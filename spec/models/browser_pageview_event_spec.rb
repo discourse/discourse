@@ -189,7 +189,9 @@ RSpec.describe BrowserPageviewEvent do
       expect(event.country_code).to eq("AU")
       expect(event.asn).to eq(12_345)
       expect(event.normalized_url).to eq("/t/topic/1")
-      expect(event.normalized_url_version).to eq(BrowserPageviewUrlInspector::VERSION)
+      expect(event.normalized_url_version).to eq(
+        BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
+      )
       expect(event.normalized_referrer).to eq("example.com/path")
       expect(event.created_at).to eq_time(occurred_at)
       expect(event.source).to eq("beacon")

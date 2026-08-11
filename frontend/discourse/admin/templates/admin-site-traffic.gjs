@@ -14,7 +14,6 @@ export default <template>
     @setCustomDateRange={{@controller.setCustomDateRange}}
     @setFilter={{@controller.setFilter}}
     @removeFilter={{@controller.removeFilter}}
-    @clearFilters={{@controller.clearFilters}}
     @retry={{@controller.fetchTraffic}}
   />
 </template>

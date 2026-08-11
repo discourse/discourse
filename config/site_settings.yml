@@ -4649,6 +4649,10 @@ dashboard:
       - user_to_user_private_messages_with_replies
       - signups
     area: "reports"
+  enable_site_traffic_explorer:
+    default: false
+    client: true
+    hidden: true
   verbose_user_stat_count_logging:
     hidden: true
     default: false

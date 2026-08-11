@@ -6,12 +6,9 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const BROWSER_ICONS = {
   edge: "fab-microsoft",
-  opera: "globe",
   firefox: "globe",
   chrome: "fab-chrome",
   safari: "fab-apple",
-  ie: "fab-microsoft",
-  discoursehub: "fab-discourse",
   unknown: "globe",
 };
 

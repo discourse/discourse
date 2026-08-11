@@ -63,9 +63,7 @@ module PageObjects
       def has_partial_data_warning?(reason:)
         selector = "[data-test-site-traffic-partial-warning]"
 
-        has_css?(selector, text: "Partial traffic data") &&
-          has_css?("#{selector} [data-test-partial-reason]", exact_text: reason) &&
-          has_no_css?("#{selector} button")
+        has_css?(selector, exact_text: reason) && has_no_css?("#{selector} button")
       end
 
       def has_no_partial_data_warning?
@@ -102,7 +100,7 @@ module PageObjects
 
       def filter_row(card:, label:)
         within("[data-test-site-traffic-card='#{card}']") do
-          find("button[aria-label='Filter by #{label}']").click
+          find("button[aria-label^='Filter by #{label},']").click
         end
         self
       end
@@ -135,20 +133,22 @@ module PageObjects
         self
       end
 
-      def has_expanded_table?(title:)
-        selector = ".site-traffic-explorer__modal[role='dialog']"
-        has_css?(selector, text: title) && has_css?("#{selector} tbody tr")
+      def has_expanded_table?(title:, column:)
+        selector = ".site-traffic-breakdown-modal[role='dialog']"
+        has_css?(selector, text: title) &&
+          has_css?("#{selector} .d-table__header-cell", exact_text: column) &&
+          has_css?("#{selector} .d-table__body .d-table__row")
       end
 
       def filter_expanded_row(label:)
-        within(".site-traffic-explorer__modal[role='dialog']") do
-          within("tr", text: label) { find("button[aria-label='Filter by #{label}']").click }
+        within(".site-traffic-breakdown-modal[role='dialog']") do
+          within("tr", text: label) { find("button[aria-label^='Filter by #{label},']").click }
         end
         self
       end
 
       def has_no_expanded_table?
-        has_no_css?(".site-traffic-explorer__modal[role='dialog']")
+        has_no_css?(".site-traffic-breakdown-modal[role='dialog']")
       end
 
       def has_focused_filter_pill?(dimension:)

@@ -253,8 +253,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
     expect(traffic).to have_metric(label: "Pageviews", value: "2")
     expect(traffic).to have_metric(label: "Logged-in share", value: "100%")
-    expect(traffic).to have_metric(label: "Distinct sessions", value: "3")
-    expect(traffic).to have_metric(label: "Bounce rate", value: "67%")
+    expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
+    expect(traffic).to have_metric(label: "Bounce rate", value: "50%")
     expect(page).to have_current_path(
       "/admin/dashboard/traffic?country=US&end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
@@ -277,8 +277,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
     expect(traffic).to have_filter_pill(dimension: "top_url", label: "/top")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
-    expect(traffic).to have_metric(label: "Distinct sessions", value: "3")
-    expect(traffic).to have_metric(label: "Bounce rate", value: "67%")
+    expect(traffic).to have_metric(label: "Distinct sessions", value: "1")
+    expect(traffic).to have_metric(label: "Bounce rate", value: "0%")
     expect(page).to have_current_path(
       "/admin/dashboard/traffic?country=US&end_date=2026-05-12&range=custom&start_date=2026-05-01&top_url=%2Ftop",
     )
@@ -343,7 +343,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     traffic.expand("pages")
 
-    expect(traffic).to have_expanded_table(title: "Top URLs")
+    expect(traffic).to have_expanded_table(title: "Top URLs", column: "URL")
 
     traffic.filter_expanded_row(label: additional_path)
 
@@ -375,7 +375,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_partial_data_warning(
       reason:
-        "Traffic before Feb 14, 2026 is no longer available. These results are also limited to the most recent 2 pageviews in the selected date range. Choose a shorter date range within the available dates to include all available traffic.",
+        "Detailed pageview activity before Feb 14, 2026 is no longer available, so these results cover only part of the selected date range. They are also limited to the most recent 2 pageviews. Choose a shorter date range within the available dates to include all available pageview activity.",
     )
   end
 

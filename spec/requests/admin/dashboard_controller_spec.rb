@@ -1386,6 +1386,13 @@ RSpec.describe Admin::DashboardController do
 
   describe "#traffic" do
     let(:request_params) { { start_date: "2026-05-01", end_date: "2026-05-12" } }
+    let(:series_colors) do
+      {
+        "logged_in_human_pageviews" => "#4B3CE0",
+        "anonymous_human_pageviews" => "#9C8DEC",
+        "likely_crawler_pageviews" => "#B3AAC9",
+      }
+    end
 
     before do
       freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
@@ -1486,60 +1493,64 @@ RSpec.describe Admin::DashboardController do
       it "summarizes every traffic dimension for the selected dates" do
         get "/admin/dashboard/traffic.json", params: request_params
 
-        expect(response.parsed_body).to eq(
-          "partial_data" => nil,
-          "summary" => {
-            "pageviews" => 3,
-            "distinct_sessions" => 2,
-            "logged_in_share" => 67,
-            "bounce_rate" => 50,
-            "average_session_duration_seconds" => 30,
-          },
-          "series" => [
-            {
-              "date" => "2026-05-10",
-              "pageviews" => 2,
-              "logged_in_human_pageviews" => 2,
-              "anonymous_human_pageviews" => 0,
-              "likely_crawler_pageviews" => 0,
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => nil,
+            "summary" => {
+              "pageviews" => 3,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 67,
+              "bounce_rate" => 50,
+              "average_session_duration_seconds" => 30,
             },
-            {
-              "date" => "2026-05-11",
-              "pageviews" => 1,
-              "logged_in_human_pageviews" => 0,
-              "anonymous_human_pageviews" => 1,
-              "likely_crawler_pageviews" => 0,
+            "series" => [
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 2,
+                "logged_in_human_pageviews" => 2,
+                "anonymous_human_pageviews" => 0,
+                "likely_crawler_pageviews" => 0,
+              },
+              {
+                "date" => "2026-05-11",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
+                { "value" => "/latest", "label" => "/latest", "pageviews" => 1 },
+                { "value" => "/top", "label" => "/top", "pageviews" => 1 },
+              ],
+              "entry_urls" => [
+                { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
+                { "value" => "/top", "label" => "/top", "pageviews" => 1 },
+              ],
+              "referrers" => [
+                { "value" => "", "label" => "Direct / unknown", "pageviews" => 1 },
+                { "value" => "search.example", "label" => "search.example", "pageviews" => 1 },
+              ],
+              "countries" => [
+                { "value" => "US", "label" => "United States", "pageviews" => 2 },
+                { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+              ],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 3 },
+              ],
+              "browsers" => [
+                { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
+                { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+              ],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
             },
-          ],
-          "dimensions" => {
-            "top_urls" => [
-              { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
-              { "value" => "/latest", "label" => "/latest", "pageviews" => 1 },
-              { "value" => "/top", "label" => "/top", "pageviews" => 1 },
-            ],
-            "entry_urls" => [
-              { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
-              { "value" => "/top", "label" => "/top", "pageviews" => 1 },
-            ],
-            "referrers" => [
-              { "value" => "", "label" => "Direct / unknown", "pageviews" => 1 },
-              { "value" => "search.example", "label" => "search.example", "pageviews" => 1 },
-            ],
-            "countries" => [
-              { "value" => "US", "label" => "United States", "pageviews" => 2 },
-              { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
-            ],
-            "networks" => [
-              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 3 },
-            ],
-            "browsers" => [
-              { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
-              { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
-            ],
-            "ip_addresses" => [
-              { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
-              { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
-            ],
           },
         )
       end
@@ -1547,35 +1558,42 @@ RSpec.describe Admin::DashboardController do
       it "applies the direct referrer filter" do
         get "/admin/dashboard/traffic.json", params: request_params.merge(referrer: "")
 
-        expect(response.parsed_body).to eq(
-          "partial_data" => nil,
-          "summary" => {
-            "pageviews" => 1,
-            "distinct_sessions" => 2,
-            "logged_in_share" => 0,
-            "bounce_rate" => 50,
-            "average_session_duration_seconds" => 30,
-          },
-          "series" => [
-            {
-              "date" => "2026-05-11",
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => nil,
+            "summary" => {
               "pageviews" => 1,
-              "logged_in_human_pageviews" => 0,
-              "anonymous_human_pageviews" => 1,
-              "likely_crawler_pageviews" => 0,
+              "distinct_sessions" => 1,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
             },
-          ],
-          "dimensions" => {
-            "top_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
-            "entry_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
-            "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 1 }],
-            "countries" => [{ "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 }],
-            "networks" => [
-              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 1 },
+            "series" => [
+              {
+                "date" => "2026-05-11",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
             ],
-            "browsers" => [{ "value" => "firefox", "label" => "Firefox", "pageviews" => 1 }],
-            "ip_addresses" => [
-              { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
+              "entry_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 1 }],
+              "countries" => [{ "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 }],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 1 },
+              ],
+              "browsers" => [{ "value" => "firefox", "label" => "Firefox", "pageviews" => 1 }],
+              "ip_addresses" => [
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
+            "active_filters" => [
+              { "key" => "referrer", "value" => "", "label" => "Direct / unknown" },
             ],
           },
         )
@@ -1614,59 +1632,63 @@ RSpec.describe Admin::DashboardController do
 
         get "/admin/dashboard/traffic.json", params: request_params.merge(start_date: "2026-01-01")
 
-        expect(response.parsed_body).to eq(
-          "partial_data" => {
-            "reason" => "retention",
-            "available_start_date" => "2026-02-14",
-          },
-          "summary" => {
-            "pageviews" => 2,
-            "distinct_sessions" => 2,
-            "logged_in_share" => 0,
-            "bounce_rate" => 100,
-            "average_session_duration_seconds" => 0,
-          },
-          "series" => [
-            {
-              "date" => "2026-02-15",
-              "pageviews" => 1,
-              "logged_in_human_pageviews" => 0,
-              "anonymous_human_pageviews" => 1,
-              "likely_crawler_pageviews" => 0,
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => {
+              "reason" => "retention",
+              "available_start_date" => "2026-02-14",
             },
-            {
-              "date" => "2026-05-10",
-              "pageviews" => 1,
-              "logged_in_human_pageviews" => 0,
-              "anonymous_human_pageviews" => 1,
-              "likely_crawler_pageviews" => 0,
+            "summary" => {
+              "pageviews" => 2,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
             },
-          ],
-          "dimensions" => {
-            "top_urls" => [
-              { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
-              { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
+            "series" => [
+              {
+                "date" => "2026-02-15",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
             ],
-            "entry_urls" => [
-              { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
-              { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
-            ],
-            "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
-            "countries" => [
-              { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
-              { "value" => "US", "label" => "United States", "pageviews" => 1 },
-            ],
-            "networks" => [
-              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 2 },
-            ],
-            "browsers" => [
-              { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
-              { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
-            ],
-            "ip_addresses" => [
-              { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
-              { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
-            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
+                { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
+              ],
+              "entry_urls" => [
+                { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
+                { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
+              ],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+              "countries" => [
+                { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+                { "value" => "US", "label" => "United States", "pageviews" => 1 },
+              ],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
+              ],
+              "browsers" => [
+                { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+                { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+              ],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
           },
         )
       end
@@ -1718,45 +1740,49 @@ RSpec.describe Admin::DashboardController do
       it "returns no more than the configured pageview cap" do
         get "/admin/dashboard/traffic.json", params: request_params
 
-        expect(response.parsed_body).to eq(
-          "partial_data" => {
-            "reason" => "pageview_limit",
-            "pageview_limit" => 2,
-          },
-          "summary" => {
-            "pageviews" => 2,
-            "distinct_sessions" => 2,
-            "logged_in_share" => 0,
-            "bounce_rate" => 100,
-            "average_session_duration_seconds" => 0,
-          },
-          "series" => [
-            {
-              "date" => "2026-05-10",
-              "pageviews" => 2,
-              "logged_in_human_pageviews" => 0,
-              "anonymous_human_pageviews" => 2,
-              "likely_crawler_pageviews" => 0,
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => {
+              "reason" => "pageview_limit",
+              "pageview_limit" => 2,
             },
-          ],
-          "dimensions" => {
-            "top_urls" => [
-              { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
-              { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
+            "summary" => {
+              "pageviews" => 2,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
+            },
+            "series" => [
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 2,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 2,
+                "likely_crawler_pageviews" => 0,
+              },
             ],
-            "entry_urls" => [
-              { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
-              { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
-            ],
-            "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
-            "countries" => [{ "value" => "US", "label" => "United States", "pageviews" => 2 }],
-            "networks" => [
-              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 2 },
-            ],
-            "browsers" => [{ "value" => "chrome", "label" => "Chrome", "pageviews" => 2 }],
-            "ip_addresses" => [
-              { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
-            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+                { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
+              ],
+              "entry_urls" => [
+                { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+                { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
+              ],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+              "countries" => [{ "value" => "US", "label" => "United States", "pageviews" => 2 }],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
+              ],
+              "browsers" => [{ "value" => "chrome", "label" => "Chrome", "pageviews" => 2 }],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
+              ],
+            },
           },
         )
       end
@@ -1807,63 +1833,100 @@ RSpec.describe Admin::DashboardController do
 
         get "/admin/dashboard/traffic.json", params: request_params.merge(start_date: "2026-01-01")
 
-        expect(response.parsed_body).to eq(
-          "partial_data" => {
-            "reason" => "retention_and_pageview_limit",
-            "available_start_date" => "2026-02-14",
-            "pageview_limit" => 2,
-          },
-          "summary" => {
-            "pageviews" => 2,
-            "distinct_sessions" => 2,
-            "logged_in_share" => 0,
-            "bounce_rate" => 100,
-            "average_session_duration_seconds" => 0,
-          },
-          "series" => [
-            {
-              "date" => "2026-05-10",
-              "pageviews" => 1,
-              "logged_in_human_pageviews" => 0,
-              "anonymous_human_pageviews" => 1,
-              "likely_crawler_pageviews" => 0,
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => {
+              "reason" => "retention_and_pageview_limit",
+              "available_start_date" => "2026-02-14",
+              "pageview_limit" => 2,
             },
-            {
-              "date" => "2026-05-11",
-              "pageviews" => 1,
-              "logged_in_human_pageviews" => 0,
-              "anonymous_human_pageviews" => 1,
-              "likely_crawler_pageviews" => 0,
+            "summary" => {
+              "pageviews" => 2,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
             },
-          ],
-          "dimensions" => {
-            "top_urls" => [
-              { "value" => latest_retained.url, "label" => latest_retained.url, "pageviews" => 1 },
-              { "value" => middle_retained.url, "label" => middle_retained.url, "pageviews" => 1 },
+            "series" => [
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+              {
+                "date" => "2026-05-11",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
             ],
-            "entry_urls" => [
-              { "value" => latest_retained.url, "label" => latest_retained.url, "pageviews" => 1 },
-              { "value" => middle_retained.url, "label" => middle_retained.url, "pageviews" => 1 },
-            ],
-            "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
-            "countries" => [
-              { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
-              { "value" => "US", "label" => "United States", "pageviews" => 1 },
-            ],
-            "networks" => [
-              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 2 },
-            ],
-            "browsers" => [
-              { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
-              { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
-            ],
-            "ip_addresses" => [
-              { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
-              { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
-            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                {
+                  "value" => latest_retained.url,
+                  "label" => latest_retained.url,
+                  "pageviews" => 1,
+                },
+                {
+                  "value" => middle_retained.url,
+                  "label" => middle_retained.url,
+                  "pageviews" => 1,
+                },
+              ],
+              "entry_urls" => [
+                {
+                  "value" => latest_retained.url,
+                  "label" => latest_retained.url,
+                  "pageviews" => 1,
+                },
+                {
+                  "value" => middle_retained.url,
+                  "label" => middle_retained.url,
+                  "pageviews" => 1,
+                },
+              ],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+              "countries" => [
+                { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+                { "value" => "US", "label" => "United States", "pageviews" => 1 },
+              ],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
+              ],
+              "browsers" => [
+                { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+                { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+              ],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
           },
         )
       end
+    end
+
+    it "returns a service unavailable response when the traffic query times out" do
+      sign_in(admin)
+      AdminDashboardSiteTrafficExplorer.stubs(:call).raises(
+        ActiveRecord::QueryCanceled,
+        "statement timeout",
+      )
+
+      get "/admin/dashboard/traffic.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 503,
+        body: {
+          "error_type" => "traffic_query_timeout",
+        },
+      )
     end
 
     it "does not allow moderators to read traffic details" do
@@ -1871,10 +1934,12 @@ RSpec.describe Admin::DashboardController do
 
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.status).to eq(404)
-      expect(response.parsed_body).to eq(
-        "errors" => ["The requested URL or resource could not be found."],
-        "error_type" => "not_found",
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
       )
     end
 
@@ -1883,20 +1948,24 @@ RSpec.describe Admin::DashboardController do
 
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.status).to eq(404)
-      expect(response.parsed_body).to eq(
-        "errors" => ["The requested URL or resource could not be found."],
-        "error_type" => "not_found",
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
       )
     end
 
     it "does not allow anonymous users to read traffic details" do
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.status).to eq(404)
-      expect(response.parsed_body).to eq(
-        "errors" => ["The requested URL or resource could not be found."],
-        "error_type" => "not_found",
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
       )
     end
 
@@ -1906,10 +1975,12 @@ RSpec.describe Admin::DashboardController do
 
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.status).to eq(404)
-      expect(response.parsed_body).to eq(
-        "errors" => ["The requested URL or resource could not be found."],
-        "error_type" => "not_found",
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
       )
     end
   end

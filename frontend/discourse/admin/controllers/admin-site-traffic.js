@@ -1,13 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import {
   calculatePresetStartDate,
   DEFAULT_PERIOD,
   PERIOD_CUSTOM,
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
+import { countryName } from "discourse/admin/lib/format-country";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
@@ -32,9 +32,7 @@ const DIMENSION_KEYS = {
 };
 
 export default class AdminSiteTrafficController extends Controller {
-  @service loadingSlider;
-
-  @tracked range = null;
+  @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
   @tracked top_url = null;
@@ -50,9 +48,7 @@ export default class AdminSiteTrafficController extends Controller {
 
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
 
-  defaultPeriod = DEFAULT_PERIOD;
   #fetchId = 0;
-  #loadingCount = 0;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -78,14 +74,21 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   get hasPageviews() {
-    return (this.traffic?.summary?.pageviews ?? 0) > 0;
+    return (this.traffic?.series ?? []).some(
+      (row) =>
+        (row.pageviews ?? 0) > 0 || (row.likely_crawler_pageviews ?? 0) > 0
+    );
   }
 
   get activeFilters() {
     return FILTER_KEYS.filter((key) => this[key] !== null).map((key) => {
       const value = this[key];
       const rows = this.traffic?.dimensions?.[DIMENSION_KEYS[key]] ?? [];
-      const label = rows.find((row) => row.value === value)?.label;
+      const activeFilter = this.traffic?.active_filters?.find(
+        (filter) => filter.key === key && filter.value === value
+      );
+      const label =
+        activeFilter?.label ?? rows.find((row) => row.value === value)?.label;
 
       return {
         key,
@@ -123,15 +126,32 @@ export default class AdminSiteTrafficController extends Controller {
     return params;
   }
 
+  #localizeCountryLabels(traffic) {
+    const countries = traffic.dimensions?.countries ?? [];
+    const activeFilters = traffic.active_filters ?? [];
+
+    return {
+      ...traffic,
+      dimensions: {
+        ...traffic.dimensions,
+        countries: countries.map((row) => ({
+          ...row,
+          label: countryName(row.value),
+        })),
+      },
+      active_filters: activeFilters.map((filter) =>
+        filter.key === "country"
+          ? { ...filter, label: countryName(filter.value) }
+          : filter
+      ),
+    };
+  }
+
   @action
   async fetchTraffic() {
     const fetchId = ++this.#fetchId;
     this.loading = true;
     this.fetchError = null;
-    this.#loadingCount++;
-    if (this.#loadingCount === 1) {
-      this.loadingSlider.transitionStarted();
-    }
 
     try {
       const traffic = await ajax("/admin/dashboard/traffic.json", {
@@ -139,7 +159,7 @@ export default class AdminSiteTrafficController extends Controller {
       });
 
       if (fetchId === this.#fetchId) {
-        this.traffic = traffic;
+        this.traffic = this.#localizeCountryLabels(traffic);
       }
     } catch (error) {
       if (fetchId === this.#fetchId) {
@@ -149,10 +169,6 @@ export default class AdminSiteTrafficController extends Controller {
             : "unexpected";
       }
     } finally {
-      this.#loadingCount = Math.max(this.#loadingCount - 1, 0);
-      if (this.#loadingCount === 0) {
-        this.loadingSlider.transitionEnded();
-      }
       if (fetchId === this.#fetchId) {
         this.loading = false;
       }
@@ -188,17 +204,9 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   @action
-  clearFilters() {
-    for (const key of FILTER_KEYS) {
-      this[key] = null;
-    }
-    this.fetchTraffic();
-  }
-
-  @action
   resetState() {
     this.#fetchId++;
-    this.range = null;
+    this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
     for (const key of FILTER_KEYS) {

@@ -1,66 +1,92 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import SiteTrafficDimensionLabel from "discourse/admin/components/site-traffic-dimension-label";
+import SiteTrafficPageviewCount from "discourse/admin/components/site-traffic-pageview-count";
+import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SiteTrafficBreakdownModal extends Component {
+  get rows() {
+    return this.args.model.rows.slice(0, 50);
+  }
+
   @action
-  filterLabel(label) {
-    return i18n("admin.site_traffic_explorer.filter_by", { label });
+  filterLabel(row) {
+    return i18n("admin.site_traffic_explorer.filter_by", {
+      label: row.label,
+      count: row.pageviews,
+    });
+  }
+
+  @action
+  filter(row) {
+    this.args.closeModal();
+    this.args.model.filter(row);
   }
 
   <template>
     <DModal
-      @inline={{true}}
-      @title={{@title}}
-      @closeModal={{@close}}
-      class="site-traffic-explorer__modal"
+      @title={{@model.title}}
+      @closeModal={{@closeModal}}
+      class="site-traffic-breakdown-modal"
     >
       <:body>
-        <table class="site-traffic-explorer__table">
-          <thead>
-            <tr>
-              <th scope="col">{{@title}}</th>
-              <th scope="col">{{i18n
-                  "admin.site_traffic_explorer.pageviews"
-                }}</th>
-              <th scope="col"><span class="sr-only">{{i18n
-                    "admin.site_traffic_explorer.actions"
-                  }}</span></th>
+        <table class="d-table site-traffic-breakdown-modal__table">
+          <thead class="d-table__header">
+            <tr class="d-table__row">
+              <th class="d-table__header-cell" scope="col">
+                {{@model.columnLabel}}
+              </th>
+              <th
+                class="d-table__header-cell site-traffic-breakdown-modal__pageviews"
+                scope="col"
+              >{{i18n "admin.site_traffic_explorer.pageviews"}}</th>
             </tr>
           </thead>
-          <tbody>
-            {{#each @rows as |row|}}
-              <tr>
-                <td>
-                  {{#if @link}}
-                    <a href={{row.value}}>
+          <tbody class="d-table__body">
+            {{#each this.rows as |row|}}
+              <tr class="d-table__row">
+                <td class="d-table__cell --overview">
+                  {{#let (@model.rowLink row) as |rowLink|}}
+                    {{#if rowLink}}
+                      <a
+                        href={{rowLink.href}}
+                        rel={{rowLink.rel}}
+                        target={{rowLink.target}}
+                        class="site-traffic-explorer__row-link"
+                      >
+                        <SiteTrafficDimensionLabel
+                          @dimension={{@model.dimension}}
+                          @row={{row}}
+                        />
+                      </a>
+                    {{else}}
                       <SiteTrafficDimensionLabel
-                        @dimension={{@dimension}}
+                        @dimension={{@model.dimension}}
                         @row={{row}}
                       />
-                    </a>
-                  {{else}}
-                    <SiteTrafficDimensionLabel
-                      @dimension={{@dimension}}
-                      @row={{row}}
-                    />
-                  {{/if}}
+                    {{/if}}
+                  {{/let}}
                 </td>
-                <td>{{row.pageviews}}</td>
-                <td>
-                  <button
-                    type="button"
-                    class="btn-flat"
-                    aria-label={{this.filterLabel row.label}}
-                    {{on "click" (fn @filter row)}}
+                <td
+                  class="d-table__cell --detail site-traffic-breakdown-modal__pageviews"
+                >
+                  <div class="d-table__mobile-label">
+                    {{i18n "admin.site_traffic_explorer.pageviews"}}
+                  </div>
+                  <SiteTrafficPageviewCount
+                    @value={{row.pageviews}}
+                    as |formattedValue|
                   >
-                    {{dIcon "filter"}}
-                  </button>
+                    <DButton
+                      @display="link"
+                      @translatedLabel={{formattedValue}}
+                      @translatedAriaLabel={{this.filterLabel row}}
+                      @action={{this.filter}}
+                      @actionParam={{row}}
+                    />
+                  </SiteTrafficPageviewCount>
                 </td>
               </tr>
             {{/each}}

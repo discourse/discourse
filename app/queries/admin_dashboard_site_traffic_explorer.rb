@@ -1,15 +1,23 @@
 # frozen_string_literal: true
 
 class AdminDashboardSiteTrafficExplorer
-  BROWSER_CLASSIFIER_VERSION = 1
   DIMENSION_LIMIT = 50
   STATEMENT_TIMEOUT_MS = 10_000
   FILTER_KEYS = %i[top_url entry_url referrer country network browser ip].freeze
-  BROWSER_VALUES = %w[edge opera firefox chrome safari ie discoursehub unknown].freeze
-  private_constant :BROWSER_CLASSIFIER_VERSION
+  FILTER_DIMENSIONS = {
+    top_url: "top_urls",
+    entry_url: "entry_urls",
+    referrer: "referrers",
+    country: "countries",
+    network: "networks",
+    browser: "browsers",
+    ip: "ip_addresses",
+  }.freeze
+  BROWSER_VALUES = %w[edge firefox chrome safari unknown].freeze
   private_constant :DIMENSION_LIMIT
   private_constant :STATEMENT_TIMEOUT_MS
   private_constant :FILTER_KEYS
+  private_constant :FILTER_DIMENSIONS
   private_constant :BROWSER_VALUES
 
   def self.call(params)
@@ -28,12 +36,16 @@ class AdminDashboardSiteTrafficExplorer
   def call
     row = execute_query
 
-    {
+    result = {
       partial_data: partial_data(row.fetch("pageview_limited")),
       summary: row.fetch("summary"),
       series: row.fetch("series"),
+      series_colors: series_colors,
       dimensions: decorate_dimensions(row.fetch("dimensions")),
     }
+    active_filters = decorate_active_filters(row.fetch("active_filter_representative_ips"))
+    result[:active_filters] = active_filters if active_filters.any?
+    result
   end
 
   private
@@ -41,7 +53,8 @@ class AdminDashboardSiteTrafficExplorer
   attr_reader :start_date, :end_date, :filters
 
   def parse_date(key)
-    Date.iso8601(@params.fetch(key))
+    value = @params.fetch(key)
+    value.is_a?(Date) ? value : Date.iso8601(value)
   rescue Date::Error, KeyError, TypeError
     raise Discourse::InvalidParameters.new(key)
   end
@@ -57,7 +70,8 @@ class AdminDashboardSiteTrafficExplorer
 
     case key
     when :top_url, :entry_url
-      BrowserPageviewUrlInspector.normalize(value) || raise(Discourse::InvalidParameters.new(key))
+      BrowserPageviewReferrerInspector.normalize_site_path(value) ||
+        raise(Discourse::InvalidParameters.new(key))
     when :country
       country = value.to_s.upcase
       raise Discourse::InvalidParameters.new(key) if !country.match?(/\A[A-Z]{2}\z/)
@@ -95,6 +109,7 @@ class AdminDashboardSiteTrafficExplorer
 
     {
       start_date: effective_start_date,
+      retention_cutoff: retention_cutoff,
       end_date: end_date + 1.day,
       cap: cap,
       cap_plus_one: cap + 1,
@@ -118,64 +133,123 @@ class AdminDashboardSiteTrafficExplorer
     <<~SQL
       WITH eligible AS MATERIALIZED (
         SELECT
-          bpe.id,
-          bpe.created_at,
-          bpe.session_id,
-          bpe.user_id,
-          bpe.normalized_url,
-          bpe.normalized_referrer,
-          bpe.country_code,
-          bpe.asn,
-          bpe.ip_address,
-          bpe.user_agent,
-          bpe.score
-        FROM browser_pageview_events bpe
-        WHERE bpe.created_at >= :start_date
-          AND bpe.created_at < :end_date
-          AND #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
-        ORDER BY bpe.created_at DESC, bpe.id DESC
-        LIMIT :cap_plus_one
-      ),
-      population AS MATERIALIZED (
-        SELECT *
-        FROM eligible
-        ORDER BY created_at DESC, id DESC
-        LIMIT :cap
-      ),
-      classified AS MATERIALIZED (
-        SELECT
-          population.*,
+          candidates.id,
+          candidates.created_at,
+          candidates.session_id,
+          candidates.user_id,
+          candidates.normalized_url,
+          candidates.country_code,
+          candidates.asn,
+          candidates.ip_address,
+          candidates.user_agent,
+          candidates.score,
           ROW_NUMBER() OVER (
-            PARTITION BY session_id
-            ORDER BY created_at, id
-          ) AS session_position,
-          CASE
-            WHEN user_agent ~* 'Edg' THEN 'edge'
-            WHEN user_agent ~* '(Opera|OPR)' THEN 'opera'
-            WHEN user_agent ~* 'Firefox' THEN 'firefox'
-            WHEN user_agent ~* '(Chrome|CriOS)' THEN 'chrome'
-            WHEN user_agent ~* 'Safari' THEN 'safari'
-            WHEN user_agent ~* '(MSIE|Trident)' THEN 'ie'
-            WHEN user_agent ~* 'Discourse' THEN 'discoursehub'
-            ELSE 'unknown'
-          END AS browser,
-          (
-            :crawler_detection_enabled
-            AND COALESCE(score, 0) > :crawler_threshold
-          ) AS likely_crawler
+            ORDER BY candidates.created_at DESC, candidates.id DESC
+          ) AS cap_position
+        FROM (
+          SELECT
+            bpe.id,
+            bpe.created_at,
+            bpe.session_id,
+            bpe.user_id,
+            bpe.normalized_url,
+            bpe.country_code,
+            bpe.asn,
+            bpe.ip_address,
+            bpe.user_agent,
+            bpe.score
+          FROM browser_pageview_events bpe
+          WHERE bpe.created_at >= :start_date
+            AND bpe.created_at < :end_date
+            AND #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
+          ORDER BY bpe.created_at DESC, bpe.id DESC
+          LIMIT :cap_plus_one
+        ) candidates
+      ),
+      population AS NOT MATERIALIZED (
+        SELECT
+          id,
+          created_at,
+          session_id,
+          user_id,
+          normalized_url,
+          country_code,
+          asn,
+          ip_address,
+          user_agent,
+          score
+        FROM eligible
+        WHERE cap_position <= :cap
+      ),
+      population_sessions AS (
+        SELECT DISTINCT session_id
         FROM population
       ),
-      dimensioned AS MATERIALIZED (
+      session_entries AS (
+        SELECT entry.*
+        FROM population_sessions
+        CROSS JOIN LATERAL (
+          SELECT
+            bpe.id,
+            bpe.session_id,
+            bpe.normalized_url,
+            bpe.normalized_referrer
+          FROM browser_pageview_events bpe
+          WHERE bpe.session_id = population_sessions.session_id
+            AND bpe.created_at >= :retention_cutoff
+            AND #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
+          ORDER BY bpe.created_at, bpe.id
+          LIMIT 1
+        ) entry
+      ),
+      browser_values AS MATERIALIZED (
+        SELECT
+          user_agent,
+          CASE
+            WHEN user_agent ~* 'Edg' THEN 'edge'
+            WHEN user_agent ~* '(Opera|OPR|SamsungBrowser|Vivaldi|YaBrowser)' THEN 'unknown'
+            WHEN user_agent ~* '(Firefox|FxiOS)' THEN 'firefox'
+            WHEN user_agent ~* '(Chrome|CriOS)' THEN 'chrome'
+            WHEN user_agent ~* 'Safari' THEN 'safari'
+            ELSE 'unknown'
+          END AS browser
+        FROM population
+        GROUP BY user_agent
+      ),
+      classified AS (
+        SELECT
+          population.id,
+          population.created_at,
+          population.session_id,
+          population.user_id,
+          population.normalized_url,
+          population.country_code,
+          population.asn,
+          population.ip_address,
+          browser_values.browser,
+          (
+            :crawler_detection_enabled
+            AND COALESCE(population.score, 0) > :crawler_threshold
+          ) AS likely_crawler
+        FROM population
+        JOIN browser_values
+          ON browser_values.user_agent = population.user_agent
+      ),
+      dimensioned AS (
         SELECT
           classified.*,
-          CASE WHEN session_position = 1 THEN normalized_url END AS entry_url,
           CASE
-            WHEN session_position <> 1 THEN NULL
-            WHEN normalized_referrer IS NULL THEN ''
-            WHEN split_part(normalized_referrer, '/', 1) = :current_hostname THEN ''
-            ELSE split_part(normalized_referrer, '/', 1)
+            WHEN classified.id = session_entries.id THEN session_entries.normalized_url
+          END AS entry_url,
+          CASE
+            WHEN session_entries.id IS NULL OR classified.id <> session_entries.id THEN NULL
+            WHEN session_entries.normalized_referrer IS NULL THEN ''
+            WHEN split_part(session_entries.normalized_referrer, '/', 1) = :current_hostname THEN ''
+            ELSE split_part(session_entries.normalized_referrer, '/', 1)
           END AS referrer
         FROM classified
+        LEFT JOIN session_entries
+          ON session_entries.session_id = classified.session_id
       ),
       filtered AS MATERIALIZED (
         SELECT *
@@ -183,20 +257,20 @@ class AdminDashboardSiteTrafficExplorer
         WHERE (:top_url IS NULL OR normalized_url = :top_url)
           AND (
             :entry_url IS NULL
-            OR (session_position = 1 AND entry_url = :entry_url)
+            OR entry_url = :entry_url
           )
           AND (
             :referrer IS NULL
-            OR (session_position = 1 AND referrer = :referrer)
+            OR referrer = :referrer
           )
           AND (:country IS NULL OR country_code = :country)
           AND (:network_asn IS NULL OR asn = :network_asn)
           AND (:browser IS NULL OR browser = :browser)
           AND (:ip_address IS NULL OR host(ip_address) = :ip_address)
       ),
-      sessions AS MATERIALIZED (
+      sessions AS (
         SELECT session_id, COUNT(*) AS pageviews
-        FROM population
+        FROM filtered
         GROUP BY session_id
       ),
       session_summary AS (
@@ -234,8 +308,21 @@ class AdminDashboardSiteTrafficExplorer
         GROUP BY created_at::date
       )
       SELECT
-        #{BROWSER_CLASSIFIER_VERSION} AS browser_classifier_version,
-        (SELECT COUNT(*) > :cap FROM eligible) AS pageview_limited,
+        (SELECT EXISTS (SELECT 1 FROM eligible WHERE cap_position > :cap)) AS pageview_limited,
+        jsonb_build_object(
+          'country', (
+            SELECT MIN(host(ip_address))
+            FROM population
+            WHERE :country IS NOT NULL
+              AND country_code = :country
+          ),
+          'network', (
+            SELECT MIN(host(ip_address))
+            FROM population
+            WHERE :network_asn IS NOT NULL
+              AND asn = :network_asn
+          )
+        ) AS active_filter_representative_ips,
         jsonb_build_object(
           'pageviews', traffic_summary.pageviews,
           'distinct_sessions', session_summary.distinct_sessions,
@@ -441,6 +528,31 @@ class AdminDashboardSiteTrafficExplorer
     end
   end
 
+  def decorate_active_filters(representative_ips)
+    filters.filter_map do |key, value|
+      next if value.nil?
+
+      canonical_value = key == :network ? "AS#{value}" : value
+      dimension = FILTER_DIMENSIONS.fetch(key)
+      {
+        key: key,
+        value: canonical_value,
+        label: dimension_label(dimension, canonical_value, representative_ips[key.to_s]),
+      }
+    end
+  end
+
+  def series_colors
+    {
+      "logged_in_human_pageviews" =>
+        Reports::SiteTraffic::SERIES_COLORS.fetch("page_view_logged_in_browser"),
+      "anonymous_human_pageviews" =>
+        Reports::SiteTraffic::SERIES_COLORS.fetch("page_view_anon_browser"),
+      "likely_crawler_pageviews" =>
+        Reports::SiteTraffic::SERIES_COLORS.fetch("page_view_likely_crawler"),
+    }
+  end
+
   def decorate_dimension_row(dimension, row)
     value = row.fetch("value")
     {
@@ -466,6 +578,8 @@ class AdminDashboardSiteTrafficExplorer
   end
 
   def country_label(value, representative_ip)
+    return value if representative_ip.blank?
+
     info = DiscourseIpInfo.get(representative_ip, locale: I18n.locale, resolve_hostname: false)
     return info[:country] if info[:country_code].to_s.casecmp?(value) && info[:country].present?
 
@@ -473,10 +587,12 @@ class AdminDashboardSiteTrafficExplorer
   end
 
   def network_label(value, representative_ip)
+    return value if representative_ip.blank?
+
     info = DiscourseIpInfo.get(representative_ip, locale: I18n.locale, resolve_hostname: false)
     asn = value.delete_prefix("AS").to_i
     return value if info[:asn].to_i != asn || info[:organization].blank?
 
-    "#{value} #{info[:organization]}"
+    "#{info[:organization]} (#{value})"
   end
 end

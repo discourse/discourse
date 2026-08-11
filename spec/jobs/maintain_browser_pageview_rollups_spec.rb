@@ -526,7 +526,9 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
 
         event.reload
         expect(event.normalized_url).to eq("/latest")
-        expect(event.normalized_url_version).to eq(BrowserPageviewUrlInspector::VERSION)
+        expect(event.normalized_url_version).to eq(
+          BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
+        )
       end
 
       it "resumes bounded batches without revisiting current rows" do
@@ -546,6 +548,27 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         job.execute({})
 
         expect(BrowserPageviewEvent.where(normalized_url_version: nil)).to be_empty
+      end
+
+      it "re-normalizes rows stamped with an older version" do
+        raw = "https://forum.example/latest/?campaign=private#section"
+        event = Fabricate(:browser_pageview_event, url: raw)
+
+        stub_const(
+          BrowserPageviewReferrerInspector,
+          "SITE_PATH_VERSION",
+          BrowserPageviewReferrerInspector::SITE_PATH_VERSION + 1,
+        ) do
+          job.execute({})
+
+          event.reload
+          expect(event.normalized_url).to eq(
+            BrowserPageviewReferrerInspector.normalize_site_path(raw),
+          )
+          expect(event.normalized_url_version).to eq(
+            BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
+          )
+        end
       end
 
       it "does not backfill rows outside the retained window" do

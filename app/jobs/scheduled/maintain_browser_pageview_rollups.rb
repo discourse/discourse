@@ -189,7 +189,7 @@ module Jobs
       return if rows.empty?
 
       ids = rows.map(&:id)
-      normalized = rows.map { |row| BrowserPageviewUrlInspector.normalize(row.url) }
+      normalized = rows.map { |row| BrowserPageviewReferrerInspector.normalize_site_path(row.url) }
 
       DB.exec(
         <<~SQL,
@@ -205,7 +205,7 @@ module Jobs
         SQL
         ids: ids,
         normalized: normalized,
-        version: BrowserPageviewUrlInspector::VERSION,
+        version: BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
       )
     end
 
@@ -224,7 +224,7 @@ module Jobs
           LIMIT :limit
         SQL
         retention_cutoff: BrowserPageviewEvent.retention_cutoff,
-        version: BrowserPageviewUrlInspector::VERSION,
+        version: BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
         limit: batch_size,
       )
     end

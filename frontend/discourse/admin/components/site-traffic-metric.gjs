@@ -1,21 +1,38 @@
+import { concat } from "@ember/helper";
+import SiteTrafficPageviewCount from "discourse/admin/components/site-traffic-pageview-count";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div
-    class="site-traffic-explorer__metric"
+    class="site-traffic-explorer__metric {{if @primary '--primary'}}"
     data-test-site-traffic-metric={{@name}}
   >
-    <div class="site-traffic-explorer__metric-value">{{@value}}</div>
-    <div class="site-traffic-explorer__metric-label">
-      {{@label}}
-      <DTooltip
-        @identifier={{@name}}
-        @icon="far-circle-question"
-        @title={{i18n "admin.site_traffic_explorer.metric_information"}}
-      >
-        <:content>{{@tooltip}}</:content>
-      </DTooltip>
-    </div>
+    <span class="site-traffic-explorer__metric-copy">
+      {{#if @compact}}
+        <SiteTrafficPageviewCount @value={{@value}} as |formattedValue|>
+          <span
+            class="db-section__metric-number site-traffic-explorer__metric-value"
+          >{{formattedValue}}</span>
+        </SiteTrafficPageviewCount>
+      {{else}}
+        <span
+          class="db-section__metric-number site-traffic-explorer__metric-value"
+        >{{@value}}</span>
+      {{/if}}
+      <span class="site-traffic-explorer__metric-label-row">
+        <span
+          class="db-section__metric-label site-traffic-explorer__metric-label"
+        >{{@label}}</span>
+        <DTooltip
+          class="db-section__info site-traffic-explorer__metric-tooltip"
+          @identifier={{concat "site-traffic-explorer-" @name "-tooltip"}}
+          @icon="far-circle-question"
+          @title={{i18n "admin.site_traffic_explorer.metric_information"}}
+        >
+          <:content>{{@tooltip}}</:content>
+        </DTooltip>
+      </span>
+    </span>
   </div>
 </template>

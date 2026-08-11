@@ -112,4 +112,22 @@ describe BrowserPageviewReferrerInspector do
       expect(described_class.normalize_host("")).to be_nil
     end
   end
+
+  describe ".normalize_site_path" do
+    it "returns a canonical site-relative path" do
+      expect(
+        described_class.normalize_site_path(
+          "https://forum.example/latest/?campaign=private#section",
+        ),
+      ).to eq("/latest")
+      expect(described_class.normalize_site_path("/top?token=private")).to eq("/top")
+      expect(described_class.normalize_site_path("about/")).to eq("/about")
+      expect(described_class.normalize_site_path("https://forum.example/")).to eq("/")
+    end
+
+    it "returns nil for an unusable URL" do
+      expect(described_class.normalize_site_path(nil)).to be_nil
+      expect(described_class.normalize_site_path("javascript:alert(1)")).to be_nil
+    end
+  end
 end

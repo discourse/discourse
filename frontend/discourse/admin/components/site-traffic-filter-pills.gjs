@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { trustHTML } from "@ember/template";
+import { escapeExpression } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class SiteTrafficFilterPills extends Component {
@@ -18,6 +19,14 @@ export default class SiteTrafficFilterPills extends Component {
     });
   }
 
+  @action
+  filterDescription(filter) {
+    return i18n("admin.site_traffic_explorer.filter_description", {
+      filter: escapeExpression(this.filterLabel(filter.key)),
+      value: escapeExpression(filter.label),
+    });
+  }
+
   <template>
     {{#if @filters.length}}
       <div
@@ -27,32 +36,20 @@ export default class SiteTrafficFilterPills extends Component {
         {{#each @filters as |filter|}}
           <span
             class="site-traffic-explorer__filter-pill"
+            id={{concat "site-traffic-filter-pill-" filter.key}}
             data-test-site-traffic-filter-pill={{filter.key}}
           >
             <span>
-              {{i18n
-                "admin.site_traffic_explorer.filter_description"
-                filter=(this.filterLabel filter.key)
-                value=filter.label
-              }}
+              {{trustHTML (this.filterDescription filter)}}
             </span>
-            <button
-              type="button"
+            <DButton
               class="btn-flat site-traffic-explorer__filter-remove"
-              aria-label={{this.removeLabel filter.key}}
-              {{on "click" (fn @removeFilter filter.key)}}
-            >
-              {{dIcon "xmark"}}
-            </button>
+              @icon="xmark"
+              @translatedAriaLabel={{this.removeLabel filter.key}}
+              @action={{fn @removeFilter filter.key}}
+            />
           </span>
         {{/each}}
-        <button
-          type="button"
-          class="btn-flat site-traffic-explorer__clear-filters"
-          {{on "click" @clearFilters}}
-        >
-          {{i18n "admin.site_traffic_explorer.clear_filters"}}
-        </button>
       </div>
     {{/if}}
   </template>

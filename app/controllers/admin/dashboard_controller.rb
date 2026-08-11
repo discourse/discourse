@@ -74,9 +74,15 @@ class Admin::DashboardController < Admin::StaffController
         :ip,
       )
 
-    render json: AdminDashboardSiteTrafficExplorer.call(permitted.to_h.symbolize_keys)
-  rescue ActiveRecord::QueryCanceled, PG::QueryCanceled
-    render json: { error_type: "traffic_query_timeout" }, status: :service_unavailable
+    AdminDashboardSiteTrafficExplorer::Fetch.call(
+      service_params.deep_merge(params: permitted.to_h),
+    ) do
+      on_success { |traffic:| render json: traffic }
+      on_failed_contract { raise Discourse::InvalidParameters }
+      on_exceptions(ActiveRecord::QueryCanceled, PG::QueryCanceled) do
+        render json: { error_type: "traffic_query_timeout" }, status: :service_unavailable
+      end
+    end
   end
 
   def problems

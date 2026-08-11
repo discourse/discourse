@@ -397,14 +397,29 @@ export default class DashboardTraffic extends Component {
             />
           </div>
           {{#if this.currentUser.admin}}
-            <LinkTo
-              class="db-traffic__see-details"
-              @route="adminSiteTraffic"
-              @query={{this.explorerQuery}}
-            >
-              {{i18n "admin.dashboard.site_traffic.see_details"}}
-              {{dIcon "arrow-right"}}
-            </LinkTo>
+            {{#if this.siteSettings.enable_site_traffic_explorer}}
+              <LinkTo
+                class="db-traffic__see-details"
+                @route="adminSiteTraffic"
+                @query={{this.explorerQuery}}
+              >
+                {{i18n "admin.dashboard.site_traffic.see_details"}}
+                {{dIcon "arrow-right"}}
+              </LinkTo>
+            {{else}}
+              <LinkTo
+                class="db-traffic__see-details"
+                @route="adminReports.show"
+                @model="site_traffic"
+                @query={{hash
+                  start_date=this.reportQuery.start_date
+                  end_date=this.reportQuery.end_date
+                }}
+              >
+                {{i18n "admin.dashboard.site_traffic.see_details"}}
+                {{dIcon "arrow-right"}}
+              </LinkTo>
+            {{/if}}
           {{/if}}
         {{else}}
           <div class="db-section__traffic-chart">

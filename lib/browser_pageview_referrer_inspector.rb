@@ -9,6 +9,7 @@ class BrowserPageviewReferrerInspector
   # Bump when the normalization logic changes significantly to trigger a
   # re-backfill of rows stamped with an older version.
   VERSION = 1
+  SITE_PATH_VERSION = 1
 
   # TODO: consider vendoring DuckDuckGo's Tracker Radar tracking-parameter list
   # (https://github.com/duckduckgo/tracker-radar) for broader, maintained
@@ -31,24 +32,28 @@ class BrowserPageviewReferrerInspector
   MAX_LENGTH = 2000
 
   def self.normalize(raw)
-    return nil if raw.blank?
-
-    # Scheme is intentionally dropped: `http://example.com/x` and
-    # `https://example.com/x` collapse to the same key so the report groups
-    # cross-protocol traffic together.
-    uri = Addressable::URI.parse(raw.to_s.strip)
+    uri = parse_uri(raw)
     return nil if uri.nil?
 
     host = normalize_host(uri.host)
     return nil if host.blank?
 
-    path = uri.path.to_s.sub(%r{/+\z}, "")
+    path = normalized_path(uri)
     filtered_query = filter_query(uri.query)
     query_str = filtered_query.empty? ? "" : "?#{filtered_query}"
 
     "#{host}#{path}#{query_str}".byteslice(0, MAX_LENGTH).scrub("")
-  rescue Addressable::URI::InvalidURIError, ArgumentError, TypeError
-    nil
+  end
+
+  def self.normalize_site_path(raw)
+    uri = parse_uri(raw)
+    return nil if uri.nil?
+    return nil if uri.scheme.present? && (!%w[http https].include?(uri.scheme) || uri.host.blank?)
+
+    path = normalized_path(uri)
+    path = "/#{path}" if !path.start_with?("/")
+    path = "/" if path.blank?
+    path.byteslice(0, MAX_LENGTH).scrub("")
   end
 
   def self.normalize_host(host)
@@ -73,5 +78,18 @@ class BrowserPageviewReferrerInspector
       end
       .join("&")
   end
-  private_class_method :filter_query
+
+  def self.normalized_path(uri)
+    uri.path.to_s.sub(%r{/+\z}, "")
+  end
+
+  def self.parse_uri(raw)
+    return nil if raw.blank?
+
+    Addressable::URI.parse(raw.to_s.strip)
+  rescue Addressable::URI::InvalidURIError, ArgumentError, TypeError
+    nil
+  end
+
+  private_class_method :filter_query, :normalized_path, :parse_uri
 end

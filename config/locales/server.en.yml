@@ -1129,11 +1129,8 @@ en:
     direct_or_unknown: "Direct / unknown"
     browsers:
       chrome: "Chrome"
-      discoursehub: "DiscourseHub app"
       edge: "Microsoft Edge"
       firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
       safari: "Safari"
       unknown: "Unknown browser"
 
@@ -2908,6 +2905,7 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
+    enable_site_traffic_explorer: "Link the admin dashboard's site traffic details action to the Site Traffic Explorer."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."

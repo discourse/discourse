@@ -17620,13 +17620,6 @@ CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING 
 
 
 --
--- Name: idx_bpe_stale_normalized_url; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_stale_normalized_url ON public.browser_pageview_events USING btree (id) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1));
-
-
---
 -- Name: idx_bprd_rollups_date_referrer_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23153,7 +23146,6 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260810154331'),
 ('20260810012238'),
-('20260806074210'),
 ('20260806074204'),
 ('20260803015314'),
 ('20260731055703'),
@@ -25574,4 +25566,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-
