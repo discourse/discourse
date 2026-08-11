@@ -50,6 +50,9 @@ const Negatives = <template>
   {{! @glint-expect-error - auto-scroll filters external drags by the same closed set of kinds the external target does }}
   <div {{dDragAndDropAutoScroll accepts="images"}}></div>
 
+  {{! @glint-expect-error - adoption is described by a predicate, not by the external kind vocabulary }}
+  <li {{dDragAndDropTarget adopts="urls"}}></li>
+
   {{! @glint-expect-error - the element and external targets report different payloads }}
   <li {{dDragAndDropTarget accepts="link" onDrop=onExternalDrop}}></li>
 

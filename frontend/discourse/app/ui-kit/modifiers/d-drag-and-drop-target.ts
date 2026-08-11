@@ -1,10 +1,16 @@
+import { cancel, next } from "@ember/runloop";
 import {
+  draggable,
   dropTargetForElements,
   type ElementDragPayload,
   type ElementDropTargetEventBasePayload,
   type ElementDropTargetGetFeedbackArgs,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { modifier } from "ember-modifier";
+import {
+  decorateExternalSource,
+  type ExternalDragPayload,
+} from "discourse/services/drag-and-drop";
 
 /** The pointer position as the underlying library reports it. */
 type DragInput = ElementDropTargetGetFeedbackArgs["input"];
@@ -31,6 +37,17 @@ export interface DropTargetSource {
 
   /** The dragged element, falling back to this target when the drag has none. */
   element: Element | null;
+
+  /**
+   * The native payload, present only for an adopted drag — one the browser
+   * started from page content no source registered.
+   *
+   * Reads exactly like the payload `dDragAndDropExternalTarget` hands its
+   * callbacks, so one handler can serve a link dragged in from another window
+   * and one dragged from this page. `items` is always empty: the underlying
+   * handles do not outlive the `dragstart` that produced them.
+   */
+  native?: ExternalDragPayload;
 }
 
 /** What a synchronous gate (`canDrop`, `getDropEffect`) is asked about. */
@@ -213,18 +230,284 @@ export function createEnterLeavePairing() {
   };
 }
 
+/**
+ * The `type` every adopted drag carries, so a target can tell one apart from a
+ * drag a `dDragAndDropSource` registered.
+ *
+ * Namespaced because it occupies the same slot as a consumer's own `type`: a
+ * plugin stamping this literal on a real source would be misrouted into the
+ * adoption branch. It cannot be a symbol — the drag service and `matchesDragType`
+ * both treat `type` as a string.
+ */
+export const ADOPTED_DRAG_TYPE = "discourse:adopted-native-drag";
+
+/** Where an adoption's declared type travels, since `type` is the sentinel. */
+const ADOPTED_AS = "adoptedAs";
+
+/** What an adoption gate is asked about, and handed if it accepts. */
+export interface NativeDragAdoptionFeedback {
+  /** The element the browser chose to drag. */
+  element: HTMLElement;
+
+  /**
+   * The incoming payload, already snapshotted. Not the live `DataTransfer`: its
+   * handles go inert when the `dragstart` dispatch ends, so anything read later
+   * would come back empty.
+   */
+  source: ExternalDragPayload;
+}
+
+/**
+ * Opt-in description of a browser-started drag a target is willing to adopt.
+ *
+ * The gate is a predicate rather than a list of payload kinds because the kinds
+ * are too coarse to be safe: a web link needs `"text"` accepted (some sources
+ * publish a URL only as text), and that also describes a text selection.
+ */
+export interface NativeDragAdoption {
+  /**
+   * Names this kind of adopted drag. Travels beside the sentinel rather than as
+   * `source.type`, and is what a target's `adopts` is matched against.
+   */
+  type: string;
+
+  /** Whether this drag should be adopted. Throwing is treated as `false`. */
+  match: (feedback: NativeDragAdoptionFeedback) => boolean;
+
+  /** Payload for `source.data`. Reserved keys are stamped over it. */
+  getData?: (feedback: NativeDragAdoptionFeedback) => object;
+}
+
+/**
+ * Live targets that might adopt, held so the listener below can ask them.
+ *
+ * Every target joins, not just the ones with `adopts`: deciding at registration
+ * would mean reading an arg inside the modifier's tracking frame, which is
+ * exactly what the note at the bottom of this file forbids — it would
+ * re-register the drop target on every unrelated arg change. Reading `adopts`
+ * from inside a DOM event listener consumes nothing, because no autotracking
+ * frame is open there.
+ */
+const adoptionCandidates = new Set<() => DragAndDropTargetArgs>();
+
+let stopListeningForAdoption: (() => void) | null = null;
+
+/** The one adoption a drag can have in flight, and how to undo it. */
+let liveAdoption: { release: () => void } | null = null;
+
+/**
+ * Whether this drag started from a text selection, which must never be adopted.
+ *
+ * Cannot be inferred from the drag target alone. The standard says a selection
+ * drag targets a `Text` node, which an `HTMLElement` check already excludes —
+ * but Safari reports the nearest element instead, so on that browser a selected
+ * URL in the composer would otherwise satisfy a link predicate and be adopted.
+ */
+function isTextSelectionDrag(target: HTMLElement) {
+  if (target.closest("[contenteditable]:not([contenteditable='false'])")) {
+    return true;
+  }
+  const selection = window.getSelection();
+  return Boolean(
+    selection &&
+    !selection.isCollapsed &&
+    selection.rangeCount > 0 &&
+    selection.containsNode(target, true)
+  );
+}
+
+/**
+ * Reads the payload while it is still readable.
+ *
+ * A drag's string data is only accessible during `dragstart`; by `dragover` the
+ * store is in protected mode and by `drop` the item handles are inert. Taking a
+ * copy here is what lets an adopted drag expose the same reader API an external
+ * one does. `items` stays empty for that same reason — the handles cannot outlive
+ * this dispatch, and promising otherwise would hand consumers dead objects.
+ */
+function snapshotPayload(dataTransfer: DataTransfer): ExternalDragPayload {
+  const types = Array.from(dataTransfer.types);
+  const strings = new Map<string, string>();
+  for (const type of types) {
+    if (type !== "Files") {
+      strings.set(type, dataTransfer.getData(type));
+    }
+  }
+
+  return decorateExternalSource({
+    types,
+    items: [],
+    getStringData: (mediaType: string) => strings.get(mediaType) ?? null,
+  } as Parameters<typeof decorateExternalSource>[0]);
+}
+
+/** The adoptions a live target is offering, in registration order. */
+function offeredAdoptions() {
+  const offered: NativeDragAdoption[] = [];
+  for (const getArgs of adoptionCandidates) {
+    offered.push(...toAcceptList(getArgs().adopts));
+  }
+  return offered;
+}
+
+/**
+ * Hands a browser-started drag to the drag library so the ordinary drop targets
+ * receive it.
+ *
+ * The library only dispatches for elements it was told about, and it looks that
+ * up when `dragstart` reaches `document` on the way back up. Registering here,
+ * from a capture-phase listener on `window`, therefore lands in time for the
+ * very drag that triggered it — which is what turns an anchor the app never
+ * registered into an ordinary element drag, with one dispatch path and no
+ * second set of lifecycle rules.
+ */
+function adoptNativeDrag(event: DragEvent) {
+  const target = event.target;
+  if (!(target instanceof HTMLElement) || !event.dataTransfer) {
+    return;
+  }
+
+  // Already the library's to dispatch. Registering over it would replace the
+  // real source's entry, and releasing ours would then delete theirs.
+  if (target.closest("[data-drag-source]")) {
+    return;
+  }
+
+  // Someone else's explicitly draggable element. The library removes the
+  // attribute unconditionally when it cleans up, so adopting one would strip a
+  // `draggable` we did not add.
+  if (target.hasAttribute("draggable")) {
+    return;
+  }
+
+  if (isTextSelectionDrag(target)) {
+    return;
+  }
+
+  const source = snapshotPayload(event.dataTransfer);
+  if (source.containsFiles()) {
+    return;
+  }
+
+  const feedback = { element: target, source };
+  const adoption = offeredAdoptions().find((candidate) => {
+    try {
+      return candidate.match(feedback);
+    } catch {
+      // A consumer's predicate must not decide the fate of the drags after it,
+      // nor surface as an unrelated failure — this listener is app-wide.
+      return false;
+    }
+  });
+
+  if (!adoption) {
+    return;
+  }
+
+  liveAdoption?.release();
+
+  let started = false;
+  let released = false;
+
+  const cleanup = draggable({
+    element: target,
+    getInitialData: () => ({
+      ...adoption.getData?.(feedback),
+      // Last, so a consumer payload cannot overwrite the discriminators and
+      // disguise an adopted drag as a sourced one.
+      type: ADOPTED_DRAG_TYPE,
+      [ADOPTED_AS]: adoption.type,
+      native: source,
+    }),
+    // Fires synchronously within this same dispatch, unlike `onDragStart` which
+    // the library defers a frame. Anything later cannot distinguish "the drag is
+    // running" from "the drag never began".
+    onGenerateDragPreview: () => {
+      started = true;
+    },
+    onDrop: () => release(),
+  });
+
+  const release = () => {
+    if (released) {
+      return;
+    }
+    released = true;
+    cancel(neverStarted);
+    if (liveAdoption?.release === release) {
+      liveAdoption = null;
+    }
+    // A real source may have claimed this element since. The library's cleanup
+    // deletes by element, so running it would tear down their registration.
+    if (!target.hasAttribute("data-drag-source")) {
+      cleanup();
+    }
+  };
+
+  // A drag can be cancelled before it starts, and a cancelled `dragstart` is
+  // followed by no events at all — so nothing would ever release this. Checked
+  // on a task rather than a microtask: microtasks run between listener
+  // invocations, which is before the library has had its turn.
+  const neverStarted = next(() => {
+    if (!started) {
+      release();
+    }
+  });
+
+  liveAdoption = { release };
+}
+
+/** Test-only: drop any adoption and unbind the listener between tests. */
+export function resetDragAdoptionForTesting() {
+  liveAdoption?.release();
+  liveAdoption = null;
+  adoptionCandidates.clear();
+  stopListeningForAdoption?.();
+  stopListeningForAdoption = null;
+}
+
+function watchForAdoptableDrags(getArgsRef: () => DragAndDropTargetArgs) {
+  adoptionCandidates.add(getArgsRef);
+  if (!stopListeningForAdoption) {
+    window.addEventListener("dragstart", adoptNativeDrag, { capture: true });
+    stopListeningForAdoption = () =>
+      window.removeEventListener("dragstart", adoptNativeDrag, {
+        capture: true,
+      });
+  }
+
+  return () => {
+    adoptionCandidates.delete(getArgsRef);
+    // Only the listener goes; an adoption already in flight belongs to its drag
+    // and is released by that drag's end. Releasing it here would delete the
+    // registration the library still needs to dispatch through.
+    if (adoptionCandidates.size === 0) {
+      stopListeningForAdoption?.();
+      stopListeningForAdoption = null;
+    }
+  };
+}
+
 function sourceFromPDND(
   pdndSource: ElementDragPayload,
   element: Element
 ): DropTargetSource {
+  const data = pdndSource.data ?? {};
+  const adopted = data.type === ADOPTED_DRAG_TYPE;
+  // The reserved keys are how a drag is routed, not payload, so they are lifted
+  // out rather than left for a consumer iterating `data` to trip over.
+  const { [ADOPTED_AS]: adoptedAs, native, ...rest } = data;
+  delete rest.type;
+
   return {
     // The underlying library types its payload values as `unknown`, because
-    // anything registering a draggable with it can put anything there. Only
-    // `dDragAndDropSource` does, since the library is imported nowhere outside
-    // these files, and it always stamps a string.
-    type: (pdndSource.data?.type ?? null) as string | null,
-    data: pdndSource.data ?? {},
+    // anything registering a draggable with it can put anything there. Two
+    // writers exist: `dDragAndDropSource`, which always stamps a string, and the
+    // adoption above, which stamps its sentinel.
+    type: (adopted ? adoptedAs : (data.type ?? null)) as string | null,
+    data: adopted ? rest : data,
     element: pdndSource.element ?? element ?? null,
+    ...(adopted ? { native: native as ExternalDragPayload } : {}),
   };
 }
 
@@ -235,9 +518,22 @@ interface DDragAndDropTargetSignature {
     Named: {
       /**
        * The dragged source's `type` must be in this list for the target to
-       * engage. Omit to accept any source.
+       * engage. Omit to accept any source — unless `adopts` is set, in which
+       * case omitting it accepts no source at all, only adopted drags.
        */
       accepts?: string | string[];
+
+      /**
+       * Also accept drags the browser started from page content that no
+       * `dDragAndDropSource` registered — a link or an image it makes draggable
+       * by itself.
+       *
+       * Independent of `accepts`, which filters a discriminator such a drag has
+       * no way of carrying: a target without `adopts` refuses every one of them
+       * whatever `accepts` says. Everything else behaves as for a sourced drag,
+       * and the payload arrives on `source.native`.
+       */
+      adopts?: NativeDragAdoption | NativeDragAdoption[];
 
       /**
        * `false` to refuse a drop whose dragged element is this element. Where
@@ -354,6 +650,7 @@ export function registerDragAndDropTarget(
   element: Element,
   getArgsRef: () => DragAndDropTargetArgs
 ) {
+  const stopWatchingForAdoption = watchForAdoptableDrags(getArgsRef);
   const indicator = createPositionIndicator(element);
   // Whether this wrapper has forwarded an enter the consumer is still owed a
   // leave for. The underlying library sends both to every target in the
@@ -362,8 +659,61 @@ export function registerDragAndDropTarget(
   const pairing = createEnterLeavePairing();
 
   const acceptsType = (type: unknown) => {
-    const list = toAcceptList(getArgsRef().accepts);
-    return list.length === 0 || list.includes(type as string);
+    const args = getArgsRef();
+    const list = toAcceptList(args.accepts);
+    if (list.length === 0) {
+      // An omitted filter usually means "any source". Not for a target that
+      // opted into adoption: it named the drags it wants through `adopts`, and
+      // reading the omission as "everything" would hand it every element drag
+      // on the page — whose payload has none of the reader methods such a
+      // consumer is written against.
+      return !args.adopts;
+    }
+    return list.includes(type as string);
+  };
+
+  /**
+   * Whether this target will take the drag, by whichever branch applies.
+   *
+   * Shared between the synchronous gate and the drop, because the library
+   * decides the target list on the last `dragover` and reuses it when the
+   * pointer is released — so a target that stopped qualifying in between would
+   * otherwise still be handed the drop. Consumers put authorization here, which
+   * makes re-asking the difference between refusing and acting on stale
+   * permission.
+   */
+  const passesGate = (source: ElementDragPayload, input: DragInput) => {
+    const args = getArgsRef();
+    const adopted = source.data?.type === ADOPTED_DRAG_TYPE;
+
+    if (
+      adopted
+        ? !toAcceptList(args.adopts).some(
+            (adoption) => adoption.type === source.data?.[ADOPTED_AS]
+          )
+        : !acceptsType(source.data?.type)
+    ) {
+      return false;
+    }
+
+    // Compared against the raw source element rather than the normalised
+    // payload, whose `element` falls back to this one and would therefore read
+    // as self whenever the source element is absent.
+    if (args.acceptsSelf === false && source.element === element) {
+      return false;
+    }
+
+    if (!args.canDrop) {
+      return true;
+    }
+
+    return (
+      args.canDrop({
+        source: sourceFromPDND(source, element),
+        input,
+        element,
+      }) !== false
+    );
   };
 
   const resolvePosition = (input: DragInput): DropPosition => {
@@ -400,28 +750,7 @@ export function registerDragAndDropTarget(
 
   const cleanup = dropTargetForElements({
     element,
-    canDrop: ({ source, input }) => {
-      if (!acceptsType(source.data?.type)) {
-        return false;
-      }
-      const args = getArgsRef();
-      // Compared against the raw source element rather than the normalised
-      // payload, whose `element` falls back to this one and would therefore read
-      // as self whenever the source element is absent.
-      if (args.acceptsSelf === false && source.element === element) {
-        return false;
-      }
-      if (!args.canDrop) {
-        return true;
-      }
-      return (
-        args.canDrop({
-          source: sourceFromPDND(source, element),
-          input,
-          element,
-        }) !== false
-      );
-    },
+    canDrop: ({ source, input }) => passesGate(source, input),
     // The consumer's metadata is deliberately typed as a plain object, which the
     // underlying library's index-signature shape does not accept as-is.
     getData: () =>
@@ -503,6 +832,13 @@ export function registerDragAndDropTarget(
       if (!isDeepest(location)) {
         return;
       }
+      // Asked again rather than trusted: the target list was settled on the last
+      // `dragover`, so anything that changed since — a panel switched, a
+      // permission withdrawn, the arg turned off — would otherwise land a drop
+      // this target would now refuse.
+      if (!passesGate(source, location.current.input)) {
+        return;
+      }
       const pos = resolvePosition(location.current.input);
       getArgsRef().onDrop?.({
         source: sourceFromPDND(source, element),
@@ -515,6 +851,7 @@ export function registerDragAndDropTarget(
 
   return () => {
     cleanup();
+    stopWatchingForAdoption();
     indicator.clear();
     element.removeAttribute("data-drop-target");
   };

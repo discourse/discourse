@@ -26,6 +26,10 @@ declare const acceptedTypes: string[];
 declare function onGesture(event: PointerEvent): void;
 declare function vetoGesture(event: PointerEvent): boolean;
 declare function onDropTargetEvent(event: DropTargetEvent): void;
+declare function alwaysAdopt(feedback: {
+  element: HTMLElement;
+  source: unknown;
+}): boolean;
 
 declare const columnHandles: {
   payload: number;
@@ -97,6 +101,15 @@ const Positives = <template>
       indicator=false
       onDragEnter=noop
       onDrop=noop
+    }}
+  ></div>
+
+  {{! An element target can also adopt a drag the browser started from page
+      content nothing registered, gated by a predicate rather than a kind }}
+  <div
+    {{dDragAndDropTarget
+      adopts=(hash type="web-link" match=alwaysAdopt)
+      onDrop=onDropTargetEvent
     }}
   ></div>
 

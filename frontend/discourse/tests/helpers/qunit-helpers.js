@@ -114,6 +114,7 @@ import {
 } from "discourse/tests/helpers/site-settings";
 import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
+import { resetDragAdoptionForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
@@ -291,6 +292,10 @@ export function testCleanup(container, app) {
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
   resetDragAndDropForTesting();
+  // After the drag reset above, so a drag it ends releases its own adoption and
+  // this only has to force-release one that never started — which no synthetic
+  // end event can reach, because the library bound no drag-phase listeners.
+  resetDragAdoptionForTesting();
   resetPointerDragForTesting();
   clearBacklog();
 }

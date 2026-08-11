@@ -11,6 +11,7 @@ import {
   externalDragOver,
   simulateDrag,
   simulateExternalDrag,
+  simulateUnsourcedDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
@@ -2066,6 +2067,124 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         drops,
         [null],
         "and reports no position, because it was never asked to resolve one"
+      );
+    });
+  });
+
+  module("adopting an unsourced drag", function () {
+    function linkTransfer() {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.setData("text/uri-list", "https://example.com/adopted");
+      dataTransfer.setData("text/plain", "https://example.com/adopted");
+      return dataTransfer;
+    }
+
+    const WEB_LINK = {
+      type: "web-link",
+      match: ({ element }) => Boolean(element.closest("a[href]")),
+    };
+
+    test("adopting an unsourced drag delivers a link the browser dragged from the page", async function (assert) {
+      let seen = null;
+      const onDrop = ({ source }) => {
+        seen = { type: source.type, urls: source.native.getURLs() };
+      };
+
+      await render(
+        <template>
+          <a id="anchor" href="https://example.com/adopted">a link</a>
+          <div
+            id="zone"
+            {{dDragAndDropTarget adopts=WEB_LINK onDrop=onDrop}}
+          >zone</div>
+        </template>
+      );
+
+      await simulateUnsourcedDrag("#anchor", "#zone", {
+        dataTransfer: linkTransfer(),
+      });
+
+      assert.deepEqual(
+        seen,
+        { type: "web-link", urls: ["https://example.com/adopted"] },
+        "a drag nothing registered reaches the target as an ordinary drop, named by the adoption and carrying the payload the browser supplied"
+      );
+    });
+
+    test("adopting an unsourced drag is refused by a target that did not ask", async function (assert) {
+      const drops = [];
+      const onDrop = () => drops.push("dropped");
+
+      await render(
+        <template>
+          <a id="anchor" href="https://example.com/adopted">a link</a>
+          <div id="zone" {{dDragAndDropTarget onDrop=onDrop}}>zone</div>
+        </template>
+      );
+
+      await simulateUnsourcedDrag("#anchor", "#zone", {
+        dataTransfer: linkTransfer(),
+      });
+
+      assert.deepEqual(
+        drops,
+        [],
+        "an omitted accepts filter does not quietly admit a drag no source registered"
+      );
+    });
+
+    test("adopting an unsourced drag leaves a registered source alone", async function (assert) {
+      const drops = [];
+      const onDrop = ({ source }) => drops.push(source.type);
+
+      await render(
+        <template>
+          <div id="row" {{dDragAndDropSource type="row" data=(hash id=1)}}>
+            <a id="inner" href="https://example.com/adopted">a link</a>
+          </div>
+          <div
+            id="zone"
+            {{dDragAndDropTarget accepts="row" adopts=WEB_LINK onDrop=onDrop}}
+          >zone</div>
+        </template>
+      );
+
+      await simulateDrag("#row", "#zone", { dataTransfer: linkTransfer() });
+
+      assert.deepEqual(
+        drops,
+        ["row"],
+        "a drag starting inside a registered source stays that source's drag rather than being adopted out from under it"
+      );
+    });
+
+    test("adopting an unsourced drag refuses a dragged text selection", async function (assert) {
+      const drops = [];
+      const onDrop = () => drops.push("dropped");
+
+      await render(
+        <template>
+          {{! Dragging a selected URL out of an editable region produces a dragstart
+              whose payload looks exactly like a dragged link. }}
+          {{! eslint-disable ember/template-no-nested-interactive }}
+          <div id="editable" contenteditable="true">
+            <a id="inner" href="https://example.com/adopted">a link</a>
+          </div>
+          <div
+            id="zone"
+            {{dDragAndDropTarget adopts=WEB_LINK onDrop=onDrop}}
+          >zone</div>
+        </template>
+      );
+
+      await simulateUnsourcedDrag("#inner", "#zone", {
+        dataTransfer: linkTransfer(),
+      });
+
+      assert.deepEqual(
+        drops,
+        [],
+        "editing text is not a drag to be repurposed, however link-shaped its payload"
       );
     });
   });

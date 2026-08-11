@@ -137,6 +137,57 @@ export async function simulateDrag(
   await dragEvent(sourceSelector, "dragend", { dataTransfer, ...source });
 }
 
+/**
+ * Drives a drag the browser started from page content nothing registered, the
+ * way an anchor in a topic list or a post produces one.
+ *
+ * The event sequence is a normal element drag's — the difference is entirely in
+ * what the source is, so the assertions guard that rather than the events: the
+ * source must NOT be inside a registered drag source, and the target must be a
+ * registered ELEMENT target. Without the first, a later change that "fixes"
+ * adoption by registering a source would leave this test passing while testing
+ * something else; without the second, the test could pass against an external
+ * registration on the same element.
+ *
+ * @param sourceSelector - CSS selector for the unregistered element to drag.
+ * @param targetSelector - CSS selector for the target element.
+ */
+export async function simulateUnsourcedDrag(
+  sourceSelector: string,
+  targetSelector: string,
+  {
+    dataTransfer,
+    sourceCoordinates,
+    targetCoordinates,
+  }: {
+    dataTransfer: DataTransfer;
+    sourceCoordinates?: Partial<ClientPoint>;
+    targetCoordinates?: Partial<ClientPoint>;
+  }
+) {
+  const sourceElement = document.querySelector(sourceSelector);
+  if (sourceElement?.closest("[data-drag-source]")) {
+    throw new Error(
+      `${sourceSelector} is inside a registered drag source, so this would exercise the sourced path instead of adoption`
+    );
+  }
+
+  const targetElement = document.querySelector(targetSelector);
+  if (!targetElement?.hasAttribute("data-drop-target")) {
+    throw new Error(
+      `${targetSelector} is not a registered element drop target, so this drag would do nothing`
+    );
+  }
+
+  const source = { ...centerOf(sourceSelector), ...sourceCoordinates };
+  const target = { ...centerOf(targetSelector), ...targetCoordinates };
+  await dragEvent(sourceSelector, "dragstart", { dataTransfer, ...source });
+  await dragEvent(targetSelector, "dragenter", { dataTransfer, ...target });
+  await dragEvent(targetSelector, "dragover", { dataTransfer, ...target });
+  await dragEvent(targetSelector, "drop", { dataTransfer, ...target });
+  await dragEvent(sourceSelector, "dragend", { dataTransfer, ...source });
+}
+
 /** How an external drag is aimed at its target. */
 interface ExternalDragOptions {
   /**

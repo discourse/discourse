@@ -26,6 +26,7 @@ input. `dOnResize` appears below only as a disambiguation note.
 | React to a drag without being a drop target                                         | `dDragAndDropMonitor`                                     |
 | Scroll a container while a drag is in flight                                        | `dDragAndDropAutoScroll`                                  |
 | Receive files/HTML/text dragged in from outside the browser, and handle them myself | `dDragAndDropExternalTarget`                              |
+| Receive a link or image the browser dragged from **this page**, that nothing registered | `dDragAndDropTarget` with `adopts`                        |
 | Receive dropped files **for upload**                                                | the Uppy `DropTarget` path, **not** the modifier above    |
 | Read whether, and what, is currently being dragged — reactively                     | `@service dragAndDrop`                                    |
 | Press, drag, and change a value continuously                                        | `dPointerDrag`                                            |
@@ -140,7 +141,10 @@ So nobody tries to force them in:
 - **`chat/resizable-node`** — 2D with repositioning, plugin-local, staying where
   it is.
 - **ProseMirror image drag**, **workflow expression dragging**, and every Uppy
-  file-drop path — drag implementations this consolidation does not touch.
+  file-drop path — drag implementations this consolidation does not touch. Note
+  that `adopts` deliberately steps around all three: it refuses an element that
+  is already draggable, one inside a registered source, and any drag that began
+  as a text selection.
 - **`dOnResize`**, **`dObserveIntersection`**, **`dScrollIntoView`** — observers,
   not gestures. See the first boundary above.
 
