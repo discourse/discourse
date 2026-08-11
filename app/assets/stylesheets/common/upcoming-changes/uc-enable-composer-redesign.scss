@@ -287,6 +287,11 @@
 
     .composer-fields {
       grid-area: fields;
+
+      @include viewport.until(sm) {
+        max-width: 100vw;
+        box-sizing: border-box;
+      }
     }
 
     .d-editor-textarea-column {
