@@ -1131,6 +1131,80 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         expect(pm.reload.title).to eq(expected_response)
       end
     end
+
+    it "falls back to an excerpt of the first post when the model returns nothing" do
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        playground.title_playground(third_post, user)
+      end
+
+      expect(pm.reload.title).to eq(first_post.raw)
+    end
+
+    it "truncates a title the model returns too long to be valid" do
+      long_title = "word " * 100
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([long_title]) do
+        playground.title_playground(third_post, user)
+      end
+
+      expect(pm.reload.title.length).to be <= SiteSetting.max_topic_title_length
+      expect(pm.reload.title.downcase).to start_with("word word")
+    end
+
+    it "does not announce a title that was not saved" do
+      PostRevisor.any_instance.stubs(:revise!).returns(false)
+
+      messages =
+        MessageBus.track_publish("/discourse-ai/ai-bot/topic-titles") do
+          DiscourseAi::Completions::Llm.with_prepared_responses([expected_response]) do
+            playground.title_playground(third_post, user)
+          end
+        end
+
+      expect(messages).to be_empty
+      expect(pm.reload.title).to eq("This is my special PM")
+    end
+
+    it "logs and swallows errors instead of propagating them to the caller" do
+      PostRevisor.any_instance.stubs(:revise!).raises(StandardError.new("boom"))
+      Discourse.expects(:warn_exception).once
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([expected_response]) do
+        expect { playground.title_playground(third_post, user) }.to_not raise_error
+      end
+    end
+
+    context "when the bot user's daily edit allowance is exhausted" do
+      fab!(:agent) { Fabricate(:ai_agent, enabled: false) }
+      fab!(:agent_user) { agent.create_user! }
+
+      let(:agent_playground) do
+        described_class.new(
+          DiscourseAi::Agents::Bot.as(agent_user, agent: agent.class_instance.new, model: claude_2),
+        )
+      end
+
+      before do
+        RateLimiter.enable
+        SiteSetting.editing_grace_period = 0
+        SiteSetting.max_edits_per_day = 1
+        SiteSetting.tl4_additional_edits_per_day_multiplier = 1
+      end
+
+      it "still updates the title" do
+        expect(agent_user.trust_level).to eq(TrustLevel[4])
+        expect(agent_user.staff?).to eq(false)
+
+        scratch_post = Fabricate(:post, user: agent_user)
+        PostRevisor.new(scratch_post).revise!(agent_user, raw: "using up the daily allowance")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([expected_response]) do
+          agent_playground.title_playground(third_post, user)
+        end
+
+        expect(pm.reload.title).to eq(expected_response)
+      end
+    end
   end
 
   describe "#reply_to" do

@@ -543,11 +543,7 @@ module DiscourseAi
           agent_class = DiscourseAi::Agents::Agent.find_by(id: @agent.id, user: @current_user)
           if agent_class
             bot = DiscourseAi::Agents::Bot.as(@reply_user, agent: agent_class.new, model: llm_model)
-            begin
-              DiscourseAi::AiBot::Playground.new(bot).title_playground(reply_post, @user)
-            rescue StandardError => e
-              Discourse.warn_exception(e, message: "Discourse AI: Unable to generate stream title")
-            end
+            DiscourseAi::AiBot::Playground.new(bot).title_playground(reply_post, @user)
           end
         end
       end
