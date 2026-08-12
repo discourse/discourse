@@ -651,8 +651,9 @@ module(
 
       await render(
         <template>
-          <input class="controller" role="combobox" />
+          <input class="controller" role="combobox" aria-controls="rf-lb" />
           <div
+            id="rf-lb"
             role="listbox"
             {{dRovingFocus
               focusStrategy="active-descendant"
