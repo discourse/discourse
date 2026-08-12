@@ -1249,15 +1249,15 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def event_bbcode(event)
-    return unless defined?(DiscoursePostEvent)
+    return unless defined?(DiscourseEvents::Events)
 
     starts_at = to_datetime(event["starts_at"])
     ends_at = to_datetime(event["ends_at"])
-    status = DiscoursePostEvent::Event.statuses[event["status"]].to_s
+    status = DiscourseEvents::Events::Event.statuses[event["status"]].to_s
     name =
       if (name = event["name"].presence)
-        name.ljust(DiscoursePostEvent::Event::MIN_NAME_LENGTH, ".").truncate(
-          DiscoursePostEvent::Event::MAX_NAME_LENGTH,
+        name.ljust(DiscourseEvents::Events::Event::MIN_NAME_LENGTH, ".").truncate(
+          DiscourseEvents::Events::Event::MAX_NAME_LENGTH,
         )
       end
     url = event["url"]
@@ -2673,7 +2673,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_post_events
     puts "", "Importing events..."
 
-    unless defined?(DiscoursePostEvent)
+    unless defined?(DiscourseEvents::Events)
       puts "  Skipping import of events because the plugin is not installed."
       return
     end
@@ -2686,10 +2686,10 @@ class BulkImport::Generic < BulkImport::Base
 
     default_custom_fields = "{}"
     timezone = "UTC"
-    public_group_invitees = "{#{DiscoursePostEvent::Event::PUBLIC_GROUP}}"
+    public_group_invitees = "{#{DiscourseEvents::Events::Event::PUBLIC_GROUP}}"
     standalone_invitees = "{}"
 
-    existing_events = DiscoursePostEvent::Event.pluck(:id).to_set
+    existing_events = DiscourseEvents::Events::Event.pluck(:id).to_set
 
     create_post_events(post_events) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
@@ -2706,7 +2706,7 @@ class BulkImport::Generic < BulkImport::Base
         timezone: timezone,
         raw_invitees:
           (
-            if row["status"] == DiscoursePostEvent::Event.statuses[:public]
+            if row["status"] == DiscourseEvents::Events::Event.statuses[:public]
               public_group_invitees
             else
               standalone_invitees
@@ -2718,7 +2718,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing event dates..."
 
     post_events.reset
-    existing_events = DiscoursePostEvent::EventDate.pluck(:event_id).to_set
+    existing_events = DiscourseEvents::Events::EventDate.pluck(:event_id).to_set
 
     create_post_event_dates(post_events) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
@@ -2734,7 +2734,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing topic event custom fields..."
 
     post_events.reset
-    field_name = DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT
+    field_name = DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
     existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
 
     create_topic_custom_fields(post_events) do |row|
@@ -2748,7 +2748,7 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     post_events.reset
-    field_name = DiscoursePostEvent::TOPIC_POST_EVENT_ENDS_AT
+    field_name = DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT
     existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
 
     create_topic_custom_fields(post_events) do |row|

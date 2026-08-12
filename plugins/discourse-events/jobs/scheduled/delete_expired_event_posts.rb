@@ -14,11 +14,11 @@ module Jobs
         calendar_topic_ids =
           Post
             .joins(:_custom_fields)
-            .where(post_custom_fields: { name: ::DiscourseCalendar::CALENDAR_CUSTOM_FIELD })
+            .where(post_custom_fields: { name: ::DiscourseEvents::CALENDAR_CUSTOM_FIELD })
             .pluck(:topic_id)
 
         post_events =
-          CalendarEvent
+          DiscourseEvents::Calendar::Event
             .joins(:post, :topic)
             .where(topic_id: calendar_topic_ids)
             .where("TRIM(COALESCE(calendar_events.recurrence, '')) = ''")
