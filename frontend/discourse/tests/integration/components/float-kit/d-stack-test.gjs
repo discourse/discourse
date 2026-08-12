@@ -715,7 +715,7 @@ module("Integration | Component | FloatKit | d-stack", function (hooks) {
             ></div>
             <div
               class="horizontal-scroll-port"
-              data-d-scroll="scroll-container axis-x overflow-x"
+              data-d-scroll="scroll-container axis-x overflow-x native-scrollbar"
               style="overflow-x: auto;"
             ></div>
           </stack.Outlet>

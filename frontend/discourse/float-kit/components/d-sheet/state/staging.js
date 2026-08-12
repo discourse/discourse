@@ -2,11 +2,9 @@ import { EVENTS } from "../state-machine-events";
 
 export default class StagingState {
   #machine;
-  #openness;
 
-  constructor(machine, opennessNamespace) {
+  constructor(machine) {
     this.#machine = machine;
-    this.#openness = opennessNamespace;
   }
 
   get isNone() {
@@ -46,25 +44,15 @@ export default class StagingState {
   }
 
   openPrepared() {
-    this.#machine.send(EVENTS.OPEN_PREPARED, {
-      opennessState: this.#openness.current,
-    });
+    this.#machine.send(EVENTS.OPEN_PREPARED);
   }
 
   actuallyClose(skipClosing = false) {
-    this.#machine.send(EVENTS.ACTUALLY_CLOSE, {
-      opennessState: this.#openness.current,
-      skipClosing,
-    });
+    this.#machine.send(EVENTS.ACTUALLY_CLOSE, { skipClosing });
   }
 
   actuallyStep(detent, behavior) {
-    this.#machine.send(
-      { type: EVENTS.ACTUALLY_STEP, detent, behavior },
-      {
-        opennessState: this.#openness.current,
-      }
-    );
+    this.#machine.send({ type: EVENTS.ACTUALLY_STEP, detent, behavior });
   }
 
   advance() {
@@ -72,15 +60,11 @@ export default class StagingState {
   }
 
   goDown() {
-    this.#machine.send(EVENTS.GO_DOWN, {
-      opennessState: this.#openness.current,
-    });
+    this.#machine.send(EVENTS.GO_DOWN);
   }
 
   goUp() {
-    this.#machine.send(EVENTS.GO_UP, {
-      opennessState: this.#openness.current,
-    });
+    this.#machine.send(EVENTS.GO_UP);
   }
 
   get current() {

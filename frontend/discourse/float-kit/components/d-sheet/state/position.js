@@ -44,19 +44,23 @@ export default class PositionState {
   }
 
   goOut() {
-    this.#machine.send(EVENTS.GO_OUT);
+    this.#machine.sendUnscoped(EVENTS.GO_OUT);
   }
 
   advance() {
-    this.#machine.send(EVENTS.NEXT);
+    this.#machine.sendUnscoped(EVENTS.NEXT);
+  }
+
+  advanceTransient() {
+    this.#machine.sendUnscoped("");
   }
 
   goToFrontIdle() {
-    this.#machine.send(EVENTS.GOTO_FRONT);
+    this.#machine.sendUnscoped(EVENTS.GOTO_FRONT);
   }
 
   goToCoveredIdle() {
-    this.#machine.send(EVENTS.GOTO_IDLE);
+    this.#machine.sendUnscoped(EVENTS.GOTO_IDLE);
   }
 
   readyToGoFront(skipOpening) {
@@ -64,7 +68,7 @@ export default class PositionState {
   }
 
   readyToGoOut() {
-    this.#machine.send(EVENTS.READY_TO_GO_OUT);
+    this.#machine.sendUnscoped(EVENTS.READY_TO_GO_OUT);
   }
 
   get current() {

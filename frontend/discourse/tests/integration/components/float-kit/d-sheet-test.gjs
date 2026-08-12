@@ -885,6 +885,257 @@ module("Integration | Component | FloatKit | d-sheet", function (hooks) {
       );
   });
 
+  test("reopens after a scroll dismissal during the pending window", async function (assert) {
+    const OriginalIntersectionObserver = window.IntersectionObserver;
+    const OriginalRequestAnimationFrame = window.requestAnimationFrame;
+    const OriginalCancelAnimationFrame = window.cancelAnimationFrame;
+    const intersectionObservers = [];
+    let sheetController;
+    const captureSheet = (_element, [sheet]) => {
+      sheetController = sheet;
+    };
+
+    window.IntersectionObserver = class {
+      constructor(callback, options) {
+        this.callback = callback;
+        this.options = options;
+        intersectionObservers.push(this);
+      }
+
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    };
+
+    try {
+      await render(
+        <template>
+          <DSheet.Root as |sheet|>
+            <div hidden {{didInsert captureSheet sheet}}></div>
+            <DSheet.Trigger @sheet={{sheet}} class="open-after-scroll-dismiss">
+              Open
+            </DSheet.Trigger>
+            <DSheet.Portal @sheet={{sheet}}>
+              <DSheet.View @sheet={{sheet}}>
+                <DSheet.Content @sheet={{sheet}} as |ContentTag|>
+                  <ContentTag>Content</ContentTag>
+                </DSheet.Content>
+              </DSheet.View>
+            </DSheet.Portal>
+          </DSheet.Root>
+        </template>
+      );
+
+      await click(".open-after-scroll-dismiss");
+      await waitUntil(
+        () =>
+          sheetController.state.openness.isOpen &&
+          sheetController.state.staging.isNone,
+        {
+          timeout: 3000,
+          timeoutMessage: "the initial sheet finishes opening",
+        }
+      );
+      await settled();
+
+      const initialController = sheetController;
+      const concealedView = find("[data-d-sheet~='view']");
+      const concealedContent = find("[data-d-sheet~='content']");
+      const concealedScrollContainer = find(
+        "[data-d-sheet~='scroll-container']"
+      );
+      const intersectionObserver = intersectionObservers.find(
+        ({ options }) => options?.root === concealedView
+      );
+
+      assert.notStrictEqual(
+        intersectionObserver,
+        undefined,
+        "the open sheet observes content visibility for scroll dismissal"
+      );
+
+      let swipeOutFrame;
+      window.requestAnimationFrame = (callback) => {
+        swipeOutFrame = callback;
+        return -1;
+      };
+      window.cancelAnimationFrame = () => {
+        swipeOutFrame = undefined;
+      };
+
+      try {
+        intersectionObserver.callback([{ isIntersecting: false }]);
+      } finally {
+        window.requestAnimationFrame = OriginalRequestAnimationFrame;
+        window.cancelAnimationFrame = OriginalCancelAnimationFrame;
+      }
+
+      assert.strictEqual(
+        concealedContent.style.getPropertyValue("pointer-events"),
+        "none",
+        "the outgoing content ignores pointer events"
+      );
+      assert.strictEqual(
+        concealedScrollContainer.style.getPropertyValue("clip-path"),
+        "inset(0px)",
+        "the outgoing scroll container is clipped"
+      );
+      assert.strictEqual(
+        concealedScrollContainer.style.getPropertyValue("height"),
+        "1px",
+        "the outgoing scroll container is collapsed vertically"
+      );
+      assert.strictEqual(
+        concealedScrollContainer.style.getPropertyValue("width"),
+        "1px",
+        "the outgoing scroll container is collapsed horizontally"
+      );
+      assert.strictEqual(
+        concealedView.style.getPropertyValue("left"),
+        "-100px",
+        "the outgoing view is moved beyond the left edge"
+      );
+      assert.strictEqual(
+        concealedView.style.getPropertyValue("opacity"),
+        "0",
+        "the outgoing view is transparent"
+      );
+      assert.strictEqual(
+        concealedView.style.getPropertyValue("pointer-events"),
+        "none",
+        "the outgoing view ignores pointer events"
+      );
+      assert.strictEqual(
+        concealedView.style.getPropertyValue("position"),
+        "fixed",
+        "the outgoing view is removed from its scrolling layout"
+      );
+      assert.strictEqual(
+        concealedView.style.getPropertyValue("top"),
+        "-100px",
+        "the outgoing view is moved beyond the top edge"
+      );
+      assert.strictEqual(
+        typeof swipeOutFrame,
+        "function",
+        "the observer queues its swipe-out frame"
+      );
+
+      swipeOutFrame();
+
+      await waitUntil(() => sheetController.state.openness.isClosedPending, {
+        timeout: 3000,
+        timeoutMessage: "the observer-triggered swipe reaches closed pending",
+      });
+
+      assert.strictEqual(
+        find("[data-d-sheet~='view']"),
+        concealedView,
+        "the pending window keeps the concealed View mounted"
+      );
+      assert.true(
+        concealedView.isConnected,
+        "the concealed View remains connected during the pending window"
+      );
+      assert.strictEqual(
+        concealedScrollContainer.style.getPropertyValue("scroll-snap-type"),
+        "none",
+        "the observer frame disables scroll snapping"
+      );
+
+      await click(".open-after-scroll-dismiss");
+      await waitUntil(
+        () =>
+          sheetController.state.openness.isOpen &&
+          sheetController.state.staging.isNone,
+        {
+          timeout: 3000,
+          timeoutMessage: "the pending sheet finishes reopening",
+        }
+      );
+
+      const reopenedView = find("[data-d-sheet~='view']");
+      const reopenedContent = find("[data-d-sheet~='content']");
+      const reopenedScrollContainer = find(
+        "[data-d-sheet~='scroll-container']"
+      );
+
+      assert.strictEqual(
+        sheetController,
+        initialController,
+        "the pending lifecycle reuses its controller"
+      );
+      assert.notStrictEqual(
+        reopenedView,
+        concealedView,
+        "the pending flush remounts the concealed View"
+      );
+      assert.false(
+        concealedView.isConnected,
+        "the pending flush disconnects the concealed View"
+      );
+      assert.true(reopenedView.isConnected, "the reopened View is connected");
+      assert.strictEqual(
+        reopenedContent.style.getPropertyValue("pointer-events"),
+        "",
+        "the reopened content restores pointer events"
+      );
+      assert.strictEqual(
+        reopenedScrollContainer.style.getPropertyValue("clip-path"),
+        "",
+        "the reopened scroll container is not clipped"
+      );
+      assert.strictEqual(
+        reopenedScrollContainer.style.getPropertyValue("height"),
+        "",
+        "the reopened scroll container has no forced height"
+      );
+      assert.strictEqual(
+        reopenedScrollContainer.style.getPropertyValue("width"),
+        "",
+        "the reopened scroll container has no forced width"
+      );
+      assert.strictEqual(
+        reopenedScrollContainer.style.getPropertyValue("scroll-snap-type"),
+        "",
+        "the reopened scroll container restores scroll snapping"
+      );
+      assert.strictEqual(
+        reopenedView.style.getPropertyValue("left"),
+        "",
+        "the reopened View has no forced horizontal offset"
+      );
+      assert.strictEqual(
+        reopenedView.style.getPropertyValue("opacity"),
+        "",
+        "the reopened View has no forced opacity"
+      );
+      assert.strictEqual(
+        reopenedView.style.getPropertyValue("pointer-events"),
+        "",
+        "the reopened View restores pointer events"
+      );
+      assert.strictEqual(
+        reopenedView.style.getPropertyValue("position"),
+        "",
+        "the reopened View has no forced position"
+      );
+      assert.strictEqual(
+        reopenedView.style.getPropertyValue("top"),
+        "",
+        "the reopened View has no forced vertical offset"
+      );
+      assert.true(
+        sheetController.state.openness.isOpen,
+        "the remounted sheet completes its open lifecycle"
+      );
+    } finally {
+      window.IntersectionObserver = OriginalIntersectionObserver;
+      window.requestAnimationFrame = OriginalRequestAnimationFrame;
+      window.cancelAnimationFrame = OriginalCancelAnimationFrame;
+    }
+  });
+
   test("detects body layers added after an inert sheet", async function (assert) {
     let externalLayer;
     let externalButton;

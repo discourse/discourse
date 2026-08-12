@@ -168,6 +168,49 @@ module(
       );
     });
 
+    test("element registrations survive rerenders", async function (assert) {
+      const calls = createLabelCalls();
+      const state = new (class {
+        @tracked registrationVersion = 0;
+      })();
+      const sheet = {
+        ...createLabelSheet("stable", calls),
+        registerTitle: (element) => {
+          void state.registrationVersion;
+          calls.registerTitle.push(element);
+        },
+      };
+
+      await render(
+        <template>
+          <DSheet.Title @sheet={{sheet}}>Title</DSheet.Title>
+        </template>
+      );
+
+      const title = find("h2");
+      state.registrationVersion++;
+      await settled();
+
+      assert.deepEqual(
+        calls.registerTitle,
+        [title],
+        "rerendering does not register the same element again"
+      );
+      assert.deepEqual(
+        calls.unregisterTitle,
+        [],
+        "rerendering does not unregister the connected element"
+      );
+
+      await clearRender();
+
+      assert.deepEqual(
+        calls.unregisterTitle,
+        [title],
+        "destroying the element unregisters it once"
+      );
+    });
+
     test("Header transfers its title registration when the sheet changes", async function (assert) {
       const firstCalls = createLabelCalls();
       const secondCalls = createLabelCalls();

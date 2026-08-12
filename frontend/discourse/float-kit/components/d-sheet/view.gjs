@@ -115,7 +115,12 @@ export default class View extends Component {
   }
 
   get shouldRender() {
-    return this.args.shouldRenderView ?? this.args.sheet?.isPresented ?? false;
+    return (
+      this.args.shouldRenderView ??
+      this.args.sheet?.shouldRenderView ??
+      this.args.sheet?.isPresented ??
+      false
+    );
   }
 
   <template>

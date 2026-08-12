@@ -1,7 +1,8 @@
+import { untrack } from "@glimmer/validator";
 import { modifier } from "ember-modifier";
 
 export default modifier((element, [register, unregister]) => {
-  register(element);
+  untrack(() => register(element));
 
-  return () => unregister(element);
+  return () => untrack(() => unregister(element));
 });

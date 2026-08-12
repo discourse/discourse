@@ -35,6 +35,13 @@ export default class OpennessState {
     return this.#machine.matches("closed.status:safe-to-unmount");
   }
 
+  get isClosedFlushing() {
+    return (
+      this.#machine.matches("closed.status:flushing-to-preparing-open") ||
+      this.#machine.matches("closed.status:flushing-to-preparing-opening")
+    );
+  }
+
   get isScrollOngoing() {
     return this.#machine.matches("open.scroll:ongoing");
   }
@@ -46,7 +53,7 @@ export default class OpennessState {
   get areScrollEndedAfterPaintEffectsRun() {
     return (
       this.isScrollEnded &&
-      this.#machine.matches("open.scrollEndedAfterPaintEffectsRun:true")
+      this.#machine.matches("open.scroll:ended.afterPaintEffectsRun:true")
     );
   }
 
@@ -60,34 +67,48 @@ export default class OpennessState {
 
   scrollStart() {
     if (!this.isScrollOngoing) {
-      this.#machine.send(EVENTS.SCROLL_START);
+      this.#machine.send({
+        machine: "openness:open.scroll",
+        type: EVENTS.SCROLL_START,
+      });
     }
   }
 
   scrollEnd() {
     if (this.isScrollOngoing) {
-      this.#machine.send(EVENTS.SCROLL_END);
+      this.#machine.send({
+        machine: "openness:open.scroll",
+        type: EVENTS.SCROLL_END,
+      });
     }
   }
 
   markScrollEndedAfterPaintEffectsRun() {
-    this.#machine.send(EVENTS.OCCURRED);
-  }
-
-  resetScrollEndedAfterPaintEffects() {
-    this.#machine.send(EVENTS.RESET);
+    this.#machine.send({
+      machine: "openness:open.scroll:ended.afterPaintEffectsRun",
+      type: EVENTS.OCCURRED,
+    });
   }
 
   swipeStart() {
-    this.#machine.send(EVENTS.SWIPE_START);
+    this.#machine.send({
+      machine: "openness:open.swipe",
+      type: EVENTS.SWIPE_START,
+    });
   }
 
   swipeEnd() {
-    this.#machine.send(EVENTS.SWIPE_END);
+    this.#machine.send({
+      machine: "openness:open.swipe",
+      type: EVENTS.SWIPE_END,
+    });
   }
 
   swipeReset() {
-    this.#machine.send(EVENTS.SWIPE_RESET);
+    this.#machine.send({
+      machine: "openness:open.swipe",
+      type: EVENTS.SWIPE_RESET,
+    });
   }
 
   completeAnimation() {
@@ -95,30 +116,36 @@ export default class OpennessState {
   }
 
   moveStart() {
-    this.#machine.send(EVENTS.MOVE_START);
+    this.#machine.send({
+      machine: "openness:open.move",
+      type: EVENTS.MOVE_START,
+    });
   }
 
   moveEnd() {
-    this.#machine.send(EVENTS.MOVE_END);
+    this.#machine.send({
+      machine: "openness:open.move",
+      type: EVENTS.MOVE_END,
+    });
   }
 
   beginStep(detent) {
-    this.#machine.send({ type: EVENTS.STEP, detent });
+    this.#machine.sendUnscoped({ type: EVENTS.STEP, detent });
   }
 
   readyToOpen(skipOpening) {
     this.#machine.send({ type: EVENTS.READY_TO_OPEN, skipOpening });
   }
 
-  flushComplete() {
+  advanceClosedStatus() {
     this.#machine.send({
       machine: "openness:closed.status",
-      type: EVENTS.FLUSH_COMPLETE,
+      type: "",
     });
   }
 
   send(messageOrType, context) {
-    this.#machine.send(messageOrType, context);
+    this.#machine.sendUnscoped(messageOrType, context);
   }
 
   get current() {

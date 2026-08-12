@@ -716,6 +716,46 @@ module("Unit | FloatKit | d-sheet controller", function (hooks) {
       controller.cleanup();
     });
 
+    test("native scroll progress travels before swipe-out", function (assert) {
+      const controller = new Controller();
+      const travelProgress = [];
+
+      controller.configure({
+        onTravel: ({ progress }) => travelProgress.push(progress),
+      });
+      controller.state.openness.readyToOpen(true);
+      controller.scrollContainer = { scrollTop: 110 };
+      controller.dimensions = {
+        content: { travelAxis: { unitless: 100 } },
+        scroll: { travelAxis: { unitless: 200 } },
+        snapOutAccelerator: { travelAxis: { unitless: 10 } },
+        exactProgressValueAtDetents: [0, 1],
+        progressValueAtDetents: [
+          { before: -0.01, exact: 0, after: 0.01 },
+          { before: 0.99, exact: 1, after: 1.01 },
+        ],
+      };
+      sinon.stub(controller.timeoutManager, "schedule");
+
+      controller.handleScrollStateChange();
+      controller.processScrollFrame();
+      controller.scrollContainer.scrollTop = 60;
+      controller.handleScrollStateChange();
+      controller.processScrollFrame();
+
+      assert.deepEqual(
+        travelProgress,
+        [1, 0.5],
+        "native scroll positions publish their travel progress"
+      );
+      assert.true(
+        controller.state.openness.isOpen,
+        "pre-threshold scrolling leaves swipe-out to the intersection observer"
+      );
+
+      controller.cleanup();
+    });
+
     test("scroll end resolves from the last processed progress", function (assert) {
       const controller = new Controller();
       let finishScroll;

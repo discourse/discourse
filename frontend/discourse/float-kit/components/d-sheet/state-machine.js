@@ -1,51 +1,134 @@
 import { tracked } from "@glimmer/tracking";
-import { trackedObject } from "@ember/reactive/collections";
 import { cancel, schedule } from "@ember/runloop";
+import StateMachineDefinition from "./state-machine-definition";
 
-const AUTOMATIC_TRANSITION = "";
-const TIMING = {
-  IMMEDIATE: "immediate",
-  BEFORE_PAINT: "before-paint",
+const TIMING = Object.freeze({
   AFTER_PAINT: "after-paint",
-};
-const TYPE = {
+  BEFORE_PAINT: "before-paint",
+  IMMEDIATE: "immediate",
+});
+
+const TYPE = Object.freeze({
   ENTER: "enter",
   EXIT: "exit",
-};
+  TRANSITION: "transition",
+});
 
 function asArray(value) {
   return Array.isArray(value) ? value : [value];
 }
 
-class StateMachine {
-  @tracked current;
-  definition;
-  nestedMachines = trackedObject();
+function includesAny(values, candidates) {
+  return candidates.some((candidate) => values.includes(candidate));
+}
+
+class Revision {
+  @tracked value = 0;
+
+  increment() {
+    this.value++;
+  }
+}
+
+class StateMachineSelector {
+  #includeSilentUpdates;
+  #machine;
+  #machinePath;
+
+  constructor(machine, machinePath, { includeSilentUpdates = false } = {}) {
+    this.#machine = machine;
+    this.#machinePath = machinePath;
+    this.#includeSilentUpdates = includeSilentUpdates;
+  }
+
+  get current() {
+    return this.#machine.stateValue(
+      this.#machinePath,
+      this.#includeSilentUpdates
+    );
+  }
+
+  get lastProcessedMessage() {
+    return this.#machine.lastProcessedMessage;
+  }
+
+  matches(state) {
+    return this.#machine.matches(
+      this.#resolveStatePath(state),
+      this.#includeSilentUpdates,
+      this.#machinePath
+    );
+  }
+
+  toStrings() {
+    return this.#machine.scopedStatePaths(
+      this.#machinePath,
+      this.#includeSilentUpdates
+    );
+  }
+
+  send(message, context = {}) {
+    const normalizedMessage =
+      typeof message === "string"
+        ? { ...context, type: message }
+        : { ...context, ...message };
+
+    if (!("machine" in normalizedMessage)) {
+      normalizedMessage.machine = this.#machinePath;
+    }
+
+    return this.#machine.send(normalizedMessage);
+  }
+
+  sendUnscoped(message, context = {}) {
+    return this.#machine.send(message, context);
+  }
+
+  subscribe(options) {
+    return this.#machine.subscribe({
+      ...options,
+      state: asArray(options.state).map((state) =>
+        this.#resolveStatePath(state)
+      ),
+    });
+  }
+
+  #resolveStatePath(state) {
+    return this.#machine.resolveStatePath(this.#machinePath, state);
+  }
+}
+
+export default class StateMachine {
   lastProcessedMessage = null;
-  #messageQueue = [];
-  #isProcessingQueue = false;
-  #subscriptions = [];
+  #activeStatePaths;
+  #definition;
   #entryActions = [];
   #exitActions = [];
-  #stateConfigCache = new Map();
-  #guards = {};
-  #currentStateMachines = null;
-  #silentMachines = new Set();
-  #parentGroup = null;
-  #machineName = null;
   #isDestroyed = false;
+  #isProcessingQueue = false;
   #latestTimedSubscriptionTokens = new Map();
-  #scheduledRunLoopTasks = new Set();
+  #messageQueue = [];
+  #publishedStatePaths;
+  #revisionsByMachine = new Map();
   #scheduledAnimationFrames = new Set();
+  #scheduledRunLoopTasks = new Set();
+  #timedSubscriptions = [];
+  #transitionActions = [];
+  #allRevision = new Revision();
+  #reactiveRevision = new Revision();
 
-  constructor(definition, initialState, options = {}) {
-    this.definition = definition;
-    this.current = initialState;
-    this.#guards = options.guards || {};
-    this.#parentGroup = options.parentGroup || null;
-    this.#machineName = options.machineName || null;
-    this.#initializeNestedMachines(this.current);
-    this.#processAutomaticTransitions();
+  constructor(machineDefinitions, { guards = {} } = {}) {
+    this.#definition = new StateMachineDefinition(machineDefinitions, guards);
+    this.#activeStatePaths = this.#definition.initialStatePaths();
+    this.#publishedStatePaths = [...this.#activeStatePaths];
+  }
+
+  select(machinePath, options) {
+    if (!this.#definition.hasMachine(machinePath)) {
+      throw new Error(`Unknown state machine '${machinePath}'`);
+    }
+
+    return new StateMachineSelector(this, machinePath, options);
   }
 
   send(message, context = {}) {
@@ -53,50 +136,18 @@ class StateMachine {
       return false;
     }
 
-    const normalizedMessage =
-      typeof message === "string" ? { type: message } : message;
+    const normalizedMessage = this.#normalizeMessage(message, context);
+    this.#messageQueue.push(normalizedMessage);
 
-    this.#messageQueue.push({ message: normalizedMessage, context });
-
-    if (!this.#isProcessingQueue) {
-      return this.#processQueue();
-    }
-
-    return true;
-  }
-
-  matches(state) {
-    if (this.current === state) {
+    if (this.#isProcessingQueue) {
       return true;
     }
 
-    if (state.includes(":")) {
-      return this.#matchesNestedMachineState(state);
-    }
-
-    return (
-      this.current.startsWith(state) &&
-      this.current.charAt(state.length) === "."
-    );
-  }
-
-  toStrings() {
-    const strings = [this.current];
-    const parentState = this.current.split(".")[0];
-
-    for (const [machineName, machineState] of Object.entries(
-      this.nestedMachines
-    )) {
-      if (machineState) {
-        strings.push(`${parentState}.${machineName}:${machineState}`);
-      }
-    }
-
-    return strings;
+    return this.#processQueue();
   }
 
   subscribe({
-    timing,
+    timing = TIMING.IMMEDIATE,
     state,
     transition = null,
     callback,
@@ -107,18 +158,69 @@ class StateMachine {
       return () => {};
     }
 
-    const id = Symbol();
-    const subscription = { id, timing, state, transition, callback, guard };
-
-    if (type === TYPE.EXIT) {
-      this.#exitActions.push(subscription);
-    } else if (timing === TIMING.IMMEDIATE) {
-      this.#entryActions.push(subscription);
-    } else {
-      this.#subscriptions.push(subscription);
+    if (!Object.values(TIMING).includes(timing)) {
+      throw new Error(`Unknown state effect timing '${timing}'`);
     }
 
-    return () => this.#unsubscribe(id);
+    if (!Object.values(TYPE).includes(type)) {
+      throw new Error(`Unknown state effect type '${type}'`);
+    }
+
+    if (type === TYPE.TRANSITION && timing !== TIMING.IMMEDIATE) {
+      throw new Error("Transition effects must use immediate timing");
+    }
+
+    const subscription = {
+      callback,
+      guard,
+      id: Symbol(),
+      state: asArray(state),
+      timing,
+      transition:
+        transition === null || transition === undefined
+          ? null
+          : asArray(transition),
+      type,
+    };
+
+    if (timing !== TIMING.IMMEDIATE) {
+      this.#timedSubscriptions.push(subscription);
+    } else if (type === TYPE.EXIT) {
+      this.#exitActions.push(subscription);
+    } else if (type === TYPE.TRANSITION) {
+      this.#transitionActions.push(subscription);
+    } else {
+      this.#entryActions.push(subscription);
+    }
+
+    return () => this.#unsubscribe(subscription.id);
+  }
+
+  matches(statePath, includeSilentUpdates = false, machinePath = null) {
+    this.#consumeRevision(includeSilentUpdates, machinePath);
+    return this.#definition.matches(this.#activeStatePaths, statePath);
+  }
+
+  stateValue(machinePath, includeSilentUpdates = false) {
+    this.#consumeRevision(includeSilentUpdates, machinePath);
+    return this.#definition.stateValue(this.#activeStatePaths, machinePath);
+  }
+
+  scopedStatePaths(machinePath, includeSilentUpdates = false) {
+    this.#consumeRevision(includeSilentUpdates, machinePath);
+    return this.#definition.scopedStatePaths(
+      this.#activeStatePaths,
+      machinePath
+    );
+  }
+
+  toStrings(includeSilentUpdates = false) {
+    this.#consumeRevision(includeSilentUpdates);
+    return [...this.#activeStatePaths];
+  }
+
+  resolveStatePath(machinePath, state) {
+    return this.#definition.resolveStatePath(machinePath, state);
   }
 
   cleanup() {
@@ -131,713 +233,216 @@ class StateMachine {
     for (const task of this.#scheduledRunLoopTasks) {
       cancel(task);
     }
-    this.#scheduledRunLoopTasks.clear();
 
     for (const frame of this.#scheduledAnimationFrames) {
       cancelAnimationFrame(frame);
     }
-    this.#scheduledAnimationFrames.clear();
 
-    this.#subscriptions = [];
+    this.#scheduledRunLoopTasks.clear();
+    this.#scheduledAnimationFrames.clear();
+    this.#latestTimedSubscriptionTokens.clear();
     this.#entryActions = [];
     this.#exitActions = [];
-    this.#latestTimedSubscriptionTokens.clear();
+    this.#transitionActions = [];
+    this.#timedSubscriptions = [];
     this.#messageQueue = [];
-    this.#isProcessingQueue = false;
+    this.#revisionsByMachine.clear();
   }
 
-  getStateConfig(statePath) {
-    if (this.#stateConfigCache.has(statePath)) {
-      return this.#stateConfigCache.get(statePath);
+  #normalizeMessage(message, context) {
+    const normalizedMessage =
+      typeof message === "string"
+        ? { ...context, type: message }
+        : { ...context, ...message };
+
+    if (typeof normalizedMessage.type !== "string") {
+      throw new Error("State machine messages require a string type");
     }
 
-    const config = this.#resolveStateConfig(statePath);
-    this.#stateConfigCache.set(statePath, config);
-    return config;
-  }
-
-  getNestedMachineState(machineName) {
-    return this.nestedMachines[machineName] || null;
-  }
-
-  #resolveStateConfig(statePath) {
-    const parts = statePath.split(".");
-    let config = this.definition.states[parts[0]];
-
-    if (!config) {
-      return null;
-    }
-
-    for (let i = 1; i < parts.length; i++) {
-      if (config.states?.[parts[i]]) {
-        config = config.states[parts[i]];
-      } else if (config.machines) {
-        const machineDef = config.machines.find((m) => m.name === parts[i]);
-        if (machineDef && i + 1 < parts.length) {
-          const machineState = parts[i + 1];
-          if (machineDef.states?.[machineState]) {
-            config = machineDef.states[machineState];
-            i++;
-          } else {
-            return null;
-          }
-        } else {
-          return null;
-        }
-      } else {
-        return null;
-      }
-    }
-
-    return config;
-  }
-
-  #unsubscribe(id) {
-    this.#latestTimedSubscriptionTokens.delete(id);
-    this.#subscriptions = this.#subscriptions.filter((s) => s.id !== id);
-    this.#entryActions = this.#entryActions.filter((s) => s.id !== id);
-    this.#exitActions = this.#exitActions.filter((s) => s.id !== id);
-  }
-
-  #initializeNestedMachines(statePath) {
-    const stateConfig = this.getStateConfig(statePath);
-    this.#silentMachines.clear();
-
-    if (stateConfig?.machines) {
-      const machinesArray = asArray(stateConfig.machines);
-
-      this.#currentStateMachines = machinesArray;
-      for (const machineDef of machinesArray) {
-        this.nestedMachines[machineDef.name] = machineDef.initial;
-        if (machineDef.silentOnly) {
-          this.#silentMachines.add(machineDef.name);
-        }
-      }
-    } else {
-      this.#currentStateMachines = null;
-    }
-  }
-
-  #isSilentMachine(machineName) {
-    return this.#silentMachines.has(machineName);
-  }
-
-  #setNestedMachineState(machineName, stateName) {
-    this.nestedMachines[machineName] = stateName;
-  }
-
-  #getParentState(statePath) {
-    const parts = statePath.split(".");
-    return parts.length > 1 ? parts[0] : null;
+    return normalizedMessage;
   }
 
   #processQueue() {
-    if (this.#messageQueue.length === 0) {
-      this.#isProcessingQueue = false;
-      return false;
-    }
-
+    let anyStateChanged = false;
+    let reactiveStateChanged = false;
+    const previousActiveStatePaths = this.#activeStatePaths;
     this.#isProcessingQueue = true;
-    let anyTransitioned = false;
 
-    while (this.#messageQueue.length > 0) {
-      const { message, context } = this.#messageQueue.shift();
-      const result = this.#processMessage(message, context);
-
-      this.lastProcessedMessage = message;
-
-      if (result.transitioned) {
-        anyTransitioned = true;
-        if (result.silent) {
-          this.#notifyImmediateSubscribers(
-            message,
-            result.enteredStates,
-            result.exitedStates
-          );
-        } else {
-          this.#notifySubscribers(
-            message,
-            result.enteredStates,
-            result.exitedStates
-          );
-        }
-      }
-    }
-
-    this.#isProcessingQueue = false;
-    return anyTransitioned;
-  }
-
-  #processMessage(message, context = {}) {
-    const enrichedMessage = { ...message, ...context };
-    const previousState = this.current;
-    const previousNestedStates = { ...this.nestedMachines };
-
-    const mainStateResult = this.#tryMainStateTransition(enrichedMessage);
-    if (mainStateResult) {
-      this.#processAutomaticTransitions();
-      this.#processNestedMachinesSilently(enrichedMessage);
-
-      const { entered, exited } = this.#calculateStateChanges(
-        previousState,
-        previousNestedStates
-      );
-      return {
-        transitioned: true,
-        enteredStates: entered,
-        exitedStates: exited,
-        silent: false,
-      };
-    }
-
-    const nestedResult = this.#tryNestedMachineTransition(enrichedMessage);
-    if (nestedResult) {
-      const { entered, exited } = this.#calculateStateChanges(
-        previousState,
-        previousNestedStates,
-        { includeUnchangedCurrentState: false }
-      );
-      return {
-        transitioned: true,
-        enteredStates: entered,
-        exitedStates: exited,
-        silent: nestedResult.silent,
-      };
-    }
-
-    return {
-      transitioned: false,
-      enteredStates: [],
-      exitedStates: [],
-      silent: false,
-    };
-  }
-
-  #tryMainStateTransition(message) {
-    const messageType = message.type;
-    const currentStateConfig = this.getStateConfig(this.current);
-
-    let transitions = currentStateConfig?.messages?.[messageType];
-
-    if (!transitions) {
-      const parentState = this.#getParentState(this.current);
-      if (parentState) {
-        const parentConfig = this.getStateConfig(parentState);
-        transitions = parentConfig?.messages?.[messageType];
-      }
-    }
-
-    if (!transitions) {
-      return false;
-    }
-
-    return this.#tryTransitions(transitions, message, (target) =>
-      this.#transitionToState(target)
-    );
-  }
-
-  #tryNestedMachineTransition(message) {
-    const messageType = message.type;
-    const currentStateConfig = this.getStateConfig(this.current);
-
-    if (!currentStateConfig?.machines) {
-      return null;
-    }
-
-    const machinesArray = asArray(currentStateConfig.machines);
-
-    for (const machineDef of machinesArray) {
-      const machineName = machineDef.name;
-      const currentMachineState =
-        this.getNestedMachineState(machineName) || machineDef.initial;
-      const machineStateConfig = machineDef.states?.[currentMachineState];
-
-      if (!machineStateConfig?.messages?.[messageType]) {
-        continue;
-      }
-
-      const transitioned = this.#tryTransitions(
-        machineStateConfig.messages[messageType],
-        message,
-        (target) => {
-          if (this.#isCrossLevelTransition(target, machineDef)) {
-            this.#transitionToState(target);
-          } else {
-            this.#setNestedMachineState(machineName, target);
-          }
-        }
-      );
-
-      if (transitioned) {
-        this.#processNestedMachineAutomaticTransitions(machineName);
-        return { silent: this.#isSilentMachine(machineName) };
-      }
-    }
-
-    return null;
-  }
-
-  #tryTransitions(transitions, message, onSuccess) {
-    const transitionList = asArray(transitions);
-
-    for (const transition of transitionList) {
-      if (typeof transition === "string") {
-        onSuccess(transition);
-        return true;
-      }
-
-      if (transition.guard) {
-        const previousStates = this.#parentGroup
-          ? this.#parentGroup.toStrings()
-          : this.toStrings();
-        const guardPassed = this.#checkGuard(
-          transition.guard,
-          previousStates,
+    try {
+      while (this.#messageQueue.length > 0) {
+        const message = this.#messageQueue.shift();
+        const result = this.#definition.transition(
+          this.#activeStatePaths,
           message
         );
-        if (!guardPassed) {
+
+        if (!result.transitioned) {
+          this.lastProcessedMessage = message;
           continue;
         }
+
+        anyStateChanged = true;
+        reactiveStateChanged ||= result.reactive;
+        this.#activeStatePaths = result.nextStatePaths;
+
+        this.#dispatchImmediateActions(result, message);
+        this.lastProcessedMessage = message;
+      }
+    } catch (error) {
+      this.#messageQueue = [];
+      throw error;
+    } finally {
+      this.#isProcessingQueue = false;
+
+      if (anyStateChanged) {
+        this.#allRevision.increment();
+        this.#incrementMachineRevisions(
+          previousActiveStatePaths,
+          this.#activeStatePaths,
+          "all"
+        );
       }
 
-      if (transition.target) {
-        onSuccess(transition.target);
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  #checkGuard(guardName, previousStates, message) {
-    const guardFn = this.#guards[guardName];
-    return guardFn ? guardFn(previousStates, message) : true;
-  }
-
-  transitionToState(targetState) {
-    this.#transitionToState(targetState);
-  }
-
-  #transitionToState(targetState) {
-    // Check for machine prefix when part of a group (e.g., "position:front.status:idle")
-    if (this.#parentGroup) {
-      const colonIndex = targetState.indexOf(":");
-      if (colonIndex !== -1) {
-        const potentialMachineName = targetState.substring(0, colonIndex);
-        // If prefix matches a different machine in the group, delegate
-        if (
-          this.#parentGroup.hasMachine(potentialMachineName) &&
-          potentialMachineName !== this.#machineName
-        ) {
-          this.#parentGroup.transitionTo(targetState);
-          return;
-        }
-        // If prefix matches our own name, strip it and continue
-        if (potentialMachineName === this.#machineName) {
-          targetState = targetState.substring(colonIndex + 1);
-        }
+      if (reactiveStateChanged) {
+        this.#reactiveRevision.increment();
+        this.#incrementMachineRevisions(
+          this.#publishedStatePaths,
+          this.#activeStatePaths,
+          "reactive"
+        );
+        this.#publishTimedSubscriptions();
       }
     }
 
-    const colonIndex = targetState.indexOf(":");
-
-    if (colonIndex !== -1) {
-      this.#transitionToNestedMachinePath(targetState);
-    } else {
-      this.#transitionToStatePath(targetState);
-    }
+    return anyStateChanged;
   }
 
-  #transitionToNestedMachinePath(targetState) {
-    const dotIndex = targetState.indexOf(".");
-    const mainState = targetState.substring(0, dotIndex);
-    const rest = targetState.substring(dotIndex + 1);
-
-    this.current = mainState;
-
-    const stateConfig = this.getStateConfig(mainState);
-    const newMachines = stateConfig?.machines || null;
-
-    if (this.#machinesAreDifferent(this.#currentStateMachines, newMachines)) {
-      this.nestedMachines = trackedObject();
-      this.#initializeNestedMachines(mainState);
-    }
-
-    const machineColonIndex = rest.indexOf(":");
-    const machineName = rest.substring(0, machineColonIndex);
-    const machineState = rest.substring(machineColonIndex + 1);
-    this.#setNestedMachineState(machineName, machineState);
-  }
-
-  #transitionToStatePath(targetState) {
-    this.current = targetState;
-
-    const stateConfig = this.getStateConfig(targetState);
-    const newMachines = stateConfig?.machines || null;
-
-    if (this.#machinesAreDifferent(this.#currentStateMachines, newMachines)) {
-      this.nestedMachines = trackedObject();
-      this.#initializeNestedMachines(targetState);
-    }
-  }
-
-  #machinesAreDifferent(oldMachines, newMachines) {
-    if (oldMachines === newMachines) {
-      return false;
-    }
-    if (!oldMachines || !newMachines) {
-      return true;
-    }
-
-    const oldMachineList = asArray(oldMachines);
-    const newMachineList = asArray(newMachines);
-
-    if (oldMachineList.length !== newMachineList.length) {
-      return true;
-    }
-
-    for (let i = 0; i < oldMachineList.length; i++) {
-      if (oldMachineList[i].name !== newMachineList[i].name) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  #isCrossLevelTransition(target, machineDef) {
-    return !machineDef.states?.[target];
-  }
-
-  #processAutomaticTransitions() {
-    const currentStateConfig = this.getStateConfig(this.current);
-
-    if (this.#processMainStateAutomaticTransition(currentStateConfig)) {
-      return;
-    }
-
-    this.#processNestedMachinesAutomaticTransitions(currentStateConfig);
-  }
-
-  #processMainStateAutomaticTransition(currentStateConfig) {
-    if (!currentStateConfig?.messages?.[AUTOMATIC_TRANSITION]) {
-      return false;
-    }
-
-    const previousState = this.current;
-    const previousNestedStates = { ...this.nestedMachines };
-
-    const transitioned = this.#tryTransitions(
-      currentStateConfig.messages[AUTOMATIC_TRANSITION],
-      { type: AUTOMATIC_TRANSITION },
-      (target) => this.#transitionToState(target)
+  #dispatchImmediateActions(result, message) {
+    this.#runActions(
+      this.#exitActions,
+      result.exitedStatePaths,
+      result,
+      message
     );
-
-    if (transitioned) {
-      const { entered, exited } = this.#calculateStateChanges(
-        previousState,
-        previousNestedStates
-      );
-      this.#notifySubscribers({ type: AUTOMATIC_TRANSITION }, entered, exited);
-      this.#processAutomaticTransitions();
-      return true;
-    }
-
-    return false;
-  }
-
-  #processNestedMachinesAutomaticTransitions(currentStateConfig) {
-    if (!currentStateConfig?.machines) {
-      return;
-    }
-
-    const machinesArray = asArray(currentStateConfig.machines);
-
-    for (const machineDef of machinesArray) {
-      const machineName = machineDef.name;
-      const currentMachineState =
-        this.getNestedMachineState(machineName) || machineDef.initial;
-      const machineStateConfig = machineDef.states?.[currentMachineState];
-
-      if (!machineStateConfig?.messages?.[AUTOMATIC_TRANSITION]) {
-        continue;
-      }
-
-      const previousState = this.current;
-      const previousNestedStates = { ...this.nestedMachines };
-
-      const transitioned = this.#tryTransitions(
-        machineStateConfig.messages[AUTOMATIC_TRANSITION],
-        { type: AUTOMATIC_TRANSITION },
-        (target) => this.#setNestedMachineState(machineName, target)
-      );
-
-      if (transitioned) {
-        const { entered, exited } = this.#calculateStateChanges(
-          previousState,
-          previousNestedStates,
-          { includeUnchangedCurrentState: false }
-        );
-        if (!this.#isSilentMachine(machineName)) {
-          this.#notifySubscribers(
-            { type: AUTOMATIC_TRANSITION },
-            entered,
-            exited
-          );
-        }
-        this.#processAutomaticTransitions();
-        return;
-      }
-    }
-  }
-
-  #processNestedMachineAutomaticTransitions(machineName) {
-    const currentStateConfig = this.getStateConfig(this.current);
-    if (!currentStateConfig?.machines) {
-      return;
-    }
-
-    const machinesArray = asArray(currentStateConfig.machines);
-
-    const machineDef = machinesArray.find((m) => m.name === machineName);
-    if (!machineDef) {
-      return;
-    }
-
-    const currentMachineState =
-      this.getNestedMachineState(machineName) || machineDef.initial;
-    const machineStateConfig = machineDef.states?.[currentMachineState];
-
-    if (machineStateConfig?.messages?.[AUTOMATIC_TRANSITION]) {
-      const transitioned = this.#tryTransitions(
-        machineStateConfig.messages[AUTOMATIC_TRANSITION],
-        { type: AUTOMATIC_TRANSITION },
-        (target) => this.#setNestedMachineState(machineName, target)
-      );
-
-      if (transitioned) {
-        this.#processNestedMachineAutomaticTransitions(machineName);
-      }
-    }
-  }
-
-  #processNestedMachinesSilently(message) {
-    const messageType = message.type;
-    const currentStateConfig = this.getStateConfig(this.current);
-
-    if (!currentStateConfig?.machines) {
-      return;
-    }
-
-    const machinesArray = asArray(currentStateConfig.machines);
-
-    for (const machineDef of machinesArray) {
-      if (!machineDef.silentOnly) {
-        continue;
-      }
-
-      const machineName = machineDef.name;
-      const currentMachineState =
-        this.getNestedMachineState(machineName) || machineDef.initial;
-      const machineStateConfig = machineDef.states?.[currentMachineState];
-
-      if (machineStateConfig?.messages?.[messageType]) {
-        this.#tryTransitions(
-          machineStateConfig.messages[messageType],
-          message,
-          (target) => {
-            if (!this.#isCrossLevelTransition(target, machineDef)) {
-              this.#setNestedMachineState(machineName, target);
-            }
-          }
-        );
-      }
-    }
-  }
-
-  #matchesNestedMachineState(state) {
-    const dotIndex = state.indexOf(".");
-    const colonIndex = state.indexOf(":");
-
-    if (dotIndex === -1 || colonIndex === -1) {
-      return false;
-    }
-
-    const parentState = state.substring(0, dotIndex);
-    const machineName = state.substring(dotIndex + 1, colonIndex);
-    const machineState = state.substring(colonIndex + 1);
-
-    const isInParentState =
-      this.current === parentState ||
-      this.current.startsWith(`${parentState}.`);
-
-    if (!isInParentState) {
-      return false;
-    }
-
-    const currentMachineState = this.getNestedMachineState(machineName);
-
-    if (currentMachineState === machineState) {
-      return true;
-    }
-
-    return (
-      currentMachineState?.startsWith(machineState) &&
-      currentMachineState?.charAt(machineState.length) === "."
+    this.#runActions(
+      this.#transitionActions,
+      result.exitedStatePaths,
+      result,
+      message
+    );
+    this.#runActions(
+      this.#entryActions,
+      result.enteredStatePaths,
+      result,
+      message
     );
   }
 
-  #calculateStateChanges(
-    previousState,
-    previousNestedStates,
-    { includeUnchangedCurrentState = true } = {}
-  ) {
-    const entered = [];
-    const exited = [];
-
-    const parentState = this.current.split(".")[0];
-    const prevParentState = previousState.split(".")[0];
-
-    if (includeUnchangedCurrentState || this.current !== previousState) {
-      entered.push(this.current);
-    }
-
-    if (this.current !== previousState) {
-      exited.push(previousState);
-    }
-
-    for (const [machineName, machineState] of Object.entries(
-      this.nestedMachines
-    )) {
-      const prevMachineState = previousNestedStates[machineName];
-      if (prevMachineState !== machineState) {
-        entered.push(`${parentState}.${machineName}:${machineState}`);
-        if (prevMachineState) {
-          exited.push(`${prevParentState}.${machineName}:${prevMachineState}`);
-        }
-      }
-    }
-
-    if (parentState !== prevParentState) {
-      for (const [machineName, machineState] of Object.entries(
-        previousNestedStates
-      )) {
-        if (machineState) {
-          exited.push(`${prevParentState}.${machineName}:${machineState}`);
-        }
-      }
-    }
-
-    return { entered, exited };
-  }
-
-  #notifySubscribers(message, enteredStates, exitedStates) {
-    this.#notifyImmediateSubscribers(message, enteredStates, exitedStates);
-    this.#dispatchTimedSubscriptions(message, enteredStates, exitedStates);
-  }
-
-  #notifyImmediateSubscribers(message, enteredStates, exitedStates) {
-    this.#dispatchExitActions(message, exitedStates);
-    this.#dispatchEntryActions(message, enteredStates);
-  }
-
-  #dispatchExitActions(message, exitedStates) {
-    for (const sub of this.#exitActions) {
-      const wasExited = this.#didExitState(sub, exitedStates);
-      const transitionMatches = this.#matchesTransition(sub, message);
-      const guardPasses =
-        typeof sub.guard === "function" ? sub.guard() : sub.guard;
-
-      if (wasExited && transitionMatches && guardPasses) {
-        sub.callback(message);
-      }
-    }
-  }
-
-  #dispatchEntryActions(message, enteredStates) {
-    for (const sub of this.#entryActions) {
-      const wasEntered = this.#didEnterState(sub, enteredStates);
-      const transitionMatches = this.#matchesTransition(sub, message);
-      const guardPasses =
-        typeof sub.guard === "function" ? sub.guard() : sub.guard;
-
-      if (wasEntered && transitionMatches && guardPasses) {
-        sub.callback(message);
-      }
-    }
-  }
-
-  #dispatchTimedSubscriptions(message, enteredStates, exitedStates) {
-    let beforePaintSubs = null;
-    let afterPaintSubs = null;
-
-    for (const sub of this.#subscriptions) {
-      if (this.#didExitState(sub, exitedStates)) {
-        this.#latestTimedSubscriptionTokens.delete(sub.id);
-      }
-
-      if (!this.#didEnterState(sub, enteredStates)) {
-        continue;
-      }
-
+  #runActions(subscriptions, changedStatePaths, result, message) {
+    for (const subscription of subscriptions) {
       if (
-        !this.#matchesSubscriptionState(sub) ||
-        !this.#matchesTransition(sub, message)
+        !includesAny(changedStatePaths, subscription.state) ||
+        !this.#matchesTransition(subscription, message) ||
+        !this.#guardPasses(subscription, result.previousStatePaths, message)
       ) {
         continue;
       }
 
-      const token = Symbol();
-      const timedSubscription = { sub, token };
-      this.#latestTimedSubscriptionTokens.set(sub.id, token);
-
-      if (sub.timing === TIMING.BEFORE_PAINT) {
-        if (!beforePaintSubs) {
-          beforePaintSubs = [];
-        }
-        beforePaintSubs.push(timedSubscription);
-      } else if (sub.timing === TIMING.AFTER_PAINT) {
-        if (!afterPaintSubs) {
-          afterPaintSubs = [];
-        }
-        afterPaintSubs.push(timedSubscription);
-      }
-    }
-
-    if (beforePaintSubs) {
-      this.#scheduleAfterRender(() => {
-        for (const { sub, token } of beforePaintSubs) {
-          if (
-            this.#consumeLatestTimedSubscription(sub, token) &&
-            this.#evaluateSubscriptionConditions(sub, message)
-          ) {
-            sub.callback(message);
-          }
-        }
-      });
-    }
-
-    if (afterPaintSubs) {
-      this.#scheduleAfterRender(() => {
-        this.#scheduleAnimationFrame(() => {
-          for (const { sub, token } of afterPaintSubs) {
-            if (
-              this.#consumeLatestTimedSubscription(sub, token) &&
-              this.#evaluateSubscriptionConditions(sub, message)
-            ) {
-              sub.callback(message);
-            }
-          }
-        });
-      });
+      subscription.callback(message);
     }
   }
 
-  #consumeLatestTimedSubscription(sub, token) {
-    if (this.#latestTimedSubscriptionTokens.get(sub.id) !== token) {
+  #dispatchTimedSubscriptions(result, message) {
+    for (const subscription of this.#timedSubscriptions) {
+      const entered = includesAny(result.enteredStatePaths, subscription.state);
+      const exited = includesAny(result.exitedStatePaths, subscription.state);
+
+      if (
+        (subscription.type === TYPE.ENTER && exited) ||
+        (subscription.type === TYPE.EXIT && entered)
+      ) {
+        this.#latestTimedSubscriptionTokens.delete(subscription.id);
+      }
+
+      const applies = subscription.type === TYPE.EXIT ? exited : entered;
+
+      if (!applies || !this.#matchesTransition(subscription, message)) {
+        continue;
+      }
+
+      const token = Symbol();
+      this.#latestTimedSubscriptionTokens.set(subscription.id, token);
+
+      const run = () => {
+        const messageAtExecution = this.lastProcessedMessage;
+
+        if (
+          !this.#consumeTimedSubscriptionToken(subscription.id, token) ||
+          !this.#timedStateStillApplies(subscription) ||
+          !this.#guardPasses(
+            subscription,
+            result.previousStatePaths,
+            messageAtExecution
+          )
+        ) {
+          return;
+        }
+
+        subscription.callback(messageAtExecution);
+      };
+
+      if (subscription.timing === TIMING.AFTER_PAINT) {
+        this.#scheduleAfterRender(() => this.#scheduleAnimationFrame(run));
+      } else {
+        this.#scheduleAfterRender(run);
+      }
+    }
+  }
+
+  #publishTimedSubscriptions() {
+    const previousStatePaths = this.#publishedStatePaths;
+    const previousStateSet = new Set(previousStatePaths);
+    const activeStateSet = new Set(this.#activeStatePaths);
+    const enteredStatePaths = this.#activeStatePaths.filter(
+      (statePath) => !previousStateSet.has(statePath)
+    );
+    const exitedStatePaths = previousStatePaths.filter(
+      (statePath) => !activeStateSet.has(statePath)
+    );
+
+    this.#publishedStatePaths = [...this.#activeStatePaths];
+    this.#dispatchTimedSubscriptions(
+      { enteredStatePaths, exitedStatePaths, previousStatePaths },
+      this.lastProcessedMessage
+    );
+  }
+
+  #timedStateStillApplies(subscription) {
+    const matches = subscription.state.some((statePath) =>
+      this.#definition.matches(this.#activeStatePaths, statePath)
+    );
+
+    return subscription.type === TYPE.EXIT ? !matches : matches;
+  }
+
+  #guardPasses(subscription, previousStatePaths, message) {
+    return typeof subscription.guard === "function"
+      ? subscription.guard(previousStatePaths, message)
+      : subscription.guard;
+  }
+
+  #matchesTransition(subscription, message) {
+    return (
+      !subscription.transition || subscription.transition.includes(message.type)
+    );
+  }
+
+  #consumeTimedSubscriptionToken(id, token) {
+    if (this.#latestTimedSubscriptionTokens.get(id) !== token) {
       return false;
     }
 
-    this.#latestTimedSubscriptionTokens.delete(sub.id);
+    this.#latestTimedSubscriptionTokens.delete(id);
     return true;
   }
 
@@ -864,46 +469,63 @@ class StateMachine {
     this.#scheduledAnimationFrames.add(frame);
   }
 
-  #evaluateSubscriptionConditions(sub, message) {
-    const stateMatches = this.#matchesSubscriptionState(sub);
-    const transitionMatches = this.#matchesTransition(sub, message);
-    const guardPasses =
-      typeof sub.guard === "function" ? sub.guard() : sub.guard;
-    return stateMatches && transitionMatches && guardPasses;
+  #unsubscribe(id) {
+    this.#latestTimedSubscriptionTokens.delete(id);
+    this.#entryActions = this.#entryActions.filter(
+      (subscription) => subscription.id !== id
+    );
+    this.#exitActions = this.#exitActions.filter(
+      (subscription) => subscription.id !== id
+    );
+    this.#transitionActions = this.#transitionActions.filter(
+      (subscription) => subscription.id !== id
+    );
+    this.#timedSubscriptions = this.#timedSubscriptions.filter(
+      (subscription) => subscription.id !== id
+    );
   }
 
-  #matchesSubscriptionState(sub) {
-    if (Array.isArray(sub.state)) {
-      return sub.state.some((state) => this.matches(state));
-    }
+  #consumeRevision(includeSilentUpdates, machinePath = null) {
+    const revision = machinePath
+      ? this.#machineRevision(machinePath, includeSilentUpdates)
+      : includeSilentUpdates
+        ? this.#allRevision
+        : this.#reactiveRevision;
 
-    return this.matches(sub.state);
+    revision.value;
   }
 
-  #matchesTransition(sub, message) {
-    if (!sub.transition) {
-      return true;
-    }
+  #incrementMachineRevisions(previousStatePaths, nextStatePaths, type) {
+    for (const [machinePath, revisions] of this.#revisionsByMachine) {
+      const previousSelection = this.#definition.scopedStatePaths(
+        previousStatePaths,
+        machinePath
+      );
+      const nextSelection = this.#definition.scopedStatePaths(
+        nextStatePaths,
+        machinePath
+      );
 
-    const messageType = message?.type;
-    if (!messageType) {
-      return false;
+      if (
+        previousSelection.length !== nextSelection.length ||
+        previousSelection.some(
+          (statePath, index) => statePath !== nextSelection[index]
+        )
+      ) {
+        revisions[type].increment();
+      }
     }
-
-    if (Array.isArray(sub.transition)) {
-      return sub.transition.includes(messageType);
-    }
-
-    return sub.transition === messageType;
   }
 
-  #didEnterState(sub, enteredStates) {
-    return asArray(sub.state).some((state) => enteredStates.includes(state));
-  }
+  #machineRevision(machinePath, includeSilentUpdates) {
+    if (!this.#revisionsByMachine.has(machinePath)) {
+      this.#revisionsByMachine.set(machinePath, {
+        all: new Revision(),
+        reactive: new Revision(),
+      });
+    }
 
-  #didExitState(sub, exitedStates) {
-    return asArray(sub.state).some((state) => exitedStates.includes(state));
+    const revisions = this.#revisionsByMachine.get(machinePath);
+    return includeSilentUpdates ? revisions.all : revisions.reactive;
   }
 }
-
-export default StateMachine;

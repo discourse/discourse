@@ -136,24 +136,28 @@ export function buildStateEffects(controller) {
       machine: "openness",
       state: "open.evaluateCloseMessage:true",
       transition: EVENTS.CLOSE,
+      type: "transition",
       callback: () => controller.evaluateCloseMessage(),
     },
     {
       machine: "openness",
       state: "open.evaluateCloseMessage:false",
       transition: EVENTS.CLOSE,
+      type: "transition",
       callback: () => controller.evaluateCloseMessage(),
     },
     {
       machine: "openness",
       state: "open.evaluateStepMessage:true",
       transition: EVENTS.STEP,
+      type: "transition",
       callback: (message) => controller.evaluateStepMessage(message),
     },
     {
       machine: "openness",
       state: "open.evaluateStepMessage:false",
       transition: EVENTS.STEP,
+      type: "transition",
       callback: (message) => controller.evaluateStepMessage(message),
     },
     { machine: "openness", state: "closing", handler: "handleClosing" },
@@ -177,24 +181,6 @@ export function buildStateEffects(controller) {
       state: "false",
       timing: "before-paint",
       callback: () => controller.removeAllOutletPersistedStyles(),
-    },
-    {
-      machine: "openness",
-      state: "closed.status:flushing-to-preparing-opening",
-      timing: "before-paint",
-      callback: () => {
-        controller.timeoutManager.clear("pendingFlush");
-        controller.state.flushClosedStatus();
-      },
-    },
-    {
-      machine: "openness",
-      state: "closed.status:flushing-to-preparing-open",
-      timing: "before-paint",
-      callback: () => {
-        controller.timeoutManager.clear("pendingFlush");
-        controller.state.flushClosedStatus();
-      },
     },
     {
       machine: "openness",
@@ -261,7 +247,7 @@ export function buildStateEffects(controller) {
       state: "covered.status:come-back",
       timing: "immediate",
       callback: () => {
-        controller.state.advancePositionAuto();
+        controller.state.position.advanceTransient();
       },
     },
     {
@@ -269,7 +255,6 @@ export function buildStateEffects(controller) {
       state: "open.scroll:ongoing",
       callback: () => {
         controller.markScrollOccurred();
-        controller.state.openness.resetScrollEndedAfterPaintEffects();
         const currentProgress =
           controller.lastProcessedProgress ??
           controller.dimensions?.progressValueAtDetents?.[

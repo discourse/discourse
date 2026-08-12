@@ -52,6 +52,25 @@ export default class Root extends Component {
   syncViewConfiguration = modifier((_element, [sheet, provider]) => {
     provider?.configureSheetController(sheet);
   });
+  advanceFlushingState = modifier((_element, [sheet, shouldFlushView]) => {
+    if (!shouldFlushView || this.#flushingStateTask) {
+      return;
+    }
+
+    this.#flushingStateTask = schedule("afterRender", () => {
+      this.#flushingStateTask = null;
+
+      if (
+        !this.isDestroying &&
+        !this.isDestroyed &&
+        sheet === this.sheet &&
+        sheet.shouldFlushView
+      ) {
+        sheet.timeoutManager.clear("pendingFlush");
+        sheet.state.advanceClosedStatus();
+      }
+    });
+  });
   registerRootElement = modifier((element, [sheet]) => {
     sheet.registerRootElement(element);
 
@@ -64,6 +83,7 @@ export default class Root extends Component {
     this.#updateStackTarget(stackId);
   });
   #lastPresented;
+  #flushingStateTask = null;
   #presentationTask = null;
   #pendingOpenSubscription = null;
   #pendingOpenToken = 0;
@@ -88,6 +108,7 @@ export default class Root extends Component {
     this.#updateComponentIdRegistration(this.args.componentId);
 
     registerDestructor(this, () => {
+      this.#cancelFlushingStateTask();
       this.#cancelPresentationTask();
       this.#cancelStackSyncTask();
       this.#cleanupPendingOpen();
@@ -118,6 +139,13 @@ export default class Root extends Component {
     if (this.#presentationTask) {
       cancel(this.#presentationTask);
       this.#presentationTask = null;
+    }
+  }
+
+  #cancelFlushingStateTask() {
+    if (this.#flushingStateTask) {
+      cancel(this.#flushingStateTask);
+      this.#flushingStateTask = null;
     }
   }
 
@@ -427,6 +455,7 @@ export default class Root extends Component {
         role=this.sheetRole
       }}
       {{this.syncViewConfiguration this.sheet this.viewConfigurationProvider}}
+      {{this.advanceFlushingState this.sheet this.sheet.shouldFlushView}}
       {{this.registerRootElement this.sheet}}
       {{outletAnimationModifier this.sheet @travelAnimation @stackingAnimation}}
       ...attributes

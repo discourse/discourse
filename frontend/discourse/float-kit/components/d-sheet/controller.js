@@ -852,6 +852,20 @@ export default class Controller {
     return this.state.staging.current === "none" ? "staging-none" : null;
   }
 
+  get shouldRenderView() {
+    const opennessKeepsViewMounted =
+      !this.state.openness.isClosedFlushing &&
+      !this.state.openness.isClosedSafeToUnmount;
+    const stagingKeepsViewMounted =
+      this.state.staging.isOpening || this.state.staging.isOpen;
+
+    return opennessKeepsViewMounted || stagingKeepsViewMounted;
+  }
+
+  get shouldFlushView() {
+    return this.state.openness.isClosedFlushing;
+  }
+
   updateTravelStatus(status) {
     if (this.travelStatus !== status) {
       const previousStatus = this.travelStatus;
@@ -1210,7 +1224,7 @@ export default class Controller {
       "pendingFlush",
       () => {
         if (this.state.openness.isClosedPending) {
-          this.state.openness.flushComplete();
+          this.state.openness.advanceClosedStatus();
         }
       },
       3000

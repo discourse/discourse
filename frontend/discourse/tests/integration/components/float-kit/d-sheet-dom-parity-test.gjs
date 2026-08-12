@@ -988,13 +988,12 @@ module("Integration | Component | FloatKit | DSheet", function (hooks) {
       "right",
       "the hidden View configures the replacement track"
     );
-    assert.true(
-      root.sheet.state.skip.isOpening,
-      "the replacement is ready to use the View's opening behavior"
-    );
-
     root.openSheet();
 
+    assert.true(
+      root.sheet.state.skip.isOpening,
+      "reopening synchronizes the View's opening behavior"
+    );
     assert.true(
       root.sheet.state.staging.isOpen,
       "the second open uses the configured skipped-opening path"

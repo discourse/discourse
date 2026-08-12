@@ -120,18 +120,14 @@ export const SHEET_MACHINES = [
                     },
                     { target: "flushing-to-preparing-opening" },
                   ],
-                  [EVENTS.FLUSH_COMPLETE]: "safe-to-unmount",
+                  "": "safe-to-unmount",
                 },
               },
               "flushing-to-preparing-open": {
-                messages: {
-                  [EVENTS.FLUSH_COMPLETE]: "preparing-open",
-                },
+                messages: { "": "preparing-open" },
               },
               "flushing-to-preparing-opening": {
-                messages: {
-                  [EVENTS.FLUSH_COMPLETE]: "preparing-opening",
-                },
+                messages: { "": "preparing-opening" },
               },
               "preparing-open": {},
               "preparing-opening": {},
@@ -163,21 +159,22 @@ export const SHEET_MACHINES = [
             name: "scroll",
             initial: "ended",
             states: {
-              ended: { messages: { [EVENTS.SCROLL_START]: "ongoing" } },
+              ended: {
+                messages: { [EVENTS.SCROLL_START]: "ongoing" },
+                machines: [
+                  {
+                    name: "afterPaintEffectsRun",
+                    initial: MACHINE_STATE.FALSE,
+                    states: {
+                      [MACHINE_STATE.FALSE]: {
+                        messages: { [EVENTS.OCCURRED]: MACHINE_STATE.TRUE },
+                      },
+                      [MACHINE_STATE.TRUE]: {},
+                    },
+                  },
+                ],
+              },
               ongoing: { messages: { [EVENTS.SCROLL_END]: "ended" } },
-            },
-          },
-          {
-            name: "scrollEndedAfterPaintEffectsRun",
-            silentOnly: true,
-            initial: MACHINE_STATE.FALSE,
-            states: {
-              [MACHINE_STATE.FALSE]: {
-                messages: { [EVENTS.OCCURRED]: MACHINE_STATE.TRUE },
-              },
-              [MACHINE_STATE.TRUE]: {
-                messages: { [EVENTS.RESET]: MACHINE_STATE.FALSE },
-              },
             },
           },
           {

@@ -296,7 +296,7 @@ module("Integration | Component | FloatKit | d-bottom-sheet", function (hooks) {
     );
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']");
+    await waitFor(OPEN_VIEW_SELECTOR);
 
     assert.dom("[data-d-sheet~='view']").exists();
     assert.dom(".bottom-sheet__content.--expandable").exists();
