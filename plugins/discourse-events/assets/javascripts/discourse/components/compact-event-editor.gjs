@@ -20,6 +20,7 @@ import PostEventBuilder from "discourse/plugins/discourse-events/discourse/compo
 import {
   defaultEventState,
   isLivestreamUrl,
+  livestreamSource,
   reconcileDefaultReminder,
 } from "discourse/plugins/discourse-events/discourse/lib/raw-event-helper";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
@@ -210,7 +211,7 @@ export default class CompactEventEditor extends Component {
 
   get isLivestreamUrl() {
     return isLivestreamUrl(
-      this.hasLocation ? this.location : this.url,
+      livestreamSource(this.location, this.url),
       this.siteSettings
     );
   }
@@ -317,19 +318,9 @@ export default class CompactEventEditor extends Component {
   }
 
   @action
-  onLocationInput(event) {
+  onLinkFieldInput(field, event) {
     const value = event.target.value;
-    this.location = value === "" ? null : value;
-    if (!this.isLivestreamUrl) {
-      this.livestream = false;
-    }
-    this.#emitChange();
-  }
-
-  @action
-  onUrlInput(event) {
-    const value = event.target.value;
-    this.url = value === "" ? null : value;
+    this[field] = value === "" ? null : value;
     if (!this.isLivestreamUrl) {
       this.livestream = false;
     }
@@ -818,7 +809,7 @@ export default class CompactEventEditor extends Component {
           value={{this.location}}
           class="composer-event__location-input"
           placeholder={{this.locationPlaceholder}}
-          {{on "input" this.onLocationInput}}
+          {{on "input" (fn this.onLinkFieldInput "location")}}
           {{on "focus" this.handleTextInputFocus}}
         />
         {{#if this.isLocationUrl}}
@@ -843,7 +834,7 @@ export default class CompactEventEditor extends Component {
           value={{this.url}}
           class="composer-event__url-input"
           placeholder={{i18n "discourse_post_event.composer.url_placeholder"}}
-          {{on "input" this.onUrlInput}}
+          {{on "input" (fn this.onLinkFieldInput "url")}}
           {{on "focus" this.handleTextInputFocus}}
         />
       </section>

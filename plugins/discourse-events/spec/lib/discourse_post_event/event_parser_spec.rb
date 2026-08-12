@@ -343,9 +343,9 @@ describe DiscoursePostEvent::EventParser do
     end
   end
 
-  describe ".normalize_links" do
+  describe ".cook_location" do
     def present(location)
-      described_class.normalize_links(described_class.cook_inline(location))
+      described_class.cook_location(location)
     end
 
     it "upgrades an inferred scheme to https and keeps it off screen" do

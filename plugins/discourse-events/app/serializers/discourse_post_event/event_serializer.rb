@@ -207,8 +207,7 @@ module DiscoursePostEvent
     end
 
     def location_html
-      @location_html ||=
-        EventParser.normalize_links(EventParser.cook_inline(object.location, post: object.post))
+      @location_html ||= EventParser.cook_location(object.location, post: object.post)
     end
 
     def url_restates_location

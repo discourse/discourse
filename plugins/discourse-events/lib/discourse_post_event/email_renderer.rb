@@ -90,8 +90,7 @@ module DiscoursePostEvent
     end
 
     def cooked_location
-      @cooked_location ||=
-        EventParser.normalize_links(EventParser.cook_inline(event_node["data-location"], post:))
+      @cooked_location ||= EventParser.cook_location(event_node["data-location"], post:)
     end
 
     def location_row

@@ -113,6 +113,18 @@ module DiscoursePostEvent
         end
     end
 
+    def self.cook_location(text, post: nil)
+      text = text.to_s
+      add_nofollow = post.nil? || post.add_nofollow?
+
+      Discourse
+        .cache
+        .fetch(
+          "post-event-location:#{INLINE_CACHE_VERSION}:#{Digest::SHA1.hexdigest(text)}:#{add_nofollow}",
+          expires_in: 1.week,
+        ) { normalize_links(cook_inline(text, post:)) }
+    end
+
     def self.inline_text(text)
       cooked = cook_inline(text)
       PrettyText.excerpt(cooked, cooked.length, strip_links: true, text_entities: true)
@@ -173,7 +185,7 @@ module DiscoursePostEvent
       return true if normalize_link(location) == target
 
       Nokogiri::HTML5
-        .fragment(cooked_location || cook_inline(location))
+        .fragment(cooked_location || cook_location(location))
         .css("a[href]")
         .any? { |anchor| normalize_link(anchor["href"]) == target }
     end

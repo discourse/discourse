@@ -28,6 +28,7 @@ import {
   defaultReminderFor,
   getCustomFieldNames,
   isLivestreamUrl,
+  livestreamSource,
   reconcileDefaultReminder,
 } from "../../lib/raw-event-helper";
 import CompactEventEditor from "../compact-event-editor";
@@ -149,24 +150,14 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  syncLocationToEvent(value, { set }) {
-    set("location", value);
-    this.event.location = value;
+  syncLinkToEvent(field, value, { set }) {
+    set(field, value);
+    this.event[field] = value;
     this.#resetInvalidLivestream(set);
   }
 
-  @action
-  syncUrlToEvent(value, { set }) {
-    set("url", value);
-    this.event.url = value;
-    this.#resetInvalidLivestream(set);
-  }
-
-  // Mirrors `Event#livestream_url` on the server: location takes precedence,
-  // url only carries the livestream when no location is set. A blank location
-  // counts as absent, matching what `buildParams` serializes.
   #livestreamSource() {
-    return this.event.location?.trim() ? this.event.location : this.event.url;
+    return livestreamSource(this.event.location, this.event.url);
   }
 
   #resetInvalidLivestream(set) {
@@ -878,7 +869,7 @@ export default class PostEventBuilder extends Component {
                   @title={{i18n this.locationLabel}}
                   @type="input"
                   @format="full"
-                  @onSet={{this.syncLocationToEvent}}
+                  @onSet={{fn this.syncLinkToEvent "location"}}
                   as |field|
                 >
                   <field.Control
@@ -896,7 +887,7 @@ export default class PostEventBuilder extends Component {
                     }}
                     @type="input"
                     @format="full"
-                    @onSet={{this.syncUrlToEvent}}
+                    @onSet={{fn this.syncLinkToEvent "url"}}
                     as |field|
                   >
                     <field.Control
