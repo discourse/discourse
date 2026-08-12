@@ -5,14 +5,18 @@ import {
   parseBlockName,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/-internals/patterns";
+import {
+  type CustomizationSource,
+  resolveSourceId,
+} from "discourse/lib/customization-source";
 import { isTesting } from "discourse/lib/environment";
-import identifySource from "discourse/lib/source-identifier";
+import { getThemeInfo } from "discourse/lib/source-identifier";
 
 /**
  * Tracks which namespace each source (theme/plugin) has used.
  * Enforces that each source can only register blocks with a single namespace.
  *
- * Key: source identifier (e.g., "theme:Tactile Theme" or "plugin:chat")
+ * Key: source identifier (e.g., "theme:42" or "plugin:chat")
  * Value: the namespace prefix used (e.g., "theme:tactile" or "chat")
  */
 const sourceNamespaceMap = new Map<string, string | null>();
@@ -121,6 +125,9 @@ interface ValidateSourceNamespaceOptions {
   /** Type of entity for error messages. */
   entityType: "block" | "outlet" | "condition";
 
+  /** The plugin or theme the call came from. */
+  source?: CustomizationSource;
+
   /** Whether to enforce single namespace per source. Defaults to `true`. */
   enforceConsistency?: boolean;
 }
@@ -138,9 +145,10 @@ interface ValidateSourceNamespaceOptions {
 export function validateSourceNamespace({
   name,
   entityType,
+  source,
   enforceConsistency = true,
 }: ValidateSourceNamespaceOptions): boolean {
-  const sourceId = getSourceIdentifier();
+  const sourceId = getSourceIdentifier(source);
   if (!sourceId) {
     return true;
   }
@@ -183,9 +191,14 @@ export function validateSourceNamespace({
       existingNamespace !== undefined &&
       existingNamespace !== namespacePrefix
     ) {
+      // Themes are keyed by id, but the message reads better with their name.
+      const sourceLabel =
+        source?.type === "theme"
+          ? `theme:${getThemeInfo(source.id).name}`
+          : sourceId;
       raiseBlockError(
         `${entityCapitalized} "${name}" uses namespace "${namespacePrefix ?? "(core)"}" but ` +
-          `${sourceId} already used namespace "${existingNamespace ?? "(core)"}". ` +
+          `${sourceLabel} already used namespace "${existingNamespace ?? "(core)"}". ` +
           `Each theme/plugin must use a single consistent namespace for all blocks, outlets, and conditions.`
       );
       return false;
@@ -259,27 +272,18 @@ export function createTestRegistrationWrapper({
  */
 
 /**
- * Gets a unique identifier for the current source from the call stack.
- * Returns null for core code (no theme or plugin detected).
+ * Gets a unique identifier for the given customization source. In tests, a value
+ * set via `setTestSourceIdentifier` takes precedence.
  *
- * @returns Source identifier like "theme:Tactile" or "plugin:chat"
+ * @param source - The plugin or theme the call came from.
+ * @returns Source identifier like "theme:42" or "plugin:chat", or null for core.
  */
-function getSourceIdentifier(): string | null {
+function getSourceIdentifier(source?: CustomizationSource): string | null {
   if (DEBUG && testSourceIdentifier !== undefined) {
     return testSourceIdentifier;
   }
 
-  const source = identifySource();
-  if (!source) {
-    return null;
-  }
-  if (source.type === "theme") {
-    return `theme:${source.name}`;
-  }
-  if (source.type === "plugin") {
-    return `plugin:${source.name}`;
-  }
-  return null;
+  return resolveSourceId(source);
 }
 
 /**
