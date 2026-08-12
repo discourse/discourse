@@ -250,6 +250,13 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 10, 13),
         )
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: "test.localhost.example/path",
+          session_id: "lookalike-external-referrer",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 5, 10, 14),
+        )
 
         expect(result.traffic.dig(:dimensions, "referrers")).to eq(
           [
@@ -257,6 +264,11 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             {
               value: "external.example?article=traffic",
               label: "external.example?article=traffic",
+              pageviews: 1,
+            },
+            {
+              value: "test.localhost.example/path",
+              label: "test.localhost.example/path",
               pageviews: 1,
             },
           ],

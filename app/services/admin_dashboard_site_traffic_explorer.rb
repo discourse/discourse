@@ -221,8 +221,7 @@ class AdminDashboardSiteTrafficExplorer
             bpe.id,
             bpe.session_id,
             bpe.normalized_url,
-            bpe.normalized_referrer,
-            split_part(split_part(bpe.normalized_referrer, '/', 1), '?', 1) AS referrer_host
+            bpe.normalized_referrer
           FROM browser_pageview_events bpe
           WHERE bpe.session_id = population_sessions.session_id
             AND bpe.created_at >= :retention_cutoff
@@ -273,7 +272,15 @@ class AdminDashboardSiteTrafficExplorer
           CASE
             WHEN session_entries.id IS NULL OR classified.id <> session_entries.id THEN NULL
             WHEN session_entries.normalized_referrer IS NULL THEN ''
-            WHEN session_entries.referrer_host = :current_hostname THEN ''
+            WHEN session_entries.normalized_referrer = :current_hostname THEN ''
+            WHEN starts_with(
+              session_entries.normalized_referrer,
+              :current_hostname || '/'
+            ) THEN ''
+            WHEN starts_with(
+              session_entries.normalized_referrer,
+              :current_hostname || '?'
+            ) THEN ''
             ELSE session_entries.normalized_referrer
           END AS referrer
         FROM classified
