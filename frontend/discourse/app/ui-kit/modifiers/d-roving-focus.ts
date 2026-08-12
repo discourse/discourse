@@ -5,7 +5,13 @@ import type Owner from "@ember/owner";
 import { cancel, next as nextRunloop } from "@ember/runloop";
 import Modifier, { type ArgsFor } from "ember-modifier";
 
-type SelectionMode = "focus" | "active";
+/**
+ * Which of the practice page's two focus-management strategies the group uses:
+ * a roving tabindex that moves DOM focus, or `aria-activedescendant` on a controller that keeps
+ * it. Named for the strategies rather than for selection, which the page is emphatic is a
+ * different concept.
+ */
+export type DRovingFocusStrategy = "roving-tabindex" | "active-descendant";
 type Orientation = "grid" | "horizontal" | "vertical";
 
 /**
@@ -149,11 +155,11 @@ export type DRovingFocusEntry =
 export type DRovingFocusStepResult = "moved" | "edge" | "unavailable";
 
 interface DRovingFocusArgs {
-  /** `"focus"` (roving tabindex, default) or `"active"` (`aria-activedescendant`). */
-  selectionMode?: SelectionMode;
+  /** Which focus-management strategy the group uses. Default `"roving-tabindex"`. */
+  focusStrategy?: DRovingFocusStrategy;
   /**
    * Navigation axes; `"grid"` (default) allows both, `"horizontal"`/`"vertical"` one. Ignored
-   * under `selectionMode="active"`, which is single-axis by construction: it leaves the
+   * under `focusStrategy="active-descendant"`, which is single-axis by construction: it leaves the
    * horizontal arrows to its controller's caret, so the vertical axis is always the live one
    * there whatever this says.
    */
@@ -161,7 +167,7 @@ interface DRovingFocusArgs {
   /** CSS selector matching the navigable items within the container. */
   itemSelector: string;
   /**
-   * Called when an item is activated: Enter or Space in `"focus"` mode, Enter only in `"active"`
+   * Called when an item is activated: Enter or Space in `"roving-tabindex"` mode, Enter only in `"active-descendant"`
    * mode, where Space belongs to the controller's caret. Only fires when the key landed on the
    * item itself, so a control nested inside an item keeps its own activation.
    */
@@ -172,7 +178,7 @@ interface DRovingFocusArgs {
    * consumer can use to move the cursor without revealing it. Fires even when the cursor is
    * re-placed on the item it already held.
    *
-   * Driven by actual cursor movement, so in `"focus"` mode it reports arrow keys, pointer
+   * Driven by actual cursor movement, so in `"roving-tabindex"` mode it reports arrow keys, pointer
    * presses and the API — not the tab stop being seeded or re-seeded, which moves no cursor —
    * and the `null` clear is an active-mode signal only.
    */
@@ -191,9 +197,9 @@ interface DRovingFocusArgs {
    * consumer handing off to a neighbouring control must resolve the physical side itself.
    *
    * `axis` names the axis travelled, and the two are not symmetric. `"horizontal"` requires
-   * `"horizontal"` or `"grid"` orientation and never fires under `selectionMode="active"`, which
+   * `"horizontal"` or `"grid"` orientation and never fires under `focusStrategy="active-descendant"`, which
    * leaves the horizontal arrows to its controller's caret. `"vertical"` requires `"vertical"`
-   * or `"grid"` in `"focus"` mode, but fires in `"active"` mode whatever `orientation` says,
+   * or `"grid"` in `"roving-tabindex"` mode, but fires in `"active-descendant"` mode whatever `orientation` says,
    * because there the vertical axis is always the live one. A consumer that means "leave the
    * widget" must therefore branch on `axis` rather than treat every boundary alike.
    *
@@ -238,7 +244,7 @@ interface DRovingFocusArgs {
    * Turn it off to place focus yourself, e.g. onto a control outside the group.
    */
   restoreLostFocus?: boolean;
-  /** Class toggled on the active item in `"active"` mode. */
+  /** Class toggled on the active item in `"active-descendant"` mode. */
   activeClass?: string | null;
   /**
    * A reactive key (e.g. the filter string) that re-reconciles the cursor when it changes. The
@@ -251,8 +257,8 @@ interface DRovingFocusArgs {
    * cursor on the active item whenever it survives the change, which is right when rows are
    * appended or revised but wrong when the list becomes a different result set: a row that
    * happens to match both queries would hold the cursor deep in the new list. Change this and
-   * the cursor stops tracking the survivor: in `"active"` mode it re-seeds per
-   * {@link DRovingFocusArgs.entryFocus}; in `"focus"` mode the tab stop is picked afresh rather
+   * the cursor stops tracking the survivor: in `"active-descendant"` mode it re-seeds per
+   * {@link DRovingFocusArgs.entryFocus}; in `"roving-tabindex"` mode the tab stop is picked afresh rather
    * than left on a surviving row.
    *
    * Key it on the query the *rendered* items answer, not the one being typed — a list that
@@ -285,10 +291,10 @@ interface DRovingFocusArgs {
    * consumer owns those attributes; this only reads them.
    *
    * The two modes answer different questions with the same values. Under
-   * `selectionMode="focus"` this is the entry convention from the keyboard-interface practice:
+   * `focusStrategy="roving-tabindex"` this is the entry convention from the keyboard-interface practice:
    * where focus lands when Tab moves into the composite. Toolbars and menubars enter on the
    * first control (`"first"`), while listboxes, radio groups, tabs and trees enter on the
-   * selected one. Under `selectionMode="active"` it is instead what is active when a popup
+   * selected one. Under `focusStrategy="active-descendant"` it is instead what is active when a popup
    * opens, which the combobox pattern leaves to the author: a list that waits for the reader to
    * type or arrow wants `"none"`, and one that should not pre-highlight an arbitrary row but
    * should still restore a held value wants `"selected-or-none"`.
@@ -325,13 +331,13 @@ interface DRovingFocusSignature {
 /**
  * Keyboard navigation for a one-dimensional list or a two-dimensional grid of
  * items, in DOM order. It implements the two WAI-ARIA "single tab stop" patterns
- * from one engine, chosen with `selectionMode`:
+ * from one engine, chosen with `focusStrategy`:
  *
- * - `"focus"` (the default) — a roving tabindex. Exactly one item is reachable with Tab
+ * - `"roving-tabindex"` (the default) — exactly one item is reachable with Tab
  *   (`tabindex="0"`) and the rest are set to `tabindex="-1"`; with `tabStop=false` every item is
  *   set to `-1`. Arrow keys move real DOM focus between items and update tabindex along with it.
  *   Use this when the active item should itself hold focus (a tile grid, a toolbar).
- * - `"active"` — `aria-activedescendant`. DOM focus stays on a separate controller
+ * - `"active-descendant"` — DOM focus stays on a separate controller
  *   element (typically a text input); arrow keys move a *virtual* highlight through
  *   the items by pointing the controller's `aria-activedescendant` at the active
  *   item and toggling `activeClass` on it. Use this for a combobox where the user
@@ -372,7 +378,7 @@ interface DRovingFocusSignature {
  *   id="results"
  *   role="listbox"
  *   {{dRovingFocus
- *     selectionMode="active"
+ *     focusStrategy="active-descendant"
  *     controllerElement="#q"
  *     itemSelector="[role=option]"
  *     activeClass="--active"
@@ -432,11 +438,11 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /**
    * The modes this instance has actually operated in. Teardown consults it so a mode that never
-   * ran cannot hand back attributes it never wrote — `#mode` starts at `"focus"`, so an
+   * ran cannot hand back attributes it never wrote — `#mode` starts at `"roving-tabindex"`, so an
    * active-mode-only group would otherwise strip every author-supplied `tabindex` on its first
    * run and turn items the author had deliberately excluded into tab stops.
    */
-  #enteredModes = new Set<SelectionMode>();
+  #enteredModes = new Set<DRovingFocusStrategy>();
 
   /** Whether `modify()` has run at least once, so the first run is not mistaken for a reset. */
   #hasRun = false;
@@ -479,7 +485,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    */
   #resetKey: unknown = Symbol("unset");
 
-  #mode: SelectionMode = "focus";
+  #mode: DRovingFocusStrategy = "roving-tabindex";
 
   /** Stable controls registered with the consumer for moving the cursor within the group. */
   #api: DRovingFocusApi = Object.freeze({
@@ -551,7 +557,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       // Mirrors what `#reconcileActive` does when the cursor's row disappears, so a cleared
       // group is in exactly the state a vanished cursor leaves behind rather than a second,
       // subtly different one.
-      if (this.#mode !== "active" || !this.#activeId) {
+      if (this.#mode !== "active-descendant" || !this.#activeId) {
         return false;
       }
       this.#activeId = null;
@@ -582,7 +588,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     reannounceActive: () => {
       const id = this.#activeId;
       const listenElement = this.#listenElement;
-      if (this.#mode !== "active" || !id || !listenElement) {
+      if (this.#mode !== "active-descendant" || !id || !listenElement) {
         return false;
       }
       // The item has to still be there. A cursor id outlives its row — a re-render can drop every
@@ -651,7 +657,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     // bubble up from an editable descendant (a text field embedded inside an
     // item). Let that surface keep its own caret and selection keys — including
     // Home/End — rather than hijacking them for navigation.
-    if (this.#mode === "focus" && this.#isEditableTarget(event.target)) {
+    if (
+      this.#mode === "roving-tabindex" &&
+      this.#isEditableTarget(event.target)
+    ) {
       return;
     }
 
@@ -659,7 +668,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     // belong to the listbox; Home/End do too for a non-editable controller, while
     // an editable controller keeps them for its caret.
     if (
-      this.#mode === "active" &&
+      this.#mode === "active-descendant" &&
       event.key !== "ArrowDown" &&
       event.key !== "ArrowUp" &&
       event.key !== "Enter" &&
@@ -696,7 +705,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     // `orientation="horizontal"` would otherwise leave the group with no working arrow key at
     // all, and therefore no way to ever seed a cursor.
     const vertical =
-      this.#mode === "active" ||
+      this.#mode === "active-descendant" ||
       this.#orientation === "vertical" ||
       this.#orientation === "grid";
     // A horizontal axis is physical, so its arrows follow the writing direction: in RTL the
@@ -810,7 +819,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
           current >= 0 &&
           this.#onActivate &&
           this.#isNavigable(cells[current]) &&
-          (this.#mode === "active" || event.target === cells[current])
+          (this.#mode === "active-descendant" ||
+            event.target === cells[current])
         ) {
           event.preventDefault();
           this.#onActivate(cells[current], event);
@@ -842,7 +852,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * @param event - The `mousedown` that landed on the container.
    */
   #handlePointerDown = (event: MouseEvent): void => {
-    if (this.#mode !== "active" || !this.#itemSelector) {
+    if (this.#mode !== "active-descendant" || !this.#itemSelector) {
       return;
     }
     // Only a primary press moves the cursor. A right- or middle-click opens a context menu or
@@ -879,7 +889,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * move that the arrow path has already reported, or invent one the reader did not make.
    */
   #handleFocusIn = (event: FocusEvent): void => {
-    if (this.#mode !== "focus" || !this.#itemSelector) {
+    if (this.#mode !== "roving-tabindex" || !this.#itemSelector) {
       return;
     }
     const target = (event.target as HTMLElement | null)?.closest<HTMLElement>(
@@ -917,7 +927,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     const previousMode = this.#mode;
     const previousActiveClass = this.#activeClass;
     const previousItemSelector = this.#itemSelector;
-    const nextMode = named.selectionMode ?? "focus";
+    const nextMode = named.focusStrategy ?? "roving-tabindex";
 
     // Everything the previous configuration wrote has to be swept BEFORE the new arguments are
     // adopted, because every sweep resolves items through the CURRENT `itemSelector` and class.
@@ -972,7 +982,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.#hasRun = true;
 
     const listenElement =
-      this.#mode === "active"
+      this.#mode === "active-descendant"
         ? this.#resolveController(named.controllerElement)
         : element;
 
@@ -1004,7 +1014,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
     // Recorded before seeding, since seeding is the act that writes to the DOM.
     this.#enteredModes.add(this.#mode);
-    if (this.#mode === "active") {
+    if (this.#mode === "active-descendant") {
       this.#warnMissingFocusIndicator();
       this.#reconcileActive(resetKeyChanged);
     } else {
@@ -1208,7 +1218,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   /**
    * The number of columns the cursor navigates by.
    *
-   * Only a `"grid"` group in `"focus"` mode has a second axis, so both other cases resolve to one
+   * Only a `"grid"` group in `"roving-tabindex"` mode has a second axis, so both other cases resolve to one
    * column without measuring anything. Active mode leaves the horizontal arrows to its
    * controller's caret, so its cursor can never reach a second column — deriving one would
    * strand every item outside the first.
@@ -1221,7 +1231,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * @returns The column count, at least 1.
    */
   #columnCount(): number {
-    if (this.#mode === "active" || this.#orientation !== "grid") {
+    if (this.#mode === "active-descendant" || this.#orientation !== "grid") {
       return 1;
     }
     if (!this.#element) {
@@ -1336,7 +1346,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#warnedNoIndicator = true;
       // eslint-disable-next-line no-console
       console.warn(
-        `dRovingFocus: selectionMode="active" with neither activeClass nor onActiveChange, so ` +
+        `dRovingFocus: focusStrategy="active-descendant" with neither activeClass nor onActiveChange, so ` +
           `nothing marks the active item and the cursor is invisible. Pass activeClass, or ` +
           `render the highlight yourself from onActiveChange.`
       );
@@ -1382,7 +1392,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * can submit or create.
    */
   #currentIndex(cells: HTMLElement[]): number {
-    if (this.#mode === "active") {
+    if (this.#mode === "active-descendant") {
       return cells.findIndex((el) => el.id === this.#activeId);
     }
     const active = document.activeElement;
@@ -1525,7 +1535,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * so the two can never disagree about which item holds the cursor.
    */
   #currentElement(items: HTMLElement[]): HTMLElement | null {
-    if (this.#mode === "active") {
+    if (this.#mode === "active-descendant") {
       return items.find((el) => el.id === this.#activeId) ?? null;
     }
     const active = document.activeElement;
@@ -1749,7 +1759,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * consumer can distinguish "the cursor moved" from "show the cursor".
    */
   #setActive(target: HTMLElement, pointer = false): void {
-    if (this.#mode === "active") {
+    if (this.#mode === "active-descendant") {
       this.#clearActiveClass();
       const id = this.#ensureId(target);
       this.#activeId = id;
@@ -2012,7 +2022,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       // Re-check the conditions that armed it: an arg change between arming and firing can have
       // left active mode entirely, and seeding from here would then take real DOM focus with no
       // keypress behind it.
-      if (this.#mode !== "active" || this.#entryFocus === "none") {
+      if (this.#mode !== "active-descendant" || this.#entryFocus === "none") {
         this.#disarmPendingSeed();
         return;
       }
@@ -2088,8 +2098,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    *
    * @param mode - The mode being left.
    */
-  #exitMode(mode: SelectionMode): void {
-    if (mode === "active") {
+  #exitMode(mode: DRovingFocusStrategy): void {
+    if (mode === "active-descendant") {
       this.#listenElement?.removeAttribute("aria-activedescendant");
       this.#activeId = null;
       this.#clearActiveClass();
