@@ -240,7 +240,11 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_card_tabs(card: "pages", tabs: ["Top URLs", "Entry URLs"])
     expect(traffic).to have_card_tabs(card: "visitors", tabs: ["Browsers", "IP addresses"])
     expect(traffic).to have_row(card: "acquisition", label: "Direct / unknown", count: "2")
-    expect(traffic).to have_row(card: "acquisition", label: "search.example", count: "1")
+    expect(traffic).to have_row(
+      card: "acquisition",
+      label: "search.example/results?token=secret",
+      count: "1",
+    )
     expect(traffic).to have_row(card: "pages", label: "/top", count: "2")
     expect(traffic).to have_url_link(card: "pages", label: "/top", href: "/top")
 
@@ -263,11 +267,14 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     )
     traffic.remove_filter("referrer")
 
-    traffic.filter_row(card: "acquisition", label: "search.example")
-    expect(traffic).to have_filter_pill(dimension: "referrer", label: "search.example")
+    traffic.filter_row(card: "acquisition", label: "search.example/results?token=secret")
+    expect(traffic).to have_filter_pill(
+      dimension: "referrer",
+      label: "search.example/results?token=secret",
+    )
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
-      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&referrer=search.example&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&referrer=search.example%2Fresults%3Ftoken%3Dsecret&start_date=2026-05-01",
     )
     traffic.remove_filter("referrer")
 

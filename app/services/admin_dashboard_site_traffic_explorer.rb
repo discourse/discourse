@@ -86,10 +86,8 @@ class AdminDashboardSiteTrafficExplorer
       when :ip
         IPAddr.new(value.to_s).to_s
       when :referrer
-        BrowserPageviewEventUrlNormalizer
-          .normalize_referrer("https://#{value}")
-          &.split("/", 2)
-          &.first || raise(Discourse::InvalidParameters.new(key))
+        BrowserPageviewEventUrlNormalizer.normalize_referrer("https://#{value}").presence ||
+          raise(Discourse::InvalidParameters.new(key))
       end
     rescue IPAddr::Error
       raise Discourse::InvalidParameters.new(key)
@@ -276,7 +274,7 @@ class AdminDashboardSiteTrafficExplorer
             WHEN session_entries.id IS NULL OR classified.id <> session_entries.id THEN NULL
             WHEN session_entries.normalized_referrer IS NULL THEN ''
             WHEN session_entries.referrer_host = :current_hostname THEN ''
-            ELSE session_entries.referrer_host
+            ELSE session_entries.normalized_referrer
           END AS referrer
         FROM classified
         LEFT JOIN session_entries

@@ -1533,7 +1533,11 @@ RSpec.describe Admin::DashboardController do
               ],
               "referrers" => [
                 { "value" => "", "label" => "Direct / unknown", "pageviews" => 1 },
-                { "value" => "search.example", "label" => "search.example", "pageviews" => 1 },
+                {
+                  "value" => "search.example/results?token=private",
+                  "label" => "search.example/results?token=private",
+                  "pageviews" => 1,
+                },
               ],
               "countries" => [
                 { "value" => "US", "label" => "United States", "pageviews" => 2 },
