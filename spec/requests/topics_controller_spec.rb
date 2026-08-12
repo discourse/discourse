@@ -3029,6 +3029,16 @@ RSpec.describe TopicsController do
             expect(topic.reload.category).to eq(category)
           end
         end
+
+        it "can not clear the category when the guardian disallows the move" do
+          topic.update!(category:)
+          Guardian.any_instance.stubs(:can_move_topic_to_category?).returns(false)
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: nil }, as: :json
+
+          expect(response.status).to eq(403)
+          expect(topic.reload.category_id).to eq(category.id)
+        end
       end
     end
 
