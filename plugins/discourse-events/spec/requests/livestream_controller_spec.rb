@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DiscourseCalendar
+module DiscourseEvents
   describe LivestreamController do
     fab!(:current_user, :user)
     fab!(:tag) { Fabricate(:tag, name: "livestream") }

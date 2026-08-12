@@ -7,7 +7,7 @@ describe CategoriesController do
   before do
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    DiscourseCalendar::Categories::Types::Events.configure_category(
+    DiscourseEvents::Categories::Types::Events.configure_category(
       category,
       guardian: admin.guardian,
     )
@@ -40,7 +40,7 @@ describe CategoriesController do
     end
 
     it "preserves unspecified category_type_settings when only one key is sent" do
-      DiscourseCalendar::Categories::Types::Events.configure_category(
+      DiscourseEvents::Categories::Types::Events.configure_category(
         category,
         guardian: admin.guardian,
         configuration_values: {

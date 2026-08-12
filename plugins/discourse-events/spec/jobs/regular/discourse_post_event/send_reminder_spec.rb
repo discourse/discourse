@@ -12,20 +12,20 @@ describe Jobs::DiscoursePostEventSendReminder do
   let(:reminders) { "notification.5.minutes" }
 
   def init_invitees
-    DiscoursePostEvent::Invitee.create_attendance!(going_user.id, event_1.id, :going)
-    DiscoursePostEvent::Invitee.create_attendance!(interested_user.id, event_1.id, :interested)
-    DiscoursePostEvent::Invitee.create_attendance!(not_going_user.id, event_1.id, :not_going)
-    DiscoursePostEvent::Invitee.create_attendance!(
+    DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, event_1.id, :going)
+    DiscourseEvents::Events::Invitee.create_attendance!(interested_user.id, event_1.id, :interested)
+    DiscourseEvents::Events::Invitee.create_attendance!(not_going_user.id, event_1.id, :not_going)
+    DiscourseEvents::Events::Invitee.create_attendance!(
       going_user_unread_notification.id,
       event_1.id,
       :going,
     )
-    DiscoursePostEvent::Invitee.create_attendance!(
+    DiscourseEvents::Events::Invitee.create_attendance!(
       going_user_read_notification.id,
       event_1.id,
       :going,
     )
-    DiscoursePostEvent::Invitee.create_attendance!(visited_going_user.id, event_1.id, :going)
+    DiscourseEvents::Events::Invitee.create_attendance!(visited_going_user.id, event_1.id, :going)
 
     [
       going_user,
@@ -308,35 +308,35 @@ describe Jobs::DiscoursePostEventSendReminder do
       end
 
       def setup_recurring_event_invitees
-        DiscoursePostEvent::Invitee.create_attendance!(
+        DiscourseEvents::Events::Invitee.create_attendance!(
           going_user.id,
           recurring_event.id,
           :going,
           recurring: true,
         )
-        DiscoursePostEvent::Invitee.create_attendance!(
+        DiscourseEvents::Events::Invitee.create_attendance!(
           interested_user.id,
           recurring_event.id,
           :interested,
         )
-        DiscoursePostEvent::Invitee.create_attendance!(
+        DiscourseEvents::Events::Invitee.create_attendance!(
           not_going_user.id,
           recurring_event.id,
           :not_going,
         )
-        DiscoursePostEvent::Invitee.create_attendance!(
+        DiscourseEvents::Events::Invitee.create_attendance!(
           going_user_unread_notification.id,
           recurring_event.id,
           :going,
           recurring: true,
         )
-        DiscoursePostEvent::Invitee.create_attendance!(
+        DiscourseEvents::Events::Invitee.create_attendance!(
           going_user_read_notification.id,
           recurring_event.id,
           :going,
           recurring: true,
         )
-        DiscoursePostEvent::Invitee.create_attendance!(
+        DiscourseEvents::Events::Invitee.create_attendance!(
           visited_going_user.id,
           recurring_event.id,
           :going,
@@ -424,7 +424,11 @@ describe Jobs::DiscoursePostEventSendReminder do
             timezone: tokyo_timezone,
           )
 
-        DiscoursePostEvent::Invitee.create_attendance!(going_user.id, timezone_event.id, :going)
+        DiscourseEvents::Events::Invitee.create_attendance!(
+          going_user.id,
+          timezone_event.id,
+          :going,
+        )
         going_user.notifications.delete_all
 
         expect { send_reminder(timezone_event) }.to change {
@@ -451,7 +455,7 @@ describe Jobs::DiscoursePostEventSendReminder do
             timezone: la_timezone,
           )
 
-        DiscoursePostEvent::Invitee.create_attendance!(going_user.id, ongoing_event.id, :going)
+        DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, ongoing_event.id, :going)
         going_user.notifications.delete_all
 
         expect { send_reminder(ongoing_event) }.to change {
@@ -472,7 +476,7 @@ describe Jobs::DiscoursePostEventSendReminder do
       end
 
       it "handles expired recurring events" do
-        DiscoursePostEvent::Invitee.create_attendance!(going_user.id, expired_event.id, :going)
+        DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, expired_event.id, :going)
 
         expect(expired_event.starts_at).to be_nil
 
@@ -499,7 +503,7 @@ describe Jobs::DiscoursePostEventSendReminder do
             recurrence: "every_week",
           )
 
-        DiscoursePostEvent::Invitee.create_attendance!(
+        DiscourseEvents::Events::Invitee.create_attendance!(
           dst_user.id,
           dst_event.id,
           :going,

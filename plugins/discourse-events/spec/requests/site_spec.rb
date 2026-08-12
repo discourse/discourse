@@ -6,7 +6,7 @@ describe "calendar site additions" do
 
   before do
     SiteSetting.discourse_events_enabled = true
-    DiscourseCalendar.users_on_holiday = [user.username]
+    DiscourseEvents.users_on_holiday = [user.username]
   end
 
   it "includes users_on_holiday for staff only" do

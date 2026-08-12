@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module DiscoursePostEvent
-  describe EventsController do
+module DiscourseEvents::Events
+  describe DiscourseEvents::EventsController do
     before do
       Jobs.run_immediately!
       SiteSetting.discourse_events_enabled = true
@@ -691,7 +691,7 @@ module DiscoursePostEvent
             Fabricate(
               :event,
               post: private_event_post,
-              status: DiscoursePostEvent::Event.statuses[:private],
+              status: DiscourseEvents::Events::Event.statuses[:private],
               raw_invitees: [restricted_group.name],
             )
           end
