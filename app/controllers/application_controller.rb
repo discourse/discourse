@@ -1096,7 +1096,7 @@ class ApplicationController < ActionController::Base
       value =
         begin
           Integer(params[key])
-        rescue ArgumentError
+        rescue ArgumentError, TypeError
           raise Discourse::InvalidParameters.new(key)
         end
 

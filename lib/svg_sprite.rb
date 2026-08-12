@@ -466,11 +466,30 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     svgs_for(SiteSetting.default_theme_id)[searched_icon.strip] || false
   end
 
-  def self.icon_picker_search(keyword, only_available = false)
-    symbols = svgs_for(SiteSetting.default_theme_id)
-    symbols.slice!(*all_icons(SiteSetting.default_theme_id)) if only_available
-    symbols.reject! { |icon_id, _sym| !icon_id.include?(keyword) } if keyword.present?
-    symbols.sort_by(&:first).map { |id, symbol| { id:, symbol: } }
+  def self.icon_picker_search(keyword, only_available, page:, per_page:, theme_id: nil)
+    ids = picker_icon_ids(theme_id, only_available)
+    ids = ids.lazy.select { |id| id.include?(keyword) } if keyword.present?
+    ids = ids.drop(page * per_page).first(per_page + 1)
+
+    has_more = ids.size > per_page
+    ids = ids.take(per_page)
+
+    missing = only_available ? [] : (ids - picker_icon_ids(theme_id, true)).to_set
+    return { icons: ids.map { |id| { id: } }, has_more: } if missing.empty?
+
+    custom = theme_id.present? ? custom_svgs(theme_id) : {}
+    icons =
+      ids.map { |id| missing.include?(id) ? { id:, symbol: custom[id] || core_svgs[id] } : { id: } }
+    { icons:, has_more: }
+  end
+
+  def self.picker_icon_ids(theme_id, only_available)
+    get_set_cache("picker_icon_ids_#{Theme.transform_ids(theme_id).join(",")}_#{only_available}") do
+      symbols = svgs_for(theme_id)
+      in_sprite = all_icons(theme_id).select { |id| symbols.key?(id) }
+
+      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite).sort
+    end
   end
 
   # For use in no_ember .html.erb layouts

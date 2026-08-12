@@ -10,7 +10,10 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
 
   hooks.beforeEach(function () {
     pretender.get("/svg-sprite/picker-search", () =>
-      response(200, [{ id: "pencil", name: "pencil" }])
+      response(200, {
+        icons: [{ id: "pencil", name: "pencil" }],
+        has_more: false,
+      })
     );
   });
 

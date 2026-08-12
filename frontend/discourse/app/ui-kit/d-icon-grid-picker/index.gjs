@@ -30,8 +30,9 @@ import { i18n } from "discourse-i18n";
  * @property {boolean} [Args.showCaret] - When true, shows a chevron icon in the trigger
  *   that flips between angle-down and angle-up based on the menu's expanded state.
  * @property {boolean} [Args.disabled] - When true, disables the trigger button and clear button.
- * @property {boolean} [Args.onlyAvailable] - When true, only shows icons available in the
- *   current SVG sprite set. Defaults to true.
+ * @property {boolean} [Args.onlyAvailable] - When true, only offers icons available in the
+ *   current SVG sprite set. Defaults to true. Pass false only where saving the value adds
+ *   it to the sprite, otherwise the picked icon is blank once the page reloads.
  * @property {string} [Args.iconColor] - CSS color value applied to icons in both the trigger
  *   and the picker grid via the `--icon-color` custom property.
  * @property {string} [Args.selectedTitle] - Translation key for the trigger button title when an
@@ -123,14 +124,6 @@ export default class DIconGridPicker extends Component {
   }
 
   /**
-   * Forwards to the external `@onShow` callback if provided.
-   */
-  @action
-  onShow() {
-    this.args.onShow?.();
-  }
-
-  /**
    * Handles icon selection by invoking the `@onChange` callback and closing
    * the menu/modal.
    *
@@ -170,7 +163,7 @@ export default class DIconGridPicker extends Component {
         @modalForMobile={{this.modalForMobile}}
         @maxWidth={{490}}
         @autofocus={{true}}
-        @onShow={{this.onShow}}
+        @onShow={{@onShow}}
         @onRegisterApi={{this.onRegisterMenu}}
         @onClose={{@onClose}}
         @inline={{@inline}}

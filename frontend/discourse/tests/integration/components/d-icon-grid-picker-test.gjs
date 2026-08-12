@@ -1,5 +1,9 @@
 import { click, render, triggerKeyEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import {
+  clearExtraSpriteSymbols,
+  hasSpriteSymbol,
+} from "discourse/lib/svg-sprite-loader";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
@@ -10,6 +14,10 @@ function iconFixtures(ids) {
   return ids.map((id) => ({ id, symbol: `<symbol id="${id}"></symbol>` }));
 }
 
+function pickerResponse(icons, hasMore = false) {
+  return response(200, { icons, has_more: hasMore });
+}
+
 module("Integration | Component | DIconGridPicker", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -18,7 +26,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
       const filter = request.queryParams.filter || "";
 
       if (filter === "no-match-xyz") {
-        return response(200, []);
+        return pickerResponse([]);
       }
 
       const allIcons = iconFixtures([
@@ -30,15 +38,14 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
       ]);
 
       if (filter) {
-        return response(
-          200,
-          allIcons.filter((i) => i.id.includes(filter))
-        );
+        return pickerResponse(allIcons.filter((i) => i.id.includes(filter)));
       }
 
-      return response(200, allIcons);
+      return pickerResponse(allIcons);
     });
   });
+
+  hooks.afterEach(clearExtraSpriteSymbols);
 
   test("renders trigger with selected icon", async function (assert) {
     await render(
@@ -580,3 +587,133 @@ async function fillInFilterInput(input, value) {
   await new Promise((resolve) => setTimeout(resolve, 300));
   await waitFor(".d-icon-grid-picker__icon, .d-icon-grid-picker__empty");
 }
+
+module("Integration | Component | DIconGridPicker | paging", function (hooks) {
+  setupRenderingTest(hooks);
+
+  const PAGE_SIZE = 100;
+  const UNBUNDLED = "unbundled-test-icon";
+
+  let requests;
+
+  function pageOf(index) {
+    return iconFixtures(
+      Array.from({ length: PAGE_SIZE }, (_, i) => `icon-${index}-${i}`)
+    );
+  }
+
+  hooks.beforeEach(function () {
+    requests = [];
+
+    pretender.get("/svg-sprite/picker-search", (request) => {
+      requests.push(request.queryParams);
+
+      const page = parseInt(request.queryParams.page, 10) || 0;
+
+      if (request.queryParams.filter === UNBUNDLED) {
+        return pickerResponse(iconFixtures([UNBUNDLED]));
+      }
+
+      return page < 2
+        ? pickerResponse(pageOf(page), true)
+        : pickerResponse(iconFixtures(["last"]));
+    });
+  });
+
+  hooks.afterEach(clearExtraSpriteSymbols);
+
+  test("asks for the first page and reports whether more exist", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+
+    assert.deepEqual(
+      requests,
+      [{ filter: "", only_available: "true", page: "0" }],
+      "requests the first page of available icons"
+    );
+    assert
+      .dom(".d-icon-grid-picker__grid .d-icon-grid-picker__icon")
+      .exists({ count: PAGE_SIZE }, "renders one page of icons");
+  });
+
+  test("loads the next page when arrowing past the last icon", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+
+    const icons = [...document.querySelectorAll(".d-icon-grid-picker__icon")];
+    const last = icons[icons.length - 1];
+    last.focus();
+    await triggerKeyEvent(last, "keydown", "ArrowDown");
+    await waitFor(`[data-icon-id="icon-1-0"]`);
+
+    assert.strictEqual(requests[1].page, "1", "asks for the next page");
+    assert
+      .dom(".d-icon-grid-picker__grid .d-icon-grid-picker__icon")
+      .exists({ count: PAGE_SIZE * 2 }, "appends to the icons already shown");
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "data-icon-id",
+        "icon-1-0",
+        "moves focus onto the first icon of the new page"
+      );
+  });
+
+  test("keeps searched icons out of the page sprite until one is picked", async function (assert) {
+    let selected;
+
+    const onChange = (value) => (selected = value);
+
+    await render(
+      <template>
+        <DIconGridPicker
+          @value={{null}}
+          @onChange={{onChange}}
+          @onlyAvailable={{false}}
+        />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+
+    await fillInFilterInput(
+      document.querySelector(".d-icon-grid-picker__filter .filter-input"),
+      UNBUNDLED
+    );
+    await waitFor(`[data-icon-id="${UNBUNDLED}"]`);
+
+    assert.strictEqual(
+      requests[0].only_available,
+      "false",
+      "searches every icon"
+    );
+    assert
+      .dom(`.d-icon-grid-picker__symbols symbol#${UNBUNDLED}`, document.body)
+      .exists("renders the symbol so the grid can display it");
+    assert.false(
+      hasSpriteSymbol(UNBUNDLED),
+      "leaves the page sprite alone while browsing"
+    );
+
+    await click(`[data-icon-id="${UNBUNDLED}"]`);
+
+    assert.strictEqual(selected, UNBUNDLED, "reports the picked icon");
+    assert.true(
+      hasSpriteSymbol(UNBUNDLED),
+      "adds the picked icon so it still renders once closed"
+    );
+  });
+});

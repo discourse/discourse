@@ -1,3 +1,4 @@
+import { registerDestructor } from "@ember/destroyable";
 import deprecated from "discourse/lib/deprecated";
 import { isDevelopment } from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
@@ -6,7 +7,7 @@ import { i18n } from "discourse-i18n";
 export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
 
-let warnMissingIcons = true;
+let missingIconSuppressions = 0;
 let _iconList;
 
 export const REPLACEMENTS = {
@@ -63,11 +64,28 @@ export function replaceIcon(source, destination) {
 }
 
 export function disableMissingIconWarning() {
-  warnMissingIcons = false;
+  missingIconSuppressions++;
 }
 
 export function enableMissingIconWarning() {
-  warnMissingIcons = false;
+  missingIconSuppressions = Math.max(0, missingIconSuppressions - 1);
+}
+
+/**
+ * Suppresses dev-mode missing-icon warnings for the lifetime of a component
+ * that knowingly renders icons the sprite may not bundle (e.g. a picker
+ * browsing the full catalog). Suppressions are counted, so overlapping
+ * components do not re-enable warnings out from under each other.
+ *
+ * @param {object} owner - A destroyable (component) the suppression is tied to.
+ */
+export function suppressMissingIconWarnings(owner) {
+  if (!isDevelopment()) {
+    return;
+  }
+
+  disableMissingIconWarning();
+  registerDestructor(owner, enableMissingIconWarning);
 }
 
 export function renderIcon(renderType, id, params) {
@@ -124,15 +142,19 @@ function iconClasses(icon, params) {
 }
 
 export function setIconList(iconList) {
-  _iconList = iconList;
+  _iconList = new Set(iconList);
 }
 
 export function isExistingIconId(id) {
-  return _iconList?.includes(id);
+  return _iconList?.has(id);
 }
 
 function warnIfMissing(id) {
-  if (warnMissingIcons && isDevelopment() && !isExistingIconId(id)) {
+  if (
+    missingIconSuppressions === 0 &&
+    isDevelopment() &&
+    !isExistingIconId(id)
+  ) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }

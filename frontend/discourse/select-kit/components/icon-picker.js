@@ -2,13 +2,12 @@ import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse/lib/deprecated";
-import { isDevelopment } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import {
   convertIconClass,
-  disableMissingIconWarning,
-  enableMissingIconWarning,
+  suppressMissingIconWarnings,
 } from "discourse/lib/icon-library";
+import { addExtraSpriteSymbols } from "discourse/lib/svg-sprite-loader";
 import FilterForMore from "discourse/select-kit/components/filter-for-more";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
@@ -17,8 +16,6 @@ import {
 } from "discourse/select-kit/components/select-kit";
 
 const MORE_ICONS_COLLECTION = "MORE_ICONS_COLLECTION";
-const MAX_RESULTS_RETURNED = 200;
-// Matches  max returned results from icon_picker_search in svg_sprite_controller.rb
 
 @classNames("icon-picker")
 @pluginApiIdentifiers("icon-picker")
@@ -32,11 +29,10 @@ export default class IconPicker extends MultiSelectComponent {
     );
 
     this._cachedIconsList = null;
-    this._resultCount = 0;
+    this._cachedHasMore = false;
+    this._hasMore = false;
 
-    if (isDevelopment()) {
-      disableMissingIconWarning();
-    }
+    suppressMissingIconWarnings(this);
 
     this.insertAfterCollection(MAIN_COLLECTION, MORE_ICONS_COLLECTION);
   }
@@ -50,7 +46,7 @@ export default class IconPicker extends MultiSelectComponent {
   modifyContentForCollection(collection) {
     if (collection === MORE_ICONS_COLLECTION) {
       return {
-        shouldShowMoreTip: this._resultCount === MAX_RESULTS_RETURNED,
+        shouldShowMoreTip: this._hasMore,
       };
     }
   }
@@ -62,7 +58,7 @@ export default class IconPicker extends MultiSelectComponent {
 
   search(filter = "") {
     if (filter === "" && this._cachedIconsList?.length) {
-      this._resultCount = this._cachedIconsList.length;
+      this._hasMore = this._cachedHasMore;
       return this._cachedIconsList;
     } else {
       return ajax("/svg-sprite/picker-search", {
@@ -70,12 +66,14 @@ export default class IconPicker extends MultiSelectComponent {
           filter,
           only_available: this.onlyAvailable,
         },
-      }).then((icons) => {
-        icons = icons.map(this._processIcon);
+      }).then((response) => {
+        addExtraSpriteSymbols(response.icons);
+        const icons = response.icons.map(this._processIcon);
         if (filter === "") {
           this._cachedIconsList = icons;
+          this._cachedHasMore = response.has_more;
         }
-        this._resultCount = icons.length;
+        this._hasMore = response.has_more;
         return icons;
       });
     }
@@ -85,29 +83,6 @@ export default class IconPicker extends MultiSelectComponent {
     const iconName = typeof icon === "object" ? icon.id : icon,
       strippedIconName = convertIconClass(iconName);
 
-    const spriteEl = "#svg-sprites",
-      holder = "ajax-icon-holder";
-
-    if (typeof icon === "object") {
-      if (!document.querySelector(`${spriteEl} .${holder}`)) {
-        document
-          .querySelector(spriteEl)
-          .insertAdjacentHTML(
-            "beforeend",
-            `<div class="${holder}" style='display: none;'></div>`
-          );
-      }
-
-      if (!document.querySelector(`${spriteEl} symbol#${strippedIconName}`)) {
-        document
-          .querySelector(`${spriteEl} .${holder}`)
-          .insertAdjacentHTML(
-            "beforeend",
-            `<svg xmlns='http://www.w3.org/2000/svg'>${icon.symbol}</svg>`
-          );
-      }
-    }
-
     return {
       id: iconName,
       name: iconName,
@@ -116,17 +91,11 @@ export default class IconPicker extends MultiSelectComponent {
   }
 
   willDestroyElement() {
-    document
-      .querySelectorAll("#svg-sprites .ajax-icon-holder")
-      .forEach((el) => el.remove());
     super.willDestroyElement(...arguments);
 
     this._cachedIconsList = null;
-    this._resultCount = 0;
-
-    if (isDevelopment()) {
-      enableMissingIconWarning();
-    }
+    this._cachedHasMore = false;
+    this._hasMore = false;
   }
 
   @action
