@@ -5725,7 +5725,6 @@ ja:
         discourse_last_updated: "Discourse が更新されました:"
         version: "バージョン"
         up_to_date: "最新のバージョンです!"
-        critical_available: "重大なアップデートがあります。"
         updates_available: "アップデートがあります。"
         please_update: "更新してください！"
         no_check_performed: "アップデートの確認が行われていません。sidekiq が起動していることを確認してください。"

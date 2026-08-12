@@ -205,6 +205,9 @@ hu:
       llms:
         display_name: "Név"
         provider: "Szolgáltató"
+        vision_modes:
+          disabled:
+            title: "Kikapcsolva"
         save: "Mentés"
         edit: "Szerkesztés"
         delete: Törlés

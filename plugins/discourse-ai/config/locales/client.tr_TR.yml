@@ -865,6 +865,9 @@ tr_TR:
         max_output_tokens: "Maks. çıktı token'ları"
         url: "Modeli barındıran hizmetin URL'si"
         api_key: "Modeli barındıran hizmetin API Anahtarı"
+        vision_modes:
+          disabled:
+            title: "Devre Dışı"
         ai_bot_user: "YZ botu Kullanıcısı"
         cost_input: "Girdi maliyeti"
         cost_cached_input: "Ön belleğe alınmış girdi maliyeti"

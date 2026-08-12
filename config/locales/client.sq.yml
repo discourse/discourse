@@ -4174,7 +4174,6 @@ sq:
         title: "Paneli i kontrollit"
         version: "Versioni"
         up_to_date: "Jeni të azhurnuar!"
-        critical_available: "Përditësim i rëndësishëm."
         updates_available: "Ka përditësime."
         no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "

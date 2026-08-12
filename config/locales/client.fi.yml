@@ -5644,7 +5644,6 @@ fi:
         discourse_last_updated: "Discourse päivitetty:"
         version: "Versio"
         up_to_date: "Sivusto on ajan tasalla!"
-        critical_available: "Kriittinen päivitys on saatavilla."
         updates_available: "Päivityksiä on saatavilla."
         please_update: "Päivitä!"
         no_check_performed: "Päivityksiä ei ole tarkistettu. Varmista, että sidekiq on käynnissä."

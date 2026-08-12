@@ -4292,7 +4292,6 @@ ro:
         title: "Panou de control"
         version: "Versiune"
         up_to_date: "Ești la zi!"
-        critical_available: "O actualizare importantă este disponibilă."
         updates_available: "Sunt disponibile actualizări."
         no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
         stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."

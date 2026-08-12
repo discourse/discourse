@@ -207,6 +207,9 @@ id:
         delete: "Hapus"
       llms:
         display_name: "Nama"
+        vision_modes:
+          disabled:
+            title: "Dinonaktifkan"
         save: "Simpan"
         edit: "Ubah"
         delete: Hapus

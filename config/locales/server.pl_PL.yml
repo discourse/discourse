@@ -2970,7 +2970,7 @@ pl_PL:
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
       content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
-      content_localization_language_switcher_requirements: "Przełącznik języka wymaga włączenia opcji {{setting:set_locale_from_cookie}} i {{setting:allow_user_locale}} , a także ustawienia opcji {{setting:content_localization_supported_locales}} , co najmniej jednego języka. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
+      content_localization_language_switcher_requirements: "Przełącznik języka wymaga włączenia opcji {{setting:allow_user_locale}} i ustawienia co najmniej jednego języka dla opcji {{setting:content_localization_supported_locales}} . {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "Przed włączeniem tego ustawienia należy najpierw włączyć opcję „ustaw ustawienia regionalne z parametrów”."
       mediaconvert_role_arn_required: "Rola AWS IAM ARN jest wymagana w przypadku korzystania z AWS MediaConvert do konwersji wideo."
       mediaconvert_output_subdirectory_required: "Podkatalog wyjściowy MediaConvert jest wymagany."
@@ -5391,6 +5391,8 @@ pl_PL:
 
       Ten dokument jest na licencji CC-BY-SA. Ostatnia aktualizacja miała miejsce [WSTAW TUTAJ DATĘ OSTATNIEJ AKTUALIZACJI].
   badges:
+    errors:
+      cant_delete_system_badge: Odznak systemowych nie można usunąć.
     mass_award:
       errors:
         invalid_csv: Natrafiliśmy na błąd w linii %{line_number}. Upewnij się, że plik CSV zawiera jeden adres w każdej linii.

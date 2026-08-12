@@ -6265,7 +6265,6 @@ es:
         discourse_last_updated: "Última actualización de Discourse:"
         version: "Versión"
         up_to_date: "Estás en la última versión"
-        critical_available: "Actualización crítica disponible."
         updates_available: "Hay actualizaciones disponibles."
         please_update: "Por favor, ¡actualiza!"
         no_check_performed: "Todavía no se ha realizado ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."

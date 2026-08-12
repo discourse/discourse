@@ -9,6 +9,10 @@ de:
     problem:
       hcaptcha_configuration: "Es gibt ein Problem mit deiner hCaptcha-Konfiguration für `site_key` oder `secret_key`"
       recaptcha_configuration: "Es gibt ein Problem mit deiner ReCaptcha -Konfiguration für `site_key` oder `secret_key`"
+  admin:
+    site_settings:
+      categories:
+        discourse_captcha: "Captcha-Plug-in"
   site_settings:
     discourse_captcha_enabled: "Aktiviere die Captcha-Verifizierung für die Registrierung neuer Benutzer. Dazu musst du unten entweder hCaptcha oder reCaptcha konfigurieren."
     discourse_captcha_provider: "Wähle einen Captcha-Anbieter aus. Dazu musst du ein Konto bei dem ausgewählten Anbieter haben."

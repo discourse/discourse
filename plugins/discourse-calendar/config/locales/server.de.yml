@@ -75,6 +75,11 @@ de:
     sidebar_show_upcoming_events: "Zeige den Link für anstehende Ereignisse in der Seitenleiste unter „Mehr“."
     calendar_first_day_of_week: "Lege den ersten Wochentag für die Kalenderanzeige fest. Zur Auswahl stehen Samstag, Sonntag oder Montag."
     enable_events_category_type_setup: "Aktiviert die Option „Ereignisse“ als Kategorietyp bei der Einrichtung der Kategorieerstellung."
+    livestream_allowed_hosts: "Hosts, die als Livestream für Ereignisse genutzt werden können."
+    livestream_allowed_hosts_invalid: "Diese Einträge sind keine Hosts: %{hosts}. Gib den Host allein ein (zum Beispiel zoom.us), wodurch alle URLs auf diesem Host und seinen Subdomains zugelassen werden."
+    livestream_zoom_enabled: "Aktiviere die Zoom-Videoeinbettung für Livestream-Themen."
+    livestream_zoom_sdk_key: "Client-ID des Zoom Meeting SDK."
+    livestream_zoom_sdk_secret: "Client-Secret des Zoom Meeting SDK."
     livestream_embeddable_chat_allowed_paths: "Erlaubte Pfade für den einbettbaren Livestream-Chat."
     livestream_enable_modal_chat_on_mobile: "Zeige den Livestream-Chat auf Mobilgeräten in einer Dialogbox an."
   discourse_calendar:
@@ -103,6 +108,9 @@ de:
       all_events_feed_name: "%{site_title} - Alle Ereignisse"
       my_events_feed_name: "%{site_title} - Meine Ereignisse"
     invite_user_notification: "%{username} lädt dich ein zu: %{description}"
+    livestream:
+      chat:
+        topic_reference_message: "Dieser Kanal ist für das Ereignis [%{title}](%{url}) gedacht – schau im Thema vorbei, um mehr zu erfahren und dich anzumelden."
     calendar_must_be_in_first_post: "Kalender-Tag kann nur im ersten Beitrag eines Themas verwendet werden."
     more_than_one_calendar: "Ein Beitrag kann nicht mehr als einen Kalender enthalten."
     more_than_two_dates: "Ein Beitrag zu einem Kalenderthema kann nicht mehr als zwei Daten enthalten."
@@ -112,7 +120,12 @@ de:
       description: "Im Urlaub"
   discourse_post_event:
     event_excerpt:
+      summary: "📅 %{summary}"
+      separator: " · "
+      date_range: "%{from} → %{to}"
+      date_with_timezone: "%{date} (%{timezone})"
       date_format: "%-d. %B %Y"
+      datetime_format: "%-d. %B %Y %-I:%M %p"
     notifications:
       before_event_reminder: "%{title} fängt gleich an."
       after_event_reminder: "%{title} ist beendet."

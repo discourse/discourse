@@ -2956,7 +2956,6 @@ sr:
         title: "Komandna Tabla"
         version: "Verzija"
         up_to_date: "Imate trenutnu verziju!"
-        critical_available: "Dostupno je kritično ažuriranje."
         updates_available: "Ažuriranje je dostupno."
         no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."

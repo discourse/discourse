@@ -6248,7 +6248,6 @@ el:
         discourse_last_updated: "Το Discourse ενημερώθηκε:"
         version: "Έκδοση"
         up_to_date: "Είσαι ενήμερος!"
-        critical_available: "Μια κρίσιμη ενημέρωση είναι διαθέσιμη"
         updates_available: "Υπάρχουν διαθέσιμες ενημερώσεις"
         please_update: "Παρακαλούμε ενημερώστε!"
         no_check_performed: "Δεν έγινε έλεγχος για ενημερώσεις. Βεβαιωθείτε ότι το Sidekiq εκτελείται."

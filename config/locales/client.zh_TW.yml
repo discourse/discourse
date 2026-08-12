@@ -5030,7 +5030,6 @@ zh_TW:
         discourse_last_updated: "話語更新："
         version: "版本"
         up_to_date: "你使用的是最新版本!"
-        critical_available: "有重要更新可以安裝。"
         updates_available: "有更新可以安裝。"
         please_update: "請更新！"
         no_check_performed: "從未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"

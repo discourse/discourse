@@ -6047,7 +6047,6 @@ sk:
         discourse_last_updated: "Discourse bol aktualizovaný:"
         version: "Verzia"
         up_to_date: "Máte nainštalovanú najnovšiu verziu!"
-        critical_available: "Je dostupná kritická aktualizácia."
         updates_available: "Aktualizácie sú k dispozícii."
         please_update: "Aktualizujte prosím!"
         no_check_performed: "Neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."

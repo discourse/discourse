@@ -6201,7 +6201,6 @@ ur:
         discourse_last_updated: "ڈسکورس اَپ ڈیٹ کیا گیا:"
         version: "ورژن"
         up_to_date: "آپ اَپ ٹو ڈیٹ ہیں!"
-        critical_available: "ایک انتہائی اہم اَپ ڈیٹ دستیاب ہے۔"
         updates_available: "اَپ ڈیٹس دستیاب ہیں۔"
         please_update: "براہ کرم اپ ڈیٹ کریں!"
         no_check_performed: "اَپ ڈیٹس کے لئے چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"

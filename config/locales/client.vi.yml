@@ -5782,7 +5782,6 @@ vi:
         discourse_last_updated: "Đã cập nhật website:"
         version: "Phiên bản"
         up_to_date: "Bạn đã cập nhật!"
-        critical_available: "Bản cập nhật quan trọng sẵn sằng."
         updates_available: "Cập nhật đang sẵng sàng"
         please_update: "Vui lòng cập nhật!"
         no_check_performed: "Kiểm tra phiên bản mới đã không được thực hiện, đảm bảo rằng Sidekiq đang chạy."

@@ -6333,7 +6333,6 @@ nl:
         discourse_last_updated: "Discourse bijgewerkt:"
         version: "Versie"
         up_to_date: "Je bent helemaal bij!"
-        critical_available: "Er is een kritieke update beschikbaar."
         updates_available: "Er zijn updates beschikbaar."
         please_update: "Werk bij!"
         no_check_performed: "Er is niet op updates gecontroleerd. Zorg dat Sidekiq actief is."
