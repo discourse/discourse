@@ -1244,10 +1244,10 @@ export default class Composer extends RestModel {
           Object.keys(_edit_topic_serializer)
         );
         // frontend should have featuredLink but backend needs featured_link
-        if (topicProps.featuredLink) {
-          topicProps.featured_link = topicProps.featuredLink;
-          delete topicProps.featuredLink;
+        if (topicProps.featuredLink !== topic.featured_link) {
+          topicProps.featured_link = topicProps.featuredLink ?? null;
         }
+        delete topicProps.featuredLink;
 
         // If we're editing a shared draft, keep the original category
         if (this.action === EDIT_SHARED_DRAFT) {

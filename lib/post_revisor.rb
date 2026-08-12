@@ -184,12 +184,12 @@ class PostRevisor
   track_topic_field(:tags) { |tc, tags| tc.apply_tag_changes(tags) }
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
-    if !SiteSetting.topic_featured_link_enabled ||
-         !topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
+    if featured_link.blank?
+      track_and_revise topic_changes, :featured_link, nil
+    elsif !topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
       topic_changes.check_result(false)
     else
-      topic_changes.record_change("featured_link", topic_changes.topic.featured_link, featured_link)
-      topic_changes.topic.featured_link = featured_link
+      track_and_revise topic_changes, :featured_link, featured_link
     end
   end
 
