@@ -1957,6 +1957,7 @@ content_localization:
     area: "localization"
   content_localization_max_locales:
     default: 10
+    client: true
     type: integer
     hidden: true
   content_localization_crawler_param:
