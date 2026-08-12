@@ -518,26 +518,16 @@ fr:
       pill: "Suggérés"
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Lancement en %{step_count} étapes simples"
       congrats_onboarding_complete: "Félicitations pour avoir terminé le processus d'intégration !"
       select_theme:
         title: "Personnalisez votre site"
-        description: "Choisissez un thème de départ pour votre communauté"
-        action: "Sélectionner un thème"
-        modal_title: "Choisissez un thème"
-        use_theme: "Utiliser le thème sélectionné"
-        enabled: "Sélectionné"
-        applying_theme: "Application du thème..."
-        browse_all: "Gérer les thèmes"
         show_light_screenshot: "Afficher une capture d'écran claire"
         show_dark_screenshot: "Afficher une capture d'écran sombre"
       invite_collaborators:
         title: "Inviter des collaborateurs"
-        description: "Les premiers membres contribuent à donner vie à votre communauté."
         action: "Créer une invitation"
       start_posting:
         title: "Commencer à publier"
-        description: "Donnez aux participants un sujet de conversation."
         action: "Découvrir des idées"
         choose_option: "Comment souhaitez-vous commencer ?"
         predefined_topics: "Modèles d'activités pour briser la glace"
@@ -558,6 +548,27 @@ fr:
           what_is_your_favorite_food:
             title: "Quel est votre plat préféré ?"
             body: "Partagez vos plats préférés avec la communauté ! Je commence : j'adore la pizza, surtout avec un supplément de fromage et de pepperoni."
+    design_wizard:
+      title: "Personnalisez votre site"
+      back: "Retour"
+      next: "Suivant"
+      sections:
+        theme: "Thème"
+        fonts: "Polices"
+        homepage: "Page d'accueil"
+      theme:
+        selected: "Sélectionné"
+      colors:
+        light: "Clair"
+        dark: "Sombre"
+      fonts:
+        base_font: "Police de base"
+        heading_font: "Police de titre"
+      homepage:
+        topics: "Sujets"
+        categories: "Catégories"
+        styles:
+          boxes: "Boîtes"
     about:
       edit: "Modifier cette page"
       simple_title: "À propos"
@@ -864,10 +875,6 @@ fr:
       stale_help: "Cet élément a été résolu par <b>%{username}</b>."
       claim_help:
         optional: "Vous pouvez vous réserver cet élément pour empêcher d'autres responsables de l'examiner."
-        required: "Vous devez réserver un élément avant de l'examiner."
-        claimed_by_you: "Vous avez réservé cet élément et pouvez donc l'examiner."
-        claimed_by_other: "Cet élément ne peut être examiné que par <b>%{username}</b>."
-        automatically_claimed_by: "Cet élément est actuellement en cours d'examen par <b>%{username}</b>."
       claim:
         title: "Réserver ce sujet"
       unclaim:
@@ -2980,6 +2987,7 @@ fr:
       subcategory_count:
         one: "+%{count} sous-catégorie"
         other: "+%{count} sous-catégories"
+      subcategories: "+ Sous-catégories"
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
@@ -3052,6 +3060,7 @@ fr:
       toggle: "Afficher/masquer les filtres déroulants"
     d_icon_grid_picker:
       select_icon: "Sélectionner l'icône"
+      search_label: "Rechercher des icônes"
       search_placeholder: "Rechercher des icônes..."
       no_results: "Aucune icône n'a été trouvée"
       results_count:
@@ -3492,7 +3501,6 @@ fr:
         other: "%{count} demandes d'adhésion ouvertes pour « %{group_name} »"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - terminé"
       new_features: "Nouvelles fonctionnalités disponibles !"
       admin_problems: "De nouveaux conseils sur votre tableau de bord"
       upcoming_changes:
@@ -6758,6 +6766,33 @@ fr:
       new_features:
         title: "Quoi de neuf ?"
         check_for_updates: "Vérifier les mises à jour"
+      site_traffic_explorer:
+        pageviews: "Pages vues"
+        view_more: "Voir plus"
+        cards:
+          pages: "Pages"
+          visitors: "Visiteurs"
+        columns:
+          referrers: "Source de trafic"
+          countries: "Pays"
+          top_urls: "URL"
+          browsers: "Navigateur"
+          ip_addresses: "Adresse IP"
+        filters:
+          referrer: "Source de trafic"
+          country: "Pays"
+          browser: "Navigateur"
+          ip: "Adresse IP"
+        metrics:
+          pageviews:
+            label: "Pages vues"
+          logged_in_share:
+            label: "Part des pages vues par des utilisateurs connectés"
+          bounce_rate:
+            label: "Taux de rebond"
+        series:
+          logged_in_human: "Utilisateurs connectés"
+          anonymous_human: "Anonymes"
       dashboard:
         title: "Tableau de bord"
         last_updated: "Dernière actualisation du tableau de bord :"
@@ -6767,7 +6802,6 @@ fr:
         up_to_date_newer_commits:
           one: "Vous utilisez la version la plus récente, mais %{count} nouvelle modification est disponible."
           other: "Vous utilisez la version la plus récente, mais %{count} nouvelles modifications sont disponibles."
-        critical_available: "Une mise à jour critique est disponible."
         updates_available: "Des mises à jour sont disponibles."
         please_update: "Veuillez mettre à jour !"
         no_check_performed: "Une vérification de mises à jour n'a pas été effectuée. Vérifiez que sidekiq est en cours d'exécution."

@@ -1202,6 +1202,7 @@ en:
       date_filter: "Posted between"
       in_reply_to: "in reply to"
       filtered_flagged_by: "Flagged by"
+      no_component_found: "No component found for %{type}"
       unknown:
         title:
           one: "You have pending review queue items from disabled plugin:"
@@ -7521,6 +7522,75 @@ en:
       new_features:
         title: "What's new?"
         check_for_updates: "Check for updates"
+      site_traffic_explorer:
+        title: "Site Traffic Explorer"
+        loading: "Loading traffic…"
+        errors:
+          timeout: "This traffic query took too long. Choose a shorter date range and try again."
+          unexpected: "Couldn't load site traffic. Try again."
+        empty: "No matching pageviews"
+        summary: "Traffic summary"
+        traffic_over_time: "Traffic over time"
+        pageviews: "Pageviews"
+        metric_information: "About this metric"
+        active_filters: "Active traffic filters"
+        filter_description: "%{filter} is <strong>%{value}</strong>"
+        filter_by:
+          one: "Filter by %{label}, %{count} pageview"
+          other: "Filter by %{label}, %{count} pageviews"
+        remove_filter: "Remove %{filter} filter"
+        remove_traffic_type_filter: "Remove %{value} traffic filter"
+        view_more: "View more"
+        no_dimension_data: "No data for this breakdown."
+        direct_or_unknown: "Direct / unknown"
+        cards:
+          acquisition: "Acquisition"
+          pages: "Pages"
+          visitors: "Visitors"
+        dimensions:
+          referrers: "Referrers"
+          countries: "Countries"
+          networks: "Networks"
+          top_urls: "Top URLs"
+          entry_urls: "Entry URLs"
+          browsers: "Browsers"
+          ip_addresses: "IP addresses"
+        columns:
+          referrers: "Referrer"
+          countries: "Country"
+          networks: "Network"
+          top_urls: "URL"
+          entry_urls: "Entry URL"
+          browsers: "Browser"
+          ip_addresses: "IP address"
+        filters:
+          traffic_type: "Traffic type"
+          top_url: "Top URL"
+          entry_url: "Entry URL"
+          referrer: "Referrer"
+          country: "Country"
+          network: "Network"
+          browser: "Browser"
+          ip: "IP address"
+        metrics:
+          pageviews:
+            label: "Pageviews"
+          distinct_sessions:
+            label: "Distinct sessions"
+          logged_in_share:
+            label: "Logged-in share"
+          bounce_rate:
+            label: "Bounce rate"
+          average_session_duration:
+            label: "Average session duration"
+        series:
+          logged_in_human: "Logged in"
+          anonymous_human: "Anonymous"
+          likely_crawler: "Likely crawlers"
+        partial:
+          retention: "Detailed pageview activity before %{date} is no longer available, so these results cover only part of the selected date range."
+          pageview_limit: "These results are limited to the most recent %{limit} pageviews in the selected date range. Choose a shorter date range to include all available traffic."
+          combined: "Detailed pageview activity before %{date} is no longer available, so these results cover only part of the selected date range. They are also limited to the most recent %{limit} pageviews. Choose a shorter date range within the available dates to include all available pageview activity."
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -7530,7 +7600,6 @@ en:
         up_to_date_newer_commits:
           one: "You're on the most recent release, but %{count} new change is available."
           other: "You're on the most recent release, but %{count} new changes are available."
-        critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_update: "Please update!"
         no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."

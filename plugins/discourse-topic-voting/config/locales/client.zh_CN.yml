@@ -17,6 +17,7 @@ zh_CN:
     topic_voting:
       notification_label:
         vote_released: "投票已返还"
+        voting_closed: "投票已结束"
       hot_nav_help: "近期热门话题，包括近期票数最多的话题"
       voted: "您已经为为话题投过票了"
       vote_title: "投票"
@@ -50,5 +51,13 @@ zh_CN:
           topic_upvote: "当用户对某个话题投票时"
           topic_unvote: "当用户对某个话题取消投票时"
     discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "需要启用话题投票"
+      nodes:
+        "trigger:topic_received_vote": "话题已收到投票"
+      node_descriptions:
+        "trigger:topic_received_vote": "当用户对某个话题投票时触发"
       topic_received_vote:
+        category_ids_description: "仅对这些类别中的话题触发。留空则表示匹配所有类别。"
         tag_names: "标签"
+        tag_names_description: "仅对包含以下标签之一的话题触发"

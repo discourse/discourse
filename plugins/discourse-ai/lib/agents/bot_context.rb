@@ -26,8 +26,12 @@ module DiscourseAi
                     :bypass_response_format,
                     :mcp_state,
                     :guardian,
-                    :reviewable_id
-
+                    :reviewable_id,
+                    :server_owned_tools,
+                    :runtime_tools,
+                    :runtime_tools_llm_model_id,
+                    :authorized_image_upload_ids,
+                    :view_image_invocations
       def initialize(
         post: nil,
         topic: nil,
@@ -50,7 +54,8 @@ module DiscourseAi
         inferred_concepts: [],
         format_dates: false,
         bypass_response_format: false,
-        guardian: nil
+        guardian: nil,
+        server_owned_tools: true
       )
         @participants = participants
         @user = user
@@ -79,6 +84,9 @@ module DiscourseAi
         @mcp_state = {}
 
         @guardian = guardian
+        @server_owned_tools = server_owned_tools
+        @authorized_image_upload_ids = Set.new
+        @view_image_invocations = 0
 
         if post
           @post_id = post.id
@@ -94,6 +102,18 @@ module DiscourseAi
           @participants ||= topic.allowed_users.map(&:username).join(", ") if @private_message
           @user ||= topic.user
         end
+      end
+
+      def image_guardian(fallback_user: nil)
+        guardian || Guardian.new(user || fallback_user)
+      end
+
+      def register_image_upload(upload_id)
+        authorized_image_upload_ids << upload_id.to_i
+      end
+
+      def image_upload_authorized?(upload_id)
+        authorized_image_upload_ids.include?(upload_id.to_i)
       end
 
       # these are strings that can be safely interpolated into templates

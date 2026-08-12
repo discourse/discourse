@@ -40,7 +40,7 @@ class AdminDashboardSiteTraffic
       pageview_series: pageview_series(current_rows, include_embedded: include_embedded),
     }
 
-    if SiteSetting.persist_browser_pageview_events
+    if SiteSetting.persist_browser_pageview_events && !SiteSetting.use_legacy_pageviews
       top_countries = fetch_card("top_countries_by_browser_pageviews")
       response[:top_countries] = top_countries if top_countries
 

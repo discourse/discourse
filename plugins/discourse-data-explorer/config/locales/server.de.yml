@@ -15,12 +15,15 @@ de:
           name: "Daten-Explorer-Abfrageerstellung"
           description: "Erstellt SQL-Abfragen für den Daten-Explorer aus natürlicher Sprache"
       tool_help:
+        find_queries: "Findet vorhandene Daten-Explorer-Abfragen, die als nützliche Beispiele dienen könnten"
         run_sql: "Führt eine SQL-Abfrage aus und gibt die Ergebnisse zurück"
         submit_query: "Sendet die endgültig generierte Abfrage ab"
       tool_summary:
+        find_queries: "Beispielanfragen finden"
         run_sql: "Ausführen der SQL-Abfrage"
         submit_query: "Generierte Anfrage wird übermittelt"
       tool_description:
+        find_queries: "Beispielabfragen für %{search} gefunden"
         run_sql: "SQL-Abfrage ausgeführt"
         submit_query: "Generierte Abfrage %{name} wurde übermittelt"
   discourse_data_explorer:

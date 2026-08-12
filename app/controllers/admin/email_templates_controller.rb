@@ -163,12 +163,8 @@ class Admin::EmailTemplatesController < Admin::AdminController
         rest_serializer: true,
       )
     else
-      TranslationOverride.upsert!(
-        I18n.locale,
-        "#{key}.subject_template",
-        subject_result[:old_value],
-      )
-      TranslationOverride.upsert!(I18n.locale, "#{key}.text_body_template", body_result[:old_value])
+      restore_key(subject_result)
+      restore_key(body_result)
 
       render_json_error(error_messages)
     end
@@ -201,12 +197,23 @@ class Admin::EmailTemplatesController < Admin::AdminController
 
   def update_key(key, value)
     old_value = I18n.t(key)
+    has_override = TranslationOverride.exists?(locale: I18n.locale, translation_key: key)
 
     unless old_value.is_a?(Hash)
       translation_override = TranslationOverride.upsert!(I18n.locale, key, value)
     end
 
-    { key:, old_value:, error_messages: translation_override&.errors&.full_messages }
+    { key:, old_value:, has_override:, error_messages: translation_override&.errors&.full_messages }
+  end
+
+  def restore_key(update_result)
+    return if update_result[:old_value].is_a?(Hash)
+
+    if update_result[:has_override]
+      TranslationOverride.upsert!(I18n.locale, update_result[:key], update_result[:old_value])
+    else
+      TranslationOverride.revert!(I18n.locale, update_result[:key])
+    end
   end
 
   def revert_and_log(*keys)

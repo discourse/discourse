@@ -9,7 +9,7 @@ import {
 import FormatSelectedContent from "discourse/select-kit/components/multi-select/format-selected-content";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SelectKitHeaderComponent from "discourse/select-kit/components/select-kit/select-kit-header";
-import { or } from "discourse/truth-helpers";
+import { and, or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("summary")
@@ -66,6 +66,17 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
       {{#each this.icons as |iconName|}}
         {{dIcon iconName}}
       {{/each}}
+
+      {{#if
+        (and
+          this.selectKit.options.useHeaderSelectedCount
+          this.selectedContent.length
+        )
+      }}
+        <span
+          class="multi-select-header__selected-count"
+        >{{this.selectedContent.length}}</span>
+      {{/if}}
 
       {{#if this.selectKit.options.useHeaderFilter}}
         <div class="select-kit-header--filter">

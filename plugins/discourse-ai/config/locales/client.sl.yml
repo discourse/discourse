@@ -181,6 +181,9 @@ sl:
           required: "Zahtevano"
       llms:
         display_name: "Ime"
+        vision_modes:
+          disabled:
+            title: "Onemogočeno"
         save: "Shrani"
         edit: "Uredi"
         delete: Izbriši

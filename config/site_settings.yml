@@ -621,6 +621,12 @@ basic:
     min: 1
     max: 20000
     hidden: true
+  admin_site_traffic_event_cap:
+    default: 1000000
+    type: integer
+    min: 1
+    max: 1000000
+    hidden: true
   browser_pageview_max_engaged_seconds:
     default: 1800
     type: integer
@@ -1932,8 +1938,11 @@ content_localization:
       - all
     default: none
     client: true
+    refresh: true
     area: "localization"
     validator: "LanguageSwitcherSettingValidator"
+    depends_on:
+      - "content_localization_enabled"
   content_localization_allowed_groups:
     type: group_list
     list_type: compact
@@ -1948,6 +1957,7 @@ content_localization:
     area: "localization"
   content_localization_max_locales:
     default: 10
+    client: true
     type: integer
     hidden: true
   content_localization_crawler_param:
@@ -3125,10 +3135,10 @@ security:
     hidden: true
     default: "cubot|MetaIAB"
   # 38365/55967=Baidu, 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
-  # 13238=Yandex
+  # 13238=Yandex, 45102=Alibaba
   crawler_asns:
     hidden: true
-    default: "38365|55967|140577|210743|7941|13238"
+    default: "38365|55967|140577|210743|7941|13238|45102"
     type: list
     list_type: compact
   # 16509/14618=AWS, 16276=OVH, 136907/55990=Huawei Cloud,
@@ -4640,6 +4650,10 @@ dashboard:
       - user_to_user_private_messages_with_replies
       - signups
     area: "reports"
+  enable_site_traffic_explorer:
+    default: false
+    client: true
+    hidden: true
   verbose_user_stat_count_logging:
     hidden: true
     default: false

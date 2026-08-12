@@ -5,6 +5,7 @@ import { modifier as modifierFn } from "ember-modifier";
 import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import type FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
+import { horizontalViewportInset } from "discourse/float-kit/lib/update-position";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -80,14 +81,20 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
     };
   });
 
-  hoverGrace = modifierFn((element) => {
+  /**
+   * Extends the trigger's grace period across the content itself, so hovering onto the
+   * float keeps it open and leaving it starts the close. Focus moving within the
+   * content is not a departure, so it holds the lock rather than scheduling a close.
+   */
+  hoverGrace = modifierFn((element: HTMLElement) => {
     const instance = this.args.instance;
 
     const onPointerEnter = () => instance.cancelHoverClose();
     const onPointerLeave = () => instance.scheduleHoverClose();
     const onFocusIn = () => instance.lockHoverCloseForFocus();
-    const onFocusOut = (event) => {
-      if (event.relatedTarget && element.contains(event.relatedTarget)) {
+    const onFocusOut = (event: FocusEvent) => {
+      const nextFocused = event.relatedTarget;
+      if (nextFocused instanceof Node && element.contains(nextFocused)) {
         return;
       }
       instance.unlockHoverCloseForFocus();
@@ -107,7 +114,13 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
     };
   });
 
-  get supportsHoverGrace() {
+  /**
+   * Whether to install the grace-period listeners on the content. Only meaningful while
+   * the float is open, and only when a grace period is configured.
+   *
+   * @returns `true` when the content should participate in the grace period.
+   */
+  get supportsHoverGrace(): boolean {
     return this.args.instance.expanded && this.options.hoverGracePeriod > 0;
   }
 
@@ -152,12 +165,16 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
   }
 
   get style() {
-    const maxWidth =
-      typeof this.options.maxWidth === "number"
-        ? `${this.options.maxWidth}px`
-        : this.options.maxWidth;
+    const { maxWidth } = this.options;
 
-    return trustHTML(`max-width: ${maxWidth}`);
+    // Only a number is clamped: a keyword like `none` or `unset` is invalid inside `min()`,
+    // which would drop the declaration and hand the float to whatever CSS sets `max-width`.
+    const value =
+      typeof maxWidth === "number"
+        ? `min(${maxWidth}px, calc(100dvw - ${horizontalViewportInset(this.options)}px))`
+        : maxWidth;
+
+    return trustHTML(`max-width: ${value}`);
   }
 
   <template>

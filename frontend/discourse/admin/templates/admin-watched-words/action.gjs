@@ -25,6 +25,7 @@ export default <template>
   <div class="watched-word-controls">
     <DButton
       @href={{@controller.downloadLink}}
+      @action={{@controller.downloadAction}}
       @icon="download"
       @label="admin.watched_words.download"
       class="btn-default download-link"

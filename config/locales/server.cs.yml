@@ -1127,6 +1127,13 @@ cs:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznámý operační systém"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonymní"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
     doesnt_exist: "Tato e-mailová adresa není spojena s vaším účtem."
@@ -4276,6 +4283,10 @@ cs:
     deprecation_error_label: Umožnit, aby zastaralé Javascripty vyvolaly chybu
     enter: "Vstoupit do bezpečného režimu"
     must_select: "Chcete-li vstoupit do bezpečného režimu, musíte vybrat alespoň jednu možnost."
+  design_wizard:
+    palette_pairs:
+      default: "Výchozí"
+      dracula: "Drákula"
   wizard:
     title: "Nastavení Discourse"
     step:

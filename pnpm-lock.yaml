@@ -46,8 +46,8 @@ importers:
   .:
     devDependencies:
       '@discourse/lint-configs':
-        specifier: ^3.2.0
-        version: 3.2.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3))(eslint@10.6.0(jiti@2.6.1))(postcss@8.5.15)(prettier@3.8.1)(stylelint@17.5.0(typescript@5.9.3))
+        specifier: ^3.3.0
+        version: 3.3.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3))(eslint@10.6.0(jiti@2.6.1))(postcss@8.5.15)(prettier@3.8.1)(stylelint@17.5.0(typescript@5.9.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -109,8 +109,8 @@ importers:
   docs/developer-guides:
     devDependencies:
       '@discourse/lint-configs':
-        specifier: ^3.1.2
-        version: 3.2.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3))(eslint@10.6.0(jiti@2.6.1))(postcss@8.5.15)(prettier@3.8.1)(stylelint@17.5.0(typescript@5.9.3))
+        specifier: ^3.3.0
+        version: 3.3.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3))(eslint@10.6.0(jiti@2.6.1))(postcss@8.5.15)(prettier@3.8.1)(stylelint@17.5.0(typescript@5.9.3))
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -702,6 +702,27 @@ importers:
         specifier: ~6.10.0
         version: 6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)
 
+  frontend/pretty-text-processor:
+    dependencies:
+      discourse:
+        specifier: workspace:0.0.0
+        version: link:../discourse
+      discourse-markdown-it:
+        specifier: workspace:*
+        version: link:../discourse-markdown-it
+      markdown-it:
+        specifier: ^14.1.1
+        version: 14.2.0
+      pretty-text:
+        specifier: workspace:*
+        version: link:../pretty-text
+      rolldown:
+        specifier: 1.1.2
+        version: 1.1.2
+      xss:
+        specifier: ^1.0.15
+        version: 1.0.15
+
   plugins/automation:
     dependencies:
       discourse:
@@ -756,12 +777,6 @@ importers:
         specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
-  plugins/discourse-calendar:
-    dependencies:
-      discourse:
-        specifier: workspace:@discourse/types@*
-        version: link:../../frontend/discourse-types
-
   plugins/discourse-captcha:
     dependencies:
       discourse:
@@ -781,6 +796,12 @@ importers:
         version: link:../../frontend/discourse-types
 
   plugins/discourse-details:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@*
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-events:
     dependencies:
       discourse:
         specifier: workspace:@discourse/types@*
@@ -932,7 +953,7 @@ importers:
     devDependencies:
       lucide-static:
         specifier: ^1.16.0
-        version: 1.25.0
+        version: 1.31.0
 
   plugins/discourse-zendesk-plugin:
     dependencies:
@@ -1825,8 +1846,8 @@ packages:
   '@discourse/jxl@1.3.0':
     resolution: {integrity: sha512-Veu75DEDC7uKsCCsD94UIjFwvHE73+AATBQbBWb83QyJV34wmyxl2Ji+fiiM234mlNn4cpo3DUl0QFrXgRTcfA==}
 
-  '@discourse/lint-configs@3.2.0':
-    resolution: {integrity: sha512-mEZYPNlGyf+Jq6i6QKzi2mXw9ofgcEh1XARoQKQS1Y+SsclJgGHT33MUxn5QwWEaGpSYA67/0hdPVL+HEW29gw==}
+  '@discourse/lint-configs@3.3.0':
+    resolution: {integrity: sha512-BrC17IVjBacD72sdfEz1kJpqCeDp54aTIXXHYjm4uxQuK9VsftZFHfwn2ntg2NwhCk3LqrprAS/11QMxzAk27w==}
     peerDependencies:
       eslint: 10.6.0
       prettier: 3.8.1
@@ -6062,8 +6083,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-static@1.25.0:
-    resolution: {integrity: sha512-uJTdyP8vxKELd+Kqk45ahUvOA1rv3Ehy6ZUP7JlBt8UJwmzHgFFts0OZNU3C6/4MDKsssgR9Jrut7GnuqGgYmg==}
+  lucide-static@1.31.0:
+    resolution: {integrity: sha512-XFX9NO+gcLsOkXISmeQZYGJa2siGWZc/lgT/BK1b83h9RdOiz3cj1eQP5nWhELiB1KhW5ryk0nmMopOgm/CuSA==}
 
   magic-string@0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
@@ -9535,7 +9556,7 @@ snapshots:
     dependencies:
       wasm-feature-detect: 1.8.0
 
-  '@discourse/lint-configs@3.2.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3))(eslint@10.6.0(jiti@2.6.1))(postcss@8.5.15)(prettier@3.8.1)(stylelint@17.5.0(typescript@5.9.3))':
+  '@discourse/lint-configs@3.3.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3))(eslint@10.6.0(jiti@2.6.1))(postcss@8.5.15)(prettier@3.8.1)(stylelint@17.5.0(typescript@5.9.3))':
     dependencies:
       '@babel/core': 8.0.1
       '@babel/eslint-parser': 8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.6.1))
@@ -9548,6 +9569,7 @@ snapshots:
       eslint-plugin-qunit: 8.2.6(eslint@10.6.0(jiti@2.6.1))
       eslint-plugin-simple-import-sort: 13.0.0(eslint@10.6.0(jiti@2.6.1))
       eslint-plugin-sort-class-members: 1.22.1(eslint@10.6.0(jiti@2.6.1))
+      eslint-plugin-tsdoc: 0.5.2(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3)
       globals: 17.7.0
       prettier: 3.8.1
       prettier-plugin-ember-template-tag: 2.1.7(prettier@3.8.1)
@@ -14781,7 +14803,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-static@1.25.0: {}
+  lucide-static@1.31.0: {}
 
   magic-string@0.25.9:
     dependencies:

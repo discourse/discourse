@@ -3,6 +3,15 @@
 module DiscourseAi
   module Completions
     class UploadEncoder
+      def self.image_upload?(upload)
+        mime_type = MiniMime.lookup_by_filename(upload.original_filename)&.content_type
+        mime_type&.start_with?("image/") == true
+      end
+
+      def self.supported_image_upload?(upload)
+        image_upload?(upload) && %w[jpg jpeg png gif webp].include?(upload.extension&.downcase)
+      end
+
       def self.encode(
         upload_ids:,
         max_pixels:,
@@ -354,7 +363,7 @@ module DiscourseAi
           image = upload
 
           if original_pixels > max_pixels
-            ratio = max_pixels.to_f / original_pixels
+            ratio = Math.sqrt(max_pixels.to_f / original_pixels)
 
             new_width = (ratio * upload.width).to_i
             new_height = (ratio * upload.height).to_i

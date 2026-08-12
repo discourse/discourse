@@ -99,6 +99,7 @@ interface DSwipeSignature {
  * with the current state of the swipe, including its direction, orientation, and delta values.
  *
  * @example
+ * ```hbs
  * <div {{swipe
  *        onDidStartSwipe=this.onDidStartSwipe
  *        onDidSwipe=this.onDidSwipe
@@ -108,6 +109,7 @@ interface DSwipeSignature {
  * >
  *   Swipe here
  * </div>
+ * ```
  *
  * Guide to choosing between the gesture primitives:
  * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`

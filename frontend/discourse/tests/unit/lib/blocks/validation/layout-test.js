@@ -61,6 +61,18 @@ module("Unit | Lib | blocks/validation/layout", function () {
     });
   });
 
+  module("validateEntry", function () {
+    test("primitive block reference raises the decorator validation error", async function (assert) {
+      await assert.rejects(
+        validateEntry({ block: 42 }, "hero-blocks", undefined, "layout[0]"),
+        (error) =>
+          error.message.includes("is not a valid @block-decorated component") &&
+          error.message.includes("layout[0]"),
+        "an entry whose block is a truthy primitive gets the actionable validation error, not a raw TypeError"
+      );
+    });
+  });
+
   module("validateEntryKeys", function () {
     test("passes validation for entry with all valid keys", function (assert) {
       const config = {

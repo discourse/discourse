@@ -687,6 +687,13 @@ lt:
       macos: "„MacOS“"
       windows: "Microsoft Windows"
       unknown: "nežinoma operacinė sistema"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimas"
+    browsers:
+      edge: "„Microsoft Edge“"
+      firefox: "„Firefox“"
+      safari: "Safari"
   change_email:
     error: "Keičiant el. pašto adresą įvyko klaida. Galbūt adresas jau naudojamas?"
     doesnt_exist: "Šis el. pašto adresas nėra susietas su jūsų paskyra."
@@ -2552,6 +2559,9 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
+  design_wizard:
+    palette_pairs:
+      default: "Numatytasis"
   wizard:
     title: "Discourse sąranka"
     step:

@@ -106,9 +106,9 @@ discourse-gamification:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-gamification/**/*
 
-discourse-calendar:
+discourse-events:
   - changed-files:
-      - any-glob-to-any-file: plugins/discourse-calendar/**/*
+      - any-glob-to-any-file: plugins/discourse-events/**/*
 
 discourse-policy:
   - changed-files:

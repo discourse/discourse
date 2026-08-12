@@ -4,6 +4,7 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import {
   click,
+  find,
   render,
   settled,
   triggerEvent,
@@ -310,9 +311,78 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     );
     await hover();
 
+    assert.dom(".fk-d-tooltip__content").hasStyle({ maxWidth: "20px" });
+
+    await close();
+
+    await render(
+      <template>
+        <DTooltip @inline={{true}} @label="label" @maxWidth={{100000}} />
+      </template>
+    );
+    await hover();
+
+    // 20 is the default left + right `getPadding` inset the clamp reserves
     assert
       .dom(".fk-d-tooltip__content")
-      .hasAttribute("style", /max-width: 20px;/);
+      .hasStyle(
+        { maxWidth: `${window.innerWidth - 20}px` },
+        "a numeric cap is clamped to the width the viewport leaves"
+      );
+  });
+
+  test("a keyword @maxWidth is applied verbatim", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @inline={{true}} @label="label" @maxWidth="unset" />
+      </template>
+    );
+    await hover();
+
+    // asserting the declaration rather than the computed value: wrapping a keyword in `min()`
+    // is invalid CSS, and the browser drops such a declaration to the same computed `none`
+    assert
+      .dom(".fk-d-tooltip__content")
+      .hasAttribute("style", /max-width: unset;/);
+  });
+
+  test("content taller than the cap scrolls inside the tooltip", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @inline={{true}} @label="label">
+          <div>
+            <div class="first-line">first line</div>
+            <div style="height: 4000px"></div>
+            <div class="last-line">last line</div>
+          </div>
+        </DTooltip>
+      </template>
+    );
+    await hover();
+
+    const content = find(".fk-d-tooltip__inner-content");
+    const scrollport = content.getBoundingClientRect();
+
+    assert.true(
+      content.clientHeight <= Math.ceil(window.innerHeight * 0.6),
+      "the content is capped to a fraction of the viewport"
+    );
+    assert.true(
+      content.scrollHeight > content.clientHeight,
+      "the overflowing content is scrollable rather than clipped"
+    );
+    assert.true(
+      find(".first-line").getBoundingClientRect().top >= scrollport.top,
+      "the top of the content is reachable rather than centred out of view"
+    );
+
+    content.scrollTop = content.scrollHeight;
+
+    assert.true(
+      find(".last-line").getBoundingClientRect().bottom <=
+        scrollport.bottom + 1,
+      "the bottom of the content is reachable"
+    );
   });
 
   test("applies position", async function (assert) {

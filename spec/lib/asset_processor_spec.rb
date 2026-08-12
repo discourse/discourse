@@ -83,7 +83,8 @@ RSpec.describe AssetProcessor do
     # outside its own directory has to be listed or its changes go unnoticed.
     processor_dir = File.expand_path("frontend/asset-processor")
     hashed =
-      AssetProcessor::CACHE_DEPENDENCY_GLOBS
+      AssetProcessor::BUNDLE
+        .dependency_globs
         .flat_map { |glob| Dir.glob(glob) }
         .map { |path| File.expand_path(path) }
         .to_set
@@ -129,7 +130,7 @@ RSpec.describe AssetProcessor do
         expect(hashed).to include(path),
         "#{Pathname.new(path).relative_path_from(Rails.root)} is imported by " \
           "#{Pathname.new(imported_by).relative_path_from(Rails.root)} " \
-          "but is not in CACHE_DEPENDENCY_GLOBS"
+          "but is not in AssetProcessor::BUNDLE's dependency_globs"
       end
     end
   end

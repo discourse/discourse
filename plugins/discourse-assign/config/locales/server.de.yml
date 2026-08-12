@@ -42,6 +42,7 @@ de:
         nobody: "Themen anzeigen, die keinem zugeordnet sind"
         anyone: "Themen anzeigen, die jemanden zugeordnet sind"
     already_claimed: "Dieses Thema wurde bereits übernommen."
+    no_assignee: "Es wurde keine zugeordnete Person ausgewählt."
     already_assigned: "Thema ist bereits @%{username} zugeordnet"
     too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugeordneten Themen erreicht (%{max})."
     too_many_assigns_for_topic: "Das Limit von %{limit} Zuordnungen pro Thema wurde erreicht."

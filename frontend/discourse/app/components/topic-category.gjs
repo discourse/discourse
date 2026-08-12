@@ -12,13 +12,18 @@ import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 export default class TopicCategory extends Component {
   <template>
     <div ...attributes>
-      {{#unless this.topic.isPrivateMessage}}
-        {{dBoundCategoryLink
-          this.topic.category
-          ancestors=this.topic.category.predecessors
-          hideParent=true
-        }}
-      {{/unless}}
+      <PluginOutlet
+        @name="topic-category-link-wrapper"
+        @outletArgs={{lazyHash category=this.topic.category topic=this.topic}}
+      >
+        {{#unless this.topic.isPrivateMessage}}
+          {{dBoundCategoryLink
+            this.topic.category
+            ancestors=this.topic.category.predecessors
+            hideParent=true
+          }}
+        {{/unless}}
+      </PluginOutlet>
       <div class="topic-header-extra">
         {{#if this.siteSettings.tagging_enabled}}
           <div class="list-tags">

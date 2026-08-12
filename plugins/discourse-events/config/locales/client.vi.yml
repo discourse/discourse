@@ -1,0 +1,124 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  admin_js:
+    admin:
+      calendar: "Sự kiện"
+      site_settings:
+        categories:
+          discourse_calendar: "Sự kiện"
+  js:
+    notifications:
+      titles:
+        event_reminder: "Lời nhắc sự kiện"
+        event_invitation: "Lời mời sự kiện"
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ID Chủ đề
+    discourse_calendar:
+      livestream:
+        zoom:
+          join: "Tham gia Zoom"
+          chat: "Trò chuyện"
+          open_in_zoom: "Mở trong ứng dụng Zoom"
+          load_error: "Bạn đã rời khỏi buổi hội thảo (Webinar) hoặc không thể tải Zoom trên trang này."
+          too_early: "Bạn có thể tham gia hội thảo khi gần đến giờ bắt đầu sự kiện"
+          view_topic: "Xem bài viết về sự kiện này"
+          not_started_retrying:
+            other: "Buổi hội thảo chưa bắt đầu. Đang thử tham gia lại sau %{count} giây..."
+          not_started_trying_again: "Đang tiến hành tham gia lại buổi hội thảo..."
+        chat:
+          rsvp_to_event: "Đăng ký tham gia sự kiện để bắt đầu trò chuyện"
+          rsvp_to_event_with_link: "Đăng ký <a href='%{url}'>tham gia sự kiện</a> để bắt đầu trò chuyện"
+          rsvp_body: "Kết nối với những người tham dự khác trước, trong và sau sự kiện."
+      disable_holiday: "Tắt"
+      enable_holiday: "Bật"
+      date: "Ngày"
+      region:
+        none: "Không có gì"
+        names:
+          ru: "Liên bang Nga"
+      toolbar_button:
+        today: "Hôm nay"
+        month: "Tháng"
+        week: "Tuần"
+        day: "Ngày"
+        year: "Năm"
+    group_timezones:
+      search: "Tìm kiếm..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "Hiện thêm"
+        show_less: "Thu gọn"
+      show_all: "Hiển thị tất cả"
+      add_to_calendar: "Thêm vào lịch"
+      created_by: "Tạo bởi"
+      bulk_invite: "Mời hàng loạt"
+      bulk_invite_modal:
+        confirm: "xác nhận"
+        title: "Mời hàng loạt"
+        success: "Tải lên thành công, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
+        error: "Xin lỗi, file phải ở định dạng CSV."
+        group_selector_placeholder: "Chọn một nhóm..."
+      upcoming_events:
+        status: "Trạng thái"
+      upcoming_events_list:
+        try_again: "Thử lại"
+      models:
+        event:
+          expired: "Hết hạn"
+          closed: "Đã đóng"
+          status:
+            public:
+              title: "Công khai"
+            private:
+              title: "Riêng tư"
+      composer:
+        reminder:
+          units:
+            minutes:
+              other: "phút"
+            hours:
+              other: "tiếng"
+            days:
+              other: "ngày"
+      builder_modal:
+        custom_fields:
+          placeholder: "Tùy chọn"
+        advanced_settings_title: "Cài đặt nâng cao"
+        create: "Tạo"
+        update: "Lưu lại"
+        timezone:
+          label: Múi giờ
+        reminders:
+          units:
+            minutes: "phút"
+            hours: "tiếng"
+            days: "ngày"
+          periods:
+            before: "trước"
+            after: "sau"
+        recurrence:
+          label: "Tái diễn"
+          none: "Không tái diễn"
+          every_day: "Mỗi ngày"
+          ordinals:
+            last: "cuối cùng"
+        attendance:
+          none: "Không"
+        description:
+          label: "Mô tả"
+        event_type:
+          public:
+            title: "Công khai"
+      invite_user_or_group:
+        invite: "Gửi"

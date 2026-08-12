@@ -50,6 +50,7 @@ zh_CN:
         regenerate_placeholder: "例如，更新查询以将结果数限制为 50 条。"
         prompt_label: "提示"
         generate: "生成"
+        regenerate: "更新查询"
         generating: "正在使用 AI 生成查询…"
         generation_timeout: "AI 查询生成超时。您可以手动编写 SQL 语句。"
         generation_error: "生成查询时出错。"

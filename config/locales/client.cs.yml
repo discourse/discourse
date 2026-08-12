@@ -515,11 +515,28 @@ cs:
       pill: "Navrhované"
       pm_title: "Doporučené zprávy"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Odstartujte v %{step_count} snadných krocích"
-      select_theme:
-        enabled: "Zaškrtnuté"
       start_posting:
         back: "Zpět"
+    design_wizard:
+      back: "Zpět"
+      next: "Další"
+      sections:
+        theme: "Téma"
+        fonts: "Písma"
+        homepage: "Domovská stránka"
+      theme:
+        selected: "Zaškrtnuté"
+      colors:
+        light: "Světlá"
+        dark: "Tmavá"
+      fonts:
+        base_font: "Základní písmo"
+        heading_font: "Písmo nadpisů"
+      homepage:
+        topics: "Témata"
+        categories: "Kategorie"
+        styles:
+          boxes: "Boxy "
     about:
       edit: "Upravit tuto stránku"
       simple_title: "O tomto webu"
@@ -843,10 +860,6 @@ cs:
         optional: "volitelné"
       claim_help:
         optional: "Tuto položku si můžete nárokovat, abyste zabránili ostatním v její kontrole."
-        required: "Než budete moci položky revidovat, musíte si je nárokovat."
-        claimed_by_you: "Tuto položku jste si nárokovali a můžete ji zkontrolovat."
-        claimed_by_other: "Tuto položku může revidovat pouze <b>%{username}</b>."
-        automatically_claimed_by: "Tuto položku aktuálně reviduje <b>%{username}</b>."
       claim:
         title: "Nárokovat toto téma"
       unclaim:
@@ -3022,6 +3035,7 @@ cs:
         few: "+%{count} podkategorie"
         many: "+%{count} podkategorií"
         other: "+%{count} podkategorií"
+      subcategories: "+ Podkategorie"
       topic_count:
         one: "%{count} téma v této kategorii"
         few: "%{count} témata v této kategorii"
@@ -3454,7 +3468,6 @@ cs:
         other: "%{count} otevřených žádostí o členství v '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - dokončeno"
       new_features: "Jsou k dispozici nové funkce!"
       admin_problems: "Na administrační nástěnce vašeho webu jsou nová doporučení"
       upcoming_changes:
@@ -6544,13 +6557,30 @@ cs:
       new_features:
         title: "Co je nového?"
         check_for_updates: "Aktualizovat"
+      site_traffic_explorer:
+        pageviews: "Zobrazení stránky"
+        view_more: "Zobrazit více"
+        cards:
+          pages: "Stránek"
+          visitors: "Návštěvníci"
+        columns:
+          top_urls: "URL"
+          browsers: "Prohlížeč"
+          ip_addresses: "IP adresa"
+        filters:
+          browser: "Prohlížeč"
+          ip: "IP adresa"
+        metrics:
+          pageviews:
+            label: "Zobrazení stránky"
+        series:
+          anonymous_human: "Anonymní"
       dashboard:
         title: "Nástěnka"
         last_updated: "Nástěnka aktualizována:"
         discourse_last_updated: "Discourse aktualizován:"
         version: "Verze Discourse"
         up_to_date: "Máte aktuální!"
-        critical_available: "K dispozici je důležitá aktualizace."
         updates_available: "Jsou k dispozici aktualizace."
         please_update: "Prosím, aktualizujte!"
         no_check_performed: "Kontrola na aktualizace nebyla provedena. Ujistěte se, že běží služby sidekiq."

@@ -43,19 +43,29 @@ export default abstract class FloatKitInstance {
 
   /** The merged options bag; a menu or tooltip subclass narrows the exact shape. */
   abstract options: TooltipOptions;
+
   /**
    * The reference the float is anchored to — a real element, or a virtual one when the
    * float is positioned programmatically. Use `triggerElement` for element-only work.
    */
   abstract trigger: FloatKitTrigger;
+
   /** Whether the float is currently open. */
   abstract expanded: boolean;
+
   /** The rendered float body, assigned by the `apply-floating-ui` modifier. */
   declare content: HTMLElement;
+
   declare touchTimeout: ReturnType<typeof discourseLater>;
+
   declare delayedHoverTimeout: ReturnType<typeof discourseLater>;
+
   declare openedByDelayedHover: boolean;
+
+  /** The pending grace-period close, if one is scheduled. */
   #hoverCloseTimer: ReturnType<typeof discourseLater> | null = null;
+
+  /** Whether focus inside the content is currently suppressing the grace-period close. */
   #hoverFocusLocked = false;
 
   /** Whether THIS instance renders in a mobile modal (see {@link resolveRenderInModal}). */
@@ -78,18 +88,30 @@ export default abstract class FloatKitInstance {
   /** The element the rendered float body is portalled into. */
   abstract get portalOutletElement(): HTMLElement | null;
 
+  /**
+   * How long, in milliseconds, the float stays open after the pointer leaves it.
+   *
+   * @returns The configured grace period, or `0` when the feature is off.
+   */
+  get hoverGracePeriod(): number {
+    return this.options?.hoverGracePeriod ?? 0;
+  }
+
+  /**
+   * Whether a grace period is configured. When it is, the trigger keeps its
+   * `pointerleave` listener even on an interactive float, because the delayed close
+   * replaces the immediate one rather than being skipped.
+   *
+   * @returns `true` when the grace period is greater than zero.
+   */
+  get hasHoverGracePeriod(): boolean {
+    return this.hoverGracePeriod > 0;
+  }
+
   abstract onClick(event: MouseEvent): Promise<void>;
   abstract onPointerMove(event: PointerEvent): Promise<void>;
   abstract onPointerLeave(event: PointerEvent): Promise<void>;
   abstract onTrigger(event?: Event): Promise<void>;
-
-  get hoverGracePeriod() {
-    return this.options?.hoverGracePeriod ?? 0;
-  }
-
-  get hasHoverGracePeriod() {
-    return this.hoverGracePeriod > 0;
-  }
 
   @action
   async show() {
@@ -105,17 +127,31 @@ export default abstract class FloatKitInstance {
     await this.options.onClose?.();
   }
 
+  /** Drops any pending grace-period close, so the float stays open. */
   @action
   cancelHoverClose() {
     cancel(this.#hoverCloseTimer);
     this.#hoverCloseTimer = null;
   }
 
+  /**
+   * Clears both the pending close and the focus lock. Called whenever the float
+   * closes, so a lock taken while focus was inside the content cannot outlive it and
+   * suppress a later close.
+   */
   resetHoverCloseState() {
     this.cancelHoverClose();
     this.#hoverFocusLocked = false;
   }
 
+  /**
+   * Starts the grace period after which the float closes. Re-entering the trigger or
+   * the content cancels it, which is what lets the pointer cross the gap between them
+   * without the float closing underneath it.
+   *
+   * Does nothing when no grace period is configured, or while focus is held inside the
+   * content: a keyboard user is not "hovering away" and must not be closed out.
+   */
   @action
   scheduleHoverClose() {
     if (!this.hasHoverGracePeriod || this.#hoverFocusLocked) {
@@ -131,17 +167,20 @@ export default abstract class FloatKitInstance {
     }, this.hoverGracePeriod);
   }
 
+  /** Cancels a pending close when the pointer returns to the trigger. */
   @action
   onPointerEnterTrigger() {
     this.cancelHoverClose();
   }
 
+  /** Holds the float open while focus is inside its content, regardless of the pointer. */
   @action
   lockHoverCloseForFocus() {
     this.#hoverFocusLocked = true;
     this.cancelHoverClose();
   }
 
+  /** Releases the focus lock, letting the pointer govern closing again. */
   @action
   unlockHoverCloseForFocus() {
     this.#hoverFocusLocked = false;

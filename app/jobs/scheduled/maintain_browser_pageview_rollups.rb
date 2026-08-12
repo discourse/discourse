@@ -13,6 +13,7 @@ module Jobs
       aggregate_engagement
       aggregate_crawlers
       backfill_referrers
+      backfill_urls
     end
 
     private
@@ -93,7 +94,7 @@ module Jobs
     end
 
     def next_batch
-      params = { version: BrowserPageviewReferrerInspector::VERSION, limit: batch_size }
+      params = { version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION, limit: batch_size }
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -120,7 +121,8 @@ module Jobs
 
     def store_normalized_referrers(rows)
       ids = rows.map(&:id)
-      normalized = rows.map { |row| BrowserPageviewReferrerInspector.normalize(row.referrer) }
+      normalized =
+        rows.map { |row| BrowserPageviewEventUrlNormalizer.normalize_referrer(row.referrer) }
 
       DB.exec(<<~SQL, ids: ids, normalized: normalized)
         UPDATE browser_pageview_events AS e
@@ -135,7 +137,7 @@ module Jobs
     end
 
     def recomputable_dates(ids)
-      params = { ids: ids, version: BrowserPageviewReferrerInspector::VERSION }
+      params = { ids: ids, version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION }
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -176,11 +178,56 @@ module Jobs
     end
 
     def stamp_version(ids)
-      DB.exec(<<~SQL, version: BrowserPageviewReferrerInspector::VERSION, ids: ids)
+      DB.exec(<<~SQL, version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION, ids: ids)
         UPDATE browser_pageview_events
         SET normalized_referrer_version = :version
         WHERE id IN (:ids)
       SQL
+    end
+
+    def backfill_urls
+      rows = url_batch
+      return if rows.empty?
+
+      ids = rows.map(&:id)
+      normalized = rows.map { |row| BrowserPageviewEventUrlNormalizer.normalize_site_path(row.url) }
+
+      DB.exec(
+        <<~SQL,
+          UPDATE browser_pageview_events AS e
+          SET
+            normalized_url = data.normalized_url,
+            normalized_url_version = :version
+          FROM unnest(
+            ARRAY[:ids]::bigint[],
+            ARRAY[:normalized]::text[]
+          ) AS data(id, normalized_url)
+          WHERE e.id = data.id
+        SQL
+        ids: ids,
+        normalized: normalized,
+        version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
+      )
+    end
+
+    def url_batch
+      DB.query(
+        <<~SQL,
+          SELECT id, url
+          FROM browser_pageview_events
+          WHERE created_at >= :retention_cutoff
+            AND #{BrowserPageviewEvent.rollup_source_condition}
+            AND (
+              normalized_url_version IS NULL
+              OR normalized_url_version < :version
+            )
+          ORDER BY id
+          LIMIT :limit
+        SQL
+        retention_cutoff: BrowserPageviewEvent.retention_cutoff,
+        version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
+        limit: batch_size,
+      )
     end
 
     def batch_size

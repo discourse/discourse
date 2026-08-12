@@ -22,6 +22,8 @@ zh_CN:
     first_reaction:
       name: 首次回应
       description: 回应了帖子
+      long_description: |
+        当您首次使用表情符号回应选择器回应帖子时，即可获得此徽章。它与普通的点赞不同，是一种很棒的方式，可以让社区中的其他成员知道他们发布的内容很有趣、实用、很酷或者很好玩。
   reports:
     reactions:
       title: "回应"

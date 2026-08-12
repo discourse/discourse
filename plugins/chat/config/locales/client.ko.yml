@@ -303,9 +303,9 @@ ko:
         move_selection_to_channel: "채널로 이동"
         title: "채팅을 글로 이동"
         new_topic:
-          title: "새로운 주제로 이동"
+          title: "새 글로 이동"
         existing_topic:
-          title: "이미 있는 주제로 옮기기"
+          title: "기존 글로 이동"
         new_message:
           title: "새 메시지로 이동"
       replying_indicator:

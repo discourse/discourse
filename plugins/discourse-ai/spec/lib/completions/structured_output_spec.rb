@@ -28,6 +28,25 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
 
   before { enable_current_plugin }
 
+  describe "#read_buffered_property_chunk" do
+    it "yields non-empty chunks, including whitespace-only ones" do
+      yielded = []
+
+      structured_output << "{\"message\": \"First."
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      structured_output << "\\n\\n"
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      structured_output << "Second.\"}"
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      expect(yielded).to eq(["First.", "\n\n", "Second."])
+    end
+  end
+
   describe "Parsing structured output on the fly" do
     it "acts as a buffer for an streamed JSON" do
       chunks = [

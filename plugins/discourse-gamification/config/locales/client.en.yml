@@ -118,3 +118,18 @@ en:
         title: "Gamification"
         name: "Name"
         period: "Period"
+    discourse_workflows:
+      node_unavailable:
+        requires_gamification: "Requires the Gamification plugin to be enabled"
+      nodes:
+        "action:gamification_score": "Award score"
+      node_descriptions:
+        "action:gamification_score": "Add or deduct gamification points for a user"
+      gamification_score:
+        username: "User"
+        points: "Points"
+        points_description: "Number of points to award. Use a negative value to deduct points."
+        date: "Date"
+        date_description: "Date the points apply to (YYYY-MM-DD). Defaults to today."
+        description: "Description"
+        description_description: "Optional note shown alongside the score event."

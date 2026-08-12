@@ -131,5 +131,7 @@ en:
         char_counter:
           title: "Character Counter"
           placeholder: "Enter your text here..."
+        combo_button:
+          title: "Combo Button"
         segmented_control:
           title: "Segmented Control (Button toggle group)"

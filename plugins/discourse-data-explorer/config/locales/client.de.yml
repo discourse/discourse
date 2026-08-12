@@ -50,6 +50,7 @@ de:
         regenerate_placeholder: "z. B. Passe die Abfrage so an, dass nur 50 Ergebnisse angezeigt werden"
         prompt_label: "Aufforderung"
         generate: "Erzeugen"
+        regenerate: "Abfrage aktualisieren"
         generating: "Abfrage wird mit KI generiert …"
         generation_timeout: "Eine Zeitüberschreitung ist bei der Generierung der KI-Abfrage aufgetreten. Du kannst die SQL-Abfrage manuell eingeben."
         generation_error: "Beim Erstellen der Abfrage ist etwas schiefgelaufen."

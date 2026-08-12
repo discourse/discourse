@@ -109,6 +109,7 @@ module DiscourseAi
             post: @source_post,
             user: @user,
             custom_instructions: @custom_instructions,
+            server_owned_tools: false,
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 @source_post,
@@ -119,7 +120,7 @@ module DiscourseAi
                     @bot.agent.class.max_turn_tokens,
                   ),
                 tokenizer: context_llm.tokenizer,
-                include_image_uploads: @bot.agent.class.vision_enabled,
+                include_image_uploads: @bot.agent.class.vision_enabled && @bot.model.native_vision?,
                 include_document_uploads: @bot.model.allowed_attachment_types.present?,
                 allowed_attachment_types: @bot.model.allowed_attachment_types,
                 bot_usernames: available_bot_usernames,
@@ -542,11 +543,7 @@ module DiscourseAi
           agent_class = DiscourseAi::Agents::Agent.find_by(id: @agent.id, user: @current_user)
           if agent_class
             bot = DiscourseAi::Agents::Bot.as(@reply_user, agent: agent_class.new, model: llm_model)
-            begin
-              DiscourseAi::AiBot::Playground.new(bot).title_playground(reply_post, @user)
-            rescue StandardError => e
-              Discourse.warn_exception(e, message: "Discourse AI: Unable to generate stream title")
-            end
+            DiscourseAi::AiBot::Playground.new(bot).title_playground(reply_post, @user)
           end
         end
       end

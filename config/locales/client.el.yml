@@ -491,26 +491,16 @@ el:
       pill: "Προτεινόμενα"
       pm_title: "Προτεινόμενα μηνύματα"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Εκκίνηση σε %{step_count} εύκολα βήματα"
       congrats_onboarding_complete: "Συγχαρητήρια για την ολοκλήρωση της διαδικασίας ενσωμάτωσης!"
       select_theme:
         title: "Προσαρμόστε τον ιστότοπό σας"
-        description: "Επιλέξτε ένα αρχικό θέμα για την κοινότητά σας"
-        action: "Επιλογή θέματος"
-        modal_title: "Επιλέξτε ένα θέμα"
-        use_theme: "Χρήση επιλεγμένου θέματος"
-        enabled: "Επιλεγμένο"
-        applying_theme: "Γίνεται εφαρμογή θέματος..."
-        browse_all: "Διαχείριση θεμάτων"
         show_light_screenshot: "Εμφάνιση φωτεινού στιγμιότυπου οθόνης"
         show_dark_screenshot: "Εμφάνιση σκοτεινού στιγμιότυπου οθόνης"
       invite_collaborators:
         title: "Προσκαλέστε συνεργάτες"
-        description: "Τα πρώτα μέλη βοηθούν να ζωντανέψει η κοινότητά σας"
         action: "Δημιουργία πρόσκλησης"
       start_posting:
         title: "Ξεκινήστε να αναρτάτε"
-        description: "Δώστε στον κόσμο κάτι για να συζητήσουν μαζί"
         action: "Δείτε ιδέες"
         choose_option: "Πώς θα θέλατε να ξεκινήσετε;"
         predefined_topics: "Πρότυπα για το σπάσιμο του πάγου"
@@ -531,6 +521,27 @@ el:
           what_is_your_favorite_food:
             title: "Ποιο είναι το αγαπημένο σας φαγητό;"
             body: "Μοιραστείτε το αγαπημένο σας φαγητό με την κοινότητα! Θα ξεκινήσω: Λατρεύω την πίτσα, ειδικά με έξτρα τυρί και πεπερόνι."
+    design_wizard:
+      title: "Προσαρμόστε τον ιστότοπό σας"
+      back: "Πίσω"
+      next: "Επόμενο"
+      sections:
+        theme: "Θέμα"
+        fonts: "Γραμματοσειρές"
+        homepage: "Αρχική Σελίδα"
+      theme:
+        selected: "Επιλεγμένο"
+      colors:
+        light: "Φωτεινή"
+        dark: "Σκοτεινή"
+      fonts:
+        base_font: "Βασική γραμματοσειρά"
+        heading_font: "Γραμματοσειρά επικεφαλίδας"
+      homepage:
+        topics: "Θέματα"
+        categories: "Κατηγορίες"
+        styles:
+          boxes: "Κουτιά"
     about:
       edit: "Επεξεργασία αυτής της σελίδας"
       simple_title: "Σχετικά"
@@ -831,10 +842,6 @@ el:
       stale_help: "Αυτό το στοιχείο έχει επιλυθεί από <b>%{username}</b>."
       claim_help:
         optional: "Μπορείτε να υποβάλετε αξίωση για αυτό το στοιχείο για να αποτρέψετε την αξιολόγηση από άλλους."
-        required: "Πρέπει να διεκδικήσετε στοιχεία για να μπορέσετε να τα ελέγξετε."
-        claimed_by_you: "Έχετε διεκδικήσει αυτό το στοιχείο και μπορείτε να το ελέγξετε."
-        claimed_by_other: "Αυτό το στοιχείο μπορεί να αναθεωρηθεί μόνο από τον/την <b>%{username}</b>."
-        automatically_claimed_by: "Αυτό το στοιχείο αναθεωρείται αυτήν τη στιγμή από <b>%{username}</b>."
       claim:
         title: "Διεκδικήστε αυτό το θέμα"
       unclaim:
@@ -2843,6 +2850,7 @@ el:
       subcategory_count:
         one: "+%{count} υποκατηγορία"
         other: "+%{count} υποκατηγορίες"
+      subcategories: "+ Υποκατηγορίες"
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"
@@ -2913,6 +2921,7 @@ el:
       toggle: "Εναλλαγή αναπτυσσόμενων φίλτρων"
     d_icon_grid_picker:
       select_icon: "Επιλογή εικονιδίου"
+      search_label: "Αναζητήστε εικονίδια"
       search_placeholder: "Αναζητήστε εικονίδια..."
       no_results: "Δεν βρέθηκαν εικονίδια"
       results_count:
@@ -3274,7 +3283,6 @@ el:
         other: "%{count} ανοιχτά αιτήματα συμμετοχής για '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - ολοκληρώθηκε"
       new_features: "Νέες δυνατότητες διαθέσιμες!"
       admin_problems: "Νέα συμβουλή στον πίνακα ελέγχου του ιστότοπού σας"
       upcoming_changes:
@@ -6234,13 +6242,35 @@ el:
       new_features:
         title: "Τι νέο υπάρχει;"
         check_for_updates: "Ελέγξτε για ενημερώσεις"
+      site_traffic_explorer:
+        pageviews: "Προβολές σελίδας"
+        view_more: "Δείτε περισσότερα"
+        cards:
+          pages: "Σελίδες"
+          visitors: "Επισκέπτες"
+        columns:
+          countries: "Χώρα"
+          top_urls: "URL"
+          browsers: "Περιηγητής"
+          ip_addresses: "IP διεύθυνση"
+        filters:
+          country: "Χώρα"
+          browser: "Περιηγητής"
+          ip: "IP διεύθυνση"
+        metrics:
+          pageviews:
+            label: "Προβολές σελίδας"
+          logged_in_share:
+            label: "Μερίδιο συνδεδεμένων"
+        series:
+          logged_in_human: "Συνδεδεμένοι"
+          anonymous_human: "Ανώνυμοι"
       dashboard:
         title: "Πίνακας ελέγχου"
         last_updated: "Το ταμπλό ενημερώθηκε:"
         discourse_last_updated: "Το Discourse ενημερώθηκε:"
         version: "Έκδοση"
         up_to_date: "Είσαι ενήμερος!"
-        critical_available: "Μια κρίσιμη ενημέρωση είναι διαθέσιμη"
         updates_available: "Υπάρχουν διαθέσιμες ενημερώσεις"
         please_update: "Παρακαλούμε ενημερώστε!"
         no_check_performed: "Δεν έγινε έλεγχος για ενημερώσεις. Βεβαιωθείτε ότι το Sidekiq εκτελείται."
