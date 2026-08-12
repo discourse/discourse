@@ -99,6 +99,7 @@ interface DSwipeSignature {
  * with the current state of the swipe, including its direction, orientation, and delta values.
  *
  * @example
+ * ```hbs
  * <div {{swipe
  *        onDidStartSwipe=this.onDidStartSwipe
  *        onDidSwipe=this.onDidSwipe
@@ -108,6 +109,7 @@ interface DSwipeSignature {
  * >
  *   Swipe here
  * </div>
+ * ```
  */
 export default class DSwipeModifier extends Modifier<DSwipeSignature> {
   @service declare site: Site;
