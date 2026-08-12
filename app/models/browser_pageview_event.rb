@@ -216,10 +216,12 @@ class BrowserPageviewEvent < ActiveRecord::Base
     RETENTION_PERIOD.ago.beginning_of_day
   end
 
-  def self.rollup_source_condition(table: nil)
+  def self.rollup_source_condition(table: nil, start_date: nil, end_date: nil)
     prefix = table ? "#{table}." : ""
     cutover_date = beacon_cutover_date
     return "#{prefix}source = #{SOURCE_PIGGYBACK}" if cutover_date.nil?
+    return "#{prefix}source = #{SOURCE_PIGGYBACK}" if end_date && end_date.to_date <= cutover_date
+    return "#{prefix}source = #{SOURCE_BEACON}" if start_date && start_date.to_date >= cutover_date
 
     sanitize_sql_array(
       [
@@ -273,6 +275,7 @@ end
 #
 # Indexes
 #
+#  idx_bpe_beacon_created_at_id                 (created_at DESC,id DESC) WHERE (source = 2)
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
