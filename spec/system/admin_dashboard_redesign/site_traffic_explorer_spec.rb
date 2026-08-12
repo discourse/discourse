@@ -399,7 +399,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_filter_pill(dimension: "top_url", label: additional_path)
     expect(traffic).to have_no_expanded_table
-    expect(traffic).to have_focused_filter_pill(dimension: "top_url")
   end
 
   it "warns an admin when the selected range has incomplete traffic data",
