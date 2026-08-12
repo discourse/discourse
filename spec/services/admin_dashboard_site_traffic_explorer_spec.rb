@@ -235,7 +235,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         ).to eq([12, 11, [{ value: "", label: "Direct / unknown", pageviews: 11 }]])
       end
 
-      it "groups external traffic by normalized referrer and recognizes local traffic by host" do
+      it "groups session entries by normalized referrer" do
         Fabricate(
           :browser_pageview_event,
           normalized_referrer: "external.example?article=traffic",
@@ -260,10 +260,15 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
 
         expect(result.traffic.dig(:dimensions, "referrers")).to eq(
           [
-            { value: "", label: "Direct / unknown", pageviews: 12 },
+            { value: "", label: "Direct / unknown", pageviews: 11 },
             {
               value: "external.example?article=traffic",
               label: "external.example?article=traffic",
+              pageviews: 1,
+            },
+            {
+              value: "test.localhost?view=latest",
+              label: "test.localhost?view=latest",
               pageviews: 1,
             },
             {

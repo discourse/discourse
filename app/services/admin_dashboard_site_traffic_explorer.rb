@@ -147,8 +147,6 @@ class AdminDashboardSiteTrafficExplorer
       include_logged_in: filters[:traffic_type]&.include?("logged_in"),
       include_anonymous: filters[:traffic_type]&.include?("anonymous"),
       include_likely_crawler: filters[:traffic_type]&.include?("likely_crawler"),
-      current_hostname:
-        BrowserPageviewEventUrlNormalizer.normalize_host(Discourse.current_hostname),
       crawler_detection_enabled: UpcomingChanges.enabled?(:improved_crawler_detection),
       crawler_threshold: CrawlerScorer::BOT_SCORE_THRESHOLD,
       bounce_threshold:
@@ -271,17 +269,7 @@ class AdminDashboardSiteTrafficExplorer
           END AS entry_url,
           CASE
             WHEN session_entries.id IS NULL OR classified.id <> session_entries.id THEN NULL
-            WHEN session_entries.normalized_referrer IS NULL THEN ''
-            WHEN session_entries.normalized_referrer = :current_hostname THEN ''
-            WHEN starts_with(
-              session_entries.normalized_referrer,
-              :current_hostname || '/'
-            ) THEN ''
-            WHEN starts_with(
-              session_entries.normalized_referrer,
-              :current_hostname || '?'
-            ) THEN ''
-            ELSE session_entries.normalized_referrer
+            ELSE COALESCE(session_entries.normalized_referrer, '')
           END AS referrer
         FROM classified
         LEFT JOIN session_entries
