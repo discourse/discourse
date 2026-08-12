@@ -2068,7 +2068,9 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL
+    source smallint DEFAULT 1 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer
 );
 
 
@@ -17611,6 +17613,13 @@ CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_even
 
 
 --
+-- Name: idx_bpe_normalized_url_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events USING btree (normalized_url_version);
+
+
+--
 -- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23144,6 +23153,8 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260810154331'),
 ('20260810012238'),
+('20260806074210'),
+('20260806074204'),
 ('20260803015314'),
 ('20260731055703'),
 ('20260730183114'),

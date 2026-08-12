@@ -125,6 +125,7 @@ module SvgSprite
         fab-discourse
         fab-facebook
         fab-facebook-square
+        fab-firefox-browser
         fab-github
         fab-google
         fab-instagram

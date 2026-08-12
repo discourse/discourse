@@ -25,7 +25,7 @@ module Reports::TopReferrersByBrowserPageviews
       count_expr = SiteSetting.login_required ? "logged_in_count" : "count"
       end_date_exclusive = report.end_date.to_date + 1
 
-      host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
+      host = BrowserPageviewEventUrlNormalizer.normalize_host(Discourse.current_hostname)
       escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
 
       sql = <<~SQL

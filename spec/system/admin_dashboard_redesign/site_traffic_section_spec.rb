@@ -2,6 +2,7 @@
 
 describe "Admin Dashboard Redesign | Site Traffic section" do
   fab!(:current_user, :admin)
+  fab!(:moderator)
 
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
 
@@ -136,8 +137,8 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     expect(traffic).to have_chart
   end
 
-  it "takes staff to the full site traffic report scoped to the same period when they click See details",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "takes an admin to the traffic explorer with the selected period when they click See details" do
+    SiteSetting.enable_site_traffic_explorer = true
     Fabricate(:logged_in_browser_application_request, date: "2026-05-05", count: 10)
 
     dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
@@ -147,6 +148,29 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     expect(traffic).to have_see_details_link
 
     traffic.click_see_details
+
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+    )
+  end
+
+  it "links to the aggregate traffic report by default" do
+    Fabricate(:logged_in_browser_application_request, date: "2026-05-05", count: 10)
+
+    dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+    dashboard.site_traffic.click_see_details
+
+    expect(page).to have_current_path(
+      "/admin/reports/site_traffic?end_date=2026-05-12&start_date=2026-05-01",
+    )
+  end
+
+  it "keeps the aggregate traffic report available to moderators" do
+    SiteSetting.enable_site_traffic_explorer = true
+    sign_in(moderator)
+
+    dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+    dashboard.site_traffic.click_see_details
 
     expect(page).to have_current_path(
       "/admin/reports/site_traffic?end_date=2026-05-12&start_date=2026-05-01",

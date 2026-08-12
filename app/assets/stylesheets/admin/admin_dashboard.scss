@@ -7,6 +7,7 @@ $db-bar-height: var(--space-2);
 @import "admin/dashboard/reports";
 @import "admin/dashboard/search";
 @import "admin/dashboard/traffic";
+@import "admin/dashboard/site-traffic-explorer";
 
 .db-site-advice {
   border: 1px solid var(--content-border-color);
