@@ -169,10 +169,6 @@ module PageObjects
         has_no_css?(".site-traffic-breakdown-modal[role='dialog']")
       end
 
-      def has_focused_filter_pill?(dimension:)
-        has_css?("[data-test-site-traffic-filter-pill='#{dimension}'] button:focus")
-      end
-
       def has_empty_state?
         has_css?("[data-test-site-traffic-empty]", exact_text: "No matching pageviews")
       end
