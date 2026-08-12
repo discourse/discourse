@@ -74,7 +74,7 @@ module Discourse
     end
 
     def self.landlock_supported?
-      landlock_abi_version.positive?
+      ::Landlock.supported?
     end
 
     def self.landlock_abi_version

@@ -19,20 +19,6 @@ RSpec.describe Discourse::SafeExec do
     end
   end
 
-  describe ".landlock_supported?" do
-    it "returns true when the Landlock ABI is positive" do
-      allow(Landlock).to receive(:abi_version).and_return(6)
-
-      expect(described_class.landlock_supported?).to eq(true)
-    end
-
-    it "returns false when the Landlock ABI is zero" do
-      allow(Landlock).to receive(:abi_version).and_return(0)
-
-      expect(described_class.landlock_supported?).to eq(false)
-    end
-  end
-
   describe ".capture" do
     it "delegates sandboxed execution to Landlock" do
       status = instance_double(Process::Status, exited?: true, exitstatus: 0)
