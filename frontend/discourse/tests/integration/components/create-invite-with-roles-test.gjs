@@ -443,4 +443,56 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       .dom(".create-invite-with-roles-modal__summary-rows")
       .doesNotIncludeText("google.com", "the restriction is gone");
   });
+
+  test("editing a domain-restricted admin invite keeps the domain", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = {
+      editing: true,
+      invite: Invite.create({
+        id: 48,
+        invite_key: "adm789",
+        link: "http://example.com/invites/adm789",
+        domain: "example.com",
+        grants_admin: true,
+        max_redemptions_allowed: 1,
+        expires_at: "2100-01-01 00:00",
+      }),
+    };
+
+    let requestBody;
+    pretender.put("/invites/48", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 48,
+        invite_key: "adm789",
+        link: "http://example.com/invites/adm789",
+        domain: "example.com",
+        grants_admin: true,
+        max_redemptions_allowed: 1,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    assert
+      .form()
+      .field("domain")
+      .hasValue("example.com", "the existing restriction is pre-filled");
+
+    await click(".save-invite");
+
+    assert.strictEqual(
+      requestBody.get("domain"),
+      "example.com",
+      "the restriction survives an update that doesn't touch it"
+    );
+    assert
+      .dom(".create-invite-with-roles-modal__summary-rows")
+      .includesText("example.com", "the summary still shows the restriction");
+  });
 });

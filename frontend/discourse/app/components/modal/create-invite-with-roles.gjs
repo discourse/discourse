@@ -224,6 +224,7 @@ export default class CreateInviteWithRoles extends Component {
   get adminFormData() {
     const data = {
       email: this.invite.email ?? "",
+      domain: this.invite.domain ?? "",
       description: this.invite.description ?? "",
       customMessage: this.invite.custom_message ?? "",
       // seeded from the untracked copy: reading the tracked property here would
