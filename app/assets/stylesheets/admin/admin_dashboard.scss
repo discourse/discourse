@@ -193,10 +193,6 @@ $db-bar-height: var(--space-2);
   &__drag-handle {
     color: var(--primary-low-mid);
     cursor: grab;
-
-    @include viewport.until(sm) {
-      display: none;
-    }
   }
 
   .d-toggle-switch {

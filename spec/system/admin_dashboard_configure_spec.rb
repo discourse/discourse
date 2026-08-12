@@ -69,6 +69,16 @@ describe "Admin Dashboard Configure menu" do
       expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
     end
 
+    it "shows the drag handle on mobile", mobile: true do
+      # The rendering test only proves the handle is in the DOM. A touch screen
+      # reaches the menu as a modal rather than a popover, so this asserts it is
+      # actually visible there, which is the only thing a finger can act on.
+      dashboard.visit
+      dashboard.open_configure_menu
+
+      expect(page).to have_css(".db-configure__drag-handle")
+    end
+
     it "Configure menu DnD oracle lets an admin reorder sections with a real browser drag" do
       dashboard.visit
       dashboard.open_configure_menu
