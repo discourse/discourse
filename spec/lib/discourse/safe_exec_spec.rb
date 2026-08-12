@@ -3,6 +3,36 @@
 require "discourse/safe_exec"
 
 RSpec.describe Discourse::SafeExec do
+  describe ".landlock_abi_version" do
+    it "returns the Landlock ABI version" do
+      allow(Landlock).to receive(:abi_version).and_return(6)
+
+      expect(described_class.landlock_abi_version).to eq(6)
+    end
+
+    it "returns zero when the ABI cannot be queried" do
+      allow(Landlock).to receive(:abi_version).and_raise(
+        Landlock::SyscallError.new("landlock_create_ruleset", Errno::EPERM::Errno),
+      )
+
+      expect(described_class.landlock_abi_version).to eq(0)
+    end
+  end
+
+  describe ".landlock_supported?" do
+    it "returns true when the Landlock ABI is positive" do
+      allow(Landlock).to receive(:abi_version).and_return(6)
+
+      expect(described_class.landlock_supported?).to eq(true)
+    end
+
+    it "returns false when the Landlock ABI is zero" do
+      allow(Landlock).to receive(:abi_version).and_return(0)
+
+      expect(described_class.landlock_supported?).to eq(false)
+    end
+  end
+
   describe ".capture" do
     it "delegates sandboxed execution to Landlock" do
       status = instance_double(Process::Status, exited?: true, exitstatus: 0)

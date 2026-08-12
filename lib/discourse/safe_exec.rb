@@ -74,7 +74,13 @@ module Discourse
     end
 
     def self.landlock_supported?
-      ::Landlock.supported?
+      landlock_abi_version.positive?
+    end
+
+    def self.landlock_abi_version
+      ::Landlock.abi_version
+    rescue ::Landlock::Error
+      0
     end
 
     def self.default_read_paths
