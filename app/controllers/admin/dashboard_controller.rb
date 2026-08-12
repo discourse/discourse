@@ -208,14 +208,7 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def dashboard_improvements?
-    dashboard_improvements_enabled =
-      UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
-
-    if params[:version] == "alt"
-      !dashboard_improvements_enabled
-    else
-      dashboard_improvements_enabled
-    end
+    UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
   end
 
   def parse_reports_items_payload
