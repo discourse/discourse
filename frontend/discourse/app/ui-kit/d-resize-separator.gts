@@ -173,6 +173,7 @@ interface DResizeSeparatorSignature {
  * side panel.
  *
  * @example
+ * ```gjs
  * <DResizeSeparator
  *   @axis="vertical"
  *   @side="end"
@@ -184,6 +185,7 @@ interface DResizeSeparatorSignature {
  *   @onResizeEnd={{this.commit}}
  *   class="my-block__handle"
  * />
+ * ```
  *
  * Attributes pass through, so a consumer keeps its own class alongside this one —
  * Glimmer merges the two rather than replacing — and may add its own modifiers.

@@ -28,7 +28,9 @@ interface DDragHandleSignature {
  * modifier that registers the handle with a drag source.
  *
  * @example
+ * ```gjs
  * <DDragHandle @label={{this.dragLabel}} class="my-block__handle" />
+ * ```
  */
 const DDragHandle: TemplateOnlyComponent<DDragHandleSignature> = <template>
   <span

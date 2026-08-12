@@ -73,6 +73,7 @@ interface DReorderButtonsSignature {
  * cannot be pressed twice is not a keyboard path.
  *
  * @example
+ * ```gjs
  * <DReorderButtons
  *   @onMoveUp={{fn this.moveUp item}}
  *   @onMoveDown={{fn this.moveDown item}}
@@ -82,6 +83,7 @@ interface DReorderButtonsSignature {
  *   @downLabel={{this.moveDownLabel}}
  *   class="my-block__arrows"
  * />
+ * ```
  *
  * Attributes pass through, so a consumer keeps its own class alongside this one.
  *

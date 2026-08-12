@@ -488,6 +488,7 @@ export function registerPointerDrag(
  * documented on {@link DPointerDragArgs}.
  *
  * @example
+ * ```gjs
  * <span {{dPointerDrag
  *   onDragStart=this.onDragStart
  *   onDrag=this.onDrag
@@ -495,6 +496,7 @@ export function registerPointerDrag(
  *   onDragCancel=this.onDragCancel
  *   draggingClass="--dragging"
  * }} />
+ * ```
  *
  * A press never moves focus. Cancelling `pointerdown` suppresses the compatibility
  * `mousedown` that focus rides on, and that suppression is kept: a handle usually

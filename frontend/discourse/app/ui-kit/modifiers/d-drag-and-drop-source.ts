@@ -526,7 +526,8 @@ export function registerDragAndDropSource(
   /**
    * Tears the registration down.
    *
-   * @param options.cancelPending - Whether to drop a drop dispatch already
+   * @param options - Teardown options. `cancelPending` decides whether to drop
+   *   a drop dispatch already
    *   scheduled for the next task. True when the consumer itself is going away,
    *   because running its callbacks against a destroyed component is the hazard
    *   this defers around. False when the registration is merely being replaced —
@@ -668,7 +669,8 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
   /**
    * Unregisters the source.
    *
-   * @param options.cancelPending - Passed through to the registration's own
+   * @param options - Unregistration options. `cancelPending` is passed through
+   *   to the registration's own
    *   cleanup. Defaults to true, which is the destructor's case: only a caller
    *   that is replacing the registration while the consumer lives on asks for
    *   the pending drop dispatch to be kept.

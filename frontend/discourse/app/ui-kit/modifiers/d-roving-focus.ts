@@ -1284,8 +1284,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * the result. Both the keydown handler and the API's `focusNext`/`focusPrevious` go through
    * here, so the two can never disagree about where a step lands.
    *
-   * A vertical step from a *seedless* cursor deliberately uses {@link #step} rather than
-   * {@link #stepRow}: with no current row there is no row to move out of, and row arithmetic on
+   * A vertical step from a *seedless* cursor deliberately uses `#step` rather than
+   * `#stepRow`: with no current row there is no row to move out of, and row arithmetic on
    * a negative index has no meaning.
    */
   #applyStep(
@@ -1343,7 +1343,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   /**
-   * Resolves the cursor to an ELEMENT, mirroring {@link #currentIndex} but over the raw item set,
+   * Resolves the cursor to an ELEMENT, mirroring `#currentIndex` but over the raw item set,
    * so nothing has to be measured to find it. Deliberately the same resolution order — active id,
    * then innermost-first containment of `document.activeElement`, then the established tab stop —
    * so the two can never disagree about which item holds the cursor.
@@ -1365,14 +1365,14 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /**
    * The one-dimensional step: walks outward from the cursor and stops at the first navigable
-   * item, exactly as {@link #scan} does — but without materialising the coordinate space first.
+   * item, exactly as `#scan` does — but without materialising the coordinate space first.
    *
    * That materialisation is the whole point. `#cells()` costs a forced layout read per mounted
    * item, so building it in order to move one place makes a single step O(items mounted): a
    * keypress among a handful of rows would measure every item on the page. Here the expensive
    * predicate runs only on the items actually walked over, so a step costs O(distance moved).
    *
-   * Semantically identical to {@link #step} with `rowBound` false, which is what any non-grid
+   * Semantically identical to `#step` with `rowBound` false, which is what any non-grid
    * orientation produces anyway.
    */
   #stepLinear(delta: 1 | -1): DRovingFocusStepResult {

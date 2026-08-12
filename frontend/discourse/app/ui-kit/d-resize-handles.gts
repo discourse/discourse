@@ -159,12 +159,16 @@ interface DResizeHandlesSignature<Payload extends string | number> {
  * offsets), pass explicit `@handles` descriptors as an escape hatch.
  *
  * @example
+ * ```gjs
  * // Box (edges + corners) from a BEM block:
  * <DResizeHandles @handleClass="my-block__handle" @onResize={{this.onResize}} />
+ * ```
  *
  * @example
+ * ```gjs
  * // Escape hatch — explicit descriptors:
  * <DResizeHandles @handles={{this.columnHandles}} @onResize={{this.onResize}} />
+ * ```
  *
  * This is the TWO-dimensional shape. `role="separator"` is wrong here and must not
  * be used: a box resized from its corners has no single value to report.
