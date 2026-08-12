@@ -5,15 +5,6 @@ import { getAllOutlets } from "discourse/lib/blocks/-internals/registry/outlet";
 import { isValidGlobPattern } from "discourse/lib/glob-utils";
 
 /**
- * Minimal call-shape typing for the untyped `picomatch` package (it ships no
- * type declarations of its own).
- */
-type PicomatchFactory = (
-  pattern: string,
-  options?: { dot?: boolean }
-) => (input: string) => boolean;
-
-/**
  * The result of `detectPatternConflicts()`.
  */
 export interface PatternConflictResult {
@@ -95,7 +86,7 @@ export function isNamespacedPattern(pattern: string): boolean {
  */
 export function matchOutletPattern(outlet: string, pattern: string): boolean {
   // Use dot: true to match dots in outlet names (e.g., namespaced outlets)
-  const isMatch = (picomatch as PicomatchFactory)(pattern, { dot: true });
+  const isMatch = picomatch(pattern, { dot: true });
   return isMatch(outlet);
 }
 

@@ -2,15 +2,6 @@ import picomatch from "picomatch";
 import { withoutPrefix } from "discourse/lib/get-url";
 
 /**
- * Minimal call-shape typing for the untyped `picomatch` package (it ships no
- * type declarations of its own).
- */
-type PicomatchFactory = (
-  pattern: string,
-  options?: { dot?: boolean }
-) => (input: string) => boolean;
-
-/**
  * Normalizes a URL path for matching.
  *
  * This function prepares a URL for glob pattern matching by:
@@ -97,7 +88,7 @@ export function normalizePath(url: string | null | undefined): string {
  * ```
  */
 export function matchUrlPattern(path: string, pattern: string): boolean {
-  const isMatch = (picomatch as PicomatchFactory)(pattern, { dot: true });
+  const isMatch = picomatch(pattern, { dot: true });
   return isMatch(path);
 }
 
