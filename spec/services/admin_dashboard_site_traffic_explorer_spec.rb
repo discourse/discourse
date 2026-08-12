@@ -238,14 +238,14 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       it "groups external traffic by normalized referrer and recognizes local traffic by host" do
         Fabricate(
           :browser_pageview_event,
-          normalized_referrer: "external.example?token=private",
+          normalized_referrer: "external.example?article=traffic",
           session_id: "external-referrer-query",
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 10, 12),
         )
         Fabricate(
           :browser_pageview_event,
-          normalized_referrer: "test.localhost?token=private",
+          normalized_referrer: "test.localhost?view=latest",
           session_id: "local-referrer-query",
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 10, 13),
@@ -255,8 +255,8 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           [
             { value: "", label: "Direct / unknown", pageviews: 12 },
             {
-              value: "external.example?token=private",
-              label: "external.example?token=private",
+              value: "external.example?article=traffic",
+              label: "external.example?article=traffic",
               pageviews: 1,
             },
           ],

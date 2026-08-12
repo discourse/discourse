@@ -1427,14 +1427,14 @@ RSpec.describe Admin::DashboardController do
       fab!(:landing_pageview) do
         Fabricate(
           :browser_pageview_event,
-          url: "https://test.localhost/landing/?campaign=private#section",
+          url: "https://test.localhost/landing/?source=newsletter#section",
           country_code: "US",
           asn: 64_496,
           ip_address: "192.0.2.1",
           user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
           user_id: admin.id,
           session_id: "admin-session",
-          normalized_referrer: "search.example/results?token=private",
+          normalized_referrer: "search.example/results?q=discourse",
           normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:00:00",
@@ -1444,14 +1444,14 @@ RSpec.describe Admin::DashboardController do
       fab!(:latest_pageview) do
         Fabricate(
           :browser_pageview_event,
-          url: "https://test.localhost/latest?token=private",
+          url: "https://test.localhost/latest?page=2",
           country_code: "US",
           asn: 64_496,
           ip_address: "192.0.2.1",
           user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
           user_id: admin.id,
           session_id: "admin-session",
-          normalized_referrer: "ignored.example/return?token=private",
+          normalized_referrer: "ignored.example/return?from=latest",
           normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:01:00",
@@ -1534,8 +1534,8 @@ RSpec.describe Admin::DashboardController do
               "referrers" => [
                 { "value" => "", "label" => "Direct / unknown", "pageviews" => 1 },
                 {
-                  "value" => "search.example/results?token=private",
-                  "label" => "search.example/results?token=private",
+                  "value" => "search.example/results?q=discourse",
+                  "label" => "search.example/results?q=discourse",
                   "pageviews" => 1,
                 },
               ],

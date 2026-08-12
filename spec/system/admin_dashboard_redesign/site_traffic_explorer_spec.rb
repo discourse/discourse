@@ -119,12 +119,12 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         user_agent: chrome,
         user_id: admin.id,
         session_id: "logged-in-session",
-        normalized_referrer: "search.example/results?token=secret",
+        normalized_referrer: "search.example/results?q=discourse",
         normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         created_at: "2026-05-10 10:00:00",
       },
       {
-        url: "https://test.localhost/top?token=secret",
+        url: "https://test.localhost/top?sort=popular",
         country_code: "US",
         asn: 64_496,
         ip_address: "192.0.2.1",
@@ -242,7 +242,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_row(card: "acquisition", label: "Direct / unknown", count: "2")
     expect(traffic).to have_row(
       card: "acquisition",
-      label: "search.example/results?token=secret",
+      label: "search.example/results?q=discourse",
       count: "1",
     )
     expect(traffic).to have_row(card: "pages", label: "/top", count: "2")
@@ -267,14 +267,14 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     )
     traffic.remove_filter("referrer")
 
-    traffic.filter_row(card: "acquisition", label: "search.example/results?token=secret")
+    traffic.filter_row(card: "acquisition", label: "search.example/results?q=discourse")
     expect(traffic).to have_filter_pill(
       dimension: "referrer",
-      label: "search.example/results?token=secret",
+      label: "search.example/results?q=discourse",
     )
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
-      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&referrer=search.example%2Fresults%3Ftoken%3Dsecret&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&referrer=search.example%2Fresults%3Fq%3Ddiscourse&start_date=2026-05-01",
     )
     traffic.remove_filter("referrer")
 

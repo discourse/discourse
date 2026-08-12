@@ -526,7 +526,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         event =
           Fabricate(
             :browser_pageview_event,
-            url: "https://forum.example/latest/?campaign=private#section",
+            url: "https://forum.example/latest/?sort=recent#section",
           )
         event.update_columns(normalized_url: nil, normalized_url_version: nil)
 
@@ -559,7 +559,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
       end
 
       it "re-normalizes rows stamped with an older version" do
-        raw = "https://forum.example/latest/?campaign=private#section"
+        raw = "https://forum.example/latest/?sort=recent#section"
         event = Fabricate(:browser_pageview_event, url: raw)
 
         stub_const(
