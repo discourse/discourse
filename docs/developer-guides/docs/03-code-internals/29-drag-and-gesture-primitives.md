@@ -20,21 +20,21 @@ input. `dOnResize` appears below only as a disambiguation note.
 
 # Pick by intent
 
-| I want to…                                                                          | Use                                                       |
-| ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| Move something onto a target and transfer a payload                                 | `dDragAndDropSource` + `dDragAndDropTarget`               |
-| React to a drag without being a drop target                                         | `dDragAndDropMonitor`                                     |
-| Scroll a container while a drag is in flight                                        | `dDragAndDropAutoScroll`                                  |
-| Receive files/HTML/text dragged in from outside the browser, and handle them myself | `dDragAndDropExternalTarget`                              |
+| I want to…                                                                              | Use                                                       |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Move something onto a target and transfer a payload                                     | `dDragAndDropSource` + `dDragAndDropTarget`               |
+| React to a drag without being a drop target                                             | `dDragAndDropMonitor`                                     |
+| Scroll a container while a drag is in flight                                            | `dDragAndDropAutoScroll`                                  |
+| Receive files/HTML/text dragged in from outside the browser, and handle them myself     | `dDragAndDropExternalTarget`                              |
 | Receive a link or image the browser dragged from **this page**, that nothing registered | `dDragAndDropTarget` with `adopts`                        |
-| Receive dropped files **for upload**                                                | the Uppy `DropTarget` path, **not** the modifier above    |
-| Read whether, and what, is currently being dragged — reactively                     | `@service dragAndDrop`                                    |
-| Press, drag, and change a value continuously                                        | `dPointerDrag`                                            |
-| Put a resize handle between two regions                                             | `DResizeSeparator`                                        |
-| Resize along one axis, supplying my own element and semantics                       | `dResizeEdge`                                             |
-| Resize a box in two dimensions from its edges and corners                           | `DResizeHandles`                                          |
-| Detect a directional touch swipe                                                    | `dSwipe` — a discrete gesture, not a continuous transform |
-| Anything, using `dDraggable`                                                        | Don't — deprecated; its notice names the replacement      |
+| Receive dropped files **for upload**                                                    | the Uppy `DropTarget` path, **not** the modifier above    |
+| Read whether, and what, is currently being dragged — reactively                         | `@service dragAndDrop`                                    |
+| Press, drag, and change a value continuously                                            | `dPointerDrag`                                            |
+| Put a resize handle between two regions                                                 | `DResizeSeparator`                                        |
+| Resize along one axis, supplying my own element and semantics                           | `dResizeEdge`                                             |
+| Resize a box in two dimensions from its edges and corners                               | `DResizeHandles`                                          |
+| Detect a directional touch swipe                                                        | `dSwipe` — a discrete gesture, not a continuous transform |
+| Anything, using `dDraggable`                                                            | Don't — deprecated; its notice names the replacement      |
 
 That last row is enforced rather than advisory. `dDraggable` raises the
 `discourse.ui-kit.d-draggable` deprecation the moment it is instantiated, and
