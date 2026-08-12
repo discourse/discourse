@@ -1196,7 +1196,7 @@ class Category < ActiveRecord::Base
   end
 
   def subcategory_list_includes_topics?
-    subcategory_list_style.end_with?("with_featured_topics")
+    subcategory_list_style.to_s.end_with?("with_featured_topics")
   end
 
   %i[category_created category_updated category_destroyed].each do |event|

@@ -203,6 +203,20 @@ module PageObjects
         end
       end
 
+      def select_none
+        select(PageObjects::Components::DSelect::NO_VALUE_OPTION)
+      end
+
+      def has_no_value?
+        if control_type == "select"
+          PageObjects::Components::DSelect.new(
+            component.find(".form-kit__control-select"),
+          ).has_no_value?
+        else
+          raise "'has_no_value?' is not supported for control type: #{control_type}"
+        end
+      end
+
       def accept
         if control_type == "question"
           component.find(".form-kit__control-radio[value='true']").click

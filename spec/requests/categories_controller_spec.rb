@@ -445,6 +445,18 @@ RSpec.describe CategoriesController do
       ).not_to include(uncategorized.id)
     end
 
+    it "lists the subcategories of a parent that has no subcategory list style" do
+      category.update!(subcategory_list_style: nil)
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+      get "/categories.json", params: { parent_category_id: category.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["category_list"]["categories"].map { |c| c["id"] }).to eq(
+        [subcategory.id],
+      )
+    end
+
     describe "with page" do
       before { sign_in(admin) }
 
@@ -1174,6 +1186,51 @@ RSpec.describe CategoriesController do
           cat_json = response.parsed_body["category"]
           expect(cat_json["has_children"]).to eq(false)
           expect(cat_json["subcategory_count"]).to eq(nil)
+        end
+
+        context "with appearance settings set" do
+          before do
+            category.update!(
+              sort_order: "likes",
+              sort_ascending: true,
+              default_view: "top",
+              default_top_period: "weekly",
+              default_list_filter: "none",
+            )
+          end
+
+          it "resets the appearance settings that are sent as null" do
+            put "/categories/#{category.id}.json",
+                params: {
+                  sort_order: nil,
+                  sort_ascending: nil,
+                  default_view: nil,
+                  default_top_period: nil,
+                  default_list_filter: nil,
+                },
+                as: :json
+
+            expect(response.status).to eq(200)
+            category.reload
+            expect(category.sort_order).to eq(nil)
+            expect(category.sort_ascending).to eq(nil)
+            expect(category.default_view).to eq(nil)
+            expect(category.default_top_period).to eq(nil)
+            expect(category.default_list_filter).to eq(nil)
+          end
+
+          it "keeps the appearance settings that are not sent at all" do
+            put "/categories/#{category.id}.json", params: { name: "hello" }, as: :json
+
+            expect(response.status).to eq(200)
+            category.reload
+            expect(category.name).to eq("hello")
+            expect(category.sort_order).to eq("likes")
+            expect(category.sort_ascending).to eq(true)
+            expect(category.default_view).to eq("top")
+            expect(category.default_top_period).to eq("weekly")
+            expect(category.default_list_filter).to eq("none")
+          end
         end
 
         it "does not update other fields" do

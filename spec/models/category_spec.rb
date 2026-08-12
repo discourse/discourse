@@ -51,6 +51,20 @@ RSpec.describe Category do
     end
   end
 
+  describe "#subcategory_list_includes_topics?" do
+    def includes_topics?(style)
+      Category.new(subcategory_list_style: style).subcategory_list_includes_topics?
+    end
+
+    it "is true only for the styles that feature topics" do
+      expect(includes_topics?("rows_with_featured_topics")).to eq(true)
+      expect(includes_topics?("boxes_with_featured_topics")).to eq(true)
+      expect(includes_topics?("rows")).to eq(false)
+      expect(includes_topics?("boxes")).to eq(false)
+      expect(includes_topics?(nil)).to eq(false)
+    end
+  end
+
   it "validates uniqueness in case insensitive way" do
     Fabricate(:category_with_definition, name: "Cats")
     cats = Fabricate.build(:category, name: "cats")
