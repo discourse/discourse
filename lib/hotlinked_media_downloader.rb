@@ -39,8 +39,10 @@ class HotlinkedMediaDownloader
     filename << File.extname(file.path) if !filename["."]
     upload = UploadCreator.new(file, filename, origin: src).create_for(user_id)
     if !upload.persisted?
-      raise UploadCreateError,
-            "Failed to persist downloaded hotlinked image #{src}: #{upload.errors.full_messages.join(", ")}"
+      Rails.logger.info(
+        "#{RailsMultisite::ConnectionManagement.current_db}: Failed to persist downloaded hotlinked image: #{src} - #{upload.errors.full_messages.join("\n")}",
+      )
+      raise UploadCreateError
     end
     upload
   end
