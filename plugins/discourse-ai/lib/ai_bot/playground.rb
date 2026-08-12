@@ -119,15 +119,20 @@ module DiscourseAi
         mentions = nil
         if mentionables.present? || (bot_user && post.topic.private_message?)
           mentions = post.mentions.map(&:downcase)
-
-          # in case we are replying to a post by a bot
-          if post.reply_to_post_number && post.reply_to_post&.user
-            mentions << post.reply_to_post.user.username_lower
-          end
         end
 
         if mentionables.present?
+          # explicit @mentions take priority (fix: replying to a bot's post and
+          # mentioning a different bot used to pick the replied-to bot first)
           mentioned = mentionables.find { |mentionable| mentions.include?(mentionable[:username]) }
+
+          # fallback: replying to a bot's post without mentioning another bot
+          if !mentioned && post.reply_to_post_number && post.reply_to_post&.user
+            mentioned =
+              mentionables.find do |mentionable|
+                mentionable[:username] == post.reply_to_post.user.username_lower
+              end
+          end
 
           # direct PM to mentionable
           if !mentioned && bot_user
