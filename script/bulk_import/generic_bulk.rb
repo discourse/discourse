@@ -614,6 +614,7 @@ class BulkImport::Generic < BulkImport::Base
         suspended_at: suspended_at,
         suspended_till: suspended_till,
         trust_level: row["trust_level"],
+        manual_locked_trust_level: row["manual_locked_trust_level"],
         ip_address: row["ip_address"],
         registration_ip_address: row["registration_ip_address"],
         date_of_birth: to_date(row["date_of_birth"]),
@@ -1006,9 +1007,6 @@ class BulkImport::Generic < BulkImport::Base
       next if row["raw"].blank?
       next unless (topic_id = topic_id_from_imported_id(row["topic_id"]))
       next if post_id_from_imported_id(row["id"]).present?
-
-      # TODO Ensure that we calculate the `like_count` if the column is empty, but the DB contains likes.
-      # Otherwise #import_user_stats will not be able to calculate the correct `likes_received` value.
 
       {
         imported_id: row["id"],
@@ -1476,6 +1474,28 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     likes.close
+
+    puts "", "Updating like counts of posts..."
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+      UPDATE posts
+         SET like_count = (
+               SELECT COUNT(*)
+                 FROM post_actions pa
+                WHERE pa.post_id = posts.id
+                  AND pa.post_action_type_id = 2
+                  AND pa.deleted_at IS NULL
+             )
+       WHERE id IN (
+               SELECT DISTINCT post_id
+                 FROM post_actions
+                WHERE post_action_type_id = 2
+                  AND deleted_at IS NULL
+             )
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
 
     puts "", "Updating like counts of topics..."
     start_time = Time.now
