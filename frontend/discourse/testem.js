@@ -13,6 +13,11 @@ const sandboxDisabled =
     (process.env.DISCOURSE_DISABLE_BROWSER_SANDBOX || "").toLowerCase()
   );
 
+// bin/qunit derives a port that does not clash with the other checkouts on the machine. Direct
+// invocations keep the historical fixed port, which stays a predictable address to attach to.
+const remoteDebuggingPort =
+  process.env.QUNIT_REMOTE_DEBUGGING_PORT ?? (process.env.CI ? 0 : 3001);
+
 class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
@@ -280,7 +285,7 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      `--remote-debugging-port=${process.env.CI ? 0 : 3001}`,
+      `--remote-debugging-port=${remoteDebuggingPort}`,
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
@@ -294,7 +299,7 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      `--remote-debugging-port=${process.env.CI ? 0 : 3001}`,
+      `--remote-debugging-port=${remoteDebuggingPort}`,
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",

@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
+load Rails.root.join("bin/qunit").to_s
+
 describe "bin/qunit" do
   def run(*args, env: {})
+    # Unset CI so the expectations hold both on a developer machine and on CI itself, where the
+    # browser port is deliberately left to the OS.
+    env = { "CI" => nil }.merge(env)
     out, err, status = Open3.capture3(env, "bin/qunit", "--dry-run", *args, chdir: Rails.root.to_s)
 
     parsed_args, parsed_env =
@@ -30,8 +35,11 @@ describe "bin/qunit" do
       "QUNIT_BROWSER_WATCHDOG" => "1",
       "QUNIT_BROWSER_START_TIMEOUT" => "45",
       "QUNIT_BROWSER_INACTIVITY_TIMEOUT" => "30",
+      "QUNIT_REMOTE_DEBUGGING_PORT" => a_string_matching(/\A\d+\z/),
     }
   end
+
+  let(:derived_test_port) { ["--test-port", a_string_matching(/\A\d+\z/)] }
 
   it "runs all core tests by default" do
     result = run
@@ -43,6 +51,7 @@ describe "bin/qunit" do
         "pnpm",
         "ember",
         "exam",
+        *derived_test_port,
         "--query",
         "target=core&testem=1",
         "--random",
@@ -70,6 +79,7 @@ describe "bin/qunit" do
         "pnpm",
         "ember",
         "exam",
+        *derived_test_port,
         "--query",
         "target=core&testem=1",
         "--file-path",
@@ -99,6 +109,7 @@ describe "bin/qunit" do
         "pnpm",
         "ember",
         "exam",
+        *derived_test_port,
         "--query",
         "testem=1",
         "--random",
@@ -127,6 +138,7 @@ describe "bin/qunit" do
         "pnpm",
         "ember",
         "exam",
+        *derived_test_port,
         "--query",
         "testem=1",
         "--random",
@@ -155,6 +167,7 @@ describe "bin/qunit" do
         "pnpm",
         "ember",
         "exam",
+        *derived_test_port,
         "--query",
         "target=chat&testem=1",
         "--file-path",
@@ -245,5 +258,111 @@ describe "bin/qunit" do
 
     expect(result.status).to eq(1)
     expect(result.err).to include("--browser-inactivity-timeout must be greater than 0")
+  end
+
+  describe "port derivation" do
+    let(:runner) { QunitRunner.new(["--dry-run"]) }
+
+    def offset_for(path)
+      runner.instance_variable_set(:@rails_root, path)
+      runner.instance_variable_set(:@port_offset, nil)
+      runner.send(:port_offset)
+    end
+
+    it "keeps every derived port inside its own band" do
+      band = QunitRunner::PORT_BAND_SIZE
+
+      expect(offset_for("/some/checkout")).to be_between(0, band - 1)
+    end
+
+    it "derives a stable offset for the same checkout" do
+      expect(offset_for("/some/checkout")).to eq(offset_for("/some/checkout"))
+    end
+
+    it "derives different offsets for different checkouts" do
+      offsets = %w[/a/main /a/worktrees/one /a/worktrees/two].map { |path| offset_for(path) }
+
+      expect(offsets.uniq.size).to eq(3)
+    end
+
+    it "gives concurrent worktrees non-overlapping port bands" do
+      expect(QunitRunner::RAILS_PORT_BASE + QunitRunner::PORT_BAND_SIZE).to be <
+        QunitRunner::TESTEM_PORT_BASE
+      expect(QunitRunner::DEVTOOLS_PORT_BASE + QunitRunner::PORT_BAND_SIZE).to be <
+        QunitRunner::RAILS_PORT_BASE
+    end
+
+    it "treats a port bound on either address family as unavailable" do
+      server = TCPServer.open("127.0.0.1", 0)
+      port = server.addr[1]
+
+      begin
+        expect(runner.send(:port_available?, port)).to eq(false)
+      ensure
+        server.close
+      end
+    end
+  end
+
+  describe "port selection" do
+    def band_for(base)
+      (base...(base + QunitRunner::PORT_BAND_SIZE))
+    end
+
+    def test_port(result)
+      result.args[result.args.index("--test-port") + 1].to_i
+    end
+
+    it "runs the Rails server, testem and the browser on derived ports" do
+      result = run("--standalone")
+
+      expect(result.env["UNICORN_PORT"].to_i).to be_in(band_for(QunitRunner::RAILS_PORT_BASE))
+      expect(result.env["QUNIT_REMOTE_DEBUGGING_PORT"].to_i).to be_in(
+        band_for(QunitRunner::DEVTOOLS_PORT_BASE),
+      )
+      expect(test_port(result)).to be_in(band_for(QunitRunner::TESTEM_PORT_BASE))
+    end
+
+    it "picks the same ports on every run from the same checkout" do
+      first = run("--standalone")
+      second = run("--standalone")
+
+      expect(first.env["UNICORN_PORT"]).to eq(second.env["UNICORN_PORT"])
+      expect(first.env["QUNIT_REMOTE_DEBUGGING_PORT"]).to eq(
+        second.env["QUNIT_REMOTE_DEBUGGING_PORT"],
+      )
+      expect(test_port(first)).to eq(test_port(second))
+    end
+
+    it "walks past a derived port that is already bound" do
+      derived = run("--standalone").env["UNICORN_PORT"].to_i
+      server = TCPServer.open("127.0.0.1", derived)
+
+      begin
+        expect(run("--standalone").env["UNICORN_PORT"].to_i).to be > derived
+      ensure
+        server.close
+      end
+    end
+
+    it "lets TEST_SERVER_PORT override the derived Rails port" do
+      free = TCPServer.open("127.0.0.1", 0)
+      port = free.addr[1]
+      free.close
+
+      result = run("--standalone", env: { "TEST_SERVER_PORT" => port.to_s })
+      expect(result.env["UNICORN_PORT"]).to eq(port.to_s)
+    end
+
+    it "lets the OS assign a browser port for every worker of a parallel run" do
+      expect(run(env: { "QUNIT_PARALLEL" => "4" }).env["QUNIT_REMOTE_DEBUGGING_PORT"]).to eq("0")
+    end
+
+    it "leaves the testem and browser ports untouched when running on CI" do
+      result = run(env: { "CI" => "1" })
+
+      expect(result.args).not_to include("--test-port")
+      expect(result.env).not_to include("QUNIT_REMOTE_DEBUGGING_PORT")
+    end
   end
 end
