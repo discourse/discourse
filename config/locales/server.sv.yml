@@ -801,6 +801,13 @@ sv:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "okänt operativsystem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonym"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Det uppstod ett fel vid ändringen av din e-postadress. Kanske används adressen redan?"
     doesnt_exist: "Den e-postadressen är inte kopplad till ditt konto."

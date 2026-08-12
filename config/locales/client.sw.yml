@@ -2606,6 +2606,18 @@ sw:
         default_value: "Halisi"
       search:
         title: "Tafuta"
+      site_traffic_explorer:
+        pageviews: "Ukurasa Umeonwa Mara"
+        columns:
+          top_urls: "Anwani ya mtandao"
+          ip_addresses: "Anwani ya Mtandao"
+        filters:
+          ip: "Anwani ya Mtandao"
+        metrics:
+          pageviews:
+            label: "Ukurasa Umeonwa Mara"
+        series:
+          anonymous_human: "Asiyejulikana"
       dashboard:
         title: "Ubao"
         version: "Toleo"

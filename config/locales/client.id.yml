@@ -2520,6 +2520,19 @@ id:
         default_value: "Asal"
       search:
         title: "Cari"
+      site_traffic_explorer:
+        pageviews: "Tampilan halaman"
+        columns:
+          browsers: "Peramban"
+          ip_addresses: "Alamat IP"
+        filters:
+          browser: "Peramban"
+          ip: "Alamat IP"
+        metrics:
+          pageviews:
+            label: "Tampilan halaman"
+        series:
+          anonymous_human: "Anonim"
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"

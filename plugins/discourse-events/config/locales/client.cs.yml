@@ -7,11 +7,11 @@
 cs:
   admin_js:
     admin:
-      calendar: "Kalendář a události"
+      calendar: "Události"
       site_settings:
         categories:
           discourse_post_event: "Událost Discourse"
-          discourse_calendar: "Kalendář a události"
+          discourse_calendar: "Události"
   js:
     notifications:
       titles:

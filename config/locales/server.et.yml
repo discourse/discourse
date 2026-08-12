@@ -441,6 +441,13 @@ et:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "tundmatu operatsioonisüsteem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonüümne"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Sinu meiliaadressi muutmisel esines tõrge. Äkki on see juba kasutuses?"
     error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."

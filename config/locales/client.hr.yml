@@ -5829,6 +5829,22 @@ hr:
       new_features:
         title: "Što je novo?"
         check_for_updates: "Provjeri ažuriranja"
+      site_traffic_explorer:
+        pageviews: "Pregledi stranica"
+        view_more: "Pogledaj više"
+        cards:
+          pages: "Stranice"
+          visitors: "Posjetitelji"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP adrese"
+        filters:
+          ip: "IP adrese"
+        metrics:
+          pageviews:
+            label: "Pregledi stranica"
+        series:
+          anonymous_human: "Anonimno"
       dashboard:
         title: "Nadzorna ploča"
         last_updated: "Nadzorna ploča ažurirana:"

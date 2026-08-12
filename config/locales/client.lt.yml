@@ -4391,6 +4391,23 @@ lt:
         default_value: "Numatytasis"
       search:
         title: "Paieška"
+      site_traffic_explorer:
+        pageviews: "Puslapio peržiūros"
+        view_more: "Žiūrėti daugiau"
+        cards:
+          visitors: "Lankytojai"
+        columns:
+          top_urls: "Nuoroda"
+          browsers: "Naršyklė"
+          ip_addresses: "IP adresas"
+        filters:
+          browser: "Naršyklė"
+          ip: "IP adresas"
+        metrics:
+          pageviews:
+            label: "Puslapio peržiūros"
+        series:
+          anonymous_human: "Anonimas"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"

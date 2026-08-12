@@ -7,11 +7,11 @@
 ja:
   admin_js:
     admin:
-      calendar: "カレンダーとイベント"
+      calendar: "イベント"
       site_settings:
         categories:
           discourse_post_event: "Discourse イベント"
-          discourse_calendar: "カレンダーとイベント"
+          discourse_calendar: "イベント"
   js:
     notifications:
       titles:

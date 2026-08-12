@@ -899,6 +899,13 @@ fa_IR:
       macos: "macOS"
       windows: "مایکروسافت ویندوز"
       unknown: "سیستم‌عامل ناشناخته"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "ناشناس"
+    browsers:
+      edge: "مایکروسافت اج"
+      firefox: "فایرفاکس"
+      safari: "سافاری"
   change_email:
     error: "در تغییر ایمیلتان خطایی روی داد. شاید قبلا در سایت استفاده شده است؟"
     error_staged: "خطایی در تغییر ایمیل رخ داده است. این ایمیل در حال حاضر در یک حساب‌کاربری خودکار استفاده می‌شود."

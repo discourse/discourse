@@ -7,9 +7,11 @@
 it:
   admin_js:
     admin:
+      calendar: "Eventi"
       site_settings:
         categories:
           discourse_post_event: "Evento Discourse"
+          discourse_calendar: "Eventi"
   js:
     notifications:
       titles:

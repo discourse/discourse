@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      calendar: "Sự kiện"
+      site_settings:
+        categories:
+          discourse_calendar: "Sự kiện"
   js:
     notifications:
       titles:

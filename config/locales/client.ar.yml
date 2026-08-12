@@ -5653,9 +5653,9 @@ ar:
       few_likes_left: "نشكرك على نشر المحبة في المجتمع! و لكن للأسف لقد اقتربت من الحد اليومي المسموح به لمرات تسجيل الإعجاب."
       controls:
         menu_label: "إجراءات المنشور"
-        reply: "ابدأ في كتابة رد على هذا المنشور"
+        reply: "البدء في كتابة رد على هذا المنشور"
         like_action: "تسجيل الإعجاب"
-        like: "سجِّل إعجابك بهذا المنشور"
+        like: "تسجيل إعجابك بهذا المنشور"
         has_liked: "لقد سجَّلت إعجابك بهذا المنشور"
         read_indicator: "الأعضاء الذين قرأوا هذا المنشور"
         undo_like_action: "التراجع عن تسجيل الإعجاب"
@@ -7190,19 +7190,19 @@ ar:
           text: "يُرجى إدخال قيمة نصية."
           url: "يُرجى إدخال عنوان URL صالح."
         too_short:
-          zero: "يجب أن يكون طول الإدخال %{count} حرف أو أطول."
-          one: "يجب أن يكون طول الإدخال حرفًا واحدًا (%{count}) أو أطول."
-          two: "يجب أن يكون طول الإدخال حرفَين (%{count}) أو أطول."
-          few: "يجب أن يكون طول الإدخال %{count} أحرف أو أطول."
-          many: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
-          other: "يجب أن يكون طول الإدخال %{count} حرف أو أطول."
+          zero: "يجب أن يبلغ طول الإدخال %{count} حرف أو أطول."
+          one: "يجب أن يبلغ طول الإدخال حرفًا واحدًا (%{count}) أو أطول."
+          two: "يجب أن يبلغ طول الإدخال حرفَين (%{count}) أو أطول."
+          few: "يجب أن يبلغ طول الإدخال %{count} أحرف أو أطول."
+          many: "يجب أن يبلغ طول الإدخال %{count} حرفًا أو أطول."
+          other: "يجب أن يبلغ طول الإدخال %{count} حرف أو أطول."
         too_long:
-          zero: "يجب أن يكون طول الإدخال أقل من %{count} حرف."
-          one: "يجب أن يكون طول الإدخال أقل من حرف واحد (%{count})."
-          two: "يجب أن يكون طول الإدخال أقل من حرفَين (%{count})."
-          few: "يجب أن يكون طول الإدخال أقل من %{count} أحرف."
-          many: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
-          other: "يجب أن يكون طول الإدخال أقل من %{count} حرف."
+          zero: "يجب أن يبلغ طول الإدخال أقل من %{count} حرف."
+          one: "يجب أن يبلغ طول الإدخال أقل من حرف واحد (%{count})."
+          two: "يجب أن يبلغ طول الإدخال أقل من حرفَين (%{count})."
+          few: "يجب أن يبلغ طول الإدخال أقل من %{count} أحرف."
+          many: "يجب أن يبلغ طول الإدخال أقل من %{count} حرفًا."
+          other: "يجب أن يبلغ طول الإدخال أقل من %{count} حرف."
         range_overflow:
           zero: "يجب أن يكون الإدخال أقصر من %{count}."
           one: "يجب أن يكون الإدخال أقصر من %{count}."
@@ -7969,6 +7969,33 @@ ar:
       new_features:
         title: "ما الجديد؟"
         check_for_updates: "تحقَّق من وجود تحديثات"
+      site_traffic_explorer:
+        pageviews: "مرات عرض الصفحة"
+        view_more: "عرض المزيد"
+        cards:
+          pages: "صفحتان"
+          visitors: "الزوار"
+        columns:
+          referrers: "المُحيل"
+          countries: "البلد"
+          top_urls: "عنوان URL"
+          browsers: "المتصفح"
+          ip_addresses: "عنوان IP"
+        filters:
+          referrer: "المُحيل"
+          country: "البلد"
+          browser: "المتصفح"
+          ip: "عنوان IP"
+        metrics:
+          pageviews:
+            label: "مرات عرض الصفحة"
+          logged_in_share:
+            label: "نسبة المسجَّلين الدخول"
+          bounce_rate:
+            label: "معدَّل الارتداد"
+        series:
+          logged_in_human: "المسجَّلون الدخول"
+          anonymous_human: "مجهول"
       dashboard:
         title: "لوحة المعلومات"
         last_updated: "تم تحديث لوحة المعلومات:"
@@ -9469,8 +9496,8 @@ ar:
           js:
             text: "لغة البرمجة JavaScript"
             title: "مُهيئ JavaScript يدعم صياغة وسوم template الخاصة بإطار Ember"
-          scss_color_variables_warning: 'تم التوقف عن استخدام متغيرات ألوان SCSS الأساسية في السمات. يُرجى استخدام خصائص CSS المخصَّصة بدلًا من ذلك. راجع <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">هذا الدليل</a> لمزيد من التفاصيل.'
-          scss_warning_inline: "تم التوقف عن استخدام متغيرات ألوان SCSS الأساسية في السمات."
+          scss_color_variables_warning: 'تم إهمال استخدام متغيرات ألوان SCSS الأساسية في السمات. يُرجى استخدام خصائص CSS المخصَّصة بدلًا من ذلك. راجع <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">هذا الدليل</a> لمزيد من التفاصيل.'
+          scss_warning_inline: "تم إهمال استخدام متغيرات ألوان SCSS الأساسية في السمات."
           all_filter: "الكل"
           active_filter: "نشطة"
           inactive_filter: "غير نشطة"
@@ -10929,7 +10956,7 @@ ar:
 
           <p> إذا كنت ترغب في تخصيص النمط، فقم بإلغاء التعليق واستبدال <b>CLASS_NAME</b> بفئة CSS المحدَّدة في <i>Embedded CSS</i> لسمتك.</p>
 
-          <p>استبدل <b>DISCOURSE_USERNAME</b> باسم مستخدم Discourse للمؤلف المفترض أن ينشئ الموضوع. سيبحث Discourse تلقائيًا عن المستخدم من خلال سمة <code>content</code> للعلامات <code>&lt;meta&gt;</code> مع تعيين سمة <code>name</code> إلى <code>discourse-username</code> أو <code>author</code>. تم إيقاف المعلمة <code>discourseUserName</code> وستتم إزالتها في Discourse 3.2.</p>
+          <p>استبدل <b>DISCOURSE_USERNAME</b> باسم مستخدم Discourse للمؤلف المفترض أن ينشئ الموضوع. سيبحث Discourse تلقائيًا عن المستخدم من خلال سمة <code>content</code> للعلامات <code>&lt;meta&gt;</code> مع تعيين سمة <code>name</code> إلى <code>discourse-username</code> أو <code>author</code>. تم إهمال المعلمة <code>discourseUserName</code> وستتم إزالتها في Discourse 3.2.</p>
         title: "التضمين"
         description: "يتمتع Discourse بالقدرة على تضمين التعليقات من أحد الموضوعات في موقع بعيد باستخدام واجهة برمجة تطبيقات Javascript التي تُنشئ IFRAME"
         host: "المضيفون المسموح بهم"

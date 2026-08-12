@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      calendar: "ایوینٹس"
+      site_settings:
+        categories:
+          discourse_calendar: "ایوینٹس"
   js:
     discourse_automation:
       triggerables:

@@ -347,6 +347,9 @@ sq:
     title: "Rivendos Fjalëkalimin"
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonim"
   change_email:
     error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
     already_done: "Na vjen keq, ky link nuk vlen më. Mbase adresa juaj email u ndryshua para pak kohësh?"

@@ -671,6 +671,14 @@ el:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "άγνωστο λειτουργικό σύστημα"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Συνδεδεμένοι"
+      anonymous: "Ανώνυμοι"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Ίσως αυτή η διεύθυνση είναι ήδη σε χρήση;"
     error_staged: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Η δεύθυνση αυτή χρησιμοποιείται ήδη από αλλό χρήστη. "

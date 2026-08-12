@@ -665,6 +665,13 @@ gl:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operativo descoñecido"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anónimo"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Produciuse un erro ao cambiar o enderezo electrónico. Estarase usando xa ese enderezo?"
     doesnt_exist: "Este enderezo electrónico non está asociado coa súa conta."

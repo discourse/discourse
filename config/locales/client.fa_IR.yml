@@ -5138,6 +5138,26 @@ fa_IR:
       new_features:
         title: "چه چیزی جدید شده؟"
         check_for_updates: "برررسی به‌روز‌رسانی‌ها"
+      site_traffic_explorer:
+        pageviews: "بازدید"
+        view_more: "نمایش بیشتر"
+        cards:
+          pages: "صفحه"
+          visitors: "بازدیدکنندگان"
+        columns:
+          countries: "کشور"
+          top_urls: "نشانی اینترنتی"
+          browsers: "مرورگر"
+          ip_addresses: "نشانی IP"
+        filters:
+          country: "کشور"
+          browser: "مرورگر"
+          ip: "نشانی IP"
+        metrics:
+          pageviews:
+            label: "بازدید"
+        series:
+          anonymous_human: "ناشناس"
       dashboard:
         title: "پیشخوان"
         last_updated: "داشبورد بروزرسانی شد:"

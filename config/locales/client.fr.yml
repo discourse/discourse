@@ -6766,6 +6766,33 @@ fr:
       new_features:
         title: "Quoi de neuf ?"
         check_for_updates: "Vérifier les mises à jour"
+      site_traffic_explorer:
+        pageviews: "Pages vues"
+        view_more: "Voir plus"
+        cards:
+          pages: "Pages"
+          visitors: "Visiteurs"
+        columns:
+          referrers: "Source de trafic"
+          countries: "Pays"
+          top_urls: "URL"
+          browsers: "Navigateur"
+          ip_addresses: "Adresse IP"
+        filters:
+          referrer: "Source de trafic"
+          country: "Pays"
+          browser: "Navigateur"
+          ip: "Adresse IP"
+        metrics:
+          pageviews:
+            label: "Pages vues"
+          logged_in_share:
+            label: "Part des pages vues par des utilisateurs connectés"
+          bounce_rate:
+            label: "Taux de rebond"
+        series:
+          logged_in_human: "Utilisateurs connectés"
+          anonymous_human: "Anonymes"
       dashboard:
         title: "Tableau de bord"
         last_updated: "Dernière actualisation du tableau de bord :"

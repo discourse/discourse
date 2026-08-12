@@ -44,7 +44,6 @@ uk:
   site_settings:
     map_events_to_color: "Призначити колір для кожного тегу або категорії."
     map_events_title: "Перезаписує «Події» у заголовку бічної панелі «Майбутні події» для кожної категорії."
-    calendar_enabled: "Увімкніть плагін календаря дискурсу. Це додасть підтримку тегу [calendar][/calendar] у першій публікації теми."
     discourse_post_event_enabled: "Увімкнути функції подій. Примітка: також потрібно увімкнути {{setting:calendar_enabled}}."
     displayed_invitees_limit: "Обмежує кількість запрошених, що відображаються в події."
     display_post_event_date_on_topic_title: "Відображає дату події після назви теми."

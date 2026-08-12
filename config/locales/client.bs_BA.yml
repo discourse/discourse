@@ -3353,6 +3353,18 @@ bs_BA:
         default_value: "Uobičajen"
       search:
         title: "Pretraži"
+      site_traffic_explorer:
+        pageviews: "Prikazi stranica"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP address"
+        filters:
+          ip: "IP address"
+        metrics:
+          pageviews:
+            label: "Prikazi stranica"
+        series:
+          anonymous_human: "Anoniman"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"

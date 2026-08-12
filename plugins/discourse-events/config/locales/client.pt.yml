@@ -5,12 +5,6 @@
 # https://translate.discourse.org/
 
 pt:
-  admin_js:
-    admin:
-      calendar: "Calendário e Eventos"
-      site_settings:
-        categories:
-          discourse_calendar: "Calendário e Eventos"
   js:
     discourse_automation:
       triggerables:

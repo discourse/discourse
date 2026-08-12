@@ -4595,6 +4595,20 @@ sv:
         default_value: "Standard"
       search:
         title: "Sök"
+      site_traffic_explorer:
+        pageviews: "Sidvisningar"
+        columns:
+          top_urls: "URL"
+          browsers: "Webbläsare"
+          ip_addresses: "IP-adress"
+        filters:
+          browser: "Webbläsare"
+          ip: "IP-adress"
+        metrics:
+          pageviews:
+            label: "Sidvisningar"
+        series:
+          anonymous_human: "Anonym"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"

@@ -39,7 +39,6 @@ cs:
   site_settings:
     map_events_to_color: "Každému štítku nebo kategorii přiřadit barvu."
     map_events_title: "Přepíše „Události“ v názvu postranního panelu „Nadcházející události“ podle kategorie."
-    calendar_enabled: "Povolte plugin `discourse-calendar`. Přidá podporu pro značku `[calendar][/calendar]` v prvním příspěvku tématu."
     displayed_invitees_limit: "Omezuje, kolik pozvaných se u události zobrazí."
     display_post_event_date_on_topic_title: "Zobrazí datum události za názvem tématu."
     use_local_event_date: "Za názvem tématu použít místo relativního času místní datum."

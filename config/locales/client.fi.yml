@@ -5638,6 +5638,26 @@ fi:
       new_features:
         title: "Mitä uutta?"
         check_for_updates: "Tarkista päivitykset"
+      site_traffic_explorer:
+        pageviews: "Sivukatselua"
+        view_more: "Näytä enemmän"
+        cards:
+          pages: "Sivut"
+          visitors: "Vierailijat"
+        columns:
+          countries: "Maa"
+          top_urls: "URL"
+          browsers: "Selain"
+          ip_addresses: "IP-osoite"
+        filters:
+          country: "Maa"
+          browser: "Selain"
+          ip: "IP-osoite"
+        metrics:
+          pageviews:
+            label: "Sivukatselua"
+        series:
+          anonymous_human: "Anonyymeja"
       dashboard:
         title: "Hallintapaneeli"
         last_updated: "Hallintapaneeli päivitetty:"

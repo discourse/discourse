@@ -401,6 +401,9 @@ sw:
     success_unapproved: "Umebadilisha nywila yako kwa mafanikio."
   email_login:
     title: "Ingia kupitia barua pepe"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Asiyejulikana"
   change_email:
     error: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Labda barua pepe tayari inatumika?"
     error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."

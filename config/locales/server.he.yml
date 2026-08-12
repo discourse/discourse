@@ -1127,6 +1127,13 @@ he:
       macos: "macOS"
       windows: "Windows מבית Microsoft"
       unknown: "מערכת הפעלה בלתי מוכרת"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "אלמוני"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "הייתה שגיאה בעדכון כתובת הדוא״ל. אולי היא כבר בשימוש?"
     doesnt_exist: "כתובת דוא״ל זו אינה משויכת לחשבונך."

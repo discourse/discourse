@@ -480,7 +480,13 @@ ug:
       pill: "تەۋسىيە"
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
+      launch_in_easy_steps: "جامائەت تەڭشىكى"
+      launch_in_easy_steps_subtitle: "%{completed_steps}/%{step_count} قەدەم تاماملاندى"
+      expand: "تەڭشەك قەدىمىنى ياي"
+      collapse: "تەڭشەش قەدىمىنى يىغ"
+      dismiss: "تەڭشەشكە پەرۋا قىلما"
       select_theme:
+        description: "رەڭ، خەت نۇسخا ۋە باش بەت تاللىنىدۇ."
         show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
         show_dark_screenshot: "قېنىق ئېكران كۆرۈنۈشىنى كۆرسەت"
       invite_collaborators:
@@ -5948,6 +5954,24 @@ ug:
       new_features:
         title: "يېڭىلىق?"
         check_for_updates: "يېڭىلانمىنى تەكشۈر"
+      site_traffic_explorer:
+        pageviews: "بەت كۆرۈلۈشى"
+        view_more: "تېخىمۇ كۆپ كۆرسەت"
+        cards:
+          pages: "بەت"
+          visitors: "زىيارەتچى"
+        columns:
+          top_urls: "تور ئادرېسى"
+          browsers: "توركۆرگۈ"
+          ip_addresses: "IP ئادرېس"
+        filters:
+          browser: "توركۆرگۈ"
+          ip: "IP ئادرېس"
+        metrics:
+          pageviews:
+            label: "بەت كۆرۈلۈشى"
+        series:
+          anonymous_human: "نامسىز"
       dashboard:
         title: "باشقۇرۇش تاختا"
         last_updated: "باشقۇرۇش تاختا يېڭىلاندى:"

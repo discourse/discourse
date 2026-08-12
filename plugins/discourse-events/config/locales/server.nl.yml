@@ -43,7 +43,6 @@ nl:
   site_settings:
     map_events_to_color: "Wijs een kleur toe aan elke tag of categorie."
     map_events_title: "Overschrijft 'Evenementen' in de zijbalktitel 'Aankomende evenementen' per categorie."
-    calendar_enabled: "Schakel de Discourse-Kalender-plug-in in. Dit voegt ondersteuning toe voor een [calendar][/calendar]-tag in het eerste bericht van een topic."
     displayed_invitees_limit: "Beperkt het aantal genodigden van een evenement."
     display_post_event_date_on_topic_title: "Geeft de datum van het evenement weer na de topictitel."
     use_local_event_date: "Gebruik lokale datum na topictitel in plaats van relatieve tijd."

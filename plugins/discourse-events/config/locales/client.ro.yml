@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ro:
+  admin_js:
+    admin:
+      calendar: "Evenimente"
+      site_settings:
+        categories:
+          discourse_calendar: "Evenimente"
   js:
     discourse_automation:
       triggerables:

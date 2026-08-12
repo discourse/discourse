@@ -6041,6 +6041,24 @@ sk:
       new_features:
         title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
+      site_traffic_explorer:
+        pageviews: "Zobrazenia stránky"
+        view_more: "Zobraziť viac"
+        cards:
+          pages: "Stránky"
+          visitors: "Návštevníci"
+        columns:
+          top_urls: "URL"
+          browsers: "Prehliadač"
+          ip_addresses: "IP adresy"
+        filters:
+          browser: "Prehliadač"
+          ip: "IP adresy"
+        metrics:
+          pageviews:
+            label: "Zobrazenia stránky"
+        series:
+          anonymous_human: "Anonymný"
       dashboard:
         title: "Ovládací panel"
         last_updated: "Informačný panel bol aktualizovaný:"

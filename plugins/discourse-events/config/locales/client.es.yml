@@ -7,11 +7,11 @@
 es:
   admin_js:
     admin:
-      calendar: "Calendario y eventos"
+      calendar: "Eventos"
       site_settings:
         categories:
           discourse_post_event: "Evento de Discourse"
-          discourse_calendar: "Calendario y eventos"
+          discourse_calendar: "Eventos"
       web_hooks:
         calendar_event:
           group_name: "Evento del calendario"
@@ -38,9 +38,7 @@ es:
           chat: "Chat"
       invite_user_notification: "%{username} te invitó a: %{description}"
       preferences:
-        all_events: "Calendario de Discourse - Todos los eventos"
         all_events_description: "Todos los eventos del foro"
-        my_events: "Calendario de Discourse - Mis eventos"
         my_events_description: "Eventos a los que vas a asistir o que te interesan"
       on_holiday: "De vacaciones"
       disable_holiday: "Desactivar"

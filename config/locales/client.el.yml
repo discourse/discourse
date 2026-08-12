@@ -6242,6 +6242,29 @@ el:
       new_features:
         title: "Τι νέο υπάρχει;"
         check_for_updates: "Ελέγξτε για ενημερώσεις"
+      site_traffic_explorer:
+        pageviews: "Προβολές σελίδας"
+        view_more: "Δείτε περισσότερα"
+        cards:
+          pages: "Σελίδες"
+          visitors: "Επισκέπτες"
+        columns:
+          countries: "Χώρα"
+          top_urls: "URL"
+          browsers: "Περιηγητής"
+          ip_addresses: "IP διεύθυνση"
+        filters:
+          country: "Χώρα"
+          browser: "Περιηγητής"
+          ip: "IP διεύθυνση"
+        metrics:
+          pageviews:
+            label: "Προβολές σελίδας"
+          logged_in_share:
+            label: "Μερίδιο συνδεδεμένων"
+        series:
+          logged_in_human: "Συνδεδεμένοι"
+          anonymous_human: "Ανώνυμοι"
       dashboard:
         title: "Πίνακας ελέγχου"
         last_updated: "Το ταμπλό ενημερώθηκε:"

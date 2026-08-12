@@ -6215,6 +6215,26 @@ pt_BR:
       new_features:
         title: "Novidades?"
         check_for_updates: "Verificar atualizações"
+      site_traffic_explorer:
+        pageviews: "Visualizações de página"
+        view_more: "Ver mais"
+        cards:
+          pages: "Páginas"
+          visitors: "Visitantes"
+        columns:
+          countries: "País"
+          top_urls: "URL"
+          browsers: "Navegador"
+          ip_addresses: "Endereço IP"
+        filters:
+          country: "País"
+          browser: "Navegador"
+          ip: "Endereço IP"
+        metrics:
+          pageviews:
+            label: "Visualizações de página"
+        series:
+          anonymous_human: "Anônimo(a)"
       dashboard:
         title: "Painel de controle"
         last_updated: "Painel de controle atualizado:"

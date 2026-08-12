@@ -44,7 +44,6 @@ zh_CN:
   site_settings:
     map_events_to_color: "为每个标签或类别分配颜色。"
     map_events_title: "按类别覆盖“近期活动”边栏标题中的“活动”。"
-    calendar_enabled: "启用 discourse-calendar 插件。这将在话题的第一个帖子中添加对 [calendar][/calendar] 标签的支持。"
     discourse_post_event_enabled: "启用活动功能。注意：还需要启用 {{setting:calendar_enabled}}。"
     displayed_invitees_limit: "限制活动中显示的受邀者数量。"
     display_post_event_date_on_topic_title: "在话题标题之后显示活动日期。"

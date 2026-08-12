@@ -7,11 +7,11 @@
 pl_PL:
   admin_js:
     admin:
-      calendar: "Kalendarz i wydarzenia"
+      calendar: "Wydarzenia"
       site_settings:
         categories:
           discourse_post_event: "Wydarzenie Discourse"
-          discourse_calendar: "Kalendarz i wydarzenia"
+          discourse_calendar: "Wydarzenia"
       web_hooks:
         calendar_event:
           group_name: "Wydarzenie w kalendarzu"
@@ -54,9 +54,7 @@ pl_PL:
           rsvp_body: "Nawiąż kontakt z innymi uczestnikami przed, w trakcie i po wydarzeniu."
       invite_user_notification: "%{username} zaprosił Cię do: %{description}"
       preferences:
-        all_events: "Kalendarz Discourse – wszystkie wydarzenia"
         all_events_description: "Wszystkie wydarzenia na forum"
-        my_events: "Kalendarz Discourse – moje wydarzenia"
         my_events_description: "Wydarzenia, na które się wybierasz lub które Cię interesują"
       on_holiday: "Na świętach"
       disable_holiday: "Wyłącz"

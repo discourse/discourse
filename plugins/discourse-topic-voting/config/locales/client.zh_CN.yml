@@ -60,4 +60,4 @@ zh_CN:
       topic_received_vote:
         category_ids_description: "仅对这些类别中的话题触发。留空则表示匹配所有类别。"
         tag_names: "标签"
-        tag_names_description: "仅为包含以下标签之一的话题触发"
+        tag_names_description: "仅对包含以下标签之一的话题触发"

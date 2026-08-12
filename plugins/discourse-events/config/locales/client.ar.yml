@@ -7,11 +7,11 @@
 ar:
   admin_js:
     admin:
-      calendar: "التقويم والأحداث"
+      calendar: "الأحداث"
       site_settings:
         categories:
           discourse_post_event: "حدث Discourse"
-          discourse_calendar: "التقويم والأحداث"
+          discourse_calendar: "الأحداث"
       web_hooks:
         calendar_event:
           group_name: "حدث تقويم"
@@ -55,9 +55,7 @@ ar:
           rsvp_body: "تواصل مع الحضور الآخرين قبل الحدث وأثنائه وبعده."
       invite_user_notification: "دعاك %{username} إلى: %{description}"
       preferences:
-        all_events: "تقويم Discourse - جميع الأحداث"
         all_events_description: "جميع أحداث المنتدى"
-        my_events: "تقويم Discourse - أحداثي"
         my_events_description: "الأحداث التي ستحضرها أو المهتم بها"
       on_holiday: "في عطلة"
       disable_holiday: "إيقاف"

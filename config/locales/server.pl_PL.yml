@@ -1195,6 +1195,16 @@ pl_PL:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "nieznany system operacyjny"
+  admin_site_traffic_explorer:
+    direct_or_unknown: "Bezpośredni / nieznany"
+    traffic_types:
+      logged_in: "Zalogowani"
+      anonymous: "Anonimowi"
+      likely_crawler: "Prawdopodobne roboty indeksujące"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
