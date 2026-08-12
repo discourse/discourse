@@ -80,7 +80,10 @@ export function _freezeConditionTypeRegistry(): void {
  *
  * The condition class must be decorated with `@blockCondition`
  *
- * @param ConditionClass - The condition class to register.
+ * @param ConditionClass - The condition class to register. Typed nullable
+ *   because untyped callers can hand `api.registerBlockConditionType()` a bad
+ *   import; that call must report the decorator error, not a property-read
+ *   failure.
  *
  * @example
  * ```javascript
@@ -99,7 +102,7 @@ export function _freezeConditionTypeRegistry(): void {
  * @internal
  */
 export function _registerConditionType(
-  ConditionClass: typeof BlockCondition
+  ConditionClass: typeof BlockCondition | null | undefined
 ): void {
   if (
     !assertRegistryNotFrozen({
@@ -113,9 +116,9 @@ export function _registerConditionType(
   }
 
   // Ensure the class was created by the @blockCondition decorator
-  if (!isDecoratedCondition(ConditionClass)) {
+  if (!ConditionClass || !isDecoratedCondition(ConditionClass)) {
     raiseBlockError(
-      `${ConditionClass.name} must use the @blockCondition decorator. ` +
+      `${ConditionClass?.name} must use the @blockCondition decorator. ` +
         `Manual inheritance from BlockCondition is not allowed.`
     );
     return;

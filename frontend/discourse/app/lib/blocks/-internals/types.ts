@@ -68,5 +68,5 @@ export interface ChildBlockResult {
 
   // Returns a ghost version of this child with the given reason (debug mode),
   // or null when debug mode is disabled. Ghost children return themselves.
-  asGhost?: (reason: string) => ChildBlockResult | null;
+  asGhost: (reason: string) => ChildBlockResult | null;
 }

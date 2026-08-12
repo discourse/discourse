@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
-import { type ComponentLike } from "@glint/template";
-import DTooltipUntyped from "discourse/float-kit/components/d-tooltip";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import type {
   BlockComponent,
   BlockEntry,
@@ -9,24 +8,6 @@ import type {
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import ArgsTable from "../shared/args-table";
 import ConditionsTree from "./conditions-tree";
-
-// TODO(devxp-typescript-pending): drop once DTooltip is authored in .gts with
-// a real Signature, then import it directly. Untyped .gjs today → no
-// arg/block/attr types; this shape reflects only this component's own usage.
-const DTooltip = DTooltipUntyped as unknown as ComponentLike<{
-  Args: {
-    identifier: string;
-    interactive: boolean;
-    placement: string;
-    maxWidth: number;
-    triggers: { mobile: string[]; desktop: string[] };
-    untriggers: { mobile: string[]; desktop: string[] };
-  };
-  Blocks: {
-    trigger: [];
-    content: [];
-  };
-}>;
 
 interface BlockInfoSignature {
   Args: {

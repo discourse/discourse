@@ -106,7 +106,7 @@ export function validateOutletRestrictions(
   // This prevents configurations where a block is both allowed AND denied
   // in the same outlet, which would be confusing and likely a mistake.
   const conflict = detectPatternConflicts(allowedOutlets, deniedOutlets);
-  if (conflict.conflict && conflict.details) {
+  if (conflict.conflict) {
     raiseBlockError(
       `Block "${name}": outlet "${conflict.details.outlet}" matches both ` +
         `allowedOutlets pattern "${conflict.details.allowed}" and ` +

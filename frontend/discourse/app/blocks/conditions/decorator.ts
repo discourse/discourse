@@ -132,7 +132,9 @@ export interface BlockConditionConfig {
  * })
  * ```
  */
-export function blockCondition(config: BlockConditionConfig): ClassDecorator {
+export function blockCondition(
+  config: BlockConditionConfig
+): <T extends typeof BlockCondition>(TargetClass: T) => T {
   const {
     type,
     sourceType = "none",
@@ -243,9 +245,6 @@ export function blockCondition(config: BlockConditionConfig): ClassDecorator {
     // Track as decorated so Blocks service can verify
     decoratedConditions.add(TargetClass);
 
-    // A legacy class decorator that returns nothing keeps the class
-    // unchanged, which is exactly what this decorator wants — it records
-    // metadata and tracks the class as decorated as side effects rather than
-    // replacing the class, so there is no need to return the target.
+    return TargetClass;
   };
 }

@@ -7,10 +7,12 @@ import { isValidGlobPattern } from "discourse/lib/glob-utils";
 /**
  * The result of `detectPatternConflicts()`.
  */
-export interface PatternConflictResult {
-  conflict: boolean;
-  details?: { outlet: string; allowed: string; denied: string };
-}
+export type PatternConflictResult =
+  | { conflict: false }
+  | {
+      conflict: true;
+      details: { outlet: string; allowed: string; denied: string };
+    };
 
 /**
  * The result of `isBlockPermittedInOutlet()`.
