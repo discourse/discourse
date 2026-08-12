@@ -14,7 +14,9 @@ import {
 import type { LayoutEntry } from "discourse/blocks/types";
 import type BlocksService from "discourse/services/blocks";
 import type DragAndDropService from "discourse/services/drag-and-drop";
-import DResizeHandles from "discourse/ui-kit/d-resize-handles";
+import DResizeHandles, {
+  type DResizeHandleDescriptor,
+} from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { registerDragAndDropExternalTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import {
@@ -577,7 +579,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
    *
    * Returns `DResizeHandles` descriptors.
    */
-  get columnHandles() {
+  get columnHandles(): DResizeHandleDescriptor<number>[] {
     if (this.isCollapsed || this.columns < 2) {
       return [];
     }
@@ -596,7 +598,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
           childRow.end > row
         );
       });
-    const handles = [];
+    const handles: DResizeHandleDescriptor<number>[] = [];
     for (let line = 2; line <= this.columns; line++) {
       let runStart = null;
       for (let row = 1; row <= this.rows; row++) {

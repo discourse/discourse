@@ -378,11 +378,7 @@ function installGhostChildrenCreator(): void {
             )
           );
           if (ghostData?.Component) {
-            result.push({
-              ...ghostData,
-              Component: ghostData.Component,
-              key: blockKey,
-            });
+            result.push(asGhostChild(ghostData, blockKey));
           }
           continue;
         }
@@ -451,11 +447,7 @@ function installGhostChildrenCreator(): void {
           )
         );
         if (ghostData?.Component) {
-          result.push({
-            ...ghostData,
-            Component: ghostData.Component,
-            key: blockKey,
-          });
+          result.push(asGhostChild(ghostData, blockKey));
         }
       }
       return result;
@@ -481,6 +473,29 @@ function recordOrNull(value: unknown): Record<string, unknown> | null {
  */
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Keys callback-produced ghost data as a renderable child.
+ *
+ * @param ghostData - Ghost data returned by the BLOCK_DEBUG callback.
+ * @param key - Composite key the outline walker mints for the same entry.
+ * @returns The ghost as a child the render pipeline can consume.
+ */
+function asGhostChild(
+  ghostData: DebugGhostData,
+  key: string
+): ChildBlockResult {
+  // A ghost already stands in for its failed entry, so ghosting it again
+  // returns the same child.
+  const ghostChild: ChildBlockResult = {
+    ...ghostData,
+    Component: ghostData.Component,
+    key,
+    asGhost: () => ghostChild,
+  };
+
+  return ghostChild;
 }
 
 /**

@@ -95,7 +95,7 @@ export default class RailResizeHandle extends Component<RailResizeHandleSignatur
    * The single edge handle `DResizeHandles` should render: the left panel's east
    * edge, the right rail's west edge.
    */
-  get directions(): string[] {
+  get directions(): ("e" | "w")[] {
     return [this.#isLeft ? "e" : "w"];
   }
 
