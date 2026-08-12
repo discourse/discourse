@@ -29,6 +29,16 @@ module PageObjects
         self
       end
 
+      def go_back
+        page.go_back
+        self
+      end
+
+      def go_forward
+        page.go_forward
+        self
+      end
+
       def has_page_title?
         has_css?("h1", exact_text: "Site Traffic Explorer")
       end

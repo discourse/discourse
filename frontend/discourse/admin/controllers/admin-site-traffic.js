@@ -218,7 +218,6 @@ export default class AdminSiteTrafficController extends Controller {
     this.range = period;
     this.start_date = null;
     this.end_date = null;
-    this.fetchTraffic();
   }
 
   @action
@@ -226,13 +225,11 @@ export default class AdminSiteTrafficController extends Controller {
     this.range = PERIOD_CUSTOM;
     this.start_date = moment(startDate).format("YYYY-MM-DD");
     this.end_date = moment(endDate).format("YYYY-MM-DD");
-    this.fetchTraffic();
   }
 
   @action
   setFilter(key, row) {
     this[key] = row.value;
-    this.fetchTraffic();
   }
 
   @action
@@ -243,7 +240,6 @@ export default class AdminSiteTrafficController extends Controller {
       : [...selectedTrafficTypes, trafficType];
 
     this.#setTrafficTypes(nextTrafficTypes);
-    this.fetchTraffic();
   }
 
   @action
@@ -253,12 +249,10 @@ export default class AdminSiteTrafficController extends Controller {
         (trafficType) => trafficType !== value
       );
       this.#setTrafficTypes(remainingTrafficTypes);
-      this.fetchTraffic();
       return;
     }
 
     this[key] = null;
-    this.fetchTraffic();
   }
 
   @action

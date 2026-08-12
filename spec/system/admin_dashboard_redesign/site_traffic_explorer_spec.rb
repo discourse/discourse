@@ -206,6 +206,15 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01&traffic_type=logged_in%2Canonymous",
     )
 
+    traffic.go_back
+    expect(traffic).to have_no_filter_pills
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+
+    traffic.go_forward
+    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Logged in")
+    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Anonymous")
+    expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
+
     traffic.remove_filter("traffic_type", label: "Logged in")
     expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Anonymous")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")

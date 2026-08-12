@@ -235,6 +235,30 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         ).to eq([12, 11, [{ value: "", label: "Direct / unknown", pageviews: 11 }]])
       end
 
+      it "strips query strings before grouping referrer hosts" do
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: "external.example?token=private",
+          session_id: "external-referrer-query",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 5, 10, 12),
+        )
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: "test.localhost?token=private",
+          session_id: "local-referrer-query",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 5, 10, 13),
+        )
+
+        expect(result.traffic.dig(:dimensions, "referrers")).to eq(
+          [
+            { value: "", label: "Direct / unknown", pageviews: 12 },
+            { value: "external.example", label: "external.example", pageviews: 1 },
+          ],
+        )
+      end
+
       it "does not promote a capped session continuation to an entry" do
         SiteSetting.stubs(:admin_site_traffic_event_cap).returns(1)
         Fabricate(
