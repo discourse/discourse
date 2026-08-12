@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import { trackedMap, trackedSet } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { type ModifierLike } from "@glint/template";
 import { TrackedAsyncData } from "ember-async-data";
 import type { BlockMetadata } from "discourse/blocks/types";
 import type MenuService from "discourse/float-kit/services/menu";
@@ -15,8 +14,12 @@ import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dDragAndDropSourceUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import dDragAndDropTargetUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import dDragAndDropSource, {
+  type DragSource,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropTarget, {
+  type DropTargetEvent,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import OutlineRowActions from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-row-actions";
@@ -75,36 +78,6 @@ type BlockDragData = BlockDragPayload & {
   isPart?: boolean;
 };
 
-type DragSource<T extends object> = {
-  /** Drag kind supplied by the drag-and-drop modifier. */
-  type: OutlineDragKind;
-  /** Kind-specific drag payload. */
-  data: T;
-  /** Element carrying the drag source modifier. */
-  element: HTMLElement;
-};
-
-type DragStartEvent<T extends object> = {
-  /** Source whose drag lifecycle changed. */
-  source: DragSource<T>;
-};
-
-type OutlineDropEvent =
-  | {
-      /** Palette source dropped onto an outline target. */
-      source: DragSource<PaletteDragPayload> & {
-        /** Identifies a palette drag. */
-        type: "wf-palette-block";
-      };
-    }
-  | {
-      /** Existing outline row dropped onto an outline target. */
-      source: DragSource<BlockDragData> & {
-        /** Identifies an existing-block drag. */
-        type: "wf-block";
-      };
-    };
-
 type LocatedOutlineRow = {
   /** Outlet containing the row. */
   outletName: string;
@@ -123,52 +96,6 @@ interface OutlinePanelSignature {
   /** The panel accepts no named arguments. */
   Args: Record<string, never>;
 }
-
-// TODO(devxp-typescript-pending): drop once d-drag-and-drop-source is authored
-// in .ts with a real Signature, then import it directly.
-const dDragAndDropSource =
-  dDragAndDropSourceUntyped as unknown as ModifierLike<{
-    /** Drag-source modifier arguments. */
-    Args: {
-      /** Named drag-source options. */
-      Named: {
-        /** Existing-block drag kind. */
-        type: "wf-block";
-        /** Existing outline-row drag payload. */
-        data: BlockDragData;
-        /** Handles drag start. */
-        onDragStart: (event: DragStartEvent<BlockDragData>) => void;
-        /** Handles drag completion. */
-        onDrop: (event: DragStartEvent<BlockDragData>) => void;
-      };
-      /** This modifier accepts no positional arguments. */
-      Positional: [];
-    };
-    /** Element carrying the drag source. */
-    Element: HTMLElement;
-  }>;
-
-// TODO(devxp-typescript-pending): drop once d-drag-and-drop-target is authored
-// in .ts with a real Signature, then import it directly.
-const dDragAndDropTarget =
-  dDragAndDropTargetUntyped as unknown as ModifierLike<{
-    /** Drop-target modifier arguments. */
-    Args: {
-      /** Named drop-target options. */
-      Named: {
-        /** Drag kinds accepted by the outline. */
-        accepts: OutlineDragKind[];
-        /** Relative insertion position. */
-        position: "before" | "after" | "inside";
-        /** Handles a drop on the outline target. */
-        onDrop: (event: OutlineDropEvent) => void;
-      };
-      /** This modifier accepts no positional arguments. */
-      Positional: [];
-    };
-    /** Element carrying the drop target. */
-    Element: HTMLElement;
-  }>;
 
 /**
  * Builds the inline indentation for one tree depth.
@@ -652,14 +579,15 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * @param event - Drag-start event supplied by the source modifier.
    */
   @action
-  handleRowDragStart({ source }: DragStartEvent<BlockDragData>): void {
+  handleRowDragStart({ source }: { source: DragSource }): void {
     // Synthesized composite parts aren't reorderable — never start a drag for
     // one. (The underlying move would no-op anyway, but this avoids the
     // misleading drag affordance.)
-    if (source?.data?.isPart) {
+    const data = source.data as unknown as BlockDragData;
+    if (data?.isPart) {
       return;
     }
-    this.wireframeDragSession.startDrag(source.data);
+    this.wireframeDragSession.startDrag(data);
   }
 
   /**
@@ -677,7 +605,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
   applyRowDrop(
     outletName: string,
     row: OutlineRow,
-    target: OutlineDropEvent
+    target: DropTargetEvent
   ): void {
     // A synthesized composite part isn't a real layout position — dropping
     // onto/around it can't move or insert anything, so ignore the drop.
@@ -687,16 +615,18 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
     }
     const { source } = target;
     if (source?.type === "wf-palette-block") {
+      const data = source.data as unknown as PaletteDragPayload;
       this.wireframeBlockMutations.insertBlock({
-        blockName: source.data.blockName,
-        defaultArgs: source.data.defaultArgs,
+        blockName: data.blockName,
+        defaultArgs: data.defaultArgs,
         targetKey: row.blockKey,
         position: "before",
         targetOutletName: outletName,
       });
     } else {
+      const data = source.data as unknown as BlockDragData;
       this.wireframeBlockMutations.moveBlock({
-        sourceKey: source.data.blockKey,
+        sourceKey: data.blockKey,
         targetKey: row.blockKey,
         position: "before",
         targetOutletName: outletName,
@@ -1126,7 +1056,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
                         isPart=row.isPart
                       )
                       onDragStart=this.handleRowDragStart
-                      onDrop=this.wireframeDragSession.endDrag
+                      onDragEnd=this.wireframeDragSession.endDrag
                     }}
                     {{dDragAndDropTarget
                       accepts=this.acceptedDragKinds

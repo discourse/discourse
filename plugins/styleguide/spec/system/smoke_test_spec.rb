@@ -35,6 +35,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
       { href: "/molecules/dialog", title: "Dialog" },
+      { href: "/molecules/drag-and-drop", title: "Drag and drop" },
       { href: "/molecules/tooltips", title: "Tooltips" },
       { href: "/molecules/topic-list-item", title: "Topic List Item" },
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },

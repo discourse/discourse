@@ -46,6 +46,13 @@ export default class PluginsExplorerController extends Controller {
   order = null;
   form = null;
   shouldAutoRun = false;
+  /**
+   * The panes the live separator resolved, so the reader and the writer cannot
+   * disagree with the observer about which editor they belong to. A global
+   * first-match query would pick whichever editor happens to be first in the
+   * document.
+   */
+  #resolvedPanes = null;
   _pristine = null;
   _teardownAiGeneration = null;
   _aiGenerationToken = 0;
@@ -338,36 +345,87 @@ export default class PluginsExplorerController extends Controller {
     });
   }
 
+  /**
+   * The panes the separator resizes, found from the separator's own position so the
+   * two cannot disagree about which editor they belong to.
+   *
+   * @param {HTMLElement} separator - The separator element.
+   * @returns {HTMLElement|null} The panes, or null before they render.
+   */
   @bind
-  dragMove(e) {
-    if (!e.movementX) {
-      return;
+  panesFor(separator) {
+    this.#resolvedPanes =
+      separator.closest(".query-editor")?.querySelector(".panels-flex") ?? null;
+    // A different editor means a fresh minimum. This controller is a singleton,
+    // so without the reset the first query's resting height would bound every
+    // query opened afterwards for the rest of the session.
+    this.originalPaneHeight = null;
+    return this.#resolvedPanes;
+  }
+
+  /**
+   * The panes' current height.
+   *
+   * A function rather than a number because it is a live measurement: an arg whose
+   * compute reads no tracked state is cached for the modifier's lifetime, so every
+   * drag after the first would start from the first one's height.
+   *
+   * @returns {number} The height in pixels.
+   */
+  @bind
+  paneHeight() {
+    return this.#panes?.clientHeight ?? 0;
+  }
+
+  /**
+   * The smallest the panes may be dragged to, which is the height they were first
+   * seen at. Captured once, so shrinking is bounded by the layout's own idea of a
+   * reasonable editor rather than by an arbitrary constant.
+   *
+   * @returns {number} The minimum height in pixels.
+   */
+  @bind
+  minPaneHeight() {
+    const measured = this.paneHeight();
+    // Zero means the panes have not been laid out yet — the narrow layout makes
+    // their height content-driven and the editor loads asynchronously. Capturing
+    // that would pin the minimum at zero and let the editor be dragged shut.
+    if (measured > 0) {
+      this.originalPaneHeight ??= measured;
     }
+    return this.originalPaneHeight ?? measured;
+  }
 
-    const editPane = document.querySelector(".query-editor");
-    const target = editPane.querySelector(".panels-flex");
-
-    // we need to get the initial height / width of edit pane
-    // before we manipulate the size
-    if (!this.initialPaneWidth && !this.originalPaneHeight) {
-      this.originalPaneHeight = target.clientHeight;
-    }
-
-    const newHeight = Math.max(
-      this.originalPaneHeight,
-      target.clientHeight + e.movementY
-    );
-
-    target.style.height = newHeight + "px";
-
-    this.appEvents.trigger("ace:resize");
+  /**
+   * The largest the panes may be dragged to.
+   *
+   * A screenful, not the space below the header: these panes sit in a page that
+   * scrolls, so growing them lengthens the page rather than pushing anything out of
+   * view, and subtracting a header offset here would cap them below their own
+   * resting height on a short window. Past one screen the results are off-screen
+   * anyway, which is what makes a screenful the useful limit.
+   *
+   * @returns {number} The maximum height in pixels.
+   */
+  @bind
+  maxPaneHeight() {
+    return Math.max(window.innerHeight, this.minPaneHeight());
   }
 
   @bind
-  didStartDrag() {}
+  onPaneResize(size) {
+    const panes = this.#panes;
+    if (!panes) {
+      return;
+    }
 
-  @bind
-  didEndDrag() {}
+    panes.style.height = `${size}px`;
+    this.appEvents.trigger("ace:resize");
+  }
+
+  get #panes() {
+    return this.#resolvedPanes;
+  }
 
   @action
   updateGroupIds(value) {

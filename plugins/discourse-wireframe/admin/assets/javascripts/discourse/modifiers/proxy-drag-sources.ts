@@ -2,8 +2,13 @@ import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { service } from "@ember/service";
 import Modifier, { type ArgsFor } from "ember-modifier";
-import { registerDragAndDropSource } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import type WireframeDragSessionService from "../services/wireframe-drag-session";
+import {
+  type DragSource,
+  registerDragAndDropSource,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import WireframeDragSessionService, {
+  BlockDragPayload,
+} from "../services/wireframe-drag-session";
 
 interface ProxyDragSourcesSignature {
   /** Container chrome whose proxy children become drag sources. */
@@ -85,21 +90,13 @@ export default class ProxyDragSourcesModifier extends Modifier<ProxyDragSourcesS
         registerDragAndDropSource(proxy, () => ({
           type: "wf-block",
           data: { blockKey, outletName },
-          onDragStart: ({
-            source,
-          }: {
-            /** Drag source payload provided by the ui-kit modifier. */
-            source: {
-              /** Existing block drag data. */
-              data: {
-                /** Composite key of the dragged block. */
-                blockKey: string;
-                /** Outlet containing the dragged block. */
-                outletName: string;
-              };
-            };
-          }) => this.wireframeDragSession.startDrag(source.data),
-          onDrop: () => this.wireframeDragSession.endDrag(),
+          onDragStart: ({ source }: { source: DragSource }) =>
+            this.wireframeDragSession.startDrag(
+              source.data as unknown as BlockDragPayload
+            ),
+          // `onDragEnd`, not `onDrop`: a drag abandoned over nothing has to
+          // clear the session too, and only this one fires for every ending.
+          onDragEnd: () => this.wireframeDragSession.endDrag(),
         }))
       );
     }

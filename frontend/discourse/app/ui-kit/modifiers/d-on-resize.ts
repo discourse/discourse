@@ -22,6 +22,14 @@ interface DOnResizeSignature {
 /**
  * Calls `callback` with the observed `ResizeObserverEntry`s whenever the element
  * resizes, throttled through the runloop. Cleans up the observer on teardown.
+ *
+ * OBSERVES a size; it does not let anyone change one. Nothing here is a gesture.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see The `DResizeSeparator` / `dResizeEdge` / `DResizeHandles` primitives to let a user
+ *   PERFORM a resize. The similar names are the trap; this one only watches.
  */
 export default class DOnResize extends Modifier<DOnResizeSignature> {
   #resizeObserver?: ResizeObserver;

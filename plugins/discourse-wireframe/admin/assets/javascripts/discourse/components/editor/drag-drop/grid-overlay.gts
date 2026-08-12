@@ -17,7 +17,10 @@ import type DragAndDropService from "discourse/services/drag-and-drop";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { registerDragAndDropExternalTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
-import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import {
+  type DropTargetEvent,
+  registerDragAndDropTarget,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import EditorEmptyDropPlaceholder from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/editor-empty-drop-placeholder";
 import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
@@ -52,7 +55,10 @@ import {
   type BlockPaletteEntry,
   buildBlockPalette,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
-import type { DragSource } from "discourse/plugins/discourse-wireframe/discourse/modifiers/container-drop-target";
+import {
+  asWireframeDragSource,
+  type DragSource,
+} from "discourse/plugins/discourse-wireframe/discourse/modifiers/container-drop-target";
 import WireframeDragOverlayService, {
   type DropDispatch,
   type OverlayGeometry,
@@ -152,13 +158,6 @@ type DragLocation = {
     /** Pointer input for the current location. */
     input: DragInput;
   };
-};
-
-type GridElementDragEvent = {
-  /** Normalized element drag source. */
-  source: DragSource;
-  /** Current pointer location. */
-  location: DragLocation;
 };
 
 type GridExternalDragEvent = {
@@ -843,10 +842,10 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     this.#gridDropTargetCleanup = registerDragAndDropTarget(gridEl, () => ({
       accepts: this.acceptedDropKinds,
       indicator: false,
-      onDragEnter: ({ source, location }: GridElementDragEvent) =>
-        this.#publishFromDrag(source, location),
-      onDrag: ({ source, location }: GridElementDragEvent) =>
-        this.#publishFromDrag(source, location),
+      onDragEnter: ({ source, location }: DropTargetEvent) =>
+        this.#publishFromDrag(asWireframeDragSource(source), location),
+      onDrag: ({ source, location }: DropTargetEvent) =>
+        this.#publishFromDrag(asWireframeDragSource(source), location),
       onDragLeave: () => {
         this.#lastIntermediate = null;
         this.#releaseDrop?.();

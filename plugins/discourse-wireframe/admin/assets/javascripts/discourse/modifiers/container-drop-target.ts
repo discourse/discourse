@@ -4,7 +4,11 @@ import { service } from "@ember/service";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import { LAYOUT_MERGED_CELL_BLOCK } from "discourse/blocks";
 import { registerDragAndDropAutoScroll } from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
-import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import {
+  type DropTargetEvent,
+  type DropTargetSource,
+  registerDragAndDropTarget,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import type { DropDispatch } from "discourse/plugins/discourse-wireframe/discourse/lib/drop-dispatch";
 import {
@@ -43,14 +47,9 @@ export interface PointerInput {
 }
 
 /**
- * The normalised drag payload surfaced through the ui-kit drop-target helper.
- * That helper is untyped today (its args closure is read as `any`), so the
- * modifier declares the shape it actually reads off a source: a moved block
- * carries its own key, a palette entry carries the block name / default args to
- * insert.
- *
- * TODO(devxp-typescript-pending): replace this local boundary type once the
- * ui-kit drop-target helper exports its source-payload contract.
+ * The drag payloads this editor publishes, narrowed from the opaque record the
+ * ui-kit drop target hands its callbacks: a moved block carries its own key, a
+ * palette entry carries the block name / default args to insert.
  */
 export type DragSource =
   | {
@@ -73,6 +72,15 @@ export type DragSource =
         defaultArgs?: Record<string, unknown>;
       };
     };
+
+/**
+ * Reads a drop target's source as one of this editor's own drag kinds. The
+ * ui-kit types `data` as an opaque record, since only the source that wrote it
+ * knows its shape, so the narrowing has to happen at each consumer's boundary.
+ */
+export function asWireframeDragSource(source: DropTargetSource): DragSource {
+  return source as unknown as DragSource;
+}
 
 /** Viewport-relative pixel rect for the slot-insert indicator. */
 export interface DropGeometry {
@@ -116,14 +124,6 @@ type DropLocation = {
     /** Pointer coordinates for the drag frame. */
     input: PointerInput;
   };
-};
-
-/** The event object a drop-target enter / drag callback receives. */
-type DragTargetEvent = {
-  /** Normalized drag source. */
-  source: DragSource;
-  /** Current drag location. */
-  location: DropLocation;
 };
 
 interface ContainerDropTargetSignature {
@@ -262,17 +262,17 @@ export default class ContainerDropTargetModifier extends Modifier<ContainerDropT
         /** Current pointer coordinates. */
         input: PointerInput;
       }) => !shouldDeferToParent(input),
-      onDragEnter: ({ source, location }: DragTargetEvent) => {
+      onDragEnter: ({ source, location }: DropTargetEvent) => {
         // A container that declares a scroll axis (e.g. a horizontal slide
         // track) auto-scrolls when the cursor nears its edge, so a drag can
         // reach an off-screen child. Registered lazily on first entry — the
         // inner scroll element is resolved and present by drag time — and
         // cleared on detach.
         this.#enableAutoScroll(resolveContainer());
-        claim(source, location.current.input);
+        claim(asWireframeDragSource(source), location.current.input);
       },
-      onDrag: ({ source, location }: DragTargetEvent) =>
-        claim(source, location.current.input),
+      onDrag: ({ source, location }: DropTargetEvent) =>
+        claim(asWireframeDragSource(source), location.current.input),
       onDragLeave: () => this.#releaseDrop?.(),
       onDrop: ({
         location,

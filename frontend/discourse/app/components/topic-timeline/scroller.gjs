@@ -29,6 +29,8 @@ export default class TopicTimelineScroller extends Component {
         onDragStart=@didStartDrag
         onDrag=@dragMove
         onDragEnd=@didEndDrag
+        onDragCancel=@didEndDrag
+        bodyClass="dragging"
       }}
       style={{this.style}}
       class="timeline-scroller"

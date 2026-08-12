@@ -4,10 +4,11 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { type ModifierLike } from "@glint/template";
 import type A11yService from "discourse/services/a11y";
 import type BlocksService from "discourse/services/blocks";
-import dDragAndDropSourceUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropSource, {
+  type DragSource,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import BlockTile from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-tile";
@@ -28,63 +29,6 @@ type PaletteCategorySection = {
   /** Palette entries in the category. */
   rows: BlockPaletteEntry[];
 };
-
-type PaletteDragEvent = {
-  /** Drag source descriptor supplied by the drag-and-drop modifier. */
-  source: {
-    /** Palette data attached to the dragged tile. */
-    data: PaletteDragPayload;
-  };
-};
-
-type DragPreviewArgs = {
-  /** Offscreen host photographed by the browser. */
-  container: HTMLElement;
-  /** Palette tile being dragged. */
-  element: HTMLElement;
-};
-
-// TODO(devxp-typescript-pending): drop once d-drag-and-drop-source is authored
-// in .ts with a real Signature, then import it directly.
-const dDragAndDropSource =
-  dDragAndDropSourceUntyped as unknown as ModifierLike<{
-    /** Drag-source modifier arguments. */
-    Args: {
-      /** Named modifier arguments. */
-      Named: {
-        /** Drag source type identifier. */
-        type: string;
-        /** Data attached to the drag source. */
-        data: PaletteDragPayload;
-        /** Builds the native drag preview. */
-        dragPreview: (
-          /** Drag preview elements. */
-          args: DragPreviewArgs
-        ) => () => void;
-        /** Offset applied to the native drag preview. */
-        dragPreviewOffset: {
-          /** Horizontal preview offset. */
-          x: string;
-          /** Vertical preview offset. */
-          y: string;
-        };
-        /** Handles the start of a palette drag. */
-        onDragStart: (
-          /** Palette drag event. */
-          event: PaletteDragEvent
-        ) => void;
-        /** Handles completion or cancellation of the palette drag. */
-        onDrop: (
-          /** Palette drag event. */
-          event: PaletteDragEvent
-        ) => void;
-      };
-      /** This modifier accepts no positional arguments. */
-      Positional: [];
-    };
-    /** Palette tile acting as the drag source. */
-    Element: HTMLElement;
-  }>;
 
 /**
  * Palette of registered blocks, shown in the left rail when the user
@@ -298,8 +242,10 @@ export default class PalettePanel extends Component {
    * the drop fires.
    */
   @action
-  handleDragStart({ source }: PaletteDragEvent): void {
-    this.wireframeDragSession.startPaletteDrag(source.data);
+  handleDragStart({ source }: { source: DragSource }): void {
+    this.wireframeDragSession.startPaletteDrag(
+      source.data as unknown as PaletteDragPayload
+    );
   }
 
   /**
@@ -315,14 +261,22 @@ export default class PalettePanel extends Component {
    * @returns Cleanup that removes the cloned preview.
    */
   @action
-  renderDragPreview({ container, element }: DragPreviewArgs): () => void {
+  renderDragPreview({
+    container,
+    element,
+  }: {
+    /** Offscreen host photographed by the browser. */
+    container: HTMLElement;
+    /** Palette tile being dragged. */
+    element: HTMLElement;
+  }): () => void {
     const clone = element.cloneNode(true);
     if (!(clone instanceof HTMLElement)) {
       return () => {};
     }
     // Drop the source-only drag styling and the screen-reader-only description
     // span so the preview shows just the tile's thumbnail and label.
-    clone.classList.remove("is-dragging");
+    clone.classList.remove("--dragging");
     clone.querySelector(".sr-only")?.remove();
     // Pin the clone to the source width so it renders at the tile's size rather
     // than shrinking to its content in the unconstrained container.
@@ -392,7 +346,7 @@ export default class PalettePanel extends Component {
                   dragPreview=this.renderDragPreview
                   dragPreviewOffset=(hash x="1rem" y="0.5rem")
                   onDragStart=this.handleDragStart
-                  onDrop=this.wireframeDragSession.endDrag
+                  onDragEnd=this.wireframeDragSession.endDrag
                 }}
               />
             {{/each}}

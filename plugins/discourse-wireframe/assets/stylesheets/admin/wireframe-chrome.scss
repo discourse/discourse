@@ -1485,7 +1485,7 @@ body.wireframe-active {
     border-color: var(--wf-accent);
   }
 
-  &.is-dragging {
+  &.--dragging {
     opacity: 0.5;
   }
 
@@ -2351,15 +2351,15 @@ body.wireframe-active {
        outline.
 
        The shared `dDragAndDropTarget` modifier still toggles
-       `is-drag-above`/`-below`/`-left`/`-right` classes whose default
+       `--drag-above`/`-below`/`-left`/`-right` classes whose default
        foundation styling paints a line via `::before`/`::after`. Null out
        those pseudo-elements here so the only drop indicator is the grid
        overlay. */
 
-    &.is-drag-above::before,
-    &.is-drag-below::after,
-    &.is-drag-left::before,
-    &.is-drag-right::after {
+    &.--drag-above::before,
+    &.--drag-below::after,
+    &.--drag-left::before,
+    &.--drag-right::after {
       content: none;
     }
 
@@ -2435,10 +2435,10 @@ body.wireframe-active
      the grid overlay stays the sole drop-feedback surface (see the same note on
      `.wireframe-transparent-slot`). */
 
-  &.is-drag-above::before,
-  &.is-drag-below::after,
-  &.is-drag-left::before,
-  &.is-drag-right::after {
+  &.--drag-above::before,
+  &.--drag-below::after,
+  &.--drag-left::before,
+  &.--drag-right::after {
     content: none;
   }
 }

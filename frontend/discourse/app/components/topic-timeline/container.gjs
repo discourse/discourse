@@ -21,6 +21,7 @@ import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -370,6 +371,8 @@ export default class TopicTimelineScrollArea extends Component {
   updatePercentage(e) {
     e.preventDefault();
 
+    // Both a pointer drag and a click on the timeline track land here, and both
+    // carry `pageY` directly.
     const currentCursorY = e.pageY;
 
     const desiredScrollerCentre = currentCursorY - this.dragOffset;
@@ -603,7 +606,10 @@ export default class TopicTimelineScrollArea extends Component {
         </div>
 
         <div
-          class="timeline-scrollarea"
+          class={{dConcatClass
+            "timeline-scrollarea"
+            (if this.dragging "--dragging")
+          }}
           style={{this.timelineScrollareaStyle}}
           {{didInsert this.registerScrollarea}}
         >

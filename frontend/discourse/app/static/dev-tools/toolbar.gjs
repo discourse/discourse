@@ -72,6 +72,8 @@ export default class Toolbar extends Component {
           onDragStart=this.didStartDrag
           onDrag=this.dragMove
           onDragEnd=this.didEndDrag
+          onDragCancel=this.didEndDrag
+          bodyClass="dragging"
         }}
       >
         {{dIcon "grip-vertical"}}

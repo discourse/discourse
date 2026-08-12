@@ -4,20 +4,24 @@ import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 
 /**
- * A coarse "move/scrub" modifier that mixes raw mouse, touch, and HTML5 drag
- * events into a single drag gesture and toggles a global `body.dragging` class.
+ * Binds a press-drag lifecycle using legacy mouse and touch event pairs, plus
+ * native drag events, with document-level listeners for the gesture's duration.
  *
- * @deprecated Prefer the modifier built for the gesture you actually have:
- *  - For "press-drag-transform" gestures (press, drag, a value changes
- *    continuously with the pointer — scrollers, splitters, sliders, knobs,
- *    repositioning a handle), use `d-pointer-drag` (`dPointerDrag`). It uses
- *    unified Pointer Events with pointer capture, so it works for mouse, touch,
- *    and pen without per-input branching and without a global class.
- *  - For transferring something to a drop target (reorder a list, drop onto a
- *    zone, accept dropped files), use the `d-drag-and-drop-*` modifiers.
+ * @deprecated since 2026.8.0. Use `dPointerDrag`
+ *   (`discourse/ui-kit/modifiers/d-pointer-drag`), which covers mouse, touch and
+ *   pen through unified Pointer Events and `setPointerCapture` rather than
+ *   parallel event pairs. Map `didStartDrag` to `onDragStart`, `dragMove` to
+ *   `onDrag`, and `didEndDrag` to `onDragEnd` — usually to `onDragCancel` too, so
+ *   an interrupted gesture still finishes. Where this marked the body, pass
+ *   `bodyClass="dragging"`.
  *
- * Kept only for external consumers still importing the legacy
- * `discourse/modifiers/draggable` path; no in-repo code uses it.
+ *   Three behaviour differences matter when migrating. This treats `dragenter` and
+ *   `dragover` as gesture input, so a file dragged over the element starts a
+ *   gesture, where `dPointerDrag` answers pointer input only. Handlers here can
+ *   receive a `TouchEvent` and so tend to read `event.touches[0].pageY`, which a
+ *   `PointerEvent` does not have — read `event.pageY` directly. And a gesture here
+ *   is driven by whichever pointer moves, while `dPointerDrag` matches the
+ *   `pointerId` that began it, so a second finger cannot take one over.
  */
 export default class DDraggableModifier extends Modifier {
   hasStarted = false;
@@ -26,11 +30,8 @@ export default class DDraggableModifier extends Modifier {
   constructor(owner, args) {
     super(owner, args);
     deprecated(
-      "The `draggable` modifier is deprecated. For press-drag-transform gestures (scrollers, splitters, repositioning a handle) use the `d-pointer-drag` modifier; for transferring something to a drop target use the `d-drag-and-drop-*` modifiers.",
-      {
-        id: "discourse.ui-kit.d-draggable",
-        since: "2026.6.0",
-      }
+      "`dDraggable` is deprecated. Use `dPointerDrag` (`discourse/ui-kit/modifiers/d-pointer-drag`) instead.",
+      { id: "discourse.ui-kit.d-draggable", since: "2026.8.0" }
     );
     registerDestructor(this, (instance) => instance.cleanup());
   }

@@ -13,7 +13,9 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dDragAndDropSourceUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropSource, {
+  type DragSource,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dFitUntyped from "discourse/ui-kit/modifiers/d-fit";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
@@ -139,39 +141,6 @@ const DMenu = DMenuUntyped as unknown as ComponentLike<{
     ];
   };
 }>;
-
-// TODO(devxp-typescript-pending): drop once d-drag-and-drop-source is authored
-// in .ts with a real Signature. Its DefaultSignature rejects named args, so the
-// named contract this bar uses is declared here.
-const dDragAndDropSource =
-  dDragAndDropSourceUntyped as unknown as ModifierLike<{
-    /** Element carrying the drag source. */
-    Element: HTMLElement;
-    /** Drag-source modifier arguments. */
-    Args: {
-      /** Named drag-source options. */
-      Named: {
-        /** Drag source type. */
-        type?: string;
-        /** Data exposed by the drag source. */
-        data?: object;
-        /** Element used for the drag preview. */
-        dragPreview?: HTMLElement;
-        /** Handles drag start. */
-        onDragStart?: (args: {
-          /** Drag source supplied by the modifier. */
-          source: {
-            /** Existing block drag payload. */
-            data: BlockDragPayload;
-          };
-        }) => void;
-        /** Handles drag completion. */
-        onDrop?: () => void;
-      };
-      /** This modifier accepts no positional arguments. */
-      Positional: [];
-    };
-  }>;
 
 // TODO(devxp-typescript-pending): drop once d-fit is authored in .ts with a
 // real Signature, then import it directly.
@@ -754,16 +723,10 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * @param event - Drag-start event supplied by the source modifier.
    */
   @action
-  startDrag({
-    source,
-  }: {
-    /** Drag source supplied by the modifier. */
-    source: {
-      /** Existing block drag payload. */
-      data: BlockDragPayload;
-    };
-  }): void {
-    this.wireframeDragSession.startDrag(source.data);
+  startDrag({ source }: { source: DragSource }): void {
+    this.wireframeDragSession.startDrag(
+      source.data as unknown as BlockDragPayload
+    );
   }
 
   <template>
@@ -848,7 +811,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
             data=(hash blockKey=@blockKey outletName=@outletName)
             dragPreview=@chromeEl
             onDragStart=this.startDrag
-            onDrop=this.wireframeDragSession.endDrag
+            onDragEnd=this.wireframeDragSession.endDrag
           }}
         >
           {{dIcon "grip-vertical"}}

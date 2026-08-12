@@ -63,27 +63,19 @@ module PageObjects
       end
 
       def has_disabled_move_up?(identifier)
-        has_css?(
-          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow[disabled] .d-icon-arrow-up",
-        )
+        has_css?(arrow_selector(identifier, "up", disabled: true))
       end
 
       def has_disabled_move_down?(identifier)
-        has_css?(
-          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow[disabled] .d-icon-arrow-down",
-        )
+        has_css?(arrow_selector(identifier, "down", disabled: true))
       end
 
       def has_enabled_move_up?(identifier)
-        has_css?(
-          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow:not([disabled]) .d-icon-arrow-up",
-        )
+        has_css?(arrow_selector(identifier, "up", disabled: false))
       end
 
       def has_enabled_move_down?(identifier)
-        has_css?(
-          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow:not([disabled]) .d-icon-arrow-down",
-        )
+        has_css?(arrow_selector(identifier, "down", disabled: false))
       end
 
       def has_drag_controls?
@@ -100,6 +92,38 @@ module PageObjects
           "#{MODAL} .manage-reports__counter",
           text: I18n.t("admin_js.admin.dashboard.reports_section.modal.counter", count:, max:),
         )
+      end
+
+      def drag_report(source_identifier, target_identifier)
+        drag_and_drop(
+          source: row_selector(source_identifier),
+          source_position: {
+            x: 32,
+            y: 20,
+          },
+          target: row_selector(target_identifier),
+          target_position: {
+            x: 100,
+            y: 1,
+          },
+        )
+        self
+      end
+
+      private
+
+      def row_selector(identifier)
+        "#{MODAL} #{ROW}[data-identifier='#{identifier}']"
+      end
+
+      def arrow_selector(identifier, direction, disabled:)
+        # `aria-disabled`, not the real attribute: an arrow at the end of the
+        # list stays focusable so a keyboard user keeps their place in the tab
+        # order.
+        state = disabled ? "[aria-disabled='true']" : ":not([aria-disabled])"
+
+        "#{row_selector(identifier)} .manage-reports__arrows " \
+          "button#{state} .d-icon-chevron-#{direction}"
       end
     end
   end

@@ -1,0 +1,27 @@
+/* `touch-action` for elements carrying the press-drag-transform gesture. The
+   modifier reflects its `touchAction` arg to `data-pointer-drag`, because the
+   declaration has to be in effect before a touch begins and consumers bind
+   `style` themselves.
+
+   `none` suits a small handle. Anything large enough that a user might start a
+   scroll or a pinch-zoom on it wants a value that leaves those gestures alone. */
+
+[data-pointer-drag="none"] {
+  touch-action: none;
+}
+
+[data-pointer-drag="pan-x"] {
+  touch-action: pan-x pinch-zoom;
+}
+
+[data-pointer-drag="pan-y"] {
+  touch-action: pan-y pinch-zoom;
+}
+
+[data-pointer-drag="manipulation"] {
+  touch-action: manipulation;
+}
+
+[data-pointer-drag="pinch-zoom"] {
+  touch-action: pinch-zoom;
+}
