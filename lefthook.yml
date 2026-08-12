@@ -40,7 +40,7 @@ pre-commit:
         - "frontend/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}"
         - "plugins/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}"
         - "themes/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}"
-      run: pnpm eslint --max-warnings 0 {staged_files}
+      run: pnpm eslint --max-warnings 0 --no-warn-ignored {staged_files}
     yaml-syntax:
       glob: &yaml_glob "**/*.{yaml,yml}"
       # database.yml is an erb file not a yaml file
@@ -64,7 +64,7 @@ fix-staged:
       run: pnpm pprettier --write {staged_files}
     eslint:
       glob: *eslint_glob
-      run: pnpm eslint --fix {staged_files}
+      run: pnpm eslint --fix --no-warn-ignored {staged_files}
     stylelint:
       glob: *stylelint_glob
       run: pnpm stylelint --fix {staged_files}
@@ -104,7 +104,7 @@ lint-files:
     eslint:
       files: *working_tree_files
       glob: *eslint_glob
-      run: pnpm eslint --max-warnings 0 {files}
+      run: pnpm eslint --max-warnings 0 --no-warn-ignored {files}
     yaml-syntax:
       files: *working_tree_files
       glob: *yaml_glob
