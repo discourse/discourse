@@ -1243,6 +1243,12 @@ export default class Composer extends RestModel {
         const topicProps = this.getProperties(
           Object.keys(_edit_topic_serializer)
         );
+        // user clicked "overwrite edits" button
+        if (!this.editConflict) {
+          topicProps.original_title = this.originalTitle;
+          topicProps.original_tags = this.originalTags;
+        }
+
         // frontend should have featuredLink but backend needs featured_link
         if (topicProps.featuredLink !== topic.featured_link) {
           topicProps.featured_link = topicProps.featuredLink ?? null;

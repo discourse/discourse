@@ -27,6 +27,34 @@ function openComposer(opts) {
   return composer;
 }
 
+async function editTopicViaComposer(opts = {}) {
+  const store = getOwner(this).lookup("service:store");
+  const { topicProps = {}, ...composerProps } = opts;
+
+  const composer = createComposer.call(this, {
+    action: EDIT,
+    post: store.createRecord("post", { id: 123, post_number: 1 }),
+    topic: store.createRecord("topic", {
+      id: 456,
+      title: "a title",
+      details: { can_edit: true },
+      ...topicProps,
+    }),
+    title: "a title",
+    reply: "the body",
+    ...composerProps,
+  });
+
+  let payload;
+  pretender.put("/t/topic/456", (request) => {
+    payload = JSON.parse(request.requestBody);
+    return response({ basic_topic: { title: composer.title } });
+  });
+
+  await composer.editPost({});
+  return payload;
+}
+
 module("Unit | Model | composer", function (hooks) {
   setupTest(hooks);
 
@@ -664,5 +692,66 @@ module("Unit | Model | composer", function (hooks) {
     assert.false(post.staged);
     assert.strictEqual(composer.composeState, "open");
     assert.true(composer.editConflict);
+  });
+
+  test("editPost sends the topic edit-conflict fields", async function (assert) {
+    const payload = await editTopicViaComposer.call(this, {
+      topicProps: { title: "the original title" },
+      title: "a brand new title",
+      originalTitle: "the original title",
+      originalTags: [{ id: 7, name: "bug" }],
+    });
+
+    assert.strictEqual(
+      payload.original_title,
+      "the original title",
+      "sends original_title so the server can detect a conflict"
+    );
+    assert.deepEqual(
+      payload.original_tags,
+      [{ id: 7, name: "bug" }],
+      "sends original_tags so the server can detect a conflict"
+    );
+  });
+
+  test("editPost omits the edit-conflict fields when overwriting edits", async function (assert) {
+    const payload = await editTopicViaComposer.call(this, {
+      topicProps: { title: "the original title" },
+      title: "a brand new title",
+      originalTitle: "the original title",
+      originalTags: [{ id: 7, name: "bug" }],
+      editConflict: true,
+    });
+
+    assert.false(
+      "original_title" in payload,
+      "lets the overwrite go through instead of conflicting again"
+    );
+    assert.false("original_tags" in payload, "same for the tags");
+  });
+
+  test("editPost only sends featured_link when it changed", async function (assert) {
+    const cleared = await editTopicViaComposer.call(this, {
+      topicProps: { featured_link: "https://discourse.org" },
+      featuredLink: null,
+    });
+    assert.strictEqual(
+      cleared.featured_link,
+      null,
+      "sends an explicit null when the link was cleared"
+    );
+    assert.false(
+      "featuredLink" in cleared,
+      "never sends the camelCase key the server ignores"
+    );
+
+    const unchanged = await editTopicViaComposer.call(this, {
+      topicProps: { featured_link: "https://discourse.org" },
+      featuredLink: "https://discourse.org",
+    });
+    assert.false(
+      "featured_link" in unchanged,
+      "leaves the link alone when it didn't change"
+    );
   });
 });
