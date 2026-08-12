@@ -110,6 +110,7 @@ export default class AdminSiteTrafficController extends Controller {
             rows.find((row) => row.value === value)?.label;
 
           return {
+            id: `${key}:${value}`,
             key,
             value,
             label:

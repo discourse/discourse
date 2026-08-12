@@ -46,7 +46,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
         role="group"
         aria-label={{i18n "admin.site_traffic_explorer.active_filters"}}
       >
-        {{#each @filters as |filter|}}
+        {{#each @filters key="id" as |filter|}}
           <span
             class="site-traffic-explorer__filter-pill"
             id={{this.filterId filter}}
