@@ -1997,15 +1997,17 @@ RSpec.describe ApplicationController do
       expect(response.headers["X-Discourse-Username"]).to eq(admin.username)
     end
 
-    it "does not set the X-Discourse-Username header for responses that can be stored" do
+    it "sets the X-Discourse-Username header in bfcache compatibility mode" do
+      # bfcache mode swaps `no-store` for `private`, which still keeps the
+      # response out of any shared cache, so attribution is safe to keep.
       SiteSetting.cache_control_bfcache_compatibility = true
       sign_in(admin)
 
       get "/u/#{admin.username}.json"
 
       expect(response.status).to eq(200)
-      expect(response.headers["Cache-Control"]).to eq("no-cache")
-      expect(response.headers["X-Discourse-Username"]).to be_nil
+      expect(response.headers["Cache-Control"]).to eq("no-cache, private")
+      expect(response.headers["X-Discourse-Username"]).to eq(admin.username)
     end
 
     it "sets the X-Discourse-Username header for private cached responses" do

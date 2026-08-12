@@ -1129,9 +1129,14 @@ class ApplicationController < ActionController::Base
     return if !current_user
 
     cache_control = response.cache_control
-    no_store = cache_control[:no_store] || cache_control[:extras]&.include?("no-store")
+    extras = cache_control[:extras]
+    # `dont_cache_page` sets both of these through `extras` rather than as
+    # their own keys, and Rails only populates `cache_control[:private]` when
+    # the directive was set that way, so both spellings have to be checked.
+    no_store = cache_control[:no_store] || extras&.include?("no-store")
     private_response =
-      cache_control[:private] || (cache_control[:max_age] && !cache_control[:public])
+      cache_control[:private] || extras&.include?("private") ||
+        (cache_control[:max_age] && !cache_control[:public])
     return if !private_response && !no_store
 
     response.headers["X-Discourse-Username"] = current_user.username
