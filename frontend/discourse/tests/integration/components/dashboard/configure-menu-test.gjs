@@ -29,6 +29,13 @@ function rowSelector(id) {
   return `[data-section-id="${id}"]`;
 }
 
+// A drag starts on the grip rather than anywhere on the row, so a press meant to
+// scroll still scrolls. The events still go to the row, which is the registered
+// source; only the coordinates have to land on the grip.
+function gripSelector(id) {
+  return `${rowSelector(id)} .db-configure__drag-handle`;
+}
+
 async function dragSection(sourceId, targetId, position) {
   const source = rowSelector(sourceId);
   const target = rowSelector(targetId);
@@ -38,6 +45,7 @@ async function dragSection(sourceId, targetId, position) {
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {
     dataTransfer: new DataTransfer(),
+    sourceCoordinates: centerOf(gripSelector(sourceId)),
     targetCoordinates: {
       clientY:
         position === "above" ? targetRect.top + 1 : targetRect.bottom - 1,
@@ -89,12 +97,18 @@ async function hoverOver(sourceId, targetId, position) {
     clientY: position === "above" ? targetRect.top + 1 : targetRect.bottom - 1,
   };
 
-  await dragEvent(source, "dragstart", { dataTransfer, ...centerOf(source) });
+  await dragEvent(source, "dragstart", {
+    dataTransfer,
+    ...centerOf(gripSelector(sourceId)),
+  });
   await dragEvent(target, "dragenter", { dataTransfer, ...coordinates });
   await dragEvent(target, "dragover", { dataTransfer, ...coordinates });
 
   return () =>
-    dragEvent(source, "dragend", { dataTransfer, ...centerOf(source) });
+    dragEvent(source, "dragend", {
+      dataTransfer,
+      ...centerOf(gripSelector(sourceId)),
+    });
 }
 
 module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
@@ -212,7 +226,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     const source = rowSelector("reports");
     const target = rowSelector("traffic");
     const dataTransfer = new DataTransfer();
-    const sourceCoordinates = centerOf(source);
+    const sourceCoordinates = centerOf(gripSelector("reports"));
     const targetRect = find(target).getBoundingClientRect();
     const targetCoordinates = {
       clientX: targetRect.left + targetRect.width / 2,
@@ -262,7 +276,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     const source = rowSelector("reports");
     const target = rowSelector("traffic");
     const dataTransfer = new DataTransfer();
-    const sourceCoordinates = centerOf(source);
+    const sourceCoordinates = centerOf(gripSelector("reports"));
     const targetRect = find(target).getBoundingClientRect();
     const targetCoordinates = {
       clientX: targetRect.left + targetRect.width / 2,
@@ -672,7 +686,7 @@ module(
 
     setupRenderingTest(hooks);
 
-    test("hides the drag handle and renders arrow buttons", async function (assert) {
+    test("renders the drag handle and the arrow buttons", async function (assert) {
       const sections = FOUR_SECTIONS;
       const noop = () => {};
 
@@ -686,11 +700,13 @@ module(
         </template>
       );
 
-      assert.dom(".db-configure__drag-handle").doesNotExist();
+      // Both paths render: a touch screen can drag from the grip and has no
+      // keyboard, so neither is a substitute for the other here.
+      assert.dom(".db-configure__drag-handle").exists({ count: 4 });
       assert.dom(".d-reorder-buttons__button").exists({ count: 8 });
     });
 
-    test(`${ORACLE} disables shared row drag on mobile`, async function (assert) {
+    test(`${ORACLE} keeps the row draggable from its grip on mobile`, async function (assert) {
       const noop = () => {};
 
       await render(
@@ -704,14 +720,16 @@ module(
       );
 
       assert
+        .dom(".db-configure__drag-handle")
+        .exists(
+          "the grip renders on mobile, so the drag has a target to press"
+        );
+      assert
         .dom(".db-configure__row")
-        .doesNotHaveAttribute(
+        .hasAttribute(
           "data-drag-source",
-          "mobile rows have no active drag-source registration"
-        )
-        .doesNotHaveAttribute(
-          "draggable",
-          "mobile rows have no hardcoded draggable attribute"
+          "",
+          "a mobile row carries an active drag-source registration"
         );
     });
 

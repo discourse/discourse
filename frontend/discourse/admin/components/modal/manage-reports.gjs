@@ -4,6 +4,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -26,7 +27,13 @@ const VISIBLE_CAP = 10;
 const SEARCH_DEBOUNCE_MS = 200;
 
 class ManageReportsRow extends Component {
-  @service site;
+  /** The grip, so the drag starts there while the whole row is what moves. */
+  @tracked gripElement;
+
+  captureGrip = modifier((element) => {
+    this.gripElement = element;
+    return () => (this.gripElement = undefined);
+  });
 
   /**
    * A disabled row is not part of the order, so it cannot receive a drop.
@@ -63,6 +70,7 @@ class ManageReportsRow extends Component {
       {{dDragAndDropSource
         type="dashboard-report"
         data=(hash key=@row.key)
+        dragHandle=this.gripElement
         disabled=(not (and @row.enabled @reorderable))
       }}
       {{dDragAndDropTarget
@@ -73,15 +81,18 @@ class ManageReportsRow extends Component {
       }}
     >
 
-      {{#unless this.site.mobileView}}
-        <DDragHandle
-          @label={{i18n
-            "admin.dashboard.reports_section.modal.drag_handle"
-            title=@row.title
-          }}
-          class="manage-reports__grip"
-        />
-      {{/unless}}
+      {{! Every viewport, because a touch screen can drag from a grip. Hiding it
+          on mobile left the row draggable with nothing to show for it, which is
+          the worst of both. The drag starts here rather than anywhere on the
+          row, so a press that was meant to scroll still scrolls. }}
+      <DDragHandle
+        {{this.captureGrip}}
+        @label={{i18n
+          "admin.dashboard.reports_section.modal.drag_handle"
+          title=@row.title
+        }}
+        class="manage-reports__grip"
+      />
 
       {{! The arrows are the only keyboard path to reorder, so they render on
           every viewport — the pointer drag beside them on desktop is an

@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq, not } from "discourse/truth-helpers";
+import { modifier } from "ember-modifier";
+import { eq } from "discourse/truth-helpers";
 import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -12,7 +14,13 @@ import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-targe
 import { i18n } from "discourse-i18n";
 
 class ConfigureRow extends Component {
-  @service site;
+  /** The grip, so the drag starts there while the whole row is what moves. */
+  @tracked gripElement;
+
+  captureGrip = modifier((element) => {
+    this.gripElement = element;
+    return () => (this.gripElement = undefined);
+  });
 
   /**
    * Resolves a drop onto this row into a reorder.
@@ -62,7 +70,7 @@ class ConfigureRow extends Component {
       {{dDragAndDropSource
         type="dashboard-section"
         data=(hash index=@index)
-        disabled=(not this.site.desktopView)
+        dragHandle=this.gripElement
       }}
       {{dDragAndDropTarget
         accepts="dashboard-section"
@@ -72,16 +80,18 @@ class ConfigureRow extends Component {
       class="db-configure__row"
       data-section-id={{@section.id}}
     >
-      {{#if this.site.desktopView}}
-        <DDragHandle
-          @label={{this.dragHandleLabel}}
-          class="db-configure__drag-handle"
-        />
-      {{/if}}
+      {{! Every viewport, because a touch screen can drag from a grip and had
+          no way to reorder at all while this was desktop-only. The drag starts
+          here rather than anywhere on the row, so a press that was meant to
+          scroll still scrolls. }}
+      <DDragHandle
+        {{this.captureGrip}}
+        @label={{this.dragHandleLabel}}
+        class="db-configure__drag-handle"
+      />
 
-      {{! The arrows are the only keyboard path to reorder, so they render on
-          every viewport — the pointer drag beside them on desktop is an
-          alternative to them, not a replacement. }}
+      {{! The arrows are the keyboard path, which a touch screen does not have
+          either, so they render everywhere the grip does. }}
       <DReorderButtons
         @onMoveUp={{fn @onMoveUp @index}}
         @onMoveDown={{fn @onMoveDown @index}}

@@ -51,6 +51,13 @@ function rowSelector(key) {
   return `.manage-reports__row[data-identifier="${key}"]`;
 }
 
+// A drag starts on the grip rather than anywhere on the row, so a press meant to
+// scroll still scrolls. The events still go to the row, which is the registered
+// source; only the coordinates have to land on the grip.
+function gripSelector(key) {
+  return `${rowSelector(key)} .manage-reports__grip`;
+}
+
 function enabledKeys() {
   return findAll(".manage-reports__row.--enabled").map(
     (row) => row.dataset.identifier
@@ -72,6 +79,7 @@ async function dragReport(sourceKey, targetKey, position) {
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {
     dataTransfer: new DataTransfer(),
+    sourceCoordinates: centerOf(gripSelector(sourceKey)),
     targetCoordinates: {
       clientY:
         position === "above" ? targetRect.top + 1 : targetRect.bottom - 1,
@@ -248,7 +256,7 @@ acceptance("Manage reports drag and drop", function (needs) {
     const source = rowSelector("core_report:signups");
     const target = rowSelector("core_report:topics");
     const dataTransfer = new DataTransfer();
-    const sourceCoordinates = centerOf(source);
+    const sourceCoordinates = centerOf(gripSelector("core_report:signups"));
     const targetRect = find(target).getBoundingClientRect();
     const targetCoordinates = {
       clientX: targetRect.left + targetRect.width / 2,
@@ -288,7 +296,7 @@ acceptance("Manage reports drag and drop", function (needs) {
     const source = rowSelector("core_report:signups");
     const target = rowSelector("core_report:topics");
     const dataTransfer = new DataTransfer();
-    const sourceCoordinates = centerOf(source);
+    const sourceCoordinates = centerOf(gripSelector("core_report:signups"));
     const targetRect = find(target).getBoundingClientRect();
     const targetCoordinates = {
       clientX: targetRect.left + targetRect.width / 2,

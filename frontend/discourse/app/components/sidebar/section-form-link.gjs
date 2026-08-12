@@ -4,10 +4,9 @@ import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
-import { eq, not } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
@@ -18,8 +17,6 @@ import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-targe
 import { i18n } from "discourse-i18n";
 
 export default class SectionFormLink extends Component {
-  @service site;
-
   /**
    * The grip element, once it exists. Held as tracked state rather than looked up,
    * and the drag source re-registers when it arrives: the grip renders on desktop
@@ -74,7 +71,6 @@ export default class SectionFormLink extends Component {
           type="sidebar-link"
           data=(hash link=@link)
           dragHandle=this.gripElement
-          disabled=(not this.site.desktopView)
         }}
         {{dDragAndDropTarget
           accepts="sidebar-link"
@@ -85,18 +81,19 @@ export default class SectionFormLink extends Component {
         data-row-id={{@link.objectId}}
         class={{dConcatClass "sidebar-section-form-link" "row-wrapper"}}
       >
-        {{#if this.site.desktopView}}
-          <DDragHandle
-            {{this.captureGrip}}
-            @label={{this.dragHandleLabel}}
-            class="draggable"
-            data-link-name={{@link.name}}
-          />
-        {{/if}}
+        {{! Every viewport, because a touch screen can drag from a grip and had
+            no way to reorder at all while this was desktop-only. The drag
+            starts here rather than anywhere on the row, so a press that was
+            meant to scroll still scrolls. }}
+        <DDragHandle
+          {{this.captureGrip}}
+          @label={{this.dragHandleLabel}}
+          class="draggable"
+          data-link-name={{@link.name}}
+        />
 
-        {{! The arrows are the only keyboard path to reorder, so they render on
-            every viewport — the pointer drag beside them on desktop is an
-            alternative to them, not a replacement. }}
+        {{! The arrows are the keyboard path, which a touch screen does not
+            have either, so they render everywhere the grip does. }}
         <DReorderButtons
           @onMoveUp={{fn @moveUp @link}}
           @onMoveDown={{fn @moveDown @link}}

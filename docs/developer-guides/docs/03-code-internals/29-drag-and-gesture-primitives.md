@@ -187,9 +187,14 @@ something else — arrow buttons at a reorder surface, the keyboard path built i
 
 Every reorder surface in core does: the dashboard configure menu, the
 manage-reports modal, and the sidebar section-link form all render
-`DReorderButtons` beside the handle. The arrows render on every viewport, because
-the drag beside them is an alternative to them rather than a replacement — a
-touch screen has no drag path at all here.
+`DReorderButtons` beside the handle. Both paths render on every viewport, and
+neither substitutes for the other: the arrows are the only route without a
+pointer, and the drag is the only route without a keyboard.
+
+A grip is what makes that safe on a touch screen. All three surfaces pass
+`dragHandle`, so a drag begins on the grip rather than anywhere on the row, and
+a press that was meant to scroll still scrolls. A surface that leaves its whole
+row draggable should not then offer that row on touch.
 
 Arrows and a drag do not have to reach the same destinations. The sidebar's
 arrows move a link within its own list, while its drag also moves links between

@@ -478,26 +478,37 @@ module(
       );
     });
 
-    test(`${ORACLE} disables row drag initiation on mobile`, async function (assert) {
+    test(`${ORACLE} drags from the grip on mobile too`, async function (assert) {
+      // A touch screen has no keyboard, so the arrows are not a substitute here;
+      // taking the drag away on mobile left the surface with the arrows alone.
       sinon.stub(this.site, "desktopView").value(false);
       await renderForm(this);
 
       const row = ".sidebar-section-form-link";
+      const grip = `${row} .draggable`;
       const dataTransfer = new DataTransfer();
-      const coordinates = centerOf(row);
 
       assert
+        .dom(grip)
+        .exists(
+          "the grip renders on mobile, so the drag has a target to press"
+        );
+      assert
         .dom(row)
-        .doesNotHaveAttribute(
+        .hasAttribute(
           "data-drag-source",
-          "mobile rows have no active drag-source registration"
+          "",
+          "a mobile row carries an active drag-source registration"
         );
 
-      await dragEvent(row, "dragstart", { dataTransfer, ...coordinates });
+      await dragEvent(row, "dragstart", {
+        dataTransfer,
+        ...centerOf(grip),
+      });
       assert
         .dom(row)
-        .doesNotHaveClass("--dragging", "a mobile row cannot initiate a drag");
-      await dragEvent(row, "dragend", { dataTransfer, ...coordinates });
+        .hasClass("--dragging", "a drag pressed on the grip starts on mobile");
+      await dragEvent(row, "dragend", { dataTransfer, ...centerOf(grip) });
     });
 
     test(`${ORACLE} moves a link down its own list with the arrow`, async function (assert) {
