@@ -130,6 +130,17 @@ export interface DRovingFocusApi {
 export type DRovingFocusAxis = Exclude<Orientation, "grid">;
 
 /**
+ * Where the cursor goes when no surviving one can be kept. Each value names its own fallback:
+ * `"selected-or-first"` prefers a marked item and settles for the first, `"selected-or-none"`
+ * prefers a marked item and settles for nothing.
+ */
+export type DRovingFocusEntry =
+  | "none"
+  | "first"
+  | "selected-or-first"
+  | "selected-or-none";
+
+/**
  * The outcome of an API-driven step: `"moved"` when the cursor advanced, `"edge"` when a cursor
  * exists but is already against a boundary, and `"unavailable"` when the group has no items at
  * all. Three-valued so a caller can tell "the run ended here" from "there is no run here" and
@@ -241,9 +252,8 @@ interface DRovingFocusArgs {
    * appended or revised but wrong when the list becomes a different result set: a row that
    * happens to match both queries would hold the cursor deep in the new list. Change this and
    * the cursor stops tracking the survivor: in `"active"` mode it re-seeds per
-   * {@link DRovingFocusArgs.autoActivateSelected}/{@link DRovingFocusArgs.autoActivateFirst}, or
-   * clears when neither is set; in `"focus"` mode the tab stop is picked afresh rather than left
-   * on a surviving row.
+   * {@link DRovingFocusArgs.entryFocus}; in `"focus"` mode the tab stop is picked afresh rather
+   * than left on a surviving row.
    *
    * Key it on the query the *rendered* items answer, not the one being typed — a list that
    * keeps its old rows visible during an async reload would otherwise re-seed against them.
@@ -261,40 +271,45 @@ interface DRovingFocusArgs {
    */
   controllerElement?: HTMLElement | string | null;
   /**
-   * Active mode only — when true, highlight the first item whenever the cursor has none
-   * (initial render, or the active item dropped out on a re-filter), so Enter selects it
-   * without an ArrowDown. The WAI-ARIA "list autocomplete with automatic selection"
-   * combobox pattern. Default `false` (the cursor starts empty until an Arrow keypress).
+   * Where the cursor goes when there is no surviving one to keep. Default
+   * `"selected-or-first"`.
    *
-   * Constrained by {@link activationRemovesSelected}, which excludes items the seed must not
-   * land on.
+   * Each value names its own fallback, because the fallback is the whole distinction:
+   *
+   * - `"none"` — nothing becomes active.
+   * - `"first"` — the first navigable item, whatever is marked.
+   * - `"selected-or-first"` — the marked item, else the first.
+   * - `"selected-or-none"` — the marked item, else nothing.
+   *
+   * "Marked" means `aria-selected="true"`, `aria-checked="true"` or any `aria-current`. The
+   * consumer owns those attributes; this only reads them.
+   *
+   * The two modes answer different questions with the same values. Under
+   * `selectionMode="focus"` this is the entry convention from the keyboard-interface practice:
+   * where focus lands when Tab moves into the composite. Toolbars and menubars enter on the
+   * first control (`"first"`), while listboxes, radio groups, tabs and trees enter on the
+   * selected one. Under `selectionMode="active"` it is instead what is active when a popup
+   * opens, which the combobox pattern leaves to the author: a list that waits for the reader to
+   * type or arrow wants `"none"`, and one that should not pre-highlight an arbitrary row but
+   * should still restore a held value wants `"selected-or-none"`.
+   *
+   * A surviving cursor always outranks this. In focus mode an established tab stop is kept, and
+   * in active mode a still-present active item is kept, so this only decides the *first* entry
+   * and re-entry after a {@link DRovingFocusArgs.resetKey} change.
+   *
+   * In focus mode the two no-fallback values leave the group with no tab stop unless the author
+   * supplies one, which is a deliberate way to hand that choice back rather than an oversight.
    */
-  autoActivateFirst?: boolean;
-  /**
-   * Active mode only — when the cursor has none, prefer the item marked `aria-selected="true"`
-   * over the first one. Restores the user's existing choice when a list is reopened, rather than
-   * pointing them at an unrelated row. Takes priority over {@link autoActivateFirst}, so a list
-   * that deliberately starts without a cursor still gets its selection back.
-   *
-   * The consumer owns `aria-selected`; this only reads it, mirroring what the tab-stop seeding
-   * already does in focus mode. Default `false`.
-   *
-   * Deliberately NOT constrained by {@link DRovingFocusArgs.activationRemovesSelected}: a
-   * restored selection is seeded even where activating it would remove it, on the grounds that
-   * the reader chose that row themselves and can see it is selected. The constraint applies only
-   * to {@link DRovingFocusArgs.autoActivateFirst}, which would otherwise land on a selected row
-   * they never navigated to.
-   */
-  autoActivateSelected?: boolean;
+  entryFocus?: DRovingFocusEntry;
   /**
    * Active mode only — whether activating an already-selected item *removes* it, as a
-   * multi-select toggle does. When true, {@link autoActivateFirst} skips selected items, because
+   * multi-select toggle does. When true, a `"first"` fallback skips selected items, because
    * seeding one would arm the very first Enter to discard a value the reader never navigated to.
    * Arrow keys still reach those items, where removing them is deliberate.
    *
-   * Distinct from {@link autoActivateSelected} being off, which is a *preference* (a filtering
-   * single-select wants the top match rather than the held row) and not a hazard: there,
-   * activating the held item merely re-confirms it. Default `false`.
+   * Constrains only the fallback, never a restored selection: the reader chose that row
+   * themselves and can see it is selected, so it is seeded even where activating it would
+   * remove it. Default `false`.
    */
   activationRemovesSelected?: boolean;
 }
@@ -403,8 +418,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #tabStop = true;
   #restoreLostFocus = true;
   #activeClass: string | null = null;
-  #autoActivateFirst = false;
-  #autoActivateSelected = false;
+  #entryFocus: DRovingFocusEntry = "selected-or-first";
   #activationRemovesSelected = false;
 
   /** The ARIA anchor: the container (focus) or controller (active). */
@@ -945,8 +959,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.#tabStop = named.tabStop ?? true;
     this.#restoreLostFocus = named.restoreLostFocus ?? true;
     this.#activeClass = named.activeClass ?? null;
-    this.#autoActivateFirst = named.autoActivateFirst ?? false;
-    this.#autoActivateSelected = named.autoActivateSelected ?? false;
+    this.#entryFocus = named.entryFocus ?? "selected-or-first";
     this.#activationRemovesSelected = named.activationRemovesSelected ?? false;
     // The read itself is the whole point: consuming the tag is what makes a changed
     // `itemsKey` re-run `modify()` and reconcile the cursor. The value is never needed,
@@ -1815,6 +1828,49 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * a different question (`resetKey`). Without this a surviving row keeps the tab stop buried
    * mid-list after a re-filter.
    */
+  /** Whether {@link DRovingFocusArgs.entryFocus} prefers an item the consumer has marked. */
+  #prefersSelected(): boolean {
+    return (
+      this.#entryFocus === "selected-or-first" ||
+      this.#entryFocus === "selected-or-none"
+    );
+  }
+
+  /** Whether {@link DRovingFocusArgs.entryFocus} settles for the first item. */
+  #fallsBackToFirst(): boolean {
+    return (
+      this.#entryFocus === "first" || this.#entryFocus === "selected-or-first"
+    );
+  }
+
+  /**
+   * The item the consumer has marked as its chosen value, or nothing.
+   *
+   * Three spellings, because three pattern families disagree: listboxes and tabs use
+   * `aria-selected`, radio groups use `aria-checked`, and navigation-shaped groups use
+   * `aria-current`. They are searched in that order rather than by document position, so a group
+   * carrying more than one keeps a stable answer: an explicit selection outranks a merely
+   * current row wherever each happens to sit.
+   *
+   * @param items - The candidates, in DOM order.
+   * @param eligible - Extra predicate, so the caller can require navigability without paying for
+   * it on items the cheap attribute check already rejected.
+   */
+  #findMarked(
+    items: HTMLElement[],
+    eligible: (el: HTMLElement) => boolean = () => true
+  ): HTMLElement | undefined {
+    return (
+      items.find(
+        (el) => el.getAttribute("aria-selected") === "true" && eligible(el)
+      ) ??
+      items.find(
+        (el) => el.getAttribute("aria-checked") === "true" && eligible(el)
+      ) ??
+      items.find((el) => el.hasAttribute("aria-current") && eligible(el))
+    );
+  }
+
   #seedTabStop(reseed = false): void {
     const all = this.#allItems();
     // The preference below is consulted ONLY when this group takes a tab stop, so resolving it
@@ -1830,23 +1886,17 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       preferred =
         // The ATTRIBUTE, not the `tabIndex` property: every natively-focusable element reports 0
         // without carrying the attribute, so reading the property would match the first button
-        // here and make the `aria-selected`/`aria-current` preferences below unreachable. Read
-        // before the demotion loop, which would otherwise erase what it is looking for.
+        // here and make the marked-item preference below unreachable. Read before the demotion
+        // loop, which would otherwise erase what it is looking for.
         (reseed
           ? undefined
           : all.find(
               (el) => el.getAttribute("tabindex") === "0" && navigable(el)
             )) ??
-        all.find(
-          (el) => el.getAttribute("aria-selected") === "true" && navigable(el)
-        ) ??
-        // A radio group expresses its chosen value as `aria-checked`, never `aria-selected`, so
-        // reading only the latter loses the reader's choice on every re-entry.
-        all.find(
-          (el) => el.getAttribute("aria-checked") === "true" && navigable(el)
-        ) ??
-        all.find((el) => el.hasAttribute("aria-current") && navigable(el)) ??
-        all.find(navigable);
+        (this.#prefersSelected()
+          ? this.#findMarked(all, navigable)
+          : undefined) ??
+        (this.#fallsBackToFirst() ? all.find(navigable) : undefined);
     }
     // Only items this group has not demoted before, so a re-render that appends rows pays for
     // the new ones rather than restamping the whole set. Tracked by identity, because an item
@@ -1911,8 +1961,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       // match any current element, so `#setActive` finds no previous highlight to clear.
       // The user's own choice outranks the first row: reopening a list should point at what
       // they already picked, not at an unrelated option.
-      const selected = this.#autoActivateSelected
-        ? items.find((el) => el.getAttribute("aria-selected") === "true")
+      const selected = this.#prefersSelected()
+        ? this.#findMarked(items)
         : undefined;
       const seed = selected ?? this.#autoFirstSeed(items);
       if (seed) {
@@ -1954,7 +2004,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     if (this.#pendingSeed || !this.#element) {
       return;
     }
-    if (!this.#autoActivateFirst && !this.#autoActivateSelected) {
+    if (this.#entryFocus === "none") {
       return;
     }
 
@@ -1962,10 +2012,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       // Re-check the conditions that armed it: an arg change between arming and firing can have
       // left active mode entirely, and seeding from here would then take real DOM focus with no
       // keypress behind it.
-      if (
-        this.#mode !== "active" ||
-        (!this.#autoActivateFirst && !this.#autoActivateSelected)
-      ) {
+      if (this.#mode !== "active" || this.#entryFocus === "none") {
         this.#disarmPendingSeed();
         return;
       }
@@ -1989,8 +2036,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   /**
    * The first item the cursor may safely start on, honouring `activationRemovesSelected`.
    *
-   * Returns nothing when `autoActivateFirst` is off (the default), and — when
-   * `activationRemovesSelected` is set — when every *mounted navigable* item is selected, which a
+   * Returns nothing when {@link DRovingFocusArgs.entryFocus} has no first-item fallback, and —
+   * when `activationRemovesSelected` is set — when every *mounted navigable* item is selected, which a
    * windowed list reaches while unselected rows still exist offscreen. The cursor then stays empty
    * until an Arrow moves it, rather than falling back to a row whose activation would discard a
    * value.
@@ -1999,7 +2046,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * @returns The item to seed the cursor on, or `undefined` to leave it empty.
    */
   #autoFirstSeed(items: HTMLElement[]): HTMLElement | undefined {
-    if (!this.#autoActivateFirst) {
+    if (!this.#fallsBackToFirst()) {
       return undefined;
     }
     if (!this.#activationRemovesSelected) {
