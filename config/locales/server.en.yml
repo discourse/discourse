@@ -61,15 +61,17 @@ en:
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
 
+  access_control_list:
+    errors:
+      user_will_not_have_permission: "If you remove this ACL entry you will lose access to this entity."
+
   topic_category_changed: "From %{from} to %{to}"
   topic_tag_changed:
     added_and_removed: "Added %{added} and removed %{removed}"
     added: "Added %{added}"
     removed: "Removed %{removed}"
-
   topics_bulk_action:
     too_many_topic_ids: "You can only perform a bulk action on up to %{limit} topics at once."
-
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"

@@ -60,6 +60,7 @@ en:
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
         disallowed: "Disallowed"
+        required_permission_not_added: "At least one grantee must have %{permission} permission for this %{typeName}"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
