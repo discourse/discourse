@@ -128,6 +128,7 @@
     "@rolldown/pluginutils": "1.0.1",
     "@rollup/plugin-babel": "^7.1.0",
     "@types/jquery": "^3.5.33",
+    "@types/picomatch": "^4.0.3",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
     "@types/sinon": "^21.0.1",
