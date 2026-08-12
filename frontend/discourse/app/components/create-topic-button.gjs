@@ -28,6 +28,10 @@ export default class CreateTopicButton extends Component {
     };
   }
 
+  /**
+   * Classes for the button half only. The variant is not repeated here; it goes
+   * to the group as `@btnTypeClass`, which applies it to both halves.
+   */
   get btnClasses() {
     const additionalClasses = applyValueTransformer(
       "create-topic-button-class",
@@ -35,13 +39,10 @@ export default class CreateTopicButton extends Component {
       this.transformerContext
     );
 
-    return dConcatClass(
-      this.args.btnClass,
-      this.btnTypeClass,
-      ...additionalClasses
-    );
+    return dConcatClass(this.args.btnClass, ...additionalClasses);
   }
 
+  /** Classes for the drafts menu half only. */
   get draftMenuClasses() {
     const additionalClasses = applyValueTransformer(
       "create-topic-button-draft-menu-class",
@@ -49,7 +50,7 @@ export default class CreateTopicButton extends Component {
       this.transformerContext
     );
 
-    return dConcatClass(this.btnTypeClass, ...additionalClasses);
+    return dConcatClass(...additionalClasses);
   }
 
   <template>
@@ -59,6 +60,7 @@ export default class CreateTopicButton extends Component {
         @label={{this.label}}
         @icon={{@icon}}
         @btnId={{this.btnId}}
+        @btnTypeClass={{this.btnTypeClass}}
         @btnClasses={{this.btnClasses}}
         @draftMenuClasses={{this.draftMenuClasses}}
         @showDrafts={{@showDrafts}}

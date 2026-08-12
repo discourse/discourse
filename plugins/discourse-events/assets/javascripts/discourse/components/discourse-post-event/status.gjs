@@ -255,9 +255,13 @@ export default class DiscoursePostEventStatus extends Component {
                     </:content>
                   </DMenu>
                 {{else}}
-                  <DComboButton class="going-button --has-menu" as |combo|>
+                  <DComboButton
+                    @hasMenu={{true}}
+                    @btnTypeClass={{statusButtonClass this.isGoing}}
+                    class="going-button"
+                    as |combo|
+                  >
                     <combo.Button
-                      class={{statusButtonClass this.isGoing}}
                       @ariaPressed={{this.isGoing}}
                       @disabled={{this.goingButtonDisabled}}
                       @icon={{this.goingTriggerIcon}}
@@ -270,7 +274,6 @@ export default class DiscoursePostEventStatus extends Component {
                     />
                     <combo.Menu
                       @identifier="discourse-post-event-going-menu"
-                      @triggerClass={{statusButtonClass this.isGoing}}
                       @disabled={{this.goingButtonDisabled}}
                       @onRegisterApi={{this.registerGoingMenu}}
                     >
