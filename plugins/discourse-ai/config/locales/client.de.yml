@@ -21,6 +21,7 @@ de:
       dashboard:
         emotion:
           title: "Emotion"
+          description: "Die Tabelle zeigt die Anzahl der Beiträge an, die einer bestimmten Emotion zugeordnet wurden. Je nach gewählter Methode zur Emotionsklassifizierung werden die Beiträge entweder mit dem konfigurierten Emotionsklassifizierungsmodell („SamLowe/roberta-base-go_emotions“) oder mit dem konfigurierten Emotionsklassifizierungsagenten klassifiziert."
         reports:
           filters:
             group_by:
@@ -232,6 +233,12 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      post_image_captions:
+        edit: "KI-Bildbeschriftung bearbeiten"
+        title: "KI-Bildbeschriftung bearbeiten"
+        description: "Beschriftung"
+        save: "Bildbeschriftung speichern"
+        saved: "KI-Bildbeschriftung gespeichert"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -250,6 +257,7 @@ de:
         tab_label: "Bot-Chats"
       ai_tool_approval:
         loading: "Wird geladen …"
+        load_error: "Diese ausstehende Aktion konnte nicht geladen werden."
         agent: "Agent"
         tool: "Aktion"
         user: "Nutzer"
@@ -257,6 +265,7 @@ de:
         reject: "Ablehnen"
         approved: "Genehmigt"
         rejected: "Abgelehnt"
+        awaiting_staff: "Warte auf Genehmigung durch das Team"
       default_llm:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
@@ -370,6 +379,9 @@ de:
             automation: "Automatisierung"
             agents: "Agenten"
         image_caption:
+          name: "Bildbeschriftung"
+          description: "Generiert KI-Bildbeschriftungen für Beitragsbilder und stellt diese Lesern und assistiven Technologien zur Verfügung."
+          post_image_captions: "Bildbeschriftungen für Beiträge"
           setting_groups:
             settings: "Einstellungen"
         translation:
@@ -408,28 +420,91 @@ de:
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
         category_scope: "Kategorien"
+        category_scope_description: "Entscheide, ob automatische Übersetzungen für Inhalte in allen Kategorien, in öffentlichen Kategorien oder in ausgewählten Kategorien gelten sollen."
         cached_results_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
         model_progress:
+          loading: "Übersetzungsfortschritt wird geladen"
+          overview_label: "Übersetzungsfortschritt nach Inhaltstyp"
           detail:
+            loading: "Details zu %{target} werden geladen..."
+            load_error: "Details zu %{target} konnten nicht geladen werden."
             retry: "Erneut versuchen"
+            empty: "Es sind keine Sprachfortschritte verfügbar."
+            progress_label: "%{translated} von %{total} übersetzt auf %{language}"
             columns:
               locale: "Gebietsschema"
+              translated: "Übersetzt"
               pending: "Ausstehend"
+              eligible: "Geeignet"
               total: "Gesamt"
+              progress: "Fortschritt"
+            eligible_help: "Inhalte, die bereits in dieser Sprache vorliegen, sind ausgeschlossen."
+            pending_help: "Enthält Inhalte, die noch einer Spracherkennung bedürfen."
           targets:
             post:
               title: "Beiträge"
+              eligible_total:
+                one: "Es gibt %{count} Beitrag, der für die Übersetzung geeignet ist."
+                other: "Es gibt %{count} Beiträge, die für die Übersetzung geeignet sind."
+              translated:
+                one: "%{count} Beitrag wurde vollständig übersetzt."
+                other: "%{count} Beiträge wurden vollständig übersetzt."
+              needs_language_detection:
+                one: "%{count} Beitrag benötigt noch eine Spracherkennung."
+                other: "%{count} Beiträge benötigen noch eine Spracherkennung."
+              all_translated:
+                one: "Der geeignete Beitrag wurde vollständig übersetzt."
+                other: "Alle %{count} geeigneten Beiträge wurden vollständig übersetzt."
             topic:
               title: "Themen"
+              eligible_total:
+                one: "Es gibt %{count} Thema, das für die Übersetzung geeignet ist."
+                other: "Es gibt %{count} Themen, die für die Übersetzung geeignet sind."
+              translated:
+                one: "%{count} Thema wurde vollständig übersetzt."
+                other: "%{count} Themen wurden vollständig übersetzt."
+              needs_language_detection:
+                one: "%{count} Thema benötigt noch eine Spracherkennung."
+                other: "%{count} Themen benötigen noch eine Spracherkennung."
+              all_translated:
+                one: "Das geeignete Thema wurde vollständig übersetzt."
+                other: "Alle %{count} geeigneten Themen wurden vollständig übersetzt."
             category:
               title: "Kategorien"
+              eligible_total:
+                one: "Es gibt %{count} Kategorie, die für die Übersetzung geeignet ist."
+                other: "Es gibt %{count} Kategorien, die für die Übersetzung geeignet sind."
+              translated:
+                one: "%{count} Kategorie wurde vollständig übersetzt."
+                other: "%{count} Kategorien wurden vollständig übersetzt."
+              needs_language_detection:
+                one: "%{count} Kategorie benötigt noch eine Spracherkennung."
+                other: "%{count} Kategorien benötigen noch eine Spracherkennung."
+              all_translated:
+                one: "Die geeignete Kategorie wurde vollständig übersetzt."
+                other: "Alle %{count} geeigneten Kategorien wurden vollständig übersetzt."
             tag:
               title: "Schlagwörter"
+              total:
+                one: "Es gibt %{count} Schlagwort, das für die Übersetzung geeignet ist."
+                other: "Es gibt %{count} Schlagwörter, die für die Übersetzung geeignet sind."
+              translated:
+                one: "%{count} Schlagwort wurde vollständig übersetzt."
+                other: "%{count} Schlagwörter wurden vollständig übersetzt."
+              needs_language_detection:
+                one: "%{count} Schlagwort benötigt noch eine Spracherkennung."
+                other: "%{count} Schlagwörter benötigen noch eine Spracherkennung."
+              all_translated:
+                one: "Das Schlagwort wurde vollständig übersetzt."
+                other: "Alle %{count} Schlagwörter wurden vollständig übersetzt."
         admin_actions:
+          translation_settings: "KI-Einstellungen"
+          localization_settings: "App-Spracheinstellungen"
           enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
           backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
+          backfill_message: "Die <a href='%{settingsUrl}'>Einstellungen für rückwirkendes Ergänzen</a> sind so konfiguriert, dass alle Beiträge nach dem %{date} übersetzt werden."
           eta_minutes:
             one: "%{count} Minute"
             other: "%{count} Minuten"
@@ -583,6 +658,9 @@ de:
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
         use_parent_llm: "Sprachmodell des Agenten verwenden"
+        max_turn_tokens: "Max. Runden-Token"
+        max_turn_tokens_help: "Maximale Gesamtanzahl an Token (Eingabe + Ausgabe), die bei allen LLM-Aufrufen während einer einzelnen Bot-Antwort verbraucht werden. Lass das Feld leer, um die Standardeinstellung zu verwenden, die der Hälfte des Kontextfensters des Modells entspricht."
+        compression_threshold: "Kompressionsschwelle"
         compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
         vision_enabled: Bild-Uploads einbeziehen
         vision_enabled_help: Wenn diese Option aktiviert ist, kann dieser Agent Bilder aus Beiträgen und Chats einbeziehen, wenn das ausgewählte Modell die Bildeingabe unterstützt.
@@ -658,11 +736,16 @@ de:
         temperature_help: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Kreativität zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, im Allgemeinen ein Wert zwischen 0,0 und 2,0)"
         top_p: "Top P"
         top_p_help: "Top P für das LLM. Erhöhen, um die Zufälligkeit zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, in der Regel ein Wert zwischen 0,0 und 1,0)"
+        thinking_effort: "Denkanstrengung"
+        thinking_effort_help: "Wie lange sollen Modelle mit Argumentationsfähigkeit nachdenken, bevor sie antworten? Höhere Werte können die Lösung schwieriger Aufgaben verbessern, führen aber möglicherweise zu einer höheren Latenz und höheren Kosten. Nicht unterstützte Anbieter ignorieren diese Einstellung."
         thinking_effort_options:
+          default: "Modellstandard"
           none: "Keine Auswahl"
+          minimal: "Minimal"
           low: "Niedrig"
           medium: "Mittel"
           high: "Hoch"
+          xhigh: "Besonders hoch"
           max: "Höchstwert"
         priority: "Priorität"
         priority_help: "Agenten mit Priorität werden den Benutzern am Anfang der Agenten-Liste angezeigt. Wenn mehrere Agenten Priorität haben, werden sie alphabetisch sortiert."
@@ -950,6 +1033,9 @@ de:
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-3-1-pro: "Googles intelligentestes Modell"
           google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
+          open_ai-gpt-5-6-sol: "Das bahnbrechende Modell von OpenAI für komplexe fachliche Aufgaben"
+          open_ai-gpt-5-6-terra: "Schafft ein ausgewogenes Verhältnis zwischen Intelligenz und Kosten für anspruchsvolle Arbeitslasten"
+          open_ai-gpt-5-6-luna: "Optimiert für kostenbewusste Workloads mit hohem Durchsatz"
           open_router-moonshotai-kimi-k2-6: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
           open_router-deepseek-deepseek-v4-flash: "DeepSeeks neuestes Hochleistungsmodell mit Kontext von 1 Million"
           open_router-minimax-minimax-m2-7: "Das MiniMax-Modell mit großem Kontext"
@@ -997,6 +1083,7 @@ de:
           cohere: "Cohere"
           open_ai: "OpenAI"
           google: "Google"
+          google_vertex_ai: "Google Vertex AI"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -1010,6 +1097,7 @@ de:
           role_arn: "AWS Bedrock-Rollen-ARN"
           inference_profile_arn: "AWS Bedrock Anwendungs-Inferenzprofil ARN"
           region: "Region"
+          project_id: "GCP-Projekt-ID"
           organization: "Optionale OpenAI-Organisations-ID"
           disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
           enable_native_tool: "Aktiviere native Tool-Unterstützung"
@@ -1019,6 +1107,7 @@ de:
           provider_quantizations: "Reihenfolge der Provider-Quantisierungen (kommagetrennte Liste, z. B.: fp16,fp8)"
           disable_streaming: "Streaming-Vervollständigung deaktivieren (Streaming-Anfragen in Nicht-Streaming-Anfragen umwandeln)"
           reasoning_effort: "Argumentationsaufwand (gilt nur für Argumentationsmodelle)"
+          reasoning_mode: "Argumentationsmodus"
           service_tier: "Service-Stufe (Flex = geringere Kosten/höhere Latenzzeit, Priority = schnellere Verarbeitung)"
           reasoning_parser: "vLLM-Schlussfolgerungs-Parser"
           thinking_override: "Denken überschreiben"
@@ -1037,6 +1126,8 @@ de:
           prompt_caching_always: "Immer - Immer zwischengespeicherte Aufforderungen verwenden"
           effort: "Anstrengungsgrad"
         provider_field_hints:
+          reasoning_mode: "Im Standardmodus wird die Standardeinstellung des Anbieters verwendet. Der Pro-Modus erfordert die Responses-API und die Unterstützung durch das ausgewählte Modell und führt zu einer höheren Latenz sowie einem höheren Token-Verbrauch."
+          azure_reasoning_effort: "Die verfügbaren Anstrengungsgrade vom in Azure bereitgestellten Modell ab. Nicht unterstützte Werte werden von Azure abgelehnt."
           reasoning_parser: "Muss mit der Einstellung „--reasoning-parser“ des vLLM-Servers übereinstimmen. Discourse kann den Parser nicht pro Anfrage wechseln; es nutzt diese Einstellung, um die Anfrageoptionen anzupassen."
           thinking_override: "Erzwinge optional, dass unterstützte vLLM-Chat-Vorlagen das Denken für jede Anfrage aktivieren oder deaktivieren. Nicht unterstützte Parser behalten den Serverstandard bei."
           reasoning_effort: "Sendet die vLLM-Option „reasoning_effort“ an Parser, die diese unterstützen."
@@ -1296,9 +1387,11 @@ de:
           bulk_regen_description: "Wähle aus, welche Art von KI-Zusammenfassung für die ausgewählten Themen neu erstellt werden soll."
           regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
           regenerate_summaries_option: "Themenzusammenfassungen"
+          regenerate_gists_started: "Kurzzusammenfassungen werden neu generiert…"
           regenerate_gists_error:
             one: "Kurzzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
+          regenerate_topic_summaries_started: "Themenzusammenfassungen werden neu generiert…"
           regenerate_topic_summary_error:
             one: "Themenzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Themenzusammenfassungen konnten nicht neu generiert werden"

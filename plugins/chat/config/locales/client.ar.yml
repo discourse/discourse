@@ -294,6 +294,7 @@ ar:
         composer: "أداة إنشاء الدردشة"
         channels_list: "قائمة قنوات الدردشة"
       screen_reader:
+        new_message: "%{username}: %{message}"
         new_messages:
           zero: "%{count} رسائل جديدة"
           one: "رسالة جديدة %{count}"
@@ -301,6 +302,34 @@ ar:
           few: "%{count} رسائل جديدة"
           many: "%{count} رسالة جديدة"
           other: "%{count} رسائل جديدة"
+        new_image:
+          zero: "لم يرسل %{username} أي صور"
+          one: "أرسل %{username} صورة"
+          two: "أرسل %{username} صورتين"
+          few: "أرسل %{username} %{count} صور"
+          many: "أرسل %{username} %{count} صورةً"
+          other: "أرسل %{username} %{count} صورة"
+        new_attachment:
+          zero: "لم يرسل %{username} أي مرفقات"
+          one: "أرسل %{username} مرفقًا"
+          two: "أرسل %{username} مرفقين"
+          few: "أرسل %{username} %{count} مرفقات"
+          many: "أرسل %{username} %{count} مرفقًا"
+          other: "أرسل %{username} %{count} مرفق"
+        new_message_with_image:
+          zero: "%{username}: %{message} (لا تتضمَّن أي صور)"
+          one: "%{username}: %{message} (تتضمَّن صورة)"
+          two: "%{username}: %{message} (تتضمَّن صورتين)"
+          few: "%{username}: %{message} (تتضمَّن %{count} صور)"
+          many: "%{username}: %{message} (تتضمَّن %{count} صورةً)"
+          other: "%{username}: %{message} (تتضمَّن %{count} صورة)"
+        new_message_with_attachment:
+          zero: "%{username}: %{message} (لا تتضمَّن أي مرفقات)"
+          one: "%{username}: %{message} (تتضمَّن مرفقًا)"
+          two: "%{username}: %{message} (تتضمَّن مرفقين)"
+          few: "%{username}: %{message} (تتضمَّن %{count} مرفقات)"
+          many: "%{username}: %{message} (تتضمَّن %{count} مرفقًا)"
+          other: "%{username}: %{message} (تتضمَّن %{count} مرفق)"
       no_direct_message_channels: "لم تنضم إلى أي رسائل مباشرة بعد‎!"
       no_direct_message_channels_cta: "بدء محادثة"
       no_public_channels: "لم تنضم إلى أي قنوات بعد‎!"
@@ -308,8 +337,13 @@ ar:
       kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
       chat_notifications_title: "إشعارات الدردشة"
       personalization_title: "التخصيص"
+      accessibility_title: "إمكانية الوصول"
       ignore_channel_wide_mention:
         title: "تجاهل الإشارات على مستوى القناة"
+      announce_new_messages:
+        title: "الإعلان عن رسائل جديدة لقارئات الشاشة"
+      new_message_sound:
+        title: "تشغيل أصوات للرسائل الجديدة بينما تكون نافذة الدردشة مفتوحة في الواجهة الأمامية"
       show_thread_title_prompts:
         title: "إظهار مطالبات عنوان سلسلة الدردشة"
         description: "إظهار مطالبات لتعيين عنوان للموضوعات الجديدة"
@@ -373,6 +407,10 @@ ar:
         ethereal: "زجاج أثيري"
       title: "دردشة"
       title_capitalized: "الدردشة"
+      disabled:
+        title: "لقد عطَّلت الدردشة"
+        body: "فعِّلها مرة أخرى لعرض القنوات والرسائل."
+        cta: "تفضيلات الدردشة الخاصة بي"
       upload: "إرفاق ملف"
       upload_to_channel: "التحميل إلى %{title}"
       upload_to_thread: "التحميل إلى سلسلة دردشة"
@@ -407,6 +445,7 @@ ar:
         filter_input_placeholder: البحث عن القناة بالاسم
         filter_joined_all: "الكل"
         filter_joined_joined: "تاريخ الانضمام"
+        filter_joined_not_joined: "لم تنضم إليها"
       chat_message_separator:
         today: اليوم
         yesterday: الأمس
@@ -488,7 +527,25 @@ ar:
           few: "%{count} أعضاء"
           many: "%{count} عضوًا"
           other: "%{count} عضوًا"
+        empty_state:
+          title: "هذه هي بداية %{channelName}"
+          joined_title: "أنت أول المنضمين إلى %{channelName}"
+          guest_tip: "أنت تقرأ كزائر. تبدأ المحادثة من لحظة نشر الأعضاء لمشاركاتهم - انضم إليهم لتصبح واحدًا منهم."
+          joined_tip: "كُن أول من ينشر ويبدأ المحادثة."
+          members_here:
+            zero: "لا يوجد أعضاء هنا"
+            one: "<strong>عضو واحد (%{count})</strong> هنا"
+            two: "<strong>عضوان (%{count})</strong> هنا"
+            few: "<strong>%{count} أعضاء</strong> هنا"
+            many: "<strong>%{count} عضوًا</strong> هنا"
+            other: "<strong>%{count} عضو</strong> هنا"
+          no_other_members: "لا يوجد أعضاء آخرين بعد"
         preview_card:
+          guest_title: "انضم إلى %{channelName} لبدء الدردشة"
+          guest_body: "القراءة مجانًا للجميع. سجِّل الآن لتتمكن من النشر والتفاعل والرد - تستغرق العملية 30 ثانية تقريبًا."
+          join_body: "ستتمكن من النشر والرد، وستظهر القناة في قائمة قنواتك."
+          no_access_title: "لا يمكنك الانضمام إلى %{channelName}"
+          no_access_body: "هذه القناة غير مفتوحة للأعضاء الجُدد في الوقت الحالي."
           log_in: "تسجيل الدخول"
           sign_up: "الاشتراك"
       create_channel:
