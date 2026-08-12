@@ -6,17 +6,9 @@ import type { BlockClass } from "discourse/lib/blocks/-internals/types";
 import type { ValidationErrorDetails } from "discourse/lib/blocks/-internals/validation/args";
 
 /**
- * Validation context passed through the layout validation pipeline for error
- * reporting. Created via `createValidationContext()` to ensure consistent
- * structure across all validation functions.
- *
- * The following properties are added by validation code after initial context
- * creation: `errorPath` (full path to the error, e.g.
- * "layout[0].conditions.params.categoryId"), `conditionsPath` (path within
- * conditions, e.g. "params.categoryId"), and `conditions` (the conditions
- * object for error display).
+ * Parameters accepted by `createValidationContext()`.
  */
-export interface ValidationContext {
+export interface CreateValidationContextParams {
   /** The name of the outlet being validated. */
   outletName: string;
   /** The name of the block, if resolved. */
@@ -29,6 +21,15 @@ export interface ValidationContext {
   callSiteError?: Error | null;
   /** The root layout array for error display. */
   rootLayout?: Array<Record<string, unknown>> | null;
+}
+
+/**
+ * Validation context passed through the layout validation pipeline for error
+ * reporting. Created via `createValidationContext()` to ensure consistent
+ * structure across all validation functions; the members beyond the creation
+ * params are added by validation code after initial context creation.
+ */
+export interface ValidationContext extends CreateValidationContextParams {
   /** Full path to the error (e.g., "layout[0].conditions.params.categoryId"). */
   errorPath?: string;
   /** Path within conditions (e.g., "params.categoryId"). */
@@ -37,24 +38,6 @@ export interface ValidationContext {
   conditions?: unknown;
   /** Structured payload preserved through re-throws for field-level errors. */
   details?: ValidationErrorDetails | ValidationErrorDetails[] | null;
-}
-
-/**
- * Parameters accepted by `createValidationContext()`.
- */
-export interface CreateValidationContextParams {
-  /** The name of the outlet being validated. */
-  outletName: string;
-  /** The name of the block, if resolved. */
-  blockName?: string | null;
-  /** The hierarchical path to this entry. */
-  path: string;
-  /** The block entry object being validated. */
-  entry?: Record<string, unknown> | null;
-  /** Error captured at the call site. */
-  callSiteError?: Error | null;
-  /** The root layout array for error display. */
-  rootLayout?: Array<Record<string, unknown>> | null;
 }
 
 /**

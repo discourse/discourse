@@ -79,8 +79,8 @@ export interface LogRouteStateOptions {
   pages?: string[];
   /** The actual page type (when expected doesn't match). */
   actualPageType?: string | null;
-  /** Actual page context (for determining page type match). */
-  actualPageContext?: Record<string, unknown> | null;
+  /** Actual page context; `null` when no page type matched. */
+  actualPageContext: Record<string, unknown> | null;
   /** Nesting depth for indentation. */
   depth: number;
   /** Whether the URL/page matched (true) or not (false). */
@@ -210,11 +210,30 @@ class BlockDebugLogger {
    * Shows URL/page matching status. Params and queryParams are logged separately
    * with proper nesting via logCondition.
    */
-  logRouteState(options: LogRouteStateOptions): void {
+  logRouteState({
+    currentPath,
+    expectedUrls,
+    excludeUrls,
+    pages,
+    actualPageType,
+    actualPageContext,
+    depth,
+    result,
+  }: LogRouteStateOptions): void {
     if (!this.#currentGroup) {
       return;
     }
-    this.#currentGroup.logs.push({ type: "route-state", ...options });
+    this.#currentGroup.logs.push({
+      type: "route-state",
+      currentPath,
+      expectedUrls,
+      excludeUrls,
+      pages,
+      actualPageType,
+      actualPageContext,
+      depth,
+      result,
+    });
   }
 
   /**
@@ -374,7 +393,7 @@ class BlockDebugLogger {
       // When using pages option, show page type and params as siblings
       if (pages) {
         // Page type matches if actualPageContext exists (regardless of params)
-        const pageTypeMatched = actualPageContext != null;
+        const pageTypeMatched = actualPageContext !== null;
         const pageIcon = pageTypeMatched ? ICONS.passed : ICONS.failed;
         const pageStyle = pageTypeMatched ? STYLES.passed : STYLES.failed;
 

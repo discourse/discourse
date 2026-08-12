@@ -219,7 +219,7 @@ function freezeParts(
 export function block(
   name: string,
   options: BlockOptions = {}
-): ClassDecorator {
+): <T extends BlockClass & { prototype: unknown }>(target: T) => T {
   // Decoration-time validation.
   validateBlockOptions(name, options);
   const parsed = validateAndParseBlockName(name);
@@ -313,16 +313,11 @@ export function block(
   // Shallow type-check the optional display-metadata fields.
   validateDisplayMetadata(name, options);
 
-  // A legacy class decorator that returns nothing keeps the class unchanged,
-  // which is exactly what this decorator wants — it records metadata and
-  // installs a component manager as side effects rather than replacing the
-  // class, so there is no need to return the target.
   return (target) => {
     setInternalComponentManager(BlockComponentManager, target);
 
     if (!(target.prototype instanceof Component)) {
       raiseBlockError("@block target must be a Glimmer component class");
-      return;
     }
 
     // Create and register the frozen metadata object with all block information.
@@ -356,6 +351,8 @@ export function block(
     });
 
     blockMetadataMap.set(target, metadata);
+
+    return target;
   };
 }
 
@@ -450,9 +447,12 @@ export function createBlockArgsWithReactiveGetters(
  * @experimental This API is under active development and may change or be
  * removed in future releases without prior notice.
  *
- * @param component - The component (or factory) to get metadata for.
+ * @param component - The component (or factory) to get metadata for. Accepts
+ *   nullish values so untyped registration paths can probe safely.
  * @returns The block metadata object, or `null` if not a block.
  */
-export function getBlockMetadata(component: object): BlockMetadata | null {
-  return blockMetadataMap.get(component) ?? null;
+export function getBlockMetadata(
+  component: object | null | undefined
+): BlockMetadata | null {
+  return component ? (blockMetadataMap.get(component) ?? null) : null;
 }

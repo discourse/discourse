@@ -278,7 +278,10 @@ export function _freezeBlockRegistry(): void {
  * (including `blockName`) is stored in an internal WeakMap and accessed
  * via `getBlockMetadata()`.
  *
- * @param klass - The block component class
+ * @param klass - The block component class. Typed nullable because untyped
+ *   callers reach this through `api.registerBlock()`, where a bad or circular
+ *   import hands it `undefined`; that call must report the decorator error
+ *   rather than fail on a property read.
  * @throws If called after registry is locked, or if block is invalid
  *
  * @example
@@ -296,13 +299,10 @@ export function _freezeBlockRegistry(): void {
  * };
  * ```
  */
-export function _registerBlock(klass: BlockClass): void {
+export function _registerBlock(klass: BlockClass | null | undefined): void {
   const metadata: BlockMetadata | null = getBlockMetadata(klass);
   const blockName = metadata?.blockName;
 
-  // Untyped callers reach this through `api.registerBlock()`, where a bad or
-  // circular import hands it `undefined`. Read `name` defensively so that call
-  // still reports the decorator error below rather than failing here.
   if (
     !assertRegistryNotFrozen({
       frozen: registryFrozen,
@@ -314,7 +314,7 @@ export function _registerBlock(klass: BlockClass): void {
     return;
   }
 
-  if (!blockName) {
+  if (!klass || !blockName) {
     raiseBlockError(
       `Block class "${klass?.name}" must be decorated with @block to be registered.`
     );

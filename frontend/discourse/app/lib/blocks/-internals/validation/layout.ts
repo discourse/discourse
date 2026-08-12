@@ -531,7 +531,7 @@ function validateContainerArgsUniqueness(
 
     for (let i = 0; i < childEntries.length; i++) {
       const childEntry = childEntries[i];
-      const value = childEntry?.containerArgs?.[argName];
+      const value = childEntry.containerArgs?.[argName];
 
       // Skip undefined values (uniqueness only applies to provided values)
       if (value === undefined) {
@@ -1196,7 +1196,7 @@ async function validateOneEntry({
       );
       if (
         resolved &&
-        typeof resolved !== "string" &&
+        (typeof resolved === "object" || typeof resolved === "function") &&
         !(OPTIONAL_MISSING in resolved)
       ) {
         blockName = getBlockMetadata(resolved)?.blockName ?? null;
@@ -1322,14 +1322,15 @@ export async function validateEntry(
     return null;
   }
 
-  // Optional block not registered - skip validation entirely. `resolvedBlock`
-  // can still be `undefined` here (a previously-failed factory resolution,
-  // only reachable in DEBUG mode); the `!== undefined` guard falls through
-  // exactly like the original's `resolvedBlock?.[OPTIONAL_MISSING]`
-  // optional-chaining read, rather than throwing on the `in` operator.
+  // Optional block not registered - skip validation entirely. Guard for an
+  // object or function before the `in` read: untyped callers can put any
+  // primitive in `entry.block` (e.g. `{ block: 42 }`), and those must fall
+  // through to the actionable decorator error below instead of throwing on
+  // the `in` operator.
   if (
-    resolvedBlock !== undefined &&
-    typeof resolvedBlock !== "string" &&
+    resolvedBlock &&
+    (typeof resolvedBlock === "object" ||
+      typeof resolvedBlock === "function") &&
     OPTIONAL_MISSING in resolvedBlock
   ) {
     return null;

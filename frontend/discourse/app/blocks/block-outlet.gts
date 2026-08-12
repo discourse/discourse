@@ -535,11 +535,8 @@ function resolveDecoratorClassNames(
 const createChildBlock: CreateChildBlockFn = (entry, owner, debugContext) => {
   const { block: rawBlock, containerArgs, classNames, id } = entry;
 
-  // `entry.block` is `string | BlockClass` because a `BlockEntry` may
-  // reference a block by name before resolution; `createChildBlock` is only
-  // ever invoked (via `createChildBlockFn`) after `tryResolveBlock` has
-  // already resolved the reference to a class, so it is always a
-  // `BlockClass` here.
+  // Always a class here: callers only invoke this after `tryResolveBlock` has
+  // resolved a by-name reference.
   const ComponentClass = rawBlock as BlockClass;
 
   const blockMeta = getBlockMetadata(ComponentClass);
@@ -569,11 +566,9 @@ const createChildBlock: CreateChildBlockFn = (entry, owner, debugContext) => {
       : debugContext.displayHierarchy,
   });
 
-  // Curry the component with pre-bound args so it can be rendered
-  // without knowing its configuration details. `curryComponent` only refines
-  // its return to a `ComponentLike` when the input class is glint-invokable;
-  // `ComponentClass` is the deliberately-opaque `BlockClass`, so the generic
-  // passes it through unchanged and we assert the known renderable result.
+  // Curry the component with pre-bound args so it can be rendered without
+  // knowing its configuration details; the deliberately-opaque `BlockClass`
+  // isn't glint-invokable, so assert the known renderable result.
   const curried = curryComponent(
     ComponentClass,
     blockArgs,
@@ -1593,9 +1588,7 @@ export default class BlockOutlet extends Component<BlockOutletSignature> {
     | typeof Component<OutletInfoSignature>
     | null
     | undefined {
-    // `debugHooks.outletInfoComponent` is typed as a bare `typeof Component`
-    // (the debug-hooks module has no reason to know this specific consumer's
-    // signature); narrow it to the shape this component actually renders with.
+    // Narrow the hook's bare `typeof Component` to the shape rendered here.
     return debugHooks.outletInfoComponent as
       | typeof Component<OutletInfoSignature>
       | null

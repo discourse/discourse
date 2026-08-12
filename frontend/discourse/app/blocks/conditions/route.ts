@@ -22,6 +22,20 @@ import type DiscoveryService from "discourse/services/discovery";
 import { BlockCondition, type ConditionContext } from "./condition";
 import { blockCondition } from "./decorator";
 
+/**
+ * The `any`/`not` combinator keys of a `params`/`queryParams` spec. Specs are
+ * authored as plain objects, so the operators are read through this shape at
+ * each recursion site; `validateParamsWithOperators()` is the runtime
+ * enforcement point for `any` actually being an array.
+ */
+interface ParamsSpecOperators {
+  /** Alternative param specs — OR logic. */
+  any?: unknown[];
+
+  /** A negated param spec. */
+  not?: unknown;
+}
+
 /** Args accepted by the `route` condition. */
 interface RouteConditionArgs {
   /** URL patterns to match (passes if ANY match). */
@@ -372,7 +386,7 @@ export default class BlockRouteCondition extends BlockCondition {
     const logger = debugContext.logger;
 
     // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
-    const anySpec = (params as { any?: unknown[] }).any;
+    const anySpec = (params as ParamsSpecOperators).any;
     if (anySpec !== undefined) {
       // Log combinator BEFORE children so it appears first in tree
       if (isLoggingEnabled) {
@@ -402,7 +416,7 @@ export default class BlockRouteCondition extends BlockCondition {
     }
 
     // Handle not operator: { not: { categoryId: 3 } }
-    const notSpec = (params as { not?: unknown }).not;
+    const notSpec = (params as ParamsSpecOperators).not;
     if (notSpec !== undefined) {
       // Log combinator BEFORE children so it appears first in tree
       if (isLoggingEnabled) {
@@ -474,11 +488,11 @@ export default class BlockRouteCondition extends BlockCondition {
     pageContext: Record<string, unknown>
   ): Record<string, unknown> {
     // Handle any/not operators - extract from first nested object for display
-    const anySpec = (params as { any?: unknown[] }).any;
+    const anySpec = (params as ParamsSpecOperators).any;
     if (anySpec !== undefined && anySpec.length > 0) {
       return this.#extractParamValues(anySpec[0], pageContext);
     }
-    const notSpec = (params as { not?: unknown }).not;
+    const notSpec = (params as ParamsSpecOperators).not;
     if (notSpec !== undefined) {
       return this.#extractParamValues(notSpec, pageContext);
     }
@@ -504,7 +518,7 @@ function validateParamsWithOperators(
   path = "params"
 ): string | null {
   // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
-  const anySpec = (params as { any?: unknown }).any;
+  const anySpec = (params as ParamsSpecOperators).any;
   if (anySpec !== undefined) {
     if (!Array.isArray(anySpec)) {
       return `\`any\` in params must be an array of param objects.`;
@@ -523,7 +537,7 @@ function validateParamsWithOperators(
   }
 
   // Handle not operator: { not: { categoryId: 3 } }
-  const notSpec = (params as { not?: unknown }).not;
+  const notSpec = (params as ParamsSpecOperators).not;
   if (notSpec !== undefined) {
     return validateParamsWithOperators(notSpec, pages, `${path}.not`);
   }

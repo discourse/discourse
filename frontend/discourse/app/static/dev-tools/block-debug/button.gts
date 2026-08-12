@@ -1,32 +1,12 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { type ComponentLike } from "@glint/template";
-import DMenuUntyped from "discourse/float-kit/components/d-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import devToolsState from "../state";
-
-// TODO(devxp-typescript-pending): drop once DMenu is authored in .gts with a
-// real Signature, then import it directly. Untyped .gjs today → no
-// arg/block/attr types; this shape reflects only this component's own usage.
-// `triggerComponent` is `unknown` because it's fed the return of the
-// (also untyped) `dElement` helper.
-const DMenu = DMenuUntyped as unknown as ComponentLike<{
-  Args: {
-    identifier: string;
-    triggerClass?: string;
-    triggerComponent?: unknown;
-    modalForMobile: boolean;
-    title: string;
-  };
-  Blocks: {
-    trigger: [];
-    content: [];
-  };
-}>;
 
 /**
  * Block debug button with dropdown menu.
