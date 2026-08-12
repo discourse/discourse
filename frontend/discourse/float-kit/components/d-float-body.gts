@@ -5,6 +5,7 @@ import { modifier as modifierFn } from "ember-modifier";
 import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import type FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
+import { horizontalViewportInset } from "discourse/float-kit/lib/update-position";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -164,12 +165,16 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
   }
 
   get style() {
-    const maxWidth =
-      typeof this.options.maxWidth === "number"
-        ? `${this.options.maxWidth}px`
-        : this.options.maxWidth;
+    const { maxWidth } = this.options;
 
-    return trustHTML(`max-width: ${maxWidth}`);
+    // Only a number is clamped: a keyword like `none` or `unset` is invalid inside `min()`,
+    // which would drop the declaration and hand the float to whatever CSS sets `max-width`.
+    const value =
+      typeof maxWidth === "number"
+        ? `min(${maxWidth}px, calc(100dvw - ${horizontalViewportInset(this.options)}px))`
+        : maxWidth;
+
+    return trustHTML(`max-width: ${value}`);
   }
 
   <template>

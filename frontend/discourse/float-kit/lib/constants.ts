@@ -134,6 +134,9 @@ export interface TooltipOptions {
    * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
    * silently wins over the matched width and a trigger wider than the cap gets a narrower
    * overlay.
+   *
+   * A number is additionally capped to the width the viewport leaves the float, so it can never
+   * overflow the document; a string is applied verbatim and gets no such cap.
    */
   maxWidth: number | string;
 
