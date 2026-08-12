@@ -15,6 +15,12 @@ module DiscourseAi
       COMPRESSED_CONTEXT_ACK =
         DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK
 
+      SUBAGENT_FEATURE_CONTEXT_KEYS = %w[
+        subagent_parent_agent_id
+        subagent_agent_id
+        subagent_depth
+      ].freeze
+
       TOKEN_BUDGET_FINAL_ANSWER_HINT = <<~TEXT.strip
         [The turn token budget has been reached — no further tool calls are available.]
         Provide your final response now using the information already gathered.
@@ -149,8 +155,10 @@ module DiscourseAi
 
         llm_kwargs = llm_args.dup
         llm_kwargs[:user] = user
+        context_feature_attribution =
+          context.feature_context.to_h.deep_stringify_keys.slice(*SUBAGENT_FEATURE_CONTEXT_KEYS)
         llm_kwargs[:feature_context] = llm_args[:feature_context].to_h.deep_stringify_keys.merge(
-          context.feature_context.to_h.deep_stringify_keys,
+          context_feature_attribution,
         )
         llm_kwargs[:temperature] = agent.temperature if agent.temperature
         llm_kwargs[:top_p] = agent.top_p if agent.top_p

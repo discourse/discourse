@@ -139,11 +139,11 @@ RSpec.describe DiscourseAi::Agents::SubagentRunner do
       )
       expect(prompts.last.messages.last[:content]).to include("The Moon orbits Earth.")
       expect(prompt_options[1][:feature_context]).to include(
-        "source" => "spec",
         "subagent_parent_agent_id" => parent.id,
         "subagent_agent_id" => child.id,
         "subagent_depth" => 1,
       )
+      expect(prompt_options[1][:feature_context]).not_to have_key("source")
     end
 
     thinking_updates = updates.select { |update| update[2] == :thinking }.flatten.compact.join

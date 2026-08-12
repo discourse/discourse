@@ -108,7 +108,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(captured_kwargs.first[:extra_model_params]).to be_nil
     end
 
-    it "merges caller and context feature attribution with context values taking precedence" do
+    it "adds subagent attribution without leaking unrelated context metadata" do
       context =
         DiscourseAi::Agents::BotContext.new(
           user: user,
@@ -116,6 +116,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
           feature_context: {
             :source => "context",
             "subagent_depth" => 1,
+            "subagent_agent_id" => 7,
           },
         )
 
@@ -135,8 +136,9 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
         expect(options.first[:feature_context]).to eq(
           "post_id" => 42,
-          "source" => "context",
+          "source" => "caller",
           "subagent_depth" => 1,
+          "subagent_agent_id" => 7,
         )
       end
     end

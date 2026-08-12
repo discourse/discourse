@@ -633,9 +633,9 @@ end
 #  require_approval            :boolean          default(FALSE), not null
 #  response_format             :jsonb
 #  show_thinking               :boolean          default(TRUE), not null
+#  subagent_ids                :bigint           default([]), not null, is an Array
 #  system                      :boolean          default(FALSE), not null
 #  system_prompt               :string(10000000) not null
-#  subagent_ids                :bigint           default([]), not null, is an Array
 #  temperature                 :float
 #  thinking_effort             :string
 #  tools                       :json             not null
