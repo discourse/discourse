@@ -321,6 +321,10 @@ module(
       const target = rowSelector("Primary 2");
       const dataTransfer = new DataTransfer();
 
+      // The row is not draggable, which is both why a press on its body cannot
+      // begin a drag and why the name and URL inputs beside the grip stay
+      // selectable. Dispatching here anyway proves the row routes nothing.
+      assert.dom(source).doesNotHaveAttribute("draggable");
       await dragEvent(source, "dragstart", {
         dataTransfer,
         ...centerOf(source),
@@ -336,14 +340,14 @@ module(
         ...centerOf(source),
       });
 
-      await dragEvent(source, "dragstart", {
+      await dragEvent(gripSelector("Primary 1"), "dragstart", {
         dataTransfer,
         ...centerOf(gripSelector("Primary 1")),
       });
       assert
         .dom(source)
         .hasClass("--dragging", "pressing the grip initiates the row drag");
-      await dragEvent(source, "dragend", {
+      await dragEvent(gripSelector("Primary 1"), "dragend", {
         dataTransfer,
         ...centerOf(target),
       });
@@ -355,14 +359,15 @@ module(
       const source = rowSelector("Primary 1");
       const target = rowSelector("Primary 2");
       const dataTransfer = new DataTransfer();
-      const sourceCoordinates = centerOf(gripSelector("Primary 1"));
+      const sourceGrip = gripSelector("Primary 1");
+      const sourceCoordinates = centerOf(sourceGrip);
       const targetRect = find(target).getBoundingClientRect();
       const targetCoordinates = {
         clientX: targetRect.left + targetRect.width / 2,
         clientY: targetRect.top + 1,
       };
 
-      await dragEvent(source, "dragstart", {
+      await dragEvent(sourceGrip, "dragstart", {
         dataTransfer,
         ...sourceCoordinates,
       });
@@ -382,7 +387,7 @@ module(
         .dom(target)
         .hasClass("--drag-above", "the target uses the shared above indicator");
 
-      await dragEvent(source, "dragend", {
+      await dragEvent(sourceGrip, "dragend", {
         dataTransfer,
         ...sourceCoordinates,
       });
@@ -421,7 +426,8 @@ module(
         find(row).hasAttribute("data-drag-source") &&
         find(row).hasAttribute("data-drop-target");
       const dataTransfer = new DataTransfer();
-      const sourceCoordinates = centerOf(gripSelector("Primary 1"));
+      const sourceGrip = gripSelector("Primary 1");
+      const sourceCoordinates = centerOf(sourceGrip);
       const rowRect = find(row).getBoundingClientRect();
       const targetCoordinates = {
         clientX: rowRect.left + rowRect.width / 2,
@@ -434,7 +440,7 @@ module(
       );
 
       if (sharedDragIsRegistered) {
-        await dragEvent(row, "dragstart", {
+        await dragEvent(sourceGrip, "dragstart", {
           dataTransfer,
           ...sourceCoordinates,
         });
@@ -462,7 +468,7 @@ module(
           dataTransfer,
           ...targetCoordinates,
         });
-        await dragEvent(row, "dragend", {
+        await dragEvent(sourceGrip, "dragend", {
           dataTransfer,
           ...sourceCoordinates,
         });
@@ -501,14 +507,14 @@ module(
           "a mobile row carries an active drag-source registration"
         );
 
-      await dragEvent(row, "dragstart", {
+      await dragEvent(grip, "dragstart", {
         dataTransfer,
         ...centerOf(grip),
       });
       assert
         .dom(row)
         .hasClass("--dragging", "a drag pressed on the grip starts on mobile");
-      await dragEvent(row, "dragend", { dataTransfer, ...centerOf(grip) });
+      await dragEvent(grip, "dragend", { dataTransfer, ...centerOf(grip) });
     });
 
     test(`${ORACLE} moves a link down its own list with the arrow`, async function (assert) {

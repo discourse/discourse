@@ -196,6 +196,15 @@ A grip is what makes that safe on a touch screen. All three surfaces pass
 a press that was meant to scroll still scrolls. A surface that leaves its whole
 row draggable should not then offer that row on touch.
 
+The grip is also what keeps the rest of the row usable. `draggable="true"` is
+what makes a browser read a press-drag as a drag instead of a selection, so
+whichever element carries it has no selectable text — which is why `dragHandle`
+moves the registration onto the handle rather than merely narrowing where a drag
+may begin. The row stays the body throughout: it is what the state modifiers land
+on, what a target receives as `source.element`, and what the drag preview
+photographs. Style and assert on `data-drag-source`, never on `draggable`, since
+only the former is always on the row.
+
 Arrows and a drag do not have to reach the same destinations. The sidebar's
 arrows move a link within its own list, while its drag also moves links between
 the primary and "More menu" lists: the two lists render under separate headings,

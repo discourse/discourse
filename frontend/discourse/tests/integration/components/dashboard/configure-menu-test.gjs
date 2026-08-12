@@ -30,8 +30,8 @@ function rowSelector(id) {
 }
 
 // A drag starts on the grip rather than anywhere on the row, so a press meant to
-// scroll still scrolls. The events still go to the row, which is the registered
-// source; only the coordinates have to land on the grip.
+// scroll still scrolls and the row's own text stays selectable. The grip is what
+// carries the registration, so that is where the events go.
 function gripSelector(id) {
   return `${rowSelector(id)} .db-configure__drag-handle`;
 }
@@ -88,7 +88,6 @@ function indicatorBand() {
 
 /** Opens a drag and holds it over a target, without dropping. */
 async function hoverOver(sourceId, targetId, position) {
-  const source = rowSelector(sourceId);
   const target = rowSelector(targetId);
   const dataTransfer = new DataTransfer();
   const targetRect = find(target).getBoundingClientRect();
@@ -97,7 +96,10 @@ async function hoverOver(sourceId, targetId, position) {
     clientY: position === "above" ? targetRect.top + 1 : targetRect.bottom - 1,
   };
 
-  await dragEvent(source, "dragstart", {
+  // Dispatched on the grip, which is where the registration lives: a row that
+  // scopes its drag to a handle is not itself draggable, so the browser would
+  // never raise `dragstart` on it.
+  await dragEvent(gripSelector(sourceId), "dragstart", {
     dataTransfer,
     ...centerOf(gripSelector(sourceId)),
   });
@@ -105,7 +107,7 @@ async function hoverOver(sourceId, targetId, position) {
   await dragEvent(target, "dragover", { dataTransfer, ...coordinates });
 
   return () =>
-    dragEvent(source, "dragend", {
+    dragEvent(gripSelector(sourceId), "dragend", {
       dataTransfer,
       ...centerOf(gripSelector(sourceId)),
     });
@@ -226,14 +228,15 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     const source = rowSelector("reports");
     const target = rowSelector("traffic");
     const dataTransfer = new DataTransfer();
-    const sourceCoordinates = centerOf(gripSelector("reports"));
+    const sourceGrip = gripSelector("reports");
+    const sourceCoordinates = centerOf(sourceGrip);
     const targetRect = find(target).getBoundingClientRect();
     const targetCoordinates = {
       clientX: targetRect.left + targetRect.width / 2,
       clientY: targetRect.top + 1,
     };
 
-    await dragEvent(source, "dragstart", {
+    await dragEvent(sourceGrip, "dragstart", {
       dataTransfer,
       ...sourceCoordinates,
     });
@@ -254,7 +257,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       .dom(target)
       .hasClass("--drag-above", "the target uses the shared above indicator");
 
-    await dragEvent(source, "dragend", {
+    await dragEvent(sourceGrip, "dragend", {
       dataTransfer,
       ...sourceCoordinates,
     });
@@ -276,14 +279,15 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     const source = rowSelector("reports");
     const target = rowSelector("traffic");
     const dataTransfer = new DataTransfer();
-    const sourceCoordinates = centerOf(gripSelector("reports"));
+    const sourceGrip = gripSelector("reports");
+    const sourceCoordinates = centerOf(sourceGrip);
     const targetRect = find(target).getBoundingClientRect();
     const targetCoordinates = {
       clientX: targetRect.left + targetRect.width / 2,
       clientY: targetRect.top + 1,
     };
 
-    await dragEvent(source, "dragstart", {
+    await dragEvent(sourceGrip, "dragstart", {
       dataTransfer,
       ...sourceCoordinates,
     });
@@ -296,7 +300,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       offsetY: 1,
       ...targetCoordinates,
     });
-    await dragEvent(source, "dragend", {
+    await dragEvent(sourceGrip, "dragend", {
       dataTransfer,
       ...sourceCoordinates,
     });

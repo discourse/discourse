@@ -43,9 +43,9 @@
       border-bottom: 1px solid var(--primary-low);
     }
 
-    &[draggable="true"] {
-      cursor: grab;
-    }
+    /* The grip is what the row is grabbed by, and it carries its own cursor. A
+       row-wide `grab` would promise that the text beside it drags too, when
+       pressing there selects instead. */
 
     /* Rows carry their own separator, so "above row N" is drawn on row N-1's bottom
        edge instead, and nothing doubles up. The shared primitive's inserted lines are

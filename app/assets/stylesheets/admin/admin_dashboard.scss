@@ -157,7 +157,9 @@ $db-bar-height: var(--space-2);
     padding: calc(var(--space-3) / 2 + var(--space-half)) 0;
     border-top: 2px solid transparent;
     border-bottom: 2px solid transparent;
-    cursor: grab;
+
+    /* No row-wide `grab`: the grip carries its own cursor, and promising the
+       whole row drags would misdescribe a press on the label, which selects. */
 
     @include viewport.until(sm) {
       padding: calc(var(--space-5) / 2 + var(--space-half)) 0;

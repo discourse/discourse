@@ -319,24 +319,21 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     state.showHandle = true;
     await settled();
 
-    await simulateDrag("#src", "#tgt", {
-      dataTransfer: new DataTransfer(),
-      sourceCoordinates: centerOf("#body"),
-    });
-    assert.strictEqual(
-      state.starts,
-      0,
-      "after the handle arrives, pressing the row body does not start a drag"
-    );
+    // The handle takes over the registration, which is what the browser reads
+    // to decide a press can begin a drag at all. Asserting the attribute rather
+    // than a coordinate is the honest form: a press on the row body cannot
+    // produce a `dragstart` once the row is no longer draggable, so a synthetic
+    // one dispatched there would be testing a state the browser never reaches.
+    assert.dom("#src").doesNotHaveAttribute("draggable");
+    assert.dom("#handle").hasAttribute("draggable", "true");
 
     await simulateDrag("#src", "#tgt", {
       dataTransfer: new DataTransfer(),
-      sourceCoordinates: centerOf("#handle"),
     });
     assert.strictEqual(
       state.starts,
       1,
-      "after the handle arrives, pressing the handle starts a drag"
+      "after the handle arrives, a drag from it still reaches the source"
     );
   });
 
@@ -383,24 +380,20 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     state.showSecondHandle = true;
     await settled();
 
-    await simulateDrag("#src", "#tgt", {
-      dataTransfer: new DataTransfer(),
-      sourceCoordinates: centerOf("#first-handle"),
-    });
-    assert.strictEqual(
-      state.starts,
-      0,
-      "pressing the previous handle does not start a drag"
-    );
+    // The registration moves with the handle, so the superseded one stops being
+    // draggable and the replacement starts. Without the first assertion a stale
+    // registration would leave two draggable elements and the row would drag
+    // from a handle it no longer recognises.
+    assert.dom("#first-handle").doesNotHaveAttribute("draggable");
+    assert.dom("#second-handle").hasAttribute("draggable", "true");
 
     await simulateDrag("#src", "#tgt", {
       dataTransfer: new DataTransfer(),
-      sourceCoordinates: centerOf("#second-handle"),
     });
     assert.strictEqual(
       state.starts,
       1,
-      "pressing the replacement handle starts a drag"
+      "a drag from the replacement handle reaches the source"
     );
   });
 
@@ -432,18 +425,17 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       </template>
     );
 
-    await simulateDrag("#src", "#tgt", {
-      dataTransfer: new DataTransfer(),
-      sourceCoordinates: centerOf("#body"),
-    });
-    assert.strictEqual(
-      state.starts,
-      0,
-      "while the handle is configured, pressing the row body does not drag"
-    );
+    // While a handle is configured the row itself is not draggable, so a press
+    // on its body is an ordinary press — which is what leaves the text there
+    // selectable.
+    assert.dom("#src").doesNotHaveAttribute("draggable");
+    assert.dom("#handle").hasAttribute("draggable", "true");
 
     state.useHandle = false;
     await settled();
+
+    assert.dom("#handle").doesNotHaveAttribute("draggable");
+    assert.dom("#src").hasAttribute("draggable", "true");
 
     await simulateDrag("#src", "#tgt", {
       dataTransfer: new DataTransfer(),
@@ -542,10 +534,14 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       undefined,
       "the raw source element really was removed"
     );
+    // The source publishes the element it stands for in the payload, so the
+    // normalisation has something to name even once the raw one is gone and
+    // never reaches the fallback that would read as self. That is what makes a
+    // deleted raw element harmless rather than a refused drop.
     assert.strictEqual(
       normalisedElement,
-      find("#tgt"),
-      "the normalised payload does fall back to the target, which is what the raw check exists to avoid"
+      find("#src"),
+      "the normalised payload still names the source, not the target it fell through to"
     );
     assert.strictEqual(
       drops,

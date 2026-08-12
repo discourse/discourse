@@ -10,6 +10,7 @@ import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/eleme
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/prevent-unhandled";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import { DRAG_BODY } from "discourse/services/drag-and-drop";
 
 /** The pointer position as the underlying library reports it. */
 type DragInput = ElementGetFeedbackArgs["input"];
@@ -158,6 +159,13 @@ interface DDragAndDropSourceSignature {
        * querying the DOM. Changing it re-registers, so a ref that only arrives on
        * a later render still takes effect. Omit it and the whole element
        * initiates a drag.
+       *
+       * The handle becomes what carries `draggable="true"`, because that
+       * attribute is what makes a browser read a press-drag as a drag instead of
+       * a selection — leaving it on the row would cost exactly the text and
+       * controls a handle exists to keep usable. This element stays the body
+       * regardless: it is what the state markers land on, what a target receives
+       * as `source.element`, and what the drag preview photographs.
        */
       dragHandle?: Element;
 
@@ -165,8 +173,12 @@ interface DDragAndDropSourceSignature {
        * When `true`, the underlying draggable registration is detached. Used by
        * consumers that conditionally suppress dragging (e.g. read-only modes).
        * This, not `dragHandle`, is how to stop an element being dragged:
-       * `draggable="true"` is stamped on the host element either way, and
-       * `dragHandle` only narrows where a drag may begin.
+       * `dragHandle` only moves where a drag may begin, and something is always
+       * draggable while a registration stands.
+       *
+       * Style and assert on `data-drag-source`, never on `draggable`: the
+       * attribute sits on whichever element was registered, which a handle
+       * changes.
        */
       disabled?: boolean;
     };
@@ -316,6 +328,16 @@ export function resetDragSourcesForTesting() {
  *   caller driving this imperatively must re-register to change it.
  * @returns Cleanup function. Caller invokes it once on teardown.
  */
+/**
+ * The payload as a consumer should see it: the body a handled source publishes
+ * for the target and the service to read is routing, not data anyone wrote.
+ */
+function consumerData(data: Record<string, unknown> | null | undefined) {
+  const rest = { ...(data ?? {}) };
+  delete rest[DRAG_BODY];
+  return rest;
+}
+
 export function registerDragAndDropSource(
   element: HTMLElement,
   getArgsRef: () => DragAndDropSourceArgs
@@ -340,13 +362,23 @@ export function registerDragAndDropSource(
 
   const stopDeclaringEffect = declareEffectFor(element, getArgsRef);
 
+  // A handle takes the registration, and this element stays the body. The
+  // registration is what receives `draggable="true"`, and that attribute is what
+  // makes a browser read a press-drag as a drag rather than a selection — so
+  // leaving it on the body would cost the row the selectable text and operable
+  // controls a handle exists to preserve. It also makes the library's own
+  // `dragHandle` unnecessary: a press outside the registration cannot begin a
+  // drag at all, rather than beginning one the library then hit-tests and vetoes.
+  //
+  // Read once, here: the underlying library keeps this in the config captured at
+  // registration, so it does not see a later change the way the callbacks below
+  // see one through `getArgsRef`. Replacing the registration when the handle
+  // changes is the modifier's job. Cast because `dragHandle` is the broader
+  // `Element` for consumers, while the library needs an `HTMLElement`.
+  const registered = (getArgsRef().dragHandle ?? element) as HTMLElement;
+
   const cleanup = draggable({
-    element,
-    // Read once, here: the underlying library keeps this in the config captured
-    // at registration, so it does not see a later change the way the callbacks
-    // below see one through `getArgsRef`. Replacing the registration when the
-    // handle changes is the modifier's job.
-    dragHandle: getArgsRef().dragHandle,
+    element: registered,
     canDrag: ({ input }) => {
       const args = getArgsRef();
       if (!args.canDrag) {
@@ -402,8 +434,16 @@ export function registerDragAndDropSource(
       // An `Element` is photographed in place. The browser clamps the hotspot
       // to within the element, so `dragPreviewOffset` cannot push it off the
       // pointer here — it applies only to the render-function form above.
-      if (args.dragPreview) {
-        nativeSetDragImage(args.dragPreview, 0, 0);
+      //
+      // With a handle, the body stands in when the consumer named no preview:
+      // what the user is moving is the row, and the browser's own default would
+      // photograph the registration — a picture of the grip alone. Without one
+      // the two are the same element, so the browser's default already is the
+      // body and asking for it explicitly would only cost a call.
+      const preview =
+        args.dragPreview ?? (registered === element ? null : element);
+      if (preview) {
+        nativeSetDragImage(preview, 0, 0);
       }
     },
     getInitialData: () => {
@@ -412,7 +452,11 @@ export function registerDragAndDropSource(
       // Stamped last: the discriminator is the primitive's, and a payload
       // carrying its own `type` — which domain objects routinely do — would
       // otherwise decide which targets accept the drag.
-      return { ...resolved, type: args.type };
+      //
+      // The body rides along so a target can name the element the user is
+      // moving rather than the handle the library registered. It is read back
+      // out in `d-drag-and-drop-target.ts` and never surfaces to consumers.
+      return { ...resolved, type: args.type, [DRAG_BODY]: element };
     },
     onDragStart: (event) => {
       const args = getArgsRef();
@@ -420,7 +464,7 @@ export function registerDragAndDropSource(
       element.classList.add("--dragging");
       const sourcePayload = {
         type: args.type,
-        data: event.source.data,
+        data: consumerData(event.source.data),
         element,
       };
       args.onDragStart?.({
@@ -452,7 +496,7 @@ export function registerDragAndDropSource(
         // The library types every payload value as `unknown`; this key is
         // written by `getInitialData` above and is always the string `type`.
         type: event.source.data?.type as string,
-        data: event.source.data,
+        data: consumerData(event.source.data),
         element,
       };
       const location = event.location;

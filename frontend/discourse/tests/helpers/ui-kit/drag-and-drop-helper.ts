@@ -74,17 +74,18 @@ export function assertDragRegistered(
  * guaranteed to have fired. Bundling the wait here keeps it out of the test
  * bodies.
  *
- * @param selector - CSS selector for the event target.
+ * @param target - CSS selector for the event target, or the element itself when
+ *   the caller has already resolved it.
  * @param type - The drag event type (e.g. `"dragstart"`, `"drop"`).
  * @param options - Forwarded to `triggerEvent`; must include the shared
  *   `dataTransfer` and finite client coordinates (see {@link centerOf}).
  */
 export async function dragEvent(
-  selector: string,
+  target: string | Element,
   type: string,
   options?: Record<string, unknown>
 ) {
-  await triggerEvent(selector, type, options);
+  await triggerEvent(target as Element, type, options);
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
@@ -100,9 +101,13 @@ export async function dragEvent(
  * still-pending `onDrag` and never let it be observed). The source and target
  * center coordinates are computed via {@link centerOf}, then independently
  * overridden when a test needs a more precise pointer location. A bare center
- * only exercises the `after` branch of strict midpoint comparisons, and a drag
- * handle needs the event dispatched on its registered row while carrying the
- * handle's coordinates.
+ * only exercises the `after` branch of strict midpoint comparisons.
+ *
+ * `sourceSelector` names the row, the way a consumer and a reader both think of
+ * it. A row that scopes its drag to a handle registers the handle rather than
+ * itself, so the browser would dispatch `dragstart` there — this resolves that
+ * and dispatches on whichever element the registration actually sits on, so a
+ * caller never has to know which shape a surface used.
  *
  * @param sourceSelector - CSS selector for the source element.
  * @param targetSelector - CSS selector for the target element.
@@ -130,11 +135,25 @@ export async function simulateDrag(
 ) {
   const source = { ...centerOf(sourceSelector), ...sourceCoordinates };
   const target = { ...centerOf(targetSelector), ...targetCoordinates };
-  await dragEvent(sourceSelector, "dragstart", { dataTransfer, ...source });
+  const registered = registeredElementFor(sourceSelector);
+  await dragEvent(registered, "dragstart", { dataTransfer, ...source });
   await dragEvent(targetSelector, "dragenter", { dataTransfer, ...target });
   await dragEvent(targetSelector, "dragover", { dataTransfer, ...target });
   await dragEvent(targetSelector, "drop", { dataTransfer, ...target });
-  await dragEvent(sourceSelector, "dragend", { dataTransfer, ...source });
+  await dragEvent(registered, "dragend", { dataTransfer, ...source });
+}
+
+/**
+ * The element a row's drag registration sits on: its handle when the row scopes
+ * the drag to one, and the row itself otherwise.
+ *
+ * The browser dispatches `dragstart` at the element carrying `draggable`, and
+ * the drag library looks the registration up by exactly that element, so a
+ * synthetic drag aimed anywhere else routes nowhere and silently does nothing.
+ */
+function registeredElementFor(rowSelector: string) {
+  const row = document.querySelector(rowSelector);
+  return (row?.querySelector("[draggable]") ?? row) as Element;
 }
 
 /**

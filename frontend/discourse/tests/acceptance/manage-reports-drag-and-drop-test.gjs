@@ -214,7 +214,7 @@ acceptance("Manage reports drag and drop", function (needs) {
     );
   });
 
-  test(`${ORACLE} conditionally registers rows and leaves disabled rows without a grab cursor`, async function (assert) {
+  test(`${ORACLE} conditionally registers rows and puts the grab cursor on the grip`, async function (assert) {
     await openModal(this);
 
     const disabledRow = rowSelector("core_report:posts");
@@ -228,18 +228,21 @@ acceptance("Manage reports drag and drop", function (needs) {
         "draggable",
         "a disabled row is not stamped as draggable"
       );
-    // Paired with the enabled row below, because `auto` is what an unstyled
-    // element reports anyway: on its own this passes even if the rule never
-    // matches anything.
-    assert.strictEqual(
-      getComputedStyle(find(disabledRow)).cursor,
-      "auto",
-      "a disabled row does not receive the grab cursor"
-    );
+    // The grip is what a drag begins on, so it is what advertises the grab. The
+    // row must not: its text is selectable, and a `grab` cursor over text would
+    // promise a gesture pressing there does not perform.
     assert.strictEqual(
       getComputedStyle(find(rowSelector("core_report:signups"))).cursor,
+      "auto",
+      "an enabled row does not claim the grab cursor across its whole width"
+    );
+    // Paired with the row above, because `auto` is what an unstyled element
+    // reports anyway: on its own that assertion passes even if no rule is
+    // reached at all.
+    assert.strictEqual(
+      getComputedStyle(find(gripSelector("core_report:signups"))).cursor,
       "grab",
-      "an enabled row does receive it, so the rule is reached"
+      "the grip does, so the rule is reached"
     );
 
     assert
@@ -256,14 +259,15 @@ acceptance("Manage reports drag and drop", function (needs) {
     const source = rowSelector("core_report:signups");
     const target = rowSelector("core_report:topics");
     const dataTransfer = new DataTransfer();
-    const sourceCoordinates = centerOf(gripSelector("core_report:signups"));
+    const sourceGrip = gripSelector("core_report:signups");
+    const sourceCoordinates = centerOf(sourceGrip);
     const targetRect = find(target).getBoundingClientRect();
     const targetCoordinates = {
       clientX: targetRect.left + targetRect.width / 2,
       clientY: targetRect.top + 1,
     };
 
-    await dragEvent(source, "dragstart", {
+    await dragEvent(sourceGrip, "dragstart", {
       dataTransfer,
       ...sourceCoordinates,
     });
@@ -284,7 +288,7 @@ acceptance("Manage reports drag and drop", function (needs) {
       .dom(target)
       .hasClass("--drag-above", "the target uses the shared above indicator");
 
-    await dragEvent(source, "dragend", {
+    await dragEvent(sourceGrip, "dragend", {
       dataTransfer,
       ...sourceCoordinates,
     });
@@ -296,14 +300,15 @@ acceptance("Manage reports drag and drop", function (needs) {
     const source = rowSelector("core_report:signups");
     const target = rowSelector("core_report:topics");
     const dataTransfer = new DataTransfer();
-    const sourceCoordinates = centerOf(gripSelector("core_report:signups"));
+    const sourceGrip = gripSelector("core_report:signups");
+    const sourceCoordinates = centerOf(sourceGrip);
     const targetRect = find(target).getBoundingClientRect();
     const targetCoordinates = {
       clientX: targetRect.left + targetRect.width / 2,
       clientY: targetRect.top + 1,
     };
 
-    await dragEvent(source, "dragstart", {
+    await dragEvent(sourceGrip, "dragstart", {
       dataTransfer,
       ...sourceCoordinates,
     });
@@ -316,7 +321,7 @@ acceptance("Manage reports drag and drop", function (needs) {
       offsetY: 1,
       ...targetCoordinates,
     });
-    await dragEvent(source, "dragend", {
+    await dragEvent(sourceGrip, "dragend", {
       dataTransfer,
       ...sourceCoordinates,
     });

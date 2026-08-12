@@ -243,6 +243,39 @@ describe "Custom sidebar sections" do
     expect(sidebar).to have_no_section_link("Sidebar Categories")
   end
 
+  it "lets the user select text in a link's fields" do
+    # The row is a drag source, and a `draggable` element turns a press-drag into
+    # a drag rather than a selection. These rows are a form: the name and URL are
+    # text inputs whose contents a user edits and copies, so only the grip may be
+    # draggable.
+    #
+    # A selection inside a form control does not appear in `window.getSelection`,
+    # so this reads the input's own selection range.
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+    Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+
+    sign_in user
+    visit("/latest")
+    sidebar.edit_custom_section("My section")
+
+    url_field = ".sidebar-section-form-link input[name='link-url']"
+    # Leftwards and well past the field's edge: the press lands at its centre,
+    # which for a short value is beyond the end of the text, so a short sweep
+    # crosses no characters and would fail whether or not selection works. A
+    # drag running off the edge still selects back to the start.
+    drag_with_pointer(from: url_field, by: { x: -400 })
+
+    expect(
+      page.evaluate_script(
+        "(() => { const i = document.querySelector(\"#{url_field}\"); " \
+          "return i.selectionEnd - i.selectionStart; })()",
+      ),
+    ).to be > 0
+  end
+
   it "Sidebar link DnD oracle lets the user reorder links in a custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 

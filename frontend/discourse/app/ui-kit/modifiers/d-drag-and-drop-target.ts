@@ -11,6 +11,7 @@ import {
   ADOPTED_AS,
   ADOPTED_DRAG_TYPE,
   decorateExternalSource,
+  DRAG_BODY,
   type ExternalDragPayload,
 } from "discourse/services/drag-and-drop";
 
@@ -482,7 +483,9 @@ function sourceFromPDND(
   pdndSource: ElementDragPayload,
   element: Element
 ): DropTargetSource {
-  const data = pdndSource.data ?? {};
+  // Lifted out first, and out of every branch below: the body is routing, not
+  // payload, so no consumer should ever iterate onto it.
+  const { [DRAG_BODY]: body, ...data } = pdndSource.data ?? {};
   const adopted = data.type === ADOPTED_DRAG_TYPE;
   // The reserved keys are how a drag is routed, not payload, so they are lifted
   // out rather than left for a consumer iterating `data` to trip over.
@@ -496,7 +499,11 @@ function sourceFromPDND(
     // adoption above, which stamps its sentinel.
     type: (adopted ? adoptedAs : (data.type ?? null)) as string | null,
     data: adopted ? rest : data,
-    element: pdndSource.element ?? element ?? null,
+    // A source that registered a handle publishes the body it stands for, so a
+    // consumer receives the element the user is moving rather than the grip
+    // they happened to press. `acceptsSelf` compares against this, which is why
+    // a handled row still recognises a drop of itself.
+    element: (body as Element) ?? pdndSource.element ?? element ?? null,
     ...(adopted ? { native: native as ExternalDragPayload } : {}),
   };
 }
@@ -686,10 +693,14 @@ export function registerDragAndDropTarget(
       return false;
     }
 
-    // Compared against the raw source element rather than the normalised
-    // payload, whose `element` falls back to this one and would therefore read
-    // as self whenever the source element is absent.
-    if (args.acceptsSelf === false && source.element === element) {
+    // The body a handled source stands for, or the raw source element when
+    // there is none. Deliberately not the normalised payload, whose `element`
+    // falls back to this one and would therefore read as self whenever the
+    // source element is absent — and deliberately not the registered element
+    // alone, which for a handled source is a grip nested inside the row and so
+    // never equal to the target that is the row.
+    const moving = (source.data?.[DRAG_BODY] as Element) ?? source.element;
+    if (args.acceptsSelf === false && moving === element) {
       return false;
     }
 

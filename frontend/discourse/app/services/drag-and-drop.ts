@@ -55,6 +55,20 @@ export const ADOPTED_DRAG_TYPE = "discourse:adopted-native-drag";
 export const ADOPTED_AS = "adoptedAs";
 
 /**
+ * Where the dragged body travels when a source registered a drag handle.
+ *
+ * The handle is what the underlying library registers, so that the row keeps
+ * neither `draggable="true"` nor the unselectable text that attribute brings.
+ * The body is the row the handle stands for, and it is what a target reports as
+ * `source.element` and compares for `acceptsSelf`.
+ *
+ * Lives here with the rest of the shared vocabulary because both the source and
+ * the target need it, and importing one modifier from the other would close a
+ * cycle.
+ */
+export const DRAG_BODY = "discourse:dragBody";
+
+/**
  * The type a drag answers to in an `accepts` / `types` filter.
  *
  * For an adopted drag that is the adoption's own declared type rather than the
@@ -224,13 +238,18 @@ export default class DragAndDropService extends Service {
         if (this.isDestroying || this.isDestroyed) {
           return;
         }
+        // Lifted out rather than passed along: the body is how a drag is
+        // routed, not payload a reader of `currentDrag.data` should meet.
+        const { [DRAG_BODY]: body, ...data } = source.data ?? {};
         this.setCurrentDrag({
           // `source.data` is PDND's `Record<string, unknown>`; our own
           // `dDragAndDropSource` always stamps `type` as a string, and
           // `canMonitor` above only admits sources whose `type` is set.
-          type: dragTypeOf(source.data) as string,
-          data: source.data,
-          element: source.element,
+          type: dragTypeOf(data) as string,
+          data,
+          // The body a handled source stands for, so a reader sees the element
+          // being moved rather than the grip it was pressed by.
+          element: (body as HTMLElement) ?? source.element,
         });
       },
       onDrop: () => {
