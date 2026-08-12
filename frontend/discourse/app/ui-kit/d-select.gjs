@@ -62,12 +62,12 @@ export default class DSelect extends Component {
     // if an option has no value, event.target.value will be the content of the option
     // this is why we use this magic value to represent no value
     this.args.onChange(
-      event.target.value === NO_VALUE_OPTION ? undefined : event.target.value
+      event.target.value === NO_VALUE_OPTION ? null : event.target.value
     );
   }
 
   get hasSelectedValue() {
-    return this.args.value && this.args.value !== NO_VALUE_OPTION;
+    return this.htmlSelectValue !== NO_VALUE_OPTION;
   }
 
   get includeNone() {
