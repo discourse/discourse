@@ -1451,7 +1451,7 @@ RSpec.describe Admin::DashboardController do
           user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
           user_id: admin.id,
           session_id: "admin-session",
-          normalized_referrer: "ignored.example/return?from=latest",
+          normalized_referrer: "test.localhost/landing",
           normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:01:00",
@@ -1601,6 +1601,38 @@ RSpec.describe Admin::DashboardController do
               { "key" => "referrer", "value" => "", "label" => "Direct / unknown" },
             ],
           },
+        )
+      end
+
+      it "treats same-site referrers as internal navigation" do
+        same_site_pageview =
+          Fabricate(
+            :browser_pageview_event,
+            url: "https://test.localhost/same-site-full-load",
+            normalized_referrer: "test.localhost/previous-page",
+            session_id: "same-site-full-load",
+            source: BrowserPageviewEvent::SOURCE_BEACON,
+            created_at: "2026-05-11 11:00:00",
+          )
+
+        get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+        dimensions = response.parsed_body.fetch("dimensions")
+        top_url =
+          dimensions
+            .fetch("top_urls")
+            .find { |row| row["value"] == same_site_pageview.normalized_url }
+        entry_url =
+          dimensions
+            .fetch("entry_urls")
+            .find { |row| row["value"] == same_site_pageview.normalized_url }
+        referrer =
+          dimensions
+            .fetch("referrers")
+            .find { |row| row["value"] == same_site_pageview.normalized_referrer }
+
+        expect([response.status, top_url&.fetch("pageviews"), entry_url, referrer]).to eq(
+          [200, 1, nil, nil],
         )
       end
     end
