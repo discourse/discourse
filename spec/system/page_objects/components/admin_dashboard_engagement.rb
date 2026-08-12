@@ -68,6 +68,11 @@ module PageObjects
       def has_no_selected_whos_posting_category?(category)
         has_no_css?("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
       end
+
+      def has_headline?(title, summary)
+        has_css?("#{SECTION} .db-section__subintro h3", exact_text: title) &&
+          has_css?("#{SECTION} .db-section__subintro p", exact_text: summary)
+      end
     end
   end
 end

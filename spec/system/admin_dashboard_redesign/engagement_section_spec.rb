@@ -115,4 +115,40 @@ describe "Admin Dashboard Redesign | Engagement section" do
 
     expect(engagement).to have_no_selected_whos_posting_category(category_alpha)
   end
+
+  it "shows an admin an objective summary when every engagement metric improves",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    Fabricate(:user_visit_daily_rollup, date: Date.new(2026, 5, 1), dau: 1, mau: 2)
+    Fabricate(:user_visit_daily_rollup, date: Date.new(2026, 6, 1), dau: 2, mau: 2)
+
+    prior_engaged_user = Fabricate(:user, created_at: Time.zone.local(2026, 1, 1))
+    Fabricate(
+      :user_action,
+      user: prior_engaged_user,
+      action_type: UserAction::LIKE,
+      created_at: Time.zone.local(2026, 5, 1),
+    )
+
+    2.times do
+      current_engaged_user = Fabricate(:user, created_at: Time.zone.local(2026, 1, 1))
+      Fabricate(
+        :user_action,
+        user: current_engaged_user,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 6, 1),
+      )
+    end
+
+    Fabricate(:user, created_at: Time.zone.local(2026, 5, 1))
+    Fabricate.times(2, :user, created_at: Time.zone.local(2026, 6, 1))
+    Discourse.cache.clear
+
+    dashboard.visit
+
+    expect(engagement).to have_headline(
+      "Engagement is up in the last 30 days",
+      "Stickiness, daily engagement, and new signups have all improved, showing that more " \
+        "members are joining and participating in your community.",
+    )
+  end
 end
