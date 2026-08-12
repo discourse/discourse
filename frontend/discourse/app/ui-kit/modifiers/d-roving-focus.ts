@@ -308,16 +308,22 @@ interface DRovingFocusArgs {
    */
   entryFocus?: DRovingFocusEntry;
   /**
-   * Active mode only — whether activating an already-selected item *removes* it, as a
-   * multi-select toggle does. When true, a `"first"` fallback skips selected items, because
-   * seeding one would arm the very first Enter to discard a value the reader never navigated to.
-   * Arrow keys still reach those items, where removing them is deliberate.
+   * Whether {@link DRovingFocusArgs.entryFocus}'s first-item fallback skips items the consumer
+   * has marked. Default `false`.
    *
-   * Constrains only the fallback, never a restored selection: the reader chose that row
-   * themselves and can see it is selected, so it is seeded even where activating it would
-   * remove it. Default `false`.
+   * The case it exists for is a multi-select whose Enter *toggles*: seeding the fallback onto an
+   * already-selected row arms the very first Enter to discard a value the reader never navigated
+   * to. Arrow keys still reach those rows, where removing them is deliberate.
+   *
+   * Stated as the focus instruction rather than as the activation semantics behind it, because
+   * what activation does is the consumer's business and the modifier only needs to know where
+   * not to land.
+   *
+   * Constrains the fallback only, never a restored selection: the reader chose that row
+   * themselves and can see it is marked, so it is seeded even where activating it would remove
+   * it.
    */
-  activationRemovesSelected?: boolean;
+  fallbackSkipsMarked?: boolean;
 }
 
 interface DRovingFocusSignature {
@@ -425,7 +431,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #restoreLostFocus = true;
   #activeClass: string | null = null;
   #entryFocus: DRovingFocusEntry = "selected-or-first";
-  #activationRemovesSelected = false;
+  #fallbackSkipsMarked = false;
 
   /** The ARIA anchor: the container (focus) or controller (active). */
   #listenElement: HTMLElement | null = null;
@@ -452,6 +458,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /** Set once a group has reported that it can draw no focus indicator, so it warns once. */
   #warnedNoIndicator = false;
+
+  #warnedUnreachableActiveDescendant = false;
 
   /**
    * Focus mode — the item that last held focus, and its index among ALL items, navigable or not.
@@ -970,7 +978,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.#restoreLostFocus = named.restoreLostFocus ?? true;
     this.#activeClass = named.activeClass ?? null;
     this.#entryFocus = named.entryFocus ?? "selected-or-first";
-    this.#activationRemovesSelected = named.activationRemovesSelected ?? false;
+    this.#fallbackSkipsMarked = named.fallbackSkipsMarked ?? false;
     // The read itself is the whole point: consuming the tag is what makes a changed
     // `itemsKey` re-run `modify()` and reconcile the cursor. The value is never needed,
     // so it is discarded rather than stored.
@@ -1326,6 +1334,75 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     if (target) {
       this.#setActive(target);
     }
+  }
+
+  /** The ids in a space-separated ARIA id-reference list. */
+  #ariaIdList(el: HTMLElement, attribute: string): string[] {
+    return (el.getAttribute(attribute) ?? "").split(/\s+/).filter(Boolean);
+  }
+
+  /**
+   * Whether `aria-activedescendant` on the controller is actually allowed to point at `target`.
+   * The ARIA specification permits exactly three relationships, and a widget satisfying none of
+   * them is broken for assistive technology while looking perfectly fine on screen, because the
+   * visible highlight is drawn by something else entirely.
+   *
+   * @param controller - The element carrying `aria-activedescendant`.
+   * @param target - The item it points at.
+   */
+  #activeDescendantIsReachable(
+    controller: HTMLElement,
+    target: HTMLElement
+  ): boolean {
+    if (controller.contains(target)) {
+      return true;
+    }
+    if (this.#ariaIdList(controller, "aria-owns").includes(target.id)) {
+      return true;
+    }
+    // The third relationship is open only to the textual roles, explicit or implicit.
+    const role = controller.getAttribute("role");
+    const textual = role
+      ? role === "combobox" || role === "textbox" || role === "searchbox"
+      : controller instanceof HTMLInputElement ||
+        controller instanceof HTMLTextAreaElement;
+    if (!textual) {
+      return false;
+    }
+    const doc = controller.ownerDocument;
+    return this.#ariaIdList(controller, "aria-controls").some((id) => {
+      const controlled = doc.getElementById(id);
+      return (
+        !!controlled &&
+        (controlled.contains(target) ||
+          this.#ariaIdList(controlled, "aria-owns").includes(target.id))
+      );
+    });
+  }
+
+  /**
+   * Warns once when the cursor points somewhere `aria-activedescendant` may not reach. Silent on
+   * screen and total for a screen reader, so nothing else surfaces it.
+   */
+  #warnUnreachableActiveDescendant(target: HTMLElement): void {
+    const controller = this.#listenElement;
+    if (!controller || this.#activeDescendantIsReachable(controller, target)) {
+      return;
+    }
+    runInDebug(() => {
+      if (this.#warnedUnreachableActiveDescendant) {
+        return;
+      }
+      this.#warnedUnreachableActiveDescendant = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        `dRovingFocus: the controller points aria-activedescendant at an item it does not ` +
+          `contain, does not aria-own, and does not reach through aria-controls, which ARIA ` +
+          `does not permit. Assistive technology will not follow the cursor. Put the items ` +
+          `inside the controller, or add aria-owns, or give a combobox/textbox/searchbox ` +
+          `controller an aria-controls pointing at the list.`
+      );
+    });
   }
 
   /**
@@ -1767,6 +1844,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         target.classList.add(this.#activeClass);
       }
       this.#listenElement?.setAttribute("aria-activedescendant", id);
+      this.#warnUnreachableActiveDescendant(target);
       this.#scrollActiveIntoView(target);
     } else {
       this.#promoteTabStop(target);
@@ -1854,13 +1932,25 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   /**
-   * The item the consumer has marked as its chosen value, or nothing.
+   * Whether the consumer has marked this item as its chosen value. Three spellings, because
+   * three pattern families disagree: listboxes and tabs use `aria-selected`, radio groups use
+   * `aria-checked`, and navigation-shaped groups use `aria-current`.
    *
-   * Three spellings, because three pattern families disagree: listboxes and tabs use
-   * `aria-selected`, radio groups use `aria-checked`, and navigation-shaped groups use
-   * `aria-current`. They are searched in that order rather than by document position, so a group
-   * carrying more than one keeps a stable answer: an explicit selection outranks a merely
-   * current row wherever each happens to sit.
+   * @param el - The item to test.
+   */
+  #isMarked(el: HTMLElement): boolean {
+    return (
+      el.getAttribute("aria-selected") === "true" ||
+      el.getAttribute("aria-checked") === "true" ||
+      el.hasAttribute("aria-current")
+    );
+  }
+
+  /**
+   * The item the consumer has marked as its chosen value, or nothing. The three spellings are
+   * searched in attribute order rather than document order, so a group carrying more than one
+   * keeps a stable answer: an explicit selection outranks a merely current row wherever each
+   * happens to sit.
    *
    * @param items - The candidates, in DOM order.
    * @param eligible - Extra predicate, so the caller can require navigability without paying for
@@ -2044,13 +2134,13 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   /**
-   * The first item the cursor may safely start on, honouring `activationRemovesSelected`.
+   * The first item the cursor may safely start on.
    *
    * Returns nothing when {@link DRovingFocusArgs.entryFocus} has no first-item fallback, and —
-   * when `activationRemovesSelected` is set — when every *mounted navigable* item is selected, which a
-   * windowed list reaches while unselected rows still exist offscreen. The cursor then stays empty
-   * until an Arrow moves it, rather than falling back to a row whose activation would discard a
-   * value.
+   * when {@link DRovingFocusArgs.fallbackSkipsMarked} is set — when every *mounted navigable*
+   * item is marked, which a windowed list reaches while unmarked rows still exist offscreen. The
+   * cursor then stays empty until an Arrow moves it, rather than landing somewhere the reader
+   * would not want the first Enter to go.
    *
    * @param items - The navigable items to choose from.
    * @returns The item to seed the cursor on, or `undefined` to leave it empty.
@@ -2059,10 +2149,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     if (!this.#fallsBackToFirst()) {
       return undefined;
     }
-    if (!this.#activationRemovesSelected) {
+    if (!this.#fallbackSkipsMarked) {
       return items[0];
     }
-    return items.find((el) => el.getAttribute("aria-selected") !== "true");
+    return items.find((el) => !this.#isMarked(el));
   }
 
   /**
