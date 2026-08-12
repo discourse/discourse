@@ -634,6 +634,7 @@ module(
             role="listbox"
             {{dRovingFocus
               selectionMode="active"
+              entryFocus="none"
               controllerElement=".ctrl"
               itemSelector="[role=option]"
               activeClass="--active"
@@ -682,6 +683,7 @@ module(
             role="listbox"
             {{dRovingFocus
               selectionMode="active"
+              entryFocus="none"
               controllerElement=".search"
               itemSelector="[role=option]"
               activeClass="--active"

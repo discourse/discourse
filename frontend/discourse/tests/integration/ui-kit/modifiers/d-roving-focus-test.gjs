@@ -288,6 +288,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             onRegisterApi=register
@@ -355,6 +356,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             onRegisterApi=register
@@ -389,6 +391,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -435,6 +438,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             onActivate=(fn onActivate)
@@ -479,6 +483,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             itemsKey=state.key
@@ -514,7 +519,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .hasAttribute("id", activeId, "ArrowDown reseeds the first live option");
   });
 
-  test("active mode: autoActivateFirst highlights the first item on insert", async function (assert) {
+  test("active mode: entryFocus=first highlights the first item on insert", async function (assert) {
     await render(
       <template>
         <input class="search" role="combobox" />
@@ -525,7 +530,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option">A</button>
@@ -567,7 +572,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           {{#each state.items key="id" as |item|}}
@@ -620,7 +625,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           {{#each state.items key="id" as |item|}}
@@ -663,7 +668,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       );
   });
 
-  test("active mode: autoActivateSelected prefers the selected item over the first", async function (assert) {
+  test("active mode: entryFocus=selected-or-first prefers the selected item over the first", async function (assert) {
     await render(
       <template>
         <input class="search" role="combobox" />
@@ -674,8 +679,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
-            autoActivateSelected=true
+            entryFocus="selected-or-first"
           }}
         >
           <button class="a" role="option" aria-selected="false">A</button>
@@ -697,9 +701,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".b").hasAttribute("id", activeId);
   });
 
-  test("active mode: autoActivateSelected seeds a list that would otherwise start with no cursor", async function (assert) {
-    // `autoActivateFirst` is deliberately false for lists that wait for the user to act. That
-    // rule exists to avoid highlighting an arbitrary row; a restored selection is not arbitrary.
+  test("active mode: entryFocus=selected-or-none restores a selection without seeding a first item", async function (assert) {
+    // A list that waits for the reader to act takes no first-item fallback. That rule exists to
+    // avoid highlighting an arbitrary row; a restored selection is not arbitrary.
     await render(
       <template>
         <input class="search" role="combobox" />
@@ -710,8 +714,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=false
-            autoActivateSelected=true
+            entryFocus="selected-or-none"
           }}
         >
           <button class="a" role="option" aria-selected="false">A</button>
@@ -723,7 +726,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".b").hasClass("--active", "the selection is restored");
   });
 
-  test("active mode: autoActivateSelected leaves the cursor empty when nothing is selected", async function (assert) {
+  test("active mode: entryFocus=selected-or-none leaves the cursor empty when nothing is selected", async function (assert) {
     await render(
       <template>
         <input class="search" role="combobox" />
@@ -734,8 +737,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=false
-            autoActivateSelected=true
+            entryFocus="selected-or-none"
           }}
         >
           <button class="a" role="option" aria-selected="false">A</button>
@@ -754,7 +756,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       );
   });
 
-  test("active mode: autoActivateSelected does not move a cursor the user has set", async function (assert) {
+  test("active mode: entryFocus=selected-or-first does not move a cursor the user has set", async function (assert) {
     // `itemsKey` is what makes this test mean what its name says: without a reconcile after the
     // arrow key, nothing could possibly drag the cursor back and the assertion would only be
     // restating that ArrowDown moved it.
@@ -773,8 +775,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             itemSelector="[role=option]"
             activeClass="--active"
             itemsKey=state.key
-            autoActivateFirst=true
-            autoActivateSelected=true
+            entryFocus="selected-or-first"
           }}
         >
           <button class="a" role="option" aria-selected="false">A</button>
@@ -803,7 +804,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .doesNotHaveClass("--active", "and the preference does not drag it back");
   });
 
-  test("active mode: autoActivateFirst re-seeds the first item when the set changes", async function (assert) {
+  test("active mode: entryFocus=first re-seeds the first item when the set changes", async function (assert) {
     class State {
       @tracked items = ["a", "b", "c"];
       @tracked key = 0;
@@ -830,7 +831,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             itemSelector="[role=option]"
             itemsKey=state.key
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           {{#each state.items key="@identity" as |item|}}
@@ -855,7 +856,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".opt-x").hasAttribute("id", activeId);
   });
 
-  test("active mode: without autoActivateFirst nothing is highlighted until an Arrow key", async function (assert) {
+  test("active mode: entryFocus=none highlights nothing until an Arrow key", async function (assert) {
     await render(
       <template>
         <input class="search" role="combobox" />
@@ -863,6 +864,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -890,6 +892,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -935,6 +938,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -980,6 +984,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             onActivate=(fn onActivate)
@@ -1015,6 +1020,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -1450,6 +1456,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           style="display: grid; grid-template-columns: repeat(3, 40px);"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -1605,6 +1612,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -1694,6 +1702,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             orientation="horizontal"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -2099,6 +2108,35 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .hasAttribute("tabindex", "-1", "and the first item is not");
   });
 
+  test("focus mode: entryFocus=first ignores a marked item", async function (assert) {
+    await render(
+      <template>
+        {{! Deliberately unroled: the modifier reads no roles, and the lint rule forbids
+          buttons inside a toolbar role even though that is what the pattern is made of. }}
+        <div
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector="[data-control]"
+            entryFocus="first"
+          }}
+        >
+          <button class="a" data-control>A</button>
+          <button class="b" data-control aria-current="page">B</button>
+          <button class="c" data-control>C</button>
+        </div>
+      </template>
+    );
+
+    // Toolbar and menubar enter on the first control unconditionally. A button marking the
+    // current view is not a selection, and must not take the tab stop off the first one.
+    assert
+      .dom(".a")
+      .hasAttribute("tabindex", "0", "the first control keeps the tab stop");
+    assert
+      .dom(".b")
+      .hasAttribute("tabindex", "-1", "the marked control does not steal it");
+  });
+
   test("focus mode: the tab stop prefers the checked radio over the first", async function (assert) {
     await render(
       <template>
@@ -2371,6 +2409,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
           }}
@@ -2399,6 +2438,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           {{dRovingFocus
             selectionMode="active"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             onActiveChange=noop
@@ -2432,7 +2472,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass=state.cls
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option">A</button>
@@ -2467,7 +2507,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option">A</button>
@@ -2503,7 +2543,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option">A</button>
@@ -2558,7 +2598,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option" tabindex="-1">A</button>
