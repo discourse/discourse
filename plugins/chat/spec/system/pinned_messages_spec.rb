@@ -245,6 +245,9 @@ RSpec.describe "Chat pinned messages" do
     expect(page).to have_css(".chat-pinned-bar")
 
     find(".chat-pinned-bar__see-all").click
+    expect(page).to have_css(".chat-pinned-message", text: "Important message")
+    expect(page).to have_no_css(".chat-pinned-message__unpin")
+
     find(".chat-pinned-messages-list__dismiss").click
 
     # the panel closes and the bar is dismissed (hidden) until a newer pin
@@ -300,6 +303,69 @@ RSpec.describe "Chat pinned messages" do
     expect(page).to have_no_css(".c-routes.--channel-pins")
     expect(page).to have_no_css(".chat-pinned-bar")
     expect(channel.pinned_messages.count).to eq(2)
+  end
+
+  context "when unpinning from the pinned messages panel" do
+    fab!(:pin) do
+      Fabricate(:chat_pinned_message, chat_message: message, chat_channel: channel, user: admin)
+    end
+    fab!(:second_message) do
+      Fabricate(:chat_message, chat_channel: channel, message: "Second message")
+    end
+    fab!(:second_pin) do
+      Fabricate(
+        :chat_pinned_message,
+        chat_message: second_message,
+        chat_channel: channel,
+        user: admin,
+      )
+    end
+
+    it "lets a pin manager unpin a message from the panel" do
+      chat_page.visit_channel(channel)
+      find(".chat-pinned-bar__see-all").click
+      expect(page).to have_css(".c-routes.--channel-pins")
+
+      row = find(".chat-pinned-message", text: "Important message")
+      row.hover
+      expect(row).to have_css(
+        ".chat-pinned-message__unpin[aria-label='#{I18n.t("js.chat.unpin_message")}']",
+      )
+      row.find(".chat-pinned-message__unpin").click
+
+      expect(page).to have_css(
+        "#a11y-announcements-polite",
+        text: I18n.t("js.chat.pinned_messages.message_unpinned"),
+        visible: :all,
+      )
+
+      expect(page).to have_no_css(".chat-pinned-message", text: "Important message")
+      expect(page).to have_css(".chat-pinned-message", text: "Second message")
+
+      # focus moves to the next row instead of falling back to <body>
+      expect(page).to have_css(".chat-pinned-message__unpin:focus")
+
+      find(".c-navbar__close-pins-button").click
+
+      expect(page).to have_no_css(
+        ".chat-message-container[data-id='#{message.id}'] .chat-message-info__pinned",
+      )
+
+      # the remaining pin still counts: the bar must not vanish
+      expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Second message")
+    end
+
+    it "lets a pin manager unpin a message on mobile", mobile: true do
+      chat_page.visit_channel(channel)
+      find(".chat-pinned-bar__see-all").click
+      expect(page).to have_css(".c-routes.--channel-pins")
+
+      find(".chat-pinned-message", text: "Important message").find(
+        ".chat-pinned-message__unpin",
+      ).click
+
+      expect(page).to have_no_css(".chat-pinned-message", text: "Important message")
+    end
   end
 
   context "when viewing pinned messages attribution" do
