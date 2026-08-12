@@ -765,12 +765,6 @@ importers:
         specifier: npm:@discourse/types@*
         version: '@discourse/types@2026.6.0-06d03da3'
 
-  plugins/discourse-calendar:
-    dependencies:
-      discourse:
-        specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.7.0-ded677e0'
-
   plugins/discourse-captcha:
     dependencies:
       discourse:
@@ -794,6 +788,12 @@ importers:
       discourse:
         specifier: npm:@discourse/types@*
         version: '@discourse/types@2026.6.0-06d03da3'
+
+  plugins/discourse-events:
+    dependencies:
+      discourse:
+        specifier: npm:@discourse/types@*
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-gamification:
     dependencies:
