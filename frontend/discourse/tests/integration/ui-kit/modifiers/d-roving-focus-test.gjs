@@ -287,7 +287,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -355,7 +355,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -390,7 +390,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -437,7 +437,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -482,7 +482,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -526,7 +526,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -568,7 +568,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -621,7 +621,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -675,7 +675,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -710,7 +710,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -733,7 +733,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -770,7 +770,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -826,7 +826,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             itemsKey=state.key
@@ -863,7 +863,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -891,7 +891,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -937,7 +937,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -983,7 +983,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -1019,7 +1019,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -1455,7 +1455,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           role="listbox"
           style="display: grid; grid-template-columns: repeat(3, 40px);"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -1611,7 +1611,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -1701,7 +1701,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             orientation="horizontal"
             controllerElement=".search"
@@ -2408,7 +2408,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -2437,7 +2437,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -2468,7 +2468,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass=state.cls
@@ -2492,9 +2492,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .doesNotHaveClass("--active", "and the previous one is swept off");
   });
 
-  test("switching selectionMode leaves no state from the previous mode", async function (assert) {
+  test("switching focusStrategy leaves no state from the previous mode", async function (assert) {
     const state = new (class {
-      @tracked mode = "active";
+      @tracked mode = "active-descendant";
     })();
 
     await render(
@@ -2503,7 +2503,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode=state.mode
+            focusStrategy=state.mode
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -2518,7 +2518,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     assert.dom(".a").hasClass("--active", "active mode seeded a highlight");
 
-    state.mode = "focus";
+    state.mode = "roving-tabindex";
     await settled();
 
     assert
@@ -2539,7 +2539,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -2594,7 +2594,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"

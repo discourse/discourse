@@ -633,7 +633,7 @@ module(
             class="list"
             role="listbox"
             {{dRovingFocus
-              selectionMode="active"
+              focusStrategy="active-descendant"
               entryFocus="none"
               controllerElement=".ctrl"
               itemSelector="[role=option]"
@@ -682,7 +682,7 @@ module(
             class="list"
             role="listbox"
             {{dRovingFocus
-              selectionMode="active"
+              focusStrategy="active-descendant"
               entryFocus="none"
               controllerElement=".search"
               itemSelector="[role=option]"

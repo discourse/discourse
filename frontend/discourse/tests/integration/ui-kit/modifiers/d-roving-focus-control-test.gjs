@@ -20,7 +20,7 @@ module(
           <div
             role="listbox"
             {{dRovingFocus
-              selectionMode="active"
+              focusStrategy="active-descendant"
               entryFocus="none"
               controllerElement=".controller"
               itemSelector="[role=option]"
@@ -79,7 +79,7 @@ module(
           <div
             role="listbox"
             {{dRovingFocus
-              selectionMode="active"
+              focusStrategy="active-descendant"
               entryFocus="none"
               controllerElement=".controller"
               itemSelector="[role=option]"
