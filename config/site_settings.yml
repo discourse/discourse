@@ -2364,6 +2364,9 @@ email:
     list_type: simple
     default: ""
     area: "email"
+  ignore_by_title_regex:
+    default: ""
+    area: "email"
   mailgun_api_key:
     default: ""
     regex: '^((key-)?\h{32}|\h{32}-\h{8}-\h{8})$'
