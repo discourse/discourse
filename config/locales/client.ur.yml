@@ -6195,6 +6195,31 @@ ur:
       new_features:
         title: "نیا کیا ہے؟"
         check_for_updates: "اپ ڈیٹس کے لیے چیک کریں۔"
+      site_traffic_explorer:
+        pageviews: "صفحہ کے مشاہدات"
+        view_more: "مزید دیکھیں"
+        cards:
+          pages: "صفحات"
+          visitors: "زائرین"
+        columns:
+          referrers: "حوالہ دہندہ"
+          countries: "ملک"
+          top_urls: "URL"
+          browsers: "براؤزر"
+          ip_addresses: "IP ایڈریس"
+        filters:
+          referrer: "حوالہ دہندہ"
+          country: "ملک"
+          browser: "براؤزر"
+          ip: "IP ایڈریس"
+        metrics:
+          pageviews:
+            label: "صفحہ کے مشاہدات"
+          logged_in_share:
+            label: "لاگ ان شدہ شراکت"
+        series:
+          logged_in_human: "لاگ ان شدہ"
+          anonymous_human: "گمنام"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا:"

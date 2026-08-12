@@ -7,9 +7,11 @@
 fa_IR:
   admin_js:
     admin:
+      calendar: "رویدادها"
       site_settings:
         categories:
           discourse_post_event: "رویداد دیسکورس"
+          discourse_calendar: "رویدادها"
   js:
     notifications:
       titles:

@@ -4013,6 +4013,23 @@ hy:
         default_value: "Լռելյայն"
       search:
         title: "Որոնում"
+      site_traffic_explorer:
+        pageviews: "Էջադիտումներ"
+        view_more: "Դիտել ավելին"
+        cards:
+          visitors: "Այցելուներ"
+        columns:
+          top_urls: "URL"
+          browsers: "Բրաուզեր"
+          ip_addresses: "IP հասցե"
+        filters:
+          browser: "Բրաուզեր"
+          ip: "IP հասցե"
+        metrics:
+          pageviews:
+            label: "Էջադիտումներ"
+        series:
+          anonymous_human: "Անանուն"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"

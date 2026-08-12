@@ -7,11 +7,11 @@
 el:
   admin_js:
     admin:
-      calendar: "Ημερολόγιο και Εκδηλώσεις"
+      calendar: "Συμβάντα"
       site_settings:
         categories:
           discourse_post_event: "Εκδήλωση Discourse"
-          discourse_calendar: "Ημερολόγιο και Εκδηλώσεις"
+          discourse_calendar: "Συμβάντα"
       web_hooks:
         calendar_event:
           group_name: "Εκδήλωση ημερολογίου"
@@ -38,9 +38,7 @@ el:
           chat: "Συνομιλία"
       invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
       preferences:
-        all_events: "Ημερολόγιο Discourse - Όλες οι Εκδηλώσεις"
         all_events_description: "Όλες οι εκδηλώσεις του φόρουμ"
-        my_events: "Ημερολόγιο Discourse - Οι Εκδηλώσεις μου"
         my_events_description: "Εκδηλώσεις στις οποίες θα παραστείτε ή ενδιαφέρεστε"
       disable_holiday: "Απενεργοποίηση"
       enable_holiday: "Ενεργοποίηση"

@@ -3644,6 +3644,14 @@ bg:
         default_value: "По подразбиране"
       search:
         title: "Търсене"
+      site_traffic_explorer:
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP адрес"
+        filters:
+          ip: "IP адрес"
+        series:
+          anonymous_human: "Анонимен"
       dashboard:
         title: "Работен плот"
         version: "Версия"

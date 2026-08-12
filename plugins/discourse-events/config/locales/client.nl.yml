@@ -7,11 +7,11 @@
 nl:
   admin_js:
     admin:
-      calendar: "Kalender en evenementen"
+      calendar: "Gebeurtenissen"
       site_settings:
         categories:
           discourse_post_event: "Discourse-evenement"
-          discourse_calendar: "Kalender en evenementen"
+          discourse_calendar: "Gebeurtenissen"
       web_hooks:
         calendar_event:
           group_name: "Kalenderevenement"
@@ -38,9 +38,7 @@ nl:
           chat: "Chat"
       invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
       preferences:
-        all_events: "Discourse-kalender - Alle evenementen"
         all_events_description: "Alle forumevenementen"
-        my_events: "Discourse-kalender - Mijn evenementen"
         my_events_description: "Evenementen waar je naartoe gaat of in geïnteresseerd bent"
       on_holiday: "Op feestdag"
       disable_holiday: "Uitschakelen"

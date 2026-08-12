@@ -210,6 +210,9 @@ lv:
         other: "pirms %{count} dienām"
   password_reset:
     title: "Atjaunot paroli"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonīmi"
   reviewable_score_types:
     needs_approval:
       title: "Nepieciešama apstiprināšana"

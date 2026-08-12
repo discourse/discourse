@@ -4639,6 +4639,24 @@ da:
       new_features:
         title: "Hvad er nyt?"
         check_for_updates: "Se efter opdateringer"
+      site_traffic_explorer:
+        pageviews: "Sidevisninger"
+        view_more: "Se mere"
+        cards:
+          pages: "Sider"
+          visitors: "Besøgende"
+        columns:
+          top_urls: "URL"
+          browsers: "Browser"
+          ip_addresses: "IP-adresse"
+        filters:
+          browser: "Browser"
+          ip: "IP-adresse"
+        metrics:
+          pageviews:
+            label: "Sidevisninger"
+        series:
+          anonymous_human: "Anonym"
       dashboard:
         title: "Dashboard"
         last_updated: "instrumentbræt opdateret:"

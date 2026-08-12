@@ -1029,6 +1029,14 @@ fr:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "système d'exploitation inconnu"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Utilisateurs connectés"
+      anonymous: "Anonymes"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Une erreur s'est produite lors de la modification de votre adresse e-mail. L'adresse est peut-être déjà utilisée ?"
     doesnt_exist: "Cette adresse e-mail n'est pas associée à votre compte."

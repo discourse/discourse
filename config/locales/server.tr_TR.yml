@@ -992,6 +992,13 @@ tr_TR:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "bilinmeyen işletim sistemi"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonim"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "E-posta adresinizi değiştirirken bir hata oluştu. Belki de adres zaten kullanılıyordur?"
     doesnt_exist: "Bu e-posta adresi hesabınızla ilişkili değil."

@@ -7,11 +7,11 @@
 ru:
   admin_js:
     admin:
-      calendar: "Календарь и события"
+      calendar: "События"
       site_settings:
         categories:
           discourse_post_event: "Мероприятие Discourse"
-          discourse_calendar: "Календарь и события"
+          discourse_calendar: "События"
       web_hooks:
         calendar_event:
           group_name: "Событие календаря"
@@ -38,9 +38,7 @@ ru:
           chat: "Чат"
       invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
       preferences:
-        all_events: "Discourse Календарь - Все события"
         all_events_description: "Все события форума"
-        my_events: "Discourse Календарь — Мои события"
         my_events_description: "Мероприятия, которые вы собираетесь посетить или которыми вы интересуетесь."
       on_holiday: "Выходные"
       disable_holiday: "Отключить"

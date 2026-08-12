@@ -2221,7 +2221,8 @@ de:
       bookmark_after_notification:
         title: "Nachdem eine Lesezeichen-Erinnerungsbenachrichtigung gesendet wurde:"
       send_shortcut:
-        enter: "Enter"
+        title: "Nachrichten in Chat-ähnlichen Eingabefeldern senden mit:"
+        enter: "Eingabetaste"
         meta_enter: "%{meta_key} + Eingabetaste"
       like_notification_frequency:
         title: "Benachrichtigung für erhaltene „Gefällt mir“ anzeigen"
@@ -6766,6 +6767,33 @@ de:
       new_features:
         title: "Was ist neu?"
         check_for_updates: "Nach Aktualisierungen suchen"
+      site_traffic_explorer:
+        pageviews: "Seitenaufrufe"
+        view_more: "Mehr anzeigen"
+        cards:
+          pages: "Seiten"
+          visitors: "Besucher"
+        columns:
+          referrers: "Referrer"
+          countries: "Land"
+          top_urls: "URL"
+          browsers: "Browser"
+          ip_addresses: "IP-Adresse"
+        filters:
+          referrer: "Referrer"
+          country: "Land"
+          browser: "Browser"
+          ip: "IP-Adresse"
+        metrics:
+          pageviews:
+            label: "Seitenaufrufe"
+          logged_in_share:
+            label: "Anteil angemeldeter Mitglieder"
+          bounce_rate:
+            label: "Absprungrate"
+        series:
+          logged_in_human: "Angemeldet"
+          anonymous_human: "Anonym"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aktualisiert:"

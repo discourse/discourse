@@ -5024,6 +5024,24 @@ zh_TW:
       new_features:
         title: "有什麼最新消息？"
         check_for_updates: "檢查更新"
+      site_traffic_explorer:
+        pageviews: "頁面瀏覽次數"
+        view_more: "查看更多"
+        cards:
+          pages: "頁面"
+          visitors: "訪客"
+        columns:
+          top_urls: "網址"
+          browsers: "瀏覽器"
+          ip_addresses: "IP 位址"
+        filters:
+          browser: "瀏覽器"
+          ip: "IP 位址"
+        metrics:
+          pageviews:
+            label: "頁面瀏覽次數"
+        series:
+          anonymous_human: "匿名"
       dashboard:
         title: "控制台"
         last_updated: "儀表板更新："

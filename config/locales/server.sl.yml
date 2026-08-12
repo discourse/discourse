@@ -480,6 +480,13 @@ sl:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimni"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Prišlo je do napake med spremembo vašega e-naslova. Mogoče je e-naslov že uporabljen?"
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."

@@ -992,6 +992,13 @@ nl:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "onbekend besturingssysteem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anoniem"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Er is een fout opgetreden bij het wijzigen van je e-mailadres. Misschien is het adres al in gebruik?"
     doesnt_exist: "Dat e-mailadres is niet aan je account gekoppeld."

@@ -7,11 +7,11 @@
 hu:
   admin_js:
     admin:
-      calendar: "Naptár és események"
+      calendar: "Események"
       site_settings:
         categories:
           discourse_post_event: "Discourse esemény"
-          discourse_calendar: "Naptár és események"
+          discourse_calendar: "Események"
   js:
     notifications:
       titles:

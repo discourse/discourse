@@ -4523,6 +4523,19 @@ nb_NO:
         default_value: "Forvalg"
       search:
         title: "Søk"
+      site_traffic_explorer:
+        pageviews: "Sidevisninger"
+        view_more: "Vis mer"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP-adresse"
+        filters:
+          ip: "IP-adresse"
+        metrics:
+          pageviews:
+            label: "Sidevisninger"
+        series:
+          anonymous_human: "Anonym"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashbord oppdatert:"

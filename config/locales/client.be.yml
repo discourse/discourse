@@ -2218,6 +2218,23 @@ be:
         default_value: "Прадвызначаная"
       search:
         title: "Пошук"
+      site_traffic_explorer:
+        pageviews: "Прагляды"
+        view_more: "Паказаць больш"
+        cards:
+          visitors: "Наведвальнікі"
+        columns:
+          top_urls: "URL-адрас"
+          browsers: "браўзэр"
+          ip_addresses: "IP-адрас"
+        filters:
+          browser: "браўзэр"
+          ip: "IP-адрас"
+        metrics:
+          pageviews:
+            label: "Прагляды"
+        series:
+          anonymous_human: "ананімны"
       dashboard:
         title: "Панэль кіравання"
         last_updated: "Панэль кіравання абноўлена:"

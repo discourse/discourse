@@ -1195,6 +1195,15 @@ uk:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "невідома операційна система"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Ви увійшли"
+      anonymous: "Анонімний"
+      likely_crawler: "Ймовірні сканери"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Під час зміни адреси електронної пошти сталася помилка. Можливо, адреса вже використовується?"
     doesnt_exist: "Ця адреса е-пошти не пов’язана з вашим обліковим записом."

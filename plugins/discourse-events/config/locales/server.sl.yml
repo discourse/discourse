@@ -26,7 +26,6 @@ sl:
         %{logs}
         ```
   site_settings:
-    calendar_enabled: "Omogoči vtičnik discourse-calendar. To bo omogočilo dodajanje oznak [calendar][/calendar] v prvo objavo teme."
     displayed_invitees_limit: "Omeji število povabljencev na dogodek."
     display_post_event_date_on_topic_title: "Prikaže datum dogodka ob koncu naslova teme."
     discourse_post_event_allowed_on_groups: "Grupe z dovoljenjem za ustvarjanje dogodkov."

@@ -1029,6 +1029,14 @@ de:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "unbekanntes Betriebssystem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Angemeldet"
+      anonymous: "Anonym"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Es gab einen Fehler beim Ändern deiner E-Mail-Adresse. Wird vielleicht diese Adresse bereits verwendet?"
     doesnt_exist: "Diese E-Mail-Adresse ist nicht mit deinem Konto verknüpft."

@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ug:
+  admin_js:
+    admin:
+      calendar: "پائالىيەت"
+      site_settings:
+        categories:
+          discourse_calendar: "پائالىيەت"
   js:
     discourse_automation:
       triggerables:

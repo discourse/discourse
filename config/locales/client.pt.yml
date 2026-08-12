@@ -4820,6 +4820,21 @@ pt:
       new_features:
         title: "O que é novo?"
         check_for_updates: "Procurar por atualizações"
+      site_traffic_explorer:
+        pageviews: "Exibições de Página"
+        view_more: "Ver mais"
+        cards:
+          visitors: "Visitantes"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "Endereço IP"
+        filters:
+          ip: "Endereço IP"
+        metrics:
+          pageviews:
+            label: "Exibições de Página"
+        series:
+          anonymous_human: "Anónimo"
       dashboard:
         title: "Painel de Administração"
         last_updated: "Painel atualizado:"

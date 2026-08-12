@@ -987,6 +987,13 @@ es:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operativo desconocido"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anónimas"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Hubo un problema al cambiar tu dirección de correo electrónico. ¿Quizás la dirección ya está en uso?"
     doesnt_exist: "Ese correo electrónico no está asociado a tu cuenta."

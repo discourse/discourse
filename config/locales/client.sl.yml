@@ -3933,6 +3933,15 @@ sl:
         default_value: "Privzeto"
       search:
         title: "Išči"
+      site_traffic_explorer:
+        pageviews: "Ogledov strani"
+        columns:
+          top_urls: "URL"
+        metrics:
+          pageviews:
+            label: "Ogledov strani"
+        series:
+          anonymous_human: "Anonimni"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"

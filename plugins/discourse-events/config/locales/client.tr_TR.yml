@@ -7,11 +7,11 @@
 tr_TR:
   admin_js:
     admin:
-      calendar: "Takvim ve Etkinlikler"
+      calendar: "Olaylar"
       site_settings:
         categories:
           discourse_post_event: "Discourse Etkinliği"
-          discourse_calendar: "Takvim ve Etkinlikler"
+          discourse_calendar: "Olaylar"
       web_hooks:
         calendar_event:
           group_name: "Takvim Etkinliği"
@@ -38,9 +38,7 @@ tr_TR:
           chat: "Sohbet"
       invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
       preferences:
-        all_events: "Etkinlik Takvimi - Tüm Etkinlikler"
         all_events_description: "Tüm forum etkinlikleri"
-        my_events: "Etkinlik Takvimi - Etkinliklerim"
         my_events_description: "Katılacağınız veya ilgilendiğiniz etkinlikler"
       on_holiday: "Tatilde"
       disable_holiday: "Devre dışı bırak"

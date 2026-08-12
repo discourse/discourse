@@ -4034,6 +4034,24 @@ ko:
         default_value: "기본"
       search:
         title: "검색"
+      site_traffic_explorer:
+        pageviews: "페이지뷰"
+        view_more: "자세히 보기"
+        cards:
+          pages: "페이지"
+          visitors: "방문자"
+        columns:
+          top_urls: "URL"
+          browsers: "브라우저"
+          ip_addresses: "IP 주소"
+        filters:
+          browser: "브라우저"
+          ip: "IP 주소"
+        metrics:
+          pageviews:
+            label: "페이지뷰"
+        series:
+          anonymous_human: "익명"
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 업데이트됨:"

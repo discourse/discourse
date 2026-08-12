@@ -968,6 +968,13 @@ it:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operativo sconosciuto"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimo"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Si è verificato un errore durante la modifica del tuo indirizzo email. Forse l'indirizzo è già in uso?"
     doesnt_exist: "Questo indirizzo email non è associato al tuo account."

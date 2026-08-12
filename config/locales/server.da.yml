@@ -708,6 +708,13 @@ da:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "ukendt operativsystem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonym"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Der opstod en fejl under ændringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     doesnt_exist: "Denne e-mailadresse er ikke knyttet til din konto."

@@ -5776,6 +5776,24 @@ vi:
       new_features:
         title: "Có gì mới?"
         check_for_updates: "Kiểm tra cập nhật"
+      site_traffic_explorer:
+        pageviews: "Số lượt xem"
+        view_more: "Mở rộng"
+        cards:
+          pages: "Trang"
+          visitors: "Khách ghé thăm"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "Địa chỉ IP"
+        filters:
+          ip: "Địa chỉ IP"
+        metrics:
+          pageviews:
+            label: "Số lượt xem"
+          bounce_rate:
+            label: "Tỷ lệ thoát (Bounce rate)"
+        series:
+          anonymous_human: "Ẩn danh"
       dashboard:
         title: "Bảng điều khiển"
         last_updated: "Đã cập nhật trang tổng quan:"

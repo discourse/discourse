@@ -44,7 +44,6 @@ ru:
   site_settings:
     map_events_to_color: "Назначать цвет каждому тегу или категории."
     map_events_title: "Перезаписывает «События» в заголовке боковой панели «Предстоящие события» для каждой категории."
-    calendar_enabled: "Включить плагин discourse-calendar. Это добавит поддержку тега [calendar][/calendar] в первой публикации темы."
     discourse_post_event_enabled: "Включает функции событий. Примечание: также необходимо включить {{setting:calendar_enabled}}."
     displayed_invitees_limit: "Ограничивать количество приглашений, отображаемых в мероприятии ."
     display_post_event_date_on_topic_title: "Отображать дату мероприятия после названия темы."

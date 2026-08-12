@@ -7,9 +7,11 @@
 da:
   admin_js:
     admin:
+      calendar: "Hændelser"
       site_settings:
         categories:
           discourse_post_event: "Discourse Begivenhed"
+          discourse_calendar: "Hændelser"
   js:
     discourse_automation:
       triggerables:

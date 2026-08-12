@@ -6518,6 +6518,34 @@ zh_CN:
       new_features:
         title: "最新变化"
         check_for_updates: "检查更新"
+      site_traffic_explorer:
+        pageviews: "页面浏览量"
+        view_more: "展开"
+        cards:
+          pages: "页面"
+          visitors: "访客"
+        columns:
+          referrers: "推荐人"
+          countries: "国家/地区"
+          top_urls: "URL"
+          browsers: "浏览器"
+          ip_addresses: "IP 地址"
+        filters:
+          referrer: "推荐人"
+          country: "国家/地区"
+          browser: "浏览器"
+          ip: "IP 地址"
+        metrics:
+          pageviews:
+            label: "页面浏览量"
+          logged_in_share:
+            label: "登录成员占比"
+          bounce_rate:
+            label: "跳出率"
+        series:
+          logged_in_human: "登录成员"
+          anonymous_human: "匿名"
+          likely_crawler: "疑似爬虫"
       dashboard:
         title: "信息中心"
         last_updated: "信息中心更新："

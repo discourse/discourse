@@ -7,9 +7,11 @@
 fi:
   admin_js:
     admin:
+      calendar: "Tapahtumat"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
+          discourse_calendar: "Tapahtumat"
   js:
     notifications:
       titles:

@@ -779,6 +779,14 @@ ur:
       macos: "مَیک اَو اَیس"
       windows: "مائیکروسافٹ وِنڈَوز"
       unknown: "نامعلوم آپریٹنگ سسٹم"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "لاگ ان شدہ"
+      anonymous: "گمنام"
+    browsers:
+      edge: "مائیکروسافٹ اَیج"
+      firefox: "فائر فاکس"
+      safari: "سفاری"
   change_email:
     error: "آپ کا اِی میل ایڈریس تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ شاید یہ ایڈریس پہلے سے استعمال میں ہے؟"
     doesnt_exist: "وہ ای میل پتہ آپ کے اکاؤنٹ سے وابستہ نہیں ہے۔"

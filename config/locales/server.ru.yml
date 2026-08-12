@@ -1144,6 +1144,13 @@ ru:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "Неизвестная операционная система"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Анонимные просмотры"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "При смене адреса электронной почты произошла ошибка. Возможно, этот адрес уже используется?"
     doesnt_exist: "Этот адрес электронной почты не связан с вашим аккаунтом."

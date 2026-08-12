@@ -1127,6 +1127,13 @@ cs:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznámý operační systém"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonymní"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
     doesnt_exist: "Tato e-mailová adresa není spojena s vaším účtem."

@@ -898,6 +898,13 @@ ja:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "不明なオペレーティングシステム"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "匿名ユーザー"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
     doesnt_exist: "そのメールアドレスは、あなたのアカウントに関連付けられていません。"

@@ -453,6 +453,12 @@ be:
       macos: "Macos"
       windows: "Microsoft Windows,"
       unknown: "невядомая аперацыйная сістэма"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "ананімны"
+    browsers:
+      edge: "Microsoft Эдж"
+      firefox: "Firefox"
   change_email:
     error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
     error_staged: "Падчас змянення адраса электроннай пошты адбылася памылка. Гэты адрас ужо выкарыстоўваецца зарэгістраваным карыстальнікам."

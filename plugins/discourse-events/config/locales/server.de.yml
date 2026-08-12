@@ -44,7 +44,6 @@ de:
   site_settings:
     map_events_to_color: "Weise jedem Schlagwort oder jeder Kategorie eine Farbe zu."
     map_events_title: "Überschreibt „Ereignisse“ im Titel der Seitenleiste „Anstehende Ereignisse“ pro Kategorie."
-    calendar_enabled: "Aktiviere das discourse-calendar-Plug-in. Dadurch wird Unterstützung für einen [calendar][/calendar]-Tag im ersten Beitrag eines Themas hinzugefügt."
     discourse_post_event_enabled: "Aktiviert die Ereignisfunktionen. Hinweis: {{setting:calendar_enabled}} muss ebenfalls aktiviert sein."
     displayed_invitees_limit: "Begrenzt die Anzahl der eingeladenen Personen, die für ein Ereignis angezeigt werden."
     display_post_event_date_on_topic_title: "Zeigt das Datum des Ereignisses nach dem Thementitel an."

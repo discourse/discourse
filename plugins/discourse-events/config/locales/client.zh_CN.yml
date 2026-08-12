@@ -7,11 +7,11 @@
 zh_CN:
   admin_js:
     admin:
-      calendar: "日历与活动"
+      calendar: "活动"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "日历与活动"
+          discourse_calendar: "活动"
       web_hooks:
         calendar_event:
           group_name: "日历活动"
@@ -51,9 +51,7 @@ zh_CN:
           rsvp_body: "在活动开始前、进行中和结束后与其他与会者建立联系。"
       invite_user_notification: "%{username} 邀请您加入：%{description}"
       preferences:
-        all_events: "Discourse 日历 - 所有事件"
         all_events_description: "所有论坛事件"
-        my_events: "Discourse 日历 - 我的事件"
         my_events_description: "您将要参加或感兴趣的事件"
       on_holiday: "休假"
       disable_holiday: "禁用"

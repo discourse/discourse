@@ -3072,6 +3072,18 @@ lv:
         default_value: "Noklusējums"
       search:
         title: "Meklēt"
+      site_traffic_explorer:
+        pageviews: "Lapu skatījumi"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP adrese"
+        filters:
+          ip: "IP adrese"
+        metrics:
+          pageviews:
+            label: "Lapu skatījumi"
+        series:
+          anonymous_human: "Anonīmi"
       dashboard:
         title: "Administrācijas panelis"
         version: "Versija"

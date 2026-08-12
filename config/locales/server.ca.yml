@@ -587,6 +587,13 @@ ca:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anònim"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."

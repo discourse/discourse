@@ -6557,6 +6557,24 @@ cs:
       new_features:
         title: "Co je nového?"
         check_for_updates: "Aktualizovat"
+      site_traffic_explorer:
+        pageviews: "Zobrazení stránky"
+        view_more: "Zobrazit více"
+        cards:
+          pages: "Stránek"
+          visitors: "Návštěvníci"
+        columns:
+          top_urls: "URL"
+          browsers: "Prohlížeč"
+          ip_addresses: "IP adresa"
+        filters:
+          browser: "Prohlížeč"
+          ip: "IP adresa"
+        metrics:
+          pageviews:
+            label: "Zobrazení stránky"
+        series:
+          anonymous_human: "Anonymní"
       dashboard:
         title: "Nástěnka"
         last_updated: "Nástěnka aktualizována:"

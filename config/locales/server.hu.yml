@@ -983,6 +983,13 @@ hu:
       macos: "MacOS"
       windows: "Microsoft Windows"
       unknown: "ismeretlen operációs rendszer"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Névtelen"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Hiba történt az e-mail-cím módosításakor. Lehet, hogy már használatban van?"
     doesnt_exist: "Ez az e-mail-cím nincs a fiókjához társítva."

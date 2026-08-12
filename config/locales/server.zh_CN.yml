@@ -955,6 +955,15 @@ zh_CN:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "未知操作系统"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "登录成员"
+      anonymous: "匿名"
+      likely_crawler: "疑似爬虫"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "更改您的电子邮件地址时出错。也许该地址已被使用？"
     doesnt_exist: "该电子邮件地址未与您的帐户关联。"

@@ -5719,6 +5719,26 @@ ja:
       new_features:
         title: "新機能"
         check_for_updates: "アップデートを確認"
+      site_traffic_explorer:
+        pageviews: "ページビュー"
+        view_more: "さらに表示"
+        cards:
+          pages: "ページ"
+          visitors: "訪問者"
+        columns:
+          countries: "国"
+          top_urls: "URL"
+          browsers: "ブラウザ"
+          ip_addresses: "IP アドレス"
+        filters:
+          country: "国"
+          browser: "ブラウザ"
+          ip: "IP アドレス"
+        metrics:
+          pageviews:
+            label: "ページビュー"
+        series:
+          anonymous_human: "匿名ユーザー"
       dashboard:
         title: "ダッシュボード"
         last_updated: "ダッシュボードが更新されました:"

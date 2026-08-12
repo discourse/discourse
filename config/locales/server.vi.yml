@@ -621,6 +621,9 @@ vi:
       mobile: "Thiết bị di động"
       windows: "Máy tính Windows"
       unknown: "thiết bị không rõ"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Ẩn danh"
   change_email:
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
     error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."

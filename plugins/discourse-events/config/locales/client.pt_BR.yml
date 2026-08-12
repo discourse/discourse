@@ -7,11 +7,11 @@
 pt_BR:
   admin_js:
     admin:
-      calendar: "Calendário e Eventos"
+      calendar: "Eventos"
       site_settings:
         categories:
           discourse_post_event: "Evento do Discourse"
-          discourse_calendar: "Calendário e Eventos"
+          discourse_calendar: "Eventos"
   js:
     notifications:
       titles:
