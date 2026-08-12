@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -22,6 +23,7 @@ export default class ChatPinnedMessagesList extends Component {
   @service chatApi;
   @service currentUser;
   @service router;
+  @service siteSettings;
 
   @tracked pinnedMessages = this.args.pinnedMessages || [];
 
@@ -34,6 +36,8 @@ export default class ChatPinnedMessagesList extends Component {
       channel.channelMessageBusLastId
     );
 
+    // @pinnedMessages can be stale (the drawer caches its route model)
+    this.#loadPins(channel);
     this.#markPinsAsRead(channel);
 
     return () => {
@@ -79,6 +83,9 @@ export default class ChatPinnedMessagesList extends Component {
   routeModels = (pin) => {
     return [...this.args.channel.routeModels, pin.message.id];
   };
+  #inFlightUnpins = new Set();
+  #loadSequence = 0;
+
   #lastViewedPinsAtSnapshot =
     this.args.channel.currentUserMembership?.lastViewedPinsAt;
 
@@ -88,6 +95,12 @@ export default class ChatPinnedMessagesList extends Component {
 
   get barDismissed() {
     return hasPinsDismissal(this.args.channel);
+  }
+
+  get canManagePins() {
+    return (
+      this.siteSettings.chat_pinned_messages && this.args.channel?.canManagePins
+    );
   }
 
   // mirror the visited pin in the bar (the jump's scroll wouldn't update it)
@@ -110,7 +123,67 @@ export default class ChatPinnedMessagesList extends Component {
     this.router.transitionTo("chat.channel", ...channel.routeModels);
   }
 
+  // channel-wide pin state (count, message.pinned) is only ever set from
+  // server data (bus events, #loadPins) — no optimistic math here
+  @action
+  async unpin(pin) {
+    const channel = this.args.channel;
+    const messageId = pin.message.id;
+
+    if (this.#inFlightUnpins.has(messageId)) {
+      return;
+    }
+    // kept on success until a pin event re-pins the message, so fetches
+    // started before the unpin can't restore the row
+    this.#inFlightUnpins.add(messageId);
+
+    this.pinnedMessages = this.pinnedMessages.filter(
+      (existingPin) => existingPin.message.id !== messageId
+    );
+
+    try {
+      await this.chatApi.unpinMessage(channel.id, messageId);
+    } catch (error) {
+      this.#inFlightUnpins.delete(messageId);
+
+      if (this.isDestroying) {
+        return;
+      }
+      popupAjaxError(error);
+    }
+
+    await this.#loadPins(channel);
+  }
+
+  async #loadPins(channel) {
+    const sequence = ++this.#loadSequence;
+
+    try {
+      const pinnedMessages = await this.chatApi.pinnedMessages(channel);
+
+      if (sequence !== this.#loadSequence) {
+        return;
+      }
+
+      // the channel outlives this panel, so keep its count fresh even when
+      // the panel closed while the request was in flight
+      channel.pinnedMessagesCount = pinnedMessages.length;
+
+      if (this.isDestroying) {
+        return;
+      }
+
+      this.pinnedMessages = pinnedMessages.filter(
+        (pin) => !this.#inFlightUnpins.has(pin.message.id)
+      );
+    } catch {
+      // best-effort refresh
+    }
+  }
+
   handlePinMessage(data) {
+    this.#inFlightUnpins.delete(data.chat_message_id);
+
     const existingPin = this.pinnedMessages.find(
       (pin) => pin.message.id === data.chat_message_id
     );
@@ -119,9 +192,7 @@ export default class ChatPinnedMessagesList extends Component {
       return;
     }
 
-    this.chatApi.pinnedMessages(this.args.channel).then((pinnedMessages) => {
-      this.pinnedMessages = pinnedMessages;
-
+    this.#loadPins(this.args.channel).then(() => {
       // If current user pinned this message, update timestamp so it doesn't show as unseen
       if (
         this.args.channel.currentUserMembership &&
@@ -153,31 +224,43 @@ export default class ChatPinnedMessagesList extends Component {
     >
       <div class="chat-pinned-messages-list__items">
         {{#each this.pinnedMessages as |pin|}}
-          <LinkTo
-            @route="chat.channel.near-message"
-            @models={{this.routeModels pin}}
-            class="chat-pinned-message"
-            {{on "click" (fn this.visitPin pin)}}
-          >
-            <ChatMessage
-              @message={{this.decorateMessage pin}}
-              @context="pinned"
-              @includeSeparator={{false}}
-              @interactive={{false}}
+          <div class="chat-pinned-message">
+            <LinkTo
+              @route="chat.channel.near-message"
+              @models={{this.routeModels pin}}
+              class="chat-pinned-message__link"
+              {{on "click" (fn this.visitPin pin)}}
             >
-              <:top>
-                <div class="chat-pinned-message__pinned-by">
-                  {{#if (this.isUnseen pin)}}
-                    {{dIcon
-                      "thumbtack"
-                      class="chat-pinned-message__pinned-by-icon"
-                    }}
-                  {{/if}}
-                  <span>{{this.pinnedByText pin}}</span>
-                </div>
-              </:top>
-            </ChatMessage>
-          </LinkTo>
+              <ChatMessage
+                @message={{this.decorateMessage pin}}
+                @context="pinned"
+                @includeSeparator={{false}}
+                @interactive={{false}}
+              >
+                <:top>
+                  <div class="chat-pinned-message__pinned-by">
+                    {{#if (this.isUnseen pin)}}
+                      {{dIcon
+                        "thumbtack"
+                        class="chat-pinned-message__pinned-by-icon"
+                      }}
+                    {{/if}}
+                    <span>{{this.pinnedByText pin}}</span>
+                  </div>
+                </:top>
+              </ChatMessage>
+            </LinkTo>
+
+            {{#if this.canManagePins}}
+              <DButton
+                @icon="thumbtack-slash"
+                @title="chat.unpin_message"
+                @ariaLabel="chat.unpin_message"
+                @action={{fn this.unpin pin}}
+                class="btn-transparent chat-pinned-message__unpin"
+              />
+            {{/if}}
+          </div>
         {{else}}
           <div class="chat-pinned-messages-list__empty">
             {{i18n "chat.no_pinned_messages"}}
