@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import {
@@ -17,10 +17,9 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 const PROBLEMS_CHECK_MINUTES = 1;
 
 export default class AdminDashboardController extends Controller {
-  @service router;
   @service siteSettings;
+  @service exception;
   @service loadingSlider;
-  @controller("exception") exceptionController;
 
   @tracked loadingProblems = false;
   @tracked problemsFetchedAt;
@@ -275,8 +274,7 @@ export default class AdminDashboardController extends Controller {
           this.setProperties(properties);
         })
         .catch((e) => {
-          this.exceptionController.set("thrown", e.jqXHR);
-          this.router.replaceWith("exception");
+          this.exception.show(e.jqXHR);
         })
         .finally(() => {
           this.set("isLoading", false);
