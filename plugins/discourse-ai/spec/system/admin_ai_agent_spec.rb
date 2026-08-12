@@ -66,10 +66,41 @@ RSpec.describe "Admin AI agent configuration" do
     expect(page).not_to have_selector("input[name='toolOptions.Read.got_deleted']", visible: :all)
   end
 
+  it "saves and reloads selected subagents" do
+    child = Fabricate(:ai_agent, name: "Individual fact checker", enabled: true)
+    parent = Fabricate(:ai_agent, name: "Lead fact checker")
+
+    agent_editor_page.visit_edit(parent)
+    expect(agent_editor_page).to have_no_subagent_option(parent)
+    agent_editor_page.select_subagent(child)
+
+    expect(agent_editor_page).to have_selected_subagent(child)
+    expect(agent_editor_page).to have_subagent_summary(1)
+    expect(agent_editor_page).to have_floating_actions
+
+    agent_editor_page.form.submit
+    expect(page).to have_content(I18n.t("js.discourse_ai.ai_agent.saved"))
+    expect(parent.reload.subagent_ids).to eq([child.id])
+
+    agent_editor_page.visit_edit(parent)
+
+    expect(agent_editor_page).to have_selected_subagent(child)
+    expect(agent_editor_page).to have_subagent_summary(1)
+
+    child.update!(enabled: false)
+    agent_editor_page.visit_edit(parent)
+
+    expect(agent_editor_page).to have_disabled_subagent(child)
+
+    agent_editor_page.clear_subagents.form.submit
+    expect(parent.reload.subagent_ids).to eq([])
+  end
+
   it "will not allow deletion or editing of system agents" do
     visit "/admin/plugins/discourse-ai/ai-agents/#{DiscourseAi::Agents::Agent.system_agents.values.first}/edit"
     expect(page).not_to have_selector(".ai-agent-editor__delete")
     expect(form.field("system_prompt")).to be_disabled
+    expect(agent_editor_page).to have_subagent_selector_disabled
   end
 
   it "starts an unsaved custom agent by duplicating a system agent" do

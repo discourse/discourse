@@ -20,6 +20,7 @@ class AiAgent < ActiveRecord::Base
 
   # places a hard limit, so per site we cache a maximum of 500 classes
   MAX_AGENTS_PER_SITE = 500
+  MAX_SUBAGENTS = 20
 
   validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
   validates :description, presence: true, length: { maximum: 2000 }
@@ -55,6 +56,8 @@ class AiAgent < ActiveRecord::Base
 
   validate :tools_can_not_be_duplicated
   validate :native_tools_require_supported_forced_llm
+  validate :subagent_ids_are_valid
+  validate :subagents_can_not_use_spawn_agent
 
   has_many :rag_document_fragments, dependent: :destroy, as: :target
   has_many :ai_agent_mcp_servers, dependent: :destroy
@@ -70,9 +73,11 @@ class AiAgent < ActiveRecord::Base
   has_many :uploads, through: :upload_references
 
   before_validation :set_default_compression_threshold
+  before_validation :normalize_subagent_ids
 
   before_update :regenerate_rag_fragments
   before_destroy :ensure_not_system
+  after_destroy :remove_destroyed_agent_from_subagents
 
   def self.agent_cache
     @agent_cache ||= DiscourseAi::MultisiteHash.new("agent_cache")
@@ -87,6 +92,24 @@ class AiAgent < ActiveRecord::Base
       agent_cache[:value].select { |p| p.enabled }
     else
       agent_cache[:value]
+    end
+  end
+
+  def self.subagent_tool_token_count
+    agent_cache[:subagent_tool_token_count] ||= begin
+      tokenizer = DiscourseAi::Tokenizer::OpenAiCl100kTokenizer
+      catalog =
+        AiAgent
+          .ordered
+          .limit(MAX_AGENTS_PER_SITE)
+          .pluck(:id, :name, :description)
+          .sort_by do |id, name, description|
+            -tokenizer.size("#{id}: #{name} #{description.to_s.truncate(300)}")
+          end
+          .first(MAX_SUBAGENTS)
+          .to_h { |id, name, description| [id, { name: name, description: description }] }
+
+      DiscourseAi::Agents::Tools::SpawnAgent.class_instance_from_catalog(nil, catalog).token_count
     end
   end
 
@@ -241,6 +264,11 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
+  def subagent_ids=(ids)
+    @subagent_ids_contained_invalid_value = Array(ids).any? { |id| normalize_subagent_id(id).nil? }
+    super
+  end
+
   def class_instance
     attributes = %i[
       id
@@ -265,6 +293,7 @@ class AiAgent < ActiveRecord::Base
       max_turn_tokens
       compression_threshold
       require_approval
+      subagent_ids
     ]
 
     instance_attributes = {}
@@ -312,6 +341,7 @@ class AiAgent < ActiveRecord::Base
       end
 
     reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
+    reserved_names << DiscourseAi::Agents::Tools::SpawnAgent.name if subagent_ids.present?
     enabled_mcp_server_assignments =
       ai_agent_mcp_servers
         .includes(:ai_mcp_server)
@@ -450,6 +480,79 @@ class AiAgent < ActiveRecord::Base
 
   private
 
+  def normalize_subagent_ids
+    self[:subagent_ids] = Array(self[:subagent_ids])
+      .filter_map { |id| normalize_subagent_id(id) }
+      .uniq
+  end
+
+  def normalize_subagent_id(id)
+    return id if id.is_a?(Integer)
+    id.to_i if id.is_a?(String) && id.match?(/\A-?\d+\z/)
+  end
+
+  def subagent_ids_are_valid
+    if @subagent_ids_contained_invalid_value
+      errors.add(:subagent_ids, I18n.t("discourse_ai.ai_bot.agents.invalid_subagent_ids"))
+    end
+
+    return if subagent_ids.blank?
+
+    if subagent_ids.length > MAX_SUBAGENTS
+      errors.add(
+        :subagent_ids,
+        I18n.t("discourse_ai.ai_bot.agents.too_many_subagents", max: MAX_SUBAGENTS),
+      )
+    end
+
+    if subagent_ids.include?(id)
+      errors.add(:subagent_ids, I18n.t("discourse_ai.ai_bot.agents.subagent_self"))
+    end
+
+    missing_ids = subagent_ids - AiAgent.where(id: subagent_ids).pluck(:id)
+    if missing_ids.present?
+      errors.add(
+        :subagent_ids,
+        I18n.t("discourse_ai.ai_bot.agents.subagents_not_found", ids: missing_ids.join(", ")),
+      )
+    end
+  end
+
+  def subagents_can_not_use_spawn_agent
+    return if subagent_ids.blank?
+
+    if configured_tool_function_names.any? { |name| name.to_s.casecmp("spawn_agent").zero? }
+      errors.add(:tools, I18n.t("discourse_ai.ai_bot.agents.subagent_tool_collision"))
+    end
+  end
+
+  def configured_tool_function_names
+    Array(tools).filter_map do |tool_config|
+      tool_name = tool_config.is_a?(Array) ? tool_config.first : tool_config
+      next if tool_name.blank?
+
+      if tool_name.to_s.start_with?("custom-")
+        AiTool.find_by(id: tool_name.to_s.split("-", 2).last.to_i)&.function_call_name
+      else
+        normalized_name = tool_name.to_s.gsub("Tool", "")
+        normalized_name = "List#{normalized_name}" if %w[Categories Tags Users].include?(
+          normalized_name,
+        )
+        tool_class =
+          "DiscourseAi::Agents::Tools::#{normalized_name}".safe_constantize ||
+            DiscourseAi::Agents::Agent.external_tool_by_name(normalized_name)
+        tool_class&.signature&.[](:name)
+      end
+    end
+  end
+
+  def remove_destroyed_agent_from_subagents
+    affected_agents = AiAgent.where("? = ANY(subagent_ids)", id)
+    affected_agents.update_all(
+      AiAgent.sanitize_sql_array(["subagent_ids = array_remove(subagent_ids, ?)", id]),
+    )
+  end
+
   def chat_preconditions
     if (
          allow_chat_channel_mentions || allow_chat_direct_messages || allow_topic_mentions ||
@@ -463,7 +566,7 @@ class AiAgent < ActiveRecord::Base
     error_msg = I18n.t("discourse_ai.ai_bot.agents.cannot_edit_system_agent")
 
     if top_p_changed? || temperature_changed? || system_prompt_changed? || name_changed? ||
-         description_changed?
+         description_changed? || subagent_ids_changed?
       errors.add(:base, error_msg)
     elsif tools_changed?
       old_tools = tools_change[0]
@@ -532,6 +635,7 @@ end
 #  show_thinking               :boolean          default(TRUE), not null
 #  system                      :boolean          default(FALSE), not null
 #  system_prompt               :string(10000000) not null
+#  subagent_ids                :bigint           default([]), not null, is an Array
 #  temperature                 :float
 #  thinking_effort             :string
 #  tools                       :json             not null

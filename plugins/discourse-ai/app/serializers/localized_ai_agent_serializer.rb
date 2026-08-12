@@ -36,6 +36,8 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
              :mcp_server_ids,
              :mcp_server_tool_names,
              :mcp_servers,
+             :subagent_ids,
+             :subagent_tool_token_count,
              :response_format,
              :examples,
              :features
@@ -76,6 +78,10 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
 
       hash[assignment.ai_mcp_server_id.to_s] = assignment.selected_tool_names
     end
+  end
+
+  def subagent_tool_token_count
+    AiAgent.subagent_tool_token_count
   end
 
   def mcp_servers
