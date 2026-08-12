@@ -353,7 +353,7 @@ describe "Custom sidebar sections" do
     end
   end
 
-  it "does not allow to drag on mobile", mobile: true do
+  it "offers both the drag handle and the arrows on mobile", mobile: true do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
     Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
@@ -371,10 +371,12 @@ describe "Custom sidebar sections" do
     sidebar.open_on_mobile
     sidebar.edit_custom_section("My section")
 
-    expect(page).not_to have_css(".sidebar-section-form-link .draggable")
+    # The handle renders on every viewport now that the drag begins on the grip
+    # rather than anywhere on the row, so a press meant to scroll still scrolls.
+    expect(page).to have_css(".sidebar-section-form-link .draggable")
 
-    # The arrows are the only reorder path left once the handle is gone, so a
-    # touch screen having none at all is the regression to catch here.
+    # Neither path substitutes for the other: the arrows are the only route
+    # without a pointer, and the drag is the only route without a keyboard.
     section_modal.move_link_down("Sidebar Tags")
 
     try_until_success do
