@@ -300,12 +300,15 @@ export function _registerBlock(klass: BlockClass): void {
   const metadata: BlockMetadata | null = getBlockMetadata(klass);
   const blockName = metadata?.blockName;
 
+  // Untyped callers reach this through `api.registerBlock()`, where a bad or
+  // circular import hands it `undefined`. Read `name` defensively so that call
+  // still reports the decorator error below rather than failing here.
   if (
     !assertRegistryNotFrozen({
       frozen: registryFrozen,
       apiMethod: "api.registerBlock()",
       entityType: "Block",
-      entityName: blockName || klass.name,
+      entityName: blockName || klass?.name,
     })
   ) {
     return;
@@ -313,7 +316,7 @@ export function _registerBlock(klass: BlockClass): void {
 
   if (!blockName) {
     raiseBlockError(
-      `Block class "${klass.name}" must be decorated with @block to be registered.`
+      `Block class "${klass?.name}" must be decorated with @block to be registered.`
     );
     return;
   }
@@ -419,16 +422,6 @@ export function _registerBlockFactory(
 }
 
 /**
- * Checks whether a resolved factory value is a module object (with a
- * `.default` export) rather than the block class itself.
- */
-function hasDefaultExport(
-  value: BlockClass | { default: BlockClass }
-): value is { default: BlockClass } {
-  return typeof value !== "function";
-}
-
-/**
  * Resolves a factory function and caches the result.
  *
  * @param name - The block name.
@@ -442,9 +435,12 @@ async function resolveFactory(
 ): Promise<BlockClass | undefined> {
   try {
     const result = await factory();
-    const resolvedClass: BlockClass = hasDefaultExport(result)
-      ? result.default
-      : result;
+
+    // A factory resolves to the class itself or to a module namespace, and to
+    // nothing at all when an author forgets to return. Unwrap without assuming
+    // a value is present so an absent result reaches the error below.
+    const resolvedClass = ((result as { default?: BlockClass } | null)
+      ?.default ?? result) as BlockClass;
     const resolvedBlockName = getBlockMetadata(resolvedClass)?.blockName;
 
     if (!resolvedBlockName) {

@@ -372,7 +372,7 @@ export default class BlockRouteCondition extends BlockCondition {
     const logger = debugContext.logger;
 
     // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
-    const anySpec = (params as { any?: unknown[] } | null)?.any;
+    const anySpec = (params as { any?: unknown[] }).any;
     if (anySpec !== undefined) {
       // Log combinator BEFORE children so it appears first in tree
       if (isLoggingEnabled) {
@@ -402,7 +402,7 @@ export default class BlockRouteCondition extends BlockCondition {
     }
 
     // Handle not operator: { not: { categoryId: 3 } }
-    const notSpec = (params as { not?: unknown } | null)?.not;
+    const notSpec = (params as { not?: unknown }).not;
     if (notSpec !== undefined) {
       // Log combinator BEFORE children so it appears first in tree
       if (isLoggingEnabled) {
@@ -474,11 +474,11 @@ export default class BlockRouteCondition extends BlockCondition {
     pageContext: Record<string, unknown>
   ): Record<string, unknown> {
     // Handle any/not operators - extract from first nested object for display
-    const anySpec = (params as { any?: unknown[] } | null)?.any;
+    const anySpec = (params as { any?: unknown[] }).any;
     if (anySpec !== undefined && anySpec.length > 0) {
       return this.#extractParamValues(anySpec[0], pageContext);
     }
-    const notSpec = (params as { not?: unknown } | null)?.not;
+    const notSpec = (params as { not?: unknown }).not;
     if (notSpec !== undefined) {
       return this.#extractParamValues(notSpec, pageContext);
     }
@@ -504,7 +504,7 @@ function validateParamsWithOperators(
   path = "params"
 ): string | null {
   // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
-  const anySpec = (params as { any?: unknown } | null)?.any;
+  const anySpec = (params as { any?: unknown }).any;
   if (anySpec !== undefined) {
     if (!Array.isArray(anySpec)) {
       return `\`any\` in params must be an array of param objects.`;
@@ -523,7 +523,7 @@ function validateParamsWithOperators(
   }
 
   // Handle not operator: { not: { categoryId: 3 } }
-  const notSpec = (params as { not?: unknown } | null)?.not;
+  const notSpec = (params as { not?: unknown }).not;
   if (notSpec !== undefined) {
     return validateParamsWithOperators(notSpec, pages, `${path}.not`);
   }

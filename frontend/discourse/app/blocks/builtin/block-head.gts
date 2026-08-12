@@ -86,11 +86,12 @@ export default class HeadBlock extends Component<HeadBlockSignature> {
   /**
    * Converts a passed-over sibling into a ghost with the given reason,
    * for the debug visual overlay. `asGhost` is always populated by the
-   * render pipeline; the optional chaining here only satisfies the type
-   * checker's static uncertainty about that invariant.
+   * render pipeline, so it is invoked unguarded: a child arriving without
+   * one is a pipeline bug that should surface rather than render nothing.
    */
   ghostify(child: ChildBlockResult, reason: string): ChildBlockResult | null {
-    return child.asGhost?.(reason) ?? null;
+    const asGhost = child.asGhost as NonNullable<ChildBlockResult["asGhost"]>;
+    return asGhost(reason);
   }
 
   <template>
