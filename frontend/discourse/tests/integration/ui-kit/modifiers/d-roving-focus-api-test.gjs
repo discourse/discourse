@@ -656,6 +656,7 @@ module(
             role="listbox"
             {{dRovingFocus
               selectionMode="active"
+              entryFocus="none"
               controllerElement=".controller"
               itemSelector="[role=option]"
               onRegisterApi=register

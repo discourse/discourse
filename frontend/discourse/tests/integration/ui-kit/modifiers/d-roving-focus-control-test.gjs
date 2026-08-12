@@ -21,6 +21,7 @@ module(
             role="listbox"
             {{dRovingFocus
               selectionMode="active"
+              entryFocus="none"
               controllerElement=".controller"
               itemSelector="[role=option]"
               activeClass="--active"
@@ -79,6 +80,7 @@ module(
             role="listbox"
             {{dRovingFocus
               selectionMode="active"
+              entryFocus="none"
               controllerElement=".controller"
               itemSelector="[role=option]"
               activeClass="--active"
