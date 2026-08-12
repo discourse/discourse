@@ -355,7 +355,7 @@ export default class WireframeInplaceTextService extends Service {
   }
 
   /**
-   * The active containerArg target ({ childKey, namespace, field }) when this
+   * The active containerArg target (`{ childKey, namespace, field }`) when this
    * is a containerArg session, else `null`. The controller reads it to resolve
    * the renderer span via a dedicated `[data-wf-container-arg-key]` selector
    * instead of `[data-wf-block-key]` (the editable span lives in the parent's

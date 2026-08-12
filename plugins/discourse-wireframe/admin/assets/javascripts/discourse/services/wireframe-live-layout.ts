@@ -110,7 +110,7 @@ export default class WireframeLiveLayoutService extends Service {
   /** Resolves each outlet's destination theme and ownership metadata. */
   @service declare wireframePublishTarget: WireframePublishTargetService;
 
-  /** `${themeId}:${outlet}` -> last-observed live version token. */
+  /** `${themeId}:${outlet}` maps to the last-observed live version token. */
   #versionTokens = new Map<string, string>();
 
   /** Whether boot-preloaded live tokens have been read. */
@@ -289,7 +289,7 @@ export default class WireframeLiveLayoutService extends Service {
    * @param themeId - ID of the theme owning the outlet.
    * @param outlet - Outlet identifier.
    * @param options - Export source options.
-   * @param options.useDraft - Export the current draft instead of the live field.
+   *   - `useDraft` - Export the current draft instead of the live field.
    */
   async exportOutlet(
     themeId: number,

@@ -47,7 +47,7 @@ interface EditorEmptyDropPlaceholderSignature {
  * Args:
  *   - `@hint` (string) — pre-translated message. Shown as the visible label
  *     when there's room, and always the button's accessible name.
- *   - `@palette` (Array<{name, displayName, icon, ...}>) — the shared
+ *   - `@palette` (`Array<{name, displayName, icon, ...}>`) — the shared
  *     `buildBlockPalette` rows, already filtered to user-pickable blocks.
  *   - `@targetOutletName` (string) — the outlet the drop target lives in.
  *     The picker filters its suggestions to blocks valid for this outlet.

@@ -23,8 +23,9 @@ const DIconGridPickerContent =
 
 /**
  * The payload the FloatKit menu service injects as `@data` when this component
- * is opened via `menu.show(anchorEl, { component: this, data: { value,
- * onSelect } })`. See `WireframeInplaceIconService`.
+ * is opened via
+ * `menu.show(anchorEl, { component: this, data: { value, onSelect } })`.
+ * See `WireframeInplaceIconService`.
  */
 type InplaceIconPopoverData = {
   /** The currently selected icon ID, used to preselect the grid. */
@@ -51,8 +52,8 @@ interface InplaceIconPopoverSignature {
  * commits the selection via `@data.onSelect`.
  *
  * `@data` is provided by the FloatKit menu service when this
- * component is opened via `menu.show(anchorEl, { component: this,
- * data: { value, onSelect } })`.
+ * component is opened via
+ * `menu.show(anchorEl, { component: this, data: { value, onSelect } })`.
  */
 const InplaceIconPopover: TemplateOnlyComponent<InplaceIconPopoverSignature> =
   <template>

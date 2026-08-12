@@ -427,8 +427,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * actions. Both the inline action row and the hamburger menu render from this
    * list, so they can never drift. Each descriptor is one of:
    *
-   *   - a plain icon button: `{ id, group, icon, title, action, disabled?,
-   *     active?, danger? }`.
+   *   - a plain icon button:
+   *     `{ id, group, icon, title, action, disabled?, active?, danger? }`.
    *
    * `separatorBefore` is computed from `group` transitions so the inline row
    * reproduces the visual grouping. Outlet roots and parts omit the structural

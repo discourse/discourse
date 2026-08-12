@@ -14,7 +14,7 @@
  * Unknown codes fall through to the raw message — better than nothing,
  * and a forcing-function to add an i18n key when a new code lands.
  *
- * @module discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message
+ * Module: `discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message`
  */
 
 import type { ArgSchema, LayoutEntry } from "discourse/blocks/types";

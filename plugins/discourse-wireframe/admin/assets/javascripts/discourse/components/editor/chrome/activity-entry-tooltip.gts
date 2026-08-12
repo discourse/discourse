@@ -28,8 +28,8 @@ interface ActivityEntryTooltipSignature {
 /**
  * Hover card for an activity-bar entry: the panel's name plus a one-line hint.
  * The icon-only rail relies on this for discoverability (the button itself
- * carries only an `aria-label`). FloatKit injects the entry — `{label,
- * description}` i18n keys — as `@data.entry` via `tooltip.register`.
+ * carries only an `aria-label`). FloatKit injects the entry — its
+ * `{label, description}` i18n keys — as `@data.entry` via `tooltip.register`.
  */
 const ActivityEntryTooltip: TemplateOnlyComponent<ActivityEntryTooltipSignature> =
   <template>

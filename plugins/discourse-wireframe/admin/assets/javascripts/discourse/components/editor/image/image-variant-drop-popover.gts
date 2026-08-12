@@ -40,8 +40,8 @@ interface ImageVariantDropPopoverSignature {
  * FloatKit menu content for adding / replacing the dark variant of
  * an image arg via drag-and-drop.
  *
- * Mounted by `menu.show(overlayEl, { component: ImageVariantDropPopover,
- * data })` from the image overlay when the user starts dragging a
+ * Mounted by `menu.show(overlayEl, { component: ImageVariantDropPopover, data })`
+ * from the image overlay when the user starts dragging a
  * file over the image. The popover hosts its own `UppyUpload`
  * instance with its own DropTarget — dropping a file onto the
  * popover triggers the dark-variant upload pipeline, decoupled
@@ -54,16 +54,16 @@ interface ImageVariantDropPopoverSignature {
  * fires `onDragLeave` on whichever target was deepest when the
  * drag ends, even if the user cancels (Esc, off-window release).
  *
- * @data shape (injected by FloatKit as `@data`):
- *   - blockKey {string}
- *   - argName  {string}
- *   - hasDarkVariant {boolean} — drives the label text
- *   - onDarkUpload {(upload: Object) => void} — called with the
+ * The `@data` shape (injected by FloatKit):
+ *   - blockKey `{string}`
+ *   - argName  `{string}`
+ *   - hasDarkVariant `{boolean}` — drives the label text
+ *   - onDarkUpload `{(upload: Object) => void}` — called with the
  *     UppyUpload `uploadDone` payload; the overlay's owner
  *     re-uses it to write to `entry.args[argName].dark`
- *   - onPopoverEnter {() => void} — called when PDND reports the
+ *   - onPopoverEnter `{() => void}` — called when PDND reports the
  *     popover became the deepest drop target.
- *   - onPopoverLeave {() => void} — called when PDND reports the
+ *   - onPopoverLeave `{() => void}` — called when PDND reports the
  *     popover left the drop-target stack (cursor moved elsewhere
  *     or the drag ended).
  */

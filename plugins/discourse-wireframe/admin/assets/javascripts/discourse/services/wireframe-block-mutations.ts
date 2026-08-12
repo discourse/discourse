@@ -360,7 +360,7 @@ export default class WireframeBlockMutationsService extends Service {
    * so their relative order among themselves is irrelevant.
    *
    * @param blockKey - Composite key of the block to duplicate.
-   * @param count - How many clones to insert (clamped to >= 1).
+   * @param count - How many clones to insert (clamped to `>= 1`).
    */
   duplicateBlock(blockKey: string, count: number = 1): boolean {
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
@@ -1084,8 +1084,8 @@ export default class WireframeBlockMutationsService extends Service {
    *   1. The entry isn't already a merged cell — deleting an empty cell
    *      is the author saying "I don't want this region", not
    *      "regenerate one".
-   *   2. The placement spans more than one cell (column span > 1 OR
-   *      row span > 1). Single-cell positions are already discoverable
+   *   2. The placement spans more than one cell (`column span > 1` OR
+   *      `row span > 1`). Single-cell positions are already discoverable
    *      via the grid overlay's auto-empty cell rendering; we only
    *      need an explicit cell entry when the rect is too large for
    *      the auto-detection to reconstruct.

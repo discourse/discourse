@@ -108,7 +108,9 @@ export default class WireframeLayoutQueryService extends Service {
    * the flag) yields the baseline and the edited layout for a change comparison.
    *
    * @param outletName - Outlet whose resolved layout should be read.
-   * @param options.ignoreSessionDraft - When true, skip the session-draft layer and resolve the underlying source.
+   * @param options - Parameters:
+   *   - `ignoreSessionDraft` - When true, skip the session-draft layer and
+   *     resolve the underlying source.
    */
   readResolvedLayout(
     outletName: string,

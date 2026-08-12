@@ -175,8 +175,9 @@ export default class WireframeSelectionService extends Service {
   /**
    * Snapshot of the selected block populated by either the canvas chrome
    * (on click) or the outline panel (on row click). The shape is a loose
-   * subset of `{ key, name, id, args, containerArgs, conditions, outletArgs,
-   * outletName, metadata }`. Some fields are only available from one entry
+   * subset of
+   * `{ key, name, id, args, containerArgs, conditions, outletArgs, outletName, metadata }`.
+   * Some fields are only available from one entry
    * point — for example, `containerArgs` and `outletArgs` are only set when
    * the selection comes from a rendered block on the canvas.
    *

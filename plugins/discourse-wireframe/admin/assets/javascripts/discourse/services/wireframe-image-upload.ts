@@ -122,8 +122,9 @@ export default class WireframeImageUploadService extends Service {
    * race. The instance tears itself down on success or failure.
    *
    * @param file - The image file or blob to upload.
-   * @param options.blockKey - The block whose arg to write.
-   * @param options.argName - The image arg name on that block.
+   * @param options - Parameters:
+   *   - `blockKey` - The block whose arg to write.
+   *   - `argName` - The image arg name on that block.
    * @returns The upload result on success, `null` on failure (the consumer
    *   surfaces its own error UI).
    */

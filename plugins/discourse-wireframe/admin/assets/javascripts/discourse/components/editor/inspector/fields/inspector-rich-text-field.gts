@@ -107,8 +107,8 @@ function valuesEqual(
  * structural mutation.
  *
  * Args:
- *   @custom  the FormKit FieldData (reads `.value`, writes `.set`, `.name`).
- *   @schema  the variant name (`plain` / `heading` / `paragraph`) — picks the
+ *   `@custom`  the FormKit FieldData (reads `.value`, writes `.set`, `.name`).
+ *   `@schema`  the variant name (`plain` / `heading` / `paragraph`) — picks the
  *            allowed marks / line breaks. Supplied from the arg's `ui.schema`.
  */
 export default class InspectorRichTextField extends Component<InspectorRichTextFieldSignature> {

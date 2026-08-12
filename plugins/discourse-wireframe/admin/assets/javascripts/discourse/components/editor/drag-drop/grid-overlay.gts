@@ -790,7 +790,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
    *
    * The thresholds (40rem / 15rem) are duplicated from
    * `wireframe.scss` because there's no clean way to read a
-   * @container's max-width from JS; if either constant changes,
+   * The `@container` max-width from JS; if either constant changes,
    * update both sides.
    *
    * Returns `false` when an ancestor carries `.--force-expanded`
@@ -2098,7 +2098,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
 
   /**
    * Pixel offset of the LEFT edge of an item starting at grid line
-   * `line`. With `gap` between tracks, line K (K > 1) is preceded by
+   * `line`. With `gap` between tracks, line K (`K > 1`) is preceded by
    * (K-1) tracks and (K-1) gaps in the layout, so the item's left
    * edge falls after both. Line 1 is the grid's origin (0).
    */

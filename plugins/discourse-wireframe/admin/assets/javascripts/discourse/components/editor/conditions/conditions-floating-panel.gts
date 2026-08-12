@@ -46,8 +46,8 @@ type PanelDragStart = {
  * localStorage via the editor service so the layout survives
  * reloads. First-open positioning centres the panel over the canvas.
  *
- * z-index: above the editor shell (which uses `z("modal", "content")
- * - 200`) so the panel sits on top of the inspector and the canvas
+ * z-index: above the editor shell (which uses
+ * `z("modal", "content") - 200`) so the panel sits on top of the inspector and the canvas
  * but stays below DMenu's content layer.
  */
 export default class ConditionsFloatingPanel extends Component {

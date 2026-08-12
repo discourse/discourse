@@ -30,11 +30,11 @@ interface ImageEditMenuSignature {
  * `block-chrome.gts` when the user clicks the rendered `<img>` /
  * `<picture>` / backdrop marker of a filled image arg.
  *
- * @data shape (injected by FloatKit, available as `@data` on this
+ * The `@data` shape (injected by FloatKit, available as `@data` on this
  * component):
- *   - blockKey {string}     The block whose arg is being edited.
- *   - argName  {string}     The image arg name.
- *   - close    {() => void} Closes the menu (provided by FloatKit's
+ *   - blockKey `{string}`     The block whose arg is being edited.
+ *   - argName  `{string}`     The image arg name.
+ *   - close    `{() => void}` Closes the menu (provided by FloatKit's
  *                           per-instance options).
  */
 export default class ImageEditMenu extends Component<ImageEditMenuSignature> {

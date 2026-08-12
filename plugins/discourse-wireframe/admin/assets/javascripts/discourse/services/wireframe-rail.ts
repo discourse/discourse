@@ -347,7 +347,7 @@ export default class WireframeRail extends Service {
   }
 
   /**
-   * Persists and applies the right collapse flag; see {@link #setLeftCollapsed}.
+   * Persists and applies the right collapse flag; see `#setLeftCollapsed`.
    *
    * @param collapsed - Whether the right rail should be collapsed.
    */

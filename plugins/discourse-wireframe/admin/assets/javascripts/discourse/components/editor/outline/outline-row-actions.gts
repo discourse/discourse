@@ -25,9 +25,9 @@ interface OutlineRowActionsSignature {
  * many rows the outline renders.
  *
  * FloatKit injects two args:
- *   - `@data` {{ onDuplicate: () => void, onDelete: () => void }} — the mutation
+ *   - `@data` `{{ onDuplicate: () => void, onDelete: () => void }}` — the mutation
  *     callbacks, already bound to the row's block key by the panel.
- *   - `@close` {() => void} — closes the menu. Called BEFORE each action runs so
+ *   - `@close` `{() => void}` — closes the menu. Called BEFORE each action runs so
  *     the action (delete unmounts the row) never fires against a torn-down menu
  *     portal, mirroring the block toolbar's `invokeFromMenu`.
  */

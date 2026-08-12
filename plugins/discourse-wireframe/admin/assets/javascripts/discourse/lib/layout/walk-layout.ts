@@ -4,14 +4,17 @@
  *
  * The return value groups rows by outlet:
  *
+ * ```
  *   [
  *     { outletName: "homepage-blocks", rows: [<row>, <row>, ...] },
  *     { outletName: "sidebar-blocks",  rows: [<row>, ...] },
  *     ...
  *   ]
+ * ```
  *
- * Each row carries `{ depth, blockName, blockId, blockKey, args, conditions,
- * hasChildren, path }`, where:
+ * Each row carries
+ * `{ depth, blockName, blockId, blockKey, args, conditions, hasChildren, path }`,
+ * where:
  *   - `depth` is the nesting level inside the outlet (0 for top-level).
  *   - `blockKey` is `${blockName}:${entry.__stableKey}`, matching the key
  *     minted by `entry-processing.js` and exposed via the BLOCK_DEBUG
@@ -155,13 +158,12 @@ function resolveBlockName(
 
 /**
  * @param options - Dependencies and inclusion overrides for the walk.
- * @param options.blocksService - Canonical blocks registry/layout service.
- * @param options.alwaysInclude - Outlet names the
- *   caller wants kept regardless of the DOM scan. The editor passes
- *   the outlets it has materialized session-drafts for, so a publish-
- *   driven re-render (which briefly unmounts the boundary during
- *   `DAsyncContent`'s `:loading` block) doesn't drop the row from
- *   the outline mid-edit.
+ *   - `blocksService` - Canonical blocks registry/layout service.
+ *   - `alwaysInclude` - Outlet names the caller wants kept regardless of the
+ *     DOM scan. The editor passes the outlets it has materialized
+ *     session-drafts for, so a publish- driven re-render (which briefly
+ *     unmounts the boundary during `DAsyncContent`'s `:loading` block) doesn't
+ *     drop the row from the outline mid-edit.
  * @returns One flattened outline group per included outlet.
  */
 export async function walkAllOutlets({

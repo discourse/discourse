@@ -101,9 +101,9 @@ export default class WireframeGridTemplateService extends Service {
    * content than `columns × rows` cells.
    *
    * @param options - Free-grid shape to apply.
-   * @param options.gridKey - Composite key of the grid layout.
-   * @param options.columns - New column count.
-   * @param options.rows - New row count.
+   *   - `gridKey` - Composite key of the grid layout.
+   *   - `columns` - New column count.
+   *   - `rows` - New row count.
    * @returns Whether the grid was reshaped.
    */
   applyFreeGrid({
@@ -175,8 +175,8 @@ export default class WireframeGridTemplateService extends Service {
    * can be reverted with one Cmd+Z.
    *
    * @param options - Preset application request.
-   * @param options.gridKey - Composite key of the grid layout.
-   * @param options.template - Preset to apply, or `null` to refuse.
+   *   - `gridKey` - Composite key of the grid layout.
+   *   - `template` - Preset to apply, or `null` to refuse.
    * @returns Whether the template was applied.
    */
   applyGridTemplate({
@@ -239,8 +239,8 @@ export default class WireframeGridTemplateService extends Service {
    * `applyGridTemplate`.
    *
    * @param options - Preset capacity query.
-   * @param options.gridKey - Composite key of the grid layout.
-   * @param options.template - Preset to evaluate, or `null` to refuse.
+   *   - `gridKey` - Composite key of the grid layout.
+   *   - `template` - Preset to evaluate, or `null` to refuse.
    * @returns Whether the grid's content fits the preset.
    */
   canApplyGridTemplate({
@@ -274,9 +274,9 @@ export default class WireframeGridTemplateService extends Service {
    * reverted with one Cmd+Z (e.g. after a "Reduce columns" confirm).
    *
    * @param options - Bounds to enforce on a grid.
-   * @param options.gridKey - Composite key of the grid layout.
-   * @param options.maxColumns - Maximum allowed column count.
-   * @param options.maxRows - Maximum allowed row count.
+   *   - `gridKey` - Composite key of the grid layout.
+   *   - `maxColumns` - Maximum allowed column count.
+   *   - `maxRows` - Maximum allowed row count.
    * @returns Whether any slot placement was clamped.
    */
   clampGridSlotPlacements({

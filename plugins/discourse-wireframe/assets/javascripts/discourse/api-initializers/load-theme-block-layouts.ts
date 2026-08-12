@@ -178,8 +178,9 @@ export function subscribeToBlockLayoutUpdates(
  * exposes a flat list of `{ theme_id, outlet, schema_version, layout }` rows
  * — one per `block_layout` ThemeField on every theme in the active stack —
  * plus a `themeBlockLayoutMeta` map carrying each theme's `stack_index`. We hand
- * both to `hydrateThemeBlockLayouts`, which calls `api.setLayoutLayer(outlet,
- * "theme", layout, { themeId, themeStackIndex, lazy: true })` for each.
+ * both to `hydrateThemeBlockLayouts`, which calls
+ * `api.setLayoutLayer(outlet, "theme", layout, { themeId, themeStackIndex, lazy: true })`
+ * for each.
  *
  * Ownership of an outlet is the theme with the minimum stack rank (the most
  * ancestral theme — parent before components), so array order no longer

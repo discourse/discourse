@@ -134,13 +134,13 @@ function deltaSigns(direction: ResizeDirection): DeltaSigns {
  * floored at `MIN_DIM` and rounded.
  *
  * @param params - Resize origin and current pointer displacement.
- * @param params.originWidth - Origin image width.
- * @param params.originHeight - Origin image height.
- * @param params.direction - Resize handle being dragged.
- * @param params.deltaX - Raw horizontal pointer delta.
- * @param params.deltaY - Raw vertical pointer delta.
- * @param params.shiftKey - Whether to release the aspect lock.
- * @param params.aspect - Locked aspect ratio, or `null`.
+ *   - `originWidth` - Origin image width.
+ *   - `originHeight` - Origin image height.
+ *   - `direction` - Resize handle being dragged.
+ *   - `deltaX` - Raw horizontal pointer delta.
+ *   - `deltaY` - Raw vertical pointer delta.
+ *   - `shiftKey` - Whether to release the aspect lock.
+ *   - `aspect` - Locked aspect ratio, or `null`.
  * @returns Resized image dimensions.
  */
 function computeImageResize({
@@ -226,7 +226,7 @@ export default class ImageResizeOverlay extends Component<ImageResizeOverlaySign
   #boundMeasure: (() => void) | null = null;
 
   /**
-   * The active resize session ({originWidth, originHeight, aspect}), or `null`.
+   * The active resize session (`{originWidth, originHeight, aspect}`), or `null`.
    * Captured on `onImageResizeStart` so every move computes against a stable
    * origin rather than re-measuring the (already-previewed) marker.
    *

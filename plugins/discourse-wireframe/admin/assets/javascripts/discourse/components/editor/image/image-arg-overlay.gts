@@ -217,7 +217,7 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
    * Whether this overlay's image arg is the single active drag overlay
    * (per the coordinator). Drives the BEM `--drag-over` tint. Matching by
    * identity — not by which surface the cursor is on — means the tint stays
-   * while the cursor travels overlay -> dark popover, because the popover
+   * while the cursor travels from overlay to dark popover, because the popover
    * re-claims the same identity (only `variant` flips).
    *
    */
@@ -607,7 +607,7 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
    * Opens when this image arg becomes the active overlay (foreground drag OR
    * the chrome's passive-background claim) and schedules a graced close when
    * it stops being active. The popover's show/hide TIMING stays a FloatKit
-   * concern (hover-grace lets the cursor travel image -> popover); this only
+   * concern (hover-grace lets the cursor travel from image to popover); this only
    * decides open-vs-close. Wired to `isDragOver` via `didUpdate`.
    */
   @action

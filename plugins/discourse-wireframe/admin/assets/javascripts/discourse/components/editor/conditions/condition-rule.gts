@@ -122,7 +122,7 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
 
   /**
    * Short, human-readable summary of the leaf's current configuration
-   * (e.g. "Logged-in users in @staff"). Shown collapsed in the rule
+   * (e.g. "Logged-in users in `@staff`"). Shown collapsed in the rule
    * header so authors can scan rules without expanding them.
    */
   get summary(): string {

@@ -8,6 +8,7 @@
  *
  * Default control mapping (overridable via `argDef.ui.control`):
  *
+ * ```
  *   ┌───────────────────────────────────┬────────────────────┐
  *   │ Schema shape                      │ Default control    │
  *   ├───────────────────────────────────┼────────────────────┤
@@ -19,6 +20,7 @@
  *   │ array (itemType: string)          │ tag-chooser        │
  *   │ any                               │ code               │
  *   └───────────────────────────────────┴────────────────────┘
+ * ```
  *
  * Anything more specific (color picker, image uploader, etc.) is opt-in via
  * the `ui.control` hint on the arg schema. See `VALID_UI_CONTROLS` in

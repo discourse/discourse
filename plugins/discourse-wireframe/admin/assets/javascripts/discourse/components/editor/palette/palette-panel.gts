@@ -255,9 +255,9 @@ export default class PalettePanel extends Component {
    * snapshot of the live tile does.
    *
    * @param args - Drag preview elements.
-   * @param args.container - The offscreen host the browser
-   *   photographs; appended to `document.body` and removed after cleanup.
-   * @param args.element - The dragged tile.
+   *   - `container` - The offscreen host the browser photographs; appended to
+   *     `document.body` and removed after cleanup.
+   *   - `element` - The dragged tile.
    * @returns Cleanup that removes the cloned preview.
    */
   @action

@@ -640,14 +640,15 @@ export function cellAt(
  * (against the already-clamped column band), so a diagonal obstacle pulls
  * whichever edge reaches it rather than allowing an overlap to slip through.
  *
- * @param params.origin - The cell's current placement (assumed to be a valid,
- *   non-overlapping rect).
- * @param params.cell - The pointer's cell.
- * @param params.direction - One of `n|s|e|w|ne|nw|se|sw`.
- * @param params.columns - The grid's column count.
- * @param params.rows - The grid's row count.
- * @param params.occupied - Cells occupied by OTHER entries (exclude the resized
- *   cell), keyed by `cellKey`. Defaults to empty (no occupancy clamp).
+ * @param params - Parameters:
+ *   - `origin` - The cell's current placement (assumed to be a valid,
+ *     non-overlapping rect).
+ *   - `cell` - The pointer's cell.
+ *   - `direction` - One of `n|s|e|w|ne|nw|se|sw`.
+ *   - `columns` - The grid's column count.
+ *   - `rows` - The grid's row count.
+ *   - `occupied` - Cells occupied by OTHER entries (exclude the resized cell),
+ *     keyed by `cellKey`. Defaults to empty (no occupancy clamp).
  */
 export function computeSpanResize({
   origin,
@@ -726,11 +727,12 @@ export function computeSpanResize({
  * handles that would actually move the cell. A 1×1 origin can never shrink, so
  * it yields only the directions that have a free neighbour to grow into.
  *
- * @param params.origin - The cell's current placement.
- * @param params.columns - Effective column count.
- * @param params.rows - Effective row count.
- * @param params.occupied - Cells occupied by OTHER entries, keyed `"row,col"`
- *   (the origin's own cells must not be in this set).
+ * @param params - Parameters:
+ *   - `origin` - The cell's current placement.
+ *   - `columns` - Effective column count.
+ *   - `rows` - Effective row count.
+ *   - `occupied` - Cells occupied by OTHER entries, keyed `"row,col"` (the
+ *     origin's own cells must not be in this set).
  * @returns A subset of `["n","e","s","w","ne","nw","se","sw"]`.
  */
 export function resizableDirections({

@@ -473,7 +473,7 @@ const PARAGRAPH_EXTENSIONS = [
 ];
 
 /**
- * Map of schema variant -> editor configuration. The variant is emitted as
+ * Map of schema variant to editor configuration. The variant is emitted as
  * a data-attr on the renderer span so the editor controller can resolve the
  * right config when it enters edit mode.
  */

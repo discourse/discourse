@@ -250,20 +250,20 @@ export function fieldTypeFor(control: string): string {
  *
  * Args contract:
  *
- *   @form              the FormKit form object; its `Field` component is
+ *   `@form`              the FormKit form object; its `Field` component is
  *                      invoked for each field.
- *   @field             the InspectorField descriptor from `schemaToFields`.
- *   @values            current values map (only the `rich-inline` branch
+ *   `@field`             the InspectorField descriptor from `schemaToFields`.
+ *   `@values`            current values map (only the `rich-inline` branch
  *                      reads it, for the read-only summary).
- *   @validationRuleFor optional fn(field) → FormKit validation rule
+ *   `@validationRuleFor` optional fn(field) → FormKit validation rule
  *                      string. Pass `undefined` to skip validation
  *                      (container-args form does this — its placement
  *                      schema doesn't declare required/min/max).
- *   @onFieldSet        FormKit `@onSet` handler; called with (value, ctx).
+ *   `@onFieldSet`        FormKit `@onSet` handler; called with (value, ctx).
  *                      The container-args form curries its namespace in
  *                      via `(fn this.onFieldSet section.namespace)`, so
  *                      the shape stays identical here.
- *   @disabled          When true, the field renders read-only. Set for
+ *   `@disabled`          When true, the field renders read-only. Set for
  *                      unregistered blocks — the editor doesn't know their
  *                      schema, so their values are shown but not editable.
  */
