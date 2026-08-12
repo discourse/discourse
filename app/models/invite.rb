@@ -366,23 +366,27 @@ class Invite < ActiveRecord::Base
   end
 
   def ensure_valid_admin_invite
-    # checked when the flag is set or the invite's reach changes (email
-    # removed turns it into an open link), but not on unrelated saves (e.g.
-    # marking the invite redeemed) so they don't fail if the inviter has
-    # since been demoted
-    if (new_record? || will_save_change_to_admin? || will_save_change_to_email?) &&
-         !invited_by&.admin?
+    # checked when the flag is set or the invite's reach changes (removing
+    # the email or domain restriction widens who can redeem it), but not on
+    # unrelated saves (e.g. marking the invite redeemed) so they don't fail
+    # if the inviter has since been demoted
+    if (
+         new_record? || will_save_change_to_admin? || will_save_change_to_email? ||
+           will_save_change_to_domain?
+       ) && !invited_by&.admin?
       errors.add(:base, I18n.t("invite.admin_invite_requires_admin_inviter"))
     end
   end
 
   def ensure_valid_moderator_invite
-    # checked when the flag is set or the invite's reach changes (email
-    # removed turns it into an open link), but not on unrelated saves (e.g.
-    # marking the invite redeemed) so they don't fail if the inviter has
-    # since been demoted
-    if (new_record? || will_save_change_to_moderator? || will_save_change_to_email?) &&
-         !invited_by&.staff?
+    # checked when the flag is set or the invite's reach changes (removing
+    # the email or domain restriction widens who can redeem it), but not on
+    # unrelated saves (e.g. marking the invite redeemed) so they don't fail
+    # if the inviter has since been demoted
+    if (
+         new_record? || will_save_change_to_moderator? || will_save_change_to_email? ||
+           will_save_change_to_domain?
+       ) && !invited_by&.staff?
       errors.add(:base, I18n.t("invite.moderator_invite_requires_staff_inviter"))
     end
   end

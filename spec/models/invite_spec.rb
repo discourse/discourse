@@ -297,6 +297,39 @@ RSpec.describe Invite do
         )
       end
 
+      it "requires the inviter to still be an admin when the domain restriction is removed" do
+        invite = Invite.generate(admin, domain: "example.com", admin: true)
+        admin.update!(admin: false)
+
+        invite.domain = nil
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.admin_invite_requires_admin_inviter"),
+        )
+      end
+
+      it "requires the inviter to still be an admin when the domain restriction is changed" do
+        invite = Invite.generate(admin, domain: "example.com", admin: true)
+        admin.update!(admin: false)
+
+        invite.domain = "other-example.com"
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.admin_invite_requires_admin_inviter"),
+        )
+      end
+
+      it "requires the inviter to still be staff when a moderator invite's domain restriction is removed" do
+        invite = Invite.generate(admin, domain: "example.com", moderator: true)
+        admin.update!(admin: false)
+
+        invite.domain = nil
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.moderator_invite_requires_staff_inviter"),
+        )
+      end
+
       it "must be single-use" do
         invite = Invite.generate(admin, admin: true)
 
