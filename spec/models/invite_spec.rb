@@ -264,7 +264,7 @@ RSpec.describe Invite do
         expect(invite.max_redemptions_allowed).to eq(1)
       end
 
-      it "creates a single-use invite link when no email is given" do
+      it "creates a single-use invite link when a shareable link is chosen" do
         invite = Invite.generate(admin, admin: true)
 
         expect(invite.admin).to eq(true)
