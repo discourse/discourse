@@ -7,4 +7,12 @@
 ar:
   js:
     discourse_captcha:
+      missing_token: "يُرجى إكمال تحدي Captcha."
+      verification_failed: "فشل تحقُّق Captcha. يُرجى إعادة المحاولة."
       placeholder: عنصر نائب
+      contact_system_administrator: "حدثت مشكلة مع مقدِّم خدمة Captcha. إذا استمرت هذه المشكلة، يُرجى التواصل مع مسؤول النظام"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_captcha: "Discourse Captcha"

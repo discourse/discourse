@@ -8,6 +8,17 @@ ar:
   dashboard:
     problem:
       hcaptcha_configuration: "هناك مشكلة في تكوين `site_key` أو `secret_key` الخاص بك لـ hCaptcha"
+      recaptcha_configuration: "هناك مشكلة في تكوين `site_key` أو `secret_key` الخاص بك لـ ReCaptcha"
+  admin:
+    site_settings:
+      categories:
+        discourse_captcha: "المكوِّن الإضافي Captcha"
   site_settings:
-    hcaptcha_site_key: "مفتاح موقع hCaptcha من حساب <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> الخاص بك"
-    hcaptcha_secret_key: "المفتاح السري لموقع hCaptcha من حساب <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> الخاص بك"
+    discourse_captcha_enabled: "تفعيل تحقُّق Captcha لتسجيل المستخدمين الجُدد. يتطلَّب ذلك إعداد hCaptcha أو reCaptcha أدناه."
+    discourse_captcha_provider: "اختيار مقدِّم خدمة تحقُّق Captcha. يتطلَّب ذلك أن يكون لديك حساب لدى مقدِّم الخدمة المختار."
+    hcaptcha_site_key: "مفتاح موقع hCaptcha من حساب <a target='blank' href='https://hCaptcha.com'>hCaptcha.com</a> الخاص بك"
+    hcaptcha_secret_key: "المفتاح السري لموقع hCaptcha من حساب <a target='blank' href='https://hCaptcha.com'>hCaptcha.com</a> الخاص بك"
+    recaptcha_site_key: "مفتاح موقع ReCaptcha من حسابك على <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
+    recaptcha_secret_key: "المفتاح السري لـ ReCaptcha من حسابك على <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
+  captcha_verification_failed: "فشل اجتياز تحقُّق Captcha"
+  captcha_not_configured: "تحقُّق Captcha مفعَّل، لكنه غير مهيَّأ بشكلٍ صحيح. يُرجى التواصل مع مسؤول الموقع."

@@ -81,8 +81,8 @@ zh_CN:
                 "4_24h": "4–24小时"
                 gt_24h: "> 24 小时"
               trend:
-                faster: "%{duration} 更快"
-                slower: "%{duration} 更慢"
+                faster: "快 %{duration}"
+                slower: "慢 %{duration}"
                 tooltip: "平均回复时间趋势。"
   js:
     notifications:
@@ -133,8 +133,8 @@ zh_CN:
         label_with_count: "%{label} (%{count})"
         title: "我也遇到了这个问题。"
         author_title: "您发起的此话题"
-        closed_title: "该话题已关闭"
-        archived_title: "该话题已归档"
+        closed_title: "此话题已被关闭"
+        archived_title: "此话题已被归档"
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"
