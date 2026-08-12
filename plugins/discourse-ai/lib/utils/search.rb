@@ -87,8 +87,11 @@ module DiscourseAi
           semantic_results = nil
           begin
             semantic_results = semantic_search.search_for_topics(search.term, hyde: hyde)
-          rescue => e
-            Discourse.warn_exception(e, message: "Semantic search failed")
+          rescue DiscourseAi::Inference::EmbeddingInferenceError,
+                 DiscourseAi::Embeddings::ProviderPausedError
+            semantic_results = nil
+          rescue StandardError => error
+            Discourse.warn_exception(error, message: "Semantic search failed")
           end
 
           if semantic_results

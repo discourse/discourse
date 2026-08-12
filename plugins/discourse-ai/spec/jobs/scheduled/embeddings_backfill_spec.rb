@@ -38,6 +38,27 @@ RSpec.describe Jobs::EmbeddingsBackfill do
     )
   end
 
+  after do
+    [vector_def, vector_def2].each do |definition|
+      DiscourseAi::Embeddings::ProviderHealth.clear!(definition)
+    end
+  end
+
+  it "skips a paused definition before generating embeddings" do
+    error =
+      DiscourseAi::Inference::EmbeddingInferenceError.new(
+        provider: vector_def.provider,
+        category: :quota_exhausted,
+      )
+    expect do
+      DiscourseAi::Embeddings::ProviderHealth.request!(vector_def) { raise error }
+    end.to raise_error(DiscourseAi::Inference::EmbeddingInferenceError)
+
+    described_class.new.execute({})
+
+    expect(a_request(:post, vector_def.url)).not_to have_been_made
+  end
+
   it "backfills topics based on bumped_at date" do
     Jobs::EmbeddingsBackfill.new.execute({})
 
