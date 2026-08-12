@@ -340,7 +340,9 @@ class Invite < ActiveRecord::Base
           end
         )
 
-      if email.present? && max_redemptions_allowed != 1
+      if (admin? || moderator?) && max_redemptions_allowed != 1
+        errors.add(:max_redemptions_allowed, I18n.t("invite.max_redemptions_allowed_one_staff"))
+      elsif email.present? && max_redemptions_allowed != 1
         errors.add(:max_redemptions_allowed, I18n.t("invite.max_redemptions_allowed_one"))
       elsif !max_redemptions_allowed.between?(1, limit)
         errors.add(
@@ -364,21 +366,23 @@ class Invite < ActiveRecord::Base
   end
 
   def ensure_valid_admin_invite
-    errors.add(:base, I18n.t("invite.admin_invite_requires_email")) if email.blank?
-
-    # only checked when the flag is set so that later saves (e.g. marking the
-    # invite redeemed) don't fail if the inviter has since been demoted
-    if (new_record? || will_save_change_to_admin?) && !invited_by&.admin?
+    # checked when the flag is set or the invite's reach changes (email
+    # removed turns it into an open link), but not on unrelated saves (e.g.
+    # marking the invite redeemed) so they don't fail if the inviter has
+    # since been demoted
+    if (new_record? || will_save_change_to_admin? || will_save_change_to_email?) &&
+         !invited_by&.admin?
       errors.add(:base, I18n.t("invite.admin_invite_requires_admin_inviter"))
     end
   end
 
   def ensure_valid_moderator_invite
-    errors.add(:base, I18n.t("invite.moderator_invite_requires_email")) if email.blank?
-
-    # only checked when the flag is set so that later saves (e.g. marking the
-    # invite redeemed) don't fail if the inviter has since been demoted
-    if (new_record? || will_save_change_to_moderator?) && !invited_by&.staff?
+    # checked when the flag is set or the invite's reach changes (email
+    # removed turns it into an open link), but not on unrelated saves (e.g.
+    # marking the invite redeemed) so they don't fail if the inviter has
+    # since been demoted
+    if (new_record? || will_save_change_to_moderator? || will_save_change_to_email?) &&
+         !invited_by&.staff?
       errors.add(:base, I18n.t("invite.moderator_invite_requires_staff_inviter"))
     end
   end

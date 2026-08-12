@@ -624,6 +624,9 @@ acceptance("Admin - Onboarding Banner - admin invites", function (needs) {
       )
       .isChecked("defaults to the admins tab");
 
+    await click(
+      ".create-invite-with-roles-modal .form-kit__inline-radio input[value='email']"
+    );
     await fillIn(
       ".create-invite-with-roles-modal input[name='email']",
       "new-admin@example.com"

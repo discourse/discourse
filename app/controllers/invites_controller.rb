@@ -129,8 +129,7 @@ class InvitesController < ApplicationController
     if is_staff_invite
       guardian.ensure_can_create_admin_invite!
 
-      if params[:topic_id].present? || params[:group_ids].present? ||
-           params[:group_names].present? || params[:domain].present?
+      if params[:topic_id].present? || params[:group_ids].present? || params[:group_names].present?
         raise Discourse::InvalidParameters.new(is_admin_invite ? :is_admin : :is_moderator)
       end
 
