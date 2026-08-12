@@ -242,6 +242,79 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     );
   });
 
+  test("offers livestream when the url field carries the livestream link", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const event = eventWith({ url: "https://zoom.us/j/123456789" });
+    await renderAdvanced(event);
+
+    assert
+      .dom(`[data-name="livestream"]`)
+      .exists("a livestream link is recognized in either field");
+
+    await fillIn(`[data-name="url"] input`, "https://example.com/tickets");
+
+    assert
+      .dom(`[data-name="livestream"]`)
+      .doesNotExist("a plain link offers nothing to embed");
+    assert.false(
+      event.livestream,
+      "livestream is reset so it is not submitted for a non-livestream url"
+    );
+  });
+
+  test("keeps the livestream flag when only the companion url changes", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const event = eventWith({
+      location: "https://zoom.us/j/123456789",
+      url: "https://example.com/tickets",
+      livestream: true,
+    });
+    await renderAdvanced(event);
+
+    await fillIn(`[data-name="url"] input`, "https://example.com/register");
+
+    assert
+      .dom(`[data-name="livestream"]`)
+      .exists("the location still carries the stream");
+    assert.true(event.livestream, "the flag survives a companion url edit");
+  });
+
+  test("ignores a whitespace-only location when the url carries the stream", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const event = eventWith({
+      url: "https://zoom.us/j/123456789",
+      livestream: true,
+    });
+    await renderAdvanced(event);
+
+    await fillIn(`[data-name="location"] input`, " ");
+
+    assert
+      .dom(`[data-name="livestream"]`)
+      .exists("a blank location does not shadow the url");
+    assert.true(
+      event.livestream,
+      "the flag matches what the save path would keep"
+    );
+  });
+
+  test("the location takes precedence over the url as the livestream source", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const event = eventWith({
+      location: "Discourse HQ, Denver",
+      url: "https://zoom.us/j/123456789",
+    });
+    await renderAdvanced(event);
+
+    assert
+      .dom(`[data-name="livestream"]`)
+      .doesNotExist("a venue event is not streamed from its companion link");
+  });
+
   test("advanced screen hides the url field behind an add button when unset", async function (assert) {
     const event = eventWith();
     await renderAdvanced(event);

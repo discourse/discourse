@@ -152,8 +152,25 @@ export default class PostEventBuilder extends Component {
   syncLocationToEvent(value, { set }) {
     set("location", value);
     this.event.location = value;
+    this.#resetInvalidLivestream(set);
+  }
 
-    if (!isLivestreamUrl(value, this.siteSettings)) {
+  @action
+  syncUrlToEvent(value, { set }) {
+    set("url", value);
+    this.event.url = value;
+    this.#resetInvalidLivestream(set);
+  }
+
+  // Mirrors `Event#livestream_url` on the server: location takes precedence,
+  // url only carries the livestream when no location is set. A blank location
+  // counts as absent, matching what `buildParams` serializes.
+  #livestreamSource() {
+    return this.event.location?.trim() ? this.event.location : this.event.url;
+  }
+
+  #resetInvalidLivestream(set) {
+    if (!isLivestreamUrl(this.#livestreamSource(), this.siteSettings)) {
       set("livestream", false);
       this.event.livestream = false;
     }
@@ -338,7 +355,7 @@ export default class PostEventBuilder extends Component {
 
   get showLivestream() {
     return (
-      isLivestreamUrl(this.event.location, this.siteSettings) &&
+      isLivestreamUrl(this.#livestreamSource(), this.siteSettings) &&
       this.siteSettings.chat_enabled
     );
   }
@@ -879,7 +896,7 @@ export default class PostEventBuilder extends Component {
                     }}
                     @type="input"
                     @format="full"
-                    @onSet={{fn this.syncFieldToEvent "url"}}
+                    @onSet={{this.syncUrlToEvent}}
                     as |field|
                   >
                     <field.Control

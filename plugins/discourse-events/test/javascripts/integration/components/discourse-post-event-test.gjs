@@ -162,6 +162,29 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       );
   });
 
+  test("hides the url row when it carries the zoom livestream", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        url: "https://zoom.us/j/123",
+        livestream: true,
+        livestream_url: "https://zoom.us/j/123",
+        is_zoom_livestream: true,
+        url_restates_location: false,
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-header");
+
+    assert
+      .dom(".event-url")
+      .doesNotExist(
+        "the zoom join UI presents the link, like a location-carried livestream"
+      );
+  });
+
   test("renders the link once when url only restates location", async function (assert) {
     stubApi.call(
       this,

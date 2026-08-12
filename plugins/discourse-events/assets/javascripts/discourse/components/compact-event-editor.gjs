@@ -209,8 +209,9 @@ export default class CompactEventEditor extends Component {
   }
 
   get isLivestreamUrl() {
-    return (
-      this.hasLocation && isLivestreamUrl(this.location, this.siteSettings)
+    return isLivestreamUrl(
+      this.hasLocation ? this.location : this.url,
+      this.siteSettings
     );
   }
 
@@ -329,6 +330,9 @@ export default class CompactEventEditor extends Component {
   onUrlInput(event) {
     const value = event.target.value;
     this.url = value === "" ? null : value;
+    if (!this.isLivestreamUrl) {
+      this.livestream = false;
+    }
     this.#emitChange();
   }
 

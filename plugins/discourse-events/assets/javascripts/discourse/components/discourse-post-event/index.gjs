@@ -119,7 +119,15 @@ export default class DiscoursePostEvent extends Component {
   }
 
   get displayUrl() {
-    return this.event?.urlRestatesLocation ? null : this.event?.url;
+    if (
+      this.event?.urlRestatesLocation ||
+      (this.event?.isZoomLivestream &&
+        this.event?.livestreamUrl === this.event?.url)
+    ) {
+      return null;
+    }
+
+    return this.event?.url;
   }
 
   get loadingDetails() {

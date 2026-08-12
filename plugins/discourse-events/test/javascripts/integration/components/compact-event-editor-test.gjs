@@ -74,6 +74,89 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
       .exists("the input is not yanked out from under the cursor");
   });
 
+  test("offers the livestream toggle when the url carries the livestream link", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const initialState = stateWith({ url: "https://zoom.us/j/123456789" });
+    await renderEditor(initialState);
+
+    assert
+      .dom(".composer-event__livestream")
+      .exists("a livestream link is recognized in either field");
+  });
+
+  test("does not offer livestream for a venue with a companion link", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const initialState = stateWith({
+      location: "Room 5",
+      url: "https://zoom.us/j/123456789",
+    });
+    await renderEditor(initialState);
+
+    assert
+      .dom(".composer-event__livestream")
+      .doesNotExist("the location takes precedence as the livestream source");
+  });
+
+  test("keeps the livestream flag when only the companion url changes", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const initialState = stateWith({
+      location: "https://zoom.us/j/123456789",
+      url: "https://example.com/tickets",
+      livestream: true,
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await fillIn(".composer-event__url-input", "https://example.com/register");
+
+    assert
+      .dom(".composer-event__livestream")
+      .exists("the location still carries the stream");
+    assert.true(lastState.livestream, "the flag survives a companion url edit");
+  });
+
+  test("ignores a whitespace-only location when the url carries the stream", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const initialState = stateWith({
+      url: "https://zoom.us/j/123456789",
+      livestream: true,
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await fillIn(".composer-event__location-input", " ");
+
+    assert
+      .dom(".composer-event__livestream")
+      .exists("a blank location does not shadow the url");
+    assert.true(
+      lastState.livestream,
+      "the flag matches what the save path would keep"
+    );
+  });
+
+  test("drops the livestream flag when the url stops being the livestream", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const initialState = stateWith({
+      url: "https://zoom.us/j/123456789",
+      livestream: true,
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await fillIn(".composer-event__url-input", "https://example.com/tickets");
+
+    assert.false(
+      lastState.livestream,
+      "livestream is reset so it is not submitted for a non-livestream url"
+    );
+  });
+
   test("narrows the location placeholder once url has its own row", async function (assert) {
     const initialState = stateWith({
       location: "Room 5",
