@@ -283,8 +283,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -351,8 +352,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -386,8 +388,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: focus stays on the controller, aria-activedescendant tracks", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -433,8 +436,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -473,13 +477,14 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <button
           class="refilter"
           type="button"
           {{on "click" refilter}}
         >x</button>
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -522,8 +527,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: entryFocus=first highlights the first item on insert", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -564,8 +570,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -617,8 +624,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -671,8 +679,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: entryFocus=selected-or-first prefers the selected item over the first", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -706,8 +715,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     // avoid highlighting an arbitrary row; a restored selection is not arbitrary.
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -729,8 +739,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: entryFocus=selected-or-none leaves the cursor empty when nothing is selected", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -766,8 +777,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -817,13 +829,14 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <button
           class="refilter"
           type="button"
           {{on "click" refilter}}
         >x</button>
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -859,8 +872,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: entryFocus=none highlights nothing until an Arrow key", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -887,8 +901,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -933,8 +948,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -979,8 +995,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -1015,8 +1032,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: first ArrowUp seeds the last option", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -1450,8 +1468,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode steps one item at a time even over a grid", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           style="display: grid; grid-template-columns: repeat(3, 40px);"
           {{dRovingFocus
@@ -1607,8 +1626,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: keys mid-composition leave the highlight alone", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -1697,8 +1717,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     // would leave the group with no working arrow key and therefore no way to seed a cursor.
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -2404,8 +2425,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -2427,14 +2449,100 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     );
   });
 
+  test("active mode: fallbackSkipsMarked seeds past a marked first item", async function (assert) {
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <div
+          id="rf-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="first"
+            fallbackSkipsMarked=true
+          }}
+        >
+          <button class="a" role="option" aria-selected="true">A</button>
+          <button class="b" role="option" aria-selected="false">B</button>
+        </div>
+      </template>
+    );
+
+    // Seeding the held row would arm the very first Enter to discard it, in a group whose
+    // activation toggles.
+    assert
+      .dom(".b")
+      .hasClass("--active", "the fallback lands past the marked row");
+    assert.dom(".a").doesNotHaveClass("--active");
+  });
+
+  test("active mode warns when the cursor is unreachable from the controller", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        {{! No aria-controls and no aria-owns, so the list is a sibling the controller has no
+          permitted relationship with. }}
+        <input class="lonely" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".lonely"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="first"
+          }}
+        >
+          <button class="a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    assert.true(
+      warn.called,
+      "an activedescendant that ARIA does not let the controller reach is reported"
+    );
+  });
+
+  test("active mode does not warn when aria-owns reaches the cursor", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <input class="owner" role="combobox" aria-owns="owned-option" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".owner"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="first"
+          }}
+        >
+          <button id="owned-option" class="a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    // Containment is not the only permitted relationship, so a sibling list that is explicitly
+    // owned must pass.
+    assert.false(warn.called, "aria-owns is one of the three ARIA permits");
+  });
+
   test("active mode does not warn when the consumer renders its own indicator", async function (assert) {
     const warn = sinon.stub(console, "warn");
     const noop = () => {};
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -2464,8 +2572,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -2499,7 +2608,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
           role="listbox"
           {{dRovingFocus
@@ -2535,8 +2644,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: a non-primary pointer press does not move the cursor", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
@@ -2590,8 +2700,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     // author's own tabindex values are stripped and items they excluded become tab stops.
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"

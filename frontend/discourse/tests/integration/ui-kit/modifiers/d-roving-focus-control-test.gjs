@@ -16,8 +16,14 @@ module(
 
       await render(
         <template>
-          <div class="controller" role="combobox" tabindex="0"></div>
           <div
+            class="controller"
+            role="combobox"
+            aria-controls="rf-lb"
+            tabindex="0"
+          ></div>
+          <div
+            id="rf-lb"
             role="listbox"
             {{dRovingFocus
               focusStrategy="active-descendant"
@@ -75,8 +81,14 @@ module(
 
       await render(
         <template>
-          <div class="controller" role="combobox" tabindex="0"></div>
           <div
+            class="controller"
+            role="combobox"
+            aria-controls="rf-lb"
+            tabindex="0"
+          ></div>
+          <div
+            id="rf-lb"
             role="listbox"
             {{dRovingFocus
               focusStrategy="active-descendant"

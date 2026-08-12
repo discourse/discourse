@@ -628,8 +628,14 @@ module(
 
       await render(
         <template>
-          <div class="ctrl" role="combobox" tabindex="0"></div>
           <div
+            class="ctrl"
+            role="combobox"
+            aria-controls="rf-lb"
+            tabindex="0"
+          ></div>
+          <div
+            id="rf-lb"
             class="list"
             role="listbox"
             {{dRovingFocus
@@ -677,8 +683,9 @@ module(
 
       await render(
         <template>
-          <input class="search" role="combobox" />
+          <input class="search" role="combobox" aria-controls="rf-lb" />
           <div
+            id="rf-lb"
             class="list"
             role="listbox"
             {{dRovingFocus
