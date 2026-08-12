@@ -51,6 +51,22 @@ RSpec.describe Category do
     end
   end
 
+  describe "#minimum_required_tags" do
+    it "is zero when blank" do
+      category = Fabricate.build(:category, user: user, minimum_required_tags: nil)
+      category.validate
+
+      expect(category.minimum_required_tags).to eq(0)
+    end
+
+    it "keeps a set value" do
+      category = Fabricate.build(:category, user: user, minimum_required_tags: 3)
+      category.validate
+
+      expect(category.minimum_required_tags).to eq(3)
+    end
+  end
+
   describe "#subcategory_list_includes_topics?" do
     def includes_topics?(style)
       Category.new(subcategory_list_style: style).subcategory_list_includes_topics?

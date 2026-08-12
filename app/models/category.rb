@@ -142,6 +142,7 @@ class Category < ActiveRecord::Base
   validates :text_color, format: { with: /\A(\h{6}|\h{3})\z/ }
 
   before_validation :normalize_default_top_period
+  before_validation :normalize_minimum_required_tags
 
   before_save :apply_permissions
   before_save :downcase_email
@@ -1389,6 +1390,10 @@ class Category < ActiveRecord::Base
 
   def normalize_default_top_period
     self.default_top_period = nil if TopTopic.periods.exclude?(default_top_period&.to_sym)
+  end
+
+  def normalize_minimum_required_tags
+    self.minimum_required_tags = 0 if minimum_required_tags.blank?
   end
 
   def group_based_posting_review_mode?(post_type)
