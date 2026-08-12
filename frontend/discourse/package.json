@@ -77,7 +77,7 @@
     "morphlex": "^1.0.5",
     "orderedmap": "^2.1.1",
     "photoswipe": "5.4.4",
-    "picomatch": "^4.0.4",
+    "picomatch": "^4.0.5",
     "pikaday": "^1.8.2",
     "pretty-text": "workspace:1.0.0",
     "prosemirror-codemark": "^0.4.2",
