@@ -21089,6 +21089,13 @@ CREATE INDEX index_reviewables_on_status_and_type ON public.reviewables USING bt
 
 
 --
+-- Name: index_reviewables_on_target_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviewables_on_target_created_by_id ON public.reviewables USING btree (target_created_by_id);
+
+
+--
 -- Name: index_reviewables_on_target_id_where_post_type_eq_post; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23050,6 +23057,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260810154331'),
 ('20260728150000'),
 ('20260728071552'),
 ('20260728045008'),
