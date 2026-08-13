@@ -262,7 +262,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       end
 
       it "does not report partial data when the population exactly matches the cap" do
-        SiteSetting.stubs(:admin_site_traffic_event_cap).returns(11)
+        SiteSetting.admin_site_traffic_event_cap = 11
 
         expect(result.traffic.slice(:partial_data, :summary)).to eq(
           partial_data: nil,
@@ -277,7 +277,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       end
 
       it "does not promote a capped session continuation to an entry" do
-        SiteSetting.stubs(:admin_site_traffic_event_cap).returns(1)
+        SiteSetting.admin_site_traffic_event_cap = 1
         Fabricate(
           :browser_pageview_event,
           url: "/capped-session-entry",

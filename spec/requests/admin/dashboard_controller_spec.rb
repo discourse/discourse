@@ -1771,7 +1771,7 @@ RSpec.describe Admin::DashboardController do
 
       before do
         sign_in(admin)
-        SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
+        SiteSetting.admin_site_traffic_event_cap = 2
       end
 
       it "returns no more than the configured pageview cap" do
@@ -1866,7 +1866,7 @@ RSpec.describe Admin::DashboardController do
 
       it "returns both partial-data reasons" do
         sign_in(admin)
-        SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
+        SiteSetting.admin_site_traffic_event_cap = 2
 
         get "/admin/dashboard/site-traffic-explorer.json",
             params: request_params.merge(start_date: "2026-01-01")
