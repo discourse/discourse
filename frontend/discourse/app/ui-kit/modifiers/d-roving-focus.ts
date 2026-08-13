@@ -175,6 +175,7 @@ export type DRovingFocusStepResult = "moved" | "edge" | "unavailable";
 
 interface DRovingFocusArgs {
   /** Which focus-management strategy the group uses. Default `"roving-tabindex"`. */
+  /* Shape dictated by: Managing Focus in Composites, which names these two strategies. */
   focusStrategy?: DRovingFocusStrategy;
   /**
    * Navigation axes; `"grid"` (default) allows both, `"horizontal"`/`"vertical"` one. Ignored
@@ -191,6 +192,13 @@ interface DRovingFocusArgs {
    * item itself, so a control nested inside an item keeps its own activation.
    */
   onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
+  /*
+   * Together with `onActiveChange` below, this pair IS the practice page's selection-follows-
+   * focus switch, which is why both exist rather than one. Wire selection to `onActivate` to
+   * make the reader commit deliberately; wire it to `onActiveChange` to have it follow the
+   * cursor. The page's "Deciding When to Make Selection Automatically Follow Focus" is the
+   * guidance on which to choose, and a radio group and a listbox land on opposite answers.
+   */
   /**
    * Called whenever the cursor is placed on an item, or with `null` (and no `meta`) when the
    * highlight is cleared. `meta.pointer` is `true` when a pointer press placed it, which a
@@ -230,6 +238,12 @@ interface DRovingFocusArgs {
     axis: DRovingFocusAxis
   ) => void;
   /**
+   * DELIBERATE EXTENSION beyond the keyboard-interface practice, as are `onJump`,
+   * `onRegisterApi`, `itemsKey` and `resetKey`. The first three exist to pair the cursor with a
+   * virtualised list, where the DOM holds a window rather than the whole set; the last two are
+   * reactivity plumbing. Nothing in the practice page asks for any of them, and they are marked
+   * so the conformance surface stays legible from the surface itself.
+   *
    * The total number of navigable logical rows. Setting it is what makes PageUp/PageDown page:
    * without it those keys are left alone entirely so a scrollable container pages natively, Home
    * and End address the mounted items positionally, and {@link DRovingFocusArgs.onJump} is never
@@ -251,6 +265,7 @@ interface DRovingFocusArgs {
   /** Whether navigation wraps at the ends (default `false` = clamp). */
   wrap?: boolean;
   /** Focus mode: whether one item is reachable with Tab (default `true`). */
+  /* Shape dictated by: Navigation Between Components — the single-tab-stop contract. */
   tabStop?: boolean;
   /**
    * Focus mode: whether removing the item that holds focus moves the cursor to the item that
@@ -264,6 +279,7 @@ interface DRovingFocusArgs {
    */
   restoreLostFocus?: boolean;
   /** Class toggled on the active item in `"active-descendant"` mode. */
+  /* Shape dictated by: Discernible and Predictable Focus — the indicator must stay visible. */
   activeClass?: string | null;
   /**
    * A reactive key (e.g. the filter string) that re-reconciles the cursor when it changes. The
@@ -294,6 +310,7 @@ interface DRovingFocusArgs {
    * destroyed and re-created under the same selector must be signalled — pass the element itself,
    * or change another argument — or the listener stays on the detached node.
    */
+  /* Shape dictated by: Managing Focus in Composites Using aria-activedescendant. */
   controllerElement?: HTMLElement | string | null;
   /**
    * Where the cursor goes when there is no surviving one to keep. Default
@@ -325,6 +342,7 @@ interface DRovingFocusArgs {
    * In focus mode the two no-fallback values leave the group with no tab stop unless the author
    * supplies one, which is a deliberate way to hand that choice back rather than an oversight.
    */
+  /* Shape dictated by: Navigation Inside Components — the three entry conventions. */
   entryFocus?: DRovingFocusEntry;
   /**
    * Whether {@link DRovingFocusArgs.entryFocus}'s first-item fallback skips items the consumer
@@ -361,6 +379,7 @@ interface DRovingFocusArgs {
    * refuses focus to such a control outright, so targeting one would strand focus on `body`
    * rather than move it. Only the ARIA spelling is affected.
    */
+  /* Shape dictated by: Focusability of disabled controls. */
   disabledItems?: DRovingFocusDisabledItems;
   /**
    * Called for an arrow press on the axis this group does NOT navigate, so the keys a
@@ -419,7 +438,21 @@ interface DRovingFocusSignature {
 
 /**
  * Keyboard navigation for a one-dimensional list or a two-dimensional grid of
- * items, in DOM order. It implements the two WAI-ARIA "single tab stop" patterns
+ * items, in DOM order.
+ *
+ * Its conformance target is the WAI-ARIA Authoring Practices' keyboard-interface practice,
+ * https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/ — the sections implemented here
+ * are Discernible and Predictable Focus, Navigation Between Components, Navigation Inside
+ * Components, and the focusability of disabled controls. Focus VS Selection is split: the
+ * modifier owns the indicator, the consumer owns the chosen value.
+ *
+ * **Where the boundary falls.** Key BINDINGS come from the individual pattern pages, which that
+ * document delegates to, and pattern-specific SEMANTICS belong to consumers. So the modifier
+ * moves a cursor and reports what happened; what a step, an activation or a cross-axis press
+ * MEANS for a tree, a menubar or a treegrid is not its business. A behaviour earns a place here
+ * only if it means the same thing in every composite pattern.
+ *
+ * It implements the two WAI-ARIA "single tab stop" patterns
  * from one engine, chosen with `focusStrategy`:
  *
  * - `"roving-tabindex"` (the default) — exactly one item is reachable with Tab
@@ -436,7 +469,13 @@ interface DRovingFocusSignature {
  * it only re-runs when a named argument does, so a group whose rows come from state it cannot
  * see must pass `itemsKey`.
  *
- * Navigation is always DOM order. Row and column arithmetic uses the items that occupy a layout
+ * Navigation is always DOM order, which is a CONSTRAINT ON CONSUMERS rather than an
+ * implementation detail: the practice page stresses keeping the navigation order aligned with
+ * reading order, and CSS can reorder a grid visually (`order`, `grid-auto-flow: dense`, an
+ * explicit line placement) without moving anything in the DOM. Where those disagree the cursor
+ * follows the DOM and the reader sees it jump. Order the markup the way it should be read.
+ *
+ * Row and column arithmetic uses the items that occupy a layout
  * position — a disabled or `visibility: hidden` row still fills its cell, so counting only the
  * navigable ones would land a vertical step a column adrift. The column count is derived from
  * the resolved `grid-template-columns` at keydown time, never from element geometry
@@ -2310,6 +2349,18 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     );
   }
 
+  /**
+   * Chooses which item carries the group's single tab stop, and deliberately does NOT move focus
+   * to it.
+   *
+   * That silence is the contract, not an omission. The practice page is explicit that focus
+   * should not be set on page load, and a group seeding itself on render is the same event from
+   * the reader's side: they did not ask to be moved. Seeding decides where Tab will ARRIVE; only
+   * the reader decides when. The same rule holds for a re-render, where yanking focus would also
+   * interrupt whatever they were doing elsewhere.
+   *
+   * @param reseed - Whether an established tab stop should be reconsidered.
+   */
   #seedTabStop(reseed = false): void {
     const all = this.#allItems();
     // The preference below is consulted ONLY when this group takes a tab stop, so resolving it
