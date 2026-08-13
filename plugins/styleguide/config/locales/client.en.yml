@@ -110,8 +110,8 @@ en:
           toolbar:
             label: "Text formatting"
             example: "Toolbar"
-            example_description: "The whole bar is one tab stop. Activation is left to the native buttons rather than routed through the modifier, so Enter and Space behave exactly as they would without it."
-            try_this: "Tab in, then arrow along the bar. Home and End reach the ends. Tab out and back in to see which control you return to."
+            example_description: "The whole bar is one tab stop. Activation is left to the native buttons rather than routed through the modifier, so Enter and Space behave exactly as they would without it. Cut and Paste are disabled in the two different ways the practice page distinguishes, and the cursor treats them differently as a result."
+            try_this: "Tab in, then arrow along the bar. Home and End reach the ends. Arrow past Cut and Paste: Cut is stepped over, while Paste can be reached and read out but does nothing when activated."
             bold: "Bold"
             italic: "Italic"
             underline: "Underline"
