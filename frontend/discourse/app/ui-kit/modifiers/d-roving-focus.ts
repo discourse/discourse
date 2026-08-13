@@ -436,10 +436,15 @@ interface DRovingFocusArgs {
    * the query and narrow the match; the query lapses after a short pause, and Space extends it
    * rather than activating while one is under way.
    *
-   * Declined for a windowed group, where {@link DRovingFocusArgs.logicalCount} is set: the
-   * modifier can only see mounted rows, and answering from those would return a nearer match
-   * while a truer one sits off-window. A consumer that wants it there has to search its own
-   * data, which needs a callback this does not yet have.
+   * Declined when the DOM holds only part of the set — {@link DRovingFocusArgs.logicalCount}
+   * exceeding the mounted count — because answering from those rows returns a nearer match
+   * while a truer one sits off-window, which is worse than not answering. A consumer that wants
+   * it there has to search its own data, which needs a callback this does not yet have.
+   *
+   * A logical count alone does not decline it: that argument also drives paging, and a
+   * fully-mounted list may set it for that alone. Note the completeness test relies on the
+   * consumer declaring the count honestly — a group that windows without saying so is searched
+   * as though it were whole, and nothing here can detect that.
    */
   typeAhead?: boolean;
 }
@@ -1361,13 +1366,19 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * one keeps the item it already found.
    */
   #handleTypeAhead(event: KeyboardEvent): void {
-    if (this.#logicalCount != null) {
-      this.#warnWindowedTypeAhead();
-      return;
-    }
     if (!this.#accessibleName) {
       // Still loading. Consumed rather than passed on, so a half-typed word does not leak
       // through to whatever else is listening.
+      return;
+    }
+
+    const items = this.#items();
+    // The question is whether the DOM holds the WHOLE set, not whether a logical count was
+    // supplied: that argument's job is paging, and a fully-mounted list may set it for that
+    // alone. Searching an incomplete set is what has to be refused, because it answers with a
+    // nearer match while a truer one sits off-window — worse than not answering.
+    if (this.#logicalCount != null && this.#logicalCount > items.length) {
+      this.#warnWindowedTypeAhead();
       return;
     }
 
@@ -1380,7 +1391,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.#typeAheadQuery += event.key;
     this.#typeAheadAt = event.timeStamp;
 
-    const items = this.#items();
     if (!items.length) {
       return;
     }
@@ -1442,8 +1452,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#warnedWindowedTypeAhead = true;
       // eslint-disable-next-line no-console
       console.warn(
-        `dRovingFocus: typeAhead is declined while logicalCount is set. Only mounted rows are ` +
-          `visible here, so a search would answer with a nearer match while a truer one sits ` +
+        `dRovingFocus: typeAhead is declined because logicalCount exceeds the mounted rows. A ` +
+          `search over part of the set answers with a nearer match while a truer one sits ` +
           `off-window. Search the full data from the consumer instead.`
       );
     });

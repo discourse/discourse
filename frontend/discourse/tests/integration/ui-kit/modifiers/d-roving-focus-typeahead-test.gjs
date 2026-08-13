@@ -361,6 +361,39 @@ module(
         );
     });
 
+    test("still types when a logical count is set but nothing is off-window", async function (assert) {
+      const warn = sinon.stub(console, "warn");
+
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector=".item"
+              typeAhead=true
+              logicalCount=2
+            }}
+          >
+            <button class="item a" role="option" aria-label="Apple">1</button>
+            <button class="item b" role="option" aria-label="Banana">2</button>
+          </div>
+        </template>
+      );
+
+      await focus(".a");
+      pressKey(".a", "b");
+      await settled();
+
+      assert
+        .dom(document.activeElement)
+        .hasClass(
+          "b",
+          "every row is mounted, so the search is complete and there is nothing to be wrong about"
+        );
+      assert.false(warn.calledWithMatch(/typeAhead/), "and no reason to warn");
+    });
+
     test("declines to type-ahead over a windowed group", async function (assert) {
       const warn = sinon.stub(console, "warn");
 
