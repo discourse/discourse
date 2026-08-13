@@ -340,17 +340,14 @@
   padding: 0.5em 0.75em;
   border-top: 1px solid var(--primary-low);
 
-  // The footer states something; it is not a call to action competing with the list above it.
+  // The footer states something; it is not a call to action competing with the list above it —
+  // which is what `btn-flat` already means, so a control here wears that class and this only sets
+  // the smaller type. Nothing is restated: flat is transparent at rest, tertiary text, and fills
+  // with `--d-hover` on hover AND on `:focus-visible`. That last one matters more than it looks:
+  // a footer control is a real tab stop, since the panel takes part in the tab sequence, so it
+  // needs a focus indicator — and an earlier `background: none` here silently suppressed it.
   .btn {
-    padding: 0;
-    color: var(--tertiary);
     font-size: var(--font-down-1);
-
-    &:hover,
-    &:focus {
-      color: var(--tertiary-hover);
-      background: none;
-    }
   }
 }
 

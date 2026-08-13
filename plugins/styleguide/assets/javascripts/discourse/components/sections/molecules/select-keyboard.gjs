@@ -2,6 +2,7 @@ import { i18n } from "discourse-i18n";
 import KeyboardClearingSelectExample from "../../examples/molecules/select/keyboard/clearing";
 import MobileSelectExample from "../../examples/molecules/select/keyboard/mobile";
 import OpenBehaviourSelectExample from "../../examples/molecules/select/keyboard/open-behaviour";
+import TabOrderSelectExample from "../../examples/molecules/select/keyboard/tab-order";
 import KeyboardTranscriptSelectExample from "../../examples/molecules/select/keyboard/transcript";
 import KeyboardWalkthroughSelectExample from "../../examples/molecules/select/keyboard/walkthrough";
 import StyleguideExample from "../../styleguide-example";
@@ -30,6 +31,24 @@ export default <template>
         <li>{{i18n "styleguide.sections.select.keyboard_step_escape"}}</li>
         <li>{{i18n "styleguide.sections.select.keyboard_step_tab"}}</li>
       </ol>
+    </:note>
+  </StyleguideExample>
+
+  <StyleguideExample
+    class="--wide"
+    @title={{i18n "styleguide.sections.select.tab_order_example"}}
+    @description={{i18n "styleguide.sections.select.tab_order_description"}}
+    @tryThis={{i18n "styleguide.sections.select.tab_order_try_this"}}
+  >
+    <:default>
+      <div class="select-examples__control"><TabOrderSelectExample /></div>
+    </:default>
+    <:note>
+      <ul class="styleguide-example__note-list">
+        <li>{{i18n "styleguide.sections.select.tab_order_note_into"}}</li>
+        <li>{{i18n "styleguide.sections.select.tab_order_note_out"}}</li>
+        <li>{{i18n "styleguide.sections.select.tab_order_note_list"}}</li>
+      </ul>
     </:note>
   </StyleguideExample>
 

@@ -69,9 +69,12 @@ interface ComboboxQueryInputSignature {
  * remain siblings in the composite trigger box. It owns the combobox keyboard model that
  * DMenu's default button trigger does not:
  *
- * - **Tab** is stopped from bubbling to DMenu's trigger-root `forwardTabToContent`, so it
- *   exits the widget (and the resulting blur closes the overlay) instead of being pulled
- *   into the portaled list.
+ * - **Tab** is stopped from bubbling to DMenu's trigger-root `forwardTabToContent`, which
+ *   would pull focus into the panel whenever one is open — onto the body wrapper itself when
+ *   the panel holds nothing but a list. Stopped here, Tab exits the widget instead, and the
+ *   resulting blur closes the overlay. A panel that renders a control of its own (a `:footer`,
+ *   the error state's retry) is reached before this, by the overlay's `inlineTabOrder`
+ *   handler, which listens in the capture phase and declines a panel with no stop to offer.
  * - **ArrowDown/ArrowUp** open the overlay when closed; once open they reach `dRovingFocus`
  *   (bound to this same input) to move the virtual highlight.
  * - **Escape** closes; **Enter** is handled by `dRovingFocus` (activates the highlighted
@@ -143,7 +146,9 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
   @action
   handleKeydown(event: KeyboardEvent): void {
     // Neutralize DMenu's trigger-root `forwardTabToContent` (a bubble-phase listener):
-    // stop the bubble but don't preventDefault, so focus leaves the widget naturally.
+    // stop the bubble but don't preventDefault, so focus leaves the widget naturally. A panel
+    // with a control of its own has already claimed this press in the capture phase, so this
+    // is only reached when leaving really is the right outcome.
     if (event.key === "Tab") {
       event.stopPropagation();
       return;

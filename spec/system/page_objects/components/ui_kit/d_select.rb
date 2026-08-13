@@ -183,6 +183,133 @@ module PageObjects
           remove_buttons.map { |button| button[:tabindex] }
         end
 
+        # The query input for a panel-searchable (`button`) variant, which renders inside the
+        # portaled overlay rather than in the trigger. `input` reaches the typeahead's trigger
+        # input instead, and finds nothing here: the panel builds its filter from `DFilterInput`
+        # (an `input.filter-input`), not the typeahead's `.d-combobox__input`. The class DSelect
+        # puts on it is what both variants have in common to key on.
+        def panel_input
+          find(in_panel(".d-combobox__filter"))
+        end
+
+        def panel_input_focused?
+          page.has_css?(owned_focus_selector(".d-combobox__filter"))
+        end
+
+        # Whether DOM focus rests anywhere in this instance's overlay, the panel itself included.
+        # Waiting matchers rather than an `activeElement` sample, for the reason `input_focused?`
+        # documents: focus moves a beat after the keystroke that causes it.
+        def panel_focused?
+          @panel ? page.has_css?("#{@panel}:focus, #{@panel} :focus") : false
+        end
+
+        def panel_blurred?
+          @panel ? page.has_no_css?("#{@panel}:focus, #{@panel} :focus") : true
+        end
+
+        # Whether focus rests on the windowed list's scroll viewport — the element a browser
+        # with keyboard-focusable scrollers will adopt as a tab stop when the list carries no
+        # focusable descendants of its own. Paired with the waiting negative, since asserting
+        # focus is elsewhere through `has_css?` costs a full timeout on every run.
+        def list_scroller_focused?
+          page.has_css?(in_panel(".d-virtual-list:focus"))
+        end
+
+        def list_scroller_blurred?
+          page.has_no_css?(in_panel(".d-virtual-list:focus"))
+        end
+
+        # The `tabindex` the windowed list's scroll viewport carries, or nil for none.
+        def list_scroller_tabindex
+          find(in_panel(".d-virtual-list"))[:tabindex]
+        end
+
+        def trigger_focused?
+          page.has_css?("#{@root}:focus")
+        end
+
+        # Whether focus rests on a control the consumer yielded into the panel's `:footer`, or on
+        # the error state's retry action. Both live in the portaled panel rather than the trigger,
+        # so they are only reachable once the panel participates in the tab sequence.
+        def footer_control_focused?
+          page.has_css?(in_panel(".d-combobox__footer button:focus"))
+        end
+
+        def retry_focused?
+          page.has_css?(in_panel(".d-combobox__retry:focus"))
+        end
+
+        # Whether DOM focus rests anywhere this instance owns — the trigger subtree or the panel.
+        # The waiting negative is the useful direction: it is how a test asserts Tab left the
+        # widget entirely without paying a full timeout for a `has_css?` that will never match.
+        def widget_focused?
+          page.has_css?(owned_scopes.map { |scope| "#{scope}:focus, #{scope} :focus" }.join(", "))
+        end
+
+        def widget_blurred?
+          page.has_no_css?(
+            owned_scopes.map { |scope| "#{scope}:focus, #{scope} :focus" }.join(", "),
+          )
+        end
+
+        # Stamps `data-tab-oracle` on the host-document tab stops immediately before and after
+        # this instance's trigger, so a test can name where Tab *should* land without hard-coding
+        # a neighbouring example's markup.
+        #
+        # Must run while the overlay is CLOSED. The overlay is portaled to the end of the
+        # document, so once open its own controls enumerate as host tab stops and the neighbour
+        # this computes is no longer the one the user would reach.
+        #
+        # Returns the enumeration for the caller to sanity-check, since a page whose trigger has
+        # no following tab stop would satisfy a "focus left the widget" assertion vacuously.
+        def mark_tab_order_oracle
+          page.evaluate_script(<<~JS)
+            (function () {
+              const SELECTOR = [
+                "a[href]",
+                "button:not([disabled])",
+                "input:not([disabled])",
+                "select:not([disabled])",
+                "textarea:not([disabled])",
+                "summary",
+                "[tabindex]:not([tabindex='-1'])",
+              ].join(", ");
+
+              document
+                .querySelectorAll("[data-tab-oracle]")
+                .forEach((el) => el.removeAttribute("data-tab-oracle"));
+
+              const trigger = document.querySelector("#{@root}");
+              if (!trigger) {
+                return null;
+              }
+
+              const tabbables = [...document.querySelectorAll(SELECTOR)].filter((el) => {
+                if (el.closest("[aria-hidden='true']")) {
+                  return false;
+                }
+                return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+              });
+
+              const index = tabbables.indexOf(trigger);
+              if (index === -1) {
+                return null;
+              }
+
+              const before = tabbables[index - 1];
+              const after = tabbables[index + 1];
+              if (before) {
+                before.setAttribute("data-tab-oracle", "before");
+              }
+              if (after) {
+                after.setAttribute("data-tab-oracle", "after");
+              }
+
+              return { hasBefore: !!before, hasAfter: !!after };
+            })()
+          JS
+        end
+
         def listbox
           find(in_panel("[role='listbox']"))
         end

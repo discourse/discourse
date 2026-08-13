@@ -105,9 +105,13 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
     @retainWhileReloading={{@feedback.retainRowsWhileReloading}}
   >
     <:loading>
+      {{! The skeleton scrolls itself, and its rows are inert placeholders, so it would be
+      adopted as a tab stop by a browser with keyboard-focusable scrollers — a stop onto
+      nothing, in a panel the reader is still waiting on. }}
       <ul
         class="d-combobox__listbox d-combobox__listbox--loading"
         aria-busy="true"
+        tabindex="-1"
       >
         {{#each @feedback.skeletonRows key="key" as |row|}}
           <li class="d-combobox__skeleton" data-key={{row.key}}>
@@ -130,6 +134,14 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             @onReachEnd={{@engine.revealMore}}
             @onRegisterApi={{@listbox.registerListboxApi}}
             @pinnedIndices={{@listbox.windowPins items}}
+            {{! The options are reached with the arrow keys from the combobox controller, so the
+            scroll viewport must not also be a tab stop: in active roving mode the rows carry no
+            tabindex, which is exactly the shape a browser adopts the scroller for, and it would
+            land the reader on a wrapper with nothing to do. This is also what lets the panel's
+            own Tab handling enumerate its tab stops truthfully — an adopted scroller reports
+            a tabIndex of -1 and matches no focusable selector, so it is invisible to any such
+            enumeration while still consuming a Tab press. }}
+            @viewportTabbable={{false}}
             {{! First render only, so it reveals the held value on open and never
             fights a reader who has scrolled. Centred rather than aligned to the top:
             a selection pinned to the first row hides the options around it, which are

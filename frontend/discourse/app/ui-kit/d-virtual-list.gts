@@ -188,6 +188,21 @@ interface DVirtualListSignature<T> {
      */
     as?: string;
     /**
+     * Whether the scroll viewport may take sequential focus. Defaults to `true`, which leaves
+     * the decision to the browser.
+     *
+     * A browser with keyboard-focusable scrollers adopts a scroll container as a tab stop when
+     * it holds no focusable descendants, so that a list which can only be read by scrolling is
+     * still reachable from the keyboard. Pass `false` when the rows are already reachable some
+     * other way and that tab stop would be a dead end — a listbox whose cursor is driven by
+     * `aria-activedescendant`, for instance, leaves its options without a tabindex but is fully
+     * navigable with the arrow keys from its controller.
+     *
+     * Opt out only with such a route in hand: without one this removes the sole keyboard access
+     * to the list's content.
+     */
+    viewportTabbable?: boolean;
+    /**
      * When set, the default block yields `[item, rowContext]` and the CONSUMER
      * renders the row element, applying `{{rowContext.place}}` + `{{rowContext.measure}}`
      * (no wrapper, native semantic rows). When omitted, the primitive wraps the
@@ -485,6 +500,16 @@ export default class DVirtualList<T> extends Component<
   }
 
   /**
+   * `-1` once a consumer has opted the viewport out of the tab order, and otherwise absent so
+   * the browser keeps its own judgement. Written as an explicit attribute rather than left off,
+   * because a scroller a browser has adopted reports `tabIndex === -1` either way — the
+   * attribute is what actually suppresses the adoption.
+   */
+  get viewportTabIndex() {
+    return this.args.viewportTabbable === false ? "-1" : undefined;
+  }
+
+  /**
    * The true total, which is exactly what a windowed list must publish: the DOM
    * count is a lie, and `-1` ("indeterminable") throws away a number we have.
    * Consumers windowing an unbounded stream pass `@setSize={{-1}}` explicitly.
@@ -533,6 +558,7 @@ export default class DVirtualList<T> extends Component<
         semantic element owns them. Size this viewport from CSS. }}
     <div
       class="d-virtual-list"
+      tabindex={{this.viewportTabIndex}}
       {{dVirtualizer
         items=@items
         estimateSize=@estimateSize

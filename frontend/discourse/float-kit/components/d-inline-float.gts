@@ -14,6 +14,12 @@ interface DInlineFloatSignature {
     /** Whether to trap Tab focus within the content. */
     trapTab?: boolean;
 
+    /**
+     * Whether the content takes part in the tab sequence as if rendered inline after the trigger.
+     * The non-containing alternative to `trapTab`; the two are mutually exclusive.
+     */
+    inlineTabOrder?: boolean;
+
     /** A class added to the outer float element. */
     mainClass?: string;
 
@@ -64,6 +70,7 @@ const DInlineFloat: TemplateOnlyComponent<DInlineFloatSignature> = <template>
       <DFloatBody
         @instance={{@instance}}
         @trapTab={{@trapTab}}
+        @inlineTabOrder={{@inlineTabOrder}}
         @mainClass={{@mainClass}}
         @innerClass={{@innerClass}}
         @role={{@role}}

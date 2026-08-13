@@ -24,9 +24,9 @@ const FooterContents = <template>
     </span>
   {{/if}}
   <DButton
-    class="btn-transparent"
+    class="btn-flat"
     @action={{@state.close}}
-    @icon="arrow-up-right-from-square"
+    @icon="up-right-from-square"
     @label="styleguide.sections.select.content.footer_view_all"
   />
 </template>;

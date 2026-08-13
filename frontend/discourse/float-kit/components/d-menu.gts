@@ -316,6 +316,7 @@ export default class DMenu<Data = unknown> extends Component<
         <DFloatBody
           @instance={{this.menuInstance}}
           @trapTab={{this.options.trapTab}}
+          @inlineTabOrder={{this.options.inlineTabOrder}}
           @mainClass={{dConcatClass
             "fk-d-menu"
             (concat this.options.identifier "-content")

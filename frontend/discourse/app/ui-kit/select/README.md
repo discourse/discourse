@@ -37,6 +37,30 @@ entirely on `d-select.gts` and `select-engine.ts`.
 - `-internals/modify-select-kit-bridge.ts` — the deprecated legacy compatibility bridge,
   slated for removal.
 
+### Why the panel is portaled
+
+The overlay is a `DMenu`, so on desktop float-kit teleports the panel into a portal outlet near
+the document root rather than rendering it beside the trigger. That is deliberate and worth not
+undoing: the portal is what lets the panel escape the `overflow` clipping and stacking context of
+whatever contains the field, and a combobox has to work inside modals, the composer, the sidebar,
+admin tables and chat. The component this replaces rendered its list inline and paid for it —
+`position: fixed` by default on desktop, per-call-site strategy overrides, a `transform`
+containing-block hack on one table container, and a recurring tail of "dropdown is cut off" fixes.
+
+Rendering near the trigger (float-kit's `portalOutletElement`) was evaluated and rejected. It
+would make the tab order correct for free, since the panel would be adjacent in document order,
+but it re-acquires exactly that clipping tax. The cost is paid instead by `@inlineTabOrder`, which
+makes the portaled panel take part in the tab sequence as if it were inline: Tab leads into the
+panel's own controls and, off the end of them, continues from the trigger.
+
+Two things to know when testing this area. float-kit renders floats **in place** under tests
+(`DFloatPortal`, `@inline ?? isTesting()`), so a component test sees no portal unless it forces
+one with `@inline={{false}}` plus an outlet — which is worth doing, since `tab()` dispatches a
+cancelable keydown and so does exercise the real handling. What no component test can reach is a
+browser adopting a scroll container as a tab stop: such an element reports `tabIndex === -1` and
+matches no focusable selector, so `tab()` skips it whether or not it was suppressed. That one
+assertion needs a real browser.
+
 ## Custom row content
 
 Six named blocks control what the component renders: `:item`, `:selection`, `:groupHeader`,

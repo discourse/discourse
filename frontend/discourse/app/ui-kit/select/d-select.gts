@@ -540,6 +540,18 @@ export default class DSelect extends Component<DSelectSignature> {
         min-width floor overrides that (it also gives the windowed option list a real width). }}
       @contentClass="d-combobox__content"
       @trapTab={{false}}
+      {{! The panel is portaled away from the trigger, so Tab follows the portal's place in the
+        document instead of the field's. Both directions need it, for different variants: the
+        panel-searchable trigger keeps its controller INSIDE the panel, so Tab out of it must
+        continue from the trigger; every variant can render a control in the panel (a footer block,
+        the error state's retry), which nothing would otherwise lead into. Containment is the
+        wrong tool for either — the desktop panel is a non-modal dialog, dismissed by clicking
+        outside, so Tab is meant to leave it.
+
+        Ungated: a panel with nothing focusable in it is unaffected in both directions, so a
+        plain list still lets Tab pass over the widget and is still read with the arrow keys.
+        Inert on mobile, where the overlay is a DModal that owns its own containment. }}
+      @inlineTabOrder={{true}}
       {{! Typeahead: keep DMenu's default click-to-open (the whole trigger root opens the
         overlay) but disable close-on-click so clicking the already-open trigger/input does
         not toggle it shut, and focus the input on open. Resetting the query is not scoped
