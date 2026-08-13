@@ -12,6 +12,12 @@ import Modifier, { type ArgsFor } from "ember-modifier";
  * different concept.
  */
 export type DRovingFocusStrategy = "roving-tabindex" | "active-descendant";
+
+/**
+ * Whether an `aria-disabled` item is a cursor target. Named for the two behaviours rather than
+ * spelled as a boolean, because the call site should say which one it wants.
+ */
+export type DRovingFocusDisabledItems = "skip" | "focusable";
 type Orientation = "grid" | "horizontal" | "vertical";
 
 /**
@@ -324,6 +330,25 @@ interface DRovingFocusArgs {
    * it.
    */
   fallbackSkipsMarked?: boolean;
+  /**
+   * Whether the cursor may rest on an item the consumer has marked `aria-disabled="true"`.
+   * Default `"skip"`, which is what a listbox or combobox wants.
+   *
+   * The practice page's section on the focusability of disabled controls draws a distinction
+   * this collapses by default: `disabled` is for state a reader can infer from context, while
+   * `aria-disabled` is for state that must stay discoverable, because moving focus to a control
+   * is how a screen reader user finds out it exists at all. Toolbars and menus are the patterns
+   * that need it.
+   *
+   * `"focusable"` widens where the cursor may LAND, and nothing else. A disabled item is still
+   * never activated, so {@link DRovingFocusArgs.onActivate} does not fire on one under either
+   * value. Reachable and operable are separate questions and only the first is opened here.
+   *
+   * Note the asymmetry with native `disabled`, which no value can override: the platform
+   * refuses focus to such a control outright, so targeting one would strand focus on `body`
+   * rather than move it. Only the ARIA spelling is affected.
+   */
+  disabledItems?: DRovingFocusDisabledItems;
 }
 
 interface DRovingFocusSignature {
@@ -432,6 +457,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #activeClass: string | null = null;
   #entryFocus: DRovingFocusEntry = "selected-or-first";
   #fallbackSkipsMarked = false;
+  #disabledItems: DRovingFocusDisabledItems = "skip";
 
   /** The ARIA anchor: the container (focus) or controller (active). */
   #listenElement: HTMLElement | null = null;
@@ -826,7 +852,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         if (
           current >= 0 &&
           this.#onActivate &&
-          this.#isNavigable(cells[current]) &&
+          this.#isActivatable(cells[current]) &&
           (this.#mode === "active-descendant" ||
             event.target === cells[current])
         ) {
@@ -979,6 +1005,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.#activeClass = named.activeClass ?? null;
     this.#entryFocus = named.entryFocus ?? "selected-or-first";
     this.#fallbackSkipsMarked = named.fallbackSkipsMarked ?? false;
+    this.#disabledItems = named.disabledItems ?? "skip";
     // The read itself is the whole point: consuming the tag is what makes a changed
     // `itemsKey` re-run `modify()` and reconcile the cursor. The value is never needed,
     // so it is discarded rather than stored.
@@ -1193,14 +1220,38 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   /**
-   * Whether an item can be a navigation target — it occupies space, is not disabled, and is
-   * not hidden.
+   * Whether the consumer has marked the item disabled without removing its focusability.
+   *
+   * @param el - The candidate item.
+   */
+  #isAriaDisabled(el: HTMLElement): boolean {
+    return el.getAttribute("aria-disabled") === "true";
+  }
+
+  /**
+   * Whether Enter or Space may fire {@link DRovingFocusArgs.onActivate} on an item.
+   *
+   * Strictly narrower than {@link #isNavigable} and deliberately not derived from the same
+   * answer: under `disabledItems="focusable"` the cursor is allowed to REST on a disabled item
+   * so a reader can discover it, which must not also make it operable. The two questions only
+   * coincide under the default policy.
+   *
+   * @param el - The item holding the cursor.
+   */
+  #isActivatable(el: HTMLElement): boolean {
+    return !this.#isAriaDisabled(el) && this.#isNavigable(el);
+  }
+
+  /**
+   * Whether an item can be a navigation target — it occupies space, is not hidden, and is not
+   * disabled in a way that would refuse focus. Which disabled items qualify is
+   * {@link DRovingFocusArgs.disabledItems}; the native spelling never does.
    *
    * @param el - The candidate item.
    * @returns `true` when the cursor may rest on the item.
    */
   #isNavigable(el: HTMLElement): boolean {
-    if (el.getAttribute("aria-disabled") === "true") {
+    if (this.#disabledItems === "skip" && this.#isAriaDisabled(el)) {
       return false;
     }
     // `:disabled` rather than the `disabled` IDL property, so a control disabled through an

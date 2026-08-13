@@ -26,9 +26,11 @@ const COMMANDS = [
  * pattern where a marked item must NOT win: a button marking the current view would otherwise
  * take the tab stop away from the first.
  *
- * The last two commands spell disabled differently on purpose. Both are skipped by the cursor
- * today, which is the behaviour the practice page's section on the focusability of disabled
- * controls asks us to reconsider.
+ * The last two commands spell disabled differently on purpose, and under this policy they behave
+ * differently: the natively disabled one is skipped because the platform will not focus it,
+ * while the aria-disabled one keeps its place in the sequence. Moving focus to a control is how
+ * a screen reader user discovers it exists, so the second stays reachable without ever becoming
+ * operable.
  */
 export default class RovingFocusToolbarExample extends Component {
   @tracked pressed = {};
@@ -63,6 +65,7 @@ export default class RovingFocusToolbarExample extends Component {
         orientation="horizontal"
         itemSelector=".roving-demo__item"
         entryFocus="first"
+        disabledItems="focusable"
       }}
     >
       {{#each this.toggles key="id" as |item|}}

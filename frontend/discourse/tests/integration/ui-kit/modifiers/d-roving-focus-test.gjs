@@ -2952,6 +2952,103 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     );
   });
 
+  test('disabledItems="focusable" lets the cursor reach an aria-disabled item', async function (assert) {
+    await render(
+      <template>
+        <div
+          role="toolbar"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector=".item"
+            disabledItems="focusable"
+          }}
+        >
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item a">A</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item b" aria-disabled="true">B</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item c">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+
+    assert
+      .dom(document.activeElement)
+      .hasClass(
+        "b",
+        "moving focus is how a screen reader user discovers the control is there at all"
+      );
+  });
+
+  test('disabledItems="focusable" still refuses to activate the item', async function (assert) {
+    const activated = [];
+    const onActivate = (item) => activated.push(item.className);
+
+    await render(
+      <template>
+        <div
+          role="toolbar"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector=".item"
+            disabledItems="focusable"
+            onActivate=onActivate
+          }}
+        >
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item a">A</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item b" aria-disabled="true">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".b");
+    await triggerKeyEvent(".b", "keydown", "Enter");
+
+    assert.deepEqual(
+      activated,
+      [],
+      "reachable and activatable are separate, so the policy widens only the first"
+    );
+  });
+
+  test('disabledItems="focusable" cannot resurrect a natively disabled control', async function (assert) {
+    await render(
+      <template>
+        <div
+          role="toolbar"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector=".item"
+            disabledItems="focusable"
+          }}
+        >
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item a">A</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item b" disabled>B</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item c">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+
+    assert
+      .dom(document.activeElement)
+      .hasClass(
+        "c",
+        "the platform refuses focus to a disabled control, so no policy here can offer it"
+      );
+  });
+
   test("changing itemSelector releases the items it no longer matches", async function (assert) {
     const state = new (class {
       @tracked selector = ".one";
