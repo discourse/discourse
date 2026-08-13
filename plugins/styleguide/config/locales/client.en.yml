@@ -116,6 +116,9 @@ en:
             tree:
               title: "Tree"
               description: "A vertical cursor over the visible rows, with hierarchy left to the consumer."
+            adjacent:
+              title: "Beside a control"
+              description: "A group that Tab never reaches, entered and left through its edges."
             components:
               title: "With components"
               description: "The same cursor over real buttons, where items are destroyed under it."
@@ -141,6 +144,26 @@ en:
             keyboard: "Keyboard"
             release: "Release"
             support: "Support"
+          multi:
+            label: "Accessibility checks"
+            example: "Multi-select entry"
+            example_description: "Entry lands on the first chosen row, returning the reader to their own selection rather than to the top. That knowingly starts the cursor where the next Space would remove something, which is the trade the pattern makes. Arrows wrap, so passing the last row returns to the first."
+            try_this: "Note that the cursor starts on the chosen row rather than the first one, then arrow past the last row to come back around to the top."
+            keyboard: "Keyboard navigable"
+            contrast: "Sufficient contrast"
+            captions: "Captions provided"
+            motion: "Reduced motion honoured"
+            labels: "Fields are labelled"
+          adjacent:
+            label: "Filters"
+            field: "Search"
+            placeholder: "Search topics"
+            example: "A group Tab does not reach"
+            example_description: "The filters are not in the tab sequence, so Tab goes straight to the field and the pair counts as one component rather than two. The filters are reached with an arrow from the start of the field, and running off their end returns there. The modifier reports the edge and the direction; where to go next is this example's decision, because only it knows the field exists."
+            try_this: "Tab in and notice you land on the field, not the filters. With the caret at the start, press the left arrow to step into them, arrow between them, then continue past the last to return to the field."
+            open: "Open"
+            mine: "Mine"
+            recent: "Recent"
           listbox:
             label: "Fruit"
             example: "Listbox with type-ahead"

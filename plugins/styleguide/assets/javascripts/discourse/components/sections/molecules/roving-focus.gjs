@@ -1,9 +1,13 @@
 import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
+import RovingFocusAdjacentGroupsExample from "../../examples/molecules/roving-focus/adjacent-groups";
+import rovingFocusAdjacentGroupsSource from "../../examples/molecules/roving-focus/adjacent-groups?source=file";
 import RovingFocusComboboxExample from "../../examples/molecules/roving-focus/combobox";
 import rovingFocusComboboxSource from "../../examples/molecules/roving-focus/combobox?source=file";
 import RovingFocusListboxExample from "../../examples/molecules/roving-focus/listbox";
 import rovingFocusListboxSource from "../../examples/molecules/roving-focus/listbox?source=file";
+import RovingFocusMultiSelectExample from "../../examples/molecules/roving-focus/multi-select";
+import rovingFocusMultiSelectSource from "../../examples/molecules/roving-focus/multi-select?source=file";
 import RovingFocusRadioGroupExample from "../../examples/molecules/roving-focus/radio-group";
 import rovingFocusRadioGroupSource from "../../examples/molecules/roving-focus/radio-group?source=file";
 import RovingFocusRemovableTagsExample from "../../examples/molecules/roving-focus/removable-tags";
@@ -21,6 +25,7 @@ const GROUPS = [
   "combobox",
   "radio",
   "tree",
+  "adjacent",
   "components",
 ];
 
@@ -70,6 +75,16 @@ export default class RovingFocus extends Component {
       </Group>
 
       <Group @id="listbox">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.roving_focus.multi.example"}}
+          @description={{i18n
+            "styleguide.sections.roving_focus.multi.example_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.roving_focus.multi.try_this"}}
+          @code={{rovingFocusMultiSelectSource}}
+        >
+          <RovingFocusMultiSelectExample />
+        </StyleguideExample>
         <StyleguideExample
           @title={{i18n "styleguide.sections.roving_focus.listbox.example"}}
           @description={{i18n
@@ -128,6 +143,19 @@ export default class RovingFocus extends Component {
           @tryThis={{i18n "styleguide.sections.roving_focus.tree.rtl_try_this"}}
         >
           <RovingFocusTreeExample @dir="rtl" />
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="adjacent">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.roving_focus.adjacent.example"}}
+          @description={{i18n
+            "styleguide.sections.roving_focus.adjacent.example_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.roving_focus.adjacent.try_this"}}
+          @code={{rovingFocusAdjacentGroupsSource}}
+        >
+          <RovingFocusAdjacentGroupsExample />
         </StyleguideExample>
       </Group>
 

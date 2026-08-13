@@ -365,6 +365,16 @@ interface DRovingFocusArgs {
    * Constrains the fallback only, never a restored selection: the reader chose that row
    * themselves and can see it is marked, so it is seeded even where activating it would remove
    * it.
+   *
+   * **Scoped to a popup that seeds itself, and deliberately NOT the listbox convention.** The
+   * listbox pattern says the opposite for a multi-select group receiving focus — land on the
+   * first selected option, returning the reader to their own selection — and accepts that the
+   * next toggle key removes it, because they tabbed in on purpose and can see where the cursor
+   * is. This exists for the case that pattern does not cover: a combobox popup where the cursor
+   * is placed automatically, focus is still in the input, and Enter reads as "take this" rather
+   * than "toggle this", so an auto-seeded cursor on a held row silently drops a value the reader
+   * never navigated to. Reach for `entryFocus="selected-or-first"` in a listbox; reach for this
+   * in a popup.
    */
   fallbackSkipsMarked?: boolean;
   /**

@@ -8,8 +8,10 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import RovingFocusAdjacentGroupsExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/adjacent-groups";
 import RovingFocusComboboxExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/combobox";
 import RovingFocusListboxExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/listbox";
+import RovingFocusMultiSelectExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/multi-select";
 import RovingFocusRadioGroupExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/radio-group";
 import RovingFocusRemovableTagsExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/removable-tags";
 import RovingFocusToolbarExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/toolbar";
@@ -470,6 +472,97 @@ module(
       assert.false(
         warn.calledWithMatch(/aria-activedescendant/),
         "aria-controls is one of the three permitted relationships, so no warning is raised"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | Component | roving-focus examples | multi-select",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("entry lands on the row already chosen", async function (assert) {
+      await render(<template><RovingFocusMultiSelectExample /></template>);
+
+      const seeded = findAll(".roving-demo__option").find(
+        (el) => el.getAttribute("tabindex") === "0"
+      );
+
+      assert
+        .dom(findAll(".roving-demo__option")[0])
+        .hasAttribute("aria-selected", "true", "the first row is chosen");
+      assert
+        .dom(seeded)
+        .hasAttribute(
+          "data-option-id",
+          "keyboard",
+          "the pattern returns a reader to their own selection rather than to the top of the list"
+        );
+    });
+
+    test("arrows wrap past the last row", async function (assert) {
+      await render(<template><RovingFocusMultiSelectExample /></template>);
+
+      const rows = findAll(".roving-demo__option");
+      rows[rows.length - 1].focus();
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+
+      assert
+        .dom(document.activeElement)
+        .hasAttribute(
+          "data-option-id",
+          "keyboard",
+          "passing the end returns to the top rather than stopping"
+        );
+    });
+  }
+);
+
+module(
+  "Integration | Component | roving-focus examples | adjacent groups",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("the filters are not in the tab sequence", async function (assert) {
+      await render(<template><RovingFocusAdjacentGroupsExample /></template>);
+
+      const tabbable = findAll(".roving-demo__filter").filter(
+        (el) => el.getAttribute("tabindex") !== "-1"
+      );
+
+      assert.strictEqual(
+        tabbable.length,
+        0,
+        "every filter is out of the tab order, so Tab reaches the field instead"
+      );
+    });
+
+    test("an arrow from the start of the field steps into the filters", async function (assert) {
+      await render(<template><RovingFocusAdjacentGroupsExample /></template>);
+
+      const field = document.querySelector(".roving-demo__field");
+      field.focus();
+      field.setSelectionRange(0, 0);
+      await triggerKeyEvent(field, "keydown", "ArrowLeft");
+
+      assert
+        .dom(document.activeElement)
+        .hasText("Recent", "the nearest filter takes the cursor");
+    });
+
+    test("running off the end of the filters returns to the field", async function (assert) {
+      await render(<template><RovingFocusAdjacentGroupsExample /></template>);
+
+      const filters = findAll(".roving-demo__filter");
+      const last = filters[filters.length - 1];
+      last.focus();
+      await triggerKeyEvent(last, "keydown", "ArrowRight");
+
+      assert.strictEqual(
+        document.activeElement,
+        document.querySelector(".roving-demo__field"),
+        "the boundary report is what sends it back, since the modifier does not know the field is there"
       );
     });
   }
