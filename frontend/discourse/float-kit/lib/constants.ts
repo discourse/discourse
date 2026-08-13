@@ -217,6 +217,19 @@ export interface MenuOptions extends TooltipOptions {
   /** Whether to focus the content when the menu opens. */
   autofocus: boolean;
 
+  /**
+   * Whether the menu takes part in the tab sequence as if it were rendered inline after its
+   * trigger, rather than at the portal's position in the document. Tab leads into the menu's own
+   * controls from the trigger, and off the end of them it closes the menu and continues from the
+   * trigger.
+   *
+   * The non-containing alternative to `trapTab`, for a menu that is dismissable but whose content
+   * holds focus. A menu with nothing focusable in it is unaffected in either direction, so this
+   * is safe to set on a menu that only sometimes renders a control. Desktop only, since the
+   * mobile modal is a real `aria-modal` dialog that owns its own containment.
+   */
+  inlineTabOrder: boolean;
+
   /** Whether the menu renders as a modal on mobile. */
   modalForMobile: boolean;
 
@@ -392,6 +405,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
+    inlineTabOrder: false,
     contentRole: "dialog",
     onClose: null,
     onShow: null,
