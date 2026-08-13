@@ -317,17 +317,20 @@
   }
 
   &__dimension-label {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    display: flex;
     align-items: center;
-    gap: var(--space-2);
     min-width: 0;
     width: 100%;
   }
 
+  &__dimension-prefix {
+    flex: 0 0 auto;
+    margin-inline-end: var(--space-2);
+  }
+
   &__dimension-text {
     @include ellipsis;
-    grid-column: 2;
+    flex: 1 1 auto;
     min-width: 0;
   }
 
