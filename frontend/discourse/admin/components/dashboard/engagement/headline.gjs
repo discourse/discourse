@@ -11,7 +11,6 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const PRESET_PERIODS = ["last_7_days", "last_30_days", "last_3_months"];
 const PERCENTAGE_KPIS = ["dau_mau"];
 const METRIC_NAMES = {
   dau_mau: "stickiness",
@@ -133,7 +132,6 @@ class MetricItem extends Component {
         {{else}}
           <div class={{concat "db-delta " this.deltaClass}}>
             {{this.deltaText}}
-            <span class="db-delta__label">{{@comparisonLabel}}</span>
           </div>
         {{/if}}
       {{/if}}
@@ -288,13 +286,6 @@ export default class EngagementHeadline extends Component {
     };
   }
 
-  get comparisonLabel() {
-    const key = PRESET_PERIODS.includes(this.args.period)
-      ? this.args.period
-      : "previous_period";
-    return i18n(`admin.dashboard.highlights.comparison.${key}`);
-  }
-
   <template>
     <div class="db-section__subheader">
       {{#if this.headline}}
@@ -305,10 +296,7 @@ export default class EngagementHeadline extends Component {
       {{/if}}
       <div class="db-section__metrics">
         {{#each @kpis as |metric|}}
-          <MetricItem
-            @metric={{metric}}
-            @comparisonLabel={{this.comparisonLabel}}
-          />
+          <MetricItem @metric={{metric}} />
         {{/each}}
       </div>
     </div>
