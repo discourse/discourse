@@ -4,6 +4,7 @@ import { guidFor } from "@ember/object/internals";
 import type Owner from "@ember/owner";
 import { cancel, next as nextRunloop } from "@ember/runloop";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 
 /**
  * Which of the practice page's two focus-management strategies the group uses:
@@ -19,6 +20,18 @@ export type DRovingFocusStrategy = "roving-tabindex" | "active-descendant";
  */
 export type DRovingFocusDisabledItems = "skip" | "focusable";
 type Orientation = "grid" | "horizontal" | "vertical";
+
+/**
+ * Folds case AND diacritics, so `e` matches `Éclair`. `toLocaleLowerCase` would leave those as
+ * different letters, and on a Turkish host would stop `i` from ever matching `Italic`.
+ */
+const TYPE_AHEAD_COLLATOR = new Intl.Collator(undefined, {
+  sensitivity: "base",
+  usage: "search",
+});
+
+/** How long a type-ahead query survives without another keystroke. */
+const TYPE_AHEAD_LAPSE_MS = 1000;
 
 /**
  * The result of one navigation step.
@@ -375,6 +388,25 @@ interface DRovingFocusArgs {
     item: HTMLElement,
     event: KeyboardEvent
   ) => boolean | void;
+  /**
+   * Whether typing printable characters moves the cursor to the item whose accessible NAME
+   * starts with what was typed. Default `false`.
+   *
+   * The practice page specifies this identically for listbox, tree and menu, which is why it
+   * lives here rather than in each of them. Matching is on the accessible name — what assistive
+   * technology announces — rather than on text content, so an item labelled by `aria-label` or
+   * by a pseudo-element is reachable exactly as it is heard.
+   *
+   * Comparison folds case and diacritics, so `e` finds `Éclair`. Successive characters extend
+   * the query and narrow the match; the query lapses after a short pause, and Space extends it
+   * rather than activating while one is under way.
+   *
+   * Declined for a windowed group, where {@link DRovingFocusArgs.logicalCount} is set: the
+   * modifier can only see mounted rows, and answering from those would return a nearer match
+   * while a truer one sits off-window. A consumer that wants it there has to search its own
+   * data, which needs a callback this does not yet have.
+   */
+  typeAhead?: boolean;
 }
 
 interface DRovingFocusSignature {
@@ -467,6 +499,13 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #tabStopHolder: HTMLElement | null = null;
   #itemSelector?: string;
   #onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
+  #typeAhead = false;
+  #typeAheadQuery = "";
+  #typeAheadAt = 0;
+  #accessibleName: ((element: Element) => string) | null = null;
+  #namerPending = false;
+  #warnedWindowedTypeAhead = false;
+  #torndown = false;
   #onCrossAxis?: (
     direction: "forward" | "backward",
     item: HTMLElement,
@@ -727,6 +766,17 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#isEditableTarget(event.target)
     ) {
       return;
+    }
+
+    // Type-ahead claims its characters BEFORE the two guards below, both of which are written
+    // for navigation keys and would drop them: the active-mode allow-list names the keys it
+    // accepts, and the chord guard rejects every Shift press, which is how a capital arrives.
+    if (this.#typeAhead) {
+      this.#expireQuery(event.timeStamp);
+      if (this.#isTypeAheadKey(event)) {
+        this.#handleTypeAhead(event);
+        return;
+      }
     }
 
     // Active mode keeps focus on the controller. Vertical navigation and paging
@@ -990,7 +1040,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   constructor(owner: Owner, args: ArgsFor<DRovingFocusSignature>) {
     super(owner, args);
-    registerDestructor(this, () => this.#cleanup());
+    registerDestructor(this, () => {
+      this.#torndown = true;
+      this.#cleanup();
+    });
   }
 
   /**
@@ -1039,6 +1092,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.#itemSelector = named.itemSelector;
     this.#onActivate = named.onActivate;
     this.#onCrossAxis = named.onCrossAxis;
+    this.#typeAhead = named.typeAhead ?? false;
+    if (this.#typeAhead) {
+      this.#startNamer();
+    }
     this.#onActiveChange = named.onActiveChange;
     this.#onBoundary = named.onBoundary;
     this.#logicalCount = named.logicalCount;
@@ -1186,6 +1243,143 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     if (this.#onCrossAxis(direction, cells[current], event)) {
       event.preventDefault();
     }
+  }
+
+  /**
+   * Begins loading the accessible-name implementation, once per instance.
+   *
+   * Kicked off from `modify()` rather than from the first keystroke so the chunk is in flight
+   * long before anyone types. Keystrokes that arrive first are dropped rather than matched on
+   * `textContent`, which would match differently and turn a load race into a correctness bug.
+   */
+  #startNamer(): void {
+    if (this.#accessibleName || this.#namerPending) {
+      return;
+    }
+    this.#namerPending = true;
+    loadAccessibleName().then((namer) => {
+      this.#namerPending = false;
+      // The instance may have been torn down, or type-ahead turned off, while this was loading.
+      if (!this.#torndown && this.#typeAhead) {
+        this.#accessibleName = namer;
+      }
+    });
+  }
+
+  /** Drops a query that has gone stale, so the next character starts a fresh one. */
+  #expireQuery(now: number): void {
+    if (this.#typeAheadQuery && now - this.#typeAheadAt > TYPE_AHEAD_LAPSE_MS) {
+      this.#typeAheadQuery = "";
+    }
+  }
+
+  /**
+   * Whether this press is a character for the type-ahead query rather than a command.
+   *
+   * The chord rules are narrower than the navigation guard below on purpose. Shift is how a
+   * capital is produced, so rejecting it makes capitals untypeable. AltGr sets `ctrlKey` AND
+   * `altKey` on ISO layouts while producing an ordinary character, so only `ctrlKey` WITHOUT
+   * `altKey` is a shortcut. Meta always is.
+   *
+   * Space is a character only once a query is under way; with none, it belongs to activation.
+   */
+  #isTypeAheadKey(event: KeyboardEvent): boolean {
+    if (!this.#typeAhead || event.key.length !== 1) {
+      return false;
+    }
+    if (event.metaKey || (event.ctrlKey && !event.altKey)) {
+      return false;
+    }
+    // An editable controller owns its own characters: they are the filter query, not a search
+    // over the options. The roving-tabindex case is already handled by the target check above.
+    if (this.#mode === "active-descendant" && this.#isEditableController()) {
+      return false;
+    }
+    return event.key !== " " || this.#typeAheadQuery !== "";
+  }
+
+  /**
+   * Extends the query with this character and moves the cursor to the first item that matches.
+   *
+   * A single character searches from the item AFTER the cursor, so repeating it walks through
+   * the items sharing an initial. A longer query searches from the cursor itself, so refining
+   * one keeps the item it already found.
+   */
+  #handleTypeAhead(event: KeyboardEvent): void {
+    if (this.#logicalCount != null) {
+      this.#warnWindowedTypeAhead();
+      return;
+    }
+    if (!this.#accessibleName) {
+      // Still loading. Consumed rather than passed on, so a half-typed word does not leak
+      // through to whatever else is listening.
+      return;
+    }
+
+    this.#typeAheadQuery += event.key;
+    this.#typeAheadAt = event.timeStamp;
+
+    const items = this.#items();
+    if (!items.length) {
+      return;
+    }
+    const from = this.#currentIndex(items);
+    const offset = this.#typeAheadQuery.length > 1 ? 0 : 1;
+    const match = this.#findByName(items, from, offset);
+    if (!match) {
+      return;
+    }
+
+    event.preventDefault();
+    if (from >= 0 && items[from] === match) {
+      // The cursor is already here, so nothing changes and nothing would be announced.
+      this.#api.reannounceActive();
+      return;
+    }
+    this.#setActive(match);
+  }
+
+  /**
+   * The first item at or after `from + offset`, wrapping, whose accessible name starts with the
+   * current query.
+   *
+   * @param items - The navigable items, in DOM order.
+   * @param from - Where the cursor rests, or negative when it rests nowhere.
+   * @param offset - 1 to skip the resting item, 0 to include it.
+   */
+  #findByName(
+    items: HTMLElement[],
+    from: number,
+    offset: number
+  ): HTMLElement | undefined {
+    const query = this.#typeAheadQuery;
+    const start = (Math.max(from, 0) + offset) % items.length;
+    for (let step = 0; step < items.length; step++) {
+      const candidate = items[(start + step) % items.length];
+      const name = this.#accessibleName?.(candidate) ?? "";
+      if (
+        name.length >= query.length &&
+        TYPE_AHEAD_COLLATOR.compare(name.slice(0, query.length), query) === 0
+      ) {
+        return candidate;
+      }
+    }
+    return undefined;
+  }
+
+  #warnWindowedTypeAhead(): void {
+    runInDebug(() => {
+      if (this.#warnedWindowedTypeAhead) {
+        return;
+      }
+      this.#warnedWindowedTypeAhead = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        `dRovingFocus: typeAhead is declined while logicalCount is set. Only mounted rows are ` +
+          `visible here, so a search would answer with a nearer match while a truer one sits ` +
+          `off-window. Search the full data from the consumer instead.`
+      );
+    });
   }
 
   #isRtl(): boolean {
