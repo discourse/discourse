@@ -254,7 +254,7 @@
   }
 
   &__row-link {
-    @include ellipsis;
+    display: block;
     min-width: 0;
     color: inherit;
     text-decoration: none;
@@ -311,9 +311,17 @@
   }
 
   &__dimension-label {
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
     gap: var(--space-2);
+    min-width: 0;
+    width: 100%;
+  }
+
+  &__dimension-text {
+    @include ellipsis;
+    grid-column: 2;
     min-width: 0;
   }
 
