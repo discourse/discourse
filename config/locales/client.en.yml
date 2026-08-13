@@ -6333,6 +6333,9 @@ en:
             title: "Section links"
             add: "Add another link"
             delete: "Delete link"
+            drag_handle: "Drag to reorder %{label}"
+            move_up: "Move %{label} up"
+            move_down: "Move %{label} down"
             reset: "Reset to default"
             icon:
               label: "Icon"
