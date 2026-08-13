@@ -405,7 +405,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   it "warns an admin when the selected range has incomplete traffic data",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     sign_in(admin)
-    SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
+    SiteSetting.admin_site_traffic_event_cap = 2
 
     [
       ["/first-retained", "2026-02-15 09:00:00"],

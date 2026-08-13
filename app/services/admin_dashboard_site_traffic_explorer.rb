@@ -118,10 +118,14 @@ class AdminDashboardSiteTrafficExplorer
   end
 
   def execute_query(start_date:, end_date:, filters:)
+    parameters = query_params(start_date:, end_date:, filters:)
+
     ActiveRecord::Base.transaction(requires_new: true) do
-      DB.exec("SET TRANSACTION READ ONLY")
       DB.exec("SET LOCAL statement_timeout = #{STATEMENT_TIMEOUT_MS}")
-      DB.query_hash(query, query_params(start_date:, end_date:, filters:)).first
+      DB.query_hash(
+        query(start_date: parameters[:start_date], end_date: parameters[:end_date]),
+        parameters,
+      ).first
     end
   end
 
@@ -132,10 +136,9 @@ class AdminDashboardSiteTrafficExplorer
 
     {
       start_date: effective_start_date,
-      retention_cutoff: retention_cutoff,
       end_date: end_date + 1.day,
       cap: cap,
-      cap_plus_one: cap + 1,
+      site_host: BrowserPageviewEventUrlNormalizer.normalize_host(Discourse.current_hostname),
       top_url: filters[:top_url],
       entry_url: filters[:entry_url],
       referrer: filters[:referrer],
@@ -155,78 +158,48 @@ class AdminDashboardSiteTrafficExplorer
     }
   end
 
-  def query
+  def query(start_date:, end_date:)
+    source_condition =
+      BrowserPageviewEvent.rollup_source_condition(table: "bpe", start_date:, end_date:)
+
     <<~SQL
-      WITH eligible AS MATERIALIZED (
+      WITH population AS MATERIALIZED (
         SELECT
-          candidates.id,
-          candidates.created_at,
-          candidates.session_id,
-          candidates.user_id,
-          candidates.normalized_url,
-          candidates.country_code,
-          candidates.asn,
-          candidates.ip_address,
-          candidates.user_agent,
-          candidates.score,
-          ROW_NUMBER() OVER (
-            ORDER BY candidates.created_at DESC, candidates.id DESC
-          ) AS cap_position
-        FROM (
-          SELECT
-            bpe.id,
-            bpe.created_at,
-            bpe.session_id,
-            bpe.user_id,
-            bpe.normalized_url,
-            bpe.country_code,
-            bpe.asn,
-            bpe.ip_address,
-            bpe.user_agent,
-            bpe.score
-          FROM browser_pageview_events bpe
-          WHERE bpe.created_at >= :start_date
-            AND bpe.created_at < :end_date
-            AND #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
-          ORDER BY bpe.created_at DESC, bpe.id DESC
-          LIMIT :cap_plus_one
-        ) candidates
+          bpe.id,
+          bpe.created_at,
+          bpe.session_id,
+          bpe.user_id,
+          bpe.normalized_url,
+          bpe.normalized_referrer,
+          bpe.country_code,
+          bpe.asn,
+          bpe.ip_address,
+          bpe.user_agent,
+          bpe.score
+        FROM browser_pageview_events bpe
+        WHERE bpe.created_at >= :start_date
+          AND bpe.created_at < :end_date
+          AND #{source_condition}
+        ORDER BY bpe.created_at DESC, bpe.id DESC
+        LIMIT :cap
       ),
-      population AS NOT MATERIALIZED (
+      population_stats AS MATERIALIZED (
         SELECT
-          id,
-          created_at,
-          session_id,
-          user_id,
-          normalized_url,
-          country_code,
-          asn,
-          ip_address,
-          user_agent,
-          score
-        FROM eligible
-        WHERE cap_position <= :cap
-      ),
-      population_sessions AS (
-        SELECT DISTINCT session_id
+          COUNT(*) AS row_count,
+          MIN(created_at) AS oldest_created_at
         FROM population
       ),
-      session_entries AS (
-        SELECT entry.*
-        FROM population_sessions
-        CROSS JOIN LATERAL (
-          SELECT
-            bpe.id,
-            bpe.session_id,
-            bpe.normalized_url,
-            bpe.normalized_referrer
-          FROM browser_pageview_events bpe
-          WHERE bpe.session_id = population_sessions.session_id
-            AND bpe.created_at >= :retention_cutoff
-            AND #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
-          ORDER BY bpe.created_at, bpe.id
-          LIMIT 1
-        ) entry
+      population_boundary AS MATERIALIZED (
+        SELECT
+          population_stats.row_count,
+          population_stats.oldest_created_at,
+          MIN(population.id) AS oldest_id
+        FROM population_stats
+        LEFT JOIN population
+          ON population.created_at = population_stats.oldest_created_at
+        GROUP BY
+          population_stats.row_count,
+          population_stats.oldest_created_at
       ),
       browser_values AS MATERIALIZED (
         SELECT
@@ -244,15 +217,23 @@ class AdminDashboardSiteTrafficExplorer
       ),
       classified AS (
         SELECT
-          population.id,
           population.created_at,
           population.session_id,
           population.user_id,
           population.normalized_url,
+          population.normalized_referrer,
           population.country_code,
           population.asn,
           population.ip_address,
           browser_values.browser,
+          (
+            population.normalized_referrer IS NULL
+            OR split_part(
+              split_part(population.normalized_referrer, '/', 1),
+              '?',
+              1
+            ) <> :site_host
+          ) AS acquisition_entry,
           (
             :crawler_detection_enabled
             AND COALESCE(population.score, 0) > :crawler_threshold
@@ -263,17 +244,23 @@ class AdminDashboardSiteTrafficExplorer
       ),
       dimensioned AS (
         SELECT
-          classified.*,
+          classified.created_at,
+          classified.session_id,
+          classified.user_id,
+          classified.normalized_url,
+          classified.country_code,
+          classified.asn,
+          classified.ip_address,
+          classified.browser,
+          classified.likely_crawler,
           CASE
-            WHEN classified.id = session_entries.id THEN session_entries.normalized_url
+            WHEN classified.acquisition_entry THEN classified.normalized_url
           END AS entry_url,
           CASE
-            WHEN session_entries.id IS NULL OR classified.id <> session_entries.id THEN NULL
-            ELSE COALESCE(session_entries.normalized_referrer, '')
+            WHEN classified.acquisition_entry
+              THEN COALESCE(classified.normalized_referrer, '')
           END AS referrer
         FROM classified
-        LEFT JOIN session_entries
-          ON session_entries.session_id = classified.session_id
       ),
       filtered AS MATERIALIZED (
         SELECT *
@@ -326,16 +313,6 @@ class AdminDashboardSiteTrafficExplorer
         LEFT JOIN browser_pageview_session_engagements engagement
           ON engagement.session_id = sessions.session_id
       ),
-      traffic_summary AS (
-        SELECT
-          COUNT(*) FILTER (
-            WHERE :traffic_type_filtered OR NOT likely_crawler
-          )::integer AS pageviews,
-          COUNT(*) FILTER (
-            WHERE NOT likely_crawler AND user_id IS NOT NULL
-          )::integer AS logged_in_pageviews
-        FROM filtered
-      ),
       series_rows AS (
         SELECT
           created_at::date AS date,
@@ -351,18 +328,53 @@ class AdminDashboardSiteTrafficExplorer
           COUNT(*) FILTER (WHERE likely_crawler)::integer AS likely_crawler_pageviews
         FROM filtered
         GROUP BY created_at::date
+      ),
+      traffic_summary AS (
+        SELECT
+          COALESCE(SUM(pageviews), 0)::integer AS pageviews,
+          COALESCE(SUM(logged_in_human_pageviews), 0)::integer AS logged_in_pageviews
+        FROM series_rows
+      ),
+      bounded_dimension_rows AS MATERIALIZED (
+        SELECT
+          CASE
+            WHEN GROUPING(country_code) = 0 THEN 'countries'
+            WHEN GROUPING(browser) = 0 THEN 'browsers'
+          END AS dimension,
+          country_code,
+          browser,
+          COUNT(*)::integer AS pageviews,
+          MIN(ip_address) AS representative_ip
+        FROM filtered
+        GROUP BY GROUPING SETS ((country_code), (browser))
       )
       SELECT
-        (SELECT EXISTS (SELECT 1 FROM eligible WHERE cap_position > :cap)) AS pageview_limited,
+        (
+          SELECT
+            population_boundary.row_count = :cap
+            AND EXISTS (
+              SELECT 1
+              FROM browser_pageview_events bpe
+              WHERE bpe.created_at >= :start_date
+                AND bpe.created_at < :end_date
+                AND #{source_condition}
+                AND (bpe.created_at, bpe.id) < (
+                  population_boundary.oldest_created_at,
+                  population_boundary.oldest_id
+                )
+              LIMIT 1
+            )
+          FROM population_boundary
+        ) AS pageview_limited,
         jsonb_build_object(
           'country', (
-            SELECT MIN(host(ip_address))
+            SELECT host(MIN(ip_address))
             FROM population
             WHERE :country IS NOT NULL
               AND country_code = :country
           ),
           'network', (
-            SELECT MIN(host(ip_address))
+            SELECT host(MIN(ip_address))
             FROM population
             WHERE :network_asn IS NOT NULL
               AND asn = :network_asn
@@ -476,11 +488,11 @@ class AdminDashboardSiteTrafficExplorer
             FROM (
               SELECT
                 country_code AS value,
-                COUNT(*)::integer AS pageviews,
-                MIN(host(ip_address)) AS representative_ip
-              FROM filtered
-              WHERE country_code IS NOT NULL
-              GROUP BY country_code
+                pageviews,
+                host(representative_ip) AS representative_ip
+              FROM bounded_dimension_rows
+              WHERE dimension = 'countries'
+                AND country_code IS NOT NULL
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
@@ -501,7 +513,7 @@ class AdminDashboardSiteTrafficExplorer
               SELECT
                 'AS' || asn AS value,
                 COUNT(*)::integer AS pageviews,
-                MIN(host(ip_address)) AS representative_ip
+                host(MIN(ip_address)) AS representative_ip
               FROM filtered
               WHERE asn IS NOT NULL
               GROUP BY asn
@@ -518,9 +530,9 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT browser AS value, COUNT(*)::integer AS pageviews
-              FROM filtered
-              GROUP BY browser
+              SELECT browser AS value, pageviews
+              FROM bounded_dimension_rows
+              WHERE dimension = 'browsers'
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows

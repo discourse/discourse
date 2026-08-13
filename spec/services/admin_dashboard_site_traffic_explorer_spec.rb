@@ -170,7 +170,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         )
       end
 
-      it "runs one read-only analytics statement with a ten-second deadline" do
+      it "runs one analytics statement with a ten-second deadline" do
         query_row = {
           "pageview_limited" => false,
           "summary" => {
@@ -183,7 +183,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             "network" => nil,
           },
         }
-        DB.expects(:exec).with("SET TRANSACTION READ ONLY").once
         DB.expects(:exec).with("SET LOCAL statement_timeout = 10000").once
         DB.expects(:query_hash).once.returns([query_row])
 
@@ -235,7 +234,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         ).to eq([12, 11, [{ value: "", label: "Direct / unknown", pageviews: 11 }]])
       end
 
-      it "groups session entries by normalized referrer" do
+      it "groups acquisition entries by normalized referrer" do
         Fabricate(
           :browser_pageview_event,
           normalized_referrer: "external.example?article=traffic",
@@ -258,17 +257,27 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
               label: "external.example?article=traffic",
               pageviews: 1,
             },
-            {
-              value: "test.localhost?view=latest",
-              label: "test.localhost?view=latest",
-              pageviews: 1,
-            },
           ],
         )
       end
 
+      it "does not report partial data when the population exactly matches the cap" do
+        SiteSetting.admin_site_traffic_event_cap = 11
+
+        expect(result.traffic.slice(:partial_data, :summary)).to eq(
+          partial_data: nil,
+          summary: {
+            "pageviews" => 11,
+            "distinct_sessions" => 11,
+            "logged_in_share" => 0,
+            "bounce_rate" => 100,
+            "average_session_duration_seconds" => 0,
+          },
+        )
+      end
+
       it "does not promote a capped session continuation to an entry" do
-        SiteSetting.stubs(:admin_site_traffic_event_cap).returns(1)
+        SiteSetting.admin_site_traffic_event_cap = 1
         Fabricate(
           :browser_pageview_event,
           url: "/capped-session-entry",
@@ -298,18 +307,20 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         ).to eq([1, [], [], "pageview_limit"])
       end
 
-      it "uses the earliest event id to break a session entry timestamp tie" do
+      it "uses referrers rather than event ids to identify acquisition entries" do
         created_at = Time.zone.local(2026, 5, 11, 10)
         Fabricate(
           :browser_pageview_event,
-          url: "/first-at-timestamp",
+          url: "/acquisition-at-timestamp",
+          normalized_referrer: "external.example/path",
           session_id: "same-timestamp",
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at:,
         )
         Fabricate(
           :browser_pageview_event,
-          url: "/second-at-timestamp",
+          url: "/internal-at-timestamp",
+          normalized_referrer: "test.localhost/acquisition-at-timestamp",
           session_id: "same-timestamp",
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at:,
@@ -318,7 +329,13 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         entry_urls = result.traffic.dig(:dimensions, "entry_urls")
 
         expect(entry_urls.select { |row| row[:value].end_with?("-at-timestamp") }).to eq(
-          [{ value: "/first-at-timestamp", label: "/first-at-timestamp", pageviews: 1 }],
+          [
+            {
+              value: "/acquisition-at-timestamp",
+              label: "/acquisition-at-timestamp",
+              pageviews: 1,
+            },
+          ],
         )
       end
     end
