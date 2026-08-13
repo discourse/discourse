@@ -269,6 +269,7 @@ body.discourse-calendar-livestream-zoom-full {
           flex: 1 1 auto;
           height: 100%;
           pointer-events: auto;
+          max-height: unset;
         }
 
         .discourse-calendar-livestream-zoom-page__chat {
