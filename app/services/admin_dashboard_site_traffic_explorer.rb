@@ -313,16 +313,6 @@ class AdminDashboardSiteTrafficExplorer
         LEFT JOIN browser_pageview_session_engagements engagement
           ON engagement.session_id = sessions.session_id
       ),
-      traffic_summary AS (
-        SELECT
-          COUNT(*) FILTER (
-            WHERE :traffic_type_filtered OR NOT likely_crawler
-          )::integer AS pageviews,
-          COUNT(*) FILTER (
-            WHERE NOT likely_crawler AND user_id IS NOT NULL
-          )::integer AS logged_in_pageviews
-        FROM filtered
-      ),
       series_rows AS (
         SELECT
           created_at::date AS date,
@@ -339,36 +329,24 @@ class AdminDashboardSiteTrafficExplorer
         FROM filtered
         GROUP BY created_at::date
       ),
-      dimension_rows AS MATERIALIZED (
+      traffic_summary AS (
+        SELECT
+          COALESCE(SUM(pageviews), 0)::integer AS pageviews,
+          COALESCE(SUM(logged_in_human_pageviews), 0)::integer AS logged_in_pageviews
+        FROM series_rows
+      ),
+      bounded_dimension_rows AS MATERIALIZED (
         SELECT
           CASE
-            WHEN GROUPING(normalized_url) = 0 THEN 'top_urls'
-            WHEN GROUPING(entry_url) = 0 THEN 'entry_urls'
-            WHEN GROUPING(referrer) = 0 THEN 'referrers'
             WHEN GROUPING(country_code) = 0 THEN 'countries'
-            WHEN GROUPING(asn) = 0 THEN 'networks'
             WHEN GROUPING(browser) = 0 THEN 'browsers'
-            WHEN GROUPING(ip_address) = 0 THEN 'ip_addresses'
           END AS dimension,
-          normalized_url,
-          entry_url,
-          referrer,
           country_code,
-          asn,
           browser,
-          ip_address,
           COUNT(*)::integer AS pageviews,
           MIN(ip_address) AS representative_ip
         FROM filtered
-        GROUP BY GROUPING SETS (
-          (normalized_url),
-          (entry_url),
-          (referrer),
-          (country_code),
-          (asn),
-          (browser),
-          (ip_address)
-        )
+        GROUP BY GROUPING SETS ((country_code), (browser))
       )
       SELECT
         (
@@ -453,10 +431,10 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT normalized_url AS value, pageviews
-              FROM dimension_rows
-              WHERE dimension = 'top_urls'
-                AND normalized_url IS NOT NULL
+              SELECT normalized_url AS value, COUNT(*)::integer AS pageviews
+              FROM filtered
+              WHERE normalized_url IS NOT NULL
+              GROUP BY normalized_url
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
@@ -470,10 +448,10 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT entry_url AS value, pageviews
-              FROM dimension_rows
-              WHERE dimension = 'entry_urls'
-                AND entry_url IS NOT NULL
+              SELECT entry_url AS value, COUNT(*)::integer AS pageviews
+              FROM filtered
+              WHERE entry_url IS NOT NULL
+              GROUP BY entry_url
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
@@ -487,10 +465,10 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT referrer AS value, pageviews
-              FROM dimension_rows
-              WHERE dimension = 'referrers'
-                AND referrer IS NOT NULL
+              SELECT referrer AS value, COUNT(*)::integer AS pageviews
+              FROM filtered
+              WHERE referrer IS NOT NULL
+              GROUP BY referrer
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
@@ -512,7 +490,7 @@ class AdminDashboardSiteTrafficExplorer
                 country_code AS value,
                 pageviews,
                 host(representative_ip) AS representative_ip
-              FROM dimension_rows
+              FROM bounded_dimension_rows
               WHERE dimension = 'countries'
                 AND country_code IS NOT NULL
               ORDER BY pageviews DESC, value
@@ -534,11 +512,11 @@ class AdminDashboardSiteTrafficExplorer
             FROM (
               SELECT
                 'AS' || asn AS value,
-                pageviews,
-                host(representative_ip) AS representative_ip
-              FROM dimension_rows
-              WHERE dimension = 'networks'
-                AND asn IS NOT NULL
+                COUNT(*)::integer AS pageviews,
+                host(MIN(ip_address)) AS representative_ip
+              FROM filtered
+              WHERE asn IS NOT NULL
+              GROUP BY asn
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
@@ -553,7 +531,7 @@ class AdminDashboardSiteTrafficExplorer
             )
             FROM (
               SELECT browser AS value, pageviews
-              FROM dimension_rows
+              FROM bounded_dimension_rows
               WHERE dimension = 'browsers'
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
@@ -568,9 +546,9 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT host(ip_address) AS value, pageviews
-              FROM dimension_rows
-              WHERE dimension = 'ip_addresses'
+              SELECT host(ip_address) AS value, COUNT(*)::integer AS pageviews
+              FROM filtered
+              GROUP BY ip_address
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
