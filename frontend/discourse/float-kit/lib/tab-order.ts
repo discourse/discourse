@@ -7,85 +7,179 @@
  * expected so a component can put focus there itself.
  *
  * The enumeration is only as truthful as the DOM allows. A browser with keyboard-focusable
- * scrollers adopts a scroll container as a tab stop without marking it — such an element reports
- * `tabIndex === -1` and matches no focusable selector — so it is counted by the browser and not
- * by anything here. A surface relying on these helpers has to suppress those adoptions itself
- * (an explicit `tabindex="-1"`) or its idea of "the last stop in the panel" will be wrong.
+ * scrollers adopts a scroll container as a tab stop without marking it, while iframe and shadow
+ * focus scopes do not expose their internal key events or stops here. A surface relying on these
+ * helpers must avoid those focus scopes and suppress adopted scrollers with `tabindex="-1"`.
  */
 
-/**
- * Elements that take sequential focus. Deliberately without a bare `[tabindex]`: only a
- * non-negative value is in the tab order, and `-1` is the marker for the opposite.
- */
+/** Elements that can take sequential focus when their current state permits it. */
 const TAB_STOP_SELECTOR = [
   "a[href]",
   "area[href]",
-  "button:not([disabled])",
-  "input:not([disabled]):not([type='hidden'])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
+  "button",
+  "input:not([type='hidden'])",
+  "select",
+  "textarea",
   "summary",
   "iframe",
   "audio[controls]",
   "video[controls]",
   "[contenteditable]:not([contenteditable='false'])",
-  "[tabindex]:not([tabindex^='-'])",
+  "[tabindex]",
 ].join(", ");
 
-/**
- * Whether `element` can actually be tabbed to right now: rendered, not hidden from the platform,
- * and not opted out. A selector alone is not enough, since a display-less or `inert` subtree
- * still matches one.
- */
+interface TabStopsOptions {
+  ignore?: HTMLElement | null;
+}
+
+function isIgnored(element: HTMLElement, ignore?: HTMLElement | null) {
+  return Boolean(ignore && (element === ignore || ignore.contains(element)));
+}
+
+/** Whether `element` can actually be reached by sequential focus right now. */
 function isTabbable(element: HTMLElement): boolean {
-  if (element.hasAttribute("disabled") || element.tabIndex < 0) {
+  if (element.tabIndex < 0 || element.matches(":disabled")) {
     return false;
   }
-  if (element.closest("[inert]") || element.closest("[aria-hidden='true']")) {
+  if (element.closest("[inert]")) {
     return false;
   }
-  // Cheapest sufficient rendered-ness test: all three are zero only for a box that is not laid
-  // out at all, which is what `display: none` (on the element or any ancestor) produces.
-  return !!(
+
+  const visibility = getComputedStyle(element).visibility;
+  if (visibility === "hidden" || visibility === "collapse") {
+    return false;
+  }
+
+  return Boolean(
     element.offsetWidth ||
     element.offsetHeight ||
     element.getClientRects().length
   );
 }
 
+function radioGroupRepresentative(
+  radio: HTMLInputElement,
+  ignore?: HTMLElement | null
+): HTMLInputElement | null {
+  if (!radio.name) {
+    return radio;
+  }
+
+  const tree = radio.getRootNode();
+  if (!(tree instanceof Document || tree instanceof ShadowRoot)) {
+    return radio;
+  }
+
+  const members = Array.from(
+    tree.querySelectorAll<HTMLInputElement>("input[type='radio']")
+  ).filter(
+    (member) =>
+      member.name === radio.name &&
+      member.form === radio.form &&
+      !isIgnored(member, ignore) &&
+      isTabbable(member)
+  );
+
+  return members.find((member) => member.checked) ?? members[0] ?? null;
+}
+
+function isRadio(element: HTMLElement): element is HTMLInputElement {
+  return (
+    element instanceof HTMLInputElement &&
+    element.type.toLowerCase() === "radio"
+  );
+}
+
+function compareTabOrder(
+  left: { element: HTMLElement; documentIndex: number },
+  right: { element: HTMLElement; documentIndex: number }
+) {
+  const leftPositive = left.element.tabIndex > 0;
+  const rightPositive = right.element.tabIndex > 0;
+
+  if (leftPositive !== rightPositive) {
+    return leftPositive ? -1 : 1;
+  }
+  if (leftPositive && left.element.tabIndex !== right.element.tabIndex) {
+    return left.element.tabIndex - right.element.tabIndex;
+  }
+  return left.documentIndex - right.documentIndex;
+}
+
 /**
- * The tab stops inside `root`, in document order. `root` itself is included when it is one, so a
- * container that has been made focusable counts as its own first stop.
+ * The tab stops inside `root`, in a native-like local sequence. `root` itself is included when it
+ * is a stop. Positive tabindex values are ordered within this local segment; portaling cannot
+ * reproduce their global position without changing the surrounding page's tab order as well.
  */
-export function tabStopsWithin(root: HTMLElement): HTMLElement[] {
+export function tabStopsWithin(
+  root: HTMLElement,
+  { ignore }: TabStopsOptions = {}
+): HTMLElement[] {
   const found = Array.from(
     root.querySelectorAll<HTMLElement>(TAB_STOP_SELECTOR)
   );
   const all = root.matches(TAB_STOP_SELECTOR) ? [root, ...found] : found;
-  return all.filter(isTabbable);
+
+  return all
+    .filter(
+      (element) =>
+        !isIgnored(element, ignore) &&
+        isTabbable(element) &&
+        (!isRadio(element) ||
+          radioGroupRepresentative(element, ignore) === element)
+    )
+    .map((element, documentIndex) => ({ element, documentIndex }))
+    .sort(compareTabOrder)
+    .map(({ element }) => element);
+}
+
+function isBefore(left: HTMLElement, right: HTMLElement) {
+  const position = left.compareDocumentPosition(right);
+  return (
+    position === Node.DOCUMENT_POSITION_FOLLOWING ||
+    position ===
+      Node.DOCUMENT_POSITION_FOLLOWING + Node.DOCUMENT_POSITION_CONTAINED_BY
+  );
 }
 
 /**
- * The document tab stop just before or just after `anchor`, ignoring anything inside `ignore`.
+ * The local tab stop just before or after `anchor`.
  *
- * `ignore` is the portaled panel: it sits somewhere else in document order, so counting its
- * controls would answer with a stop the reader is leaving rather than the one they are going to.
- *
- * Returns `null` when `anchor` is the last (or first) stop on the page, where there is nothing to
- * move to and the caller should leave focus alone.
+ * By default the search covers the page. `root` narrows it to a panel, and `ignore` excludes a
+ * portaled panel while finding the page stop beside its trigger. When programmatic focus rests on
+ * a non-candidate, DOM position determines the next candidate in the requested direction.
  */
 export function adjacentTabStop(
   anchor: HTMLElement,
-  { forward, ignore }: { forward: boolean; ignore?: HTMLElement | null }
+  {
+    forward,
+    ignore,
+    root = document.body,
+  }: {
+    forward: boolean;
+    ignore?: HTMLElement | null;
+    root?: HTMLElement;
+  }
 ): HTMLElement | null {
-  const stops = tabStopsWithin(document.body).filter(
-    (element) => element === anchor || !ignore || !ignore.contains(element)
-  );
-
+  let stops = tabStopsWithin(root, { ignore });
   const index = stops.indexOf(anchor);
-  if (index === -1) {
-    return null;
+
+  if (index !== -1) {
+    return stops[forward ? index + 1 : index - 1] ?? null;
   }
 
-  return stops[forward ? index + 1 : index - 1] ?? null;
+  if (isRadio(anchor)) {
+    const representative = radioGroupRepresentative(anchor, ignore);
+    // Script can focus another member of an unchecked group, but Tab leaves the group from there
+    // instead of visiting the representative that sequential entry would use.
+    if (representative && !representative.checked) {
+      stops = stops.filter((stop) => stop !== representative);
+    }
+  }
+
+  const candidates = stops.filter((stop) =>
+    forward ? isBefore(anchor, stop) : isBefore(stop, anchor)
+  );
+
+  return (forward ? candidates[0] : candidates.at(-1)) ?? null;
 }

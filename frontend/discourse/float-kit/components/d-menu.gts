@@ -173,7 +173,7 @@ export default class DMenu<Data = unknown> extends Component<
     // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
     const parentHandlerResult = this.args.onKeydown?.(event);
 
-    if (!this.#body) {
+    if (!this.#body || this.options.inlineTabOrder) {
       return parentHandlerResult;
     }
 

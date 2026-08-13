@@ -1,8 +1,20 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { click, render, setupOnerror, tab } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  focus,
+  render,
+  setupOnerror,
+  tab,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DMenu from "discourse/float-kit/components/d-menu";
+import {
+  adjacentTabStop,
+  tabStopsWithin,
+} from "discourse/float-kit/lib/tab-order";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dElement from "discourse/ui-kit/helpers/d-element";
 
 /**
  * `inlineTabOrder` only means anything when the content is portaled away from its trigger, and
@@ -21,7 +33,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
  *
  * What it CANNOT exercise is a browser adopting a scroll container as a tab stop: `tab()` picks
  * candidates by `tabIndex >= 0`, and an adopted scroller reports `-1` exactly like one that opted
- * out. That case is only observable in a real browser, and is covered by a system spec.
+ * out. A surface using this option must opt such a scroller out explicitly with `tabindex="-1"`.
  */
 module(
   "Integration | Modifier | FloatKit | tab-order-inline",
@@ -85,6 +97,98 @@ module(
         "after-trigger",
         "Tab off the last panel control resumes after the TRIGGER, not after the portal"
       );
+      assert
+        .dom("#outlet .in-panel")
+        .doesNotExist("leaving the panel also dismisses it");
+    });
+
+    test("a non-focusable trigger wrapper resumes from its last stop", async function (assert) {
+      await render(
+        <template>
+          {{#if this.outlet}}
+            <DMenu
+              @inline={{false}}
+              @trapTab={{false}}
+              @inlineTabOrder={{true}}
+              @triggerComponent={{dElement "div"}}
+              @portalOutletElement={{this.outlet}}
+            >
+              <:trigger>
+                <input id="trigger-input" aria-label="trigger" />
+              </:trigger>
+              <:content>
+                <button type="button" id="in-panel">panel action</button>
+              </:content>
+            </DMenu>
+          {{/if}}
+          <button type="button" id="after-trigger">after</button>
+          <div id="outlet" {{didInsert this.setOutlet}}></div>
+        </template>
+      );
+
+      await click(".fk-d-menu__trigger");
+      await focus("#trigger-input");
+      await tab();
+      assert.dom("#in-panel").isFocused("the trigger input enters the panel");
+
+      await tab();
+      assert
+        .dom("#after-trigger")
+        .isFocused("forward exit resumes after the trigger wrapper");
+      assert.dom("#in-panel").doesNotExist("forward exit dismisses the panel");
+    });
+
+    test("a compound trigger finishes its own tab sequence before entering the panel", async function (assert) {
+      await render(
+        <template>
+          <button type="button" id="before-trigger">before</button>
+          {{#if this.outlet}}
+            <DMenu
+              @inline={{false}}
+              @trapTab={{false}}
+              @inlineTabOrder={{true}}
+              @triggerComponent={{dElement "div"}}
+              @portalOutletElement={{this.outlet}}
+            >
+              <:trigger>
+                <input id="trigger-first" aria-label="first trigger control" />
+                <button type="button" id="trigger-last">last trigger control</button>
+              </:trigger>
+              <:content>
+                <button type="button" id="in-panel">panel action</button>
+              </:content>
+            </DMenu>
+          {{/if}}
+          <button type="button" id="after-trigger">after</button>
+          <div id="outlet" {{didInsert this.setOutlet}}></div>
+        </template>
+      );
+
+      await click(".fk-d-menu__trigger");
+      await focus("#trigger-first");
+      await tab();
+      assert
+        .dom("#trigger-last")
+        .isFocused("Tab from an early trigger stop stays in the trigger");
+
+      await tab();
+      assert
+        .dom("#in-panel")
+        .isFocused("Tab from the trigger's last stop enters the panel");
+
+      await tab({ backwards: true });
+      assert
+        .dom("#trigger-last")
+        .isFocused("backward panel exit returns to the trigger's last stop");
+
+      await click(".fk-d-menu__trigger");
+      await focus("#trigger-first");
+      await tab({ backwards: true });
+      assert
+        .dom("#before-trigger")
+        .isFocused(
+          "Shift+Tab from the trigger follows the page's backward order"
+        );
     });
 
     test("Shift+Tab out of the float returns to the trigger", async function (assert) {
@@ -148,20 +252,12 @@ module(
       await click(".fk-d-menu__trigger");
       assert.dom("#outlet .in-panel").exists();
 
-      // The fall-through path, and the reason this is safe to leave on by default: a panel that
-      // is only a list must never pull focus in, since its rows are reached with the arrow keys.
-      //
-      // Asserted as "focus did not enter the float" rather than "focus reached the neighbour",
-      // because where the press ends up is not this modifier's to decide once it declines. A bare
-      // DMenu still has its older `forwardTabToContent`, which swallows the press on a body with
-      // nothing focusable in it (`firstFocusable` is null and `#body.focus()` is a no-op), leaving
-      // focus on the trigger. DSelect stops that from reaching the trigger; this test does not,
-      // and should not pin behaviour it does not own.
+      // The fall-through path: a panel that is only a list must never pull focus in, since its
+      // rows are reached with the arrow keys rather than by tabbing.
       await tab();
-      assert.false(
-        document.querySelector("#outlet").contains(document.activeElement),
-        "focus never enters a float that offers no stop of its own"
-      );
+      assert
+        .dom("#after-trigger")
+        .isFocused("Tab passes a float that offers no stop of its own");
     });
 
     test("asserts when containment is asked for as well", async function (assert) {
@@ -242,6 +338,147 @@ module(
         .isNotFocused(
           "without the repair, leaving the panel does not resume beside the trigger"
         );
+    });
+
+    test("tab stops honor disabled fieldset semantics", async function (assert) {
+      await render(
+        <template>
+          <div id="root">
+            <fieldset disabled>
+              <legend><button id="first-legend">first legend</button></legend>
+              <button id="fieldset-control">disabled control</button>
+              <legend><button id="second-legend">second legend</button></legend>
+            </fieldset>
+            <button id="after-fieldset">after</button>
+          </div>
+        </template>
+      );
+
+      assert.deepEqual(
+        tabStopsWithin(find("#root")).map((element) => element.id),
+        ["first-legend", "after-fieldset"],
+        "only the first legend escapes a disabled fieldset"
+      );
+    });
+
+    test("tab stops use the checked radio as the group's single stop", async function (assert) {
+      await render(
+        <template>
+          <input
+            id="checked-outside"
+            type="radio"
+            name="outside-group"
+            checked
+          />
+          <div id="root">
+            <input id="unchecked" type="radio" name="group" />
+            <input id="checked" type="radio" name="group" checked />
+            <input id="unchecked-after" type="radio" name="group" />
+            <input
+              id="suppressed-by-outside"
+              type="radio"
+              name="outside-group"
+            />
+          </div>
+        </template>
+      );
+
+      assert.deepEqual(
+        tabStopsWithin(find("#root")).map((element) => element.id),
+        ["checked"],
+        "radio membership is resolved across the full document group"
+      );
+    });
+
+    test("unchecked radio groups keep one stop and exit from a programmatically focused member", async function (assert) {
+      await render(
+        <template>
+          <div id="root">
+            <button id="before-radios">before</button>
+            <input id="first-radio" type="radio" name="group" />
+            <input id="focused-radio" type="radio" name="group" />
+            <button id="after-radios">after</button>
+            <form id="form-a">
+              <input id="form-a-radio" type="radio" name="shared" />
+            </form>
+            <form id="form-b">
+              <input id="form-b-radio" type="radio" name="shared" />
+            </form>
+          </div>
+        </template>
+      );
+
+      const root = find("#root");
+      const focusedRadio = find("#focused-radio");
+
+      assert.deepEqual(
+        tabStopsWithin(root).map((element) => element.id),
+        [
+          "before-radios",
+          "first-radio",
+          "after-radios",
+          "form-a-radio",
+          "form-b-radio",
+        ],
+        "an unchecked group exposes its first member, while separate forms expose one each"
+      );
+      assert.strictEqual(
+        adjacentTabStop(focusedRadio, { forward: false, root })?.id,
+        "before-radios",
+        "Shift+Tab exits an unchecked group from a programmatically focused non-stop"
+      );
+      assert.strictEqual(
+        adjacentTabStop(focusedRadio, { forward: true, root })?.id,
+        "after-radios",
+        "Tab exits an unchecked group from a programmatically focused non-stop"
+      );
+    });
+
+    test("tab stops sort positive tabindex before the regular sequence", async function (assert) {
+      await render(
+        <template>
+          <div id="root">
+            <button id="regular-first">regular first</button>
+            <button id="positive-two" tabindex="2">positive two</button>
+            <button id="positive-one-a" tabindex="1">positive one a</button>
+            <button id="positive-one-b" tabindex="1">positive one b</button>
+            <button id="regular-last">regular last</button>
+          </div>
+        </template>
+      );
+
+      assert.deepEqual(
+        tabStopsWithin(find("#root")).map((element) => element.id),
+        [
+          "positive-one-a",
+          "positive-one-b",
+          "positive-two",
+          "regular-first",
+          "regular-last",
+        ],
+        "positive values are ascending and ties retain document order"
+      );
+    });
+
+    test("tab stops follow keyboard visibility rather than the accessibility tree", async function (assert) {
+      await render(
+        <template>
+          <div id="root">
+            <button id="aria-hidden" aria-hidden="true">aria hidden</button>
+            <button id="transparent" style="opacity: 0">transparent</button>
+            <button id="visibility-hidden" style="visibility: hidden">visibility
+              hidden</button>
+            <button id="display-none" style="display: none">display none</button>
+            <div inert><button id="inert">inert</button></div>
+          </div>
+        </template>
+      );
+
+      assert.deepEqual(
+        tabStopsWithin(find("#root")).map((element) => element.id),
+        ["aria-hidden", "transparent"],
+        "ARIA and opacity do not remove focus, while CSS visibility and inertness do"
+      );
     });
   }
 );
