@@ -57,14 +57,14 @@ module(
         );
     });
 
-    test("classifies a visible sub-one-percent change as a decline", async function (assert) {
+    test("classifies a visible negative half-step change as a decline", async function (assert) {
       const engagement = {
         kpis: [
           {
             type: "dau_mau",
-            value: 99.6,
-            previous_value: 100,
-            percent_change: -0.4,
+            value: 1999,
+            previous_value: 2000,
+            percent_change: -0.05,
           },
         ],
       };
