@@ -27,6 +27,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   metaModifier,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
@@ -732,13 +733,13 @@ acceptance(`Composer`, function (needs) {
 
     await click("#post_1 .reply.create");
     assert
-      .dom(".reply-details a.topic-link")
-      .hasText("Internationalization / localization");
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.composer_actions.reply_to_topic.trigger"));
 
     await click("#post_1 .reply.create");
     assert
-      .dom(".reply-details a.topic-link")
-      .hasText("Internationalization / localization");
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.composer_actions.reply_to_topic.trigger"));
   });
 
   test("Can edit a post after starting a reply", async function (assert) {
@@ -1120,24 +1121,30 @@ acceptance(`Composer`, function (needs) {
   });
 
   test("Composer can toggle whispers when whisperer user", async function (assert) {
-    const menu = selectKit(".composer-actions");
-
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post[data-post-number='1'] button.reply");
 
-    await menu.expand();
-    await menu.selectRowByValue("toggle_whisper");
+    await click(".composer-actions-trigger");
 
     assert
-      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .dom(".composer-toggle-whisper")
+      .exists("whisper toggle item is visible in dropdown");
+
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
+
+    assert
+      .dom(
+        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='true']"
+      )
       .exists("sets the post type to whisper");
 
-    await menu.expand();
-    await menu.selectRowByValue("toggle_whisper");
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
     assert
-      .dom(".composer-actions svg.d-icon-far-eye-slash")
-      .doesNotExist("removes the whisper mode");
+      .dom(
+        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='false']"
+      )
+      .exists("removes the whisper mode");
   });
 
   test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
@@ -1202,103 +1209,168 @@ acceptance(`Composer`, function (needs) {
     "Composer can switch between new topic and new PM in different contexts",
     function () {
       test("within post/topic context", async function (assert) {
+        const composer = this.owner.lookup("service:composer");
+
         await visit("/t/this-is-a-test-topic/54081");
         await click(".topic-post[data-post-number='1'] button.reply");
-        await selectKit(".composer-actions").expand();
-        assert.notStrictEqual(
-          selectKit(".composer-actions")
-            .rowByValue("create_private_message")
-            .exists(),
-          "New message option is not present when in reply mode"
-        );
+        await click(".composer-actions-trigger");
+        assert
+          .dom(
+            ".composer-actions-dropdown [data-action-id='create_private_message']"
+          )
+          .doesNotExist("New message option is not present when in reply mode");
+        await click(".composer-actions-trigger");
 
-        await click("#reply-control .discard-button");
         await visit("/");
-        await click("#create-topic");
-        await selectKit(".composer-actions").expand();
-        assert.true(
-          selectKit(".composer-actions").rowByValue("reply_to_topic").exists(),
-          "composer topic context is preserved when reopened"
-        );
+        await composer.openNewTopic();
+        await settled();
+        await click(".composer-actions-trigger");
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
+          .doesNotExist(
+            "stale topic context is cleared when opening a fresh new-topic composer"
+          );
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_post']")
+          .doesNotExist(
+            "stale post context is cleared when opening a fresh new-topic composer"
+          );
 
-        await selectKit(".composer-actions").selectRowByValue(
-          "create_private_message"
-        );
-        assert.dom(".action-title").hasText(i18n("topic.private_message"));
+        await click("[data-action-id='create_private_message']");
         assert
           .dom(".save-or-cancel button")
           .hasText(i18n("composer.create_pm"));
 
-        await selectKit(".composer-actions").expand();
-        await selectKit(".composer-actions").selectRowByValue("create_topic");
-        assert.dom(".action-title").hasText(i18n("topic.create_long"));
+        await click(".composer-actions-trigger");
+        await click("[data-action-id='create_topic']");
         assert
           .dom(".save-or-cancel button")
           .hasText(i18n("composer.create_topic"));
+      });
+
+      test("fresh new message clears stale reply context", async function (assert) {
+        const composer = this.owner.lookup("service:composer");
+
+        await visit("/t/this-is-a-test-topic/54081");
+        await click(".topic-post[data-post-number='1'] button.reply");
+
+        await visit("/");
+        await composer.openNewMessage({ recipients: "shade" });
+        await settled();
+
+        await click(".composer-actions-trigger");
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
+          .doesNotExist(
+            "stale topic context is cleared when opening a fresh message composer"
+          );
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_post']")
+          .doesNotExist(
+            "stale post context is cleared when opening a fresh message composer"
+          );
+      });
+
+      test("topic context is cleared after a successful save", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await click("article#post_3 button.reply");
+        await fillIn(".d-editor-input", "this is a successful reply");
+        await click("#reply-control button.create");
+
+        await visit("/");
+        await click("#create-topic");
+        await click(".composer-actions-trigger");
+
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
+          .doesNotExist(
+            "reply_to_topic is not surfaced after the previous composer was saved"
+          );
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_post']")
+          .doesNotExist(
+            "reply_to_post is not surfaced after the previous composer was saved"
+          );
       });
     }
   );
 
   test("Composer can toggle between reply and createTopic", async function (assert) {
+    updateCurrentUser({ admin: true });
     await visit("/t/this-is-a-test-topic/54081");
     await click(".topic-post[data-post-number='1'] button.reply");
 
-    await selectKit(".composer-actions").expand();
-
-    await selectKit(".composer-actions").selectRowByValue("toggle_whisper");
+    await click(".composer-actions-trigger");
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
     assert
-      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .dom(
+        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='true']"
+      )
       .exists("sets the post type to whisper");
+    await click(".composer-actions-trigger");
 
     await visit("/");
     assert.dom("#create-topic").exists("the create topic button is visible");
 
     await click("#create-topic");
     assert
-      .dom(".reply-details .whisper .d-icon-far-eye-slash")
+      .dom(".composer-whisper-indicator.--whispering")
       .doesNotExist("should reset the state of the composer's model");
+    assert
+      .dom(".save-or-cancel button .d-icon-far-eye-slash")
+      .doesNotExist("the save button should not use the whisper icon");
 
-    await selectKit(".composer-actions").expand();
-    await selectKit(".composer-actions").selectRowByValue("toggle_unlisted");
+    await click(".composer-actions-trigger");
+    await click(".composer-toggle-unlisted .d-toggle-switch__checkbox");
 
     assert
-      .dom(".reply-details .unlist")
-      .includesText(i18n("composer.unlist"), "sets the topic to unlisted");
+      .dom(
+        ".composer-toggle-unlisted .d-toggle-switch__checkbox[aria-checked='true']"
+      )
+      .exists("sets the topic to unlisted");
 
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post[data-post-number='1'] button.reply");
     assert
-      .dom(".reply-details .whisper")
+      .dom(".composer-whisper-indicator.--whispering")
       .doesNotExist("should reset the state of the composer's model");
+    assert
+      .dom(".composer-whisper-indicator.--public")
+      .exists("the closed-state whisper indicator shows the reply is public");
   });
 
-  test("Composer can toggle whisper when switching from reply to whisper to reply to topic", async function (assert) {
+  test("Composer whisper toggle not shown when replying to whisper", async function (assert) {
     await visit("/t/topic-with-whisper/960");
 
     await click(".topic-post[data-post-number='3'] button.reply");
-    await click(".reply-details summary div");
+    await click(".composer-actions-trigger");
     assert
-      .dom('.reply-details li[data-value="toggle_whisper"]')
-      .doesNotExist("toggle whisper is not available when reply to whisper");
-    await click('.reply-details li[data-value="reply_to_topic"]');
-    await click(".reply-details summary div");
+      .dom(".composer-toggle-whisper")
+      .doesNotExist("whisper toggle is not available when reply to whisper");
+    await click(".composer-actions-trigger");
+
+    await click(".composer-actions-trigger");
+    await click("[data-action-id='reply_to_topic']");
+
+    await click(".composer-actions-trigger");
     assert
-      .dom('.reply-details li[data-value="toggle_whisper"]')
-      .exists("toggle whisper is available when reply to topic");
+      .dom(".composer-toggle-whisper")
+      .exists("whisper toggle is available when reply to topic");
   });
 
-  test("Composer can toggle whisper when clicking reply to topic after reply to whisper", async function (assert) {
+  test("Composer whisper toggle available when replying to topic after whisper", async function (assert) {
     await visit("/t/topic-with-whisper/54081");
 
     await click(".topic-post[data-post-number='3'] button.reply");
     await click("#reply-control .discard-button");
     await click(".timeline-footer-controls button.create");
-    await click(".reply-details summary div");
+
+    await click(".composer-actions-trigger");
     assert
-      .dom('.reply-details li[data-value="toggle_whisper"]')
-      .exists("toggle whisper is available when reply to topic");
+      .dom(".composer-toggle-whisper")
+      .exists("whisper toggle is available when reply to topic");
   });
 
   test("Composer restores whisper state from draft", async function (assert) {
@@ -1389,14 +1461,16 @@ acceptance(`Composer`, function (needs) {
     await fillIn(".d-editor-input", longText);
 
     assert
-      .dom('.action-title a[href="/t/internationalization-localization/280"]')
-      .exists("the mode should be: reply to post");
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.reply_to_topic.trigger"),
+        "the mode should be: reply to topic"
+      );
 
     await click("article#post_3 button.reply");
 
-    const composerActions = selectKit(".composer-actions");
-    await composerActions.expand();
-    await composerActions.selectRowByValue("reply_as_new_topic");
+    await click(".composer-actions-trigger");
+    await click("[data-action-id='reply_as_new_topic']");
 
     assert.dom(".d-modal__body").doesNotExist("abandon popup shouldn't come");
 
@@ -1405,8 +1479,11 @@ acceptance(`Composer`, function (needs) {
       .includesValue(longText, "entered text should still be there");
 
     assert
-      .dom('.action-title a[href="/t/internationalization-localization/280"]')
-      .doesNotExist("mode should have changed");
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.create_topic.label"),
+        "mode should have changed to create topic"
+      );
   });
 
   test("Does not replace recipient when another draft exists", async function (assert) {
@@ -1601,12 +1678,17 @@ acceptance(`Composer - Customizations`, function (needs) {
   test("Supports text customization", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    assert.dom(".action-title").hasText(i18n("topic.create_long"));
+    assert
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.create_topic.label"),
+        "trigger shows create topic label"
+      );
     assert.dom(".save-or-cancel button").hasText(i18n("composer.create_topic"));
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
     await tags.selectRowByName("monkey");
-    assert.dom(".action-title").hasText("custom text");
+    assert.dom(".composer-actions-trigger").includesText("custom text");
     assert.dom(".save-or-cancel button").hasText(i18n("composer.emoji"));
   });
 });
@@ -2077,7 +2159,7 @@ acceptance(`composer buttons API`, function (needs) {
     await visit("/t/34");
     await click("article#post_3 button.reply");
 
-    assert.dom(".reply-details .user-link").hasText("NewNameHere");
+    assert.dom(".composer-actions-trigger").includesText("NewNameHere");
   });
 
   test("modified avatar when replying to a post", async function (assert) {
@@ -2093,13 +2175,11 @@ acceptance(`composer buttons API`, function (needs) {
     await visit("/t/34");
     await click("article#post_3 button.reply");
 
-    assert
-      .dom(".reply-details .action-title img")
-      .hasAttribute(
-        "src",
-        /\/images\/avatar\.png/,
-        "Reply avatar can be customized"
-      );
+    const composer = this.owner.lookup("service:composer");
+    assert.true(
+      composer.model.replyOptions.userAvatar.includes("/images/avatar.png"),
+      "reply avatar can be customized"
+    );
   });
 
   test("modified avatar in quote", async function (assert) {

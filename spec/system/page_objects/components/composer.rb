@@ -39,11 +39,6 @@ module PageObjects
       end
 
       def open_composer_actions
-        find(".composer-action-title .btn").click
-        self
-      end
-
-      def open_composer_actions_new
         find(".composer-actions-trigger").click
         self
       end
