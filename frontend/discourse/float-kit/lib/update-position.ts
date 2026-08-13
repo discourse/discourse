@@ -220,6 +220,19 @@ function getPadding(options: PositioningOptions): Padding {
   );
 }
 
+/**
+ * The total horizontal clearance a float keeps from the viewport edges: the left and right
+ * {@link getPadding} sides added together. `shift` can only move a float, never shrink it, so a
+ * float wider than what is left over overflows the document instead of being fitted on screen.
+ */
+export function horizontalViewportInset(options: PositioningOptions): number {
+  const padding = getPadding(options);
+
+  return typeof padding === "number"
+    ? padding * 2
+    : (padding.left ?? 0) + (padding.right ?? 0);
+}
+
 function buildDetectOverflowOptions(
   options: PositioningOptions,
   padding: Padding

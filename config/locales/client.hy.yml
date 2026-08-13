@@ -4013,13 +4013,29 @@ hy:
         default_value: "Լռելյայն"
       search:
         title: "Որոնում"
+      site_traffic_explorer:
+        pageviews: "Էջադիտումներ"
+        view_more: "Դիտել ավելին"
+        cards:
+          visitors: "Այցելուներ"
+        columns:
+          top_urls: "URL"
+          browsers: "Բրաուզեր"
+          ip_addresses: "IP հասցե"
+        filters:
+          browser: "Բրաուզեր"
+          ip: "IP հասցե"
+        metrics:
+          pageviews:
+            label: "Էջադիտումներ"
+        series:
+          anonymous_human: "Անանուն"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
         discourse_last_updated: "Discourse վերջին թարմացումը՝"
         version: "Տարբերակ"
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
-        critical_available: "Հասանելի է կրիտիկական թարմացում:"
         updates_available: "Կան հասանելի թարմացումներ:"
         no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"

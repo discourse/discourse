@@ -4391,13 +4391,29 @@ lt:
         default_value: "Numatytasis"
       search:
         title: "Paieška"
+      site_traffic_explorer:
+        pageviews: "Puslapio peržiūros"
+        view_more: "Žiūrėti daugiau"
+        cards:
+          visitors: "Lankytojai"
+        columns:
+          top_urls: "Nuoroda"
+          browsers: "Naršyklė"
+          ip_addresses: "IP adresas"
+        filters:
+          browser: "Naršyklė"
+          ip: "IP adresas"
+        metrics:
+          pageviews:
+            label: "Puslapio peržiūros"
+        series:
+          anonymous_human: "Anonimas"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"
         discourse_last_updated: "Discourse atnaujinta:"
         version: "Versija"
         up_to_date: "Jūs turite naujausią versiją!"
-        critical_available: "Yra kritinių atnaujinimų."
         updates_available: "Yra atnaujinimų."
         no_check_performed: "Atnaujinimų patikrinimas neįvykdytas. Patikrinkite ar veikia sidekiq."
         stale_data: "Artimiausiu metu atnaujinimų patikrinimas nebuvo įvykdytas. Patikrinkite ar veikia sidekiq."

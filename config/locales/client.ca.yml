@@ -3303,13 +3303,26 @@ ca:
         default_value: "Per defecte"
       search:
         title: "Cerca"
+      site_traffic_explorer:
+        pageviews: "Pàgines vistes"
+        columns:
+          top_urls: "URL"
+          browsers: "Navegador"
+          ip_addresses: "Adreça IP"
+        filters:
+          browser: "Navegador"
+          ip: "Adreça IP"
+        metrics:
+          pageviews:
+            label: "Pàgines vistes"
+        series:
+          anonymous_human: "Anònim"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
         discourse_last_updated: "Discourse actualitzat"
         version: "Versió"
         up_to_date: "Esteu al dia!"
-        critical_available: "Hi ha una actualització crítica."
         updates_available: "Hi ha actualitzacions disponibles."
         no_check_performed: "No s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         stale_data: "Darrerament no s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."

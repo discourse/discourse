@@ -4523,13 +4523,25 @@ nb_NO:
         default_value: "Forvalg"
       search:
         title: "Søk"
+      site_traffic_explorer:
+        pageviews: "Sidevisninger"
+        view_more: "Vis mer"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP-adresse"
+        filters:
+          ip: "IP-adresse"
+        metrics:
+          pageviews:
+            label: "Sidevisninger"
+        series:
+          anonymous_human: "Anonym"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashbord oppdatert:"
         discourse_last_updated: "Diskurs oppdatert:"
         version: "Versjon"
         up_to_date: "Du har den seneste versjonen!"
-        critical_available: "En kritisk oppdatering er tilgjengelig."
         updates_available: "Oppdateringer er tilgjengelige."
         no_check_performed: "En sjekk for oppdateringer har ikke blitt utført. Verifiser at sidekiq kjører."
         stale_data: "Det har ikke vært sjekket for oppdateringer på en stund. Sjekk at sidekiq kjører."

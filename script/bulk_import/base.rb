@@ -564,6 +564,7 @@ class BulkImport::Base
     active
     staged
     trust_level
+    manual_locked_trust_level
     admin
     moderator
     approved

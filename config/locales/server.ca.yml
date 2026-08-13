@@ -587,6 +587,13 @@ ca:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anònim"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."
@@ -2312,9 +2319,6 @@ ca:
     user_posted_pm_staged:
       title: "L'usuari ha publicat un missatge personal (MP) fictici"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."

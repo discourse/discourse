@@ -557,6 +557,9 @@ ro:
     title: "Resetează parola"
     success: "Ți-ai schimbat cu succes parola și acum ești autentificat."
     success_unapproved: "Ți-ai schimbat cu succes parola."
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimi"
   change_email:
     error: "A apărut o eroare la schimbarea adresei de email. Poate adresa e deja folosită?"
     error_staged: "A apărut o eroare la schimbarea adresei tale de email. Adresa este deja folosită de un utilizator în așteptare."
@@ -1902,9 +1905,6 @@ ro:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_deleted:
       title: "Cont șters"
       subject_template: "[%{email_prefix}] Contul tău a fost șters"

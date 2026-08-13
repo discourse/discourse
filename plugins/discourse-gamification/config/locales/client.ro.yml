@@ -41,3 +41,8 @@ ro:
       custom_range_from: "De la"
       admin:
         name: "Nume"
+    discourse_workflows:
+      gamification_score:
+        username: "Utilizator"
+        date: "Dată"
+        description: "Descriere"

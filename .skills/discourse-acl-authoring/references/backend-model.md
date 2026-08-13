@@ -148,6 +148,8 @@ The concern provides:
 - `.acl_is_mandatory?(acl)`
 - `.has_banned_acl?`
 - `.acl_is_banned?(acl)`
+- `.has_loss_warning_permissions?`
+- `.acl_triggers_loss_warning?(acl)`
 - `mandatory_acl_as_expanded_list(owner)`
 
 `AclTarget.acl_matches?(acl_a, acl_b)` is the shared comparator for mandatory and banned ACL matching. It normalizes `type` to symbols and compares `permission` as strings.
@@ -184,6 +186,25 @@ Banned entries are consumed by both backend writes and frontend rendering:
 - `DAccessControl` filters banned permission options for the matching grantee.
 
 Keep mandatory and banned ACL metadata group-based unless the target flow has explicit user ACL UI and review coverage. Backend lookups can understand user ACL rows, but shared frontend editing is not complete.
+
+## Loss Warning Permissions
+
+Define `self.loss_warning_permissions` when the current actor should confirm losing particular permissions from the proposed ACL:
+
+```ruby
+def self.loss_warning_permissions
+  %w[manage]
+end
+```
+
+This is advisory, unlike `mandatory_acl` or `banned_acl`. It does not prevent persistence. `AccessControlList::EvaluateModification` checks the proposed ACL before save and reports when it would not grant the current user every configured permission.
+
+The concern provides:
+
+- `.has_loss_warning_permissions?` to detect non-empty configuration.
+- `.acl_triggers_loss_warning?(acl)` to test whether one flattened ACL entry has a configured permission.
+
+Use a noun phrase because the method returns permission strings; do not reintroduce action-like names such as `warn_of_loss`.
 
 ## Stale References
 

@@ -6696,13 +6696,32 @@ ru:
       new_features:
         title: "Что нового?"
         check_for_updates: "Проверить обновления"
+      site_traffic_explorer:
+        pageviews: "Просмотры"
+        view_more: "Показать больше"
+        cards:
+          pages: "страниц"
+          visitors: "Посетители"
+        columns:
+          countries: "Страна"
+          top_urls: "URL-адрес"
+          browsers: "Браузер"
+          ip_addresses: "IP-адрес"
+        filters:
+          country: "Страна"
+          browser: "Браузер"
+          ip: "IP-адрес"
+        metrics:
+          pageviews:
+            label: "Просмотры"
+        series:
+          anonymous_human: "Анонимные просмотры"
       dashboard:
         title: "Панель управления"
         last_updated: "Панель управления обновлена:"
         discourse_last_updated: "Discourse обновлён:"
         version: "Версия"
         up_to_date: "Обновлений нет"
-        critical_available: "Доступно критическое обновление."
         updates_available: "Доступны обновления."
         please_update: "Обновитесь!"
         no_check_performed: "Проверка обновлений не производится. Убедитесь, что запущен процесс sidekiq."

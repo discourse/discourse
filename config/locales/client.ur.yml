@@ -12,6 +12,7 @@ ur:
       deny: "منسوخ کریں"
       logged_in_as: "کے طور پر لاگ ان"
       permissions_header: 'یہ "%{application_name}" کو اجازت دے گا:'
+      redirect_warning: "مجاز کر دینے پر آپ کو منتقل کر دیا جائے گا"
       copied: "کاپی کر لیا!"
       otp_description: 'کیا آپ "%{application_name}" کو اِس سائٹ تک رسائی دینا پسند کریں گے؟'
       no_trust_level: "معذرت، آپ کے پاس رکن API تک رسائی کے لیے مطلوبہ فعالیت کا درجہ نہیں ہے۔"
@@ -71,8 +72,8 @@ ur:
       time_short_day: "dddd، HH:mm"
       timeline_date: "MMMM YYYY"
       long_no_year: "D MMMM، HH:mm"
-      long_no_year_no_time: "D MMMM"
-      full_no_year_no_time: "Do MMMM"
+      long_no_year_no_time: "D ‏MMMM"
+      full_no_year_no_time: "Do ‏MMMM"
       long_with_year: "D MMMM، YYYY HH:mm"
       long_with_year_no_time: "D MMMM، YYYY"
       full_with_year_no_time: "Do MMMM، YYYY"
@@ -1353,7 +1354,7 @@ ur:
         public_groups: "عوامی گروپس"
         my_groups: "میرے گروپس"
         group_type: "گروپ قِسم"
-        is_group_user: "ممبر"
+        is_group_user: "معتمد"
         is_group_owner: "مالک"
         search_results: "تلاش کے نتائج نیچے ظاہر ہوں گے۔"
       title:
@@ -1392,7 +1393,7 @@ ur:
         forbidden: "آپ کو ممبران دیکھنے کی اجازت نہیں ہے۔"
         no_filter_matches: "کوئی ممبر اس تلاش سے مماثل نہیں ہے۔"
       topics: "موضوعات"
-      posts: "پوسٹ"
+      posts: "دھاگے"
       aria_post_number: "%{title} - پوسٹ #%{postNumber}"
       mentions: "تذکرے"
       messages: "پیغامات"
@@ -1472,7 +1473,7 @@ ur:
         save: "محفوظ کردینے کا حکم"
         apply_all: "لاگو کریں"
         position: "پوزیشن"
-      posts: "پوسٹ"
+      posts: "دھاگے"
       topics: "موضوعات"
       latest: "تازہ ترین"
       subcategories: "ذیلی زمرے"
@@ -1729,7 +1730,7 @@ ur:
       watched_categories_instructions: "آپ خود کار طریقے سے اِن زمرہ جات میں موجود تمام موضوعات کو دیکھیں گے۔ آپ کو تمام نئے دھاگوں اور موضوعات کے بارے میں مطلع کیا جائے گا، اور نئے دھاگوں کی گنتی بھی موضوع کے ساتھ دکھائی جائے گی۔"
       tracked_categories: "ٹریک کیا ہوا"
       tracked_categories_instructions: "آپ خود کار طریقے سے اِن زمرہ جات میں موجود تمام موضوعات کو ڈھونڈیں۔ نئے دھاگوں کی گنتی موضوع کے ساتھ دکھائی جائے گی۔"
-      watched_first_post_categories: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
+      watched_first_post_categories: "پہلے دھاگے پر نظر رکھی ہوئی ہے"
       watched_first_post_categories_instructions: "آپ کو اِن زمرہ جات میں ہر نئے موضوع کے پہلے دھاگہ کے بارے میں مطلع کیا جائے گا۔"
       watched_first_post_tags: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
       watched_first_post_tags_instructions: "آپ کو اِن ٹیگ والے ہر نئے موضوع کے پہلے دھاگہ کے بارے میں مطلع کیا جائے گا۔"
@@ -1752,7 +1753,7 @@ ur:
       allowed_pm_users: "اجازت یافتہ"
       allowed_pm_users_instructions: "صرف ان اراکین سے PM کی اجازت دیں۔"
       allow_private_messages_from_specific_users: "صرف مخصوص اراکین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں۔"
-      ignored_users: "نظر انداز کردہ"
+      ignored_users: "نظر انداز شدہ"
       ignored_users_instructions: "ان اراکین کے تمام دھاگوں، اطلاعات اور نجی پیغامات کو دبا دیں۔"
       tracked_topics_link: "دیکھیں"
       automatically_unpin_topics: "جب میں نیچے تک پہنچ جاتا ہوں تو خودکار طور پر موضوعات کو اَن پِن کردیں"
@@ -2172,6 +2173,7 @@ ur:
       bookmark_after_notification:
         title: "بُک مارک یاد دہانی کی اطلاع بھیجے جانے کے بعد:"
       send_shortcut:
+        title: "گفتگو کے کمپوزر سے پیغامات بھیجنے کے لیے استعمال کریں:"
         enter: "اَینٹر"
         meta_enter: "%{meta_key} + درج کریں"
       like_notification_frequency:
@@ -3506,7 +3508,7 @@ ur:
           single_user: صرف ایک صارف پر مشتمل ہوں
         post:
           count:
-            label: پوسٹ
+            label: دھاگے
           min:
             placeholder: کم از کم
             aria_label: پوسٹس کی کم از کم تعداد کے حساب سے فلٹر
@@ -3692,6 +3694,7 @@ ur:
         progress:
           one: "پیش رفت: <strong>%{count}</strong> موضوع"
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
+        notify: "صارفین کو اس تبدیلی کے بارے مطلع کریں"
         performing: "حجم آپریشنز ہو رہے ہیں، براہ کرم انتظار کریں۔۔۔"
         completed: "حجمی اختیارات کامیابی سے مکمل ہو گئے!"
         completed_count:
@@ -4754,7 +4757,7 @@ ur:
           title: "نظر رکھی ہوئی ہے"
           description: "آپ خود بخود اس زمرے کے تمام موضوعات دیکھیں گے۔ آپ کو ہر موضوع میں ہر نئے دھاگہ کے بارے میں مطلع کیا جائے گا، اور نئے جوابات کی گنتی دکھائی جائے گی۔"
         watching_first_post:
-          title: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
+          title: "پہلے دھاگے پر نظر رکھی ہوئی ہے"
           description: "آپ کو اِس زمرہ میں نئے ٹاپکس کے بارے میں مطلع کیا جائے گا لیکن ٹاپکس کے جوابات پر نہیں۔"
         tracking:
           title: "ٹریک کیا جا رہا"
@@ -5272,7 +5275,7 @@ ur:
           title: "نظر رکھی ہوئی ہے"
           description: "آپ خود کار طریقے سے اِس ٹیگ والے تمام ٹاپکس پر نظر رکھیں گے۔ تمام نئی پوسٹ اور ٹاپکس کے بارے میں مطلع کیا جائے گا، اور نئی پوسٹس کی گنتی بھی ٹاپک کے ساتھ دکھائی جائے گی۔"
         watching_first_post:
-          title: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
+          title: "پہلے دھاگے پر نظر رکھی ہوئی ہے"
           description: "آپ کو اِس ٹیگ میں نئے ٹاپکس کے بارے میں مطلع کیا جائے گا لیکن ٹاپکس کے جوابات پر نہیں۔"
         tracking:
           title: "ٹریک کیا جا رہا"
@@ -6195,13 +6198,37 @@ ur:
       new_features:
         title: "نیا کیا ہے؟"
         check_for_updates: "اپ ڈیٹس کے لیے چیک کریں۔"
+      site_traffic_explorer:
+        pageviews: "صفحہ کے مشاہدات"
+        view_more: "مزید دیکھیں"
+        cards:
+          pages: "صفحات"
+          visitors: "زائرین"
+        columns:
+          referrers: "حوالہ دہندہ"
+          countries: "ملک"
+          top_urls: "URL"
+          browsers: "براؤزر"
+          ip_addresses: "IP ایڈریس"
+        filters:
+          referrer: "حوالہ دہندہ"
+          country: "ملک"
+          browser: "براؤزر"
+          ip: "IP ایڈریس"
+        metrics:
+          pageviews:
+            label: "صفحہ کے مشاہدات"
+          logged_in_share:
+            label: "لاگ ان شدہ شراکت"
+        series:
+          logged_in_human: "لاگ ان شدہ"
+          anonymous_human: "گمنام"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا:"
         discourse_last_updated: "ڈسکورس اَپ ڈیٹ کیا گیا:"
         version: "ورژن"
         up_to_date: "آپ اَپ ٹو ڈیٹ ہیں!"
-        critical_available: "ایک انتہائی اہم اَپ ڈیٹ دستیاب ہے۔"
         updates_available: "اَپ ڈیٹس دستیاب ہیں۔"
         please_update: "براہ کرم اپ ڈیٹ کریں!"
         no_check_performed: "اَپ ڈیٹس کے لئے چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
@@ -8302,7 +8329,7 @@ ur:
         topic_id: "ٹاپک ID"
         topic_title: "موضوع"
         post_id: "پوسٹ ID"
-        post_title: "پوسٹ"
+        post_title: "دھاگہ"
         category_id: "زمرہ ID"
         category_title: "زمرہ"
         tag_name: "ٹیگ کا نام"

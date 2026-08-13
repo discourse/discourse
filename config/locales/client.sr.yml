@@ -2952,11 +2952,27 @@ sr:
         default_value: "Подразумевано"
       search:
         title: "Pretraži"
+      site_traffic_explorer:
+        view_more: "Pogledajte više"
+        cards:
+          visitors: "Posetioci"
+        columns:
+          referrers: "Upućivač"
+          top_urls: "URL"
+          ip_addresses: "IP adrese"
+        filters:
+          referrer: "Upućivač"
+          ip: "IP adrese"
+        metrics:
+          logged_in_share:
+            label: "Udeo prijavljenih"
+        series:
+          logged_in_human: "Prijavljen"
+          anonymous_human: "Anonimno"
       dashboard:
         title: "Komandna Tabla"
         version: "Verzija"
         up_to_date: "Imate trenutnu verziju!"
-        critical_available: "Dostupno je kritično ažuriranje."
         updates_available: "Ažuriranje je dostupno."
         no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."

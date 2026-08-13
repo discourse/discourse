@@ -5138,13 +5138,32 @@ fa_IR:
       new_features:
         title: "چه چیزی جدید شده؟"
         check_for_updates: "برررسی به‌روز‌رسانی‌ها"
+      site_traffic_explorer:
+        pageviews: "بازدید"
+        view_more: "نمایش بیشتر"
+        cards:
+          pages: "صفحه"
+          visitors: "بازدیدکنندگان"
+        columns:
+          countries: "کشور"
+          top_urls: "نشانی اینترنتی"
+          browsers: "مرورگر"
+          ip_addresses: "نشانی IP"
+        filters:
+          country: "کشور"
+          browser: "مرورگر"
+          ip: "نشانی IP"
+        metrics:
+          pageviews:
+            label: "بازدید"
+        series:
+          anonymous_human: "ناشناس"
       dashboard:
         title: "پیشخوان"
         last_updated: "داشبورد بروزرسانی شد:"
         discourse_last_updated: "دیسکورس بروزرسانی شد:"
         version: "نسخه"
         up_to_date: "شما به روز هستید!"
-        critical_available: "به روز رسانی مهم در دسترس است."
         updates_available: "بروز رسانی در درسترس است."
         please_update: "لطفا ارتقا دهید!"
         no_check_performed: "بررسی برای بروزرسانی انجام نشد. از اجرای sidekiq اطمینان حاصل کنید."

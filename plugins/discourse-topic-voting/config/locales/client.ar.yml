@@ -55,5 +55,13 @@ ar:
           topic_upvote: "عندما يقوم المستخدم بالتصويت على موضوع"
           topic_unvote: "عندما يقوم المستخدم بإلغاء التصويت على موضوع"
     discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "يتطلَّب تفعيل التصويت على الموضوع"
+      nodes:
+        "trigger:topic_received_vote": "حصول الموضوع على تصويت"
+      node_descriptions:
+        "trigger:topic_received_vote": "يتم تشغيله عندما يصوِّت مستخدم على موضوع"
       topic_received_vote:
+        category_ids_description: "التشغيل للموضوعات في تلك الفئات فقط. اترك الحقل فارغًا لمطابقة جميع الفئات."
         tag_names: "الوسوم"
+        tag_names_description: "التشغيل للموضوعات التي تحتوي على واحد على الأقل من تلك الوسوم"

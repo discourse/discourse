@@ -5,14 +5,14 @@ require "letter_avatar"
 RSpec.describe LetterAvatar do
   describe ".cleanup_old" do
     it "removes stale cache directories" do
-      path = LetterAvatar.cache_path
+      cache_path = LetterAvatar.cache_path
+      parent_path = File.dirname(cache_path)
+      stale_path = File.join(parent_path, "stale")
+      FileUtils.mkdir_p([cache_path, stale_path])
 
-      FileUtils.mkdir_p(path + "junk")
-      LetterAvatar.generate("test", 100)
+      described_class.cleanup_old
 
-      LetterAvatar.cleanup_old
-
-      expect(Dir.entries(File.dirname(path)).length).to eq(3)
+      expect(Dir.children(parent_path)).to contain_exactly(File.basename(cache_path))
     end
   end
 

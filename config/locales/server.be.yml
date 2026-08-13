@@ -453,6 +453,12 @@ be:
       macos: "Macos"
       windows: "Microsoft Windows,"
       unknown: "невядомая аперацыйная сістэма"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "ананімны"
+    browsers:
+      edge: "Microsoft Эдж"
+      firefox: "Firefox"
   change_email:
     error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
     error_staged: "Падчас змянення адраса электроннай пошты адбылася памылка. Гэты адрас ужо выкарыстоўваецца зарэгістраваным карыстальнікам."
@@ -1832,9 +1838,6 @@ be:
     user_posted_pm_staged:
       title: "Карыстальнік Паведамленне PM Пастановачная"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Аккаунт прыпынены"
       subject_template: "[%{email_prefix}] Ваш рахунак быў заблякаваны"

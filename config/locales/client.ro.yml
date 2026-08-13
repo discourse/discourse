@@ -4288,11 +4288,26 @@ ro:
       new_features:
         title: "Ce este nou?"
         check_for_updates: "Verifică actualizări"
+      site_traffic_explorer:
+        pageviews: "Vizualizări"
+        view_more: "Vezi mai multe"
+        cards:
+          pages: "Pagini"
+          visitors: "Vizitatori"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "Adresă IP"
+        filters:
+          ip: "Adresă IP"
+        metrics:
+          pageviews:
+            label: "Vizualizări"
+        series:
+          anonymous_human: "Anonimi"
       dashboard:
         title: "Panou de control"
         version: "Versiune"
         up_to_date: "Ești la zi!"
-        critical_available: "O actualizare importantă este disponibilă."
         updates_available: "Sunt disponibile actualizări."
         no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
         stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."

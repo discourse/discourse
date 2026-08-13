@@ -190,6 +190,9 @@ hr:
       llms:
         display_name: "Ime"
         provider: "Pružatelj usluga"
+        vision_modes:
+          disabled:
+            title: "Onemogućeno"
         save: "Spremi"
         edit: "Uredi"
         delete: Izbriši

@@ -165,6 +165,9 @@ hy:
       llms:
         display_name: "Անուն"
         provider: "Մատակարար"
+        vision_modes:
+          disabled:
+            title: "Անջատված"
         save: "Պահպանել"
         edit: "Խմբագրել"
         delete: Ջնջել

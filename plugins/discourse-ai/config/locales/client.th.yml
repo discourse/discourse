@@ -146,6 +146,9 @@ th:
           required: "ต้องการ"
       llms:
         display_name: "ชื่อ"
+        vision_modes:
+          disabled:
+            title: "ปิดใช้งานแล้ว"
         save: "บันทึก"
         edit: "แก้ไข"
         delete: ลบ

@@ -25,6 +25,13 @@ pl_PL:
         agent_vision_disabled: "agent nie może uwzględniać przesyłania obrazów"
         llm_missing: "agent nie rozwiązuje umowy LLM"
         llm_vision_disabled: "rozwiązany problem LLM nie obsługuje wprowadzania obrazu"
+      ai_llm_vision_delegation: "%{model_name} nie może użyć skonfigurowanego modelu wizji: %{reason}. <a href='%{url}'>Przejrzyj model AI</a>."
+      ai_llm_vision_delegation_reasons:
+        missing: "model wizji już nie istnieje"
+        native_and_delegated: "skonfigurowano zarówno natywny obraz wejściowy, jak i delegowaną wizję"
+        self_reference: "model nie może używać siebie do wizji"
+        delegated: "model wizji deleguje do innego modelu"
+        not_native: "model wizji nie obsługuje natywnego wprowadzania obrazów"
   discourse_automation:
     ai:
       flag_types:
@@ -623,6 +630,7 @@ pl_PL:
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
+        view_image: "Sprawdź obraz"
         update_artifact: "Zaktualizuj artefakt sieciowy"
         create_artifact: "Utwórz artefakt sieciowy"
         web_browser: "Przeglądaj sieć"
@@ -675,6 +683,7 @@ pl_PL:
       tool_help:
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
         search_uploaded_documents: "Wyszukaj dokumenty przesłane do tego agenta"
+        view_image: "Sprawdź obraz dostępny podczas tego zadania"
         update_artifact: "Aktualizuj artefakt sieciowy za pomocą bota AI"
         create_artifact: "Utwórz artefakt sieciowy za pomocą bota AI"
         web_browser: "Przeglądaj stronę internetową za pomocą bota AI"
@@ -725,6 +734,7 @@ pl_PL:
         researcher: "Informacje o forum badawczym z wykorzystaniem bota AI"
       tool_description:
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
+        view_image: "Przeanalizowano obraz dostępny podczas tego zadania"
         search_uploaded_documents:
           one: "Znaleziono %{count} przesłany fragment dokumentu dla „%{query}”"
           few: "Znaleziono %{count} przesłane fragmenty dokumentu dla „%{query}”"
@@ -1071,6 +1081,12 @@ pl_PL:
       secret_not_found: "Wybrane poświadczenie nie istnieje"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."
       bedrock_missing_auth: "AWS Bedrock wymaga skonfigurowania Access Key ID lub Role ARN"
+      native_vision_cannot_delegate: "Wprowadzanie obrazu natywnego nie może korzystać z innego modelu widzenia"
+      vision_model_required: "Należy wybrać model wizji"
+      vision_model_not_found: "Wybrany model wizji nie istnieje"
+      vision_model_cannot_be_self: "Model nie może używać siebie jako modelu swojej wizji"
+      vision_model_must_be_native: "Wybrany model wizji musi obsługiwać natywne wprowadzanie obrazów"
+      vision_model_has_dependents: "Ten model zapewnia wizję dla: %{models}. Najpierw skonfiguruj ponownie te modele."
     ai_staff_action_logger:
       updated: "zaktualizowane"
       set: "ustaw"

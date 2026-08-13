@@ -216,9 +216,12 @@ module DiscourseAi
 
           if changes.present?
             first_post = post.topic.posts.where(post_number: 1).first
-            changes[:bypass_bump] = true
-            changes[:skip_validations] = true
-            first_post.revise(Discourse.system_user, changes)
+            first_post.revise(
+              Discourse.system_user,
+              changes,
+              bypass_bump: true,
+              skip_validations: true,
+            )
           end
 
           post.topic.update!(visible: false) if hide_topic

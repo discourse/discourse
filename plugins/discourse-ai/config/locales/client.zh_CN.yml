@@ -21,7 +21,7 @@ zh_CN:
       dashboard:
         emotion:
           title: "情绪"
-          description: "该表格列出了按特定情绪分类的帖子数量。根据所选的情绪分类方法，帖子将使用配置的情绪分类模型（“SamLowe/roberta-base-go_emotions”）或配置的情绪分类智能体进行分类。"
+          description: "该表格列出了按特定情绪分类的帖子数量。根据所选情绪分类方法，帖子将使用配置的情绪分类模型（“SamLowe/roberta-base-go_emotions”）或配置的情绪分类智能体进行分类。"
         reports:
           filters:
             group_by:
@@ -234,11 +234,11 @@ zh_CN:
     discourse_ai:
       title: "AI"
       post_image_captions:
-        edit: "编辑 AI 图片摘要"
-        title: "编辑 AI 图片摘要"
-        description: "摘要"
-        save: "保存摘要"
-        saved: "AI 图片摘要已保存"
+        edit: "编辑 AI 图片说明"
+        title: "编辑 AI 图片说明"
+        description: "说明"
+        save: "保存说明"
+        saved: "AI 图片说明已保存"
       discourse_workflows:
         ai_agent:
           agent_id: "智能体"
@@ -261,14 +261,14 @@ zh_CN:
         tab_label: "机器人聊天"
       ai_tool_approval:
         loading: "正在加载…"
-        load_error: "操作失败，无法加载此待处理操作。"
+        load_error: "无法加载此待处理操作。"
         agent: "智能体"
         tool: "操作"
         user: "用户"
         approve: "批准"
         reject: "拒绝"
         approved: "已批准"
-        rejected: "遭拒"
+        rejected: "已拒绝"
         awaiting_staff: "等待管理人员审批"
       default_llm:
         title: "默认 LLM 模型"
@@ -380,9 +380,9 @@ zh_CN:
             automation: "自动化"
             agents: "智能体"
         image_caption:
-          name: "图片摘要"
-          description: "为帖子图片生成 AI 摘要，将其提供给读者和辅助阅读技术。"
-          post_image_captions: "帖子图片摘要"
+          name: "图片说明"
+          description: "为帖子图片生成 AI 说明，将其提供给读者和辅助阅读技术。"
+          post_image_captions: "帖子图片说明"
           setting_groups:
             settings: "设置"
         translation:
@@ -420,22 +420,22 @@ zh_CN:
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
         category_scope: "类别"
-        category_scope_description: "选择自动翻译是否适用于所有分类、公开分类或选定分类中的内容。"
+        category_scope_description: "选择自动翻译应用于所有类别、公开类别还是所选类别中的内容。"
         cached_results_notice: "正在显示自 %{relative_time} 起的缓存结果。"
         model_progress:
           loading: "正在加载翻译进度"
           overview_label: "按内容类型划分的翻译进度"
           detail:
-            loading: "正在加载 %{target} 详情..."
-            load_error: "%{target} 详细信息无法加载。"
+            loading: "正在加载%{target}详细信息…"
+            load_error: "%{target}详细信息无法加载。"
             retry: "重试"
             empty: "没有可用的语言进度。"
-            progress_label: "已将 %{translated} 个条目（共 %{total} 个）翻译为 %{language}"
+            progress_label: "已将 %{translated} 个条目（共 %{total} 个）翻译为%{language}"
             columns:
               locale: "语言区域"
-              translated: "已翻译条目数"
+              translated: "已翻译"
               pending: "待处理"
-              eligible: "符合条件的条目数"
+              eligible: "符合条件"
               total: "总计"
               progress: "进度"
             eligible_help: "排除已使用此语言的内容。"
@@ -444,43 +444,43 @@ zh_CN:
             post:
               title: "帖子"
               eligible_total:
-                other: "One\n有 %{count} 个符合条件的帖子需要翻译。\nOther\n有 %{count} 个符合条件的帖子需要翻译。"
+                other: "%{count} 个符合条件的帖子需要翻译。"
               translated:
-                other: "One\n%{count} 个帖子已翻译完毕。\nOther\n%{count} 个帖子已翻译完毕。"
+                other: "%{count} 个帖子已翻译完毕。"
               needs_language_detection:
-                other: "One\n%{count} 个帖子仍需进行语言检测。\nOther\n%{count} 个帖子仍需进行语言检测。"
+                other: "%{count} 个帖子仍需进行语言检测。"
               all_translated:
-                other: "One\n符合条件的帖子已翻译完毕。\nOther\n全部 %{count} 个符合条件的帖子已翻译完毕。"
+                other: "所有 %{count} 个符合条件的帖子已翻译完毕。"
             topic:
               title: "话题"
               eligible_total:
-                other: "One\n有 %{count} 个符合条件的话题需要翻译。\nOther\n有 %{count} 个符合条件的话题需要翻译。"
+                other: "%{count} 个符合条件的话题需要翻译。"
               translated:
-                other: "One\n%{count} 个话题已翻译完毕。\nOther\n%{count} 个话题已翻译完毕。"
+                other: "%{count} 个话题已翻译完毕。"
               needs_language_detection:
-                other: "One\n%{count} 个话题仍需进行语言检测。\nOther\n%{count} 个话题仍需进行语言检测。"
+                other: "%{count} 个话题仍需进行语言检测。"
               all_translated:
-                other: "One\n符合条件的话题已翻译完毕。\nOther\n全部 %{count} 个符合条件的话题已翻译完毕。"
+                other: "所有 %{count} 个符合条件的话题已翻译完毕。"
             category:
               title: "类别"
               eligible_total:
-                other: "One\n有 %{count} 个符合条件的类别需要翻译。\nOther\n有 %{count} 个符合条件的类别需要翻译。"
+                other: "%{count} 个符合条件的类别需要翻译。"
               translated:
-                other: "One\n%{count} 个类别已翻译完毕。\nOther\n%{count} 个类别已翻译完毕。"
+                other: "%{count} 个类别已翻译完毕。"
               needs_language_detection:
-                other: "One\n%{count} 个类别仍需进行语言检测。\nOther\n%{count} 个类别仍需进行语言检测。"
+                other: "%{count} 个类别仍需进行语言检测。"
               all_translated:
-                other: "One\n符合条件的类别已翻译完毕。\nOther\n全部 %{count} 个符合条件的类别已翻译完毕。"
+                other: "所有 %{count} 个符合条件的类别已翻译完毕。"
             tag:
               title: "标签"
               total:
-                other: "One\n有 %{count} 个标签需要翻译。\nOther\n有 %{count} 个标签需要翻译。"
+                other: "%{count} 个符合条件的标签需要翻译。"
               translated:
-                other: "One\n%{count} 个标签已翻译完毕。\nOther\n%{count} 个标签已翻译完毕。"
+                other: "%{count} 个标签已翻译完毕。"
               needs_language_detection:
-                other: "One\n%{count} 个标签仍需进行语言检测。\nOther\n%{count} 个标签仍需进行语言检测。"
+                other: "%{count} 个标签仍需进行语言检测。"
               all_translated:
-                other: "One\n标签已翻译完毕。\nOther\n全部 %{count} 个标签已翻译完毕。"
+                other: "所有 %{count} 个标签已翻译完毕。"
         admin_actions:
           translation_settings: "AI 设置"
           localization_settings: "应用语言设置"
@@ -489,7 +489,7 @@ zh_CN:
         stats:
           title: "翻译统计"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
-          backfill_message: "<a href='%{settingsUrl}'>回填设置</a> 配置为翻译 %{date} 之后的所有帖子。"
+          backfill_message: "<a href='%{settingsUrl}'>回填设置</a>配置为翻译 %{date} 之后的所有帖子。"
           eta_minutes:
             other: "%{count} 分钟"
           eta_hours:
@@ -636,11 +636,10 @@ zh_CN:
         no_llm_selected: "未选择语言模型"
         use_parent_llm: "使用智能体的语言模型"
         max_turn_tokens: "最大回合 Token"
-        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总 token 数量（输入 + 输出）。留空则默认值为模型上下文窗口的一半。"
-        compression_threshold: "上下文压缩阈值"
+        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大 token 总量（输入 + 输出）。留空则默认为模型上下文窗口的一半。"
+        compression_threshold: "压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
         vision_enabled: 包含图片上传
-        vision_enabled_help: 如果启用，当所选模型支持图片输入时，此智能体可以包含帖子和聊天中的图片
         vision_max_pixels: 最大图片尺寸
         vision_max_pixel_sizes:
           low: 低品质 - 最便宜 (256x256)
@@ -719,12 +718,12 @@ zh_CN:
         thinking_effort_options:
           default: "模型默认值"
           none: "无"
-          minimal: "最低 - minimal"
-          low: "低 - low"
-          medium: "中 - medium"
-          high: "高 - high"
-          xhigh: "极高 - xhigh"
-          max: "最高 - max"
+          minimal: "最低"
+          low: "低"
+          medium: "中"
+          high: "高"
+          xhigh: "极高"
+          max: "最高"
         priority: "优先级"
         priority_help: "优先级较高的智能体会显示在智能体列表的顶部。如果有多个智能体的优先级相同，则会按字母顺序排列。"
         tool_options: "工具选项"
@@ -947,6 +946,9 @@ zh_CN:
         url: "托管模型的服务的 URL"
         api_key: "托管模型的服务的 API 密钥"
         vision_enabled: "支持图片输入"
+        vision_modes:
+          disabled:
+            title: "已禁用"
         allowed_attachment_types: "允许的文档附件"
         attachment_types_placeholder: "选择或输入扩展名（例如，pdf、txt、csv、docx、xlsx）"
         ai_bot_user: "AI 机器人用户"
@@ -991,7 +993,7 @@ zh_CN:
         usage:
           ai_bot: "AI 机器人"
           ai_helper: "助手 (%{agent})"
-          ai_image_caption: "图片摘要"
+          ai_image_caption: "图片说明"
           ai_agent: "智能体（%{agent}）"
           ai_summarization: "总结"
           ai_embeddings_semantic_search: "AI 搜索"
@@ -1071,7 +1073,7 @@ zh_CN:
           role_arn: "AWS Bedrock 角色 ARN"
           inference_profile_arn: "AWS Bedrock 应用程序推理配置文件 ARN"
           region: "区域"
-          project_id: "GCP Project ID"
+          project_id: "GCP 项目 ID"
           organization: "可选 OpenAI 组织 ID"
           disable_system_prompt: "在提示中禁用系统消息"
           enable_native_tool: "启用原生工具支持"
@@ -1101,7 +1103,7 @@ zh_CN:
           prompt_caching_always: "始终 - 始终使用提示缓存"
           effort: "作用等级"
         provider_field_hints:
-          reasoning_mode: "标准模式使用提供商的默认设置。专业模式需要 Responses API 以及所选模型的支持，且会增加延迟和令牌消耗。"
+          reasoning_mode: "标准模式使用提供商的默认设置。专业模式需要 Responses API 以及所选模型的支持，且会增加延迟和 token 用量。"
           azure_reasoning_effort: "可用的思考强度取决于 Azure 中部署的模型。Azure 会拒绝不支持的值。"
           reasoning_parser: "必须与 vLLM 服务器的 --reasoning-parser 设置相匹配。Discourse 无法针对每个请求切换解析器，它会利用此设置来构建请求选项。"
           thinking_override: "可以选择强制支持的 vLLM 聊天模板为每个请求启用或禁用“思考”功能。对于不受支持的解析器，则保持服务器默认值。"
@@ -1240,8 +1242,8 @@ zh_CN:
         click_to_run_label: "运行工件"
       ai_bot:
         title: "AI 机器人"
-        agent: "智能体:"
-        llm: "模型:"
+        agent: "智能体："
+        llm: "模型："
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
         try_again: "重试"

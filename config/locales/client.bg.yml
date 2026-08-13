@@ -3644,11 +3644,18 @@ bg:
         default_value: "По подразбиране"
       search:
         title: "Търсене"
+      site_traffic_explorer:
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP адрес"
+        filters:
+          ip: "IP адрес"
+        series:
+          anonymous_human: "Анонимен"
       dashboard:
         title: "Работен плот"
         version: "Версия"
         up_to_date: "Вие сте с последна версия!"
-        critical_available: "Налична е важна актуализация."
         updates_available: "Налична е актуализация."
         no_check_performed: "Не е направена проверка за нова версия. Убедете се, че sidekiq работи."
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."

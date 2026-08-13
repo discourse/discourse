@@ -6152,7 +6152,7 @@ zh_CN:
             apple_touch_icon:
               title: "Apple 触控图标"
               description: "用于 Apple 触控设备的图标。如果留空，将使用 large_icon。"
-              help_text: "建议尺寸为 180 x 180 像素。请勿使用SVG图像，不建议使用透明背景。"
+              help_text: "建议尺寸为 180 x 180 像素。请勿使用SVG 图片，不建议使用透明背景。"
             digest_logo:
               title: "摘要徽标"
               description: "您的站点的电子邮件摘要顶部使用的备用徽标图片。如果留空，将使用 `logo` 设置中的图片。"
@@ -6518,6 +6518,34 @@ zh_CN:
       new_features:
         title: "最新变化"
         check_for_updates: "检查更新"
+      site_traffic_explorer:
+        pageviews: "页面浏览量"
+        view_more: "展开"
+        cards:
+          pages: "页面"
+          visitors: "访客"
+        columns:
+          referrers: "推荐人"
+          countries: "国家/地区"
+          top_urls: "URL"
+          browsers: "浏览器"
+          ip_addresses: "IP 地址"
+        filters:
+          referrer: "推荐人"
+          country: "国家/地区"
+          browser: "浏览器"
+          ip: "IP 地址"
+        metrics:
+          pageviews:
+            label: "页面浏览量"
+          logged_in_share:
+            label: "登录成员占比"
+          bounce_rate:
+            label: "跳出率"
+        series:
+          logged_in_human: "登录成员"
+          anonymous_human: "匿名"
+          likely_crawler: "疑似爬虫"
       dashboard:
         title: "信息中心"
         last_updated: "信息中心更新："
@@ -6526,7 +6554,6 @@ zh_CN:
         up_to_date: "您已经是最新版本！"
         up_to_date_newer_commits:
           other: "您当前使用的是最新版本，但有 %{count} 条可用的新更改。"
-        critical_available: "有一个可用的关键更新。"
         updates_available: "有可用的更新。"
         please_update: "请更新！"
         no_check_performed: "尚未执行更新检查。确保 sidekiq 正在运行。"
@@ -9144,7 +9171,7 @@ zh_CN:
         select_to_export: "选择以导出"
         import: "导入"
         import_heading: "导入表情符号"
-        import_description: "上传包含 emojis.csv 清单和图像文件的 ZIP 文件。"
+        import_description: "上传包含 emojis.csv 清单和图片文件的 ZIP 文件。"
         import_download_sample: "下载示例模板。"
         import_preview_heading: "检查导入"
         import_summary: "%{new} 个新增 · %{conflicts} 个冲突 · %{unchanged} 个未更改 · %{invalid} 个错误"

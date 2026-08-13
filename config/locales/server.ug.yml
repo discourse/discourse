@@ -965,6 +965,13 @@ ug:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "نامەلۇم مەشغۇلات سىستېمىسى"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "نامسىز"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "ئېلخەت ئادرېسىڭىزنى ئۆزگەرتىۋاتقاندا خاتالىق كۆرۈلگەن. بەلكىم ئۇ ئادرېس ئاللىبۇرۇن ئىشلىتىلگەن بولۇشى مۇمكىن؟"
     doesnt_exist: "ئۇ ئېلخەت ئادرېسى ھېساباتىڭىز بىلەن باغلانمىغان."
@@ -3732,9 +3739,6 @@ ug:
     user_posted_pm_staged:
       title: "ئىشلەتكۈچى يوللىغان شەخسىي ئۇچۇر ۋاقىتلىق ساقلاندى"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ھېسابات توختىتىلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز توختىتىلدى"

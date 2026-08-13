@@ -431,6 +431,8 @@ pl_PL:
         title: "Tłumaczenia"
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
+        max_locales_reached: "Można wybrać maksymalnie %{max} języków."
+        locale_count: "Korzystanie z %{count} z %{max} dostępnych języków."
         category_scope: "Kategorie"
         category_scope_description: "Wybierz, czy automatyczne tłumaczenia mają dotyczyć treści we wszystkich kategoriach, kategoriach publicznych czy wybranych kategoriach."
         cached_results_notice: "Wyświetlanie wyników z pamięci podręcznej z %{relative_time}."
@@ -546,6 +548,8 @@ pl_PL:
           localization_settings: "Ustawienia języka aplikacji"
           enable_translations: "Włącz automatyczne tłumaczenia"
           enable_translations_disabled: "Aby włączyć tłumaczenia, musisz dodać obsługiwany język"
+          show_language_switcher: "Pokaż przełącznik języka w nagłówku"
+          show_language_switcher_description: "Umożliwia każdemu wybór języka i przeglądanie w nim Twojej witryny."
         stats:
           title: "Statystyki tłumaczeń"
           backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
@@ -724,7 +728,7 @@ pl_PL:
         compression_threshold: "Próg kompresji"
         compression_threshold_help: "Procent wykorzystania kontekstu (20–99), przy którym włącza się automatyczna kompresja. Niższe wartości powodują szybsze uruchomienie kompresji, co pozwala zachować większy margines bezpieczeństwa."
         vision_enabled: Dołącz przesyłanie obrazów
-        vision_enabled_help: Jeśli ta opcja jest włączona, agent może uwzględniać obrazy ze wpisów i czatów, jeśli wybrany model obsługuje wprowadzanie obrazów.
+        vision_enabled_help: Jeśli ta opcja jest włączona, agent może uwzględniać obrazy ze wpisów i czatów, gdy wybrany model korzysta z natywnego wprowadzania obrazów lub deleguje obsługę obrazów do innego modelu.
         vision_max_pixels: Maksymalny rozmiar obrazu
         vision_max_pixel_sizes:
           low: Niska jakość - najtańsza (256x256)
@@ -1051,6 +1055,18 @@ pl_PL:
         url: "Adres URL usługi hostującej model"
         api_key: "Klucz API usługi hostującej model"
         vision_enabled: "Obsługuje wprowadzanie obrazu"
+        vision_mode: "Obsługa obrazów"
+        vision_mode_help: "Opcja „Wyłączone” uniemożliwia przetwarzanie obrazów. Opcja „Użyj innego modelu” dodaje narzędzie do wyświetlania obrazów obsługiwane przez natywny model wizyjny. Natywne wejście obrazu wysyła obrazy bezpośrednio do tego modelu."
+        vision_modes:
+          disabled:
+            title: "Wyłączone"
+          delegated:
+            title: "Użyj innego modelu"
+          native:
+            title: "Natywne wprowadzanie obrazów"
+        vision_model: "Model wizji"
+        vision_model_help: "Delegacja dodaje żądania modeli, opóźnienia i koszty. Dostępne są tylko modele z natywnym obrazem wejściowym."
+        no_native_vision_models: "Przed użyciem innego modelu do celów wizualnych skonfiguruj model z natywnym obrazem wejściowym."
         allowed_attachment_types: "Dozwolone załączniki dokumentów"
         attachment_types_placeholder: "Wybierz lub wpisz rozszerzenia (np. pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "Użytkownik bota AI"
@@ -1101,6 +1117,7 @@ pl_PL:
           ai_embeddings_semantic_search: "Wyszukiwanie AI"
           ai_spam: "Spam"
           automation: "Automatyzacja (%{agent})"
+          vision_delegate: "Wizja modelu (%{agent})"
         in_use_warning:
           one: "Ten model jest obecnie używany przez %{settings}. W przypadku nieprawidłowej konfiguracji funkcja nie będzie działać zgodnie z oczekiwaniami."
           few: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "

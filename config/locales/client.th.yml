@@ -2795,11 +2795,18 @@ th:
         default_value: "ค่าเริ่มต้น"
       search:
         title: "ค้นหา"
+      site_traffic_explorer:
+        columns:
+          top_urls: "URL"
+          ip_addresses: "ที่อยู่ไอพี"
+        filters:
+          ip: "ที่อยู่ไอพี"
+        series:
+          anonymous_human: "ไม่ระบุชื่อ"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
         up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
-        critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
         updates_available: "มีการอัปเดต"
         installed_version: "ติดตั้งแล้ว"
         github: "กิตฮับ"

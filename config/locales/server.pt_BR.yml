@@ -979,6 +979,13 @@ pt_BR:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operacional desconhecido"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anônimo(a)"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja em uso?"
     doesnt_exist: "Esse endereço de e-mail não está associado à sua conta."
@@ -3907,9 +3914,6 @@ pt_BR:
     user_posted_pm_staged:
       title: "MP postada por usuário(a) encenado(a)"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Conta suspensa"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"

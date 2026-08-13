@@ -671,6 +671,14 @@ el:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "άγνωστο λειτουργικό σύστημα"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Συνδεδεμένοι"
+      anonymous: "Ανώνυμοι"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Ίσως αυτή η διεύθυνση είναι ήδη σε χρήση;"
     error_staged: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Η δεύθυνση αυτή χρησιμοποιείται ήδη από αλλό χρήστη. "
@@ -2515,9 +2523,6 @@ el:
     user_posted_pm_staged:
       title: "Χρήστης που ανάρτησε σταδιακό ΠΜ"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"

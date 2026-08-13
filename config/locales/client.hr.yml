@@ -5829,13 +5829,28 @@ hr:
       new_features:
         title: "Što je novo?"
         check_for_updates: "Provjeri ažuriranja"
+      site_traffic_explorer:
+        pageviews: "Pregledi stranica"
+        view_more: "Pogledaj više"
+        cards:
+          pages: "Stranice"
+          visitors: "Posjetitelji"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP adrese"
+        filters:
+          ip: "IP adrese"
+        metrics:
+          pageviews:
+            label: "Pregledi stranica"
+        series:
+          anonymous_human: "Anonimno"
       dashboard:
         title: "Nadzorna ploča"
         last_updated: "Nadzorna ploča ažurirana:"
         discourse_last_updated: "Ažuriran Discourse:"
         version: "Verzija"
         up_to_date: "Imate ažurnu verziju!"
-        critical_available: "Dostupna je kritična dopuna."
         updates_available: "Dopune su dostupne."
         please_update: "Molimo ažurirajte!"
         no_check_performed: "Nije učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."

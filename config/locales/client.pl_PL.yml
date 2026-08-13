@@ -976,6 +976,7 @@ pl_PL:
       date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
       filtered_flagged_by: "Oflagowany przez"
+      no_component_found: "Nie znaleziono żadnego komponentu dla %{type}"
       unknown:
         title:
           one: "Masz elementy oczekujące na sprawdzenie w kolejce z wyłączonej wtyczki:"
@@ -7461,6 +7462,77 @@ pl_PL:
       new_features:
         title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
+      site_traffic_explorer:
+        title: "Eksplorator ruchu w witrynie"
+        loading: "Ładowanie ruchu…"
+        errors:
+          timeout: "To zapytanie o ruch trwało za długo. Wybierz krótszy zakres dat i spróbuj ponownie."
+          unexpected: "Nie można załadować ruchu w witrynie. Spróbuj ponownie."
+        empty: "Brak pasujących wyświetleń stron"
+        summary: "Podsumowanie ruchu"
+        traffic_over_time: "Ruch w czasie"
+        pageviews: "Wyświetlenia strony"
+        metric_information: "O tej metryce"
+        active_filters: "Aktywne filtry ruchu"
+        filter_description: "%{filter} to <strong>%{value}</strong>"
+        filter_by:
+          one: "Filtruj według %{label}, %{count} odsłona strony"
+          few: "Filtruj według %{label}, %{count} odsłony strony"
+          many: "Filtruj według %{label}, %{count} odsłon stron"
+          other: "Filtruj według %{label}, %{count} odsłon stron"
+        remove_filter: "Usuń filtr %{filter}"
+        remove_traffic_type_filter: "Usuń filtr ruchu %{value}"
+        view_more: "Zobacz więcej"
+        no_dimension_data: "Brak danych dla tego podziału."
+        direct_or_unknown: "Bezpośredni / nieznany"
+        cards:
+          acquisition: "Nabytek"
+          pages: "Stron"
+          visitors: "Odwiedzający"
+        dimensions:
+          referrers: "Polecający"
+          countries: "Kraje"
+          networks: "Sieci"
+          top_urls: "Najpopularniejsze adresy URL"
+          entry_urls: "Wpisowe adresy URL"
+          browsers: "Przeglądarki"
+          ip_addresses: "Adresy IP"
+        columns:
+          referrers: "Polecający"
+          countries: "Kraj"
+          networks: "Sieć"
+          top_urls: "URL"
+          entry_urls: "Wpisowy adres URL"
+          browsers: "Przeglądarka"
+          ip_addresses: "Adres IP"
+        filters:
+          traffic_type: "Rodzaj ruchu"
+          top_url: "Najpopularniejszy adres URL"
+          entry_url: "Wpisowy adres URL"
+          referrer: "Polecający"
+          country: "Kraj"
+          network: "Sieć"
+          browser: "Przeglądarka"
+          ip: "Adres IP"
+        metrics:
+          pageviews:
+            label: "Wyświetlenia strony"
+          distinct_sessions:
+            label: "Różne sesje"
+          logged_in_share:
+            label: "Udział zalogowanych"
+          bounce_rate:
+            label: "Współczynnik odrzuceń"
+          average_session_duration:
+            label: "Średni czas trwania sesji"
+        series:
+          logged_in_human: "Zalogowani"
+          anonymous_human: "Anonimowi"
+          likely_crawler: "Prawdopodobne roboty indeksujące"
+        partial:
+          retention: "Szczegółowe dane dotyczące aktywności wyświetleń stron przed %{date} nie są już dostępne, dlatego wyniki te obejmują tylko część wybranego zakresu dat."
+          pageview_limit: "Te wyniki są ograniczone do ostatnich %{limit} wyświetleń stron w wybranym zakresie dat. Wybierz krótszy zakres dat, aby uwzględnić cały dostępny ruch."
+          combined: "Szczegółowa aktywność odsłon sprzed %{date} nie jest już dostępna, dlatego wyniki obejmują tylko część wybranego zakresu dat. Są one również ograniczone do ostatnich %{limit} odsłon. Wybierz krótszy zakres dat w ramach dostępnych dat, aby uwzględnić całą dostępną aktywność odsłon."
       dashboard:
         title: "Panel"
         last_updated: "Panel zaktualizowany:"
@@ -7472,7 +7544,6 @@ pl_PL:
           few: "Korzystasz z najnowszej wersji, ale dostępne są %{count} nowe zmiany."
           many: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
           other: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
-        critical_available: "Ważna aktualizacja jest dostępna."
         updates_available: "Aktualizacje są dostępne."
         please_update: "Koniecznie zaktualizuj!"
         no_check_performed: "Sprawdzanie aktualizacji nie zostało przeprowadzone. Upewnij się, że sidekiq jest uruchomiony."

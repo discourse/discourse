@@ -7438,6 +7438,34 @@ uk:
       new_features:
         title: "Що нового?"
         check_for_updates: "Перевірте наявність оновлень"
+      site_traffic_explorer:
+        pageviews: "Переглядів"
+        view_more: "Переглянути більше"
+        cards:
+          pages: "Сторінки"
+          visitors: "Відвідувачі"
+        columns:
+          referrers: "Реферер"
+          countries: "Країна"
+          top_urls: "Посилання"
+          browsers: "Оглядач"
+          ip_addresses: "IP-адреса"
+        filters:
+          referrer: "Реферер"
+          country: "Країна"
+          browser: "Оглядач"
+          ip: "IP-адреса"
+        metrics:
+          pageviews:
+            label: "Переглядів"
+          logged_in_share:
+            label: "Зареєстровано спільний доступ"
+          bounce_rate:
+            label: "Показник відмов"
+        series:
+          logged_in_human: "Ви увійшли"
+          anonymous_human: "Анонімний"
+          likely_crawler: "Ймовірні сканери"
       dashboard:
         title: "Майстерня"
         last_updated: "Інформаційна панель оновлена:"
@@ -7449,7 +7477,6 @@ uk:
           few: "Ви використовуєте найновішу версію, але доступні %{count} нові оновлення."
           many: "Ви використовуєте найновішу версію, але доступні %{count} нові оновлення."
           other: "Ви використовуєте найновішу версію, але доступні %{count} нові оновлення."
-        critical_available: "Доступне критичне оновлення."
         updates_available: "Доступні оновлення."
         please_update: "Будь ласка, оновіть!"
         no_check_performed: "Не виконано перевірку на наявність оновлень. Перевірте, чи працює sidekiq."

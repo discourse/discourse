@@ -15,18 +15,23 @@ ar:
           name: "منشئ استعلام مستكشف البيانات"
           description: "إنشاء استعلامات SQL لمستكشف البيانات من نصوص طبيعية"
       tool_help:
+        find_queries: "العثور على استعلامات مستكشف البيانات الحالية التي قد تكون أمثلةً مفيدة"
         run_sql: "تنفيذ استعلام SQL وإرجاع النتائج"
         submit_query: "يرسل الاستعلام المولَّد النهائي"
       tool_summary:
+        find_queries: "جارٍ العثور على أمثلة للاستعلامات"
         run_sql: "جاري تنفيذ استعلام SQL"
         submit_query: "جارٍ إرسال الاستعلام المولَّد"
       tool_description:
+        find_queries: "تم العثور على أمثلة للاستعلامات لعبارة البحث %{search}."
         run_sql: "تم تنفيذ استعلام SQL"
         submit_query: "تم إرسال الاستعلام المولَّد %{name}"
   discourse_data_explorer:
     ai:
       error_agent_not_configured: "وكيل الذكاء الاصطناعي غير مُهيأ. يُرجى التحقق من إعدادات ميزات الذكاء الاصطناعي."
       error_no_sql_returned: "لم يتمكن الذكاء الاصطناعي من استعادة استعلام SQL صالح. يُرجى المحاولة مرة أخرى أو كتابة الاستعلام يدويًا."
+    errors:
+      tool_not_allowed: "غير مسموح لك باستخدام هذه الأداة."
     discourse_workflows:
       sql_action:
         no_query_selected: "لم يتم تحديد أي استعلام."
