@@ -66,6 +66,22 @@ module PageObjects
         self
       end
 
+      def height
+        find(@composer_id).native.bounding_box["height"].round
+      end
+
+      def drag_resize_by(pixels)
+        drag_with_pointer(from: "#{@composer_id} .grippie", by: { y: -pixels })
+        self
+      end
+
+      # The composer's height is driven by this variable, so matching it is how the
+      # resize is observed. Named for what it reads rather than for the height, which
+      # would suggest measuring the box.
+      def has_applied_height?(height)
+        has_css?("html[style*='--composer-height: #{height}px']", visible: :all)
+      end
+
       def fill_title(title)
         find("#{@composer_id} #reply-title").fill_in(with: title)
         self
