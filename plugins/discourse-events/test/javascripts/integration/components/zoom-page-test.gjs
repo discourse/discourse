@@ -24,7 +24,8 @@ function stubFrameUrl(context) {
 // left to a system test driving the real frame.
 
 // The channel itself is chat's to render and needs a live channel record, so
-// only the decision to embed it is exercised here.
+// only the decision to embed it is exercised here. Registering is repeatable,
+// which a test flipping `userCanChat` for itself depends on.
 function stubChat(context, userCanChat = true) {
   const owner = getOwner(context);
 
@@ -35,18 +36,29 @@ function stubChat(context, userCanChat = true) {
     { instantiate: false }
   );
 
+  // Never resolving, rather than resolving to nothing: the channel it is asked
+  // for is assigned to tracked state that the same modifier reads, so anything
+  // it hands back that is not the channel being looked for invalidates the
+  // modifier and sets it looking again. A real one matches and settles; a blank
+  // one spins.
   owner.unregister("service:chat-channels-manager");
   owner.register(
     "service:chat-channels-manager",
-    { find: () => Promise.resolve(null) },
+    { find: () => new Promise(() => {}) },
     { instantiate: false }
   );
+}
 
-  // The embedded channel subscribes for its own membership updates, and a live
-  // subscription is a request that never finishes, which is a test that never
-  // settles. Only the subscribing is taken out: the service itself is left in
-  // place for everything else that expects to find it.
-  const messageBus = owner.lookup("service:message-bus");
+// The embedded channel subscribes for its own membership updates, and a live
+// subscription is a request that never finishes, which is a test that never
+// settles. Only the subscribing is taken out: the service itself is left in
+// place for everything else that expects to find it.
+//
+// Once per test, unlike the services above: a second wrapping of the same
+// method is an error in sinon, not a no-op.
+function stubMessageBus(context) {
+  const messageBus = getOwner(context).lookup("service:message-bus");
+
   sinon.stub(messageBus, "subscribe");
   sinon.stub(messageBus, "unsubscribe");
 }
@@ -57,6 +69,7 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
   hooks.beforeEach(function () {
     getOwner(this).lookup("service:site-settings").chat_enabled = true;
     stubChat(this);
+    stubMessageBus(this);
     stubFrameUrl(this);
 
     this.topic = {
