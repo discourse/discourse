@@ -8,7 +8,10 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import {
+  stubPointerCapture,
+  stubSharedPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import dPointerDrag, * as dPointerDragModule from "discourse/ui-kit/modifiers/d-pointer-drag";
 
 function installEventListenerSpy(element) {
@@ -941,6 +944,57 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         outer,
         ["start", "end", "start"],
         "every started gesture reaches exactly one terminal callback"
+      );
+    });
+
+    test("an ancestor that vetoes the press leaves the descendant's capture in place", async function (assert) {
+      const inner = [];
+      const innerHandlers = recorder(inner);
+      const veto = () => false;
+
+      await render(
+        <template>
+          <div class="dpd-outer" {{dPointerDrag onDragStart=veto}}>
+            <div
+              class="dpd-inner"
+              {{dPointerDrag
+                onDragStart=innerHandlers.onDragStart
+                onDragEnd=innerHandlers.onDragEnd
+                onDragCancel=innerHandlers.onDragCancel
+              }}
+            ></div>
+          </div>
+        </template>
+      );
+
+      const innerTarget = find(".dpd-inner");
+      // The shared stub, because the subject is exactly the displacement: the
+      // ancestor's claim replaces the descendant's pending capture before the
+      // veto is known.
+      const { ownerOf } = stubSharedPointerCapture([".dpd-outer", innerTarget]);
+
+      await triggerEvent(innerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(
+        inner,
+        ["start"],
+        "the descendant's gesture is the live one"
+      );
+      assert.strictEqual(
+        ownerOf(1),
+        innerTarget,
+        "the capture the veto displaced is handed back to the claimant"
+      );
+
+      await triggerEvent(innerTarget, "pointerup", { pointerId: 1 });
+
+      assert.deepEqual(
+        inner,
+        ["start", "end"],
+        "the gesture still reaches its one terminal callback"
       );
     });
 

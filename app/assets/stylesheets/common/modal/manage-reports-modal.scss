@@ -76,7 +76,6 @@
   }
 
   &__grip {
-    align-self: flex-start;
     color: var(--primary-low-mid);
     visibility: hidden;
 
@@ -86,7 +85,6 @@
   }
 
   &__arrows {
-    align-self: flex-start;
     visibility: hidden;
 
     .manage-reports__list.--reorderable .manage-reports__row.--enabled & {

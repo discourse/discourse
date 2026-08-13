@@ -462,6 +462,11 @@ acceptance("Run Query", function (needs) {
       `${startingHeight + 40}px`,
       "the panes grow by the pointer's vertical travel"
     );
+    // Asserted mid-gesture as well as after: absence on release alone would
+    // pass against a resize that never held the cursor at all.
+    assert
+      .dom(document.body)
+      .hasClass("d-resizing-ns", "the cursor is held while the drag runs");
 
     await triggerEvent(grippie, "pointerup", { pointerId: 1, clientY: 240 });
     assert

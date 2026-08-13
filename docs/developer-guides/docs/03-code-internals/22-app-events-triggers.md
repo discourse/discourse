@@ -314,7 +314,7 @@ No arguments passed to this event.
 | 1        | objectArg1        | object   | True           | -           |
 | -        | objectArg1.postId | property | True           | -           |
 
-#### composer:div-resizing [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L55)
+#### composer:div-resizing [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L337)
 
 No arguments passed to this event.
 
@@ -414,11 +414,23 @@ No arguments passed to this event.
 
 </details>
 
-#### composer:resize-ended [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L402)
+#### composer:resize-ended [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L361)
 
 No arguments passed to this event.
 
-#### composer:resize-started [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L371)
+<details><summary>Detailed List</summary>
+
+##### /frontend/discourse/app/components/composer-container.gjs#361 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L361)
+
+No arguments passed to this event.
+
+##### /frontend/discourse/app/components/composer-container.gjs#131 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L131)
+
+No arguments passed to this event. Fired from `willDestroy` when the container is torn down with a resize still open, so subscribers hear the end of every started resize.
+
+</details>
+
+#### composer:resize-started [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L332)
 
 No arguments passed to this event.
 
@@ -432,7 +444,7 @@ No arguments passed to this event.
 
 No arguments passed to this event.
 
-##### /frontend/discourse/app/components/composer-container.gjs#72 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L72)
+##### /frontend/discourse/app/components/composer-container.gjs#381 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L381)
 
 No arguments passed to this event.
 

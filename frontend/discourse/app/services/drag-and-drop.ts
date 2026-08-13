@@ -1,7 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service from "@ember/service";
-import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+  type ElementDragPayload,
+  monitorForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   type ExternalDragPayload as NativeExternalDragPayload,
   monitorForExternal,
@@ -38,6 +41,13 @@ export interface DragPayload {
    * driving the service by hand may not.
    */
   element: HTMLElement | null;
+
+  /**
+   * The native payload, present only for an adopted drag — one the browser
+   * started from page content no source registered. The same shape a drop
+   * target reports on its `source.native`.
+   */
+  native?: ExternalDragPayload;
 }
 
 /**
@@ -193,6 +203,68 @@ export function matchesExternalKind(
 }
 
 /**
+ * A drag source as consumers read it: the routing keys lifted out, the type
+ * resolved through the adoption, and the dragged body in place of the grip
+ * that carried it.
+ */
+export interface NormalizedDragSource {
+  /** The source's discriminator, or `null` when the drag carries none. */
+  type: string | null;
+
+  /** The payload the source attached to the drag. */
+  data: Record<string, unknown>;
+
+  /** The dragged element, or `null` when the drag has none. */
+  element: Element | null;
+
+  /**
+   * The native payload, present only for an adopted drag — one the browser
+   * started from page content no source registered.
+   */
+  native?: ExternalDragPayload;
+}
+
+/**
+ * Resolves a raw PDND payload into the shape every reader reports.
+ *
+ * This is the single place the routing vocabulary above is interpreted. The
+ * drop target, the monitor modifier, and this service all consume it, so a
+ * payload reads identically wherever a consumer meets it — a shape one of them
+ * derived by hand drifted once already.
+ *
+ * @param pdndSource - The payload as PDND carries it.
+ * @param fallbackElement - Reported as `element` when the drag itself has none;
+ *   a drop target passes itself here.
+ */
+export function normalizeDragSource(
+  pdndSource: ElementDragPayload,
+  fallbackElement?: Element
+): NormalizedDragSource {
+  // Lifted out first, and out of every branch below: the body is routing, not
+  // payload, so no consumer should ever iterate onto it.
+  const { [DRAG_BODY]: body, ...data } = pdndSource.data ?? {};
+  const adopted = data.type === ADOPTED_DRAG_TYPE;
+  // The reserved keys are how a drag is routed, not payload, so they are lifted
+  // out rather than left for a consumer iterating `data` to trip over.
+  const { [ADOPTED_AS]: adoptedAs, native, ...rest } = data;
+  delete rest.type;
+
+  return {
+    // The underlying library types its payload values as `unknown`, because
+    // anything registering a draggable with it can put anything there. Two
+    // writers exist: `dDragAndDropSource`, which always stamps a string, and
+    // the adoption, which stamps its sentinel.
+    type: (adopted ? adoptedAs : (data.type ?? null)) as string | null,
+    data: adopted ? rest : data,
+    // A source that registered a handle publishes the body it stands for, so a
+    // consumer receives the element the user is moving rather than the grip
+    // they happened to press.
+    element: (body as Element) ?? pdndSource.element ?? fallbackElement ?? null,
+    ...(adopted ? { native: native as ExternalDragPayload } : {}),
+  };
+}
+
+/**
  * Tracks the in-flight drag — both for the `dDragAndDropSource` /
  * `dDragAndDropTarget` element pair AND for OS-level external drags
  * (files, URLs, HTML, text entering the window from outside) wired
@@ -238,18 +310,14 @@ export default class DragAndDropService extends Service {
         if (this.isDestroying || this.isDestroyed) {
           return;
         }
-        // Lifted out rather than passed along: the body is how a drag is
-        // routed, not payload a reader of `currentDrag.data` should meet.
-        const { [DRAG_BODY]: body, ...data } = source.data ?? {};
+        const normalized = normalizeDragSource(source);
         this.setCurrentDrag({
-          // `source.data` is PDND's `Record<string, unknown>`; our own
-          // `dDragAndDropSource` always stamps `type` as a string, and
-          // `canMonitor` above only admits sources whose `type` is set.
-          type: dragTypeOf(data) as string,
-          data,
-          // The body a handled source stands for, so a reader sees the element
-          // being moved rather than the grip it was pressed by.
-          element: (body as HTMLElement) ?? source.element,
+          // `canMonitor` above only admits sources whose `type` is set, so the
+          // `null` a typeless drag would normalize to cannot reach here.
+          type: normalized.type as string,
+          data: normalized.data,
+          element: normalized.element as HTMLElement,
+          ...(normalized.native ? { native: normalized.native } : {}),
         });
       },
       onDrop: () => {

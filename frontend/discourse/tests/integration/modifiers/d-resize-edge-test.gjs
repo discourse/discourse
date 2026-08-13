@@ -1197,9 +1197,11 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       // The OS taking the pointer away mid-gesture. The modifier asks the gesture
       // engine to commit on cancel rather than revert, because snapping a pane
       // back to where it started would discard a resize the user watched happen.
+      // Chrome ships `pointercancel` with uninitialized (0,0) coordinates, so the
+      // event's own position must play no part in what gets committed.
       await triggerEvent(edge, "pointercancel", {
         button: 0,
-        clientX: 400,
+        clientX: 0,
         pointerId: 1,
       });
 
@@ -1212,8 +1214,48 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       assert.deepEqual(
         state.resizeEnds,
         [400],
-        "and cancellation commits that size instead of reverting"
+        "and cancellation commits the size the pointer dragged to, not one recomputed from the cancel event"
       );
+    });
+
+    test("an interrupted press that never moved commits nothing", async function (assert) {
+      const state = new Harness();
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResizeStart=state.onResizeStart
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      stubPointerCapture(edge);
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 300,
+        pointerId: 1,
+      });
+
+      // A press the OS interrupts before any movement is still a click, not a
+      // resize — the (0,0) the cancel event carries must not defeat the guard.
+      await triggerEvent(edge, "pointercancel", {
+        button: 0,
+        clientX: 0,
+        pointerId: 1,
+      });
+
+      assert.strictEqual(state.resizeStarts, 0, "no gesture opened");
+      assert.deepEqual(state.resizes, [], "nothing was reported");
+      assert.deepEqual(state.resizeEnds, [], "nothing was committed");
     });
 
     test("coalesces the pointer moves sharing a frame into one report", async function (assert) {

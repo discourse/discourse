@@ -223,17 +223,12 @@ module PageObjects
       end
 
       # Read from the name inputs, not from the drag handles, so it reports the
-      # order on a touch screen too — where no handle renders.
+      # order on a touch screen too — where no handle renders. Scoped away from
+      # the secondary list, which renders in a wrapper of its own.
       def link_names
-        all(".sidebar-section-form__links-wrapper input[name='link-name']").map(&:value)
-      end
-
-      def topics_link
-        find(".draggable[data-link-name='Topics']")
-      end
-
-      def my_messages_link
-        find(".draggable[data-link-name='My messages']")
+        all(".sidebar-section-form__links-wrapper:not(.--secondary) input[name='link-name']").map(
+          &:value
+        )
       end
 
       def has_source_language?(locale)
@@ -272,7 +267,7 @@ module PageObjects
       end
 
       def primary_links_wrapper
-        find(".sidebar-section-form__links-wrapper")
+        find(".sidebar-section-form__links-wrapper:not(.--secondary)")
       end
     end
   end

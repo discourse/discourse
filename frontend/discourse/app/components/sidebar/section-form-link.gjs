@@ -18,9 +18,10 @@ import { i18n } from "discourse-i18n";
 
 export default class SectionFormLink extends Component {
   /**
-   * The grip element, once it exists. Held as tracked state rather than looked up,
-   * and the drag source re-registers when it arrives: the grip renders on desktop
-   * only, so its ref reaches the modifier's args on a later run.
+   * The grip element, once it exists. Held as tracked state rather than looked
+   * up, and the drag source re-registers when it arrives: the grip renders on
+   * every viewport, but its ref still reaches the modifier's args only on a
+   * run after the one that rendered it.
    */
   @tracked gripElement;
 
@@ -105,7 +106,7 @@ export default class SectionFormLink extends Component {
           class="sidebar-section-form-link__arrows"
         />
 
-        <div class="input-group" role="cell">
+        <div class="input-group link-icon" role="cell">
           <DIconGridPicker
             @value={{@link.icon}}
             @onChange={{fn (mut @link.icon)}}
@@ -121,7 +122,7 @@ export default class SectionFormLink extends Component {
           {{/if}}
         </div>
 
-        <div class="input-group" role="cell">
+        <div class="input-group link-name" role="cell">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <Input
             {{on "input" (withEventValue (fn (mut @link.name)))}}
@@ -140,7 +141,7 @@ export default class SectionFormLink extends Component {
           {{/if}}
         </div>
 
-        <div class="input-group" role="cell">
+        <div class="input-group link-url" role="cell">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <Input
             {{on "input" (withEventValue (fn (mut @link.value)))}}

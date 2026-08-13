@@ -197,6 +197,152 @@ module(
       );
     });
 
+    test("a cancelled note drag still closes the mutation it opened", async function (assert) {
+      const afterMutations = [];
+      const note = noteFixture();
+      const onAfterMutation = () => afterMutations.push(true);
+
+      await render(
+        <template>
+          <StickyNote
+            @note={{note}}
+            @zoom={{1}}
+            @onAfterMutation={{onAfterMutation}}
+          />
+        </template>
+      );
+
+      const element = pressable(".workflow-sticky-note");
+      await triggerEvent(element, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 100,
+        clientY: 100,
+      });
+      await triggerEvent(element, "pointermove", {
+        pointerId: 1,
+        clientX: 120,
+        clientY: 100,
+      });
+      // The OS taking the pointer away. The undo-mutation pair opened at the
+      // press must still close, or the canvas is left holding an open mutation.
+      await triggerEvent(element, "pointercancel", {
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+
+      assert.strictEqual(
+        afterMutations.length,
+        1,
+        "the interruption closes the mutation the press opened"
+      );
+    });
+
+    test("a cancelled edge resize still closes the mutation it opened", async function (assert) {
+      const afterMutations = [];
+      const note = noteFixture();
+      const onAfterMutation = () => afterMutations.push(true);
+
+      await render(
+        <template>
+          <StickyNote
+            @note={{note}}
+            @zoom={{1}}
+            @onAfterMutation={{onAfterMutation}}
+          />
+        </template>
+      );
+
+      pressable(".workflow-sticky-note");
+      const edge = pressable(".workflow-sticky-note__edge--e");
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+      await triggerEvent(edge, "pointermove", {
+        pointerId: 1,
+        clientX: 30,
+        clientY: 0,
+      });
+      await triggerEvent(edge, "pointercancel", {
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+
+      assert.strictEqual(
+        afterMutations.length,
+        1,
+        "the interruption closes the mutation the press opened"
+      );
+    });
+
+    test("two edge gestures at once keep their own origins", async function (assert) {
+      const resizes = [];
+      const note = noteFixture();
+      const onResize = (size) => {
+        resizes.push(size);
+        // Committed the way the canvas commits, which is what makes a second
+        // gesture's press-time box differ from the first's.
+        note.size = { ...size };
+      };
+
+      await render(
+        <template>
+          <StickyNote @note={{note}} @zoom={{1}} @onResize={{onResize}} />
+        </template>
+      );
+
+      pressable(".workflow-sticky-note");
+      const east = pressable(".workflow-sticky-note__edge--e");
+      const south = pressable(".workflow-sticky-note__edge--s");
+
+      await triggerEvent(east, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+      await triggerEvent(east, "pointermove", {
+        pointerId: 1,
+        clientX: 50,
+        clientY: 0,
+      });
+
+      // A second finger starts on another edge after the first already grew
+      // the note. Its press-time box must not become the first gesture's base.
+      await triggerEvent(south, "pointerdown", {
+        button: 0,
+        pointerId: 2,
+        clientX: 0,
+        clientY: 0,
+      });
+
+      await triggerEvent(east, "pointermove", {
+        pointerId: 1,
+        clientX: 60,
+        clientY: 0,
+      });
+      await triggerEvent(south, "pointermove", {
+        pointerId: 2,
+        clientX: 0,
+        clientY: 40,
+      });
+
+      assert.deepEqual(
+        resizes,
+        [
+          { width: 250, height: 150 },
+          { width: 260, height: 150 },
+          { width: 250, height: 190 },
+        ],
+        "each gesture resizes from the box it pressed on, not the other's"
+      );
+    });
+
     test("a leading edge stops shrinking at the minimum and stops moving with it", async function (assert) {
       const moves = [];
       const resizes = [];

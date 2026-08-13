@@ -13,6 +13,7 @@ import {
   decorateExternalSource,
   DRAG_BODY,
   type ExternalDragPayload,
+  normalizeDragSource,
 } from "discourse/services/drag-and-drop";
 
 /** The pointer position as the underlying library reports it. */
@@ -483,29 +484,11 @@ function sourceFromPDND(
   pdndSource: ElementDragPayload,
   element: Element
 ): DropTargetSource {
-  // Lifted out first, and out of every branch below: the body is routing, not
-  // payload, so no consumer should ever iterate onto it.
-  const { [DRAG_BODY]: body, ...data } = pdndSource.data ?? {};
-  const adopted = data.type === ADOPTED_DRAG_TYPE;
-  // The reserved keys are how a drag is routed, not payload, so they are lifted
-  // out rather than left for a consumer iterating `data` to trip over.
-  const { [ADOPTED_AS]: adoptedAs, native, ...rest } = data;
-  delete rest.type;
-
-  return {
-    // The underlying library types its payload values as `unknown`, because
-    // anything registering a draggable with it can put anything there. Two
-    // writers exist: `dDragAndDropSource`, which always stamps a string, and the
-    // adoption above, which stamps its sentinel.
-    type: (adopted ? adoptedAs : (data.type ?? null)) as string | null,
-    data: adopted ? rest : data,
-    // A source that registered a handle publishes the body it stands for, so a
-    // consumer receives the element the user is moving rather than the grip
-    // they happened to press. `acceptsSelf` compares against this, which is why
-    // a handled row still recognises a drop of itself.
-    element: (body as Element) ?? pdndSource.element ?? element ?? null,
-    ...(adopted ? { native: native as ExternalDragPayload } : {}),
-  };
+  // The routing interpretation lives with the vocabulary it reads. The target
+  // supplies itself as the fallback because `acceptsSelf` compares against the
+  // reported element, which is why a handled row still recognises a drop of
+  // itself.
+  return normalizeDragSource(pdndSource, element);
 }
 
 interface DDragAndDropTargetSignature {

@@ -60,9 +60,9 @@ interface DPointerDragSignature {
        * Pixels of travel, measured as a straight line from the press origin, that
        * `onDrag` waits for before it starts firing. Reaching the distance is
        * enough; it does not have to be exceeded. Suppresses the jitter of a click
-       * that was never meant to be a drag. Defaults to `0`. Read when the gesture
-       * starts: raising it mid-gesture will not re-suppress movement, because the
-       * latch only opens once.
+       * that was never meant to be a drag. Defaults to `0`. Read live until the
+       * distance is reached; only the latch is permanent, so raising it after
+       * movement has engaged will not re-suppress a gesture already under way.
        */
       threshold?: number;
 
@@ -112,13 +112,20 @@ export type DPointerDragArgs = DPointerDragSignature["Args"]["Named"];
  * Keyed per pointer rather than kept as a single current owner, because two
  * gestures driven by two different pointers are both legitimately live.
  *
- * A pointer ID is a number, so this cannot be a `WeakMap`, and each value closes
- * over its element: an entry left behind holds a detached element alive, and a
+ * A pointer ID is a number, so this cannot be a `WeakMap`, and each entry holds
+ * its element: an entry left behind holds a detached element alive, and a
  * later press reusing that ID would call into a registration that no longer
  * exists. Removing an entry the moment its gesture ends is therefore load-bearing
  * rather than housekeeping.
+ *
+ * The element is held beside the supersede callback so a claim rejected in the
+ * same dispatch — a veto, a throw — can hand the pending capture it displaced
+ * back to the entry's owner rather than releasing it into nothing.
  */
-const pointerOwners = new Map<number, (event: PointerEvent) => void>();
+const pointerOwners = new Map<
+  number,
+  { element: HTMLElement; supersede: (event: PointerEvent) => void }
+>();
 
 /**
  * How many live gestures asked for each body class. Counted rather than toggled,
@@ -261,7 +268,7 @@ export function registerPointerDrag(
     if (finishedPointer !== null) {
       // Only while the claim is still ours: a later claimant owns the entry from
       // the moment it supersedes us, and must not have it deleted underneath it.
-      if (pointerOwners.get(finishedPointer) === onSuperseded) {
+      if (pointerOwners.get(finishedPointer)?.supersede === onSuperseded) {
         pointerOwners.delete(finishedPointer);
       }
       try {
@@ -341,6 +348,27 @@ export function registerPointerDrag(
       }
     };
 
+    // For a claim rejected during its own dispatch. The `setPointerCapture`
+    // above displaced any earlier claimant's pending capture, so a plain
+    // release here would clear the override entirely and leave that claimant's
+    // live gesture uncaptured — latched until some later press happens to
+    // supersede it, which a touch pointer's unreused ID never does. Handing the
+    // capture back is the only exit that keeps the one-terminal-callback
+    // guarantee; releasing is only right when there was no one to displace.
+    const restoreDisplacedCapture = () => {
+      const prior = pointerOwners.get(event.pointerId);
+      if (!prior) {
+        releaseCapture();
+        return;
+      }
+      try {
+        prior.element.setPointerCapture(event.pointerId);
+      } catch {
+        // The prior claimant's element is gone; nothing to hand back.
+        releaseCapture();
+      }
+    };
+
     const args = getArgsRef();
     // The caller captures its origin state here and may veto by returning false.
     let vetoed;
@@ -349,14 +377,14 @@ export function registerPointerDrag(
     } catch (error) {
       // Rethrown, because a throwing consumer is the consumer's bug. The capture
       // still has to go back: nothing else would release it.
-      releaseCapture();
+      restoreDisplacedCapture();
       throw error;
     }
     // A registration torn down by its own `onDragStart` has already had its
     // listeners removed, so nothing is left to end a gesture installed now — and
     // claiming the pointer would leave an entry no one can remove.
     if (vetoed || tornDown) {
-      releaseCapture();
+      restoreDisplacedCapture();
       return;
     }
 
@@ -373,7 +401,7 @@ export function registerPointerDrag(
     // back through `hasPointerCapture`, which cannot tell a lost claim apart from
     // a pointer that was never real.
     const superseded = pointerOwners.get(event.pointerId);
-    pointerOwners.set(event.pointerId, onSuperseded);
+    pointerOwners.set(event.pointerId, { element, supersede: onSuperseded });
 
     if (args.draggingClass) {
       try {
@@ -404,7 +432,7 @@ export function registerPointerDrag(
 
     // Last, so this gesture is fully established before control passes to another
     // consumer's callback, which is free to throw.
-    superseded?.(event);
+    superseded?.supersede(event);
   };
 
   const onPointerMove = (event: PointerEvent) => {

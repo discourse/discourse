@@ -356,9 +356,10 @@ export default class PluginsExplorerController extends Controller {
   panesFor(separator) {
     this.#resolvedPanes =
       separator.closest(".query-editor")?.querySelector(".panels-flex") ?? null;
-    // A different editor means a fresh minimum. This controller is a singleton,
-    // so without the reset the first query's resting height would bound every
-    // query opened afterwards for the rest of the session.
+    // A fresh separator means a fresh minimum. This runs once per separator
+    // install (the modifier's args never change), so a same-route transition
+    // that reuses the element keeps the previous bound — the ordinary path
+    // through the index tears the template down and re-lands here.
     this.originalPaneHeight = null;
     return this.#resolvedPanes;
   }
@@ -425,6 +426,17 @@ export default class PluginsExplorerController extends Controller {
 
   get #panes() {
     return this.#resolvedPanes;
+  }
+
+  /**
+   * Lets go of the resolved panes and the height bound derived from them.
+   * Called from the route on exit: this controller is an app-lifetime
+   * singleton, so a reference kept here would hold the detached editor subtree
+   * alive until the next visit resolved a fresh one.
+   */
+  releasePanes() {
+    this.#resolvedPanes = null;
+    this.originalPaneHeight = null;
   }
 
   @action

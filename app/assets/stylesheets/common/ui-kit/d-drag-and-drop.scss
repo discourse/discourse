@@ -70,11 +70,17 @@
     }
   }
 
+  /* Kept physical: the class is assigned from the pointer's physical clientX
+     (before = left of the midpoint), so an rtlcss flip would draw the line on
+     the opposite side from where the drop resolves. */
+
   &.--drag-left {
     position: relative;
 
     &::before {
       @include d-drag-line-vertical;
+
+      /*! rtl:ignore */
       left: -1px;
     }
   }
@@ -84,6 +90,8 @@
 
     &::after {
       @include d-drag-line-vertical;
+
+      /*! rtl:ignore */
       right: -1px;
     }
   }

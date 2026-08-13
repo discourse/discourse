@@ -1564,6 +1564,81 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
     });
 
+    test("a source whose handle changes identity mid-drag still reports how that drag ended", async function (assert) {
+      const calls = [];
+      const state = new (class {
+        @tracked useSecondHandle = false;
+        @tracked dragHandle;
+        captureHandle = (element) => (this.dragHandle = element);
+        onDragEnd = () => calls.push("dragEnd");
+        onDrop = () => calls.push("drop");
+      })();
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              dragHandle=state.dragHandle
+              onDragEnd=state.onDragEnd
+              onDrop=state.onDrop
+            }}
+          >
+            {{#if state.useSecondHandle}}
+              <button
+                id="second-handle"
+                type="button"
+                {{didInsert state.captureHandle}}
+              >second</button>
+            {{else}}
+              <button
+                id="first-handle"
+                type="button"
+                {{didInsert state.captureHandle}}
+              >first</button>
+            {{/if}}
+          </div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      // The drag begins on the handle the live registration sits on.
+      await dragEvent("#first-handle", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      // The handle is re-rendered mid-drag, replacing the registration while
+      // the drag it started is still in flight. The library dispatches the
+      // drag's end by looking the ORIGINAL handle up, so the replaced
+      // registration must stay reachable until then.
+      state.useSecondHandle = true;
+      await settled();
+
+      assert
+        .dom("#src")
+        .hasClass("--dragging", "the drag in flight keeps its mark");
+
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await settled();
+
+      assert.deepEqual(
+        calls,
+        ["dragEnd", "drop"],
+        "the swap does not cost the consumer the end of its drag"
+      );
+    });
+
     test("a source disabled mid-drag and then destroyed drops its callbacks", async function (assert) {
       const calls = [];
       const state = new (class {
@@ -1788,6 +1863,43 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await simulateExternalDrag("#ext", { dataTransfer: fileTransfer() });
 
       assert.strictEqual(drops, 0, "the synchronous gate refuses the drop");
+    });
+
+    test("a gate that turns false after the last dragover refuses the drop", async function (assert) {
+      let allowed = true;
+      let drops = 0;
+      const canDrop = () => allowed;
+      const onDrop = () => drops++;
+
+      await render(
+        <template>
+          <div
+            id="ext"
+            {{dDragAndDropExternalTarget
+              accepts="files"
+              canDrop=canDrop
+              onDrop=onDrop
+            }}
+          >ext</div>
+        </template>
+      );
+
+      const dataTransfer = fileTransfer();
+      await externalDragOver("#ext", { dataTransfer });
+
+      // The library settles its target stack at the last dragover and does not
+      // re-ask the gate at drop, so refusing here is this modifier's own doing.
+      allowed = false;
+      await dragEvent("#ext", "drop", {
+        dataTransfer,
+        ...centerOf("#ext"),
+      });
+
+      assert.strictEqual(
+        drops,
+        0,
+        "a permission withdrawn before release does not act"
+      );
     });
 
     test("indicator=false suppresses the hover class without refusing the drop", async function (assert) {
@@ -2105,6 +2217,48 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         { type: "web-link", urls: ["https://example.com/adopted"] },
         "a drag nothing registered reaches the target as an ordinary drop, named by the adoption and carrying the payload the browser supplied"
       );
+    });
+
+    test("the service reports an adopted drag by its adoption, not its routing", async function (assert) {
+      // The target strips the adoption's routing keys before a consumer sees
+      // them; a reader of the service must meet the same shape.
+      const dnd = this.owner.lookup("service:drag-and-drop");
+
+      await render(
+        <template>
+          <a id="anchor" href="https://example.com/adopted">a link</a>
+          <div id="zone" {{dDragAndDropTarget adopts=WEB_LINK}}>zone</div>
+        </template>
+      );
+
+      const dataTransfer = linkTransfer();
+      await dragEvent("#anchor", "dragstart", {
+        dataTransfer,
+        ...centerOf("#anchor"),
+      });
+
+      assert.strictEqual(
+        dnd.currentDrag.type,
+        "web-link",
+        "currentDrag.type is the adoption's own type"
+      );
+      assert.deepEqual(
+        dnd.currentDrag.data,
+        {},
+        "the routing keys never reach a reader of currentDrag.data"
+      );
+      assert.deepEqual(
+        dnd.currentDrag.native.getURLs(),
+        ["https://example.com/adopted"],
+        "the native payload sits beside data, as a target reports it"
+      );
+
+      await dragEvent("#anchor", "dragend", {
+        dataTransfer,
+        ...centerOf("#anchor"),
+      });
+
+      assert.strictEqual(dnd.currentDrag, null, "cleared once the drag ends");
     });
 
     test("adopting an unsourced drag is refused by a target that did not ask", async function (assert) {

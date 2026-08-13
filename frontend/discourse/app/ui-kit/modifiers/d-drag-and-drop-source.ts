@@ -197,6 +197,16 @@ interface DDragAndDropSourceSignature {
  */
 export interface DetachedSourceWork {
   /**
+   * The element the registration was created on — the drag handle when one was
+   * given, the source element otherwise. A replacement registering on the SAME
+   * element must supersede this work first (two registrations on one element is
+   * not a state the library supports); one registering elsewhere must leave it
+   * waiting, because the library dispatches an in-flight drag's end by looking
+   * this element up.
+   */
+  registeredElement: HTMLElement;
+
+  /**
    * Something has taken this registration's place. Runs a teardown that was
    * waiting on a drag, and leaves a scheduled dispatch to fire.
    */
@@ -595,11 +605,13 @@ export function registerDragAndDropSource(
       // `onDragEnd` every drag is promised — would never arrive. The consumer
       // is still here to receive it, so the teardown waits for the drag.
       teardownWhenIdle = teardown;
-      return { supersede, abandon, outstanding };
+      return { registeredElement: registered, supersede, abandon, outstanding };
     }
 
     teardown();
-    return pendingConsumers ? { supersede, abandon, outstanding } : null;
+    return pendingConsumers
+      ? { registeredElement: registered, supersede, abandon, outstanding }
+      : null;
   };
 }
 
@@ -699,11 +711,20 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
     this.#dragHandle = args.dragHandle;
 
     if (!this.#cleanup) {
-      // Anything still holding the element is let go of first: two registrations
-      // on one element is not a state the library supports. Only the teardowns
-      // though — a dispatch already scheduled belongs to a drag that finished,
-      // and this consumer is still here to be told how.
-      this.#detached.forEach((work) => work.supersede());
+      // Anything still holding the element about to be registered is let go of
+      // first: two registrations on one element is not a state the library
+      // supports. Only that element's work though — a registration waiting on a
+      // DIFFERENT element (the ordinary shape of a handle change) is how an
+      // in-flight drag's end still reaches the consumer, since the library
+      // dispatches it by looking the original element up. And only the
+      // teardowns — a dispatch already scheduled belongs to a drag that
+      // finished, and this consumer is still here to be told how.
+      const registering = (args.dragHandle ?? element) as HTMLElement;
+      this.#detached.forEach((work) => {
+        if (work.registeredElement === registering) {
+          work.supersede();
+        }
+      });
       this.#pruneDetached();
       this.#cleanup = registerDragAndDropSource(element, () => this.#args);
     }
@@ -720,11 +741,14 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
   #detach({ cancelPending = true }: { cancelPending?: boolean } = {}) {
     const work = this.#cleanup?.({ cancelPending }) ?? null;
     if (work) {
+      // The drag this work is waiting on is still in flight, so the element
+      // keeps its mark; the deferred teardown removes it when the drag ends.
       this.#detached.add(work);
+    } else {
+      this.#element?.classList.remove("--dragging");
     }
     this.#pruneDetached();
     this.#cleanup = null;
-    this.#element?.classList.remove("--dragging");
     this.#element = null;
   }
 

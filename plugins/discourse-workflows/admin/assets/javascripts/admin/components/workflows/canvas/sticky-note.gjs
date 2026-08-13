@@ -67,10 +67,14 @@ export default class StickyNote extends Component {
   /** How much of the move has already been handed to co-selected notes. */
   #appliedDx = 0;
   #appliedDy = 0;
-  /** The note's box when the resize gesture began. */
-  #resizeOrigin = { x: 0, y: 0, width: 0, height: 0 };
-  /** The canvas zoom in force when the live gesture began. */
-  #gestureZoom = null;
+  /**
+   * Live edge gestures keyed by pointer, each holding the note's box and the
+   * zoom at its own press. The handles support two gestures at once, and a
+   * shared origin would rebase the first the moment the second pressed.
+   */
+  #resizeSessions = new Map();
+  /** The canvas zoom in force when the note drag began. */
+  #dragZoom = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -117,14 +121,15 @@ export default class StickyNote extends Component {
    * scaled, so a 10px pointer move is a smaller move of the note when zoomed in.
    *
    * @param {{x: number, y: number}} delta - The pointer delta in screen pixels.
+   * @param {number} [zoom] - The zoom snapshotted when the gesture began.
+   *   Zooming mid-gesture would otherwise re-divide the whole accumulated delta
+   *   by the new factor and make the note jump, because the delta is measured
+   *   from the original press.
    * @returns {{dx: number, dy: number}} The same delta in canvas units.
    */
-  #inCanvasUnits(delta) {
-    // Snapshotted at the start of the gesture: zooming mid-drag would otherwise
-    // re-divide the whole accumulated delta by the new factor and make the note
-    // jump, because the delta is measured from the original press.
-    const zoom = this.#gestureZoom ?? this.args.zoom ?? 1;
-    return { dx: delta.x / zoom, dy: delta.y / zoom };
+  #inCanvasUnits(delta, zoom) {
+    const factor = zoom ?? this.args.zoom ?? 1;
+    return { dx: delta.x / factor, dy: delta.y / factor };
   }
 
   @action
@@ -137,7 +142,7 @@ export default class StickyNote extends Component {
 
     this.args.onSelect?.();
     this.args.onBeforeMutation?.();
-    this.#gestureZoom = this.args.zoom ?? 1;
+    this.#dragZoom = this.args.zoom ?? 1;
     this.#pressX = event.clientX;
     this.#pressY = event.clientY;
     this.#dragOrigin = { ...this.args.note.position };
@@ -147,10 +152,13 @@ export default class StickyNote extends Component {
 
   @action
   onNoteDrag(event) {
-    const { dx, dy } = this.#inCanvasUnits({
-      x: event.clientX - this.#pressX,
-      y: event.clientY - this.#pressY,
-    });
+    const { dx, dy } = this.#inCanvasUnits(
+      {
+        x: event.clientX - this.#pressX,
+        y: event.clientY - this.#pressY,
+      },
+      this.#dragZoom
+    );
 
     this.args.onMove?.({
       x: this.#dragOrigin.x + dx,
@@ -170,24 +178,27 @@ export default class StickyNote extends Component {
 
   @action
   onNoteDragEnd() {
-    this.#gestureZoom = null;
+    this.#dragZoom = null;
     this.args.onAfterMutation?.();
   }
 
   @action
-  onEdgeResizeStart() {
+  onEdgeResizeStart(edge, dragInfo) {
     this.args.onBeforeMutation?.();
-    this.#gestureZoom = this.args.zoom ?? 1;
-    this.#resizeOrigin = {
-      ...this.args.note.position,
-      ...this.args.note.size,
-    };
+    this.#resizeSessions.set(dragInfo.event.pointerId, {
+      origin: { ...this.args.note.position, ...this.args.note.size },
+      zoom: this.args.zoom ?? 1,
+    });
   }
 
   @action
   onEdgeResize(edge, dragInfo) {
-    const { x, y, width, height } = this.#resizeOrigin;
-    const { dx, dy } = this.#inCanvasUnits(dragInfo.delta);
+    const session = this.#resizeSessions.get(dragInfo.event.pointerId);
+    if (!session) {
+      return;
+    }
+    const { x, y, width, height } = session.origin;
+    const { dx, dy } = this.#inCanvasUnits(dragInfo.delta, session.zoom);
 
     let newWidth = width;
     let newHeight = height;
@@ -216,8 +227,8 @@ export default class StickyNote extends Component {
   }
 
   @action
-  onEdgeResizeEnd() {
-    this.#gestureZoom = null;
+  onEdgeResizeEnd(edge, dragInfo) {
+    this.#resizeSessions.delete(dragInfo.event.pointerId);
     this.args.onAfterMutation?.();
   }
 

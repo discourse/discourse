@@ -18,6 +18,7 @@ import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 declare const noop: () => void;
 declare const size: number;
 declare const measure: () => number;
+declare const measureMaybe: () => number | null;
 declare const box: HTMLElement;
 declare const handle: HTMLElement;
 declare const payload: object;
@@ -153,6 +154,14 @@ const Positives = <template>
     @max={{measure}}
     @label="Resize"
   >grip</DResizeSeparator>
+  {{! A measurement may honestly say "not yet": null withholds aria-valuenow }}
+  <DResizeSeparator
+    @axis="horizontal"
+    @value={{measureMaybe}}
+    @min={{size}}
+    @max={{measureMaybe}}
+    @label="Resize"
+  />
 
   {{! The built-in box hands a compass direction to the handler }}
   <DResizeHandles @handleClass="my-block__handle" @threshold={{4}} />

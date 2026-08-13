@@ -4,7 +4,11 @@ import {
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { modifier } from "ember-modifier";
-import { dragTypeOf } from "discourse/services/drag-and-drop";
+import {
+  dragTypeOf,
+  type NormalizedDragSource,
+  normalizeDragSource,
+} from "discourse/services/drag-and-drop";
 
 /**
  * Whether a drag's type is one the consumer asked for.
@@ -28,8 +32,14 @@ export function matchesDragType(
   return list.includes(dragTypeOf(source.data) as string);
 }
 
-/** What a monitor callback is told: the dragged source and where it has been. */
-export type DragMonitorEvent = ElementEventBasePayload;
+/**
+ * What a monitor callback is told: the dragged source and where it has been.
+ * The source arrives normalized ({@link normalizeDragSource}), so a monitor
+ * reads the same shape a drop target reports and never meets a routing key.
+ */
+export type DragMonitorEvent = Omit<ElementEventBasePayload, "source"> & {
+  source: NormalizedDragSource;
+};
 
 interface DDragAndDropMonitorSignature {
   /**
@@ -81,11 +91,15 @@ export type DragAndDropMonitorArgs =
 export function registerDragAndDropMonitor(
   getArgsRef: () => DragAndDropMonitorArgs
 ) {
+  const normalized = (event: ElementEventBasePayload): DragMonitorEvent => ({
+    ...event,
+    source: normalizeDragSource(event.source),
+  });
   return monitorForElements({
     canMonitor: ({ source }) => matchesDragType(getArgsRef().types, source),
-    onDragStart: (event) => getArgsRef().onDragStart?.(event),
-    onDrag: (event) => getArgsRef().onDrag?.(event),
-    onDrop: (event) => getArgsRef().onDrop?.(event),
+    onDragStart: (event) => getArgsRef().onDragStart?.(normalized(event)),
+    onDrag: (event) => getArgsRef().onDrag?.(normalized(event)),
+    onDrop: (event) => getArgsRef().onDrop?.(normalized(event)),
   });
 }
 

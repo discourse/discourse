@@ -10,7 +10,7 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/external";
 import { modifier } from "ember-modifier";
 import {
-  ExternalDragKind,
+  type ExternalDragKind,
   matchesExternalKind,
 } from "discourse/services/drag-and-drop";
 import { matchesDragType } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";

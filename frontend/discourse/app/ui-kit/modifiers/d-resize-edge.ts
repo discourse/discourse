@@ -179,6 +179,9 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#rtl = undefined;
     this.#started = false;
     this.#startCoordinate = this.#coordinate(event);
+    // Reset so a cancellation before any movement reads the origin, not the
+    // previous gesture's last position.
+    this.#pendingCoordinate = this.#startCoordinate;
     this.#startValue = this.#read(this.#named.value);
   };
   #onDrag = (event: PointerEvent) => {
@@ -198,7 +201,16 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#cancelFrame();
     this.#pointerActive = false;
 
-    const coordinate = this.#coordinate(event);
+    // A cancellation's own coordinates are not the pointer's last position —
+    // Chrome ships `pointercancel` uninitialized at (0,0), and a browser-fired
+    // `lostpointercapture` carries no meaningful position either — so the
+    // commit falls back to the last position the pointer actually reached.
+    // Recomputing from the event would snap the size to a clamp bound.
+    const cancelled =
+      event.type === "pointercancel" || event.type === "lostpointercapture";
+    const coordinate = cancelled
+      ? this.#pendingCoordinate
+      : this.#coordinate(event);
     // A press that reported nothing and was released where it landed is a click,
     // not a resize. Reporting it would hand the consumer the size it already
     // had, which is enough to make it persist one. The coordinate is checked as

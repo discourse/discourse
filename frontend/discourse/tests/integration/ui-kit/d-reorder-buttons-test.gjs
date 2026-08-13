@@ -1,3 +1,5 @@
+import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -98,6 +100,41 @@ module("Integration | ui-kit | DReorderButtons", function (hooks) {
       ["down"],
       "while the available one still runs its callback"
     );
+  });
+
+  test("a press keeps its button focused across the re-render it causes", async function (assert) {
+    // The real consumers move the pressed row inside a keyed list, and moving a
+    // DOM node drops focus to the body. A bare component would pass this from
+    // the click's own native focus alone, so the list is part of the fixture —
+    // it is what makes the component's refocus observable.
+    const state = new (class {
+      @tracked items = ["a", "b"];
+      move = () => (this.items = [...this.items].reverse());
+    })();
+
+    await render(
+      <template>
+        {{#each state.items key="@identity" as |item|}}
+          <div data-item={{item}}>
+            <DReorderButtons
+              @onMoveUp={{fn state.move item}}
+              @onMoveDown={{fn state.move item}}
+              @upLabel="Move up"
+              @downLabel="Move down"
+            />
+          </div>
+        {{/each}}
+      </template>
+    );
+
+    await click("[data-item='a'] .d-reorder-buttons__button:last-child");
+
+    assert.strictEqual(state.items[1], "a", "the move happened");
+    assert
+      .dom("[data-item='a'] .d-reorder-buttons__button:last-child")
+      .isFocused(
+        "the pressed button is focused again after its row moved, so a keyboard user can keep going"
+      );
   });
 
   test("keeps the tab order, so the pair is the keyboard path", async function (assert) {

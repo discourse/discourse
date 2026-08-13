@@ -1479,18 +1479,32 @@ export default class SidebarSectionForm extends Component {
 
             {{#if this.transformedModel.sectionType}}
               <hr />
-              <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
-              {{#each this.activeSecondaryLinks key="objectId" as |link index|}}
-                <SectionFormLink
-                  @link={{link}}
-                  @index={{index}}
-                  @lastIndex={{this.lastActiveSecondaryLinkIndex}}
-                  @deleteLink={{this.deleteLink}}
-                  @moveUp={{this.moveLinkUp}}
-                  @moveDown={{this.moveLinkDown}}
-                  @reorderCallback={{this.reorder}}
-                />
-              {{/each}}
+              <h3 id="section-secondary-links-label">{{i18n
+                  "sidebar.sections.custom.more_menu"
+                }}</h3>
+              {{! The rows resolve their columns through the wrapper's grid, so
+                  a list rendered without one would collapse. }}
+              <div
+                role="table"
+                aria-labelledby="section-secondary-links-label"
+                aria-rowcount={{this.activeSecondaryLinks.length}}
+                class="sidebar-section-form__links-wrapper --secondary"
+              >
+                {{#each
+                  this.activeSecondaryLinks key="objectId"
+                  as |link index|
+                }}
+                  <SectionFormLink
+                    @link={{link}}
+                    @index={{index}}
+                    @lastIndex={{this.lastActiveSecondaryLinkIndex}}
+                    @deleteLink={{this.deleteLink}}
+                    @moveUp={{this.moveLinkUp}}
+                    @moveDown={{this.moveLinkDown}}
+                    @reorderCallback={{this.reorder}}
+                  />
+                {{/each}}
+              </div>
               <DButton
                 @action={{this.addSecondaryLink}}
                 @title="sidebar.sections.custom.links.add"

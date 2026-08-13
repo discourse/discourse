@@ -46,6 +46,12 @@ function overridePlaceholder(ace) {
   };
 }
 
+/**
+ * Used only if the editor's min-height computes to `auto`, which would leave
+ * the resize with no lower bound at all.
+ */
+const FALLBACK_MIN_HEIGHT = 250;
+
 // Args:
 // @content
 // @mode
@@ -59,10 +65,6 @@ function overridePlaceholder(ace) {
 // @save
 // @submit
 // @setWarning
-// Used only if the editor's min-height computes to `auto`, which would leave the
-// resize with no lower bound at all.
-const FALLBACK_MIN_HEIGHT = 250;
-
 export default class AceEditor extends Component {
   @service appEvents;
 

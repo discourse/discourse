@@ -7,8 +7,8 @@ import { modifier } from "ember-modifier";
 import DButton from "discourse/ui-kit/d-button";
 
 /**
- * Invoked when a direction is pressed. Variadic because the press event is
- * forwarded, and because a consumer normally binds its item with `fn`.
+ * Invoked when a direction is pressed. Variadic because a consumer normally
+ * binds its item with `fn`; the press event itself is not forwarded.
  *
  * Focus is taken back onto the pressed button once the list has re-rendered, so
  * a consumer that moves focus of its own in response to a reorder will find this
@@ -122,7 +122,7 @@ export default class DReorderButtons extends Component<DReorderButtonsSignature>
    * @param direction - Which button was pressed.
    * @param disabled - Whether that direction is unavailable.
    * @param callback - The consumer's handler for it.
-   * @param args - Whatever the consumer bound with `fn`, plus the event.
+   * @param args - Whatever the consumer bound with `fn`.
    */
   #move(
     direction: Direction,

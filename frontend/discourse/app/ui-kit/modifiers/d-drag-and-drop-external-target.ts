@@ -242,24 +242,29 @@ export function registerDragAndDropExternalTarget(
   // See the note in `registerDragAndDropSource`.
   element.setAttribute("data-drop-target-external", "");
 
+  // One gate for feedback time and drop time, as on the element target:
+  // consumers put authorization in `canDrop`, so re-asking at drop is the
+  // difference between refusing and acting on stale permission.
+  const passesGate = (source: NativeExternalDragPayload, input: DragInput) => {
+    if (!acceptsSource(source)) {
+      return false;
+    }
+    const args = getArgsRef();
+    if (!args.canDrop) {
+      return true;
+    }
+    return (
+      args.canDrop({
+        source: decorateExternalSource(source),
+        input,
+        element,
+      }) !== false
+    );
+  };
+
   const cleanup = dropTargetForExternal({
     element,
-    canDrop: ({ source, input }) => {
-      if (!acceptsSource(source)) {
-        return false;
-      }
-      const args = getArgsRef();
-      if (!args.canDrop) {
-        return true;
-      }
-      return (
-        args.canDrop({
-          source: decorateExternalSource(source),
-          input,
-          element,
-        }) !== false
-      );
-    },
+    canDrop: ({ source, input }) => passesGate(source, input),
     getDropEffect: ({ source, input }) => {
       const args = getArgsRef();
       return args.getDropEffect?.({
@@ -327,6 +332,12 @@ export function registerDragAndDropExternalTarget(
       clearIndicator();
       pairing.reset();
       if (!isDeepest(location)) {
+        return;
+      }
+      // The library reuses the target stack from the last `dragover` and never
+      // re-asks `canDrop` at drop time, so a gate that flipped false in the
+      // final moments before release would otherwise still act.
+      if (!passesGate(source, location.current.input)) {
         return;
       }
       getArgsRef().onDrop?.({

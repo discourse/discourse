@@ -8,9 +8,27 @@
   flex-direction: column;
   font-size: 0.7em;
 
+  /* On a touch screen these ARE the reorder path, and the compact pair
+     collapses well below the 24px WCAG 2.5.8 asks of a pointer target. The
+     rows are taller under coarse pointers anyway, so full-size targets no
+     longer drive the row height the way they would on desktop. */
+  @media (pointer: coarse) {
+    font-size: 1em;
+
+    /* The full-size pair is often taller than the row beside it, so a consumer
+       that stretches this cell would otherwise leave the buttons pinned to its
+       top rather than balanced around the row's middle. */
+    justify-content: center;
+  }
+
   &__button.btn {
     padding: 0 var(--space-1);
     min-height: 0;
+
+    @media (pointer: coarse) {
+      min-width: 24px;
+      min-height: 24px;
+    }
 
     /* Marked unavailable rather than disabled, so the button keeps its place in
        the tab order at the ends of the list. Mirrors what core paints for a real

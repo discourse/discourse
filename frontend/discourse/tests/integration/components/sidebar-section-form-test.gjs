@@ -84,10 +84,10 @@ function linkNames(selector) {
 
 function renderedLinks() {
   return {
-    primary: linkNames(".sidebar-section-form__links-wrapper"),
-    secondary: linkNames(
-      ".sidebar-section-form > h3 ~ .sidebar-section-form-link-wrapper"
+    primary: linkNames(
+      ".sidebar-section-form__links-wrapper:not(.--secondary)"
     ),
+    secondary: linkNames(".sidebar-section-form__links-wrapper.--secondary"),
   };
 }
 

@@ -47,8 +47,10 @@ import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import { i18n } from "discourse-i18n";
 
-// Used only if the composer's min-height computes to `auto`, which would leave
-// the resize with no lower bound at all.
+/**
+ * Used only if the composer's min-height computes to `auto`, which would leave
+ * the resize with no lower bound at all.
+ */
 const FALLBACK_MIN_HEIGHT = 250;
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
@@ -112,9 +114,22 @@ export default class ComposerContainer extends Component {
   #swipeEditor = null;
   #swipeSlide = 0;
 
+  /** Whether a resize is open — `resize-started` announced, its end still owed. */
+  #resizeOpen = false;
+
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.composerResizeDebounceHandler);
+    // The resize modifier deliberately fires no callback when torn down
+    // mid-gesture (its own JSDoc says gesture-held state must also be released
+    // on the consumer's destruction), so the state a live resize opened is
+    // closed here: a subscriber suppressing transitions for the gesture's
+    // length would otherwise hold that past the composer's death.
+    if (this.#resizeOpen) {
+      this.#resizeOpen = false;
+      this.#replyControl?.classList.remove("clear-transitions");
+      this.appEvents.trigger("composer:resize-ended");
+    }
   }
 
   get composerRedesign() {
@@ -313,6 +328,7 @@ export default class ComposerContainer extends Component {
 
   @bind
   onResizeStart() {
+    this.#resizeOpen = true;
     this.appEvents.trigger("composer:resize-started");
   }
 
@@ -337,6 +353,7 @@ export default class ComposerContainer extends Component {
 
   @bind
   onResizeEnd(size) {
+    this.#resizeOpen = false;
     this.#replyControl?.classList.remove("clear-transitions");
     // Announced before persisting, because the write can throw — storage quota —
     // and a subscriber that undoes its own drag-time state has to hear the end of

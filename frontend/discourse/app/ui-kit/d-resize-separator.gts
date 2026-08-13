@@ -7,8 +7,12 @@ import dResizeEdge, {
   type ResizeReportMeta,
 } from "discourse/ui-kit/modifiers/d-resize-edge";
 
-/** A size, or a function returning one for a value the template cannot observe. */
-type Measurement = number | (() => number);
+/**
+ * A size, or a function returning one for a value the template cannot observe.
+ * `null` is the unmeasured state — the component withholds `aria-valuenow`
+ * until a size is known, so a measurement function may honestly say "not yet".
+ */
+type Measurement = number | null | (() => number | null);
 
 /**
  * The box being resized: the element itself, or a function receiving the
@@ -325,7 +329,7 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
     this._announced = { now, min, max };
   }
 
-  #read(arg: Measurement) {
+  #read(arg: Measurement): number | null {
     return typeof arg === "function" ? arg() : arg;
   }
 

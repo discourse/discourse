@@ -36,6 +36,48 @@ export function stubPointerCapture(target: string | HTMLElement) {
 }
 
 /**
+ * Like {@link stubPointerCapture}, but models the browser's one pending
+ * capture override per pointer across a set of elements.
+ *
+ * The per-element stub gives each element an independent record, so it cannot
+ * express displacement: in a real browser a second element's
+ * `setPointerCapture` during the same dispatch replaces the first's pending
+ * override, and a release by the displacing element clears the override
+ * entirely. Tests about contested claims on one bubbling press need exactly
+ * that shape — who ends up owning the pointer is the assertion.
+ *
+ * @param targets - The elements contending for capture, or selectors for them.
+ * @returns Per-element records in input order, and `ownerOf` to ask which
+ *   element currently holds a pointer's capture.
+ */
+export function stubSharedPointerCapture(targets: (string | HTMLElement)[]) {
+  const owners = new Map<number, HTMLElement>();
+  const stubs = targets.map((target) => {
+    const element = (
+      typeof target === "string" ? find(target) : target
+    ) as HTMLElement;
+    const released: number[] = [];
+    element.setPointerCapture = (pointerId) => owners.set(pointerId, element);
+    element.hasPointerCapture = (pointerId) =>
+      owners.get(pointerId) === element;
+    element.releasePointerCapture = (pointerId) => {
+      // A release only clears the override the caller holds, as in the spec: a
+      // displaced claimant releasing changes nothing.
+      if (owners.get(pointerId) === element) {
+        owners.delete(pointerId);
+      }
+      released.push(pointerId);
+    };
+    return { element, released };
+  });
+
+  return {
+    stubs,
+    ownerOf: (pointerId: number) => owners.get(pointerId) ?? null,
+  };
+}
+
+/**
  * Waits for a gesture's pending report to land.
  *
  * Pointer moves are coalesced into an animation frame, so the size or position a
