@@ -3218,6 +3218,62 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     );
   });
 
+  test("fallbackSkipsMarked seeds the tab stop past a marked item", async function (assert) {
+    await render(
+      <template>
+        <div
+          role="listbox"
+          aria-multiselectable="true"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            entryFocus="first"
+            fallbackSkipsMarked=true
+          }}
+        >
+          <button class="item a" role="option" aria-selected="true">A</button>
+          <button class="item b" role="option" aria-selected="false">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".b")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "activation toggles in a multi-select list, so entry avoids arming the first Enter to remove a value"
+      );
+  });
+
+  test("fallbackSkipsMarked still seeds when every item is marked", async function (assert) {
+    await render(
+      <template>
+        <div
+          role="listbox"
+          aria-multiselectable="true"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            entryFocus="first"
+            fallbackSkipsMarked=true
+          }}
+        >
+          <button class="item a" role="option" aria-selected="true">A</button>
+          <button class="item b" role="option" aria-selected="true">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "an empty seed would take the group out of the tab sequence entirely, which is worse than seeding a marked item"
+      );
+  });
+
   test("changing itemSelector releases the items it no longer matches", async function (assert) {
     const state = new (class {
       @tracked selector = ".one";
