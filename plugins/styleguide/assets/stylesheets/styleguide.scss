@@ -804,6 +804,32 @@
     align-items: center;
   }
 
+  &__adjacent {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    flex-wrap: wrap;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 0.25em;
+  }
+
+  &__filter {
+    padding: 0.25em 0.75em;
+    border: 1px solid var(--primary-low);
+    border-radius: 2em;
+    background: none;
+    color: var(--primary);
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+    }
+  }
+
   &__combobox {
     position: relative;
     width: fit-content;
