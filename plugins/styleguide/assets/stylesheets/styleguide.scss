@@ -442,3 +442,70 @@
     flex-grow: 1;
   }
 }
+
+.roving-demo {
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    padding: 0.5em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__separator {
+    width: 1px;
+    align-self: stretch;
+    margin: 0 0.5em;
+    background: var(--primary-low);
+  }
+
+  &__item {
+    padding: 0.25em 0.75em;
+    border: 1px solid transparent;
+    border-radius: var(--d-border-radius);
+    background: none;
+    color: var(--primary);
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      color: var(--primary-medium);
+      cursor: not-allowed;
+    }
+  }
+
+  &__tree {
+    margin: 0;
+    padding: 0.5em;
+    list-style: none;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__row {
+    padding: 0.25em 0.5em;
+    cursor: pointer;
+
+    // The rows are a flat list, so depth has to be drawn from aria-level rather than from
+    // nesting. Logical padding so the right-to-left copy indents from the other edge.
+    &[aria-level="2"] {
+      padding-inline-start: 2em;
+    }
+
+    &[aria-expanded]::before {
+      content: "▸";
+      display: inline-block;
+      width: 1em;
+    }
+
+    &[aria-expanded="true"]::before {
+      content: "▾";
+    }
+  }
+}

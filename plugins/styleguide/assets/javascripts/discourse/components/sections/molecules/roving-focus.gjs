@@ -1,0 +1,81 @@
+import Component from "@glimmer/component";
+import { i18n } from "discourse-i18n";
+import RovingFocusToolbarExample from "../../examples/molecules/roving-focus/toolbar";
+import rovingFocusToolbarSource from "../../examples/molecules/roving-focus/toolbar?source=file";
+import RovingFocusTreeExample from "../../examples/molecules/roving-focus/tree";
+import rovingFocusTreeSource from "../../examples/molecules/roving-focus/tree?source=file";
+import StyleguideExample from "../../styleguide-example";
+import StyleguideGroups from "../../styleguide-groups";
+
+const GROUPS = ["toolbar", "tree"];
+
+/**
+ * Conformance demos for the roving-focus modifier, mirroring the interactive examples in the
+ * WAI-ARIA Authoring Practices at
+ * https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/
+ *
+ * Deliberately plain semantic HTML rather than shared components. A failure here is
+ * unambiguously the modifier's, which is the point of this tier; the same patterns built from
+ * real components belong beside it later, where the interesting failures actually live.
+ */
+export default class RovingFocus extends Component {
+  get groups() {
+    return GROUPS.map((id) => ({
+      id,
+      title: i18n(`styleguide.sections.roving_focus.groups.${id}.title`),
+      description: i18n(
+        `styleguide.sections.roving_focus.groups.${id}.description`
+      ),
+    }));
+  }
+
+  <template>
+    <p class="section-description">
+      {{i18n "styleguide.sections.roving_focus.description"}}
+    </p>
+
+    <StyleguideGroups
+      @groups={{this.groups}}
+      @section={{@section}}
+      @active={{@group}}
+      @ariaLabel={{i18n "styleguide.sections.roving_focus.groups.aria_label"}}
+      as |Group|
+    >
+      <Group @id="toolbar">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.roving_focus.toolbar.example"}}
+          @description={{i18n
+            "styleguide.sections.roving_focus.toolbar.example_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.roving_focus.toolbar.try_this"}}
+          @code={{rovingFocusToolbarSource}}
+        >
+          <RovingFocusToolbarExample />
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="tree">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.roving_focus.tree.example"}}
+          @description={{i18n
+            "styleguide.sections.roving_focus.tree.example_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.roving_focus.tree.try_this"}}
+          @code={{rovingFocusTreeSource}}
+        >
+          <RovingFocusTreeExample @dir="ltr" />
+        </StyleguideExample>
+
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.roving_focus.tree.rtl_example"}}
+          @description={{i18n
+            "styleguide.sections.roving_focus.tree.rtl_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.roving_focus.tree.rtl_try_this"}}
+        >
+          <RovingFocusTreeExample @dir="rtl" />
+        </StyleguideExample>
+      </Group>
+    </StyleguideGroups>
+  </template>
+}
