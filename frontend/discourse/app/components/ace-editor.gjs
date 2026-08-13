@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -9,8 +8,13 @@ import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
-import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
+import {
+  measuredHeight,
+  measuredMaxHeight,
+  measuredMinHeight,
+} from "discourse/lib/resize-measurements";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -63,6 +67,8 @@ export default class AceEditor extends Component {
   @service appEvents;
 
   @tracked isLoading = true;
+  /** The resized box, handed to the separator once the editor has built it. */
+  @tracked editorContainer = null;
   editor = null;
   ace = null;
   skipChangePropagation = false;
@@ -153,6 +159,8 @@ export default class AceEditor extends Component {
 
     this.editor.on("blur", () => this.warnSCSSDeprecations());
 
+    // Only now does the box the separator announces exist.
+    this.editorContainer = this.editor.container;
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
 
@@ -268,9 +276,53 @@ export default class AceEditor extends Component {
     }
   }
 
+  /**
+   * The height the next drag grows or shrinks from.
+   *
+   * Passed as a function because it is a live measurement: an arg whose compute
+   * reads no tracked state is cached for the modifier's lifetime, so a plain
+   * number would pin every drag to the first one's starting height. Reporting no
+   * measurement is what stops a gesture opening before the editor is built, which
+   * is why the two callbacks below can dereference it freely.
+   *
+   * @returns {number|null} The editor's current height in pixels, or null.
+   */
+  @bind
+  editorHeight() {
+    return measuredHeight(this.editor?.container);
+  }
+
+  /**
+   * The smallest height the editor may be dragged to.
+   *
+   * @returns {number} The minimum height, in pixels.
+   */
+  @bind
+  minEditorHeight() {
+    return measuredMinHeight(this.editor?.container);
+  }
+
+  /**
+   * The largest height the editor may be dragged to, leaving the header visible.
+   *
+   * @returns {number} The maximum height, in pixels.
+   */
+  @bind
+  maxEditorHeight() {
+    return measuredMaxHeight(this.editor?.container);
+  }
+
   @bind
   onResizeDrag(size) {
+    // Added on the first report rather than on the press, so a click that
+    // resizes nothing does not touch the class at all.
+    this.editor.container.classList.add("clear-transitions");
     this.editor.container.style.height = `${size}px`;
+  }
+
+  @bind
+  onResizeEnd() {
+    this.editor.container.classList.remove("clear-transitions");
   }
 
   <template>
@@ -288,14 +340,18 @@ export default class AceEditor extends Component {
         >
         </div>
         {{#if @resizable}}
-          <div
+          <DResizeSeparator
             class="grippie"
-            {{grippieDragResize
-              ".ace_editor--resizable"
-              "bottom"
-              (hash onThrottledDrag=this.onResizeDrag)
-            }}
-          ></div>
+            @axis="vertical"
+            @side="start"
+            @value={{this.editorHeight}}
+            @min={{this.minEditorHeight}}
+            @max={{this.maxEditorHeight}}
+            @label={{i18n "ace_editor.resize"}}
+            @onResize={{this.onResizeDrag}}
+            @onResizeEnd={{this.onResizeEnd}}
+            @observe={{this.editorContainer}}
+          />
         {{/if}}
       </DConditionalLoadingSpinner>
     </div>
