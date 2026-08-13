@@ -2,6 +2,7 @@
 
 RSpec.describe AccessControlList::EvaluateModification do
   describe described_class::Contract, type: :model do
+    it { is_expected.to allow_values(nil, 1).for(:target_id) }
     it { is_expected.to validate_presence_of(:target_type) }
   end
 
