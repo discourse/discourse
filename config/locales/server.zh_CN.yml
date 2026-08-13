@@ -4285,9 +4285,6 @@ zh_CN:
     user_posted_pm_staged:
       title: "暂存用户发布私信"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"

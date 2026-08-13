@@ -84,6 +84,8 @@ ur:
             weeks:
               one: "ہفتہ"
               other: "ہفتے"
+          notification_title: "شرکاء کو مطلع کریں"
+          bump_topic_title: "خوبخود عنوان اوپر لائیں"
       builder_modal:
         custom_fields:
           placeholder: "اختیاری"

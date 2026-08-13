@@ -2823,9 +2823,6 @@ gl:
     user_posted_pm_staged:
       title: "Usuario enviou unha MP transitoria"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"

@@ -37,18 +37,18 @@ ar:
         feed_category_filter_description: استورد فقط العناصر التي تحتوي فئة موجزها على هذا النص (حساس لحالة الأحرف). اترك الحقل فارغًا لاستيراد كل شيء.
         showing: "يتم عرض أول %{count} من إجمالي %{total} من العناصر."
         feeds:
-          title: الموجزات
-          nav_description: إدارة موجزات RSS/Atom التي يتم استيرادها إلى Discourse
-          description: تهيئة موجزات RSS/Atom التي يتم استطلاعها واستيرادها كموضوعات
+          title: المواجز
+          nav_description: إدارة مواجز RSS/Atom التي يتم استيرادها إلى Discourse
+          description: تهيئة مواجز RSS/Atom التي يتم استطلاعها واستيرادها كموضوعات
           add: إضافة موجز
           add_header: إضافة موجز
           edit_header: تعديل موجز
-          empty: لم تقم بتهيئة أي موجزات بعد.
+          empty: لم تقم بتهيئة أي مواجز بعد.
           edit: تعديل
           delete: حذف
           enable: تفعيل الموجز
           disable: تعطيل الموجز
-          back: العودة إلى الموجزات
+          back: العودة إلى المواجز
           save: حفظ
           confirm_delete: "هل تريد بالتأكيد حذف هذا الموجز؟"
           delete_success: تم حذف الموجز

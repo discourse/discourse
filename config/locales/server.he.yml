@@ -4090,9 +4090,6 @@ he:
     user_posted_pm_staged:
       title: "משתמש/ת פרסם/ה הודעה פרטית מבוימת"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"

@@ -13,6 +13,10 @@ ur:
   js:
     styleguide:
       title: "اسٹائل گائڈ"
+      example:
+        toggle_code: "کوڈ کا نمونہ دیکھیں"
+        try_this: "اسے آزمائیں:"
+        code_region: "ماخذ کا ٹکڑا: %{title}"
       categories:
         syntax: نحو
         atoms: ایٹم
@@ -75,7 +79,7 @@ ur:
         topic_notifications:
           title: "موضوع کی اطلاعات"
         post:
-          title: "پوسٹ"
+          title: "دھاگہ"
         post_list:
           title: "پوسٹ فہرست"
           empty_example: "<PostList /> خالی حالت"
