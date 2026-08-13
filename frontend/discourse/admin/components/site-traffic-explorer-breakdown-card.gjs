@@ -177,6 +177,7 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                       href={{rowLink.href}}
                       rel={{rowLink.rel}}
                       target={{rowLink.target}}
+                      title={{row.label}}
                       class="site-traffic-explorer__row-link"
                     >
                       <SiteTrafficExplorerDimensionLabel

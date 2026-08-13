@@ -46,13 +46,16 @@ export default class SiteTrafficExplorerBreakdownModal extends Component {
           <tbody class="d-table__body">
             {{#each this.rows as |row|}}
               <tr class="d-table__row">
-                <td class="d-table__cell --overview">
+                <td
+                  class="d-table__cell --overview site-traffic-breakdown-modal__dimension"
+                >
                   {{#let (@model.rowLink row) as |rowLink|}}
                     {{#if rowLink}}
                       <a
                         href={{rowLink.href}}
                         rel={{rowLink.rel}}
                         target={{rowLink.target}}
+                        title={{row.label}}
                         class="site-traffic-explorer__row-link"
                       >
                         <SiteTrafficExplorerDimensionLabel

@@ -254,8 +254,10 @@
   }
 
   &__row-link {
-    @include ellipsis;
+    display: block;
+    flex: 1 1 auto;
     min-width: 0;
+    overflow: hidden;
     color: inherit;
     text-decoration: none;
 
@@ -275,7 +277,7 @@
     align-items: center;
     align-self: stretch;
     justify-content: flex-end;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
     margin-block: calc(-1 * var(--space-1));
     margin-inline-end: calc(-1 * var(--space-2));
@@ -311,9 +313,17 @@
   }
 
   &__dimension-label {
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
     gap: var(--space-2);
+    min-width: 0;
+    width: 100%;
+  }
+
+  &__dimension-text {
+    @include ellipsis;
+    grid-column: 2;
     min-width: 0;
   }
 
@@ -341,8 +351,27 @@
 }
 
 .site-traffic-breakdown-modal {
+  &__dimension {
+    max-width: 0;
+    overflow: hidden;
+
+    .site-traffic-explorer__row-link {
+      display: block;
+    }
+
+    @include viewport.until(md) {
+      max-width: none;
+    }
+  }
+
   &__pageviews {
+    width: 1%;
+    white-space: nowrap;
     text-align: end;
+
+    @include viewport.until(md) {
+      width: auto;
+    }
 
     .d-table__mobile-label {
       text-align: start;

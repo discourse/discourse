@@ -394,6 +394,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.expand("pages")
 
     expect(traffic).to have_expanded_table(title: "Top URLs", column: "URL")
+    expect(traffic).to have_expanded_url_link(label: additional_path)
 
     traffic.filter_expanded_row(label: additional_path)
 
