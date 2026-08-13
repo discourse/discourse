@@ -110,15 +110,9 @@ class LetterAvatar
 
     def image_magick_version
       @image_magick_version ||=
-        begin
-          Thread.new do
-            sleep 2
-            cleanup_old
-          end
-          Digest::MD5.hexdigest(
-            ImageMagick.magick("--version") << ImageMagick.magick("-list", "font"),
-          )
-        end
+        Digest::MD5.hexdigest(
+          ImageMagick.magick("--version") << ImageMagick.magick("-list", "font"),
+        )
     end
 
     def cleanup_old
