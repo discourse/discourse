@@ -364,11 +364,7 @@ export default class ComposerContainer extends Component {
 
             <div class="reply-to">
               {{#unless this.composer.model.viewFullscreen}}
-                <ComposerActionTitle
-                  @model={{this.composer.model}}
-                  @canWhisper={{this.composer.canWhisper}}
-                  @canUnlistTopic={{this.composer.canUnlistTopic}}
-                />
+                <ComposerActionTitle @model={{this.composer.model}} />
 
                 {{#if this.composer.showTranslationSelector}}
                   <DropdownSelectBox
