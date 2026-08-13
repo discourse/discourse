@@ -12,16 +12,11 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const PERCENTAGE_KPIS = ["dau_mau"];
-const METRIC_NAMES = {
-  dau_mau: "stickiness",
-  daily_engaged_users: "daily_engagement",
-  new_signups: "new_signups",
-};
 const METRIC_ORDER = ["dau_mau", "daily_engaged_users", "new_signups"];
 
 function direction(metric) {
-  if (metric.value == null) {
-    return null;
+  if (metric?.value == null) {
+    return "unavailable";
   }
 
   if (metric.previous_value == null || metric.previous_value === 0) {
@@ -47,26 +42,6 @@ function percentChange(metric) {
     metric.percent_change ??
     ((metric.value - metric.previous_value) / metric.previous_value) * 100
   );
-}
-
-function metricGroup(metrics) {
-  return i18n(
-    `admin.dashboard.sections.engagement.headline.metric_groups.${metrics
-      .map((metric) => METRIC_NAMES[metric.type])
-      .join("_")}`
-  );
-}
-
-function lowercaseMetricGroup(metrics) {
-  return i18n(
-    `admin.dashboard.sections.engagement.headline.metric_groups_lowercase.${metrics
-      .map((metric) => METRIC_NAMES[metric.type])
-      .join("_")}`
-  );
-}
-
-function metricCount(metrics) {
-  return metrics.length === 1 && metrics[0].type !== "new_signups" ? 1 : 2;
 }
 
 class MetricItem extends Component {
@@ -142,71 +117,16 @@ class MetricItem extends Component {
 export default class EngagementHeadline extends Component {
   get headline() {
     const prefix = "admin.dashboard.sections.engagement.headline";
-    const metrics = [...this.args.kpis]
-      .sort(
-        (left, right) =>
-          METRIC_ORDER.indexOf(left.type) - METRIC_ORDER.indexOf(right.type)
-      )
-      .map((metric) => ({ ...metric, direction: direction(metric) }))
-      .filter((metric) => metric.direction);
-
-    if (metrics.length === 0) {
-      return {
-        title: i18n(`${prefix}.no_data.title`),
-        summary: i18n(`${prefix}.no_data.summary`),
-      };
-    }
-
-    const improved = metrics.filter(
-      (metric) => metric.direction === "improved"
+    const metricsByType = new Map(
+      this.args.kpis.map((metric) => [metric.type, metric])
     );
+    const metrics = METRIC_ORDER.map((type) => {
+      const metric = metricsByType.get(type) ?? { type };
+      return { ...metric, direction: direction(metric) };
+    });
     const declined = metrics.filter(
       (metric) => metric.direction === "declined"
     );
-    const flat = metrics.filter((metric) => metric.direction === "flat");
-    const period = formatDashboardHeadlinePeriod(this.args.period);
-
-    if (improved.length === metrics.length && metrics.length === 3) {
-      return {
-        title: i18n(`${prefix}.all_improved.title`, { period }),
-        summary: i18n(`${prefix}.all_improved.summary`),
-      };
-    }
-
-    if (improved.length > 0 && declined.length === 0) {
-      const improvedMetrics = metricGroup(improved);
-      if (flat.length === 0) {
-        return {
-          title: i18n(`${prefix}.improved_only.title`, {
-            count: metricCount(improved),
-            metrics: improvedMetrics,
-            period,
-          }),
-          summary: i18n(`${prefix}.improved_only.summary`, {
-            count: metricCount(improved),
-            metrics: improvedMetrics,
-          }),
-        };
-      }
-      return {
-        title: i18n(`${prefix}.improved_flat.title`, {
-          count: metricCount(improved),
-          metrics: improvedMetrics,
-          period,
-        }),
-        summary: i18n(
-          `${prefix}.improved_flat.${
-            metricCount(improved) === 1 ? "one" : "many"
-          }_improved.summary`,
-          {
-            count: metricCount(flat),
-            improved_metrics: improvedMetrics,
-            flat_metrics: lowercaseMetricGroup(flat),
-          }
-        ),
-      };
-    }
-
     const ctaOwner = declined.reduce((most, metric) => {
       if (!most) {
         return metric;
@@ -216,73 +136,16 @@ export default class EngagementHeadline extends Component {
         ? metric
         : most;
     }, null)?.type;
-
-    if (improved.length > 0) {
-      const improvedMetrics = metricGroup(improved);
-      return {
-        title: i18n(`${prefix}.mixed_decline.title`, {
-          count: metricCount(improved),
-          metrics: improvedMetrics,
-          period,
-        }),
-        summary: i18n(
-          `${prefix}.mixed_decline.${ctaOwner}.${
-            metricCount(improved) === 1 ? "one" : "many"
-          }_improved.summary`,
-          {
-            count: metricCount(declined),
-            improved_metrics: improvedMetrics,
-            declined_metrics: lowercaseMetricGroup(declined),
-          }
-        ),
-      };
-    }
-
-    if (declined.length === metrics.length && metrics.length === 3) {
-      return {
-        title: i18n(`${prefix}.all_declined.title`, { period }),
-        summary: i18n(`${prefix}.all_declined.${ctaOwner}.summary`),
-      };
-    }
-
-    if (declined.length > 0) {
-      if (flat.length === 0) {
-        return {
-          title: i18n(`${prefix}.declined_only.title`, { period }),
-          summary: i18n(`${prefix}.declined_only.${ctaOwner}.summary`, {
-            count: metricCount(declined),
-            metrics: metricGroup(declined),
-          }),
-        };
-      }
-      return {
-        title: i18n(`${prefix}.declined_flat.title`, { period }),
-        summary: i18n(
-          `${prefix}.declined_flat.${ctaOwner}.${
-            metricCount(declined) === 1 ? "one" : "many"
-          }_declined.summary`,
-          {
-            count: metricCount(flat),
-            declined_metrics: metricGroup(declined),
-            flat_metrics: lowercaseMetricGroup(flat),
-          }
-        ),
-      };
-    }
-
-    if (metrics.length === 3) {
-      return {
-        title: i18n(`${prefix}.all_flat.title`, { period }),
-        summary: i18n(`${prefix}.all_flat.summary`),
-      };
-    }
+    const scenario = metrics.map((metric) => metric.direction).join("_");
+    const scenarioPrefix = `${prefix}.scenarios.${scenario}`;
+    const summary = i18n(`${scenarioPrefix}.summary`);
+    const cta = ctaOwner ? i18n(`${prefix}.cta.${ctaOwner}`) : null;
 
     return {
-      title: i18n(`${prefix}.flat_only.title`, { period }),
-      summary: i18n(`${prefix}.flat_only.summary`, {
-        count: metricCount(flat),
-        metrics: metricGroup(flat),
+      title: i18n(`${scenarioPrefix}.title`, {
+        period: formatDashboardHeadlinePeriod(this.args.period),
       }),
+      summary: cta ? `${summary} ${cta}` : summary,
     };
   }
 

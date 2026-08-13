@@ -2,6 +2,7 @@ import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 import SupportSection from "discourse/plugins/discourse-solved/admin/components/dashboard/support";
 
 function buildData(overrides = {}) {
@@ -39,6 +40,49 @@ const startDate = new Date("2026-04-01");
 const endDate = new Date("2026-04-30");
 module("Integration | Component | Dashboard | Support", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("has a complete headline lookup table", function (assert) {
+    const prefix = "admin.dashboard.sections.support.headline";
+    const headlineTranslations = I18n.lookup(prefix);
+    const scenarios = Object.fromEntries(
+      Object.entries(headlineTranslations).filter(([key]) => key !== "cta")
+    );
+
+    assert.deepEqual(
+      Object.keys(scenarios).sort(),
+      [
+        "down_down",
+        "down_flat",
+        "down_unavailable",
+        "down_up",
+        "flat_down",
+        "flat_flat",
+        "flat_unavailable",
+        "flat_up",
+        "no_data",
+        "unavailable_down",
+        "unavailable_flat",
+        "unavailable_up",
+        "up_down",
+        "up_flat",
+        "up_unavailable",
+        "up_up",
+      ],
+      "contains every supported direction combination exactly once"
+    );
+    assert.true(
+      Object.values(scenarios).every(
+        ({ title, summary }) =>
+          typeof title === "string" && typeof summary === "string"
+      ),
+      "every scenario has a complete headline and summary"
+    );
+    assert.deepEqual(
+      Object.keys(headlineTranslations.cta).sort(),
+      ["in_progress", "in_progress_and_unanswered", "unanswered"],
+      "contains each reusable support CTA"
+    );
+  });
 
   test("renders a positive resolution-rate delta", async function (assert) {
     const data = buildData();
@@ -175,194 +219,6 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
     );
   });
 
-  test("renders the PM headline when the resolution rate improves and the first reply becomes slower", async function (assert) {
-    const data = {
-      category_options: [],
-      kpis: {
-        resolution_rate: { value: 72, previous_value: 60, report_query: {} },
-        staff_involvement: { value: 19, previous_value: 25 },
-        avg_first_reply: { value: 15_000, previous_value: 12_000 },
-      },
-      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 3 },
-      whos_answering: {
-        rows: [{ type: "staff", count: 1, share: 100 }],
-        total: 1,
-      },
-      response_time_distribution: {
-        buckets: [
-          { key: "lt_1h", count: 1, share: 100 },
-          { key: "1_4h", count: 0, share: 0 },
-          { key: "4_24h", count: 0, share: 0 },
-          { key: "gt_24h", count: 0, share: 0 },
-        ],
-        trend: { direction: "flat", seconds: 0 },
-      },
-    };
-
-    await render(
-      <template>
-        <SupportSection
-          @data={{data}}
-          @period="last_30_days"
-          @startDate={{startDate}}
-          @endDate={{endDate}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "The resolution rate has improved in the last 30 days",
-        "More questions are getting answered, but the time to first reply has increased. Check out the unanswered topics to see which you can address.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when the resolution rate improves and the first reply stays flat", async function (assert) {
-    const data = {
-      category_options: [],
-      kpis: {
-        resolution_rate: { value: 72, previous_value: 60, report_query: {} },
-        staff_involvement: { value: 19, previous_value: 25 },
-        avg_first_reply: { value: 12_000, previous_value: 12_000 },
-      },
-      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 3 },
-      whos_answering: {
-        rows: [{ type: "staff", count: 1, share: 100 }],
-        total: 1,
-      },
-      response_time_distribution: {
-        buckets: [
-          { key: "lt_1h", count: 1, share: 100 },
-          { key: "1_4h", count: 0, share: 0 },
-          { key: "4_24h", count: 0, share: 0 },
-          { key: "gt_24h", count: 0, share: 0 },
-        ],
-        trend: { direction: "flat", seconds: 0 },
-      },
-    };
-
-    await render(
-      <template>
-        <SupportSection
-          @data={{data}}
-          @period="last_30_days"
-          @startDate={{startDate}}
-          @endDate={{endDate}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "The resolution rate has improved in the last 30 days",
-        "More questions are getting answered, but the time to first reply is flat. Check out the unanswered topics to see which you can address.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when the first reply becomes faster and the resolution rate declines", async function (assert) {
-    const data = {
-      category_options: [],
-      kpis: {
-        resolution_rate: { value: 48, previous_value: 60, report_query: {} },
-        staff_involvement: { value: 19, previous_value: 25 },
-        avg_first_reply: { value: 9000, previous_value: 12_000 },
-      },
-      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 3 },
-      whos_answering: {
-        rows: [{ type: "staff", count: 1, share: 100 }],
-        total: 1,
-      },
-      response_time_distribution: {
-        buckets: [
-          { key: "lt_1h", count: 1, share: 100 },
-          { key: "1_4h", count: 0, share: 0 },
-          { key: "4_24h", count: 0, share: 0 },
-          { key: "gt_24h", count: 0, share: 0 },
-        ],
-        trend: { direction: "flat", seconds: 0 },
-      },
-    };
-
-    await render(
-      <template>
-        <SupportSection
-          @data={{data}}
-          @period="last_30_days"
-          @startDate={{startDate}}
-          @endDate={{endDate}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "The time to first reply has decreased in the last 30 days",
-        "Members are getting faster responses, but resolution rate has decreased. Take a look at the in progress topics to see if there are replies that should be marked as answers.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when the first reply becomes faster and the resolution rate stays flat", async function (assert) {
-    const data = {
-      category_options: [],
-      kpis: {
-        resolution_rate: { value: 60, previous_value: 60, report_query: {} },
-        staff_involvement: { value: 19, previous_value: 25 },
-        avg_first_reply: { value: 9000, previous_value: 12_000 },
-      },
-      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 3 },
-      whos_answering: {
-        rows: [{ type: "staff", count: 1, share: 100 }],
-        total: 1,
-      },
-      response_time_distribution: {
-        buckets: [
-          { key: "lt_1h", count: 1, share: 100 },
-          { key: "1_4h", count: 0, share: 0 },
-          { key: "4_24h", count: 0, share: 0 },
-          { key: "gt_24h", count: 0, share: 0 },
-        ],
-        trend: { direction: "flat", seconds: 0 },
-      },
-    };
-
-    await render(
-      <template>
-        <SupportSection
-          @data={{data}}
-          @period="last_30_days"
-          @startDate={{startDate}}
-          @endDate={{endDate}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "The time to first reply has decreased in the last 30 days",
-        "Members are getting faster responses, but resolution rate is flat. Take a look at the in progress topics to see if there are replies that should be marked as answers.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
   test("renders the PM headline when the resolution rate declines and the first reply becomes slower", async function (assert) {
     const data = {
       category_options: [],
@@ -405,100 +261,6 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       [
         "Resolution rate and time to first reply have declined in the last 30 days",
         "Members are getting fewer answers and are waiting longer for their first reply. Investigate the in progress and unanswered topics to make sure members are getting timely responses.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when the resolution rate declines and the first reply stays flat", async function (assert) {
-    const data = {
-      category_options: [],
-      kpis: {
-        resolution_rate: { value: 48, previous_value: 60, report_query: {} },
-        staff_involvement: { value: 19, previous_value: 25 },
-        avg_first_reply: { value: 12_000, previous_value: 12_000 },
-      },
-      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 3 },
-      whos_answering: {
-        rows: [{ type: "staff", count: 1, share: 100 }],
-        total: 1,
-      },
-      response_time_distribution: {
-        buckets: [
-          { key: "lt_1h", count: 1, share: 100 },
-          { key: "1_4h", count: 0, share: 0 },
-          { key: "4_24h", count: 0, share: 0 },
-          { key: "gt_24h", count: 0, share: 0 },
-        ],
-        trend: { direction: "flat", seconds: 0 },
-      },
-    };
-
-    await render(
-      <template>
-        <SupportSection
-          @data={{data}}
-          @period="last_30_days"
-          @startDate={{startDate}}
-          @endDate={{endDate}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "The resolution rate has decreased in the last 30 days",
-        "Members are getting fewer answers, but the time to first reply is holding steady. Take a look at the in progress topics to see if there are replies that should be marked as answers.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when the resolution rate stays flat and the first reply becomes slower", async function (assert) {
-    const data = {
-      category_options: [],
-      kpis: {
-        resolution_rate: { value: 60, previous_value: 60, report_query: {} },
-        staff_involvement: { value: 19, previous_value: 25 },
-        avg_first_reply: { value: 15_000, previous_value: 12_000 },
-      },
-      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 3 },
-      whos_answering: {
-        rows: [{ type: "staff", count: 1, share: 100 }],
-        total: 1,
-      },
-      response_time_distribution: {
-        buckets: [
-          { key: "lt_1h", count: 1, share: 100 },
-          { key: "1_4h", count: 0, share: 0 },
-          { key: "4_24h", count: 0, share: 0 },
-          { key: "gt_24h", count: 0, share: 0 },
-        ],
-        trend: { direction: "flat", seconds: 0 },
-      },
-    };
-
-    await render(
-      <template>
-        <SupportSection
-          @data={{data}}
-          @period="last_30_days"
-          @startDate={{startDate}}
-          @endDate={{endDate}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "The time to first reply has increased in the last 30 days",
-        "Members are waiting longer for their first reply, but the resolution rate is holding steady. Check out the unanswered topics to see which you can address.",
       ],
       "renders the exact scenario headline and summary"
     );
@@ -834,6 +596,97 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       .doesNotHaveAttribute(
         "aria-hidden",
         "the count stays exposed to assistive tech"
+      );
+  });
+
+  test("summarizes the measurable metric when reply time is unavailable", async function (assert) {
+    const data = {
+      category_options: [],
+      kpis: {
+        resolution_rate: { value: 72, previous_value: 60, report_query: {} },
+        staff_involvement: { value: null, previous_value: null },
+        avg_first_reply: { value: null, previous_value: null },
+      },
+      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 0 },
+      whos_answering: { rows: [], total: 0 },
+      response_time_distribution: {
+        buckets: [],
+        trend: { direction: "flat", seconds: 0 },
+      },
+    };
+
+    await render(
+      <template>
+        <SupportSection @data={{data}} @period="last_30_days" />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "The resolution rate has improved in the last 30 days More questions are getting answered."
+      );
+  });
+
+  test("treats no prior support activity as a zero baseline", async function (assert) {
+    const data = {
+      category_options: [],
+      kpis: {
+        resolution_rate: {
+          value: 72,
+          previous_value: null,
+          report_query: {},
+        },
+        staff_involvement: { value: 50, previous_value: null },
+        avg_first_reply: { value: 0, previous_value: null },
+      },
+      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 0 },
+      whos_answering: { rows: [], total: 0 },
+      response_time_distribution: {
+        buckets: [],
+        trend: { direction: "flat", seconds: 0 },
+      },
+    };
+
+    await render(
+      <template>
+        <SupportSection @data={{data}} @period="last_30_days" />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "The resolution rate has improved in the last 30 days More questions are getting answered, but the time to first reply has increased. Check out the unanswered topics to see which you can address."
+      );
+  });
+
+  test("preserves the no-data headline when no metric is measurable", async function (assert) {
+    const data = {
+      category_options: [],
+      kpis: {
+        resolution_rate: { value: null, previous_value: null },
+        staff_involvement: { value: null, previous_value: null },
+        avg_first_reply: { value: null, previous_value: null },
+      },
+      topic_outcomes: { resolved: 0, in_progress: 0, unanswered: 0 },
+      whos_answering: { rows: [], total: 0 },
+      response_time_distribution: {
+        buckets: [],
+        trend: { direction: "flat", seconds: 0 },
+      },
+    };
+
+    await render(
+      <template>
+        <SupportSection @data={{data}} @period="last_30_days" />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "Not enough support activity yet There's no support activity in this period yet. Once topics come in, you'll see how your community is handling them."
       );
   });
 });

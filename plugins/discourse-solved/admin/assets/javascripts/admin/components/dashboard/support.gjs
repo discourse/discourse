@@ -20,6 +20,17 @@ import SupportTopicOutcomes from "./support/topic-outcomes";
 import SupportWhosAnswering from "./support/whos-answering";
 
 const MAX_CATEGORIES = 10;
+const CTA_BY_SCENARIO = {
+  up_up: "unanswered",
+  up_flat: "unanswered",
+  down_down: "in_progress",
+  flat_down: "in_progress",
+  down_up: "in_progress_and_unanswered",
+  down_flat: "in_progress",
+  flat_up: "unanswered",
+  down_unavailable: "in_progress",
+  unavailable_up: "unanswered",
+};
 
 const DeltaPill = <template>
   {{#if @delta.hasDelta}}
@@ -91,9 +102,12 @@ export default class SupportSection extends Component {
 
     const scenario = `${resolutionDirection}_${replyDirection}`;
     const period = formatDashboardHeadlinePeriod(this.args.period);
+    const summary = i18n(`${prefix}.${scenario}.summary`);
+    const ctaKey = CTA_BY_SCENARIO[scenario];
+    const cta = ctaKey ? i18n(`${prefix}.cta.${ctaKey}`) : null;
     return {
       title: i18n(`${prefix}.${scenario}.title`, { period }),
-      summary: i18n(`${prefix}.${scenario}.summary`),
+      summary: cta ? `${summary} ${cta}` : summary,
     };
   }
 

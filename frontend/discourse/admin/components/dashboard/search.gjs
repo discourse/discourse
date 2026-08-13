@@ -13,6 +13,14 @@ import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
 
+const CONTENT_GAPS_SCENARIOS = new Set([
+  "up_up",
+  "up_flat",
+  "down_up",
+  "flat_up",
+  "unavailable_up",
+]);
+
 function formatCount(value) {
   return I18n.toNumber(value, { precision: 0 });
 }
@@ -62,10 +70,14 @@ export default class DashboardSearch extends Component {
     const period = formatDashboardHeadlinePeriod(this.args.period);
     const prefix = "admin.dashboard.sections.search.headline";
     const scenario = `${searchesDirection}_${noResultDirection}`;
+    const summary = i18n(`${prefix}.${scenario}.summary`);
+    const cta = CONTENT_GAPS_SCENARIOS.has(scenario)
+      ? i18n(`${prefix}.cta.content_gaps`)
+      : null;
 
     return {
       title: i18n(`${prefix}.${scenario}.title`, { period }),
-      summary: i18n(`${prefix}.${scenario}.summary`),
+      summary: cta ? `${summary} ${cta}` : summary,
     };
   }
 

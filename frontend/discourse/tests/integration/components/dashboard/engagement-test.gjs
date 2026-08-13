@@ -2,6 +2,7 @@ import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | Dashboard | Engagement", function (hooks) {
   setupRenderingTest(hooks);
@@ -38,6 +39,37 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       },
     ],
   };
+
+  test("has a complete headline lookup table", function (assert) {
+    const directions = ["improved", "declined", "flat", "unavailable"];
+    const expectedScenarios = directions.flatMap((stickiness) =>
+      directions.flatMap((dailyEngagement) =>
+        directions.map(
+          (newSignups) => `${stickiness}_${dailyEngagement}_${newSignups}`
+        )
+      )
+    );
+    const prefix = "admin.dashboard.sections.engagement.headline";
+    const scenarios = I18n.lookup(`${prefix}.scenarios`);
+
+    assert.deepEqual(
+      Object.keys(scenarios).sort(),
+      expectedScenarios.sort(),
+      "contains every direction combination exactly once"
+    );
+    assert.true(
+      Object.values(scenarios).every(
+        ({ title, summary }) =>
+          typeof title === "string" && typeof summary === "string"
+      ),
+      "every scenario has a complete headline and summary"
+    );
+    assert.deepEqual(
+      Object.keys(I18n.lookup(`${prefix}.cta`)).sort(),
+      ["daily_engaged_users", "dau_mau", "new_signups"],
+      "contains one CTA for each engagement metric"
+    );
+  });
 
   test("renders one metric per kpi", async function (assert) {
     await render(
@@ -111,90 +143,6 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     );
   });
 
-  test("renders the PM headline when some metrics improve and the rest stay flat", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 30, previous_value: 20, percent_change: 50 },
-        {
-          type: "daily_engaged_users",
-          value: 100,
-          previous_value: 100,
-          percent_change: 0,
-        },
-        {
-          type: "new_signups",
-          value: 40,
-          previous_value: 40,
-          percent_change: 0,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Stickiness has increased in the last 30 days",
-        "Stickiness is up, but daily engagement and new signups are flat.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when metrics move in different directions and stickiness declines most", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 10, previous_value: 20, percent_change: -50 },
-        {
-          type: "daily_engaged_users",
-          value: 150,
-          previous_value: 100,
-          percent_change: 50,
-        },
-        {
-          type: "new_signups",
-          value: 60,
-          previous_value: 40,
-          percent_change: 50,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Daily engagement and new signups have increased in the last 30 days",
-        "Daily engagement and new signups are up, but stickiness is down. Take a look at the activity by category to see which areas of your community may need your attention.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
   test("renders the PM headline when metrics move in different directions and new signups decline most", async function (assert) {
     const scenarioEngagement = {
       kpis: [
@@ -232,300 +180,6 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       [
         "Stickiness and daily engagement have increased in the last 30 days",
         "Stickiness and daily engagement are up, but new signups are down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when metrics move in different directions and daily engagement declines most", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 30, previous_value: 20, percent_change: 50 },
-        {
-          type: "daily_engaged_users",
-          value: 50,
-          previous_value: 100,
-          percent_change: -50,
-        },
-        {
-          type: "new_signups",
-          value: 60,
-          previous_value: 40,
-          percent_change: 50,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Stickiness and new signups have increased in the last 30 days",
-        "Stickiness and new signups are up, but daily engagement is down. Investigate the decline to see which members have disengaged.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when all metrics decline and stickiness declines most", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 5, previous_value: 20, percent_change: -75 },
-        {
-          type: "daily_engaged_users",
-          value: 50,
-          previous_value: 100,
-          percent_change: -50,
-        },
-        {
-          type: "new_signups",
-          value: 30,
-          previous_value: 40,
-          percent_change: -25,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Engagement has declined in the last 30 days",
-        "Stickiness, daily engagement, and new signups are all down. Take a look at the activity by category to see which areas of your community may need your attention.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when all metrics decline and new signups decline most", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 15, previous_value: 20, percent_change: -25 },
-        {
-          type: "daily_engaged_users",
-          value: 50,
-          previous_value: 100,
-          percent_change: -50,
-        },
-        {
-          type: "new_signups",
-          value: 10,
-          previous_value: 40,
-          percent_change: -75,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Engagement has declined in the last 30 days",
-        "Stickiness, daily engagement, and new signups are all down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when all metrics decline and daily engagement declines most", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 15, previous_value: 20, percent_change: -25 },
-        {
-          type: "daily_engaged_users",
-          value: 25,
-          previous_value: 100,
-          percent_change: -75,
-        },
-        {
-          type: "new_signups",
-          value: 20,
-          previous_value: 40,
-          percent_change: -50,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Engagement has declined in the last 30 days",
-        "Stickiness, daily engagement, and new signups are all down. Investigate the decline to see which members have disengaged.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when some metrics decline, the rest stay flat, and stickiness declines most", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 10, previous_value: 20, percent_change: -50 },
-        {
-          type: "daily_engaged_users",
-          value: 100,
-          previous_value: 100,
-          percent_change: 0,
-        },
-        {
-          type: "new_signups",
-          value: 40,
-          previous_value: 40,
-          percent_change: 0,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Some declines in engagement in the last 30 days",
-        "Stickiness is down, but daily engagement and new signups are holding steady. Take a look at the activity by category to see which areas of your community may need your attention.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when some metrics decline, the rest stay flat, and new signups decline most", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 20, previous_value: 20, percent_change: 0 },
-        {
-          type: "daily_engaged_users",
-          value: 100,
-          previous_value: 100,
-          percent_change: 0,
-        },
-        {
-          type: "new_signups",
-          value: 20,
-          previous_value: 40,
-          percent_change: -50,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Some declines in engagement in the last 30 days",
-        "New signups are down, but stickiness and daily engagement are holding steady. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when some metrics decline, the rest stay flat, and daily engagement declines most", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 20, previous_value: 20, percent_change: 0 },
-        {
-          type: "daily_engaged_users",
-          value: 50,
-          previous_value: 100,
-          percent_change: -50,
-        },
-        {
-          type: "new_signups",
-          value: 40,
-          previous_value: 40,
-          percent_change: 0,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Some declines in engagement in the last 30 days",
-        "Daily engagement is down, but stickiness and new signups are holding steady. Investigate the decline to see which members have disengaged.",
       ],
       "renders the exact scenario headline and summary"
     );
@@ -643,5 +297,204 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     );
 
     assert.dom(".db-section__subintro").doesNotExist();
+  });
+
+  test("treats no prior activity as a zero baseline", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "new_signups",
+          value: 10,
+          previous_value: null,
+          percent_change: null,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement
+          @engagement={{scenarioEngagement}}
+          @period="last_30_days"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "New signups have increased in the last 30 days New signups are up."
+      );
+  });
+
+  test("preserves the no-data headline when no metric is measurable", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement
+          @engagement={{scenarioEngagement}}
+          @period="last_30_days"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "Not enough activity yet to summarise engagement. Pick a longer date range or come back once your community has more activity."
+      );
+  });
+
+  test("classifies a visible negative half-step change as a decline", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "dau_mau",
+          value: 1999,
+          previous_value: 2000,
+          percent_change: -0.05,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement
+          @engagement={{scenarioEngagement}}
+          @period="last_30_days"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "Engagement has declined in the last 30 days Stickiness is down. Take a look at the activity by category to see which areas of your community may need your attention."
+      );
+  });
+
+  test("chooses the largest decline using the tile's display rounding", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "dau_mau",
+          value: 99.4,
+          previous_value: 100,
+          percent_change: -0.6,
+        },
+        {
+          type: "daily_engaged_users",
+          value: 98.6,
+          previous_value: 100,
+          percent_change: -1.4,
+        },
+        {
+          type: "new_signups",
+          value: 100,
+          previous_value: 100,
+          percent_change: 0,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement
+          @engagement={{scenarioEngagement}}
+          @period="last_30_days"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro p")
+      .includesText(
+        "Investigate the decline to see which members have disengaged.",
+        "daily engagement owns the CTA because -1% is below -0.6%"
+      );
+  });
+
+  test("uses metric order to resolve rounded decline ties", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "dau_mau",
+          value: 89.6,
+          previous_value: 100,
+          percent_change: -10.4,
+        },
+        {
+          type: "daily_engaged_users",
+          value: 89.51,
+          previous_value: 100,
+          percent_change: -10.49,
+        },
+        {
+          type: "new_signups",
+          value: 100,
+          previous_value: 100,
+          percent_change: 0,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement
+          @engagement={{scenarioEngagement}}
+          @period="last_30_days"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro p")
+      .includesText(
+        "Take a look at the activity by category",
+        "stickiness owns the CTA when rounded declines tie"
+      );
+  });
+
+  test("summarizes measurable metrics when another metric is unavailable", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "dau_mau",
+          value: null,
+          previous_value: null,
+          percent_change: null,
+        },
+        {
+          type: "daily_engaged_users",
+          value: 120,
+          previous_value: 100,
+          percent_change: 20,
+        },
+        {
+          type: "new_signups",
+          value: 40,
+          previous_value: 40,
+          percent_change: 0,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement
+          @engagement={{scenarioEngagement}}
+          @period="last_30_days"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "Daily engagement has increased in the last 30 days Daily engagement is up, but new signups are flat."
+      );
   });
 });
