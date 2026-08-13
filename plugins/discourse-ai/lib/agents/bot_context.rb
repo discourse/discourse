@@ -38,7 +38,8 @@ module DiscourseAi
                     :parent_agent_id,
                     :current_agent_id,
                     :turn_token_budget,
-                    :tool_invocation_counts
+                    :tool_invocation_counts,
+                    :completion_limit_reached
       def initialize(
         post: nil,
         topic: nil,
@@ -77,6 +78,7 @@ module DiscourseAi
         @custom_instructions = custom_instructions
         @feature_context = feature_context || {}
         @format_dates = format_dates
+        @completion_limit_reached = false
 
         @message_id = message_id
         @channel_id = channel_id

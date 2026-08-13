@@ -105,6 +105,58 @@ RSpec.describe DiscourseAi::Agents::SubagentRunner do
     end
   end
 
+  it "preserves the reserved final completion for the root agent" do
+    child.update!(tools: [["Time", nil, false]])
+    execution_context =
+      DiscourseAi::Completions::ExecutionContext.new(
+        token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
+      )
+    state =
+      DiscourseAi::Agents::SubagentExecutionState.new(
+        execution_context: execution_context,
+        root_token_budget: 10_000,
+      )
+    (DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 3).times do
+      expect(state.reserve_completion).to eq(true)
+    end
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        messages: [{ type: :user, content: "Check the time" }],
+        execution_context: execution_context,
+        subagent_execution_state: state,
+      )
+    spawn_call =
+      DiscourseAi::Completions::ToolCall.new(
+        id: "spawn-1",
+        name: "spawn_agent",
+        parameters: {
+          agent_id: child.id,
+          prompt: "Check the time",
+        },
+      )
+    time_call = DiscourseAi::Completions::ToolCall.new(id: "time-1", name: "time", parameters: {})
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(
+      [spawn_call, time_call, "Parent final answer"],
+    ) do |_endpoint, _llm, prompts|
+      bot = DiscourseAi::Agents::Bot.as(user, agent: parent.class_instance.new, model: model)
+
+      raw_context = bot.reply(context)
+
+      expect(raw_context.last.first).to eq("Parent final answer")
+      expect(prompts.length).to eq(3)
+      spawn_result =
+        prompts.last.messages.reverse.find do |message|
+          message[:type] == :tool && message[:name] == "spawn_agent"
+        end
+      expect(JSON.parse(spawn_result[:content])).to include(
+        "status" => "error",
+        "error" => I18n.t("discourse_ai.ai_bot.subagent_errors.completion_limit"),
+      )
+    end
+  end
+
   it "runs the child with an isolated prompt and returns its result to the parent" do
     spawn_call =
       DiscourseAi::Completions::ToolCall.new(

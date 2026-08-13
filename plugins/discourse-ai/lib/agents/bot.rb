@@ -240,13 +240,29 @@ module DiscourseAi
           current_thinking = []
           thinking_placeholder = nil
 
-          unless context.subagent_execution_state.reserve_completion(final: final_answer_requested)
-            break if final_answer_requested
+          completion_reserved =
+            if final_answer_requested && context.subagent_depth.to_i.zero?
+              context.subagent_execution_state.reserve_root_final_completion
+            else
+              context.subagent_execution_state.reserve_completion
+            end
+
+          unless completion_reserved
+            if final_answer_requested
+              context.completion_limit_reached = true
+              break
+            end
 
             self.class.inject_token_budget_final_answer_hint(prompt)
             prompt.tool_choice = :none
             final_answer_requested = true
-            break if !context.subagent_execution_state.reserve_completion(final: true)
+
+            if context.subagent_depth.to_i.zero?
+              break if !context.subagent_execution_state.reserve_root_final_completion
+            else
+              context.completion_limit_reached = true
+              break
+            end
           end
 
           result =

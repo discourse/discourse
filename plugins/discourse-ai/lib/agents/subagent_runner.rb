@@ -59,6 +59,8 @@ module DiscourseAi
         child_agent = child_class.new
         child_context = build_child_context(child_record, model)
         response = collect_response(child_agent, child_context, model)
+        return error("completion_limit", child_record) if child_context.completion_limit_reached
+
         truncate_response(response, child_record)
       rescue => exception
         return error("cancelled", child_record) if @context.cancel_manager&.cancelled?

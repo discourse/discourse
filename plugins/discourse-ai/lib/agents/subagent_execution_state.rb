@@ -33,18 +33,27 @@ module DiscourseAi
         @mutex.synchronize { @completion_count < MAX_COMPLETIONS - 1 }
       end
 
-      def reserve_completion(final: false)
+      def reserve_completion
+        reserve_completion_with_limit(MAX_COMPLETIONS - 1)
+      end
+
+      def reserve_root_final_completion
+        reserve_completion_with_limit(MAX_COMPLETIONS)
+      end
+
+      def remaining_tokens
+        [root_token_budget - execution_context.token_usage_tracker.total, 0].max
+      end
+
+      private
+
+      def reserve_completion_with_limit(limit)
         @mutex.synchronize do
-          limit = final ? MAX_COMPLETIONS : MAX_COMPLETIONS - 1
           return false if @completion_count >= limit
 
           @completion_count += 1
           true
         end
-      end
-
-      def remaining_tokens
-        [root_token_budget - execution_context.token_usage_tracker.total, 0].max
       end
     end
   end
