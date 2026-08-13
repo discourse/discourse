@@ -240,10 +240,10 @@
     color: var(--primary);
     font: inherit;
     text-align: start;
+  }
 
-    > span:not(.site-traffic-explorer__row-count) {
-      @include ellipsis;
-    }
+  &__row-label {
+    @include ellipsis;
   }
 
   &__row-count {
