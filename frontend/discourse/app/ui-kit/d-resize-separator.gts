@@ -242,6 +242,8 @@ interface DResizeSeparatorSignature {
  *
  * @see {@link dResizeEdge}, the modifier underneath. Use it directly only when the
  *   element and its separator semantics are already yours to own.
+ * @see The `DResizeHandles` component for a TWO-dimensional box resize, where the separator role
+ *   does not apply.
  * @see The `dOnResize` modifier to merely OBSERVE a size change. It is not a gesture.
  */
 export default class DResizeSeparator extends Component<DResizeSeparatorSignature> {
