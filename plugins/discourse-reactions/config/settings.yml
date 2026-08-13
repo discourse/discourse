@@ -1,10 +1,7 @@
 discourse_reactions:
   discourse_reactions_enabled:
-    default: false
+    default: true
     client: true
-    upcoming_change_default_override:
-      upcoming_change: "enable_discourse_reactions_by_default"
-      new_default: true
   discourse_reactions_like_icon:
     client: true
     type: icon
@@ -39,7 +36,7 @@ discourse_reactions:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403795"
       permanent_warning: false
