@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "fileutils"
 require "tmpdir"
 
 # Runs ImageMagick under the Landlock sandbox (via Discourse::SafeExec) so a
@@ -41,7 +42,9 @@ module ImageMagick
   def self.run(*command, read:, write:, timeout:, failure_message:)
     # A private scratch dir keeps ImageMagick's disk-backed pixel cache inside
     # the write allowlist, so large images that spill to disk still succeed.
-    Dir.mktmpdir("discourse-imagemagick-") do |scratch|
+    scratch = Dir.mktmpdir("discourse-imagemagick-")
+
+    begin
       Discourse::SafeExec.capture(
         *command,
         env: {
@@ -61,7 +64,25 @@ module ImageMagick
         failure_message:,
         seccomp_deny_network: true,
       )
+    ensure
+      remove_scratch(scratch)
     end
   end
   private_class_method :run
+
+  # Helper libraries (eg fontconfig) can still be populating their cache under
+  # the scratch dir while it is being torn down, which makes a strict removal
+  # raise ENOTEMPTY. Retry, then give up: losing a scratch dir is not worth
+  # failing the caller, and this often runs on a thread with no handler.
+  def self.remove_scratch(scratch, attempts: 3)
+    FileUtils.remove_entry(scratch)
+  rescue StandardError => e
+    attempts -= 1
+    if e.is_a?(Errno::ENOTEMPTY) && attempts > 0
+      sleep 0.05
+      retry
+    end
+    FileUtils.remove_entry(scratch, true)
+  end
+  private_class_method :remove_scratch
 end

@@ -109,16 +109,24 @@ class LetterAvatar
     end
 
     def image_magick_version
-      @image_magick_version ||=
-        begin
-          Thread.new do
-            sleep 2
-            cleanup_old
-          end
-          Digest::MD5.hexdigest(
-            ImageMagick.magick("--version") << ImageMagick.magick("-list", "font"),
-          )
-        end
+      return @image_magick_version if @image_magick_version
+
+      # Memoize before kicking off cleanup: cleanup_old asks for the cache path,
+      # which comes back here, and an unset memo makes it shell out and spawn
+      # another cleanup thread of its own.
+      @image_magick_version =
+        Digest::MD5.hexdigest(
+          ImageMagick.magick("--version") << ImageMagick.magick("-list", "font"),
+        )
+
+      Thread.new do
+        sleep 2
+        cleanup_old
+      rescue StandardError => e
+        Discourse.warn_exception(e, message: "Failed to clean up old letter avatars")
+      end
+
+      @image_magick_version
     end
 
     def cleanup_old
