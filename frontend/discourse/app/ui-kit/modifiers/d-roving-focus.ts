@@ -2404,7 +2404,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         (this.#prefersSelected()
           ? this.#findMarked(all, navigable)
           : undefined) ??
-        (this.#fallsBackToFirst() ? all.find(navigable) : undefined);
+        (this.#fallsBackToFirst()
+          ? this.#firstSeed(all, navigable)
+          : undefined);
     }
     // Only items this group has not demoted before, so a re-render that appends rows pays for
     // the new ones rather than restamping the whole set. Tracked by identity, because an item
@@ -2417,6 +2419,32 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       }
     }
     this.#promoteTabStop(preferred);
+  }
+
+  /**
+   * The item the first-item fallback should land the TAB STOP on.
+   *
+   * Differs from the active-mode fallback deliberately. There, skipping every marked item can
+   * legitimately leave the cursor empty, because an empty cursor is just no highlight. Here an
+   * empty seed means no tab stop, which takes the whole group out of the tab sequence and
+   * strands it — so when everything is marked this settles for the first item rather than
+   * leaving the reader with no way in.
+   *
+   * @param all - Every item, in DOM order.
+   * @param navigable - The expensive predicate, applied only to candidates the cheap attribute
+   * check has already accepted.
+   */
+  #firstSeed(
+    all: HTMLElement[],
+    navigable: (el: HTMLElement) => boolean
+  ): HTMLElement | undefined {
+    if (!this.#fallbackSkipsMarked) {
+      return all.find(navigable);
+    }
+    return (
+      all.find((el) => !this.#isMarked(el) && navigable(el)) ??
+      all.find(navigable)
+    );
   }
 
   /**
