@@ -174,33 +174,36 @@ module(
         .hasText("Modifiers", "the cursor steps to what is left");
     });
 
-    test("the cross-axis keys are physical, so they do not mirror under rtl", async function (assert) {
+    test("the cross-axis keys mirror under rtl", async function (assert) {
       await render(<template><RovingFocusTreeExample @dir="rtl" /></template>);
 
       const parent = findAll(".roving-demo__row")[0];
+      parent.focus();
       assert
         .dom(parent)
         .hasAttribute("aria-expanded", "true", "it starts expanded");
 
-      await triggerKeyEvent(parent, "keydown", "ArrowLeft");
+      await triggerKeyEvent(parent, "keydown", "ArrowRight");
       assert
         .dom(findAll(".roving-demo__row")[0])
         .hasAttribute(
           "aria-expanded",
           "false",
-          "ArrowLeft still collapses under rtl, where it points at the children rather than away from them"
+          "the arrow pointing away from the children closes them, which is ArrowRight here"
         );
 
-      // Pinning today's behaviour rather than endorsing it. A cross-axis event resolved
-      // logically would swap these two, and this is the assertion that changes with it.
       await triggerKeyEvent(
         findAll(".roving-demo__row")[0],
         "keydown",
-        "ArrowRight"
+        "ArrowLeft"
       );
       assert
         .dom(findAll(".roving-demo__row")[0])
-        .hasAttribute("aria-expanded", "true", "and ArrowRight still expands");
+        .hasAttribute(
+          "aria-expanded",
+          "true",
+          "and the one pointing at them opens them, without the example resolving direction itself"
+        );
     });
   }
 );

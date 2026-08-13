@@ -18,12 +18,13 @@ const NODES = [
  * The APG tree pattern in plain semantic HTML. The modifier runs vertically over the visible
  * rows, which is the whole of what it claims here: hierarchy is the consumer's.
  *
- * Expand and collapse are hand-rolled below, on a sibling keydown handler, because a vertical
- * group leaves the horizontal arrows un-prevented and the modifier emits no cross-axis event yet.
- * That handler reads the physical key, so rendering this same component under a right-to-left
- * direction is the experiment: the arrow that points at a row's children stops agreeing with the
- * arrow that opens it. Resolving the direction logically rather than physically is what a
- * cross-axis event would move into the modifier and out of here.
+ * Expand and collapse arrive through the cross-axis event, which reports the arrows a vertical
+ * group does not navigate as a direction rather than as a key. What forward MEANS is this
+ * component's business; resolving which arrow is forward is not, and that is the whole split.
+ *
+ * The consequence is visible in the right-to-left copy: the arrow that points at a row's
+ * children is the one that opens them, without this component knowing that writing directions
+ * exist.
  *
  * @param dir - Writing direction to render under, either ltr or rtl.
  */
@@ -59,16 +60,19 @@ export default class RovingFocusTreeExample extends Component {
     }
   }
 
+  /**
+   * Forward opens a container, backward closes one. Reports back whether it acted, so a leaf or
+   * an already-open row leaves the key un-prevented and free to bubble.
+   */
   @action
-  handleCrossAxisKeys(event) {
-    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
-      return;
+  handleCrossAxis(direction, item) {
+    const id = item.dataset.nodeId;
+    const next = direction === "forward";
+    if (!this.#isParent(id) || Boolean(this.expanded[id]) === next) {
+      return false;
     }
-    const row = event.target.closest("[data-node-id]");
-    if (!row || !this.#isParent(row.dataset.nodeId)) {
-      return;
-    }
-    this.#setExpanded(row.dataset.nodeId, event.key === "ArrowRight");
+    this.#setExpanded(id, next);
+    return true;
   }
 
   #isParent(id) {
@@ -91,13 +95,13 @@ export default class RovingFocusTreeExample extends Component {
       dir={{@dir}}
       role="tree"
       aria-label={{i18n "styleguide.sections.roving_focus.tree.label"}}
-      {{on "keydown" this.handleCrossAxisKeys}}
       {{on "click" this.handleClick}}
       {{dRovingFocus
         orientation="vertical"
         itemSelector=".roving-demo__row"
         entryFocus="selected-or-first"
         onActivate=this.activateRow
+        onCrossAxis=this.handleCrossAxis
       }}
     >
       {{#each this.rows key="id" as |row|}}
