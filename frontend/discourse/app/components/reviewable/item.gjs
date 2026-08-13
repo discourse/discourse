@@ -647,10 +647,18 @@ export default class ReviewableItem extends Component {
 
     if (message) {
       if (await this.#claimReviewable()) {
-        this.dialog.confirm({
+        const confirmOptions = {
           message,
           didConfirm: () => this._performConfirmed(performableAction),
-        });
+          // Claiming happens before the prompt, so release it if nothing is performed.
+          didCancel: () => this.#unclaimAutomaticReviewable(),
+        };
+
+        if (performableAction.get("confirm_destructive")) {
+          this.dialog.deleteConfirm(confirmOptions);
+        } else {
+          this.dialog.confirm(confirmOptions);
+        }
       }
     } else if (actionModalClass) {
       if (await this.#claimReviewable()) {

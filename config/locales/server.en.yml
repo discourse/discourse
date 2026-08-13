@@ -6293,10 +6293,12 @@ en:
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
+          confirm: "Are you sure you want to delete @%{username}?"
           complete: "User deleted."
         block:
           title: "Delete and block user"
           description: "Delete the user and block their email and IP address"
+          confirm: "Are you sure you want to delete and block @%{username}?"
           complete: "User deleted and blocked."
       confirm_spam:
         title: "Yes"
