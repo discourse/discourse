@@ -255,7 +255,9 @@
 
   &__row-link {
     display: block;
+    flex: 1 1 auto;
     min-width: 0;
+    overflow: hidden;
     color: inherit;
     text-decoration: none;
 
@@ -275,7 +277,7 @@
     align-items: center;
     align-self: stretch;
     justify-content: flex-end;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
     margin-block: calc(-1 * var(--space-1));
     margin-inline-end: calc(-1 * var(--space-2));
@@ -363,8 +365,13 @@
   }
 
   &__pageviews {
+    width: 1%;
     white-space: nowrap;
     text-align: end;
+
+    @include viewport.until(md) {
+      width: auto;
+    }
 
     .d-table__mobile-label {
       text-align: start;
