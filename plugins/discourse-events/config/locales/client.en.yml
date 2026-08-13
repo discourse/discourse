@@ -30,7 +30,7 @@ en:
       livestream:
         zoom:
           join: "Join Zoom"
-          chat: "Chat"
+          frame_title: "Zoom webinar"
           open_in_zoom: "Open in Zoom"
           load_error: "You left the webinar or we are unable to load Zoom in this page."
           too_early: "You can join the webinar closer to the event start time"

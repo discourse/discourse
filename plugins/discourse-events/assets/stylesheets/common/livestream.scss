@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 body.chat-enabled.livestream-topic.confirmed-event-assistance {
   .topic-navigation {
     display: none;
@@ -104,13 +106,64 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
   }
 }
 
+// The meeting is the page here, so it is given the viewport below the header
+// whole: anything the layout adds around it is height the page cannot have,
+// and overflowing it drags the meeting under the sticky header.
+body.discourse-calendar-livestream-zoom-full {
+  #main-outlet {
+    padding: 0;
+  }
+
+  .powered-by-discourse {
+    display: none;
+  }
+}
+
 .discourse-calendar-livestream-zoom-page {
+  // Both heights are measured from the viewport and set on this element; these
+  // are the fallbacks for a browser without `visualViewport`, where there is no
+  // keyboard to account for and the two are the same.
+  //
+  // The resting height is the space the page has with no keyboard over it,
+  // which the meeting is sized against so it is never the thing that shrinks.
+  // The visible height is what the viewport is showing right now.
+  --livestream-zoom-page-height: calc(
+    var(--composer-vh, 1vh) * 100 - var(--header-offset, 0px)
+  );
+  --livestream-zoom-resting-height: var(--livestream-zoom-page-height);
+  --livestream-zoom-visible-height: var(--livestream-zoom-page-height);
+
+  // without chat below it, the meeting is the page
+  --livestream-zoom-view-height: var(--livestream-zoom-resting-height);
   position: relative;
-  min-height: calc(100vh - var(--header-offset, 0px));
+  height: var(--livestream-zoom-resting-height);
   background: var(--secondary);
 
+  // The device's own controls sit over the bottom of the viewport wherever the
+  // page is laid out edge to edge, and the app's footer navigation over that
+  // again in a PWA. Neither is taken out of the height the viewport reports, so
+  // the page gives it up itself rather than leaving the composer underneath.
+  --livestream-zoom-bottom-inset: env(safe-area-inset-bottom, 0px);
+
+  html.footer-nav-visible & {
+    --livestream-zoom-bottom-inset: calc(
+      env(safe-area-inset-bottom, 0px) + var(--footer-nav-height, 0px)
+    );
+  }
+
+  &:not([data-keyboard-open]) {
+    height: calc(
+      var(--livestream-zoom-resting-height) - var(
+          --livestream-zoom-bottom-inset
+        )
+    );
+  }
+
   &__frame {
-    min-height: calc(100vh - var(--header-offset, 0px));
+    display: block;
+    width: 100%;
+    height: var(--livestream-zoom-view-height);
+    border: 0;
   }
 
   &__waiting-wrapper {
@@ -142,11 +195,108 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     }
   }
 
-  &__chat-button {
-    position: fixed;
-    right: 1rem;
-    bottom: 4rem;
-    z-index: 3;
+  &__chat {
+    display: flex;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  &.--with-chat {
+    --livestream-zoom-view-height: calc(
+      var(--livestream-zoom-resting-height) * 0.55
+    );
+    display: flex;
+    flex-direction: column;
+
+    .discourse-calendar-livestream-zoom-page__frame {
+      flex: 0 0 var(--livestream-zoom-view-height);
+    }
+
+    .discourse-calendar-livestream-zoom-page__chat {
+      flex: 1 1 0;
+      border-top: 1px solid var(--primary-low);
+    }
+
+    .discourse-calendar-livestream-zoom-page__waiting-wrapper {
+      flex: 0 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+    }
+
+    // The meeting keeps its height above chat, so the whole of it is still
+    // there to scroll back up to.
+    &[data-keyboard-open] {
+      --livestream-zoom-stage-height: calc(
+        var(--livestream-zoom-visible-height) - var(--header-offset, 0px)
+      );
+      position: fixed;
+      top: calc(
+        var(--livestream-zoom-visible-top, 0px) + var(--header-offset, 0px)
+      );
+      left: 0;
+      right: 0;
+      height: var(--livestream-zoom-stage-height);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      z-index: 1;
+
+      .discourse-calendar-livestream-zoom-page__chat {
+        flex: 0 0 var(--livestream-zoom-stage-height);
+      }
+
+      .discourse-calendar-livestream-zoom-page__frame {
+        pointer-events: none;
+      }
+
+      .chat-messages-scroller {
+        overflow-y: hidden;
+        overscroll-behavior: auto;
+      }
+    }
+
+    @include viewport.from(lg) {
+      &,
+      &[data-keyboard-open] {
+        position: relative;
+        flex-direction: row;
+        height: var(--livestream-zoom-resting-height);
+        overflow: visible;
+
+        .discourse-calendar-livestream-zoom-page__frame {
+          flex: 1 1 auto;
+          height: 100%;
+          pointer-events: auto;
+        }
+
+        .discourse-calendar-livestream-zoom-page__chat {
+          flex: 0 0 clamp(20rem, 30%, 28rem);
+          border-top: 0;
+          border-left: 1px solid var(--primary-low);
+        }
+
+        .discourse-calendar-livestream-zoom-page__waiting-wrapper {
+          flex: 1 1 auto;
+        }
+
+        .chat-messages-scroller {
+          overflow-y: scroll;
+        }
+      }
+    }
+  }
+}
+
+#custom-chat-container.inline {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1 1 0;
+  min-height: 0;
+
+  .chat-drawer,
+  .chat-channel {
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -154,11 +304,4 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
 // un-dismissable and not helpful messages
 .notistack-SnackbarContainer {
   display: none !important;
-}
-
-// Full page client view Zoom overrides
-#zmmtg-root {
-  #sdk-footer-sortable-list #chat {
-    display: none;
-  }
 }

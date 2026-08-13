@@ -110,6 +110,10 @@ en:
     livestream:
       chat:
         topic_reference_message: "This channel is for the event [%{title}](%{url}) — visit the topic for details and to RSVP."
+      zoom:
+        frame_title: "Zoom webinar"
+        frame_join: "Join webinar"
+        frame_joining: "Connecting…"
     calendar_must_be_in_first_post: "Calendar tag can only be used in first post of a topic."
     more_than_one_calendar: "You can’t have more than one calendar in a post."
     more_than_two_dates: "A post of a calendar topic can’t contain more than two dates."
