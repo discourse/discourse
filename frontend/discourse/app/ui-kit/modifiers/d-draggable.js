@@ -1,10 +1,12 @@
 import { registerDestructor } from "@ember/destroyable";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
+import ElementClassLease from "discourse/lib/element-class-lease";
 
 export default class DDraggableModifier extends Modifier {
   hasStarted = false;
   element;
+  #bodyClassLease;
 
   constructor(owner, args) {
     super(owner, args);
@@ -40,7 +42,7 @@ export default class DDraggableModifier extends Modifier {
       document.addEventListener("touchmove", this.drag, { passive: false });
       document.addEventListener("mousemove", this.drag, { passive: false });
       document.addEventListener("dragover", this.drag, { passive: false });
-      document.body.classList.add("dragging");
+      this.#bodyClassLease = new ElementClassLease(document.body, "dragging");
 
       // On leaving click, stop moving.
       document.addEventListener("touchend", this.didEndDrag, {
@@ -71,7 +73,8 @@ export default class DDraggableModifier extends Modifier {
       document.removeEventListener("mousemove", this.drag);
       document.removeEventListener("dragover", this.drag);
 
-      document.body.classList.remove("dragging");
+      this.#bodyClassLease.release();
+      this.#bodyClassLease = null;
       this.hasStarted = false;
     }
   }
@@ -86,6 +89,7 @@ export default class DDraggableModifier extends Modifier {
     document.removeEventListener("mousemove", this.drag);
     document.removeEventListener("touchmove", this.drag);
     document.removeEventListener("dragover", this.drag);
-    document.body.classList.remove("dragging");
+    this.#bodyClassLease?.release();
+    this.#bodyClassLease = null;
   }
 }

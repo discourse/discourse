@@ -1,6 +1,7 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import ElementClassLease from "discourse/lib/element-class-lease";
 
 // Suppressing every browser touch gesture suits a small handle, which is what
 // most consumers of this are.
@@ -128,63 +129,12 @@ const pointerOwners = new Map<
 >();
 
 /**
- * How many live gestures asked for each body class. Counted rather than toggled,
- * because two gestures driven by two pointers can want the same mark at once and
- * the first to end must not take it away from the second.
- */
-const bodyClassHolders = new Map<string, number>();
-
-/**
- * Marks `document.body` for the duration of a gesture.
- *
- * The case this exists for is the cursor. Not every engine keeps the cursor of the
- * element a drag began on: some suppress cursor updates while a button is held,
- * others re-resolve it against whatever the pointer is over, so the cursor changes
- * mid-gesture as it leaves the handle. A page-level rule is the only way to state
- * an intent that outlives the element's own bounds.
- *
- * @param className - The class to hold.
- */
-function holdBodyClass(className: string) {
-  const held = bodyClassHolders.get(className) ?? 0;
-  if (held === 0) {
-    // Before the count, so a token the DOM rejects leaves nothing to give back.
-    document.body.classList.add(className);
-  }
-  bodyClassHolders.set(className, held + 1);
-}
-
-/**
- * Gives up one hold on a body class, removing it once nothing holds it.
- *
- * @param className - The class to release.
- */
-function releaseBodyClass(className: string) {
-  const held = bodyClassHolders.get(className) ?? 0;
-  if (held > 1) {
-    bodyClassHolders.set(className, held - 1);
-    return;
-  }
-
-  bodyClassHolders.delete(className);
-  try {
-    document.body.classList.remove(className);
-  } catch {
-    // Teardown runs through here and must not be abandoned part-way.
-  }
-}
-
-/**
  * Drops all pointer-ownership bookkeeping. For tests only: a consumer of
  * {@link registerPointerDrag} that never invokes its cleanup would otherwise
  * leave an entry behind that releases the next gesture to reuse that pointer ID.
  */
 export function resetPointerDragForTesting() {
   pointerOwners.clear();
-  for (const className of bodyClassHolders.keys()) {
-    document.body.classList.remove(className);
-  }
-  bodyClassHolders.clear();
 }
 
 /**
@@ -245,9 +195,7 @@ export function registerPointerDrag(
   // change between gestures, so the value really on the element is snapshotted
   // rather than re-read when it is time to remove it.
   let appliedClass: string | null = null;
-  // Snapshotted for the same reason, and separately, because this one is a hold
-  // on shared state that has to be given back exactly once.
-  let heldBodyClass: string | null = null;
+  let bodyClassLease: ElementClassLease | null = null;
   // Set by the cleanup below. A consumer can destroy its own registration from
   // inside `onDragStart`, and the rest of that dispatch still runs.
   let tornDown = false;
@@ -255,14 +203,14 @@ export function registerPointerDrag(
   const finish = () => {
     const finishedPointer = pointerId;
     const classToRemove = appliedClass;
-    const bodyClassToRelease = heldBodyClass;
+    const finishedBodyClassLease = bodyClassLease;
 
     // Reset before touching the DOM: either call below can throw, and leaving
     // `pointerId` set would keep the gesture in flight forever.
     pointerId = null;
     engaged = false;
     appliedClass = null;
-    heldBodyClass = null;
+    bodyClassLease = null;
 
     if (finishedPointer !== null) {
       // Only while the claim is still ours: a later claimant owns the entry from
@@ -283,9 +231,7 @@ export function registerPointerDrag(
         // Teardown runs through here and must not be abandoned part-way.
       }
     }
-    if (bodyClassToRelease) {
-      releaseBodyClass(bodyClassToRelease);
-    }
+    finishedBodyClassLease?.release();
   };
 
   /**
@@ -415,8 +361,7 @@ export function registerPointerDrag(
     }
     if (args.bodyClass) {
       try {
-        holdBodyClass(args.bodyClass);
-        heldBodyClass = args.bodyClass;
+        bodyClassLease = new ElementClassLease(document.body, args.bodyClass);
       } catch {
         // Same as above: a rejected token costs the page-level styling only.
       }

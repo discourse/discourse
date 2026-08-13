@@ -12,6 +12,7 @@ import {
   stubPointerCapture,
   stubSharedPointerCapture,
 } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import dPointerDrag, * as dPointerDragModule from "discourse/ui-kit/modifiers/d-pointer-drag";
 
 function installEventListenerSpy(element) {
@@ -1381,6 +1382,94 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       assert
         .dom(document.body)
         .doesNotHaveClass("dragging", "the last one out clears the mark");
+    });
+
+    test("a legacy drag keeps the body class after a pointer drag ends", async function (assert) {
+      const noop = () => {};
+      await render(
+        <template>
+          <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+          <div class="legacy-target" {{dDraggable didEndDrag=noop}}></div>
+        </template>
+      );
+
+      const pointerTarget = find(".dpd-target");
+      stubPointerCapture(pointerTarget);
+
+      await triggerEvent(".legacy-target", "mousedown");
+      await triggerEvent(pointerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+      await triggerEvent(pointerTarget, "pointerup", { pointerId: 1 });
+
+      assert
+        .dom(document.body)
+        .hasClass("dragging", "the legacy gesture still owns the body class");
+
+      await triggerEvent(document, "mouseup");
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "dragging",
+          "the last gesture releases the body class"
+        );
+    });
+
+    test("a pointer drag keeps the body class after a legacy drag ends", async function (assert) {
+      const noop = () => {};
+      await render(
+        <template>
+          <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+          <div class="legacy-target" {{dDraggable didEndDrag=noop}}></div>
+        </template>
+      );
+
+      const pointerTarget = find(".dpd-target");
+      stubPointerCapture(pointerTarget);
+
+      await triggerEvent(pointerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+      await triggerEvent(".legacy-target", "mousedown");
+      await triggerEvent(document, "mouseup");
+
+      assert
+        .dom(document.body)
+        .hasClass("dragging", "the pointer gesture still owns the body class");
+
+      await triggerEvent(pointerTarget, "pointerup", { pointerId: 1 });
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "dragging",
+          "the last gesture releases the body class"
+        );
+    });
+
+    test("preserves a body class that predates the gesture", async function (assert) {
+      document.body.classList.add("dragging");
+      await render(
+        <template>
+          <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      stubPointerCapture(target);
+
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
+      await triggerEvent(target, "pointerup", { pointerId: 1 });
+
+      assert
+        .dom(document.body)
+        .hasClass(
+          "dragging",
+          "the gesture leaves the pre-existing class alone"
+        );
+
+      document.body.classList.remove("dragging");
     });
   });
 });
