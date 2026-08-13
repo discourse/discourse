@@ -3,6 +3,20 @@
 RSpec.describe ApplicationController do
   fab!(:user)
 
+  describe "handling PostgreSQL read-only errors" do
+    after { Discourse.clear_postgres_readonly! }
+
+    it "returns a read-only response" do
+      get "/test_postgres_readonly.json"
+
+      expect(response.status).to eq(503)
+      expect(response.parsed_body).to eq(
+        "errors" => [I18n.t("read_only_mode_enabled")],
+        "error_type" => "read_only",
+      )
+    end
+  end
+
   describe "shared session key" do
     before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
 

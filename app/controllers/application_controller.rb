@@ -152,7 +152,7 @@ class ApplicationController < ActionController::Base
   rescue_from PG::ReadOnlySqlTransaction do |e|
     Discourse.received_postgres_readonly!
     Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
-    rescue_with_handler(Discourse::ReadOnly) || raise
+    rescue_with_handler(Discourse::ReadOnly.new) || raise
   end
 
   rescue_from ActionController::ParameterMissing do |e|
