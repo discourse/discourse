@@ -64,6 +64,7 @@ en:
   access_control_list:
     errors:
       user_will_not_have_permission: "If you remove this ACL entry you will lose access to this entity."
+      user_will_not_have_permission_on_create: "If you create this entity with these permissions, you will not have access to it. Continue?"
 
   topic_category_changed: "From %{from} to %{to}"
   topic_tag_changed:
