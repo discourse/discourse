@@ -431,6 +431,8 @@ pl_PL:
         title: "Tłumaczenia"
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
+        max_locales_reached: "Można wybrać maksymalnie %{max} języków."
+        locale_count: "Korzystanie z %{count} z %{max} dostępnych języków."
         category_scope: "Kategorie"
         category_scope_description: "Wybierz, czy automatyczne tłumaczenia mają dotyczyć treści we wszystkich kategoriach, kategoriach publicznych czy wybranych kategoriach."
         cached_results_notice: "Wyświetlanie wyników z pamięci podręcznej z %{relative_time}."

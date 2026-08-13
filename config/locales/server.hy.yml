@@ -2307,9 +2307,6 @@ hy:
     user_posted_pm_staged:
       title: "Անձնական Նամակ Հրապարակած Օգտատերը Աստիճանավորված է"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Հաշիվը Սառեցված է"
       subject_template: "[%{email_prefix}] Ձեր հաշիվը սառեցվել է"

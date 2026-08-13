@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 ur:
+  discourse_automation:
+    scriptables:
+      llm_triage:
+        notify_author_pm:
+          body: |
+            آداب @%{username},
+
+            "%{topic_title}" میں آپ کے دھاگے کو عارضی طور پر ہٹا دیا گیا اور ایک نگران کے جائزہ کے لیے ہماری جائزہ کی قطار میں شامل کیا گیا ہے۔ اگر منظور ہوا تو یہ خود بخود بحال ہو جائے گا۔
+
+            حوالہ: %{post_url}
   reports:
     overall_sentiment:
       yaxis: "تاریخ"

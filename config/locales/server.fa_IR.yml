@@ -2435,9 +2435,6 @@ fa_IR:
     user_posted_pm_staged:
       title: "کاربر پیام خصوصی ارسال کرده"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "حساب کاربری معلق شد"
       subject_template: "[%{email_prefix}] حساب کاربری شما معلق شده است"

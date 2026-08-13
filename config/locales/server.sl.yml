@@ -1542,9 +1542,6 @@ sl:
     user_posted_pm_staged:
       title: "Uporabnik je objavil ZS prirejeni"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Suspendiran račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"

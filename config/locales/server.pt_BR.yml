@@ -3914,9 +3914,6 @@ pt_BR:
     user_posted_pm_staged:
       title: "MP postada por usuário(a) encenado(a)"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Conta suspensa"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"

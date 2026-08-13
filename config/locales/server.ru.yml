@@ -4280,9 +4280,6 @@ ru:
     user_posted_pm_staged:
       title: "Отправка сымитированным пользователем личного сообщения"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Аккаунт заблокирован"
       subject_template: "[%{email_prefix}] Ваш аккаунт был заблокирован"

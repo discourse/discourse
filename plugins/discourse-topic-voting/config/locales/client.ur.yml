@@ -10,6 +10,8 @@ ur:
       sort_options:
         votes: "ووٹ"
     topic_voting:
+      notification_label:
+        voting_closed: "ووٹنگ بند"
       voted: "آپ نے اِس ٹاپک پر ووٹ کیا"
       vote_title: "ووٹ"
       vote_title_plural: "ووٹ"
