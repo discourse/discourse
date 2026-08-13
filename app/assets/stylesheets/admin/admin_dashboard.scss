@@ -146,11 +146,6 @@ $db-bar-height: var(--space-2);
     @include unstyled-list;
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-
-    @include viewport.until(sm) {
-      gap: var(--space-5);
-    }
   }
 
   &__section-name {
@@ -161,21 +156,42 @@ $db-bar-height: var(--space-2);
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-1) 0;
+
+    /* Row separation is padding rather than a `gap` on the list, so the rows
+       tile edge to edge. A gap belongs to the container, so a drag passing
+       through it reaches no drop target and the above/below zones stop
+       meeting. */
+    padding: calc(var(--space-3) / 2 + var(--space-half)) 0;
     border-top: 2px solid transparent;
     border-bottom: 2px solid transparent;
-    cursor: grab;
 
-    &.dragging {
-      opacity: 0.5;
+    /* No row-wide `grab`: the grip carries its own cursor, and promising the
+       whole row drags would misdescribe a press on the label, which selects. */
+
+    @include viewport.until(sm) {
+      padding: calc(var(--space-5) / 2 + var(--space-half)) 0;
     }
 
-    &.drag-above {
-      border-top-color: var(--tertiary);
+    /* One boundary, one line. Rows tile edge to edge, so a row's own top border
+       and its predecessor's bottom border are adjacent bands rather than the
+       same pixels: drawing each state on its own row would shift the indicator
+       by its own width as the pointer crossed the midpoint. "Above row N" is
+       therefore drawn on row N-1's bottom edge. The shared primitive's inserted
+       line is dropped rather than overridden, or both would show at once. */
+
+    &.--drag-below,
+    &:not(.--dragging):has(+ .db-configure__row.--drag-above) {
+      border-bottom-color: var(--d-drag-indicator-color);
     }
 
-    &.drag-below {
-      border-bottom-color: var(--tertiary);
+    /* No predecessor to borrow an edge from. */
+    &.--drag-above:first-child {
+      border-top-color: var(--d-drag-indicator-color);
+    }
+
+    &.--drag-above::before,
+    &.--drag-below::after {
+      content: none;
     }
   }
 
@@ -186,20 +202,6 @@ $db-bar-height: var(--space-2);
   &__drag-handle {
     color: var(--primary-low-mid);
     cursor: grab;
-
-    @include viewport.until(sm) {
-      display: none;
-    }
-  }
-
-  &__arrows {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__arrow.btn {
-    padding: 0 var(--space-1);
-    min-height: 0;
   }
 
   .d-toggle-switch {

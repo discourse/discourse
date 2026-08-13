@@ -68,6 +68,31 @@ describe "Admin Dashboard Configure menu" do
       expect(dashboard).to have_first_section("reports")
       expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
     end
+
+    it "shows the drag handle on mobile", mobile: true do
+      # The rendering test only proves the handle is in the DOM. A touch screen
+      # reaches the menu as a modal rather than a popover, so this asserts it is
+      # actually visible there, which is the only thing a finger can act on.
+      dashboard.visit
+      dashboard.open_configure_menu
+
+      expect(page).to have_css(".db-configure__drag-handle")
+    end
+
+    it "reorders sections with a real browser drag" do
+      dashboard.visit
+      dashboard.open_configure_menu
+
+      # Asserted before the drag: without it, a run where the two are already in
+      # the expected order passes whether or not the drag did anything.
+      expect(dashboard.section_ids_in_order.first(2)).to eq(%w[highlights reports])
+
+      dashboard.drag_section("reports", "highlights")
+
+      try_until_success do
+        expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
+      end
+    end
   end
 
   context "as a moderator" do
