@@ -155,3 +155,61 @@ function registeredElementFor(rowSelector: string) {
   const row = document.querySelector(rowSelector);
   return (row?.querySelector("[draggable]") ?? row) as Element;
 }
+
+/** How an external drag is aimed at its target. */
+interface ExternalDragOptions {
+  /**
+   * Shared payload that must travel across every event so the drag library can
+   * correlate them.
+   */
+  dataTransfer: DataTransfer;
+
+  /** Coordinates merged over the target element's center. */
+  coordinates?: Partial<ClientPoint>;
+}
+
+/**
+ * Brings an external drag over a target and leaves it hovering there, without
+ * dropping.
+ *
+ * Deliberately no `dragstart`: a drag that began outside the page never fires
+ * one, and its absence is exactly what routes the drag to the external adapter
+ * rather than the element one. A test that starts with `dragstart` is testing
+ * the wrong adapter.
+ *
+ * Stops short of the drop so a caller can assert on the hovering state — the
+ * indicator classes, or what a lifecycle callback was told — which a completed
+ * drop would already have cleared. Use {@link simulateExternalDrag} when the
+ * drop itself is the subject.
+ *
+ * @param targetSelector - CSS selector for the target element.
+ * @param options - The shared payload and any coordinate override.
+ */
+export async function externalDragOver(
+  targetSelector: string,
+  { dataTransfer, coordinates }: ExternalDragOptions
+) {
+  const target = { ...centerOf(targetSelector), ...coordinates };
+  await dragEvent(targetSelector, "dragenter", { dataTransfer, ...target });
+  await dragEvent(targetSelector, "dragover", { dataTransfer, ...target });
+}
+
+/**
+ * Drives a complete external drag onto a target and drops it there.
+ *
+ * The external counterpart to {@link simulateDrag}, and the same frame-per-event
+ * rule applies. Coordinates matter here as much as they do for an element drag:
+ * a target resolving a drop position from the pointer reads them, and a bare
+ * center only ever exercises the `after` branch of a midpoint comparison.
+ *
+ * @param targetSelector - CSS selector for the target element.
+ * @param options - The shared payload and any coordinate override.
+ */
+export async function simulateExternalDrag(
+  targetSelector: string,
+  { dataTransfer, coordinates }: ExternalDragOptions
+) {
+  const target = { ...centerOf(targetSelector), ...coordinates };
+  await externalDragOver(targetSelector, { dataTransfer, coordinates });
+  await dragEvent(targetSelector, "drop", { dataTransfer, ...target });
+}

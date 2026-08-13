@@ -201,6 +201,9 @@ importers:
       '@atlaskit/pragmatic-drag-and-drop':
         specifier: ^1.7.4
         version: 1.8.1
+      '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
+        specifier: ^2.1.4
+        version: 2.1.5
       '@codemirror/autocomplete':
         specifier: ^6.20.3
         version: 6.20.3
@@ -976,6 +979,9 @@ packages:
 
   '@asamuzakjp/css-color@3.2.0':
     resolution: {integrity: sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw==}
+
+  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.5':
+    resolution: {integrity: sha512-InLvVhZAHPBfv3CxuG4AfOQuhNJjaFy69YBfodPMWtRFQNQAKa9Yb3vL9Ho6qsD9qKUBuJa4A5k7QddaXQ4Eyw==}
 
   '@atlaskit/pragmatic-drag-and-drop@1.8.1':
     resolution: {integrity: sha512-uXWNPpL8n4OmTVbduH7nq8pk8htqGo/prR5cYEE8sVCPJGAUMWn6lzvWTfI+4VCeQvHiDRODVz4YzH06OVAxhw==}
@@ -8465,6 +8471,11 @@ snapshots:
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 10.4.3
+
+  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.5':
+    dependencies:
+      '@atlaskit/pragmatic-drag-and-drop': 1.8.1
+      '@babel/runtime': 7.29.7
 
   '@atlaskit/pragmatic-drag-and-drop@1.8.1':
     dependencies:
