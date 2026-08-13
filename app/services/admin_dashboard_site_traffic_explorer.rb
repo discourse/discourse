@@ -9,6 +9,9 @@ class AdminDashboardSiteTrafficExplorer
   STATEMENT_TIMEOUT_MS = 10_000
   private_constant :STATEMENT_TIMEOUT_MS
 
+  WORK_MEM = "32MB"
+  private_constant :WORK_MEM
+
   FILTER_KEYS = %i[traffic_type top_url entry_url referrer country network browser ip].freeze
   private_constant :FILTER_KEYS
 
@@ -123,6 +126,7 @@ class AdminDashboardSiteTrafficExplorer
     ActiveRecord::Base.transaction(requires_new: true) do
       DB.exec("SET TRANSACTION READ ONLY")
       DB.exec("SET LOCAL statement_timeout = #{STATEMENT_TIMEOUT_MS}")
+      DB.exec("SET LOCAL work_mem = '#{WORK_MEM}'")
       DB.query_hash(
         query(start_date: parameters[:start_date], end_date: parameters[:end_date]),
         parameters,

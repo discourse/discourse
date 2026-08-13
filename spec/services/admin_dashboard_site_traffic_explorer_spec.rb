@@ -171,6 +171,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       end
 
       it "runs one read-only analytics statement with a ten-second deadline" do
+        transaction_depth = ActiveRecord::Base.connection.open_transactions
         query_row = {
           "pageview_limited" => false,
           "summary" => {
@@ -185,6 +186,13 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         }
         DB.expects(:exec).with("SET TRANSACTION READ ONLY").once
         DB.expects(:exec).with("SET LOCAL statement_timeout = 10000").once
+        DB
+          .expects(:exec)
+          .with do |sql|
+            sql == "SET LOCAL work_mem = '32MB'" &&
+              ActiveRecord::Base.connection.open_transactions > transaction_depth
+          end
+          .once
         DB.expects(:query_hash).once.returns([query_row])
 
         expect(result).to run_successfully
