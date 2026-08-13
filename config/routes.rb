@@ -1984,6 +1984,7 @@ Discourse::Application.routes.draw do
       # Routes that are only used for testing
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
       get "/test_net_http_headers" => "test_requests#test_net_http_headers"
+      get "/test_postgres_readonly" => "test_requests#test_postgres_readonly"
     end
 
     # This catch-all route should always be last
