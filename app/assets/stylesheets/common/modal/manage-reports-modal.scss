@@ -8,6 +8,11 @@
 
   &__search-wrapper {
     padding: var(--space-2) 1.5rem;
+
+    /* Not decoration: rows draw their separator on their own bottom edge, so this
+       is what supplies the first row's top one. Removing it is why the first row
+       needs its own `--drag-above` rule below rather than borrowing a
+       predecessor's edge like every other row. */
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
   }
@@ -34,33 +39,34 @@
       inset 0 2px 0 0 transparent,
       inset 0 -2px 0 0 transparent;
 
-    .manage-reports__list.--dragging & {
-      transition: box-shadow 0.1s ease;
-    }
-
     &:not(:last-child) {
       border-bottom: 1px solid var(--primary-low);
     }
 
-    &[draggable="true"] {
-      cursor: grab;
+    /* The grip is what the row is grabbed by, and it carries its own cursor. A
+       row-wide `grab` would promise that the text beside it drags too, when
+       pressing there selects instead. */
+
+    /* Rows carry their own separator, so "above row N" is drawn on row N-1's bottom
+       edge instead, and nothing doubles up. The shared primitive's inserted lines are
+       dropped in favour of these insets. */
+
+    &.--drag-above::before,
+    &.--drag-below::after {
+      content: none;
     }
 
-    &.dragging {
-      opacity: 0.5;
-    }
-
-    &.drag-below,
-    &:not(.dragging):has(+ .manage-reports__row.drag-above) {
+    &.--drag-below,
+    &:not(.--dragging):has(+ .manage-reports__row.--drag-above) {
       box-shadow:
         inset 0 2px 0 0 transparent,
-        inset 0 -2px 0 0 var(--tertiary);
+        inset 0 -2px 0 0 var(--d-drag-indicator-color);
     }
 
-    &:first-child.drag-above,
-    .manage-reports__row.dragging + &.drag-above {
+    &:first-child.--drag-above,
+    .manage-reports__row.--dragging + &.--drag-above {
       box-shadow:
-        inset 0 2px 0 0 var(--tertiary),
+        inset 0 2px 0 0 var(--d-drag-indicator-color),
         inset 0 -2px 0 0 transparent;
     }
 
@@ -70,7 +76,6 @@
   }
 
   &__grip {
-    align-self: flex-start;
     color: var(--primary-low-mid);
     visibility: hidden;
 
@@ -79,10 +84,7 @@
     }
   }
 
-  &__order-mobile {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
+  &__arrows {
     visibility: hidden;
 
     .manage-reports__list.--reorderable .manage-reports__row.--enabled & {
@@ -118,10 +120,6 @@
     color: var(--primary-medium);
     font-size: var(--font-down-1);
     text-transform: capitalize;
-  }
-
-  &__arrow {
-    flex: 0 0 auto;
   }
 
   .d-modal__footer {

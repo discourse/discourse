@@ -7648,6 +7648,7 @@ en:
             disable: "Disable %{title}"
             move_up: "Move %{title} up"
             move_down: "Move %{title} down"
+            drag_handle: "Drag to reorder %{title}"
             footer_note: "These changes will apply for all users."
 
         configure:
