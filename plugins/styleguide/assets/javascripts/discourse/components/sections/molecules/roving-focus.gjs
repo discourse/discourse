@@ -4,6 +4,8 @@ import RovingFocusListboxExample from "../../examples/molecules/roving-focus/lis
 import rovingFocusListboxSource from "../../examples/molecules/roving-focus/listbox?source=file";
 import RovingFocusRadioGroupExample from "../../examples/molecules/roving-focus/radio-group";
 import rovingFocusRadioGroupSource from "../../examples/molecules/roving-focus/radio-group?source=file";
+import RovingFocusRemovableTagsExample from "../../examples/molecules/roving-focus/removable-tags";
+import rovingFocusRemovableTagsSource from "../../examples/molecules/roving-focus/removable-tags?source=file";
 import RovingFocusToolbarExample from "../../examples/molecules/roving-focus/toolbar";
 import rovingFocusToolbarSource from "../../examples/molecules/roving-focus/toolbar?source=file";
 import RovingFocusTreeExample from "../../examples/molecules/roving-focus/tree";
@@ -11,7 +13,7 @@ import rovingFocusTreeSource from "../../examples/molecules/roving-focus/tree?so
 import StyleguideExample from "../../styleguide-example";
 import StyleguideGroups from "../../styleguide-groups";
 
-const GROUPS = ["toolbar", "listbox", "radio", "tree"];
+const GROUPS = ["toolbar", "listbox", "radio", "tree", "components"];
 
 /**
  * Conformance demos for the roving-focus modifier, mirroring the interactive examples in the
@@ -104,6 +106,19 @@ export default class RovingFocus extends Component {
           @tryThis={{i18n "styleguide.sections.roving_focus.tree.rtl_try_this"}}
         >
           <RovingFocusTreeExample @dir="rtl" />
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="components">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.roving_focus.tags.example"}}
+          @description={{i18n
+            "styleguide.sections.roving_focus.tags.example_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.roving_focus.tags.try_this"}}
+          @code={{rovingFocusRemovableTagsSource}}
+        >
+          <RovingFocusRemovableTagsExample />
         </StyleguideExample>
       </Group>
     </StyleguideGroups>
