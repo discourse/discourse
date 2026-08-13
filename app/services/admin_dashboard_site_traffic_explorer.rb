@@ -110,7 +110,11 @@ class AdminDashboardSiteTrafficExplorer
       dimensions: decorate_dimensions(row.fetch("dimensions")),
     }
     active_filters =
-      decorate_active_filters(row.fetch("active_filter_representative_ips"), filters:)
+      decorate_active_filters(
+        row.fetch("active_filter_representative_ips"),
+        filters:,
+        network_organization: row.fetch("active_filter_network_organization"),
+      )
     traffic[:active_filters] = active_filters if active_filters.any?
     context[:traffic] = traffic
   rescue ActiveRecord::QueryCanceled, PG::QueryCanceled
@@ -166,6 +170,7 @@ class AdminDashboardSiteTrafficExplorer
           candidates.normalized_url,
           candidates.country_code,
           candidates.asn,
+          candidates.asn_organization,
           candidates.ip_address,
           candidates.user_agent,
           candidates.score,
@@ -181,6 +186,7 @@ class AdminDashboardSiteTrafficExplorer
             bpe.normalized_url,
             bpe.country_code,
             bpe.asn,
+            bpe.asn_organization,
             bpe.ip_address,
             bpe.user_agent,
             bpe.score
@@ -201,6 +207,7 @@ class AdminDashboardSiteTrafficExplorer
           normalized_url,
           country_code,
           asn,
+          asn_organization,
           ip_address,
           user_agent,
           score
@@ -251,6 +258,7 @@ class AdminDashboardSiteTrafficExplorer
           population.normalized_url,
           population.country_code,
           population.asn,
+          population.asn_organization,
           population.ip_address,
           browser_values.browser,
           (
@@ -368,6 +376,12 @@ class AdminDashboardSiteTrafficExplorer
               AND asn = :network_asn
           )
         ) AS active_filter_representative_ips,
+        (
+          SELECT MAX(asn_organization)
+          FROM population
+          WHERE :network_asn IS NOT NULL
+            AND asn = :network_asn
+        ) AS active_filter_network_organization,
         jsonb_build_object(
           'pageviews', traffic_summary.pageviews,
           'distinct_sessions', session_summary.distinct_sessions,
@@ -491,7 +505,8 @@ class AdminDashboardSiteTrafficExplorer
                 jsonb_build_object(
                   'value', value,
                   'pageviews', pageviews,
-                  'representative_ip', representative_ip
+                  'representative_ip', representative_ip,
+                  'organization', organization
                 )
                 ORDER BY pageviews DESC, value
               ),
@@ -501,7 +516,8 @@ class AdminDashboardSiteTrafficExplorer
               SELECT
                 'AS' || asn AS value,
                 COUNT(*)::integer AS pageviews,
-                MIN(host(ip_address)) AS representative_ip
+                MIN(host(ip_address)) AS representative_ip,
+                MAX(asn_organization) AS organization
               FROM filtered
               WHERE asn IS NOT NULL
               GROUP BY asn
@@ -573,7 +589,7 @@ class AdminDashboardSiteTrafficExplorer
     end
   end
 
-  def decorate_active_filters(representative_ips, filters:)
+  def decorate_active_filters(representative_ips, filters:, network_organization:)
     filters.flat_map do |key, value|
       next [] if value.nil?
 
@@ -595,7 +611,13 @@ class AdminDashboardSiteTrafficExplorer
         {
           key: key,
           value: canonical_value,
-          label: dimension_label(dimension, canonical_value, representative_ips[key.to_s]),
+          label:
+            dimension_label(
+              dimension,
+              canonical_value,
+              representative_ips[key.to_s],
+              organization: key == :network ? network_organization : nil,
+            ),
         },
       ]
     end
@@ -616,19 +638,25 @@ class AdminDashboardSiteTrafficExplorer
     value = row.fetch("value")
     {
       value: value,
-      label: dimension_label(dimension, value, row["representative_ip"]),
+      label:
+        dimension_label(
+          dimension,
+          value,
+          row["representative_ip"],
+          organization: row["organization"],
+        ),
       pageviews: row.fetch("pageviews"),
     }
   end
 
-  def dimension_label(dimension, value, representative_ip)
+  def dimension_label(dimension, value, representative_ip, organization: nil)
     case dimension
     when "referrers"
       value.presence || I18n.t("admin_site_traffic_explorer.direct_or_unknown")
     when "countries"
       country_label(value, representative_ip)
     when "networks"
-      network_label(value, representative_ip)
+      network_label(value:, representative_ip:, organization:)
     when "browsers"
       I18n.t("admin_site_traffic_explorer.browsers.#{value}", default: value)
     else
@@ -645,7 +673,8 @@ class AdminDashboardSiteTrafficExplorer
     value
   end
 
-  def network_label(value, representative_ip)
+  def network_label(value:, representative_ip:, organization:)
+    return "#{organization} (#{value})" if organization.present?
     return value if representative_ip.blank?
 
     info = DiscourseIpInfo.get(representative_ip, locale: I18n.locale, resolve_hostname: false)

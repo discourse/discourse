@@ -133,6 +133,20 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         expect(countries).to eq([{ value: "US", label: "US", pageviews: 11 }])
       end
 
+      it "uses stored network organizations when current IP data cannot resolve them" do
+        BrowserPageviewEvent.update_all(asn_organization: "Example Network")
+        DiscourseIpInfo.stubs(:get).returns({})
+
+        traffic = described_class.call(params: params.merge(network: "AS64496")).traffic
+
+        expect(traffic.dig(:dimensions, "networks")).to eq(
+          [{ value: "AS64496", label: "Example Network (AS64496)", pageviews: 11 }],
+        )
+        expect(traffic.fetch(:active_filters)).to eq(
+          [{ key: :network, value: "AS64496", label: "Example Network (AS64496)" }],
+        )
+      end
+
       it "labels active country and network filters independently of their intersection" do
         Fabricate(
           :browser_pageview_event,
@@ -182,6 +196,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             "country" => nil,
             "network" => nil,
           },
+          "active_filter_network_organization" => nil,
         }
         DB.expects(:exec).with("SET TRANSACTION READ ONLY").once
         DB.expects(:exec).with("SET LOCAL statement_timeout = 10000").once

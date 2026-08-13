@@ -7,6 +7,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_USER_AGENT_LENGTH = 1000
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
   MAX_NORMALIZED_URL_LENGTH = 2000
+  MAX_ASN_ORGANIZATION_LENGTH = 255
   RETENTION_PERIOD = 3.months
   SOURCE_PIGGYBACK = 1
   SOURCE_BEACON = 2
@@ -155,6 +156,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
         asn: payload[:asn],
+        asn_organization: payload[:asn_organization]&.slice(0, MAX_ASN_ORGANIZATION_LENGTH),
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
@@ -179,6 +181,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
         asn: payload[:asn],
+        asn_organization: payload[:asn_organization]&.slice(0, MAX_ASN_ORGANIZATION_LENGTH),
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
         normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
@@ -240,6 +243,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
     self.referrer = referrer.slice(0, MAX_REFERRER_LENGTH) if referrer.present?
     self.user_agent = user_agent.slice(0, MAX_USER_AGENT_LENGTH) if user_agent.present?
     self.session_id = session_id.slice(0, MAX_SESSION_ID_LENGTH) if session_id.present?
+    if asn_organization.present?
+      self.asn_organization = asn_organization.slice(0, MAX_ASN_ORGANIZATION_LENGTH)
+    end
     if normalized_referrer.present?
       self.normalized_referrer = normalized_referrer.slice(0, MAX_NORMALIZED_REFERRER_LENGTH)
     end
@@ -255,6 +261,7 @@ end
 #
 #  id                          :bigint           not null, primary key
 #  asn                         :integer
+#  asn_organization            :string
 #  country_code                :string(2)
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)

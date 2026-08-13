@@ -139,6 +139,7 @@ RSpec.describe BrowserPageviewEvent do
         url: "a" * (described_class::MAX_URL_LENGTH + 1),
         referrer: "a" * (described_class::MAX_REFERRER_LENGTH + 1),
         user_agent: "a" * (described_class::MAX_USER_AGENT_LENGTH + 1),
+        asn_organization: "a" * (described_class::MAX_ASN_ORGANIZATION_LENGTH + 1),
         ip_address: "1.2.3.4",
         session_id: "a" * (described_class::MAX_SESSION_ID_LENGTH + 1),
         normalized_referrer: "a" * (described_class::MAX_NORMALIZED_REFERRER_LENGTH + 1),
@@ -147,6 +148,7 @@ RSpec.describe BrowserPageviewEvent do
     expect(event.url.length).to eq(described_class::MAX_URL_LENGTH)
     expect(event.referrer.length).to eq(described_class::MAX_REFERRER_LENGTH)
     expect(event.user_agent.length).to eq(described_class::MAX_USER_AGENT_LENGTH)
+    expect(event.asn_organization.length).to eq(described_class::MAX_ASN_ORGANIZATION_LENGTH)
     expect(event.session_id.length).to eq(described_class::MAX_SESSION_ID_LENGTH)
     expect(event.normalized_referrer.length).to eq(described_class::MAX_NORMALIZED_REFERRER_LENGTH)
   end
@@ -160,6 +162,7 @@ RSpec.describe BrowserPageviewEvent do
         ip_address: "1.2.3.4",
         country_code: "AU",
         asn: 12_345,
+        asn_organization: "Example Network",
         referrer: "https://www.example.com/path?utm_source=x",
         user_agent: "Mozilla/5.0",
         session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
@@ -188,6 +191,7 @@ RSpec.describe BrowserPageviewEvent do
       expect(event.url).to eq(payload[:url])
       expect(event.country_code).to eq("AU")
       expect(event.asn).to eq(12_345)
+      expect(event.asn_organization).to eq("Example Network")
       expect(event.normalized_url).to eq("/t/topic/1")
       expect(event.normalized_url_version).to eq(
         BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,

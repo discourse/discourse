@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
+  include ThemeScreenshotMarker
+
   fab!(:admin)
 
   let(:traffic) { PageObjects::Pages::AdminSiteTrafficExplorer.new }
@@ -19,30 +21,15 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     DiscourseIpInfo
       .stubs(:get)
       .with { |ip, **options| ip.to_s == "192.0.2.1" && options[:resolve_hostname] == false }
-      .returns(
-        country_code: "US",
-        country: "United States",
-        asn: 64_496,
-        organization: "Example Network",
-      )
+      .returns(country_code: "US", country: "United States", asn: 64_496)
     DiscourseIpInfo
       .stubs(:get)
       .with { |ip, **options| ip.to_s == "198.51.100.2" && options[:resolve_hostname] == false }
-      .returns(
-        country_code: "GB",
-        country: "United Kingdom",
-        asn: 64_497,
-        organization: "Example Network",
-      )
+      .returns(country_code: "GB", country: "United Kingdom", asn: 64_497)
     DiscourseIpInfo
       .stubs(:get)
       .with { |ip, **options| ip.to_s == "203.0.113.3" && options[:resolve_hostname] == false }
-      .returns(
-        country_code: "US",
-        country: "United States",
-        asn: 64_498,
-        organization: "Example Network",
-      )
+      .returns(country_code: "US", country: "United States", asn: 64_498)
   end
 
   it "lets an admin see anonymous traffic without a crawler series when detection is disabled",
@@ -115,6 +102,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         url: "https://test.localhost/latest/?campaign=secret#section",
         country_code: "US",
         asn: 64_496,
+        asn_organization: "Example Network",
         ip_address: "192.0.2.1",
         user_agent: chrome,
         user_id: admin.id,
@@ -127,6 +115,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         url: "https://test.localhost/top?sort=popular",
         country_code: "US",
         asn: 64_496,
+        asn_organization: "Example Network",
         ip_address: "192.0.2.1",
         user_agent: chrome,
         user_id: admin.id,
@@ -139,6 +128,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         url: "/top",
         country_code: "GB",
         asn: 64_497,
+        asn_organization: "Example Network",
         ip_address: "198.51.100.2",
         user_agent: firefox,
         session_id: "anonymous-session",
@@ -148,6 +138,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         url: "/hot",
         country_code: "US",
         asn: 64_498,
+        asn_organization: "Example Network",
         ip_address: "203.0.113.3",
         user_agent: chrome,
         session_id: "crawler-session",
@@ -279,6 +270,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.remove_filter("referrer")
 
     traffic.select_tab(card: "acquisition", tab: "Networks")
+    expect(traffic).to have_row(card: "acquisition", label: "Example Network (AS64496)", count: "2")
+    screenshot_marker(label: "site-traffic-network-names", only: :desktop)
     traffic.filter_row(card: "acquisition", label: "Example Network (AS64496)")
     expect(traffic).to have_filter_pill(dimension: "network", label: "Example Network (AS64496)")
     expect(traffic).to have_metric(label: "Pageviews", value: "2")

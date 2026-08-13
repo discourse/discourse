@@ -1169,7 +1169,11 @@ RSpec.describe Middleware::RequestTracker do
 
     it "persists beacon pageviews to browser_pageview_events with beacon source" do
       SiteSetting.persist_browser_pageview_events = true
-      DiscourseIpInfo.stubs(:get).returns(country_code: "US")
+      DiscourseIpInfo.stubs(:get).returns(
+        country_code: "US",
+        asn: 64_496,
+        organization: "Example Network",
+      )
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
 
       expect {
@@ -1192,6 +1196,8 @@ RSpec.describe Middleware::RequestTracker do
       expect(event.session_id).to eq("abc123")
       expect(event.topic_id).to eq(123)
       expect(event.country_code).to eq("US")
+      expect(event.asn).to eq(64_496)
+      expect(event.asn_organization).to eq("Example Network")
       expect(event.ip_address.to_s).to eq("1.2.3.4")
       expect(event.source).to eq("beacon")
     end

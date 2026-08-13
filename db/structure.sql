@@ -2070,7 +2070,8 @@ CREATE TABLE public.browser_pageview_events (
     normalized_referrer_version smallint,
     source smallint DEFAULT 1 NOT NULL,
     normalized_url character varying(2000),
-    normalized_url_version integer
+    normalized_url_version integer,
+    asn_organization character varying
 );
 
 
@@ -23151,6 +23152,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260813031641'),
 ('20260810154331'),
 ('20260810012238'),
 ('20260807182856'),
@@ -25575,4 +25577,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-
