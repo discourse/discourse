@@ -116,6 +116,7 @@ import { resetDragAndDropForTesting } from "discourse/tests/helpers/ui-kit/drag-
 import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import { resetDragAdoptionForTesting } from "discourse/lib/-internals/drag-and-drop/native-drag-adoption";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
@@ -293,6 +294,9 @@ export function testCleanup(container, app) {
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
   resetDragAndDropForTesting();
+  // Run after the drag reset so any active drag releases its own adoption. This
+  // only has to force-release a registration for a drag that never started.
+  resetDragAdoptionForTesting();
   resetDragSourcesForTesting();
   resetPointerDragForTesting();
   resetElementClassLeasesForTesting();

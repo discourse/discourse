@@ -17,10 +17,10 @@ import { makeArray } from "discourse/lib/helpers";
 
 /** The in-flight element drag, as the source described it. */
 export interface DragPayload {
-  /** Discriminator string set by the source. */
+  /** Discriminator string set by the source or the adoption that claimed it. */
   type: string;
 
-  /** Arbitrary payload the source attached to the drag. */
+  /** Arbitrary payload the source or adoption attached to the drag. */
   data: Record<string, unknown>;
 
   /**
@@ -28,6 +28,12 @@ export interface DragPayload {
    * `setCurrentDrag` supplied none; the service's own monitor always does.
    */
   element: HTMLElement | null;
+
+  /**
+   * The snapshotted native payload for a browser-started drag adopted from page
+   * content. Absent for registered element sources.
+   */
+  native?: ExternalDragPayload;
 }
 
 /**
@@ -59,6 +65,7 @@ export default class DragAndDropService extends Service {
           type: normalized.type as string,
           data: normalized.data,
           element: normalized.element,
+          ...(normalized.native ? { native: normalized.native } : {}),
         });
       },
       onDrop: () => {
