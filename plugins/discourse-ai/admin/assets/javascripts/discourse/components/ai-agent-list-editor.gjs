@@ -233,6 +233,17 @@ export default class AiAgentListEditor extends Component {
       })
       .catch((error) => {
         if (error.jqXHR?.status === 422) {
+          const missingSubagents =
+            error.jqXHR.responseJSON?.conflicts?.subagents;
+          if (missingSubagents?.length) {
+            this.dialog.alert(
+              i18n("discourse_ai.ai_agent.import_error_missing_subagents", {
+                names: missingSubagents.join(", "),
+              })
+            );
+            return;
+          }
+
           this.dialog.confirm({
             message:
               i18n("discourse_ai.ai_agent.import_error_conflict", {

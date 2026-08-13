@@ -438,6 +438,32 @@ en:
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
       tool_pending_approval: "This action requires moderator approval before it can be executed."
+      spawn_agent:
+        description: "Delegate a self-contained prompt to one of the allowed agents and return its response"
+        prompt_description: "The complete self-contained prompt sent to the selected agent and shown in the thinking block"
+        summary: "Consulting %{agent}"
+        failed: "The delegated task could not be completed."
+        unknown_agent: "subagent"
+      read_post:
+        unknown_post: "post"
+      tool_errors:
+        invocation_limit_reached: "This tool has reached its configured invocation limit. Use the evidence already gathered."
+      subagent_errors:
+        invalid_agent: "The requested subagent is invalid."
+        invalid_prompt: "The delegated prompt is required."
+        prompt_too_long: "The delegated prompt is too long."
+        missing_user: "Delegation requires an originating user."
+        depth_limit: "The maximum delegation depth has been reached."
+        unavailable_parent: "The parent agent is no longer available."
+        agent_not_allowed: "The requested subagent is not allowed."
+        unavailable_agent: "The requested subagent is unavailable or inaccessible."
+        missing_model: "The requested subagent has no available language model."
+        call_limit: "The delegation call limit has been reached."
+        completion_limit: "The delegation completion limit has been reached."
+        token_limit: "The delegation token budget has been reached."
+        cancelled: "The delegated task was cancelled."
+        execution_failed: "The delegated task failed."
+        approval_unavailable: "Tools requiring approval are unavailable in delegated runs."
       chat_tool_approval:
         approved: "Approved by @%{username}."
         rejected: "Rejected by @%{username}."
@@ -450,6 +476,11 @@ en:
         cannot_have_duplicate_tools: "Can not have duplicate tools"
         native_tool_requires_forced_llm: "Provider-native tools require a default LLM with \"Force default LLM\" enabled"
         native_tool_unsupported_by_llm: "The selected default LLM does not support one of the enabled provider-native tools"
+        invalid_subagent_ids: "Subagent IDs must be a list of integers"
+        too_many_subagents: "An agent can have at most %{max} subagents"
+        subagent_self: "An agent cannot select itself as a subagent"
+        subagents_not_found: "The selected subagent IDs do not exist: %{ids}"
+        subagent_tool_collision: "An agent with subagents cannot configure a tool named spawn_agent"
         admin_dashboard_highlights:
           name: "Admin Dashboard Highlights"
           description: "Writes the brief readout shown at the top of the admin dashboard, explaining what changed and what deserves attention this period"
@@ -610,6 +641,13 @@ en:
           read_private:
             name: "Read Private"
             description: "Allow access to all topics user has access to (by default only public topics are included)"
+        read_post:
+          read_private:
+            name: "Read private"
+            description: "Allow access to posts the requesting user can see (by default only public posts are included)"
+          max_invocations:
+            name: "Maximum invocations"
+            description: "Maximum number of times this tool can run during one agent turn; leave blank for no limit"
         search:
           search_private:
             name: "Search Private"
@@ -620,6 +658,15 @@ en:
           base_query:
             name: "Base Search Query"
             description: "Base query to use when searching. Example: '#urgent' will prepend '#urgent' to the search query and only include topics with the urgent category or tag."
+          max_invocations:
+            name: "Maximum invocations"
+            description: "Maximum number of times this tool can run during one agent turn; leave blank for no limit"
+          ignore_user_filter:
+            name: "Ignore user filter"
+            description: "Ignore usernames supplied by the model so searches can find misattributed content"
+          absolute_urls:
+            name: "Absolute URLs"
+            description: "Return complete source URLs instead of forum-relative paths"
         flag_post:
           flag_type:
             name: "Flag Type"
@@ -678,6 +725,7 @@ en:
         image: "Generate image"
         google: "Search Google"
         read: "Read topic"
+        read_post: "Read post"
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
@@ -733,6 +781,7 @@ en:
         edit_image: "Edit image using Open AI GPT image model"
         google: "Search Google for a query"
         read: "Read public topic on the forum"
+        read_post: "Read one exact post on the forum"
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
@@ -776,6 +825,7 @@ en:
         assign: "Assigning topic %{topic_id} (assigned: %{assigned})"
         mark_as_solved: "Marking post %{post_id} as solved (solved: %{solved})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
+        read_post: "Reading post: <a href='%{url}'>%{title}</a>"
         time: "Time in %{timezone} is %{time}"
         summarize: "Summarized <a href='%{url}'>%{title}</a>"
         set_topic_summary: "Set the final short topic summary"
@@ -1151,4 +1201,5 @@ en:
         one: "Custom tool with the name %{names} already exists."
         other: "Custom tools with the names %{names} already exist."
       mcp_server_missing: "The following MCP servers are not configured on this site: %{names}."
+      subagents_missing: "The following subagents are not configured on this site: %{names}."
       mcp_server_tools_not_found: "No matching tools from MCP server %{name} are available on this site."
