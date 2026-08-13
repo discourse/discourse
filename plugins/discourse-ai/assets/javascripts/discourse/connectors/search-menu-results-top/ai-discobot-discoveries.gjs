@@ -1,14 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { i18n } from "discourse-i18n";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
-import AiSearchDiscoveriesTooltip from "../../components/ai-search-discoveries-tooltip";
 
 export default class AiDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
     return (
+      args?.location === "welcome-banner" &&
       siteSettings.ai_discover_enabled &&
       siteSettings.ai_discover_agent &&
       currentUser?.can_use_ai_discover_agent &&
@@ -18,7 +17,6 @@ export default class AiDiscobotDiscoveries extends Component {
 
   @service aiCredits;
   @service discobotDiscoveries;
-  @service search;
 
   @tracked creditsAvailable = true;
   @tracked creditCheckComplete = false;
@@ -39,35 +37,41 @@ export default class AiDiscobotDiscoveries extends Component {
   }
 
   get shouldShow() {
-    return this.creditCheckComplete && this.creditsAvailable;
+    return (
+      this.creditCheckComplete &&
+      this.creditsAvailable &&
+      this.discobotDiscoveries.mode === "ask" &&
+      this.args.outletArgs.searchTerm &&
+      this.discobotDiscoveries.lastQuery ===
+        this.args.outletArgs.searchTerm.trim()
+    );
+  }
+
+  get isGenerating() {
+    return (
+      this.discobotDiscoveries.loadingDiscoveries ||
+      this.discobotDiscoveries.isStreaming
+    );
   }
 
   <template>
     {{#if this.shouldShow}}
-      <div class="ai-discobot-discoveries">
-        {{#if this.discobotDiscoveries.showDiscoveryTitle}}
-          <h3 class="ai-search-discoveries__discoveries-title">
-            <span>
-              {{dIcon "discobot"}}
-              {{i18n "discourse_ai.discobot_discoveries.main_title"}}
-            </span>
-
-            <AiSearchDiscoveriesTooltip />
-          </h3>
-        {{/if}}
-
+      <div
+        class={{dConcatClass
+          "ai-discobot-discoveries"
+          (if this.isGenerating "is-generating")
+          (if this.discobotDiscoveries.sources.length "has-sources")
+        }}
+      >
         <AiSearchDiscoveries
           @searchTerm={{@outletArgs.searchTerm}}
-          @discoveryPreviewLength={{50}}
+          @discoveryPreviewLength={{320}}
           @closeSearchMenu={{@outletArgs.closeSearchMenu}}
+          @showHeading={{true}}
+          @collapsible={{false}}
+          @showSources={{true}}
+          @triggerOnInsert={{false}}
         />
-
-        {{#if this.search.results.topics.length}}
-          <h3 class="ai-search-discoveries__regular-results-title">
-            {{dIcon "bars-staggered"}}
-            {{i18n "discourse_ai.discobot_discoveries.regular_results"}}
-          </h3>
-        {{/if}}
       </div>
     {{/if}}
   </template>

@@ -5,29 +5,63 @@ module DiscourseAi
     class DiscoveriesController < ::ApplicationController
       include AiCreditLimitHandler
 
+      MAX_QUERY_LENGTH = 1000
+
       requires_plugin PLUGIN_NAME
       requires_login
       before_action :check_permissions!
 
       def reply
-        if ai_discover_agent.default_llm_id.blank? && SiteSetting.ai_default_llm_model.blank?
-          render_json_error "Discover agent is missing a default LLM model.", status: 503
+        query = normalized_query
+        request_id = params[:request_id].to_s
+        if !DiscourseAi::Discoveries.valid_request_id?(request_id)
+          render_json_error(
+            I18n.t("discourse_ai.ai_bot.discoveries.errors.invalid_request_id"),
+            status: :bad_request,
+          )
           return
         end
 
-        query = params[:query]
-        raise Discourse::InvalidParameters.new("Missing query to discover") if query.blank?
-
         RateLimiter.new(current_user, "ai_discover_#{current_user.id}", 8, 1.minute).performed!
 
-        Jobs.enqueue(:stream_discover_reply, user_id: current_user.id, query: query)
+        binding =
+          DiscourseAi::Discoveries.bind_request(user_id: current_user.id, request_id:, query:)
+        if binding == :created
+          Jobs.enqueue(
+            :stream_discover_reply,
+            user_id: current_user.id,
+            query:,
+            request_id:,
+            queued_at: Time.now.to_f,
+          )
+        end
 
-        render json: {}, status: :ok
+        render json: { request_id: }, status: :ok
+      rescue DiscourseAi::Discoveries::RequestConflict
+        render_json_error(
+          I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),
+          status: :conflict,
+        )
       end
 
       def continue_convo
-        raise Discourse::InvalidParameters.new("query") if !params[:query]
-        raise Discourse::InvalidParameters.new("context") if !params[:context]
+        request_id = params[:request_id].to_s
+        if !DiscourseAi::Discoveries.valid_request_id?(request_id)
+          render_json_error(
+            I18n.t("discourse_ai.ai_bot.discoveries.errors.invalid_request_id"),
+            status: :bad_request,
+          )
+          return
+        end
+
+        result = DiscourseAi::Discoveries.cached_result_for(user: current_user, request_id:)
+        if result.nil? || result["agent_id"] != ai_discover_agent.id
+          render_json_error(
+            I18n.t("discourse_ai.ai_bot.discoveries.errors.result_expired"),
+            status: :not_found,
+          )
+          return
+        end
 
         bot_user_id = ai_discover_agent.user_id
         bot_username = User.find_by(id: bot_user_id).username
@@ -39,8 +73,8 @@ module DiscourseAi
           1.minute,
         ).performed!
 
-        query = params[:query]
-        context = "[quote]\n#{params[:context]}\n[/quote]"
+        query = result.fetch("query")
+        context = "[quote]\n#{result.fetch("answer")}\n[/quote]"
 
         post =
           PostCreator.create!(
@@ -60,7 +94,11 @@ module DiscourseAi
 
         render json: success_json.merge(topic_id: post.topic_id)
       rescue StandardError => e
-        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
+        Rails.logger.error("Discourse AI Discoveries follow-up failed: #{e.class}")
+        render_json_error(
+          I18n.t("discourse_ai.ai_bot.discoveries.errors.follow_up_failed"),
+          status: :unprocessable_entity,
+        )
       end
 
       private
@@ -70,13 +108,21 @@ module DiscourseAi
       end
 
       def check_permissions!
-        raise Discourse::InvalidAccess if !SiteSetting.ai_discover_enabled
-        raise Discourse::InvalidAccess if ai_discover_agent.nil?
-        raise Discourse::InvalidAccess if current_user.nil?
-        if !current_user.in_any_groups?(ai_discover_agent.allowed_group_ids.to_a)
-          raise Discourse::InvalidAccess
+        raise Discourse::InvalidAccess if !DiscourseAi::Discoveries.enabled_for_user?(current_user)
+      end
+
+      def normalized_query
+        query = params[:query].to_s.strip
+        if query.blank? || query.length > MAX_QUERY_LENGTH || query.include?("\0")
+          raise Discourse::InvalidParameters.new(
+                  I18n.t(
+                    "discourse_ai.ai_bot.discoveries.errors.invalid_query",
+                    max: MAX_QUERY_LENGTH,
+                  ),
+                )
         end
-        raise Discourse::InvalidAccess if guardian.is_silenced?
+
+        query
       end
     end
   end

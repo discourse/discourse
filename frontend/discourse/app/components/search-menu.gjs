@@ -461,24 +461,37 @@ export default class SearchMenu extends Component {
             @inputPlaceholder={{this.searchInputPlaceholder}}
           />
 
-          {{#if this.loading}}
-            <div class="searching">
+          <div class="searching">
+            <PluginOutlet
+              @name="search-menu-before-advanced-search"
+              @outletArgs={{lazyHash
+                location=@location
+                triggerSearch=this.triggerSearch
+              }}
+            />
+            {{#if this.loading}}
               {{dLoadingSpinner}}
-            </div>
-          {{else}}
-            <div class="searching">
-              <PluginOutlet @name="search-menu-before-advanced-search" />
+            {{else}}
               {{#if this.search.activeGlobalSearchTerm}}
                 <ClearButton @clearSearch={{this.clearSearch}} />
               {{/if}}
               <AdvancedButton @openAdvancedSearch={{this.openAdvancedSearch}} />
-            </div>
-          {{/if}}
+            {{/if}}
+          </div>
         </div>
+
+        <PluginOutlet
+          @name="search-menu-after-input"
+          @outletArgs={{lazyHash
+            location=@location
+            triggerSearch=this.triggerSearch
+          }}
+        />
       </div>
 
       {{#if @inlineResults}}
         <Results
+          @location={{@location}}
           @searchInputId={{this.searchInputId}}
           @loading={{this.loading}}
           @invalidTerm={{this.invalidTerm}}
@@ -496,6 +509,7 @@ export default class SearchMenu extends Component {
       {{else if this.displayMenuPanelResults}}
         <MenuPanel class="search-menu-panel">
           <Results
+            @location={{@location}}
             @searchInputId={{this.searchInputId}}
             @loading={{this.loading}}
             @invalidTerm={{this.invalidTerm}}

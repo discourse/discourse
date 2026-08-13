@@ -9,12 +9,14 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiBlinkingAnimation from "./ai-blinking-animation";
 import AiIndicatorWave from "./ai-indicator-wave";
@@ -30,6 +32,7 @@ export default class AiSearchDiscoveries extends Component {
 
   @tracked loadingConversationTopic = false;
   @tracked fullDiscoveryToggled = false;
+  @tracked showAllSources = false;
 
   constructor() {
     super(...arguments);
@@ -77,7 +80,11 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   get query() {
-    return this.args?.searchTerm || this.search.activeGlobalSearchTerm;
+    return (
+      this.args?.searchTerm ||
+      this.search.activeGlobalSearchTerm ||
+      ""
+    ).trim();
   }
 
   get toggleLabel() {
@@ -98,6 +105,7 @@ export default class AiSearchDiscoveries extends Component {
 
   get canShowExpandtoggle() {
     return (
+      this.args.collapsible !== false &&
       !this.discobotDiscoveries.loadingDiscoveries &&
       this.discobotDiscoveries.streamedText.length > this.discoveryPreviewLength
     );
@@ -105,6 +113,40 @@ export default class AiSearchDiscoveries extends Component {
 
   get renderPreviewOnly() {
     return !this.fullDiscoveryToggled && this.canShowExpandtoggle;
+  }
+
+  get sources() {
+    return this.discobotDiscoveries.sources || [];
+  }
+
+  get hasSources() {
+    return this.sources.length > 0;
+  }
+
+  get noAnswer() {
+    return this.discobotDiscoveries.answerable === false;
+  }
+
+  get visibleSources() {
+    return this.showAllSources ? this.sources : this.sources.slice(0, 2);
+  }
+
+  get canToggleSources() {
+    return this.sources.length > 2;
+  }
+
+  get sourceToggleLabel() {
+    if (this.showAllSources) {
+      return i18n("discourse_ai.discobot_discoveries.sources.show_fewer");
+    }
+
+    return i18n("discourse_ai.discobot_discoveries.sources.view_all", {
+      count: this.sources.length,
+    });
+  }
+
+  get fullSearchUrl() {
+    return getURL(`/search?q=${encodeURIComponent(this.query)}`);
   }
 
   get canContinueConversation() {
@@ -143,8 +185,25 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   @action
+  triggerDiscoveryOnInsert() {
+    if (this.args.triggerOnInsert !== false) {
+      this.triggerDiscovery();
+    }
+  }
+
+  @action
   toggleDiscovery() {
     this.fullDiscoveryToggled = !this.fullDiscoveryToggled;
+  }
+
+  @action
+  toggleSources() {
+    this.showAllSources = !this.showAllSources;
+  }
+
+  @action
+  resetSourceExpansion() {
+    this.showAllSources = false;
   }
 
   @action
@@ -171,8 +230,7 @@ export default class AiSearchDiscoveries extends Component {
   @action
   async continueConversation() {
     const data = {
-      query: this.query,
-      context: this.discobotDiscoveries.discovery,
+      request_id: this.discobotDiscoveries.activeRequestId,
     };
     try {
       this.loadingConversationTopic = true;
@@ -206,17 +264,46 @@ export default class AiSearchDiscoveries extends Component {
 
   <template>
     <div
-      class="ai-search-discoveries"
+      class={{dConcatClass
+        "ai-search-discoveries"
+        (if @fullPage "--full-page")
+      }}
       {{didInsert this.subscribe this.query}}
       {{didUpdate this.subscribe this.query}}
-      {{didInsert this.triggerDiscovery this.query}}
+      {{didUpdate this.resetSourceExpansion this.query}}
+      {{didInsert this.triggerDiscoveryOnInsert this.query}}
       {{willDestroy this.unsubscribe}}
     >
+      {{#if @showHeading}}
+        {{#if this.discobotDiscoveries.showDiscoveryTitle}}
+          <header class="ai-search-discoveries__header">
+            <h3 class="ai-search-discoveries__title">
+              {{dIcon "far-circle"}}
+              {{i18n "discourse_ai.discobot_discoveries.main_title"}}
+            </h3>
+          </header>
+        {{/if}}
+      {{/if}}
+
+      {{#if this.discobotDiscoveries.discoveryTitle}}
+        <h4 class="ai-search-discoveries__answer-title">
+          {{this.discobotDiscoveries.discoveryTitle}}
+        </h4>
+      {{/if}}
+
       <div class="ai-search-discoveries__completion">
         {{#if this.discobotDiscoveries.loadingDiscoveries}}
           <AiBlinkingAnimation />
+        {{else if this.discobotDiscoveries.errorMessage}}
+          <p class="ai-search-discoveries__error">
+            {{this.discobotDiscoveries.errorMessage}}
+          </p>
         {{else if this.discobotDiscoveries.discoveryTimedOut}}
           {{i18n "discourse_ai.discobot_discoveries.timed_out"}}
+        {{else if this.noAnswer}}
+          <p class="ai-search-discoveries__no-answer">
+            {{i18n "discourse_ai.discobot_discoveries.no_answer"}}
+          </p>
         {{else}}
           {{! eslint-disable ember/template-no-invalid-interactive }}
           <article
@@ -244,6 +331,73 @@ export default class AiSearchDiscoveries extends Component {
           {{/if}}
         {{/if}}
       </div>
+
+      {{#if @showSources}}
+        {{#if this.hasSources}}
+          <section
+            class="ai-discovery-sources"
+            aria-labelledby="ai-discovery-sources-title"
+          >
+            <header class="ai-discovery-sources__header">
+              <h4
+                id="ai-discovery-sources-title"
+                class="ai-discovery-sources__title"
+              >
+                {{i18n
+                  "discourse_ai.discobot_discoveries.sources.related_discussions"
+                }}
+              </h4>
+              {{#if this.canToggleSources}}
+                <DButton
+                  class="ai-discovery-sources__toggle"
+                  @display="link"
+                  @translatedLabel={{this.sourceToggleLabel}}
+                  @ariaExpanded={{this.showAllSources}}
+                  @action={{this.toggleSources}}
+                />
+              {{/if}}
+            </header>
+
+            <ul
+              class="ai-discovery-sources__list"
+              {{on "click" this.handleDiscoveryClick}}
+            >
+              {{#each this.visibleSources as |source|}}
+                <li class="ai-discovery-sources__item">
+                  <a class="ai-discovery-source" href={{source.url}}>
+                    <h5 class="ai-discovery-source__title">{{source.title}}</h5>
+                    {{#if source.excerpt}}
+                      <p class="ai-discovery-source__excerpt">
+                        {{source.excerpt}}
+                      </p>
+                    {{/if}}
+                    <div class="ai-discovery-source__metadata">
+                      {{#if source.category}}
+                        <span>{{source.category}}</span>
+                        <span aria-hidden="true">·</span>
+                      {{/if}}
+                      <span>
+                        {{source.topic_replies}}
+                        {{i18n "replies_lowercase" count=source.topic_replies}}
+                      </span>
+                    </div>
+                  </a>
+                </li>
+              {{/each}}
+            </ul>
+
+            <a
+              class="ai-discovery-sources__all-results"
+              href={{this.fullSearchUrl}}
+              {{on "click" this.handleDiscoveryClick}}
+            >
+              {{i18n
+                "discourse_ai.discobot_discoveries.sources.show_all_matching"
+              }}
+            </a>
+          </section>
+        {{/if}}
+      {{/if}}
 
       {{#if this.canContinueConversation}}
         <div class="ai-search-discoveries__continue-conversation">

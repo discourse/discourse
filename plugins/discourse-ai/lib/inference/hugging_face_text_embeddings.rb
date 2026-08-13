@@ -3,6 +3,9 @@
 module DiscourseAi
   module Inference
     class HuggingFaceTextEmbeddings
+      RERANK_OPEN_TIMEOUT = 2.seconds
+      RERANK_TIMEOUT = 5.seconds
+
       def initialize(endpoint, key, referer = Discourse.base_url)
         @endpoint = endpoint
         @key = key
@@ -36,7 +39,13 @@ module DiscourseAi
             headers["Authorization"] = "Bearer #{SiteSetting.ai_hugging_face_tei_reranker_api_key}"
           end
 
-          conn = Faraday.new { |f| f.adapter FinalDestination::FaradayAdapter }
+          conn =
+            Faraday.new(
+              request: {
+                open_timeout: RERANK_OPEN_TIMEOUT,
+                timeout: RERANK_TIMEOUT,
+              },
+            ) { |f| f.adapter FinalDestination::FaradayAdapter }
           response = conn.post("#{api_endpoint}/rerank", body, headers)
 
           if response.status != 200

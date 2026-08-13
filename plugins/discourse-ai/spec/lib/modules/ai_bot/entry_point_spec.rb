@@ -179,10 +179,18 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
     end
 
     it "will include ai_search_discoveries field in the user_option if discover agent is enabled" do
-      SiteSetting.ai_discover_enabled = true
-      SiteSetting.ai_discover_agent = Fabricate(:ai_agent).id
-
       user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(user)
+      llm_model = Fabricate(:llm_model)
+      agent = Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
+      SiteSetting.ai_discover_enabled = true
+      SiteSetting.ai_discover_agent = agent.id
+      SiteSetting.ai_discover_allowed_groups = group.id.to_s
+      SiteSetting.ai_embeddings_enabled = true
+      SiteSetting.ai_embeddings_semantic_search_enabled = true
+      SiteSetting.ai_hugging_face_tei_reranker_endpoint = "https://reranker.example.com"
+
       user.user_option.update!(ai_search_discoveries: true)
       serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user))
       serializer = serializer.as_json

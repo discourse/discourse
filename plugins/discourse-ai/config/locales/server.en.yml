@@ -161,6 +161,9 @@ en:
 
     ai_discover_enabled: "Enable the discovery search feature"
     ai_discover_agent: "Agent to use for discovery search feature"
+    ai_discover_allowed_groups: "Groups allowed to use Discoveries. The selected agent's permissions and normal topic and category visibility still apply. Personal messages are always excluded. Content from restricted categories visible to an allowed user may be sent to the configured LLM and reranker providers."
+    ai_hugging_face_tei_reranker_endpoint: "URL of the Text Embeddings Inference reranker used to rank hybrid search candidates. Required by Discoveries."
+    ai_hugging_face_tei_reranker_api_key: "API key for the configured Text Embeddings Inference reranker."
 
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX for Google Custom Search API"
@@ -815,6 +818,15 @@ en:
         read_site_setting: "Reading site setting %{setting_name}"
         change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:
+        errors:
+          invalid_query: "Enter a search query between 1 and %{max} characters."
+          invalid_request_id: "The discovery request ID is invalid."
+          request_conflict: "This discovery request ID is already being used for another query."
+          processing_failed: "Discoveries could not complete this search."
+          temporarily_unavailable: "Discoveries is busy right now. Try again shortly."
+          credits_unavailable: "Discoveries is unavailable until AI credits reset."
+          follow_up_failed: "The follow-up conversation could not be created."
+          result_expired: "This discovery is no longer available. Search again to ask a follow-up."
         continue_conversation:
           title: "Discovery conversation: Search for %{query}"
           raw: "In my search for %{query}, you showed me the following information:\n\n%{context}\n\nLet's continue the conversation."

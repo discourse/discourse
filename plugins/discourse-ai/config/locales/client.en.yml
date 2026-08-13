@@ -1479,14 +1479,28 @@ en:
             expanded_description: "with AI summaries"
 
       discobot_discoveries:
-        main_title: "Discobot discoveries"
+        main_title: "Discoveries"
         regular_results: "Topics"
         tell_me_more: "Tell me more..."
-        continue_convo: "Continue conversation..."
+        continue_convo: "Ask a follow-up"
         loading_convo: "Loading conversation"
         collapse: "Collapse"
-        timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+        timed_out: "Discoveries took too long to complete this search. Try again or use Search."
+        request_failed: "Discoveries could not start this search. Try again or use Search."
+        no_answer: "Discoveries couldn’t find enough useful discussion to answer this."
+        answer_ready: "Discoveries answer ready."
         user_setting: "Enable AI search discoveries"
+        mode:
+          label: "Search mode"
+          search: "Search"
+          ask: "Ask"
+          search_submit: "Search"
+          ask_submit: "Ask with Discoveries"
+        sources:
+          related_discussions: "Related discussions"
+          view_all: "View all %{count}"
+          show_fewer: "Show fewer"
+          show_all_matching: "Show all matching posts"
         tooltip:
           header: "AI powered search"
           content: "Natural language search powered by %{model}"

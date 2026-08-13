@@ -3,10 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { i18n } from "discourse-i18n";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
-import AiSearchDiscoveriesTooltip from "../../components/ai-search-discoveries-tooltip";
 
 export default class AiFullPageDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
@@ -19,7 +16,6 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
   }
 
   @service aiCredits;
-  @service capabilities;
   @service discobotDiscoveries;
 
   @tracked creditsAvailable = true;
@@ -44,39 +40,27 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
     return this.creditCheckComplete && this.creditsAvailable;
   }
 
-  get previewLength() {
-    if (!this.capabilities.viewport.md) {
-      return 50;
-    } else {
-      return 10000;
-    }
+  get hasContent() {
+    return this.discobotDiscoveries.showDiscoveryTitle;
   }
 
   <template>
     {{#if this.shouldShow}}
-      {{bodyClass "has-discoveries"}}
+      {{#if this.hasContent}}
+        {{bodyClass "has-discoveries"}}
+      {{/if}}
       <div
         class={{dConcatClass
           "ai-search-discoveries__discoveries-wrapper"
-          (if this.discobotDiscoveries.showDiscoveryTitle "--has-content")
+          (if this.hasContent "--has-content")
         }}
       >
-        {{#if this.discobotDiscoveries.showDiscoveryTitle}}
-          <h3
-            class="ai-search-discoveries__discoveries-title full-page-discoveries"
-          >
-            <span>
-              {{dIcon "discobot"}}
-              {{i18n "discourse_ai.discobot_discoveries.main_title"}}
-            </span>
-            <AiSearchDiscoveriesTooltip />
-          </h3>
-        {{/if}}
-
         <div class="full-page-discoveries">
           <AiSearchDiscoveries
-            @discoveryPreviewLength={{this.previewLength}}
             @searchTerm={{@outletArgs.search}}
+            @showHeading={{true}}
+            @collapsible={{false}}
+            @fullPage={{true}}
           />
         </div>
       </div>

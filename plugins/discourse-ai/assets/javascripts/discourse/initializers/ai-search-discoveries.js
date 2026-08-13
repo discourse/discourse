@@ -7,8 +7,7 @@ export default apiInitializer((api) => {
 
   if (
     !settings.ai_discover_enabled ||
-    (!currentUser?.can_use_ai_discover_agent &&
-      !currentUser?.can_use_ai_discover_agent)
+    !currentUser?.can_use_ai_discover_agent
   ) {
     return;
   }
@@ -24,10 +23,11 @@ export default apiInitializer((api) => {
       return;
     }
 
-    const query = searchMenu.search.activeGlobalSearchTerm;
+    const query = searchMenu.search.activeGlobalSearchTerm?.trim();
 
     if (
       isScopedSearch(searchMenu.search) ||
+      discobotDiscoveries.mode !== "ask" ||
       discobotDiscoveries.lastQuery === query
     ) {
       return true;
@@ -51,6 +51,10 @@ export default apiInitializer((api) => {
     }
 
     if (isScopedSearch(search)) {
+      return true;
+    }
+
+    if (discobotDiscoveries.mode !== "ask") {
       return true;
     }
 
