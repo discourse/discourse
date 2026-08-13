@@ -488,6 +488,48 @@
     align-items: center;
   }
 
+  &__combobox {
+    position: relative;
+    width: fit-content;
+  }
+
+  &__combobox-trigger {
+    padding: 0.35em 0.75em;
+    border: 1px solid var(--primary-medium);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+    color: var(--primary);
+    cursor: pointer;
+    min-width: 10em;
+    text-align: start;
+  }
+
+  &__combobox-listbox {
+    margin: 0.25em 0 0;
+    padding: 0.25em;
+    list-style: none;
+    min-width: 10em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+  }
+
+  &__combobox-option {
+    padding: 0.25em 0.5em;
+    cursor: pointer;
+
+    // The highlight is drawn from a class the modifier toggles, not from focus, because focus
+    // never arrives here. Selection is a separate mark and can sit on a different row.
+    &--active {
+      background: var(--tertiary-low);
+    }
+
+    &[aria-selected="true"]::after {
+      content: "✓";
+      float: inline-end;
+    }
+  }
+
   &__listbox {
     margin: 0;
     padding: 0.5em;

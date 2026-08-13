@@ -6,7 +6,9 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import RovingFocusComboboxExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/combobox";
 import RovingFocusListboxExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/listbox";
 import RovingFocusRadioGroupExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/radio-group";
 import RovingFocusRemovableTagsExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/removable-tags";
@@ -398,6 +400,77 @@ module(
       assert
         .dom(".roving-demo__reset")
         .exists("and the group offers a way back");
+    });
+  }
+);
+
+module(
+  "Integration | Component | roving-focus examples | combobox",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("the cursor moves while focus stays on the control", async function (assert) {
+      await render(<template><RovingFocusComboboxExample /></template>);
+
+      await click(".roving-demo__combobox-trigger");
+      const trigger = document.querySelector(".roving-demo__combobox-trigger");
+
+      assert
+        .dom(".roving-demo__combobox-option--active")
+        .hasAttribute(
+          "data-option-id",
+          "weekly",
+          "opening highlights the option already chosen"
+        );
+
+      await triggerKeyEvent(trigger, "keydown", "ArrowDown");
+
+      assert
+        .dom(".roving-demo__combobox-option--active")
+        .hasAttribute("data-option-id", "monthly", "the highlight moved");
+      assert.strictEqual(
+        document.activeElement,
+        trigger,
+        "and focus never left the control, which is the whole distinction from the other examples"
+      );
+      assert
+        .dom(trigger)
+        .hasAttribute(
+          "aria-activedescendant",
+          document.querySelector(".roving-demo__combobox-option--active").id,
+          "the control reports where the cursor is, since the browser cannot"
+        );
+    });
+
+    test("Enter chooses the highlighted option", async function (assert) {
+      await render(<template><RovingFocusComboboxExample /></template>);
+
+      await click(".roving-demo__combobox-trigger");
+      const trigger = document.querySelector(".roving-demo__combobox-trigger");
+      await triggerKeyEvent(trigger, "keydown", "ArrowDown");
+      await triggerKeyEvent(trigger, "keydown", "Enter");
+
+      assert.dom(trigger).hasText("Monthly", "the choice is committed");
+      assert
+        .dom(".roving-demo__combobox-listbox")
+        .doesNotExist("and the list closed");
+    });
+
+    test("the control can legally reach the option it points at", async function (assert) {
+      const warn = sinon.stub(console, "warn");
+
+      await render(<template><RovingFocusComboboxExample /></template>);
+      await click(".roving-demo__combobox-trigger");
+      await triggerKeyEvent(
+        document.querySelector(".roving-demo__combobox-trigger"),
+        "keydown",
+        "ArrowDown"
+      );
+
+      assert.false(
+        warn.calledWithMatch(/aria-activedescendant/),
+        "aria-controls is one of the three permitted relationships, so no warning is raised"
+      );
     });
   }
 );
