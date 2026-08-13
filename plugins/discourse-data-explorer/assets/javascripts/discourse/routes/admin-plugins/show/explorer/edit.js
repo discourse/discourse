@@ -86,6 +86,7 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
   resetController(controller, isExiting) {
     if (isExiting) {
       controller._teardownAi();
+      controller.releasePanes();
     }
   }
 }
