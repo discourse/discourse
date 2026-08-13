@@ -3049,6 +3049,175 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       );
   });
 
+  test("onCrossAxis reports the horizontal arrows a vertical group does not use", async function (assert) {
+    const seen = [];
+    const onCrossAxis = (direction, item) =>
+      seen.push(`${direction}:${item.className}`);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+          <button class="item b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+    await triggerKeyEvent(".a", "keydown", "ArrowLeft");
+
+    assert.deepEqual(
+      seen,
+      ["forward:item a", "backward:item a"],
+      "the resting item comes with the direction, so the consumer need not re-read activeElement"
+    );
+  });
+
+  test("onCrossAxis mirrors its direction in a right-to-left group", async function (assert) {
+    const seen = [];
+    const onCrossAxis = (direction) => seen.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          dir="rtl"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowLeft");
+
+    assert.deepEqual(
+      seen,
+      ["forward"],
+      "the arrow pointing at where children would be is the forward one, whichever key that is"
+    );
+  });
+
+  test("onCrossAxis reports the vertical arrows a horizontal group does not use", async function (assert) {
+    const seen = [];
+    const onCrossAxis = (direction) => seen.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          dir="rtl"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowDown");
+
+    assert.deepEqual(
+      seen,
+      ["forward"],
+      "a menubar opens its submenu downward, and the vertical axis never mirrors"
+    );
+  });
+
+  test("onCrossAxis prevents the default only when the consumer says it acted", async function (assert) {
+    const handled = [];
+    const onCrossAxis = (direction) => {
+      handled.push(direction);
+      return direction === "forward";
+    };
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    const item = document.querySelector(".a");
+
+    const acted = new KeyboardEvent("keydown", {
+      key: "ArrowRight",
+      bubbles: true,
+      cancelable: true,
+    });
+    item.dispatchEvent(acted);
+
+    const declined = new KeyboardEvent("keydown", {
+      key: "ArrowLeft",
+      bubbles: true,
+      cancelable: true,
+    });
+    item.dispatchEvent(declined);
+
+    assert.true(acted.defaultPrevented, "a handled key is consumed");
+    assert.false(
+      declined.defaultPrevented,
+      "an unhandled one keeps bubbling, which is what a leaf node or an already-collapsed row needs"
+    );
+  });
+
+  test("onCrossAxis never fires for a grid, which navigates both axes", async function (assert) {
+    const seen = [];
+    const onCrossAxis = (direction) => seen.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="grid"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+          <button class="item b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+    await triggerKeyEvent(".b", "keydown", "ArrowDown");
+
+    assert.deepEqual(
+      seen,
+      [],
+      "there is no unused axis to report, so a grid consumer never has to distinguish one"
+    );
+  });
+
   test("changing itemSelector releases the items it no longer matches", async function (assert) {
     const state = new (class {
       @tracked selector = ".one";

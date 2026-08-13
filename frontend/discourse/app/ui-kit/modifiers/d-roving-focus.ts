@@ -349,6 +349,32 @@ interface DRovingFocusArgs {
    * rather than move it. Only the ARIA spelling is affected.
    */
   disabledItems?: DRovingFocusDisabledItems;
+  /**
+   * Called for an arrow press on the axis this group does NOT navigate, so the keys a
+   * single-axis composite leaves unused become available without every consumer re-deriving
+   * them. A `"vertical"` group reports the horizontal arrows and a `"horizontal"` group reports
+   * the vertical ones; a `"grid"` navigates both and so never reports either.
+   *
+   * Deliberately reports a direction rather than prescribing a response, exactly as
+   * {@link DRovingFocusArgs.onBoundary} does, because the meaning varies per pattern: expand
+   * and collapse for a tree, enter and exit a cell for a treegrid, open and close a submenu for
+   * a menubar. Those semantics are the consumer's; only the key handling is shared.
+   *
+   * `direction` is LOGICAL and already mirrored where the axis mirrors. In a right-to-left
+   * group the forward horizontal key is ArrowLeft, which is what a reader expects when the
+   * arrow pointing at a row's children is the one that opens them. The vertical axis does not
+   * mirror, so a horizontal group reports ArrowDown as `"forward"` whatever the direction.
+   *
+   * Return `true` when the press was acted on and the modifier will consume it. Return nothing
+   * to leave it un-prevented so it can bubble, which is what a leaf node or an
+   * already-collapsed row needs. Never fires while the cursor rests nowhere, since there would
+   * be no item to report it against.
+   */
+  onCrossAxis?: (
+    direction: "forward" | "backward",
+    item: HTMLElement,
+    event: KeyboardEvent
+  ) => boolean | void;
 }
 
 interface DRovingFocusSignature {
@@ -441,6 +467,11 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #tabStopHolder: HTMLElement | null = null;
   #itemSelector?: string;
   #onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
+  #onCrossAxis?: (
+    direction: "forward" | "backward",
+    item: HTMLElement,
+    event: KeyboardEvent
+  ) => boolean | void;
   #onActiveChange?: (
     item: HTMLElement | null,
     meta?: { pointer: boolean }
@@ -742,19 +773,25 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#mode === "active-descendant" ||
       this.#orientation === "vertical" ||
       this.#orientation === "grid";
-    // A horizontal axis is physical, so its arrows follow the writing direction: in RTL the
-    // visual "next" item is the one to the LEFT.
-    const forwardKey = this.#isRtl() ? "ArrowLeft" : "ArrowRight";
-    const backwardKey = this.#isRtl() ? "ArrowRight" : "ArrowLeft";
+    // Resolved ONCE here so nothing below mentions writing direction: a horizontal axis is
+    // physical, so in RTL the visually "next" item is the one to the LEFT, and every branch
+    // after this compares against logical names as though the group were LTR.
+    const key = this.#logicalKey(event.key);
 
     let outcome: StepOutcome;
-    switch (event.key) {
-      case forwardKey:
-      case backwardKey: {
+    switch (key) {
+      case "ArrowRight":
+      case "ArrowLeft": {
         if (!horizontal) {
+          this.#emitCrossAxis(
+            key === "ArrowRight" ? "forward" : "backward",
+            cells,
+            current,
+            event
+          );
           return;
         }
-        const delta = event.key === forwardKey ? 1 : -1;
+        const delta = key === "ArrowRight" ? 1 : -1;
         outcome = this.#applyStep("horizontal", delta, cells, current, columns);
         if (outcome.kind === "group-edge") {
           if (current >= 0 && this.#onBoundary) {
@@ -768,9 +805,15 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       case "ArrowDown":
       case "ArrowUp": {
         if (!vertical) {
+          this.#emitCrossAxis(
+            key === "ArrowDown" ? "forward" : "backward",
+            cells,
+            current,
+            event
+          );
           return;
         }
-        const direction = event.key === "ArrowDown" ? 1 : -1;
+        const direction = key === "ArrowDown" ? 1 : -1;
         outcome = this.#applyStep(
           "vertical",
           direction,
@@ -818,7 +861,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         if (this.#logicalCount == null) {
           return;
         }
-        const forward = event.key === "PageDown";
+        const forward = key === "PageDown";
         // With no cursor there is no current row to page from; anchor on the mounted window
         // instead, or a PageDown computed from -1 pages BACKWARDS to the top of the data set.
         const anchor =
@@ -995,6 +1038,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     );
     this.#itemSelector = named.itemSelector;
     this.#onActivate = named.onActivate;
+    this.#onCrossAxis = named.onCrossAxis;
     this.#onActiveChange = named.onActiveChange;
     this.#onBoundary = named.onBoundary;
     this.#logicalCount = named.logicalCount;
@@ -1094,6 +1138,56 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   /**
    * Whether the group is laid out right-to-left, which inverts the horizontal arrows.
    */
+  /**
+   * The arrow key this press MEANS, with writing direction already resolved: in a right-to-left
+   * group ArrowLeft is the forward horizontal key, so it is reported as ArrowRight.
+   *
+   * Normalizing once at the top of the dispatch, rather than rebuilding a forward/backward pair
+   * per branch, is what keeps direction out of every branch below and stops a new
+   * direction-aware key from having to re-derive it.
+   *
+   * Only the horizontal pair is affected. The vertical axis does not mirror.
+   *
+   * @param key - The physical `event.key`.
+   */
+  #logicalKey(key: string): string {
+    if (!this.#isRtl()) {
+      return key;
+    }
+    if (key === "ArrowLeft") {
+      return "ArrowRight";
+    }
+    return key === "ArrowRight" ? "ArrowLeft" : key;
+  }
+
+  /**
+   * Hands the consumer an arrow press on the axis this group does NOT navigate, so a pattern
+   * can attach its own meaning: expand and collapse for a tree, enter and exit a cell for a
+   * treegrid, open and close a submenu for a menubar.
+   *
+   * Shaped like {@link DRovingFocusArgs.onBoundary}: a resolved direction and no prescribed
+   * response. The modifier consumes the key only when the consumer reports that it acted, which
+   * is what lets a leaf node or an already-collapsed row leave the event to bubble.
+   *
+   * @param direction - Logical, so it is already mirrored where the axis mirrors.
+   * @param cells - The coordinate space.
+   * @param current - Where the cursor rests, or negative when it rests nowhere.
+   * @param event - The originating press, forwarded so a consumer can inspect it.
+   */
+  #emitCrossAxis(
+    direction: "forward" | "backward",
+    cells: HTMLElement[],
+    current: number,
+    event: KeyboardEvent
+  ): void {
+    if (current < 0 || !this.#onCrossAxis) {
+      return;
+    }
+    if (this.#onCrossAxis(direction, cells[current], event)) {
+      event.preventDefault();
+    }
+  }
+
   #isRtl(): boolean {
     return this.#element
       ? getComputedStyle(this.#element).direction === "rtl"
