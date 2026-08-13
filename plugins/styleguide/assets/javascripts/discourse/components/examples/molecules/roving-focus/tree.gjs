@@ -15,6 +15,8 @@ const NODES = [
 ];
 
 /**
+ * Mirrors https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+ *
  * The APG tree pattern in plain semantic HTML. The modifier runs vertically over the visible
  * rows, which is the whole of what it claims here: hierarchy is the consumer's.
  *

@@ -14,6 +14,8 @@ const OPTIONS = [
 ];
 
 /**
+ * Mirrors https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+ *
  * The APG listbox pattern, and the only example here that types.
  *
  * The labels share initials on purpose, so one character lands on the first of a group and a

@@ -7,6 +7,8 @@ import { i18n } from "discourse-i18n";
 const CHOICES = ["left", "center", "right"];
 
 /**
+ * Mirrors https://www.w3.org/WAI/ARIA/apg/patterns/radio/
+ *
  * The APG radio group pattern, and the one place selection is meant to follow the cursor.
  *
  * A radio group states which member it is checked on with `aria-checked` rather than

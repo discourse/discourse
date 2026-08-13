@@ -13,6 +13,10 @@ in core's codebase.
  * `dom-accessibility-api` directly loses the corrections below silently, and a second copy of
  * them is worse than none, because only one of the two gets fixed next time another is found.
  *
+ * Serves the type-ahead wording in the WAI-ARIA Authoring Practices, which specifies moving to
+ * "the next item with a NAME that starts with the typed character" — the name, not the text:
+ * https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/
+ *
  * @returns {Promise<(element: Element) => string>} Computes the accessible name of an element,
  * per https://w3c.github.io/accname/ — what assistive technology announces for it.
  */

@@ -15,6 +15,8 @@ const COMMANDS = [
 ];
 
 /**
+ * Mirrors https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+ *
  * The APG toolbar pattern in plain semantic HTML: the whole bar is one tab stop, the arrows move
  * between controls, and Home/End reach the ends.
  *
