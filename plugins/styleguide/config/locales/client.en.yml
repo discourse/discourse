@@ -41,6 +41,30 @@ en:
           title: "Colors"
         dialog:
           title: "Dialog"
+        drag_and_drop:
+          title: "Drag and drop"
+          positions_title: "Drop positions"
+          positions_description: "Four sibling positions plus one container position. A target toggles exactly one while a compatible drag is over it."
+          positions:
+            above: "Above"
+            below: "Below"
+            left: "Left"
+            right: "Right"
+            inside: "Inside"
+          external_title: "A drop from outside the window"
+          external_description: "An external target without a position treats the whole target as one destination. Give it an axis to use the positions above."
+          external_label: "External"
+          live_title: "A live reorder"
+          live_description: "Drag a row by its grip or use its arrow buttons to reorder the list with the shared primitives."
+          drag_handle: "Drag %{item} to reorder"
+          move_up: "Move %{item} up"
+          move_down: "Move %{item} down"
+          items:
+            alpha: "Alpha"
+            bravo: "Bravo"
+            charlie: "Charlie"
+          resize_title: "Box resize"
+          resize_description: "Drag an edge or corner. The resize-handles component reports pointer geometry, and this example turns it into a size."
         icons:
           title: "Icons"
           full_list: "See the full list of Font Awesome Icons"

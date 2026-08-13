@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Styleguide Smoke Test" do
+  include ThemeScreenshotMarker
+
   fab!(:admin)
 
   let(:styleguide) { PageObjects::Pages::Styleguide.new }
@@ -36,6 +38,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
       { href: "/molecules/dialog", title: "Dialog" },
+      { href: "/molecules/drag-and-drop", title: "Drag and drop" },
       { href: "/molecules/tooltips", title: "Tooltips" },
       { href: "/molecules/topic-list-item", title: "Topic List Item" },
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
@@ -121,6 +124,14 @@ RSpec.describe "Styleguide Smoke Test" do
 
     expect(styleguide).to have_breadcrumb("Styleguide")
     expect(styleguide).to have_breadcrumb("Buttons")
+  end
+
+  it "renders the drag and drop examples" do
+    visit "/styleguide/molecules/drag-and-drop"
+
+    expect(styleguide).to have_heading("Drag and drop")
+    expect(page).to have_css(".styleguide-drag-and-drop__resizable")
+    screenshot_marker(label: "styleguide-drag-and-drop")
   end
 
   it "renders the index page correctly on a site with no default color schemes" do
