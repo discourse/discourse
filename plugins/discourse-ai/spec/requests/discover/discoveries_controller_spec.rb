@@ -10,7 +10,6 @@ describe DiscourseAi::Discover::DiscoveriesController do
     SiteSetting.ai_discover_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
-    SiteSetting.ai_hugging_face_tei_reranker_endpoint = "https://reranker.example.com"
   end
 
   describe "#reply" do
@@ -27,7 +26,6 @@ describe DiscourseAi::Discover::DiscoveriesController do
       SiteSetting.ai_discover_allowed_groups = allowed_group.id.to_s
       SiteSetting.ai_embeddings_enabled = true
       SiteSetting.ai_embeddings_semantic_search_enabled = true
-      SiteSetting.ai_hugging_face_tei_reranker_endpoint = "https://reranker.example.com"
       allowed_group.add(user)
     end
 

@@ -12,7 +12,6 @@ describe "User AI preferences" do
     SiteSetting.ai_discover_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
-    SiteSetting.ai_hugging_face_tei_reranker_endpoint = "https://reranker.example.com"
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
     assign_fake_provider_to(:ai_default_llm_model)
     sign_in(user)

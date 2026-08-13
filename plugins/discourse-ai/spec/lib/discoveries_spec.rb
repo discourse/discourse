@@ -16,7 +16,6 @@ describe DiscourseAi::Discoveries do
     SiteSetting.ai_discover_allowed_groups = allowed_group.id.to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
-    SiteSetting.ai_hugging_face_tei_reranker_endpoint = "https://reranker.example.com"
     allowed_group.add(user)
     agent_group.add(user)
   end
@@ -45,12 +44,9 @@ describe DiscourseAi::Discoveries do
       expect(described_class.enabled_for_user?(user)).to eq(false)
     end
 
-    it "requires semantic search and the reranker used by the bounded pipeline" do
+    it "requires semantic search" do
       SiteSetting.ai_embeddings_semantic_search_enabled = false
-      expect(described_class.enabled_for_user?(user)).to eq(false)
 
-      SiteSetting.ai_embeddings_semantic_search_enabled = true
-      SiteSetting.ai_hugging_face_tei_reranker_endpoint = ""
       expect(described_class.enabled_for_user?(user)).to eq(false)
     end
   end

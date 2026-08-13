@@ -38,7 +38,6 @@ describe Jobs::StreamDiscoverReply do
     SiteSetting.ai_discover_allowed_groups = group.id.to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
-    SiteSetting.ai_hugging_face_tei_reranker_endpoint = "https://reranker.example.com"
     group.add(user)
     DiscourseAi::Discoveries.bind_request(user_id: user.id, request_id:, query:)
 

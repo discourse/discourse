@@ -189,8 +189,6 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
       SiteSetting.ai_discover_allowed_groups = group.id.to_s
       SiteSetting.ai_embeddings_enabled = true
       SiteSetting.ai_embeddings_semantic_search_enabled = true
-      SiteSetting.ai_hugging_face_tei_reranker_endpoint = "https://reranker.example.com"
-
       user.user_option.update!(ai_search_discoveries: true)
       serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user))
       serializer = serializer.as_json

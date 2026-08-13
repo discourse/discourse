@@ -24,25 +24,19 @@ describe DiscourseAi::Discoveries::Retrieval do
   end
 
   describe "#call" do
-    it "fuses, permission-checks, reranks, and assigns request-owned source references" do
+    it "fuses, permission-checks, and assigns request-owned source references" do
       lexical = [source(post_1), source(post_2), source(private_post)]
       semantic = [source(post_2), source(post_3), source(private_post)]
-      reranker =
-        lambda do |_query, candidates|
-          expect(candidates.length).to eq(3)
-          [{ index: 2, score: 0.9 }, { index: 1, score: 0.8 }, { index: 0, score: 0.7 }]
-        end
 
       result =
         described_class.new(
           user:,
           lexical_retriever: ->(_query) { lexical },
           semantic_retriever: ->(_query) { semantic },
-          reranker:,
         ).call("猫")
 
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
-        [topic_3.id, topic_1.id, topic_2.id],
+        [topic_2.id, topic_1.id, topic_3.id],
       )
       expect(result.candidates.map { |candidate| candidate.fetch("source_ref") }).to eq(
         %w[source_1 source_2 source_3],
@@ -58,7 +52,6 @@ describe DiscourseAi::Discoveries::Retrieval do
           user:,
           lexical_retriever: ->(_query) { [source(post_1)] },
           semantic_retriever: ->(_query) { [source(post_1)] },
-          reranker: ->(_query, _candidates) { [{ index: 0, score: 1.0 }] },
         ).call("cats in:messages")
 
       expect(result.candidates).to eq([])
@@ -72,14 +65,13 @@ describe DiscourseAi::Discoveries::Retrieval do
           user:,
           lexical_retriever: ->(_query) { [source(post_1)] },
           semantic_retriever:,
-          reranker: ->(_query, _candidates) { [{ index: 0, score: 1.0 }] },
         ).call("猫 category:#{category.slug}")
 
       expect(semantic_retriever).not_to have_received(:call)
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq([topic_1.id])
     end
 
-    it "excludes deleted posts and topics before reranking" do
+    it "excludes deleted posts and topics before synthesis" do
       candidates = [source(post_1), source(post_2), source(post_3)]
       post_2.update!(deleted_at: Time.zone.now)
       topic_3.update!(deleted_at: Time.zone.now)
@@ -89,26 +81,9 @@ describe DiscourseAi::Discoveries::Retrieval do
           user:,
           lexical_retriever: ->(_query) { candidates },
           semantic_retriever: ->(_query) { [] },
-          reranker: ->(_query, _candidates) { [{ index: 0, score: 1.0 }] },
         ).call("useful answers")
 
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq([topic_1.id])
-    end
-
-    it "ignores duplicate candidate indexes from the reranker" do
-      result =
-        described_class.new(
-          user:,
-          lexical_retriever: ->(_query) { [source(post_1), source(post_2)] },
-          semantic_retriever: ->(_query) { [] },
-          reranker: ->(_query, _candidates) do
-            [{ index: 0, score: 1.0 }, { index: 0, score: 0.9 }, { index: 1, score: 0.8 }]
-          end,
-        ).call("useful answers")
-
-      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
-        [topic_1.id, topic_2.id],
-      )
     end
   end
 
@@ -119,9 +94,6 @@ describe DiscourseAi::Discoveries::Retrieval do
           user:,
           lexical_retriever: ->(_query) { [source(post_1), source(post_2)] },
           semantic_retriever: ->(_query) { [] },
-          reranker: ->(_query, _candidates) do
-            [{ index: 0, score: 1.0 }, { index: 1, score: 0.9 }]
-          end,
         )
       result = retrieval.call("useful answers")
 
@@ -140,7 +112,6 @@ describe DiscourseAi::Discoveries::Retrieval do
           user:,
           lexical_retriever: ->(_query) { [source(post_1)] },
           semantic_retriever: ->(_query) { [] },
-          reranker: ->(_query, _candidates) { [{ index: 0, score: 1.0 }] },
         )
       result = retrieval.call("useful answers")
 
@@ -156,7 +127,6 @@ describe DiscourseAi::Discoveries::Retrieval do
           user:,
           lexical_retriever: ->(_query) { [source(post_1)] },
           semantic_retriever: ->(_query) { [] },
-          reranker: ->(_query, _candidates) { [{ index: 0, score: 1.0 }] },
         )
       result = retrieval.call("useful answers")
 
@@ -178,14 +148,7 @@ describe DiscourseAi::Discoveries::Retrieval do
       hidden_post = Fabricate(:post, topic: private_topic, raw: token)
       [parent_post, child_post, hidden_post].each { |post| SearchIndexer.index(post, force: true) }
 
-      retrieval =
-        described_class.new(
-          user:,
-          semantic_retriever: ->(_query) { [] },
-          reranker: ->(_query, candidates) do
-            candidates.each_index.map { |index| { index:, score: 1.0 - index.fdiv(100) } }
-          end,
-        )
+      retrieval = described_class.new(user:, semantic_retriever: ->(_query) { [] })
       result = retrieval.call("#{token} ##{category.slug}")
 
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to contain_exactly(

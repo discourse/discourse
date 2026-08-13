@@ -20,11 +20,10 @@ module DiscourseAi
           end
         end
 
-      def initialize(user:, lexical_retriever: nil, semantic_retriever: nil, reranker: nil)
+      def initialize(user:, lexical_retriever: nil, semantic_retriever: nil)
         @guardian = Guardian.new(user)
         @lexical_retriever = lexical_retriever || method(:lexical_sources)
         @semantic_retriever = semantic_retriever || method(:semantic_sources)
-        @reranker = reranker || DiscourseAi::Inference::HuggingFaceTextEmbeddings.method(:rerank)
       end
 
       def call(query)
@@ -34,7 +33,6 @@ module DiscourseAi
         rankings << @semantic_retriever.call(query) if !explicit_filters?(query)
         candidates = reciprocal_rank_fusion(rankings)
         candidates = revalidate_and_limit(candidates)
-        candidates = rerank(query, candidates)
         candidates =
           candidates.map.with_index do |candidate, index|
             candidate.merge("source_ref" => "source_#{index + 1}")
@@ -167,37 +165,6 @@ module DiscourseAi
             )
           end
           .first(CANDIDATE_LIMIT)
-      end
-
-      def rerank(query, candidates)
-        return [] if candidates.empty?
-
-        response =
-          @reranker.call(
-            query,
-            candidates.map { |candidate| "#{candidate["title"]}\n#{candidate["excerpt"]}" },
-          )
-        rows = response.is_a?(Hash) ? response["results"] || response[:results] : response
-        raise Net::HTTPBadResponse, "Unexpected reranker response" if !rows.is_a?(Array)
-
-        seen_indexes = Set.new
-        ranked =
-          rows.filter_map do |row|
-            row = row.with_indifferent_access
-            index = Integer(row[:index], exception: false)
-            next if index.nil? || candidates[index].nil?
-            next if seen_indexes.include?(index)
-
-            seen_indexes << index
-
-            candidates[index].merge("reranker_score" => row[:score].to_f)
-          end
-        raise Net::HTTPBadResponse, "Reranker returned no candidates" if ranked.empty?
-
-        ranked
-          .sort_by { |candidate| -candidate.fetch("reranker_score") }
-          .map
-          .with_index { |candidate, index| candidate.merge("reranker_rank" => index + 1) }
       end
 
       def plain_text(value)

@@ -161,8 +161,8 @@ en:
 
     ai_discover_enabled: "Enable the discovery search feature"
     ai_discover_agent: "Agent to use for discovery search feature"
-    ai_discover_allowed_groups: "Groups allowed to use Discoveries. The selected agent's permissions and normal topic and category visibility still apply. Personal messages are always excluded. Content from restricted categories visible to an allowed user may be sent to the configured LLM and reranker providers."
-    ai_hugging_face_tei_reranker_endpoint: "URL of the Text Embeddings Inference reranker used to rank hybrid search candidates. Required by Discoveries."
+    ai_discover_allowed_groups: "Groups allowed to use Discoveries. The selected agent's permissions and normal topic and category visibility still apply. Personal messages are always excluded. Content from restricted categories visible to an allowed user may be sent to the configured LLM provider."
+    ai_hugging_face_tei_reranker_endpoint: "URL of the Text Embeddings Inference reranker."
     ai_hugging_face_tei_reranker_api_key: "API key for the configured Text Embeddings Inference reranker."
 
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"

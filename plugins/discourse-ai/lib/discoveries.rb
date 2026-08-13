@@ -193,8 +193,7 @@ module DiscourseAi
       end
 
       def retrieval_configured?
-        SiteSetting.ai_embeddings_enabled && SiteSetting.ai_embeddings_semantic_search_enabled &&
-          DiscourseAi::Inference::HuggingFaceTextEmbeddings.reranker_configured?
+        SiteSetting.ai_embeddings_enabled && SiteSetting.ai_embeddings_semantic_search_enabled
       end
     end
   end
