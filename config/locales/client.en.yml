@@ -7457,198 +7457,146 @@ en:
                 other: "%{count} members got demoted to this trust level"
               stable_aria: "no movement"
             headline:
+              titles:
+                engagement_up: "Engagement is up in %{period}"
+                stickiness_and_daily_engagement_increased: "Stickiness and daily engagement have increased in %{period}"
+                stickiness_and_new_signups_increased: "Stickiness and new signups have increased in %{period}"
+                stickiness_increased: "Stickiness has increased in %{period}"
+                daily_engagement_and_new_signups_increased: "Daily engagement and new signups have increased in %{period}"
+                daily_engagement_increased: "Daily engagement has increased in %{period}"
+                new_signups_increased: "New signups have increased in %{period}"
+                engagement_declined: "Engagement has declined in %{period}"
+                some_engagement_declines: "Some declines in engagement in %{period}"
+                engagement_steady: "Engagement is steady in %{period}"
+                insufficient_activity: "Not enough activity yet to summarise engagement."
               scenarios:
                 improved_improved_improved:
-                  title: "Engagement is up in %{period}"
                   summary: "Stickiness, daily engagement, and new signups have all improved, showing that more members are joining and participating in your community."
                 improved_improved_declined:
-                  title: "Stickiness and daily engagement have increased in %{period}"
                   summary: "Stickiness and daily engagement are up, but new signups are down."
                 improved_improved_flat:
-                  title: "Stickiness and daily engagement have increased in %{period}"
                   summary: "Stickiness and daily engagement are up, but new signups are flat."
                 improved_improved_unavailable:
-                  title: "Stickiness and daily engagement have increased in %{period}"
                   summary: "Stickiness and daily engagement are up."
                 improved_declined_improved:
-                  title: "Stickiness and new signups have increased in %{period}"
                   summary: "Stickiness and new signups are up, but daily engagement is down."
                 improved_declined_declined:
-                  title: "Stickiness has increased in %{period}"
                   summary: "Stickiness is up, but daily engagement and new signups are down."
                 improved_declined_flat:
-                  title: "Stickiness has increased in %{period}"
                   summary: "Stickiness is up, but daily engagement is down."
                 improved_declined_unavailable:
-                  title: "Stickiness has increased in %{period}"
                   summary: "Stickiness is up, but daily engagement is down."
                 improved_flat_improved:
-                  title: "Stickiness and new signups have increased in %{period}"
                   summary: "Stickiness and new signups are up, but daily engagement is flat."
                 improved_flat_declined:
-                  title: "Stickiness has increased in %{period}"
                   summary: "Stickiness is up, but new signups are down."
                 improved_flat_flat:
-                  title: "Stickiness has increased in %{period}"
                   summary: "Stickiness is up, but daily engagement and new signups are flat."
                 improved_flat_unavailable:
-                  title: "Stickiness has increased in %{period}"
                   summary: "Stickiness is up, but daily engagement is flat."
                 improved_unavailable_improved:
-                  title: "Stickiness and new signups have increased in %{period}"
                   summary: "Stickiness and new signups are up."
                 improved_unavailable_declined:
-                  title: "Stickiness has increased in %{period}"
                   summary: "Stickiness is up, but new signups are down."
                 improved_unavailable_flat:
-                  title: "Stickiness has increased in %{period}"
                   summary: "Stickiness is up, but new signups are flat."
                 improved_unavailable_unavailable:
-                  title: "Stickiness has increased in %{period}"
                   summary: "Stickiness is up."
                 declined_improved_improved:
-                  title: "Daily engagement and new signups have increased in %{period}"
                   summary: "Daily engagement and new signups are up, but stickiness is down."
                 declined_improved_declined:
-                  title: "Daily engagement has increased in %{period}"
                   summary: "Daily engagement is up, but stickiness and new signups are down."
                 declined_improved_flat:
-                  title: "Daily engagement has increased in %{period}"
                   summary: "Daily engagement is up, but stickiness is down."
                 declined_improved_unavailable:
-                  title: "Daily engagement has increased in %{period}"
                   summary: "Daily engagement is up, but stickiness is down."
                 declined_declined_improved:
-                  title: "New signups have increased in %{period}"
                   summary: "New signups are up, but stickiness and daily engagement are down."
                 declined_declined_declined:
-                  title: "Engagement has declined in %{period}"
                   summary: "Stickiness, daily engagement, and new signups are all down."
                 declined_declined_flat:
-                  title: "Some declines in engagement in %{period}"
                   summary: "Stickiness and daily engagement are down, but new signups are holding steady."
                 declined_declined_unavailable:
-                  title: "Engagement has declined in %{period}"
                   summary: "Stickiness and daily engagement are down."
                 declined_flat_improved:
-                  title: "New signups have increased in %{period}"
                   summary: "New signups are up, but stickiness is down."
                 declined_flat_declined:
-                  title: "Some declines in engagement in %{period}"
                   summary: "Stickiness and new signups are down, but daily engagement is holding steady."
                 declined_flat_flat:
-                  title: "Some declines in engagement in %{period}"
                   summary: "Stickiness is down, but daily engagement and new signups are holding steady."
                 declined_flat_unavailable:
-                  title: "Some declines in engagement in %{period}"
                   summary: "Stickiness is down, but daily engagement is holding steady."
                 declined_unavailable_improved:
-                  title: "New signups have increased in %{period}"
                   summary: "New signups are up, but stickiness is down."
                 declined_unavailable_declined:
-                  title: "Engagement has declined in %{period}"
                   summary: "Stickiness and new signups are down."
                 declined_unavailable_flat:
-                  title: "Some declines in engagement in %{period}"
                   summary: "Stickiness is down, but new signups are holding steady."
                 declined_unavailable_unavailable:
-                  title: "Engagement has declined in %{period}"
                   summary: "Stickiness is down."
                 flat_improved_improved:
-                  title: "Daily engagement and new signups have increased in %{period}"
                   summary: "Daily engagement and new signups are up, but stickiness is flat."
                 flat_improved_declined:
-                  title: "Daily engagement has increased in %{period}"
                   summary: "Daily engagement is up, but new signups are down."
                 flat_improved_flat:
-                  title: "Daily engagement has increased in %{period}"
                   summary: "Daily engagement is up, but stickiness and new signups are flat."
                 flat_improved_unavailable:
-                  title: "Daily engagement has increased in %{period}"
                   summary: "Daily engagement is up, but stickiness is flat."
                 flat_declined_improved:
-                  title: "New signups have increased in %{period}"
                   summary: "New signups are up, but daily engagement is down."
                 flat_declined_declined:
-                  title: "Some declines in engagement in %{period}"
                   summary: "Daily engagement and new signups are down, but stickiness is holding steady."
                 flat_declined_flat:
-                  title: "Some declines in engagement in %{period}"
                   summary: "Daily engagement is down, but stickiness and new signups are holding steady."
                 flat_declined_unavailable:
-                  title: "Some declines in engagement in %{period}"
                   summary: "Daily engagement is down, but stickiness is holding steady."
                 flat_flat_improved:
-                  title: "New signups have increased in %{period}"
                   summary: "New signups are up, but stickiness and daily engagement are flat."
                 flat_flat_declined:
-                  title: "Some declines in engagement in %{period}"
                   summary: "New signups are down, but stickiness and daily engagement are holding steady."
                 flat_flat_flat:
-                  title: "Engagement is steady in %{period}"
                   summary: "No meaningful change in stickiness, daily engagement, or new signups."
                 flat_flat_unavailable:
-                  title: "Engagement is steady in %{period}"
                   summary: "No meaningful change in stickiness and daily engagement."
                 flat_unavailable_improved:
-                  title: "New signups have increased in %{period}"
                   summary: "New signups are up, but stickiness is flat."
                 flat_unavailable_declined:
-                  title: "Some declines in engagement in %{period}"
                   summary: "New signups are down, but stickiness is holding steady."
                 flat_unavailable_flat:
-                  title: "Engagement is steady in %{period}"
                   summary: "No meaningful change in stickiness and new signups."
                 flat_unavailable_unavailable:
-                  title: "Engagement is steady in %{period}"
                   summary: "No meaningful change in stickiness."
                 unavailable_improved_improved:
-                  title: "Daily engagement and new signups have increased in %{period}"
                   summary: "Daily engagement and new signups are up."
                 unavailable_improved_declined:
-                  title: "Daily engagement has increased in %{period}"
                   summary: "Daily engagement is up, but new signups are down."
                 unavailable_improved_flat:
-                  title: "Daily engagement has increased in %{period}"
                   summary: "Daily engagement is up, but new signups are flat."
                 unavailable_improved_unavailable:
-                  title: "Daily engagement has increased in %{period}"
                   summary: "Daily engagement is up."
                 unavailable_declined_improved:
-                  title: "New signups have increased in %{period}"
                   summary: "New signups are up, but daily engagement is down."
                 unavailable_declined_declined:
-                  title: "Engagement has declined in %{period}"
                   summary: "Daily engagement and new signups are down."
                 unavailable_declined_flat:
-                  title: "Some declines in engagement in %{period}"
                   summary: "Daily engagement is down, but new signups are holding steady."
                 unavailable_declined_unavailable:
-                  title: "Engagement has declined in %{period}"
                   summary: "Daily engagement is down."
                 unavailable_flat_improved:
-                  title: "New signups have increased in %{period}"
                   summary: "New signups are up, but daily engagement is flat."
                 unavailable_flat_declined:
-                  title: "Some declines in engagement in %{period}"
                   summary: "New signups are down, but daily engagement is holding steady."
                 unavailable_flat_flat:
-                  title: "Engagement is steady in %{period}"
                   summary: "No meaningful change in daily engagement and new signups."
                 unavailable_flat_unavailable:
-                  title: "Engagement is steady in %{period}"
                   summary: "No meaningful change in daily engagement."
                 unavailable_unavailable_improved:
-                  title: "New signups have increased in %{period}"
                   summary: "New signups are up."
                 unavailable_unavailable_declined:
-                  title: "Engagement has declined in %{period}"
                   summary: "New signups are down."
                 unavailable_unavailable_flat:
-                  title: "Engagement is steady in %{period}"
                   summary: "No meaningful change in new signups."
                 unavailable_unavailable_unavailable:
-                  title: "Not enough activity yet to summarise engagement."
                   summary: "Pick a longer date range or come back once your community has more activity."
               cta:
                 dau_mau: "Take a look at the activity by category to see which areas of your community may need your attention."

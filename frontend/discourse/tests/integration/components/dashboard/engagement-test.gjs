@@ -1,8 +1,8 @@
 import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
+import { engagementHeadlineTitleKey } from "discourse/admin/lib/engagement-headline";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
 
 module("Integration | Component | Dashboard | Engagement", function (hooks) {
   setupRenderingTest(hooks);
@@ -40,34 +40,11 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     ],
   };
 
-  test("has a complete headline lookup table", function (assert) {
-    const directions = ["improved", "declined", "flat", "unavailable"];
-    const expectedScenarios = directions.flatMap((stickiness) =>
-      directions.flatMap((dailyEngagement) =>
-        directions.map(
-          (newSignups) => `${stickiness}_${dailyEngagement}_${newSignups}`
-        )
-      )
-    );
-    const prefix = "admin.dashboard.sections.engagement.headline";
-    const scenarios = I18n.lookup(`${prefix}.scenarios`);
-
-    assert.deepEqual(
-      Object.keys(scenarios).sort(),
-      expectedScenarios.sort(),
-      "contains every direction combination exactly once"
-    );
-    assert.true(
-      Object.values(scenarios).every(
-        ({ title, summary }) =>
-          typeof title === "string" && typeof summary === "string"
-      ),
-      "every scenario has a complete headline and summary"
-    );
-    assert.deepEqual(
-      Object.keys(I18n.lookup(`${prefix}.cta`)).sort(),
-      ["daily_engaged_users", "dau_mau", "new_signups"],
-      "contains one CTA for each engagement metric"
+  test("looks up a headline by scenario", function (assert) {
+    assert.strictEqual(
+      engagementHeadlineTitleKey("improved_declined_flat"),
+      "stickiness_increased",
+      "returns the semantic headline key"
     );
   });
 

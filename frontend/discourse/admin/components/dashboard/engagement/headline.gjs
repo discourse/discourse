@@ -7,6 +7,7 @@ import {
   formatKpiValue,
   roundDeltaPercent,
 } from "discourse/admin/lib/dashboard-format";
+import { engagementHeadlineTitleKey } from "discourse/admin/lib/engagement-headline";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -142,7 +143,7 @@ export default class EngagementHeadline extends Component {
     const cta = ctaOwner ? i18n(`${prefix}.cta.${ctaOwner}`) : null;
 
     return {
-      title: i18n(`${scenarioPrefix}.title`, {
+      title: i18n(`${prefix}.titles.${engagementHeadlineTitleKey(scenario)}`, {
         period: formatDashboardHeadlinePeriod(this.args.period),
       }),
       summary: cta ? `${summary} ${cta}` : summary,
