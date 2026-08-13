@@ -262,7 +262,7 @@ export default class DVirtualizer<T> extends Modifier<
    * arriving beyond the viewport move the BAND, not the range. Watching the keys
    * instead re-arms the edge the change actually touched. Null until the first
    * non-empty evaluation seeds them, which is what keeps mount suppression
-   * intact across the initial 0 -> N transition.
+   * intact across the initial transition from zero to a populated list.
    */
   #lastFirstKey: VirtualKey | null = null;
   #lastLastKey: VirtualKey | null = null;
@@ -274,7 +274,7 @@ export default class DVirtualizer<T> extends Modifier<
    */
   #lastCount = 0;
 
-  /** Reentrancy guard for the synchronous offset push (see {@link #syncScrollOffset}). */
+  /** Reentrancy guard for the synchronous offset push (see `#syncScrollOffset`). */
   #syncingScroll = false;
 
   /**
@@ -327,7 +327,8 @@ export default class DVirtualizer<T> extends Modifier<
       // the API is never registered — so `measureRow` stays a no-op and NO row is
       // ever measured, silently, for the life of the list.
       //
-      // The JavaScript adapter's public type loses its element and option types.
+      // TODO(devxp-typescript-pending): Remove once the JavaScript adapter
+      // preserves the engine's element and option types.
       const virtualizer = createElementVirtualizer(
         options
       ) as unknown as VirtualizerApi;
@@ -377,7 +378,7 @@ export default class DVirtualizer<T> extends Modifier<
    * An empty list gets no height at all: the `empty` block renders inside this
    * element, and a self-centering empty state would collapse into a zero-height box.
    *
-   * @param options `grow` raises the height but never lowers it.
+   * @param options - `grow` raises the height but never lowers it.
    */
   #applySizerHeight({ grow = false } = {}) {
     const sizer = this.#sizer();
@@ -428,7 +429,7 @@ export default class DVirtualizer<T> extends Modifier<
    * Compared with a tolerance rather than exactly, because the engine's offset is
    * arithmetic over estimates while `scrollTop` is snapped to the layout grid. A
    * no-op when they already agree, which is the common case now that
-   * {@link #growSizerToTotal} keeps a grown list's anchored scroll reachable.
+   * `#growSizerToTotal` keeps a grown list's anchored scroll reachable.
    */
   #resyncScrollOffset() {
     const element = this.#element;
@@ -479,7 +480,7 @@ export default class DVirtualizer<T> extends Modifier<
    * Strip an animated scroll when the reader has asked for reduced motion, so a
    * consumer does not have to check for it at every call site.
    *
-   * @param options The caller's scroll options.
+   * @param options - The caller's scroll options.
    * @returns The options, with any animation removed if motion is unwelcome.
    */
   #respectMotionPreference<O extends { behavior?: ScrollBehavior }>(
@@ -553,7 +554,7 @@ export default class DVirtualizer<T> extends Modifier<
    * takes the no-op branch and settles through the engine's own reconcile loop
    * instead.
    *
-   * @param previousScrollTop The offset before the scroll was requested.
+   * @param previousScrollTop - The offset before the scroll was requested.
    */
   #syncScrollOffset(previousScrollTop: number | undefined) {
     const element = this.#element;
@@ -706,8 +707,8 @@ export default class DVirtualizer<T> extends Modifier<
    * the loss would instead desync the rendered window, the caller must undo its
    * commit on a false return rather than memoize a publish that never happened.
    *
-   * @param label Callback name, used to attribute the error.
-   * @param run The callback to invoke.
+   * @param label - Callback name, used to attribute the error.
+   * @param run - The callback to invoke.
    * @returns Whether it completed without throwing.
    */
   #safely(label: string, run: () => void): boolean {
@@ -731,7 +732,7 @@ export default class DVirtualizer<T> extends Modifier<
    * Keying off the boundary rows instead re-arms exactly the edge that gained
    * rows, which is why a tail change must not disturb the start latch.
    *
-   * @param count The total number of items, known to be non-zero.
+   * @param count - The total number of items, known to be non-zero.
    */
   #rearmEdgesForItemChange(count: number) {
     const named = this.#named;
@@ -813,12 +814,12 @@ export default class DVirtualizer<T> extends Modifier<
   /**
    * Fires `onReachStart`/`onReachEnd` once per entry into an edge band, re-arming
    * after the range retreats past the band plus hysteresis OR when the list gains
-   * a new edge (see {@link #rearmEdgesForItemChange}). An empty list resets both
+   * a new edge (see `#rearmEdgesForItemChange`). An empty list resets both
    * latches so a refill re-fires; a null range holds the current state (nothing
    * measured yet) but still tracks the edges.
    *
-   * @param range The visible range, or null before anything has been measured.
-   * @param count The total number of items.
+   * @param range - The visible range, or null before anything has been measured.
+   * @param count - The total number of items.
    */
   #evaluateEdges(range: VisibleRange | null, count: number) {
     if (count === 0) {

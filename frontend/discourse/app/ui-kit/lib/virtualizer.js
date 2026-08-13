@@ -1,3 +1,12 @@
+/*
+ * This is the only module in the app that imports the windowing engine. Plugins,
+ * themes, and other core code go through `DVirtualList` and this module so the
+ * engine stays swappable behind this boundary.
+ *
+ * The dependency is pinned to an exact version because the adapter relies on
+ * framework hooks that can shift between minor releases. Gate upgrades on the
+ * ui-kit virtualizer test suite.
+ */
 import {
   defaultRangeExtractor,
   elementScroll,
@@ -6,24 +15,6 @@ import {
   observeElementRect,
   Virtualizer,
 } from "@tanstack/virtual-core";
-
-/**
- * The library wall around `@tanstack/virtual-core`.
- *
- * This is the ONLY module in the app that imports the windowing engine. Plugins,
- * themes, and other core code go through `DVirtualList` and this module, never the
- * package directly, so the engine stays swappable behind the wall.
- *
- * The dependency is pinned to an EXACT version in `package.json` (no caret): the
- * adapter relies on `_didMount()`/`_willUpdate()`, which are part of the engine's
- * framework-adapter surface and can shift between minor releases. Gate any upgrade
- * on the ui-kit virtualizer test suite.
- *
- * The pin carries more weight than it looks. This module reaches the engine through
- * an unchecked cast, and the repo does not compile with strict null checks, so a
- * renamed internal or a changed virtual-item shape would type-check clean and fail
- * only at runtime. The suite is the only thing standing behind an upgrade.
- */
 
 let VIRTUALIZATION_ENABLED = true;
 

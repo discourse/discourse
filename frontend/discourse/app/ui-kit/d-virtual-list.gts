@@ -69,8 +69,8 @@ export interface DVirtualListApi {
   /**
    * Scroll a row into view.
    *
-   * @param index Absolute index in `@items`.
-   * @param opts Placement within the viewport, and how to animate getting there.
+   * @param index - Absolute index in `@items`.
+   * @param opts - Placement within the viewport, and how to animate getting there.
    */
   scrollToIndex(
     index: number,
@@ -83,15 +83,15 @@ export interface DVirtualListApi {
   /**
    * Scroll to an absolute pixel offset in the list's coordinate space.
    *
-   * @param offset Offset in px from the start of the list.
-   * @param opts How to animate getting there.
+   * @param offset - Offset in px from the start of the list.
+   * @param opts - How to animate getting there.
    */
   scrollToOffset(offset: number, opts?: { behavior?: ScrollBehavior }): void;
 
   /**
    * Scroll to the first or last row. A no-op on an empty list.
    *
-   * @param edge Which end to travel to.
+   * @param edge - Which end to travel to.
    */
   scrollToEdge(edge: "start" | "end"): void;
 
@@ -315,15 +315,22 @@ interface DVirtualListSignature<T> {
     edgeThreshold?: number;
   };
   Blocks: {
-    default: [item: T, row: RowContext<T>];
+    /** Renders each item in the active window. */
+    default: [
+      /** The backing-array item. */
+      item: T,
+      /** Its measured position and row modifiers. */
+      row: RowContext<T>,
+    ];
+    /** Renders when the backing array is empty. */
     empty: [];
   };
   Element: HTMLElement;
 }
 
 /**
- * Renders only a window of a large list while keeping the DOM bounded, backed by
- * `@tanstack/virtual-core` behind the ui-kit library wall.
+ * Renders only a window of a large list while keeping the DOM bounded. The
+ * windowing engine remains behind the ui-kit library boundary.
  *
  * Structure: an outer role-less `.d-virtual-list` scroll VIEWPORT (the element the
  * `dVirtualizer` modifier drives) wraps an inner `@as` CONTAINER — the semantic
@@ -356,8 +363,6 @@ interface DVirtualListSignature<T> {
 export default class DVirtualList<T> extends Component<
   DVirtualListSignature<T>
 > {
-  @tracked api: DVirtualListApi | null = null;
-
   /**
    * Makes the inner container a containing block for the absolutely positioned
    * rows. Cleared in the render-all fallback so rows flow normally.
@@ -382,7 +387,6 @@ export default class DVirtualList<T> extends Component<
     }
     element.style.position = "relative";
   });
-
   /**
    * Registers a row for height measurement. Runs on insert and re-runs only when
    * the api handle arrives — NOT per-render, so it does not re-measure on every
@@ -392,9 +396,8 @@ export default class DVirtualList<T> extends Component<
    * {@link placeRow} stamps, so apply place before measure.
    */
   measureRow = modifier((element: HTMLElement) => {
-    this.api?.measureElement(element);
+    this._api?.measureElement(element);
   });
-
   /**
    * Positions one row: stamps `data-index` (the engine reads it to identify the
    * row) and, while windowing, positions the row absolutely at its virtual
@@ -426,6 +429,7 @@ export default class DVirtualList<T> extends Component<
       element.style.transform = `translateY(${start}px)`;
     }
   );
+  @tracked _api: DVirtualListApi | null = null;
 
   @tracked _virtualItems: readonly VirtualItem[] = [];
   @tracked _totalSize = 0;
@@ -533,7 +537,7 @@ export default class DVirtualList<T> extends Component<
 
   @action
   onRegisterApi(api: DVirtualListApi) {
-    this.api = api;
+    this._api = api;
     this.args.onRegisterApi?.(api);
 
     // Registration happens once (first-run only), so an initial scroll set up
