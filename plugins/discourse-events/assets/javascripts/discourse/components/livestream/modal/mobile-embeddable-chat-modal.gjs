@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import bodyClass from "discourse/helpers/body-class";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import DModal from "discourse/ui-kit/d-modal";
 import EmbeddableChatChannel from "../embeddable-chat-channel";
@@ -67,6 +68,8 @@ export default class MobileEmbeddableChatModal extends Component {
   }
 
   <template>
+    {{bodyClass "livestream-chat-modal-active"}}
+
     <DModal
       @closeModal={{@closeModal}}
       class="livestream-chat-modal"
