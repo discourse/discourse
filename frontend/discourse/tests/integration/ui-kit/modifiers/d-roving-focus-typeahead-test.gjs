@@ -323,6 +323,44 @@ module(
         );
     });
 
+    test("repeating a character walks the items sharing that initial", async function (assert) {
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector=".item"
+              typeAhead=true
+            }}
+          >
+            <button class="item a" role="option" aria-label="Apple">1</button>
+            <button class="item b" role="option" aria-label="Apricot">2</button>
+            <button class="item c" role="option" aria-label="Banana">3</button>
+          </div>
+        </template>
+      );
+
+      await focus(".a");
+      pressKey(".a", "a");
+      await settled();
+      assert
+        .dom(document.activeElement)
+        .hasClass(
+          "b",
+          "the first press moves to the next item sharing the initial"
+        );
+
+      pressKey(".b", "a");
+      await settled();
+      assert
+        .dom(document.activeElement)
+        .hasClass(
+          "a",
+          "a repeated character cycles rather than searching for the literal run"
+        );
+    });
+
     test("declines to type-ahead over a windowed group", async function (assert) {
       const warn = sinon.stub(console, "warn");
 

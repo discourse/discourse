@@ -1361,6 +1361,12 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       return;
     }
 
+    // Detected BEFORE appending, so it reads the run so far rather than the run including this
+    // press, which would always look repeated on the second character.
+    const repeated =
+      this.#typeAheadQuery !== "" &&
+      [...this.#typeAheadQuery].every((char) => char === event.key);
+
     this.#typeAheadQuery += event.key;
     this.#typeAheadAt = event.timeStamp;
 
@@ -1369,8 +1375,12 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       return;
     }
     const from = this.#currentIndex(items);
-    const offset = this.#typeAheadQuery.length > 1 ? 0 : 1;
-    const match = this.#findByName(items, from, offset);
+    // The practice page has a repeated character step through the items sharing that initial,
+    // so a run of one character searches for that character and keeps skipping the resting item.
+    // Searching for the literal run would match nothing and leave the cursor stuck.
+    const search = repeated ? event.key : this.#typeAheadQuery;
+    const offset = search.length > 1 ? 0 : 1;
+    const match = this.#findByName(items, search, from, offset);
     if (!match) {
       return;
     }
@@ -1385,19 +1395,21 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   /**
-   * The first item at or after `from + offset`, wrapping, whose accessible name starts with the
-   * current query.
+   * The first item at or after `from + offset`, wrapping, whose accessible name starts with
+   * `query`.
    *
    * @param items - The navigable items, in DOM order.
+   * @param query - What to match, which is NOT always the buffer: a repeated character searches
+   * for the single character rather than for the run.
    * @param from - Where the cursor rests, or negative when it rests nowhere.
    * @param offset - 1 to skip the resting item, 0 to include it.
    */
   #findByName(
     items: HTMLElement[],
+    query: string,
     from: number,
     offset: number
   ): HTMLElement | undefined {
-    const query = this.#typeAheadQuery;
     const start = (Math.max(from, 0) + offset) % items.length;
     for (let step = 0; step < items.length; step++) {
       const candidate = items[(start + step) % items.length];
