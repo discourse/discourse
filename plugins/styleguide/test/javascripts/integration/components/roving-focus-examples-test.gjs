@@ -1,6 +1,14 @@
-import { click, findAll, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  findAll,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import RovingFocusListboxExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/listbox";
+import RovingFocusRadioGroupExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/radio-group";
 import RovingFocusToolbarExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/toolbar";
 import RovingFocusTreeExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/tree";
 
@@ -8,6 +16,16 @@ import RovingFocusTreeExample from "discourse/plugins/styleguide/discourse/compo
  * The tier-1 conformance fixtures are plain semantic HTML, so anything that fails here is the
  * modifier rather than a component wrapped around it.
  */
+
+function pressKey(element, key) {
+  const event = new KeyboardEvent("keydown", {
+    key,
+    bubbles: true,
+    cancelable: true,
+  });
+  element.dispatchEvent(event);
+  return event;
+}
 
 function labels(selector) {
   return findAll(selector).map((el) => el.textContent.trim());
@@ -203,6 +221,117 @@ module(
           "aria-expanded",
           "true",
           "and the one pointing at them opens them, without the example resolving direction itself"
+        );
+    });
+  }
+);
+
+module(
+  "Integration | Component | roving-focus examples | listbox",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("enters on the option already chosen, not the first", async function (assert) {
+      await render(<template><RovingFocusListboxExample /></template>);
+
+      const seeded = findAll(".roving-demo__option").find(
+        (el) => el.getAttribute("tabindex") === "0"
+      );
+
+      assert
+        .dom(seeded)
+        .hasAttribute(
+          "data-option-id",
+          "banana",
+          "a listbox returns a reader to their own choice, which is the opposite of the toolbar convention"
+        );
+    });
+
+    test("typing matches the name, and the decorative count is not part of it", async function (assert) {
+      await render(<template><RovingFocusListboxExample /></template>);
+
+      const rows = findAll(".roving-demo__option");
+      rows[0].focus();
+
+      pressKey(document.activeElement, "c");
+      await settled();
+      assert
+        .dom(document.activeElement)
+        .hasAttribute(
+          "data-option-id",
+          "cherry",
+          "one character finds the first C"
+        );
+
+      const digit = pressKey(document.activeElement, "1");
+      await settled();
+      assert
+        .dom(document.activeElement)
+        .hasAttribute(
+          "data-option-id",
+          "cherry",
+          "the counts belong to the text but not to any name, so a digit matches nothing"
+        );
+      assert.false(digit.defaultPrevented, "and the key is not consumed");
+    });
+
+    test("a second character narrows within the shared initial", async function (assert) {
+      await render(<template><RovingFocusListboxExample /></template>);
+
+      findAll(".roving-demo__option")[0].focus();
+
+      pressKey(document.activeElement, "a");
+      pressKey(document.activeElement, "p");
+      await settled();
+
+      assert
+        .dom(document.activeElement)
+        .hasAttribute(
+          "data-option-id",
+          "apricot",
+          "ap passes over Apple, which only matches the first character"
+        );
+    });
+  }
+);
+
+module(
+  "Integration | Component | roving-focus examples | radio group",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("enters on the checked member", async function (assert) {
+      await render(<template><RovingFocusRadioGroupExample /></template>);
+
+      const seeded = findAll(".roving-demo__radio").find(
+        (el) => el.getAttribute("tabindex") === "0"
+      );
+
+      assert
+        .dom(seeded)
+        .hasAttribute(
+          "data-choice-id",
+          "center",
+          "aria-checked is the radio group spelling, and seeding has to read it"
+        );
+    });
+
+    test("the choice follows the cursor", async function (assert) {
+      await render(<template><RovingFocusRadioGroupExample /></template>);
+
+      const center = findAll(".roving-demo__radio")[1];
+      center.focus();
+      await triggerKeyEvent(center, "keydown", "ArrowRight");
+
+      assert
+        .dom(document.activeElement)
+        .hasAttribute("data-choice-id", "right", "the cursor moved");
+      assert
+        .dom(document.activeElement)
+        .hasAttribute(
+          "aria-checked",
+          "true",
+          "and the choice came with it, which is what this pattern expects"
         );
     });
   }
