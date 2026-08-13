@@ -261,6 +261,43 @@ en:
           title: "More Topics"
         post_menu:
           title: "Post Menu"
+        roving_focus:
+          title: "Roving focus"
+          description: "Keyboard navigation inside a composite widget, built from plain semantic HTML so that anything that misbehaves here is the modifier rather than a component wrapped around it. The patterns mirror the interactive examples in the WAI-ARIA Authoring Practices."
+          groups:
+            aria_label: "Roving focus patterns"
+            toolbar:
+              title: "Toolbar"
+              description: "A single tab stop holding controls of mixed kinds, entered on the first one."
+            tree:
+              title: "Tree"
+              description: "A vertical cursor over the visible rows, with hierarchy left to the consumer."
+          toolbar:
+            label: "Text formatting"
+            example: "Toolbar"
+            example_description: "The whole bar is one tab stop. Activation is left to the native buttons rather than routed through the modifier, so Enter and Space behave exactly as they would without it."
+            try_this: "Tab in, then arrow along the bar. Home and End reach the ends. Tab out and back in to see which control you return to."
+            bold: "Bold"
+            italic: "Italic"
+            underline: "Underline"
+            copy: "Copy"
+            cut: "Cut"
+            paste: "Paste"
+            docs: "Authoring practices"
+          tree:
+            label: "Source tree"
+            example: "Tree"
+            example_description: "The cursor runs over the rows that are visible right now, so collapsing a parent removes its children from the sequence. Expand and collapse are handled beside the modifier, not by it."
+            try_this: "Arrow up and down the rows, then use the right and left arrows on a parent to open and close it. Collapse a parent and notice that its children leave the cursor with it."
+            rtl_example: "Tree, right to left"
+            rtl_description: "The same component under a right-to-left direction. Expand and collapse are read as physical keys here, so the arrow that points at a row's children is no longer the one that opens them. Resolving the direction logically instead would swap the two."
+            rtl_try_this: "Open and close a parent with the right and left arrows, and compare which side the children appear on with which arrow revealed them."
+            components: "Components"
+            button: "Button"
+            select: "Select"
+            modifiers: "Modifiers"
+            roving_focus: "Roving focus"
+            auto_focus: "Auto focus"
         docked_composer:
           title: "Docked Composer"
         modal:
