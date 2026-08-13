@@ -341,7 +341,21 @@
 }
 
 .site-traffic-breakdown-modal {
+  &__dimension {
+    max-width: 0;
+    overflow: hidden;
+
+    .site-traffic-explorer__row-link {
+      display: block;
+    }
+
+    @include viewport.until(md) {
+      max-width: none;
+    }
+  }
+
   &__pageviews {
+    white-space: nowrap;
     text-align: end;
 
     .d-table__mobile-label {
