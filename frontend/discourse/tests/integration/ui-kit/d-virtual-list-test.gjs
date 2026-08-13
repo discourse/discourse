@@ -1,5 +1,11 @@
 import { tracked } from "@glimmer/tracking";
-import { render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  find,
+  findAll,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DVirtualList from "discourse/ui-kit/d-virtual-list";
@@ -41,8 +47,10 @@ module("Integration | ui-kit | DVirtualList", function (hooks) {
     assert
       .dom(".d-virtual-list__item")
       .exists({ count: 3 }, "renders every item");
-    assert.dom(".row").exists({ count: 3 });
-    assert.dom(".d-virtual-list__item:last-child .row").hasText("three");
+    assert.dom(".row").exists({ count: 3 }, "all row content is rendered");
+    assert
+      .dom(".d-virtual-list__item:last-child .row")
+      .hasText("three", "items retain their backing-array order");
   });
 
   test("emits no ARIA position attributes without a row role", async function (assert) {
@@ -58,10 +66,24 @@ module("Integration | ui-kit | DVirtualList", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-virtual-list").doesNotHaveAttribute("role");
-    assert.dom(".d-virtual-list__item").doesNotHaveAttribute("role");
-    assert.dom(".d-virtual-list__item").doesNotHaveAttribute("aria-setsize");
-    assert.dom(".d-virtual-list__item").doesNotHaveAttribute("aria-posinset");
+    assert
+      .dom(".d-virtual-list")
+      .doesNotHaveAttribute("role", "the viewport has no implicit role");
+    assert
+      .dom(".d-virtual-list__item")
+      .doesNotHaveAttribute("role", "rows have no implicit role");
+    assert
+      .dom(".d-virtual-list__item")
+      .doesNotHaveAttribute(
+        "aria-setsize",
+        "set size is omitted without a role"
+      );
+    assert
+      .dom(".d-virtual-list__item")
+      .doesNotHaveAttribute(
+        "aria-posinset",
+        "position is omitted without a role"
+      );
   });
 
   test("threads listbox roles through with a true set size", async function (assert) {
@@ -89,13 +111,15 @@ module("Integration | ui-kit | DVirtualList", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-virtual-list").doesNotHaveAttribute("role");
+    assert
+      .dom(".d-virtual-list")
+      .doesNotHaveAttribute("role", "the viewport remains role-less");
     assert
       .dom(".d-virtual-list__sizer")
       .hasAttribute("role", "listbox", "the inner container is the listbox");
     assert
       .dom(".d-virtual-list__item:first-child")
-      .hasAttribute("role", "option");
+      .hasAttribute("role", "option", "wrapped rows receive the item role");
     assert
       .dom(".d-virtual-list__item:first-child")
       .hasAttribute("aria-posinset", "1", "position is absolute, not windowed");
@@ -116,8 +140,10 @@ module("Integration | ui-kit | DVirtualList", function (hooks) {
       </template>
     );
 
-    assert.dom(".empty").hasText("Nothing here");
-    assert.dom(".d-virtual-list__item").doesNotExist();
+    assert.dom(".empty").hasText("Nothing here", "the empty block is yielded");
+    assert
+      .dom(".d-virtual-list__item")
+      .doesNotExist("no row wrapper is rendered");
   });
 });
 
@@ -138,7 +164,7 @@ function buildRows(count) {
 }
 
 function scroller() {
-  return document.querySelector(".d-virtual-list");
+  return find(".d-virtual-list");
 }
 
 // Setting scrollTop dispatches `scroll` asynchronously, and the bridge modifier
@@ -154,9 +180,9 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
   setupRenderingTest(hooks);
 
   // Inverts the suite default: these tests need the real engine driving a real
-  // scroll container. Geometry is genuine (headless Chrome), not stubbed — the
+  // scroll container. Geometry comes from browser layout rather than stubs; the
   // 0.5 scale on #ember-testing does not distort offsetHeight/borderBoxSize,
-  // which is all virtual-core reads. The scroll viewport is the outer
+  // which is all the windowing engine reads. The scroll viewport is the outer
   // .d-virtual-list; it is sized via CSS, not `...attributes` (which route to the
   // inner container).
   hooks.beforeEach(function () {
@@ -185,7 +211,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
       </template>
     );
 
-    const rendered = document.querySelectorAll(".d-virtual-list__item").length;
+    const rendered = findAll(".d-virtual-list__item").length;
 
     assert.true(rendered > 0, "renders some rows");
     assert.true(
@@ -204,7 +230,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
   });
 
   test("owned rows are stamped with data-index for measurement", async function (assert) {
-    // virtual-core's measureElement identifies a row by its data-index, so an owned
+    // Row measurement identifies an item by its data-index, so an owned
     // consumer that applies {{row.place}}/{{row.measure}} but does NOT set data-index
     // itself must still get it — otherwise every row measures at index -1 and shares
     // one bogus cache key. The modifiers stamp it; this pins that.
@@ -245,7 +271,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
       </template>
     );
 
-    const owned = [...document.querySelectorAll(".row")];
+    const owned = findAll(".row");
     assert.true(owned.length > 0, "mounts a window of owned rows");
     assert.true(
       owned.every((el) => el.hasAttribute("data-index")),
@@ -280,7 +306,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
       .dom(".d-virtual-list__item[data-index='0']")
       .doesNotExist("the first row is unmounted once scrolled away");
 
-    const first = document.querySelector(".d-virtual-list__item");
+    const first = find(".d-virtual-list__item");
     const firstIndex = Number(first.getAttribute("data-index"));
 
     assert.true(
@@ -377,7 +403,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
     // Asserting only that scrollTop moved by the prepended height proves
     // arithmetic, not preservation: a broken key-to-item mapping could satisfy
     // the number while swapping the content under the reader.
-    const anchorRow = document.querySelector(".d-virtual-list__item");
+    const anchorRow = find(".d-virtual-list__item");
     const anchorText = anchorRow.querySelector(".row").textContent.trim();
     const anchorTop = anchorRow.getBoundingClientRect().top;
 
@@ -388,9 +414,9 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
     state.value = [...older, ...state.value];
     await settled();
 
-    const movedRow = [
-      ...document.querySelectorAll(".d-virtual-list__item"),
-    ].find((el) => el.querySelector(".row")?.textContent.trim() === anchorText);
+    const movedRow = findAll(".d-virtual-list__item").find(
+      (el) => el.querySelector(".row")?.textContent.trim() === anchorText
+    );
 
     assert.strictEqual(
       movedRow?.textContent.trim(),
@@ -431,18 +457,18 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
       </template>
     );
 
-    const keyBefore = document
-      .querySelector(".d-virtual-list__item[data-index='5'] .row")
-      .getAttribute("data-key");
+    const keyBefore = find(
+      ".d-virtual-list__item[data-index='5'] .row"
+    ).getAttribute("data-key");
 
     const next = state.value.slice();
     next[5] = { id: 5, text: "replaced" };
     state.value = next;
     await settled();
 
-    const keyAfter = document
-      .querySelector(".d-virtual-list__item[data-index='5'] .row")
-      .getAttribute("data-key");
+    const keyAfter = find(
+      ".d-virtual-list__item[data-index='5'] .row"
+    ).getAttribute("data-key");
 
     assert.notStrictEqual(
       keyAfter,
