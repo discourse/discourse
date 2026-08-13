@@ -17,7 +17,7 @@ export default <template>
         {{i18n "admin.dashboard.sections.engagement.fetch_error"}}
       </div>
     {{else}}
-      {{#if @engagement.kpis.length}}
+      {{#if @engagement}}
         <EngagementHeadline @kpis={{@engagement.kpis}} @period={{@period}} />
       {{/if}}
 

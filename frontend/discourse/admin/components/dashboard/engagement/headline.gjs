@@ -5,6 +5,7 @@ import {
   formatDashboardHeadlinePeriod,
   formatDeltaPercent,
   formatKpiValue,
+  roundDeltaPercent,
 } from "discourse/admin/lib/dashboard-format";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { eq } from "discourse/truth-helpers";
@@ -31,7 +32,7 @@ function direction(metric) {
   const change =
     metric.percent_change ??
     ((metric.value - metric.previous_value) / metric.previous_value) * 100;
-  const roundedChange = Math.round(change);
+  const roundedChange = roundDeltaPercent(change);
 
   if (roundedChange > 0) {
     return "improved";
@@ -212,7 +213,8 @@ export default class EngagementHeadline extends Component {
       if (!most) {
         return metric;
       }
-      return Math.round(percentChange(metric)) < Math.round(percentChange(most))
+      return roundDeltaPercent(percentChange(metric)) <
+        roundDeltaPercent(percentChange(most))
         ? metric
         : most;
     }, null)?.type;

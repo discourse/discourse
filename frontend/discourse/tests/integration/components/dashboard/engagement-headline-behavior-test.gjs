@@ -38,24 +38,33 @@ module(
 
     test("preserves the no-data headline when no metric is measurable", async function (assert) {
       const engagement = {
+        kpis: [],
+      };
+
+      await render(
+        <template>
+          <DashboardEngagement
+            @engagement={{engagement}}
+            @period="last_30_days"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".db-section__subintro")
+        .hasText(
+          "Not enough activity yet to summarise engagement. Pick a longer date range or come back once your community has more activity."
+        );
+    });
+
+    test("classifies a visible sub-one-percent change as a decline", async function (assert) {
+      const engagement = {
         kpis: [
           {
             type: "dau_mau",
-            value: null,
-            previous_value: null,
-            percent_change: null,
-          },
-          {
-            type: "daily_engaged_users",
-            value: null,
-            previous_value: null,
-            percent_change: null,
-          },
-          {
-            type: "new_signups",
-            value: null,
-            previous_value: null,
-            percent_change: null,
+            value: 99.6,
+            previous_value: 100,
+            percent_change: -0.4,
           },
         ],
       };
@@ -72,7 +81,48 @@ module(
       assert
         .dom(".db-section__subintro")
         .hasText(
-          "Not enough activity yet to summarise engagement. Pick a longer date range or come back once your community has more activity."
+          "Engagement has declined in the last 30 days Stickiness is down. Take a look at the activity by category to see which areas of your community may need your attention."
+        );
+    });
+
+    test("chooses the largest decline using the tile's display rounding", async function (assert) {
+      const engagement = {
+        kpis: [
+          {
+            type: "dau_mau",
+            value: 99.4,
+            previous_value: 100,
+            percent_change: -0.6,
+          },
+          {
+            type: "daily_engaged_users",
+            value: 98.6,
+            previous_value: 100,
+            percent_change: -1.4,
+          },
+          {
+            type: "new_signups",
+            value: 100,
+            previous_value: 100,
+            percent_change: 0,
+          },
+        ],
+      };
+
+      await render(
+        <template>
+          <DashboardEngagement
+            @engagement={{engagement}}
+            @period="last_30_days"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".db-section__subintro p")
+        .includesText(
+          "Investigate the decline to see which members have disengaged.",
+          "daily engagement owns the CTA because -1% is below -0.6%"
         );
     });
 
