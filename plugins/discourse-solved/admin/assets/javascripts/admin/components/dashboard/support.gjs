@@ -6,6 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DashboardSection from "discourse/admin/components/dashboard/section";
+import { formatDashboardHeadlinePeriod } from "discourse/admin/lib/dashboard-format";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -70,60 +71,50 @@ export default class SupportSection extends Component {
   }
 
   get headline() {
-    const headline = this.data?.headline;
-    if (!headline) {
-      return null;
-    }
-
+    const resolutionDirection = this.#direction(
+      this.data?.kpis?.resolution_rate
+    );
+    const replyDirection = this.#direction(this.data?.kpis?.avg_first_reply, {
+      noPriorDirection: "up",
+    });
     const prefix = "admin.dashboard.sections.support.headline";
-    const titleKey = `${prefix}.${headline.key}.title`;
 
-    if (headline.key === "no_data") {
-      return { titleKey, summary: i18n(`${prefix}.no_data.summary`) };
+    if (
+      resolutionDirection === "unavailable" &&
+      replyDirection === "unavailable"
+    ) {
+      return {
+        title: i18n(`${prefix}.no_data.title`),
+        summary: i18n(`${prefix}.no_data.summary`),
+      };
     }
 
-    const parts = [
-      i18n(`${prefix}.resolution.${headline.resolution_direction}`, {
-        rate: headline.resolution_rate,
-      }),
-    ];
+    const scenario = `${resolutionDirection}_${replyDirection}`;
+    const period = formatDashboardHeadlinePeriod(this.args.period);
+    return {
+      title: i18n(`${prefix}.${scenario}.title`, { period }),
+      summary: i18n(`${prefix}.${scenario}.summary`),
+    };
+  }
 
-    if (headline.answerers_focus) {
-      parts.push(
-        i18n(`${prefix}.answerers.${headline.answerers_focus}`, {
-          share: headline.answerers_share,
-        })
-      );
+  #direction(kpi, { noPriorDirection } = {}) {
+    if (kpi?.value == null) {
+      return "unavailable";
     }
 
-    if (headline.first_reply_seconds != null) {
-      const dir = headline.first_reply_direction;
-      if (
-        (dir === "faster" || dir === "slower") &&
-        headline.first_reply_delta_seconds != null
-      ) {
-        parts.push(
-          i18n(`${prefix}.reply.${dir}`, {
-            time: durationTiny(headline.first_reply_seconds),
-            delta: durationTiny(headline.first_reply_delta_seconds),
-          })
-        );
-      } else {
-        parts.push(
-          i18n(`${prefix}.reply.flat`, {
-            time: durationTiny(headline.first_reply_seconds),
-          })
-        );
-      }
+    if (kpi.previous_value == null && noPriorDirection) {
+      return noPriorDirection;
     }
 
-    if (headline.key === "struggling" && headline.unanswered_count > 0) {
-      parts.push(
-        i18n(`${prefix}.unanswered`, { count: headline.unanswered_count })
-      );
+    const previousValue = kpi.previous_value ?? 0;
+    const roundedChange = Math.round(kpi.value - previousValue);
+    if (roundedChange > 0) {
+      return "up";
+    } else if (roundedChange < 0) {
+      return "down";
     }
 
-    return { titleKey, summary: parts.join(" ") };
+    return "flat";
   }
 
   get resolutionRate() {
@@ -339,7 +330,7 @@ export default class SupportSection extends Component {
         {{#if this.headline}}
           <div class="db-section__subheader">
             <div class="db-section__subintro">
-              <h3>{{i18n this.headline.titleKey}}</h3>
+              <h3>{{this.headline.title}}</h3>
               <p>{{this.headline.summary}}</p>
             </div>
 

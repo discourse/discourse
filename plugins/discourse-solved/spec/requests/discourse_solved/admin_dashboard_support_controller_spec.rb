@@ -27,6 +27,7 @@ RSpec.describe DiscourseSolved::AdminDashboardSupportController do
         "category_options",
         "category_ids",
       )
+      expect(response.parsed_body).not_to have_key("headline")
     end
 
     it "accepts a category filter" do

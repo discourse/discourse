@@ -16,29 +16,54 @@ en:
             fetch_error: "Support data couldn't be loaded."
             save_error: "Couldn't save your selection for next time."
             headline:
-              healthy:
-                title: "The community is solving its own problems."
-              struggling:
-                title: "Most questions aren't getting answered."
-              mixed:
-                title: "Support is a mixed bag."
               no_data:
                 title: "Not enough support activity yet"
                 summary: "There's no support activity in this period yet. Once topics come in, you'll see how your community is handling them."
-              resolution:
-                up: "Resolution rate climbed to %{rate}%."
-                down: "Resolution rate dropped to %{rate}%."
-                flat: "Resolution rate held at %{rate}%."
-              answerers:
-                members: "Members are handling %{share}% of replies."
-                staff: "Staff are answering %{share}% of replies."
-              reply:
-                faster: "First-reply time improved to %{time}, %{delta} faster than the previous period."
-                slower: "First-reply time slipped to %{time}, %{delta} slower than the previous period."
-                flat: "First-reply time held at %{time}."
-              unanswered:
-                one: "%{count} topic from this period still has zero replies."
-                other: "%{count} topics from this period still have zero replies."
+              up_down:
+                title: "Resolution rate and time to first reply have improved in %{period}"
+                summary: "More questions are getting answered, and they're getting answered faster."
+              up_up:
+                title: "The resolution rate has improved in %{period}"
+                summary: "More questions are getting answered, but the time to first reply has increased. Check out the unanswered topics to see which you can address."
+              up_flat:
+                title: "The resolution rate has improved in %{period}"
+                summary: "More questions are getting answered, but the time to first reply is flat. Check out the unanswered topics to see which you can address."
+              down_down:
+                title: "The time to first reply has decreased in %{period}"
+                summary: "Members are getting faster responses, but resolution rate has decreased. Take a look at the in progress topics to see if there are replies that should be marked as answers."
+              flat_down:
+                title: "The time to first reply has decreased in %{period}"
+                summary: "Members are getting faster responses, but resolution rate is flat. Take a look at the in progress topics to see if there are replies that should be marked as answers."
+              down_up:
+                title: "Resolution rate and time to first reply have declined in %{period}"
+                summary: "Members are getting fewer answers and are waiting longer for their first reply. Investigate the in progress and unanswered topics to make sure members are getting timely responses."
+              down_flat:
+                title: "The resolution rate has decreased in %{period}"
+                summary: "Members are getting fewer answers, but the time to first reply is holding steady. Take a look at the in progress topics to see if there are replies that should be marked as answers."
+              flat_up:
+                title: "The time to first reply has increased in %{period}"
+                summary: "Members are waiting longer for their first reply, but the resolution rate is holding steady. Check out the unanswered topics to see which you can address."
+              flat_flat:
+                title: "Support is steady in %{period}"
+                summary: "No meaningful change in resolution rate or time to first reply."
+              up_unavailable:
+                title: "The resolution rate has improved in %{period}"
+                summary: "More questions are getting answered."
+              down_unavailable:
+                title: "The resolution rate has decreased in %{period}"
+                summary: "Members are getting fewer answers. Take a look at the in progress topics to see if there are replies that should be marked as answers."
+              flat_unavailable:
+                title: "Support is steady in %{period}"
+                summary: "No meaningful change in resolution rate."
+              unavailable_down:
+                title: "The time to first reply has decreased in %{period}"
+                summary: "Members are getting faster responses."
+              unavailable_up:
+                title: "The time to first reply has increased in %{period}"
+                summary: "Members are waiting longer for their first reply. Check out the unanswered topics to see which you can address."
+              unavailable_flat:
+                title: "Support is steady in %{period}"
+                summary: "No meaningful change in time to first reply."
             kpi:
               resolution_rate:
                 label: "Resolution rate"

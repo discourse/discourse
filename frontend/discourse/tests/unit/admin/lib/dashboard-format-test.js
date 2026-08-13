@@ -1,12 +1,33 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
+  formatDashboardHeadlinePeriod,
   formatDeltaPercent,
   formatKpiValue,
 } from "discourse/admin/lib/dashboard-format";
 
 module("Unit | Admin | Lib | dashboard-format", function (hooks) {
   setupTest(hooks);
+
+  module("formatDashboardHeadlinePeriod", function () {
+    test("formats preset and custom periods", function (assert) {
+      assert.deepEqual(
+        [
+          formatDashboardHeadlinePeriod("last_7_days"),
+          formatDashboardHeadlinePeriod("last_30_days"),
+          formatDashboardHeadlinePeriod("last_3_months"),
+          formatDashboardHeadlinePeriod("custom"),
+        ],
+        [
+          "the last 7 days",
+          "the last 30 days",
+          "the last 3 months",
+          "the selected period",
+        ],
+        "formats every dashboard headline period"
+      );
+    });
+  });
 
   module("formatKpiValue", function () {
     test("returns an em dash when the value is null", function (assert) {

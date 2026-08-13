@@ -73,14 +73,15 @@ RSpec.describe AdminDashboardSearch do
       )
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline_state: "content_gaps",
         kpis: {
           total_searches: {
             value: 19,
+            previous_value: 10,
             percent_change: 90,
           },
           no_result_rate: {
             value: 21,
+            previous_value: 50,
             point_change: -29,
             exceeds_threshold: true,
           },
@@ -155,13 +156,14 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline_state: "healthy",
         kpis: {
           total_searches: {
             value: 136,
+            previous_value: 0,
           },
           no_result_rate: {
             value: 4,
+            previous_value: nil,
             exceeds_threshold: false,
           },
         },
@@ -194,13 +196,14 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline_state: "content_gaps",
         kpis: {
           total_searches: {
             value: 11,
+            previous_value: 0,
           },
           no_result_rate: {
             value: 100,
+            previous_value: nil,
             exceeds_threshold: true,
           },
         },
@@ -211,108 +214,6 @@ RSpec.describe AdminDashboardSearch do
             { term: format("gap-%02d", index), searches: 1, status: "no_match" }
           end,
       )
-    end
-
-    it "picks the headline state from the rate and volume signals" do
-      Fabricate(:search_log, term: "ghost", user: user, created_at: "2026-05-02 10:00")
-      Fabricate.times(
-        11,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-05-02 11:00",
-      )
-      Fabricate.times(
-        12,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-04-26 10:00",
-      )
-
-      Fabricate.times(
-        4,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-04-02 10:00",
-      )
-      Fabricate.times(
-        10,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-03-27 10:00",
-      )
-
-      Fabricate.times(
-        12,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-03-02 10:00",
-      )
-      Fabricate.times(
-        10,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-02-24 10:00",
-      )
-
-      expect(
-        described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:headline_state],
-      ).to eq("rate_climbing")
-
-      expect(
-        described_class.build(start_date: "2026-04-01", end_date: "2026-04-07")[:headline_state],
-      ).to eq("shrinking")
-
-      expect(
-        described_class.build(start_date: "2026-03-01", end_date: "2026-03-07")[:headline_state],
-      ).to eq("healthy")
-    end
-
-    it "resolves overlapping headline states by priority" do
-      Fabricate.times(3, :search_log, term: "ghost", user: user, created_at: "2026-02-02 10:00")
-      Fabricate.times(
-        7,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-02-02 11:00",
-      )
-      Fabricate.times(
-        10,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-01-27 10:00",
-      )
-
-      Fabricate(:search_log, term: "ghost", user: user, created_at: "2026-01-02 10:00")
-      Fabricate.times(
-        9,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-01-02 11:00",
-      )
-      Fabricate.times(
-        20,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2025-12-27 10:00",
-      )
-
-      expect(
-        described_class.build(start_date: "2026-02-01", end_date: "2026-02-07")[:headline_state],
-      ).to eq("content_gaps")
-
-      expect(
-        described_class.build(start_date: "2026-01-01", end_date: "2026-01-07")[:headline_state],
-      ).to eq("rate_climbing")
     end
 
     it "omits deltas when the prior window has no searches" do
@@ -327,9 +228,11 @@ RSpec.describe AdminDashboardSearch do
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis]).to eq(
         total_searches: {
           value: 2,
+          previous_value: 0,
         },
         no_result_rate: {
           value: 0,
+          previous_value: nil,
           exceeds_threshold: false,
         },
       )
@@ -340,13 +243,14 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline_state: "no_signal",
         kpis: {
           total_searches: {
             value: 0,
+            previous_value: 2,
           },
           no_result_rate: {
             value: nil,
+            previous_value: 100,
             exceeds_threshold: false,
           },
         },
@@ -375,9 +279,11 @@ RSpec.describe AdminDashboardSearch do
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis]).to eq(
         total_searches: {
           value: 5,
+          previous_value: 5,
         },
         no_result_rate: {
           value: 0,
+          previous_value: 0,
           exceeds_threshold: false,
         },
       )
@@ -405,10 +311,12 @@ RSpec.describe AdminDashboardSearch do
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis]).to eq(
         total_searches: {
           value: 4,
+          previous_value: 10,
           percent_change: -60,
         },
         no_result_rate: {
           value: 25,
+          previous_value: 10,
           point_change: 15,
           exceeds_threshold: true,
         },
@@ -429,7 +337,7 @@ RSpec.describe AdminDashboardSearch do
         described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis][
           :no_result_rate
         ],
-      ).to eq(value: 10, exceeds_threshold: false)
+      ).to eq(value: 10, previous_value: nil, exceeds_threshold: false)
     end
 
     it "flags a rate just above 10% even when the display rounds to 10%" do
@@ -446,7 +354,7 @@ RSpec.describe AdminDashboardSearch do
         described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis][
           :no_result_rate
         ],
-      ).to eq(value: 10, exceeds_threshold: true)
+      ).to eq(value: 10, previous_value: nil, exceeds_threshold: true)
     end
 
     it "maps the window length to the per-term report period" do

@@ -4,17 +4,14 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
-import { formatDeltaPercent } from "discourse/admin/lib/dashboard-format";
+import {
+  formatDashboardHeadlinePeriod,
+  formatDeltaPercent,
+} from "discourse/admin/lib/dashboard-format";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
-
-const COUNT_HEADLINE_KEYS = {
-  last_7_days: "admin.dashboard.sections.search.count_headline.last_7_days",
-  last_30_days: "admin.dashboard.sections.search.count_headline.last_30_days",
-  last_3_months: "admin.dashboard.sections.search.count_headline.last_3_months",
-};
 
 function formatCount(value) {
   return I18n.toNumber(value, { precision: 0 });
@@ -37,27 +34,57 @@ export default class DashboardSearch extends Component {
     return this.args.search?.logging_enabled === false;
   }
 
-  get isNoSignal() {
-    return this.args.search.headline_state === "no_signal";
-  }
+  get headline() {
+    const totalSearches = this.args.search.kpis.total_searches;
+    const noResultRate = this.args.search.kpis.no_result_rate;
 
-  get headlineTitle() {
-    if (this.isNoSignal) {
-      return i18n("admin.dashboard.sections.search.headline.no_signal_title");
+    if (
+      totalSearches.value === 0 &&
+      totalSearches.previous_value === 0 &&
+      noResultRate.value == null
+    ) {
+      return {
+        title: i18n("admin.dashboard.sections.search.headline.no_data.title"),
+        summary: i18n(
+          "admin.dashboard.sections.search.headline.no_data.summary"
+        ),
+      };
     }
 
-    const count = this.args.search.kpis.total_searches.value;
-    const key =
-      COUNT_HEADLINE_KEYS[this.args.period] ??
-      "admin.dashboard.sections.search.count_headline.selected_period";
+    const searchesDirection = this.#direction(
+      totalSearches,
+      totalSearches.percent_change
+    );
+    const noResultDirection = this.#direction(
+      noResultRate,
+      noResultRate.point_change
+    );
+    const period = formatDashboardHeadlinePeriod(this.args.period);
+    const prefix = "admin.dashboard.sections.search.headline";
+    const scenario = `${searchesDirection}_${noResultDirection}`;
 
-    return i18n(key, { count, formatted_count: formatCount(count) });
+    return {
+      title: i18n(`${prefix}.${scenario}.title`, { period }),
+      summary: i18n(`${prefix}.${scenario}.summary`),
+    };
   }
 
-  get headlineSummary() {
-    return i18n(
-      `admin.dashboard.sections.search.headline.${this.args.search.headline_state}`
-    );
+  #direction(kpi, change) {
+    if (kpi.value == null) {
+      return "unavailable";
+    }
+
+    if (kpi.previous_value == null || kpi.previous_value === 0) {
+      return kpi.value > 0 ? "up" : "flat";
+    }
+
+    if (change > 0) {
+      return "up";
+    } else if (change < 0) {
+      return "down";
+    }
+
+    return "flat";
   }
 
   get totalSearchesValue() {
@@ -134,79 +161,81 @@ export default class DashboardSearch extends Component {
           {{/if}}
         </p>
       {{else if @search}}
-        <div class="db-section__subheader">
-          <div class="db-section__subintro">
-            <h3>{{this.headlineTitle}}</h3>
-            <p>{{this.headlineSummary}}</p>
-          </div>
-
-          <div class="db-section__metrics">
-            <div
-              class="db-section__metric"
-              data-test-search-kpi="total_searches"
-            >
-              <div class="db-section__metric-number">
-                {{this.totalSearchesValue}}
-              </div>
-              <div class="db-section__metric-label">
-                {{i18n
-                  "admin.dashboard.sections.search.kpi.total_searches.label"
-                }}
-                <DTooltip
-                  class="db-section__info"
-                  @identifier="search-total-searches-tooltip"
-                  @icon="far-circle-question"
-                >
-                  <:content>
-                    {{i18n
-                      "admin.dashboard.sections.search.kpi.total_searches.tooltip"
-                    }}
-                  </:content>
-                </DTooltip>
-              </div>
-              {{#if this.totalSearchesDelta}}
-                <div
-                  class="db-delta {{this.totalSearchesDelta.className}}"
-                >{{this.totalSearchesDelta.text}}</div>
-              {{/if}}
+        {{#if this.headline}}
+          <div class="db-section__subheader">
+            <div class="db-section__subintro">
+              <h3>{{this.headline.title}}</h3>
+              <p>{{this.headline.summary}}</p>
             </div>
 
-            <div
-              class="db-section__metric"
-              data-test-search-kpi="no_result_rate"
-            >
+            <div class="db-section__metrics">
               <div
-                class={{dConcatClass
-                  "db-section__metric-number"
-                  (if this.rateExceedsThreshold "--neg")
-                }}
+                class="db-section__metric"
+                data-test-search-kpi="total_searches"
               >
-                {{this.noResultRateValue}}
+                <div class="db-section__metric-number">
+                  {{this.totalSearchesValue}}
+                </div>
+                <div class="db-section__metric-label">
+                  {{i18n
+                    "admin.dashboard.sections.search.kpi.total_searches.label"
+                  }}
+                  <DTooltip
+                    class="db-section__info"
+                    @identifier="search-total-searches-tooltip"
+                    @icon="far-circle-question"
+                  >
+                    <:content>
+                      {{i18n
+                        "admin.dashboard.sections.search.kpi.total_searches.tooltip"
+                      }}
+                    </:content>
+                  </DTooltip>
+                </div>
+                {{#if this.totalSearchesDelta}}
+                  <div
+                    class="db-delta {{this.totalSearchesDelta.className}}"
+                  >{{this.totalSearchesDelta.text}}</div>
+                {{/if}}
               </div>
-              <div class="db-section__metric-label">
-                {{i18n
-                  "admin.dashboard.sections.search.kpi.no_result_rate.label"
-                }}
-                <DTooltip
-                  class="db-section__info"
-                  @identifier="search-no-result-rate-tooltip"
-                  @icon="far-circle-question"
-                >
-                  <:content>
-                    {{i18n
-                      "admin.dashboard.sections.search.kpi.no_result_rate.tooltip"
-                    }}
-                  </:content>
-                </DTooltip>
-              </div>
-              {{#if this.noResultRateDelta}}
+
+              <div
+                class="db-section__metric"
+                data-test-search-kpi="no_result_rate"
+              >
                 <div
-                  class="db-delta {{this.noResultRateDelta.className}}"
-                >{{this.noResultRateDelta.text}}</div>
-              {{/if}}
+                  class={{dConcatClass
+                    "db-section__metric-number"
+                    (if this.rateExceedsThreshold "--neg")
+                  }}
+                >
+                  {{this.noResultRateValue}}
+                </div>
+                <div class="db-section__metric-label">
+                  {{i18n
+                    "admin.dashboard.sections.search.kpi.no_result_rate.label"
+                  }}
+                  <DTooltip
+                    class="db-section__info"
+                    @identifier="search-no-result-rate-tooltip"
+                    @icon="far-circle-question"
+                  >
+                    <:content>
+                      {{i18n
+                        "admin.dashboard.sections.search.kpi.no_result_rate.tooltip"
+                      }}
+                    </:content>
+                  </DTooltip>
+                </div>
+                {{#if this.noResultRateDelta}}
+                  <div
+                    class="db-delta {{this.noResultRateDelta.className}}"
+                  >{{this.noResultRateDelta.text}}</div>
+                {{/if}}
+              </div>
             </div>
           </div>
-        </div>
+        {{/if}}
 
         <div class="db-section__row">
           <div class="db-section__row-block">

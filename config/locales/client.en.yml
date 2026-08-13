@@ -7394,6 +7394,11 @@ en:
         loading: "Loading dashboard…"
         fetch_error: "Couldn't load the dashboard. Try refreshing the page."
         stable: "stable"
+        headline_period:
+          last_7_days: "the last 7 days"
+          last_30_days: "the last 30 days"
+          last_3_months: "the last 3 months"
+          selected_period: "the selected period"
 
         sections:
           highlights:
@@ -7452,24 +7457,137 @@ en:
                 other: "%{count} members got demoted to this trust level"
               stable_aria: "no movement"
             headline:
-              healthy_growth:
-                title: "Members are forming a habit of coming back."
-                summary: "Stickiness, daily engagement, and new sign-ups are all up this period."
-              declining:
-                title: "Members are coming back less often."
-                summary: "Stickiness, daily engagement, and new sign-ups are all down this period."
-              engaged_but_shrinking:
-                title: "Members are engaged, but the community is shrinking."
-                summary: "Stickiness is holding up, but daily engagement or new sign-ups have slipped."
-              growing_but_distracted:
-                title: "New members are signing up, but they're not sticking around."
-                summary: "Sign-ups are up, but stickiness has dropped this period."
-              mixed:
-                title: "Engagement trends are mixed this period."
-                summary: "Some metrics are up while others are down — open the tiles below for detail."
-              no_signal:
+              no_data:
                 title: "Not enough activity yet to summarise engagement."
                 summary: "Pick a longer date range or come back once your community has more activity."
+              all_improved:
+                title: "Engagement is up in %{period}"
+                summary: "Stickiness, daily engagement, and new signups have all improved, showing that more members are joining and participating in your community."
+              improved_only:
+                title:
+                  one: "%{metrics} has increased in %{period}"
+                  other: "%{metrics} have increased in %{period}"
+                summary:
+                  one: "%{metrics} is up."
+                  other: "%{metrics} are up."
+              improved_flat:
+                title:
+                  one: "%{metrics} has increased in %{period}"
+                  other: "%{metrics} have increased in %{period}"
+                one_improved:
+                  summary:
+                    one: "%{improved_metrics} is up, but %{flat_metrics} is flat."
+                    other: "%{improved_metrics} is up, but %{flat_metrics} are flat."
+                many_improved:
+                  summary:
+                    one: "%{improved_metrics} are up, but %{flat_metrics} is flat."
+                    other: "%{improved_metrics} are up, but %{flat_metrics} are flat."
+              mixed_decline:
+                title:
+                  one: "%{metrics} has increased in %{period}"
+                  other: "%{metrics} have increased in %{period}"
+                dau_mau:
+                  one_improved:
+                    summary:
+                      one: "%{improved_metrics} is up, but %{declined_metrics} is down. Take a look at the activity by category to see which areas of your community may need your attention."
+                      other: "%{improved_metrics} is up, but %{declined_metrics} are down. Take a look at the activity by category to see which areas of your community may need your attention."
+                  many_improved:
+                    summary:
+                      one: "%{improved_metrics} are up, but %{declined_metrics} is down. Take a look at the activity by category to see which areas of your community may need your attention."
+                      other: "%{improved_metrics} are up, but %{declined_metrics} are down. Take a look at the activity by category to see which areas of your community may need your attention."
+                daily_engaged_users:
+                  one_improved:
+                    summary:
+                      one: "%{improved_metrics} is up, but %{declined_metrics} is down. Investigate the decline to see which members have disengaged."
+                      other: "%{improved_metrics} is up, but %{declined_metrics} are down. Investigate the decline to see which members have disengaged."
+                  many_improved:
+                    summary:
+                      one: "%{improved_metrics} are up, but %{declined_metrics} is down. Investigate the decline to see which members have disengaged."
+                      other: "%{improved_metrics} are up, but %{declined_metrics} are down. Investigate the decline to see which members have disengaged."
+                new_signups:
+                  one_improved:
+                    summary:
+                      one: "%{improved_metrics} is up, but %{declined_metrics} is down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+                      other: "%{improved_metrics} is up, but %{declined_metrics} are down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+                  many_improved:
+                    summary:
+                      one: "%{improved_metrics} are up, but %{declined_metrics} is down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+                      other: "%{improved_metrics} are up, but %{declined_metrics} are down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+              all_declined:
+                title: "Engagement has declined in %{period}"
+                dau_mau:
+                  summary: "Stickiness, daily engagement, and new signups are all down. Take a look at the activity by category to see which areas of your community may need your attention."
+                daily_engaged_users:
+                  summary: "Stickiness, daily engagement, and new signups are all down. Investigate the decline to see which members have disengaged."
+                new_signups:
+                  summary: "Stickiness, daily engagement, and new signups are all down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+              declined_only:
+                title: "Engagement has declined in %{period}"
+                dau_mau:
+                  summary:
+                    one: "%{metrics} is down. Take a look at the activity by category to see which areas of your community may need your attention."
+                    other: "%{metrics} are down. Take a look at the activity by category to see which areas of your community may need your attention."
+                daily_engaged_users:
+                  summary:
+                    one: "%{metrics} is down. Investigate the decline to see which members have disengaged."
+                    other: "%{metrics} are down. Investigate the decline to see which members have disengaged."
+                new_signups:
+                  summary:
+                    one: "%{metrics} is down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+                    other: "%{metrics} are down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+              declined_flat:
+                title: "Some declines in engagement in %{period}"
+                dau_mau:
+                  one_declined:
+                    summary:
+                      one: "%{declined_metrics} is down, but %{flat_metrics} is holding steady. Take a look at the activity by category to see which areas of your community may need your attention."
+                      other: "%{declined_metrics} is down, but %{flat_metrics} are holding steady. Take a look at the activity by category to see which areas of your community may need your attention."
+                  many_declined:
+                    summary:
+                      one: "%{declined_metrics} are down, but %{flat_metrics} is holding steady. Take a look at the activity by category to see which areas of your community may need your attention."
+                      other: "%{declined_metrics} are down, but %{flat_metrics} are holding steady. Take a look at the activity by category to see which areas of your community may need your attention."
+                daily_engaged_users:
+                  one_declined:
+                    summary:
+                      one: "%{declined_metrics} is down, but %{flat_metrics} is holding steady. Investigate the decline to see which members have disengaged."
+                      other: "%{declined_metrics} is down, but %{flat_metrics} are holding steady. Investigate the decline to see which members have disengaged."
+                  many_declined:
+                    summary:
+                      one: "%{declined_metrics} are down, but %{flat_metrics} is holding steady. Investigate the decline to see which members have disengaged."
+                      other: "%{declined_metrics} are down, but %{flat_metrics} are holding steady. Investigate the decline to see which members have disengaged."
+                new_signups:
+                  one_declined:
+                    summary:
+                      one: "%{declined_metrics} is down, but %{flat_metrics} is holding steady. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+                      other: "%{declined_metrics} is down, but %{flat_metrics} are holding steady. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+                  many_declined:
+                    summary:
+                      one: "%{declined_metrics} are down, but %{flat_metrics} is holding steady. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+                      other: "%{declined_metrics} are down, but %{flat_metrics} are holding steady. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
+              all_flat:
+                title: "Engagement is steady in %{period}"
+                summary: "No meaningful change in stickiness, daily engagement, or new signups."
+              flat_only:
+                title: "Engagement is steady in %{period}"
+                summary:
+                  one: "No meaningful change in %{metrics}."
+                  other: "No meaningful change in %{metrics}."
+              metric_groups:
+                stickiness: "Stickiness"
+                daily_engagement: "Daily engagement"
+                new_signups: "New signups"
+                stickiness_daily_engagement: "Stickiness and daily engagement"
+                stickiness_new_signups: "Stickiness and new signups"
+                daily_engagement_new_signups: "Daily engagement and new signups"
+                stickiness_daily_engagement_new_signups: "Stickiness, daily engagement, and new signups"
+              metric_groups_lowercase:
+                stickiness: "stickiness"
+                daily_engagement: "daily engagement"
+                new_signups: "new signups"
+                stickiness_daily_engagement: "stickiness and daily engagement"
+                stickiness_new_signups: "stickiness and new signups"
+                daily_engagement_new_signups: "daily engagement and new signups"
+                stickiness_daily_engagement_new_signups: "stickiness, daily engagement, and new signups"
               metrics:
                 new_signups: "New sign-ups"
                 dau_mau: "DAU / MAU stickiness"
@@ -7479,26 +7597,55 @@ en:
             fetch_error: "Couldn't load search data. Try refreshing the page."
             logging_disabled: 'Search logging is disabled, so no search data is being collected. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to start collecting it.'
             logging_disabled_moderator: "Search logging is disabled, so no search data is being collected. Ask an admin to enable log search queries to start collecting it."
-            count_headline:
-              last_7_days:
-                one: "Members ran %{formatted_count} on-site search in the last 7 days"
-                other: "Members ran %{formatted_count} on-site searches in the last 7 days"
-              last_30_days:
-                one: "Members ran %{formatted_count} on-site search in the last 30 days"
-                other: "Members ran %{formatted_count} on-site searches in the last 30 days"
-              last_3_months:
-                one: "Members ran %{formatted_count} on-site search in the last 3 months"
-                other: "Members ran %{formatted_count} on-site searches in the last 3 months"
-              selected_period:
-                one: "Members ran %{formatted_count} on-site search in the selected period"
-                other: "Members ran %{formatted_count} on-site searches in the selected period"
             headline:
-              no_signal_title: "Not enough search activity to summarise yet."
-              no_signal: "Pick a longer date range or come back once members have searched more."
-              content_gaps: "More than 10% of member searches ended without a click this period. Review the content gaps below to see what's missing."
-              rate_climbing: "The no-result rate is climbing compared with the previous period. Keep an eye on the content gaps below."
-              shrinking: "Search volume is down compared with the previous period, while most searches still lead to content."
-              healthy: "Members keep finding what they search for, and search volume is steady or growing."
+              no_data:
+                title: "Not enough search activity to summarise yet."
+                summary: "Pick a longer date range or come back once members have searched more."
+              up_down:
+                title: "Searches have increased and the no-result rate has declined in %{period}"
+                summary: "Members are conducting more searches in your community and are finding what they're looking for more often."
+              up_up:
+                title: "The total number of searches has increased in %{period}"
+                summary: "Members are conducting more searches in your community, but the no-result rate has increased. Review the content gaps to see what's missing."
+              up_flat:
+                title: "The total number of searches has increased in %{period}"
+                summary: "Members are conducting more searches in your community, but the no-result rate is flat. Review the content gaps to see what's missing."
+              down_down:
+                title: "The no-result rate has decreased in %{period}"
+                summary: "Members are finding what they're looking for, and total search volume has decreased."
+              flat_down:
+                title: "The no-result rate has decreased in %{period}"
+                summary: "Members are finding what they're looking for, and total search volume is flat."
+              down_up:
+                title: "Searches have decreased and the no-result rate has gone up in %{period}"
+                summary: "Members are conducting fewer searches in your community and are not finding what they need as often. Review the content gaps to see what's missing."
+              down_flat:
+                title: "The total number of searches has decreased in %{period}"
+                summary: "Members are conducting fewer searches in your community, but the no-result rate is flat."
+              flat_up:
+                title: "The no-result rate has increased in %{period}"
+                summary: "Members are not finding what they need as often, and total search volume is holding steady. Review the content gaps to see what's missing."
+              flat_flat:
+                title: "Search is steady in %{period}"
+                summary: "No meaningful change in total searches or the no-result rate."
+              up_unavailable:
+                title: "The total number of searches has increased in %{period}"
+                summary: "Members are conducting more searches in your community."
+              down_unavailable:
+                title: "The total number of searches has decreased in %{period}"
+                summary: "Members are conducting fewer searches in your community."
+              flat_unavailable:
+                title: "Search is steady in %{period}"
+                summary: "No meaningful change in total searches."
+              unavailable_up:
+                title: "The no-result rate has increased in %{period}"
+                summary: "Members are not finding what they need as often. Review the content gaps to see what's missing."
+              unavailable_down:
+                title: "The no-result rate has decreased in %{period}"
+                summary: "Members are finding what they're looking for more often."
+              unavailable_flat:
+                title: "Search is steady in %{period}"
+                summary: "No meaningful change in the no-result rate."
             kpi:
               total_searches:
                 label: "Total searches"

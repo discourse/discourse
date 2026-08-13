@@ -336,13 +336,14 @@ RSpec.describe Admin::DashboardController do
           expect(response.status).to eq(200)
           expect(search_data).to eq(
             "logging_enabled" => true,
-            "headline_state" => "healthy",
             "kpis" => {
               "total_searches" => {
                 "value" => 2,
+                "previous_value" => 0,
               },
               "no_result_rate" => {
                 "value" => 0,
+                "previous_value" => nil,
                 "exceeds_threshold" => false,
               },
             },
@@ -476,7 +477,8 @@ RSpec.describe Admin::DashboardController do
         get "/admin/dashboard.json"
 
         engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
-        expect(engagement["data"]).to include("kpis", "headline")
+        expect(engagement["data"]).to include("kpis")
+        expect(engagement["data"]).not_to have_key("headline")
       end
 
       describe "reports section data" do
