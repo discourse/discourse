@@ -111,7 +111,7 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
 // and overflowing it drags the meeting under the sticky header.
 body.discourse-calendar-livestream-zoom-full {
   #main-outlet {
-    padding: 0;
+    padding: 0 !important; // override horizon styles
   }
 
   #main-container,
