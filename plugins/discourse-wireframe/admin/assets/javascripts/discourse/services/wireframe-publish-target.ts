@@ -1,11 +1,14 @@
 import { trackedObject } from "@ember/reactive/collections";
+import type RouterService from "@ember/routing/router-service";
 import Service, { service } from "@ember/service";
 import {
   LAYOUT_SOURCE,
   type ResolvedLayoutMeta,
 } from "discourse/blocks/block-outlet";
 import PreloadStore from "discourse/lib/preload-store";
+import { currentThemeId } from "discourse/lib/theme-selector";
 import type SiteService from "discourse/models/site";
+import type User from "discourse/models/user";
 import type BlocksService from "discourse/services/blocks";
 import type WireframeMutationEngineService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
 
@@ -14,6 +17,13 @@ import type WireframeMutationEngineService from "discourse/plugins/discourse-wir
  * absence removed — the non-null half of a resolved layer's `source`.
  */
 type LayoutSourceValue = NonNullable<ResolvedLayoutMeta["source"]>;
+
+// TODO(devxp-typescript-pending): use the core type directly once it declares
+// the `admin` flag.
+interface CurrentUserService extends User {
+  /** Whether the user is a site administrator. */
+  admin?: boolean;
+}
 
 /**
  * Per-theme metadata from the boot preload (`themeBlockLayoutMeta`), keyed by
@@ -98,6 +108,10 @@ export interface OutletOwner {
 export default class WireframePublishTargetService extends Service {
   /** Resolves outlet ownership metadata from active block layers. */
   @service declare blocks: BlocksService;
+  /** Gates the homepage opt-in on admin-only server endpoints. */
+  @service declare currentUser: CurrentUserService | null;
+  /** Names the route the homepage opt-in is offered on. */
+  @service declare router: RouterService;
   /** Supplies selectable themes when preload metadata is unavailable. */
   @service declare site: SiteService;
   /** Supplies the reactive set of edited outlets. */
@@ -156,6 +170,47 @@ export default class WireframePublishTargetService extends Service {
   }
 
   /**
+   * The parent theme the homepage opt-in reads and writes: the rendered theme,
+   * `null` whenever that identity is unusable — no resolvable theme (safe
+   * mode), or a rendered theme that is a component. Themeable site settings are
+   * only ever read for parent themes, so a component target would accept the
+   * write and never serve it.
+   */
+  get homepageThemeId(): number | null {
+    const themeId = currentThemeId();
+    if (!Number.isInteger(themeId)) {
+      return null;
+    }
+    const meta = this.#themeMeta(themeId);
+    if (!meta || meta.component) {
+      return null;
+    }
+    return themeId;
+  }
+
+  /**
+   * Whether the homepage opt-in may be offered: an admin (the setting write is
+   * admin-only server-side), on the custom homepage route, rendering a valid
+   * parent theme whose stack this session publishes into. The rendered theme is
+   * the setting's read/write identity, so any rendered-vs-bound mismatch (e.g.
+   * a stale preview after a theme-producing action) withdraws the offer instead
+   * of targeting the wrong theme.
+   */
+  get homepageToggleAvailable(): boolean {
+    if (!this.currentUser?.admin) {
+      return false;
+    }
+    if (this.router.currentRouteName !== "discovery.custom") {
+      return false;
+    }
+    if (this.homepageThemeId == null) {
+      return false;
+    }
+    const activeThemeId = this.activeThemeId;
+    return activeThemeId != null && this.#themeMeta(activeThemeId) != null;
+  }
+
+  /**
    * The theme an outlet publishes to when nothing yet owns it (a pure in-code
    * default with no live field). Exposed so the live-layout peer can resolve a
    * fallback publish target without reaching into the private resolver.
@@ -205,11 +260,31 @@ export default class WireframePublishTargetService extends Service {
    * duplicate / create-customization-component so the new owner takes effect and
    * Publish enables. Isolated here as a thin, stubbable seam.
    *
+   * The reload must also render the destination's stack, or every
+   * rendered-theme read (site settings, layout preloads, `currentThemeId()`)
+   * keeps describing the theme the author just left: a parent destination
+   * becomes the previewed theme, while a component destination renders under
+   * the parent already on screen, so any `preview_theme_id` present is kept.
+   *
    * @param themeId - Theme that should become the active editing destination.
+   * @param options - Parameters:
+   *   - `isComponent` - Whether the destination is a component rather than a
+   *     parent theme.
    */
-  navigateToEditTheme(themeId: number): void {
+  navigateToEditTheme(
+    themeId: number,
+    {
+      isComponent = false,
+    }: {
+      /** Whether the destination is a component rather than a parent theme. */
+      isComponent?: boolean;
+    } = {}
+  ): void {
     const url = new URL(window.location.href);
     url.searchParams.set("wf_theme", String(themeId));
+    if (!isComponent) {
+      url.searchParams.set("preview_theme_id", String(themeId));
+    }
     window.location.assign(url.toString());
   }
 

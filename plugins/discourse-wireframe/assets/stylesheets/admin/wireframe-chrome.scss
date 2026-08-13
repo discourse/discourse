@@ -3800,6 +3800,26 @@ body.wireframe-active {
     text-align: center;
   }
 
+  &__homepage {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.6rem;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: 4px;
+  }
+
+  &__homepage-row {
+    display: flex;
+    align-items: center;
+  }
+
+  &__homepage-hint {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
   &__escape {
     display: flex;
     flex-direction: column;

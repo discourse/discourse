@@ -31,6 +31,7 @@ import type WireframeDragDwellService from "discourse/plugins/discourse-wirefram
 import type WireframeDragSessionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
 import type WireframeEditModeService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
 import type WireframeMutationEngineService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
+import type WireframePublishTargetService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-publish-target";
 import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
 import type WireframeSimulationService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-simulation";
 import type WireframeStagingService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-staging";
@@ -77,6 +78,7 @@ export default class EditorShell extends Component {
   @service declare wireframeDragDwell: WireframeDragDwellService;
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
   @service declare wireframeEditMode: WireframeEditModeService;
+  @service declare wireframePublishTarget: WireframePublishTargetService;
   @service declare wireframeRail: WireframeRailService;
   @service declare wireframeStaging: WireframeStagingService;
   @service declare wireframeSimulation: WireframeSimulationService;
@@ -149,6 +151,19 @@ export default class EditorShell extends Component {
    */
   get saveTitleKey() {
     return `wireframe.chrome.save_state.${this.saveDirtiness}`;
+  }
+
+  /**
+   * Whether the Save button may open the review drawer. Beyond having edits to
+   * commit, the drawer is also the home of the homepage opt-in toggle, so it
+   * must stay reachable with a clean canvas wherever that toggle is on offer —
+   * an admin flipping only the homepage choice has nothing edited.
+   */
+  get canOpenReviewDrawer(): boolean {
+    return (
+      this.wireframeStaging.canOpenReview ||
+      this.wireframePublishTarget.homepageToggleAvailable
+    );
   }
 
   @action
@@ -255,7 +270,7 @@ export default class EditorShell extends Component {
               @icon="cloud-arrow-up"
               @label="wireframe.review.open"
               @title={{this.saveTitleKey}}
-              @disabled={{unless this.wireframeStaging.canOpenReview true}}
+              @disabled={{unless this.canOpenReviewDrawer true}}
               @action={{this.wireframeStaging.openReviewDrawer}}
             />
             <DButton

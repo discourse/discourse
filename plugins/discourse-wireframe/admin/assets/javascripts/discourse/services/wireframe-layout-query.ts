@@ -19,6 +19,7 @@ import {
   findAncestryPath,
   findEntry,
   findEntryByStableKey,
+  isLayoutBlockEntry,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 /**
@@ -122,6 +123,27 @@ export default class WireframeLayoutQueryService extends Service {
     } = {}
   ): LayoutEntry[] | null {
     return this._resolvedLayout(outletName, { ignoreSessionDraft });
+  }
+
+  /**
+   * Whether an outlet's draft-aware resolved layout renders any content.
+   *
+   * `readResolvedLayout(...).length` cannot answer this: drafted outlets are
+   * normalised to a single root `layout` block, so an outlet whose every block
+   * was deleted still resolves to a length-1 array. When the layout is exactly
+   * that wrapper, emptiness is the wrapper's child count instead.
+   *
+   * @param outletName - Outlet whose resolved layout should be inspected.
+   */
+  hasRenderableContent(outletName: string): boolean {
+    const layout = this._resolvedLayout(outletName);
+    if (!layout || layout.length === 0) {
+      return false;
+    }
+    if (layout.length === 1 && isLayoutBlockEntry(layout[0])) {
+      return (layout[0]!.children?.length ?? 0) > 0;
+    }
+    return true;
   }
 
   /* Entry / outlet lookups */

@@ -93,6 +93,10 @@ en:
         count_removed: "%{count} removed"
         count_edited: "%{count} changed"
         count_moved: "%{count} moved"
+        use_as_homepage: "Use as this theme's homepage"
+        use_as_homepage_empty: "Add and publish at least one block before enabling the homepage."
+        use_as_homepage_pending: "Applied when you publish."
+        use_as_homepage_unpublished: "The homepage layout wasn't published, so the homepage setting was left unchanged."
       palette:
         search_placeholder: "Search blocks"
         empty: "No blocks match your filter."

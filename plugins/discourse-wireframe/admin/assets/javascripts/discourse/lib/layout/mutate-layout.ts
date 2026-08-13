@@ -1165,7 +1165,9 @@ function cloneContainerArgs(
  * @param entry - Layout entry to inspect.
  * @returns Whether the entry resolves to the built-in layout block.
  */
-function isLayoutBlockEntry(entry: LayoutEntry | null | undefined): boolean {
+export function isLayoutBlockEntry(
+  entry: LayoutEntry | null | undefined
+): boolean {
   if (!entry) {
     return false;
   }

@@ -1,7 +1,8 @@
 import Service from "@ember/service";
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import PublishReviewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-review-drawer";
 
 /**
@@ -43,6 +44,18 @@ class StubWireframeService extends Service {
     return this.#config.activeThemeTarget ?? null;
   }
 
+  get homepageToggleAvailable() {
+    return this.#config.homepageToggleAvailable ?? false;
+  }
+
+  get homepageThemeId() {
+    return this.#config.homepageThemeId ?? 5;
+  }
+
+  hasRenderableContent(name) {
+    return this.#config.renderableOutlets?.includes(name) ?? false;
+  }
+
   outletState(name) {
     return this.#config.outletStates?.[name] ?? "default";
   }
@@ -78,6 +91,8 @@ class StubWireframeService extends Service {
   }
 
   navigateToEditTheme() {}
+
+  exit() {}
 }
 
 function stubWireframe(owner, config) {
@@ -210,6 +225,131 @@ module(
       assert
         .dom(".wireframe-review__publish")
         .isDisabled("Publish is disabled when no target is publishable");
+    });
+
+    test("the homepage toggle is hidden when the opt-in isn't available", async function (assert) {
+      stubWireframe(this.owner, {
+        publishTargets: [
+          {
+            themeId: 5,
+            themeName: "Acme",
+            isGit: false,
+            isSystem: false,
+            publishable: true,
+            outlets: ["homepage-blocks"],
+          },
+        ],
+      });
+
+      await render(<template><PublishReviewDrawer /></template>);
+
+      assert.dom(".wireframe-review__homepage").doesNotExist();
+    });
+
+    test("the homepage toggle can't switch on while the homepage layout is empty", async function (assert) {
+      stubWireframe(this.owner, {
+        homepageToggleAvailable: true,
+        renderableOutlets: [],
+      });
+      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
+        false;
+
+      await render(<template><PublishReviewDrawer /></template>);
+
+      assert
+        .dom(".wireframe-review__homepage .d-toggle-switch__checkbox")
+        .isDisabled("the switch is disabled with nothing to render");
+      assert
+        .dom(".wireframe-review__homepage-hint")
+        .exists("the disabled reason is explained");
+      assert
+        .dom(".wireframe-review__publish")
+        .isDisabled("nothing is pending, so Publish stays disabled");
+    });
+
+    test("flipping the homepage toggle stages the choice and enables Publish", async function (assert) {
+      stubWireframe(this.owner, {
+        homepageToggleAvailable: true,
+        renderableOutlets: ["homepage-blocks"],
+      });
+      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
+        false;
+
+      await render(<template><PublishReviewDrawer /></template>);
+
+      assert
+        .dom(".wireframe-review__publish")
+        .isDisabled("nothing is staged yet");
+
+      await click(".wireframe-review__homepage .d-toggle-switch__checkbox");
+
+      assert
+        .dom(".wireframe-review__homepage .d-toggle-switch__checkbox")
+        .hasAria("checked", "true", "the switch reflects the staged choice");
+      assert
+        .dom(".wireframe-review__homepage-hint")
+        .exists("the pending choice is explained");
+      assert
+        .dom(".wireframe-review__publish")
+        .isNotDisabled("a staged homepage choice makes Publish available");
+    });
+
+    test("publish applies the staged homepage choice for the rendered theme", async function (assert) {
+      stubWireframe(this.owner, {
+        homepageToggleAvailable: true,
+        homepageThemeId: 42,
+        renderableOutlets: ["homepage-blocks"],
+      });
+      const siteSettings = this.owner.lookup("service:site-settings");
+      siteSettings.wireframe_custom_homepage = false;
+
+      const putBodies = [];
+      pretender.put("/admin/themes/:id/site-setting", (request) => {
+        putBodies.push([request.params.id, request.requestBody]);
+        return response({ success: "OK" });
+      });
+
+      await render(<template><PublishReviewDrawer /></template>);
+      await click(".wireframe-review__homepage .d-toggle-switch__checkbox");
+      await click(".wireframe-review__publish");
+
+      assert.deepEqual(
+        putBodies,
+        [["42", "name=wireframe_custom_homepage&value=true"]],
+        "the setting write targets the rendered theme with an explicit boolean"
+      );
+      assert.true(
+        siteSettings.wireframe_custom_homepage,
+        "the applied value is mirrored locally"
+      );
+    });
+
+    test("a failed homepage write keeps the drawer open with Publish still enabled", async function (assert) {
+      stubWireframe(this.owner, {
+        homepageToggleAvailable: true,
+        homepageThemeId: 42,
+        renderableOutlets: ["homepage-blocks"],
+      });
+      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
+        false;
+
+      pretender.put("/admin/themes/:id/site-setting", () =>
+        response(500, { errors: ["boom"] })
+      );
+
+      await render(<template><PublishReviewDrawer /></template>);
+      await click(".wireframe-review__homepage .d-toggle-switch__checkbox");
+      await click(".wireframe-review__publish");
+
+      assert
+        .dom(".wireframe-review__error")
+        .exists("the failure lands in the banner");
+      assert
+        .dom(".wireframe-review")
+        .exists("the drawer stays open for a retry");
+      assert
+        .dom(".wireframe-review__publish")
+        .isNotDisabled("the staged choice keeps Publish available to retry");
     });
 
     test("a core system theme offers the companion component but not duplicate", async function (assert) {

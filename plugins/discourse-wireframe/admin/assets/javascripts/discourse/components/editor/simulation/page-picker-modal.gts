@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { type ComponentLike } from "@glint/template";
+import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import DModalUntyped from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
@@ -72,7 +73,7 @@ interface PagePickerModalSignature {
  * Phase 7's polish.
  */
 const TARGET_PAGES: TargetPage[] = [
-  { key: "homepage", path: "/", labelKey: "homepage" },
+  { key: "homepage", path: "/custom", labelKey: "homepage" },
   { key: "categories", path: "/categories", labelKey: "categories" },
   { key: "latest", path: "/latest", labelKey: "latest" },
 ];
@@ -84,9 +85,13 @@ export default class PagePickerModal extends Component<PagePickerModalSignature>
   }
 
   /**
-   * Builds the URL we navigate to when a page is picked. The destination
-   * gets a `wf_theme=<id>` query param so the in-context entry pill enters
-   * editor mode against the right theme on arrival.
+   * Builds the URL we navigate to when a page is picked. `wf_theme=<id>` makes
+   * the in-context entry pill enter editor mode bound to the chosen theme on
+   * arrival, and `preview_theme_id=<id>` makes the page RENDER that theme —
+   * without it, every rendered-theme read (site settings, layout preloads)
+   * would keep describing the admin's own theme. The homepage entry targets
+   * `/custom` directly because `/` only resolves there for themes that have
+   * already opted in.
    */
   @action
   navigate(page: TargetPage): void {
@@ -94,7 +99,20 @@ export default class PagePickerModal extends Component<PagePickerModalSignature>
       return;
     }
     this.args.closeModal();
-    const url = `${page.path}?wf_theme=${this.theme.id}`;
+    const params = new URLSearchParams({
+      wf_theme: String(this.theme.id),
+      preview_theme_id: String(this.theme.id),
+    });
+    this._assign(getURL(`${page.path}?${params}`));
+  }
+
+  /**
+   * Performs the full-document navigation. A thin, stubbable seam mirroring
+   * `WireframePublishTargetService#navigateToEditTheme`.
+   *
+   * @param url - Site-relative URL to load.
+   */
+  _assign(url: string): void {
     window.location.assign(url);
   }
 

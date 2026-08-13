@@ -16,11 +16,9 @@ class HomepageHelper
         current_user: current_user,
       )
 
-    # current_user ? SiteSetting.homepage : SiteSetting.anonymous_homepage
+    return custom_homepage_route(request) if enabled
 
-    # TODO (saquetim) temporarily enabled the homepage route for testing purposed
-    #  the plugin needs to provide a proper way of enabling this.
-    custom_homepage_route(request)
+    current_user ? SiteSetting.homepage : SiteSetting.anonymous_homepage
   end
 
   def self.custom_homepage_route(request)
