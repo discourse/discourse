@@ -75,7 +75,7 @@ ur:
         topic_notifications:
           title: "موضوع کی اطلاعات"
         post:
-          title: "پوسٹ"
+          title: "دھاگہ"
         post_list:
           title: "پوسٹ فہرست"
           empty_example: "<PostList /> خالی حالت"
