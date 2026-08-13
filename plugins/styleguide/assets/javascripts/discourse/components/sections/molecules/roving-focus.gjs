@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
+import RovingFocusComboboxExample from "../../examples/molecules/roving-focus/combobox";
+import rovingFocusComboboxSource from "../../examples/molecules/roving-focus/combobox?source=file";
 import RovingFocusListboxExample from "../../examples/molecules/roving-focus/listbox";
 import rovingFocusListboxSource from "../../examples/molecules/roving-focus/listbox?source=file";
 import RovingFocusRadioGroupExample from "../../examples/molecules/roving-focus/radio-group";
@@ -13,7 +15,14 @@ import rovingFocusTreeSource from "../../examples/molecules/roving-focus/tree?so
 import StyleguideExample from "../../styleguide-example";
 import StyleguideGroups from "../../styleguide-groups";
 
-const GROUPS = ["toolbar", "listbox", "radio", "tree", "components"];
+const GROUPS = [
+  "toolbar",
+  "listbox",
+  "combobox",
+  "radio",
+  "tree",
+  "components",
+];
 
 /**
  * Conformance demos for the roving-focus modifier, mirroring the interactive examples in the
@@ -70,6 +79,19 @@ export default class RovingFocus extends Component {
           @code={{rovingFocusListboxSource}}
         >
           <RovingFocusListboxExample />
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="combobox">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.roving_focus.combobox.example"}}
+          @description={{i18n
+            "styleguide.sections.roving_focus.combobox.example_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.roving_focus.combobox.try_this"}}
+          @code={{rovingFocusComboboxSource}}
+        >
+          <RovingFocusComboboxExample />
         </StyleguideExample>
       </Group>
 

@@ -272,6 +272,9 @@ en:
             listbox:
               title: "Listbox"
               description: "A vertical cursor with type-ahead, entered on the option already chosen."
+            combobox:
+              title: "Combobox"
+              description: "A cursor that moves without focus moving, reported by aria-activedescendant."
             radio:
               title: "Radio group"
               description: "A group whose checked member is where the cursor starts, and follows."
@@ -314,6 +317,15 @@ en:
             blackberry: "Blackberry"
             cherry: "Cherry"
             coconut: "Coconut"
+          combobox:
+            label: "Email digest"
+            example: "Cursor without focus"
+            example_description: "The control keeps focus while the arrows move a highlight through the options, and the control reports where that highlight is rather than the browser moving to it. This is the second of the two strategies the practice page describes, and the one a combobox needs so the reader can keep typing."
+            try_this: "Open the list and arrow through it while watching the focus ring: it stays on the button. Press Enter to choose, and Escape or another click to close."
+            daily: "Daily"
+            weekly: "Weekly"
+            monthly: "Monthly"
+            never: "Never"
           radio:
             label: "Alignment"
             example: "Radio group"
