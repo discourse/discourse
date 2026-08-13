@@ -191,4 +191,42 @@ module("Integration | ui-kit | DVirtualList | rendering", function (hooks) {
       .dom(".d-virtual-list")
       .doesNotHaveAttribute("id", "the viewport has no consumer id");
   });
+
+  // A browser with keyboard-focusable scrollers puts a scroll container into the tab sequence
+  // when it holds nothing focusable, and does so without marking the element: adopted or not, it
+  // reports `tabIndex === -1` and matches no focusable selector. An explicit attribute is
+  // therefore both the only way to suppress the adoption and the only part of it a test can read.
+  test("leaves the viewport's tab behaviour to the browser by default", async function (assert) {
+    await render(
+      <template>
+        <DVirtualList @items={{items}} @estimateSize={{estimate}} as |item|>
+          {{item.text}}
+        </DVirtualList>
+      </template>
+    );
+
+    assert
+      .dom(".d-virtual-list")
+      .doesNotHaveAttribute(
+        "tabindex",
+        "a list read by scrolling keeps whatever access the browser gives it"
+      );
+  });
+
+  test("opts the viewport out of the tab sequence on request", async function (assert) {
+    await render(
+      <template>
+        <DVirtualList
+          @items={{items}}
+          @estimateSize={{estimate}}
+          @viewportTabbable={{false}}
+          as |item|
+        >
+          {{item.text}}
+        </DVirtualList>
+      </template>
+    );
+
+    assert.dom(".d-virtual-list").hasAttribute("tabindex", "-1");
+  });
 });
