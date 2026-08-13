@@ -8,9 +8,11 @@ import { modifier } from "ember-modifier";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { eq } from "discourse/truth-helpers";
 import DCookText from "discourse/ui-kit/d-cook-text";
+import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
+import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import { i18n } from "discourse-i18n";
 import CanvasHoverToolbar from "./hover-toolbar";
 import { DRAG_LENIENCE_PX } from "./rete-editor";
@@ -51,12 +53,33 @@ export default class StickyNote extends Component {
   stickyNoteElement = null;
   colorOptions = COLORS;
   resizeEdges = RESIZE_EDGES;
-
+  dragLeniencePx = DRAG_LENIENCE_PX;
   handleDocumentClick = (event) => {
     if (!this.stickyNoteElement?.contains(event.target)) {
       this.closeColorPicker();
     }
   };
+
+  /** Where the pointer went down, so a move reports its total travel. */
+  #pressX = 0;
+  #pressY = 0;
+
+  /** The note's position when the move gesture began. */
+  #dragOrigin = { x: 0, y: 0 };
+
+  /** How much of the move has already been handed to co-selected notes. */
+  #appliedDx = 0;
+  #appliedDy = 0;
+
+  /** The canvas zoom in force when the note drag began. */
+  #dragZoom = null;
+
+  /**
+   * Live edge gestures keyed by pointer, each holding the note's box and the
+   * zoom at its own press. The handles support two gestures at once, and a
+   * shared origin would rebase the first the moment the second pressed.
+   */
+  #resizeSessions = new Map();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -98,112 +121,120 @@ export default class StickyNote extends Component {
     document.removeEventListener("click", this.handleDocumentClick);
   }
 
-  #startDrag(event, { onMove, onEnd }) {
-    event.stopPropagation();
-    event.preventDefault();
-    const zoom = this.args.zoom ?? 1;
-    const startX = event.clientX;
-    const startY = event.clientY;
-    let withinLenience = true;
-
-    const moveHandler = (e) => {
-      if (withinLenience) {
-        if (
-          Math.hypot(e.clientX - startX, e.clientY - startY) < DRAG_LENIENCE_PX
-        ) {
-          return;
-        }
-        withinLenience = false;
-      }
-      const dx = (e.clientX - startX) / zoom;
-      const dy = (e.clientY - startY) / zoom;
-      onMove(dx, dy);
-    };
-
-    const upHandler = () => {
-      document.removeEventListener("pointermove", moveHandler);
-      document.removeEventListener("pointerup", upHandler);
-      onEnd?.();
-    };
-
-    document.addEventListener("pointermove", moveHandler);
-    document.addEventListener("pointerup", upHandler);
+  /**
+   * Converts a pointer delta from screen pixels into canvas units. The canvas is
+   * scaled, so a 10px pointer move is a smaller move of the note when zoomed in.
+   *
+   * @param {{x: number, y: number}} delta - The pointer delta in screen pixels.
+   * @param {number} [zoom] - The zoom snapshotted when the gesture began.
+   *   Zooming mid-gesture would otherwise re-divide the whole accumulated delta
+   *   by the new factor and make the note jump, because the delta is measured
+   *   from the original press.
+   * @returns {{dx: number, dy: number}} The same delta in canvas units.
+   */
+  #inCanvasUnits(delta, zoom) {
+    const factor = zoom ?? this.args.zoom ?? 1;
+    return { dx: delta.x / factor, dy: delta.y / factor };
   }
 
   @action
-  handlePointerDown(event) {
-    if (
-      event.target.closest(".workflow-sticky-note__edge") ||
-      event.target.closest(".workflow-canvas-toolbar") ||
-      event.target.tagName === "TEXTAREA"
-    ) {
-      return;
+  onNoteDragStart(event) {
+    // The toolbar's own buttons stop the press themselves, but the strip around
+    // them does not, and pressing it has never dragged the note.
+    if (event.target.closest(".workflow-canvas-toolbar")) {
+      return false;
     }
 
     this.args.onSelect?.();
     this.args.onBeforeMutation?.();
+    this.#dragZoom = this.args.zoom ?? 1;
+    this.#pressX = event.clientX;
+    this.#pressY = event.clientY;
+    this.#dragOrigin = { ...this.args.note.position };
+    this.#appliedDx = 0;
+    this.#appliedDy = 0;
+  }
 
-    const { x, y } = this.args.note.position;
-    let prevDx = 0;
-    let prevDy = 0;
-    this.#startDrag(event, {
-      onMove: (dx, dy) => {
-        this.args.onMove?.({ x: x + dx, y: y + dy });
-        const incrementalDx = dx - prevDx;
-        const incrementalDy = dy - prevDy;
-        if (incrementalDx !== 0 || incrementalDy !== 0) {
-          this.args.onTranslateSelected?.(incrementalDx, incrementalDy);
-        }
-        prevDx = dx;
-        prevDy = dy;
+  @action
+  onNoteDrag(event) {
+    const { dx, dy } = this.#inCanvasUnits(
+      {
+        x: event.clientX - this.#pressX,
+        y: event.clientY - this.#pressY,
       },
-      onEnd: () => this.args.onAfterMutation?.(),
+      this.#dragZoom
+    );
+
+    this.args.onMove?.({
+      x: this.#dragOrigin.x + dx,
+      y: this.#dragOrigin.y + dy,
+    });
+
+    // Any co-selected notes move by the increment since the last report, not by
+    // the total, because they are translated relative to wherever they now sit.
+    const incrementalDx = dx - this.#appliedDx;
+    const incrementalDy = dy - this.#appliedDy;
+    if (incrementalDx !== 0 || incrementalDy !== 0) {
+      this.args.onTranslateSelected?.(incrementalDx, incrementalDy);
+    }
+    this.#appliedDx = dx;
+    this.#appliedDy = dy;
+  }
+
+  @action
+  onNoteDragEnd() {
+    this.#dragZoom = null;
+    this.args.onAfterMutation?.();
+  }
+
+  @action
+  onEdgeResizeStart(edge, dragInfo) {
+    this.args.onBeforeMutation?.();
+    this.#resizeSessions.set(dragInfo.event.pointerId, {
+      origin: { ...this.args.note.position, ...this.args.note.size },
+      zoom: this.args.zoom ?? 1,
     });
   }
 
   @action
-  handleResizePointerDown(event) {
-    const edge = event.target.dataset.edge;
-    if (!edge) {
+  onEdgeResize(edge, dragInfo) {
+    const session = this.#resizeSessions.get(dragInfo.event.pointerId);
+    if (!session) {
       return;
     }
+    const { x, y, width, height } = session.origin;
+    const { dx, dy } = this.#inCanvasUnits(dragInfo.delta, session.zoom);
 
-    this.args.onBeforeMutation?.();
+    let newWidth = width;
+    let newHeight = height;
+    let newX = x;
+    let newY = y;
 
-    const { width, height } = this.args.note.size;
-    const { x, y } = this.args.note.position;
-    const resizeN = edge.includes("n");
-    const resizeS = edge.includes("s");
-    const resizeW = edge.includes("w");
-    const resizeE = edge.includes("e");
+    if (edge.includes("e")) {
+      newWidth = Math.max(MIN_WIDTH, width + dx);
+    }
+    if (edge.includes("s")) {
+      newHeight = Math.max(MIN_HEIGHT, height + dy);
+    }
+    // Dragging a leading edge moves the note's origin by however much the box
+    // actually grew, which the minimum may have capped.
+    if (edge.includes("w")) {
+      newWidth = Math.max(MIN_WIDTH, width - dx);
+      newX = x + width - newWidth;
+    }
+    if (edge.includes("n")) {
+      newHeight = Math.max(MIN_HEIGHT, height - dy);
+      newY = y + height - newHeight;
+    }
 
-    this.#startDrag(event, {
-      onMove: (dx, dy) => {
-        let newW = width;
-        let newH = height;
-        let newX = x;
-        let newY = y;
+    this.args.onResize?.({ width: newWidth, height: newHeight });
+    this.args.onMove?.({ x: newX, y: newY });
+  }
 
-        if (resizeE) {
-          newW = Math.max(MIN_WIDTH, width + dx);
-        }
-        if (resizeS) {
-          newH = Math.max(MIN_HEIGHT, height + dy);
-        }
-        if (resizeW) {
-          newW = Math.max(MIN_WIDTH, width - dx);
-          newX = x + width - newW;
-        }
-        if (resizeN) {
-          newH = Math.max(MIN_HEIGHT, height - dy);
-          newY = y + height - newH;
-        }
-
-        this.args.onResize?.({ width: newW, height: newH });
-        this.args.onMove?.({ x: newX, y: newY });
-      },
-      onEnd: () => this.args.onAfterMutation?.(),
-    });
+  @action
+  onEdgeResizeEnd(edge, dragInfo) {
+    this.#resizeSessions.delete(dragInfo.event.pointerId);
+    this.args.onAfterMutation?.();
   }
 
   @action
@@ -260,7 +291,15 @@ export default class StickyNote extends Component {
       }}
       style={{this.style}}
       {{registerStickyNoteElement this}}
-      {{on "pointerdown" this.handlePointerDown}}
+      {{dPointerDrag
+        onDragStart=this.onNoteDragStart
+        onDrag=this.onNoteDrag
+        onDragEnd=this.onNoteDragEnd
+        onDragCancel=this.onNoteDragEnd
+        threshold=this.dragLeniencePx
+        stopPropagation=true
+        touchAction="pinch-zoom"
+      }}
       {{on "dblclick" this.startEditing}}
     >
       <CanvasHoverToolbar>
@@ -342,16 +381,17 @@ export default class StickyNote extends Component {
         {{/if}}
       </div>
 
-      <div
-        class="workflow-sticky-note__edges"
-        {{on "pointerdown" this.handleResizePointerDown}}
-      >
-        {{#each this.resizeEdges as |edge|}}
-          <div
-            class="workflow-sticky-note__edge --{{edge}}"
-            data-edge={{edge}}
-          />
-        {{/each}}
+      <div class="workflow-sticky-note__edges">
+        <DResizeHandles
+          @handleClass="workflow-sticky-note__edge"
+          @directions={{this.resizeEdges}}
+          @threshold={{this.dragLeniencePx}}
+          @stopPropagation={{true}}
+          @onResizeStart={{this.onEdgeResizeStart}}
+          @onResize={{this.onEdgeResize}}
+          @onResizeEnd={{this.onEdgeResizeEnd}}
+          @onResizeCancel={{this.onEdgeResizeEnd}}
+        />
       </div>
     </div>
   </template>
