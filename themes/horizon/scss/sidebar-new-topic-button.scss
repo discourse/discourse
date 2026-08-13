@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .has-ai-conversations-sidebar {
   .sidebar-new-topic-button__wrapper {
     display: none;
@@ -11,6 +13,25 @@
     box-sizing: border-box;
     display: flex;
     margin: var(--space-2) var(--space-6) 0 var(--space-2);
+    position: relative;
+
+    @include viewport.from(lg) {
+      &:not(:hover, :focus-visible) {
+        &::after {
+          content: "";
+          width: 100%;
+          height: var(--space-4);
+          position: absolute;
+          bottom: calc(var(--space-4) * -1);
+          background: linear-gradient(
+            to top,
+            transparent 0,
+            var(--background-color) 100%
+          );
+          z-index: 1;
+        }
+      }
+    }
 
     &:focus-visible,
     &:hover {

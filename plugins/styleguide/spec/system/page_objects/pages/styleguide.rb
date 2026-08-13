@@ -47,6 +47,53 @@ module PageObjects
       def has_no_color_selector?
         has_no_css?(".toggle-color-mode")
       end
+
+      # Addressed by its visible title. Every example has one, but they are not unique across
+      # every page — the forms section renders two examples titled "Input" — so a page with
+      # duplicates needs a scoped lookup rather than this one, which would raise `Ambiguous`.
+      def example(title)
+        find("[data-test-example-title]", text: title, exact_text: true).ancestor(
+          ".styleguide-example",
+        )
+      end
+
+      # Found by accessible name rather than class, so a missing translation fails the test
+      # instead of silently clicking a button labelled with the bracketed key.
+      def example_source_toggle(title)
+        example(title).find(:button, I18n.t("js.styleguide.example.toggle_code"))
+      end
+
+      def toggle_example_source(title)
+        example_source_toggle(title).click
+      end
+
+      def has_example_source?(title, text:)
+        example(title).has_css?(".styleguide-example__code", text: text)
+      end
+
+      # `visible: :all` on purpose: the source panel is meant to UNMOUNT, and a plain
+      # `has_no_css?` would also pass for a CSS-hidden node, hiding that regression.
+      def has_no_example_source?(title)
+        example(title).has_no_css?(".styleguide-example__code", visible: :all)
+      end
+
+      # `expanded` is a boolean; it interpolates to the attribute's "true"/"false".
+      def has_example_source_expanded?(title, expanded)
+        example(title).has_css?(
+          "button.styleguide-example__code-toggle[aria-expanded='#{expanded}']",
+        )
+      end
+
+      # The toggle's `aria-controls` must name the revealed region, so the two are asserted
+      # against each other rather than each against a hardcoded id.
+      def has_example_source_wired?(title)
+        card = example(title)
+        # The attribute is part of the selector so Capybara waits for it, rather than reading it
+        # once off a button that is present in both states.
+        controls =
+          card.find("button.styleguide-example__code-toggle[aria-controls]")["aria-controls"]
+        controls.present? && card.has_css?(".styleguide-example__code##{controls}")
+      end
     end
   end
 end

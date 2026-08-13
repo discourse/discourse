@@ -66,7 +66,7 @@ RSpec.describe "Managing LLM configurations" do
     form.field("provider").select("vllm")
     form.field("tokenizer").select("DiscourseAi::Tokenizer::Llama3Tokenizer")
     form.field("max_output_tokens").fill_in(2000)
-    form.field("vision_enabled").toggle
+    form.field("vision_mode").select("native")
     form.submit
 
     expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-llms/\d+/edit})

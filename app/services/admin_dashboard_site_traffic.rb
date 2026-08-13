@@ -40,7 +40,7 @@ class AdminDashboardSiteTraffic
       pageview_series: pageview_series(current_rows, include_embedded: include_embedded),
     }
 
-    if SiteSetting.persist_browser_pageview_events
+    if SiteSetting.persist_browser_pageview_events && !SiteSetting.use_legacy_pageviews
       top_countries = fetch_card("top_countries_by_browser_pageviews")
       response[:top_countries] = top_countries if top_countries
 
@@ -76,7 +76,7 @@ class AdminDashboardSiteTraffic
     return { rows: [], error: "exception" } if report.nil?
 
     # Timeouts skip the cache so the next request retries instead of being
-    # pinned to the error for the full 35-minute TTL.
+    # pinned to the error for the full TTL.
     Report.cache(report) if report.error != :timeout
 
     return { rows: [], error: report.error.to_s } if report.error.present?

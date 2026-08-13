@@ -15,6 +15,8 @@ export default class AiLlm extends RestModel {
       "ai_secret_id",
       "provider_params",
       "vision_enabled",
+      "vision_mode",
+      "vision_llm_model_id",
       "input_cost",
       "cached_input_cost",
       "cache_write_cost",

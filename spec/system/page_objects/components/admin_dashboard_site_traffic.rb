@@ -40,6 +40,10 @@ module PageObjects
         has_css?("a.db-traffic__see-details")
       end
 
+      def has_no_see_details_link?
+        has_no_css?("a.db-traffic__see-details")
+      end
+
       def click_see_details
         find("a.db-traffic__see-details").click
       end

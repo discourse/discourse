@@ -726,6 +726,13 @@ hr:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "nepoznati operacijski sustav"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimno"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Dogodila se greška u promijeni tvog e-maila. Možda se ta adresa već koristi?"
     doesnt_exist: "Ta adresa e-pošte nije povezana s vašim računom."
@@ -2750,6 +2757,9 @@ hr:
       help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
+  design_wizard:
+    palette_pairs:
+      default: "Zadano"
   wizard:
     step:
       setup:

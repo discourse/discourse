@@ -240,6 +240,21 @@ RSpec.describe AiAgent do
     expect(klass.allow_chat_direct_messages).to eq(true)
   end
 
+  it "resolves the users tool shorthand" do
+    agent =
+      AiAgent.create!(
+        name: "users_tool_agent",
+        description: "test",
+        system_prompt: "test",
+        tools: ["Users"],
+        allowed_group_ids: [],
+        default_llm_id: llm_model.id,
+        user_id: 1,
+      )
+
+    expect(agent.class_instance.new.tools).to contain_exactly(DiscourseAi::Agents::Tools::ListUsers)
+  end
+
   it "attaches mcp tool classes for assigned servers" do
     ai_mcp_server = Fabricate(:ai_mcp_server, name: "Jira")
     agent =

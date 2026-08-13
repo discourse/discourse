@@ -268,6 +268,23 @@ gl:
     admin_onboarding_banner:
       start_posting:
         back: "Volver"
+    design_wizard:
+      back: "Volver"
+      next: "Seguinte"
+      sections:
+        theme: "Tema"
+        fonts: "Tipos de letra"
+        homepage: "Páxina de inicio"
+      colors:
+        light: "Claro"
+        dark: "Escuro"
+      fonts:
+        heading_font: "Tipo de letra de título"
+      homepage:
+        topics: "Temas"
+        categories: "Categorías"
+        styles:
+          boxes: "Caixas"
     about:
       edit: "Editar esta páxina"
       simple_title: "Verbo de"
@@ -411,9 +428,6 @@ gl:
         optional: "opcional"
       claim_help:
         optional: "Podes reclamar este elemento para evitar que outros o revisen."
-        required: "Debes reclamar os elementos antes de revisalos."
-        claimed_by_you: "Reclamaches este elemento e podes revisalo."
-        claimed_by_other: "Este elemento só pode revisalo <b>%{username}</b>."
       awaiting_approval: "Agardando a aprobación"
       delete: "Eliminar"
       settings:
@@ -1780,6 +1794,7 @@ gl:
       subcategory_count:
         one: "+%{count} subcategoría"
         other: "+%{count} subcategorías"
+      subcategories: "+ Subcategorías"
       topic_count:
         one: "%{count} tema nesta categoría"
         other: "%{count} temas nesta categoría"
@@ -2000,7 +2015,6 @@ gl:
         other: "%{count} solicitudes de adhesión abertas en «%{group_name}»"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completado"
       admin_problems: "Novo consello no seu panel de sitio"
       dismiss_confirmation:
         dismiss: "Desbotar"
@@ -3617,13 +3631,26 @@ gl:
         default_value: "Predeterminado"
       search:
         title: "Buscar"
+      site_traffic_explorer:
+        pageviews: "Visualizacións de páxinas"
+        columns:
+          top_urls: "URL"
+          browsers: "Navegador"
+          ip_addresses: "Enderezo IP"
+        filters:
+          browser: "Navegador"
+          ip: "Enderezo IP"
+        metrics:
+          pageviews:
+            label: "Visualizacións de páxinas"
+        series:
+          anonymous_human: "Anónimo"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
         discourse_last_updated: "Actualización de Discourse:"
         version: "Versión"
         up_to_date: "Está actualizado/a!"
-        critical_available: "Está dispoñíbel unha actualización crítica."
         updates_available: "Hai actualizacións dispoñíbeis."
         no_check_performed: "Non se efectuou unha busca de actualizacións. Asegúrese de que sidekiq está executándose."
         stale_data: "Non se efectuou unha busca de actualizacións ultimamente. Asegúrese de que sidekiq está executándose."

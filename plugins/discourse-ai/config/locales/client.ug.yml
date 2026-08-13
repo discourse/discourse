@@ -206,6 +206,9 @@ ug:
           required: "زۆرۈر"
       llms:
         display_name: "ئىسمى"
+        vision_modes:
+          disabled:
+            title: "چەكلەندى"
         save: "ساقلا"
         edit: "تەھرىر"
         delete: ئۆچۈر

@@ -68,6 +68,7 @@ de:
       users_cant_be_added_to_channel: "Diesem Kanal können keine Benutzer hinzugefügt werden."
       user_cant_be_removed_from_channel: "Der Benutzer kann nicht aus diesem Kanal entfernt werden."
       channel_exists_for_category: "Für diese Kategorie und diesen Namen existiert bereits ein Kanal"
+      public_channels_disabled: "Der Kanal konnte nicht erstellt werden, da öffentliche Kanäle deaktiviert sind. Ein Administrator kann die Website-Einstellung „enable public channels“ aktivieren."
       channel_new_message_disallowed:
         archived: "Der Kanal ist archiviert, es können keine neuen Nachrichten gesendet werden"
         closed: "Der Kanal ist geschlossen, es können keine neuen Nachrichten gesendet werden"

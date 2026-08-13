@@ -17,6 +17,13 @@ en:
         agent_vision_disabled: "the agent cannot include image uploads"
         llm_missing: "the agent does not resolve to an LLM"
         llm_vision_disabled: "the resolved LLM does not support image input"
+      ai_llm_vision_delegation: "%{model_name} cannot use its configured vision model: %{reason}. <a href='%{url}'>Review the AI model</a>."
+      ai_llm_vision_delegation_reasons:
+        missing: "the vision model no longer exists"
+        native_and_delegated: "native image input and delegated vision are both configured"
+        self_reference: "a model cannot use itself for vision"
+        delegated: "the vision model delegates to another model"
+        not_native: "the vision model does not support native image input"
   discourse_automation:
     ai:
       flag_types:
@@ -633,6 +640,7 @@ en:
       tool_summary:
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
+        view_image: "Inspect image"
         update_artifact: "Update a web artifact"
         create_artifact: "Create web artifact"
         web_browser: "Browse Web"
@@ -642,6 +650,7 @@ en:
         github_diff: "GitHub diff"
         random_picker: "Random Picker"
         categories: "List categories"
+        users: "List users"
         flag_post: "Flag post"
         close_topic: "Close topic"
         suspend_user: "Suspend user"
@@ -684,6 +693,7 @@ en:
       tool_help:
         read_artifact: "Read a web artifact using the AI Bot"
         search_uploaded_documents: "Search documents uploaded to this agent"
+        view_image: "Inspect an image available during this task"
         update_artifact: "Update a web artifact using the AI Bot"
         create_artifact: "Create a web artifact using the AI Bot"
         web_browser: "Browse web page using the AI Bot"
@@ -693,6 +703,7 @@ en:
         github_diff: "Retrieve a GitHub pull request or commit diff"
         random_picker: "Pick a random number or a random element of a list"
         categories: "List all publicly visible categories on the forum"
+        users: "List users on the forum"
         flag_post: "Flag the current post for staff review"
         close_topic: "Close or open a topic"
         suspend_user: "Suspend (ban) a user, blocking them from logging in or posting"
@@ -733,6 +744,7 @@ en:
         researcher: "Research forum information using the AI Bot"
       tool_description:
         read_artifact: "Read a web artifact using the AI Bot"
+        view_image: "Inspected an image available during this task"
         search_uploaded_documents:
           one: "Found %{count} uploaded document excerpt for '%{query}'"
           other: "Found %{count} uploaded document excerpts for '%{query}'"
@@ -774,6 +786,9 @@ en:
         categories:
           one: "Found %{count} category"
           other: "Found %{count} categories"
+        users:
+          one: "Found %{count} user"
+          other: "Found %{count} users"
         tags:
           one: "Found %{count} tag"
           other: "Found %{count} tags"
@@ -1078,6 +1093,12 @@ en:
       secret_not_found: "The selected credential does not exist"
       bedrock_invalid_url: "Please complete all the fields to use this model."
       bedrock_missing_auth: "AWS Bedrock requires either Access Key ID or Role ARN to be configured"
+      native_vision_cannot_delegate: "Native image input cannot use another vision model"
+      vision_model_required: "A vision model must be selected"
+      vision_model_not_found: "The selected vision model does not exist"
+      vision_model_cannot_be_self: "A model cannot use itself as its vision model"
+      vision_model_must_be_native: "The selected vision model must support native image input"
+      vision_model_has_dependents: "This model provides vision for: %{models}. Reconfigure those models first."
 
     ai_staff_action_logger:
       updated: "updated"

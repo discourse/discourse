@@ -2,6 +2,8 @@
   &.tag-chooser,
   &.mini-tag-chooser,
   &.tag-drop {
+    border-radius: var(--d-input-border-radius);
+
     .select-kit-row {
       display: flex;
       align-items: baseline;

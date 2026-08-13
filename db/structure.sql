@@ -2068,7 +2068,9 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL
+    source smallint DEFAULT 1 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer
 );
 
 
@@ -6840,7 +6842,8 @@ CREATE TABLE public.llm_models (
     max_output_tokens integer,
     cache_write_cost double precision DEFAULT 0.0,
     allowed_attachment_types text[] DEFAULT '{}'::text[] NOT NULL,
-    ai_secret_id bigint
+    ai_secret_id bigint,
+    vision_llm_model_id bigint
 );
 
 
@@ -12471,7 +12474,6 @@ ALTER SEQUENCE public.web_hook_events_daily_aggregates_id_seq OWNED BY public.we
 --
 
 CREATE SEQUENCE public.web_hook_events_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -17611,6 +17613,13 @@ CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_even
 
 
 --
+-- Name: idx_bpe_normalized_url_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events USING btree (normalized_url_version);
+
+
+--
 -- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20271,6 +20280,13 @@ CREATE INDEX index_llm_models_on_ai_secret_id ON public.llm_models USING btree (
 
 
 --
+-- Name: index_llm_models_on_vision_llm_model_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_llm_models_on_vision_llm_model_id ON public.llm_models USING btree (vision_llm_model_id);
+
+
+--
 -- Name: index_llm_quota_usages_on_llm_quota_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21150,6 +21166,13 @@ CREATE INDEX index_reviewables_on_status_and_score ON public.reviewables USING b
 --
 
 CREATE INDEX index_reviewables_on_status_and_type ON public.reviewables USING btree (status, type);
+
+
+--
+-- Name: index_reviewables_on_target_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviewables_on_target_created_by_id ON public.reviewables USING btree (target_created_by_id);
 
 
 --
@@ -23128,12 +23151,18 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260810154331'),
+('20260810012238'),
+('20260807182856'),
+('20260806074210'),
+('20260806074204'),
 ('20260803015314'),
 ('20260731055703'),
 ('20260730183114'),
 ('20260729153343'),
 ('20260728162521'),
 ('20260728162516'),
+('20260728150000'),
 ('20260728134532'),
 ('20260728071552'),
 ('20260728050038'),

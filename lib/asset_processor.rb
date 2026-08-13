@@ -3,16 +3,20 @@
 class AssetProcessor
   BASE_COMPILER_VERSION = 113
 
-  PROCESSOR_DIR = "tmp/asset-processor"
-  LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
-
-  CACHE_DEPENDENCY_GLOBS = %w[
-    node_modules/.pnpm/lock.yaml
-    frontend/asset-processor/**/*.{js,mjs}
-    frontend/discourse/lib/babel-transform-module-renames.js
-    frontend/discourse/lib/discourse-source-imports.mjs
-    frontend/discourse/config/targets.js
-  ]
+  BUNDLE =
+    PrecompiledBundle.new(
+      dir: "tmp/asset-processor",
+      filename_prefix: "asset-processor",
+      dependency_globs: %w[
+        node_modules/.pnpm/lock.yaml
+        frontend/asset-processor/**/*.{js,mjs}
+        frontend/discourse/lib/babel-transform-module-renames.js
+        frontend/discourse/lib/discourse-source-imports.mjs
+        frontend/discourse/config/targets.js
+      ],
+    ) do
+      Discourse::Utils.execute_command("pnpm", "-C=frontend/asset-processor", "node", "build.mjs")
+    end
 
   @mutex = Mutex.new
   @ctx_init = Mutex.new
@@ -55,64 +59,8 @@ class AssetProcessor
     @mutex
   end
 
-  def self.build_asset_processor
-    Discourse::Utils.execute_command("pnpm", "-C=frontend/asset-processor", "node", "build.mjs")
-  end
-
-  def self.inputs_digest
-    digest = Digest::MD5.new
-
-    CACHE_DEPENDENCY_GLOBS.each do |pattern|
-      files = Dir.glob(pattern).sort
-      raise "No files matched #{pattern}" if files.empty?
-
-      files.each do |file|
-        digest.update(file)
-        digest.update(File.read(file))
-      end
-    end
-
-    digest.hexdigest.to_i(16).to_s(36) # base36
-  end
-
-  def self.processor_file_path
-    "#{PROCESSOR_DIR}/asset-processor-#{inputs_digest}.js"
-  end
-
-  def self.with_file_lock(&block)
-    lock_path = "#{Rails.root.join("#{LOCK_FILE}")}"
-    FileUtils.mkdir_p(File.dirname(lock_path))
-    File.open(lock_path, File::CREAT | File::RDWR) do |lock_file|
-      lock_file.flock(File::LOCK_EX)
-      yield
-    end
-  end
-
-  def self.cleanup_old_cache_files
-    Dir
-      .glob("#{PROCESSOR_DIR}/asset-processor-*.js")
-      .reject { it.end_with?(processor_file_path) }
-      .each { File.delete(it) }
-  end
-
   def self.load_or_build_processor_source
-    cache_path = processor_file_path
-
-    if File.exist?(cache_path)
-      File.read(cache_path)
-    else
-      with_file_lock do
-        if File.exist?(cache_path)
-          File.read(cache_path)
-        else
-          built_source = build_asset_processor
-          FileUtils.mkdir_p(PROCESSOR_DIR)
-          File.write(cache_path, built_source)
-          cleanup_old_cache_files
-          built_source
-        end
-      end
-    end
+    BUNDLE.load_or_build
   end
 
   def self.timeout
@@ -176,15 +124,11 @@ class AssetProcessor
     @ctx
   end
 
-  # Call a method in the global scope of the v8 context.
-  # The `fetch_result_call` kwarg provides a workaround for the lack of mini_racer async
-  # result support. The first call can perform some async operation, and then `fetch_result_call`
-  # will be called to fetch the result.
-  def self.v8_call(*args, **kwargs)
-    fetch_result_call = kwargs.delete(:fetch_result_call)
+  # Call a method in the global scope of the v8 context. Promise results are
+  # awaited and returned as values.
+  def self.v8_call(*args)
     mutex.synchronize do
-      result = v8.call(*args, **kwargs)
-      result = v8.call(fetch_result_call) if fetch_result_call
+      result = v8.call_await(*args)
       v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
       result
     end
@@ -258,14 +202,14 @@ class AssetProcessor
   end
 
   def terser(tree, opts)
-    self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
+    self.class.v8_call("minify", tree, opts)
   end
 
   def rollup(tree, opts)
-    self.class.v8_call("rollup", tree, opts, fetch_result_call: "getRollupResult")
+    self.class.v8_call("rollup", tree, opts)
   end
 
   def post_css(css:, map:, source_map_file:)
-    self.class.v8_call("postCss", css, map, source_map_file, fetch_result_call: "getPostCssResult")
+    self.class.v8_call("postCss", css, map, source_map_file)
   end
 end

@@ -491,17 +491,12 @@ tr_TR:
       pill: "Önerilen"
       pm_title: "Önerilen Mesajlar"
     admin_onboarding_banner:
-      launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
-      select_theme:
-        enabled: "Seçili"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
-        description: "İlk üyeler, topluluğunuzu hayata geçirmeye yardımcı olur"
         action: "Davet oluştur"
       start_posting:
         title: "Paylaşmaya Başla"
-        description: "İnsanlara birlikte konuşacakları bir konu verin"
         action: "Fikirleri gör"
         choose_option: "Nasıl başlamak istersiniz?"
         predefined_topics: "Buz kırıcı şablonlar"
@@ -522,6 +517,26 @@ tr_TR:
           what_is_your_favorite_food:
             title: "En sevdiğin yemek nedir?"
             body: "En sevdiğiniz yiyecekleri toplulukla paylaşın! Ben başlayayım: Pizza severim, özellikle ekstra peynir ve sucuklu olanı."
+    design_wizard:
+      back: "Geri"
+      next: "Sonraki"
+      sections:
+        theme: "Tema"
+        fonts: "Yazı Tipleri"
+        homepage: "Ana Sayfa"
+      theme:
+        selected: "Seçili"
+      colors:
+        light: "Açık"
+        dark: "Koyu"
+      fonts:
+        base_font: "Temel yazı tipi"
+        heading_font: "Başlık yazı tipi"
+      homepage:
+        topics: "Konular"
+        categories: "Kategoriler"
+        styles:
+          boxes: "Kutular"
     about:
       edit: "Bu sayfayı düzenle"
       simple_title: "Hakkında"
@@ -820,10 +835,6 @@ tr_TR:
       stale_help: "Bu sorun <b>%{username}</b> tarafından çözülmüştür."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu ögeyi talep edebilirsiniz."
-        required: "Ögeleri inceleyebilmek için önce talepte bulunmalısınız."
-        claimed_by_you: "Bu ögeyi talep ettiniz ve inceleyebilirsiniz."
-        claimed_by_other: "Bu öge yalnızca <b>%{username}</b> adlı kullanıcı tarafından incelenebilir."
-        automatically_claimed_by: "Bu ürün şu anda <b>%{username}</b> tarafından inceleniyor."
       claim:
         title: "Bu konuyu talep et"
       unclaim:
@@ -2872,6 +2883,7 @@ tr_TR:
       subcategory_count:
         one: "+%{count} alt kategori"
         other: "+%{count} alt kategori"
+      subcategories: "+ Alt kategoriler"
       topic_count:
         one: "bu kategorideki %{count} konu"
         other: "bu kategorideki %{count} konu"
@@ -2944,6 +2956,7 @@ tr_TR:
       toggle: "Açılır filtreleri değiştir"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
+      search_label: "Arama simgeleri"
       search_placeholder: "Arama simgeleri..."
       no_results: "Simge bulunamadı"
       results_count:
@@ -3290,7 +3303,6 @@ tr_TR:
         other: "\"%{group_name}\" için %{count} açık üyelik isteği"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - tamamlandı"
       new_features: "Yeni özellikler mevcut!"
       admin_problems: "Sitenizin kontrol panelinde yeni öneriler mevcut"
       upcoming_changes:
@@ -6341,13 +6353,32 @@ tr_TR:
       new_features:
         title: "Yenilikler"
         check_for_updates: "Güncellemeleri kontrol et"
+      site_traffic_explorer:
+        pageviews: "Sayfa Görüntülemeleri"
+        view_more: "Daha fazla görüntüle"
+        cards:
+          pages: "Sayfa"
+          visitors: "Ziyaretçiler"
+        columns:
+          countries: "Ülke"
+          top_urls: "URL"
+          browsers: "Tarayıcı"
+          ip_addresses: "IP adresi"
+        filters:
+          country: "Ülke"
+          browser: "Tarayıcı"
+          ip: "IP adresi"
+        metrics:
+          pageviews:
+            label: "Sayfa Görüntülemeleri"
+        series:
+          anonymous_human: "Anonim"
       dashboard:
         title: "Pano"
         last_updated: "Pano güncellendi:"
         discourse_last_updated: "Discourse güncellendi:"
         version: "Sürüm"
         up_to_date: "Güncelsiniz!"
-        critical_available: "Kritik bir güncelleme mevcut."
         updates_available: "Güncellemeler mevcut."
         please_update: "Lütfen güncelleyin!"
         no_check_performed: "Güncellemeler için bir kontrol yapılmadı. Sidekiq'in çalıştığından emin olun."

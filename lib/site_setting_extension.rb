@@ -305,18 +305,19 @@ module SiteSettingExtension
   end
 
   def client_settings_json
-    key = SiteSettingExtension.client_settings_cache_key
-    json = Discourse.cache.fetch(key, expires_in: 30.minutes) { client_settings_json_uncached }
-    Rails.logger.error("Nil client_settings_json from the cache for '#{key}'") if json.nil?
-    json || ""
+    client_settings_jsons[provider.current_site] ||= client_settings_json_uncached
   rescue => e
     Rails.logger.error("Error while retrieving client_settings_json: #{e.message}")
     ""
   end
 
-  def client_settings_json_uncached(return_defaults: false)
-    uncached_json =
-      @client_settings.filter_map do |name|
+  def client_settings_hash
+    client_settings_hashes[provider.current_site] ||= client_settings_hash_uncached
+  end
+
+  def client_settings_hash_uncached(return_defaults: false)
+    client_settings
+      .filter_map do |name|
         # Themeable site settings require a theme ID, which we do not always
         # have when loading client site settings. They are excluded here,
         # to get them use theme_site_settings_json(:theme_id)
@@ -345,7 +346,11 @@ module SiteSettingExtension
 
         [name, value]
       end
-    MultiJson.dump(Hash[uncached_json])
+      .to_h
+  end
+
+  def client_settings_json_uncached(return_defaults: false)
+    MultiJson.dump(client_settings_hash_uncached(return_defaults:))
   rescue => err
     # If something goes wrong here we really need to be aware of it in tests.
     raise err if Rails.env.test?
@@ -575,13 +580,6 @@ module SiteSettingExtension
       .compact
   end
 
-  def self.client_settings_cache_key
-    # NOTE: we use the git version in the key to ensure
-    # that we don't end up caching the incorrect version
-    # in cases where we are cycling unicorns
-    "client_settings_json_#{Discourse.git_version}"
-  end
-
   def self.theme_site_settings_cache_key(theme_id)
     theme_id = "notheme" if theme_id.blank?
 
@@ -654,6 +652,8 @@ module SiteSettingExtension
         modified.clear
         modified.merge!(new_modified)
         uploads.clear
+        client_settings_hashes.delete(provider.current_site)
+        client_settings_jsons.delete(provider.current_site)
 
         upcoming_change_default_overrides.each do |setting_name, override|
           if UpcomingChanges.enabled?(override[:upcoming_change])
@@ -1041,7 +1041,8 @@ module SiteSettingExtension
   protected
 
   def clear_cache!(expire_theme_site_setting_cache: false)
-    Discourse.cache.delete(SiteSettingExtension.client_settings_cache_key)
+    client_settings_hashes.delete(provider.current_site)
+    client_settings_jsons.delete(provider.current_site)
     Theme.expire_site_setting_cache! if expire_theme_site_setting_cache
     Site.clear_anon_cache!
   end
@@ -1455,6 +1456,14 @@ module SiteSettingExtension
   def uploads
     @uploads ||= {}
     @uploads[provider.current_site] ||= {}
+  end
+
+  def client_settings_hashes
+    @client_settings_hashes ||= {}
+  end
+
+  def client_settings_jsons
+    @client_settings_jsons ||= {}
   end
 
   def clear_uploads_cache(name)

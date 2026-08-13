@@ -708,6 +708,13 @@ da:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "ukendt operativsystem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonym"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Der opstod en fejl under ændringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     doesnt_exist: "Denne e-mailadresse er ikke knyttet til din konto."
@@ -3125,6 +3132,9 @@ da:
     title: "Gå ind i fejlsikret tilstand"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
+  design_wizard:
+    palette_pairs:
+      default: "Standard"
   wizard:
     title: "Discourse Opsætning"
     step:

@@ -453,6 +453,12 @@ be:
       macos: "Macos"
       windows: "Microsoft Windows,"
       unknown: "невядомая аперацыйная сістэма"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "ананімны"
+    browsers:
+      edge: "Microsoft Эдж"
+      firefox: "Firefox"
   change_email:
     error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
     error_staged: "Падчас змянення адраса электроннай пошты адбылася памылка. Гэты адрас ужо выкарыстоўваецца зарэгістраваным карыстальнікам."
@@ -2278,6 +2284,9 @@ be:
     title: "Калі ласка, увядзіце бяспечны рэжым"
     enter: "Уваход у бяспечным рэжыме"
     must_select: "Вы павінны выбраць, па меншай меры, адзін параметр, каб увайсці ў бяспечным рэжыме."
+  design_wizard:
+    palette_pairs:
+      default: "Прадвызначаная"
   wizard:
     title: "дыскурс Setup"
     step:

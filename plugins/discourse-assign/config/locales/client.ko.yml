@@ -59,7 +59,7 @@ ko:
               assign: "할당"
     user:
       notification_level_when_assigned:
-        track_topic: "주제 추적"
+        track_topic: "글 팔로우"
         do_nothing: "아무것도하지 않음"
       messages:
         assigned_title: "할당됨 (%{count})"

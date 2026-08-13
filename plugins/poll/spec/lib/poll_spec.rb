@@ -31,6 +31,29 @@ RSpec.describe DiscoursePoll::Poll do
     RAW
 
   describe ".vote" do
+    it "does not allow votes on posts the user cannot see" do
+      visible_post = Fabricate(:post)
+      whisper =
+        Fabricate(
+          :post,
+          topic: visible_post.topic,
+          user: Fabricate(:admin),
+          post_type: Post.types[:whisper],
+          raw: "[poll]\n- Staff-only option\n[/poll]",
+        )
+      poll_option = whisper.polls.first.poll_options.first
+
+      expect(user.guardian.can_create_post?(whisper.topic)).to eq(true)
+      expect(user.guardian.can_see?(whisper)).to eq(false)
+
+      aggregate_failures do
+        expect {
+          DiscoursePoll::Poll.vote(user, whisper.id, "poll", [poll_option.digest])
+        }.to raise_error(DiscoursePoll::Error, I18n.t("poll.user_cant_post_in_topic"))
+        expect(PollVote.exists?(poll_option: poll_option, user: user)).to eq(false)
+      end
+    end
+
     it "should only allow one vote per user for a regular poll" do
       poll = post_with_regular_poll.polls.first
 

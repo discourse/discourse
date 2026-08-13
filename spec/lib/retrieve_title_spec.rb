@@ -202,6 +202,12 @@ RSpec.describe RetrieveTitle do
       expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
     end
 
+    it "ignores connection reset errors" do
+      described_class.stubs(:fetch_title).raises(Errno::ECONNRESET)
+
+      expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
+    end
+
     it "ignores SSRF lookup errors" do
       described_class.stubs(:fetch_title).raises(FinalDestination::SSRFDetector::LookupFailedError)
 

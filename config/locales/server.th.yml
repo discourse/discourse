@@ -169,6 +169,9 @@ th:
         other: "%{count}เดือนที่แล้ว"
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "ไม่ระบุชื่อ"
   reviewable_score_types:
     needs_approval:
       title: "ต้องการอนุมัติ"
@@ -537,6 +540,9 @@ th:
       button: "ลงทะเบียน"
     resend_email:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
+  design_wizard:
+    palette_pairs:
+      default: "ค่าเริ่มต้น"
   wizard:
     step:
       setup:

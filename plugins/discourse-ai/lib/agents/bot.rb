@@ -6,6 +6,7 @@ module DiscourseAi
       BOT_NOT_FOUND = Class.new(StandardError)
 
       DEFAULT_MAX_TURN_TOKENS = 32_000
+      MAX_DISCOVERED_IMAGE_REFERENCES = 20
       CONTEXT_TOKEN_BUDGET_RATIO = 0.5
       COMPRESSED_CONTEXT_PREFIX =
         DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_PREFIX
@@ -75,15 +76,20 @@ module DiscourseAi
         DiscourseAi::Completions::Llm.proxy(model)
       end
 
-      def force_tool_if_needed(prompt, context)
+      def force_tool_if_needed(prompt, context, force: true, ignore_forced_tool_count: false)
         return if prompt.tool_choice == :none
 
         context.chosen_tools ||= []
+        if !force
+          prompt.tool_choice = nil
+          return
+        end
+
         forced_tools = agent.force_tool_use.map { |tool| tool.name }
         force_tool = forced_tools.find { |name| !context.chosen_tools.include?(name) }
 
-        if force_tool && agent.forced_tool_count > 0
-          user_turns = prompt.messages.select { |m| m[:type] == :user }.length
+        if force_tool && agent.forced_tool_count > 0 && !ignore_forced_tool_count
+          user_turns = prompt.messages.count { |message| message[:type] == :user }
           force_tool = false if user_turns > agent.forced_tool_count
         end
 
@@ -104,6 +110,11 @@ module DiscourseAi
         context.cancel_manager ||= DiscourseAi::Completions::CancelManager.new
         current_llm = llm
         prompt = agent.craft_prompt(context, llm: current_llm)
+        defer_forced_tool =
+          agent.defer_forced_tool_for_vision? &&
+            context.runtime_tools&.include?(Tools::ViewImage) &&
+            context.authorized_image_upload_ids.present?
+        fallback_force_required = false
 
         total_completions = 0
         ongoing_chain = true
@@ -146,7 +157,7 @@ module DiscourseAi
             break # already ran the final text-only generate
           end
 
-          if token_usage_tracker.total >= token_budget
+          if token_usage_tracker.total >= token_budget && !fallback_force_required
             self.class.inject_token_budget_final_answer_hint(prompt)
             prompt.tool_choice = :none
             final_answer_requested = true
@@ -163,7 +174,12 @@ module DiscourseAi
           end
 
           tool_found = false
-          force_tool_if_needed(prompt, context)
+          force_tool_if_needed(
+            prompt,
+            context,
+            force: !defer_forced_tool || fallback_force_required,
+            ignore_forced_tool_count: defer_forced_tool && fallback_force_required,
+          )
 
           tool_halted = false
 
@@ -201,6 +217,8 @@ module DiscourseAi
                 end
 
                 tool_found = true
+                fallback_force_required = true if defer_forced_tool &&
+                  tool.name == Tools::ViewImage.name
                 # a bit hacky, but extra newlines do no harm
                 if needs_newlines
                   update_blk.call("\n\n")
@@ -260,15 +278,17 @@ module DiscourseAi
             end
 
           if !tool_found
-            ongoing_chain = false
-            text = result
-
-            # we must strip out thinking and other types of blocks
-            if result.is_a?(Array)
-              text = +""
-              result.each { |item| text << item if item.is_a?(String) }
+            if defer_forced_tool && !fallback_force_required
+              fallback_force_required = true
+              final_answer_requested = false
+              prompt.tool_choice = nil
+              ongoing_chain = true
+            else
+              ongoing_chain = false
+              # we must strip out thinking and other types of blocks
+              text = DiscourseAi::Completions::Llm.text_from_response(result)
+              raw_context << [text, bot_user&.username]
             end
-            raw_context << [text, bot_user&.username]
           end
 
           total_completions += 1
@@ -414,6 +434,23 @@ module DiscourseAi
       )
         tool_call_id = tool.tool_call_id
         invocation_result = invoke_tool(tool, context, &update_blk)
+        if context.server_owned_tools != false &&
+             context.runtime_tools&.include?(Tools::ViewImage) &&
+             current_llm.llm_model.delegated_vision? && tool.name != Tools::ViewImage.name
+          image_references =
+            extract_tool_image_references([invocation_result, tool.custom_raw]).uniq.first(
+              MAX_DISCOVERED_IMAGE_REFERENCES,
+            )
+          available_images =
+            register_tool_image_references(
+              image_references,
+              context,
+              tool_image_guardian(context, tool),
+            )
+          if available_images.present? && invocation_result.is_a?(Hash)
+            invocation_result = invocation_result.merge(available_images: available_images)
+          end
+        end
         invocation_result_json = invocation_result.to_json
 
         tool_call_message = {
@@ -463,6 +500,62 @@ module DiscourseAi
         ]
         raw_context << [invocation_result_json, tool_call_id, "tool", tool.name]
         invocation_result
+      end
+
+      def extract_tool_image_references(value, references = [])
+        case value
+        when Hash
+          value.each_value { |nested| extract_tool_image_references(nested, references) }
+        when Array
+          value.each { |nested| extract_tool_image_references(nested, references) }
+        when String
+          references.concat(value.scan(%r{upload://[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]{1,10})?}))
+        end
+        references
+      end
+
+      def register_tool_image_references(references, context, guardian)
+        references_by_sha1 =
+          references.index_by { |short_url| Upload.sha1_from_short_url(short_url) }
+        uploads_by_sha1 = Upload.where(sha1: references_by_sha1.keys.compact).index_by(&:sha1)
+        system_secure_upload_ids =
+          system_context_secure_upload_ids(uploads_by_sha1.values, context, guardian)
+
+        references_by_sha1.filter_map do |sha1, short_url|
+          upload = uploads_by_sha1[sha1]
+          next if upload.blank?
+          next if !DiscourseAi::Completions::UploadEncoder.image_upload?(upload)
+          next if !guardian.can_see_upload?(upload)
+          if system_secure_upload_ids && upload.secure? &&
+               !system_secure_upload_ids.include?(upload.id)
+            next
+          end
+
+          context.register_image_upload(upload.id)
+          short_url
+        end
+      end
+
+      def system_context_secure_upload_ids(uploads, context, guardian)
+        return if guardian.user&.id != Discourse.system_user.id
+
+        access_control_post_ids = uploads.filter_map(&:access_control_post_id).uniq
+        allowed_post_ids = [context.post_id, *context.context_post_ids].compact.map(&:to_i).to_set
+        if context.topic_id.present? && access_control_post_ids.present?
+          allowed_post_ids.merge(
+            Post.where(id: access_control_post_ids, topic_id: context.topic_id).pluck(:id),
+          )
+        end
+
+        uploads
+          .filter_map do |upload|
+            upload.id if upload.secure? && allowed_post_ids.include?(upload.access_control_post_id)
+          end
+          .to_set
+      end
+
+      def tool_image_guardian(context, tool)
+        context.image_guardian(fallback_user: tool.bot_user || Discourse.system_user)
       end
 
       def invoke_tool(tool, context, &update_blk)
@@ -612,7 +705,7 @@ module DiscourseAi
             return :skipped
           end
 
-        summary = summary.is_a?(Array) ? summary.select { |s| s.is_a?(String) }.join : summary
+        summary = DiscourseAi::Completions::Llm.text_from_response(summary)
         return :skipped if summary.blank?
 
         summary_tokens = tokenizer.size(summary)

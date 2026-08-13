@@ -62,6 +62,7 @@ en:
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
         disallowed: "Disallowed"
+        required_permission_not_added: "At least one grantee must have %{permission} permission for this %{typeName}"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -564,27 +565,29 @@ en:
       pm_title: "Suggested Messages"
 
     admin_onboarding_banner:
-      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      launch_in_easy_steps: "Set up your community"
+      launch_in_easy_steps_subtitle: "%{completed_steps} of %{step_count} steps completed"
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      expand: "Expand setup steps"
+      collapse: "Collapse setup steps"
+      dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose a starting theme for your community"
-        action: "Select theme"
-        modal_title: "Choose a theme"
-        use_theme: "Use selected theme"
-        enabled: "Selected"
-        applying_theme: "Applying theme..."
-        browse_all: "Manage themes"
+        description: "Choose colors, fonts, and a homepage."
+        action: "See options"
+        completed: "Change options"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
       invite_collaborators:
-        title: "Invite Collaborators"
-        description: "Early members help bring your community to life"
+        title: "Invite collaborators"
+        description: "Early members bring it to life."
         action: "Create invite"
+        completed: "Invite more"
       start_posting:
-        title: "Start Posting"
-        description: "Give people something to talk about together"
+        title: "Start posting"
+        description: "Give people something to discuss."
         action: "See ideas"
+        completed: "See more ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
@@ -604,6 +607,45 @@ en:
           what_is_your_favorite_food:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+
+    design_wizard:
+      title: "Customize your site"
+      subtitle: "Choose colors, fonts, and a homepage."
+      step_label: "Go to step %{index}"
+      save: "Save and finish"
+      back: "Back"
+      next: "Next"
+      sections:
+        theme: "Theme"
+        colors: "Default color"
+        fonts: "Fonts"
+        homepage: "Homepage"
+      theme:
+        selected: "Selected"
+        custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
+      colors:
+        light: "Light"
+        dark: "Dark"
+        dark_only: "%{name} only has a dark mode"
+        both_modes: "Each palette includes a matching light and dark mode"
+        user_selectable: "Let members switch palettes"
+        user_selectable_description: "Show these palettes in a menu members can pick from"
+      fonts:
+        base_font: "Base font"
+        heading_font: "Heading font"
+      homepage:
+        topics: "Topics"
+        categories: "Categories"
+        topic_page_type: "Topic page type"
+        topic_pages:
+          latest: "Topics sorted by their most recent activity, newest first."
+          new: "Topics created in the last few days, newest first."
+          hot: "Topics trending right now, blending overall popularity with recent engagement."
+        category_page_style: "Category page style"
+        styles:
+          boxes: "Boxes"
+          with_topics: "Categories with topics"
+          only: "Categories only"
 
     about:
       edit: "Edit this page"
@@ -894,6 +936,7 @@ en:
       date_filter: "Posted between"
       in_reply_to: "in reply to"
       filtered_flagged_by: "Flagged by"
+      no_component_found: "No component found for %{type}"
       unknown:
         title:
           one: "You have pending review queue items from disabled plugin:"
@@ -3762,7 +3805,6 @@ en:
         other: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completed"
       new_features: "New features available!"
       admin_problems: "New advice on your site dashboard"
       upcoming_changes:
@@ -7214,6 +7256,75 @@ en:
       new_features:
         title: "What's new?"
         check_for_updates: "Check for updates"
+      site_traffic_explorer:
+        title: "Site Traffic Explorer"
+        loading: "Loading traffic…"
+        errors:
+          timeout: "This traffic query took too long. Choose a shorter date range and try again."
+          unexpected: "Couldn't load site traffic. Try again."
+        empty: "No matching pageviews"
+        summary: "Traffic summary"
+        traffic_over_time: "Traffic over time"
+        pageviews: "Pageviews"
+        metric_information: "About this metric"
+        active_filters: "Active traffic filters"
+        filter_description: "%{filter} is <strong>%{value}</strong>"
+        filter_by:
+          one: "Filter by %{label}, %{count} pageview"
+          other: "Filter by %{label}, %{count} pageviews"
+        remove_filter: "Remove %{filter} filter"
+        remove_traffic_type_filter: "Remove %{value} traffic filter"
+        view_more: "View more"
+        no_dimension_data: "No data for this breakdown."
+        direct_or_unknown: "Direct / unknown"
+        cards:
+          acquisition: "Acquisition"
+          pages: "Pages"
+          visitors: "Visitors"
+        dimensions:
+          referrers: "Referrers"
+          countries: "Countries"
+          networks: "Networks"
+          top_urls: "Top URLs"
+          entry_urls: "Entry URLs"
+          browsers: "Browsers"
+          ip_addresses: "IP addresses"
+        columns:
+          referrers: "Referrer"
+          countries: "Country"
+          networks: "Network"
+          top_urls: "URL"
+          entry_urls: "Entry URL"
+          browsers: "Browser"
+          ip_addresses: "IP address"
+        filters:
+          traffic_type: "Traffic type"
+          top_url: "Top URL"
+          entry_url: "Entry URL"
+          referrer: "Referrer"
+          country: "Country"
+          network: "Network"
+          browser: "Browser"
+          ip: "IP address"
+        metrics:
+          pageviews:
+            label: "Pageviews"
+          distinct_sessions:
+            label: "Distinct sessions"
+          logged_in_share:
+            label: "Logged-in share"
+          bounce_rate:
+            label: "Bounce rate"
+          average_session_duration:
+            label: "Average session duration"
+        series:
+          logged_in_human: "Logged in"
+          anonymous_human: "Anonymous"
+          likely_crawler: "Likely crawlers"
+        partial:
+          retention: "Detailed pageview activity before %{date} is no longer available, so these results cover only part of the selected date range."
+          pageview_limit: "These results are limited to the most recent %{limit} pageviews in the selected date range. Choose a shorter date range to include all available traffic."
+          combined: "Detailed pageview activity before %{date} is no longer available, so these results cover only part of the selected date range. They are also limited to the most recent %{limit} pageviews. Choose a shorter date range within the available dates to include all available pageview activity."
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -7223,7 +7334,6 @@ en:
         up_to_date_newer_commits:
           one: "You're on the most recent release, but %{count} new change is available."
           other: "You're on the most recent release, but %{count} new changes are available."
-        critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_update: "Please update!"
         no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."

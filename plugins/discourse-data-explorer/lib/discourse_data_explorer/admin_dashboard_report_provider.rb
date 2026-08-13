@@ -3,6 +3,7 @@
 module DiscourseDataExplorer
   class AdminDashboardReportProvider < ::AdminDashboard::Reports::SourceProvider
     SOURCE_NAME = "data_explorer_query"
+    CACHE_MAX_AGE = 1.hour
 
     def self.source_name
       SOURCE_NAME
@@ -45,9 +46,23 @@ module DiscourseDataExplorer
 
       load_queries(identifiers).each_with_object({}) do |query, hash|
         next if !guardian.user_can_access_query?(query)
-        result = QueryRunner.run(query, params, current_user: guardian.user)
+        result =
+          QueryRunner.cached_result(query, params, max_age: CACHE_MAX_AGE) ||
+            QueryRunner.run(query, params, current_user: guardian.user)
         result = result.merge(empty: Array(result[:rows]).empty?) if result.is_a?(Hash)
         hash[query.id.to_s] = result
+      end
+    end
+
+    def self.prewarm(identifiers, guardian:, filters: {})
+      return if guardian&.user.nil?
+
+      params = filters.with_indifferent_access
+      load_queries(identifiers).each do |query|
+        query_params = params.slice(*query.params.map(&:identifier))
+        next if !query.groups.empty? || !prewarmable?(query, query_params)
+
+        QueryRunner.run(query, query_params, current_user: guardian.user)
       end
     end
 
@@ -88,6 +103,14 @@ module DiscourseDataExplorer
       queries
     end
     private_class_method :load_queries
+
+    def self.prewarmable?(query, params)
+      QueryRunner.cacheable?(query) &&
+        query.params.all? do |param|
+          param.default.present? || param.nullable || params.key?(param.identifier)
+        end
+    end
+    private_class_method :prewarmable?
 
     def self.persisted_after(search:, after:, limit:)
       scope = Query.where(hidden: false)

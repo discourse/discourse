@@ -33,6 +33,7 @@ const SERVER_SIDE_ONLY = [
   /\.json$/,
   /^\/logs($|\/)/,
   /^\/admin\/customize\/watched_words\/action\/[^\/]+\/download$/,
+  /^\/admin\/customize\/themes\/\d+\/export$/,
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,
@@ -493,10 +494,6 @@ class DiscourseURL extends EmberObject {
 
   get appEvents() {
     return this.container.lookup("service:app-events");
-  }
-
-  controllerFor(name) {
-    return this.container.lookup("controller:" + name);
   }
 
   /**

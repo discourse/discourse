@@ -126,11 +126,17 @@ export interface TooltipOptions {
   /** Whether FloatKit attaches the trigger event listeners itself, rather than the caller driving it through the service API. */
   listeners: boolean;
 
+  /** How long to keep an interactive float open after the pointer leaves it. */
+  hoverGracePeriod: number;
+
   /**
    * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Pass
    * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
    * silently wins over the matched width and a trigger wider than the cap gets a narrower
    * overlay.
+   *
+   * A number is additionally capped to the width the viewport leaves the float, so it can never
+   * overflow the document; a string is applied verbatim and gets no such cap.
    */
   maxWidth: number | string;
 
@@ -339,6 +345,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
     inline: null,
     interactive: false,
     listeners: false,
+    hoverGracePeriod: 0,
     maxWidth: 350,
     data: null,
     offset: 10,
@@ -373,6 +380,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     identifier: null,
     interactive: true,
     listeners: false,
+    hoverGracePeriod: 0,
     maxWidth: 400,
     data: null,
     offset: 10,

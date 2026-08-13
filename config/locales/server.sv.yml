@@ -801,6 +801,13 @@ sv:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "okänt operativsystem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonym"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Det uppstod ett fel vid ändringen av din e-postadress. Kanske används adressen redan?"
     doesnt_exist: "Den e-postadressen är inte kopplad till ditt konto."
@@ -3748,6 +3755,10 @@ sv:
     deprecation_error_label: Se till att Javascript-utfasningar ger upphov till ett fel
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
+  design_wizard:
+    palette_pairs:
+      default: "Standard"
+      dracula: "Dracula"
   wizard:
     title: "Discourse-inställningar"
     step:

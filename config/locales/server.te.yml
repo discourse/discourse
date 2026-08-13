@@ -522,6 +522,13 @@ te:
       macos: "macOS"
       windows: "మైక్రోసాఫ్ట్ విండోస్"
       unknown: "తెలియని ఆపరేటింగ్ సిస్టమ్"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "అనామక"
+    browsers:
+      edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
+      firefox: "ఫైర్‌ఫాక్స్"
+      safari: "సఫారి"
   change_email:
     error: "మీ ఈమెయిల్ చిరునామా మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఈసరికే వాడుకలో ఉందా?"
     confirm: "నిర్ధారించండి"
@@ -2406,6 +2413,10 @@ te:
   safe_mode:
     title: "సురక్షిత మోడ్‌ను నమోదు చేయండి"
     enter: "సేఫ్ మోడ్‌ని నమోదు చేయండి"
+  design_wizard:
+    palette_pairs:
+      default: "అప్రమేయ"
+      dracula: "డ్రాక్యులా"
   wizard:
     title: "డిస్కర్స్ సెటప్"
     step:

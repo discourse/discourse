@@ -25,6 +25,10 @@ de:
     openid_connect_user_field_mappings: "Ordne OIDC-Claims den Discourse-Benutzerfeldern zu. Jeder Eintrag ordnet einen OIDC-Claim-Namen der numerischen ID eines Discourse-Benutzerfeldes zu."
     openid_connect_match_by_email: "Verwende eine E-Mail-Adresse, um OpenID Connect-Authentifizierungen mit bestehenden Discourse-Benutzerkonten abzugleichen."
     openid_connect_use_pkce: "Proof Key for Code Exchange (PKCE) für „OpenID Connect“-Authentifizierung aktivieren."
+    openid_connect_mtls_client_cert: "X.509-Client-Zertifikat für die mTLS-Client-Authentifizierung beim OIDC-Anbieter. Um mTLS zu aktivieren, muss außerdem {{setting:openid_connect_mtls_client_key}} festgelegt werden."
+    openid_connect_mtls_client_key: "X.509-Privatschlüssel für das mTLS-Client-Zertifikat. Um mTLS zu aktivieren, muss außerdem {{setting:openid_connect_mtls_client_cert}} gesetzt sein."
+    openid_connect_mtls_client_key_passcode: "Passphrase für den privaten mTLS-Schlüssel (optional)"
   login:
     omniauth_error:
       openid_connect_discovery_error: Konfiguration kann nicht vom Identitätsanbieter abgerufen werden. Bitte versuche es erneut.
+      openid_connect_mtls_error: Es gibt ein Problem mit der Konfiguration des mTLS-Client-Zertifikats. Bitte wende dich an einen Administrator.

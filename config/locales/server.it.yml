@@ -968,6 +968,13 @@ it:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operativo sconosciuto"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimo"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Si è verificato un errore durante la modifica del tuo indirizzo email. Forse l'indirizzo è già in uso?"
     doesnt_exist: "Questo indirizzo email non è associato al tuo account."
@@ -2303,7 +2310,6 @@ it:
     revoke_user_api_keys_unused_days: "Numero di giorni trascorsi dall'ultimo utilizzo di una chiave API utente prima che venga revocata automaticamente (0 per mai)"
     revoke_user_api_keys_maxlife_days: "Numero di giorni prima che una chiave API utente venga revocata automaticamente (0 per mai)"
     tagging_enabled: "Vuoi abilitare le etichette per gli argomenti? Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>la guida alle etichette per amministratori su Meta</a>."
-    create_tag_allowed_groups: "Gruppi a cui è consentito creare etichette. Ad amministratori e moderatori è sempre consentito creare etichette."
     edit_tags_allowed_groups: "Gruppi a cui è consentito modificare etichette, descrizioni di etichette e sinonimi di etichette."
     max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
     max_tags_per_email_subject: "Il numero massimo di tag che possono essere nell'oggetto di un'e-mail"
@@ -4392,6 +4398,10 @@ it:
     deprecation_error_label: Fai in modo che le deprecazioni di Javascript generino un errore
     enter: "Avvia Modalità Sicura"
     must_select: "È necessario selezionare almeno un'opzione per accedere alla modalità sicura."
+  design_wizard:
+    palette_pairs:
+      default: "Predefinito"
+      dracula: "Dracula"
   wizard:
     title: "Configurazione Discourse"
     step:

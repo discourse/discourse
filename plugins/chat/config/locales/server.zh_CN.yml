@@ -68,7 +68,7 @@ zh_CN:
       users_cant_be_added_to_channel: "无法将用户添加到此频道。"
       user_cant_be_removed_from_channel: "无法将用户从此频道中移除"
       channel_exists_for_category: "此类别和名称的频道已经存在"
-      public_channels_disabled: "由于公共频道已禁用，因此无法创建频道。管理员可以启用“启用公共频道”站点设置。"
+      public_channels_disabled: "由于公开频道已禁用，无法创建频道。管理员可以启用 'enable public channels' 站点设置。"
       channel_new_message_disallowed:
         archived: "该频道已被归档，无法发送新消息"
         closed: "该频道已关闭，无法发送新消息"

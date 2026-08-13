@@ -83,4 +83,13 @@ class ContentLocalization
     SiteSetting.content_localization_enabled && SiteSetting.content_localization_crawler_param &&
       SiteSetting.set_locale_from_param
   end
+
+  # These are the same conditions the header renders the switcher on. Keeping the two set-equal
+  # means a locale cookie is only ever honoured while there is UI to change it back.
+  # @return [Boolean]
+  def self.language_switcher_enabled?
+    SiteSetting.content_localization_enabled && SiteSetting.allow_user_locale &&
+      SiteSetting.content_localization_language_switcher != "none" &&
+      SiteSetting.content_localization_supported_locales.present?
+  end
 end

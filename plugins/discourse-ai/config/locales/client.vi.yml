@@ -306,6 +306,9 @@ vi:
           required: "Bắt buộc"
       llms:
         display_name: "Tên"
+        vision_modes:
+          disabled:
+            title: "Vô hiệu hóa"
         save: "Lưu lại"
         edit: "Sửa"
         delete: Xóa

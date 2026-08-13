@@ -418,10 +418,28 @@ ja:
       pill: "提案"
       pm_title: "推奨メッセージ"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "選択済み"
       start_posting:
         back: "戻る"
+    design_wizard:
+      back: "戻る"
+      next: "次へ"
+      sections:
+        theme: "テーマ"
+        fonts: "フォント"
+        homepage: "ホームページ"
+      theme:
+        selected: "選択済み"
+      colors:
+        light: "ライト"
+        dark: "ダーク"
+      fonts:
+        base_font: "ベースフォント"
+        heading_font: "見出しのフォント"
+      homepage:
+        topics: "トピック"
+        categories: "カテゴリ"
+        styles:
+          boxes: "ボックス"
     about:
       edit: "このページを編集"
       simple_title: "サイト情報"
@@ -670,10 +688,6 @@ ja:
         optional: "オプション"
       claim_help:
         optional: "この項目を自分に割り当ててほかのユーザーがレビューしないようにできます。"
-        required: "レビューする前に項目を自分に割り当てる必要があります。"
-        claimed_by_you: "この項目を自分に割り当てたため、レビューできます。"
-        claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
-        automatically_claimed_by: "この項目は現在、<b>%{username}</b> がレビューしています。"
       claim:
         title: "このトピックを自分に割り当てる"
       unclaim:
@@ -2620,6 +2634,7 @@ ja:
     category_row:
       subcategory_count:
         other: "+%{count} 個のサブカテゴリ"
+      subcategories: "+ サブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
       read_only: "読み取り専用"
@@ -2983,7 +2998,6 @@ ja:
         other: "'%{group_name}' の %{count} 件のオープンメンバーシップリクエスト"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
-      votes_released: "%{description} - 完了"
       new_features: "新機能が公開されました！"
       admin_problems: "サイトダッシュボードに関する新しいアドバイス"
       upcoming_changes:
@@ -5705,13 +5719,32 @@ ja:
       new_features:
         title: "新機能"
         check_for_updates: "アップデートを確認"
+      site_traffic_explorer:
+        pageviews: "ページビュー"
+        view_more: "さらに表示"
+        cards:
+          pages: "ページ"
+          visitors: "訪問者"
+        columns:
+          countries: "国"
+          top_urls: "URL"
+          browsers: "ブラウザ"
+          ip_addresses: "IP アドレス"
+        filters:
+          country: "国"
+          browser: "ブラウザ"
+          ip: "IP アドレス"
+        metrics:
+          pageviews:
+            label: "ページビュー"
+        series:
+          anonymous_human: "匿名ユーザー"
       dashboard:
         title: "ダッシュボード"
         last_updated: "ダッシュボードが更新されました:"
         discourse_last_updated: "Discourse が更新されました:"
         version: "バージョン"
         up_to_date: "最新のバージョンです!"
-        critical_available: "重大なアップデートがあります。"
         updates_available: "アップデートがあります。"
         please_update: "更新してください！"
         no_check_performed: "アップデートの確認が行われていません。sidekiq が起動していることを確認してください。"

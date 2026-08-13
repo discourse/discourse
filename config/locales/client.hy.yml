@@ -315,6 +315,20 @@ hy:
     admin_onboarding_banner:
       start_posting:
         back: "Ետ"
+    design_wizard:
+      back: "Ետ"
+      next: "Հաջորդը"
+      sections:
+        theme: "Թեմա"
+        homepage: "Գլխավոր էջ"
+      colors:
+        light: "Բաց"
+        dark: "Մութ"
+      homepage:
+        topics: "Թեմաներ"
+        categories: "Կատեգորիաներ"
+        styles:
+          boxes: "Արկղերը"
     about:
       edit: "Խմբագրել այս էջը"
       simple_title: "Մեր Մասին"
@@ -563,9 +577,6 @@ hy:
         optional: "ընտրովի"
       claim_help:
         optional: "Դուք կարող եք պահանջել այդ էլեմենտը, որպեսզի ուրիշները չկարողանան այն դիտել:  "
-        required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
-        claimed_by_you: "Դուք վերցրել եք այդ էլեմենտը և կարող եք այն դիտել: "
-        claimed_by_other: "Այս կետը կարելի է դիտել միայն <b>%{username}</b>."
       awaiting_approval: "Հաստատմումը սպասման մեջ է"
       delete: "Ջնջել"
       settings:
@@ -2208,6 +2219,7 @@ hy:
       alt: "Alt"
       enter: "Մուտք"
     category_row:
+      subcategories: "+ Ենթակատեգորիաներ"
       topic_count:
         one: "%{count} թեմա այս կատեգորիայում"
         other: "%{count} թեմա այս կատեգորիայում"
@@ -4001,13 +4013,29 @@ hy:
         default_value: "Լռելյայն"
       search:
         title: "Որոնում"
+      site_traffic_explorer:
+        pageviews: "Էջադիտումներ"
+        view_more: "Դիտել ավելին"
+        cards:
+          visitors: "Այցելուներ"
+        columns:
+          top_urls: "URL"
+          browsers: "Բրաուզեր"
+          ip_addresses: "IP հասցե"
+        filters:
+          browser: "Բրաուզեր"
+          ip: "IP հասցե"
+        metrics:
+          pageviews:
+            label: "Էջադիտումներ"
+        series:
+          anonymous_human: "Անանուն"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
         discourse_last_updated: "Discourse վերջին թարմացումը՝"
         version: "Տարբերակ"
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
-        critical_available: "Հասանելի է կրիտիկական թարմացում:"
         updates_available: "Կան հասանելի թարմացումներ:"
         no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"

@@ -865,6 +865,9 @@ nl:
         max_output_tokens: "Maximaal aantal uitvoertokens"
         url: "URL van de service die het model host"
         api_key: "API-sleutel van de service die het model host"
+        vision_modes:
+          disabled:
+            title: "Uitgeschakeld"
         ai_bot_user: "AI-botgebruiker"
         cost_input: "Invoerkosten"
         cost_cached_input: "Kosten gecachte invoer"

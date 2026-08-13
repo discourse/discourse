@@ -495,24 +495,16 @@ ur:
       pill: "تجویز کردہ"
       pm_title: "تجویز کردہ پیغامات"
     admin_onboarding_banner:
-      launch_in_easy_steps: "آسان مراحل %{step_count} میں لانچ کریں۔"
       congrats_onboarding_complete: "آن بورڈنگ کے عمل کو مکمل کرنے پر مبارکباد!"
       select_theme:
         title: "اپنی سائٹ کو تخصیص کریں"
-        description: "اپنی کمیونٹی کے لیے ایک ابتدائی تھیم کا انتخاب کریں"
-        action: "تھیم منتخب کریں"
-        modal_title: "ایک تھیم منتخب کریں"
-        enabled: "منتخب"
-        browse_all: "تھیمز کا نظم کریں"
         show_light_screenshot: "لائٹ اسکرین شاٹ دکھائیں"
         show_dark_screenshot: "ڈارک اسکرین شاٹ دکھائیں"
       invite_collaborators:
         title: "شراکت داروں کو مدعو کریں"
-        description: "ابتدائی ارکان آپ کی کمیونٹی کی رونق دوبالاکرتے ہیں"
         action: "دعوت نامہ بنائیں"
       start_posting:
         title: "دھاگے بنائیں"
-        description: "لوگوں کو آپس میں بات کرنے کے لیے موضوع دیں"
         action: "خیالات دیکھیں"
         choose_option: "آپ کیسے شروع کرنا چاہیں گے؟"
         predefined_topics: "بحث کے موضوع کے سانچے"
@@ -533,6 +525,27 @@ ur:
           what_is_your_favorite_food:
             title: "آپ کا پسندیدہ کھانا کیا ہے؟"
             body: "کمیونٹی کو اپنے پسندیدہ کھانے کے بارے بتائیں! میں شروع کروں: مجھے پیزا پسند ہے، خاص طور پر اضافی پنیر اور پیپرونی کے ساتھ۔"
+    design_wizard:
+      title: "اپنی سائٹ کو تخصیص کریں"
+      back: "واپس"
+      next: "اگلا"
+      sections:
+        theme: "تھیم"
+        fonts: "فونٹس"
+        homepage: "ہَوم پَیج"
+      theme:
+        selected: "منتخب"
+      colors:
+        light: "لائٹ"
+        dark: "ڈارک"
+      fonts:
+        base_font: "بیس فونٹ"
+        heading_font: "سرخی والا فونٹ"
+      homepage:
+        topics: "موضوعات"
+        categories: "زمرہ جات"
+        styles:
+          boxes: "خانے"
     about:
       edit: "اِس صفحہ میں ترمیم کریں"
       simple_title: "بارے میں"
@@ -825,10 +838,6 @@ ur:
         optional: "اختیاری"
       claim_help:
         optional: "آپ اس چیز کو کََلیم کرسکتے ہیں کہ دوسروں کو اِسکا جائزہ لینے سے روکا جا سکے۔"
-        required: "اشیاء کا جائزہ لینے سے پہلے ان کا آپکی ملکیت ہونا ضروری ہے۔"
-        claimed_by_you: "یہ آپکی ملکیت ہے اور اس کا جائزہ لے سکتے ہیں۔"
-        claimed_by_other: "اس چیز کا صرف <b>%{username}</b> جائزہ لے سکتے ہیں۔"
-        automatically_claimed_by: "اس شے کا فی الحال <b>%{username}</b> جائزہ لے رہے ہیں۔"
       claim:
         title: "اس موضوع کو کلیم کریں"
       unclaim:
@@ -2882,6 +2891,7 @@ ur:
       subcategory_count:
         one: "+%{count} ذیلی زمرہ"
         other: "+%{count} ذیلی زمرہ جات"
+      subcategories: "+ ذیلی زمرے"
       topic_count:
         one: "اس زمرے میں %{count} موضوعات"
         other: "اس زمرے میں %{count} موضوعات"
@@ -2953,6 +2963,7 @@ ur:
       reset: "ری سیٹ"
     d_icon_grid_picker:
       select_icon: "آئیکن منتخب کریں"
+      search_label: "آئیکنز ڈھونڈھیں"
       search_placeholder: "آئیکنز ڈھونڈھیں..."
       no_results: "آئیکنز نہیں ملے"
       results_count:
@@ -3306,7 +3317,6 @@ ur:
         other: "%{group_name}' کے %{count} کھلی رکنیت کی درخواستیں"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - مکمل"
       new_features: "نئی خصوصیات دستیاب ہیں!"
       admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
       upcoming_changes:
@@ -6185,13 +6195,37 @@ ur:
       new_features:
         title: "نیا کیا ہے؟"
         check_for_updates: "اپ ڈیٹس کے لیے چیک کریں۔"
+      site_traffic_explorer:
+        pageviews: "صفحہ کے مشاہدات"
+        view_more: "مزید دیکھیں"
+        cards:
+          pages: "صفحات"
+          visitors: "زائرین"
+        columns:
+          referrers: "حوالہ دہندہ"
+          countries: "ملک"
+          top_urls: "URL"
+          browsers: "براؤزر"
+          ip_addresses: "IP ایڈریس"
+        filters:
+          referrer: "حوالہ دہندہ"
+          country: "ملک"
+          browser: "براؤزر"
+          ip: "IP ایڈریس"
+        metrics:
+          pageviews:
+            label: "صفحہ کے مشاہدات"
+          logged_in_share:
+            label: "لاگ ان شدہ شراکت"
+        series:
+          logged_in_human: "لاگ ان شدہ"
+          anonymous_human: "گمنام"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا:"
         discourse_last_updated: "ڈسکورس اَپ ڈیٹ کیا گیا:"
         version: "ورژن"
         up_to_date: "آپ اَپ ٹو ڈیٹ ہیں!"
-        critical_available: "ایک انتہائی اہم اَپ ڈیٹ دستیاب ہے۔"
         updates_available: "اَپ ڈیٹس دستیاب ہیں۔"
         please_update: "براہ کرم اپ ڈیٹ کریں!"
         no_check_performed: "اَپ ڈیٹس کے لئے چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"

@@ -51,6 +51,16 @@ describe Chat::MessageSerializer do
     end
   end
 
+  describe "#is_action" do
+    it "identifies action slash commands" do
+      message_1.update!(message: "/me waves")
+      expect(serializer.as_json[:is_action]).to eq(true)
+
+      message_1.update!(message: "/shrug")
+      expect(serializer.as_json[:is_action]).to eq(false)
+    end
+  end
+
   describe "#user" do
     context "when user has been destroyed" do
       it "returns a placeholder user" do

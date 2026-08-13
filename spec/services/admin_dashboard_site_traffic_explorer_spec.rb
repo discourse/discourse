@@ -1,0 +1,326 @@
+# frozen_string_literal: true
+
+RSpec.describe AdminDashboardSiteTrafficExplorer do
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:start_date) }
+    it { is_expected.to validate_presence_of(:end_date) }
+
+    it "requires the start date to precede the end date" do
+      contract =
+        described_class.new(start_date: Date.new(2026, 5, 13), end_date: Date.new(2026, 5, 12))
+
+      expect(contract).not_to be_valid
+    end
+  end
+
+  describe ".call" do
+    subject(:result) { described_class.call(params:, **dependencies) }
+
+    let(:params) { { start_date: "2026-05-01", end_date: "2026-05-12" } }
+    let(:dependencies) { {} }
+
+    let(:user_agents) do
+      [
+        "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
+        "Mozilla/5.0 Chrome/124.0 Safari/537.36 OPR/109.0",
+        "Mozilla/5.0 Firefox/126.0",
+        "Mozilla/5.0 FxiOS/126.0 Mobile/15E148 Safari/605.1.15",
+        "Mozilla/5.0 CriOS/124.0 Mobile/15E148 Safari/604.1",
+        "Mozilla/5.0 Version/17.0 Mobile/15E148 Safari/604.1",
+        "Mozilla/5.0 SamsungBrowser/24.0 Chrome/120.0 Mobile Safari/537.36",
+        "Mozilla/5.0 Vivaldi/6.7 Chrome/124.0 Safari/537.36",
+        "Mozilla/5.0 Trident/7.0; rv:11.0",
+        "Discourse/163 CFNetwork/978.0.7 Darwin/18.6.0",
+        "ExampleBrowser/1.0",
+      ]
+    end
+
+    let!(:pageviews) do
+      user_agents.each_with_index do |user_agent, index|
+        Fabricate(
+          :browser_pageview_event,
+          url: "/browser-#{index}",
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.#{index + 1}",
+          session_id: "browser-#{index}",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          user_agent:,
+          created_at: Time.zone.local(2026, 5, 10, 10, index),
+        )
+      end
+    end
+
+    before do
+      freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+      SiteSetting.improved_crawler_detection = true
+      SiteSetting.persist_browser_pageview_events = true
+      SiteSetting.use_legacy_pageviews = false
+      BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
+    end
+
+    context "when the contract is invalid" do
+      let(:params) { super().except(:start_date) }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when the query is canceled by Active Record" do
+      before { DB.stubs(:query_hash).raises(ActiveRecord::QueryCanceled, "statement timeout") }
+
+      it "returns the timeout failure and leaves the connection usable" do
+        transaction_depth = ActiveRecord::Base.connection.open_transactions
+
+        expect(result).to fail_a_step(:load_traffic)
+        expect(result["result.step.load_traffic"].error).to eq("traffic_query_timeout")
+        expect(
+          [ActiveRecord::Base.connection.open_transactions, DB.query_single("SELECT 1")],
+        ).to eq([transaction_depth, [1]])
+      end
+    end
+
+    context "when the query is canceled by PostgreSQL" do
+      before { DB.stubs(:query_hash).raises(PG::QueryCanceled, "statement timeout") }
+
+      it "returns the named timeout failure" do
+        expect(result).to fail_a_step(:load_traffic)
+        expect(result["result.step.load_traffic"].error).to eq("traffic_query_timeout")
+      end
+    end
+
+    context "when the query succeeds" do
+      it { is_expected.to run_successfully }
+
+      it "classifies supported major browsers and groups other user agents as unknown" do
+        browsers = result.traffic.dig(:dimensions, "browsers")
+
+        expect(browsers).to eq(
+          [
+            { value: "unknown", label: "Unknown browser", pageviews: 4 },
+            { value: "chrome", label: "Chrome", pageviews: 3 },
+            { value: "safari", label: "Safari", pageviews: 2 },
+            { value: "edge", label: "Microsoft Edge", pageviews: 1 },
+            { value: "firefox", label: "Firefox", pageviews: 1 },
+          ],
+        )
+      end
+
+      it "uses only local IP data to produce country and network labels" do
+        DiscourseIpInfo
+          .expects(:get)
+          .with("192.0.2.1", locale: I18n.locale, resolve_hostname: false)
+          .twice
+          .returns(
+            country_code: "US",
+            country: "United States",
+            asn: 64_496,
+            organization: "Example Network",
+          )
+
+        dimensions = result.traffic.fetch(:dimensions)
+
+        expect(dimensions.slice("countries", "networks")).to eq(
+          "countries" => [{ value: "US", label: "United States", pageviews: 11 }],
+          "networks" => [{ value: "AS64496", label: "Example Network (AS64496)", pageviews: 11 }],
+        )
+      end
+
+      it "uses the canonical country code when local IP data has no localized country name" do
+        DiscourseIpInfo.stubs(:get).returns(country_code: "US", asn: 64_496)
+
+        countries = I18n.with_locale(:de) { result.traffic.dig(:dimensions, "countries") }
+
+        expect(countries).to eq([{ value: "US", label: "US", pageviews: 11 }])
+      end
+
+      it "labels active country and network filters independently of their intersection" do
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "GB",
+          asn: 64_500,
+          ip_address: "198.51.100.1",
+          session_id: "other-network",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 5, 10, 11),
+        )
+        DiscourseIpInfo
+          .stubs(:get)
+          .with("192.0.2.1", locale: I18n.locale, resolve_hostname: false)
+          .returns(country_code: "US", country: "United States", asn: 64_496)
+        DiscourseIpInfo
+          .stubs(:get)
+          .with("198.51.100.1", locale: I18n.locale, resolve_hostname: false)
+          .returns(asn: 64_500, organization: "Other Network")
+
+        traffic =
+          described_class.call(params: params.merge(country: "US", network: "AS64500")).traffic
+
+        expect(traffic.slice(:summary, :active_filters)).to eq(
+          summary: {
+            "pageviews" => 0,
+            "distinct_sessions" => 0,
+            "logged_in_share" => 0,
+            "bounce_rate" => 0,
+            "average_session_duration_seconds" => 0,
+          },
+          active_filters: [
+            { key: :country, value: "US", label: "United States" },
+            { key: :network, value: "AS64500", label: "Other Network (AS64500)" },
+          ],
+        )
+      end
+
+      it "runs one read-only analytics statement with a ten-second deadline" do
+        query_row = {
+          "pageview_limited" => false,
+          "summary" => {
+          },
+          "series" => [],
+          "dimensions" => {
+          },
+          "active_filter_representative_ips" => {
+            "country" => nil,
+            "network" => nil,
+          },
+        }
+        DB.expects(:exec).with("SET TRANSACTION READ ONLY").once
+        DB.expects(:exec).with("SET LOCAL statement_timeout = 10000").once
+        DB.expects(:query_hash).once.returns([query_row])
+
+        expect(result).to run_successfully
+      end
+
+      it "includes newly persisted traffic in a later call" do
+        before_pageviews = described_class.call(params:).traffic.dig(:summary, "pageviews")
+        Fabricate(
+          :browser_pageview_event,
+          url: "/new-pageview",
+          ip_address: "198.51.100.1",
+          session_id: "new-pageview",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          user_agent: "ExampleBrowser/1.0",
+          created_at: Time.zone.local(2026, 5, 11, 10),
+        )
+        after_pageviews = described_class.call(params:).traffic.dig(:summary, "pageviews")
+
+        expect([before_pageviews, after_pageviews]).to eq([11, 12])
+      end
+
+      it "does not promote a continuing session to an entry within the selected range" do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/outside-range-entry",
+          normalized_referrer: "external.example/path",
+          session_id: "continuing-session",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 4, 30, 23, 59),
+        )
+        Fabricate(
+          :browser_pageview_event,
+          url: "/inside-range-continuation",
+          normalized_referrer: "test.localhost/internal",
+          session_id: "continuing-session",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 5, 10, 12),
+        )
+
+        traffic = result.traffic
+
+        expect(
+          [
+            traffic.dig(:summary, "pageviews"),
+            traffic.dig(:dimensions, "entry_urls").sum { |row| row[:pageviews] },
+            traffic.dig(:dimensions, "referrers"),
+          ],
+        ).to eq([12, 11, [{ value: "", label: "Direct / unknown", pageviews: 11 }]])
+      end
+
+      it "groups session entries by normalized referrer" do
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: "external.example?article=traffic",
+          session_id: "external-referrer-query",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 5, 10, 12),
+        )
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: "test.localhost?view=latest",
+          session_id: "local-referrer-query",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 5, 10, 13),
+        )
+        expect(result.traffic.dig(:dimensions, "referrers")).to eq(
+          [
+            { value: "", label: "Direct / unknown", pageviews: 11 },
+            {
+              value: "external.example?article=traffic",
+              label: "external.example?article=traffic",
+              pageviews: 1,
+            },
+            {
+              value: "test.localhost?view=latest",
+              label: "test.localhost?view=latest",
+              pageviews: 1,
+            },
+          ],
+        )
+      end
+
+      it "does not promote a capped session continuation to an entry" do
+        SiteSetting.stubs(:admin_site_traffic_event_cap).returns(1)
+        Fabricate(
+          :browser_pageview_event,
+          url: "/capped-session-entry",
+          normalized_referrer: "external.example/path",
+          session_id: "capped-session",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 5, 11, 10),
+        )
+        Fabricate(
+          :browser_pageview_event,
+          url: "/capped-session-continuation",
+          normalized_referrer: "test.localhost/internal",
+          session_id: "capped-session",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: Time.zone.local(2026, 5, 11, 11),
+        )
+
+        traffic = result.traffic
+
+        expect(
+          [
+            traffic.dig(:summary, "pageviews"),
+            traffic.dig(:dimensions, "entry_urls"),
+            traffic.dig(:dimensions, "referrers"),
+            traffic.dig(:partial_data, :reason),
+          ],
+        ).to eq([1, [], [], "pageview_limit"])
+      end
+
+      it "uses the earliest event id to break a session entry timestamp tie" do
+        created_at = Time.zone.local(2026, 5, 11, 10)
+        Fabricate(
+          :browser_pageview_event,
+          url: "/first-at-timestamp",
+          session_id: "same-timestamp",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at:,
+        )
+        Fabricate(
+          :browser_pageview_event,
+          url: "/second-at-timestamp",
+          session_id: "same-timestamp",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at:,
+        )
+
+        entry_urls = result.traffic.dig(:dimensions, "entry_urls")
+
+        expect(entry_urls.select { |row| row[:value].end_with?("-at-timestamp") }).to eq(
+          [{ value: "/first-at-timestamp", label: "/first-at-timestamp", pageviews: 1 }],
+        )
+      end
+    end
+  end
+end

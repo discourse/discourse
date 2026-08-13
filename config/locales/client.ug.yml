@@ -480,9 +480,13 @@ ug:
       pill: "تەۋسىيە"
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
+      launch_in_easy_steps: "جامائەت تەڭشىكى"
+      launch_in_easy_steps_subtitle: "%{completed_steps}/%{step_count} قەدەم تاماملاندى"
+      expand: "تەڭشەك قەدىمىنى ياي"
+      collapse: "تەڭشەش قەدىمىنى يىغ"
+      dismiss: "تەڭشەشكە پەرۋا قىلما"
       select_theme:
-        enabled: "تاللاندى"
-        browse_all: "ئۆرنەك باشقۇرۇش"
+        description: "رەڭ، خەت نۇسخا ۋە باش بەت تاللىنىدۇ."
         show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
         show_dark_screenshot: "قېنىق ئېكران كۆرۈنۈشىنى كۆرسەت"
       invite_collaborators:
@@ -491,6 +495,26 @@ ug:
       start_posting:
         title: "يوللاشنى باشلا"
         back: "كەينى"
+    design_wizard:
+      back: "كەينى"
+      next: "كېيىنكى"
+      sections:
+        theme: "ئۆرنەك"
+        fonts: "خەت نۇسخا"
+        homepage: "باش بەت"
+      theme:
+        selected: "تاللاندى"
+      colors:
+        light: "يورۇق"
+        dark: "قاراڭغۇ"
+      fonts:
+        base_font: "ئاساسى خەت نۇسخىسى"
+        heading_font: "ماۋزۇ خەت نۇسخىسى"
+      homepage:
+        topics: "تېما"
+        categories: "سەھىپە"
+        styles:
+          boxes: "قۇتا"
     about:
       edit: "بۇ بەتنى تەھرىرلە"
       simple_title: "ھەققىدە"
@@ -768,10 +792,6 @@ ug:
         optional: "تاللاشچان"
       claim_help:
         optional: "سىز باشقىلارنىڭ تەكشۈرۈشىنىڭ ئالدىنى ئېلىش ئۈچۈن بۇ تۈرنى تەلەپ قىلسىڭىز بولىدۇ."
-        required: "ئاۋال تۈرنى تەلەپ قىلىپ ئاندىن ئۇلارنى تەكشۈرۈپ تەستىقلىيالايسىز."
-        claimed_by_you: "بۇ تۈرنى تەلەپ قىلدىڭىز، تەكشۈرۈپ تەستىقلىيالايسىز."
-        claimed_by_other: "بۇ تۈرنى پەقەت <b>%{username}</b>لا تەكشۈرۈپ تەستىقلىيالايدۇ."
-        automatically_claimed_by: "ھازىر بۇ تۈرنى <b>%{username}</b> تەكشۈرۈۋاتىدۇ."
       claim:
         title: "تېما تەلەپ قىلىدۇ"
       unclaim:
@@ -2793,6 +2813,7 @@ ug:
       subcategory_count:
         one: "+%{count} تارماق سەھىپە"
         other: "+%{count} تارماق سەھىپە"
+      subcategories: "+ تارماق سەھىپە"
       topic_count:
         one: "بۇ سەھىپىدە %{count} تېما بار"
         other: "بۇ سەھىپىدە %{count} تېما بار"
@@ -3180,7 +3201,6 @@ ug:
         other: "«%{group_name}» نىڭ %{count} ئوچۇق ئەزالىق ئىلتىماسى"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - تاماملاندى"
       new_features: "يېڭى ئىقتىدار مەۋجۇت!"
       admin_problems: "يېڭى تەۋسىيە بېكىتىڭىزنىڭ باشقۇرۇش تاختىسىدا كۆرۈنىدۇ"
       upcoming_changes:
@@ -5934,13 +5954,30 @@ ug:
       new_features:
         title: "يېڭىلىق?"
         check_for_updates: "يېڭىلانمىنى تەكشۈر"
+      site_traffic_explorer:
+        pageviews: "بەت كۆرۈلۈشى"
+        view_more: "تېخىمۇ كۆپ كۆرسەت"
+        cards:
+          pages: "بەت"
+          visitors: "زىيارەتچى"
+        columns:
+          top_urls: "تور ئادرېسى"
+          browsers: "توركۆرگۈ"
+          ip_addresses: "IP ئادرېس"
+        filters:
+          browser: "توركۆرگۈ"
+          ip: "IP ئادرېس"
+        metrics:
+          pageviews:
+            label: "بەت كۆرۈلۈشى"
+        series:
+          anonymous_human: "نامسىز"
       dashboard:
         title: "باشقۇرۇش تاختا"
         last_updated: "باشقۇرۇش تاختا يېڭىلاندى:"
         discourse_last_updated: "Discourse يېڭىلاندى:"
         version: "نەشرى"
         up_to_date: "سىزنىڭ ئەڭ يېڭى نەشرى!"
-        critical_available: "ھالقىلىق يېڭىلانما بار."
         updates_available: "يېڭىلانما بار."
         please_update: "يېڭىلاڭ!"
         no_check_performed: "يېڭىلانما تەكشۈرۈش ئىجرا قىلىنمىدى. Sidekiq ئىجرا قىلىنىۋاتقانلىقىنى جەزملەڭ."

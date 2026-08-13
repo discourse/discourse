@@ -11,7 +11,7 @@
     { "path": "plugins/discourse-apple-auth" },
     { "path": "plugins/discourse-assign" },
     { "path": "plugins/discourse-cakeday" },
-    { "path": "plugins/discourse-calendar" },
+    { "path": "plugins/discourse-events" },
     { "path": "plugins/discourse-chat-integration" },
     { "path": "plugins/discourse-data-explorer" },
     { "path": "plugins/discourse-details" },

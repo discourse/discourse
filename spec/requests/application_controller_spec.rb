@@ -604,6 +604,59 @@ RSpec.describe ApplicationController do
         end
       end
 
+      it "does not retain topics moved to a restricted category" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        topic = Fabricate(:topic_with_op, title: "restricted 404 cache topic")
+        private_category = Fabricate(:private_category, group: Group[:staff])
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/t/#{topic.id}.json", params: { category_id: private_category.id }
+
+        expect(response).to have_http_status(:ok)
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        aggregate_failures do
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).not_to include(topic.title)
+        end
+      end
+
+      it "does not retain topics after a category becomes restricted" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        category = Fabricate(:category)
+        topic = Fabricate(:topic_with_op, title: "restricted category 404 cache topic", category:)
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/categories/#{category.id}.json",
+            params: {
+              permissions: {
+                Group[:staff].name => CategoryGroup.permission_types[:full],
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        aggregate_failures do
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).not_to include(topic.title)
+        end
+      end
+
       it "should cache results" do
         Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
         Discourse.cache.delete("page_not_found_topics:fr")
@@ -1519,6 +1572,53 @@ RSpec.describe ApplicationController do
           get "/latest", headers: { Cookie: "" }
           expect(response.status).to eq(200)
           expect(main_locale_scripts(response.body)).to contain_exactly("en")
+        end
+      end
+    end
+
+    context "with the language switcher enabled and set_locale_from_cookie disabled" do
+      before do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.default_locale = "en"
+        SiteSetting.set_locale_from_cookie = false
+        SiteSetting.content_localization_supported_locales = "es|fr"
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      context "with an anonymous user" do
+        it "uses the locale from the cookie" do
+          get "/latest", headers: { Cookie: "locale=es" }
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("es")
+        end
+
+        it "ignores a locale the site has not configured" do
+          get "/latest", headers: { Cookie: "locale=ja" }
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
+        end
+
+        it "ignores the cookie once the switcher is turned off" do
+          SiteSetting.content_localization_language_switcher = "none"
+
+          get "/latest", headers: { Cookie: "locale=es" }
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
+        end
+      end
+
+      context "with a logged-in user" do
+        fab!(:user) { Fabricate(:user, locale: "fr") }
+
+        it "ignores the cookie and uses the user's preference" do
+          sign_in(user)
+          # Set through the jar rather than a Cookie header, which would drop the auth cookie.
+          cookies[:locale] = "es"
+
+          get "/latest"
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("fr")
         end
       end
     end

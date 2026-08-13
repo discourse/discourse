@@ -2465,6 +2465,43 @@ class _PluginApi {
   }
 
   /**
+   * Registers the component used to render a reviewable type in the review queue.
+   *
+   * The loader returns the component class, or a promise resolving to it — in
+   * which case the module is only loaded when a reviewable of that type is
+   * rendered.
+   *
+   * @param {String} reviewableType - The reviewable type class name (e.g. "ReviewableChatMessage")
+   * @param {Function} loader - A function returning the component class, or a promise
+   *   resolving to it
+   *
+   * @example
+   * ```
+   * api.registerReviewableComponent("ReviewableChatMessage", () => ReviewableChatMessage);
+   * ```
+   *
+   * @example
+   * ```
+   * api.registerReviewableComponent(
+   *   "ReviewableChatMessage",
+   *   async () => (await import("../components/reviewable/chat-message")).default
+   * );
+   * ```
+   **/
+  registerReviewableComponent(reviewableType, loader) {
+    if (typeof loader !== "function") {
+      throw new Error(
+        `registerReviewableComponent("${reviewableType}", ...) requires a function as second argument.`
+      );
+    }
+
+    this.registerValueTransformer(
+      "reviewable-component",
+      ({ value, context }) => (context.type === reviewableType ? loader : value)
+    );
+  }
+
+  /**
    * Register custom status names for a reviewable type, used in the
    * review queue status badge (e.g. "Tool approved" instead of "Flag approved").
    *
@@ -3698,7 +3735,7 @@ class _PluginApi {
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
-   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} blocks - Array of layout entries
+   * @param {Array<import("discourse/blocks/types").LayoutEntry>} blocks - Array of layout entries
    *
    * @example
    * ```javascript
@@ -3767,7 +3804,7 @@ class _PluginApi {
    * @experimental This API is under active development and may change or be removed
    * in future releases without prior notice. Use with caution in production environments.
    *
-   * @param {typeof import("@glimmer/component").default | string} blockOrName - Block class or name string for lazy loading.
+   * @param {string | import("discourse/lib/blocks/-internals/types").BlockClass} blockOrName - Block class or name string for lazy loading.
    * @param {Function} [factory] - Factory function returning Promise<BlockClass> (required when first arg is name).
    *
    * @example Direct class registration

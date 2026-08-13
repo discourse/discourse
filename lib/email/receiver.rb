@@ -150,8 +150,17 @@ module Email
     end
 
     def is_blocked?
-      return false if SiteSetting.ignore_by_title.blank?
-      Regexp.new(SiteSetting.ignore_by_title, Regexp::IGNORECASE) =~ @mail.subject
+      if SiteSetting.ignore_by_title.present?
+        escaped_regex =
+          SiteSetting.ignore_by_title.split("|").map { |s| Regexp.escape(s) }.join("|")
+        return true if Regexp.new(escaped_regex, Regexp::IGNORECASE) =~ @mail.subject
+      end
+      if SiteSetting.ignore_by_title_regex.present?
+        if Regexp.new(SiteSetting.ignore_by_title_regex, Regexp::IGNORECASE) =~ @mail.subject
+          return true
+        end
+      end
+      false
     end
 
     def create_incoming_email

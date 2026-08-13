@@ -584,27 +584,29 @@ pl_PL:
       pill: "Sugerowane"
       pm_title: "Sugerowane wiadomości"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Uruchom w %{step_count} prostych krokach"
+      launch_in_easy_steps: "Skonfiguruj swoją społeczność"
+      launch_in_easy_steps_subtitle: "Wykonano %{completed_steps} z %{step_count} kroków"
       congrats_onboarding_complete: "Gratulacje z okazji ukończenia procesu wdrażania!"
+      expand: "Rozwiń kroki konfiguracji"
+      collapse: "Zwiń kroki konfiguracji"
+      dismiss: "Odrzuć konfigurację"
       select_theme:
         title: "Dostosuj swoją witrynę"
-        description: "Wybierz motyw początkowy dla swojej społeczności"
-        action: "Wybierz motyw"
-        modal_title: "Wybierz motyw"
-        use_theme: "Użyj wybranego motywu"
-        enabled: "Wybrany"
-        applying_theme: "Stosowanie motywu..."
-        browse_all: "Zarządzaj motywami"
+        description: "Wybierz kolory, czcionki i stronę główną."
+        action: "Zobacz opcje"
+        completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
       invite_collaborators:
         title: "Zaproś współpracowników"
-        description: "Pierwsi członkowie pomagają ożywić Twoją społeczność"
+        description: "Pierwsi członkowie wcielają ją w życie."
         action: "Utwórz zaproszenie"
+        completed: "Zaproś więcej"
       start_posting:
         title: "Rozpocznij publikowanie"
-        description: "Daj ludziom temat do wspólnej rozmowy"
+        description: "Daj ludziom temat do dyskusji."
         action: "Zobacz pomysły"
+        completed: "Zobacz więcej pomysłów"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
         predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
@@ -624,6 +626,44 @@ pl_PL:
           what_is_your_favorite_food:
             title: "Jakie jest twoje ulubione jedzenie?"
             body: "Podziel się swoim ulubionym jedzeniem ze społecznością! Zacznę: uwielbiam pizzę, szczególnie z dodatkowym serem i pepperoni."
+    design_wizard:
+      title: "Dostosuj swoją witrynę"
+      subtitle: "Wybierz kolory, czcionki i stronę główną."
+      step_label: "Przejdź do kroku %{index}"
+      save: "Zapisz i zakończ"
+      back: "Wstecz"
+      next: "Dalej"
+      sections:
+        theme: "Motyw"
+        colors: "Domyślny kolor"
+        fonts: "Czcionki"
+        homepage: "Strona główna"
+      theme:
+        selected: "Wybrany"
+        custom_theme_notice: "Twoja witryna używa obecnie motywu %{name} jako domyślnego. Wybierz motyw poniżej, aby go podejrzeć. Zapisanie spowoduje zastąpienie obecnego motywu."
+      colors:
+        light: "Jasny"
+        dark: "Ciemny"
+        dark_only: "%{name} ma tylko tryb ciemny"
+        both_modes: "Każda paleta zawiera pasujący tryb jasny i ciemny"
+        user_selectable: "Umożliw członkom zmianę palet"
+        user_selectable_description: "Pokaż te palety w menu, z którego członkowie mogą wybierać"
+      fonts:
+        base_font: "Czcionka podstawowa"
+        heading_font: "Czcionka nagłówków"
+      homepage:
+        topics: "Tematy"
+        categories: "Kategorie"
+        topic_page_type: "Typ strony tematu"
+        topic_pages:
+          latest: "Tematy posortowane według ostatniej aktywności, najnowsze na początku."
+          new: "Tematy utworzone w ciągu ostatnich kilku dni, najnowsze na początku."
+          hot: "Tematy, które są obecnie popularne, łącząc ogólną popularność z niedawnym zaangażowaniem."
+        category_page_style: "Styl strony kategorii"
+        styles:
+          boxes: "Pola"
+          with_topics: "Kategorie z tematami"
+          only: "Tylko kategorie"
     about:
       edit: "Edytuj tę stronę"
       simple_title: "O stronie"
@@ -936,6 +976,7 @@ pl_PL:
       date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
       filtered_flagged_by: "Oflagowany przez"
+      no_component_found: "Nie znaleziono żadnego komponentu dla %{type}"
       unknown:
         title:
           one: "Masz elementy oczekujące na sprawdzenie w kolejce z wyłączonej wtyczki:"
@@ -980,10 +1021,6 @@ pl_PL:
       stale_help: "Ten element został rozwiązany przez <b>%{username}</b>."
       claim_help:
         optional: "Możesz przejąć tę pozycję, aby uniemożliwić innym jego sprawdzenie."
-        required: "Musisz przejąć tę pozycję, zanim będziesz mógł/mogła je przejrzeć."
-        claimed_by_you: "Przejęto tę pozycję i możesz ją teraz przejrzeć."
-        claimed_by_other: "Tę pozycję może zrecenzować tylko <b>%{username}</b>."
-        automatically_claimed_by: "Ta pozycja jest obecnie sprawdzana przez <b>%{username}</b>."
       claim:
         title: "Przejmij ten temat"
       unclaim:
@@ -3268,6 +3305,7 @@ pl_PL:
         few: "+%{count} podkategorie"
         many: "+%{count} podkategorii"
         other: "+%{count} podkategorii"
+      subcategories: "+ Podkategorie"
       topic_count:
         one: "%{count} temat w tej kategorii"
         few: "%{count} tematy w tej kategorii"
@@ -3354,6 +3392,7 @@ pl_PL:
       toggle: "Przełącz filtry rozwijane"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
+      search_label: "Szukaj ikon"
       search_placeholder: "Szukaj ikon..."
       no_results: "Nie znaleziono ikon"
       results_count:
@@ -3842,7 +3881,6 @@ pl_PL:
         other: "%{count} otwartych wniosków o członkostwo dla '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - zakończone"
       new_features: "Dostępne są nowe funkcje!"
       admin_problems: "Nowe porady w panelu administratora"
       upcoming_changes:
@@ -5963,6 +6001,7 @@ pl_PL:
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     invalid_video_url: Nie można odtworzyć tego filmu, ponieważ adres URL jest nieprawidłowy lub niedostępny.
     keyboard_shortcuts_help:
+      search_label: "Skróty wyszukiwania"
       search_placeholder: "Wyszukaj skrót według opisu lub kombinacji klawiszy"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -7423,6 +7462,77 @@ pl_PL:
       new_features:
         title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
+      site_traffic_explorer:
+        title: "Eksplorator ruchu w witrynie"
+        loading: "Ładowanie ruchu…"
+        errors:
+          timeout: "To zapytanie o ruch trwało za długo. Wybierz krótszy zakres dat i spróbuj ponownie."
+          unexpected: "Nie można załadować ruchu w witrynie. Spróbuj ponownie."
+        empty: "Brak pasujących wyświetleń stron"
+        summary: "Podsumowanie ruchu"
+        traffic_over_time: "Ruch w czasie"
+        pageviews: "Wyświetlenia strony"
+        metric_information: "O tej metryce"
+        active_filters: "Aktywne filtry ruchu"
+        filter_description: "%{filter} to <strong>%{value}</strong>"
+        filter_by:
+          one: "Filtruj według %{label}, %{count} odsłona strony"
+          few: "Filtruj według %{label}, %{count} odsłony strony"
+          many: "Filtruj według %{label}, %{count} odsłon stron"
+          other: "Filtruj według %{label}, %{count} odsłon stron"
+        remove_filter: "Usuń filtr %{filter}"
+        remove_traffic_type_filter: "Usuń filtr ruchu %{value}"
+        view_more: "Zobacz więcej"
+        no_dimension_data: "Brak danych dla tego podziału."
+        direct_or_unknown: "Bezpośredni / nieznany"
+        cards:
+          acquisition: "Nabytek"
+          pages: "Stron"
+          visitors: "Odwiedzający"
+        dimensions:
+          referrers: "Polecający"
+          countries: "Kraje"
+          networks: "Sieci"
+          top_urls: "Najpopularniejsze adresy URL"
+          entry_urls: "Wpisowe adresy URL"
+          browsers: "Przeglądarki"
+          ip_addresses: "Adresy IP"
+        columns:
+          referrers: "Polecający"
+          countries: "Kraj"
+          networks: "Sieć"
+          top_urls: "URL"
+          entry_urls: "Wpisowy adres URL"
+          browsers: "Przeglądarka"
+          ip_addresses: "Adres IP"
+        filters:
+          traffic_type: "Rodzaj ruchu"
+          top_url: "Najpopularniejszy adres URL"
+          entry_url: "Wpisowy adres URL"
+          referrer: "Polecający"
+          country: "Kraj"
+          network: "Sieć"
+          browser: "Przeglądarka"
+          ip: "Adres IP"
+        metrics:
+          pageviews:
+            label: "Wyświetlenia strony"
+          distinct_sessions:
+            label: "Różne sesje"
+          logged_in_share:
+            label: "Udział zalogowanych"
+          bounce_rate:
+            label: "Współczynnik odrzuceń"
+          average_session_duration:
+            label: "Średni czas trwania sesji"
+        series:
+          logged_in_human: "Zalogowani"
+          anonymous_human: "Anonimowi"
+          likely_crawler: "Prawdopodobne roboty indeksujące"
+        partial:
+          retention: "Szczegółowe dane dotyczące aktywności wyświetleń stron przed %{date} nie są już dostępne, dlatego wyniki te obejmują tylko część wybranego zakresu dat."
+          pageview_limit: "Te wyniki są ograniczone do ostatnich %{limit} wyświetleń stron w wybranym zakresie dat. Wybierz krótszy zakres dat, aby uwzględnić cały dostępny ruch."
+          combined: "Szczegółowa aktywność odsłon sprzed %{date} nie jest już dostępna, dlatego wyniki obejmują tylko część wybranego zakresu dat. Są one również ograniczone do ostatnich %{limit} odsłon. Wybierz krótszy zakres dat w ramach dostępnych dat, aby uwzględnić całą dostępną aktywność odsłon."
       dashboard:
         title: "Panel"
         last_updated: "Panel zaktualizowany:"
@@ -7434,7 +7544,6 @@ pl_PL:
           few: "Korzystasz z najnowszej wersji, ale dostępne są %{count} nowe zmiany."
           many: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
           other: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
-        critical_available: "Ważna aktualizacja jest dostępna."
         updates_available: "Aktualizacje są dostępne."
         please_update: "Koniecznie zaktualizuj!"
         no_check_performed: "Sprawdzanie aktualizacji nie zostało przeprowadzone. Upewnij się, że sidekiq jest uruchomiony."

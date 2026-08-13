@@ -103,15 +103,19 @@ class DiscourseConnectBase
     decoded = Base64.decode64(parsed["sso"])
     decoded_hash = Rack::Utils.parse_query(decoded)
 
-    raise SignatureError, <<~MSG if sso.sign(parsed["sso"]) != parsed["sig"]
+    expected_sig = sso.sign(parsed["sso"])
+
+    if !ActiveSupport::SecurityUtils.secure_compare(expected_sig, parsed["sig"].to_s)
+      raise SignatureError, <<~MSG
         Bad signature for payload
 
         sso: #{parsed["sso"]}
         
         sig: #{parsed["sig"]}
         
-        expected sig: #{sso.sign(parsed["sso"])}
+        expected sig: #{expected_sig}
         MSG
+    end
 
     ACCESSORS.each do |k|
       val = decoded_hash[k.to_s]

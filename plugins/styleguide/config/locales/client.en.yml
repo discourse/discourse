@@ -9,6 +9,11 @@ en:
       title: "Styleguide"
       welcome: "To get started, choose a section from the navigation menu."
 
+      example:
+        toggle_code: "Toggle code sample"
+        try_this: "Try this:"
+        code_region: "Source snippet: %{title}"
+
       categories:
         syntax: Syntax
         atoms: Atoms
@@ -126,5 +131,7 @@ en:
         char_counter:
           title: "Character Counter"
           placeholder: "Enter your text here..."
+        combo_button:
+          title: "Combo Button"
         segmented_control:
           title: "Segmented Control (Button toggle group)"

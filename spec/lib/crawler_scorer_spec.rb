@@ -127,7 +127,12 @@ RSpec.describe CrawlerScorer do
   it "does not score stale Chromium versions when the session has interaction" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345, user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36")
-    Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, click_events: 1)
+    Fabricate(
+      :browser_pageview_session_engagement,
+      session_id: event.session_id,
+      click_events: 1,
+      scroll_events: 3,
+    )
 
     score!
 
@@ -307,7 +312,12 @@ RSpec.describe CrawlerScorer do
   it "never scores an event below its bot signals" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)
-    Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, scroll_events: 3)
+    Fabricate(
+      :browser_pageview_session_engagement,
+      session_id: event.session_id,
+      scroll_events: 3,
+      mouse_move_events: 6,
+    )
 
     score!
 
@@ -318,18 +328,20 @@ RSpec.describe CrawlerScorer do
     expect(breakdown.engagement_score).to eq(0)
   end
 
-  it "treats any engagement row as engagement, since the client only beacons on activity" do
-    event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
+  it "does not treat a single interaction signal as engagement" do
+    SiteSetting.crawler_asns = "12345"
+    event = make_event(asn: 12_345)
     Fabricate(
       :browser_pageview_session_engagement,
       session_id: event.session_id,
+      scroll_events: 40,
       engaged_seconds: 30,
     )
 
     score!
 
-    expect(event.reload.score).to eq(100)
-    expect(event.browser_pageview_event_score.engagement_score).to eq(0)
+    expect(event.reload.score).to eq(70)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
   end
 
   it "lowers the score when an engagement beacon arrives after an earlier run" do
@@ -339,7 +351,12 @@ RSpec.describe CrawlerScorer do
     score!
     expect(event.reload.score).to eq(70)
 
-    Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, key_events: 4)
+    Fabricate(
+      :browser_pageview_session_engagement,
+      session_id: event.session_id,
+      key_events: 4,
+      mouse_move_events: 2,
+    )
     score!
 
     expect(event.reload.score).to eq(30)
@@ -353,7 +370,12 @@ RSpec.describe CrawlerScorer do
     10.times do |i|
       make_event(asn: 12_345, session_id: engaged_session, created_at: base + i.minutes)
     end
-    Fabricate(:browser_pageview_session_engagement, session_id: engaged_session, scroll_events: 8)
+    Fabricate(
+      :browser_pageview_session_engagement,
+      session_id: engaged_session,
+      scroll_events: 8,
+      mouse_move_events: 12,
+    )
 
     abandoned_tab = make_event(asn: 12_345, session_id: "abandoned-tab", created_at: base)
 
@@ -369,7 +391,12 @@ RSpec.describe CrawlerScorer do
     10.times do |i|
       make_event(asn: 12_345, session_id: engaged_session, created_at: 3.hours.ago + i.minutes)
     end
-    Fabricate(:browser_pageview_session_engagement, session_id: engaged_session, scroll_events: 8)
+    Fabricate(
+      :browser_pageview_session_engagement,
+      session_id: engaged_session,
+      scroll_events: 8,
+      mouse_move_events: 12,
+    )
 
     tail = 3.times.map { |i| make_event(asn: 12_345, created_at: 30.minutes.ago + i.minutes) }
 
@@ -397,7 +424,12 @@ RSpec.describe CrawlerScorer do
     10.times do |i|
       make_event(asn: 12_345, session_id: engaged_session, created_at: 7.hours.ago + i.minutes)
     end
-    Fabricate(:browser_pageview_session_engagement, session_id: engaged_session, scroll_events: 8)
+    Fabricate(
+      :browser_pageview_session_engagement,
+      session_id: engaged_session,
+      scroll_events: 8,
+      mouse_move_events: 12,
+    )
 
     event = make_event(asn: 12_345)
 
@@ -412,7 +444,12 @@ RSpec.describe CrawlerScorer do
     base = 30.minutes.ago
     engaged_session = "partly-engaged"
     make_event(asn: 12_345, session_id: engaged_session, created_at: base)
-    Fabricate(:browser_pageview_session_engagement, session_id: engaged_session, click_events: 2)
+    Fabricate(
+      :browser_pageview_session_engagement,
+      session_id: engaged_session,
+      click_events: 2,
+      mouse_move_events: 9,
+    )
 
     3.times do |i|
       make_event(asn: 12_345, session_id: "unengaged-#{i}", created_at: base + (i + 1).minutes)

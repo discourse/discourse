@@ -299,7 +299,7 @@ class AiAgent < ActiveRecord::Base
           end
         else
           inner_name = inner_name.gsub("Tool", "")
-          inner_name = "List#{inner_name}" if %w[Categories Tags].include?(inner_name)
+          inner_name = "List#{inner_name}" if %w[Categories Tags Users].include?(inner_name)
 
           klass =
             "DiscourseAi::Agents::Tools::#{inner_name}".safe_constantize ||

@@ -314,6 +314,12 @@ module Chat
       cooked
     end
 
+    def action?
+      SLASH_COMMAND_PATTERNS.any? do |_, command|
+        command[:formatter] == :action && message&.match?(command[:pattern])
+      end
+    end
+
     def self.match_slash_command(message, author_username)
       return if message.blank?
 

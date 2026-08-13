@@ -366,7 +366,7 @@ class Report
   end
 
   def self.cache(report)
-    duration = report.error == :exception ? 1.minute : 35.minutes
+    duration = report.error == :exception ? 1.minute : 60.minutes
     Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
   end
 

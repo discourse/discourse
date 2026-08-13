@@ -558,6 +558,13 @@ hy:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "անհայտ օպերացիոն համակարգ"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Անանուն"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Միգուցե հասցեն արդեն օգտագործվո՞ւմ է:"
     error_staged: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Հասցեն արդեն օգտագործվում է աստիճանավորված օգտատիրոջ կողմից:"
@@ -2759,6 +2766,9 @@ hy:
     title: "Մուտք գործել անվտանգ ռեժիմ"
     enter: "Մուտք գործել Ապահով Ռեժիմ"
     must_select: "Դուք պետք է ընտրեք առնվազն մեկ տարբերակ՝ անվտանգ ռեժիմ մուտք գործելու համար:"
+  design_wizard:
+    palette_pairs:
+      default: "Լռելյայն"
   wizard:
     title: "Discourse Տեղադրում"
     step:

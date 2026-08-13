@@ -315,7 +315,7 @@ export default class DMultiSelect extends Component {
             </div>
           {{else if this.data.isResolved}}
             {{#if this.availableOptions.length}}
-              <div class="d-multi-select__search-results">
+              <ul class="d-multi-select__search-results">
                 {{#each this.availableOptions as |result|}}
                   <menu.item
                     class={{dConcatClass
@@ -333,7 +333,7 @@ export default class DMultiSelect extends Component {
                     </span>
                   </menu.item>
                 {{/each}}
-              </div>
+              </ul>
             {{else}}
               <div class="d-multi-select__search-no-results">
                 {{this.noResultsLabel}}

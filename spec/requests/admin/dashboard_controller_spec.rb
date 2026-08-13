@@ -129,6 +129,12 @@ RSpec.describe Admin::DashboardController do
         response.parsed_body["sections"].index_by { |section| section["id"] }
       end
 
+      def signups_kpi_value
+        highlights =
+          response.parsed_body["sections"].find { |section| section["id"] == "highlights" }
+        highlights["data"]["kpis"].find { |kpi| kpi["type"] == "new_signups" }["value"]
+      end
+
       context "with highlights_data" do
         let(:highlights_data) { section_payloads["highlights"]&.dig("data") }
 
@@ -380,25 +386,6 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["configuration"]).to be_present
       end
 
-      it "is returned with version=alt when the admin is not included" do
-        group = Fabricate(:group)
-        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
-
-        get "/admin/dashboard.json", params: { version: "alt" }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]).to be_present
-        expect(response.parsed_body["configuration"]).to be_present
-      end
-
-      it "is omitted with version=alt when enabled for the admin" do
-        get "/admin/dashboard.json", params: { version: "alt" }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]).to be_nil
-        expect(response.parsed_body["configuration"]).to be_nil
-      end
-
       it "falls back to default dates when date params are malformed" do
         get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
 
@@ -497,6 +484,23 @@ RSpec.describe Admin::DashboardController do
           expect(items.first).to include("source" => "core_report", "identifier" => "signups")
           expect(items.first["title"]).to be_present
         end
+      end
+
+      it "serves the default window from the warmed report cache" do
+        configure_dashboard_sections(%w[highlights])
+        admin.update!(last_seen_at: 1.hour.ago)
+        params = { start_date: 29.days.ago.to_date.to_s, end_date: Time.zone.now.to_date.to_s }
+
+        Jobs::WarmDashboardReports.new.execute({})
+        Fabricate(:user, created_at: 2.days.ago)
+
+        get "/admin/dashboard.json", params: params
+        warmed_signups = signups_kpi_value
+
+        Discourse.cache.clear
+        get "/admin/dashboard.json", params: params
+
+        expect(signups_kpi_value).to eq(warmed_signups + 1)
       end
 
       it "denies non-staff users" do
@@ -1358,6 +1362,610 @@ RSpec.describe Admin::DashboardController do
         post "/admin/dashboard/reports/bulk.json", params: { items: "not_an_array" }
         expect(response.status).to eq(400)
       end
+    end
+  end
+
+  describe "#traffic" do
+    let(:request_params) { { start_date: "2026-05-01", end_date: "2026-05-12" } }
+    let(:series_colors) do
+      {
+        "logged_in_human_pageviews" => "#4B3CE0",
+        "anonymous_human_pageviews" => "#9C8DEC",
+        "likely_crawler_pageviews" => "#B3AAC9",
+      }
+    end
+
+    before do
+      freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.improved_crawler_detection = true
+      SiteSetting.persist_browser_pageview_events = true
+      SiteSetting.use_legacy_pageviews = false
+      BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
+      Discourse.stubs(:current_hostname).returns("test.localhost")
+      DiscourseIpInfo.stubs(:get).returns(asn: 64_496, organization: "Example Network")
+      DiscourseIpInfo
+        .stubs(:get)
+        .with("192.0.2.1", locale: anything, resolve_hostname: false)
+        .returns(
+          country_code: "US",
+          country: "United States",
+          asn: 64_496,
+          organization: "Example Network",
+        )
+      DiscourseIpInfo
+        .stubs(:get)
+        .with("198.51.100.2", locale: anything, resolve_hostname: false)
+        .returns(
+          country_code: "GB",
+          country: "United Kingdom",
+          asn: 64_496,
+          organization: "Example Network",
+        )
+    end
+
+    context "with traffic in the selected date range" do
+      fab!(:landing_pageview) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "https://test.localhost/landing/?source=newsletter#section",
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          user_id: admin.id,
+          session_id: "admin-session",
+          normalized_referrer: "search.example/results?q=discourse",
+          normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-05-10 10:00:00",
+        )
+      end
+
+      fab!(:latest_pageview) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "https://test.localhost/latest?page=2",
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          user_id: admin.id,
+          session_id: "admin-session",
+          normalized_referrer: "ignored.example/return?from=latest",
+          normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-05-10 10:01:00",
+        )
+      end
+
+      fab!(:top_pageview) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/top",
+          country_code: "GB",
+          asn: 64_496,
+          ip_address: "198.51.100.2",
+          user_agent: "Mozilla/5.0 Firefox/126.0",
+          session_id: "anonymous-session",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-05-11 10:00:00",
+        )
+      end
+
+      fab!(:admin_session_engagement) do
+        Fabricate(
+          :browser_pageview_session_engagement,
+          session_id: "admin-session",
+          engaged_seconds: 60,
+        )
+      end
+
+      fab!(:anonymous_session_engagement) do
+        Fabricate(
+          :browser_pageview_session_engagement,
+          session_id: "anonymous-session",
+          engaged_seconds: 0,
+        )
+      end
+
+      before { sign_in(admin) }
+
+      it "summarizes every traffic dimension for the selected dates" do
+        get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => nil,
+            "summary" => {
+              "pageviews" => 3,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 67,
+              "bounce_rate" => 50,
+              "average_session_duration_seconds" => 30,
+            },
+            "series" => [
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 2,
+                "logged_in_human_pageviews" => 2,
+                "anonymous_human_pageviews" => 0,
+                "likely_crawler_pageviews" => 0,
+              },
+              {
+                "date" => "2026-05-11",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
+                { "value" => "/latest", "label" => "/latest", "pageviews" => 1 },
+                { "value" => "/top", "label" => "/top", "pageviews" => 1 },
+              ],
+              "entry_urls" => [
+                { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
+                { "value" => "/top", "label" => "/top", "pageviews" => 1 },
+              ],
+              "referrers" => [
+                { "value" => "", "label" => "Direct / unknown", "pageviews" => 1 },
+                {
+                  "value" => "search.example/results?q=discourse",
+                  "label" => "search.example/results?q=discourse",
+                  "pageviews" => 1,
+                },
+              ],
+              "countries" => [
+                { "value" => "US", "label" => "United States", "pageviews" => 2 },
+                { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+              ],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 3 },
+              ],
+              "browsers" => [
+                { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
+                { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+              ],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
+          },
+        )
+      end
+
+      it "applies the direct referrer filter" do
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: "")
+
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => nil,
+            "summary" => {
+              "pageviews" => 1,
+              "distinct_sessions" => 1,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
+            },
+            "series" => [
+              {
+                "date" => "2026-05-11",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
+              "entry_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 1 }],
+              "countries" => [{ "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 }],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 1 },
+              ],
+              "browsers" => [{ "value" => "firefox", "label" => "Firefox", "pageviews" => 1 }],
+              "ip_addresses" => [
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
+            "active_filters" => [
+              { "key" => "referrer", "value" => "", "label" => "Direct / unknown" },
+            ],
+          },
+        )
+      end
+    end
+
+    context "when the selected date range exceeds retention" do
+      it "returns partial retained results and the available start date" do
+        sign_in(admin)
+        chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
+        firefox = "Mozilla/5.0 Firefox/126.0"
+
+        Fabricate(
+          :browser_pageview_event,
+          url: "/first-retained",
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.1",
+          user_agent: chrome,
+          session_id: "first-retained",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-02-15 09:00:00",
+        )
+        Fabricate(
+          :browser_pageview_event,
+          url: "/latest-retained",
+          country_code: "GB",
+          asn: 64_496,
+          ip_address: "198.51.100.2",
+          user_agent: firefox,
+          session_id: "latest-retained",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-05-10 10:00:00",
+        )
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(start_date: "2026-01-01")
+
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => {
+              "reason" => "retention",
+              "available_start_date" => "2026-02-14",
+            },
+            "summary" => {
+              "pageviews" => 2,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
+            },
+            "series" => [
+              {
+                "date" => "2026-02-15",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
+                { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
+              ],
+              "entry_urls" => [
+                { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
+                { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
+              ],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+              "countries" => [
+                { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+                { "value" => "US", "label" => "United States", "pageviews" => 1 },
+              ],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
+              ],
+              "browsers" => [
+                { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+                { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+              ],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
+          },
+        )
+      end
+    end
+
+    context "when traffic reaches the configured pageview cap" do
+      let(:created_at) { Time.zone.parse("2026-05-10 10:00:00") }
+      let(:chrome) { "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36" }
+      let(:event_attributes) do
+        {
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.1",
+          user_agent: chrome,
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: created_at,
+        }
+      end
+      let!(:oldest) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/oldest-id",
+          session_id: "oldest-id",
+          **event_attributes,
+        )
+      end
+      let!(:middle) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/middle-id",
+          session_id: "middle-id",
+          **event_attributes,
+        )
+      end
+      let!(:newest) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/newest-id",
+          session_id: "newest-id",
+          **event_attributes,
+        )
+      end
+
+      before do
+        sign_in(admin)
+        SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
+      end
+
+      it "returns no more than the configured pageview cap" do
+        get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => {
+              "reason" => "pageview_limit",
+              "pageview_limit" => 2,
+            },
+            "summary" => {
+              "pageviews" => 2,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
+            },
+            "series" => [
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 2,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 2,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+                { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
+              ],
+              "entry_urls" => [
+                { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+                { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
+              ],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+              "countries" => [{ "value" => "US", "label" => "United States", "pageviews" => 2 }],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
+              ],
+              "browsers" => [{ "value" => "chrome", "label" => "Chrome", "pageviews" => 2 }],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
+              ],
+            },
+          },
+        )
+      end
+    end
+
+    context "when the selected date range exceeds retention and traffic reaches the cap" do
+      let(:event_attributes) { { asn: 64_496, source: BrowserPageviewEvent::SOURCE_BEACON } }
+      let!(:first_retained) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/first-retained",
+          country_code: "US",
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          session_id: "first-retained",
+          created_at: "2026-02-15 09:00:00",
+          **event_attributes,
+        )
+      end
+      let!(:middle_retained) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/middle-retained",
+          country_code: "GB",
+          ip_address: "198.51.100.2",
+          user_agent: "Mozilla/5.0 Firefox/126.0",
+          session_id: "middle-retained",
+          created_at: "2026-05-10 10:00:00",
+          **event_attributes,
+        )
+      end
+      let!(:latest_retained) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/latest-retained",
+          country_code: "US",
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          session_id: "latest-retained",
+          created_at: "2026-05-11 10:00:00",
+          **event_attributes,
+        )
+      end
+
+      it "returns both partial-data reasons" do
+        sign_in(admin)
+        SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(start_date: "2026-01-01")
+
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => {
+              "reason" => "retention_and_pageview_limit",
+              "available_start_date" => "2026-02-14",
+              "pageview_limit" => 2,
+            },
+            "summary" => {
+              "pageviews" => 2,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
+            },
+            "series" => [
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+              {
+                "date" => "2026-05-11",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                {
+                  "value" => latest_retained.url,
+                  "label" => latest_retained.url,
+                  "pageviews" => 1,
+                },
+                {
+                  "value" => middle_retained.url,
+                  "label" => middle_retained.url,
+                  "pageviews" => 1,
+                },
+              ],
+              "entry_urls" => [
+                {
+                  "value" => latest_retained.url,
+                  "label" => latest_retained.url,
+                  "pageviews" => 1,
+                },
+                {
+                  "value" => middle_retained.url,
+                  "label" => middle_retained.url,
+                  "pageviews" => 1,
+                },
+              ],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+              "countries" => [
+                { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+                { "value" => "US", "label" => "United States", "pageviews" => 1 },
+              ],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
+              ],
+              "browsers" => [
+                { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+                { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+              ],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
+          },
+        )
+      end
+    end
+
+    it "returns a service unavailable response when the traffic query times out" do
+      sign_in(admin)
+      DB.stubs(:query_hash).raises(ActiveRecord::QueryCanceled, "statement timeout")
+
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 503,
+        body: {
+          "error_type" => "traffic_query_timeout",
+        },
+      )
+    end
+
+    it "does not allow moderators to read traffic details" do
+      sign_in(moderator)
+
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
+      )
+    end
+
+    it "does not allow regular users to read traffic details" do
+      sign_in(user)
+
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
+      )
+    end
+
+    it "does not allow anonymous users to read traffic details" do
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
+      )
+    end
+
+    it "does not allow access while dashboard improvements are disabled" do
+      sign_in(admin)
+      SiteSetting.dashboard_improvements = false
+
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
+      )
     end
   end
 
