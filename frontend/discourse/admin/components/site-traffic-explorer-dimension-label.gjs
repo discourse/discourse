@@ -30,7 +30,9 @@ export default class SiteTrafficExplorerDimensionLabel extends Component {
       {{else if (eq @dimension "browsers")}}
         {{dIcon (this.browserIcon @row.value)}}
       {{/if}}
-      <span class="site-traffic-explorer__dimension-text">{{@row.label}}</span>
+      <span class="site-traffic-explorer__dimension-text" title={{@row.label}}>
+        {{@row.label}}
+      </span>
     </span>
   </template>
 }

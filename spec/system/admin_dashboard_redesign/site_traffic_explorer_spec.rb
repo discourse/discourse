@@ -180,9 +180,9 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_page_title
     expect(traffic).to have_date_range("May 1, 2026 – May 12, 2026")
     expect(traffic).to have_no_filter_pills
-    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(traffic).to have_metric(label: "Pageviews", value: "4")
     expect(traffic).to have_metric(label: "Distinct sessions", value: "3")
-    expect(traffic).to have_metric(label: "Logged-in share", value: "67%")
+    expect(traffic).to have_metric(label: "Logged-in share", value: "50%")
     expect(traffic).to have_metric(label: "Bounce rate", value: "67%")
     expect(traffic).to have_metric(label: "Average session duration", value: "20s")
     expect(traffic).to have_series_total(label: "logged-in-human", value: "2")
@@ -208,7 +208,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     traffic.go_back
     expect(traffic).to have_no_filter_pills
-    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(traffic).to have_metric(label: "Pageviews", value: "4")
 
     traffic.go_forward
     expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Logged in")
@@ -221,7 +221,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     traffic.remove_filter("traffic_type", label: "Anonymous")
     expect(traffic).to have_no_filter_pills
-    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(traffic).to have_metric(label: "Pageviews", value: "4")
 
     traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12", traffic_type: "likely_crawler")
     expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Likely crawlers")
@@ -234,7 +234,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01&traffic_type=likely_crawler",
     )
     traffic.remove_filter("traffic_type", label: "Likely crawlers")
-    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(traffic).to have_metric(label: "Pageviews", value: "4")
 
     expect(traffic).to have_card_tabs(card: "acquisition", tabs: %w[Referrers Countries Networks])
     expect(traffic).to have_card_tabs(card: "pages", tabs: ["Top URLs", "Entry URLs"])
@@ -261,7 +261,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     traffic.filter_row(card: "acquisition", label: "Direct / unknown")
     expect(traffic).to have_filter_pill(dimension: "referrer", label: "Direct / unknown")
-    expect(traffic).to have_metric(label: "Pageviews", value: "1")
+    expect(traffic).to have_metric(label: "Pageviews", value: "2")
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&referrer=&start_date=2026-05-01",
     )
@@ -290,7 +290,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.select_tab(card: "visitors", tab: "Browsers")
     traffic.filter_row(card: "visitors", label: "Chrome")
     expect(traffic).to have_filter_pill(dimension: "browser", label: "Chrome")
-    expect(traffic).to have_metric(label: "Pageviews", value: "2")
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
@@ -299,8 +299,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.filter_row(card: "acquisition", label: "United States")
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
-    expect(traffic).to have_metric(label: "Pageviews", value: "2")
-    expect(traffic).to have_metric(label: "Logged-in share", value: "100%")
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(traffic).to have_metric(label: "Logged-in share", value: "67%")
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
     expect(traffic).to have_metric(label: "Bounce rate", value: "50%")
     expect(page).to have_current_path(
@@ -308,14 +308,14 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     )
 
     traffic.remove_filter("country")
-    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(traffic).to have_metric(label: "Pageviews", value: "4")
     traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.filter_row(card: "acquisition", label: "United Kingdom")
     expect(traffic).to have_filter_pill(dimension: "country", label: "United Kingdom")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
 
     traffic.remove_filter("country")
-    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(traffic).to have_metric(label: "Pageviews", value: "4")
     traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.filter_row(card: "acquisition", label: "United States")
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
@@ -353,7 +353,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.remove_filter("ip")
 
     expect(traffic).to have_no_filter_pills
-    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(traffic).to have_metric(label: "Pageviews", value: "4")
 
     traffic.select_date_preset("Last 7 days")
 

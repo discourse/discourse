@@ -108,7 +108,11 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
     }
 
     if (["top_urls", "entry_urls"].includes(this.activeTab.dimension)) {
-      return { href: getURL(row.value) };
+      return {
+        href: getURL(row.value),
+        rel: "noopener noreferrer",
+        target: "_blank",
+      };
     }
 
     return null;
@@ -177,7 +181,6 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                       href={{rowLink.href}}
                       rel={{rowLink.rel}}
                       target={{rowLink.target}}
-                      title={{row.label}}
                       class="site-traffic-explorer__row-link"
                     >
                       <SiteTrafficExplorerDimensionLabel
