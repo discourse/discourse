@@ -9,6 +9,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import RovingFocusListboxExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/listbox";
 import RovingFocusRadioGroupExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/radio-group";
+import RovingFocusRemovableTagsExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/removable-tags";
 import RovingFocusToolbarExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/toolbar";
 import RovingFocusTreeExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/roving-focus/tree";
 
@@ -333,6 +334,70 @@ module(
           "true",
           "and the choice came with it, which is what this pattern expects"
         );
+    });
+  }
+);
+
+module(
+  "Integration | Component | roving-focus examples | removable tags",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("removing the focused tag hands the cursor to the next one", async function (assert) {
+      await render(<template><RovingFocusRemovableTagsExample /></template>);
+
+      const tags = findAll(".roving-demo__tag");
+      assert.strictEqual(tags.length, 4, "four to begin with");
+
+      tags[1].focus();
+      await click(tags[1]);
+
+      assert.strictEqual(
+        findAll(".roving-demo__tag").length,
+        3,
+        "the tag is gone"
+      );
+      assert
+        .dom(document.activeElement)
+        .hasText(
+          "Release",
+          "focus followed to what took its place rather than falling to the page"
+        );
+    });
+
+    test("removing the last tag hands the cursor backwards", async function (assert) {
+      await render(<template><RovingFocusRemovableTagsExample /></template>);
+
+      const tags = findAll(".roving-demo__tag");
+      const last = tags[tags.length - 1];
+      last.focus();
+      await click(last);
+
+      assert
+        .dom(document.activeElement)
+        .hasText(
+          "Release",
+          "there is nothing after it, so the item before takes the cursor"
+        );
+    });
+
+    test("emptying the group leaves focus alone rather than guessing", async function (assert) {
+      await render(<template><RovingFocusRemovableTagsExample /></template>);
+
+      for (let i = 0; i < 4; i++) {
+        const remaining = findAll(".roving-demo__tag");
+        remaining[0].focus();
+        await click(remaining[0]);
+      }
+
+      assert.strictEqual(
+        findAll(".roving-demo__tag").length,
+        0,
+        "every tag is gone"
+      );
+      assert
+        .dom(".roving-demo__reset")
+        .exists("and the group offers a way back");
     });
   }
 );

@@ -480,6 +480,14 @@
     }
   }
 
+  &__tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    min-height: 2.5em;
+    align-items: center;
+  }
+
   &__listbox {
     margin: 0;
     padding: 0.5em;

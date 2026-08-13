@@ -275,6 +275,12 @@ interface DRovingFocusArgs {
    * removal keeps it. When the group empties entirely nothing happens: where focus should go
    * with no items left is the consumer's decision.
    *
+   * **Depends on the modifier being told the items changed.** Reconciliation runs from
+   * `modify()`, which re-runs only when a named argument does, so a group whose items come from
+   * state this cannot observe must pass {@link DRovingFocusArgs.itemsKey}. Without it there is
+   * no failure to see: focus simply falls to `body` as though this were off. Defaulting to
+   * `true` does not make it independent of that contract.
+   *
    * Turn it off to place focus yourself, e.g. onto a control outside the group.
    */
   restoreLostFocus?: boolean;
