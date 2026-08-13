@@ -26,9 +26,15 @@ export default class SiteTrafficExplorerDimensionLabel extends Component {
   <template>
     <span class="site-traffic-explorer__dimension-label">
       {{#if (eq @dimension "countries")}}
-        <span aria-hidden="true">{{this.countryFlag @row.value}}</span>
+        <span
+          class="site-traffic-explorer__dimension-prefix"
+          aria-hidden="true"
+        >{{this.countryFlag @row.value}}</span>
       {{else if (eq @dimension "browsers")}}
-        {{dIcon (this.browserIcon @row.value)}}
+        {{dIcon
+          (this.browserIcon @row.value)
+          class="site-traffic-explorer__dimension-prefix"
+        }}
       {{/if}}
       <span class="site-traffic-explorer__dimension-text" title={{@row.label}}>
         {{@row.label}}
