@@ -9,10 +9,15 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+import {
+  formatDuration,
+  isRunning,
+} from "../../../lib/workflows/execution-progress";
 import AdminTable from "../admin-table";
 import EmptyState from "../empty-state";
 
 const STATUS_ICONS = {
+  pending: "clock",
   success: "circle-check",
   error: "circle-xmark",
   waiting: "clock",
@@ -29,25 +34,18 @@ function formatTime(timestamp) {
   return new Date(timestamp).toLocaleString();
 }
 
-function isRunning(execution) {
-  return ["pending", "running"].includes(execution.status);
-}
-
-function isLive(execution) {
-  return isRunning(execution) || execution.status === "waiting";
-}
-
 function runTime(execution, currentTime) {
-  if (isRunning(execution) && execution.started_at) {
-    const ms = Math.max(0, currentTime - new Date(execution.started_at));
-    return `${Math.floor(ms / 1000).toFixed(1)}s`;
+  if (isRunning(execution)) {
+    return formatDuration(execution.started_at, null, currentTime);
   }
 
-  const ms = execution.run_time_ms;
-  if (ms == null) {
+  const milliseconds = execution.run_time_ms;
+  if (milliseconds == null) {
     return "—";
   }
-  return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
+  return milliseconds < 1000
+    ? `${milliseconds}ms`
+    : `${(milliseconds / 1000).toFixed(1)}s`;
 }
 
 export default class ExecutionsManager extends Component {
@@ -62,7 +60,14 @@ export default class ExecutionsManager extends Component {
   @tracked bulkMode = false;
   @tracked currentTime = Date.now();
 
-  #subscriptions = new Map();
+  #channel = "/discourse-workflows/executions";
+  #lastMessageId = 0;
+  #loadMoreToken = 0;
+  #loading = false;
+  #messageHandler;
+  #refreshRetryCount = 0;
+  #refreshRetryTimer;
+  #subscribed = false;
   #timer;
 
   constructor() {
@@ -72,14 +77,20 @@ export default class ExecutionsManager extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    for (const { channel, handler } of this.#subscriptions.values()) {
-      this.messageBus.unsubscribe(channel, handler);
-    }
-    this.#subscriptions.clear();
+    this.#unsubscribe();
     this.#stopTimer();
+    this.#clearRefreshRetry();
   }
 
   async loadExecutions() {
+    if (this.#loading) {
+      return;
+    }
+
+    this.#loading = true;
+    this.#loadMoreToken++;
+    this.#unsubscribe();
+
     try {
       const url = this.args.workflowId
         ? `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/executions.json`
@@ -91,70 +102,123 @@ export default class ExecutionsManager extends Component {
 
       this.executions = result.executions;
       this.loadMoreUrl = result.meta?.load_more_executions;
-      this.#syncLiveExecutions();
-    } catch (e) {
+      this.#lastMessageId = result.meta?.message_bus_last_id ?? 0;
+      this.#refreshRetryCount = 0;
+      this.#clearRefreshRetry();
+      this.#subscribe();
+      this.#syncTimer();
+    } catch (error) {
       if (!this.isDestroying && !this.isDestroyed) {
-        popupAjaxError(e);
+        this.#scheduleRefreshRetry(error);
       }
+    } finally {
+      this.#loading = false;
     }
   }
 
-  #syncLiveExecutions() {
-    const liveIds = new Set(
-      (this.executions || []).filter(isLive).map((execution) => execution.id)
+  #scheduleRefreshRetry(error) {
+    if (this.#refreshRetryTimer) {
+      return;
+    }
+
+    if (this.#refreshRetryCount >= 3) {
+      this.#subscribe();
+      this.#syncTimer();
+      popupAjaxError(error);
+      return;
+    }
+
+    this.#refreshRetryCount++;
+    this.#refreshRetryTimer = window.setTimeout(() => {
+      this.#refreshRetryTimer = null;
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.loadExecutions();
+      }
+    }, 2000 * this.#refreshRetryCount);
+  }
+
+  #clearRefreshRetry() {
+    if (this.#refreshRetryTimer) {
+      window.clearTimeout(this.#refreshRetryTimer);
+      this.#refreshRetryTimer = null;
+    }
+  }
+
+  #subscribe() {
+    if (this.#subscribed) {
+      return;
+    }
+
+    this.#messageHandler = (message, _globalId, messageId) =>
+      this.#handleProgress(message, messageId);
+    this.messageBus.subscribe(
+      this.#channel,
+      this.#messageHandler,
+      this.#lastMessageId
     );
-
-    for (const [executionId, subscription] of this.#subscriptions) {
-      if (!liveIds.has(executionId)) {
-        this.messageBus.unsubscribe(subscription.channel, subscription.handler);
-        this.#subscriptions.delete(executionId);
-      }
-    }
-
-    for (const executionId of liveIds) {
-      if (this.#subscriptions.has(executionId)) {
-        continue;
-      }
-
-      const channel = `/discourse-workflows/execution/${executionId}`;
-      const handler = (message) => this.#handleProgress(executionId, message);
-      this.#subscriptions.set(executionId, { channel, handler });
-      this.messageBus.subscribe(channel, handler, 0);
-    }
-
-    if ((this.executions || []).some(isRunning)) {
-      this.#startTimer();
-    } else {
-      this.#stopTimer();
-    }
+    this.#subscribed = true;
   }
 
-  #handleProgress(executionId, message) {
+  #unsubscribe() {
+    if (!this.#subscribed) {
+      return;
+    }
+
+    this.messageBus.unsubscribe(this.#channel, this.#messageHandler);
+    this.#messageHandler = null;
+    this.#subscribed = false;
+  }
+
+  #handleProgress(message, messageId) {
+    if (messageId !== this.#lastMessageId + 1) {
+      this.loadExecutions();
+      return;
+    }
+    this.#lastMessageId = messageId;
+    this.#refreshRetryCount = 0;
+    this.#clearRefreshRetry();
+
+    if (!this.executions) {
+      this.loadExecutions();
+      return;
+    }
+
     if (
-      message.type !== "execution_progress" ||
-      message.execution?.id !== executionId
+      !["execution_created", "execution_update"].includes(message.type) ||
+      !message.execution
+    ) {
+      return;
+    }
+
+    const update = message.execution;
+    if (
+      this.args.workflowId &&
+      update.workflow_id !== Number(this.args.workflowId)
     ) {
       return;
     }
 
     const current = this.executions.find(
-      (execution) => execution.id === executionId
+      (execution) => execution.id === update.id
     );
-    if (
-      !current ||
-      !Object.entries(message.execution).some(
-        ([key, value]) => (current[key] ?? null) !== (value ?? null)
-      )
-    ) {
-      return;
+    if (current) {
+      this.executions = this.executions.map((execution) =>
+        execution.id === update.id ? { ...execution, ...update } : execution
+      );
+    } else if (message.type === "execution_created") {
+      this.executions = [...this.executions, update].sort(
+        (left, right) => right.id - left.id
+      );
     }
+    this.#syncTimer();
+  }
 
-    this.executions = this.executions.map((execution) =>
-      execution.id === executionId
-        ? { ...execution, ...message.execution }
-        : execution
-    );
-    this.#syncLiveExecutions();
+  #syncTimer() {
+    if ((this.executions || []).some(isRunning)) {
+      this.#startTimer();
+    } else {
+      this.#stopTimer();
+    }
   }
 
   #startTimer() {
@@ -182,15 +246,28 @@ export default class ExecutionsManager extends Component {
     }
 
     this.loadingMore = true;
+    const loadMoreToken = ++this.#loadMoreToken;
     try {
       const result = await ajax(this.loadMoreUrl);
-      if (this.isDestroying || this.isDestroyed) {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        loadMoreToken !== this.#loadMoreToken
+      ) {
         return;
       }
 
-      this.executions = [...this.executions, ...result.executions];
+      const existingIds = new Set(
+        this.executions.map((execution) => execution.id)
+      );
+      this.executions = [
+        ...this.executions,
+        ...result.executions.filter(
+          (execution) => !existingIds.has(execution.id)
+        ),
+      ];
       this.loadMoreUrl = result.meta?.load_more_executions;
-      this.#syncLiveExecutions();
+      this.#syncTimer();
     } catch (e) {
       if (!this.isDestroying && !this.isDestroyed) {
         popupAjaxError(e);

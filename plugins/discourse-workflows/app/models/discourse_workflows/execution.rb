@@ -53,6 +53,8 @@ module DiscourseWorkflows
             workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
           )
         end
+      end.tap do |execution|
+        ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
       end
     end
 
@@ -80,6 +82,8 @@ module DiscourseWorkflows
             },
           )
         end
+      end.tap do |execution|
+        ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
       end
     end
 
@@ -114,6 +118,7 @@ module DiscourseWorkflows
 
       execution.status = :running
       execution.updated_at = now
+      ExecutionProgressPublisher.publish(execution)
       execution
     end
 
@@ -130,6 +135,7 @@ module DiscourseWorkflows
       execution.status = :running
       execution.started_at = now
       execution.updated_at = now
+      ExecutionProgressPublisher.publish(execution)
       execution
     end
 

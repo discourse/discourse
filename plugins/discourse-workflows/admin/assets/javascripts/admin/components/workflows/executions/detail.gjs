@@ -6,11 +6,18 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+import {
+  formatDuration,
+  isLive,
+  isPending,
+  isRunning,
+} from "../../../lib/workflows/execution-progress";
 import {
   localeKeyPart,
   propertyOptionLabel,
@@ -115,18 +122,6 @@ function itemCount(data) {
   return Array.isArray(data) && data.length > 1 && data.every((i) => i?.json)
     ? data.length
     : null;
-}
-
-function formatDuration(startedAt, finishedAt, currentTime) {
-  if (!startedAt || (!finishedAt && !currentTime)) {
-    return "—";
-  }
-  const end = finishedAt ? new Date(finishedAt) : currentTime;
-  const ms = Math.max(0, end - new Date(startedAt));
-  if (!finishedAt && currentTime) {
-    return `${Math.floor(ms / 1000).toFixed(1)}s`;
-  }
-  return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
 }
 
 function stepDuration(step, currentTime) {
@@ -241,6 +236,8 @@ export default class ExecutionDetail extends Component {
 
   #channel;
 
+  #lastMessageId = 0;
+
   #messageHandler;
 
   #timer;
@@ -249,6 +246,10 @@ export default class ExecutionDetail extends Component {
 
   #refreshRequested = false;
 
+  #refreshRetryCount = 0;
+
+  #refreshRetryTimer;
+
   #refreshToken = 0;
 
   willDestroy() {
@@ -256,6 +257,7 @@ export default class ExecutionDetail extends Component {
     this.#refreshToken++;
     this.#unsubscribe();
     this.#stopTimer();
+    this.#clearRefreshRetry();
   }
 
   get execution() {
@@ -268,16 +270,25 @@ export default class ExecutionDetail extends Component {
     this.liveExecution = value;
   }
 
+  get isPending() {
+    return isPending(this.execution);
+  }
+
   get isRunning() {
-    return ["pending", "running"].includes(this.execution.status);
+    return isRunning(this.execution);
+  }
+
+  get isActive() {
+    return this.isPending || this.isRunning;
   }
 
   get isLive() {
-    return this.isRunning || this.execution.status === "waiting";
+    return isLive(this.execution);
   }
 
   @action
   async initialize() {
+    this.#lastMessageId = this.execution.message_bus_last_id ?? 0;
     this.#syncLiveUpdates();
     await this.workflowsNodeTypes.load();
   }
@@ -287,7 +298,10 @@ export default class ExecutionDetail extends Component {
     this.#refreshToken++;
     this.#refreshing = false;
     this.#refreshRequested = false;
+    this.#refreshRetryCount = 0;
+    this.#clearRefreshRetry();
     this.liveExecution = null;
+    this.#lastMessageId = this.execution.message_bus_last_id ?? 0;
     this.#unsubscribe();
     this.#syncLiveUpdates();
   }
@@ -295,8 +309,13 @@ export default class ExecutionDetail extends Component {
   #syncLiveUpdates() {
     if (this.isLive && !this.#channel) {
       this.#channel = `/discourse-workflows/execution/${this.execution.id}`;
-      this.#messageHandler = (message) => this.#handleProgress(message);
-      this.messageBus.subscribe(this.#channel, this.#messageHandler, 0);
+      this.#messageHandler = (message, _globalId, messageId) =>
+        this.#handleProgress(message, messageId);
+      this.messageBus.subscribe(
+        this.#channel,
+        this.#messageHandler,
+        this.#lastMessageId
+      );
     } else if (!this.isLive) {
       this.#unsubscribe();
     }
@@ -308,7 +327,15 @@ export default class ExecutionDetail extends Component {
     }
   }
 
-  #handleProgress(message) {
+  #handleProgress(message, messageId) {
+    if (messageId !== this.#lastMessageId + 1) {
+      this.#resyncExecution();
+      return;
+    }
+    this.#lastMessageId = messageId;
+    this.#refreshRetryCount = 0;
+    this.#clearRefreshRetry();
+
     if (
       message.type !== "execution_progress" ||
       message.execution?.id !== this.execution.id
@@ -316,7 +343,7 @@ export default class ExecutionDetail extends Component {
       return;
     }
 
-    if (this.#refreshing) {
+    if (this.#refreshing && message.refresh) {
       this.#refreshRequested = true;
     }
 
@@ -337,11 +364,17 @@ export default class ExecutionDetail extends Component {
       ...message.execution,
       steps,
     };
-    this.#syncLiveUpdates();
 
     if (message.refresh) {
       this.#refreshExecution();
+    } else {
+      this.#syncLiveUpdates();
     }
+  }
+
+  #resyncExecution() {
+    this.#unsubscribe();
+    this.#refreshExecution();
   }
 
   async #refreshExecution() {
@@ -366,10 +399,22 @@ export default class ExecutionDetail extends Component {
         return;
       }
 
-      this.execution = result.execution;
+      this.execution = {
+        ...result.execution,
+        message_bus_last_id: result.meta?.message_bus_last_id ?? 0,
+      };
+      this.#lastMessageId = this.execution.message_bus_last_id;
+      this.#refreshRetryCount = 0;
+      this.#clearRefreshRetry();
       this.#syncLiveUpdates();
-    } catch {
-      // Keep the latest MessageBus state when an authoritative refresh fails.
+    } catch (error) {
+      if (
+        !this.isDestroying &&
+        !this.isDestroyed &&
+        refreshToken === this.#refreshToken
+      ) {
+        this.#scheduleRefreshRetry(error);
+      }
     } finally {
       if (refreshToken === this.#refreshToken) {
         this.#refreshing = false;
@@ -378,6 +423,33 @@ export default class ExecutionDetail extends Component {
           this.#refreshExecution();
         }
       }
+    }
+  }
+
+  #scheduleRefreshRetry(error) {
+    if (this.#refreshRetryTimer) {
+      return;
+    }
+
+    if (this.#refreshRetryCount >= 3) {
+      this.#syncLiveUpdates();
+      popupAjaxError(error);
+      return;
+    }
+
+    this.#refreshRetryCount++;
+    this.#refreshRetryTimer = window.setTimeout(() => {
+      this.#refreshRetryTimer = null;
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.#refreshExecution();
+      }
+    }, 2000 * this.#refreshRetryCount);
+  }
+
+  #clearRefreshRetry() {
+    if (this.#refreshRetryTimer) {
+      window.clearTimeout(this.#refreshRetryTimer);
+      this.#refreshRetryTimer = null;
     }
   }
 
@@ -495,9 +567,13 @@ export default class ExecutionDetail extends Component {
       {{didInsert this.initialize}}
       {{didUpdate this.executionChanged @execution}}
     >
-      {{#if this.isRunning}}
+      {{#if this.isActive}}
         <div class="workflows-execution-detail__progress">
-          {{dLoadingSpinner size="small"}}
+          {{#if this.isRunning}}
+            {{dLoadingSpinner size="small"}}
+          {{else}}
+            {{dIcon "clock"}}
+          {{/if}}
           <span class="workflows-execution-detail__progress-label">
             {{i18n
               (concat

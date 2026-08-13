@@ -25,12 +25,18 @@ module DiscourseWorkflows
     end
 
     def index
+      message_bus_last_id =
+        MessageBus.last_id(DiscourseWorkflows::ExecutionProgressPublisher::EXECUTIONS_CHANNEL)
+
       DiscourseWorkflows::Execution::List.call(service_params) do |result|
         on_success do |executions:, load_more_url:|
           render json: {
                    executions:
                      serialize_data(executions, DiscourseWorkflows::ExecutionListSerializer),
-                   meta: { load_more_executions: load_more_url }.compact,
+                   meta: {
+                     load_more_executions: load_more_url,
+                     message_bus_last_id: message_bus_last_id,
+                   }.compact,
                  }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
@@ -49,11 +55,20 @@ module DiscourseWorkflows
     end
 
     def show
+      channel = DiscourseWorkflows::ExecutionProgressPublisher.execution_channel(params[:id])
+      message_bus_last_id = MessageBus.last_id(channel)
+
       DiscourseWorkflows::Execution::Show.call(
         service_params.deep_merge(params: { execution_id: params[:id] }),
       ) do |result|
         on_success do |execution:|
-          render_serialized(execution, DiscourseWorkflows::ExecutionSerializer, root: "execution")
+          render json: {
+                   execution:
+                     serialize_data(execution, DiscourseWorkflows::ExecutionSerializer)[:execution],
+                   meta: {
+                     message_bus_last_id: message_bus_last_id,
+                   },
+                 }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:execution) { raise Discourse::NotFound }

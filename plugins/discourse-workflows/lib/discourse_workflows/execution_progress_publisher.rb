@@ -2,6 +2,7 @@
 
 module DiscourseWorkflows
   class ExecutionProgressPublisher
+    EXECUTIONS_CHANNEL = "/discourse-workflows/executions"
     MAX_BACKLOG_AGE = 1.hour.to_i
     MAX_BACKLOG_SIZE = 100
 
@@ -16,28 +17,78 @@ module DiscourseWorkflows
       finished_at
     ].freeze
 
+    def self.execution_channel(execution_id)
+      "/discourse-workflows/execution/#{execution_id}"
+    end
+
+    def self.publish_created(execution, workflow_name:)
+      MessageBus.publish(
+        EXECUTIONS_CHANNEL,
+        {
+          type: "execution_created",
+          execution: execution_summary(execution, workflow_name: workflow_name),
+        },
+        **publish_options,
+      )
+    end
+
     def self.publish(execution, step: nil, refresh: false)
       payload = {
         type: "execution_progress",
-        execution: {
-          id: execution.id,
-          status: execution.status,
-          error: execution.error,
-          run_time_ms: execution.run_time_ms,
-          started_at: execution.started_at,
-          finished_at: execution.finished_at,
-        },
+        execution: execution_progress(execution),
         refresh: refresh,
       }
       payload[:step] = step.to_h.slice(*STEP_FIELDS).merge("error" => step.error) if step
 
+      MessageBus.publish(execution_channel(execution.id), payload, **publish_options)
+      publish_list_update(execution) unless step
+    end
+
+    def self.publish_list_update(execution)
       MessageBus.publish(
-        "/discourse-workflows/execution/#{execution.id}",
-        payload,
+        EXECUTIONS_CHANNEL,
+        {
+          type: "execution_update",
+          execution: execution_summary(execution).except(:workflow_name),
+        },
+        **publish_options,
+      )
+    end
+
+    def self.execution_progress(execution)
+      {
+        id: execution.id,
+        status: execution.status,
+        error: execution.error,
+        run_time_ms: execution.run_time_ms,
+        started_at: execution.started_at,
+        finished_at: execution.finished_at,
+      }
+    end
+    private_class_method :execution_progress
+
+    def self.execution_summary(execution, workflow_name: nil)
+      {
+        id: execution.id,
+        workflow_id: execution.workflow_id,
+        workflow_name: workflow_name,
+        status: execution.status,
+        error: execution.error,
+        run_time_ms: execution.run_time_ms,
+        started_at: execution.started_at,
+        finished_at: execution.finished_at,
+        created_at: execution.created_at,
+      }
+    end
+    private_class_method :execution_summary
+
+    def self.publish_options
+      {
         group_ids: [Group::AUTO_GROUPS[:admins]],
         max_backlog_age: MAX_BACKLOG_AGE,
         max_backlog_size: MAX_BACKLOG_SIZE,
-      )
+      }
     end
+    private_class_method :publish_options
   end
 end

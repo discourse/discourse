@@ -113,9 +113,10 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
 
       json = response.parsed_body
       expect(json["executions"].map { |execution| execution["id"] }).to eq([execution_2.id])
-      expect(json["meta"]).to eq(
+      expect(json["meta"]).to include(
         "load_more_executions" =>
           "/admin/plugins/discourse-workflows/executions.json?cursor=#{execution_2.id}&limit=1",
+        "message_bus_last_id" => be_a(Integer),
       )
     end
   end
@@ -185,6 +186,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       expect(json["execution"]["id"]).to eq(execution.id)
       expect(json["execution"]["workflow_name"]).to eq(workflow.name)
       expect(json["execution"]["steps"].length).to eq(1)
+      expect(json.dig("meta", "message_bus_last_id")).to be_a(Integer)
     end
 
     it "returns caller workflow data for child executions" do

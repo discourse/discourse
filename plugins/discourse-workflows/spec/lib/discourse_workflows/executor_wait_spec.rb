@@ -245,10 +245,11 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(execution.status).to eq("waiting")
 
       response_items = [{ "json" => { "approved" => true } }]
-      claimed = DiscourseWorkflows::Execution.claim_for_resume(execution)
+      claimed = nil
       resumed = nil
       messages =
         MessageBus.track_publish("/discourse-workflows/execution/#{execution.id}") do
+          claimed = DiscourseWorkflows::Execution.claim_for_resume(execution)
           resumed = DiscourseWorkflows::Executor.resume(claimed, response_items)
         end
 

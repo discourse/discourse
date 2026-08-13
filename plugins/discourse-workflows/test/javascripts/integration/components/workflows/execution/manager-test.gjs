@@ -3,6 +3,7 @@ import { render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import ExecutionsManager from "discourse/plugins/discourse-workflows/admin/components/workflows/execution/manager";
 
 class MessageBusStub extends Service {
@@ -16,8 +17,8 @@ class MessageBusStub extends Service {
     this.subscriptions.delete(channel);
   }
 
-  publish(channel, message) {
-    this.subscriptions.get(channel)?.handler(message);
+  publish(channel, message, messageId) {
+    this.subscriptions.get(channel)?.handler(message, null, messageId);
   }
 }
 
@@ -29,13 +30,16 @@ module(
     hooks.beforeEach(function () {
       this.owner.unregister("service:message-bus");
       this.owner.register("service:message-bus", MessageBusStub);
-      this.startedAt = new Date(Date.now() - 2000).toISOString();
+      this.clock = fakeTime("2026-08-13T05:00:02Z", "UTC", true);
       this.executionStatus = "running";
+      this.requestCount = 0;
+      this.messageBusLastId = 40;
 
       pretender.get(
         "/admin/plugins/discourse-workflows/workflows/30/executions.json",
-        () =>
-          response(200, {
+        () => {
+          this.requestCount++;
+          return response(200, {
             executions: [
               {
                 id: 11473,
@@ -43,117 +47,165 @@ module(
                 workflow_name: "Running workflow",
                 status: this.executionStatus,
                 run_time_ms: null,
-                started_at: this.startedAt,
+                started_at: "2026-08-13T05:00:00Z",
                 finished_at: null,
               },
             ],
-            meta: {},
-          })
+            meta: { message_bus_last_id: this.messageBusLastId },
+          });
+        }
       );
     });
 
-    test("shows and updates live execution progress", async function (assert) {
+    hooks.afterEach(function () {
+      this.clock.restore();
+    });
+
+    test("uses one aggregate subscription for lifecycle updates", async function (assert) {
       await render(
         <template><ExecutionsManager @workflowId={{30}} /></template>
       );
       await waitFor(".workflows-executions-manager__status");
 
       const messageBus = this.owner.lookup("service:message-bus");
-      const subscription = messageBus.subscriptions.get(
-        "/discourse-workflows/execution/11473"
-      );
-
+      const channel = "/discourse-workflows/executions";
       assert.strictEqual(
-        subscription.lastId,
-        0,
-        "progress emitted before the list loaded is replayed"
+        messageBus.subscriptions.get(channel).lastId,
+        40,
+        "the subscription continues from the list response cursor"
+      );
+      assert.strictEqual(
+        messageBus.subscriptions.size,
+        1,
+        "the list has one subscription regardless of live execution count"
       );
       assert
         .dom(".workflows-executions-manager__status .spinner")
         .exists("running rows use an animated spinner");
       assert
         .dom(".workflows-executions-manager__run-time")
-        .containsText("2.0s", "running rows show whole-second elapsed time");
+        .containsText("2.0s", "running rows show deterministic elapsed time");
 
-      messageBus.publish("/discourse-workflows/execution/11473", {
-        type: "execution_progress",
-        execution: {
-          id: 11473,
-          status: "success",
-          run_time_ms: 3456,
-          finished_at: new Date().toISOString(),
+      messageBus.publish(
+        channel,
+        {
+          type: "execution_update",
+          execution: {
+            id: 11473,
+            workflow_id: 30,
+            status: "success",
+            run_time_ms: 3456,
+            finished_at: "2026-08-13T05:00:02Z",
+          },
         },
-        refresh: true,
-      });
+        41
+      );
       await settled();
 
       assert
         .dom(".workflows-executions-manager__status")
         .hasText("Completed", "the terminal status updates without reloading");
       assert
-        .dom(".workflows-executions-manager__status .d-icon-circle-check")
-        .exists("the terminal status icon replaces the spinner");
-      assert
         .dom(".workflows-executions-manager__run-time")
-        .containsText("3.5s", "the final run time comes from the server event");
-      assert.false(
-        messageBus.subscriptions.has("/discourse-workflows/execution/11473"),
-        "the completed execution is unsubscribed"
+        .containsText(
+          "3.5s",
+          "the final processing time comes from the server"
+        );
+      assert.true(
+        messageBus.subscriptions.has(channel),
+        "the aggregate subscription remains for future executions"
       );
     });
-    test("keeps waiting executions live through resume and completion", async function (assert) {
-      this.executionStatus = "waiting";
+
+    test("inserts newly created executions in id order and ignores unloaded updates", async function (assert) {
       await render(
         <template><ExecutionsManager @workflowId={{30}} /></template>
       );
       await waitFor(".workflows-executions-manager__status");
 
       const messageBus = this.owner.lookup("service:message-bus");
-      const channel = "/discourse-workflows/execution/11473";
-      assert.true(
-        messageBus.subscriptions.has(channel),
-        "the waiting execution remains subscribed"
+      const channel = "/discourse-workflows/executions";
+      messageBus.publish(
+        channel,
+        {
+          type: "execution_update",
+          execution: { id: 100, workflow_id: 30, status: "waiting" },
+        },
+        41
       );
-      assert
-        .dom(".workflows-executions-manager__status")
-        .hasText("Waiting", "the waiting status is shown");
-      assert
-        .dom(".workflows-executions-manager__status .spinner")
-        .doesNotExist("waiting does not look like active processing");
-
-      messageBus.publish(channel, {
-        type: "execution_progress",
-        execution: {
-          id: 11473,
-          status: "running",
-          started_at: this.startedAt,
+      messageBus.publish(
+        channel,
+        {
+          type: "execution_created",
+          execution: {
+            id: 12000,
+            workflow_id: 30,
+            workflow_name: "New workflow",
+            status: "pending",
+          },
         },
-        refresh: false,
-      });
-      await settled();
-
-      assert
-        .dom(".workflows-executions-manager__status .spinner")
-        .exists("the spinner returns when execution resumes");
-
-      messageBus.publish(channel, {
-        type: "execution_progress",
-        execution: {
-          id: 11473,
-          status: "success",
-          run_time_ms: 4200,
-          finished_at: new Date().toISOString(),
-        },
-        refresh: true,
-      });
+        42
+      );
       await settled();
 
       assert
         .dom(".workflows-executions-manager__status")
-        .hasText("Completed", "the resumed execution completes live");
-      assert.false(
-        messageBus.subscriptions.has(channel),
-        "the terminal execution is unsubscribed"
+        .exists(
+          { count: 2 },
+          "only created executions are added to the loaded page"
+        );
+      assert
+        .dom(".d-table__row:first-child .workflows-executions-manager__status")
+        .hasText("Pending", "the newer execution is placed first");
+    });
+
+    test("distinguishes queued executions from active processing", async function (assert) {
+      this.executionStatus = "pending";
+
+      await render(
+        <template><ExecutionsManager @workflowId={{30}} /></template>
+      );
+      await waitFor(".workflows-executions-manager__status");
+
+      assert
+        .dom(".workflows-executions-manager__status")
+        .hasText("Pending", "the queued state is shown");
+      assert
+        .dom(".workflows-executions-manager__status .spinner")
+        .doesNotExist("queued work does not look like active processing");
+      assert
+        .dom(".workflows-executions-manager__run-time")
+        .containsText("—", "queued work has no elapsed processing time");
+    });
+
+    test("reloads authoritative data when aggregate messages have a gap", async function (assert) {
+      await render(
+        <template><ExecutionsManager @workflowId={{30}} /></template>
+      );
+      await waitFor(".workflows-executions-manager__status");
+
+      this.executionStatus = "success";
+      this.messageBusLastId = 45;
+      this.owner.lookup("service:message-bus").publish(
+        "/discourse-workflows/executions",
+        {
+          type: "execution_update",
+          execution: { id: 11473, workflow_id: 30, status: "running" },
+        },
+        44
+      );
+      await settled();
+
+      assert.strictEqual(this.requestCount, 2, "the list is fetched again");
+      assert
+        .dom(".workflows-executions-manager__status")
+        .hasText("Completed", "the response replaces the skipped event state");
+      assert.strictEqual(
+        this.owner
+          .lookup("service:message-bus")
+          .subscriptions.get("/discourse-workflows/executions").lastId,
+        45,
+        "the replacement subscription uses the refreshed cursor"
       );
     });
   }

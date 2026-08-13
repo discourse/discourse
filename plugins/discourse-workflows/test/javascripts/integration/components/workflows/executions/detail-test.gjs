@@ -1,9 +1,9 @@
 import Service from "@ember/service";
-import { click, render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import ExecutionDetail from "discourse/plugins/discourse-workflows/admin/components/workflows/executions/detail";
 
 let transitions;
@@ -48,23 +48,43 @@ function executionWithOutput(output) {
   };
 }
 
+class MessageBusStub extends Service {
+  subscriptions = new Map();
+
+  subscribe(channel, handler, lastId) {
+    this.subscriptions.set(channel, { handler, lastId });
+  }
+
+  unsubscribe(channel) {
+    this.subscriptions.delete(channel);
+  }
+
+  publish(channel, message, messageId) {
+    this.subscriptions.get(channel)?.handler(message, null, messageId);
+  }
+}
+
 class ReplayMessageBusStub extends Service {
   subscribe(channel, handler, lastId) {
-    if (lastId === 0) {
-      handler({
-        type: "execution_progress",
-        execution: { id: 11474, status: "running" },
-        refresh: false,
-        step: {
-          node_id: "node-1",
-          node_name: "Already running",
-          node_type: "action:code",
-          position: 0,
-          status: "running",
-          started_at: new Date().toISOString(),
-          finished_at: null,
+    if (lastId === 40) {
+      handler(
+        {
+          type: "execution_progress",
+          execution: { id: 11474, status: "running" },
+          refresh: false,
+          step: {
+            node_id: "node-1",
+            node_name: "Already running",
+            node_type: "action:code",
+            position: 0,
+            status: "running",
+            started_at: new Date().toISOString(),
+            finished_at: null,
+          },
         },
-      });
+        null,
+        41
+      );
     }
   }
 
@@ -86,6 +106,13 @@ module(
         "service:workflows-node-types",
         WorkflowsNodeTypesStub
       );
+      this.owner.unregister("service:message-bus");
+      this.owner.register("service:message-bus", MessageBusStub);
+      this.clock = fakeTime("2026-08-13T05:00:02Z", "UTC", true);
+    });
+
+    hooks.afterEach(function () {
+      this.clock.restore();
     });
 
     test("explains when a successful node returns no output", async function (assert) {
@@ -240,6 +267,7 @@ module(
         workflow_id: 30,
         workflow_name: "Running workflow",
         status: "running",
+        message_bus_last_id: 40,
         started_at: new Date().toISOString(),
         finished_at: null,
         steps: [],
@@ -263,6 +291,7 @@ module(
         workflow_id: 30,
         workflow_name: "Running workflow",
         status: "running",
+        message_bus_last_id: 40,
         started_at: new Date(Date.now() - 2000).toISOString(),
         finished_at: null,
         steps: [],
@@ -288,17 +317,23 @@ module(
               },
             ],
           },
+          meta: { message_bus_last_id: 41 },
         })
       );
 
       await render(
         <template><ExecutionDetail @execution={{this.execution}} /></template>
       );
-      await publishToMessageBus("/discourse-workflows/execution/11475", {
-        type: "execution_progress",
-        execution: { id: 11475, status: "success", run_time_ms: 2500 },
-        refresh: true,
-      });
+      this.owner.lookup("service:message-bus").publish(
+        "/discourse-workflows/execution/11475",
+        {
+          type: "execution_progress",
+          execution: { id: 11475, status: "success", run_time_ms: 2500 },
+          refresh: true,
+        },
+        41
+      );
+      await settled();
 
       assert
         .dom(".workflows-execution-detail__step-name")
@@ -311,12 +346,84 @@ module(
         .doesNotExist("the running indicator is removed");
     });
 
+    test("replaces partial progress when a message gap is detected", async function (assert) {
+      this.execution = {
+        id: 11476,
+        workflow_id: 30,
+        workflow_name: "Running workflow",
+        status: "running",
+        message_bus_last_id: 40,
+        started_at: new Date(Date.now() - 2000).toISOString(),
+        finished_at: null,
+        steps: [],
+      };
+      pretender.get("/admin/plugins/discourse-workflows/executions/11476", () =>
+        response(200, {
+          execution: {
+            ...this.execution,
+            steps: [
+              {
+                node_id: "node-authoritative",
+                node_name: "Recovered step",
+                node_type: "action:code",
+                position: 0,
+                status: "success",
+                input: [],
+                output: [],
+                started_at: "2026-08-13T05:00:00Z",
+                finished_at: "2026-08-13T05:00:01Z",
+              },
+            ],
+          },
+          meta: { message_bus_last_id: 45 },
+        })
+      );
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+      this.owner.lookup("service:message-bus").publish(
+        "/discourse-workflows/execution/11476",
+        {
+          type: "execution_progress",
+          execution: { id: 11476, status: "running" },
+          step: {
+            node_id: "node-partial",
+            node_name: "Skipped partial step",
+            node_type: "action:code",
+            position: 1,
+            status: "running",
+          },
+        },
+        44
+      );
+      await settled();
+
+      assert
+        .dom(".workflows-execution-detail__step-name")
+        .hasText(
+          "Recovered step",
+          "the authoritative response repairs the gap"
+        );
+      assert
+        .dom(".workflows-execution-detail__step")
+        .exists({ count: 1 }, "the out-of-sequence event is not merged");
+      assert.strictEqual(
+        this.owner
+          .lookup("service:message-bus")
+          .subscriptions.get("/discourse-workflows/execution/11476").lastId,
+        45,
+        "the recovered stream resumes at the response cursor"
+      );
+    });
+
     test("shows live progress for a running execution", async function (assert) {
       this.execution = {
         id: 11473,
         workflow_id: 30,
         workflow_name: "Running workflow",
         status: "running",
+        message_bus_last_id: 40,
         started_at: new Date(Date.now() - 2000).toISOString(),
         finished_at: null,
         steps: [],
@@ -336,20 +443,25 @@ module(
         .dom(".workflows-execution-detail__progress-time")
         .hasText("2.0s", "the elapsed time advances in whole seconds");
 
-      await publishToMessageBus("/discourse-workflows/execution/11473", {
-        type: "execution_progress",
-        execution: { id: 11473, status: "running" },
-        refresh: false,
-        step: {
-          node_id: "node-1",
-          node_name: "Fetch topic",
-          node_type: "action:code",
-          position: 0,
-          status: "running",
-          started_at: new Date().toISOString(),
-          finished_at: null,
+      this.owner.lookup("service:message-bus").publish(
+        "/discourse-workflows/execution/11473",
+        {
+          type: "execution_progress",
+          execution: { id: 11473, status: "running" },
+          refresh: false,
+          step: {
+            node_id: "node-1",
+            node_name: "Fetch topic",
+            node_type: "action:code",
+            position: 0,
+            status: "running",
+            started_at: new Date().toISOString(),
+            finished_at: null,
+          },
         },
-      });
+        41
+      );
+      await settled();
 
       assert
         .dom(".workflows-execution-detail__step")

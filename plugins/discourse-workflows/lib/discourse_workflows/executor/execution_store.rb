@@ -121,7 +121,6 @@ module DiscourseWorkflows
           resume_token: nil,
           timeout_action: nil,
         )
-        publish_progress
       end
 
       def publish_progress(step: nil, refresh: false)
@@ -136,6 +135,7 @@ module DiscourseWorkflows
 
       def persist_execution!(status:, trigger_data:, finished_at: nil)
         @execution = @options.existing_execution || DiscourseWorkflows::Execution.new
+        created = @execution.new_record?
         @execution_context.execution = @execution if @options.existing_execution
         @execution.update!(
           workflow_id: workflow.id,
@@ -148,6 +148,9 @@ module DiscourseWorkflows
           finished_at: finished_at,
         )
         attach_workflow_call_run!
+        if created
+          ExecutionProgressPublisher.publish_created(@execution, workflow_name: workflow.name)
+        end
         @execution
       end
 
