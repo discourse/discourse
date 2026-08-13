@@ -44,8 +44,11 @@
   }
 }
 
-/* Every target draws from one position vocabulary, so "a drop would land above
-   this row" has one visual meaning across consumers. */
+/* Both target flavours draw from one position vocabulary, because "a drop would
+   land above this row" means the same thing whether the payload came from
+   another element or from outside the window. An external target only reaches
+   these once it has been given an `axis` or a `position`; without one it gets
+   the single class below instead. */
 
 /* The line is a pseudo-element, so it needs a containing block. Declared at zero
    specificity because a target that positions itself must keep its own value. */
@@ -54,12 +57,17 @@
   [data-drop-target].--drag-above,
   [data-drop-target].--drag-below,
   [data-drop-target].--drag-left,
-  [data-drop-target].--drag-right
+  [data-drop-target].--drag-right,
+  [data-drop-target-external].--drag-above,
+  [data-drop-target-external].--drag-below,
+  [data-drop-target-external].--drag-left,
+  [data-drop-target-external].--drag-right
 ) {
   position: relative;
 }
 
-[data-drop-target] {
+[data-drop-target],
+[data-drop-target-external] {
   &.--drag-above {
     &::before {
       @include d-drag-line-horizontal;
@@ -101,6 +109,13 @@
      sibling positions. */
 
   &.--drag-inside {
+    outline: 2px solid var(--d-drag-indicator-color);
+    outline-offset: -2px;
+  }
+}
+
+[data-drop-target-external] {
+  &.--drag-over-external {
     outline: 2px solid var(--d-drag-indicator-color);
     outline-offset: -2px;
   }

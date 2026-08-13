@@ -6,6 +6,27 @@ import {
   type ElementDragPayload,
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import {
+  type ExternalDragPayload as NativeExternalDragPayload,
+  monitorForExternal,
+  type NativeMediaType,
+} from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
+import {
+  containsFiles,
+  getFiles,
+} from "@atlaskit/pragmatic-drag-and-drop/external/file";
+import {
+  containsHTML,
+  getHTML,
+} from "@atlaskit/pragmatic-drag-and-drop/external/html";
+import {
+  containsText,
+  getText,
+} from "@atlaskit/pragmatic-drag-and-drop/external/text";
+import {
+  containsURLs,
+  getURLs,
+} from "@atlaskit/pragmatic-drag-and-drop/external/url";
 import { isTesting } from "discourse/lib/environment";
 import { reportClientError } from "discourse/lib/report-client-error";
 
@@ -84,6 +105,113 @@ export function consumerMayThrow<T>(run: () => T, fallback?: T): T | undefined {
 }
 
 /**
+ * The in-flight external drag, with the read helpers bound to it so consumers
+ * never reach for the underlying library themselves.
+ */
+export interface ExternalDragPayload {
+  /**
+   * Native MIME types declared by the incoming drag (e.g. `"Files"`,
+   * `"text/plain"`, `"text/uri-list"`).
+   */
+  types: NativeMediaType[];
+
+  /**
+   * The `DataTransferItem` list snapshotted at drag start. Browsers expose `kind`
+   * and `type` here even when `dataTransfer.getData(…)` is blocked during
+   * `dragover` for security.
+   */
+  items: DataTransferItem[];
+
+  /**
+   * Reads the string payload for a given MIME type. Returns `null` when the type
+   * is absent or the browser withholds string data during the current drag
+   * phase; completed drop callbacks normally receive the readable payload.
+   */
+  getStringData: (mediaType: string) => string | null;
+
+  containsFiles: () => boolean;
+  getFiles: () => File[];
+  containsHTML: () => boolean;
+  getHTML: () => string | null;
+  containsText: () => boolean;
+  getText: () => string | null;
+  containsURLs: () => boolean;
+  getURLs: () => string[];
+}
+
+/**
+ * Vocabulary `acceptsExternal()` understands. Each key delegates to the
+ * matching native-payload predicate so the service and external-target surfaces
+ * share one vocabulary.
+ */
+const EXTERNAL_KIND_PREDICATES = Object.freeze({
+  files: containsFiles,
+  html: containsHTML,
+  text: containsText,
+  urls: containsURLs,
+});
+
+/** A kind of external payload, as named by `accepts` / `acceptsExternal()`. */
+export type ExternalDragKind = keyof typeof EXTERNAL_KIND_PREDICATES;
+
+/**
+ * Wraps the underlying library's raw external payload
+ * (`{types, items, getStringData}`) with the `contains*` / `get*` helpers bound
+ * to it, so a consumer calls `source.getFiles()` rather than importing the
+ * library's helpers itself.
+ *
+ * Lives here rather than beside either drop target because both targets and this
+ * service need it, and the external target already imports from the element one
+ * — a copy in either would close an import cycle the moment a third reader
+ * appeared.
+ *
+ * @param source - The raw payload the library reports.
+ */
+export function decorateExternalSource(
+  source: NativeExternalDragPayload
+): ExternalDragPayload {
+  return {
+    types: source.types,
+    items: source.items,
+    getStringData: (mediaType) => source.getStringData(mediaType),
+    containsFiles: () => containsFiles({ source }),
+    getFiles: () => getFiles({ source }),
+    containsHTML: () => containsHTML({ source }),
+    getHTML: () => getHTML({ source }),
+    containsText: () => containsText({ source }),
+    getText: () => getText({ source }),
+    containsURLs: () => containsURLs({ source }),
+    getURLs: () => getURLs({ source }),
+  };
+}
+
+/**
+ * Whether an incoming external drag is one of the named kinds.
+ *
+ * An empty or missing filter matches every external drag, mirroring how the
+ * element target treats an absent `accepts`. Shared so everything filtering on
+ * this vocabulary agrees on what a kind name means; the element-side
+ * counterpart is `matchesDragType`.
+ *
+ * @param accepts - The kind filter as the consumer supplied it.
+ * @param source - The raw payload the underlying library reports.
+ */
+export function matchesExternalKind(
+  accepts: ExternalDragKind | ExternalDragKind[] | undefined,
+  source: NativeExternalDragPayload
+) {
+  const kinds = accepts ? (Array.isArray(accepts) ? accepts : [accepts]) : [];
+  if (kinds.length === 0) {
+    return true;
+  }
+  return kinds.some((kind) => {
+    const predicate = EXTERNAL_KIND_PREDICATES[kind];
+    // Unknown kind names fail closed — better than silently matching.
+    return predicate ? predicate({ source }) : false;
+  });
+}
+
+/**
  * A drag source as consumers read it: routing keys lifted out and the dragged
  * body in place of the grip that carried it.
  */
@@ -132,12 +260,13 @@ export function normalizeDragSource(
 }
 
 /**
- * Tracks the in-flight `dDragAndDropSource` / `dDragAndDropTarget` element
- * drag pair.
+ * Tracks in-flight drags from both the `dDragAndDropSource` /
+ * `dDragAndDropTarget` element pair and the OS-level payloads wired through
+ * `dDragAndDropExternalTarget`.
  *
- * Element drag state is populated first-hand by the singleton monitor this
- * service registers on construction. Per-element modifiers do not each carry
- * their own monitor; this is the observer.
+ * Both states are populated first-hand by singleton monitors this service
+ * registers on construction. Per-element modifiers do not each carry their own
+ * monitor; these are the observers.
  *
  * Lives as a service rather than a module slot so test setup
  * (`setupTest` / `setupRenderingTest`) gets a fresh instance per test.
@@ -148,6 +277,8 @@ export function normalizeDragSource(
  */
 export default class DragAndDropService extends Service {
   @tracked currentDrag: DragPayload | null = null;
+
+  @tracked currentExternalDrag: ExternalDragPayload | null = null;
 
   constructor(...args: ConstructorParameters<typeof Service>) {
     super(...args);
@@ -160,7 +291,7 @@ export default class DragAndDropService extends Service {
     // modifier does not push state here, the service derives it first-hand.
     // Only drags carrying a `type` are tracked, so a foreign draggable with
     // none of its own stays invisible here.
-    const cleanup = monitorForElements({
+    const cleanupElements = monitorForElements({
       canMonitor: ({ source }) =>
         !this.isDestroying &&
         !this.isDestroyed &&
@@ -185,12 +316,33 @@ export default class DragAndDropService extends Service {
         this.clearCurrentDrag();
       },
     });
-    registerDestructor(this, cleanup);
+    // Guarded the same way as the element monitor above: a drag still in flight
+    // when the service is torn down would otherwise write tracked state on a
+    // destroyed object.
+    const cleanupExternal = monitorForExternal({
+      canMonitor: () => !this.isDestroying && !this.isDestroyed,
+      onDragStart: ({ source }) => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+        this.currentExternalDrag = decorateExternalSource(source);
+      },
+      onDrop: () => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+        this.currentExternalDrag = null;
+      },
+    });
+    registerDestructor(this, () => {
+      cleanupElements();
+      cleanupExternal();
+    });
   }
 
-  /** Whether an element drag is in flight. */
+  /** Whether an element or external drag is in flight. */
   get isDragging() {
-    return !!this.currentDrag;
+    return !!(this.currentDrag || this.currentExternalDrag);
   }
 
   /**
@@ -229,6 +381,40 @@ export default class DragAndDropService extends Service {
       return accepts.includes(this.currentDrag.type);
     }
     return this.currentDrag.type === accepts;
+  }
+
+  /**
+   * Does the in-flight external drag carry one of the supplied kinds?
+   *
+   * The vocabulary mirrors the `accepts` argument on
+   * `dDragAndDropExternalTarget`: `"files"`, `"html"`, `"text"`, `"urls"`, or
+   * an array of those. A nullish filter matches nothing.
+   */
+  acceptsExternal(kinds?: ExternalDragKind | ExternalDragKind[] | null) {
+    if (!this.currentExternalDrag || !kinds) {
+      return false;
+    }
+    const list = Array.isArray(kinds) ? kinds : [kinds];
+    return list.some((kind) => {
+      const predicate = EXTERNAL_KIND_PREDICATES[kind];
+      return predicate ? this.#callExternalPredicate(predicate) : false;
+    });
+  }
+
+  /**
+   * Re-runs a native-payload predicate against the live external drag. Done
+   * lazily rather than cached so it receives the original source shape.
+   */
+  #callExternalPredicate(
+    predicate: (typeof EXTERNAL_KIND_PREDICATES)[ExternalDragKind]
+  ) {
+    return predicate({
+      source: {
+        types: this.currentExternalDrag.types,
+        items: this.currentExternalDrag.items,
+        getStringData: this.currentExternalDrag.getStringData,
+      },
+    });
   }
 }
 

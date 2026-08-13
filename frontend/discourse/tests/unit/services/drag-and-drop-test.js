@@ -2,6 +2,24 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
+async function externalDragEvent(type, dataTransfer) {
+  const event = new Event(type, { bubbles: true, cancelable: true });
+  Object.assign(event, {
+    clientX: 1,
+    clientY: 1,
+    dataTransfer,
+    relatedTarget: null,
+  });
+  document.body.dispatchEvent(event);
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+function externalTextDataTransfer() {
+  const dataTransfer = new DataTransfer();
+  dataTransfer.setData("text/plain", "external payload");
+  return dataTransfer;
+}
+
 module("Unit | Service | drag-and-drop", function (hooks) {
   setupTest(hooks);
 
@@ -90,5 +108,88 @@ module("Unit | Service | drag-and-drop", function (hooks) {
       this.dragAndDrop.accepts(undefined),
       "an omitted filter accepts nothing either"
     );
+  });
+
+  test("tracks and filters an external drag", async function (assert) {
+    const dataTransfer = externalTextDataTransfer();
+
+    await externalDragEvent("dragenter", dataTransfer);
+
+    assert.true(this.dragAndDrop.isDragging, "an external drag is in flight");
+    assert.true(
+      this.dragAndDrop.currentExternalDrag.containsText(),
+      "the decorated payload reports its native kind"
+    );
+    assert.strictEqual(
+      this.dragAndDrop.currentExternalDrag.getText(),
+      null,
+      "the hover-time service snapshot does not claim access to string data the browser withholds until drop"
+    );
+    assert.true(
+      this.dragAndDrop.acceptsExternal("text"),
+      "the matching external vocabulary is accepted"
+    );
+    assert.false(
+      this.dragAndDrop.acceptsExternal("files"),
+      "a different external kind is rejected"
+    );
+
+    await externalDragEvent("drop", dataTransfer);
+
+    assert.strictEqual(
+      this.dragAndDrop.currentExternalDrag,
+      null,
+      "the external payload is cleared after drop"
+    );
+    assert.false(
+      this.dragAndDrop.isDragging,
+      "the drag is no longer in flight"
+    );
+  });
+
+  test("external monitor ignores drag start while service is destroying", async function (assert) {
+    const dataTransfer = externalTextDataTransfer();
+
+    Object.defineProperty(this.dragAndDrop, "isDestroying", {
+      configurable: true,
+      value: true,
+    });
+    await externalDragEvent("dragenter", dataTransfer);
+
+    assert.false(
+      Boolean(this.dragAndDrop.currentExternalDrag),
+      "a destroying service does not record a newly-started external drag"
+    );
+
+    delete this.dragAndDrop.isDestroying;
+    await externalDragEvent("drop", dataTransfer);
+  });
+
+  test("external monitor ignores drop after service destruction begins", async function (assert) {
+    const dataTransfer = externalTextDataTransfer();
+    await externalDragEvent("dragenter", dataTransfer);
+    const externalDrag = this.dragAndDrop.currentExternalDrag;
+
+    assert.true(
+      Boolean(externalDrag),
+      "the service records the external drag before destruction"
+    );
+
+    // Stubbed rather than really destroyed, as the sibling test does: a real
+    // destroy also tears the monitor down, so the drop would be ignored even if
+    // the guard under test were missing.
+    Object.defineProperty(this.dragAndDrop, "isDestroying", {
+      configurable: true,
+      value: true,
+    });
+    await externalDragEvent("drop", dataTransfer);
+
+    assert.strictEqual(
+      this.dragAndDrop.currentExternalDrag,
+      externalDrag,
+      "a destroying service ignores the in-flight external drag's drop callback"
+    );
+
+    delete this.dragAndDrop.isDestroying;
   });
 });
