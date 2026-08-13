@@ -316,9 +316,7 @@ class AdminDashboardSiteTrafficExplorer
       series_rows AS (
         SELECT
           created_at::date AS date,
-          COUNT(*) FILTER (
-            WHERE :traffic_type_filtered OR NOT likely_crawler
-          )::integer AS pageviews,
+          COUNT(*)::integer AS pageviews,
           COUNT(*) FILTER (
             WHERE NOT likely_crawler AND user_id IS NOT NULL
           )::integer AS logged_in_human_pageviews,

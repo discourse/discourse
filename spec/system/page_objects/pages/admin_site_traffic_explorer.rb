@@ -107,7 +107,7 @@ module PageObjects
 
       def has_url_link?(card:, label:, href:)
         within("[data-test-site-traffic-card='#{card}']") do
-          has_css?("a[href='#{href}'][title='#{label}']", exact_text: label)
+          has_css?("a[href='#{href}']", exact_text: label)
         end
       end
 
@@ -160,7 +160,7 @@ module PageObjects
 
       def has_expanded_url_link?(label:)
         selector = ".site-traffic-breakdown-modal[role='dialog']"
-        has_css?("#{selector} a[href='#{label}'][title='#{label}']", exact_text: label)
+        has_css?("#{selector} a[href='#{label}']", exact_text: label)
       end
 
       def filter_expanded_row(label:)

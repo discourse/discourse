@@ -55,7 +55,6 @@ export default class SiteTrafficExplorerBreakdownModal extends Component {
                         href={{rowLink.href}}
                         rel={{rowLink.rel}}
                         target={{rowLink.target}}
-                        title={{row.label}}
                         class="site-traffic-explorer__row-link"
                       >
                         <SiteTrafficExplorerDimensionLabel

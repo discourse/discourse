@@ -91,6 +91,29 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
 
+      it "includes likely crawlers unless traffic types exclude them" do
+        Fabricate(
+          :browser_pageview_event,
+          session_id: "likely-crawler",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1,
+          created_at: Time.zone.local(2026, 5, 10, 11),
+        )
+
+        default_summary = result.traffic[:summary].slice("pageviews", "distinct_sessions")
+        human_summary =
+          described_class.call(params: params.merge(traffic_type: "logged_in,anonymous")).traffic[
+            :summary
+          ].slice("pageviews", "distinct_sessions")
+
+        expect([default_summary, human_summary]).to eq(
+          [
+            { "pageviews" => 12, "distinct_sessions" => 12 },
+            { "pageviews" => 11, "distinct_sessions" => 11 },
+          ],
+        )
+      end
+
       it "classifies supported major browsers and groups other user agents as unknown" do
         browsers = result.traffic.dig(:dimensions, "browsers")
 
