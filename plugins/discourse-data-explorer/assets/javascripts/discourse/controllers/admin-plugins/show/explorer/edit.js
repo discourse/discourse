@@ -46,6 +46,16 @@ export default class PluginsExplorerController extends Controller {
   order = null;
   form = null;
   shouldAutoRun = false;
+
+  #originalPaneHeight = null;
+
+  /**
+   * The panes the live separator resolved, so the reader and the writer cannot
+   * disagree with the observer about which editor they belong to. A global
+   * first-match query would pick whichever editor happens to be first in the
+   * document.
+   */
+  #resolvedPanes = null;
   _pristine = null;
   _teardownAiGeneration = null;
   _aiGenerationToken = 0;
@@ -167,6 +177,10 @@ export default class PluginsExplorerController extends Controller {
     return items;
   }
 
+  get #panes() {
+    return this.#resolvedPanes;
+  }
+
   initView() {
     const queryId = this.model?.id;
     const stored = queryId ? dataExplorerStore.get(`view_${queryId}`) : null;
@@ -179,6 +193,96 @@ export default class PluginsExplorerController extends Controller {
     } else {
       this.view = defaultView(this.results);
     }
+  }
+
+  /**
+   * The panes the separator resizes, found from the separator's own position so the
+   * two cannot disagree about which editor they belong to.
+   *
+   * @param {HTMLElement} separator - The separator element.
+   * @returns {HTMLElement|null} The panes, or null before they render.
+   */
+  @bind
+  panesFor(separator) {
+    this.#resolvedPanes =
+      separator.closest(".query-editor")?.querySelector(".panels-flex") ?? null;
+    // A fresh separator means a fresh minimum. This runs once per separator
+    // install (the modifier's args never change), so a same-route transition
+    // that reuses the element keeps the previous bound — the ordinary path
+    // through the index tears the template down and re-lands here.
+    this.#originalPaneHeight = null;
+    return this.#resolvedPanes;
+  }
+
+  /**
+   * The panes' current height.
+   *
+   * A function rather than a number because it is a live measurement: an arg whose
+   * compute reads no tracked state is cached for the modifier's lifetime, so every
+   * drag after the first would start from the first one's height.
+   *
+   * @returns {number} The height in pixels.
+   */
+  @bind
+  paneHeight() {
+    return this.#panes?.clientHeight ?? 0;
+  }
+
+  /**
+   * The smallest the panes may be dragged to, which is the height they were first
+   * seen at. Captured once, so shrinking is bounded by the layout's own idea of a
+   * reasonable editor rather than by an arbitrary constant.
+   *
+   * @returns {number} The minimum height in pixels.
+   */
+  @bind
+  minPaneHeight() {
+    const measured = this.paneHeight();
+    // Zero means the panes have not been laid out yet — the narrow layout makes
+    // their height content-driven and the editor loads asynchronously. Capturing
+    // that would pin the minimum at zero and let the editor be dragged shut.
+    if (measured > 0) {
+      this.#originalPaneHeight ??= measured;
+    }
+    return this.#originalPaneHeight ?? measured;
+  }
+
+  /**
+   * The largest the panes may be dragged to.
+   *
+   * A screenful, not the space below the header: these panes sit in a page that
+   * scrolls, so growing them lengthens the page rather than pushing anything out of
+   * view, and subtracting a header offset here would cap them below their own
+   * resting height on a short window. Past one screen the results are off-screen
+   * anyway, which is what makes a screenful the useful limit.
+   *
+   * @returns {number} The maximum height in pixels.
+   */
+  @bind
+  maxPaneHeight() {
+    return Math.max(window.innerHeight, this.minPaneHeight());
+  }
+
+  @bind
+  onPaneResize(size) {
+    const panes = this.#panes;
+    if (!panes) {
+      return;
+    }
+
+    panes.style.height = `${size}px`;
+    this.appEvents.trigger("ace:resize");
+  }
+
+  /**
+   * Lets go of the resolved panes and the height bound derived from them.
+   * Called from the route on exit: this controller is an app-lifetime
+   * singleton, so a reference kept here would hold the detached editor subtree
+   * alive until the next visit resolved a fresh one.
+   */
+  releasePanes() {
+    this.#resolvedPanes = null;
+    this.#originalPaneHeight = null;
   }
 
   @action
@@ -337,37 +441,6 @@ export default class PluginsExplorerController extends Controller {
       reader.readAsText(file);
     });
   }
-
-  @bind
-  dragMove(e) {
-    if (!e.movementX) {
-      return;
-    }
-
-    const editPane = document.querySelector(".query-editor");
-    const target = editPane.querySelector(".panels-flex");
-
-    // we need to get the initial height / width of edit pane
-    // before we manipulate the size
-    if (!this.initialPaneWidth && !this.originalPaneHeight) {
-      this.originalPaneHeight = target.clientHeight;
-    }
-
-    const newHeight = Math.max(
-      this.originalPaneHeight,
-      target.clientHeight + e.movementY
-    );
-
-    target.style.height = newHeight + "px";
-
-    this.appEvents.trigger("ace:resize");
-  }
-
-  @bind
-  didStartDrag() {}
-
-  @bind
-  didEndDrag() {}
 
   @action
   updateGroupIds(value) {
