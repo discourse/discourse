@@ -1,5 +1,9 @@
 import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
+import RovingFocusListboxExample from "../../examples/molecules/roving-focus/listbox";
+import rovingFocusListboxSource from "../../examples/molecules/roving-focus/listbox?source=file";
+import RovingFocusRadioGroupExample from "../../examples/molecules/roving-focus/radio-group";
+import rovingFocusRadioGroupSource from "../../examples/molecules/roving-focus/radio-group?source=file";
 import RovingFocusToolbarExample from "../../examples/molecules/roving-focus/toolbar";
 import rovingFocusToolbarSource from "../../examples/molecules/roving-focus/toolbar?source=file";
 import RovingFocusTreeExample from "../../examples/molecules/roving-focus/tree";
@@ -7,7 +11,7 @@ import rovingFocusTreeSource from "../../examples/molecules/roving-focus/tree?so
 import StyleguideExample from "../../styleguide-example";
 import StyleguideGroups from "../../styleguide-groups";
 
-const GROUPS = ["toolbar", "tree"];
+const GROUPS = ["toolbar", "listbox", "radio", "tree"];
 
 /**
  * Conformance demos for the roving-focus modifier, mirroring the interactive examples in the
@@ -51,6 +55,32 @@ export default class RovingFocus extends Component {
           @code={{rovingFocusToolbarSource}}
         >
           <RovingFocusToolbarExample />
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="listbox">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.roving_focus.listbox.example"}}
+          @description={{i18n
+            "styleguide.sections.roving_focus.listbox.example_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.roving_focus.listbox.try_this"}}
+          @code={{rovingFocusListboxSource}}
+        >
+          <RovingFocusListboxExample />
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="radio">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.roving_focus.radio.example"}}
+          @description={{i18n
+            "styleguide.sections.roving_focus.radio.example_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.roving_focus.radio.try_this"}}
+          @code={{rovingFocusRadioGroupSource}}
+        >
+          <RovingFocusRadioGroupExample />
         </StyleguideExample>
       </Group>
 

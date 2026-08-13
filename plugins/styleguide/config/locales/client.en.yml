@@ -104,6 +104,12 @@ en:
             toolbar:
               title: "Toolbar"
               description: "A single tab stop holding controls of mixed kinds, entered on the first one."
+            listbox:
+              title: "Listbox"
+              description: "A vertical cursor with type-ahead, entered on the option already chosen."
+            radio:
+              title: "Radio group"
+              description: "A group whose checked member is where the cursor starts, and follows."
             tree:
               title: "Tree"
               description: "A vertical cursor over the visible rows, with hierarchy left to the consumer."
@@ -119,6 +125,25 @@ en:
             cut: "Cut"
             paste: "Paste"
             docs: "Authoring practices"
+          listbox:
+            label: "Fruit"
+            example: "Listbox with type-ahead"
+            example_description: "Typing moves the cursor to the option whose name starts with what was typed, which is what the practice page specifies and what a screen reader reads out. The count beside each option is decorative, so it belongs to the row's text but not to its name."
+            try_this: "Arrow through the options, then type a letter such as b. Type ap quickly to reach Apricot rather than Apple, pause, and type a single letter again to start over. Typing a digit matches nothing, because the counts are not part of any name."
+            apple: "Apple"
+            apricot: "Apricot"
+            banana: "Banana"
+            blackberry: "Blackberry"
+            cherry: "Cherry"
+            coconut: "Coconut"
+          radio:
+            label: "Alignment"
+            example: "Radio group"
+            example_description: "A radio group marks its choice with aria-checked rather than aria-selected, and entering the group lands on that member instead of the first one. Moving the cursor moves the choice with it, which is the one pattern where that is expected."
+            try_this: "Tab into the group and notice it enters on the checked member. Arrow along it and watch the choice follow. Tab away and back to return to the new choice."
+            left: "Left"
+            center: "Center"
+            right: "Right"
           tree:
             label: "Source tree"
             example: "Tree"

@@ -480,6 +480,53 @@
     }
   }
 
+  &__listbox {
+    margin: 0;
+    padding: 0.5em;
+    list-style: none;
+    max-width: 20em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__option {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    padding: 0.25em 0.5em;
+    cursor: pointer;
+
+    &[aria-selected="true"] {
+      background: var(--tertiary-low);
+    }
+  }
+
+  &__count {
+    color: var(--primary-medium);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__radios {
+    display: flex;
+    gap: 0.25em;
+    padding: 0.5em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    width: fit-content;
+  }
+
+  &__radio {
+    padding: 0.25em 0.75em;
+    border: 1px solid transparent;
+    border-radius: var(--d-border-radius);
+    cursor: pointer;
+
+    &[aria-checked="true"] {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+    }
+  }
+
   &__tree {
     margin: 0;
     padding: 0.5em;
