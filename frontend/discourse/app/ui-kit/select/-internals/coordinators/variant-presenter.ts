@@ -1,5 +1,6 @@
 import { assert } from "@ember/debug";
 import type { FloatContentRole } from "discourse/float-kit/lib/constants";
+import type { DRovingFocusEntry } from "discourse/ui-kit/modifiers/d-roving-focus";
 import SelectEngine, {
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -301,11 +302,11 @@ export default class VariantPresenter {
   }
 
   /**
-   * Whether roving runs in `active` mode — the combobox controller keeps DOM focus and
-   * `aria-activedescendant` drives the highlight — rather than `focus` mode (a roving tabindex
-   * through the options). The controller is the query input for `typeahead` and the trigger
+   * Whether roving uses the `active-descendant` strategy — the combobox controller keeps DOM
+   * focus and `aria-activedescendant` drives the highlight — rather than `roving-tabindex`
+   * through the options. The controller is the query input for `typeahead` and the trigger
    * `<div>` for desktop `static` (a WAI-ARIA select-only combobox). Only **static in the mobile
-   * modal** uses focus mode: its list lives in an `aria-modal` dialog, so DOM focus must move
+   * modal** roves the tabindex: its list lives in an `aria-modal` dialog, so DOM focus must move
    * into the listbox rather than stay on the out-of-modal trigger.
    */
   get usesActiveRoving(): boolean {
@@ -374,6 +375,19 @@ export default class VariantPresenter {
       this.#engine.hasValue &&
       this.#engine.filter === ""
     );
+  }
+
+  /**
+   * The fallback is the whole distinction between the four values: `button` restores a held
+   * value but highlights nothing without one, so it cannot share `typeahead`'s.
+   */
+  get entryFocus(): DRovingFocusEntry {
+    if (this.shouldActivateSelected) {
+      return this.shouldAutoActivateFirst
+        ? "selected-or-first"
+        : "selected-or-none";
+    }
+    return this.shouldAutoActivateFirst ? "first" : "none";
   }
 
   /**

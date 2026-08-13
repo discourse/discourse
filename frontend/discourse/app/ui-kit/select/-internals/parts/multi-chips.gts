@@ -137,8 +137,8 @@ export default class MultiChips extends Component<MultiChipsSignature> {
    *
    * - **ArrowDown / ArrowUp** move focus back to the query input and open the overlay — the same
    *   "go to the options" gesture the input itself uses. Focus has to land on the input because
-   *   the listbox highlight is driven by `aria-activedescendant` on the input (active mode), not
-   *   on the chip; this is also how the control is reopened after Escape.
+   *   the listbox highlight is driven by `aria-activedescendant` on the input, not on the chip;
+   *   this is also how the control is reopened after Escape.
    * - **Backspace / Delete** remove the chip and keep the cursor in the group, landing on the
    *   previous chip (or the input when the first/last one goes or a loading re-flash leaves no
    *   button to focus).
@@ -215,6 +215,8 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       navigable collection; display:contents keeps the items flowing inline with the
       query input, which is a sibling of the list (an input cannot be a child of a ul). }}
     <div class="d-combobox__chips">
+      {{! Removal restores focus here, not through the modifier: once the last chip goes this
+        list falls back to the query input, which is outside the group. }}
       <ul
         class="d-combobox__chip-list"
         aria-label={{i18n "d_select.selected_items"}}
@@ -225,6 +227,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
             tabStop=false
             orientation="horizontal"
             itemSelector=".d-combobox__chip-remove"
+            restoreLostFocus=false
             onBoundary=this.exitChipsToInput
             onRegisterApi=@onRegisterChipRoving
           )

@@ -172,7 +172,7 @@ export default class InteractionCoordinator {
    * the roving controller — `aria-activedescendant` is written on it and focus stays on it.
    * Attached to the DMenu root for every variant, so it self-gates: typeahead/multi keep the
    * input as their controller, `button`'s controller is the panel filter, and static in the
-   * mobile modal uses focus mode (no controller — DOM focus moves into the listbox instead).
+   * mobile modal roves the tabindex instead (no controller — DOM focus moves into the listbox).
    */
   @action
   registerStaticController(element: HTMLElement): void {

@@ -81,8 +81,8 @@ interface ComboboxQueryInputSignature {
  *   option) — except mid-composition, where both are suppressed so an IME candidate commit
  *   doesn't select an option.
  *
- * Arrow/Enter navigation keeps DOM focus on this input (WAI-ARIA `active` mode), so the
- * user can keep typing while navigating results.
+ * Arrow/Enter navigation keeps DOM focus on this input (the `active-descendant` focus
+ * strategy), so the user can keep typing while navigating results.
  */
 export default class ComboboxQueryInput extends Component<ComboboxQueryInputSignature> {
   // Set on `pointerdown` (which fires just before the native focus) so the focus handler

@@ -184,13 +184,17 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             {{! Static in the mobile modal moves DOM focus into the listbox; every other
           surface keeps focus on its controller (no-op there). }}
             {{didInsert @listbox.focusListboxIfSimple}}
-            {{! active mode: the controller (query input, or the desktop-static trigger
-          div) keeps focus and drives the highlight via aria-activedescendant. Static
-          in the mobile modal uses focus mode (roving tabindex through the options),
-          since its out-of-modal trigger cannot be the controller. Typeahead and
-          desktop static auto-highlight the first option; re-seed when async lands. }}
+            {{! The controller (query input, or the desktop-static trigger div) keeps
+          focus and drives the highlight via aria-activedescendant. Static in the
+          mobile modal roves the tabindex through the options instead, since its
+          out-of-modal trigger cannot be the controller. Where the cursor lands on
+          open is the presenter's entry convention; re-seed when async lands. }}
             {{dRovingFocus
-              selectionMode=(if @presenter.usesActiveRoving "active" "focus")
+              focusStrategy=(if
+                @presenter.usesActiveRoving
+                "active-descendant"
+                "roving-tabindex"
+              )
               controllerElement=(if @presenter.usesActiveRoving @filterInput)
               itemSelector="[role=option]"
               itemsKey=(if
@@ -202,9 +206,8 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
               onActiveChange=@listbox.trackActiveOption
               onJump=@listbox.handleJump
               onRegisterApi=@listbox.registerListboxRoving
-              autoActivateFirst=@presenter.shouldAutoActivateFirst
-              autoActivateSelected=@presenter.shouldActivateSelected
-              activationRemovesSelected=@multiple
+              entryFocus=@presenter.entryFocus
+              fallbackSkipsMarked=@multiple
             }}
             as |descriptor row|
           >
