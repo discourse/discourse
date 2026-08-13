@@ -1,8 +1,8 @@
 import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DashboardSearch from "discourse/admin/components/dashboard/search";
+import { searchHeadlineKeys } from "discourse/admin/lib/search-headline";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
 
 const startDate = new Date("2026-04-01");
 const endDate = new Date("2026-04-30");
@@ -10,46 +10,15 @@ const endDate = new Date("2026-04-30");
 module("Integration | Component | Dashboard | Search", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("has a complete headline lookup table", function (assert) {
-    const prefix = "admin.dashboard.sections.search.headline";
-    const headlineTranslations = I18n.lookup(prefix);
-    const scenarios = Object.fromEntries(
-      Object.entries(headlineTranslations).filter(([key]) => key !== "cta")
-    );
-
+  test("looks up headline keys by scenario", function (assert) {
     assert.deepEqual(
-      Object.keys(scenarios).sort(),
-      [
-        "down_down",
-        "down_flat",
-        "down_unavailable",
-        "down_up",
-        "flat_down",
-        "flat_flat",
-        "flat_unavailable",
-        "flat_up",
-        "no_data",
-        "unavailable_down",
-        "unavailable_flat",
-        "unavailable_up",
-        "up_down",
-        "up_flat",
-        "up_unavailable",
-        "up_up",
-      ],
-      "contains every supported direction combination exactly once"
-    );
-    assert.true(
-      Object.values(scenarios).every(
-        ({ title, summary }) =>
-          typeof title === "string" && typeof summary === "string"
-      ),
-      "every scenario has a complete headline and summary"
-    );
-    assert.deepEqual(
-      Object.keys(headlineTranslations.cta),
-      ["content_gaps"],
-      "contains the reusable search CTA"
+      searchHeadlineKeys("up_up"),
+      {
+        title: "searches_increased",
+        summary: "searches_up_no_result_rate_up",
+        cta: "content_gaps",
+      },
+      "returns semantic translation keys"
     );
   });
 

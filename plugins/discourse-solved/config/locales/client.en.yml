@@ -16,54 +16,32 @@ en:
             fetch_error: "Support data couldn't be loaded."
             save_error: "Couldn't save your selection for next time."
             headline:
-              no_data:
-                title: "Not enough support activity yet"
-                summary: "There's no support activity in this period yet. Once topics come in, you'll see how your community is handling them."
-              up_down:
-                title: "Resolution rate and time to first reply have improved in %{period}"
-                summary: "More questions are getting answered, and they're getting answered faster."
-              up_up:
-                title: "The resolution rate has improved in %{period}"
-                summary: "More questions are getting answered, but the time to first reply has increased."
-              up_flat:
-                title: "The resolution rate has improved in %{period}"
-                summary: "More questions are getting answered, but the time to first reply is flat."
-              down_down:
-                title: "The time to first reply has decreased in %{period}"
-                summary: "Members are getting faster responses, but resolution rate has decreased."
-              flat_down:
-                title: "The time to first reply has decreased in %{period}"
-                summary: "Members are getting faster responses, but resolution rate is flat."
-              down_up:
-                title: "Resolution rate and time to first reply have declined in %{period}"
-                summary: "Members are getting fewer answers and are waiting longer for their first reply."
-              down_flat:
-                title: "The resolution rate has decreased in %{period}"
-                summary: "Members are getting fewer answers, but the time to first reply is holding steady."
-              flat_up:
-                title: "The time to first reply has increased in %{period}"
-                summary: "Members are waiting longer for their first reply, but the resolution rate is holding steady."
-              flat_flat:
-                title: "Support is steady in %{period}"
-                summary: "No meaningful change in resolution rate or time to first reply."
-              up_unavailable:
-                title: "The resolution rate has improved in %{period}"
-                summary: "More questions are getting answered."
-              down_unavailable:
-                title: "The resolution rate has decreased in %{period}"
-                summary: "Members are getting fewer answers."
-              flat_unavailable:
-                title: "Support is steady in %{period}"
-                summary: "No meaningful change in resolution rate."
-              unavailable_down:
-                title: "The time to first reply has decreased in %{period}"
-                summary: "Members are getting faster responses."
-              unavailable_up:
-                title: "The time to first reply has increased in %{period}"
-                summary: "Members are waiting longer for their first reply."
-              unavailable_flat:
-                title: "Support is steady in %{period}"
-                summary: "No meaningful change in time to first reply."
+              titles:
+                insufficient_activity: "Not enough support activity yet"
+                resolution_rate_and_first_reply_time_improved: "Resolution rate and time to first reply have improved in %{period}"
+                resolution_rate_improved: "The resolution rate has improved in %{period}"
+                first_reply_time_decreased: "The time to first reply has decreased in %{period}"
+                resolution_rate_and_first_reply_time_declined: "Resolution rate and time to first reply have declined in %{period}"
+                resolution_rate_decreased: "The resolution rate has decreased in %{period}"
+                first_reply_time_increased: "The time to first reply has increased in %{period}"
+                support_steady: "Support is steady in %{period}"
+              summaries:
+                insufficient_activity: "There's no support activity in this period yet. Once topics come in, you'll see how your community is handling them."
+                more_answers_and_faster_replies: "More questions are getting answered, and they're getting answered faster."
+                more_answers_but_slower_replies: "More questions are getting answered, but the time to first reply has increased."
+                more_answers_first_reply_time_flat: "More questions are getting answered, but the time to first reply is flat."
+                faster_replies_but_lower_resolution_rate: "Members are getting faster responses, but resolution rate has decreased."
+                faster_replies_resolution_rate_steady: "Members are getting faster responses, but resolution rate is flat."
+                fewer_answers_and_slower_replies: "Members are getting fewer answers and are waiting longer for their first reply."
+                fewer_answers_first_reply_time_steady: "Members are getting fewer answers, but the time to first reply is holding steady."
+                slower_replies_resolution_rate_steady: "Members are waiting longer for their first reply, but the resolution rate is holding steady."
+                resolution_rate_and_first_reply_time_steady: "No meaningful change in resolution rate or time to first reply."
+                more_answers: "More questions are getting answered."
+                fewer_answers: "Members are getting fewer answers."
+                resolution_rate_steady: "No meaningful change in resolution rate."
+                faster_replies: "Members are getting faster responses."
+                slower_replies: "Members are waiting longer for their first reply."
+                first_reply_time_steady: "No meaningful change in time to first reply."
               cta:
                 unanswered: "Check out the unanswered topics to see which you can address."
                 in_progress: "Take a look at the in progress topics to see if there are replies that should be marked as answers."

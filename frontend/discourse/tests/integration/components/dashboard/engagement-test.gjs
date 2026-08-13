@@ -1,7 +1,7 @@
 import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
-import { engagementHeadlineTitleKey } from "discourse/admin/lib/engagement-headline";
+import { engagementHeadlineKeys } from "discourse/admin/lib/engagement-headline";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | Dashboard | Engagement", function (hooks) {
@@ -40,11 +40,14 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     ],
   };
 
-  test("looks up a headline by scenario", function (assert) {
-    assert.strictEqual(
-      engagementHeadlineTitleKey("improved_declined_flat"),
-      "stickiness_increased",
-      "returns the semantic headline key"
+  test("looks up headline keys by scenario", function (assert) {
+    assert.deepEqual(
+      engagementHeadlineKeys("improved_declined_flat"),
+      {
+        title: "stickiness_increased",
+        summary: "stickiness_up_daily_engagement_down",
+      },
+      "returns semantic translation keys"
     );
   });
 

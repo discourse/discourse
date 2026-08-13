@@ -8,18 +8,11 @@ import {
   formatDashboardHeadlinePeriod,
   formatDeltaPercent,
 } from "discourse/admin/lib/dashboard-format";
+import { searchHeadlineKeys } from "discourse/admin/lib/search-headline";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
-
-const CONTENT_GAPS_SCENARIOS = new Set([
-  "up_up",
-  "up_flat",
-  "down_up",
-  "flat_up",
-  "unavailable_up",
-]);
 
 function formatCount(value) {
   return I18n.toNumber(value, { precision: 0 });
@@ -43,6 +36,7 @@ export default class DashboardSearch extends Component {
   }
 
   get headline() {
+    const prefix = "admin.dashboard.sections.search.headline";
     const totalSearches = this.args.search.kpis.total_searches;
     const noResultRate = this.args.search.kpis.no_result_rate;
 
@@ -51,11 +45,10 @@ export default class DashboardSearch extends Component {
       totalSearches.previous_value === 0 &&
       noResultRate.value == null
     ) {
+      const headlineKeys = searchHeadlineKeys("no_data");
       return {
-        title: i18n("admin.dashboard.sections.search.headline.no_data.title"),
-        summary: i18n(
-          "admin.dashboard.sections.search.headline.no_data.summary"
-        ),
+        title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+        summary: i18n(`${prefix}.summaries.${headlineKeys.summary}`),
       };
     }
 
@@ -68,15 +61,15 @@ export default class DashboardSearch extends Component {
       noResultRate.point_change
     );
     const period = formatDashboardHeadlinePeriod(this.args.period);
-    const prefix = "admin.dashboard.sections.search.headline";
     const scenario = `${searchesDirection}_${noResultDirection}`;
-    const summary = i18n(`${prefix}.${scenario}.summary`);
-    const cta = CONTENT_GAPS_SCENARIOS.has(scenario)
-      ? i18n(`${prefix}.cta.content_gaps`)
+    const headlineKeys = searchHeadlineKeys(scenario);
+    const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
+    const cta = headlineKeys.cta
+      ? i18n(`${prefix}.cta.${headlineKeys.cta}`)
       : null;
 
     return {
-      title: i18n(`${prefix}.${scenario}.title`, { period }),
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`, { period }),
       summary: cta ? `${summary} ${cta}` : summary,
     };
   }

@@ -2,8 +2,8 @@ import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
 import SupportSection from "discourse/plugins/discourse-solved/admin/components/dashboard/support";
+import { supportHeadlineKeys } from "discourse/plugins/discourse-solved/admin/lib/support-headline";
 
 function buildData(overrides = {}) {
   return {
@@ -41,46 +41,15 @@ const endDate = new Date("2026-04-30");
 module("Integration | Component | Dashboard | Support", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("has a complete headline lookup table", function (assert) {
-    const prefix = "admin.dashboard.sections.support.headline";
-    const headlineTranslations = I18n.lookup(prefix);
-    const scenarios = Object.fromEntries(
-      Object.entries(headlineTranslations).filter(([key]) => key !== "cta")
-    );
-
+  test("looks up headline keys by scenario", function (assert) {
     assert.deepEqual(
-      Object.keys(scenarios).sort(),
-      [
-        "down_down",
-        "down_flat",
-        "down_unavailable",
-        "down_up",
-        "flat_down",
-        "flat_flat",
-        "flat_unavailable",
-        "flat_up",
-        "no_data",
-        "unavailable_down",
-        "unavailable_flat",
-        "unavailable_up",
-        "up_down",
-        "up_flat",
-        "up_unavailable",
-        "up_up",
-      ],
-      "contains every supported direction combination exactly once"
-    );
-    assert.true(
-      Object.values(scenarios).every(
-        ({ title, summary }) =>
-          typeof title === "string" && typeof summary === "string"
-      ),
-      "every scenario has a complete headline and summary"
-    );
-    assert.deepEqual(
-      Object.keys(headlineTranslations.cta).sort(),
-      ["in_progress", "in_progress_and_unanswered", "unanswered"],
-      "contains each reusable support CTA"
+      supportHeadlineKeys("down_up"),
+      {
+        title: "resolution_rate_and_first_reply_time_declined",
+        summary: "fewer_answers_and_slower_replies",
+        cta: "in_progress_and_unanswered",
+      },
+      "returns semantic translation keys"
     );
   });
 

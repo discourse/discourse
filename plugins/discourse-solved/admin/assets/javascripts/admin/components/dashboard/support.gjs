@@ -15,22 +15,12 @@ import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { supportHeadlineKeys } from "discourse/plugins/discourse-solved/admin/lib/support-headline";
 import SupportResponseTime from "./support/response-time";
 import SupportTopicOutcomes from "./support/topic-outcomes";
 import SupportWhosAnswering from "./support/whos-answering";
 
 const MAX_CATEGORIES = 10;
-const CTA_BY_SCENARIO = {
-  up_up: "unanswered",
-  up_flat: "unanswered",
-  down_down: "in_progress",
-  flat_down: "in_progress",
-  down_up: "in_progress_and_unanswered",
-  down_flat: "in_progress",
-  flat_up: "unanswered",
-  down_unavailable: "in_progress",
-  unavailable_up: "unanswered",
-};
 
 const DeltaPill = <template>
   {{#if @delta.hasDelta}}
@@ -82,31 +72,33 @@ export default class SupportSection extends Component {
   }
 
   get headline() {
+    const prefix = "admin.dashboard.sections.support.headline";
     const resolutionDirection = this.#direction(
       this.data?.kpis?.resolution_rate
     );
     const replyDirection = this.#direction(this.data?.kpis?.avg_first_reply, {
       noPriorDirection: "up",
     });
-    const prefix = "admin.dashboard.sections.support.headline";
-
     if (
       resolutionDirection === "unavailable" &&
       replyDirection === "unavailable"
     ) {
+      const headlineKeys = supportHeadlineKeys("no_data");
       return {
-        title: i18n(`${prefix}.no_data.title`),
-        summary: i18n(`${prefix}.no_data.summary`),
+        title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+        summary: i18n(`${prefix}.summaries.${headlineKeys.summary}`),
       };
     }
 
     const scenario = `${resolutionDirection}_${replyDirection}`;
     const period = formatDashboardHeadlinePeriod(this.args.period);
-    const summary = i18n(`${prefix}.${scenario}.summary`);
-    const ctaKey = CTA_BY_SCENARIO[scenario];
-    const cta = ctaKey ? i18n(`${prefix}.cta.${ctaKey}`) : null;
+    const headlineKeys = supportHeadlineKeys(scenario);
+    const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
+    const cta = headlineKeys.cta
+      ? i18n(`${prefix}.cta.${headlineKeys.cta}`)
+      : null;
     return {
-      title: i18n(`${prefix}.${scenario}.title`, { period }),
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`, { period }),
       summary: cta ? `${summary} ${cta}` : summary,
     };
   }

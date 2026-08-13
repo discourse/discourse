@@ -65,6 +65,85 @@ const TITLE_BY_SCENARIO = {
   unavailable_unavailable_unavailable: "insufficient_activity",
 };
 
-export function engagementHeadlineTitleKey(scenario) {
-  return TITLE_BY_SCENARIO[scenario];
+const SUMMARY_BY_SCENARIO = {
+  improved_improved_improved: "all_metrics_improved",
+  improved_improved_declined:
+    "stickiness_and_daily_engagement_up_new_signups_down",
+  improved_improved_flat: "stickiness_and_daily_engagement_up_new_signups_flat",
+  improved_improved_unavailable: "stickiness_and_daily_engagement_up",
+  improved_declined_improved:
+    "stickiness_and_new_signups_up_daily_engagement_down",
+  improved_declined_declined:
+    "stickiness_up_daily_engagement_and_new_signups_down",
+  improved_declined_flat: "stickiness_up_daily_engagement_down",
+  improved_declined_unavailable: "stickiness_up_daily_engagement_down",
+  improved_flat_improved: "stickiness_and_new_signups_up_daily_engagement_flat",
+  improved_flat_declined: "stickiness_up_new_signups_down",
+  improved_flat_flat: "stickiness_up_daily_engagement_and_new_signups_flat",
+  improved_flat_unavailable: "stickiness_up_daily_engagement_flat",
+  improved_unavailable_improved: "stickiness_and_new_signups_up",
+  improved_unavailable_declined: "stickiness_up_new_signups_down",
+  improved_unavailable_flat: "stickiness_up_new_signups_flat",
+  improved_unavailable_unavailable: "stickiness_up",
+  declined_improved_improved:
+    "daily_engagement_and_new_signups_up_stickiness_down",
+  declined_improved_declined:
+    "daily_engagement_up_stickiness_and_new_signups_down",
+  declined_improved_flat: "daily_engagement_up_stickiness_down",
+  declined_improved_unavailable: "daily_engagement_up_stickiness_down",
+  declined_declined_improved:
+    "new_signups_up_stickiness_and_daily_engagement_down",
+  declined_declined_declined: "all_metrics_down",
+  declined_declined_flat:
+    "stickiness_and_daily_engagement_down_new_signups_steady",
+  declined_declined_unavailable: "stickiness_and_daily_engagement_down",
+  declined_flat_improved: "new_signups_up_stickiness_down",
+  declined_flat_declined:
+    "stickiness_and_new_signups_down_daily_engagement_steady",
+  declined_flat_flat: "stickiness_down_daily_engagement_and_new_signups_steady",
+  declined_flat_unavailable: "stickiness_down_daily_engagement_steady",
+  declined_unavailable_improved: "new_signups_up_stickiness_down",
+  declined_unavailable_declined: "stickiness_and_new_signups_down",
+  declined_unavailable_flat: "stickiness_down_new_signups_steady",
+  declined_unavailable_unavailable: "stickiness_down",
+  flat_improved_improved: "daily_engagement_and_new_signups_up_stickiness_flat",
+  flat_improved_declined: "daily_engagement_up_new_signups_down",
+  flat_improved_flat: "daily_engagement_up_stickiness_and_new_signups_flat",
+  flat_improved_unavailable: "daily_engagement_up_stickiness_flat",
+  flat_declined_improved: "new_signups_up_daily_engagement_down",
+  flat_declined_declined:
+    "daily_engagement_and_new_signups_down_stickiness_steady",
+  flat_declined_flat: "daily_engagement_down_stickiness_and_new_signups_steady",
+  flat_declined_unavailable: "daily_engagement_down_stickiness_steady",
+  flat_flat_improved: "new_signups_up_stickiness_and_daily_engagement_flat",
+  flat_flat_declined: "new_signups_down_stickiness_and_daily_engagement_steady",
+  flat_flat_flat: "all_metrics_steady",
+  flat_flat_unavailable: "stickiness_and_daily_engagement_steady",
+  flat_unavailable_improved: "new_signups_up_stickiness_flat",
+  flat_unavailable_declined: "new_signups_down_stickiness_steady",
+  flat_unavailable_flat: "stickiness_and_new_signups_steady",
+  flat_unavailable_unavailable: "stickiness_steady",
+  unavailable_improved_improved: "daily_engagement_and_new_signups_up",
+  unavailable_improved_declined: "daily_engagement_up_new_signups_down",
+  unavailable_improved_flat: "daily_engagement_up_new_signups_flat",
+  unavailable_improved_unavailable: "daily_engagement_up",
+  unavailable_declined_improved: "new_signups_up_daily_engagement_down",
+  unavailable_declined_declined: "daily_engagement_and_new_signups_down",
+  unavailable_declined_flat: "daily_engagement_down_new_signups_steady",
+  unavailable_declined_unavailable: "daily_engagement_down",
+  unavailable_flat_improved: "new_signups_up_daily_engagement_flat",
+  unavailable_flat_declined: "new_signups_down_daily_engagement_steady",
+  unavailable_flat_flat: "daily_engagement_and_new_signups_steady",
+  unavailable_flat_unavailable: "daily_engagement_steady",
+  unavailable_unavailable_improved: "new_signups_up",
+  unavailable_unavailable_declined: "new_signups_down",
+  unavailable_unavailable_flat: "new_signups_steady",
+  unavailable_unavailable_unavailable: "insufficient_activity",
+};
+
+export function engagementHeadlineKeys(scenario) {
+  return {
+    title: TITLE_BY_SCENARIO[scenario],
+    summary: SUMMARY_BY_SCENARIO[scenario],
+  };
 }
