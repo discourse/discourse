@@ -33,6 +33,16 @@ flip outside this branch and the table goes stale silently.
 Everything not listed above stays on this branch: the select family, the `modifySelectKit` bridge, the
 styleguide select sandbox and its system specs, and these trackers.
 
+### Follow-ups to merged layers
+
+A merged layer's files are upstream, so a later change made here for select's sake goes to `main` as
+its own PR (see the two-directions rule below) and returns by merging `main` back in. Track it, or
+the two versions diverge silently.
+
+| Layer | Follow-up | State | What it carries |
+|---|---|---|---|
+| 1 — float-kit | [#42565](https://github.com/discourse/discourse/pull/42565) | ○ draft | `inlineTabOrder`, `FloatKitTabOrderInline`, `lib/tab-order.ts`, and the `DFloatBody` assert that it and `trapTab` are exclusive. Its only consumer is the select panel, which stays on this branch, so the PR ships the option unused. |
+
 ## Rules
 
 ### Merge `main` in. Never rebase this branch.
