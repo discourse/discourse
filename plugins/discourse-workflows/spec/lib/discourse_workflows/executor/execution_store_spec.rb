@@ -201,6 +201,37 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
     end
   end
 
+  describe "#pause_waiting_execution!" do
+    let(:node) do
+      OpenStruct.new(id: "wait-1", name: "Wait", type: "action:test", typeVersion: "1.0")
+    end
+
+    before { store.start! }
+
+    it "persists the requested timeout action" do
+      waiting_until = 15.minutes.from_now
+
+      store.pause_waiting_execution!(
+        node: node,
+        waiting_until: waiting_until,
+        timeout_action: "fail",
+      )
+
+      expect(store.execution.reload).to have_attributes(
+        status: "waiting",
+        waiting_node_id: "wait-1",
+        waiting_until: be_within(1.second).of(waiting_until),
+        timeout_action: "fail",
+      )
+    end
+
+    it "keeps timeout action nil when existing callers omit it" do
+      store.pause_waiting_execution!(node: node)
+
+      expect(store.execution.reload.timeout_action).to be_nil
+    end
+  end
+
   describe "wait-state cleanup" do
     let(:waiting_step) do
       DiscourseWorkflows::Executor::Step.build(
