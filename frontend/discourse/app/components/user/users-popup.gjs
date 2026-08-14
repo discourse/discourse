@@ -81,6 +81,19 @@ export default class UsersPopup extends Component {
     return Array.from({ length: count });
   }
 
+  /**
+   * The list is fetched after render, so at insertion time the popup holds no
+   * focusable element for a float's own focus handling to land on. Focusing the
+   * container instead puts a keyboard user inside the dialog — where the tab
+   * trap and Escape apply, and where closing returns focus to the trigger.
+   */
+  @action
+  autofocus(element) {
+    if (this.args.autofocus) {
+      element.focus({ preventScroll: true });
+    }
+  }
+
   @action
   async loadInitial(element) {
     this.#bodyElement = element;
@@ -119,7 +132,12 @@ export default class UsersPopup extends Component {
   }
 
   <template>
-    <div class="users-popup" ...attributes>
+    <div
+      class="users-popup"
+      tabindex="-1"
+      {{didInsert this.autofocus}}
+      ...attributes
+    >
       <div class="users-popup__sticky-header">
         {{#if this.site.mobileView}}
           <div class="users-popup__title">{{@titleText}}</div>
@@ -154,7 +172,9 @@ export default class UsersPopup extends Component {
                   {{this.displayName user}}
                 </DUserLink>
                 {{#unless this.siteSettings.prioritize_username_in_ux}}
+                  {{! the name above links to the same profile, so a second announced link would read every user twice }}
                   <DUserLink
+                    @ariaHidden={{true}}
                     @username={{user.username}}
                     class="users-popup__username"
                   >
