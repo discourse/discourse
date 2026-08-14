@@ -7,13 +7,25 @@ import {
 } from "../entry-policy";
 import ItemScope from "../item-scope";
 
+/** Maintains the single-tab-stop strategy and focus restoration state. */
 export default class RovingTabindexStrategy {
   #scope: ItemScope;
   #config: DRovingFocusConfig;
+  /**
+   * Items already demoted to `tabindex="-1"`. Identity tracking prevents an incoming authored
+   * `tabindex="0"` from creating a second tab stop; weak references do not retain removed items.
+   */
   #stamped = new WeakSet<HTMLElement>();
   #tabStopHolder: HTMLElement | null = null;
+  /**
+   * The last focused item and its raw-item index, retained to distinguish removal from focus
+   * moving away and to address its positional replacement.
+   */
   #lastFocusedItem: HTMLElement | null = null;
   #lastFocusedIndex = -1;
+  /**
+   * The previous render's items, used only to distinguish one removal from whole-list replacement.
+   */
   #previousItems: HTMLElement[] = [];
 
   constructor(scope: ItemScope, config: DRovingFocusConfig) {
@@ -21,11 +33,13 @@ export default class RovingTabindexStrategy {
     this.#config = config;
   }
 
+  /** Adopts the latest item scope and configuration. */
   update(scope: ItemScope, config: DRovingFocusConfig): void {
     this.#scope = scope;
     this.#config = config;
   }
 
+  /** Resolves the current item from DOM focus, then the established tab stop. */
   current(items: HTMLElement[]): HTMLElement | null {
     const active = document.activeElement;
     for (let index = items.length - 1; index >= 0; index--) {
@@ -36,17 +50,25 @@ export default class RovingTabindexStrategy {
     return items.find((item) => item.getAttribute("tabindex") === "0") ?? null;
   }
 
+  /** Records focus that entered an item and promotes it as the tab stop. */
   recordFocus(target: HTMLElement): void {
     this.#promote(target);
     this.#lastFocusedItem = target;
     this.#lastFocusedIndex = this.#scope.all().indexOf(target);
   }
 
+  /** Promotes an item and moves DOM focus to it. */
   activate(target: HTMLElement): void {
     this.#promote(target);
     target.focus();
   }
 
+  /**
+   * Chooses and stamps the tab stop without moving focus. Seeding controls where a future Tab
+   * arrives; it must not pull focus into the group during initial render or reconciliation.
+   *
+   * @param reseed - Whether to disregard the established tab stop and choose afresh.
+   */
   seed(reseed: boolean): void {
     const all = this.#scope.all();
     let preferred: HTMLElement | undefined;
@@ -76,6 +98,12 @@ export default class RovingTabindexStrategy {
     this.#promote(preferred);
   }
 
+  /**
+   * Returns a replacement only when restoration is enabled and the remembered focused item was
+   * removed. A surviving prior item proves the group was edited rather than replaced; focus must
+   * have fallen to the document body so an intentional move is not reclaimed; and a non-empty
+   * group is required because only the consumer can choose an external fallback.
+   */
   restorationTarget(): HTMLElement | null {
     const remembered = this.#lastFocusedItem;
     if (
@@ -111,10 +139,12 @@ export default class RovingTabindexStrategy {
     return null;
   }
 
+  /** Snapshots the rendered items for removal-versus-replacement detection on the next pass. */
   finishRender(): void {
     this.#previousItems = this.#scope.all();
   }
 
+  /** Removes tab-stop artifacts and releases retained state. */
   destroy(): void {
     for (const item of this.#scope.all()) {
       item.removeAttribute("tabindex");

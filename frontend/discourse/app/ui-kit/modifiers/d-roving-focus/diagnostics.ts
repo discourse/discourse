@@ -1,11 +1,13 @@
 import { runInDebug } from "@ember/debug";
 
+/** Emits each development-only configuration diagnostic at most once per group. */
 export default class RovingFocusDiagnostics {
   #warnedWindowedTypeAhead = false;
   #warnedUndetectedSecondAxis = false;
   #warnedNoIndicator = false;
   #warnedUnreachableActiveDescendant = false;
 
+  /** Warns once when type-ahead is declined for a partially mounted data set. */
   warnWindowedTypeAhead(): void {
     runInDebug(() => {
       if (this.#warnedWindowedTypeAhead) {
@@ -21,6 +23,7 @@ export default class RovingFocusDiagnostics {
     });
   }
 
+  /** Warns once when active-descendant mode has no visible indicator mechanism. */
   warnMissingFocusIndicator(hasIndicator: boolean): void {
     if (hasIndicator) {
       return;
@@ -39,6 +42,7 @@ export default class RovingFocusDiagnostics {
     });
   }
 
+  /** Warns once when a two-dimensional layout exposes no measurable column tracks. */
   warnUndetectedSecondAxis(style: CSSStyleDeclaration): void {
     const wrappingFlex =
       (style.display === "flex" || style.display === "inline-flex") &&
@@ -62,6 +66,7 @@ export default class RovingFocusDiagnostics {
     });
   }
 
+  /** Warns once when ARIA does not permit the controller to reference the active item. */
   warnUnreachableActiveDescendant(
     controller: HTMLElement | null,
     target: HTMLElement

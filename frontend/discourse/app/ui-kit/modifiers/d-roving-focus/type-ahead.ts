@@ -6,6 +6,7 @@ const COLLATOR = new Intl.Collator(undefined, {
 });
 const LAPSE_MS = 1000;
 
+/** Operations and state needed to resolve a type-ahead keypress. */
 export interface TypeAheadContext {
   editableController: boolean;
   logicalCount: number | undefined;
@@ -19,6 +20,7 @@ export interface TypeAheadContext {
   warnWindowed: () => void;
 }
 
+/** Matches buffered printable input against item accessible names. */
 export default class TypeAhead {
   #query = "";
   #queryAt = 0;
@@ -33,6 +35,7 @@ export default class TypeAhead {
     this.#loader = loader;
   }
 
+  /** Enables or disables matching and primes the accessible-name implementation. */
   configure(enabled: boolean): void {
     this.#enabled = enabled;
     if (!enabled || this.#accessibleName || this.#namerPending) {
@@ -52,6 +55,7 @@ export default class TypeAhead {
     );
   }
 
+  /** Handles a claimed character and reports whether keyboard routing should stop. */
   handle(event: KeyboardEvent, context: TypeAheadContext): boolean {
     this.#expire(event.timeStamp);
     if (!this.#claims(event, context)) {
@@ -61,6 +65,8 @@ export default class TypeAhead {
       return true;
     }
     const items = context.items();
+    // A partial window makes prefix search report a nearer mounted match while a truer one is
+    // unmounted; compare against all mounted matches, not only the navigable subset.
     if (
       context.logicalCount != null &&
       context.logicalCount > context.mountedCount()
@@ -68,6 +74,7 @@ export default class TypeAhead {
       context.warnWindowed();
       return true;
     }
+    // Compute before appending, or the second press would always make the run look repeated.
     const repeated =
       this.#query !== "" &&
       [...this.#query].every((char) => char === event.key);
@@ -91,6 +98,7 @@ export default class TypeAhead {
     return true;
   }
 
+  /** Prevents a pending name-loader result from reviving matching after teardown. */
   destroy(): void {
     this.#destroyed = true;
   }
@@ -105,15 +113,25 @@ export default class TypeAhead {
     if (event.key.length !== 1) {
       return false;
     }
+    // AltGr sets both Ctrl and Alt on ISO layouts, so only Ctrl without Alt is a shortcut.
     if (event.metaKey || (event.ctrlKey && !event.altKey)) {
       return false;
     }
     if (context.editableController) {
       return false;
     }
+    // Space activates on an empty query and extends a non-empty one.
     return event.key !== " " || this.#query !== "";
   }
 
+  /**
+   * Finds the first prefix match at or after `from + offset`, wrapping once.
+   *
+   * @param items - The navigable items, in DOM order.
+   * @param query - The buffer, or only the repeated character when cycling by initial.
+   * @param from - The cursor position, or a negative value when there is no cursor.
+   * @param offset - Whether to skip the item at the cursor.
+   */
   #find(
     items: HTMLElement[],
     query: string,

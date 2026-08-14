@@ -4,6 +4,7 @@ import type {
   DRovingFocusStepResult,
 } from "./types";
 
+/** Internal operations used to bind the stable public cursor API to its owner. */
 export interface RovingFocusApiPort {
   items(): HTMLElement[];
   currentItem(): HTMLElement | null;
@@ -16,6 +17,7 @@ export interface RovingFocusApiPort {
   reannounce(): boolean;
 }
 
+/** Creates an immutable cursor API backed by the supplied strategy port. */
 export function createRovingFocusApi(
   port: RovingFocusApiPort
 ): DRovingFocusApi {
@@ -63,6 +65,7 @@ export function createRovingFocusApi(
           item.dataset.logicalIndex === undefined &&
           item.dataset.index === undefined
       );
+      // Stamped lookup accepts any finite numeric match, but positional lookup indexes an array.
       if (
         !positional ||
         !Number.isInteger(index) ||

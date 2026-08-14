@@ -3,18 +3,26 @@ import type { DRovingFocusConfig } from "../config";
 import { activeSeed } from "../entry-policy";
 import ItemScope from "../item-scope";
 
+/** The state transition requested by active-descendant reconciliation. */
 export type ActiveReconcileResult =
   | { kind: "preserved" }
   | { kind: "activate"; target: HTMLElement }
   | { kind: "cleared" };
 
+/** Maintains the active-descendant cursor, indicator, and deferred work. */
 export default class ActiveDescendantStrategy {
   #scope: ItemScope;
   #config: DRovingFocusConfig;
   #controller: HTMLElement | null;
   #activeId: string | null = null;
+  /** Tracks minted item ids so teardown never removes an author-supplied id. */
   #mintedIds = new Set<string>();
+  /**
+   * A one-shot observer owed only when an entry seed found no items; it disconnects before
+   * reconciling so later row churn cannot repeatedly return the cursor to the start.
+   */
   #pendingSeed: MutationObserver | null = null;
+  /** Pending restoration of the temporarily dropped `aria-activedescendant`. */
   #reannounceTimer?: ReturnType<typeof nextRunloop>;
   #destroyed = false;
 
@@ -30,10 +38,12 @@ export default class ActiveDescendantStrategy {
     this.#controller = controller;
   }
 
+  /** The id of the currently highlighted item. */
   get activeId(): string | null {
     return this.#activeId;
   }
 
+  /** Adopts the latest scope, configuration, and controller. */
   update(
     scope: ItemScope,
     config: DRovingFocusConfig,
@@ -51,10 +61,12 @@ export default class ActiveDescendantStrategy {
     this.#config = config;
   }
 
+  /** Resolves the item whose id is currently active. */
   current(items: HTMLElement[]): HTMLElement | null {
     return items.find((item) => item.id === this.#activeId) ?? null;
   }
 
+  /** Activates an item and returns its existing or newly minted id. */
   activate(target: HTMLElement): string {
     this.#clearClass(this.#config.activeClass, this.#scope);
     const id = this.#ensureId(target);
@@ -67,6 +79,7 @@ export default class ActiveDescendantStrategy {
     return id;
   }
 
+  /** Clears the virtual cursor, reporting whether one existed. */
   clear(): boolean {
     if (!this.#activeId) {
       return false;
@@ -77,6 +90,7 @@ export default class ActiveDescendantStrategy {
     return true;
   }
 
+  /** Temporarily drops and restores the active descendant so it is announced again. */
   reannounce(): boolean {
     const id = this.#activeId;
     const controller = this.#controller;
@@ -103,6 +117,10 @@ export default class ActiveDescendantStrategy {
     return true;
   }
 
+  /**
+   * Watches for the first navigable items only after seeding found none. A present set with no
+   * eligible seed is a policy decision, not an absence that later mutations should override.
+   */
   armPendingSeed(): void {
     if (this.#pendingSeed || this.#config.entryFocus === "none") {
       return;
@@ -124,11 +142,13 @@ export default class ActiveDescendantStrategy {
     });
   }
 
+  /** Cancels the one-shot pending-seed observer. */
   disarmPendingSeed(): void {
     this.#pendingSeed?.disconnect();
     this.#pendingSeed = null;
   }
 
+  /** Preserves, reseeds, or clears the cursor against the current item set. */
   reconcile(reseed: boolean): ActiveReconcileResult {
     const items = this.#scope.items();
     const current = reseed ? null : this.current(items);
@@ -155,6 +175,7 @@ export default class ActiveDescendantStrategy {
     return { kind: "cleared" };
   }
 
+  /** Removes active-descendant artifacts and cancels deferred work. */
   destroy(): void {
     this.#destroyed = true;
     this.disarmPendingSeed();
@@ -195,6 +216,10 @@ export default class ActiveDescendantStrategy {
     }
   }
 
+  /**
+   * Scrolls only the nearest list scroller, never the page; scrolling every ancestor can move the
+   * document while a detached container is still awaiting its anchored position.
+   */
   #scrollIntoView(target: HTMLElement): void {
     const container = this.#scrollableAncestor(target);
     if (!container) {
@@ -209,6 +234,7 @@ export default class ActiveDescendantStrategy {
     }
   }
 
+  /** Finds the nearest vertical scroller without ever returning the document scroller. */
   #scrollableAncestor(element: HTMLElement): HTMLElement | null {
     let node: HTMLElement | null = element.parentElement;
     while (
@@ -217,6 +243,8 @@ export default class ActiveDescendantStrategy {
       node !== document.documentElement
     ) {
       const overflowY = getComputedStyle(node).overflowY;
+      // Do not require current overflow: a not-yet-sized intended scroller would be skipped in
+      // favor of an unrelated ancestor, while an adjustment on it is harmless.
       if (overflowY === "auto" || overflowY === "scroll") {
         return node;
       }

@@ -14,6 +14,7 @@ const NON_ARROW_INPUT_TYPES = new Set([
   "submit",
 ]);
 
+/** Operations and state needed to route one keypress. */
 export interface KeyboardContext {
   config: DRovingFocusConfig;
   scope: ItemScope;
@@ -25,13 +26,16 @@ export interface KeyboardContext {
   activate(item: HTMLElement): void;
 }
 
+/** Routes owned keyboard commands to navigation, activation, or type-ahead. */
 export default class KeyboardRouter {
   #typeAhead = new TypeAhead();
 
+  /** Applies the type-ahead portion of the latest configuration. */
   configure(config: DRovingFocusConfig): void {
     this.#typeAhead.configure(config.typeAhead);
   }
 
+  /** Routes a keydown while leaving unowned keys unconsumed. */
   handle(event: KeyboardEvent, context: KeyboardContext): void {
     const { config, scope } = context;
     if (event.isComposing) {
@@ -43,6 +47,8 @@ export default class KeyboardRouter {
     ) {
       return;
     }
+    // Type-ahead must run before the active-mode allow-list and chord guard: printable keys are
+    // absent from the allow-list, and Shift is how a capital letter arrives.
     if (
       config.typeAhead &&
       this.#typeAhead.handle(event, {
@@ -60,6 +66,7 @@ export default class KeyboardRouter {
     ) {
       return;
     }
+    // Active mode owns Home and End only when the controller has no text caret to move.
     if (
       config.focusStrategy === "active-descendant" &&
       event.key !== "ArrowDown" &&
@@ -177,6 +184,7 @@ export default class KeyboardRouter {
           return;
         }
         const forward = key === "PageDown";
+        // With no cursor, anchor on the mounted window; calculating from -1 would page backward.
         const anchor =
           current >= 0
             ? current
@@ -189,6 +197,7 @@ export default class KeyboardRouter {
                 (cell) => scope.isNavigable(cell)
               );
         const logical = this.#logicalIndex(cells, anchor ?? 0);
+        // A placeholder-only window has no navigable items, but a zero-sized page would stall.
         const page = Math.max(1, scope.items().length);
         this.#jump(
           forward
@@ -202,6 +211,8 @@ export default class KeyboardRouter {
       }
       case "Enter":
       case " ":
+        // These guards are independent: containment can resolve a nested control as the current
+        // item, while disabled cells remain in the coordinate space to preserve grid arithmetic.
         if (
           current >= 0 &&
           config.onActivate &&
@@ -222,6 +233,7 @@ export default class KeyboardRouter {
     }
   }
 
+  /** Releases type-ahead resources. */
   destroy(): void {
     this.#typeAhead.destroy();
   }
