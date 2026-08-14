@@ -316,6 +316,10 @@ interface DReorderableListSignature<T> {
      * makes the whole list a single tab stop: arrow keys move focus between
      * rows, Space or Enter grabs, arrows then move the grabbed row, Space
      * drops, and Escape returns it to where it was picked up.
+     *
+     * Grab mode requires stable item identity and assumes the list is not
+     * nested inside another grab-mode list — the roving cursor matches grab
+     * buttons among its descendants.
      */
     keyboard?: "buttons" | "grab";
 
@@ -420,6 +424,7 @@ interface GrabHandlePartSignature {
     instructionsId: string;
     onDragStart: (event: { source: DragSource }) => void;
     onDragEnd: () => void;
+    onToggle: (event: MouseEvent) => void;
   };
   Element: HTMLButtonElement;
 }
@@ -438,6 +443,7 @@ const GrabHandlePart: TOC<GrabHandlePartSignature> = <template>
       onDragStart=@onDragStart
       onDragEnd=@onDragEnd
     }}
+    {{on "click" @onToggle}}
     type="button"
     class="d-reorderable-list__handle --grab btn-flat"
     aria-label={{@row.grabLabel}}
@@ -716,9 +722,15 @@ export default class DReorderableList<T> extends Component<
    * focus. Consumes nothing reactive — the grabbed key is read at event time.
    */
   grabKeys = modifier((element: Element) => {
+    this.#listElement = element;
     const handler = (event: Event) => {
-      const { key } = event as KeyboardEvent;
-      if (!this._grabbedKey) {
+      const { key, target } = event as KeyboardEvent;
+      if (
+        !this.isGrab ||
+        !this._grabbedKey ||
+        !(target instanceof Element) ||
+        !target.closest(".d-reorderable-list__handle.--grab")
+      ) {
         return;
       }
       if (key === "ArrowDown" || key === "ArrowUp") {
@@ -733,9 +745,14 @@ export default class DReorderableList<T> extends Component<
       }
     };
     element.addEventListener("keydown", handler, { capture: true });
-    return () =>
+    return () => {
       element.removeEventListener("keydown", handler, { capture: true });
+      this.#listElement = null;
+    };
   });
+
+  /** The list's root element, held for grab-mode focus restoration. */
+  #listElement: Element | null = null;
   /** The private drag discriminator used when the list stands alone. */
   #ownDragType = `d-reorderable-list:${guidFor(this)}`;
 
@@ -936,8 +953,30 @@ export default class DReorderableList<T> extends Component<
    *
    * @param element - The activated grab button.
    */
+  /**
+   * Pointer (and assistive-technology synthesized) activation of a grab
+   * button. Keyboard activation arrives through the roving cursor instead,
+   * whose prevented keydown suppresses the browser's synthetic click, so the
+   * two paths never double-toggle.
+   *
+   * @param event - The click event.
+   */
+  @action
+  onGrabClick(event: MouseEvent) {
+    if (event.currentTarget instanceof HTMLElement) {
+      this.onGrabActivate(event.currentTarget);
+    }
+  }
+
   @action
   onGrabActivate(element: HTMLElement) {
+    // Index identity cannot hold a grab: the key names a position, so after
+    // one step it would name a different item. Stable identity is a
+    // precondition of the grab mode.
+    assert(
+      'd-reorderable-list: the grab keyboard mode requires stable item identity — do not combine it with @key="@index"',
+      this.args.key !== "@index"
+    );
     const key = element
       .closest("[data-reorderable-key]")
       ?.getAttribute("data-reorderable-key");
@@ -1299,9 +1338,13 @@ export default class DReorderableList<T> extends Component<
       const movableSlots = seq.map((candidate) => candidate.index);
       const from = seq.indexOf(row);
       const to = movableSlots.indexOf(origin);
-      const move = this.#buildSeqMove("buttons", rows, seq, from, to);
-      if (move) {
-        this.#dispatch(move);
+      // The origin slot can vanish while grabbed (the host mutated its items);
+      // the cancellation then simply leaves the row where it stands.
+      if (to >= 0) {
+        const move = this.#buildSeqMove("buttons", rows, seq, from, to);
+        if (move) {
+          this.#dispatch(move);
+        }
       }
     }
 
@@ -1325,9 +1368,10 @@ export default class DReorderableList<T> extends Component<
       if (isDestroying(this) || isDestroyed(this) || !key) {
         return;
       }
-      document
+      const root = this.#listElement ?? document;
+      root
         .querySelector<HTMLElement>(
-          `[data-reorderable-key="${key}"] .d-reorderable-list__handle.--grab`
+          `[data-reorderable-key="${CSS.escape(key)}"] .d-reorderable-list__handle.--grab`
         )
         ?.focus();
     });
@@ -1390,6 +1434,7 @@ export default class DReorderableList<T> extends Component<
                         @instructionsId={{this.instructionsId}}
                         @onDragStart={{this.onSourceDragStart}}
                         @onDragEnd={{this.onSourceDragEnd}}
+                        @onToggle={{this.onGrabClick}}
                       />
                     {{else}}
                       <ReorderControls
@@ -1458,6 +1503,7 @@ export default class DReorderableList<T> extends Component<
                         @instructionsId={{this.instructionsId}}
                         @onDragStart={{this.onSourceDragStart}}
                         @onDragEnd={{this.onSourceDragEnd}}
+                        @onToggle={{this.onGrabClick}}
                       />
                     {{else}}
                       <ReorderControls
