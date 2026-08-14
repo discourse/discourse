@@ -1,7 +1,8 @@
 // Reserve the diagram box up-front (placeholder and rendered wrapper alike) so
 // the layout does not shift when the client renders the graph.
 div.graphviz.is-loading,
-.graphviz-wrapper {
+.graphviz-wrapper,
+.composer-graphviz-node .composer-preview-node__preview {
   margin: 1em 0;
   aspect-ratio: 16 / 9;
   background-color: var(--primary-50);
