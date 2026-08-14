@@ -23,6 +23,9 @@ describe Jobs::StreamDiscoverReply do
       "excerpt" => "Start with the plugin skeleton.",
       "category" => "Developer",
       "topic_replies" => 4,
+      "username" => source_post.user.username,
+      "name" => source_post.user.name,
+      "avatar_template" => source_post.user.avatar_template,
     }
   end
   let(:retrieval_result) do
@@ -46,7 +49,11 @@ describe Jobs::StreamDiscoverReply do
     allow(retrieval).to receive(:validated_sources).with(retrieval_result, %w[source_1]).and_return(
       [candidate],
     )
-    allow(DiscourseAi::Discoveries::Synthesis).to receive(:new).and_return(synthesis)
+    allow(DiscourseAi::Discoveries::Synthesis).to receive(:new) do |arguments|
+      expect(arguments).to include(user:, ai_agent:, llm_model:)
+      expect(arguments[:cancel_manager]).to be_a(DiscourseAi::Completions::CancelManager)
+      synthesis
+    end
     allow(synthesis).to receive(:call) do |query:, candidates:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
@@ -85,6 +92,9 @@ describe Jobs::StreamDiscoverReply do
           excerpt: candidate["excerpt"],
           category: candidate["category"],
           topic_replies: candidate["topic_replies"],
+          username: candidate["username"],
+          name: candidate["name"],
+          avatar_template: candidate["avatar_template"],
         },
       ],
     )

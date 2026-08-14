@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DSegmentedControl from "discourse/components/d-segmented-control";
 import DButton from "discourse/ui-kit/d-button";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class AiDiscoveriesModeToggle extends Component {
@@ -28,18 +27,24 @@ export default class AiDiscoveriesModeToggle extends Component {
       : "discourse_ai.discobot_discoveries.mode.search_submit";
   }
 
-  @action
-  selectSearch() {
-    this.discobotDiscoveries.setMode("search");
+  get modes() {
+    return [
+      {
+        value: "search",
+        label: i18n("discourse_ai.discobot_discoveries.mode.search"),
+        class: "ai-discoveries-mode__option --search",
+      },
+      {
+        value: "ask",
+        label: i18n("discourse_ai.discobot_discoveries.mode.ask"),
+        class: "ai-discoveries-mode__option --ask",
+      },
+    ];
   }
 
   @action
-  selectAsk() {
-    if (this.isAskMode) {
-      return;
-    }
-
-    this.discobotDiscoveries.setMode("ask");
+  selectMode(mode) {
+    this.discobotDiscoveries.setMode(mode);
   }
 
   @action
@@ -57,36 +62,15 @@ export default class AiDiscoveriesModeToggle extends Component {
 
   <template>
     <div class="ai-discoveries-mode" ...attributes>
-      <div
-        class="ai-discoveries-mode__options"
-        role="group"
-        aria-label={{i18n "discourse_ai.discobot_discoveries.mode.label"}}
-      >
-        <button
-          type="button"
-          class={{dConcatClass
-            "ai-discoveries-mode__option"
-            "--search"
-            (unless this.isAskMode "is-active")
-          }}
-          aria-pressed={{if this.isAskMode "false" "true"}}
-          {{on "click" this.selectSearch}}
-        >
-          {{i18n "discourse_ai.discobot_discoveries.mode.search"}}
-        </button>
-        <button
-          type="button"
-          class={{dConcatClass
-            "ai-discoveries-mode__option"
-            "--ask"
-            (if this.isAskMode "is-active")
-          }}
-          aria-pressed={{if this.isAskMode "true" "false"}}
-          {{on "click" this.selectAsk}}
-        >
-          {{i18n "discourse_ai.discobot_discoveries.mode.ask"}}
-        </button>
-      </div>
+      <DSegmentedControl
+        @name="ai-discoveries-mode"
+        @items={{this.modes}}
+        @value={{this.discobotDiscoveries.mode}}
+        @onSelect={{this.selectMode}}
+        @translatedLabel={{i18n
+          "discourse_ai.discobot_discoveries.mode.label"
+        }}
+      />
       {{#if @submitSearch}}
         <DButton
           class="btn-primary ai-discoveries-mode__submit"

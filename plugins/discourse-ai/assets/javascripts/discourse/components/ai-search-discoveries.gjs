@@ -16,6 +16,7 @@ import Topic from "discourse/models/topic";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiBlinkingAnimation from "./ai-blinking-animation";
@@ -365,22 +366,29 @@ export default class AiSearchDiscoveries extends Component {
               {{#each this.visibleSources as |source|}}
                 <li class="ai-discovery-sources__item">
                   <a class="ai-discovery-source" href={{source.url}}>
-                    <h5 class="ai-discovery-source__title">{{source.title}}</h5>
-                    {{#if source.excerpt}}
-                      <p class="ai-discovery-source__excerpt">
-                        {{source.excerpt}}
-                      </p>
-                    {{/if}}
-                    <div class="ai-discovery-source__metadata">
-                      {{#if source.category}}
-                        <span>{{source.category}}</span>
-                        <span aria-hidden="true">·</span>
-                      {{/if}}
-                      <span>
-                        {{source.topic_replies}}
-                        {{i18n "replies_lowercase" count=source.topic_replies}}
+                    {{#if source.avatar_template}}
+                      <span class="ai-discovery-source__avatar">
+                        {{dAvatar source imageSize="medium"}}
                       </span>
-                    </div>
+                    {{/if}}
+                    <span class="ai-discovery-source__content">
+                      <h5 class="ai-discovery-source__title">{{source.title}}</h5>
+                      {{#if source.excerpt}}
+                        <span class="ai-discovery-source__excerpt">
+                          {{source.excerpt}}
+                        </span>
+                      {{/if}}
+                      <span class="ai-discovery-source__metadata">
+                        {{#if source.category}}
+                          <span>{{source.category}}</span>
+                          <span aria-hidden="true">·</span>
+                        {{/if}}
+                        <span>
+                          {{source.topic_replies}}
+                          {{i18n "replies_lowercase" count=source.topic_replies}}
+                        </span>
+                      </span>
+                    </span>
                   </a>
                 </li>
               {{/each}}
@@ -394,6 +402,7 @@ export default class AiSearchDiscoveries extends Component {
               {{i18n
                 "discourse_ai.discobot_discoveries.sources.show_all_matching"
               }}
+              {{dIcon "arrow-right"}}
             </a>
           </section>
         {{/if}}

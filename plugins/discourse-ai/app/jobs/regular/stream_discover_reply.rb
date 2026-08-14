@@ -54,7 +54,8 @@ module Jobs
         return
       end
 
-      synthesis = DiscourseAi::Discoveries::Synthesis.new(user:, llm_model:, cancel_manager:)
+      synthesis =
+        DiscourseAi::Discoveries::Synthesis.new(user:, ai_agent:, llm_model:, cancel_manager:)
       selected_sources = nil
       selected_refs = nil
       source_selection_invalid = false
@@ -193,12 +194,8 @@ module Jobs
     private
 
     def configured_agent(user)
-      AiAgent
-        .all_agents(enabled_only: false)
-        .find do |agent|
-          agent.id == SiteSetting.ai_discover_agent.to_i &&
-            user.in_any_groups?(agent.allowed_group_ids.to_a)
-        end
+      agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_agent)
+      agent if agent && user.in_any_groups?(agent.allowed_group_ids.to_a)
     end
 
     def active_request?(user, request_id)
@@ -260,6 +257,9 @@ module Jobs
           excerpt: source["excerpt"],
           category: source["category"].presence,
           topic_replies: source["topic_replies"].to_i,
+          username: source["username"],
+          name: source["name"],
+          avatar_template: source["avatar_template"],
         }
       end
     end

@@ -1,6 +1,6 @@
 /* eslint-disable qunit/no-conditional-assertions */
 import Service from "@ember/service";
-import { click, render } from "@ember/test-helpers";
+import { click, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
@@ -135,6 +135,9 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         excerpt: "Flight, nature, work, and resilient protagonists.",
         category: "Studio Ghibli",
         topic_replies: 12,
+        username: "hayao",
+        name: "Hayao Miyazaki",
+        avatar_template: "/letter_avatar_proxy/v4/letter/h/9de053/{size}.png",
       },
       {
         title: "Gorō Miyazaki: architecture and direction",
@@ -142,6 +145,9 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         excerpt: "Architecture, inheritance, and a different visual voice.",
         category: "Studio Ghibli",
         topic_replies: 8,
+        username: "goro",
+        name: "Gorō Miyazaki",
+        avatar_template: "/letter_avatar_proxy/v4/letter/g/4491bb/{size}.png",
       },
       {
         title: "Visual craft in The Boy and the Heron",
@@ -186,6 +192,9 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .dom(".ai-discovery-sources__item")
       .exists({ count: 2 }, "two discussions are shown by default");
     assert
+      .dom(".ai-discovery-source__avatar .avatar")
+      .exists({ count: 2 }, "discussion cards show their source authors");
+    assert
       .dom(".ai-discovery-sources__toggle")
       .hasText(
         "View all 4",
@@ -204,12 +213,20 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .dom(".ai-discovery-sources__all-results")
       .hasText("Show all matching posts", "full search remains available");
     assert
+      .dom(".ai-discovery-sources__all-results .d-icon-arrow-right")
+      .exists("the full search link communicates forward navigation");
+    assert
       .dom(".ai-discovery-sources__all-results")
       .hasAttribute(
         "href",
         "/search?q=miyazaki",
         "full search keeps the active query"
       );
+    assert.strictEqual(
+      getComputedStyle(find(".ai-discovery-source__title")).color,
+      getComputedStyle(find(".ai-discovery-sources__all-results")).color,
+      "discussion titles use the standard link color"
+    );
   });
 
   test("clicking a link in discovery text closes search menu", async function (assert) {

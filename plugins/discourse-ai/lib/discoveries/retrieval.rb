@@ -136,7 +136,11 @@ module DiscourseAi
 
       def revalidate_and_limit(candidates)
         post_ids = candidates.map { |candidate| candidate.fetch("post_id") }
-        posts = Post.where(id: post_ids, deleted_at: nil).includes(topic: :category).index_by(&:id)
+        posts =
+          Post
+            .where(id: post_ids, deleted_at: nil)
+            .includes(:user, topic: :category)
+            .index_by(&:id)
 
         candidates
           .filter_map do |candidate|
@@ -160,6 +164,9 @@ module DiscourseAi
               "excerpt" => plain_text(candidate["excerpt"]),
               "category" => topic.category&.name,
               "topic_replies" => [topic.posts_count - 1, 0].max,
+              "username" => post.user&.username,
+              "name" => post.user&.name,
+              "avatar_template" => post.user&.avatar_template,
               "post_updated_at" => post.updated_at.iso8601(6),
               "topic_updated_at" => topic.updated_at.iso8601(6),
             )

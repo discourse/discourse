@@ -824,6 +824,8 @@ module DiscourseAi
 
               if format["type"] == "array"
                 type_desc[:items] = { type: format["array_type"] || "string" }
+                max_items = format["max_items"]
+                type_desc[:maxItems] = max_items if max_items.is_a?(Integer) && max_items >= 0
               end
 
               memo[format["key"].to_sym] = type_desc

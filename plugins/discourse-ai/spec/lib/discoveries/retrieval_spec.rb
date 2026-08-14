@@ -44,6 +44,11 @@ describe DiscourseAi::Discoveries::Retrieval do
       expect(result.candidates.map { |candidate| candidate.fetch("category") }).to eq(
         [category.name, category.name, category.name],
       )
+      expect(result.candidates.first).to include(
+        "username" => post_2.user.username,
+        "name" => post_2.user.name,
+        "avatar_template" => post_2.user.avatar_template,
+      )
     end
 
     it "returns no candidates for a personal-message search" do

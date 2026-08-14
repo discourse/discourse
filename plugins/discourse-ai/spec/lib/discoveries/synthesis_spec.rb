@@ -1,10 +1,19 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::Discoveries::Synthesis do
-  subject(:synthesis) { described_class.new(user:, llm_model:) }
+  subject(:synthesis) { described_class.new(user:, ai_agent:, llm_model:) }
 
   fab!(:user)
   fab!(:llm_model)
+  fab!(:ai_agent) do
+    Fabricate(
+      :ai_agent,
+      system_prompt: "Use the configured Discover agent prompt.",
+      tools: [["Search", {}, true]],
+      temperature: 0.3,
+      top_p: 0.8,
+    )
+  end
 
   before { enable_current_plugin }
 
@@ -31,14 +40,32 @@ describe DiscourseAi::Discoveries::Synthesis do
             answer: "Use the plugin skeleton.",
           },
         ],
-      ) do |_, _, prompts|
+      ) do |_, _, prompts, prompt_options|
         response =
           synthesis.call(query: "how do I create a plugin", candidates:) do |update|
             updates << update
           end
 
         prompt = prompts.first
+        expect(prompt.system_message_text).to eq(ai_agent.system_prompt)
         expect(prompt.tools).to be_empty
+        expect(prompt_options.first).to include(temperature: 0.3, top_p: 0.8)
+        expect(prompt_options.first[:response_format]).to include(
+          type: "json_schema",
+          json_schema:
+            include(
+              schema:
+                include(
+                  properties:
+                    include(
+                      answerable: include(type: "boolean"),
+                      source_refs: include(type: "array", maxItems: 6),
+                      title: include(type: "string"),
+                      answer: include(type: "string"),
+                    ),
+                ),
+            ),
+        )
         supplied_candidates = JSON.parse(prompt.messages.last[:content]).fetch("candidates")
         expect(supplied_candidates).to eq(
           [
@@ -74,5 +101,44 @@ describe DiscourseAi::Discoveries::Synthesis do
 
     expect(DiscourseAi::Agents::Bot).not_to have_received(:as)
     expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
+  end
+
+  it "keeps every streamed title fragment" do
+    candidates =
+      [
+        {
+          "source_ref" => "source_1",
+          "title" => "Create a Discourse plugin",
+          "excerpt" => "Start with the plugin skeleton.",
+        },
+      ]
+    partials =
+      [
+        {
+          answerable: true,
+          source_refs: %w[source_1],
+          title: "Create a ",
+          answer: "",
+        },
+        {
+          answerable: true,
+          source_refs: %w[source_1],
+          title: "Discourse plugin",
+          answer: "Use the plugin skeleton.",
+        },
+      ]
+    bot = instance_double(DiscourseAi::Agents::Bot)
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
+    allow(bot).to receive(:reply) do |_, &stream|
+      partials.each do |values|
+        partial = double
+        allow(partial).to receive(:read_buffered_property) { |key| values[key] }
+        stream.call(partial, nil, :structured_output)
+      end
+    end
+
+    result = synthesis.call(query: "how do I create a plugin", candidates:)
+
+    expect(result.title).to eq("Create a Discourse plugin")
   end
 end

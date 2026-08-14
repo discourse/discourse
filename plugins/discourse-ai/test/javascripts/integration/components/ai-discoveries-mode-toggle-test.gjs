@@ -49,14 +49,17 @@ module("Integration | Component | AiDiscoveriesModeToggle", function (hooks) {
     );
 
     assert
-      .dom(".ai-discoveries-mode__option.--ask")
-      .hasAttribute("aria-pressed", "true", "Ask is selected by default");
+      .dom(".ai-discoveries-mode .d-segmented-control")
+      .exists("the search modes use the shared segmented control");
+    assert
+      .dom('.ai-discoveries-mode input[value="ask"]')
+      .isChecked("Ask is selected by default");
 
     await click(".ai-discoveries-mode__option.--search");
 
     assert
-      .dom(".ai-discoveries-mode__option.--search")
-      .hasAttribute("aria-pressed", "true", "Search can be selected");
+      .dom('.ai-discoveries-mode input[value="search"]')
+      .isChecked("Search can be selected");
     assert.deepEqual(
       this.triggeredQueries,
       [],
