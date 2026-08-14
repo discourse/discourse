@@ -450,7 +450,15 @@ module SystemHelpers
       # Waited for rather than queried once: `query_selector` returns nil without
       # waiting, so a not-yet-rendered element would fail as a `NoMethodError` on
       # nil, naming neither the selector nor the timing.
-      node = pw_page.wait_for_selector(from, state: "visible")
+      # Capybara's budget, not Playwright's 30s default: the driver is registered
+      # without `default_timeout`, so a missing handle would otherwise stall the
+      # example for half a minute before failing.
+      node =
+        pw_page.wait_for_selector(
+          from,
+          state: "visible",
+          timeout: Capybara.default_max_wait_time * 1000,
+        )
       node.scroll_into_view_if_needed
       box = node.bounding_box
       start_x = box["x"] + box["width"] / 2
@@ -465,10 +473,14 @@ module SystemHelpers
       pw_page.mouse.move(end_x, end_y, steps: steps)
     end
 
-    # Outside the driver block, so Capybara's own matchers work normally in it.
-    yield if block_given?
-
-    page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+    begin
+      # Outside the driver block, so Capybara's own matchers work normally in it.
+      yield if block_given?
+    ensure
+      # Released even when an in-gesture assertion fails, so the example does not
+      # run its remaining hooks with the button still held.
+      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+    end
   end
 
   def html_translation_to_text(html_translation)

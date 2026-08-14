@@ -73,7 +73,7 @@ export default class DDraggableModifier extends Modifier {
       document.removeEventListener("mousemove", this.drag);
       document.removeEventListener("dragover", this.drag);
 
-      this.#bodyClassLease.release();
+      this.#bodyClassLease?.release();
       this.#bodyClassLease = null;
       this.hasStarted = false;
     }

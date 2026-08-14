@@ -4,14 +4,13 @@ describe "Topic timeline scroller drag" do
   fab!(:current_user, :user)
   fab!(:topic)
   fab!(:post_1) { Fabricate(:post, topic: topic) }
+  # More replies than `TopicView::CHUNK_SIZE`, so a late post is only in the DOM
+  # once the drag has actually moved the stream on.
+  fab!(:replies) { 30.times.map { Fabricate(:post, topic: topic) } }
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before do
-    sign_in(current_user)
-    # Enough replies that the timeline renders a scroller with somewhere to travel.
-    30.times { Fabricate(:post, topic: topic) }
-  end
+  before { sign_in(current_user) }
 
   it "lets the user scroll the topic by dragging down the timeline" do
     topic_page.visit_topic(topic)
@@ -24,11 +23,13 @@ describe "Topic timeline scroller drag" do
     # picks its own event target and so cannot tell a live drag from a dead one.
     topic_page.timeline.drag_to_bottom
 
-    expect(topic_page.timeline).to have_scroller
-    # Dragging to the foot of the timeline lands near the end of a 31-post topic.
-    # Asserting on a late post rather than an exact index keeps this about "the
-    # drag moved the topic" and not about the scroller's pixel-to-post rounding.
+    # A later chunk had to load for this to be in the DOM at all.
     expect(topic_page).to have_post_number(25)
+    # And the reader travelled with it. Asserted separately because the two can
+    # come apart: a cloaked post keeps its `#post_N` id, so the assertion above
+    # proves the stream advanced without saying where the reader ended up, and
+    # the readout is computed from the drag rather than from what loaded.
+    expect(topic_page.timeline).to have_position(31, 31)
   end
 
   it "clears the user's drag state when the pointer is released" do
@@ -43,8 +44,10 @@ describe "Topic timeline scroller drag" do
         # Asserted mid-gesture, because the absence afterwards is also what a drag
         # that never started would produce.
         expect(topic_page.timeline).to have_dragging_page
+        expect(topic_page.timeline).to have_dragging_scrollarea
       end
 
     expect(topic_page.timeline).to have_no_dragging_page
+    expect(topic_page.timeline).to have_no_dragging_scrollarea
   end
 end

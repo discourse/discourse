@@ -23,6 +23,9 @@ module("Integration | Component | DevTools | Toolbar", function (hooks) {
 
     const gripper = find(".dev-tools-toolbar .gripper");
     stubPointerCapture(gripper);
+    // Where the toolbar actually sits, so the grab offset can be asserted rather
+    // than cancelled out by comparing two dragged positions.
+    const realTop = find(".dev-tools-toolbar").getBoundingClientRect().top;
 
     await triggerEvent(gripper, "pointerdown", {
       button: 0,
@@ -32,9 +35,6 @@ module("Integration | Component | DevTools | Toolbar", function (hooks) {
       pageX: 10,
       pageY: 300,
     });
-    // The first move settles the toolbar against the grab offset captured at the
-    // press. Travel is compared from there, because the offset depends on where
-    // the toolbar happens to be laid out rather than on the gesture.
     await triggerEvent(gripper, "pointermove", {
       pointerId: 1,
       clientX: 10,
@@ -43,6 +43,12 @@ module("Integration | Component | DevTools | Toolbar", function (hooks) {
       pageY: 340,
     });
     const settled = declaredTop();
+
+    assert.strictEqual(
+      settled,
+      realTop + 40,
+      "the toolbar keeps the offset it was grabbed at, so it follows the pointer from where the user picked it up rather than jumping its edge to the cursor"
+    );
 
     await triggerEvent(gripper, "pointermove", {
       pointerId: 1,
@@ -110,6 +116,41 @@ module("Integration | Component | DevTools | Toolbar", function (hooks) {
     assert
       .dom(document.body)
       .doesNotHaveClass("dragging", "the page mark is given back on release");
+  });
+
+  test("grabbing the toolbar at its exact top edge still opens a drag session", async function (assert) {
+    await render(<template><Toolbar /></template>);
+
+    const gripper = find(".dev-tools-toolbar .gripper");
+    stubPointerCapture(gripper);
+    // A press here yields a grab offset of exactly 0, which is the value a
+    // truthiness check on the offset silently reads as "not dragging".
+    const realTop = find(".dev-tools-toolbar").getBoundingClientRect().top;
+
+    await triggerEvent(gripper, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 10,
+      clientY: realTop,
+      pageX: 10,
+      pageY: realTop,
+    });
+
+    assert
+      .dom(".dev-tools-toolbar")
+      .hasClass("--dragging", "a zero grab offset is still a live drag");
+
+    await triggerEvent(gripper, "pointerup", {
+      pointerId: 1,
+      clientX: 10,
+      clientY: realTop,
+      pageX: 10,
+      pageY: realTop,
+    });
+
+    assert
+      .dom(".dev-tools-toolbar")
+      .doesNotHaveClass("--dragging", "and it still closes on release");
   });
 
   test("a cancelled gesture closes the drag session too", async function (assert) {

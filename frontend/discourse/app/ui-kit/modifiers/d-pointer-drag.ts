@@ -3,9 +3,22 @@ import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import ElementClassLease from "discourse/lib/element-class-lease";
 
-// Suppressing every browser touch gesture suits a small handle, which is what
-// most consumers of this are.
-const DEFAULT_TOUCH_ACTION = "none";
+/**
+ * The `touch-action` tokens `d-pointer-drag.scss` has a rule for. A token
+ * without one leaves the element at `auto`, so the two must move together.
+ */
+export type TouchActionToken =
+  | "none"
+  | "pan-x"
+  | "pan-y"
+  | "pinch-zoom"
+  | "manipulation";
+
+/**
+ * Suppressing every browser touch gesture suits a small handle, which is what
+ * most consumers of this are.
+ */
+const DEFAULT_TOUCH_ACTION: TouchActionToken = "none";
 
 interface DPointerDragSignature {
   /** The element the gesture is bound to. */
@@ -28,11 +41,17 @@ interface DPointerDragSignature {
 
       /**
        * Compute and commit the new value. Runs BEFORE the pointer capture is
-       * released.
+       * released. Fires for any release on this element, including one that
+       * never reached `threshold` and so saw no `onDrag` at all — read the
+       * pointer position rather than assuming movement happened.
        */
       onDragEnd?: (event: PointerEvent) => void;
 
-      /** Release any preview without committing. */
+      /**
+       * Release any preview without committing. Neither this nor `onDragEnd`
+       * runs when the element is destroyed mid-gesture; see the modifier's own
+       * docs for what to do with state that outlives the handle.
+       */
       onDragCancel?: (event: PointerEvent) => void;
 
       /**
@@ -90,11 +109,14 @@ interface DPointerDragSignature {
        * `app/assets/stylesheets/common/ui-kit/d-pointer-drag.scss`. Defaults to
        * `"none"`, which suits a small handle. Anything large enough that a user
        * might start a scroll or a pinch-zoom on it wants `"pan-x"`, `"pan-y"`,
-       * `"pinch-zoom"` or `"manipulation"` instead. Only those tokens are mapped;
-       * an unrecognised value leaves `touch-action` at its inherited value, so add
-       * a rule to that stylesheet rather than inventing a token here.
+       * `"pinch-zoom"` or `"manipulation"` instead.
+       *
+       * The union is closed against that stylesheet, so widen it only alongside
+       * a rule there: `touch-action` is not inherited, and a token with no rule
+       * behind it leaves the element at `auto`, where the browser claims the
+       * touch as a scroll and the gesture dies through `pointercancel`.
        */
-      touchAction?: string;
+      touchAction?: TouchActionToken;
     };
     Positional: [];
   };
@@ -146,7 +168,7 @@ export function resetPointerDragForTesting() {
  * @param element - The element carrying the gesture.
  * @param touchAction - A token the stylesheet maps; see its docs.
  */
-function syncTouchAction(element: HTMLElement, touchAction?: string) {
+function syncTouchAction(element: HTMLElement, touchAction?: TouchActionToken) {
   element.setAttribute(
     "data-pointer-drag",
     touchAction ?? DEFAULT_TOUCH_ACTION
@@ -225,11 +247,9 @@ export function registerPointerDrag(
       }
     }
     if (classToRemove) {
-      try {
-        element.classList.remove(classToRemove);
-      } catch {
-        // Teardown runs through here and must not be abandoned part-way.
-      }
+      // Unguarded: `appliedClass` is only ever set to a token `classList.add`
+      // already accepted, and `remove` rejects exactly what `add` rejects.
+      element.classList.remove(classToRemove);
     }
     finishedBodyClassLease?.release();
   };
@@ -477,6 +497,11 @@ export function registerPointerDrag(
  * stop when it has a keyboard path worth reaching — that is how it stays operable,
  * not by claiming focus from a gesture assistive technology cannot perform.
  *
+ * That cancellation reaches further than focus: an accepted press produces no
+ * `mousedown` or `mouseup`, so a document-level listener on either never sees it.
+ * Build dismiss-on-outside-press on `pointerdown`, which still bubbles unless
+ * `stopPropagation` is set.
+ *
  * A single element supports one registration. Two would each claim the same
  * pointer capture and the same attribute, and tearing either down would strand
  * the other's gesture.
@@ -485,9 +510,14 @@ export function registerPointerDrag(
  * hold a given press: the ancestor sees it too, and whichever claims the pointer
  * last keeps it. The other is ended immediately through `onDragCancel` (or
  * `onDragEnd` under `cancelCommits`) with the same press as its event, so a
- * consumer always gets one terminal callback per `onDragStart`. Pass
- * `stopPropagation` on the inner registration when the press should not reach the
- * ancestor at all.
+ * contested press still leaves each consumer with one terminal callback for the
+ * `onDragStart` it received. Pass `stopPropagation` on the inner registration when
+ * the press should not reach the ancestor at all.
+ *
+ * The one end that reports nothing is teardown: destroying the element mid-gesture
+ * releases the capture and drops the classes but fires no terminal callback, since
+ * one would run against a consumer already being torn down. Release gesture state
+ * that outlives the handle from the consumer's own destructor instead.
  */
 export default class DPointerDragModifier extends Modifier<DPointerDragSignature> {
   #args: DPointerDragArgs | null = null;

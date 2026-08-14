@@ -25,11 +25,13 @@ export default class TopicTimelineScroller extends Component {
 
   <template>
     <div
+      {{! Position is committed continuously as the pointer moves, so discarding
+          on cancel would snap the topic back to where the drag began. }}
       {{dPointerDrag
         onDragStart=@didStartDrag
         onDrag=@dragMove
         onDragEnd=@didEndDrag
-        onDragCancel=@didEndDrag
+        cancelCommits=true
         bodyClass="dragging"
       }}
       style={{this.style}}

@@ -49,6 +49,7 @@ import deprecated, { clearBacklog } from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import { resetElementClassLeasesForTesting } from "discourse/lib/element-class-lease";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -290,6 +291,7 @@ export function testCleanup(container, app) {
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
   resetPointerDragForTesting();
+  resetElementClassLeasesForTesting();
   clearBacklog();
 }
 

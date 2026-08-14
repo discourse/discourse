@@ -15,9 +15,17 @@ import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
 import VerboseLocalizationButton from "./verbose-localization/button";
 
 export default class Toolbar extends Component {
-  @tracked activeDragOffset;
+  @tracked activeDragOffset = null;
   @tracked ownSize = 0;
   @tracked top = 250;
+
+  /**
+   * Not the offset's truthiness: a grab exactly at the top edge gives 0, which
+   * would read as "not dragging" for the whole gesture.
+   */
+  get dragging() {
+    return this.activeDragOffset !== null;
+  }
 
   get style() {
     const clampedTop = Math.max(this.top, 0);
@@ -57,10 +65,7 @@ export default class Toolbar extends Component {
 
   <template>
     <div
-      class={{dConcatClass
-        "dev-tools-toolbar"
-        (if this.activeDragOffset "--dragging")
-      }}
+      class={{dConcatClass "dev-tools-toolbar" (if this.dragging "--dragging")}}
       style={{this.style}}
       {{dOnResize this.onResize}}
     >
@@ -68,11 +73,13 @@ export default class Toolbar extends Component {
         type="button"
         title={{i18n "dev_tools.drag_to_move"}}
         class="gripper"
+        {{! An interrupted drag leaves the toolbar where it was dragged to,
+            rather than snapping back to where the grab started. }}
         {{dPointerDrag
           onDragStart=this.didStartDrag
           onDrag=this.dragMove
           onDragEnd=this.didEndDrag
-          onDragCancel=this.didEndDrag
+          cancelCommits=true
           bodyClass="dragging"
         }}
       >
