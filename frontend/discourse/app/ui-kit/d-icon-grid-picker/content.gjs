@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -15,15 +16,23 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-/* Module-level cache for the unfiltered icon list, keyed by onlyAvailable flag */
-const unfilteredIconCache = new Map();
+/* Caches of the unfiltered icon list (keyed by onlyAvailable flag), scoped per
+   application instance so stubbed lists can't leak between test apps */
+const unfilteredIconCaches = new WeakMap();
 
 /**
- * Clears the cached unfiltered icon list. Called by the test harness between
- * tests so stubbed icon lists can't leak from one test into another.
+ * Returns the unfiltered icon cache for the given application owner.
+ *
+ * @param {object} owner - The application owner instance.
+ * @returns {Map<boolean, Array<{id: string, symbol: string}>>}
  */
-export function resetUnfilteredIconCache() {
-  unfilteredIconCache.clear();
+function unfilteredIconCacheFor(owner) {
+  let cache = unfilteredIconCaches.get(owner);
+  if (!cache) {
+    cache = new Map();
+    unfilteredIconCaches.set(owner, cache);
+  }
+  return cache;
 }
 
 /**
@@ -271,6 +280,7 @@ export default class DIconGridPickerContent extends Component {
   @action
   async fetchIcons(filter) {
     const onlyAvailable = this.args.onlyAvailable ?? true;
+    const unfilteredIconCache = unfilteredIconCacheFor(getOwner(this));
 
     if (!filter && unfilteredIconCache.has(onlyAvailable)) {
       const cached = unfilteredIconCache.get(onlyAvailable);
