@@ -9,7 +9,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("formats the bumpedAt date", async function (assert) {
+    test("shows the topic activity month and year", async function (assert) {
       const topic = Topic.create({
         id: 1,
         bumped_at: "2024-06-01T12:00:00Z",
@@ -20,7 +20,7 @@ module(
       assert.dom(".topic-activity__time").hasText("Jun 2024");
     });
 
-    test("has the correct user details and class when there is only one post", async function (assert) {
+    test("shows the topic creator for a topic with one post", async function (assert) {
       const topic = Topic.create({
         id: 1,
         bumped_at: "2024-06-01T12:00:00Z",
@@ -34,7 +34,7 @@ module(
       assert.dom(".topic-activity__username").hasText("bob");
     });
 
-    test("has the correct user details and class when there are multiple posts", async function (assert) {
+    test("shows the latest replier for a topic with multiple posts", async function (assert) {
       const topic = Topic.create({
         id: 1,
         bumped_at: "2024-06-01T12:00:00Z",
@@ -48,7 +48,7 @@ module(
       assert.dom(".topic-activity__username").hasText("alice");
     });
 
-    test("shows no user and the updated class when the topic was bumped long after the last post", async function (assert) {
+    test("omits the user when topic activity is not tied to a post", async function (assert) {
       const topic = Topic.create({
         id: 1,
         bumped_at: "2024-06-10T12:00:00Z",

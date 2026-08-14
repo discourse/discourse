@@ -130,7 +130,7 @@ module(
         .containsText("Pinned data must be an array of items");
     });
 
-    test("Save calls pinNodeData and exits edit mode", async function (assert) {
+    test("Save persists pinned data and closes the editor", async function (assert) {
       let requestBody = null;
       pretender.put(
         "/admin/plugins/discourse-workflows/workflows/7/pin-data.json",

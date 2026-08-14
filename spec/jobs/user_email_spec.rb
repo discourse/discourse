@@ -37,43 +37,43 @@ RSpec.describe Jobs::UserEmail do
     fab!(:user) { Fabricate(:user, last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago) }
     fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
 
-    it "doesn't call the mailer when the user is missing" do
+    it "does not send a digest when the user is missing" do
       Jobs::UserEmail.new.execute(type: :digest, user_id: User.last.id + 10_000)
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
-    it "doesn't call the mailer when the user is staged" do
+    it "does not send a digest when the user is staged" do
       staged.update!(last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
       Jobs::UserEmail.new.execute(type: :digest, user_id: staged.id)
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
-    it "doesn't call the mailer when the user is suspended" do
+    it "does not send a digest when the user is suspended" do
       suspended.update!(last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
       Jobs::UserEmail.new.execute(type: :digest, user_id: suspended.id)
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
-    it "doesn't call the mailer when the user is not active" do
+    it "does not send a digest when the user is not active" do
       user.update!(active: false)
       Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
-    it "doesn't call the mailer when the user has disabled email digests" do
+    it "does not send a digest when the user has disabled email digests" do
       user.user_option.update!(email_digests: false)
       Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
-    it "doesn't call the mailer when the user has enabled mailing list mode" do
+    it "does not send a digest when the user has enabled mailing list mode" do
       SiteSetting.disable_mailing_list_mode = false
       user.user_option.update!(mailing_list_mode: true)
       Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
-    it "doesn't call the mailer when the user's digest_after_minute is 0" do
+    it "does not send a digest when the user's digest interval is disabled" do
       user.user_option.update!(digest_after_minutes: 0)
       Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
       expect(ActionMailer::Base.deliveries).to eq([])
@@ -85,7 +85,7 @@ RSpec.describe Jobs::UserEmail do
         user.update!(last_emailed_at: 8.days.ago)
       end
 
-      it "calls the mailer when the user exists" do
+      it "sends a digest and records the delivery attempt" do
         Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
         expect(ActionMailer::Base.deliveries).to_not be_empty
         expect(user.user_stat.reload.digest_attempted_at).to eq_time(Time.zone.now)

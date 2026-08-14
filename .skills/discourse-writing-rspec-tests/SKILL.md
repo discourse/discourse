@@ -10,6 +10,7 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 ## Testing Principles
 
 - **Test behavior, not implementation** — test public interfaces; don't assert on internal state or private methods. Refactoring internals shouldn't break tests.
+- **Describe behavior, not implementation** — `describe` names the public subject or entry point, `context` names the condition, and `it` states the observable outcome at that test layer. Avoid implementation details unless they are part of the public contract. Descriptions should survive internal refactoring.
 - **Choose assertions at the public boundary** — for a query, assert its return value. For a command, drive its public entry point and assert the direct side effect it owns: persisted state, an enqueued job, an emitted event, a response body, or rendered output. Group class, service, job, and model specs by that entry point (`describe ".call"`, `describe "#execute"`, or `describe "#expire!"`).
 - **One concept per test** — each `it` block verifies one behavior for clear failure diagnosis.
 - **Don't over-mock** — mock external boundaries (HTTP, third-party services), not internal collaborators. Too many mocks signals a design problem.

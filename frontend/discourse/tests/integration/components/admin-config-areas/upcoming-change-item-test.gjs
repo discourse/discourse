@@ -133,7 +133,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
       );
   });
 
-  test("renders setting links in the description and rewrites their href via the modifier", async function (assert) {
+  test("links setting names in the description to their config pages", async function (assert) {
     const rewrittenURL = "/admin/config/category/settings?filter=other_setting";
     const dataSource = this.owner.lookup("service:admin-search-data-source");
     dataSource.urlForSetting = ({ setting }) =>
@@ -159,7 +159,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
       .hasAttribute(
         "href",
         rewrittenURL,
-        "rewrites the href to the setting's config page via the modifier"
+        "links the setting name to its config page"
       );
 
     assert

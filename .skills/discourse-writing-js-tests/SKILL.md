@@ -13,6 +13,10 @@ Discourse uses [QUnit](https://qunitjs.com/) with `ember-qunit` and
 
 - **Test behavior, not implementation** — assert on rendered output, DOM state, and public
   return values, not internal component state or private methods.
+- **Describe behavior, not implementation** — `module` names the public subject or scenario,
+  `test` states the observable outcome, and assertion messages explain the behavior being
+  proved. Avoid implementation details unless they are part of the public contract.
+  Descriptions should survive internal refactoring.
 - **One concept per `test`** — each `test()` verifies one behavior for clear failure diagnosis.
 - **Prefer `assert.dom(...)`** over manual DOM querying. It produces better failure messages
   and waits-free, synchronous DOM reads. See the [qunit-dom API](https://github.com/mainmatter/qunit-dom/blob/master/API.md).

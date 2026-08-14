@@ -51,7 +51,7 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function (hooks) {
     assert.strictEqual(plugin.optimizeFn(), "wow such optimized");
   });
 
-  test("installation uses the correct function", function (assert) {
+  test("installation registers the selected optimization mode", function (assert) {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
       runParallel: true,

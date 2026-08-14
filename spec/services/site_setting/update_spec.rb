@@ -195,7 +195,7 @@ RSpec.describe SiteSetting::Update do
         ]
       end
 
-      it "calls the relevant class for backfill" do
+      it "backfills users for settings that request it" do
         SiteSettingUpdateExistingUsers.expects(:call).once.with("default_hide_profile", true, false)
 
         result
