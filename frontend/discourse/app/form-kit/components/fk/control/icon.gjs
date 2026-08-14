@@ -18,6 +18,7 @@ export default class FKControlIcon extends FKBaseControl {
       @allowClear={{@allowClear}}
       @showCaret={{true}}
       @showSelectedName={{true}}
+      @onlyAvailable={{@onlyAvailable}}
       class="form-kit__control-icon"
     />
   </template>

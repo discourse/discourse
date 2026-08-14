@@ -96,6 +96,14 @@ RSpec.describe SvgSprite do
     expect(SvgSprite.all_icons).not_to include("  fab fa-facebook-messenger  ")
   end
 
+  it "picks up a new badge icon in the picker list" do
+    expect(SvgSprite.picker_icon_ids(nil, true)).not_to include("seedling")
+
+    Fabricate(:badge, name: "Seedling Badge", icon: "seedling")
+
+    expect(SvgSprite.picker_icon_ids(nil, true)).to include("seedling")
+  end
+
   it "includes icons from badges" do
     Fabricate(:badge, name: "Custom Icon Badge", icon: "far fa-building")
     expect(SvgSprite.all_icons).to include("far fa-building")

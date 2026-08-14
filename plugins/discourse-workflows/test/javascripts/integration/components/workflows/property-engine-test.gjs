@@ -23,10 +23,13 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
   hooks.beforeEach(function () {
     pretender.get("/svg-sprite/picker-search", () =>
-      response(200, [
-        { id: "gear", symbol: '<symbol id="gear"></symbol>' },
-        { id: "bolt", symbol: '<symbol id="bolt"></symbol>' },
-      ])
+      response(200, {
+        icons: [
+          { id: "gear", symbol: '<symbol id="gear"></symbol>' },
+          { id: "bolt", symbol: '<symbol id="bolt"></symbol>' },
+        ],
+        has_more: false,
+      })
     );
     pretender.get("/admin/plugins/discourse-workflows/variables.json", () =>
       response(200, { variables: [] })
