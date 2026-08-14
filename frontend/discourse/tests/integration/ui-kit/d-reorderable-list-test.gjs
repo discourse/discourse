@@ -22,6 +22,7 @@ import {
   simulateDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
+import DReorderableListGroup from "discourse/ui-kit/d-reorderable-list-group";
 
 const noop = () => {};
 const label = (item) => item.name ?? String(item);
@@ -2250,3 +2251,897 @@ module(
     });
   }
 );
+
+module("Integration | ui-kit | DReorderableList | group", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("DReorderableListGroup renders no wrapper around its block", async function (assert) {
+    await render(
+      <template>
+        <div id="group-placement">
+          <span data-placement="before">Before</span>
+          <DReorderableListGroup @onMove={{noop}} as |group|>
+            <span
+              data-placement="first"
+              data-group-context={{if group "present" "missing"}}
+            >First</span>
+            <span data-placement="last">Last</span>
+          </DReorderableListGroup>
+          <span data-placement="after">After</span>
+        </div>
+      </template>
+    );
+
+    assert.deepEqual(
+      Array.from(find("#group-placement").children).map(
+        (element) => element.dataset.placement
+      ),
+      ["before", "first", "last", "after"],
+      "the group inserts no element between its parent and block content"
+    );
+  });
+
+  test("DReorderableList requires listId when it joins a group", async function (assert) {
+    const items = objectItems().slice(0, 1);
+    let raised;
+
+    setupOnerror((error) => {
+      raised = error;
+    });
+
+    try {
+      await render(
+        <template>
+          <DReorderableListGroup @onMove={{noop}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @items={{items}}
+              @key="id"
+              @label={{label}}
+              as |item|
+            >
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+    } finally {
+      resetOnerror();
+    }
+
+    assert.true(
+      /Assertion Failed:.*(list.?id|required|group)/i.test(
+        raised?.message ?? ""
+      ),
+      "a grouped member without listId triggers a development assertion"
+    );
+  });
+
+  test("DReorderableList routes an in-list button move through the group", async function (assert) {
+    const primaryItems = objectItems();
+    const secondaryItems = [{ id: "secondary-alpha", name: "Secondary Alpha" }];
+    const movedItem = primaryItems[1];
+    const fromIndex = primaryItems.indexOf(movedItem);
+    const toIndex = fromIndex - 1;
+    const proposed = [...primaryItems];
+    proposed.splice(fromIndex, 1);
+    proposed.splice(toIndex, 0, movedItem);
+    const onMove = sinon.spy();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+    let raised;
+
+    setupOnerror((error) => {
+      raised = error;
+    });
+
+    try {
+      await render(
+        <template>
+          <DReorderableListGroup @onMove={{onMove}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="primary"
+              @listLabel="Primary links"
+              @items={{primaryItems}}
+              @key="id"
+              @label={{label}}
+              id="button-primary-list"
+              as |item|
+            >
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="secondary"
+              @items={{secondaryItems}}
+              @key="id"
+              @label={{label}}
+              id="button-secondary-list"
+              as |item|
+            >
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      const up = arrowSelector(movedItem.id, "up", "#button-primary-list");
+      assert
+        .dom(up)
+        .exists("the grouped member arrow renders for the interaction");
+      await click(up);
+    } finally {
+      resetOnerror();
+    }
+
+    assert.strictEqual(
+      raised,
+      undefined,
+      "the grouped button move raises no error"
+    );
+
+    assert.strictEqual(
+      onMove.callCount,
+      1,
+      "one member arrow press calls the group callback exactly once"
+    );
+    assert.deepEqual(
+      onMove.firstCall.args[0],
+      {
+        method: "buttons",
+        item: movedItem,
+        fromList: "primary",
+        toList: "primary",
+        fromIndex,
+        toIndex,
+        fromItems: primaryItems,
+        toItems: primaryItems,
+        proposedFromItems: proposed,
+        proposedToItems: proposed,
+      },
+      "the grouped button path keeps the standalone payload shape with member IDs"
+    );
+    assert.strictEqual(
+      onMove.firstCall.args[0].fromItems,
+      primaryItems,
+      "the button payload carries the live member items reference"
+    );
+    assert.strictEqual(
+      onMove.firstCall.args[0].proposedFromItems,
+      onMove.firstCall.args[0].proposedToItems,
+      "an in-list grouped button move shares one proposed array"
+    );
+    assert.strictEqual(
+      announce.callCount,
+      1,
+      "the grouped button move announces exactly once"
+    );
+    assert.strictEqual(
+      announce.firstCall.args[0],
+      `Moved ${label(movedItem)} to position ${toIndex + 1} of ${proposed.length}`,
+      "an in-list grouped button move uses the standard announcement"
+    );
+  });
+
+  test("DReorderableList routes an in-list drag move through the group", async function (assert) {
+    const primaryItems = objectItems();
+    const secondaryItems = [{ id: "secondary-alpha", name: "Secondary Alpha" }];
+    const movedItem = primaryItems[2];
+    const targetItem = primaryItems[0];
+    const fromIndex = primaryItems.indexOf(movedItem);
+    const targetIndex = primaryItems.indexOf(targetItem);
+    const toIndex = targetIndex + 1;
+    const proposed = [...primaryItems];
+    proposed.splice(fromIndex, 1);
+    proposed.splice(toIndex, 0, movedItem);
+    const onMove = sinon.spy();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+    let raised;
+
+    setupOnerror((error) => {
+      raised = error;
+    });
+
+    try {
+      await render(
+        <template>
+          <DReorderableListGroup @onMove={{onMove}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="primary"
+              @items={{primaryItems}}
+              @key="id"
+              @label={{label}}
+              id="drag-primary-list"
+              as |item|
+            >
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="secondary"
+              @items={{secondaryItems}}
+              @key="id"
+              @label={{label}}
+              id="drag-secondary-list"
+              as |item|
+            >
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      const source = rowSelector(movedItem.id, "#drag-primary-list");
+      const target = rowSelector(targetItem.id, "#drag-primary-list");
+      assertDragReady(assert, source, target);
+      assertDragRegistered(`${source} .d-reorderable-list__handle`, target);
+      await simulateDrag(source, target, {
+        dataTransfer: new DataTransfer(),
+        targetCoordinates: dropCoordinates(target, "after"),
+      });
+    } finally {
+      resetOnerror();
+    }
+
+    assert.strictEqual(
+      raised,
+      undefined,
+      "the grouped drag move raises no error"
+    );
+
+    assert.strictEqual(
+      onMove.callCount,
+      1,
+      "one member drag calls the group callback exactly once"
+    );
+    assert.deepEqual(
+      onMove.firstCall.args[0],
+      {
+        method: "drag",
+        item: movedItem,
+        fromList: "primary",
+        toList: "primary",
+        fromIndex,
+        toIndex,
+        fromItems: primaryItems,
+        toItems: primaryItems,
+        proposedFromItems: proposed,
+        proposedToItems: proposed,
+      },
+      "the grouped drag path keeps the standalone payload shape with member IDs"
+    );
+    assert.strictEqual(
+      onMove.firstCall.args[0].fromItems,
+      primaryItems,
+      "the drag payload carries the live member items reference"
+    );
+    assert.strictEqual(
+      onMove.firstCall.args[0].proposedFromItems,
+      onMove.firstCall.args[0].proposedToItems,
+      "an in-list grouped drag shares one proposed array"
+    );
+    assert.strictEqual(
+      announce.callCount,
+      1,
+      "the grouped in-list drag announces exactly once"
+    );
+    assert.strictEqual(
+      announce.firstCall.args[0],
+      `Moved ${label(movedItem)} to position ${toIndex + 1} of ${proposed.length}`,
+      "an in-list grouped drag uses the standard announcement"
+    );
+  });
+
+  test("DReorderableList commits a cross-list drag with frozen source slots", async function (assert) {
+    const primaryItems = [
+      { id: "primary-alpha", name: "Primary Alpha" },
+      { id: "primary-fixed", name: "Primary Fixed" },
+      { id: "primary-charlie", name: "Primary Charlie" },
+    ];
+    const secondaryItems = [
+      { id: "secondary-alpha", name: "Secondary Alpha" },
+      { id: "secondary-bravo", name: "Secondary Bravo" },
+    ];
+    const movedItem = primaryItems[0];
+    const frozenItem = primaryItems[1];
+    const targetItem = secondaryItems[0];
+    const movable = (item) => item !== frozenItem;
+    const proposedFromItems = [primaryItems[2], frozenItem];
+    const proposedToItems = [secondaryItems[0], movedItem, secondaryItems[1]];
+    const fromIndex = primaryItems.indexOf(movedItem);
+    const toIndex = secondaryItems.indexOf(targetItem) + 1;
+    const onMove = sinon.spy();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+    await render(
+      <template>
+        <DReorderableListGroup @onMove={{onMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="primary"
+            @listLabel="Primary links"
+            @items={{primaryItems}}
+            @key="id"
+            @label={{label}}
+            @movable={{movable}}
+            id="cross-primary-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="secondary"
+            @listLabel="Secondary links"
+            @items={{secondaryItems}}
+            @key="id"
+            @label={{label}}
+            id="cross-secondary-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    const source = rowSelector(movedItem.id, "#cross-primary-list");
+    const target = rowSelector(targetItem.id, "#cross-secondary-list");
+    assertDragReady(assert, source, target);
+    assertDragRegistered(`${source} .d-reorderable-list__handle`, target);
+    await simulateDrag(source, target, {
+      dataTransfer: new DataTransfer(),
+      targetCoordinates: dropCoordinates(target, "after"),
+    });
+
+    assert.strictEqual(
+      onMove.callCount,
+      1,
+      "one cross-list drop calls the group callback exactly once"
+    );
+    assert.deepEqual(
+      onMove.firstCall.args[0],
+      {
+        method: "drag",
+        item: movedItem,
+        fromList: "primary",
+        toList: "secondary",
+        fromIndex,
+        toIndex,
+        fromItems: primaryItems,
+        toItems: secondaryItems,
+        proposedFromItems,
+        proposedToItems,
+      },
+      "the cross-list drop reports both lists and their independent proposals"
+    );
+    assert.strictEqual(
+      onMove.firstCall.args[0].fromItems,
+      primaryItems,
+      "fromItems is the live source array reference"
+    );
+    assert.strictEqual(
+      onMove.firstCall.args[0].toItems,
+      secondaryItems,
+      "toItems is the live destination array reference"
+    );
+    assert.deepEqual(
+      onMove.firstCall.args[0].proposedFromItems,
+      proposedFromItems,
+      "removal refills movable source slots while the frozen row keeps index one"
+    );
+    assert.deepEqual(
+      onMove.firstCall.args[0].proposedToItems,
+      proposedToItems,
+      "an after drop inserts after the destination row without same-list correction"
+    );
+    assert.strictEqual(
+      announce.callCount,
+      1,
+      "the cross-list move announces exactly once"
+    );
+    assert.strictEqual(
+      announce.firstCall.args[0],
+      `Moved ${label(movedItem)} to Secondary links, position ${toIndex + 1} of ${proposedToItems.length}`,
+      "the cross-list announcement names the labelled destination list"
+    );
+  });
+
+  test("DReorderableList keeps arrow boundaries within each group member", async function (assert) {
+    const primaryItems = [{ id: "primary-alpha", name: "Primary Alpha" }];
+    const secondaryItems = [
+      { id: "secondary-alpha", name: "Secondary Alpha" },
+      { id: "secondary-bravo", name: "Secondary Bravo" },
+    ];
+    const onMove = sinon.spy();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+    await render(
+      <template>
+        <DReorderableListGroup @onMove={{onMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="primary"
+            @items={{primaryItems}}
+            @key="id"
+            @label={{label}}
+            id="boundary-primary-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="secondary"
+            @items={{secondaryItems}}
+            @key="id"
+            @label={{label}}
+            id="boundary-secondary-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    const up = arrowSelector(
+      secondaryItems[0].id,
+      "up",
+      "#boundary-secondary-list"
+    );
+    assert
+      .dom(up)
+      .hasAttribute(
+        "aria-disabled",
+        "true",
+        "the first row of the second member cannot move into the preceding member"
+      );
+
+    await click(up);
+
+    assert.strictEqual(
+      onMove.callCount,
+      0,
+      "pressing the local boundary arrow commits no group move"
+    );
+    assert.strictEqual(
+      announce.callCount,
+      0,
+      "pressing the local boundary arrow makes no announcement"
+    );
+  });
+
+  test("DReorderableList accepts a cross-list drop on an empty member root", async function (assert) {
+    const primaryItems = [{ id: "primary-alpha", name: "Primary Alpha" }];
+    const emptyItems = [];
+    const movedItem = primaryItems[0];
+    const onMove = sinon.spy();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+    await render(
+      <template>
+        <DReorderableListGroup @onMove={{onMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="primary"
+            @items={{primaryItems}}
+            @key="id"
+            @label={{label}}
+            id="empty-source-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="empty"
+            @listLabel="Empty links"
+            @items={{emptyItems}}
+            @key="id"
+            @label={{label}}
+            id="empty-target-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    const source = rowSelector(movedItem.id, "#empty-source-list");
+    const target = "#empty-target-list";
+    assert
+      .dom(target)
+      .hasClass(
+        "d-reorderable-list",
+        "the empty destination keeps the standard list root"
+      )
+      .hasAttribute(
+        "data-drop-target",
+        "",
+        "an empty grouped member registers its root as a drop target"
+      );
+    assertDragRegistered(`${source} .d-reorderable-list__handle`, target);
+    await simulateDrag(source, target, {
+      dataTransfer: new DataTransfer(),
+    });
+
+    assert.strictEqual(
+      onMove.callCount,
+      1,
+      "dropping on the empty root calls the group callback once"
+    );
+    assert.deepEqual(
+      onMove.firstCall.args[0],
+      {
+        method: "drag",
+        item: movedItem,
+        fromList: "primary",
+        toList: "empty",
+        fromIndex: 0,
+        toIndex: 0,
+        fromItems: primaryItems,
+        toItems: emptyItems,
+        proposedFromItems: [],
+        proposedToItems: [movedItem],
+      },
+      "the empty-root drop removes the source and inserts at destination index zero"
+    );
+    assert.strictEqual(
+      announce.callCount,
+      1,
+      "the empty-root drop announces exactly once"
+    );
+    assert.strictEqual(
+      announce.firstCall.args[0],
+      `Moved ${label(movedItem)} to Empty links, position 1 of 1`,
+      "the empty destination announcement measures its proposed one-item list"
+    );
+  });
+
+  test("DReorderableList keeps non-empty member roots out of drop targeting", async function (assert) {
+    const primaryItems = [{ id: "primary-alpha", name: "Primary Alpha" }];
+    const secondaryItems = [{ id: "secondary-alpha", name: "Secondary Alpha" }];
+
+    await render(
+      <template>
+        <DReorderableListGroup @onMove={{noop}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="primary"
+            @items={{primaryItems}}
+            @key="id"
+            @label={{label}}
+            id="non-empty-primary-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="secondary"
+            @items={{secondaryItems}}
+            @key="id"
+            @label={{label}}
+            id="non-empty-secondary-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    for (const root of [
+      "#non-empty-primary-list",
+      "#non-empty-secondary-list",
+    ]) {
+      assert
+        .dom(root)
+        .doesNotHaveAttribute(
+          "data-drop-target",
+          `${root} does not register its non-empty root for drops`
+        );
+      assert
+        .dom(`${root} > .d-reorderable-list__row`)
+        .hasAttribute(
+          "data-drop-target",
+          "",
+          `${root} continues to accept drops on its row`
+        );
+    }
+  });
+
+  test("DReorderableList uses the standard cross-list announcement without a destination label", async function (assert) {
+    const primaryItems = [{ id: "primary-alpha", name: "Primary Alpha" }];
+    const secondaryItems = [{ id: "secondary-alpha", name: "Secondary Alpha" }];
+    const movedItem = primaryItems[0];
+    const targetItem = secondaryItems[0];
+    const proposedToItems = [movedItem, targetItem];
+    const onMove = sinon.spy();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+    await render(
+      <template>
+        <DReorderableListGroup @onMove={{onMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="primary"
+            @listLabel="Primary links"
+            @items={{primaryItems}}
+            @key="id"
+            @label={{label}}
+            id="unlabelled-primary-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="secondary"
+            @items={{secondaryItems}}
+            @key="id"
+            @label={{label}}
+            id="unlabelled-secondary-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    const source = rowSelector(movedItem.id, "#unlabelled-primary-list");
+    const target = rowSelector(targetItem.id, "#unlabelled-secondary-list");
+    assertDragReady(assert, source, target);
+    assertDragRegistered(`${source} .d-reorderable-list__handle`, target);
+    await simulateDrag(source, target, {
+      dataTransfer: new DataTransfer(),
+      targetCoordinates: dropCoordinates(target, "before"),
+    });
+
+    assert.strictEqual(
+      onMove.callCount,
+      1,
+      "the unlabelled destination still commits one cross-list move"
+    );
+    assert.strictEqual(
+      announce.callCount,
+      1,
+      "the unlabelled destination still announces exactly once"
+    );
+    assert.strictEqual(
+      announce.firstCall.args[0],
+      `Moved ${label(movedItem)} to position 1 of ${proposedToItems.length}`,
+      "the fallback announcement omits a destination list name"
+    );
+  });
+
+  test("DReorderableList isolates grouped and standalone drag surfaces", async function (assert) {
+    const groupedItems = [
+      { id: "grouped-alpha", name: "Grouped Alpha" },
+      { id: "grouped-bravo", name: "Grouped Bravo" },
+    ];
+    const standaloneItems = [
+      { id: "standalone-alpha", name: "Standalone Alpha" },
+      { id: "standalone-bravo", name: "Standalone Bravo" },
+    ];
+    const groupOnMove = sinon.spy();
+    const standaloneOnMove = sinon.spy();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+    await render(
+      <template>
+        <DReorderableListGroup @onMove={{groupOnMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="grouped"
+            @items={{groupedItems}}
+            @key="id"
+            @label={{label}}
+            id="isolated-grouped-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </DReorderableListGroup>
+        <DReorderableList
+          @items={{standaloneItems}}
+          @key="id"
+          @label={{label}}
+          @onMove={{standaloneOnMove}}
+          id="isolated-standalone-list"
+          as |item|
+        >
+          <span data-test-item={{item.id}}>{{item.name}}</span>
+        </DReorderableList>
+      </template>
+    );
+
+    const groupedSource = rowSelector(
+      groupedItems[0].id,
+      "#isolated-grouped-list"
+    );
+    const groupedTarget = rowSelector(
+      groupedItems[1].id,
+      "#isolated-grouped-list"
+    );
+    const standaloneSource = rowSelector(
+      standaloneItems[0].id,
+      "#isolated-standalone-list"
+    );
+    const standaloneTarget = rowSelector(
+      standaloneItems[1].id,
+      "#isolated-standalone-list"
+    );
+
+    assertDragRegistered(
+      `${groupedSource} .d-reorderable-list__handle`,
+      standaloneTarget
+    );
+    await simulateDrag(groupedSource, standaloneTarget, {
+      dataTransfer: new DataTransfer(),
+      targetCoordinates: dropCoordinates(standaloneTarget, "before"),
+    });
+
+    assertDragRegistered(
+      `${standaloneSource} .d-reorderable-list__handle`,
+      groupedTarget
+    );
+    await simulateDrag(standaloneSource, groupedTarget, {
+      dataTransfer: new DataTransfer(),
+      targetCoordinates: dropCoordinates(groupedTarget, "before"),
+    });
+
+    assert.strictEqual(
+      groupOnMove.callCount,
+      0,
+      "the group rejects the standalone drag"
+    );
+    assert.strictEqual(
+      standaloneOnMove.callCount,
+      0,
+      "the standalone list rejects the grouped drag"
+    );
+    assert.strictEqual(
+      announce.callCount,
+      0,
+      "rejected drags across the isolation boundary are silent"
+    );
+  });
+
+  test("DReorderableList refuses a drop after the source member is torn down", async function (assert) {
+    const primaryItems = [{ id: "primary-alpha", name: "Primary Alpha" }];
+    const secondaryItems = [{ id: "secondary-alpha", name: "Secondary Alpha" }];
+    const state = new (class {
+      @tracked showPrimary = true;
+    })();
+    const onMove = sinon.spy();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+    await render(
+      <template>
+        <DReorderableListGroup @onMove={{onMove}} as |group|>
+          {{#if state.showPrimary}}
+            <DReorderableList
+              @group={{group}}
+              @listId="primary"
+              @items={{primaryItems}}
+              @key="id"
+              @label={{label}}
+              id="teardown-primary-list"
+              as |item|
+            >
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </DReorderableList>
+          {{/if}}
+          <DReorderableList
+            @group={{group}}
+            @listId="secondary"
+            @items={{secondaryItems}}
+            @key="id"
+            @label={{label}}
+            id="teardown-secondary-list"
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    const source = rowSelector(primaryItems[0].id, "#teardown-primary-list");
+    const sourceHandle = `${source} .d-reorderable-list__handle`;
+    const target = rowSelector(
+      secondaryItems[0].id,
+      "#teardown-secondary-list"
+    );
+    const dataTransfer = new DataTransfer();
+    assertDragRegistered(sourceHandle, target);
+    await dragEvent(sourceHandle, "dragstart", {
+      dataTransfer,
+      ...centerOf(sourceHandle),
+    });
+
+    state.showPrimary = false;
+    await settled();
+
+    assert
+      .dom("#teardown-primary-list")
+      .doesNotExist("the source member is fully unrendered mid-drag");
+    const targetCoordinates = dropCoordinates(target, "before");
+    await dragEvent(target, "dragenter", {
+      dataTransfer,
+      ...targetCoordinates,
+    });
+    await dragEvent(target, "dragover", {
+      dataTransfer,
+      ...targetCoordinates,
+    });
+    await dragEvent(target, "drop", {
+      dataTransfer,
+      ...targetCoordinates,
+    });
+
+    assert.strictEqual(
+      onMove.callCount,
+      0,
+      "the group refuses a drop whose source membership is gone"
+    );
+    assert.strictEqual(
+      announce.callCount,
+      0,
+      "the refused teardown drop makes no announcement"
+    );
+  });
+
+  test("DReorderableList rejects duplicate group listId registrations", async function (assert) {
+    const primaryItems = [{ id: "primary-alpha", name: "Primary Alpha" }];
+    const secondaryItems = [{ id: "secondary-alpha", name: "Secondary Alpha" }];
+    let raised;
+
+    setupOnerror((error) => {
+      raised = error;
+    });
+
+    try {
+      await render(
+        <template>
+          <DReorderableListGroup @onMove={{noop}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="duplicate"
+              @items={{primaryItems}}
+              @key="id"
+              @label={{label}}
+              as |item|
+            >
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="duplicate"
+              @items={{secondaryItems}}
+              @key="id"
+              @label={{label}}
+              as |item|
+            >
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+    } finally {
+      resetOnerror();
+    }
+
+    assert.true(
+      /Assertion Failed:.*(duplicate|list.?id|unique)/i.test(
+        raised?.message ?? ""
+      ),
+      "duplicate listId registration triggers a development assertion"
+    );
+  });
+});
