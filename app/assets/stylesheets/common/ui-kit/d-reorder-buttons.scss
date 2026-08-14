@@ -1,4 +1,4 @@
-/* The stacked reorder pair. Deliberately smaller than a normal button: it sits
+/* The compact reorder pair. Deliberately smaller than a normal button: it sits
    beside a drag handle in a dense list row, and at full button size it drives the
    row's height instead of fitting inside it. Positioning within the row is left
    to the consumer, since only it knows whether the row is one line or many. */
@@ -7,6 +7,10 @@
   display: flex;
   flex-direction: column;
   font-size: 0.7em;
+
+  &.--inline {
+    flex-direction: row;
+  }
 
   /* On a touch screen these ARE the reorder path, and the compact pair
      collapses well below the 24px WCAG 2.5.8 asks of a pointer target. The
@@ -17,8 +21,13 @@
 
     /* The full-size pair is often taller than the row beside it, so a consumer
        that stretches this cell would otherwise leave the buttons pinned to its
-       top rather than balanced around the row's middle. */
+       top rather than balanced around the row's middle. The inline pair also
+       centers along its row when the consumer gives it extra width. */
     justify-content: center;
+
+    &.--inline {
+      align-items: center;
+    }
   }
 
   &__button.btn {
