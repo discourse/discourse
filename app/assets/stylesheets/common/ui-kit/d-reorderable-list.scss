@@ -3,6 +3,12 @@
    what the list itself owns. */
 
 .d-reorderable-list {
+  &__create {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+  }
+
   /* Reveal mode hides with opacity rather than display, because the arrows are
      the keyboard path: they must keep their tab stops and reveal themselves the
      moment one is focused. A touch screen has no hover to reveal with, so the

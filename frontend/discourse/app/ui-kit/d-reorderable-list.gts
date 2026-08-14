@@ -2,12 +2,18 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import type { TOC } from "@ember/component/template-only";
 import { assert } from "@ember/debug";
+import { isDestroyed, isDestroying } from "@ember/destroyable";
 import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import type { ComponentLike, ModifierLike } from "@glint/template";
+import { modifier } from "ember-modifier";
 import type A11yService from "discourse/services/a11y";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -73,6 +79,28 @@ export interface ReorderableRowApi {
 
   /** Whether this row's drag is currently in flight. */
   isDragging: boolean;
+
+  /**
+   * The pre-wired drag handle for this row, present only under
+   * `@controls="manual"` on a movable row. Placing it anywhere inside the row
+   * block renders the standard handle; omitting it makes the row a
+   * keyboard-only surface.
+   */
+  handle?: ComponentLike<{ Element: HTMLSpanElement }>;
+
+  /**
+   * The pre-wired arrow pair for this row, present only under
+   * `@controls="manual"` on a movable row. A movable manual row must place
+   * either this or `controls` — the keyboard path is not optional, and a
+   * development assertion fires when both are missing.
+   */
+  arrows?: ComponentLike<{ Element: HTMLSpanElement }>;
+
+  /**
+   * The handle and arrows fused in their standard order, for manual
+   * placements that keep both controls in one cell.
+   */
+  controls?: ComponentLike<object>;
 }
 
 /** The context handed to a `@rowClass` function. */
@@ -99,6 +127,7 @@ interface Row<T> {
   handleLabel: string;
   upLabel: string;
   downLabel: string;
+  yieldControls: boolean;
 }
 
 interface DReorderableListSignature<T> {
@@ -180,9 +209,12 @@ interface DReorderableListSignature<T> {
 
     /**
      * Where the standard controls render relative to the row's block content.
-     * Defaults to `"start"`.
+     * `"start"` (the default) and `"end"` render them automatically;
+     * `"manual"` renders none and instead yields pre-wired `handle`, `arrows`,
+     * and `controls` components on the row API, for layouts where the
+     * controls must occupy specific cells or grid tracks.
      */
-    controls?: "start" | "end";
+    controls?: "start" | "end" | "manual";
 
     /**
      * Layout for the arrow pair, forwarded to the underlying buttons: the
@@ -211,6 +243,18 @@ interface DReorderableListSignature<T> {
      * has already run either way.
      */
     announceMove?: (move: ReorderableMove<T>) => string | false;
+
+    /**
+     * Renders a create affordance after the rows: a text input and an add
+     * button by default, or the `<:create>` block when one is given.
+     */
+    allowCreate?: boolean;
+
+    /**
+     * Called with the trimmed value when the default create affordance is
+     * submitted. Never called for an empty or whitespace-only value.
+     */
+    onCreate?: (value: string) => void;
   };
   Blocks: {
     /** The row content, rendered beside the standard controls. */
@@ -227,30 +271,34 @@ interface DReorderableListSignature<T> {
 
     /** Rendered in the rows' position when `@items` is empty. */
     empty: [];
+
+    /**
+     * Replaces the default create affordance when `@allowCreate` is set,
+     * rendered between the rows and the static content.
+     */
+    create: [];
   };
   Element: HTMLElement;
 }
 
-interface ReorderControlsSignature {
+interface HandlePartSignature {
   Args: {
     row: Row<unknown>;
     dragType: string;
-    arrowsLayout?: "stacked" | "inline";
     onDragStart: (event: { source: DragSource }) => void;
     onDragEnd: () => void;
-    moveRow: (key: string, direction: "up" | "down") => void;
   };
+  Element: HTMLSpanElement;
 }
 
 /**
- * The standard per-row controls: the decorative drag handle and the arrow
- * pair. Extracted so the start and end placements render one shared shape.
+ * The standard drag handle for one row.
  *
  * The drag source registers on the handle itself, so the handle is both what
  * carries `draggable` and what the registration marks — the row stays free
  * for text selection and nested controls without any ref plumbing.
  */
-const ReorderControls: TOC<ReorderControlsSignature> = <template>
+const HandlePart: TOC<HandlePartSignature> = <template>
   <DDragHandle
     {{dDragAndDropSource
       type=@dragType
@@ -260,8 +308,28 @@ const ReorderControls: TOC<ReorderControlsSignature> = <template>
     }}
     @label={{@row.handleLabel}}
     class="d-reorderable-list__handle"
+    ...attributes
   />
+</template>;
+
+interface ArrowsPartSignature {
+  Args: {
+    row: Row<unknown>;
+    arrowsLayout?: "stacked" | "inline";
+    moveRow: (key: string, direction: "up" | "down") => void;
+    register: ModifierLike<{ Args: { Positional: [string] } }>;
+  };
+  Element: HTMLSpanElement;
+}
+
+/**
+ * The standard arrow pair for one row. It reports its presence through
+ * `@register`, which is how the manual-placement guard knows the row kept its
+ * keyboard path.
+ */
+const ArrowsPart: TOC<ArrowsPartSignature> = <template>
   <DReorderButtons
+    {{@register @row.key}}
     @onMoveUp={{fn @moveRow @row.key "up"}}
     @onMoveDown={{fn @moveRow @row.key "down"}}
     @disableUp={{@row.disableUp}}
@@ -270,8 +338,111 @@ const ReorderControls: TOC<ReorderControlsSignature> = <template>
     @downLabel={{@row.downLabel}}
     @layout={{@arrowsLayout}}
     class="d-reorderable-list__arrows"
+    ...attributes
   />
 </template>;
+
+interface ReorderControlsSignature {
+  Args: {
+    row: Row<unknown>;
+    dragType: string;
+    arrowsLayout?: "stacked" | "inline";
+    onDragStart: (event: { source: DragSource }) => void;
+    onDragEnd: () => void;
+    moveRow: (key: string, direction: "up" | "down") => void;
+    register: ModifierLike<{ Args: { Positional: [string] } }>;
+  };
+}
+
+/**
+ * The standard per-row controls: the decorative drag handle and the arrow
+ * pair, in their fixed order. The automatic placements render this shape, and
+ * a manual placement receives it as the fused `controls` component.
+ */
+const ReorderControls: TOC<ReorderControlsSignature> = <template>
+  <HandlePart
+    @row={{@row}}
+    @dragType={{@dragType}}
+    @onDragStart={{@onDragStart}}
+    @onDragEnd={{@onDragEnd}}
+  />
+  <ArrowsPart
+    @row={{@row}}
+    @arrowsLayout={{@arrowsLayout}}
+    @moveRow={{@moveRow}}
+    @register={{@register}}
+  />
+</template>;
+
+interface CreateRowSignature {
+  Args: {
+    itemTag: string;
+    onCreate?: (value: string) => void;
+  };
+}
+
+/**
+ * The default create affordance: a text input and an add button rendered as
+ * one extra row. Submitting via Enter or the button reports the trimmed value
+ * and clears the input; an empty or whitespace-only value reports nothing.
+ */
+class CreateRow extends Component<CreateRowSignature> {
+  captureInput = modifier((element: HTMLInputElement) => {
+    this.#input = element;
+    return () => (this.#input = undefined);
+  });
+  /**
+   * The live input element. Read directly at submit time instead of mirroring
+   * keystrokes into tracked state: the value only matters at that moment, and
+   * clearing must reach the element's property — resetting a bound attribute
+   * would not clear what the user typed.
+   */
+  #input?: HTMLInputElement;
+
+  @action
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.#submit();
+    }
+  }
+
+  @action
+  submit() {
+    this.#submit();
+  }
+
+  #submit() {
+    const element = this.#input;
+    const value = element?.value.trim();
+    if (!element || !value) {
+      return;
+    }
+    this.args.onCreate?.(value);
+    element.value = "";
+  }
+
+  <template>
+    {{#let (dElement @itemTag) as |Wrapper|}}
+      <Wrapper class="d-reorderable-list__create">
+        <input
+          {{this.captureInput}}
+          {{on "keydown" this.onKeydown}}
+          type="text"
+          class="d-reorderable-list__create-input"
+          aria-label={{i18n "reorder.add_item"}}
+        />
+        <DButton
+          @icon="plus"
+          @action={{this.submit}}
+          @translatedAriaLabel={{i18n "reorder.add_item"}}
+          @translatedTitle={{i18n "reorder.add_item"}}
+          class="btn-flat d-reorderable-list__create-button"
+        />
+      </Wrapper>
+    {{/let}}
+  </template>
+}
 
 /**
  * A reorderable list: the standard shell for any surface where the user
@@ -320,6 +491,72 @@ export default class DReorderableList<T> extends Component<
     }
     return rowClass;
   };
+
+  /**
+   * Applied by the arrow pair wherever it renders, so the component knows the
+   * row kept its keyboard path regardless of where a manual placement put it.
+   */
+  registerKeyboardPath = modifier((_element: Element, [key]: [string]) => {
+    this.#keyboardPathKeys.add(key);
+    return () => this.#keyboardPathKeys.delete(key);
+  });
+  /**
+   * Guards the manual-placement contract: a movable row under
+   * `@controls="manual"` must place the yielded arrows (alone or fused), or
+   * it silently loses its keyboard path. Checked after render, once the row's
+   * descendants have registered.
+   */
+  verifyKeyboardPath = modifier((element: Element) => {
+    // The key is read from the element rather than taken as an argument: an
+    // argument's tracking tag invalidates on every rows recompute, and a
+    // function modifier that consumed it would tear down and re-run each
+    // time. Reading only the element keeps this a strict once-per-element
+    // lifecycle hook.
+    if (!this.isManual) {
+      return;
+    }
+    const key = element.getAttribute("data-reorderable-key") ?? "";
+    schedule("afterRender", () => {
+      if (isDestroying(this) || isDestroyed(this)) {
+        return;
+      }
+      assert(
+        `d-reorderable-list: the manual row "${key}" renders no keyboard path — place the yielded arrows or controls`,
+        this.#keyboardPathKeys.has(key)
+      );
+    });
+  });
+  /**
+   * Clears the in-flight drag key when the dragged row is destroyed: a source
+   * torn down mid-drag may never report its `dragend`, and the stale key
+   * would otherwise mark a later row for the same item as still dragging.
+   * Deferred a tick because the teardown runs inside a render pass that has
+   * already read the key.
+   */
+  trackRowDragState = modifier((element: Element) => {
+    // The key is read from the element for the same reason as in
+    // `verifyKeyboardPath`: consuming a reactive argument would re-run this
+    // modifier on every rows recompute, and its cleanup would then wrongly
+    // clear a drag that is still in flight.
+    const key = element.getAttribute("data-reorderable-key") ?? "";
+    return () => {
+      if (this._draggingKey !== key) {
+        return;
+      }
+      next(() => {
+        if (
+          !isDestroying(this) &&
+          !isDestroyed(this) &&
+          this._draggingKey === key
+        ) {
+          this._draggingKey = null;
+        }
+      });
+    };
+  });
+  /** The keys whose arrow pair is currently rendered, for the manual guard. */
+  #keyboardPathKeys = new Set<string>();
+
   /**
    * The key of the row whose drag is in flight, so every row can yield its
    * own `isDragging`. Keyed rather than held as an element or item reference,
@@ -335,8 +572,12 @@ export default class DReorderableList<T> extends Component<
     return this.args.itemTag ?? "li";
   }
 
-  get controlsPlacement(): "start" | "end" {
+  get controlsPlacement(): "start" | "end" | "manual" {
     return this.args.controls ?? "start";
+  }
+
+  get isManual(): boolean {
+    return this.controlsPlacement === "manual";
   }
 
   get revealControls(): boolean {
@@ -361,11 +602,12 @@ export default class DReorderableList<T> extends Component<
       seen.add(key);
 
       const itemLabel = label(item);
+      const rowMovable = !disabled && (movable ? movable(item) : true);
       return {
         item,
         key,
         index,
-        movable: !disabled && (movable ? movable(item) : true),
+        movable: rowMovable,
         isFirst: false,
         isLast: false,
         isDragging: key === this._draggingKey,
@@ -374,6 +616,7 @@ export default class DReorderableList<T> extends Component<
         handleLabel: i18n("reorder.drag_handle", { label: itemLabel }),
         upLabel: i18n("reorder.move_up", { label: itemLabel }),
         downLabel: i18n("reorder.move_down", { label: itemLabel }),
+        yieldControls: rowMovable && this.isManual,
       };
     });
 
@@ -580,6 +823,8 @@ export default class DReorderableList<T> extends Component<
                     accepts=this.dragType
                     onDrop=(fn this.onRowDrop row.key)
                   }}
+                  {{this.verifyKeyboardPath}}
+                  {{this.trackRowDragState}}
                 >
                   {{#if (eq this.controlsPlacement "start")}}
                     <ReorderControls
@@ -589,6 +834,7 @@ export default class DReorderableList<T> extends Component<
                       @onDragStart={{this.onSourceDragStart}}
                       @onDragEnd={{this.onSourceDragEnd}}
                       @moveRow={{this.moveRow}}
+                      @register={{this.registerKeyboardPath}}
                     />
                   {{/if}}
                   {{yield
@@ -599,6 +845,39 @@ export default class DReorderableList<T> extends Component<
                       isLast=row.isLast
                       movable=row.movable
                       isDragging=row.isDragging
+                      handle=(if
+                        row.yieldControls
+                        (component
+                          HandlePart
+                          row=row
+                          dragType=this.dragType
+                          onDragStart=this.onSourceDragStart
+                          onDragEnd=this.onSourceDragEnd
+                        )
+                      )
+                      arrows=(if
+                        row.yieldControls
+                        (component
+                          ArrowsPart
+                          row=row
+                          arrowsLayout=@arrowsLayout
+                          moveRow=this.moveRow
+                          register=this.registerKeyboardPath
+                        )
+                      )
+                      controls=(if
+                        row.yieldControls
+                        (component
+                          ReorderControls
+                          row=row
+                          dragType=this.dragType
+                          arrowsLayout=@arrowsLayout
+                          onDragStart=this.onSourceDragStart
+                          onDragEnd=this.onSourceDragEnd
+                          moveRow=this.moveRow
+                          register=this.registerKeyboardPath
+                        )
+                      )
                     )
                   }}
                   {{#if (eq this.controlsPlacement "end")}}
@@ -609,6 +888,7 @@ export default class DReorderableList<T> extends Component<
                       @onDragStart={{this.onSourceDragStart}}
                       @onDragEnd={{this.onSourceDragEnd}}
                       @moveRow={{this.moveRow}}
+                      @register={{this.registerKeyboardPath}}
                     />
                   {{/if}}
                 </Item>
@@ -637,6 +917,13 @@ export default class DReorderableList<T> extends Component<
           {{/let}}
         {{else}}
           {{yield to="empty"}}
+        {{/if}}
+        {{#if @allowCreate}}
+          {{#if (has-block "create")}}
+            {{yield to="create"}}
+          {{else}}
+            <CreateRow @itemTag={{this.itemTag}} @onCreate={{@onCreate}} />
+          {{/if}}
         {{/if}}
         {{yield to="static"}}
       </List>
