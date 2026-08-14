@@ -785,6 +785,35 @@ RSpec.describe PostAlerter do
       expect(theirs[:linked_topics].map { |t| t[:topic_id] }).to eq([other_user_post.topic_id])
     end
 
+    it "does not name a linked topic the recipient cannot see" do
+      # Moving a post leaves a moderator post linking the destination topic,
+      # which may be in a category the post's author has no access to. The
+      # title is stored on the notification and sent to the client, so it must
+      # not name that topic - they are still notified, just without it named.
+      # The recipient authored the post in the restricted topic - that is what
+      # a moved post looks like - so the link resolves to them and would be
+      # named on their notification without the visibility check.
+      restricted_category = Fabricate(:private_category, group: Group[:staff])
+      restricted_topic =
+        Fabricate(:topic, category: restricted_category, title: "Secret destination")
+      restricted_post = Fabricate(:post, topic: restricted_topic, user: user)
+
+      expect(user.guardian.can_see?(restricted_topic)).to eq(false)
+
+      create_post(
+        raw:
+          "see #{Discourse.base_url}#{post1.url} " \
+            "and #{Discourse.base_url}#{restricted_post.url}",
+      )
+
+      notification = user.notifications.find_by(notification_type: Notification.types[:linked])
+      expect(notification).to be_present
+
+      titles = notification.data_hash[:linked_topics].map { |t| t[:title] }
+      expect(titles).to eq([post1.topic.title])
+      expect(notification.data).not_to include("Secret destination")
+    end
+
     it "triggers :before_create_notifications_for_users" do
       events = DiscourseEvent.track_events { linking_post }
       expect(events).to include(

@@ -224,7 +224,7 @@ class PostAlerter
           user,
           :linked,
           post,
-          custom_data: linked_topics_notification_data(linked_topics_by_user[user]),
+          custom_data: linked_topics_notification_data(user, linked_topics_by_user[user]),
         )
     end
 
@@ -851,9 +851,11 @@ class PostAlerter
         next if !user
 
         linked_topic ||= linked_post.topic
-        next if !linked_topic
 
-        (by_user[user] ||= []) << linked_topic
+        # A user with no visible linked topic still gets notified, exactly as
+        # before; they just have no topic named for them.
+        by_user[user] ||= []
+        by_user[user] << linked_topic if linked_topic
       end
 
     by_user
@@ -861,10 +863,17 @@ class PostAlerter
 
   # The `linked_topics` payload for one recipient, capped so a post linking
   # many of their topics cannot bloat the notification.
-  def linked_topics_notification_data(topics)
+  #
+  # Titles are stored on the notification and sent to the client, so a topic
+  # the recipient cannot see is left out entirely: moving a post leaves a
+  # moderator post linking the destination, which may be restricted. They are
+  # still notified, just without a topic named.
+  def linked_topics_notification_data(user, topics)
     return {} if topics.blank?
 
-    named = topics.uniq(&:id)
+    guardian = Guardian.new(user)
+    named = topics.uniq(&:id).select { |topic| guardian.can_see?(topic) }
+    return {} if named.empty?
 
     {
       linked_topics:
