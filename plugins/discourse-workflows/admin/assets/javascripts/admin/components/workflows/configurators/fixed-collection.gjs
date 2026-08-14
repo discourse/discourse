@@ -97,6 +97,10 @@ export default class FixedCollection extends Component {
     return this.args.schema?.ui?.flat === true;
   }
 
+  get isSortable() {
+    return this.args.schema?.type_options?.sortable === true;
+  }
+
   get hide_optional_fields() {
     const type_options = this.args.schema.type_options || {};
     return type_options.hide_optional_fields;
@@ -264,6 +268,56 @@ export default class FixedCollection extends Component {
   }
 
   @action
+  isFirstItem(index) {
+    return index === 0;
+  }
+
+  @action
+  isLastItem(group, index) {
+    return index === this.itemCount(group) - 1;
+  }
+
+  @action
+  moveItemLabel(direction, index) {
+    return i18n(`discourse_workflows.property_engine.move_item_${direction}`, {
+      position: index + 1,
+    });
+  }
+
+  @action
+  async moveItem(group, index, offset) {
+    const path = this.groupPath(group);
+    const items = this.args.formApi?.get(path);
+    const newIndex = index + offset;
+
+    if (!Array.isArray(items) || newIndex < 0 || newIndex >= items.length) {
+      return;
+    }
+
+    const reorderedItems = [...items];
+    const [movedItem] = reorderedItems.splice(index, 1);
+    reorderedItems.splice(newIndex, 0, movedItem);
+
+    const currentKey = this.activeAttrKey(group, index);
+    const newKey = this.activeAttrKey(group, newIndex);
+    const reorderedAttrs = new Map(this.activeAttrs);
+    const currentAttrs = reorderedAttrs.get(currentKey);
+    const newAttrs = reorderedAttrs.get(newKey);
+    reorderedAttrs.delete(currentKey);
+    reorderedAttrs.delete(newKey);
+    if (currentAttrs) {
+      reorderedAttrs.set(newKey, currentAttrs);
+    }
+    if (newAttrs) {
+      reorderedAttrs.set(currentKey, newAttrs);
+    }
+    this.activeAttrs = reorderedAttrs;
+
+    await this.args.formApi.set(path, reorderedItems);
+    this.args.onChange?.();
+  }
+
+  @action
   isAttrActive(group, index, field, item) {
     return isExtraFieldShown(
       field,
@@ -350,6 +404,29 @@ export default class FixedCollection extends Component {
             as |collection index item|
           >
             <div class="workflows-property-engine__collection-row">
+
+              {{#if this.isSortable}}
+                <div
+                  class="workflows-property-engine__collection-order-controls"
+                >
+                  <DButton
+                    @action={{fn this.moveItem group index -1}}
+                    @icon="arrow-up"
+                    @disabled={{this.isFirstItem index}}
+                    @translatedAriaLabel={{this.moveItemLabel "up" index}}
+                    @translatedTitle={{this.moveItemLabel "up" index}}
+                    class="workflows-property-engine__collection-move"
+                  />
+                  <DButton
+                    @action={{fn this.moveItem group index 1}}
+                    @icon="arrow-down"
+                    @disabled={{this.isLastItem group index}}
+                    @translatedAriaLabel={{this.moveItemLabel "down" index}}
+                    @translatedTitle={{this.moveItemLabel "down" index}}
+                    class="workflows-property-engine__collection-move"
+                  />
+                </div>
+              {{/if}}
 
               <DButton
                 @action={{fn this.removeItem group collection.remove index}}

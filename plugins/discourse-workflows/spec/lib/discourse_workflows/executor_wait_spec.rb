@@ -29,6 +29,7 @@ RSpec.describe DiscourseWorkflows::Executor do
           status: "waiting",
           waiting_node_id: "wait-1",
           finished_at: nil,
+          timeout_action: nil,
         )
         expect(execution.waiting_until).to eq_time(
           described_class::MAX_WAIT_DURATION_SECONDS.seconds.from_now,
@@ -167,6 +168,54 @@ RSpec.describe DiscourseWorkflows::Executor do
 
         expect(execution).to have_attributes(status: "waiting", waiting_node_id: "wait-1")
         expect(execution.waiting_until).to eq_time(3.hours.from_now)
+      end
+    end
+
+    context "when a node supplies a timeout action" do
+      let(:timeout_wait_node_class) do
+        Class.new(DiscourseWorkflows::NodeType) do
+          description(
+            name: "action:timeout_wait_test",
+            version: "1.0",
+            capabilities: {
+              waits_for_resume: true,
+            },
+          )
+
+          def execute(exec_ctx)
+            exec_ctx.put_execution_to_wait(5.minutes.from_now, timeout_action: "fail")
+            [exec_ctx.input_items]
+          end
+        end
+      end
+
+      before do
+        plugin = Plugin::Instance.new
+        DiscoursePluginRegistry.register_discourse_workflows_node(timeout_wait_node_class, plugin)
+        DiscourseWorkflows::Registry.reset_indexes!
+      end
+
+      after { unregister_workflow_nodes(timeout_wait_node_class) }
+
+      it "carries the timeout action through the executor into the execution" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:manual"
+            g.node "wait-1", "action:timeout_wait_test"
+            g.chain "trigger-1", "wait-1"
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+        freeze_time do
+          execution = described_class.new(workflow, "trigger-1", {}).run
+
+          expect(execution).to have_attributes(
+            status: "waiting",
+            waiting_until: be_within(1.second).of(5.minutes.from_now),
+            timeout_action: "fail",
+          )
+        end
       end
     end
   end
