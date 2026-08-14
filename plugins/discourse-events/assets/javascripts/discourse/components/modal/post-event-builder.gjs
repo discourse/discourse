@@ -55,7 +55,7 @@ export default class PostEventBuilder extends Component {
   // mirror-write and reinitialize the form (losing focus mid-keystroke).
   // Snapshot once at construction; refresh only when toggleAdvanced enters
   // the advanced screen.
-  formData = this.#snapshotFormData();
+  @tracked formData = this.#snapshotFormData();
 
   #initAttendanceMode() {
     if (this.event.status === "standalone") {
@@ -561,8 +561,12 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  setCustomField(field, value) {
-    this.event.customFields[field] = value;
+  setCustomField(field, value, { set, name }) {
+    set(name, value);
+    this.event.customFields = EmberObject.create({
+      ...this.event.customFields,
+      [field]: value,
+    });
   }
 
   @action
