@@ -230,6 +230,11 @@
       padding: var(--space-4);
       border-radius: var(--d-border-radius);
 
+      img:not(.avatar, .emoji) {
+        max-width: 100%;
+        height: auto;
+      }
+
       .lightbox-wrapper img {
         display: block;
       }
