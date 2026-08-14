@@ -246,7 +246,10 @@ interface DReorderableListSignature<T> {
 
     /**
      * Renders a create affordance after the rows: a text input and an add
-     * button by default, or the `<:create>` block when one is given.
+     * button by default, or the `<:create>` block when one is given. The
+     * default row is list-shaped (it renders as one extra item element), so a
+     * table shell should supply its own `<:create>` block with valid cell
+     * markup.
      */
     allowCreate?: boolean;
 
@@ -401,7 +404,9 @@ class CreateRow extends Component<CreateRowSignature> {
 
   @action
   onKeydown(event: KeyboardEvent) {
-    if (event.key === "Enter") {
+    // A keydown arriving mid-IME-composition belongs to the candidate window,
+    // not to this control.
+    if (event.key === "Enter" && !event.isComposing) {
       event.preventDefault();
       this.#submit();
     }
@@ -415,10 +420,12 @@ class CreateRow extends Component<CreateRowSignature> {
   #submit() {
     const element = this.#input;
     const value = element?.value.trim();
-    if (!element || !value) {
+    // Without a handler the value has nowhere to go, so it stays in the input
+    // instead of being silently discarded.
+    if (!element || !value || !this.args.onCreate) {
       return;
     }
-    this.args.onCreate?.(value);
+    this.args.onCreate(value);
     element.value = "";
   }
 
@@ -503,8 +510,9 @@ export default class DReorderableList<T> extends Component<
   /**
    * Guards the manual-placement contract: a movable row under
    * `@controls="manual"` must place the yielded arrows (alone or fused), or
-   * it silently loses its keyboard path. Checked after render, once the row's
-   * descendants have registered.
+   * it silently loses its keyboard path. Checked once per row element, after
+   * its first render — a consumer that conditionally removes its placed
+   * arrows later is beyond this guard's reach.
    */
   verifyKeyboardPath = modifier((element: Element) => {
     // The key is read from the element rather than taken as an argument: an
