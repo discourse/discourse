@@ -63,7 +63,12 @@ export function createRovingFocusApi(
           item.dataset.logicalIndex === undefined &&
           item.dataset.index === undefined
       );
-      if (!positional || index < 0 || index >= items.length) {
+      if (
+        !positional ||
+        !Number.isInteger(index) ||
+        index < 0 ||
+        index >= items.length
+      ) {
         return false;
       }
       port.activate(items[index]);

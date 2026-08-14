@@ -94,6 +94,9 @@ export default class RovingTabindexStrategy {
       return null;
     }
     const all = this.#scope.all();
+    if (!all.length) {
+      return null;
+    }
     const start = Math.min(this.#lastFocusedIndex, all.length - 1);
     for (let index = start; index < all.length; index++) {
       if (this.#scope.isNavigable(all[index])) {
