@@ -168,81 +168,79 @@ export default class DashboardSearch extends Component {
           {{/if}}
         </p>
       {{else if @search}}
-        {{#if this.headline}}
-          <div class="db-section__subheader">
-            <div class="db-section__subintro">
-              <h3>{{this.headline.title}}</h3>
-              <p>{{this.headline.summary}}</p>
+        <div class="db-section__subheader">
+          <div class="db-section__subintro">
+            <h3>{{this.headline.title}}</h3>
+            <p>{{this.headline.summary}}</p>
+          </div>
+
+          <div class="db-section__metrics">
+            <div
+              class="db-section__metric"
+              data-test-search-kpi="total_searches"
+            >
+              <div class="db-section__metric-number">
+                {{this.totalSearchesValue}}
+              </div>
+              <div class="db-section__metric-label">
+                {{i18n
+                  "admin.dashboard.sections.search.kpi.total_searches.label"
+                }}
+                <DTooltip
+                  class="db-section__info"
+                  @identifier="search-total-searches-tooltip"
+                  @icon="far-circle-question"
+                >
+                  <:content>
+                    {{i18n
+                      "admin.dashboard.sections.search.kpi.total_searches.tooltip"
+                    }}
+                  </:content>
+                </DTooltip>
+              </div>
+              {{#if this.totalSearchesDelta}}
+                <div
+                  class="db-delta {{this.totalSearchesDelta.className}}"
+                >{{this.totalSearchesDelta.text}}</div>
+              {{/if}}
             </div>
 
-            <div class="db-section__metrics">
+            <div
+              class="db-section__metric"
+              data-test-search-kpi="no_result_rate"
+            >
               <div
-                class="db-section__metric"
-                data-test-search-kpi="total_searches"
+                class={{dConcatClass
+                  "db-section__metric-number"
+                  (if this.rateExceedsThreshold "--neg")
+                }}
               >
-                <div class="db-section__metric-number">
-                  {{this.totalSearchesValue}}
-                </div>
-                <div class="db-section__metric-label">
-                  {{i18n
-                    "admin.dashboard.sections.search.kpi.total_searches.label"
-                  }}
-                  <DTooltip
-                    class="db-section__info"
-                    @identifier="search-total-searches-tooltip"
-                    @icon="far-circle-question"
-                  >
-                    <:content>
-                      {{i18n
-                        "admin.dashboard.sections.search.kpi.total_searches.tooltip"
-                      }}
-                    </:content>
-                  </DTooltip>
-                </div>
-                {{#if this.totalSearchesDelta}}
-                  <div
-                    class="db-delta {{this.totalSearchesDelta.className}}"
-                  >{{this.totalSearchesDelta.text}}</div>
-                {{/if}}
+                {{this.noResultRateValue}}
               </div>
-
-              <div
-                class="db-section__metric"
-                data-test-search-kpi="no_result_rate"
-              >
-                <div
-                  class={{dConcatClass
-                    "db-section__metric-number"
-                    (if this.rateExceedsThreshold "--neg")
-                  }}
+              <div class="db-section__metric-label">
+                {{i18n
+                  "admin.dashboard.sections.search.kpi.no_result_rate.label"
+                }}
+                <DTooltip
+                  class="db-section__info"
+                  @identifier="search-no-result-rate-tooltip"
+                  @icon="far-circle-question"
                 >
-                  {{this.noResultRateValue}}
-                </div>
-                <div class="db-section__metric-label">
-                  {{i18n
-                    "admin.dashboard.sections.search.kpi.no_result_rate.label"
-                  }}
-                  <DTooltip
-                    class="db-section__info"
-                    @identifier="search-no-result-rate-tooltip"
-                    @icon="far-circle-question"
-                  >
-                    <:content>
-                      {{i18n
-                        "admin.dashboard.sections.search.kpi.no_result_rate.tooltip"
-                      }}
-                    </:content>
-                  </DTooltip>
-                </div>
-                {{#if this.noResultRateDelta}}
-                  <div
-                    class="db-delta {{this.noResultRateDelta.className}}"
-                  >{{this.noResultRateDelta.text}}</div>
-                {{/if}}
+                  <:content>
+                    {{i18n
+                      "admin.dashboard.sections.search.kpi.no_result_rate.tooltip"
+                    }}
+                  </:content>
+                </DTooltip>
               </div>
+              {{#if this.noResultRateDelta}}
+                <div
+                  class="db-delta {{this.noResultRateDelta.className}}"
+                >{{this.noResultRateDelta.text}}</div>
+              {{/if}}
             </div>
           </div>
-        {{/if}}
+        </div>
 
         <div class="db-section__row">
           <div class="db-section__row-block">

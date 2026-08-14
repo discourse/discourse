@@ -41,7 +41,7 @@ const endDate = new Date("2026-04-30");
 module("Integration | Component | Dashboard | Support", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("looks up headline keys by scenario", function (assert) {
+  test("selects the declining support message when resolution drops and first reply slows", function (assert) {
     assert.deepEqual(
       supportHeadlineKeys({ resolutionRate: "down", firstReplyTime: "up" }),
       {
@@ -49,7 +49,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
         summary: "fewer_answers_and_slower_replies",
         cta: "in_progress_and_unanswered",
       },
-      "returns semantic translation keys"
+      "selects declining-support copy and both follow-up actions"
     );
   });
 
@@ -141,7 +141,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
     assert.dom(".db-section__metrics .db-pill").doesNotExist();
   });
 
-  test("renders the PM headline when the resolution rate declines and the first reply becomes slower", async function (assert) {
+  test("shows declining support when resolution drops and first reply slows", async function (assert) {
     const data = {
       category_options: [],
       kpis: {
@@ -456,7 +456,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       );
   });
 
-  test("treats no prior support activity as a zero baseline", async function (assert) {
+  test("shows improved resolution and slower replies when the prior period has no support activity", async function (assert) {
     const data = {
       category_options: [],
       kpis: {

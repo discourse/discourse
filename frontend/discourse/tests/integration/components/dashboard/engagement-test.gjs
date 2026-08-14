@@ -37,7 +37,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     ],
   };
 
-  test("looks up headline keys by scenario", function (assert) {
+  test("selects the stickiness message when stickiness improves, daily engagement declines, and signups are flat", function (assert) {
     assert.deepEqual(
       engagementHeadlineKeys({
         stickiness: "improved",
@@ -48,11 +48,11 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
         title: "stickiness_increased",
         summary: "stickiness_up_daily_engagement_down",
       },
-      "returns semantic translation keys"
+      "selects copy that highlights improved stickiness and declining daily engagement"
     );
   });
 
-  test("renders one metric per kpi", async function (assert) {
+  test("shows every KPI with its formatted value", async function (assert) {
     await render(
       <template>
         <DashboardEngagement
@@ -112,7 +112,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     assert.dom(".db-section__subintro").doesNotExist();
   });
 
-  test("treats no prior activity as a zero baseline", async function (assert) {
+  test("shows new activity as an increase when the prior period has no activity", async function (assert) {
     const scenarioEngagement = {
       kpis: [
         {
@@ -161,7 +161,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       );
   });
 
-  test("classifies a visible negative half-step change as a decline", async function (assert) {
+  test("shows a decline when a negative half-step rounds to -0.1%", async function (assert) {
     const scenarioEngagement = {
       kpis: [
         {
@@ -189,7 +189,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       );
   });
 
-  test("chooses the largest decline using the tile's display rounding", async function (assert) {
+  test("recommends investigating disengaged members when daily engagement has the largest displayed decline", async function (assert) {
     const scenarioEngagement = {
       kpis: [
         {
@@ -229,11 +229,11 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       .dom(".db-section__subintro p")
       .includesText(
         "Investigate the decline to see which members have disengaged.",
-        "daily engagement owns the CTA because -1% is below -0.6%"
+        "recommends investigating disengaged members for the largest displayed decline"
       );
   });
 
-  test("uses metric order to resolve rounded decline ties", async function (assert) {
+  test("recommends reviewing activity by category when stickiness and daily engagement have equal displayed declines", async function (assert) {
     const scenarioEngagement = {
       kpis: [
         {
@@ -270,7 +270,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       .dom(".db-section__subintro p")
       .includesText(
         "Take a look at the activity by category",
-        "stickiness owns the CTA when rounded declines tie"
+        "recommends reviewing activity by category for equal displayed declines"
       );
   });
 

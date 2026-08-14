@@ -116,7 +116,7 @@ describe "Admin Dashboard Redesign | Engagement section" do
     expect(engagement).to have_no_selected_whos_posting_category(category_alpha)
   end
 
-  it "shows an admin an objective summary when every engagement metric improves",
+  it "shows that engagement is up when every engagement metric improves",
      time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
     Fabricate(:user_visit_daily_rollup, date: Date.new(2026, 5, 1), dau: 1, mau: 2)
     Fabricate(:user_visit_daily_rollup, date: Date.new(2026, 6, 1), dau: 2, mau: 2)

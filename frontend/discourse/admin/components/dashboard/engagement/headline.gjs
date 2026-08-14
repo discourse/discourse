@@ -158,12 +158,10 @@ export default class EngagementHeadline extends Component {
 
   <template>
     <div class="db-section__subheader">
-      {{#if this.headline}}
-        <div class="db-section__subintro">
-          <h3>{{this.headline.title}}</h3>
-          <p>{{this.headline.summary}}</p>
-        </div>
-      {{/if}}
+      <div class="db-section__subintro">
+        <h3>{{this.headline.title}}</h3>
+        <p>{{this.headline.summary}}</p>
+      </div>
       <div class="db-section__metrics">
         {{#each @kpis as |metric|}}
           <MetricItem @metric={{metric}} />

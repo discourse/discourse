@@ -10,7 +10,7 @@ module("Unit | Admin | Lib | dashboard-format", function (hooks) {
   setupTest(hooks);
 
   module("formatDashboardHeadlinePeriod", function () {
-    test("formats preset and custom periods", function (assert) {
+    test("returns translated labels for preset and custom periods", function (assert) {
       assert.deepEqual(
         [
           formatDashboardHeadlinePeriod("last_7_days"),
@@ -24,7 +24,7 @@ module("Unit | Admin | Lib | dashboard-format", function (hooks) {
           "the last 3 months",
           "the selected period",
         ],
-        "formats every dashboard headline period"
+        "returns the label for every dashboard headline period"
       );
     });
   });

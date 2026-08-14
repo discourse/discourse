@@ -10,7 +10,7 @@ const endDate = new Date("2026-04-30");
 module("Integration | Component | Dashboard | Search", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("looks up headline keys by scenario", function (assert) {
+  test("selects the content-gaps message when searches and the no-result rate increase", function (assert) {
     assert.deepEqual(
       searchHeadlineKeys({ searches: "up", noResultRate: "up" }),
       {
@@ -18,11 +18,11 @@ module("Integration | Component | Dashboard | Search", function (hooks) {
         summary: "searches_up_no_result_rate_up",
         cta: "content_gaps",
       },
-      "returns semantic translation keys"
+      "selects content-gap copy for a worsening no-result rate"
     );
   });
 
-  test("renders the PM headline when searches increase and the no-result rate declines", async function (assert) {
+  test("shows improving search results when searches increase and the no-result rate declines", async function (assert) {
     const search = {
       logging_enabled: true,
       kpis: {
@@ -66,7 +66,7 @@ module("Integration | Component | Dashboard | Search", function (hooks) {
     );
   });
 
-  test("treats no prior searches as a zero baseline", async function (assert) {
+  test("shows searches as increased when the prior period has no searches", async function (assert) {
     const search = {
       logging_enabled: true,
       kpis: {
