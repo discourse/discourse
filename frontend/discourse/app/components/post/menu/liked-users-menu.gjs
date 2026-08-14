@@ -50,6 +50,7 @@ export default class PostLikedUsersMenu extends Component {
 
   <template>
     <UsersPopup
+      @autofocus={{true}}
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
       @totalUsers={{this.post.likeCount}}

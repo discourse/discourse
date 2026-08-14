@@ -84,6 +84,15 @@ export default class DMenuInstance extends FloatKitInstance {
     return this.expanded;
   }
 
+  /**
+   * Whether focus currently sits inside the menu's content. Read before the content is torn
+   * down, because a menu that owns focus has to hand it back on close — otherwise closing
+   * strands focus on a removed element and the browser drops it to the body.
+   */
+  get #ownsFocus(): boolean {
+    return !!this.content?.contains(document.activeElement);
+  }
+
   @action
   async close(options = { focusTrigger: true }) {
     this.resetHoverCloseState();
@@ -93,6 +102,8 @@ export default class DMenuInstance extends FloatKitInstance {
       return;
     }
 
+    const ownedFocus = this.#ownsFocus;
+
     await animateClosing(this.content);
 
     if (this.renderInModal && this.expanded) {
@@ -101,11 +112,20 @@ export default class DMenuInstance extends FloatKitInstance {
 
     await this.menu.close(this);
 
-    if (options.focusTrigger) {
+    // A caller that closes without asking for the trigger to be refocused (a click outside,
+    // say) still must not lose focus altogether. Recheck rather than trusting `ownedFocus`:
+    // closing is animated, so by now the click may have deliberately focused something else,
+    // and only focus left with no owner is ours to restore.
+    if (options.focusTrigger || (ownedFocus && this.#focusIsUnowned)) {
       this.triggerElement?.focus();
     }
 
     await super.close(options);
+  }
+
+  get #focusIsUnowned(): boolean {
+    const { activeElement } = document;
+    return !activeElement || activeElement === document.body;
   }
 
   @action
