@@ -206,8 +206,6 @@ export default class ChatMessageReaction extends Component {
         type="button"
         title={{this.emojiString}}
         data-emoji-name={{@reaction.emoji}}
-        {{! `interactive` is opt-out, as it is on the message itself: only an explicit
-        false makes a reaction display-only. }}
         tabindex={{if (eq @interactive false) "-1" "0"}}
         aria-pressed={{if @reaction.reacted "true" "false"}}
         aria-describedby={{if this.description this.descriptionId}}
