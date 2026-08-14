@@ -221,6 +221,20 @@ module DiscourseCalendar
 
           expect(response.status).to eq(404)
         end
+
+        context "when the site is in a subfolder" do
+          before { set_subfolder "/forum" }
+
+          it "returns them to a path the site actually serves" do
+            get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+            expect(response.status).to eq(200)
+            expect(response.body).to include(
+              "#{Discourse.base_url_no_prefix}/forum/discourse-calendar/livestream/zoom/frame?topic_id=#{topic.id}",
+            )
+            expect(response.body).not_to include("/forum/forum")
+          end
+        end
       end
     end
 

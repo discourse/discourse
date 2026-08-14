@@ -39,7 +39,8 @@ module DiscourseCalendar
         signatureUrl: "#{frame_base_path}/signature.json?#{signature_params.to_query}",
         # Zoom navigates this window when the user leaves, which is the only
         # notice the page around it gets that the meeting is over.
-        leaveUrl: "#{Discourse.base_url}#{frame_base_path}/frame?topic_id=#{topic.id}&left=1",
+        leaveUrl:
+          "#{Discourse.base_url_no_prefix}#{frame_base_path}/frame?topic_id=#{topic.id}&left=1",
         hasLeft: params[:left].present?,
       }
 
