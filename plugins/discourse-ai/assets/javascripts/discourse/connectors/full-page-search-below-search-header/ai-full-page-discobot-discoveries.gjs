@@ -37,7 +37,11 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
   }
 
   get shouldShow() {
-    return this.creditCheckComplete && this.creditsAvailable;
+    return (
+      this.creditCheckComplete &&
+      this.creditsAvailable &&
+      this.discobotDiscoveries.mode === "ask"
+    );
   }
 
   get hasContent() {

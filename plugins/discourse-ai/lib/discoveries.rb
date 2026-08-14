@@ -5,6 +5,10 @@ module DiscourseAi
     REQUEST_TTL = 30.minutes.to_i
     SITE_CONCURRENCY_LIMIT = 4
     WORK_LEASE_TTL = 25.seconds.to_i
+    SEARCH_MODES = { search: 0, ask: 1 }.freeze
+    SUMMARY_DETAILS = { quiet: 0, balanced: 1, prominent: 2 }.freeze
+    MIN_RELATED_DISCUSSIONS = 2
+    MAX_RELATED_DISCUSSIONS = 6
     REQUEST_ID_PATTERN =
       /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\z/i
     PRIVATE_MESSAGE_FILTER =
@@ -67,6 +71,24 @@ module DiscourseAi
         query.to_s.match?(PRIVATE_MESSAGE_FILTER)
       end
 
+      def preferences_for(user)
+        option = user.user_option
+        mode = SEARCH_MODES.key(option.ai_search_discoveries_mode) || :ask
+        summary_detail =
+          SUMMARY_DETAILS.key(option.ai_search_discoveries_summary_detail) || :balanced
+        related_count = option.ai_search_discoveries_related_count.to_i
+        if !related_count.between?(MIN_RELATED_DISCUSSIONS, MAX_RELATED_DISCUSSIONS)
+          related_count = MIN_RELATED_DISCUSSIONS
+        end
+
+        {
+          mode:,
+          show_summary: option.ai_search_discoveries_show_summary,
+          summary_detail:,
+          related_count:,
+        }
+      end
+
       def bind_request(user_id:, request_id:, query:)
         normalized_query = query.to_s.unicode_normalize(:nfc).squish
         result =
@@ -107,7 +129,7 @@ module DiscourseAi
       end
 
       def store_result(user_id:, request_id:, query:, answer:, sources:, agent_id:)
-        return if !valid_request_id?(request_id) || answer.blank? || sources.blank?
+        return if !valid_request_id?(request_id) || query.blank? || sources.blank?
 
         posts =
           Post
@@ -142,7 +164,7 @@ module DiscourseAi
 
         result = JSON.parse(payload)
         sources = Array(result["sources"])
-        return if result["query"].blank? || result["answer"].blank? || sources.empty?
+        return if result["query"].blank? || !result.key?("answer") || sources.empty?
 
         posts =
           Post
@@ -150,18 +172,25 @@ module DiscourseAi
             .includes(topic: :category)
             .index_by(&:id)
         guardian = Guardian.new(user)
+        visible_sources = []
         all_sources_visible =
           sources.all? do |source|
             post = posts[source["post_id"]]
             topic = post&.topic
-            topic && topic.id == source["topic_id"] && topic.archetype == Archetype.default &&
-              topic.deleted_at.nil? && topic.visible? && guardian.can_see?(post) &&
-              topic.category_id == source["category_id"] &&
-              post.updated_at.iso8601(6) == source["post_updated_at"] &&
-              topic.updated_at.iso8601(6) == source["topic_updated_at"]
+            visible =
+              topic && topic.id == source["topic_id"] && topic.archetype == Archetype.default &&
+                topic.deleted_at.nil? && topic.visible? && guardian.can_see?(post) &&
+                topic.category_id == source["category_id"] &&
+                post.updated_at.iso8601(6) == source["post_updated_at"] &&
+                topic.updated_at.iso8601(6) == source["topic_updated_at"]
+
+            if visible
+              visible_sources << source.merge("title" => topic.title, "url" => post.full_url)
+            end
+            visible
           end
 
-        result if all_sources_visible
+        result.merge("sources" => visible_sources) if all_sources_visible
       rescue JSON::ParserError
         nil
       end

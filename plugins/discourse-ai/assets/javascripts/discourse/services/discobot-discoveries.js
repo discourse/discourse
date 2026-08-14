@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { cancel, later } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import SmoothStreamer from "../lib/smooth-streamer";
 
@@ -36,6 +37,10 @@ export default class DiscobotDiscoveries extends Service {
   @tracked modelUsed = "";
   @tracked loadingDiscoveries = false;
   @tracked mode = "ask";
+  @tracked showSummary = true;
+  @tracked summaryDetail = 1;
+  @tracked relatedCount = 2;
+  @tracked savingPreferences = false;
   @tracked sources = [];
   @tracked activeRequestId = "";
   @tracked answerable = null;
@@ -51,6 +56,24 @@ export default class DiscobotDiscoveries extends Service {
   );
 
   discoveryTimeout = null;
+
+  constructor() {
+    super(...arguments);
+
+    const options = this.currentUser?.user_option || {};
+    this.mode = options.ai_search_discoveries_mode === 0 ? "search" : "ask";
+    this.showSummary = options.ai_search_discoveries_show_summary !== false;
+    this.summaryDetail = [0, 1, 2].includes(
+      options.ai_search_discoveries_summary_detail
+    )
+      ? options.ai_search_discoveries_summary_detail
+      : 1;
+    this.relatedCount =
+      options.ai_search_discoveries_related_count >= 2 &&
+      options.ai_search_discoveries_related_count <= 6
+        ? options.ai_search_discoveries_related_count
+        : 2;
+  }
 
   async onDiscoveryUpdate(update) {
     if (update.request_id !== this.activeRequestId) {
@@ -121,6 +144,7 @@ export default class DiscobotDiscoveries extends Service {
   get showDiscoveryTitle() {
     return Boolean(
       this.discovery.length > 0 ||
+      this.sources.length > 0 ||
       this.loadingDiscoveries ||
       this.discoveryTimedOut ||
       this.answerable === false ||
@@ -136,8 +160,52 @@ export default class DiscobotDiscoveries extends Service {
     return this.smoothStreamer?.renderedText;
   }
 
-  setMode(mode) {
-    this.mode = mode;
+  async setMode(mode) {
+    if (!["search", "ask"].includes(mode)) {
+      return;
+    }
+
+    await this.savePreference(
+      "ai_search_discoveries_mode",
+      "mode",
+      mode,
+      mode === "search" ? 0 : 1
+    );
+  }
+
+  async setShowSummary(showSummary) {
+    await this.savePreference(
+      "ai_search_discoveries_show_summary",
+      "showSummary",
+      showSummary,
+      showSummary
+    );
+  }
+
+  async setSummaryDetail(summaryDetail) {
+    if (![0, 1, 2].includes(summaryDetail)) {
+      return;
+    }
+
+    await this.savePreference(
+      "ai_search_discoveries_summary_detail",
+      "summaryDetail",
+      summaryDetail,
+      summaryDetail
+    );
+  }
+
+  async setRelatedCount(relatedCount) {
+    if (relatedCount < 2 || relatedCount > 6) {
+      return;
+    }
+
+    await this.savePreference(
+      "ai_search_discoveries_related_count",
+      "relatedCount",
+      relatedCount,
+      relatedCount
+    );
   }
 
   @action
@@ -149,6 +217,10 @@ export default class DiscobotDiscoveries extends Service {
 
   @action
   async triggerDiscovery(query) {
+    if (this.currentUser?.user_option?.ai_search_discoveries === false) {
+      return;
+    }
+
     const normalizedQuery = query?.trim();
 
     if (this.lastQuery === normalizedQuery) {
@@ -240,6 +312,28 @@ export default class DiscobotDiscoveries extends Service {
     if (this.discoveryTimeout) {
       cancel(this.discoveryTimeout);
       this.discoveryTimeout = null;
+    }
+  }
+
+  async savePreference(optionName, trackedName, trackedValue, optionValue) {
+    if (this[trackedName] === trackedValue || this.savingPreferences) {
+      return;
+    }
+
+    const previousTrackedValue = this[trackedName];
+    const previousOptionValue = this.currentUser.user_option[optionName];
+    this[trackedName] = trackedValue;
+    this.currentUser.user_option[optionName] = optionValue;
+    this.savingPreferences = true;
+
+    try {
+      await this.currentUser.save([optionName]);
+    } catch (error) {
+      this[trackedName] = previousTrackedValue;
+      this.currentUser.user_option[optionName] = previousOptionValue;
+      popupAjaxError(error);
+    } finally {
+      this.savingPreferences = false;
     }
   }
 }

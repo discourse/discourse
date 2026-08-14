@@ -54,9 +54,14 @@ describe Jobs::StreamDiscoverReply do
       expect(arguments[:cancel_manager]).to be_a(DiscourseAi::Completions::CancelManager)
       synthesis
     end
-    allow(synthesis).to receive(:call) do |query:, candidates:, &stream|
+    allow(synthesis).to receive(
+      :call,
+    ) do |query:, candidates:, show_summary:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
+      expect(show_summary).to eq(true)
+      expect(summary_detail).to eq(:balanced)
+      expect(related_count).to eq(2)
       stream.call(
         answerable: true,
         source_refs: %w[source_1],
@@ -115,9 +120,14 @@ describe Jobs::StreamDiscoverReply do
   end
 
   it "publishes a supported answer when the model omits the optional title" do
-    allow(synthesis).to receive(:call) do |query:, candidates:, &stream|
+    allow(synthesis).to receive(
+      :call,
+    ) do |query:, candidates:, show_summary:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
+      expect(show_summary).to eq(true)
+      expect(summary_detail).to eq(:balanced)
+      expect(related_count).to eq(2)
       stream.call(
         answerable: true,
         source_refs: %w[source_1],
@@ -147,6 +157,61 @@ describe Jobs::StreamDiscoverReply do
     )
   end
 
+  it "uses the result preferences captured when the search was submitted" do
+    user.user_option.update!(
+      ai_search_discoveries_show_summary: false,
+      ai_search_discoveries_summary_detail: 0,
+      ai_search_discoveries_related_count: 5,
+    )
+    submitted_preferences = DiscourseAi::Discoveries.preferences_for(user)
+    user.user_option.update!(
+      ai_search_discoveries_show_summary: true,
+      ai_search_discoveries_summary_detail: 2,
+      ai_search_discoveries_related_count: 2,
+    )
+    allow(synthesis).to receive(
+      :call,
+    ) do |query:, candidates:, show_summary:, summary_detail:, related_count:|
+      expect(query).to eq(self.query)
+      expect(candidates).to eq([candidate])
+      expect(show_summary).to eq(false)
+      expect(summary_detail).to eq(:quiet)
+      expect(related_count).to eq(5)
+      DiscourseAi::Discoveries::Synthesis::Result.new(
+        answerable: true,
+        source_refs: %w[source_1],
+        title: "",
+        answer: "",
+      )
+    end
+
+    messages =
+      MessageBus
+        .track_publish("/discourse-ai/discoveries") do
+          job.execute(
+            user_id: user.id,
+            query:,
+            request_id:,
+            show_summary: submitted_preferences[:show_summary],
+            summary_detail: submitted_preferences[:summary_detail].to_s,
+            related_count: submitted_preferences[:related_count],
+          )
+        end
+        .map(&:data)
+
+    expect(messages.map { |message| message[:phase] }).to eq(%w[searching sources complete])
+    expect(messages.last).to include(
+      done: true,
+      answerable: true,
+      ai_discover_title: "",
+      ai_discover_reply: "",
+    )
+    expect(messages.last[:sources]).to be_present
+    expect(DiscourseAi::Discoveries.cached_result_for(user:, request_id:)).to include(
+      "answer" => "",
+    )
+  end
+
   it "waits for progressively streamed source references to finish before validating them" do
     second_candidate = candidate.merge("source_ref" => "source_2")
     progressive_result =
@@ -156,9 +221,14 @@ describe Jobs::StreamDiscoverReply do
       progressive_result,
       %w[source_1 source_2],
     ).and_return([candidate, second_candidate])
-    allow(synthesis).to receive(:call) do |query:, candidates:, &stream|
+    allow(synthesis).to receive(
+      :call,
+    ) do |query:, candidates:, show_summary:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate, second_candidate])
+      expect(show_summary).to eq(true)
+      expect(summary_detail).to eq(:balanced)
+      expect(related_count).to eq(2)
       stream.call(
         answerable: true,
         source_refs: %w[source_1],

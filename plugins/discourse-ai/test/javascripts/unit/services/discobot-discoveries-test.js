@@ -27,6 +27,34 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
     );
   });
 
+  test("loads and saves Discoveries result preferences", async function (assert) {
+    const savedFields = [];
+    const currentUser = {
+      user_option: {
+        ai_search_discoveries_mode: 0,
+        ai_search_discoveries_show_summary: false,
+        ai_search_discoveries_summary_detail: 2,
+        ai_search_discoveries_related_count: 5,
+      },
+      save: async (fields) => savedFields.push(fields),
+    };
+    getOwner(this).unregister("service:current-user");
+    getOwner(this).register("service:current-user", currentUser, {
+      instantiate: false,
+    });
+    const service = getOwner(this).lookup("service:discobot-discoveries");
+
+    assert.strictEqual(service.mode, "search");
+    assert.false(service.showSummary);
+    assert.strictEqual(service.summaryDetail, 2);
+    assert.strictEqual(service.relatedCount, 5);
+
+    await service.setRelatedCount(6);
+
+    assert.strictEqual(service.relatedCount, 6);
+    assert.deepEqual(savedFields, [["ai_search_discoveries_related_count"]]);
+  });
+
   test("does not send duplicate requests for the same successful query", async function (assert) {
     let requestsCount = 0;
     let submittedRequestId;
@@ -53,6 +81,26 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
       /^[0-9a-f-]{36}$/.test(submittedRequestId),
       "a UUID request ID is submitted"
     );
+  });
+
+  test("does not start a request when the user disabled Discoveries", async function (assert) {
+    let requestsCount = 0;
+    pretender.post("/discourse-ai/discoveries/reply", () => {
+      requestsCount += 1;
+      return response(200, { request_id: "unused" });
+    });
+    getOwner(this).unregister("service:current-user");
+    getOwner(this).register(
+      "service:current-user",
+      { user_option: { ai_search_discoveries: false } },
+      { instantiate: false }
+    );
+
+    const service = getOwner(this).lookup("service:discobot-discoveries");
+    await service.triggerDiscovery("miyazaki");
+
+    assert.strictEqual(requestsCount, 0, "no request is made");
+    assert.false(service.loadingDiscoveries, "no loading state is shown");
   });
 
   test("allows retrying the same query when the request fails", async function (assert) {

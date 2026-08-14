@@ -336,6 +336,8 @@ en:
           discoveries: "Discoveries"
           setting_groups:
             settings: "Basic Settings"
+            agents: "Agents"
+            access_control: "Access Control"
         embeddings:
           name: "Embeddings"
           description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
@@ -1484,6 +1486,10 @@ en:
         tell_me_more: "Tell me more..."
         continue_convo: "Ask a follow-up"
         loading_convo: "Loading conversation"
+        follow_up:
+          label: "Ask a follow-up"
+          placeholder: "Ask a follow-up"
+          submit: "Ask"
         collapse: "Collapse"
         timed_out: "Discoveries took too long to complete this search. Try again or use Search."
         request_failed: "Discoveries could not start this search. Try again or use Search."
@@ -1498,9 +1504,20 @@ en:
           ask_submit: "Ask with Discoveries"
         sources:
           related_discussions: "Related discussions"
-          view_all: "View all %{count}"
-          show_fewer: "Show fewer"
           show_all_matching: "Show all matching posts"
+        preferences:
+          label: "Discoveries preferences"
+          related_discussions: "Related discussions"
+          show_fewer_discussions: "Show fewer related discussions"
+          show_more_discussions: "Show more related discussions"
+          show_summary: "Show useful summary"
+          summary_detail: "Summary detail"
+          quiet: "Quiet"
+          balanced: "Balanced"
+          detailed: "Detailed"
+          detail_hint_0: "One concise takeaway."
+          detail_hint_1: "A short answer with key context."
+          detail_hint_2: "A fuller answer with more detail."
         tooltip:
           header: "AI powered search"
           content: "Natural language search powered by %{model}"

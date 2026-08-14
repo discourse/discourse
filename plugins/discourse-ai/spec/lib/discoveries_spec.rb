@@ -148,5 +148,24 @@ describe DiscourseAi::Discoveries do
 
       expect(described_class.cached_result_for(user:, request_id:)).to be_nil
     end
+
+    it "keeps source-only context for follow-up without generated prose" do
+      request_id = SecureRandom.uuid
+      described_class.store_result(
+        user_id: user.id,
+        request_id:,
+        query: "猫 search",
+        answer: "",
+        sources: [{ "post_id" => post.id, "topic_id" => post.topic_id }],
+        agent_id: ai_agent.id,
+      )
+
+      result = described_class.cached_result_for(user:, request_id:)
+      expect(result).to include("query" => "猫 search", "answer" => "")
+      expect(result.fetch("sources").first).to include(
+        "title" => post.topic.title,
+        "url" => post.full_url,
+      )
+    end
   end
 end

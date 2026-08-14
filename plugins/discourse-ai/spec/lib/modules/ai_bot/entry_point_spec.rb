@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAi::AiBot::EntryPoint do
+describe DiscourseAi::AiBot::EntryPoint do
   before { enable_current_plugin }
 
   describe "#inject_into" do
@@ -189,10 +189,22 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
       SiteSetting.ai_discover_allowed_groups = group.id.to_s
       SiteSetting.ai_embeddings_enabled = true
       SiteSetting.ai_embeddings_semantic_search_enabled = true
-      user.user_option.update!(ai_search_discoveries: true)
+      user.user_option.update!(
+        ai_search_discoveries: true,
+        ai_search_discoveries_mode: 0,
+        ai_search_discoveries_show_summary: false,
+        ai_search_discoveries_summary_detail: 2,
+        ai_search_discoveries_related_count: 5,
+      )
       serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user))
       serializer = serializer.as_json
-      expect(serializer[:current_user][:user_option][:ai_search_discoveries]).to eq(true)
+      expect(serializer[:current_user][:user_option]).to include(
+        ai_search_discoveries: true,
+        ai_search_discoveries_mode: 0,
+        ai_search_discoveries_show_summary: false,
+        ai_search_discoveries_summary_detail: 2,
+        ai_search_discoveries_related_count: 5,
+      )
     end
   end
 end

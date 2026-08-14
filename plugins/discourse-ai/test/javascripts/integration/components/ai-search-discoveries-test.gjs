@@ -1,10 +1,9 @@
 /* eslint-disable qunit/no-conditional-assertions */
 import Service from "@ember/service";
-import { click, find, render } from "@ember/test-helpers";
+import { click, fillIn, find, render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
-import Topic from "discourse/models/topic";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import AiSearchDiscoveries from "discourse/plugins/discourse-ai/discourse/components/ai-search-discoveries";
@@ -64,12 +63,46 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       );
   });
 
+  test("hides the structured answer title in Quiet mode", async function (assert) {
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        discoveryTitle = "Two Miyazakis, two bodies of work";
+        streamedText = "A concise answer.";
+        summaryDetail = 0;
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+        showDiscoveryTitle = true;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    await render(
+      <template>
+        <AiSearchDiscoveries @searchTerm="miyazaki" @showHeading={{true}} />
+      </template>
+    );
+
+    assert
+      .dom(".ai-search-discoveries__answer-title")
+      .doesNotExist("Quiet presents the concise answer without a header");
+  });
+
   test("marks the full-page presentation for a top-of-results layout", async function (assert) {
     this.owner.register(
       "service:discobot-discoveries",
       class extends Service {
         discoveryTitle = "Two Miyazakis, two bodies of work";
         streamedText = "A useful answer.";
+        sources = [
+          {
+            title: "A selected discussion",
+            url: "/t/a-selected-discussion/123",
+          },
+        ];
         loadingDiscoveries = false;
         isStreaming = false;
         discoveryTimedOut = false;
@@ -93,6 +126,11 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     assert
       .dom(".ai-search-discoveries")
       .hasClass("--full-page", "the full-page layout has an explicit modifier");
+    assert
+      .dom(".ai-discovery-sources")
+      .doesNotExist(
+        "selected discussions use the normal full-page results instead of cards"
+      );
   });
 
   test("renders the full answer when collapsing is disabled", async function (assert) {
@@ -127,7 +165,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .doesNotExist("Tell me more is not rendered");
   });
 
-  test("shows two related discussions and can reveal all sources", async function (assert) {
+  test("shows the requested discussions and links to all matching posts", async function (assert) {
     const sources = [
       {
         title: "Recurring ideas across Hayao Miyazaki’s films",
@@ -196,22 +234,13 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .exists({ count: 2 }, "discussion cards show their source authors");
     assert
       .dom(".ai-discovery-sources__toggle")
+      .doesNotExist("there is no local source expansion control");
+    assert
+      .dom(".ai-discovery-sources__header .ai-discovery-sources__all-results")
       .hasText(
-        "View all 4",
-        "the expansion control includes the available count"
+        "Show all matching posts",
+        "full search replaces the expansion control"
       );
-
-    await click(".ai-discovery-sources__toggle");
-
-    assert
-      .dom(".ai-discovery-sources__item")
-      .exists({ count: 4 }, "all available discussions are shown on request");
-    assert
-      .dom(".ai-discovery-sources__toggle")
-      .hasText("Show fewer", "the expansion is reversible");
-    assert
-      .dom(".ai-discovery-sources__all-results")
-      .hasText("Show all matching posts", "full search remains available");
     assert
       .dom(".ai-discovery-sources__all-results .d-icon-arrow-right")
       .exists("the full search link communicates forward navigation");
@@ -227,6 +256,100 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       getComputedStyle(find(".ai-discovery-sources__all-results")).color,
       "discussion titles use the standard link color"
     );
+  });
+
+  test("offers compact result preferences from the Discoveries menu", async function (assert) {
+    const changes = [];
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        streamedText = "A useful answer.";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+        showDiscoveryTitle = true;
+        showSummary = true;
+        summaryDetail = 0;
+        relatedCount = 2;
+        savingPreferences = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+        setRelatedCount(value) {
+          changes.push(["related", value]);
+        }
+
+        setShowSummary(value) {
+          changes.push(["summary", value]);
+        }
+
+        setSummaryDetail(value) {
+          changes.push(["detail", value]);
+        }
+      }
+    );
+
+    await render(
+      <template>
+        <AiSearchDiscoveries @searchTerm="miyazaki" @showHeading={{true}} />
+      </template>
+    );
+
+    await click(".ai-discovery-preferences-menu .fk-d-menu__trigger");
+
+    assert
+      .dom(".ai-discovery-preferences")
+      .exists("the preferences open in a menu");
+    assert.dom(".ai-discovery-preferences__count").hasText("2");
+    assert
+      .dom(
+        ".ai-discovery-preferences__summary-row > .ai-discovery-preferences__label"
+      )
+      .hasText(
+        "Show useful summary",
+        "the summary setting follows the same label-control layout"
+      );
+    assert
+      .dom(
+        ".ai-discovery-preferences__detail-group > .ai-discovery-preferences__label"
+      )
+      .hasText("Summary detail", "the detail control has a visible label");
+    assert
+      .dom(".ai-discovery-preferences__detail")
+      .doesNotHaveClass(
+        "d-segmented-control--small",
+        "the three detail choices have a comfortable target size"
+      );
+    assert
+      .dom('.ai-discovery-preferences input[value="quiet"]')
+      .isChecked("Quiet is selected");
+    await waitUntil(() =>
+      find(".ai-discovery-preferences__detail")?.style.getPropertyValue(
+        "--slider-width"
+      )
+    );
+    assert.notStrictEqual(
+      find(".ai-discovery-preferences__detail").style.getPropertyValue(
+        "--slider-width"
+      ),
+      "",
+      "Quiet has a visible selected state"
+    );
+    assert
+      .dom('.ai-discovery-preferences input[value="detailed"] + span')
+      .hasText("Detailed", "the most detailed option describes its output");
+
+    await click(".ai-discovery-preferences__increment");
+    await click(
+      ".ai-discovery-preferences__summary-toggle + .d-toggle-switch__checkbox-slider"
+    );
+    await click('.ai-discovery-preferences input[value="detailed"]');
+
+    assert.deepEqual(changes, [
+      ["related", 3],
+      ["summary", false],
+      ["detail", 2],
+    ]);
   });
 
   test("clicking a link in discovery text closes search menu", async function (assert) {
@@ -413,9 +536,29 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
 
   test("asks a follow-up using only the server-owned request context", async function (assert) {
     let submittedBody;
-    this.currentUser.ai_enabled_agents = [{ id: -34, username: "discobot" }];
+    this.owner.register(
+      "service:composer",
+      class extends Service {
+        focusComposer = sinon.stub();
+      }
+    );
+    const composer = this.owner.lookup("service:composer");
+    DiscourseURL.routeTo.callsFake((_url, options) =>
+      options?.afterRouteComplete?.()
+    );
+    this.currentUser.ai_enabled_agents = [
+      {
+        id: -1,
+        username: "forum_helper",
+        allow_personal_messages: true,
+      },
+    ];
+    this.currentUser.ai_enabled_chat_bots = [
+      { id: -1200, username: "ai_bot", llm_model_id: 1 },
+    ];
+    this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
-    sinon.stub(Topic, "find").resolves({ id: 321 });
+    this.siteSettings.ai_discover_follow_up_agent = "-1";
 
     this.owner.register(
       "service:discobot-discoveries",
@@ -443,7 +586,11 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template><AiSearchDiscoveries @searchTerm="test search" /></template>
     );
-    await click(".ai-search-discoveries__continue-conversation button");
+    await fillIn(
+      ".ai-search-discoveries__follow-up-input",
+      "Which guide should I read first?"
+    );
+    await click(".ai-search-discoveries__follow-up-submit");
 
     assert.strictEqual(
       submittedBody.get("request_id"),
@@ -451,6 +598,139 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     );
     assert.false(submittedBody.has("query"));
     assert.false(submittedBody.has("context"));
+    assert.strictEqual(
+      submittedBody.get("question"),
+      "Which guide should I read first?"
+    );
+    assert.false(
+      composer.focusComposer.called,
+      "the reply composer stays closed while the conversation loads"
+    );
+  });
+
+  test("only offers a follow-up when the AI bot can receive personal messages", async function (assert) {
+    this.currentUser.ai_enabled_agents = [
+      {
+        id: -1,
+        username: "forum_helper",
+        allow_personal_messages: true,
+      },
+    ];
+    this.currentUser.ai_enabled_chat_bots = [
+      { id: -1200, username: "ai_bot", llm_model_id: 1 },
+    ];
+    this.siteSettings.ai_discover_agent = "-34";
+    this.siteSettings.ai_discover_follow_up_agent = "-1";
+
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        discovery = "A useful answer.";
+        streamedText = "A useful answer.";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    this.siteSettings.ai_bot_enabled = false;
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+    assert
+      .dom(".ai-search-discoveries__continue-conversation")
+      .doesNotExist("the field is hidden when the AI bot is disabled");
+
+    this.siteSettings.ai_bot_enabled = true;
+    this.currentUser.ai_enabled_agents[0].allow_personal_messages = false;
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+    assert
+      .dom(".ai-search-discoveries__continue-conversation")
+      .doesNotExist("the field is hidden when the agent does not allow PMs");
+  });
+
+  test("does not use the discovery agent as the follow-up agent", async function (assert) {
+    this.currentUser.ai_enabled_agents = [
+      {
+        id: -34,
+        username: "discover",
+        allow_personal_messages: true,
+      },
+    ];
+    this.currentUser.ai_enabled_chat_bots = [
+      { id: -1200, username: "ai_bot", llm_model_id: 1 },
+    ];
+    this.siteSettings.ai_bot_enabled = true;
+    this.siteSettings.ai_discover_agent = "-34";
+    this.siteSettings.ai_discover_follow_up_agent = "-1";
+
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        discovery = "A useful answer.";
+        streamedText = "A useful answer.";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+
+    assert
+      .dom(".ai-search-discoveries__continue-conversation")
+      .doesNotExist("the selected follow-up agent must be available");
+  });
+
+  test("offers a follow-up from selected discussions when summary prose is hidden", async function (assert) {
+    this.currentUser.ai_enabled_agents = [
+      {
+        id: -1,
+        username: null,
+        allow_personal_messages: true,
+      },
+    ];
+    this.currentUser.ai_enabled_chat_bots = [
+      { id: -1200, username: "ai_bot", llm_model_id: 1 },
+    ];
+    this.siteSettings.ai_bot_enabled = true;
+    this.siteSettings.ai_discover_agent = "-34";
+    this.siteSettings.ai_discover_follow_up_agent = "-1";
+
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        discovery = "";
+        streamedText = "";
+        sources = [{ title: "A selected discussion", url: "/t/topic/1" }];
+        showSummary = false;
+        answerable = true;
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+
+    assert
+      .dom(".ai-search-discoveries__continue-conversation")
+      .exists("selected discussions provide server-owned follow-up context");
   });
 
   test("shows a useful no-answer state after completion", async function (assert) {

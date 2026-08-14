@@ -11804,7 +11804,11 @@ CREATE TABLE public.user_options (
     push_notification_level integer DEFAULT 1 NOT NULL,
     automatically_translate boolean DEFAULT true NOT NULL,
     understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
-    send_shortcut integer DEFAULT 0 NOT NULL
+    send_shortcut integer DEFAULT 0 NOT NULL,
+    ai_search_discoveries_mode integer DEFAULT 1 NOT NULL,
+    ai_search_discoveries_show_summary boolean DEFAULT true NOT NULL,
+    ai_search_discoveries_summary_detail integer DEFAULT 1 NOT NULL,
+    ai_search_discoveries_related_count integer DEFAULT 2 NOT NULL
 );
 
 
@@ -23135,6 +23139,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260814083721'),
 ('20260810012238'),
 ('20260803015314'),
 ('20260731055703'),

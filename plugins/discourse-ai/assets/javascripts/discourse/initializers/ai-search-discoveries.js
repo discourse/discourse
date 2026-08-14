@@ -12,7 +12,19 @@ export default apiInitializer((api) => {
     return;
   }
 
-  api.addSaveableUserOption("ai_search_discoveries", { page: "interface" });
+  [
+    "ai_search_discoveries",
+    "ai_search_discoveries_mode",
+    "ai_search_discoveries_show_summary",
+    "ai_search_discoveries_summary_detail",
+    "ai_search_discoveries_related_count",
+  ].forEach((option) => {
+    api.addSaveableUserOption(option, { page: "interface" });
+  });
+
+  if (currentUser.user_option?.ai_search_discoveries === false) {
+    return;
+  }
 
   const discobotDiscoveries = api.container.lookup(
     "service:discobot-discoveries"

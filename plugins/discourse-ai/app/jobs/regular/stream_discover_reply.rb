@@ -54,6 +54,7 @@ module Jobs
         return
       end
 
+      preferences = request_preferences(user, args)
       synthesis =
         DiscourseAi::Discoveries::Synthesis.new(user:, ai_agent:, llm_model:, cancel_manager:)
       selected_sources = nil
@@ -64,17 +65,25 @@ module Jobs
       last_streamed_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
       result =
-        synthesis.call(query:, candidates: retrieval_result.synthesis_candidates) do |update|
+        synthesis.call(
+          query:,
+          candidates: retrieval_result.synthesis_candidates,
+          show_summary: preferences[:show_summary],
+          summary_detail: preferences[:summary_detail],
+          related_count: preferences[:related_count],
+        ) do |update|
           next if cancel_manager.cancelled? || !active_request?(user, args[:request_id])
+          next if !preferences[:show_summary]
 
           discovery_title = update[:title].to_s.strip if update[:title].present?
 
           if update[:answerable] == true && update[:source_refs].present? &&
                update[:answer].present?
-            if selected_refs.present? && selected_refs != update[:source_refs]
+            streamed_refs = Array(update[:source_refs]).first(preferences[:related_count])
+            if selected_refs.present? && selected_refs != streamed_refs
               source_selection_invalid = true
             elsif selected_refs.nil?
-              selected_refs = update[:source_refs]
+              selected_refs = streamed_refs
               selected_sources = retrieval.validated_sources(retrieval_result, selected_refs)
               source_selection_invalid = true if selected_sources.empty?
 
@@ -119,14 +128,15 @@ module Jobs
         return
       end
 
+      final_refs = Array(result.source_refs).first(preferences[:related_count])
       final_sources =
-        retrieval.validated_sources(
-          retrieval_result,
-          result.source_refs,
-        ) if result.source_refs.present?
+        retrieval.validated_sources(retrieval_result, final_refs) if final_refs.present?
       answerable =
-        result.answerable && !source_selection_invalid && selected_sources.present? &&
-          final_sources.present? && result.source_refs == selected_refs && result.answer.present?
+        result.answerable && !source_selection_invalid && final_sources.present? &&
+          (
+            !preferences[:show_summary] ||
+              (selected_sources.present? && final_refs == selected_refs && result.answer.present?)
+          )
 
       if answerable
         selected_sources = final_sources
@@ -138,6 +148,17 @@ module Jobs
           sources: selected_sources,
           agent_id: ai_agent.id,
         )
+        if !preferences[:show_summary]
+          publish_update(
+            user,
+            base.merge(
+              done: false,
+              phase: "sources",
+              ai_discover_title: "",
+              sources: serialize_sources(selected_sources),
+            ),
+          )
+        end
         publish_update(
           user,
           base.merge(
@@ -192,6 +213,25 @@ module Jobs
     end
 
     private
+
+    def request_preferences(user, args)
+      saved_preferences = DiscourseAi::Discoveries.preferences_for(user)
+      show_summary =
+        args.key?(:show_summary) ? !!args[:show_summary] : saved_preferences[:show_summary]
+      summary_detail = args[:summary_detail].to_s.to_sym
+      if !DiscourseAi::Discoveries::SUMMARY_DETAILS.key?(summary_detail)
+        summary_detail = saved_preferences[:summary_detail]
+      end
+      related_count = Integer(args[:related_count], exception: false)
+      if !related_count&.between?(
+           DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS,
+           DiscourseAi::Discoveries::MAX_RELATED_DISCUSSIONS,
+         )
+        related_count = saved_preferences[:related_count]
+      end
+
+      { show_summary:, summary_detail:, related_count: }
+    end
 
     def configured_agent(user)
       agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_agent)

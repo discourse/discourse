@@ -15,6 +15,9 @@ module DiscourseAi
         { "key" => "title", "type" => "string" },
         { "key" => "answer", "type" => "string" },
       ].freeze
+      SOURCE_ONLY_RESPONSE_FORMAT = RESPONSE_FORMAT.first(2).freeze
+      TITLELESS_SUMMARY_RESPONSE_FORMAT =
+        RESPONSE_FORMAT.reject { |property| property["key"] == "title" }.freeze
 
       def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil)
         @user = user
@@ -23,15 +26,28 @@ module DiscourseAi
         @cancel_manager = cancel_manager
       end
 
-      def call(query:, candidates:)
+      def call(
+        query:,
+        candidates:,
+        show_summary: true,
+        summary_detail: :balanced,
+        related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
+      )
         if candidates.empty?
           return Result.new(answerable: false, source_refs: [], title: "", answer: "")
         end
+        related_count = normalized_related_count(related_count)
+        show_title = show_summary && summary_detail.to_s != "quiet"
 
         context =
           DiscourseAi::Agents::BotContext.new(
             user: @user,
-            messages: [{ type: :user, content: input(query, candidates) }],
+            messages: [
+              {
+                type: :user,
+                content: input(query, candidates, show_summary:, summary_detail:, related_count:),
+              },
+            ],
             skip_show_thinking: true,
             feature_name: "discover",
             cancel_manager: @cancel_manager,
@@ -39,7 +55,7 @@ module DiscourseAi
         bot =
           DiscourseAi::Agents::Bot.as(
             Discourse.system_user,
-            agent: synthesis_agent,
+            agent: synthesis_agent(show_summary:, show_title:, related_count:),
             model: @llm_model,
           )
         values = { answerable: nil, source_refs: nil, title: +"", answer: +"" }
@@ -53,11 +69,15 @@ module DiscourseAi
           source_refs = partial.read_buffered_property(:source_refs)
           values[:source_refs] = source_refs if !source_refs.nil?
 
-          title = partial.read_buffered_property(:title)
-          values[:title] << title if title.present?
+          if show_title
+            title = partial.read_buffered_property(:title)
+            values[:title] << title if title.present?
+          end
 
-          answer_delta = partial.read_buffered_property(:answer)
-          values[:answer] << answer_delta if answer_delta.present?
+          if show_summary
+            answer_delta = partial.read_buffered_property(:answer)
+            values[:answer] << answer_delta if !answer_delta.nil?
+          end
 
           yield values.deep_dup if block_given?
         end
@@ -72,8 +92,18 @@ module DiscourseAi
 
       private
 
-      def synthesis_agent
-        response_format = RESPONSE_FORMAT
+      def synthesis_agent(show_summary:, show_title:, related_count:)
+        response_format =
+          if !show_summary
+            SOURCE_ONLY_RESPONSE_FORMAT
+          elsif !show_title
+            TITLELESS_SUMMARY_RESPONSE_FORMAT
+          else
+            RESPONSE_FORMAT
+          end.deep_dup
+        response_format.find { |property| property["key"] == "source_refs" }[
+          "max_items"
+        ] = related_count
 
         Class
           .new(@ai_agent.class_instance) do
@@ -89,12 +119,35 @@ module DiscourseAi
           .new
       end
 
-      def input(query, candidates)
+      def input(
+        query,
+        candidates,
+        show_summary: true,
+        summary_detail: :balanced,
+        related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
+      )
         JSON.generate(
           query:,
+          preferences: {
+            show_summary:,
+            summary_detail:,
+            related_count:,
+          },
           candidates:
             candidates.map { |candidate| candidate.slice("source_ref", "title", "excerpt") },
         )
+      end
+
+      def normalized_related_count(related_count)
+        related_count = related_count.to_i
+        if related_count.between?(
+             DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS,
+             DiscourseAi::Discoveries::MAX_RELATED_DISCUSSIONS,
+           )
+          return related_count
+        end
+
+        DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
       end
     end
   end

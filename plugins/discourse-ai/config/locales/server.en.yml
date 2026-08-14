@@ -161,7 +161,8 @@ en:
 
     ai_discover_enabled: "Enable the discovery search feature"
     ai_discover_agent: "Agent to use for discovery search feature"
-    ai_discover_allowed_groups: "Groups allowed to use Discoveries. The selected agent's permissions and normal topic and category visibility still apply. Personal messages are always excluded. Content from restricted categories visible to an allowed user may be sent to the configured LLM provider."
+    ai_discover_follow_up_agent: "Agent used when a user continues a Discoveries result in a personal message. Defaults to Forum Helper. The agent must be enabled, allow personal messages, and be available to the user."
+    ai_discover_allowed_groups: "Groups allowed to use Discoveries and its follow-up handoff. The Discovery agent's permissions, the follow-up agent's permissions, and normal topic and category visibility still apply. Personal messages are always excluded from search. Content from restricted categories visible to an allowed user may be sent to the configured LLM provider."
     ai_hugging_face_tei_reranker_endpoint: "URL of the Text Embeddings Inference reranker."
     ai_hugging_face_tei_reranker_api_key: "API key for the configured Text Embeddings Inference reranker."
 
@@ -826,10 +827,13 @@ en:
           temporarily_unavailable: "Discoveries is busy right now. Try again shortly."
           credits_unavailable: "Discoveries is unavailable until AI credits reset."
           follow_up_failed: "The follow-up conversation could not be created."
+          invalid_follow_up: "Enter a follow-up question with no more than %{max} characters."
           result_expired: "This discovery is no longer available. Search again to ask a follow-up."
         continue_conversation:
           title: "Discovery conversation: Search for %{query}"
           raw: "In my search for %{query}, you showed me the following information:\n\n%{context}\n\nLet's continue the conversation."
+          sources: "Selected discussions:\n%{sources}"
+          source: "- [%{title}](%{url})"
 
       flag_post:
         errors:
