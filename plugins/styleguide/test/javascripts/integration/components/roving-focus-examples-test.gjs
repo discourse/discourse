@@ -651,6 +651,41 @@ module(
         );
     });
 
+    test("Space commits the highlighted option", async function (assert) {
+      await render(<template><RovingFocusComboboxExample /></template>);
+
+      await click(".roving-demo__combobox-trigger");
+      const trigger = document.querySelector(".roving-demo__combobox-trigger");
+      await triggerKeyEvent(trigger, "keydown", "ArrowDown");
+      await triggerKeyEvent(trigger, "keydown", " ");
+
+      assert
+        .dom(trigger)
+        .hasText("Monthly", "Space commits like Enter in a select-only popup");
+      assert
+        .dom(".roving-demo__combobox-listbox")
+        .doesNotExist("and the list closed with the choice");
+    });
+
+    test("Tab commits the highlight on its way out", async function (assert) {
+      await render(<template><RovingFocusComboboxExample /></template>);
+
+      await click(".roving-demo__combobox-trigger");
+      const trigger = document.querySelector(".roving-demo__combobox-trigger");
+      await triggerKeyEvent(trigger, "keydown", "ArrowDown");
+      await triggerKeyEvent(trigger, "keydown", "Tab");
+
+      assert
+        .dom(trigger)
+        .hasText(
+          "Monthly",
+          "leaving the control keeps the reader's last highlight"
+        );
+      assert
+        .dom(".roving-demo__combobox-listbox")
+        .doesNotExist("rather than stranding an open popup behind them");
+    });
+
     test("aria-controls resolves exactly while the popup exists", async function (assert) {
       await render(<template><RovingFocusComboboxExample /></template>);
 

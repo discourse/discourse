@@ -70,6 +70,21 @@ export default class RovingFocusComboboxExample extends Component {
     if (event.key === "Escape" && this.expanded) {
       event.preventDefault();
       this.expanded = false;
+    } else if (this.expanded && (event.key === " " || event.key === "Tab")) {
+      // Space commits like Enter, and Tab commits on its way out; both close. Space is
+      // prevented so the native button click does not reopen the popup, while Tab keeps its
+      // default so focus still leaves.
+      if (event.key === " ") {
+        event.preventDefault();
+      }
+      const active = document.getElementById(
+        event.target.getAttribute("aria-activedescendant") ?? ""
+      );
+      if (active) {
+        this.choose(active);
+      } else {
+        this.expanded = false;
+      }
     } else if (
       !this.expanded &&
       (event.key === "ArrowDown" || event.key === "ArrowUp")
