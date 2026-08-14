@@ -264,6 +264,11 @@
       padding: var(--review-item-padding);
       border-radius: var(--d-border-radius);
 
+      img:not(.avatar, .emoji) {
+        max-width: 100%;
+        height: auto;
+      }
+
       .lightbox-wrapper img {
         display: block;
       }
