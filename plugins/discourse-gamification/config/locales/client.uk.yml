@@ -110,3 +110,8 @@ uk:
         title: "Гейміфікація"
         name: "Імʼя"
         period: "Період"
+    discourse_workflows:
+      gamification_score:
+        username: "Користувач"
+        date: "Дата"
+        description: "Опис"

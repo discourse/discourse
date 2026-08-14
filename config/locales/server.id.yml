@@ -700,6 +700,13 @@ id:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistem operasi yang tidak dikenal"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonim"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Ada kesalahan dalam merubah alamat email Anda. Mungkinkah alamat ini telah digunakan oleh pengguna lain?"
     error_staged: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain."
@@ -1508,6 +1515,9 @@ id:
     description: "Mode aman memungkinkan Anda menguji situs Anda tanpa memuat tema atau penyesuaian plugin client-side. Penyesuaian plugin server-side tetap diaktifkan."
     no_unofficial_plugins: "Nonaktifkan penyesuaian plugin client-side tidak resmi"
     no_plugins: "Nonaktifkan semua penyesuaian plugin client-side"
+  design_wizard:
+    palette_pairs:
+      default: "Asal"
   wizard:
     step:
       setup:

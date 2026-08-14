@@ -61,6 +61,10 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  _INTERNAL_SOURCE_KEY,
+  CORE_SOURCE,
+} from "discourse/lib/customization-source";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -208,8 +212,16 @@ function wrapWithErrorHandler(func, messageKey) {
  * @typedef {_PluginApi} PluginApi
  */
 class _PluginApi {
-  constructor(container) {
+  #source;
+
+  constructor(container, source = CORE_SOURCE) {
     this.container = container;
+    this.#source = source;
+  }
+
+  /** The plugin, theme, or core code this api was handed to. */
+  get source() {
+    return this.#source;
   }
 
   /**
@@ -2465,6 +2477,43 @@ class _PluginApi {
   }
 
   /**
+   * Registers the component used to render a reviewable type in the review queue.
+   *
+   * The loader returns the component class, or a promise resolving to it — in
+   * which case the module is only loaded when a reviewable of that type is
+   * rendered.
+   *
+   * @param {String} reviewableType - The reviewable type class name (e.g. "ReviewableChatMessage")
+   * @param {Function} loader - A function returning the component class, or a promise
+   *   resolving to it
+   *
+   * @example
+   * ```
+   * api.registerReviewableComponent("ReviewableChatMessage", () => ReviewableChatMessage);
+   * ```
+   *
+   * @example
+   * ```
+   * api.registerReviewableComponent(
+   *   "ReviewableChatMessage",
+   *   async () => (await import("../components/reviewable/chat-message")).default
+   * );
+   * ```
+   **/
+  registerReviewableComponent(reviewableType, loader) {
+    if (typeof loader !== "function") {
+      throw new Error(
+        `registerReviewableComponent("${reviewableType}", ...) requires a function as second argument.`
+      );
+    }
+
+    this.registerValueTransformer(
+      "reviewable-component",
+      ({ value, context }) => (context.type === reviewableType ? loader : value)
+    );
+  }
+
+  /**
    * Register custom status names for a reviewable type, used in the
    * review queue status badge (e.g. "Tool approved" instead of "Flag approved").
    *
@@ -3698,7 +3747,7 @@ class _PluginApi {
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
-   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} blocks - Array of layout entries
+   * @param {Array<import("discourse/blocks/types").LayoutEntry>} blocks - Array of layout entries
    *
    * @example
    * ```javascript
@@ -3767,7 +3816,7 @@ class _PluginApi {
    * @experimental This API is under active development and may change or be removed
    * in future releases without prior notice. Use with caution in production environments.
    *
-   * @param {typeof import("@glimmer/component").default | string} blockOrName - Block class or name string for lazy loading.
+   * @param {string | import("discourse/lib/blocks/-internals/types").BlockClass} blockOrName - Block class or name string for lazy loading.
    * @param {Function} [factory] - Factory function returning Promise<BlockClass> (required when first arg is name).
    *
    * @example Direct class registration
@@ -3789,10 +3838,10 @@ class _PluginApi {
           `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
         );
       }
-      _registerBlockFactory(blockOrName, factory);
+      _registerBlockFactory(blockOrName, factory, this.source);
     } else {
       // Direct class: registerBlock(BlockClass)
-      _registerBlock(blockOrName);
+      _registerBlock(blockOrName, this.source);
     }
   }
 
@@ -3826,7 +3875,7 @@ class _PluginApi {
    * ```
    */
   registerBlockOutlet(outletName, options) {
-    _registerOutlet(outletName, options);
+    _registerOutlet(outletName, options, this.source);
   }
 
   /**
@@ -3874,7 +3923,7 @@ class _PluginApi {
    * ```
    */
   registerBlockConditionType(ConditionClass) {
-    _registerConditionType(ConditionClass);
+    _registerConditionType(ConditionClass, this.source);
   }
 
   #deprecateModifyClass(resolverName, apiName) {
@@ -3892,23 +3941,6 @@ class _PluginApi {
   }
 }
 
-function getPluginApi() {
-  const owner = getOwnerWithFallback(this);
-  let pluginApi = owner.lookup("plugin-api:main");
-
-  if (!pluginApi) {
-    pluginApi = new _PluginApi(owner);
-    owner.registry.register("plugin-api:main", pluginApi, {
-      instantiate: false,
-    });
-  } else {
-    // If we are re-using an instance, make sure the container is correct
-    pluginApi.container = owner;
-  }
-
-  return pluginApi;
-}
-
 /**
  * Executes the provided callback function with the `PluginApi` object.
  *
@@ -3924,5 +3956,10 @@ export function withPluginApi(apiCodeCallback, opts) {
 
   opts = opts || {};
 
-  return apiCodeCallback(getPluginApi(), opts);
+  const api = new _PluginApi(
+    getOwnerWithFallback(this),
+    opts[_INTERNAL_SOURCE_KEY]
+  );
+
+  return apiCodeCallback(api, opts);
 }

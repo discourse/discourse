@@ -6,6 +6,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_REFERRER_LENGTH = 2000
   MAX_USER_AGENT_LENGTH = 1000
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
+  MAX_NORMALIZED_URL_LENGTH = 2000
   RETENTION_PERIOD = 3.months
   SOURCE_PIGGYBACK = 1
   SOURCE_BEACON = 2
@@ -168,16 +169,19 @@ class BrowserPageviewEvent < ActiveRecord::Base
     end
 
     def attributes_from_payload(payload)
-      normalized_referrer = BrowserPageviewReferrerInspector.normalize(payload[:referrer])
+      normalized_referrer = BrowserPageviewEventUrlNormalizer.normalize_referrer(payload[:referrer])
+      normalized_url = BrowserPageviewEventUrlNormalizer.normalize_site_path(payload[:url])
 
       {
         url: payload[:url]&.slice(0, MAX_URL_LENGTH),
+        normalized_url: normalized_url&.slice(0, MAX_NORMALIZED_URL_LENGTH),
+        normalized_url_version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
         asn: payload[:asn],
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
-        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],
@@ -212,10 +216,12 @@ class BrowserPageviewEvent < ActiveRecord::Base
     RETENTION_PERIOD.ago.beginning_of_day
   end
 
-  def self.rollup_source_condition(table: nil)
+  def self.rollup_source_condition(table: nil, start_date: nil, end_date: nil)
     prefix = table ? "#{table}." : ""
     cutover_date = beacon_cutover_date
     return "#{prefix}source = #{SOURCE_PIGGYBACK}" if cutover_date.nil?
+    return "#{prefix}source = #{SOURCE_PIGGYBACK}" if end_date && end_date.to_date <= cutover_date
+    return "#{prefix}source = #{SOURCE_BEACON}" if start_date && start_date.to_date >= cutover_date
 
     sanitize_sql_array(
       [
@@ -239,6 +245,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
     if normalized_referrer.present?
       self.normalized_referrer = normalized_referrer.slice(0, MAX_NORMALIZED_REFERRER_LENGTH)
     end
+    if normalized_url.present?
+      self.normalized_url = normalized_url.slice(0, MAX_NORMALIZED_URL_LENGTH)
+    end
   end
 end
 
@@ -252,6 +261,8 @@ end
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
+#  normalized_url              :string(2000)
+#  normalized_url_version      :integer
 #  referrer                    :string(2000)
 #  score                       :integer
 #  source                      :integer          default("piggyback"), not null
@@ -264,10 +275,12 @@ end
 #
 # Indexes
 #
+#  idx_bpe_beacon_created_at_id                 (created_at,id) WHERE (source = 2)
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
+#  idx_bpe_normalized_url_version               (normalized_url_version)
 #  idx_bpe_session_created_at                   (session_id,created_at)
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)

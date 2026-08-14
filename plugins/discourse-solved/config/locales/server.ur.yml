@@ -9,6 +9,8 @@ ur:
     category_type:
       allow_accepted_answers:
         label: "ٹاپک کے مالک اور اسٹاف کو حل کے طور پر ایک جواب کو نشان زد کرنے کی اجازت دیں"
+      notify_on_staff_accept_solved:
+        label: "جب عملہ بطور حل شدہ کے نشان زد کرے تو موضوع کے تخلیق کار کو مطلع کریں"
   site_settings:
     solved_enabled: "سَولوڈ پلگ اِن فعال کریں، صارفین کو ٹاپک کے حل منتخب کرنے کی اجازت دیں"
     accept_all_solutions_trust_level: "کسی بھی ٹاپک پر سے حل کا انتخاب کرنے کے لئے کم از کم ٹرسٹ لَیول (یہاں تک کہ جب اصل پوسٹر بھی نہ ہوں)"
@@ -16,6 +18,7 @@ ur:
     empty_box_on_unsolved: "غیر حل شدہ ٹاپکس کے ساتھ خالی باکس دکھائیں"
     solved_quote_length: "پہلی پوسٹ کے نیچے حل کو ظاہر کرنے کیلئے حروف کی تعداد"
     show_filter_by_solved_status: "حل شدہ ہونے کی بنیاد پر ٹاپک فہرست کو فلٹر کرنے کیلئے ڈراپ ڈاؤن دکھائیں۔"
+    notify_on_staff_accept_solved: "جب کسی دھاگے کو عملہ حل شدہ کے طور پر نشان زد کرے تو موضوع کے تخلیق کار کو مطلع کریں"
   reports:
     accepted_solutions:
       title: "قبول شدہ حل"

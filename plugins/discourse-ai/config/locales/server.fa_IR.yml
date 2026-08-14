@@ -24,11 +24,14 @@ fa_IR:
       formatted_excerpt: "گفتگوی هوش‌مصنوعی با %{llm_name}:\n %{excerpt}"
       title: "%{title} - گفتگوی هوش‌مصنوعی - %{site_name}"
     ai_bot:
+      read_post:
+        unknown_post: "نوشته"
       agents:
         dall_e3:
           name: "DALL-E 3"
       tool_summary:
         categories: "فهرست دسته‌بندی‌ها"
+        users: "فهرست کاربران"
         suspend_user: "کاربر تعلیق شده"
         search: "جستجو"
         tags: "فهرست برچسب‌ها"
@@ -38,6 +41,7 @@ fa_IR:
         google: "جستجو در گوگل"
         dall_e: "تولید تصویر"
       tool_help:
+        users: "فهرست کاربران در انجمن"
         delete_topic: "حذف موضوع"
       tool_description:
         summarize: "خلاصه شده <a href='%{url}'>%{title}</a>"
@@ -45,6 +49,9 @@ fa_IR:
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
         image: "%{prompt}"
+        users:
+          one: "%{count} کاربر یافت شد"
+          other: "%{count} کاربر یافت شد"
       close_topic:
         errors:
           not_found: "موضوع پیدا نشد."

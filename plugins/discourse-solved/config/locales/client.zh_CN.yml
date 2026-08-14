@@ -20,7 +20,7 @@ zh_CN:
           support:
             title: "支持"
             fetch_error: "无法加载支持数据。"
-            save_error: "无法保存此设置。"
+            save_error: "无法保存您的选择以供下次使用。"
             headline:
               healthy:
                 title: "社区正在自行解决问题。"
@@ -29,14 +29,14 @@ zh_CN:
               mixed:
                 title: "支持情况好坏参半。"
               no_data:
-                title: "没有足够的支持活动"
-                summary: "在该时间段内尚无支持活动。一旦有话题出现，您将看到您的社区是如何处理这些话题的。"
+                title: "尚无足够的支持活动"
+                summary: "此期间尚无支持活动。一旦有话题出现，您将看到您的社区是如何处理这些话题的。"
               resolution:
                 up: "问题解决率提升至 %{rate} %。"
                 down: "问题解决率降低至 %{rate} %。"
                 flat: "问题解决率保持在 %{rate} %。"
               answerers:
-                members: "用户回复了 %{share} %的回复。"
+                members: "成员处理了 %{share} %的回复。"
                 staff: "管理人员回复了 %{share} %的回复。"
               reply:
                 faster: "首次回复时间缩短至 %{time} ，比上一周期快了 %{delta} 。"
@@ -55,7 +55,7 @@ zh_CN:
                 label: "平均首次回复时间"
                 tooltip: "从支持话题发布，到收到第一个回复之间的平均时间。"
             outcomes:
-              title: "话题类别"
+              title: "话题成果"
               resolved:
                 label: "已解决"
                 tooltip: "标记为已解决的话题数量。"
@@ -69,8 +69,8 @@ zh_CN:
               title: "谁在回答？"
               empty: "在此期间没有任何回复。"
               staff: "管理人员"
-              leader: "领导者"
-              regular: "活跃用户"
+              leader: "领袖"
+              regular: "常客"
               member: "成员"
               basic: "基本用户"
             response_time:
@@ -81,8 +81,8 @@ zh_CN:
                 "4_24h": "4–24小时"
                 gt_24h: "> 24 小时"
               trend:
-                faster: "%{duration} 更快"
-                slower: "%{duration} 更慢"
+                faster: "快 %{duration}"
+                slower: "慢 %{duration}"
                 tooltip: "平均回复时间趋势。"
   js:
     notifications:
@@ -133,8 +133,8 @@ zh_CN:
         label_with_count: "%{label} (%{count})"
         title: "我也遇到了这个问题。"
         author_title: "您发起的此话题"
-        closed_title: "该话题已关闭"
-        archived_title: "该话题已归档"
+        closed_title: "此话题已被关闭"
+        archived_title: "此话题已被归档"
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"

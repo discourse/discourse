@@ -13,8 +13,39 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty, isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
+import SettingBool from "discourse/admin/components/site-settings/bool";
+import SettingCategory from "discourse/admin/components/site-settings/category";
+import SettingCategoryList from "discourse/admin/components/site-settings/category-list";
+import SettingColor from "discourse/admin/components/site-settings/color";
+import SettingCompactList from "discourse/admin/components/site-settings/compact-list";
+import SettingDate from "discourse/admin/components/site-settings/date";
+import SettingDatetime from "discourse/admin/components/site-settings/datetime";
 import Description from "discourse/admin/components/site-settings/description";
+import SettingEmojiList from "discourse/admin/components/site-settings/emoji-list";
+import SettingEnum from "discourse/admin/components/site-settings/enum";
+import SettingFileSizeRestriction from "discourse/admin/components/site-settings/file-size-restriction";
+import SettingFileTypesList from "discourse/admin/components/site-settings/file-types-list";
+import SettingFontList from "discourse/admin/components/site-settings/font-list";
+import SettingGroup from "discourse/admin/components/site-settings/group";
+import SettingGroupList from "discourse/admin/components/site-settings/group-list";
+import SettingHostList from "discourse/admin/components/site-settings/host-list";
+import SettingIcon from "discourse/admin/components/site-settings/icon";
+import SettingInteger from "discourse/admin/components/site-settings/integer";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
+import SettingList from "discourse/admin/components/site-settings/list";
+import SettingLocaleEnum from "discourse/admin/components/site-settings/locale-enum";
+import SettingLocaleList from "discourse/admin/components/site-settings/locale-list";
+import SettingNamedList from "discourse/admin/components/site-settings/named-list";
+import SettingSecretList from "discourse/admin/components/site-settings/secret-list";
+import SettingSimpleList from "discourse/admin/components/site-settings/simple-list";
+import SettingString from "discourse/admin/components/site-settings/string";
+import SettingTagGroupList from "discourse/admin/components/site-settings/tag-group-list";
+import SettingTagList from "discourse/admin/components/site-settings/tag-list";
+import SettingTopic from "discourse/admin/components/site-settings/topic";
+import SettingUpload from "discourse/admin/components/site-settings/upload";
+import SettingUploadedImageList from "discourse/admin/components/site-settings/uploaded-image-list";
+import SettingUrlList from "discourse/admin/components/site-settings/url-list";
+import SettingValueList from "discourse/admin/components/site-settings/value-list";
 import SiteSetting, {
   isSettingValueTrue,
 } from "discourse/admin/models/site-setting";
@@ -36,38 +67,38 @@ import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const CUSTOM_TYPES = [
-  "bool",
-  "date",
-  "datetime",
-  "integer",
-  "enum",
-  "list",
-  "url_list",
-  "host_list",
-  "category_list",
-  "value_list",
-  "category",
-  "uploaded_image_list",
-  "compact_list",
-  "secret_list",
-  "upload",
-  "group_list",
-  "group",
-  "tag_list",
-  "tag_group_list",
-  "color",
-  "simple_list",
-  "emoji_list",
-  "named_list",
-  "file_size_restriction",
-  "file_types_list",
-  "font_list",
-  "locale_list",
-  "locale_enum",
-  "topic",
-  "icon",
-];
+const TYPE_COMPONENTS = {
+  bool: SettingBool,
+  date: SettingDate,
+  datetime: SettingDatetime,
+  integer: SettingInteger,
+  enum: SettingEnum,
+  list: SettingList,
+  url_list: SettingUrlList,
+  host_list: SettingHostList,
+  category_list: SettingCategoryList,
+  value_list: SettingValueList,
+  category: SettingCategory,
+  uploaded_image_list: SettingUploadedImageList,
+  compact_list: SettingCompactList,
+  secret_list: SettingSecretList,
+  upload: SettingUpload,
+  group_list: SettingGroupList,
+  group: SettingGroup,
+  tag_list: SettingTagList,
+  tag_group_list: SettingTagGroupList,
+  color: SettingColor,
+  simple_list: SettingSimpleList,
+  emoji_list: SettingEmojiList,
+  named_list: SettingNamedList,
+  file_size_restriction: SettingFileSizeRestriction,
+  file_types_list: SettingFileTypesList,
+  font_list: SettingFontList,
+  locale_list: SettingLocaleList,
+  locale_enum: SettingLocaleEnum,
+  topic: SettingTopic,
+  icon: SettingIcon,
+};
 
 export default class SiteSettingComponent extends Component {
   @service modal;
@@ -152,18 +183,12 @@ export default class SiteSettingComponent extends Component {
   }
 
   get resolvedComponent() {
-    return getOwner(this).resolveRegistration(
-      `component:${this.componentName}`
-    );
+    return TYPE_COMPONENTS[this.componentType] ?? SettingString;
   }
 
   @dependentKeyCompat
   get buffered() {
     return this.setting.buffered;
-  }
-
-  get componentName() {
-    return `site-settings/${this.typeClass}`;
   }
 
   get siteSettingComponent() {
@@ -358,7 +383,7 @@ export default class SiteSettingComponent extends Component {
 
   get componentType() {
     const type = this.type;
-    return CUSTOM_TYPES.includes(type) ? type : "string";
+    return type in TYPE_COMPONENTS ? type : "string";
   }
 
   get type() {

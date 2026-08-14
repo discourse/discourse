@@ -1121,6 +1121,13 @@ sk:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznámy operačný systém"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonymný"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Nastala chyba pri aktualizácii emailu. Nieje už náhodou použitý?"
     doesnt_exist: "Táto e-mailová adresa nie je priradená k vášmu účtu."
@@ -2454,7 +2461,6 @@ sk:
     revoke_user_api_keys_unused_days: "Počet dní od posledného použitia používateľského kľúča API pred jeho automatickým odvolaním (0 nikdy)"
     revoke_user_api_keys_maxlife_days: "Počet dní pred automatickým odvolaním používateľského kľúča API (0 nikdy)"
     tagging_enabled: "Chcete povoliť značky v témach? Ďalšie informácie nájdete v príručke správcu <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>pre značky na meta</a> ."
-    create_tag_allowed_groups: "Skupiny, ktoré môžu vytvárať značky. Administrátori a moderátori môžu vytvárať značky vždy."
     max_tags_per_topic: "Maximálny počet značiek, ktoré možno použiť na tému."
     max_tags_per_email_subject: "Maximálny počet značiek, ktoré môžu byť v predmete e-mailu"
     max_tag_length: "Maximálny počet znakov, ktoré možno použiť v značke."
@@ -3987,9 +3993,6 @@ sk:
     user_posted_pm_staged:
       title: "Používateľ odoslal PM nezaktívnený"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Účet pozastavený"
       subject_template: "[%{email_prefix}] Váš účet bol pozastavený"
@@ -4758,6 +4761,10 @@ sk:
     deprecation_error_label: Zabezpečte, aby deprekácie Javascriptu vyvolali chybu
     enter: "Vstup do núdzového režimu"
     must_select: "Ak chcete vstúpiť do núdzového režimu, musíte vybrať aspoň jednu možnosť."
+  design_wizard:
+    palette_pairs:
+      default: "Predvolené"
+      dracula: "Dracula"
   wizard:
     title: "Nastavenie Discourse"
     step:

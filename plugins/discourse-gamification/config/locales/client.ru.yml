@@ -110,3 +110,8 @@ ru:
         title: "Геймификация"
         name: "Название"
         period: "Период"
+    discourse_workflows:
+      gamification_score:
+        username: "Пользователь"
+        date: "Дата"
+        description: "Описание"

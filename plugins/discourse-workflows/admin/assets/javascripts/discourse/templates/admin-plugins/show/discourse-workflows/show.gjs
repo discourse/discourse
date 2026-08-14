@@ -9,6 +9,7 @@ import DNavItem from "discourse/ui-kit/d-nav-item";
 import WorkflowEditableTitle from "discourse/plugins/discourse-workflows/admin/components/workflows/editable-title";
 import Stats from "discourse/plugins/discourse-workflows/admin/components/workflows/stats";
 import WorkflowTagsEditor from "discourse/plugins/discourse-workflows/admin/components/workflows/tags-editor";
+import { workflowUrl } from "discourse/plugins/discourse-workflows/admin/lib/workflows/urls";
 
 class WorkflowShowPage extends Component {
   get workflow() {
@@ -17,6 +18,10 @@ class WorkflowShowPage extends Component {
 
   get stats() {
     return this.args.controller.model.stats;
+  }
+
+  get workflowPath() {
+    return workflowUrl(this.workflow.id);
   }
 
   @action
@@ -35,7 +40,7 @@ class WorkflowShowPage extends Component {
   <template>
     {{htmlClass "workflows-page"}}
     <DBreadcrumbsItem
-      @path="/admin/plugins/discourse-workflows/workflows/{{this.workflow.id}}"
+      @path={{this.workflowPath}}
       @label={{this.workflow.name}}
     />
 
@@ -57,6 +62,7 @@ class WorkflowShowPage extends Component {
         <DHorizontalOverflowNav>
           <DNavItem
             @route="adminPlugins.show.discourse-workflows.show.index"
+            @currentWhen="adminPlugins.show.discourse-workflows.show.index adminPlugins.show.discourse-workflows.show.node"
             @label="discourse_workflows.tabs.workflow"
           />
           <DNavItem

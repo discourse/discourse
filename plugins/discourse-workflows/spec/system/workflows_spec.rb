@@ -110,14 +110,40 @@ RSpec.describe "Discourse Workflows" do
     end
   end
 
-  context "when closing the node configurator" do
+  context "with a persisted workflow node" do
     fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
+    fab!(:unavailable_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => "unavailable-1",
+            "type" => "action:disabled_plugin_node",
+            "typeVersion" => "1.0",
+            "name" => "Unavailable node",
+            "position" => {
+              "x" => 100,
+              "y" => 100,
+            },
+            "parameters" => {
+            },
+            "credentials" => {
+            },
+          },
+        ],
+        connections: {
+        },
+      )
+    end
+
+    let(:node_id) { "trigger.1" }
 
     before do
       workflow.update!(
         nodes: [
           {
-            "id" => "trigger-1",
+            "id" => node_id,
             "type" => "trigger:manual",
             "typeVersion" => "1.0",
             "name" => "Manual trigger",
@@ -158,13 +184,45 @@ RSpec.describe "Discourse Workflows" do
         count_workflow_updates do
           editor_page.visit(workflow.id)
           expect(editor_page).to have_node_count(1)
+          expect(editor_page).to have_workflow_path(workflow)
+
           editor_page.double_click_node(0)
           expect(editor_page).to have_node_configurator
+          expect(editor_page).to have_node_path(workflow, node_id)
+
           editor_page.close_node_configurator
           expect(editor_page).to have_no_node_configurator
+          expect(editor_page).to have_workflow_path(workflow)
         end
 
       expect(updates).to eq(0)
+    end
+
+    it "lets an admin reopen the same configured node after a refresh" do
+      editor_page.visit_node(workflow, node_id)
+
+      expect(editor_page).to have_node_path(workflow, node_id)
+      expect(editor_page).to have_node_configurator(name: "Manual trigger")
+
+      editor_page.rename_configured_node("Refreshable manual trigger")
+      expect(editor_page).to have_saved_node_configuration
+
+      page.refresh
+
+      expect(editor_page).to have_node_path(workflow, node_id)
+      expect(editor_page).to have_node_configurator(name: "Refreshable manual trigger")
+    end
+
+    it "returns an admin to the workflow when a linked node is missing or unavailable" do
+      editor_page.visit_node(workflow, "missing-node")
+
+      expect(editor_page).to have_workflow_path(workflow)
+      expect(editor_page).to have_no_node_configurator
+
+      editor_page.visit_node(unavailable_workflow, "unavailable-1")
+
+      expect(editor_page).to have_workflow_path(unavailable_workflow)
+      expect(editor_page).to have_no_node_configurator
     end
   end
 end

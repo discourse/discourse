@@ -72,15 +72,11 @@ zh_CN:
       pinned_messages:
         title: "置顶消息"
         close: "关闭置顶消息"
-        dismiss: "取消置頂消息"
-        show: "显示置顶消息"
         pinned_by_you: "由您置顶"
         pinned_by_user: "由 %{username} 置顶"
       pinned_bar:
         title: "已置顶"
-        see_all: "查看所有置顶消息"
         jump_to_pinned: "跳转至置顶消息"
-        dismiss: "取消置頂消息"
       no_pinned_messages: "此频道中没有置顶消息。"
       pin_message: "置顶消息"
       unpin_message: "取消置顶消息"
@@ -249,7 +245,7 @@ zh_CN:
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
       screen_reader:
-        new_message: "%{username}: %{message}"
+        new_message: "%{username}：%{message}"
         new_messages:
           other: "%{count} 条新消息"
         new_image:
@@ -257,9 +253,9 @@ zh_CN:
         new_attachment:
           other: "%{username} 发送了 %{count} 个附件"
         new_message_with_image:
-          other: "%{username}: %{message} (包含 %{count} 张图片)"
+          other: "%{username}：%{message}（包含 %{count} 张图片）"
         new_message_with_attachment:
-          other: "%{username}: %{message} （包含 %{count} 个附件）"
+          other: "%{username}：%{message}（包含 %{count} 个附件）"
       no_direct_message_channels: "您还没有加入任何直接消息！"
       no_direct_message_channels_cta: "开始一个对话"
       no_public_channels: "您还没有加入任何频道！"
@@ -273,7 +269,7 @@ zh_CN:
       announce_new_messages:
         title: "向屏幕阅读器播报新消息"
       new_message_sound:
-        title: "当聊天窗口处于前台时，对新消息播放提示音"
+        title: "当聊天处于前台时，对新消息播放提示音"
       show_thread_title_prompts:
         title: "显示消息串标题提示"
         description: "显示为新消息串设置标题的提示"
@@ -328,7 +324,7 @@ zh_CN:
       title: "聊天"
       title_capitalized: "聊天"
       disabled:
-        title: "您已禁用聊天功能。"
+        title: "您已禁用聊天"
         body: "重新打开它，即可查看频道和消息。"
         cta: "我的聊天偏好设置"
       upload: "附加文件"
@@ -360,7 +356,7 @@ zh_CN:
         filter_input_placeholder: 按名称搜索频道
         filter_joined_all: "所有"
         filter_joined_joined: "已加入"
-        filter_joined_not_joined: "不参加"
+        filter_joined_not_joined: "未加入"
       chat_message_separator:
         today: 今天
         yesterday: 昨天
@@ -434,18 +430,19 @@ zh_CN:
           other: "%{count} 个成员"
         empty_state:
           title: "这是 %{channelName} 的开始"
-          joined_title: "你是 %{channelName} 中的第一个用户"
-          guest_tip: "您目前以访客身份阅读。讨论从用户发帖的那一刻起就开始了——加入我们，成为其中一员吧！"
+          joined_title: "您是 %{channelName} 中的第一个用户"
+          direct_message_title: "开始与 %{name} 的对话"
+          guest_tip: "您目前以访客身份阅读。讨论从用户发帖的那一刻起开始 – 加入我们，成为其中一员吧！"
           joined_tip: "抢先发帖，开启讨论。"
           members_here:
-            other: "<strong>%{count} 个用户</strong> 在这里"
-          no_other_members: "目前尚无其他用户"
+            other: "这里有 <strong>%{count} 个成员</strong>"
+          no_other_members: "目前尚无其他成员"
         preview_card:
           guest_title: "加入 %{channelName} 开始聊天"
-          guest_body: "阅读对所有人免费。注册即可发帖、点赞和回复——只需大约30秒。"
+          guest_body: "阅读对所有人免费。注册即可发帖、回应和回复 – 只需大约 30 秒。"
           join_body: "您可以发帖和回复，这些内容会显示在您的频道列表中。"
           no_access_title: "您无法加入 %{channelName}"
-          no_access_body: "该频道目前不接受新用户加入。"
+          no_access_body: "此频道目前不对新成员开放。"
           log_in: "登录"
           sign_up: "注册"
       create_channel:

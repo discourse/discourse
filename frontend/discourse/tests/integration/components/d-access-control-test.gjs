@@ -1,11 +1,16 @@
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/owner";
 import { click, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import Form from "discourse/components/form";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DAccessControl from "discourse/ui-kit/d-access-control";
+import DAccessControlField from "discourse/ui-kit/d-access-control-field";
 import { i18n } from "discourse-i18n";
 
 // A non-automatic group, plus the "logged_in_users" auto group (id: 5) which is one of
@@ -30,6 +35,12 @@ const GROUPS = [
     automatic: true,
   },
 ];
+
+const aclTarget = {
+  type: "TestTarget",
+  id: 123,
+  name: "Test Target",
+};
 
 // Builds a controlled-component wrapper: `onChange` writes the next acl back into
 // tracked state so the component re-renders the way it would in a real parent.
@@ -191,7 +202,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         <DAccessControl
           @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -289,7 +300,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
           <DAccessControl
             @groups={{GROUPS}}
             @acl={{state.acl}}
-            @aclTarget="TestTarget"
+            @aclTarget={{aclTarget}}
             @onChange={{state.onChange}}
           />
         </template>
@@ -571,7 +582,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         <DAccessControl
           @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
           @onChange={{state.onChange}}
           @transformPermissionOptions={{transformPermissionOptions}}
         />
@@ -699,7 +710,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         <DAccessControl
           @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -748,7 +759,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         <DAccessControl
           @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -764,5 +775,53 @@ module("Integration | Component | DAccessControl", function (hooks) {
         i18n("access_control.manage.access_permission_editor"),
         "uses the mandatory permission"
       );
+  });
+});
+
+module("Integration | Component | DAccessControlField", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("reports confirmed access loss and allows submission", async function (assert) {
+    const dialog = getOwner(this).lookup("service:dialog");
+    sinon.stub(dialog, "confirm").resolves(true);
+
+    pretender.post("/access-control/evaluate.json", () =>
+      response(422, {
+        errors: ["You will lose permission to manage this target."],
+        extras: {
+          current_user_will_lose_permission: true,
+          loss_warning_permissions: ["manage"],
+        },
+      })
+    );
+
+    this.data = { acl: [] };
+    this.onChange = sinon.spy();
+    this.onSubmit = sinon.spy();
+    this.onAccessLossConfirmed = sinon.spy();
+
+    await render(
+      <template>
+        <Form @data={{this.data}} @onSubmit={{this.onSubmit}} as |form|>
+          <DAccessControlField
+            @form={{form}}
+            @title="Access"
+            @aclTarget={{aclTarget}}
+            @onChange={{this.onChange}}
+            @onAccessLossConfirmed={{this.onAccessLossConfirmed}}
+          />
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    assert.true(this.onSubmit.calledOnce, "the form submits");
+    assert.deepEqual(
+      this.onAccessLossConfirmed.firstCall.args,
+      [{ permissions: ["manage"] }],
+      "the confirmed warning permissions are reported"
+    );
   });
 });

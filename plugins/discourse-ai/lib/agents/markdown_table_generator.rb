@@ -25,10 +25,6 @@ module DiscourseAi
         [{ "key" => "output", "type" => "string" }]
       end
 
-      def temperature
-        0.5
-      end
-
       def examples
         [
           ["<input>sam,joe,jane\nage: 22|  10|11</input>", { output: <<~TEXT }.to_json],

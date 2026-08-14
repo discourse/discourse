@@ -621,6 +621,12 @@ basic:
     min: 1
     max: 20000
     hidden: true
+  admin_site_traffic_event_cap:
+    default: 1000000
+    type: integer
+    min: 1
+    max: 1000000
+    hidden: true
   browser_pageview_max_engaged_seconds:
     default: 1800
     type: integer
@@ -1932,8 +1938,11 @@ content_localization:
       - all
     default: none
     client: true
+    refresh: true
     area: "localization"
     validator: "LanguageSwitcherSettingValidator"
+    depends_on:
+      - "content_localization_enabled"
   content_localization_allowed_groups:
     type: group_list
     list_type: compact
@@ -1948,6 +1957,7 @@ content_localization:
     area: "localization"
   content_localization_max_locales:
     default: 10
+    client: true
     type: integer
     hidden: true
   content_localization_crawler_param:
@@ -2352,6 +2362,9 @@ email:
   ignore_by_title:
     type: list
     list_type: simple
+    default: ""
+    area: "email"
+  ignore_by_title_regex:
     default: ""
     area: "email"
   mailgun_api_key:
@@ -3125,10 +3138,10 @@ security:
     hidden: true
     default: "cubot|MetaIAB"
   # 38365/55967=Baidu, 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
-  # 13238=Yandex
+  # 13238=Yandex, 45102=Alibaba
   crawler_asns:
     hidden: true
-    default: "38365|55967|140577|210743|7941|13238"
+    default: "38365|55967|140577|210743|7941|13238|45102"
     type: list
     list_type: compact
   # 16509/14618=AWS, 16276=OVH, 136907/55990=Huawei Cloud,
@@ -4531,7 +4544,7 @@ tags:
     area: "categories_and_tags"
   create_tag_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
-    mandatory_values: "1|2" # auto group admins, moderators
+    mandatory_values: "1" # auto group admins
     type: group_list
     allow_any: false
     refresh: true
@@ -4640,6 +4653,10 @@ dashboard:
       - user_to_user_private_messages_with_replies
       - signups
     area: "reports"
+  enable_site_traffic_explorer:
+    default: false
+    client: true
+    hidden: true
   verbose_user_stat_count_logging:
     hidden: true
     default: false
@@ -4703,7 +4720,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403635"
   prioritize_recently_used_tags:

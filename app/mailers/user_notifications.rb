@@ -750,9 +750,7 @@ class UserNotifications < ActionMailer::Base
       end
 
       first_footer_classes = "highlight"
-      if (allow_reply_by_email && user.staged) || (user.suspended? || user.staged?)
-        first_footer_classes = ""
-      end
+      first_footer_classes = "" if user.suspended? || (user.staged? && !SiteSetting.private_email?)
 
       unless translation_override_exists
         html =
@@ -786,7 +784,7 @@ class UserNotifications < ActionMailer::Base
       mailing_list_mode: user.user_option.mailing_list_mode,
       unsubscribe_url: post.unsubscribe_url(user),
       allow_reply_by_email: allow_reply_by_email,
-      only_reply_by_email: allow_reply_by_email && user.staged,
+      only_reply_by_email: allow_reply_by_email && user.staged? && !SiteSetting.private_email?,
       use_site_subject: use_site_subject,
       add_re_to_subject: add_re_to_subject,
       show_category_in_subject: show_category_in_subject,
@@ -794,7 +792,8 @@ class UserNotifications < ActionMailer::Base
       private_reply: post.topic.private_message?,
       subject_pm: subject_pm,
       participants: participants,
-      include_respond_instructions: !(user.suspended? || user.staged?),
+      include_respond_instructions:
+        !(user.suspended? || (user.staged? && !SiteSetting.private_email?)),
       notification_type: notification_type,
       template: template,
       use_topic_title_subject: use_topic_title_subject,

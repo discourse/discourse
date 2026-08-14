@@ -5,17 +5,12 @@ import UserNavStackedExample from "../../examples/molecules/user-nav-stacked";
 import userNavStackedSource from "../../examples/molecules/user-nav-stacked?source=file";
 
 export default <template>
-  <StyleguideExample
-    @title=".nav-stacked"
-    class="half-size"
-    @code={{navStackedSource}}
-  >
+  <StyleguideExample @title=".nav-stacked" @code={{navStackedSource}}>
     <NavStackedExample @navItems={{@dummy.navItems}} />
   </StyleguideExample>
 
   <StyleguideExample
     @title=".user-navigation .nav-stacked"
-    class="half-size"
     @code={{userNavStackedSource}}
   >
     <UserNavStackedExample @navItems={{@dummy.navItems}} />

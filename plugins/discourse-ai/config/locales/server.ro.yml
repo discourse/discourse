@@ -40,6 +40,8 @@ ro:
     spam_detection:
       logging_subject: "Detectare spam"
     ai_bot:
+      read_post:
+        unknown_post: "articol"
       tool_summary:
         suspend_user: "Suspendă utilizatorul"
         silence_user: "Redu la tăcere utilizatorul"

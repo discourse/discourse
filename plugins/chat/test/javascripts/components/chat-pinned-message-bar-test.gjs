@@ -403,7 +403,7 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       .hasAttribute("href", new RegExp(`/${this.channel.id}/pins$`));
   });
 
-  test("shows an inline dismiss instead of the see-all icon for a single pin", async function (assert) {
+  test("hides the list icon for a single pin", async function (assert) {
     this.channel.pinnedMessagesCount = 1;
     pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
       pinResponse(this.channel, 1)
@@ -419,18 +419,17 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     );
 
     assert.dom(".chat-pinned-bar__see-all").doesNotExist();
-    assert.dom(".chat-pinned-bar__dismiss").exists();
 
     await click(".chat-pinned-bar__dismiss");
 
     assert.dom(".chat-pinned-bar").hasClass("--dismissed");
   });
 
-  test("keeps the see-all icon for pin managers with a single pin", async function (assert) {
+  test("offers the inline dismiss to pin managers too", async function (assert) {
     this.channel.meta.can_manage_pins = true;
-    this.channel.pinnedMessagesCount = 1;
+    this.channel.pinnedMessagesCount = 2;
     pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
-      pinResponse(this.channel, 1)
+      pinResponse(this.channel, 2)
     );
 
     await render(
@@ -442,8 +441,9 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       </template>
     );
 
-    assert.dom(".chat-pinned-bar__dismiss").doesNotExist();
-    assert.dom(".chat-pinned-bar__see-all").exists();
+    await click(".chat-pinned-bar__dismiss");
+
+    assert.dom(".chat-pinned-bar").hasClass("--dismissed");
   });
 
   test("shows an unread indicator when there are unseen pins", async function (assert) {
@@ -682,8 +682,7 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     assert.dom(".chat-pinned-bar").hasClass("--dismissed");
   });
 
-  test("pin managers bypass a stored dismissal", async function (assert) {
-    // a dismissal recorded before the user could manage pins
+  test("honors a stored dismissal for pin managers", async function (assert) {
     const store = new KeyValueStore(STORE_NAMESPACE);
     store.setObject({ key: String(this.channel.id), value: 100 });
     this.channel.meta.can_manage_pins = true;
@@ -704,7 +703,7 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
 
     assert
       .dom(".chat-pinned-bar")
-      .doesNotHaveClass("--dismissed", "managers always see the bar");
+      .hasClass("--dismissed", "dismissal is not tied to pin permissions");
   });
 
   test("stays dismissed when the dismissed pin is unpinned", async function (assert) {

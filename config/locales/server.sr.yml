@@ -268,6 +268,10 @@ sr:
         other: "pre %{count} mesec dana"
   password_reset:
     title: "Resetujte Šifru"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Prijavljen"
+      anonymous: "Anonimno"
   change_email:
     max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
   activation:
@@ -668,6 +672,9 @@ sr:
     groups:
       errors:
         empty_permissions: "Grupa oznaka mora imati najmanje jedno ovlašćenje."
+  design_wizard:
+    palette_pairs:
+      default: "Подразумевано"
   wizard:
     step:
       setup:

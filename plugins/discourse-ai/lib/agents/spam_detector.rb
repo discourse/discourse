@@ -7,10 +7,6 @@ module DiscourseAi
         false
       end
 
-      def temperature
-        0.1
-      end
-
       def system_prompt
         <<~PROMPT
           You are a spam detection system. Analyze the following post content and context.

@@ -401,6 +401,9 @@ sw:
     success_unapproved: "Umebadilisha nywila yako kwa mafanikio."
   email_login:
     title: "Ingia kupitia barua pepe"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Asiyejulikana"
   change_email:
     error: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Labda barua pepe tayari inatumika?"
     error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."
@@ -1606,9 +1609,6 @@ sw:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Akaunti Imesimamishwa"
       subject_template: "[%{email_prefix}] Akaunti yako imesimamishwa"
@@ -1982,6 +1982,9 @@ sw:
       message: "<p>Tumekutumia tena barua ya uanzishaji<b>%{email}</b>"
   safe_mode:
     enter: "Ingia Hali-tumizi iliyo salama"
+  design_wizard:
+    palette_pairs:
+      default: "Halisi"
   wizard:
     title: "Mpangilio wa Discourse"
     step:

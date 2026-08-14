@@ -279,6 +279,19 @@ RSpec.describe NewPostManager do
         end
       end
 
+      it "links the silence staff action log entry to the queued post" do
+        manager = build_manager_with("this is new post content")
+
+        result = NewPostManager.default_handler(manager)
+
+        history =
+          UserHistory.where(
+            action: UserHistory.actions[:silence_user],
+            target_user_id: user.id,
+          ).last
+        expect(history.reviewable_id).to eq(result.reviewable.id)
+      end
+
       it "runs the watched words check before checking if the user is a fast typer" do
         Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
         manager = build_manager_with("this is darn new post content")

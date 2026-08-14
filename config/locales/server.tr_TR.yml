@@ -992,6 +992,13 @@ tr_TR:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "bilinmeyen işletim sistemi"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonim"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "E-posta adresinizi değiştirirken bir hata oluştu. Belki de adres zaten kullanılıyordur?"
     doesnt_exist: "Bu e-posta adresi hesabınızla ilişkili değil."
@@ -2391,7 +2398,6 @@ tr_TR:
     revoke_user_api_keys_unused_days: "Bir kullanıcı API anahtarının otomatik olarak iptal edilmeden önce en son kullanıldığı günden bu yana geçen gün sayısı (hiçbir zaman için 0)"
     revoke_user_api_keys_maxlife_days: "Bir kullanıcı API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (asla için 0)"
     tagging_enabled: "Konulardaki etiketler etkinleştirilsin mi? Daha fazla bilgi için <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Metadaki etiketler için yönetici kılavuzu</a> bölümüne bakın."
-    create_tag_allowed_groups: "Etiket oluşturmasına izin verilen gruplar. Yöneticiler ve moderatörler her zaman etiket oluşturabilir."
     edit_tags_allowed_groups: "Etiketleri, etiket açıklamalarını ve etiket eş anlamlılarını düzenlemeye izin verilen gruplar."
     max_tags_per_topic: "Bir konuya uygulanabilecek maksimum etiket sayısı."
     max_tags_per_email_subject: "Bir e-postanın konusunda yer alabilecek maksimum etiketler"
@@ -2468,7 +2474,6 @@ tr_TR:
     default_composition_mode: "Topluluğunuzun bestecisi için varsayılan modu ayarlayın. Zengin metin modu çoğu kullanıcı için daha modern ve tanıdık bir yazma deneyimi sağlarken, Markdown modu daha teknik kitleler için uygun olabilir. Üyeler, besteci araç çubuğundaki geçiş düğmesini kullanarak modlar arasında geçiş yapabilirler."
     reviewable_ui_refresh: "İnceleme kuyruğunda deneysel yeni kullanıcı arayüzünü kullanabilen gruplar."
     content_localization_use_default_locale_when_unsupported: "Tercih edilen dili “içerik yerelleştirme desteklenen yerel ayarlar” listesinde bulunmayan kullanıcılara, sitenin varsayılan yerel ayarlarında yerelleştirilmiş içerik sunun."
-    content_localization_allow_author_localization: "Yazarların, yazı menüsü aracılığıyla kendi konularının ve yazılarının yerelleştirmelerini güncellemesine izin verin."
     nested_replies_enabled: "Konular için iç içe geçmiş yanıtlar görünümünü etkinleştirin."
     nested_replies_default: "Tüm konular için varsayılan görünüm olarak iç içe geçmiş yanıtları kullan."
     nested_replies_default_sort: "İç içe geçmiş yanıtlar görünümü için varsayılan sıralama algoritması."
@@ -4059,9 +4064,6 @@ tr_TR:
     user_posted_pm_staged:
       title: "Kullanıcı Kişisel Mesaj Gönderdi Aşamalı"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
@@ -4864,6 +4866,10 @@ tr_TR:
     title: "Geliştirici Modu"
     enable_rack_mini_profiler: "Rack Mini Profiler'ın oturum değişiklikleri arasında 1 saat boyunca kalıcı olmasını etkinleştirin"
     enter: "Geliştirici Moduna Gir"
+  design_wizard:
+    palette_pairs:
+      default: "Varsayılan"
+      dracula: "Drakula"
   wizard:
     title: "Discourse Kurulumu"
     step:

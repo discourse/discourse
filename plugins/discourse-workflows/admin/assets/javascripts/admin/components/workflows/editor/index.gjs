@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import WorkflowEditorSession from "../../../lib/workflows/editor-session";
 import {
@@ -23,6 +24,7 @@ import {
   typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import { mergeImportedStaticData } from "../../../lib/workflows/static-data";
+import { workflowNodeUrl, workflowUrl } from "../../../lib/workflows/urls";
 import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note";
 import { deserializeConnections } from "../../../models/workflow-connection";
 import WorkflowNode from "../../../models/workflow-node";
@@ -143,6 +145,7 @@ export default class WorkflowsEditor extends Component {
   currentSavePromise = null;
   pendingGraphSnapshot = null;
   pendingSaveOptions = null;
+  initialNodeHandled = false;
   workflowSession = new WorkflowEditorSession({
     workflowId: this.args.workflow?.id,
     lastExecutionRunData: this.args.workflow?.lastExecutionRunData || null,
@@ -295,6 +298,27 @@ export default class WorkflowsEditor extends Component {
   @action
   registerApi(api) {
     this.formApi = api;
+  }
+
+  @action
+  openInitialNode() {
+    if (
+      !this.args.initialNodeId ||
+      this.initialNodeHandled ||
+      this.isDestroying ||
+      this.isDestroyed
+    ) {
+      return;
+    }
+
+    this.initialNodeHandled = true;
+
+    if (!this.editNode(this.args.initialNodeId, { updateUrl: false })) {
+      this.router.replaceWith(
+        "adminPlugins.show.discourse-workflows.show.index",
+        this.args.workflow.id
+      );
+    }
   }
 
   #refreshUndoState() {
@@ -711,34 +735,53 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  editNode(clientId) {
+  editNode(clientId, { updateUrl = true } = {}) {
     const nodes = this.formApi.get("nodes");
     const connections = this.formApi.get("connections");
     const node = nodes.find((n) => n.clientId === clientId);
     if (!node) {
-      return;
+      return false;
     }
 
     if (isNodeUnavailable(this.workflowsNodeTypes, node)) {
-      return;
+      return false;
     }
 
     const triggerNode = nodes.find((n) => n.type?.startsWith("trigger:"));
 
     this.workflowSession.setEditingContext(node, nodes, connections);
 
-    this.modal.show(NodeConfigurator, {
-      model: {
-        node,
-        nodes,
-        connections,
-        session: this.workflowSession,
-        triggerType: triggerNode?.type,
-        onSave: (configuration, name, options) =>
-          this.updateNodeConfiguration(clientId, configuration, name, options),
-        onRemove: () => this.removeNodes([clientId]),
-      },
-    });
+    if (updateUrl) {
+      DiscourseURL.replaceState(
+        workflowNodeUrl(this.args.workflow.id, clientId)
+      );
+    }
+
+    this.modal
+      .show(NodeConfigurator, {
+        model: {
+          node,
+          nodes,
+          connections,
+          session: this.workflowSession,
+          triggerType: triggerNode?.type,
+          onSave: (configuration, name, options) =>
+            this.updateNodeConfiguration(
+              clientId,
+              configuration,
+              name,
+              options
+            ),
+          onRemove: () => this.removeNodes([clientId]),
+        },
+      })
+      .finally(() => {
+        if (!this.isDestroying && !this.isDestroyed) {
+          DiscourseURL.replaceState(workflowUrl(this.args.workflow.id));
+        }
+      });
+
+    return true;
   }
 
   @action
@@ -1495,6 +1538,7 @@ export default class WorkflowsEditor extends Component {
           @onConnectionDelete={{this.deleteConnection}}
           @onNodeDragEnd={{this.handleSubmit}}
           @onAreaReady={{this.initializeUndo}}
+          @onReady={{this.openInitialNode}}
           @onUndo={{this.undo}}
           @onRedo={{this.redo}}
           @canUndo={{this.canUndo}}

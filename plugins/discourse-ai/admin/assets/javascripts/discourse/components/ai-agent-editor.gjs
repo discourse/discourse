@@ -100,6 +100,39 @@ export default class AgentEditor extends Component {
     return this.args.agents.resultSetMeta.mcp_servers || [];
   }
 
+  @action
+  subagentCandidates(selectedIds = []) {
+    const selected = new Set(selectedIds);
+
+    return this.args.agents.content
+      .filter((agent) => agent.id !== this.args.model.id)
+      .filter((agent) => agent.enabled || selected.has(agent.id))
+      .map((agent) => {
+        const localizedName = agent.enabled
+          ? agent.name
+          : i18n("discourse_ai.ai_agent.subagent_disabled", {
+              name: agent.name,
+            });
+        return {
+          id: agent.id,
+          name: localizedName,
+          disabled: !agent.enabled,
+        };
+      });
+  }
+
+  @action
+  subagentTool(selectedIds = []) {
+    if (!selectedIds.length) {
+      return null;
+    }
+
+    return {
+      name: i18n("discourse_ai.ai_agent.subagent_tool_name"),
+      tokenCount: this.args.model.subagent_tool_token_count || 0,
+    };
+  }
+
   get maxPixelValues() {
     const l = (key) =>
       i18n(`discourse_ai.ai_agent.vision_max_pixel_sizes.${key}`);
@@ -436,21 +469,30 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  totalSelectedToolTokens(selectedTools = [], selectedMcpServers = []) {
+  totalSelectedToolTokens(
+    selectedTools = [],
+    selectedMcpServers = [],
+    subagentTool = null
+  ) {
     return (
       this.totalToolTokens(selectedTools) +
-      this.totalMcpToolTokens(selectedMcpServers)
+      this.totalMcpToolTokens(selectedMcpServers) +
+      (subagentTool?.tokenCount || 0)
     );
   }
 
   @action
-  totalSelectedToolCount(selectedTools = [], selectedMcpServers = []) {
+  totalSelectedToolCount(
+    selectedTools = [],
+    selectedMcpServers = [],
+    subagentTool = null
+  ) {
     const mcpToolCount = selectedMcpServers.reduce(
       (sum, server) => sum + server.selectedToolCount,
       0
     );
 
-    return selectedTools.length + mcpToolCount;
+    return selectedTools.length + mcpToolCount + (subagentTool ? 1 : 0);
   }
 
   @action
@@ -885,6 +927,33 @@ export default class AgentEditor extends Component {
             </field.Control>
           </form.Field>
 
+          <form.Field
+            @name="subagent_ids"
+            @title={{i18n "discourse_ai.ai_agent.subagents"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.subagents_help"}}
+            @format="large"
+            @type="custom"
+            as |field|
+          >
+            <field.Control>
+              <AiToolSelector
+                @value={{field.value}}
+                @disabled={{data.system}}
+                @onChange={{field.set}}
+                @content={{this.subagentCandidates field.value}}
+              />
+            </field.Control>
+          </form.Field>
+
+          {{#if data.subagent_ids.length}}
+            <p class="ai-agent-editor__subagent-summary">
+              {{i18n
+                "discourse_ai.ai_agent.subagents_summary"
+                count=data.subagent_ids.length
+              }}
+            </p>
+          {{/if}}
+
           {{#if this.allMcpServers.length}}
             <form.Field
               @name="mcp_server_ids"
@@ -913,7 +982,8 @@ export default class AgentEditor extends Component {
               data.mcp_server_ids data.mcp_server_tool_names
             )
             (this.selectedToolsWithTokens data.tools)
-            as |selectedMcpServers selectedTools|
+            (this.subagentTool data.subagent_ids)
+            as |selectedMcpServers selectedTools subagentTool|
           }}
             {{#if data.mcp_server_ids.length}}
               <div class="ai-agent-editor__mcp-server-summary">
@@ -975,8 +1045,12 @@ export default class AgentEditor extends Component {
             {{/if}}
 
             {{#let
-              (this.totalSelectedToolTokens selectedTools selectedMcpServers)
-              (this.totalSelectedToolCount selectedTools selectedMcpServers)
+              (this.totalSelectedToolTokens
+                selectedTools selectedMcpServers subagentTool
+              )
+              (this.totalSelectedToolCount
+                selectedTools selectedMcpServers subagentTool
+              )
               as |totalSelectedToolTokens totalSelectedToolCount|
             }}
               {{#let
@@ -1007,6 +1081,15 @@ export default class AgentEditor extends Component {
                           </span>
                         </li>
                       {{/each}}
+                      {{#if subagentTool}}
+                        <li class="ai-agent-editor__tool-token-item">
+                          <span>{{subagentTool.name}}</span>
+                          <span class="ai-agent-editor__tool-token-count">
+                            {{subagentTool.tokenCount}}
+                            {{i18n "discourse_ai.ai_agent.tokens"}}
+                          </span>
+                        </li>
+                      {{/if}}
                       {{#each selectedMcpServers as |server|}}
                         <li class="ai-agent-editor__tool-token-item">
                           <span>

@@ -61,7 +61,7 @@ type DMenuOptionArgs<Data> = Partial<
   onRegisterApi?: (instance: DMenuInstance) => void;
 };
 
-interface DMenuSignature<Data = unknown> {
+export interface DMenuSignature<Data = unknown> {
   Element: HTMLElement;
   Args: DMenuOptionArgs<Data> & {
     // Arguments the component reads directly and forwards to the trigger button;
