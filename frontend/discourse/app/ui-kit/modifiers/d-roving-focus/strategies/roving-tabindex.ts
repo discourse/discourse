@@ -106,14 +106,15 @@ export default class RovingTabindexStrategy {
    */
   restorationTarget(): HTMLElement | null {
     const remembered = this.#lastFocusedItem;
-    if (
-      !this.#config.restoreLostFocus ||
-      !remembered ||
-      remembered.isConnected
-    ) {
+    if (!remembered || remembered.isConnected) {
       return null;
     }
+    // Forgotten before the opt-out check: a removal declined now must not be acted on by a
+    // later run that finds restoration re-enabled, nor retain the detached element.
     this.#lastFocusedItem = null;
+    if (!this.#config.restoreLostFocus) {
+      return null;
+    }
     if (!this.#previousItems.some((item) => item.isConnected)) {
       return null;
     }

@@ -395,7 +395,10 @@ export interface DRovingFocusArgs {
    * A logical count alone does not decline it: that argument also drives paging, and a
    * fully-mounted list may set it for that alone. Note the completeness test relies on the
    * consumer declaring the count honestly — a group that windows without saying so is searched
-   * as though it were whole, and nothing here can detect that.
+   * as though it were whole, and nothing here can detect that. The same honesty applies in
+   * reverse: a selector-matched row that is not yet searchable — a placeholder awaiting its
+   * content — still counts as mounted, so keep placeholders out of `itemSelector` (or out of
+   * the count) while they are empty.
    */
   typeAhead?: boolean;
 }

@@ -38,21 +38,7 @@ export default class TypeAhead {
   /** Enables or disables matching and primes the accessible-name implementation. */
   configure(enabled: boolean): void {
     this.#enabled = enabled;
-    if (!enabled || this.#accessibleName || this.#namerPending) {
-      return;
-    }
-    this.#namerPending = true;
-    this.#loader().then(
-      (namer) => {
-        this.#namerPending = false;
-        if (!this.#destroyed && this.#enabled) {
-          this.#accessibleName = namer;
-        }
-      },
-      () => {
-        this.#namerPending = false;
-      }
-    );
+    this.#load();
   }
 
   /** Handles a claimed character and reports whether keyboard routing should stop. */
@@ -62,6 +48,9 @@ export default class TypeAhead {
       return false;
     }
     if (!this.#accessibleName) {
+      // A group that never reconfigures would otherwise stay dead after a failed load, so the
+      // keystroke itself is the retry.
+      this.#load();
       return true;
     }
     const items = context.items();
@@ -74,7 +63,6 @@ export default class TypeAhead {
       context.warnWindowed();
       return true;
     }
-    // Compute before appending, or the second press would always make the run look repeated.
     const repeated =
       this.#query !== "" &&
       [...this.#query].every((char) => char === event.key);
@@ -101,6 +89,24 @@ export default class TypeAhead {
   /** Prevents a pending name-loader result from reviving matching after teardown. */
   destroy(): void {
     this.#destroyed = true;
+  }
+
+  #load(): void {
+    if (!this.#enabled || this.#accessibleName || this.#namerPending) {
+      return;
+    }
+    this.#namerPending = true;
+    this.#loader().then(
+      (namer) => {
+        this.#namerPending = false;
+        if (!this.#destroyed && this.#enabled) {
+          this.#accessibleName = namer;
+        }
+      },
+      () => {
+        this.#namerPending = false;
+      }
+    );
   }
 
   #expire(now: number): void {
