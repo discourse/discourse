@@ -51,6 +51,36 @@ RSpec.describe Category do
     end
   end
 
+  describe "#minimum_required_tags" do
+    it "is zero when blank" do
+      category = Fabricate.build(:category, user: user, minimum_required_tags: nil)
+      category.validate
+
+      expect(category.minimum_required_tags).to eq(0)
+    end
+
+    it "keeps a set value" do
+      category = Fabricate.build(:category, user: user, minimum_required_tags: 3)
+      category.validate
+
+      expect(category.minimum_required_tags).to eq(3)
+    end
+  end
+
+  describe "#subcategory_list_includes_topics?" do
+    def includes_topics?(style)
+      Category.new(subcategory_list_style: style).subcategory_list_includes_topics?
+    end
+
+    it "is true only for the styles that feature topics" do
+      expect(includes_topics?("rows_with_featured_topics")).to eq(true)
+      expect(includes_topics?("boxes_with_featured_topics")).to eq(true)
+      expect(includes_topics?("rows")).to eq(false)
+      expect(includes_topics?("boxes")).to eq(false)
+      expect(includes_topics?(nil)).to eq(false)
+    end
+  end
+
   it "validates uniqueness in case insensitive way" do
     Fabricate(:category_with_definition, name: "Cats")
     cats = Fabricate.build(:category, name: "cats")
