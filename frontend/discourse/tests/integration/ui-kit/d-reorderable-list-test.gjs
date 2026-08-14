@@ -2,15 +2,18 @@ import { tracked } from "@glimmer/tracking";
 import { trackedArray } from "@ember/reactive/collections";
 import {
   click,
+  fillIn,
   find,
   findAll,
   render,
   resetOnerror,
   settled,
   setupOnerror,
+  triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   assertDragRegistered,
@@ -1386,3 +1389,864 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     );
   });
 });
+
+module(
+  "Integration | ui-kit | DReorderableList | manual controls and create",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("manual mode renders no automatic controls", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @controls="manual"
+          >
+            <:default as |item row|>
+              <span class="row-content" data-test-item={{item.id}}>
+                {{item.name}}
+              </span>
+              {{#if row.arrows}}
+                <div class="consumer-control-cell"><row.arrows /></div>
+              {{/if}}
+            </:default>
+          </DReorderableList>
+        </template>
+      );
+
+      assert
+        .dom(".d-reorderable-list__row > .d-reorderable-list__handle")
+        .doesNotExist("manual mode inserts no handle beside the row block");
+      assert
+        .dom(".d-reorderable-list__row > .d-reorderable-list__arrows")
+        .doesNotExist("manual mode inserts no arrow pair beside the row block");
+      assert
+        .dom(".row-content")
+        .exists(
+          { count: items.length },
+          "every row block still renders when controls are manual"
+        );
+    });
+
+    test("manual row API exposes controls only for movable manual rows", async function (assert) {
+      const items = objectItems().slice(0, 2);
+      const movable = (item) => item === items[0];
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @controls="manual"
+            @movable={{movable}}
+            id="manual-api"
+          >
+            <:default as |item row|>
+              <span
+                data-test-item={{item.id}}
+                data-handle={{if row.handle "true" "false"}}
+                data-arrows={{if row.arrows "true" "false"}}
+                data-controls={{if row.controls "true" "false"}}
+              >{{item.name}}</span>
+              {{#if row.arrows}}<row.arrows />{{/if}}
+            </:default>
+          </DReorderableList>
+
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @controls="start"
+            id="start-api"
+          >
+            <:default as |item row|><span
+                data-test-item={{item.id}}
+                data-handle={{if row.handle "true" "false"}}
+                data-arrows={{if row.arrows "true" "false"}}
+                data-controls={{if row.controls "true" "false"}}
+              >{{item.name}}</span></:default>
+          </DReorderableList>
+
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @controls="end"
+            id="end-api"
+          >
+            <:default as |item row|><span
+                data-test-item={{item.id}}
+                data-handle={{if row.handle "true" "false"}}
+                data-arrows={{if row.arrows "true" "false"}}
+                data-controls={{if row.controls "true" "false"}}
+              >{{item.name}}</span></:default>
+          </DReorderableList>
+        </template>
+      );
+
+      assert
+        .dom(`${rowSelector(items[0].id, "#manual-api")} [data-test-item]`)
+        .hasAttribute(
+          "data-handle",
+          "true",
+          "a movable manual row yields a handle"
+        )
+        .hasAttribute(
+          "data-arrows",
+          "true",
+          "a movable manual row yields arrows"
+        )
+        .hasAttribute(
+          "data-controls",
+          "true",
+          "a movable manual row yields fused controls"
+        );
+      assert
+        .dom(`${rowSelector(items[1].id, "#manual-api")} [data-test-item]`)
+        .hasAttribute(
+          "data-handle",
+          "false",
+          "a frozen manual row yields no handle"
+        )
+        .hasAttribute(
+          "data-arrows",
+          "false",
+          "a frozen manual row yields no arrows"
+        )
+        .hasAttribute(
+          "data-controls",
+          "false",
+          "a frozen manual row yields no fused controls"
+        );
+
+      for (const root of ["#start-api", "#end-api"]) {
+        assert
+          .dom(`${root} [data-test-item]`)
+          .hasAttribute(
+            "data-handle",
+            "false",
+            `${root} rows do not yield a manual handle`
+          )
+          .hasAttribute(
+            "data-arrows",
+            "false",
+            `${root} rows do not yield manual arrows`
+          )
+          .hasAttribute(
+            "data-controls",
+            "false",
+            `${root} rows do not yield fused manual controls`
+          );
+      }
+    });
+
+    test("manually placed handle and arrows match automatic controls", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @controls="manual"
+            @arrowsLayout="inline"
+          >
+            <:default as |item row|>
+              <div class="consumer-cell" data-test-item={{item.id}}>
+                <row.handle
+                  class="consumer-handle"
+                  role="presentation"
+                  data-consumer-handle={{item.id}}
+                />
+                <row.arrows
+                  class="consumer-arrows"
+                  role="group"
+                  data-consumer-arrows={{item.id}}
+                />
+              </div>
+            </:default>
+          </DReorderableList>
+        </template>
+      );
+
+      assert
+        .dom(".consumer-cell > .d-reorderable-list__handle")
+        .exists(
+          { count: items.length },
+          "one manually placed handle renders inside each nested cell"
+        );
+      assert
+        .dom(".consumer-cell > .d-reorderable-list__arrows")
+        .exists(
+          { count: items.length },
+          "one manually placed arrow pair renders inside each nested cell"
+        );
+
+      for (const [index, item] of items.entries()) {
+        const row = rowSelector(item.id);
+        const itemLabel = label(item);
+
+        assert
+          .dom(`${row} .consumer-handle`)
+          .hasTagName("span", `${itemLabel}'s manual handle keeps its element`)
+          .hasClass(
+            "d-drag-handle",
+            `${itemLabel}'s manual handle uses DDragHandle`
+          )
+          .hasClass(
+            "d-reorderable-list__handle",
+            `${itemLabel}'s manual handle keeps the list class`
+          )
+          .hasAttribute(
+            "aria-hidden",
+            "true",
+            `${itemLabel}'s manual handle stays decorative`
+          )
+          .hasAttribute(
+            "title",
+            `Drag ${itemLabel}`,
+            `${itemLabel}'s manual handle uses the standard translated label`
+          )
+          .hasAttribute(
+            "role",
+            "presentation",
+            `${itemLabel}'s consumer handle role passes through`
+          )
+          .hasAttribute(
+            "data-consumer-handle",
+            item.id,
+            `${itemLabel}'s consumer handle attribute passes through`
+          );
+        assert
+          .dom(`${row} .consumer-arrows`)
+          .hasTagName("span", `${itemLabel}'s manual arrows keep their element`)
+          .hasClass(
+            "d-reorder-buttons",
+            `${itemLabel}'s manual arrows use DReorderButtons`
+          )
+          .hasClass(
+            "d-reorderable-list__arrows",
+            `${itemLabel}'s manual arrows keep the list class`
+          )
+          .hasClass(
+            "--inline",
+            `${itemLabel}'s manual arrows inherit the layout`
+          )
+          .hasAttribute(
+            "role",
+            "group",
+            `${itemLabel}'s consumer arrow role passes through`
+          )
+          .hasAttribute(
+            "data-consumer-arrows",
+            item.id,
+            `${itemLabel}'s consumer arrow attribute passes through`
+          );
+        assert
+          .dom(arrowSelector(item.id, "up"))
+          .hasTagName("button", `${itemLabel}'s manual up control is a button`)
+          .hasAria(
+            "label",
+            `Move ${itemLabel} up`,
+            `${itemLabel}'s manual up arrow uses the standard label`
+          );
+        assert
+          .dom(arrowSelector(item.id, "down"))
+          .hasTagName(
+            "button",
+            `${itemLabel}'s manual down control is a button`
+          )
+          .hasAria(
+            "label",
+            `Move ${itemLabel} down`,
+            `${itemLabel}'s manual down arrow uses the standard label`
+          );
+
+        if (index === 0) {
+          assert
+            .dom(arrowSelector(item.id, "up"))
+            .hasAttribute(
+              "aria-disabled",
+              "true",
+              `${itemLabel}'s manual up arrow reflects the first boundary`
+            );
+        } else {
+          assert
+            .dom(arrowSelector(item.id, "up"))
+            .doesNotHaveAttribute(
+              "aria-disabled",
+              `${itemLabel}'s manual up arrow is enabled away from the boundary`
+            );
+        }
+
+        if (index === items.length - 1) {
+          assert
+            .dom(arrowSelector(item.id, "down"))
+            .hasAttribute(
+              "aria-disabled",
+              "true",
+              `${itemLabel}'s manual down arrow reflects the last boundary`
+            );
+        } else {
+          assert
+            .dom(arrowSelector(item.id, "down"))
+            .doesNotHaveAttribute(
+              "aria-disabled",
+              `${itemLabel}'s manual down arrow is enabled away from the boundary`
+            );
+        }
+      }
+    });
+
+    test("manual fused controls render handle then arrows", async function (assert) {
+      const items = objectItems().slice(0, 1);
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @controls="manual"
+            as |item row|
+          >
+            <div class="consumer-controls-cell" data-test-item={{item.id}}>
+              <row.controls />
+            </div>
+          </DReorderableList>
+        </template>
+      );
+
+      assert.deepEqual(
+        Array.from(find(".consumer-controls-cell").children).map(
+          (element) => element.className
+        ),
+        [
+          "d-drag-handle d-reorderable-list__handle",
+          "d-reorder-buttons d-reorderable-list__arrows",
+        ],
+        "the fused component renders the standard handle then the standard arrows"
+      );
+    });
+
+    test("manually placed handle commits a normalized drag move", async function (assert) {
+      const items = objectItems();
+      const sourceItem = items[0];
+      const targetItem = items.at(-1);
+      const fromIndex = items.indexOf(sourceItem);
+      const targetIndex = items.indexOf(targetItem);
+      const toIndex = targetIndex - Number(fromIndex < targetIndex);
+      const proposed = [...items];
+      proposed.splice(fromIndex, 1);
+      proposed.splice(toIndex, 0, sourceItem);
+      const moves = [];
+      const onMove = (move) => moves.push(move);
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @controls="manual"
+          >
+            <:default as |item row|>
+              <div data-test-item={{item.id}}>
+                <span class="consumer-handle-cell"><row.handle /></span>
+                <span class="consumer-arrows-cell"><row.arrows /></span>
+              </div>
+            </:default>
+          </DReorderableList>
+        </template>
+      );
+
+      const source = rowSelector(sourceItem.id);
+      const target = rowSelector(targetItem.id);
+      assertDragRegistered(`${source} .d-reorderable-list__handle`, target);
+      await simulateDrag(source, target, {
+        dataTransfer: new DataTransfer(),
+        targetCoordinates: dropCoordinates(target, "before"),
+      });
+
+      assert.strictEqual(
+        moves.length,
+        1,
+        "one manual-handle drag commits once"
+      );
+      assert.deepEqual(
+        moves[0],
+        {
+          method: "drag",
+          item: sourceItem,
+          fromList: "default",
+          toList: "default",
+          fromIndex,
+          toIndex,
+          fromItems: items,
+          toItems: items,
+          proposedFromItems: proposed,
+          proposedToItems: proposed,
+        },
+        "the nested manual handle emits the complete normalized drag payload"
+      );
+    });
+
+    test("arrows-only manual surface commits and announces without asserting", async function (assert) {
+      const items = objectItems();
+      const movedItem = items[1];
+      const fromIndex = items.indexOf(movedItem);
+      const toIndex = fromIndex - 1;
+      const proposed = [...items];
+      proposed.splice(fromIndex, 1);
+      proposed.splice(toIndex, 0, movedItem);
+      const moves = [];
+      const onMove = (move) => moves.push(move);
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+      let raised;
+
+      setupOnerror((error) => {
+        raised = error;
+      });
+
+      try {
+        await render(
+          <template>
+            <DReorderableList
+              @items={{items}}
+              @key="id"
+              @label={{label}}
+              @onMove={{onMove}}
+              @controls="manual"
+              as |item row|
+            >
+              <div data-test-item={{item.id}}><row.arrows /></div>
+            </DReorderableList>
+          </template>
+        );
+
+        await click(assertArrowReady(assert, movedItem.id, "up"));
+      } finally {
+        resetOnerror();
+      }
+
+      assert.strictEqual(
+        raised,
+        undefined,
+        "arrows alone satisfy the keyboard guard"
+      );
+      assert
+        .dom(".d-reorderable-list__handle")
+        .doesNotExist("an arrows-only surface needs no drag handle");
+      assert.strictEqual(
+        moves.length,
+        1,
+        "one manual arrow press commits once"
+      );
+      assert.deepEqual(
+        moves[0],
+        {
+          method: "buttons",
+          item: movedItem,
+          fromList: "default",
+          toList: "default",
+          fromIndex,
+          toIndex,
+          fromItems: items,
+          toItems: items,
+          proposedFromItems: proposed,
+          proposedToItems: proposed,
+        },
+        "manual arrows emit the complete normalized button payload"
+      );
+      assert.strictEqual(
+        announce.callCount,
+        1,
+        "the manual arrow move announces once"
+      );
+      assert.strictEqual(
+        announce.firstCall.args[0],
+        `Moved ${label(movedItem)} to position ${moves[0].toIndex + 1} of ${proposed.length}`,
+        "manual arrows use the standard measured announcement"
+      );
+    });
+
+    test("manual mode asserts when a movable row omits keyboard controls", async function (assert) {
+      const items = objectItems().slice(0, 1);
+      let raised;
+
+      setupOnerror((error) => {
+        raised = error;
+      });
+
+      try {
+        await render(
+          <template>
+            <DReorderableList
+              @items={{items}}
+              @key="id"
+              @label={{label}}
+              @onMove={{noop}}
+              @controls="manual"
+              as |item row|
+            >
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+              {{#if row.handle}}<row.handle />{{/if}}
+            </DReorderableList>
+          </template>
+        );
+      } finally {
+        resetOnerror();
+      }
+
+      assert
+        .dom("[data-test-item]")
+        .exists("the manual row renders before the delayed guard runs");
+      assert.true(
+        /Assertion Failed:.*(arrow|keyboard|control)/i.test(
+          raised?.message ?? ""
+        ),
+        "a handle-only movable row triggers the manual keyboard-path assertion"
+      );
+    });
+
+    test("allowCreate renders the default create row between rows and static content", async function (assert) {
+      const items = objectItems().slice(0, 2);
+      const accessibleName = await loadAccessibleName();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onCreate={{noop}}
+            @allowCreate={{true}}
+          >
+            <:default as |item|><span
+                data-test-item={{item.id}}
+              >{{item.name}}</span></:default>
+            <:static><li data-slot="static">Static</li></:static>
+          </DReorderableList>
+        </template>
+      );
+
+      assert.deepEqual(
+        Array.from(find(".d-reorderable-list").children).map((element) => {
+          if (element.classList.contains("d-reorderable-list__create")) {
+            return "create";
+          }
+          return element.dataset.reorderableKey ?? element.dataset.slot;
+        }),
+        [...items.map((item) => item.id), "create", "static"],
+        "the create row follows every item and precedes static content"
+      );
+      assert
+        .dom(".d-reorderable-list__create")
+        .exists({ count: 1 }, "one default create row renders");
+      assert
+        .dom(".d-reorderable-list__create-input")
+        .hasTagName("input", "the default create control is an input");
+      assert.strictEqual(
+        find(".d-reorderable-list__create-input").type,
+        "text",
+        "the create input accepts text"
+      );
+      assert.strictEqual(
+        accessibleName(find(".d-reorderable-list__create-input")),
+        "Add an item",
+        "the create input has the translated accessible name"
+      );
+      assert
+        .dom(".d-reorderable-list__create button")
+        .exists({ count: 1 }, "the create row has one icon button");
+      assert.strictEqual(
+        accessibleName(find(".d-reorderable-list__create button")),
+        "Add an item",
+        "the create button has the translated accessible name"
+      );
+      assert
+        .dom(".d-reorderable-list__create button .d-icon")
+        .exists("the create action is rendered as an icon button");
+    });
+
+    test("Enter creates one trimmed value and clears the input while ignoring whitespace", async function (assert) {
+      const items = objectItems().slice(0, 1);
+      const onCreate = sinon.spy();
+      const enteredValue = `  ${items[0].name} draft  `;
+      const expectedValue = enteredValue.trim();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onCreate={{onCreate}}
+            @allowCreate={{true}}
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </template>
+      );
+
+      const input = ".d-reorderable-list__create-input";
+      await fillIn(input, enteredValue);
+      await triggerKeyEvent(input, "keydown", "Enter");
+
+      assert.strictEqual(
+        onCreate.callCount,
+        1,
+        "Enter calls onCreate exactly once"
+      );
+      assert.strictEqual(
+        onCreate.firstCall.args[0],
+        expectedValue,
+        "Enter submits the measured trimmed value"
+      );
+      assert
+        .dom(input)
+        .hasValue("", "a successful Enter submission clears the input");
+
+      await fillIn(input, "   ");
+      await triggerKeyEvent(input, "keydown", "Enter");
+
+      assert.strictEqual(
+        onCreate.callCount,
+        1,
+        "Enter on whitespace adds no create callback"
+      );
+    });
+
+    test("create button submits one trimmed value and clears the input while ignoring whitespace", async function (assert) {
+      const items = objectItems().slice(0, 1);
+      const onCreate = sinon.spy();
+      const enteredValue = `  ${items[0].id} copy  `;
+      const expectedValue = enteredValue.trim();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onCreate={{onCreate}}
+            @allowCreate={{true}}
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </template>
+      );
+
+      const input = ".d-reorderable-list__create-input";
+      const button = ".d-reorderable-list__create button";
+      await fillIn(input, enteredValue);
+      await click(button);
+
+      assert.strictEqual(
+        onCreate.callCount,
+        1,
+        "the create button calls onCreate exactly once"
+      );
+      assert.strictEqual(
+        onCreate.firstCall.args[0],
+        expectedValue,
+        "the create button submits the measured trimmed value"
+      );
+      assert
+        .dom(input)
+        .hasValue("", "a successful button submission clears the input");
+
+      await fillIn(input, "\t  ");
+      await click(button);
+
+      assert.strictEqual(
+        onCreate.callCount,
+        1,
+        "clicking create for whitespace adds no callback"
+      );
+    });
+
+    test("create UI is absent unless allowCreate is true", async function (assert) {
+      const items = objectItems().slice(0, 1);
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onCreate={{noop}}
+            as |item|
+          >
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </DReorderableList>
+        </template>
+      );
+
+      assert
+        .dom(".d-reorderable-list__create")
+        .doesNotExist("the create row is opt-in");
+      assert
+        .dom(".d-reorderable-list__create-input")
+        .doesNotExist("an opted-out list has no create input");
+    });
+
+    test("custom create block replaces the default create row", async function (assert) {
+      const items = objectItems().slice(0, 1);
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onCreate={{noop}}
+            @allowCreate={{true}}
+          >
+            <:default as |item|><span
+                data-test-item={{item.id}}
+              >{{item.name}}</span></:default>
+            <:create><li data-slot="create">Consumer create</li></:create>
+            <:static><li data-slot="static">Static</li></:static>
+          </DReorderableList>
+        </template>
+      );
+
+      assert.deepEqual(
+        Array.from(find(".d-reorderable-list").children).map(
+          (element) => element.dataset.reorderableKey ?? element.dataset.slot
+        ),
+        [items[0].id, "create", "static"],
+        "the custom create block occupies the default create position"
+      );
+      assert
+        .dom("[data-slot='create']")
+        .exists({ count: 1 }, "the consumer create block renders once");
+      assert
+        .dom(".d-reorderable-list__create")
+        .doesNotExist(
+          "the custom block replaces the default create row entirely"
+        );
+      assert
+        .dom(".d-reorderable-list__create-input")
+        .doesNotExist("the custom block renders no default input");
+    });
+
+    test("create renders alongside the empty block", async function (assert) {
+      const items = [];
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @label={{label}}
+            @onMove={{noop}}
+            @onCreate={{noop}}
+            @allowCreate={{true}}
+          >
+            <:default as |item|><span
+                data-test-item={{item}}
+              >{{item}}</span></:default>
+            <:empty><li data-slot="empty">Nothing here</li></:empty>
+            <:static><li data-slot="static">Static</li></:static>
+          </DReorderableList>
+        </template>
+      );
+
+      assert.deepEqual(
+        Array.from(find(".d-reorderable-list").children).map((element) => {
+          if (element.classList.contains("d-reorderable-list__create")) {
+            return "create";
+          }
+          return element.dataset.slot;
+        }),
+        ["empty", "create", "static"],
+        "the empty block and create row both render before static content"
+      );
+      assert
+        .dom(".d-reorderable-list__create-input")
+        .exists("an empty collection still offers the create input");
+    });
+
+    test("removing a dragged item clears its state before reinsertion", async function (assert) {
+      const initialItems = objectItems();
+      const draggedItem = initialItems[1];
+      const state = new (class {
+        @tracked items = initialItems;
+      })();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{state.items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:default as |item row|><span
+                data-test-item={{item.id}}
+                data-dragging={{if row.isDragging "true" "false"}}
+              >{{item.name}}</span></:default>
+          </DReorderableList>
+        </template>
+      );
+
+      const sourceHandle = `${rowSelector(draggedItem.id)} .d-reorderable-list__handle`;
+      const sourceElement = find(sourceHandle);
+      const sourceCoordinates = centerOf(sourceHandle);
+      const dataTransfer = new DataTransfer();
+      await dragEvent(sourceElement, "dragstart", {
+        dataTransfer,
+        ...sourceCoordinates,
+      });
+      assert
+        .dom(`[data-test-item="${draggedItem.id}"]`)
+        .hasAttribute(
+          "data-dragging",
+          "true",
+          "the source enters the dragging state"
+        );
+
+      state.items = initialItems.filter((item) => item !== draggedItem);
+      await settled();
+      assert
+        .dom(rowSelector(draggedItem.id))
+        .doesNotExist("the host removes the in-flight row");
+
+      await dragEvent(sourceElement, "dragend", {
+        dataTransfer,
+        ...sourceCoordinates,
+      });
+      state.items = initialItems;
+      await settled();
+
+      assert
+        .dom(`[data-test-item="${draggedItem.id}"]`)
+        .hasAttribute(
+          "data-dragging",
+          "false",
+          "a reinserted row does not inherit its removed drag's key state"
+        );
+    });
+  }
+);
