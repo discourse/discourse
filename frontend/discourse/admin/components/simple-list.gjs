@@ -83,11 +83,12 @@ export default class SimpleList extends Component {
       <DReorderableList
         @items={{this.collection}}
         @key={{INDEX_KEY}}
+        @keyboard="buttons"
         @label={{this.valueLabel}}
         @onMove={{this.handleMove}}
         @wrap={{true}}
         @arrowsLayout="inline"
-        @controls="end"
+        @controls="split"
         @controlsVisibility="reveal"
         @tag="div"
         @itemTag="div"

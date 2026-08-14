@@ -104,6 +104,7 @@ export default class AdminConfigAreasFlags extends Component {
         <DReorderableList
           @items={{this.flags}}
           @key="id"
+          @keyboard="buttons"
           @label={{this.flagLabel}}
           @movable={{this.movable}}
           @onMove={{this.handleMove}}

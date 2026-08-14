@@ -97,6 +97,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
           <DReorderableList
             @items={{this.sortedFields}}
             @key="id"
+            @keyboard="buttons"
             @label={{this.fieldLabel}}
             @onMove={{this.handleMove}}
             @controls="manual"

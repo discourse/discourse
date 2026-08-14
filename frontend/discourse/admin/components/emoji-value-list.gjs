@@ -140,11 +140,12 @@ export default class EmojiValueList extends Component {
         <DReorderableList
           @items={{this.collection}}
           @key="value"
+          @keyboard="buttons"
           @label={{this.emojiLabel}}
           @onMove={{this.handleMove}}
           @wrap={{true}}
           @arrowsLayout="inline"
-          @controls="end"
+          @controls="split"
           @controlsVisibility="reveal"
           @rowClass="value"
           class="values emoji-value-list"
