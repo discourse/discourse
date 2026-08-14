@@ -35,6 +35,7 @@ import type MenuService from "discourse/float-kit/services/menu";
 import type ToastsService from "discourse/float-kit/services/toasts";
 import {
   getExtensions,
+  type MarkdownOptions,
   type PluginParams,
   type RichEditorExtension,
 } from "discourse/lib/composer/rich-editor-extensions";
@@ -102,6 +103,8 @@ interface ProsemirrorEditorSignature {
     replaceToolbar?: (toolbar: ToolbarBase | null, owner?: ToolbarBase) => void;
     /** Toggles between the rich and plain-text editors. */
     toggleRichEditor?: () => void;
+    /** Markdown cook options from the host editor, exposed to extensions. */
+    markdownOptions?: MarkdownOptions;
   };
 }
 
@@ -187,6 +190,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         appEvents: this.appEvents,
         dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
+        markdownOptions: this.args.markdownOptions,
         // TODO(devxp-typescript-pending): remove the cast once GlimmerNodeView's
         // component field has a typed invocation signature.
         addGlimmerNodeView: (nodeView) =>

@@ -28,6 +28,15 @@ import type ModalService from "discourse/services/modal";
 import type GlimmerNodeView from "discourse/static/prosemirror/lib/glimmer-node-view";
 import type { ToolbarBase } from "./toolbar";
 
+export interface MarkdownOptions {
+  /** Avatar template of a post in the host editor's topic. */
+  lookupAvatarTemplateByPostNumber?: (
+    postNumber: number,
+    topicId: number
+  ) => string | undefined;
+  [key: string]: unknown;
+}
+
 export interface PluginContext {
   /** Placeholder shown when the document is empty. */
   placeholder?: string;
@@ -55,6 +64,8 @@ export interface PluginContext {
   dialog: DialogService;
   /** Replaces or restores the toolbar displayed by the editor container. */
   replaceToolbar?: (toolbar: ToolbarBase | null, owner?: ToolbarBase) => void;
+  /** Markdown cook options provided by the host editor. */
+  markdownOptions?: MarkdownOptions;
   /** Registers a rendered component-backed node view. */
   addGlimmerNodeView: (nodeView: GlimmerNodeView) => void;
   /** Unregisters a rendered component-backed node view. */

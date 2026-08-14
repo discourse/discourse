@@ -2,7 +2,8 @@ import { tracked } from "@glimmer/tracking";
 import { click, render, settled, waitFor } from "@ember/test-helpers";
 import DEditor from "discourse/ui-kit/d-editor";
 
-export async function setupRichEditor(assert, markdown, multiToggle = false) {
+export async function setupRichEditor(assert, markdown, opts = {}) {
+  const { multiToggle = false, markdownOptions } = opts;
   const self = new (class {
     @tracked value = markdown;
     @tracked view;
@@ -17,6 +18,7 @@ export async function setupRichEditor(assert, markdown, multiToggle = false) {
         @value={{self.value}}
         @processPreview={{false}}
         @onSetup={{handleSetup}}
+        @markdownOptions={{markdownOptions}}
       />
     </template>
   );
@@ -76,13 +78,9 @@ export async function testMarkdown(
   markdown,
   expectedHtml,
   expectedMarkdown,
-  multiToggle = false
+  opts = {}
 ) {
-  const [editorClass, html] = await setupRichEditor(
-    assert,
-    markdown,
-    multiToggle
-  );
+  const [editorClass, html] = await setupRichEditor(assert, markdown, opts);
 
   if (typeof expectedHtml === "function") {
     expectedHtml(assert);
