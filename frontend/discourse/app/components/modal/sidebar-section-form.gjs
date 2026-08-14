@@ -24,6 +24,8 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { eq, has, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
+import DReorderableListGroup from "discourse/ui-kit/d-reorderable-list-group";
 import DSelect from "discourse/ui-kit/d-select";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -346,7 +348,6 @@ const TranslationRow = <template>
 
 @tagName("")
 export default class SidebarSectionForm extends Component {
-  @service a11y;
   @service dialog;
   @service languageNameLookup;
   @service router;
@@ -359,6 +360,18 @@ export default class SidebarSectionForm extends Component {
   nextObjectId = 0;
   nextGroupKey = 0;
   groupKeys = new Map();
+
+  /**
+   * Applies one normalized move from the reorderable lists onto the backing
+   * arrays, which keep links awaiting deletion in place with `_destroy` set.
+   * The proposed orders describe only the visible links, so each visible link
+   * is re-slotted around the hidden ones, and a cross-list move re-segments
+   * the link it carried. Announcements and no-op suppression are the lists'
+   * own; only this projection is domain knowledge.
+   *
+   * @param {Object} move - The normalized move from the list group.
+   */
+  linkName = (link) => link.name;
 
   @cached
   get transformedModel() {
@@ -607,14 +620,6 @@ export default class SidebarSectionForm extends Component {
     return duplicates;
   }
 
-  get lastActiveLinkIndex() {
-    return this.activeLinks.length - 1;
-  }
-
-  get lastActiveSecondaryLinkIndex() {
-    return (this.activeSecondaryLinks?.length ?? 0) - 1;
-  }
-
   @cached
   get activeLocalizations() {
     return this.#activeLocalizations(this.transformedModel);
@@ -849,92 +854,39 @@ export default class SidebarSectionForm extends Component {
   @afterRender
   focusNewRowInput(id) {
     document
-      .querySelector(`[data-row-id="${id}"] .d-icon-grid-picker-trigger`)
+      .querySelector(
+        `[data-reorderable-key="${id}"] .d-icon-grid-picker-trigger`
+      )
       .focus();
   }
 
-  /**
-   * Moves a link next to the row it was dropped on, across segments if needed.
-   *
-   * Both links arrive as arguments rather than one of them being remembered from
-   * when the drag started: holding the dragged link on the component is how a
-   * corrupted `segment` used to survive from one drag into the next.
-   *
-   * @param {Object} draggedLink - The link being moved.
-   * @param {Object} targetLink - The link it was dropped onto.
-   * @param {string} position - `"before"` to insert above the target, otherwise below.
-   */
   @bind
-  reorder(draggedLink, targetLink, position) {
-    if (draggedLink === targetLink) {
+  handleMove(move) {
+    const arrays = {
+      primary: this.transformedModel.links,
+      secondary: this.transformedModel.secondaryLinks,
+    };
+    const source = arrays[move.fromList];
+    const destination = arrays[move.toList];
+
+    if (move.fromList !== move.toList) {
+      removeValueFromArray(source, move.item);
+      move.item.segment = move.toList;
+      // Anchored on the visible link that follows the landing slot, so links
+      // awaiting deletion keep their positions in the stored array.
+      const following = move.proposedToItems[move.toIndex + 1];
+      const at = following
+        ? destination.indexOf(following)
+        : destination.length;
+      destination.splice(at, 0, move.item);
       return;
     }
 
-    const source = draggedLink.isPrimary
-      ? this.transformedModel.links
-      : this.transformedModel.secondaryLinks;
-    const destination = targetLink.isPrimary
-      ? this.transformedModel.links
-      : this.transformedModel.secondaryLinks;
-
-    // Nothing to insert next to, so leave both arrays untouched rather than
-    // removing the link and dropping it at an arbitrary offset.
-    if (!destination.includes(targetLink)) {
-      return;
-    }
-
-    // Both read before the removal. The array index is where the link goes back
-    // if the drop turns out to be a non-move; the displayed index is what that
-    // is decided on, because a link awaiting deletion stays in the array without
-    // being rendered, so a drop that lands the link where it already sits reads
-    // as a move in the array and as nothing at all on screen.
-    const fromIndex = source.indexOf(draggedLink);
-    const fromVisibleIndex = source
-      .filter((link) => !link._destroy)
-      .indexOf(draggedLink);
-
-    removeValueFromArray(source, draggedLink);
-
-    // Read after the removal: within one segment the two arrays are the same
-    // one, so a pre-removal index would be off by one when dragging downwards.
-    const toPosition = destination.indexOf(targetLink);
-    const toIndex = position === "before" ? toPosition : toPosition + 1;
-
-    // The same landing spot counted in the list as displayed. `visible` is taken
-    // between the removal and the insertion, so it holds every link that will be
-    // on screen afterwards except the one being moved. Counting the array
-    // instead would name a position and a total including links the user has
-    // already deleted, and the arrows announce the displayed one.
-    const visible = destination.filter((link) => !link._destroy);
-    const toVisibleIndex =
-      visible.indexOf(targetLink) + (position === "before" ? 0 : 1);
-
-    if (source === destination && toVisibleIndex === fromVisibleIndex) {
-      destination.splice(fromIndex, 0, draggedLink);
-      return;
-    }
-
-    draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
-
-    destination.splice(toIndex, 0, draggedLink);
-
-    this.a11y.announce(
-      i18n("reorder_announcement", {
-        label: draggedLink.name,
-        position: toVisibleIndex + 1,
-        total: visible.length + 1,
-      })
+    const proposed = [...move.proposedToItems];
+    const next = destination.map((link) =>
+      link._destroy ? link : proposed.shift()
     );
-  }
-
-  @action
-  moveLinkUp(link) {
-    this.#moveLink(link, -1);
-  }
-
-  @action
-  moveLinkDown(link) {
-    this.#moveLink(link, 1);
+    destination.splice(0, destination.length, ...next);
   }
 
   get canDelete() {
@@ -1257,59 +1209,6 @@ export default class SidebarSectionForm extends Component {
     });
   }
 
-  /**
-   * Swaps a link with its neighbour in the list as displayed.
-   *
-   * Resolved against the active list rather than the underlying array, because a
-   * link awaiting deletion stays in the array with `_destroy` set and stops being
-   * rendered. Stepping by index in the underlying array would swap with a link
-   * the user cannot see: the stored order would change, an announcement would
-   * claim a move, and the visible list would be identical. The neighbour is then
-   * located in the underlying array by identity, so the swap lands on the right
-   * pair either way.
-   *
-   * Arrows stay within one segment. Primary and secondary render as two lists
-   * under separate headings, so stepping across that boundary would move a link
-   * out of the list the user is arrowing through. The drag path keeps
-   * cross-segment moves, which is why `segment` is not touched here.
-   *
-   * @param {Object} link - The link to move.
-   * @param {number} delta - `-1` to move it up, `1` to move it down.
-   */
-  #moveLink(link, delta) {
-    const visible = link.isPrimary
-      ? this.activeLinks
-      : this.activeSecondaryLinks;
-    const list = link.isPrimary
-      ? this.transformedModel.links
-      : this.transformedModel.secondaryLinks;
-
-    const visibleIndex = visible.indexOf(link);
-    const neighbour = visible[visibleIndex + delta];
-    if (visibleIndex < 0 || !neighbour) {
-      return;
-    }
-
-    const from = list.indexOf(link);
-    const to = list.indexOf(neighbour);
-    if (from < 0 || to < 0) {
-      return;
-    }
-
-    [list[from], list[to]] = [list[to], list[from]];
-
-    // Counted within the visible list, because that is the one the arrows step
-    // through — a position in the underlying array would count links the user
-    // has already deleted.
-    this.a11y.announce(
-      i18n("reorder_announcement", {
-        label: link.name,
-        position: visibleIndex + delta + 1,
-        total: visible.length,
-      })
-    );
-  }
-
   <template>
     <DModal
       @autofocus={{this.modalAutofocus}}
@@ -1461,119 +1360,135 @@ export default class SidebarSectionForm extends Component {
               {{i18n "sidebar.sections.custom.links.title"}}
             </div>
 
-            <div
-              role="table"
-              aria-labelledby="section-links-label"
-              aria-rowcount={{this.activeLinks.length}}
-              class="sidebar-section-form__links-wrapper"
-            >
-
-              <div class="row-wrapper header" role="row">
-                <div
-                  class="input-group link-icon"
-                  role="columnheader"
-                  aria-sort="none"
-                >
-                  {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-                  <label>{{i18n
-                      "sidebar.sections.custom.links.icon.label"
-                    }}</label>
-                </div>
-
-                <div
-                  class="input-group link-name"
-                  role="columnheader"
-                  aria-sort="none"
-                >
-                  {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-                  <label>{{i18n
-                      "sidebar.sections.custom.links.name.label"
-                    }}</label>
-                </div>
-
-                <div
-                  class="input-group link-url"
-                  role="columnheader"
-                  aria-sort="none"
-                >
-                  {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-                  <label>{{i18n
-                      "sidebar.sections.custom.links.value.label"
-                    }}</label>
-                </div>
-              </div>
-
-              {{#each this.activeLinks key="objectId" as |link index|}}
-                <SectionFormLink
-                  @link={{link}}
-                  @index={{index}}
-                  @lastIndex={{this.lastActiveLinkIndex}}
-                  @focusNameInput={{eq
-                    link.objectId
-                    this.initialFocusLinkObjectId
-                  }}
-                  @duplicateValue={{has
-                    this.duplicateLinkObjectIds
-                    link.objectId
-                  }}
-                  @deleteLink={{this.deleteLink}}
-                  @moveUp={{this.moveLinkUp}}
-                  @moveDown={{this.moveLinkDown}}
-                  @reorderCallback={{this.reorder}}
-                />
-              {{/each}}
-
-            </div>
-            <DButton
-              @action={{this.addLink}}
-              @title="sidebar.sections.custom.links.add"
-              @icon="plus"
-              @label="sidebar.sections.custom.links.add"
-              @ariaLabel="sidebar.sections.custom.links.add"
-              class="btn-flat btn-text add-link"
-            />
-
-            {{#if this.transformedModel.sectionType}}
-              <hr />
-              <h3 id="section-secondary-links-label">{{i18n
-                  "sidebar.sections.custom.more_menu"
-                }}</h3>
-              {{! The rows resolve their columns through the wrapper's grid, so
-                  a list rendered without one would collapse. }}
-              <div
-                role="table"
-                aria-labelledby="section-secondary-links-label"
-                aria-rowcount={{this.activeSecondaryLinks.length}}
-                class="sidebar-section-form__links-wrapper --secondary"
+            <DReorderableListGroup @onMove={{this.handleMove}} as |group|>
+              <DReorderableList
+                @group={{group}}
+                @listId="primary"
+                @listLabel={{i18n "sidebar.sections.custom.links.title"}}
+                @items={{this.activeLinks}}
+                @key="objectId"
+                @label={{this.linkName}}
+                @controls="manual"
+                @tag="div"
+                @role="table"
+                @itemTag="div"
+                @itemRole="row"
+                @rowClass="sidebar-section-form-link row-wrapper"
+                aria-labelledby="section-links-label"
+                aria-rowcount={{this.activeLinks.length}}
+                class="sidebar-section-form__links-wrapper"
               >
-                {{#each
-                  this.activeSecondaryLinks key="objectId"
-                  as |link index|
-                }}
+                <:header>
+                  {{! The list element around this block carries the table role
+                      through its role argument, which the static rule cannot
+                      see from here. }}
+                  {{! eslint-disable-next-line ember/template-require-context-role }}
+                  <div class="row-wrapper header" role="row">
+                    <div
+                      class="input-group link-icon"
+                      role="columnheader"
+                      aria-sort="none"
+                    >
+                      {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+                      <label>{{i18n
+                          "sidebar.sections.custom.links.icon.label"
+                        }}</label>
+                    </div>
+
+                    <div
+                      class="input-group link-name"
+                      role="columnheader"
+                      aria-sort="none"
+                    >
+                      {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+                      <label>{{i18n
+                          "sidebar.sections.custom.links.name.label"
+                        }}</label>
+                    </div>
+
+                    <div
+                      class="input-group link-url"
+                      role="columnheader"
+                      aria-sort="none"
+                    >
+                      {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+                      <label>{{i18n
+                          "sidebar.sections.custom.links.value.label"
+                        }}</label>
+                    </div>
+                  </div>
+                </:header>
+                <:default as |link row|>
                   <SectionFormLink
+                    @row={{row}}
                     @link={{link}}
-                    @index={{index}}
-                    @lastIndex={{this.lastActiveSecondaryLinkIndex}}
+                    @focusNameInput={{eq
+                      link.objectId
+                      this.initialFocusLinkObjectId
+                    }}
                     @duplicateValue={{has
                       this.duplicateLinkObjectIds
                       link.objectId
                     }}
                     @deleteLink={{this.deleteLink}}
-                    @moveUp={{this.moveLinkUp}}
-                    @moveDown={{this.moveLinkDown}}
-                    @reorderCallback={{this.reorder}}
                   />
-                {{/each}}
-              </div>
+                </:default>
+              </DReorderableList>
               <DButton
-                @action={{this.addSecondaryLink}}
+                @action={{this.addLink}}
                 @title="sidebar.sections.custom.links.add"
                 @icon="plus"
                 @label="sidebar.sections.custom.links.add"
                 @ariaLabel="sidebar.sections.custom.links.add"
                 class="btn-flat btn-text add-link"
               />
-            {{/if}}
+
+              {{#if this.transformedModel.sectionType}}
+                <hr />
+                <h3 id="section-secondary-links-label">{{i18n
+                    "sidebar.sections.custom.more_menu"
+                  }}</h3>
+                {{! The rows resolve their columns through the wrapper's grid, so
+                  a list rendered without one would collapse. }}
+                <DReorderableList
+                  @group={{group}}
+                  @listId="secondary"
+                  @listLabel={{i18n "sidebar.sections.custom.more_menu"}}
+                  @items={{this.activeSecondaryLinks}}
+                  @key="objectId"
+                  @label={{this.linkName}}
+                  @controls="manual"
+                  @tag="div"
+                  @role="table"
+                  @itemTag="div"
+                  @itemRole="row"
+                  @rowClass="sidebar-section-form-link row-wrapper"
+                  aria-labelledby="section-secondary-links-label"
+                  aria-rowcount={{this.activeSecondaryLinks.length}}
+                  class="sidebar-section-form__links-wrapper --secondary"
+                >
+                  <:default as |link row|>
+                    <SectionFormLink
+                      @row={{row}}
+                      @link={{link}}
+                      @duplicateValue={{has
+                        this.duplicateLinkObjectIds
+                        link.objectId
+                      }}
+                      @deleteLink={{this.deleteLink}}
+                    />
+                  </:default>
+                </DReorderableList>
+                <DButton
+                  @action={{this.addSecondaryLink}}
+                  @title="sidebar.sections.custom.links.add"
+                  @icon="plus"
+                  @label="sidebar.sections.custom.links.add"
+                  @ariaLabel="sidebar.sections.custom.links.add"
+                  class="btn-flat btn-text add-link"
+                />
+              {{/if}}
+            </DReorderableListGroup>
 
             {{#if this.canTranslate}}
               <hr />

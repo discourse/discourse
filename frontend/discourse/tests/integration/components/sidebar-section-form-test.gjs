@@ -97,7 +97,7 @@ function gripSelector(name) {
 
 function rowSelector(name) {
   const row = find(gripSelector(name)).closest(".sidebar-section-form-link");
-  return `[data-row-id="${row.dataset.rowId}"]`;
+  return `[data-reorderable-key="${row.dataset.reorderableKey}"]`;
 }
 
 function arrowSelector(name, direction) {
@@ -112,7 +112,7 @@ async function dragLink(sourceName, targetName, position) {
   const source = rowSelector(sourceName);
   const target = rowSelector(targetName);
 
-  assertDragRegistered(source, target);
+  assertDragRegistered(gripSelector(sourceName), target);
 
   const targetRect = find(target).getBoundingClientRect();
   const targetCoordinates = {
@@ -169,7 +169,7 @@ module(
 
       assert.strictEqual(
         a11y.politeMessage,
-        "Moved Primary 1 to position 2 of 3",
+        "Moved Primary 1 to More menu, position 2 of 3",
         "the position is counted within the list the link moved into"
       );
     });
@@ -311,10 +311,13 @@ module(
       await renderForm(this);
 
       assert
-        .dom(".sidebar-section-form-link[data-drag-source][data-drop-target]")
+        .dom(".sidebar-section-form-link[data-drop-target]")
+        .exists({ count: 4 }, "every link row is a drop target");
+      assert
+        .dom(".sidebar-section-form-link .draggable[data-drag-source]")
         .exists(
           { count: 4 },
-          "every link row is both a drag source and a drop target"
+          "every link row's grip carries the drag registration"
         );
 
       const source = rowSelector("Primary 1");
@@ -423,7 +426,7 @@ module(
 
       const row = rowSelector("Primary 1");
       const sharedDragIsRegistered =
-        find(row).hasAttribute("data-drag-source") &&
+        find(`${row} .draggable`).hasAttribute("data-drag-source") &&
         find(row).hasAttribute("data-drop-target");
       const dataTransfer = new DataTransfer();
       const sourceGrip = gripSelector("Primary 1");
@@ -436,7 +439,7 @@ module(
 
       assert.true(
         sharedDragIsRegistered,
-        "the self-drop check runs on a shared source and target row"
+        "the self-drop check runs on a row whose grip is its own source"
       );
 
       if (sharedDragIsRegistered) {
@@ -500,11 +503,11 @@ module(
           "the grip renders on mobile, so the drag has a target to press"
         );
       assert
-        .dom(row)
+        .dom(grip)
         .hasAttribute(
           "data-drag-source",
           "",
-          "a mobile row carries an active drag-source registration"
+          "a mobile grip carries an active drag-source registration"
         );
 
       await dragEvent(grip, "dragstart", {
