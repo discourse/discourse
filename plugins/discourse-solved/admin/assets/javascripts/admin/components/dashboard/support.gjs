@@ -83,16 +83,18 @@ export default class SupportSection extends Component {
       resolutionDirection === "unavailable" &&
       replyDirection === "unavailable"
     ) {
-      const headlineKeys = supportHeadlineKeys("no_data");
+      const headlineKeys = supportHeadlineKeys({ noData: true });
       return {
         title: i18n(`${prefix}.titles.${headlineKeys.title}`),
         summary: i18n(`${prefix}.summaries.${headlineKeys.summary}`),
       };
     }
 
-    const scenario = `${resolutionDirection}_${replyDirection}`;
     const period = formatDashboardHeadlinePeriod(this.args.period);
-    const headlineKeys = supportHeadlineKeys(scenario);
+    const headlineKeys = supportHeadlineKeys({
+      resolutionRate: resolutionDirection,
+      firstReplyTime: replyDirection,
+    });
     const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
     const cta = headlineKeys.cta
       ? i18n(`${prefix}.cta.${headlineKeys.cta}`)

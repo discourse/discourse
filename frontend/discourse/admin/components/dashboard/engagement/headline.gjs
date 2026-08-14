@@ -137,8 +137,14 @@ export default class EngagementHeadline extends Component {
         ? metric
         : most;
     }, null)?.type;
-    const scenario = metrics.map((metric) => metric.direction).join("_");
-    const headlineKeys = engagementHeadlineKeys(scenario);
+    const directionsByType = Object.fromEntries(
+      metrics.map((metric) => [metric.type, metric.direction])
+    );
+    const headlineKeys = engagementHeadlineKeys({
+      stickiness: directionsByType.dau_mau,
+      dailyEngagement: directionsByType.daily_engaged_users,
+      newSignups: directionsByType.new_signups,
+    });
     const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
     const cta = ctaOwner ? i18n(`${prefix}.cta.${ctaOwner}`) : null;
 

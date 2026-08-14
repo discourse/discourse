@@ -45,7 +45,7 @@ export default class DashboardSearch extends Component {
       totalSearches.previous_value === 0 &&
       noResultRate.value == null
     ) {
-      const headlineKeys = searchHeadlineKeys("no_data");
+      const headlineKeys = searchHeadlineKeys({ noData: true });
       return {
         title: i18n(`${prefix}.titles.${headlineKeys.title}`),
         summary: i18n(`${prefix}.summaries.${headlineKeys.summary}`),
@@ -61,8 +61,10 @@ export default class DashboardSearch extends Component {
       noResultRate.point_change
     );
     const period = formatDashboardHeadlinePeriod(this.args.period);
-    const scenario = `${searchesDirection}_${noResultDirection}`;
-    const headlineKeys = searchHeadlineKeys(scenario);
+    const headlineKeys = searchHeadlineKeys({
+      searches: searchesDirection,
+      noResultRate: noResultDirection,
+    });
     const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
     const cta = headlineKeys.cta
       ? i18n(`${prefix}.cta.${headlineKeys.cta}`)

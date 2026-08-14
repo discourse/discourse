@@ -3,77 +3,86 @@ const HEADLINE_BY_SCENARIO = {
     title: "insufficient_activity",
     summary: "insufficient_activity",
   },
-  up_down: {
+  "resolution_rate=up|first_reply_time=down": {
     title: "resolution_rate_and_first_reply_time_improved",
     summary: "more_answers_and_faster_replies",
   },
-  up_up: {
+  "resolution_rate=up|first_reply_time=up": {
     title: "resolution_rate_improved",
     summary: "more_answers_but_slower_replies",
     cta: "unanswered",
   },
-  up_flat: {
+  "resolution_rate=up|first_reply_time=flat": {
     title: "resolution_rate_improved",
     summary: "more_answers_first_reply_time_flat",
     cta: "unanswered",
   },
-  down_down: {
+  "resolution_rate=down|first_reply_time=down": {
     title: "first_reply_time_decreased",
     summary: "faster_replies_but_lower_resolution_rate",
     cta: "in_progress",
   },
-  flat_down: {
+  "resolution_rate=flat|first_reply_time=down": {
     title: "first_reply_time_decreased",
     summary: "faster_replies_resolution_rate_steady",
     cta: "in_progress",
   },
-  down_up: {
+  "resolution_rate=down|first_reply_time=up": {
     title: "resolution_rate_and_first_reply_time_declined",
     summary: "fewer_answers_and_slower_replies",
     cta: "in_progress_and_unanswered",
   },
-  down_flat: {
+  "resolution_rate=down|first_reply_time=flat": {
     title: "resolution_rate_decreased",
     summary: "fewer_answers_first_reply_time_steady",
     cta: "in_progress",
   },
-  flat_up: {
+  "resolution_rate=flat|first_reply_time=up": {
     title: "first_reply_time_increased",
     summary: "slower_replies_resolution_rate_steady",
     cta: "unanswered",
   },
-  flat_flat: {
+  "resolution_rate=flat|first_reply_time=flat": {
     title: "support_steady",
     summary: "resolution_rate_and_first_reply_time_steady",
   },
-  up_unavailable: {
+  "resolution_rate=up|first_reply_time=unavailable": {
     title: "resolution_rate_improved",
     summary: "more_answers",
   },
-  down_unavailable: {
+  "resolution_rate=down|first_reply_time=unavailable": {
     title: "resolution_rate_decreased",
     summary: "fewer_answers",
     cta: "in_progress",
   },
-  flat_unavailable: {
+  "resolution_rate=flat|first_reply_time=unavailable": {
     title: "support_steady",
     summary: "resolution_rate_steady",
   },
-  unavailable_down: {
+  "resolution_rate=unavailable|first_reply_time=down": {
     title: "first_reply_time_decreased",
     summary: "faster_replies",
   },
-  unavailable_up: {
+  "resolution_rate=unavailable|first_reply_time=up": {
     title: "first_reply_time_increased",
     summary: "slower_replies",
     cta: "unanswered",
   },
-  unavailable_flat: {
+  "resolution_rate=unavailable|first_reply_time=flat": {
     title: "support_steady",
     summary: "first_reply_time_steady",
   },
 };
 
-export function supportHeadlineKeys(scenario) {
+function scenarioKey({ resolutionRate, firstReplyTime, noData = false }) {
+  if (noData) {
+    return "no_data";
+  }
+
+  return `resolution_rate=${resolutionRate}|first_reply_time=${firstReplyTime}`;
+}
+
+export function supportHeadlineKeys(directions) {
+  const scenario = scenarioKey(directions);
   return HEADLINE_BY_SCENARIO[scenario];
 }

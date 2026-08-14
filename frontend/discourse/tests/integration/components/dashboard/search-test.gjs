@@ -12,7 +12,7 @@ module("Integration | Component | Dashboard | Search", function (hooks) {
 
   test("looks up headline keys by scenario", function (assert) {
     assert.deepEqual(
-      searchHeadlineKeys("up_up"),
+      searchHeadlineKeys({ searches: "up", noResultRate: "up" }),
       {
         title: "searches_increased",
         summary: "searches_up_no_result_rate_up",

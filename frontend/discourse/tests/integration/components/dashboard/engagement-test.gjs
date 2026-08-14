@@ -42,7 +42,11 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
 
   test("looks up headline keys by scenario", function (assert) {
     assert.deepEqual(
-      engagementHeadlineKeys("improved_declined_flat"),
+      engagementHeadlineKeys({
+        stickiness: "improved",
+        dailyEngagement: "declined",
+        newSignups: "flat",
+      }),
       {
         title: "stickiness_increased",
         summary: "stickiness_up_daily_engagement_down",

@@ -1,149 +1,268 @@
-const TITLE_BY_SCENARIO = {
-  improved_improved_improved: "engagement_up",
-  improved_improved_declined: "stickiness_and_daily_engagement_increased",
-  improved_improved_flat: "stickiness_and_daily_engagement_increased",
-  improved_improved_unavailable: "stickiness_and_daily_engagement_increased",
-  improved_declined_improved: "stickiness_and_new_signups_increased",
-  improved_declined_declined: "stickiness_increased",
-  improved_declined_flat: "stickiness_increased",
-  improved_declined_unavailable: "stickiness_increased",
-  improved_flat_improved: "stickiness_and_new_signups_increased",
-  improved_flat_declined: "stickiness_increased",
-  improved_flat_flat: "stickiness_increased",
-  improved_flat_unavailable: "stickiness_increased",
-  improved_unavailable_improved: "stickiness_and_new_signups_increased",
-  improved_unavailable_declined: "stickiness_increased",
-  improved_unavailable_flat: "stickiness_increased",
-  improved_unavailable_unavailable: "stickiness_increased",
-  declined_improved_improved: "daily_engagement_and_new_signups_increased",
-  declined_improved_declined: "daily_engagement_increased",
-  declined_improved_flat: "daily_engagement_increased",
-  declined_improved_unavailable: "daily_engagement_increased",
-  declined_declined_improved: "new_signups_increased",
-  declined_declined_declined: "engagement_declined",
-  declined_declined_flat: "some_engagement_declines",
-  declined_declined_unavailable: "engagement_declined",
-  declined_flat_improved: "new_signups_increased",
-  declined_flat_declined: "some_engagement_declines",
-  declined_flat_flat: "some_engagement_declines",
-  declined_flat_unavailable: "some_engagement_declines",
-  declined_unavailable_improved: "new_signups_increased",
-  declined_unavailable_declined: "engagement_declined",
-  declined_unavailable_flat: "some_engagement_declines",
-  declined_unavailable_unavailable: "engagement_declined",
-  flat_improved_improved: "daily_engagement_and_new_signups_increased",
-  flat_improved_declined: "daily_engagement_increased",
-  flat_improved_flat: "daily_engagement_increased",
-  flat_improved_unavailable: "daily_engagement_increased",
-  flat_declined_improved: "new_signups_increased",
-  flat_declined_declined: "some_engagement_declines",
-  flat_declined_flat: "some_engagement_declines",
-  flat_declined_unavailable: "some_engagement_declines",
-  flat_flat_improved: "new_signups_increased",
-  flat_flat_declined: "some_engagement_declines",
-  flat_flat_flat: "engagement_steady",
-  flat_flat_unavailable: "engagement_steady",
-  flat_unavailable_improved: "new_signups_increased",
-  flat_unavailable_declined: "some_engagement_declines",
-  flat_unavailable_flat: "engagement_steady",
-  flat_unavailable_unavailable: "engagement_steady",
-  unavailable_improved_improved: "daily_engagement_and_new_signups_increased",
-  unavailable_improved_declined: "daily_engagement_increased",
-  unavailable_improved_flat: "daily_engagement_increased",
-  unavailable_improved_unavailable: "daily_engagement_increased",
-  unavailable_declined_improved: "new_signups_increased",
-  unavailable_declined_declined: "engagement_declined",
-  unavailable_declined_flat: "some_engagement_declines",
-  unavailable_declined_unavailable: "engagement_declined",
-  unavailable_flat_improved: "new_signups_increased",
-  unavailable_flat_declined: "some_engagement_declines",
-  unavailable_flat_flat: "engagement_steady",
-  unavailable_flat_unavailable: "engagement_steady",
-  unavailable_unavailable_improved: "new_signups_increased",
-  unavailable_unavailable_declined: "engagement_declined",
-  unavailable_unavailable_flat: "engagement_steady",
-  unavailable_unavailable_unavailable: "insufficient_activity",
+const HEADLINE_BY_SCENARIO = {
+  "stickiness=improved|daily_engagement=improved|new_signups=improved": {
+    title: "engagement_up",
+    summary: "all_metrics_improved",
+  },
+  "stickiness=improved|daily_engagement=improved|new_signups=declined": {
+    title: "stickiness_and_daily_engagement_increased",
+    summary: "stickiness_and_daily_engagement_up_new_signups_down",
+  },
+  "stickiness=improved|daily_engagement=improved|new_signups=flat": {
+    title: "stickiness_and_daily_engagement_increased",
+    summary: "stickiness_and_daily_engagement_up_new_signups_flat",
+  },
+  "stickiness=improved|daily_engagement=improved|new_signups=unavailable": {
+    title: "stickiness_and_daily_engagement_increased",
+    summary: "stickiness_and_daily_engagement_up",
+  },
+  "stickiness=improved|daily_engagement=declined|new_signups=improved": {
+    title: "stickiness_and_new_signups_increased",
+    summary: "stickiness_and_new_signups_up_daily_engagement_down",
+  },
+  "stickiness=improved|daily_engagement=declined|new_signups=declined": {
+    title: "stickiness_increased",
+    summary: "stickiness_up_daily_engagement_and_new_signups_down",
+  },
+  "stickiness=improved|daily_engagement=declined|new_signups=flat": {
+    title: "stickiness_increased",
+    summary: "stickiness_up_daily_engagement_down",
+  },
+  "stickiness=improved|daily_engagement=declined|new_signups=unavailable": {
+    title: "stickiness_increased",
+    summary: "stickiness_up_daily_engagement_down",
+  },
+  "stickiness=improved|daily_engagement=flat|new_signups=improved": {
+    title: "stickiness_and_new_signups_increased",
+    summary: "stickiness_and_new_signups_up_daily_engagement_flat",
+  },
+  "stickiness=improved|daily_engagement=flat|new_signups=declined": {
+    title: "stickiness_increased",
+    summary: "stickiness_up_new_signups_down",
+  },
+  "stickiness=improved|daily_engagement=flat|new_signups=flat": {
+    title: "stickiness_increased",
+    summary: "stickiness_up_daily_engagement_and_new_signups_flat",
+  },
+  "stickiness=improved|daily_engagement=flat|new_signups=unavailable": {
+    title: "stickiness_increased",
+    summary: "stickiness_up_daily_engagement_flat",
+  },
+  "stickiness=improved|daily_engagement=unavailable|new_signups=improved": {
+    title: "stickiness_and_new_signups_increased",
+    summary: "stickiness_and_new_signups_up",
+  },
+  "stickiness=improved|daily_engagement=unavailable|new_signups=declined": {
+    title: "stickiness_increased",
+    summary: "stickiness_up_new_signups_down",
+  },
+  "stickiness=improved|daily_engagement=unavailable|new_signups=flat": {
+    title: "stickiness_increased",
+    summary: "stickiness_up_new_signups_flat",
+  },
+  "stickiness=improved|daily_engagement=unavailable|new_signups=unavailable": {
+    title: "stickiness_increased",
+    summary: "stickiness_up",
+  },
+  "stickiness=declined|daily_engagement=improved|new_signups=improved": {
+    title: "daily_engagement_and_new_signups_increased",
+    summary: "daily_engagement_and_new_signups_up_stickiness_down",
+  },
+  "stickiness=declined|daily_engagement=improved|new_signups=declined": {
+    title: "daily_engagement_increased",
+    summary: "daily_engagement_up_stickiness_and_new_signups_down",
+  },
+  "stickiness=declined|daily_engagement=improved|new_signups=flat": {
+    title: "daily_engagement_increased",
+    summary: "daily_engagement_up_stickiness_down",
+  },
+  "stickiness=declined|daily_engagement=improved|new_signups=unavailable": {
+    title: "daily_engagement_increased",
+    summary: "daily_engagement_up_stickiness_down",
+  },
+  "stickiness=declined|daily_engagement=declined|new_signups=improved": {
+    title: "new_signups_increased",
+    summary: "new_signups_up_stickiness_and_daily_engagement_down",
+  },
+  "stickiness=declined|daily_engagement=declined|new_signups=declined": {
+    title: "engagement_declined",
+    summary: "all_metrics_down",
+  },
+  "stickiness=declined|daily_engagement=declined|new_signups=flat": {
+    title: "some_engagement_declines",
+    summary: "stickiness_and_daily_engagement_down_new_signups_steady",
+  },
+  "stickiness=declined|daily_engagement=declined|new_signups=unavailable": {
+    title: "engagement_declined",
+    summary: "stickiness_and_daily_engagement_down",
+  },
+  "stickiness=declined|daily_engagement=flat|new_signups=improved": {
+    title: "new_signups_increased",
+    summary: "new_signups_up_stickiness_down",
+  },
+  "stickiness=declined|daily_engagement=flat|new_signups=declined": {
+    title: "some_engagement_declines",
+    summary: "stickiness_and_new_signups_down_daily_engagement_steady",
+  },
+  "stickiness=declined|daily_engagement=flat|new_signups=flat": {
+    title: "some_engagement_declines",
+    summary: "stickiness_down_daily_engagement_and_new_signups_steady",
+  },
+  "stickiness=declined|daily_engagement=flat|new_signups=unavailable": {
+    title: "some_engagement_declines",
+    summary: "stickiness_down_daily_engagement_steady",
+  },
+  "stickiness=declined|daily_engagement=unavailable|new_signups=improved": {
+    title: "new_signups_increased",
+    summary: "new_signups_up_stickiness_down",
+  },
+  "stickiness=declined|daily_engagement=unavailable|new_signups=declined": {
+    title: "engagement_declined",
+    summary: "stickiness_and_new_signups_down",
+  },
+  "stickiness=declined|daily_engagement=unavailable|new_signups=flat": {
+    title: "some_engagement_declines",
+    summary: "stickiness_down_new_signups_steady",
+  },
+  "stickiness=declined|daily_engagement=unavailable|new_signups=unavailable": {
+    title: "engagement_declined",
+    summary: "stickiness_down",
+  },
+  "stickiness=flat|daily_engagement=improved|new_signups=improved": {
+    title: "daily_engagement_and_new_signups_increased",
+    summary: "daily_engagement_and_new_signups_up_stickiness_flat",
+  },
+  "stickiness=flat|daily_engagement=improved|new_signups=declined": {
+    title: "daily_engagement_increased",
+    summary: "daily_engagement_up_new_signups_down",
+  },
+  "stickiness=flat|daily_engagement=improved|new_signups=flat": {
+    title: "daily_engagement_increased",
+    summary: "daily_engagement_up_stickiness_and_new_signups_flat",
+  },
+  "stickiness=flat|daily_engagement=improved|new_signups=unavailable": {
+    title: "daily_engagement_increased",
+    summary: "daily_engagement_up_stickiness_flat",
+  },
+  "stickiness=flat|daily_engagement=declined|new_signups=improved": {
+    title: "new_signups_increased",
+    summary: "new_signups_up_daily_engagement_down",
+  },
+  "stickiness=flat|daily_engagement=declined|new_signups=declined": {
+    title: "some_engagement_declines",
+    summary: "daily_engagement_and_new_signups_down_stickiness_steady",
+  },
+  "stickiness=flat|daily_engagement=declined|new_signups=flat": {
+    title: "some_engagement_declines",
+    summary: "daily_engagement_down_stickiness_and_new_signups_steady",
+  },
+  "stickiness=flat|daily_engagement=declined|new_signups=unavailable": {
+    title: "some_engagement_declines",
+    summary: "daily_engagement_down_stickiness_steady",
+  },
+  "stickiness=flat|daily_engagement=flat|new_signups=improved": {
+    title: "new_signups_increased",
+    summary: "new_signups_up_stickiness_and_daily_engagement_flat",
+  },
+  "stickiness=flat|daily_engagement=flat|new_signups=declined": {
+    title: "some_engagement_declines",
+    summary: "new_signups_down_stickiness_and_daily_engagement_steady",
+  },
+  "stickiness=flat|daily_engagement=flat|new_signups=flat": {
+    title: "engagement_steady",
+    summary: "all_metrics_steady",
+  },
+  "stickiness=flat|daily_engagement=flat|new_signups=unavailable": {
+    title: "engagement_steady",
+    summary: "stickiness_and_daily_engagement_steady",
+  },
+  "stickiness=flat|daily_engagement=unavailable|new_signups=improved": {
+    title: "new_signups_increased",
+    summary: "new_signups_up_stickiness_flat",
+  },
+  "stickiness=flat|daily_engagement=unavailable|new_signups=declined": {
+    title: "some_engagement_declines",
+    summary: "new_signups_down_stickiness_steady",
+  },
+  "stickiness=flat|daily_engagement=unavailable|new_signups=flat": {
+    title: "engagement_steady",
+    summary: "stickiness_and_new_signups_steady",
+  },
+  "stickiness=flat|daily_engagement=unavailable|new_signups=unavailable": {
+    title: "engagement_steady",
+    summary: "stickiness_steady",
+  },
+  "stickiness=unavailable|daily_engagement=improved|new_signups=improved": {
+    title: "daily_engagement_and_new_signups_increased",
+    summary: "daily_engagement_and_new_signups_up",
+  },
+  "stickiness=unavailable|daily_engagement=improved|new_signups=declined": {
+    title: "daily_engagement_increased",
+    summary: "daily_engagement_up_new_signups_down",
+  },
+  "stickiness=unavailable|daily_engagement=improved|new_signups=flat": {
+    title: "daily_engagement_increased",
+    summary: "daily_engagement_up_new_signups_flat",
+  },
+  "stickiness=unavailable|daily_engagement=improved|new_signups=unavailable": {
+    title: "daily_engagement_increased",
+    summary: "daily_engagement_up",
+  },
+  "stickiness=unavailable|daily_engagement=declined|new_signups=improved": {
+    title: "new_signups_increased",
+    summary: "new_signups_up_daily_engagement_down",
+  },
+  "stickiness=unavailable|daily_engagement=declined|new_signups=declined": {
+    title: "engagement_declined",
+    summary: "daily_engagement_and_new_signups_down",
+  },
+  "stickiness=unavailable|daily_engagement=declined|new_signups=flat": {
+    title: "some_engagement_declines",
+    summary: "daily_engagement_down_new_signups_steady",
+  },
+  "stickiness=unavailable|daily_engagement=declined|new_signups=unavailable": {
+    title: "engagement_declined",
+    summary: "daily_engagement_down",
+  },
+  "stickiness=unavailable|daily_engagement=flat|new_signups=improved": {
+    title: "new_signups_increased",
+    summary: "new_signups_up_daily_engagement_flat",
+  },
+  "stickiness=unavailable|daily_engagement=flat|new_signups=declined": {
+    title: "some_engagement_declines",
+    summary: "new_signups_down_daily_engagement_steady",
+  },
+  "stickiness=unavailable|daily_engagement=flat|new_signups=flat": {
+    title: "engagement_steady",
+    summary: "daily_engagement_and_new_signups_steady",
+  },
+  "stickiness=unavailable|daily_engagement=flat|new_signups=unavailable": {
+    title: "engagement_steady",
+    summary: "daily_engagement_steady",
+  },
+  "stickiness=unavailable|daily_engagement=unavailable|new_signups=improved": {
+    title: "new_signups_increased",
+    summary: "new_signups_up",
+  },
+  "stickiness=unavailable|daily_engagement=unavailable|new_signups=declined": {
+    title: "engagement_declined",
+    summary: "new_signups_down",
+  },
+  "stickiness=unavailable|daily_engagement=unavailable|new_signups=flat": {
+    title: "engagement_steady",
+    summary: "new_signups_steady",
+  },
+  "stickiness=unavailable|daily_engagement=unavailable|new_signups=unavailable":
+    {
+      title: "insufficient_activity",
+      summary: "insufficient_activity",
+    },
 };
 
-const SUMMARY_BY_SCENARIO = {
-  improved_improved_improved: "all_metrics_improved",
-  improved_improved_declined:
-    "stickiness_and_daily_engagement_up_new_signups_down",
-  improved_improved_flat: "stickiness_and_daily_engagement_up_new_signups_flat",
-  improved_improved_unavailable: "stickiness_and_daily_engagement_up",
-  improved_declined_improved:
-    "stickiness_and_new_signups_up_daily_engagement_down",
-  improved_declined_declined:
-    "stickiness_up_daily_engagement_and_new_signups_down",
-  improved_declined_flat: "stickiness_up_daily_engagement_down",
-  improved_declined_unavailable: "stickiness_up_daily_engagement_down",
-  improved_flat_improved: "stickiness_and_new_signups_up_daily_engagement_flat",
-  improved_flat_declined: "stickiness_up_new_signups_down",
-  improved_flat_flat: "stickiness_up_daily_engagement_and_new_signups_flat",
-  improved_flat_unavailable: "stickiness_up_daily_engagement_flat",
-  improved_unavailable_improved: "stickiness_and_new_signups_up",
-  improved_unavailable_declined: "stickiness_up_new_signups_down",
-  improved_unavailable_flat: "stickiness_up_new_signups_flat",
-  improved_unavailable_unavailable: "stickiness_up",
-  declined_improved_improved:
-    "daily_engagement_and_new_signups_up_stickiness_down",
-  declined_improved_declined:
-    "daily_engagement_up_stickiness_and_new_signups_down",
-  declined_improved_flat: "daily_engagement_up_stickiness_down",
-  declined_improved_unavailable: "daily_engagement_up_stickiness_down",
-  declined_declined_improved:
-    "new_signups_up_stickiness_and_daily_engagement_down",
-  declined_declined_declined: "all_metrics_down",
-  declined_declined_flat:
-    "stickiness_and_daily_engagement_down_new_signups_steady",
-  declined_declined_unavailable: "stickiness_and_daily_engagement_down",
-  declined_flat_improved: "new_signups_up_stickiness_down",
-  declined_flat_declined:
-    "stickiness_and_new_signups_down_daily_engagement_steady",
-  declined_flat_flat: "stickiness_down_daily_engagement_and_new_signups_steady",
-  declined_flat_unavailable: "stickiness_down_daily_engagement_steady",
-  declined_unavailable_improved: "new_signups_up_stickiness_down",
-  declined_unavailable_declined: "stickiness_and_new_signups_down",
-  declined_unavailable_flat: "stickiness_down_new_signups_steady",
-  declined_unavailable_unavailable: "stickiness_down",
-  flat_improved_improved: "daily_engagement_and_new_signups_up_stickiness_flat",
-  flat_improved_declined: "daily_engagement_up_new_signups_down",
-  flat_improved_flat: "daily_engagement_up_stickiness_and_new_signups_flat",
-  flat_improved_unavailable: "daily_engagement_up_stickiness_flat",
-  flat_declined_improved: "new_signups_up_daily_engagement_down",
-  flat_declined_declined:
-    "daily_engagement_and_new_signups_down_stickiness_steady",
-  flat_declined_flat: "daily_engagement_down_stickiness_and_new_signups_steady",
-  flat_declined_unavailable: "daily_engagement_down_stickiness_steady",
-  flat_flat_improved: "new_signups_up_stickiness_and_daily_engagement_flat",
-  flat_flat_declined: "new_signups_down_stickiness_and_daily_engagement_steady",
-  flat_flat_flat: "all_metrics_steady",
-  flat_flat_unavailable: "stickiness_and_daily_engagement_steady",
-  flat_unavailable_improved: "new_signups_up_stickiness_flat",
-  flat_unavailable_declined: "new_signups_down_stickiness_steady",
-  flat_unavailable_flat: "stickiness_and_new_signups_steady",
-  flat_unavailable_unavailable: "stickiness_steady",
-  unavailable_improved_improved: "daily_engagement_and_new_signups_up",
-  unavailable_improved_declined: "daily_engagement_up_new_signups_down",
-  unavailable_improved_flat: "daily_engagement_up_new_signups_flat",
-  unavailable_improved_unavailable: "daily_engagement_up",
-  unavailable_declined_improved: "new_signups_up_daily_engagement_down",
-  unavailable_declined_declined: "daily_engagement_and_new_signups_down",
-  unavailable_declined_flat: "daily_engagement_down_new_signups_steady",
-  unavailable_declined_unavailable: "daily_engagement_down",
-  unavailable_flat_improved: "new_signups_up_daily_engagement_flat",
-  unavailable_flat_declined: "new_signups_down_daily_engagement_steady",
-  unavailable_flat_flat: "daily_engagement_and_new_signups_steady",
-  unavailable_flat_unavailable: "daily_engagement_steady",
-  unavailable_unavailable_improved: "new_signups_up",
-  unavailable_unavailable_declined: "new_signups_down",
-  unavailable_unavailable_flat: "new_signups_steady",
-  unavailable_unavailable_unavailable: "insufficient_activity",
-};
+function scenarioKey({ stickiness, dailyEngagement, newSignups }) {
+  return `stickiness=${stickiness}|daily_engagement=${dailyEngagement}|new_signups=${newSignups}`;
+}
 
-export function engagementHeadlineKeys(scenario) {
-  return {
-    title: TITLE_BY_SCENARIO[scenario],
-    summary: SUMMARY_BY_SCENARIO[scenario],
-  };
+export function engagementHeadlineKeys(directions) {
+  const scenario = scenarioKey(directions);
+  return HEADLINE_BY_SCENARIO[scenario];
 }

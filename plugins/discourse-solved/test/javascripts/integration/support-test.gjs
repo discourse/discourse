@@ -43,7 +43,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
 
   test("looks up headline keys by scenario", function (assert) {
     assert.deepEqual(
-      supportHeadlineKeys("down_up"),
+      supportHeadlineKeys({ resolutionRate: "down", firstReplyTime: "up" }),
       {
         title: "resolution_rate_and_first_reply_time_declined",
         summary: "fewer_answers_and_slower_replies",
