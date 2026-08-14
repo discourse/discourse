@@ -229,11 +229,18 @@ interface DReorderableListSignature<T> {
     /**
      * The API yielded by a surrounding `DReorderableListGroup`. Joining a
      * group makes cross-list drags between members possible and routes every
-     * move through the group's callback. Requires `@listId`.
+     * move through the group's callback. Requires `@listId`. Fixed at
+     * construction: a list that must change groups is re-created, not
+     * re-pointed. Cross-list movement is pointer-only — the arrows stay
+     * within their own list, matching the shipped behavior of the surfaces
+     * this component standardizes.
      */
     group?: ReorderableGroupApi;
 
-    /** This member's identity inside its group. Required with `@group`. */
+    /**
+     * This member's identity inside its group. Required with `@group`, and
+     * fixed at construction like the group itself.
+     */
     listId?: string;
 
     /**
@@ -923,7 +930,7 @@ export default class DReorderableList<T> extends Component<
    */
   @action
   onEmptyRootDrop({ source }: DropTargetEvent) {
-    if (this.rows.length > 0) {
+    if (!this.acceptsRootDrops || this.rows.length > 0) {
       return;
     }
     this.#commitCrossMove(
@@ -1022,20 +1029,42 @@ export default class DReorderableList<T> extends Component<
       return;
     }
 
-    const proposedTo = [...this.args.items] as T[];
-    proposedTo.splice(toIndex, 0, removal.item as T);
+    // The same slot model as everywhere else: frozen destination rows keep
+    // their exact visible indices while the list grows by one slot, and the
+    // arriving item joins the movable subsequence at the requested position.
+    const rows = this.rows;
+    const item = removal.item as T;
+    const size = rows.length + 1;
+    const empty = Symbol("empty");
+    const proposedTo: (T | typeof empty)[] = new Array(size).fill(empty);
+    for (const row of rows) {
+      if (!row.movable) {
+        proposedTo[row.index] = row.item;
+      }
+    }
+    const seqInsert = rows.filter(
+      (row) => row.movable && row.index < toIndex
+    ).length;
+    const queue = rows.filter((row) => row.movable).map((row) => row.item);
+    queue.splice(seqInsert, 0, item);
+    let cursor = 0;
+    for (let index = 0; index < size; index++) {
+      if (proposedTo[index] === empty) {
+        proposedTo[index] = queue[cursor++]!;
+      }
+    }
 
     this.#finalize({
       method: "drag",
-      item: removal.item as T,
+      item,
       fromList: sourceListId,
       toList: this.listIdOrDefault,
       fromIndex: removal.fromIndex,
-      toIndex,
+      toIndex: proposedTo.indexOf(item),
       fromItems: member.getItems() as readonly T[],
       toItems: this.args.items,
       proposedFromItems: removal.proposedFromItems as readonly T[],
-      proposedToItems: proposedTo,
+      proposedToItems: proposedTo as readonly T[],
     });
   }
 
