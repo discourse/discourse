@@ -36,10 +36,6 @@ after_initialize do
         DiscourseWorkflows::Nodes::CheckAssignment::V1,
       ]
     end
-
-    on(:assigned) do |assignment|
-      DiscourseWorkflows::EventListener.handle(DiscourseWorkflows::Nodes::Assigned::V1, assignment)
-    end
   end
   UserUpdater::OPTION_ATTR.push(:notification_level_when_assigned)
 
