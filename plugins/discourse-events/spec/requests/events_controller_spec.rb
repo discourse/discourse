@@ -152,10 +152,10 @@ module DiscoursePostEvent
       end
 
       it "strips CR/LF from URL fields so a stored URL cannot inject ICS properties" do
-        Fabricate(
-          :event,
-          original_starts_at: 1.day.from_now,
-          url: "https://example.com/\r\nX-INJECTED:evil\r\n",
+        # Written past validation: the encoder has to hold for imported or legacy rows.
+        Fabricate(:event, original_starts_at: 1.day.from_now).update_column(
+          :url,
+          "https://example.com/\r\nX-INJECTED:evil\r\n",
         )
 
         get "/discourse-post-event/events.ics"

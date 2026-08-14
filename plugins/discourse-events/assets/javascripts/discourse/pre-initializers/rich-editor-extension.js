@@ -16,6 +16,7 @@ export const EVENT_ATTRIBUTES = {
   start: { default: null },
   end: { default: null },
   location: { default: null },
+  url: { default: null },
   maxAttendees: { default: null },
   reminders: { default: null },
   minimal: { default: null },

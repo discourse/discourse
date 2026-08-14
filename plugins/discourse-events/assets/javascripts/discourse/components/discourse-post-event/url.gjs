@@ -1,11 +1,15 @@
 import Component from "@glimmer/component";
+import { prefixProtocol } from "discourse/lib/url";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class DiscoursePostEventUrl extends Component {
   get url() {
-    return this.args.url.includes("://") || this.args.url.includes("mailto:")
-      ? this.args.url
-      : `https://${this.args.url}`;
+    return prefixProtocol(this.args.url);
+  }
+
+  // Mirrors `EventParser.display_link` on the server.
+  get label() {
+    return (this.args.url ?? "").trim().replace(/^https?:\/\//i, "");
   }
 
   <template>
@@ -18,7 +22,7 @@ export default class DiscoursePostEventUrl extends Component {
           target="_blank"
           rel="noopener noreferrer"
         >
-          {{@url}}
+          {{this.label}}
         </a>
       </section>
     {{/if}}
