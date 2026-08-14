@@ -37,7 +37,6 @@ export default class SiteTrafficExplorer extends Component {
         name: "pageviews",
         label: i18n("admin.site_traffic_explorer.metrics.pageviews.label"),
         value: this.summary.pageviews ?? 0,
-        compact: true,
       },
       {
         name: "distinct_sessions",
