@@ -18,8 +18,9 @@ const OPTIONS = [
  *
  * The APG listbox pattern, and the only example here that types.
  *
- * The labels share initials on purpose, so one character lands on the first of a group and a
- * second character picks within it.
+ * The labels share initials on purpose. A single character walks the options sharing it, while a
+ * longer query keeps the option under the cursor for as long as it still matches, so reaching
+ * Apricot from Apple takes `apr` rather than `ap`.
  *
  * Matching is on the accessible name rather than on the text. Each row carries a decorative
  * count that belongs to its text but not to its name, so the difference between matching one
@@ -66,8 +67,6 @@ export default class RovingFocusListboxExample extends Component {
           aria-selected={{row.selected}}
         >
           {{row.label}}
-          {{! Decorative, so it is excluded from the accessible name. Typing a digit therefore
-            matches nothing, while the label still matches. }}
           <span
             class="roving-demo__count"
             aria-hidden="true"

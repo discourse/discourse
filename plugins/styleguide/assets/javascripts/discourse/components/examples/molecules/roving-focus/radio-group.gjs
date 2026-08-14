@@ -33,7 +33,8 @@ export default class RovingFocusRadioGroupExample extends Component {
 
   @action
   check(item) {
-    // Called with null when the highlight is cleared, which is not a choice being made.
+    // The null argument is an active-mode signal, so a roving-tabindex group never sees one; the
+    // guard keeps the callback honest against its own contract rather than against this group.
     if (item) {
       this.checked = item.dataset.choiceId;
     }

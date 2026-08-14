@@ -46,6 +46,11 @@ export type {
  * MEANS for a tree, a menubar or a treegrid is not its business. A behaviour earns a place here
  * only if it means the same thing in every composite pattern.
  *
+ * **What the practice page does not ask for.** Five arguments are deliberate extensions:
+ * `logicalCount`, `onJump` and `onRegisterApi` pair the cursor with a virtualised list, where the
+ * DOM holds a window rather than the whole set, and `itemsKey` and `resetKey` are reactivity
+ * plumbing. They are collected here so the conformance surface stays legible.
+ *
  * It implements the two WAI-ARIA "single tab stop" patterns
  * from one engine, chosen with `focusStrategy`:
  *

@@ -6,6 +6,10 @@ import type {
   Orientation,
 } from "./types";
 
+/**
+ * {@link DRovingFocusArgs} with every default resolved, so no consumer of a configuration has to
+ * re-decide what an omitted argument meant.
+ */
 export interface DRovingFocusConfig {
   focusStrategy: DRovingFocusStrategy;
   orientation: Orientation;
@@ -30,6 +34,10 @@ export interface DRovingFocusConfig {
   typeAhead: boolean;
 }
 
+/**
+ * Resolves the named arguments into a configuration, reading every one of them so the modifier
+ * re-runs when any changes.
+ */
 export function normalizeConfig(named: DRovingFocusArgs): DRovingFocusConfig {
   return {
     focusStrategy: named.focusStrategy ?? "roving-tabindex",

@@ -3,6 +3,7 @@ import ItemScope from "./item-scope";
 import { scan, step, type StepOutcome, stepRow } from "./navigation";
 import type { DRovingFocusAxis, DRovingFocusStepResult } from "./types";
 
+/** Operations and state needed to step the cursor from the public API. */
 export interface ApiNavigationContext {
   config: DRovingFocusConfig;
   scope: ItemScope;
@@ -11,6 +12,18 @@ export interface ApiNavigationContext {
   columnCount(): number;
 }
 
+/**
+ * Steps the cursor one item on behalf of the public API, seeding an end when there is no cursor.
+ *
+ * The boundary callback is deliberately never emitted from this path: it announces that a READER
+ * pushed against an end, which a programmatic call has not done. The three-valued return is what
+ * a caller gets instead.
+ *
+ * @param axis - The axis to travel in a grid; defaults to vertical, the axis a caller that names
+ * none is asking for in a list.
+ * @param delta - `1` for forward or `-1` for backward DOM order.
+ * @returns Whether the cursor moved, sat against an edge, or had nowhere to go at all.
+ */
 export function apiStep(
   axis: DRovingFocusAxis | undefined,
   delta: 1 | -1,
@@ -37,6 +50,7 @@ export function apiStep(
   return outcome.kind === "move" ? "moved" : "edge";
 }
 
+/** Steps a single-axis group, where no column arithmetic applies and the axis argument is moot. */
 function stepLinear(
   delta: 1 | -1,
   context: ApiNavigationContext
@@ -65,6 +79,10 @@ function stepLinear(
   return "moved";
 }
 
+/**
+ * Runs the grid step and commits a landing. Travels the row axis whenever there is no cursor yet,
+ * because the column walk has no anchor to count from.
+ */
 function applyStep(
   axis: DRovingFocusAxis,
   delta: 1 | -1,
