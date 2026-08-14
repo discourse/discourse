@@ -4,6 +4,7 @@ import {
   find,
   focus,
   render,
+  settled,
   setupOnerror,
   tab,
 } from "@ember/test-helpers";
@@ -218,7 +219,9 @@ module(
 
       await click(".fk-d-menu__trigger");
       await tab();
-      assert.dom("#in-panel").isFocused();
+      assert
+        .dom("#in-panel")
+        .isFocused("Tab from the trigger enters the panel");
 
       await tab();
       assert
@@ -613,6 +616,41 @@ module(
         })?.id,
         "after-panel",
         "the stop after an anchor skips the ignored subtree entirely"
+      );
+    });
+
+    test("each call re-measures instead of answering from an earlier one", async function (assert) {
+      await render(
+        <template>
+          <div id="root">
+            <button id="control">control</button>
+            <input id="first-radio" type="radio" name="group" />
+            {{#if this.showLateRadio}}
+              <input id="late-radio" type="radio" name="group" checked />
+            {{/if}}
+          </div>
+        </template>
+      );
+
+      const root = find("#root");
+
+      assert.deepEqual(
+        tabStopsWithin(root).map((element) => element.id),
+        ["control", "first-radio"],
+        "the unchecked group starts out represented by its first member"
+      );
+
+      // Both answers above are measured, not derived: tabbability comes from live layout and
+      // state, and a group's representative from the radios present at the time. Reusing either
+      // measurement past the call that took it would report the DOM as it used to be.
+      find("#control").tabIndex = -1;
+      this.set("showLateRadio", true);
+      await settled();
+
+      assert.deepEqual(
+        tabStopsWithin(root).map((element) => element.id),
+        ["late-radio"],
+        "the opted-out control is gone and the newly checked radio represents the group"
       );
     });
 
