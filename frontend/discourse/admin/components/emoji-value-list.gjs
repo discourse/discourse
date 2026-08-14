@@ -10,10 +10,13 @@ import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { emojiUrlFor } from "discourse/lib/text";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
 
 export default class EmojiValueList extends Component {
   @service menu;
+
+  emojiLabel = (data) => data.value;
 
   @cached
   get collection() {
@@ -59,10 +62,6 @@ export default class EmojiValueList extends Component {
     this.#saveValues(newCollection);
   }
 
-  get showUpDownButtons() {
-    return this.collection.length > 1;
-  }
-
   @action
   editValue(index, event) {
     if (parseInt(index, 10) >= 0) {
@@ -94,23 +93,15 @@ export default class EmojiValueList extends Component {
     this.#saveValues(newCollection);
   }
 
+  /**
+   * Applies a committed move and persists the new order. Wrapping and
+   * announcements are the list's own.
+   *
+   * @param {Object} move - The normalized move from the list.
+   */
   @action
-  shift(operation, index) {
-    const updateCollection = [...this.collection];
-
-    let futureIndex = index + operation;
-
-    if (futureIndex > updateCollection.length - 1) {
-      futureIndex = 0;
-    } else if (futureIndex < 0) {
-      futureIndex = updateCollection.length - 1;
-    }
-
-    const shiftedEmoji = updateCollection[index];
-    updateCollection.splice(index, 1);
-    updateCollection.splice(futureIndex, 0, shiftedEmoji);
-
-    this.#saveValues(updateCollection);
+  handleMove(move) {
+    this.#saveValues([...move.proposedToItems]);
   }
 
   #validateInput(input) {
@@ -146,47 +137,43 @@ export default class EmojiValueList extends Component {
   <template>
     <div class="value-list emoji-list">
       {{#if this.collection}}
-        <ul class="values emoji-value-list">
-          {{#each this.collection key="value" as |data index|}}
-            <li class="value" data-index={{index}}>
-              <DButton
-                @action={{fn this.removeValue data}}
-                @icon="xmark"
-                @disabled={{not data.isEditable}}
-                class="btn-default remove-value-btn btn-small"
+        <DReorderableList
+          @items={{this.collection}}
+          @key="value"
+          @label={{this.emojiLabel}}
+          @onMove={{this.handleMove}}
+          @wrap={{true}}
+          @arrowsLayout="inline"
+          @controls="end"
+          @controlsVisibility="reveal"
+          @rowClass="value"
+          class="values emoji-value-list"
+        >
+          <:default as |data row|>
+            <DButton
+              @action={{fn this.removeValue data}}
+              @icon="xmark"
+              @disabled={{not data.isEditable}}
+              class="btn-default remove-value-btn btn-small"
+            />
+
+            <div
+              class="value-input emoji-details
+                {{if data.isEditable 'can-edit'}}
+                {{if data.isEditing 'd-editor-textarea-wrapper'}}"
+              {{on "click" (fn this.editValue row.index)}}
+              role="button"
+            >
+              <img
+                height="15px"
+                width="15px"
+                src={{data.emojiUrl}}
+                class="emoji-list-emoji"
               />
-
-              <div
-                class="value-input emoji-details
-                  {{if data.isEditable 'can-edit'}}
-                  {{if data.isEditing 'd-editor-textarea-wrapper'}}"
-                {{on "click" (fn this.editValue index)}}
-                role="button"
-              >
-                <img
-                  height="15px"
-                  width="15px"
-                  src={{data.emojiUrl}}
-                  class="emoji-list-emoji"
-                />
-                <span class="emoji-name">{{data.value}}</span>
-              </div>
-
-              {{#if this.showUpDownButtons}}
-                <DButton
-                  @action={{fn this.shift -1 index}}
-                  @icon="arrow-up"
-                  class="btn-default shift-up-value-btn btn-small"
-                />
-                <DButton
-                  @action={{fn this.shift 1 index}}
-                  @icon="arrow-down"
-                  class="btn-default shift-down-value-btn btn-small"
-                />
-              {{/if}}
-            </li>
-          {{/each}}
-        </ul>
+              <span class="emoji-name">{{data.value}}</span>
+            </div>
+          </:default>
+        </DReorderableList>
       {{/if}}
 
       <div class="value">

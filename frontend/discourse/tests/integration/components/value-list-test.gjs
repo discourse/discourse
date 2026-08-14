@@ -32,10 +32,15 @@ module("Integration | Component | ValueList", function (hooks) {
 
     await render(<template><ValueList @values={{this.values}} /></template>);
 
-    await fillIn(".values .value[data-index='1'] .value-input", "jarek");
-    await blur(".values .value[data-index='1'] .value-input");
+    await fillIn(
+      ".values .value[data-reorderable-key='1'] .value-input",
+      "jarek"
+    );
+    await blur(".values .value[data-reorderable-key='1'] .value-input");
 
-    assert.dom(".values .value[data-index='1'] .value-input").hasValue("jarek");
+    assert
+      .dom(".values .value[data-reorderable-key='1'] .value-input")
+      .hasValue("jarek");
     assert.deepEqual(this.values, "vinkas\njarek", "updates the value list");
   });
 
@@ -44,7 +49,7 @@ module("Integration | Component | ValueList", function (hooks) {
 
     await render(<template><ValueList @values={{this.values}} /></template>);
 
-    await click(".values .value[data-index='0'] .remove-value-btn");
+    await click(".values .value[data-reorderable-key='0'] .remove-value-btn");
 
     assert
       .dom(".values .value")

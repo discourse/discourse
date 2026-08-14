@@ -1065,19 +1065,8 @@ table#user-badges {
       @include value-btn;
     }
 
-    .shift-up-value-btn,
-    .shift-down-value-btn {
-      .discourse-no-touch & {
-        display: none;
-      }
+    .d-reorderable-list__arrows {
       margin-inline: 0.25em;
-    }
-
-    &:hover {
-      .shift-up-value-btn,
-      .shift-down-value-btn {
-        display: block;
-      }
     }
   }
 
@@ -1122,9 +1111,7 @@ table#user-badges {
   border: none;
 }
 
-.value .add-value-btn,
-.shift-up-value-btn,
-.shift-down-value-btn {
+.value .add-value-btn {
   margin-right: 0 !important;
   margin-left: 0.25em;
 

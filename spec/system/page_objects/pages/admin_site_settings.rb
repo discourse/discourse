@@ -196,13 +196,20 @@ module PageObjects
       end
 
       def has_visible_reorder_buttons?(setting_name)
-        has_css?("#{setting_row_selector(setting_name)} .shift-up-value-btn", visible: :visible) &&
-          has_css?("#{setting_row_selector(setting_name)} .shift-down-value-btn", visible: :visible)
+        reorder_buttons_opacity(setting_name) == "1"
       end
 
       def has_hidden_reorder_buttons?(setting_name)
-        has_css?("#{setting_row_selector(setting_name)} .shift-up-value-btn", visible: :hidden) &&
-          has_css?("#{setting_row_selector(setting_name)} .shift-down-value-btn", visible: :hidden)
+        reorder_buttons_opacity(setting_name) == "0"
+      end
+
+      # The reveal styling hides the controls with opacity so they keep their
+      # tab stops, which Capybara's visibility filters cannot observe.
+      def reorder_buttons_opacity(setting_name)
+        find("#{setting_row_selector(setting_name)} .d-reorderable-list__arrows", visible: :all)
+        page.evaluate_script(
+          "getComputedStyle(document.querySelector(#{"#{setting_row_selector(setting_name)} .d-reorderable-list__arrows".to_json})).opacity",
+        )
       end
 
       def category_setting(setting_name)

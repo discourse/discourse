@@ -29,7 +29,7 @@ module("Integration | Component | SimpleList", function (hooks) {
       .exists({ count: 3 }, "adds the value to the list of values");
 
     assert
-      .dom(".values .value[data-index='2'] .value-input")
+      .dom(".values .value[data-reorderable-key='2'] .value-input")
       .hasValue("penar", "sets the correct value for added item");
 
     await fillIn(".add-value-input", "eviltrout");
@@ -78,24 +78,29 @@ module("Integration | Component | SimpleList", function (hooks) {
       </template>
     );
 
-    await fillIn(".values .value[data-index='1'] .value-input", "jarek");
-    await blur(".values .value[data-index='1'] .value-input");
+    await fillIn(
+      ".values .value[data-reorderable-key='1'] .value-input",
+      "jarek"
+    );
+    await blur(".values .value[data-reorderable-key='1'] .value-input");
 
-    assert.dom(".values .value[data-index='1'] .value-input").hasValue("jarek");
+    assert
+      .dom(".values .value[data-reorderable-key='1'] .value-input")
+      .hasValue("jarek");
   });
 
   test("removing a value", async function (assert) {
     const values = "vinkas\nosama";
     await render(<template><SimpleList @values={{values}} /></template>);
 
-    await click(".values .value[data-index='0'] .remove-value-btn");
+    await click(".values .value[data-reorderable-key='0'] .remove-value-btn");
 
     assert
       .dom(".values .value")
       .exists({ count: 1 }, "removes the value from the list of values");
 
     assert
-      .dom(".values .value[data-index='0'] .value-input")
+      .dom(".values .value[data-reorderable-key='0'] .value-input")
       .hasValue("osama", "removes the correct value");
   });
 
@@ -114,7 +119,7 @@ module("Integration | Component | SimpleList", function (hooks) {
       .exists({ count: 3 }, "adds the value to the list of values");
 
     assert
-      .dom(".values .value[data-index='2'] .value-input")
+      .dom(".values .value[data-reorderable-key='2'] .value-input")
       .hasValue("eviltrout", "adds the correct value");
   });
 
@@ -130,12 +135,14 @@ module("Integration | Component | SimpleList", function (hooks) {
     );
 
     assert
-      .dom(".values .value[data-index='0'] .value-input")
+      .dom(".values .value[data-reorderable-key='0'] .value-input")
       .hasValue("vinkas");
 
     state.values = "kris|jeff";
     await settled();
 
-    assert.dom(".values .value[data-index='0'] .value-input").hasValue("kris");
+    assert
+      .dom(".values .value[data-reorderable-key='0'] .value-input")
+      .hasValue("kris");
   });
 });

@@ -15,6 +15,9 @@ import { makeArray } from "discourse/lib/helpers";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
+
+const INDEX_KEY = "@index";
 
 @classNames("value-list")
 export default class ValueList extends Component {
@@ -26,6 +29,7 @@ export default class ValueList extends Component {
   values = null;
   onChange = null;
 
+  valueLabel = (value) => value;
   @tracked _noneKeyOverride;
 
   @computed("newValue")
@@ -95,20 +99,15 @@ export default class ValueList extends Component {
     this._addValue(choice);
   }
 
+  /**
+   * Applies a committed move onto the collection and persists the new order.
+   * Wrapping and announcements are the list's own.
+   *
+   * @param {Object} move - The normalized move from the list.
+   */
   @action
-  shift(operation, index) {
-    let futureIndex = index + operation;
-
-    if (futureIndex > this.collection.length - 1) {
-      futureIndex = 0;
-    } else if (futureIndex < 0) {
-      futureIndex = this.collection.length - 1;
-    }
-
-    const shiftedValue = this.collection[index];
-    this.collection.splice(index, 1);
-    this.collection.splice(futureIndex, 0, shiftedValue);
-
+  handleMove(move) {
+    this.collection.splice(0, this.collection.length, ...move.proposedToItems);
     this._saveValues();
   }
 
@@ -158,11 +157,6 @@ export default class ValueList extends Component {
     this.set("values", this.collection.join(this.inputDelimiter || "\n"));
   }
 
-  @computed("collection")
-  get showUpDownButtons() {
-    return this.collection.length - 1 ? true : false;
-  }
-
   _splitValues(values, delimiter) {
     if (values && values.length) {
       return values.split(delimiter).filter((x) => x);
@@ -173,37 +167,35 @@ export default class ValueList extends Component {
 
   <template>
     {{#if this.collection}}
-      <div class="values">
-        {{#each this.collection as |value index|}}
-          <div data-index={{index}} class="value">
-            <DButton
-              @action={{fn this.removeValue value}}
-              @icon="xmark"
-              class="btn-default remove-value-btn btn-small"
-            />
+      <DReorderableList
+        @items={{this.collection}}
+        @key={{INDEX_KEY}}
+        @label={{this.valueLabel}}
+        @onMove={{this.handleMove}}
+        @wrap={{true}}
+        @arrowsLayout="inline"
+        @controls="end"
+        @controlsVisibility="reveal"
+        @tag="div"
+        @itemTag="div"
+        @rowClass="value"
+        class="values"
+      >
+        <:default as |value row|>
+          <DButton
+            @action={{fn this.removeValue value}}
+            @icon="xmark"
+            class="btn-default remove-value-btn btn-small"
+          />
 
-            <Input
-              title={{value}}
-              @value={{value}}
-              class="value-input"
-              {{on "focusout" (fn this.changeValue index)}}
-            />
-
-            {{#if this.showUpDownButtons}}
-              <DButton
-                @action={{fn this.shift -1 index}}
-                @icon="arrow-up"
-                class="btn-default shift-up-value-btn btn-small"
-              />
-              <DButton
-                @action={{fn this.shift 1 index}}
-                @icon="arrow-down"
-                class="btn-default shift-down-value-btn btn-small"
-              />
-            {{/if}}
-          </div>
-        {{/each}}
-      </div>
+          <Input
+            title={{value}}
+            @value={{value}}
+            class="value-input"
+            {{on "focusout" (fn this.changeValue row.index)}}
+          />
+        </:default>
+      </DReorderableList>
     {{/if}}
 
     <ComboBox
