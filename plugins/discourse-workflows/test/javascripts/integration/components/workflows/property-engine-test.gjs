@@ -1,6 +1,7 @@
 import {
   click,
   fillIn,
+  find,
   findAll,
   render,
   select,
@@ -1020,6 +1021,174 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert.dom(".workflows-property-engine__collection-row").exists();
     assert.strictEqual(this.formApi.get("entries.values").length, 1);
+  });
+
+  test("reorders sortable fixed collection items", async function (assert) {
+    this.setProperties({
+      configuration: {
+        buttons: {
+          values: [
+            { label: "Approve", value: "approve" },
+            { label: "Deny", value: "deny" },
+          ],
+        },
+      },
+      formApi: null,
+      nodeType: "action:chat_approval",
+      onChange: sinon.spy(),
+      schema: {
+        buttons: {
+          type: "fixed_collection",
+          type_options: {
+            multiple_values: true,
+            sortable: true,
+          },
+          options: [
+            {
+              name: "values",
+              values: {
+                label: {
+                  type: "string",
+                  required: true,
+                  no_data_expression: true,
+                },
+                value: {
+                  type: "string",
+                  required: true,
+                  no_data_expression: true,
+                },
+              },
+            },
+          ],
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+            @onChange={{this.onChange}}
+          />
+        </Form>
+      </template>
+    );
+
+    const moveItemSelector = (direction, position) =>
+      `[aria-label="${i18n(
+        `discourse_workflows.property_engine.move_item_${direction}`,
+        { position }
+      )}"]`;
+    const moveButtons = (direction) => [
+      find(moveItemSelector(direction, 1)),
+      find(moveItemSelector(direction, 2)),
+    ];
+    let moveUpButtons = moveButtons("up");
+    let moveDownButtons = moveButtons("down");
+
+    assert
+      .dom(".workflows-property-engine__collection-move")
+      .exists({ count: 4 }, "each item has reorder controls");
+    assert.dom(moveUpButtons[0]).isDisabled("the first item cannot move up");
+    assert.dom(moveDownButtons[1]).isDisabled("the last item cannot move down");
+
+    await click(moveUpButtons[1]);
+
+    assert.deepEqual(
+      this.formApi.get("buttons.values"),
+      [
+        { label: "Deny", value: "deny" },
+        { label: "Approve", value: "approve" },
+      ],
+      "moving up updates the collection value"
+    );
+    assert
+      .dom(findAll(".workflows-property-engine__collection-row input")[0])
+      .hasValue("Deny", "the reordered value renders in the first row");
+    assert.true(this.onChange.calledOnce, "the editor observes the reorder");
+
+    moveDownButtons = moveButtons("down");
+    await click(moveDownButtons[0]);
+
+    assert.deepEqual(
+      this.formApi.get("buttons.values"),
+      [
+        { label: "Approve", value: "approve" },
+        { label: "Deny", value: "deny" },
+      ],
+      "moving down updates the collection value"
+    );
+    assert.true(this.onChange.calledTwice, "the editor observes each reorder");
+
+    moveUpButtons = moveButtons("up");
+    moveDownButtons = moveButtons("down");
+    assert.dom(moveUpButtons[0]).isDisabled("the first boundary is restored");
+    assert.dom(moveDownButtons[1]).isDisabled("the last boundary is restored");
+  });
+
+  test("does not add reorder controls to non-sortable fixed collections", async function (assert) {
+    this.setProperties({
+      configuration: {
+        entries: {
+          values: [{ key: "first" }, { key: "second" }],
+        },
+      },
+      nodeType: "action:log",
+      schema: {
+        entries: {
+          type: "fixed_collection",
+          type_options: {
+            multiple_values: true,
+          },
+          options: [
+            {
+              name: "values",
+              values: {
+                key: {
+                  type: "string",
+                  required: true,
+                  no_data_expression: true,
+                },
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".workflows-property-engine__collection-order-controls")
+      .doesNotExist("reordering remains opt-in");
+    assert
+      .dom(".workflows-property-engine__collection-delete")
+      .exists({ count: 2 }, "existing collection controls remain unchanged");
   });
 
   test("labels fixed collection remove buttons for items without a name", async function (assert) {

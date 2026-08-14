@@ -466,9 +466,7 @@ uk:
     max_redemptions_allowed_one: "для запрошень електронною поштою має бути 1."
     redemption_count_less_than_max: "має бути менше %{max_redemptions_allowed}."
     email_xor_domain: "Поля електронної пошти та домену не можна використовувати одночасно"
-    admin_invite_requires_email: "Запрошення адміністратора повинні бути надіслані на електронну адресу"
     admin_invite_requires_admin_inviter: "Тільки адміністратори можуть надсилати запрошення адміністраторам"
-    moderator_invite_requires_email: "Запрошення модератора повинні бути надіслані на електронну адресу"
     moderator_invite_requires_staff_inviter: "Тільки співробітники можуть створювати запрошення для модераторів"
     existing_user_success: "Запрошення активовано"
     email_invites_disabled: "Надсилання запрошень електронною поштою вимкнено"
@@ -4581,9 +4579,6 @@ uk:
     user_posted_pm_staged:
       title: "Користувач написав у PM"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Обліковий запис призупинено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис призупинено"

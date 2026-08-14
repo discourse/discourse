@@ -2311,9 +2311,6 @@ zh_TW:
     user_posted_pm_staged:
       title: "使用者發表私人訊息後備"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "帳號被停權"
       subject_template: "[%{email_prefix}] 你的帳號已被停權"

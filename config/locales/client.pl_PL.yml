@@ -63,6 +63,7 @@ pl_PL:
         mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
         mandatory: "Obowiązkowe"
         disallowed: "Niedozwolone"
+        required_permission_not_added: "Co najmniej jeden beneficjent musi mieć %{permission} uprawnień do tego %{typeName}"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"

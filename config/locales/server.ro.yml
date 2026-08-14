@@ -1905,9 +1905,6 @@ ro:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_deleted:
       title: "Cont șters"
       subject_template: "[%{email_prefix}] Contul tău a fost șters"

@@ -246,6 +246,8 @@ sk:
     ai_bot:
       reply_error: "Ospravedlňujeme sa, ale zdá sa, že náš systém narazil na neočakávaný problém pri pokuse o odpoveď.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Bez názvu AI bot PM]"
+      read_post:
+        unknown_post: "príspevok"
       agents:
         default_llm_required: "Predvolený model LLM sa vyžaduje pred povolením funkcie Chat"
         cannot_have_duplicate_tools: "Nemôže mať duplicitné nástroje"

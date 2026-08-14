@@ -54,7 +54,9 @@ pl_PL:
           rsvp_body: "Nawiąż kontakt z innymi uczestnikami przed, w trakcie i po wydarzeniu."
       invite_user_notification: "%{username} zaprosił Cię do: %{description}"
       preferences:
+        all_events: "Wydarzenia Discourse – wszystkie wydarzenia"
         all_events_description: "Wszystkie wydarzenia na forum"
+        my_events: "Wydarzenia Discourse – moje wydarzenia"
         my_events_description: "Wydarzenia, na które się wybierasz lub które Cię interesują"
       on_holiday: "Na świętach"
       disable_holiday: "Wyłącz"

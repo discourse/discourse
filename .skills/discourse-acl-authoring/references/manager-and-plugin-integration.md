@@ -99,6 +99,39 @@ The key is `target_class.acl_target_key`, which defaults to the class name. If a
 
 `mandatory_acl` and `banned_acl` are both always present in the serialized `access_control` payload. Each map only includes target classes that define non-empty metadata for that ACL type.
 
+## Evaluating Permission Loss Before Save
+
+`POST /access-control/evaluate.json` calls `AccessControlList::EvaluateModification` with:
+
+```json
+{
+  "target_type": "Plugin::Target",
+  "target_id": 123,
+  "new_acl": []
+}
+```
+
+The service resolves `target_type` from `Site.access_control_target_classes`, injects the target class's mandatory ACL entries, and calculates which proposed entries apply to the current user through direct user grants or group membership. Evaluation fails when either:
+
+- the current user would have no permission after the change; or
+- the current user would lose any permission declared by `loss_warning_permissions`.
+
+The first case uses `access_control_list.errors.user_will_not_have_permission` for an existing target and `access_control_list.errors.user_will_not_have_permission_on_create` when `target_id` is omitted. For configured loss warnings, define target-specific server translations for both editing and creation:
+
+```yaml
+en:
+  access_control_list:
+    errors:
+      "Plugin::Target_user_will_lose_permission": "You will no longer be able to manage this target. Continue?"
+      "Plugin::Target_user_will_lose_permission_on_create": "If you create this target with these permissions, you will not be able to manage it. Continue?"
+```
+
+The suffixes are `#{target_class.acl_target_key}_user_will_lose_permission` and `#{target_class.acl_target_key}_user_will_lose_permission_on_create`. Keep these translations in the plugin when the ACL target is plugin-owned.
+
+The service evaluates only the proposed ACL. It does not load the target or compare the proposal with persisted ACL rows. `target_id` only selects edit wording when present; omitting it selects creation wording. Treat “loss” as an inference that the authorized editor already holds the configured permission.
+
+This endpoint evaluates the proposed ACL for confirmation UX; it does not authorize access to the target or replace enforcement in the actual write service. Browser confirmation is not passed as proof to `AccessControlListManager`, so an API client can bypass the prompt. If confirmation must be server-enforced, extend the write contract and re-evaluate there before mutation.
+
 ## Serializing Target ACLs
 
 Use `AccessControlList.where(target: target).flattened_list` when returning ACLs to a client that edits them.

@@ -201,6 +201,23 @@
     }
   }
 
+  &__collection-order-controls {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: var(--space-2);
+    transform: translateY(-50%);
+    display: flex;
+    gap: var(--space-half);
+  }
+
+  &__collection-move {
+    padding: var(--space-half);
+    border-radius: 6px;
+    font-size: var(--font-down-1-rem);
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+  }
+
   &__collection-fields {
     flex: 1;
     min-width: 0;

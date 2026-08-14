@@ -4064,9 +4064,6 @@ tr_TR:
     user_posted_pm_staged:
       title: "Kullanıcı Kişisel Mesaj Gönderdi Aşamalı"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"

@@ -16,6 +16,8 @@ hr:
     spam_detection:
       logging_subject: "Otkrivanje neželjene pošte"
     ai_bot:
+      read_post:
+        unknown_post: "Objava"
       tool_summary:
         search: "Pretraživanje"
         time: "Vrijeme"

@@ -29,6 +29,16 @@ module DiscourseAssign
         },
       }.freeze
 
+      CHECK_ASSIGNMENT_OUTPUT_SCHEMA = {
+        "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+        "type" => "object",
+        "properties" => {
+          "is_assigned" => {
+            "type" => "boolean",
+          },
+        },
+      }.freeze
+
       ASSIGNMENT_SCHEMA = {
         "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
         "type" => "object",

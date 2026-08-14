@@ -412,6 +412,8 @@ de:
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
       thinking: "Ich denke"
       tool_pending_approval: "Diese Aktion erfordert die Zustimmung des Moderators, bevor sie ausgeführt werden kann."
+      read_post:
+        unknown_post: "Beitrag"
       chat_tool_approval:
         approved: "Genehmigt von @%{username}."
         rejected: "Abgelehnt von @%{username}."

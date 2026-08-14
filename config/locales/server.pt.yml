@@ -1801,9 +1801,6 @@ pt:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     digest:
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos tópicos"

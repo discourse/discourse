@@ -1992,10 +1992,6 @@ te:
     user_posted_pm:
       title: "సభ్యుడు పోస్ట్ చేసిన PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-    user_posted_pm_staged:
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ఖాతా నిలిపివేయబడింది"
     account_suspended_forever:

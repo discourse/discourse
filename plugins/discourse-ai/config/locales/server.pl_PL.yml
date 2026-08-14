@@ -429,6 +429,8 @@ pl_PL:
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie"
       tool_pending_approval: "Aby wykonać tę czynność, wymagana jest zgoda moderatora."
+      read_post:
+        unknown_post: "post"
       chat_tool_approval:
         approved: "Zatwierdzone przez @%{username}."
         rejected: "Odrzucone przez @%{username}."

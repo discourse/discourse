@@ -28,6 +28,7 @@ export default class AdminPluginsShowDiscourseAiAgentsNew extends DiscourseRoute
     record.set("allowed_group_ids", [AUTO_GROUPS.trust_level_0.id]);
     record.set("tools", []);
     record.set("rag_uploads", []);
+    record.set("subagent_ids", []);
     // these match the defaults on the table
     record.set("rag_chunk_tokens", 374);
     record.set("rag_chunk_overlap_tokens", 10);

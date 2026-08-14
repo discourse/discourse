@@ -63,6 +63,7 @@ zh_CN:
         mandatory_acl_tooltip: "此权限是 %{name} 的必要权限，无法移除"
         mandatory: "必要"
         disallowed: "不允许"
+        required_permission_not_added: "此 %{typeName} 至少需要一名授权对象拥有 %{permission} 权限"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -803,6 +804,7 @@ zh_CN:
       date_filter: "发布时间介于"
       in_reply_to: "回复给"
       filtered_flagged_by: "举报者"
+      no_component_found: "未找到 %{type} 的组件"
       unknown:
         title:
           other: "您有来自已禁用插件的待审核队列条目："
@@ -6519,6 +6521,11 @@ zh_CN:
         title: "最新变化"
         check_for_updates: "检查更新"
       site_traffic_explorer:
+        title: "网站流量浏览器"
+        loading: "正在加载流量…"
+        errors:
+          timeout: "本次流量查询耗时过长。请选择较短的日期范围重试。"
+          unexpected: "网站流量加载失败，请重试。"
         pageviews: "页面浏览量"
         view_more: "展开"
         cards:

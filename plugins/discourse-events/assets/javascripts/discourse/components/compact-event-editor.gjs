@@ -20,6 +20,7 @@ import PostEventBuilder from "discourse/plugins/discourse-events/discourse/compo
 import {
   defaultEventState,
   isLivestreamUrl,
+  livestreamSource,
   reconcileDefaultReminder,
 } from "discourse/plugins/discourse-events/discourse/lib/raw-event-helper";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
@@ -53,6 +54,7 @@ export default class CompactEventEditor extends Component {
   @tracked closed;
   @tracked customFields;
   @tracked linkify;
+  #startedWithUrl = false;
   #previousRsvpStatus = "public";
   #lastInitialStateRef;
   @tracked _maxAttendeesOverride;
@@ -91,6 +93,7 @@ export default class CompactEventEditor extends Component {
     this.livestream = s.livestream;
     this.minimal = s.minimal;
     this.url = s.url;
+    this.#startedWithUrl ||= !!s.url;
     this.image = s.image;
     this.allowedGroups = s.allowedGroups;
     this.closed = s.closed;
@@ -207,13 +210,24 @@ export default class CompactEventEditor extends Component {
   }
 
   get isLivestreamUrl() {
-    return (
-      this.hasLocation && isLivestreamUrl(this.location, this.siteSettings)
+    return isLivestreamUrl(
+      livestreamSource(this.location, this.url),
+      this.siteSettings
     );
   }
 
   get locationIcon() {
     return this.isLocationUrl ? "link" : "location-pin";
+  }
+
+  get showUrlRow() {
+    return !!this.url || this.#startedWithUrl;
+  }
+
+  get locationPlaceholder() {
+    return this.showUrlRow
+      ? i18n("discourse_post_event.composer.location_placeholder")
+      : i18n("discourse_post_event.composer.location_or_url_placeholder");
   }
 
   get displayLocation() {
@@ -304,9 +318,9 @@ export default class CompactEventEditor extends Component {
   }
 
   @action
-  onLocationInput(event) {
+  onLinkFieldInput(field, event) {
     const value = event.target.value;
-    this.location = value === "" ? null : value;
+    this[field] = value === "" ? null : value;
     if (!this.isLivestreamUrl) {
       this.livestream = false;
     }
@@ -634,6 +648,7 @@ export default class CompactEventEditor extends Component {
           this.recurrence = updatedEvent.recurrence || null;
           this.recurrenceUntil = updatedEvent.recurrenceUntil || null;
           this.url = updatedEvent.url || null;
+          this.#startedWithUrl ||= !!this.url;
           this.allowedGroups =
             (updatedEvent.rawInvitees || []).join(",") || null;
           this.image = updatedEvent.imageUpload?.short_url
@@ -793,10 +808,8 @@ export default class CompactEventEditor extends Component {
           type="text"
           value={{this.location}}
           class="composer-event__location-input"
-          placeholder={{i18n
-            "discourse_post_event.composer.location_placeholder"
-          }}
-          {{on "input" this.onLocationInput}}
+          placeholder={{this.locationPlaceholder}}
+          {{on "input" (fn this.onLinkFieldInput "location")}}
           {{on "focus" this.handleTextInputFocus}}
         />
         {{#if this.isLocationUrl}}
@@ -812,6 +825,20 @@ export default class CompactEventEditor extends Component {
         {{/if}}
       </div>
     </section>
+
+    {{#if this.showUrlRow}}
+      <section class="composer-event__url">
+        {{dIcon "link"}}
+        <input
+          type="text"
+          value={{this.url}}
+          class="composer-event__url-input"
+          placeholder={{i18n "discourse_post_event.composer.url_placeholder"}}
+          {{on "input" (fn this.onLinkFieldInput "url")}}
+          {{on "focus" this.handleTextInputFocus}}
+        />
+      </section>
+    {{/if}}
 
     {{#if this.isLivestreamUrl}}
       <section class="composer-event__livestream">

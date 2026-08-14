@@ -492,10 +492,6 @@ th:
         %{context}
 
         %{respond_instructions}
-    user_posted_pm_staged:
-      text_body_template: |2
-
-        %{message}
     digest:
       liked_received: "ได้รับการชอบ"
       new_users: "ผู้ใช้งานใหม่"

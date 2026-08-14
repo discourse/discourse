@@ -266,6 +266,8 @@ module DiscourseWorkflows
 
           nodes =
             DiscourseWorkflows::Registry.nodes.filter_map do |node_class|
+              next if !node_class.palette_visible?
+
               serialize_node(node_class, query_terms, include_examples)
             end
 

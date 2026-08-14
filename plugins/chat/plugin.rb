@@ -114,8 +114,13 @@ after_initialize do
       require_relative "lib/discourse_workflows/nodes/chat_channel_selection"
       require_relative "lib/discourse_workflows/nodes/send_chat_message/v1"
       require_relative "lib/discourse_workflows/nodes/chat_approval/v1"
+      require_relative "lib/discourse_workflows/nodes/chat_approval/v2"
 
-      [DiscourseWorkflows::Nodes::SendChatMessage::V1, DiscourseWorkflows::Nodes::ChatApproval::V1]
+      [
+        DiscourseWorkflows::Nodes::SendChatMessage::V1,
+        DiscourseWorkflows::Nodes::ChatApproval::V1,
+        DiscourseWorkflows::Nodes::ChatApproval::V2,
+      ]
     end
 
     require_relative "lib/discourse_workflows/nodes/chat_message_created/v1"
@@ -136,21 +141,29 @@ after_initialize do
     on(:chat_message_interaction) do |interaction|
       next unless SiteSetting.enable_discourse_workflows
 
-      action_id = interaction.action&.dig("action_id").to_s
+      action_id = interaction.action.is_a?(Hash) ? interaction.action["action_id"].to_s : ""
       next if action_id.blank?
-      unless DiscourseWorkflows::InteractiveResume.action_id?(
-               action_id,
-               expected_node_type: "action:chat_approval",
-               allowed_actions: %w[approve deny],
-             )
-        next
-      end
+      resume_request =
+        DiscourseWorkflows::InteractiveResume.from_action_id(
+          action_id,
+          expected_node_type: "action:chat_approval",
+          allowed_actions:
+            DiscourseWorkflows::Nodes::ChatApproval::V1::ACTION_IDS +
+              DiscourseWorkflows::Nodes::ChatApproval::V2::ACTION_IDS,
+        )
+      next if resume_request.blank?
 
-      Jobs.enqueue(
-        Jobs::Chat::ResumeWorkflowApproval,
-        action_id: action_id,
-        channel_id: interaction.message.chat_channel_id,
-      )
+      if DiscourseWorkflows::Nodes::ChatApproval::V1::ACTION_IDS.include?(resume_request.action)
+        Jobs.enqueue(
+          Jobs::Chat::ResumeWorkflowApproval,
+          action_id: action_id,
+          channel_id: interaction.message.chat_channel_id,
+        )
+      else
+        next if interaction.id.blank?
+
+        Jobs.enqueue(Jobs::Chat::ResumeWorkflowApprovalInteraction, interaction_id: interaction.id)
+      end
     end
   end
 
