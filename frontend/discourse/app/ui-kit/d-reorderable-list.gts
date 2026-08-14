@@ -1059,6 +1059,25 @@ export default class DReorderableList<T> extends Component<
    * @param targetKey - The key of the row the drop landed on.
    * @param event - The target modifier's drop payload.
    */
+  /**
+   * Refuses a row's own in-list drag as a drop candidate, which is what keeps
+   * the drop indicator from offering a row a position relative to itself. A
+   * same-valued key arriving from another group member is a different item
+   * and stays droppable.
+   *
+   * @param rowKey - This row's key.
+   * @param feedback - The target modifier's gate payload.
+   */
+  @action
+  canDropOnRow(
+    rowKey: string,
+    { source }: { source: { data: Record<string, unknown> } }
+  ) {
+    return (
+      source.data.key !== rowKey || source.data.listId !== this.listIdOrDefault
+    );
+  }
+
   @action
   onRowDrop(targetKey: string, { position, source }: DropTargetEvent) {
     const rows = this.rows;
@@ -1413,6 +1432,7 @@ export default class DReorderableList<T> extends Component<
                 <Item
                   class={{dConcatClass
                     "d-reorderable-list__row"
+                    (if row.isDragging "--dragging")
                     (if row.isGrabbed "--grabbed")
                     (this.rowClassFor row)
                   }}
@@ -1420,6 +1440,7 @@ export default class DReorderableList<T> extends Component<
                   data-reorderable-key={{row.key}}
                   {{dDragAndDropTarget
                     accepts=this.dragType
+                    canDrop=(fn this.canDropOnRow row.key)
                     onDrop=(fn this.onRowDrop row.key)
                   }}
                   {{this.verifyKeyboardPath}}
