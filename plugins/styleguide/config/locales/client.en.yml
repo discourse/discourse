@@ -37,6 +37,8 @@ en:
           title: "Menus"
         multi_select:
           title: "Multi select"
+        reorderable_list:
+          title: "Reorderable list"
         toasts:
           title: "Toasts"
         font_scale:
