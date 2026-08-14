@@ -158,26 +158,6 @@ export default class AdminFlagItem extends Component {
           >
             <:content>
               <DDropdownMenu as |dropdown|>
-                {{#unless @isFirstFlag}}
-                  <dropdown.item>
-                    <DButton
-                      @label="admin.config_areas.flags.more_options.move_up"
-                      @icon="arrow-up"
-                      class="btn-transparent admin-flag-item__move-up"
-                      @action={{this.moveUp}}
-                    />
-                  </dropdown.item>
-                {{/unless}}
-                {{#unless @isLastFlag}}
-                  <dropdown.item>
-                    <DButton
-                      @label="admin.config_areas.flags.more_options.move_down"
-                      @icon="arrow-down"
-                      class="btn-transparent admin-flag-item__move-down"
-                      @action={{this.moveDown}}
-                    />
-                  </dropdown.item>
-                {{/unless}}
 
                 <dropdown.item>
                   <DButton

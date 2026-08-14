@@ -93,6 +93,7 @@ export default class AdminConfigAreasFlags extends Component {
       {{! eslint-disable-next-line ember/template-table-groups }}
       <table class="d-table admin-flags__items">
         <thead class="d-table__header">
+          <th class="d-table__header-cell --reorder"></th>
           <th class="d-table__header-cell">{{i18n
               "admin.config_areas.flags.description"
             }}</th>

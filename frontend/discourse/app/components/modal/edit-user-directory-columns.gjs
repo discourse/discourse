@@ -130,6 +130,7 @@ export default class EditUserDirectoryColumns extends Component {
             @key="id"
             @label={{this.columnLabel}}
             @onMove={{this.handleMove}}
+            @controls="end"
             @tag="div"
             @itemTag="div"
             @rowClass="edit-directory-column"
