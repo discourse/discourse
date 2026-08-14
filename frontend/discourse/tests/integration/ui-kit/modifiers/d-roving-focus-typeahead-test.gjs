@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
+import TypeAhead from "discourse/ui-kit/modifiers/d-roving-focus/type-ahead";
 
 /**
  * The practice page specifies type-ahead as matching the item whose accessible NAME starts with
@@ -427,6 +428,153 @@ module(
       assert.true(
         warn.calledWithMatch(/typeAhead/),
         "and says so rather than failing quietly"
+      );
+    });
+
+    test("a fully mounted list keeps type-ahead when a row is disabled", async function (assert) {
+      const warn = sinon.stub(console, "warn");
+
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector=".item"
+              typeAhead=true
+              logicalCount=3
+            }}
+          >
+            <button class="item a" role="option" aria-label="Apple">1</button>
+            <button
+              class="item b"
+              role="option"
+              aria-label="Banana"
+              aria-disabled="true"
+            >2</button>
+            <button class="item c" role="option" aria-label="Cherry">3</button>
+          </div>
+        </template>
+      );
+
+      await focus(".a");
+      pressKey(".a", "c");
+      await settled();
+
+      assert
+        .dom(document.activeElement)
+        .hasClass(
+          "c",
+          "a skipped row is not an off-window row, so the search still runs"
+        );
+      assert.false(
+        warn.calledWithMatch(/typeAhead/),
+        "and a complete window earns no windowed warning"
+      );
+    });
+
+    test("with no cursor, a single character matches from the first item", async function (assert) {
+      await render(
+        <template>
+          <div
+            class="tri"
+            role="combobox"
+            tabindex="0"
+            aria-controls="ta-lb"
+          ></div>
+          <div
+            id="ta-lb"
+            role="listbox"
+            {{dRovingFocus
+              focusStrategy="active-descendant"
+              controllerElement=".tri"
+              itemSelector=".item"
+              activeClass="--active"
+              entryFocus="none"
+              typeAhead=true
+            }}
+          >
+            <button class="item a" role="option" aria-label="Apple">1</button>
+            <button class="item b" role="option" aria-label="Apricot">2</button>
+            <button class="item c" role="option" aria-label="Banana">3</button>
+          </div>
+        </template>
+      );
+
+      pressKey(".tri", "a");
+      await settled();
+
+      assert
+        .dom(".a")
+        .hasClass(
+          "--active",
+          "an unseeded search begins at the top of the list"
+        );
+
+      pressKey(".tri", "a");
+      await settled();
+
+      assert
+        .dom(".b")
+        .hasClass(
+          "--active",
+          "repeating the character still cycles to the next match"
+        );
+    });
+
+    test("a failed accessible-name load is retried by a later configure", async function (assert) {
+      const loads = [];
+      let outcome = "reject";
+      const namer = (element) => element.dataset.name ?? "";
+      const loader = () => {
+        const promise =
+          outcome === "reject"
+            ? Promise.reject(new Error("simulated chunk failure"))
+            : Promise.resolve(namer);
+        loads.push(promise);
+        return promise;
+      };
+      const typeAhead = new TypeAhead(loader);
+
+      typeAhead.configure(true);
+      assert.strictEqual(
+        loads.length,
+        1,
+        "the first configure starts one load"
+      );
+      await settled();
+
+      outcome = "resolve";
+      typeAhead.configure(true);
+      assert.strictEqual(
+        loads.length,
+        2,
+        "a failed load leaves the next configure free to retry"
+      );
+      await settled();
+
+      const apple = document.createElement("button");
+      apple.dataset.name = "Apple";
+      const banana = document.createElement("button");
+      banana.dataset.name = "Banana";
+      const activated = [];
+      typeAhead.handle(
+        new KeyboardEvent("keydown", { key: "b", cancelable: true }),
+        {
+          enabled: true,
+          editableController: false,
+          logicalCount: undefined,
+          items: () => [apple, banana],
+          currentIndex: () => -1,
+          activate: (item) => activated.push(item),
+          reannounce: () => {},
+          warnWindowed: () => {},
+        }
+      );
+      assert.deepEqual(
+        activated,
+        [banana],
+        "the retried namer serves the search"
       );
     });
   }
