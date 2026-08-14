@@ -70,6 +70,13 @@ module DiscoursePostEvent
       DiscourseEvent.trigger(:discourse_calendar_post_event_invitee_status_changed, self)
     end
 
+    # Called after the record is destroyed, so subscribers read the withdrawal
+    # from `destroyed?` rather than from a status that no longer applies. Bulk
+    # deletions stay silent, like the other paths that skip callbacks.
+    def publish_attendance_removed!
+      DiscourseEvent.trigger(:discourse_calendar_post_event_invitee_status_changed, self)
+    end
+
     def self.extract_uniq_usernames(groups)
       User.real.where(
         id: GroupUser.where(group_id: Group.where(name: groups).select(:id)).select(:user_id),
