@@ -169,6 +169,41 @@ RSpec.describe SvgSprite do
     expect(SvgSprite.all_icons).to include("dragon")
   end
 
+  it "includes icons defined in icon properties of objects type theme settings" do
+    theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+      featured_links:
+        type: objects
+        default:
+          - title: link
+            icon: dragon
+        schema:
+          name: link
+          properties:
+            title:
+              type: string
+            icon:
+              type: icon
+    YAML
+    theme.save!
+
+    expect(SvgSprite.all_icons(theme.id)).to include("dragon")
+
+    theme.update_setting(:featured_links, [{ "title" => "link", "icon" => "gas-pump" }])
+    theme.save!
+
+    expect(SvgSprite.all_icons(theme.id)).to include("gas-pump")
+    expect(SvgSprite.all_icons(theme.id)).not_to include("dragon")
+  end
+
+  it "includes icons defined in icon properties of objects type site settings" do
+    SiteSetting.load_settings(Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s)
+
+    SiteSetting.reaction_list = [{ name: "party", icon: "dragon" }].to_json
+    SvgSprite.expire_cache
+
+    expect(SvgSprite.all_icons).to include("dragon")
+  end
+
   it "includes icons defined in theme modifiers" do
     child_theme = Fabricate(:theme, component: true)
     theme.add_relative_theme!(:child, child_theme)
