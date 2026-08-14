@@ -72,16 +72,12 @@ module PageObjects
       end
 
       def move_down(key)
-        toggle_flag_menu(key)
-        find(".admin-flag-item__move-down").click
-        has_closed_flag_menu?
+        within(".admin-flag-item.#{key}") { find(".d-reorder-buttons__button:last-child").click }
         self
       end
 
       def move_up(key)
-        toggle_flag_menu(key)
-        find(".admin-flag-item__move-up").click
-        has_closed_flag_menu?
+        within(".admin-flag-item.#{key}") { find(".d-reorder-buttons__button:first-child").click }
         self
       end
 

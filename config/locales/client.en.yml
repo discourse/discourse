@@ -8328,8 +8328,6 @@ en:
             auto_action_type: "Auto hide flagged content"
           more_options:
             title: "More options"
-            move_up: "Move up"
-            move_down: "Move down"
         permalinks:
           edit: "Edit"
           delete: "Delete"
@@ -8396,8 +8394,6 @@ en:
           type: "Type"
           more_options:
             title: "More options"
-            move_up: "Move up"
-            move_down: "Move down"
           delete: "Delete"
           delete_successful: "User field deleted."
           save_successful: "User field saved."
