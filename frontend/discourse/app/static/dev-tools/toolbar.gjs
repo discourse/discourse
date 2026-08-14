@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
+import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n, { i18n } from "discourse-i18n";
 import BlockDebugButton from "./block-debug/button";
 import PluginOutletDebugButton from "./plugin-outlet-debug/button";
@@ -15,9 +15,17 @@ import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
 import VerboseLocalizationButton from "./verbose-localization/button";
 
 export default class Toolbar extends Component {
-  @tracked activeDragOffset;
+  @tracked activeDragOffset = null;
   @tracked ownSize = 0;
   @tracked top = 250;
+
+  /**
+   * Not the offset's truthiness: a grab exactly at the top edge gives 0, which
+   * would read as "not dragging" for the whole gesture.
+   */
+  get dragging() {
+    return this.activeDragOffset !== null;
+  }
 
   get style() {
     const clampedTop = Math.max(this.top, 0);
@@ -35,7 +43,7 @@ export default class Toolbar extends Component {
     const realTop = event.target
       .closest(".dev-tools-toolbar")
       .getBoundingClientRect().top;
-    const dragStartedAtY = event.pageY || event.touches[0].pageY;
+    const dragStartedAtY = event.pageY;
     this.activeDragOffset = dragStartedAtY - realTop;
   }
 
@@ -46,7 +54,7 @@ export default class Toolbar extends Component {
 
   @action
   dragMove(event) {
-    const dragY = event.pageY || event.touches[0].pageY;
+    const dragY = event.pageY;
     this.top = dragY - this.activeDragOffset;
   }
 
@@ -57,10 +65,7 @@ export default class Toolbar extends Component {
 
   <template>
     <div
-      class={{dConcatClass
-        "dev-tools-toolbar"
-        (if this.activeDragOffset "--dragging")
-      }}
+      class={{dConcatClass "dev-tools-toolbar" (if this.dragging "--dragging")}}
       style={{this.style}}
       {{dOnResize this.onResize}}
     >
@@ -68,13 +73,17 @@ export default class Toolbar extends Component {
         type="button"
         title={{i18n "dev_tools.drag_to_move"}}
         class="gripper"
-        {{dDraggable
-          didStartDrag=this.didStartDrag
-          didEndDrag=this.didEndDrag
-          dragMove=this.dragMove
+        {{! An interrupted drag leaves the toolbar where it was dragged to,
+            rather than snapping back to where the grab started. }}
+        {{dPointerDrag
+          onDragStart=this.didStartDrag
+          onDrag=this.dragMove
+          onDragEnd=this.didEndDrag
+          cancelCommits=true
+          bodyClass="dragging"
         }}
       >
-        {{dIcon "grip-lines"}}
+        {{dIcon "grip-vertical"}}
       </button>
       <PluginOutletDebugButton />
       <BlockDebugButton />

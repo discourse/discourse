@@ -49,6 +49,7 @@ import deprecated, { clearBacklog } from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import { resetElementClassLeasesForTesting } from "discourse/lib/element-class-lease";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -113,6 +114,7 @@ import {
 } from "discourse/tests/helpers/site-settings";
 import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
+import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
@@ -288,6 +290,8 @@ export function testCleanup(container, app) {
   _resetOutletLayoutsForTesting();
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
+  resetPointerDragForTesting();
+  resetElementClassLeasesForTesting();
   clearBacklog();
 }
 
