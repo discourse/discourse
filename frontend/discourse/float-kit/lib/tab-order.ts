@@ -33,21 +33,14 @@ interface TabStopsOptions {
 }
 
 /**
- * The state shared by one enumeration.
- *
- * Both caches exist because the same DOM reads repeat heavily within a single scan, and both are
- * expensive in the way that matters: the tabbability test forces layout, and resolving a radio
- * group queries its whole tree. Without them, a page-wide scan re-queries the tree and re-probes
- * the layout of every radio once for each radio it is asked about. A scan is created per public
- * call and thrown away with it, so no answer can outlive the layout it was measured against.
+ * The state shared by one enumeration. The caches matter because the tabbability test forces
+ * layout and resolving a radio group queries its whole tree, both repeatedly within one scan.
+ * A scan is created per public call and thrown away with it, so no answer can outlive the DOM
+ * it was measured against.
  */
 interface TabStopScan {
-  /** An element whose subtree is excluded from the enumeration, if any. */
   ignore?: HTMLElement | null;
-
   tabbable: Map<HTMLElement, boolean>;
-
-  /** Every radio in a tree, so a group is resolved from memory after the first lookup. */
   radios: Map<Node, HTMLInputElement[]>;
 }
 

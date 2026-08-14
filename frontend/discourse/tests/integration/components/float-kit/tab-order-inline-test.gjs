@@ -622,11 +622,19 @@ module(
     test("each call re-measures instead of answering from an earlier one", async function (assert) {
       await render(
         <template>
+          {{! Names unique to this test: group membership is resolved by querying the whole
+              document, so a name shared with another fixture would make the two depend on
+              teardown order. }}
           <div id="root">
-            <button id="control">control</button>
-            <input id="first-radio" type="radio" name="group" />
+            <button id="rescan-control">control</button>
+            <input id="rescan-first-radio" type="radio" name="rescan-group" />
             {{#if this.showLateRadio}}
-              <input id="late-radio" type="radio" name="group" checked />
+              <input
+                id="rescan-late-radio"
+                type="radio"
+                name="rescan-group"
+                checked
+              />
             {{/if}}
           </div>
         </template>
@@ -636,20 +644,20 @@ module(
 
       assert.deepEqual(
         tabStopsWithin(root).map((element) => element.id),
-        ["control", "first-radio"],
+        ["rescan-control", "rescan-first-radio"],
         "the unchecked group starts out represented by its first member"
       );
 
       // Both answers above are measured, not derived: tabbability comes from live layout and
       // state, and a group's representative from the radios present at the time. Reusing either
       // measurement past the call that took it would report the DOM as it used to be.
-      find("#control").tabIndex = -1;
+      find("#rescan-control").tabIndex = -1;
       this.set("showLateRadio", true);
       await settled();
 
       assert.deepEqual(
         tabStopsWithin(root).map((element) => element.id),
-        ["late-radio"],
+        ["rescan-late-radio"],
         "the opted-out control is gone and the newly checked radio represents the group"
       );
     });
