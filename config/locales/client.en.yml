@@ -402,6 +402,11 @@ en:
       move_up: "Move %{label} up"
       move_down: "Move %{label} down"
       add_item: "Add an item"
+      grab_handle: "Reorder %{label}"
+      grab_instructions: "Press Space to grab, use the arrow keys to move, press Space to drop, or Escape to cancel"
+      grabbed: "Grabbed %{label}, position %{position} of %{total}"
+      dropped: "Dropped %{label}, final position %{position} of %{total}"
+      cancelled: "Reorder cancelled, %{label} returned to position %{position}"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."

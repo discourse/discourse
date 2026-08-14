@@ -23,6 +23,7 @@ import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource, {
   DragSource,
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
@@ -30,6 +31,7 @@ import dDragAndDropTarget, {
   DropTargetEvent,
   registerDragAndDropTarget,
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -184,6 +186,8 @@ interface Row<T> {
   upLabel: string;
   downLabel: string;
   yieldControls: boolean;
+  isGrabbed: boolean;
+  grabLabel: string;
 }
 
 interface DReorderableListSignature<T> {
@@ -306,6 +310,16 @@ interface DReorderableListSignature<T> {
     arrowsLayout?: "stacked" | "inline";
 
     /**
+     * The keyboard interaction model. The default `"buttons"` renders the
+     * arrow pair on every movable row — simple and discoverable, at the cost
+     * of two tab stops per row. `"grab"` renders one grab button per row and
+     * makes the whole list a single tab stop: arrow keys move focus between
+     * rows, Space or Enter grabs, arrows then move the grabbed row, Space
+     * drops, and Escape returns it to where it was picked up.
+     */
+    keyboard?: "buttons" | "grab";
+
+    /**
      * `"reveal"` marks the list so styling can show controls only on row
      * hover or focus-within; the default keeps them always visible. The
      * controls stay in the tab order either way — reveal is presentation,
@@ -396,6 +410,42 @@ const HandlePart: TOC<HandlePartSignature> = <template>
     class="d-reorderable-list__handle"
     ...attributes
   />
+</template>;
+
+interface GrabHandlePartSignature {
+  Args: {
+    row: Row<unknown>;
+    dragType: string;
+    sourceListId: string;
+    instructionsId: string;
+    onDragStart: (event: { source: DragSource }) => void;
+    onDragEnd: () => void;
+  };
+  Element: HTMLButtonElement;
+}
+
+/**
+ * The grab-mode control: one real button per movable row, serving both input
+ * channels — pointer users drag it, keyboard users press Space on it. Its
+ * grabbed state is spoken through `aria-pressed`, and the shared instructions
+ * element it references teaches the key vocabulary.
+ */
+const GrabHandlePart: TOC<GrabHandlePartSignature> = <template>
+  <button
+    {{dDragAndDropSource
+      type=@dragType
+      data=(hash key=@row.key listId=@sourceListId)
+      onDragStart=@onDragStart
+      onDragEnd=@onDragEnd
+    }}
+    type="button"
+    class="d-reorderable-list__handle --grab btn-flat"
+    aria-label={{@row.grabLabel}}
+    aria-pressed={{if @row.isGrabbed "true" "false"}}
+    aria-describedby={{@instructionsId}}
+    title={{@row.grabLabel}}
+    ...attributes
+  >{{dIcon "grip-vertical"}}</button>
 </template>;
 
 interface ArrowsPartSignature {
@@ -660,18 +710,49 @@ export default class DReorderableList<T> extends Component<
       });
     };
   });
+  /**
+   * Intercepts the movement keys while a row is grabbed, ahead of the roving
+   * cursor's own listener: a grabbed arrow press moves the row, not the
+   * focus. Consumes nothing reactive — the grabbed key is read at event time.
+   */
+  grabKeys = modifier((element: Element) => {
+    const handler = (event: Event) => {
+      const { key } = event as KeyboardEvent;
+      if (!this._grabbedKey) {
+        return;
+      }
+      if (key === "ArrowDown" || key === "ArrowUp") {
+        event.preventDefault();
+        event.stopPropagation();
+        this.moveRow(this._grabbedKey, key === "ArrowDown" ? "down" : "up");
+        this.#refocusGrabbed();
+      } else if (key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        this.#cancelGrab();
+      }
+    };
+    element.addEventListener("keydown", handler, { capture: true });
+    return () =>
+      element.removeEventListener("keydown", handler, { capture: true });
+  });
   /** The private drag discriminator used when the list stands alone. */
   #ownDragType = `d-reorderable-list:${guidFor(this)}`;
 
   /** The keys whose arrow pair is currently rendered, for the manual guard. */
   #keyboardPathKeys = new Set<string>();
 
+  /** The grabbed row's visible index at grab time, for Escape to restore. */
+  #grabOriginIndex: number | null = null;
   /**
    * The key of the row whose drag is in flight, so every row can yield its
    * own `isDragging`. Keyed rather than held as an element or item reference,
    * because the host may replace its items mid-drag.
    */
   @tracked _draggingKey: string | null = null;
+
+  /** The key of the row currently held by the grab keyboard mode. */
+  @tracked _grabbedKey: string | null = null;
 
   constructor(owner: Owner, args: DReorderableListSignature<T>["Args"]) {
     super(owner, args);
@@ -769,6 +850,15 @@ export default class DReorderableList<T> extends Component<
     return this.args.controlsVisibility === "reveal";
   }
 
+  get isGrab(): boolean {
+    return this.args.keyboard === "grab";
+  }
+
+  /** The id linking every grab button to the shared instructions element. */
+  get instructionsId(): string {
+    return `${guidFor(this)}-grab-instructions`;
+  }
+
   /** This list's move-payload identity: its group listId, or `"default"`. */
   get listIdOrDefault(): string {
     return this.args.listId ?? "default";
@@ -819,6 +909,8 @@ export default class DReorderableList<T> extends Component<
         upLabel: i18n("reorder.move_up", { label: itemLabel }),
         downLabel: i18n("reorder.move_down", { label: itemLabel }),
         yieldControls: rowMovable && this.isManual,
+        isGrabbed: key === this._grabbedKey,
+        grabLabel: i18n("reorder.grab_handle", { label: itemLabel }),
       };
     });
 
@@ -835,6 +927,47 @@ export default class DReorderableList<T> extends Component<
     }
 
     return rows;
+  }
+
+  /**
+   * The grab toggle, invoked by the roving cursor's activation keys on a grab
+   * button. First press grabs and announces the held position; second press
+   * drops and announces the final one.
+   *
+   * @param element - The activated grab button.
+   */
+  @action
+  onGrabActivate(element: HTMLElement) {
+    const key = element
+      .closest("[data-reorderable-key]")
+      ?.getAttribute("data-reorderable-key");
+    const row = this.rows.find((candidate) => candidate.key === key);
+    if (!row?.movable) {
+      return;
+    }
+
+    if (this._grabbedKey === row.key) {
+      this._grabbedKey = null;
+      this.#grabOriginIndex = null;
+      this.a11y.announce(
+        i18n("reorder.dropped", {
+          label: this.args.label(row.item),
+          position: row.index + 1,
+          total: this.rows.length,
+        })
+      );
+      return;
+    }
+
+    this._grabbedKey = row.key;
+    this.#grabOriginIndex = row.index;
+    this.a11y.announce(
+      i18n("reorder.grabbed", {
+        label: this.args.label(row.item),
+        position: row.index + 1,
+        total: this.rows.length,
+      })
+    );
   }
 
   @action
@@ -970,8 +1103,31 @@ export default class DReorderableList<T> extends Component<
     from: number,
     to: number
   ) {
+    const move = this.#buildSeqMove(method, rows, seq, from, to);
+    if (move) {
+      this.#finalize(move);
+    }
+  }
+
+  /**
+   * Builds the normalized move for one step within the movable subsequence,
+   * or `null` for a no-op.
+   *
+   * @param method - Which input method asked for the move.
+   * @param rows - The current row projection.
+   * @param seq - The movable rows, in visible order.
+   * @param from - The item's index within `seq`.
+   * @param to - The destination index within `seq`.
+   */
+  #buildSeqMove(
+    method: ReorderableMove<T>["method"],
+    rows: Row<T>[],
+    seq: Row<T>[],
+    from: number,
+    to: number
+  ): ReorderableMove<T> | null {
     if (to === from) {
-      return;
+      return null;
     }
 
     const moved = seq[from]!;
@@ -989,7 +1145,7 @@ export default class DReorderableList<T> extends Component<
 
     const { items } = this.args;
     const listId = this.listIdOrDefault;
-    this.#finalize({
+    return {
       method,
       item: moved.item,
       fromList: listId,
@@ -1000,7 +1156,7 @@ export default class DReorderableList<T> extends Component<
       toItems: items,
       proposedFromItems: proposed,
       proposedToItems: proposed,
-    });
+    };
   }
 
   /**
@@ -1078,8 +1234,7 @@ export default class DReorderableList<T> extends Component<
    * @param move - The normalized move to report.
    */
   #finalize(move: ReorderableMove<T>) {
-    const handler = this.args.group?.onMove ?? this.args.onMove;
-    if (handler?.(move) === false) {
+    if (!this.#dispatch(move)) {
       return;
     }
 
@@ -1109,6 +1264,75 @@ export default class DReorderableList<T> extends Component<
     this.a11y.announce(message);
   }
 
+  /**
+   * Reports a move to its callback owner — the group when the list is a
+   * member, its own `@onMove` otherwise.
+   *
+   * @param move - The normalized move.
+   * @returns Whether the move may be announced (`false` when vetoed).
+   */
+  #dispatch(move: ReorderableMove<T>): boolean {
+    const handler = this.args.group?.onMove ?? this.args.onMove;
+    return handler?.(move) !== false;
+  }
+
+  /**
+   * Escape while grabbed: one restoring commit back to the grab-start index
+   * when the row has moved (reported but not given the standard step
+   * announcement — the cancellation is the announcement), then the cleared
+   * state.
+   */
+  #cancelGrab() {
+    const key = this._grabbedKey;
+    const origin = this.#grabOriginIndex;
+    this._grabbedKey = null;
+    this.#grabOriginIndex = null;
+
+    const rows = this.rows;
+    const row = rows.find((candidate) => candidate.key === key);
+    if (!row?.movable || origin == null) {
+      return;
+    }
+
+    if (row.index !== origin) {
+      const seq = rows.filter((candidate) => candidate.movable);
+      const movableSlots = seq.map((candidate) => candidate.index);
+      const from = seq.indexOf(row);
+      const to = movableSlots.indexOf(origin);
+      const move = this.#buildSeqMove("buttons", rows, seq, from, to);
+      if (move) {
+        this.#dispatch(move);
+      }
+    }
+
+    this.a11y.announce(
+      i18n("reorder.cancelled", {
+        label: this.args.label(row.item),
+        position: origin + 1,
+      })
+    );
+    this.#refocusGrabbed(key);
+  }
+
+  /**
+   * Takes focus back to a grab button after its row moved in the DOM, which
+   * blurs it — the grab mode's counterpart of the arrow pair's own refocus.
+   *
+   * @param key - The row key to refocus; defaults to the grabbed row.
+   */
+  #refocusGrabbed(key: string | null = this._grabbedKey) {
+    schedule("afterRender", () => {
+      if (isDestroying(this) || isDestroyed(this) || !key) {
+        return;
+      }
+      document
+        .querySelector<HTMLElement>(
+          `[data-reorderable-key="${key}"] .d-reorderable-list__handle.--grab`
+        )
+        ?.focus();
+    });
+  }
+
   <template>
     {{#let (dElement this.listTag) as |List|}}
       <List
@@ -1118,8 +1342,20 @@ export default class DReorderableList<T> extends Component<
         }}
         role={{@role}}
         {{this.rootDropTarget}}
+        {{dRovingFocus
+          itemSelector=".d-reorderable-list__handle.--grab"
+          orientation="vertical"
+          itemsKey=this.rows
+          onActivate=this.onGrabActivate
+        }}
+        {{this.grabKeys}}
         ...attributes
       >
+        {{#if this.isGrab}}
+          <span id={{this.instructionsId}} class="sr-only">
+            {{i18n "reorder.grab_instructions"}}
+          </span>
+        {{/if}}
         {{yield to="header"}}
         {{#if this.rows.length}}
           {{#let (dElement this.itemTag) as |Item|}}
@@ -1133,6 +1369,7 @@ export default class DReorderableList<T> extends Component<
                 <Item
                   class={{dConcatClass
                     "d-reorderable-list__row"
+                    (if row.isGrabbed "--grabbed")
                     (this.rowClassFor row)
                   }}
                   role={{@itemRole}}
@@ -1145,16 +1382,27 @@ export default class DReorderableList<T> extends Component<
                   {{this.trackRowDragState}}
                 >
                   {{#if (eq this.controlsPlacement "start")}}
-                    <ReorderControls
-                      @row={{row}}
-                      @dragType={{this.dragType}}
-                      @sourceListId={{this.listIdOrDefault}}
-                      @arrowsLayout={{@arrowsLayout}}
-                      @onDragStart={{this.onSourceDragStart}}
-                      @onDragEnd={{this.onSourceDragEnd}}
-                      @moveRow={{this.moveRow}}
-                      @register={{this.registerKeyboardPath}}
-                    />
+                    {{#if this.isGrab}}
+                      <GrabHandlePart
+                        @row={{row}}
+                        @dragType={{this.dragType}}
+                        @sourceListId={{this.listIdOrDefault}}
+                        @instructionsId={{this.instructionsId}}
+                        @onDragStart={{this.onSourceDragStart}}
+                        @onDragEnd={{this.onSourceDragEnd}}
+                      />
+                    {{else}}
+                      <ReorderControls
+                        @row={{row}}
+                        @dragType={{this.dragType}}
+                        @sourceListId={{this.listIdOrDefault}}
+                        @arrowsLayout={{@arrowsLayout}}
+                        @onDragStart={{this.onSourceDragStart}}
+                        @onDragEnd={{this.onSourceDragEnd}}
+                        @moveRow={{this.moveRow}}
+                        @register={{this.registerKeyboardPath}}
+                      />
+                    {{/if}}
                   {{/if}}
                   {{yield
                     row.item
@@ -1202,16 +1450,27 @@ export default class DReorderableList<T> extends Component<
                     )
                   }}
                   {{#if (eq this.controlsPlacement "end")}}
-                    <ReorderControls
-                      @row={{row}}
-                      @dragType={{this.dragType}}
-                      @sourceListId={{this.listIdOrDefault}}
-                      @arrowsLayout={{@arrowsLayout}}
-                      @onDragStart={{this.onSourceDragStart}}
-                      @onDragEnd={{this.onSourceDragEnd}}
-                      @moveRow={{this.moveRow}}
-                      @register={{this.registerKeyboardPath}}
-                    />
+                    {{#if this.isGrab}}
+                      <GrabHandlePart
+                        @row={{row}}
+                        @dragType={{this.dragType}}
+                        @sourceListId={{this.listIdOrDefault}}
+                        @instructionsId={{this.instructionsId}}
+                        @onDragStart={{this.onSourceDragStart}}
+                        @onDragEnd={{this.onSourceDragEnd}}
+                      />
+                    {{else}}
+                      <ReorderControls
+                        @row={{row}}
+                        @dragType={{this.dragType}}
+                        @sourceListId={{this.listIdOrDefault}}
+                        @arrowsLayout={{@arrowsLayout}}
+                        @onDragStart={{this.onSourceDragStart}}
+                        @onDragEnd={{this.onSourceDragEnd}}
+                        @moveRow={{this.moveRow}}
+                        @register={{this.registerKeyboardPath}}
+                      />
+                    {{/if}}
                   {{/if}}
                 </Item>
               {{else}}
