@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseEvents::SiteSettings::EventCustomFieldsValidator do
+describe DiscourseEvents::Configuration::EventCustomFieldsValidator do
   def expect_invalid(val)
     expect(subject.valid_value?(val)).to eq(false)
     expect(subject.error_message).to be_present

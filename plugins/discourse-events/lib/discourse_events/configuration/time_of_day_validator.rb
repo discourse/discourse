@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseEvents
-  module SiteSettings
+  module Configuration
     class TimeOfDayValidator
       def initialize(opts = {})
         @opts = opts
