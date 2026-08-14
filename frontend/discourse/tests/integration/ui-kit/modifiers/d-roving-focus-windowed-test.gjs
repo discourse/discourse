@@ -303,7 +303,7 @@ module(
       );
     });
 
-    test("Home, End, and horizontal keys do not fire onBoundary", async function (assert) {
+    test("Home and End stay silent while horizontal edges fire onBoundary", async function (assert) {
       const boundaries = [];
       const onBoundary = (direction, axis) =>
         boundaries.push(`${axis}:${direction}`);
@@ -884,6 +884,11 @@ module(
         prevented.End,
         "an unserviceable jump falls through instead of becoming a dead key"
       );
+      assert
+        .dom('[data-index="105"]')
+        .isFocused(
+          "an unserviceable End leaves the cursor on its mounted starting row"
+        );
     });
 
     test("focusLogicalIndex refuses an out-of-range index on an unstamped group", async function (assert) {

@@ -170,6 +170,36 @@ module(
       assert.false(event.defaultPrevented, "and it is not consumed");
     });
 
+    test("an unmatched character leaves the cursor and native key behavior alone", async function (assert) {
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector=".item"
+              typeAhead=true
+            }}
+          >
+            <button class="item a" role="option" aria-label="Apple">1</button>
+            <button class="item b" role="option" aria-label="Banana">2</button>
+          </div>
+        </template>
+      );
+
+      await focus(".a");
+      const event = pressKey(".a", "z");
+      await settled();
+
+      assert
+        .dom(".a")
+        .isFocused("a query with no match leaves the reader's cursor in place");
+      assert.false(
+        event.defaultPrevented,
+        "a failed match leaves the character available to native behavior"
+      );
+    });
+
     test("AltGr still types, since it sets both ctrlKey and altKey", async function (assert) {
       await render(
         <template>
@@ -201,7 +231,9 @@ module(
 
     test("Space activates on an empty query and extends a started one", async function (assert) {
       const activated = [];
+      const visited = [];
       const onActivate = (item) => activated.push(item.className);
+      const onActiveChange = (item) => visited.push(item.dataset.name);
 
       await render(
         <template>
@@ -212,12 +244,24 @@ module(
               itemSelector=".item"
               typeAhead=true
               onActivate=onActivate
+              onActiveChange=onActiveChange
             }}
           >
             <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Apple pie">
+            <button
+              class="item b"
+              role="option"
+              aria-label="Ap pie"
+              data-name="Ap pie"
+            >
               2
             </button>
+            <button
+              class="item pear"
+              role="option"
+              aria-label="Pear"
+              data-name="Pear"
+            >3</button>
           </div>
         </template>
       );
@@ -232,14 +276,20 @@ module(
       );
 
       pressKey(".a", "a");
-      pressKey(".a", "p");
-      pressKey(".a", " ");
-      pressKey(".a", "p");
+      pressKey(".b", "p");
+      pressKey(".b", " ");
+      pressKey(".b", "p");
       await settled();
 
       assert
-        .dom(document.activeElement)
-        .hasClass("b", "mid-query it is a character like any other");
+        .dom('[aria-label="Ap pie"]')
+        .isFocused(
+          "mid-query Space stays a character and keeps the full match"
+        );
+      assert.false(
+        visited.includes("Pear"),
+        "preserving the buffer keeps a fresh p query from wrapping onto Pear"
+      );
       assert.deepEqual(
         activated,
         ["item a"],
@@ -520,6 +570,101 @@ module(
           "--active",
           "repeating the character still cycles to the next match"
         );
+    });
+
+    test("an active-mode hit on the current row is reannounced", async function (assert) {
+      await render(
+        <template>
+          <div
+            class="controller"
+            role="combobox"
+            tabindex="0"
+            aria-controls="ta-lb"
+          ></div>
+          <div
+            id="ta-lb"
+            role="listbox"
+            {{dRovingFocus
+              focusStrategy="active-descendant"
+              controllerElement=".controller"
+              itemSelector=".item"
+              activeClass="--active"
+              entryFocus="first"
+              typeAhead=true
+            }}
+          >
+            <button class="item a" role="option" aria-label="Apple">1</button>
+            <button class="item b" role="option" aria-label="Banana">2</button>
+          </div>
+        </template>
+      );
+
+      const activeId = document.querySelector(".a").id;
+      pressKey(".controller", "a");
+
+      assert
+        .dom(".controller")
+        .doesNotHaveAttribute(
+          "aria-activedescendant",
+          "matching the current row briefly drops the cursor so it can be announced again"
+        );
+
+      await settled();
+
+      assert
+        .dom(".a")
+        .hasClass("--active", "reannouncing does not move the highlight");
+      assert
+        .dom(".controller")
+        .hasAttribute(
+          "aria-activedescendant",
+          activeId,
+          "the runloop restores the cursor to the same matching row"
+        );
+    });
+
+    test("an editable active-mode controller keeps printable characters", async function (assert) {
+      await render(
+        <template>
+          <input class="controller" role="combobox" aria-controls="ta-lb" />
+          <div
+            id="ta-lb"
+            role="listbox"
+            {{dRovingFocus
+              focusStrategy="active-descendant"
+              controllerElement=".controller"
+              itemSelector=".item"
+              activeClass="--active"
+              entryFocus="first"
+              typeAhead=true
+            }}
+          >
+            <button class="item a" role="option" aria-label="Apple">1</button>
+            <button class="item b" role="option" aria-label="Banana">2</button>
+          </div>
+        </template>
+      );
+
+      await focus(".controller");
+      const event = pressKey(".controller", "b");
+      await settled();
+
+      assert
+        .dom(".a")
+        .hasClass(
+          "--active",
+          "the input's character does not move the listbox highlight"
+        );
+      assert
+        .dom(".b")
+        .doesNotHaveClass(
+          "--active",
+          "a matching row cannot claim text meant for the input"
+        );
+      assert.false(
+        event.defaultPrevented,
+        "the printable character remains available to the editable controller"
+      );
     });
 
     test("a failed accessible-name load is retried by a later configure", async function (assert) {
