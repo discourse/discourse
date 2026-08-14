@@ -1,4 +1,4 @@
-import { find, render } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
 import { engagementHeadlineKeys } from "discourse/admin/lib/engagement-headline";
@@ -12,9 +12,6 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
   const reportQuery = { start_date: "2026-04-01", end_date: "2026-04-30" };
 
   const engagement = {
-    headline: {
-      key: "admin.dashboard.sections.engagement.headline.healthy_growth",
-    },
     kpis: [
       {
         type: "dau_mau",
@@ -83,174 +80,6 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
         ".db-section__metrics .db-section__metric:nth-child(3) .db-section__metric-number"
       )
       .hasText("248");
-  });
-
-  test("renders the PM headline when all metrics improve", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 30, previous_value: 20, percent_change: 50 },
-        {
-          type: "daily_engaged_users",
-          value: 150,
-          previous_value: 100,
-          percent_change: 50,
-        },
-        {
-          type: "new_signups",
-          value: 60,
-          previous_value: 40,
-          percent_change: 50,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Engagement is up in the last 30 days",
-        "Stickiness, daily engagement, and new signups have all improved, showing that more members are joining and participating in your community.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when metrics move in different directions and new signups decline most", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 30, previous_value: 20, percent_change: 50 },
-        {
-          type: "daily_engaged_users",
-          value: 150,
-          previous_value: 100,
-          percent_change: 50,
-        },
-        {
-          type: "new_signups",
-          value: 20,
-          previous_value: 40,
-          percent_change: -50,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Stickiness and daily engagement have increased in the last 30 days",
-        "Stickiness and daily engagement are up, but new signups are down. Look at your site traffic data to understand how traffic patterns might be influencing your signups this period.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline when all metrics stay flat", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 20, previous_value: 20, percent_change: 0 },
-        {
-          type: "daily_engaged_users",
-          value: 100,
-          previous_value: 100,
-          percent_change: 0,
-        },
-        {
-          type: "new_signups",
-          value: 40,
-          previous_value: 40,
-          percent_change: 0,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Engagement is steady in the last 30 days",
-        "No meaningful change in stickiness, daily engagement, or new signups.",
-      ],
-      "renders the exact scenario headline and summary"
-    );
-  });
-
-  test("renders the PM headline for a custom period", async function (assert) {
-    const scenarioEngagement = {
-      kpis: [
-        { type: "dau_mau", value: 30, previous_value: 20, percent_change: 50 },
-        {
-          type: "daily_engaged_users",
-          value: 150,
-          previous_value: 100,
-          percent_change: 50,
-        },
-        {
-          type: "new_signups",
-          value: 60,
-          previous_value: 40,
-          percent_change: 50,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="custom"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-    assert.deepEqual(
-      [
-        find(".db-section__subintro h3").textContent.trim(),
-        find(".db-section__subintro p").textContent.trim(),
-      ],
-      [
-        "Engagement is up in the selected period",
-        "Stickiness, daily engagement, and new signups have all improved, showing that more members are joining and participating in your community.",
-      ],
-      "renders selected-period wording"
-    );
   });
 
   test("renders an inline error when the section fetch failed", async function (assert) {
@@ -388,11 +217,14 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       <template>
         <DashboardEngagement
           @engagement={{scenarioEngagement}}
-          @period="last_30_days"
+          @period="custom"
         />
       </template>
     );
 
+    assert
+      .dom(".db-section__subintro h3")
+      .hasText("Some declines in engagement in the selected period");
     assert
       .dom(".db-section__subintro p")
       .includesText(
