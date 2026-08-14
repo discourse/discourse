@@ -2723,6 +2723,46 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     );
   });
 
+  test("focus mode: a removal declined by the opt-out is forgotten, not deferred", async function (assert) {
+    const state = new (class {
+      @tracked items = ["a", "b", "c"];
+      @tracked itemsKey = 0;
+      @tracked restore = false;
+    })();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            itemSelector="[role=option]"
+            itemsKey=state.itemsKey
+            restoreLostFocus=state.restore
+          }}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-b");
+    state.items = state.items.filter((item) => item !== "b");
+    state.itemsKey++;
+    await settled();
+
+    state.restore = true;
+    state.itemsKey++;
+    await settled();
+
+    assert.strictEqual(
+      document.activeElement,
+      document.body,
+      "enabling restoration later must not act on a removal that was declined at the time"
+    );
+  });
+
   test("focus mode: removing the focused last item falls back to the previous one", async function (assert) {
     const state = new RemovableItems();
 

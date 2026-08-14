@@ -708,6 +708,7 @@ module(
         {
           editableController: false,
           logicalCount: undefined,
+          mountedCount: () => 2,
           items: () => [apple, banana],
           currentIndex: () => -1,
           activate: (item) => activated.push(item),
@@ -719,6 +720,63 @@ module(
         activated,
         [banana],
         "the retried namer serves the search"
+      );
+    });
+
+    test("typing itself retries a failed name load", async function (assert) {
+      const loads = [];
+      let outcome = "reject";
+      const namer = (element) => element.dataset.name ?? "";
+      const loader = () => {
+        const promise =
+          outcome === "reject"
+            ? Promise.reject(new Error("simulated chunk failure"))
+            : Promise.resolve(namer);
+        loads.push(promise);
+        return promise;
+      };
+      const typeAhead = new TypeAhead(loader);
+
+      typeAhead.configure(true);
+      await settled();
+      assert.strictEqual(loads.length, 1, "the configure-time load failed");
+
+      const apple = document.createElement("button");
+      apple.dataset.name = "Apple";
+      const banana = document.createElement("button");
+      banana.dataset.name = "Banana";
+      const activated = [];
+      const context = {
+        editableController: false,
+        logicalCount: undefined,
+        mountedCount: () => 2,
+        items: () => [apple, banana],
+        currentIndex: () => -1,
+        activate: (item) => activated.push(item),
+        reannounce: () => {},
+        warnWindowed: () => {},
+      };
+
+      outcome = "resolve";
+      typeAhead.handle(
+        new KeyboardEvent("keydown", { key: "b", cancelable: true }),
+        context
+      );
+      assert.strictEqual(
+        loads.length,
+        2,
+        "a group that never reconfigures still recovers, because typing is the retry"
+      );
+      await settled();
+
+      typeAhead.handle(
+        new KeyboardEvent("keydown", { key: "b", cancelable: true }),
+        context
+      );
+      assert.deepEqual(
+        activated,
+        [banana],
+        "the keystroke after recovery searches normally"
       );
     });
   }
