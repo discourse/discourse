@@ -170,7 +170,7 @@ export default class DIconGridPicker extends Component {
       >
         <:trigger>
           {{#if @value}}
-            {{dIcon @value}}
+            {{dIcon @value ignoreMissing=true}}
           {{/if}}
 
           {{#if this.triggerLabel}}

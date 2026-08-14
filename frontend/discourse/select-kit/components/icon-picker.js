@@ -3,22 +3,21 @@ import { classNames } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse/lib/deprecated";
 import { makeArray } from "discourse/lib/helpers";
-import {
-  convertIconClass,
-  suppressMissingIconWarnings,
-} from "discourse/lib/icon-library";
+import { convertIconClass } from "discourse/lib/icon-library";
 import { addExtraSpriteSymbols } from "discourse/lib/svg-sprite-loader";
 import FilterForMore from "discourse/select-kit/components/filter-for-more";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
   MAIN_COLLECTION,
   pluginApiIdentifiers,
+  selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 
 const MORE_ICONS_COLLECTION = "MORE_ICONS_COLLECTION";
 
 @classNames("icon-picker")
 @pluginApiIdentifiers("icon-picker")
+@selectKitOptions({ ignoreMissingIcons: true })
 export default class IconPicker extends MultiSelectComponent {
   init() {
     super.init(...arguments);
@@ -31,8 +30,6 @@ export default class IconPicker extends MultiSelectComponent {
     this._cachedIconsList = null;
     this._cachedHasMore = false;
     this._hasMore = false;
-
-    suppressMissingIconWarnings(this);
 
     this.insertAfterCollection(MAIN_COLLECTION, MORE_ICONS_COLLECTION);
   }

@@ -11,10 +11,7 @@ import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import {
-  suppressMissingIconWarnings,
-  SVG_NAMESPACE,
-} from "discourse/lib/icon-library";
+import { SVG_NAMESPACE } from "discourse/lib/icon-library";
 import { addExtraSpriteSymbols } from "discourse/lib/svg-sprite-loader";
 import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
@@ -68,7 +65,7 @@ class IconButton extends Component {
       {{on "click" (fn @onSelect @icon)}}
     >
       {{this.symbol}}
-      {{dIcon @icon.id}}
+      {{dIcon @icon.id ignoreMissing=true}}
     </button>
   </template>
 }
@@ -180,11 +177,6 @@ export default class DIconGridPickerContent extends Component {
   #search = 0;
 
   #page = 0;
-
-  constructor(owner, args) {
-    super(owner, args);
-    suppressMissingIconWarnings(this);
-  }
 
   /**
    * Returns the list of favorite icon IDs to display, with the currently
@@ -537,7 +529,7 @@ export default class DIconGridPickerContent extends Component {
                   {{this.snapToGrid}}
                   {{on "click" (fn this.selectIcon (hash id=favIcon))}}
                 >
-                  {{dIcon favIcon}}
+                  {{dIcon favIcon ignoreMissing=true}}
                   {{#if @showSelectedName}}
                     <span
                       class="d-icon-grid-picker__selected-name"

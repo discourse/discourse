@@ -1,4 +1,3 @@
-import { registerDestructor } from "@ember/destroyable";
 import deprecated from "discourse/lib/deprecated";
 import { isDevelopment } from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
@@ -7,7 +6,6 @@ import { i18n } from "discourse-i18n";
 export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
 
-let missingIconSuppressions = 0;
 let _iconList;
 
 export const REPLACEMENTS = {
@@ -63,31 +61,6 @@ export function replaceIcon(source, destination) {
   REPLACEMENTS[source] = destination;
 }
 
-export function disableMissingIconWarning() {
-  missingIconSuppressions++;
-}
-
-export function enableMissingIconWarning() {
-  missingIconSuppressions = Math.max(0, missingIconSuppressions - 1);
-}
-
-/**
- * Suppresses dev-mode missing-icon warnings for the lifetime of a component
- * that knowingly renders icons the sprite may not bundle (e.g. a picker
- * browsing the full catalog). Suppressions are counted, so overlapping
- * components do not re-enable warnings out from under each other.
- *
- * @param {object} owner - A destroyable (component) the suppression is tied to.
- */
-export function suppressMissingIconWarnings(owner) {
-  if (!isDevelopment()) {
-    return;
-  }
-
-  disableMissingIconWarning();
-  registerDestructor(owner, enableMissingIconWarning);
-}
-
 export function renderIcon(renderType, id, params) {
   params ||= {};
 
@@ -106,6 +79,12 @@ export function renderIcon(renderType, id, params) {
   }
 }
 
+/**
+ * @param {string} id - The icon id.
+ * @param {object} [params] - Options passed to the icon renderer. Set
+ *   `ignoreMissing` where the icon is knowingly outside the sprite subset, to
+ *   skip the development-mode missing-icon warning.
+ */
 export function iconHTML(id, params) {
   return renderIcon("string", id, params);
 }
@@ -150,22 +129,21 @@ export function isExistingIconId(id) {
 }
 
 function warnIfMissing(id) {
-  if (
-    missingIconSuppressions === 0 &&
-    isDevelopment() &&
-    !isExistingIconId(id)
-  ) {
+  if (isDevelopment() && !isExistingIconId(id)) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }
 
-function handleIconId(icon) {
+function handleIconId(icon, params) {
   let id = icon.replacementId || icon.id || "";
 
   // TODO: clean up "thumbtack unpinned" at source instead of here
   id = id.replace(" unpinned", "");
 
-  warnIfMissing(id);
+  if (!params.ignoreMissing) {
+    warnIfMissing(id);
+  }
+
   return id;
 }
 
@@ -174,7 +152,7 @@ registerIconRenderer({
   name: "font-awesome",
 
   string(icon, params) {
-    const id = escape(handleIconId(icon));
+    const id = escape(handleIconId(icon, params));
     let html = `<svg class='${escape(iconClasses(icon, params))} svg-string' width='1em' height='1em'`;
 
     if (params["aria-label"]) {
@@ -209,7 +187,7 @@ registerIconRenderer({
   },
 
   element(icon, params) {
-    const id = escape(handleIconId(icon));
+    const id = escape(handleIconId(icon, params));
     const classes = iconClasses(icon, params) + " svg-node";
 
     const svgElement = document.createElementNS(SVG_NAMESPACE, "svg");
