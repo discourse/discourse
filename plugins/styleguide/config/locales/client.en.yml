@@ -39,6 +39,52 @@ en:
           title: "Multi select"
         reorderable_list:
           title: "Reorderable list"
+          groups:
+            aria_label: "Reorderable list example groups"
+            start:
+              title: "Start here"
+              description: "The two keyboard modes: the grab composite every surface gets by default, and the arrows-only opt-out for lists that cannot hold a grab."
+            policies:
+              title: "Row policies"
+              description: "Which rows may move and when the controls show: pinned rows that keep their slot, wrap-around at the ends, and reveal visibility."
+            content:
+              title: "Interactive row content"
+              description: "Rows carrying their own live controls — toggles, inputs, remove buttons — plus static bystander rows and inline creation. The list only claims the grips; everything else keeps its normal focus and clicks."
+            layouts:
+              title: "Cell layouts"
+              description: "Manual placement for table-shaped rows: the list renders the rows, and the pre-wired controls go wherever a cell needs them."
+            groups:
+              title: "Multiple lists"
+              description: "Lists registered under one group accept each other's rows by drag, with arrows staying within a list."
+          description: "Interactive examples of DReorderableList: dragging, the grab keyboard composite, pointer arrow buttons, pinned rows, cross-list groups, and inline creation."
+          basic_example: "Default list"
+          basic_description: "The out-of-the-box shell: one composite tab stop per list. Each row has a grab button that also serves as the drag grip, the arrow keys move focus between rows, Space grabs and drops, and the arrow pair stays clickable as the no-drag pointer path without adding tab stops. Every real move announces the new position."
+          basic_try_this: "Tab to a grip, press Space, move the row with the arrow keys, then press Space to drop it. Or just drag the grip, or click an arrow."
+          policies_example: "Pinned row, wrap, revealed inline arrows"
+          policies_description: "A row the movable predicate excludes renders no controls and keeps its exact slot, wherever it sits — this list pins its first and last rows. Wrap keeps the boundary arrows live: up on the first movable row carries it to the last movable slot, hopping over the pinned ends. Reveal visibility hides the arrow pair until the row is hovered or focused (a touch screen keeps it visible), while the grip stays as the persistent reorder affordance."
+          policies_try_this: "Hover a movable row to reveal its arrows, then press up on the first movable row and watch it wrap to the last movable slot. Neither pinned row ever moves."
+          toggles_example: "Rows with toggles and static bystanders"
+          toggles_description: "The admin-dashboard pattern: rows carry their own interactive controls, which keep their normal focus and clicks — the list only claims the grips. Rows toggled off drop into the static block below the order: still rendered, but uncounted and without controls."
+          toggles_try_this: "Turn a toggle off and the row falls out of the order; turn it back on to make it reorderable again. Reorder the rows above — the announced totals never count the static ones."
+          editable_example: "Editable rows"
+          editable_description: "The settings value-list pattern with stable identity: an input and a remove button per row, the grip leading and the arrows trailing via split placement. Typing stays in the input; the roving cursor keeps its remembered row."
+          editable_try_this: "Edit a value, then click a row's blank area — the cursor lands on that row's grip. Announcements read the value as it is at that moment."
+          table_example: "Native table rows, manual placement"
+          table_description: "Manual placement for cell layouts: the list renders the table body and its rows, and yields pre-wired controls for the row to place — here the fused pair occupies the first column."
+          table_try_this: "Drag a grip or click an arrow: the reorder controls live in the first cell and the whole row moves."
+          table_field: "Field"
+          table_type: "Type"
+          buttons_example: "Buttons keyboard mode"
+          buttons_description: "The opt-out for lists that cannot hold a grab: items without stable identity (index-keyed value lists), or surfaces whose only controls are the arrows. The handle is decorative and every arrow is a labeled tab stop."
+          buttons_try_this: "Tab through the list: each arrow button is focusable and announces its own item and direction."
+          cross_list_example: "Cross-list drag"
+          cross_list_description: "Lists registered under one group accept each other's rows. Arrows stay within a list; dragging is the cross-list path, and an emptied list keeps accepting drops."
+          cross_list_try_this: "Drag a row from Primary and drop it between two rows of Secondary."
+          cross_list_primary: "Primary"
+          cross_list_secondary: "Secondary"
+          create_example: "Create affordance"
+          create_description: "With create enabled the list renders an input after the rows, so appending belongs to the same component that reorders."
+          create_try_this: "Type a fruit name and press Enter."
         toasts:
           title: "Toasts"
         font_scale:

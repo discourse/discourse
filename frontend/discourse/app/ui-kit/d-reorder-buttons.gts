@@ -57,6 +57,14 @@ interface DReorderButtonsSignature {
      * stacked.
      */
     layout?: "stacked" | "inline";
+
+    /**
+     * Tab-order participation for both buttons, forwarded as their `tabindex`
+     * attribute. A composite list whose keyboard path is a roving grab button
+     * passes `"-1"` here, keeping the pair pointer-operable without adding
+     * tab stops; omitted, the buttons keep their natural tab order.
+     */
+    tabindex?: string;
   };
   Element: HTMLSpanElement;
 }
@@ -178,6 +186,7 @@ export default class DReorderButtons extends Component<DReorderButtonsSignature>
         @translatedAriaLabel={{@upLabel}}
         @translatedTitle={{@upLabel}}
         aria-disabled={{if @disableUp "true"}}
+        tabindex={{@tabindex}}
         class="btn-flat d-reorder-buttons__button"
       />
       <DButton
@@ -187,6 +196,7 @@ export default class DReorderButtons extends Component<DReorderButtonsSignature>
         @translatedAriaLabel={{@downLabel}}
         @translatedTitle={{@downLabel}}
         aria-disabled={{if @disableDown "true"}}
+        tabindex={{@tabindex}}
         class="btn-flat d-reorder-buttons__button"
       />
     </span>

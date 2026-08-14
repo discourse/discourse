@@ -96,6 +96,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="identity.value"
           @label={{label}}
@@ -224,6 +225,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -256,7 +258,12 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
-        <DReorderableList @items={{items}} @label={{label}} @onMove={{noop}}>
+        <DReorderableList
+          @keyboard="buttons"
+          @items={{items}}
+          @label={{label}}
+          @onMove={{noop}}
+        >
           <:header><li data-slot="header">Header</li></:header>
           <:default as |item|><span
               data-test-item={{item}}
@@ -286,6 +293,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -333,6 +341,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -344,6 +353,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
             data-test-item={{item.id}}
           >{{item.name}}</span></DReorderableList>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -383,6 +393,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -418,6 +429,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -449,6 +461,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -492,6 +505,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -574,6 +588,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -620,6 +635,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -655,6 +671,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -714,6 +731,40 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     );
   });
 
+  test("a frozen last row keeps its slot through wrapped moves", async function (assert) {
+    const items = objectItems();
+    const frozenItem = items.at(-1);
+    const movable = (item) => item !== frozenItem;
+    const moves = [];
+    const onMove = (move) => moves.push(move);
+
+    await render(
+      <template>
+        <DReorderableList
+          @keyboard="buttons"
+          @items={{items}}
+          @key="id"
+          @label={{label}}
+          @onMove={{onMove}}
+          @movable={{movable}}
+          @wrap={{true}}
+          as |item|
+        ><span
+            data-test-item={{item.id}}
+          >{{item.name}}</span></DReorderableList>
+      </template>
+    );
+
+    await click(assertArrowReady(assert, items[1].id, "down"));
+
+    assert.strictEqual(moves.length, 1, "the wrapped press commits once");
+    assert.deepEqual(
+      moves[0].proposedToItems,
+      [items[1], items[0], frozenItem],
+      "the last movable row wraps to the first movable slot and the frozen last row keeps its slot"
+    );
+  });
+
   test("button moves emit the exact move payload and one default announcement", async function (assert) {
     const items = objectItems();
     const moves = [];
@@ -723,6 +774,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -793,6 +845,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -840,6 +893,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -876,6 +930,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -916,6 +971,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -956,6 +1012,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -1028,6 +1085,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -1068,6 +1126,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key="id"
           @label={{label}}
@@ -1116,6 +1175,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{state.items}}
           @key="id"
           @label={{label}}
@@ -1223,6 +1283,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{firstItems}}
           @key="id"
           @label={{label}}
@@ -1233,6 +1294,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
             data-test-item={{item.id}}
           >{{item.name}}</span></DReorderableList>
         <DReorderableList
+          @keyboard="buttons"
           @items={{secondItems}}
           @key="id"
           @label={{label}}
@@ -1284,6 +1346,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -1311,6 +1374,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{items}}
           @key={{indexKey}}
           @label={{label}}
@@ -1343,6 +1407,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await render(
       <template>
         <DReorderableList
+          @keyboard="buttons"
           @items={{state.items}}
           @label={{label}}
           @onMove={{noop}}
@@ -1403,6 +1468,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -1442,6 +1508,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -1462,6 +1529,7 @@ module(
           </DReorderableList>
 
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -1478,6 +1546,7 @@ module(
           </DReorderableList>
 
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -1557,6 +1626,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -1717,6 +1787,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -1759,6 +1830,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -1827,6 +1899,7 @@ module(
         await render(
           <template>
             <DReorderableList
+              @keyboard="buttons"
               @items={{items}}
               @key="id"
               @label={{label}}
@@ -1897,6 +1970,7 @@ module(
         await render(
           <template>
             <DReorderableList
+              @keyboard="buttons"
               @items={{items}}
               @key="id"
               @label={{label}}
@@ -1931,6 +2005,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -1994,6 +2069,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -2044,6 +2120,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -2092,6 +2169,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -2118,6 +2196,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @key="id"
             @label={{label}}
@@ -2160,6 +2239,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{items}}
             @label={{label}}
             @onMove={{noop}}
@@ -2200,6 +2280,7 @@ module(
       await render(
         <template>
           <DReorderableList
+            @keyboard="buttons"
             @items={{state.items}}
             @key="id"
             @label={{label}}
@@ -2250,6 +2331,109 @@ module(
           "a reinserted row does not inherit its removed drag's key state"
         );
     });
+
+    test("split placement renders the handle first and the arrows last", async function (assert) {
+      const items = objectItems();
+      const frozenItem = items[1];
+      const movable = (item) => item !== frozenItem;
+      const commits = [];
+      const onMove = (move) => commits.push(move.toIndex);
+
+      await render(
+        <template>
+          <DReorderableList
+            @keyboard="buttons"
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @movable={{movable}}
+            @controls="split"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const row = find(rowSelector(items[0].id));
+      assert.true(
+        row.firstElementChild.classList.contains("d-reorderable-list__handle"),
+        "the split row starts with the drag handle"
+      );
+      assert.true(
+        row.lastElementChild.classList.contains("d-reorderable-list__arrows"),
+        "the split row ends with the arrow pair"
+      );
+      assert
+        .dom(`${rowSelector(items[0].id)} .d-reorderable-list__handle`)
+        .exists({ count: 1 }, "the split row renders exactly one handle");
+      assert
+        .dom(`${rowSelector(items[0].id)} .d-reorderable-list__arrows`)
+        .exists({ count: 1 }, "the split row renders exactly one arrow pair");
+      assert
+        .dom(`${rowSelector(frozenItem.id)} .d-reorderable-list__handle`)
+        .doesNotExist("a frozen split row renders no handle");
+      assert
+        .dom(`${rowSelector(frozenItem.id)} .d-reorderable-list__arrows`)
+        .doesNotExist("a frozen split row renders no arrows");
+
+      await click(arrowSelector(items[0].id, "down"));
+      assert.deepEqual(
+        commits,
+        [2],
+        "the split arrows stay wired to the keyboard funnel"
+      );
+    });
+
+    test("split placement in grab mode leads with the grab button and ends with pointer-only arrows", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @controls="split"
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const row = find(rowSelector(items[0].id));
+      assert.true(
+        row.firstElementChild.classList.contains("d-reorderable-list__handle"),
+        "the grab button leads the split row"
+      );
+      assert.true(
+        row.firstElementChild.classList.contains("--grab"),
+        "the leading control is the grab button"
+      );
+      assert.true(
+        row.lastElementChild.classList.contains("d-reorderable-list__arrows"),
+        "the split grab row still ends with the arrow pair"
+      );
+      assert
+        .dom(`${rowSelector(items[0].id)} .d-reorder-buttons__button`)
+        .exists(
+          { count: 2 },
+          "the arrows render as the single-pointer alternative to dragging"
+        );
+      for (const button of findAll(
+        `${rowSelector(items[0].id)} .d-reorder-buttons__button`
+      )) {
+        assert.strictEqual(
+          button.getAttribute("tabindex"),
+          "-1",
+          "a grab-mode arrow adds no tab stop"
+        );
+      }
+    });
   }
 );
 
@@ -2295,6 +2479,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <template>
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <DReorderableList
+              @keyboard="buttons"
               @group={{group}}
               @items={{items}}
               @key="id"
@@ -2340,6 +2525,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <template>
           <DReorderableListGroup @onMove={{onMove}} as |group|>
             <DReorderableList
+              @keyboard="buttons"
               @group={{group}}
               @listId="primary"
               @listLabel="Primary links"
@@ -2352,6 +2538,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </DReorderableList>
             <DReorderableList
+              @keyboard="buttons"
               @group={{group}}
               @listId="secondary"
               @items={{secondaryItems}}
@@ -2448,6 +2635,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <template>
           <DReorderableListGroup @onMove={{onMove}} as |group|>
             <DReorderableList
+              @keyboard="buttons"
               @group={{group}}
               @listId="primary"
               @items={{primaryItems}}
@@ -2459,6 +2647,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </DReorderableList>
             <DReorderableList
+              @keyboard="buttons"
               @group={{group}}
               @listId="secondary"
               @items={{secondaryItems}}
@@ -2559,6 +2748,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       <template>
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="primary"
             @listLabel="Primary links"
@@ -2572,6 +2762,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
             <span data-test-item={{item.id}}>{{item.name}}</span>
           </DReorderableList>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="secondary"
             @listLabel="Secondary links"
@@ -2662,6 +2853,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       <template>
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="primary"
             @items={{primaryItems}}
@@ -2673,6 +2865,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
             <span data-test-item={{item.id}}>{{item.name}}</span>
           </DReorderableList>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="secondary"
             @items={{secondaryItems}}
@@ -2725,6 +2918,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       <template>
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="primary"
             @items={{primaryItems}}
@@ -2736,6 +2930,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
             <span data-test-item={{item.id}}>{{item.name}}</span>
           </DReorderableList>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="empty"
             @listLabel="Empty links"
@@ -2810,6 +3005,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       <template>
         <DReorderableListGroup @onMove={{noop}} as |group|>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="primary"
             @items={{primaryItems}}
@@ -2821,6 +3017,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
             <span data-test-item={{item.id}}>{{item.name}}</span>
           </DReorderableList>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="secondary"
             @items={{secondaryItems}}
@@ -2868,6 +3065,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       <template>
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="primary"
             @listLabel="Primary links"
@@ -2880,6 +3078,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
             <span data-test-item={{item.id}}>{{item.name}}</span>
           </DReorderableList>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="secondary"
             @items={{secondaryItems}}
@@ -2937,6 +3136,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       <template>
         <DReorderableListGroup @onMove={{groupOnMove}} as |group|>
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="grouped"
             @items={{groupedItems}}
@@ -2949,6 +3149,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
           </DReorderableList>
         </DReorderableListGroup>
         <DReorderableList
+          @keyboard="buttons"
           @items={{standaloneItems}}
           @key="id"
           @label={{label}}
@@ -3027,6 +3228,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           {{#if state.showPrimary}}
             <DReorderableList
+              @keyboard="buttons"
               @group={{group}}
               @listId="primary"
               @items={{primaryItems}}
@@ -3039,6 +3241,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
             </DReorderableList>
           {{/if}}
           <DReorderableList
+            @keyboard="buttons"
             @group={{group}}
             @listId="secondary"
             @items={{secondaryItems}}
@@ -3112,6 +3315,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <template>
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <DReorderableList
+              @keyboard="buttons"
               @group={{group}}
               @listId="duplicate"
               @items={{primaryItems}}
@@ -3122,6 +3326,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </DReorderableList>
             <DReorderableList
+              @keyboard="buttons"
               @group={{group}}
               @listId="duplicate"
               @items={{secondaryItems}}
@@ -3184,7 +3389,7 @@ module(
       };
     }
 
-    test("renders grab handles and one shared instruction while omitting frozen controls and arrows", async function (assert) {
+    test("renders grab handles, pointer-only arrows, and one shared instruction while omitting frozen controls", async function (assert) {
       const items = objectItems();
       const frozenItem = items[1];
       const movable = (item) => item !== frozenItem;
@@ -3230,7 +3435,23 @@ module(
 
       assert
         .dom(".d-reorder-buttons")
-        .doesNotExist("grab mode renders no arrow pair");
+        .exists(
+          { count: movableItems.length },
+          "grab mode keeps the arrow pair as the single-pointer path"
+        );
+      assert
+        .dom(".d-reorder-buttons__button")
+        .exists(
+          { count: movableItems.length * 2 },
+          "each movable row renders both arrows"
+        );
+      for (const arrow of findAll(".d-reorder-buttons__button")) {
+        assert.strictEqual(
+          arrow.getAttribute("tabindex"),
+          "-1",
+          "a grab-mode arrow adds no tab stop"
+        );
+      }
       assert
         .dom("button.d-reorderable-list__handle.--grab")
         .exists(
@@ -3241,8 +3462,8 @@ module(
       for (const item of movableItems) {
         const selector = grabSelector(item.id);
         assert
-          .dom(`${rowSelector(item.id)} button`)
-          .exists({ count: 1 }, `${label(item)} has one real row control`);
+          .dom(`${rowSelector(item.id)} button.d-reorderable-list__handle`)
+          .exists({ count: 1 }, `${label(item)} has one grab button`);
         assert
           .dom(selector)
           .hasTagName("button", `${label(item)} uses a real button`)
@@ -3288,7 +3509,7 @@ module(
             @key="id"
             @label={{label}}
             @onMove={{noop}}
-            id="default-keyboard-list"
+            id="grab-keyboard-list"
             as |item|
           ><span
               data-test-item={{item.id}}
@@ -3307,16 +3528,40 @@ module(
         </template>
       );
 
-      for (const root of ["#default-keyboard-list", "#buttons-keyboard-list"]) {
+      for (const root of ["#grab-keyboard-list", "#buttons-keyboard-list"]) {
         assert
           .dom(`${root} .d-reorder-buttons`)
           .exists(
             { count: items.length },
             `${root} renders one arrow pair per row`
           );
-        assert
-          .dom(`${root} button.d-reorderable-list__handle.--grab`)
-          .doesNotExist(`${root} renders no grab button`);
+      }
+      assert
+        .dom("#grab-keyboard-list button.d-reorderable-list__handle.--grab")
+        .exists(
+          { count: items.length },
+          "the undeclared list renders the grab composite"
+        );
+      for (const arrow of findAll(
+        "#grab-keyboard-list .d-reorder-buttons__button"
+      )) {
+        assert.strictEqual(
+          arrow.getAttribute("tabindex"),
+          "-1",
+          "the grab list's arrows leave the tab order"
+        );
+      }
+      assert
+        .dom("#buttons-keyboard-list button.d-reorderable-list__handle.--grab")
+        .doesNotExist("the buttons list renders no grab button");
+      for (const arrow of findAll(
+        "#buttons-keyboard-list .d-reorder-buttons__button"
+      )) {
+        assert.strictEqual(
+          arrow.getAttribute("tabindex"),
+          null,
+          "the buttons list's arrows keep their tab stops"
+        );
       }
     });
 
@@ -3382,6 +3627,145 @@ module(
         0,
         "ungrabbed arrow navigation makes no announcement"
       );
+    });
+
+    test("mirrors the roving cursor onto the focused row", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+          <button type="button" data-test-outside>outside</button>
+        </template>
+      );
+
+      assert
+        .dom(".d-reorderable-list__row.--focused")
+        .doesNotExist("no row carries the cursor before focus enters");
+
+      const first = grabSelector(items[0].id);
+      await focus(first);
+      assert
+        .dom(rowSelector(items[0].id))
+        .hasClass("--focused", "focusing a grip marks its row");
+
+      await triggerKeyEvent(find(first), "keydown", "ArrowDown");
+      assert
+        .dom(rowSelector(items[0].id))
+        .doesNotHaveClass("--focused", "the cursor leaves the previous row");
+      assert
+        .dom(rowSelector(items[1].id))
+        .hasClass("--focused", "the cursor follows the roving focus");
+
+      await focus("[data-test-outside]");
+      assert
+        .dom(".d-reorderable-list__row.--focused")
+        .doesNotExist("leaving the list clears the cursor row");
+    });
+
+    test("clicking a row's non-interactive area moves the roving cursor there", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            as |item|
+          ><span data-test-item={{item.id}}>{{item.name}}</span>
+            <input data-test-field={{item.id}} type="text" />
+          </DReorderableList>
+        </template>
+      );
+
+      await focus(grabSelector(items[0].id));
+      assert
+        .dom(rowSelector(items[0].id))
+        .hasClass("--focused", "the cursor starts on the first row");
+
+      await click(`[data-test-item="${items[2].id}"]`);
+      assert
+        .dom(grabSelector(items[2].id))
+        .isFocused("clicking the row text focuses its grip");
+      assert
+        .dom(rowSelector(items[2].id))
+        .hasClass("--focused", "the cursor follows the click");
+      assert
+        .dom(grabSelector(items[2].id))
+        .hasAttribute("tabindex", "0", "the tab stop follows the click");
+      assert
+        .dom(grabSelector(items[0].id))
+        .hasAttribute("tabindex", "-1", "the previous row gives up the stop");
+
+      await click(`[data-test-field="${items[1].id}"]`);
+      assert
+        .dom(`[data-test-field="${items[1].id}"]`)
+        .isFocused("interactive row content keeps its own focus");
+      assert
+        .dom(grabSelector(items[2].id))
+        .hasAttribute(
+          "tabindex",
+          "0",
+          "the remembered tab stop is untouched by interactive clicks"
+        );
+    });
+
+    test("clicking another row's area releases a held row before moving the cursor", async function (assert) {
+      const sourceItems = objectItems();
+      const items = trackedArray(sourceItems);
+      const heldItem = sourceItems[0];
+      const onMove = (move) => {
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const heldSelector = grabSelector(heldItem.id);
+      await focus(heldSelector);
+      await triggerKeyEvent(find(heldSelector), "keydown", " ");
+      assert
+        .dom(heldSelector)
+        .hasAttribute("aria-pressed", "true", "the first row is held");
+
+      await click(`[data-test-item="${sourceItems[2].id}"]`);
+      assert
+        .dom(heldSelector)
+        .hasAttribute(
+          "aria-pressed",
+          "false",
+          "clicking another row drops the held one in place"
+        );
+      assert.strictEqual(
+        announce.lastCall.args[0],
+        `Dropped ${label(heldItem)}, final position 1 of ${sourceItems.length}`,
+        "the release announces the drop"
+      );
+      assert
+        .dom(rowSelector(sourceItems[2].id))
+        .hasClass("--focused", "the cursor lands on the clicked row");
     });
 
     test("Space grabs, moves once through the buttons funnel, and drops", async function (assert) {
@@ -3860,6 +4244,139 @@ module(
           proposedToItems: proposed,
         },
         "the grab handle emits the normal measured drag payload"
+      );
+    });
+
+    test("releases the grab in place when focus leaves the list", async function (assert) {
+      const sourceItems = objectItems();
+      const items = trackedArray(sourceItems);
+      const movedItem = sourceItems[1];
+      const total = sourceItems.length;
+      const commits = [];
+      const onMove = (move) => {
+        commits.push(moveSnapshot(move));
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+          <button type="button" data-test-outside>outside</button>
+        </template>
+      );
+
+      const selector = grabSelector(movedItem.id);
+      await focus(selector);
+      await triggerKeyEvent(find(selector), "keydown", " ");
+      await triggerKeyEvent(find(selector), "keydown", "ArrowDown");
+
+      assert
+        .dom(selector)
+        .hasAttribute(
+          "aria-pressed",
+          "true",
+          "the item is grabbed and has moved once"
+        );
+      assert.strictEqual(commits.length, 1, "the grabbed step committed once");
+
+      await focus("[data-test-outside]");
+
+      assert
+        .dom(selector)
+        .hasAttribute(
+          "aria-pressed",
+          "false",
+          "leaving the list releases the grab"
+        );
+      assert
+        .dom(rowSelector(movedItem.id))
+        .doesNotHaveClass("--grabbed", "leaving the list clears the row state");
+      assert.strictEqual(
+        commits.length,
+        1,
+        "the release keeps the committed move and adds none"
+      );
+      assert.strictEqual(
+        announce.lastCall.args[0],
+        `Dropped ${label(movedItem)}, final position 3 of ${total}`,
+        "the release announces the drop at the item's current position"
+      );
+
+      const orderAfterRelease = renderedItemOrder();
+      await focus(selector);
+      await triggerKeyEvent(find(selector), "keydown", "ArrowDown");
+
+      assert.strictEqual(
+        commits.length,
+        1,
+        "an arrow press after returning navigates instead of moving the item"
+      );
+      assert.deepEqual(
+        renderedItemOrder(),
+        orderAfterRelease,
+        "the order is unchanged after returning to the list"
+      );
+    });
+
+    test("the grab composite is the default keyboard mode", async function (assert) {
+      const items = objectItems();
+      const commits = [];
+      const onMove = (move) => commits.push(move.toIndex);
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const grips = findAll("button.d-reorderable-list__handle.--grab");
+      assert.strictEqual(
+        grips.length,
+        items.length,
+        "an undeclared keyboard mode renders grab buttons"
+      );
+      assert.deepEqual(
+        grips.map((grip) => grip.getAttribute("tabindex")),
+        ["0", "-1", "-1"],
+        "the grips form one roving tab stop"
+      );
+      const arrows = findAll(".d-reorder-buttons__button");
+      assert.strictEqual(
+        arrows.length,
+        items.length * 2,
+        "every row keeps its arrow pair"
+      );
+      for (const arrow of arrows) {
+        assert.strictEqual(
+          arrow.getAttribute("tabindex"),
+          "-1",
+          "a default-mode arrow adds no tab stop"
+        );
+      }
+
+      await click(arrowSelector(items[0].id, "down"));
+      assert.deepEqual(
+        commits,
+        [1],
+        "the arrows stay pointer-operable as the no-drag alternative"
       );
     });
   }

@@ -955,3 +955,74 @@
     }
   }
 }
+
+.styleguide-reorderable-list {
+  max-width: 22em;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+
+  &__label {
+    flex: 1 1 auto;
+  }
+
+  &__input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .d-reorderable-list__row {
+    padding: 0.35em 0.75em;
+
+    &:hover {
+      background: var(--d-hover);
+    }
+  }
+
+  .d-reorderable-list__create {
+    padding: 0.35em 0.75em;
+  }
+}
+
+.styleguide-reorderable-list-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5em;
+
+  &__panel {
+    flex: 1 1 14em;
+    max-width: 22em;
+
+    h4 {
+      margin-bottom: 0.5em;
+    }
+  }
+}
+
+.styleguide-reorderable-table {
+  width: 100%;
+  max-width: 30em;
+  border-collapse: collapse;
+
+  /* Keeps the cell a real table cell: the arrow pair is block-level flex,
+     so inside a td it would stack under the grip instead of beside it. */
+
+  &__reorder {
+    white-space: nowrap;
+
+    .d-reorderable-list__handle,
+    .d-reorderable-list__arrows {
+      display: inline-flex;
+      vertical-align: middle;
+    }
+  }
+
+  th {
+    padding: 0.35em 0.5em;
+    border-block-end: 1px solid var(--primary-low);
+    text-align: start;
+  }
+
+  td {
+    padding: 0.35em 0.5em;
+  }
+}
