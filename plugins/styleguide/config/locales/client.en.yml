@@ -304,6 +304,7 @@ en:
             example: "Removing the item under the cursor"
             example_description: "Each tag is a real button, so removing one destroys the element holding the cursor and the button runs its action a tick later than the key that asked for it. The cursor moves to the next tag rather than letting focus fall to the page."
             try_this: "Arrow to a tag in the middle and press Enter to remove it, then check where the cursor went. Remove the last tag in the row and it moves backwards instead. Remove them all and it stops rather than guessing."
+            remove: "Remove %{tag}"
             reset: "Start over"
             design: "Design"
             keyboard: "Keyboard"
@@ -317,7 +318,7 @@ en:
             keyboard: "Keyboard navigable"
             contrast: "Sufficient contrast"
             captions: "Captions provided"
-            motion: "Reduced motion honoured"
+            motion: "Reduced motion honored"
             labels: "Fields are labelled"
           adjacent:
             label: "Filters"

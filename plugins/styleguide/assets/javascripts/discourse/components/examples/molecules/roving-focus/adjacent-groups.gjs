@@ -20,7 +20,8 @@ const FILTERS = ["open", "mine", "recent"];
  * That return trip is what the boundary report is for. The modifier says the cursor tried to
  * leave and in which direction; it does not decide where to send it, because only this component
  * knows the field is there. The direction is logical, so this keeps working in a right-to-left
- * locale without the handler knowing which arrow was pressed.
+ * locale. Entry resolves the field's computed direction too, so its caret-facing arrow mirrors
+ * with the return trip.
  */
 export default class RovingFocusAdjacentGroupsExample extends Component {
   @tracked active = ["open"];
@@ -42,8 +43,13 @@ export default class RovingFocusAdjacentGroupsExample extends Component {
 
   @action
   enterFilters(event) {
+    const entryKey =
+      getComputedStyle(event.target).direction === "rtl"
+        ? "ArrowRight"
+        : "ArrowLeft";
+
     // Only from the very start of the text, so the arrow keeps its caret meaning everywhere else.
-    if (event.key === "ArrowLeft" && event.target.selectionStart === 0) {
+    if (event.key === entryKey && event.target.selectionStart === 0) {
       event.preventDefault();
       this.filterApi?.focusLast();
     }

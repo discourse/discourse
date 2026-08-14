@@ -65,6 +65,10 @@ export default class RovingFocusRemovableTagsExample extends Component {
             class="roving-demo__tag"
             @icon="xmark"
             @translatedLabel={{row.label}}
+            @translatedAriaLabel={{i18n
+              "styleguide.sections.roving_focus.tags.remove"
+              tag=row.label
+            }}
             @action={{fn this.remove row.id}}
           />
         {{/each}}

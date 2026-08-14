@@ -80,7 +80,11 @@ export default class RovingFocusToolbarExample extends Component {
         >{{item.label}}</button>
       {{/each}}
 
-      <span class="roving-demo__separator" role="separator"></span>
+      <span
+        class="roving-demo__separator"
+        role="separator"
+        aria-orientation="vertical"
+      ></span>
 
       {{#each this.commands key="id" as |command|}}
         {{! eslint-disable-next-line ember/template-no-nested-interactive }}

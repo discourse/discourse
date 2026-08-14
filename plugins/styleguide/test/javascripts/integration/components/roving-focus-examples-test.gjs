@@ -152,6 +152,18 @@ module(
         "no onActivate is passed, so the modifier does not claim Space and the button keeps its own activation"
       );
     });
+
+    test("the separator states its orientation", async function (assert) {
+      await render(<template><RovingFocusToolbarExample /></template>);
+
+      assert
+        .dom(".roving-demo__separator")
+        .hasAttribute(
+          "aria-orientation",
+          "vertical",
+          "a separator announces horizontal unless told otherwise, and this one stands upright"
+        );
+    });
   }
 );
 
@@ -226,6 +238,50 @@ module(
           "aria-expanded",
           "true",
           "and the one pointing at them opens them, without the example resolving direction itself"
+        );
+    });
+
+    test("the forward arrow steps into an open parent", async function (assert) {
+      await render(<template><RovingFocusTreeExample @dir="ltr" /></template>);
+
+      const parent = findAll(".roving-demo__row")[0];
+      parent.focus();
+      await triggerKeyEvent(parent, "keydown", "ArrowRight");
+
+      assert
+        .dom(document.activeElement)
+        .hasText(
+          "Button",
+          "an open parent has nothing left to open, so forward reaches its first child"
+        );
+      assert
+        .dom(findAll(".roving-demo__row")[0])
+        .hasAttribute(
+          "aria-expanded",
+          "true",
+          "and stepping in is not a toggle"
+        );
+    });
+
+    test("the backward arrow returns a child to its parent", async function (assert) {
+      await render(<template><RovingFocusTreeExample @dir="ltr" /></template>);
+
+      const child = findAll(".roving-demo__row")[1];
+      child.focus();
+      await triggerKeyEvent(child, "keydown", "ArrowLeft");
+
+      assert
+        .dom(document.activeElement)
+        .hasText(
+          "Components",
+          "a child has nothing to close, so backward climbs to the parent"
+        );
+      assert
+        .dom(findAll(".roving-demo__row")[0])
+        .hasAttribute(
+          "aria-expanded",
+          "true",
+          "and climbing does not collapse on the way"
         );
     });
   }
@@ -339,6 +395,49 @@ module(
           "and the choice came with it, which is what this pattern expects"
         );
     });
+
+    test("the vertical arrows move the choice too", async function (assert) {
+      await render(<template><RovingFocusRadioGroupExample /></template>);
+
+      const center = findAll(".roving-demo__radio")[1];
+      center.focus();
+      await triggerKeyEvent(center, "keydown", "ArrowDown");
+
+      assert
+        .dom(document.activeElement)
+        .hasAttribute(
+          "data-choice-id",
+          "right",
+          "the pattern requires both arrow pairs, whatever the visual axis"
+        );
+      assert
+        .dom(document.activeElement)
+        .hasAttribute(
+          "aria-checked",
+          "true",
+          "and the choice follows here too"
+        );
+    });
+
+    test("the arrows wrap at the ends", async function (assert) {
+      await render(<template><RovingFocusRadioGroupExample /></template>);
+
+      const center = findAll(".roving-demo__radio")[1];
+      center.focus();
+      await triggerKeyEvent(center, "keydown", "ArrowRight");
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+
+      assert
+        .dom(document.activeElement)
+        .hasAttribute(
+          "data-choice-id",
+          "left",
+          "past the last member the pattern comes back around rather than stopping"
+        );
+      assert
+        .dom(document.activeElement)
+        .hasAttribute("aria-checked", "true", "with the choice still attached");
+    });
   }
 );
 
@@ -403,6 +502,18 @@ module(
         .dom(".roving-demo__reset")
         .exists("and the group offers a way back");
     });
+
+    test("a tag's button says it removes", async function (assert) {
+      await render(<template><RovingFocusRemovableTagsExample /></template>);
+
+      assert
+        .dom(findAll(".roving-demo__tag")[0])
+        .hasAttribute(
+          "aria-label",
+          "Remove Design",
+          "hearing only the tag's own name invites pressing Enter to inspect, which destroys it"
+        );
+    });
   }
 );
 
@@ -418,7 +529,7 @@ module(
       const trigger = document.querySelector(".roving-demo__combobox-trigger");
 
       assert
-        .dom(".roving-demo__combobox-option--active")
+        .dom(".roving-demo__combobox-option.--active")
         .hasAttribute(
           "data-option-id",
           "weekly",
@@ -428,7 +539,7 @@ module(
       await triggerKeyEvent(trigger, "keydown", "ArrowDown");
 
       assert
-        .dom(".roving-demo__combobox-option--active")
+        .dom(".roving-demo__combobox-option.--active")
         .hasAttribute("data-option-id", "monthly", "the highlight moved");
       assert.strictEqual(
         document.activeElement,
@@ -439,7 +550,7 @@ module(
         .dom(trigger)
         .hasAttribute(
           "aria-activedescendant",
-          document.querySelector(".roving-demo__combobox-option--active").id,
+          document.querySelector(".roving-demo__combobox-option.--active").id,
           "the control reports where the cursor is, since the browser cannot"
         );
     });
@@ -473,6 +584,93 @@ module(
         warn.calledWithMatch(/aria-activedescendant/),
         "aria-controls is one of the three permitted relationships, so no warning is raised"
       );
+    });
+
+    test("a pointer press chooses without stealing focus", async function (assert) {
+      await render(<template><RovingFocusComboboxExample /></template>);
+
+      await click(".roving-demo__combobox-trigger");
+      const monthly = document.querySelector('[data-option-id="monthly"]');
+      const mousedown = new MouseEvent("mousedown", {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+      });
+      monthly.dispatchEvent(mousedown);
+
+      assert.true(
+        mousedown.defaultPrevented,
+        "preventing the press is how the control keeps focus through the choice"
+      );
+
+      await click('[data-option-id="monthly"]');
+
+      assert
+        .dom(".roving-demo__combobox-trigger")
+        .hasText("Monthly", "the click committed the option it landed on");
+      assert
+        .dom(".roving-demo__combobox-listbox")
+        .doesNotExist("and the list closed");
+    });
+
+    test("Escape closes the popup", async function (assert) {
+      await render(<template><RovingFocusComboboxExample /></template>);
+
+      await click(".roving-demo__combobox-trigger");
+      assert.dom(".roving-demo__combobox-listbox").exists("the list is open");
+
+      await triggerKeyEvent(
+        document.querySelector(".roving-demo__combobox-trigger"),
+        "keydown",
+        "Escape"
+      );
+
+      assert
+        .dom(".roving-demo__combobox-listbox")
+        .doesNotExist("dismissal is part of the pattern, not an extra");
+    });
+
+    test("the closed control opens from the arrows", async function (assert) {
+      await render(<template><RovingFocusComboboxExample /></template>);
+
+      await triggerKeyEvent(
+        document.querySelector(".roving-demo__combobox-trigger"),
+        "keydown",
+        "ArrowDown"
+      );
+
+      assert
+        .dom(".roving-demo__combobox-listbox")
+        .exists("the arrow is an opening gesture on a collapsed control");
+      assert
+        .dom(".roving-demo__combobox-option.--active")
+        .hasAttribute(
+          "data-option-id",
+          "weekly",
+          "and the highlight enters on the option already chosen"
+        );
+    });
+
+    test("aria-controls resolves exactly while the popup exists", async function (assert) {
+      await render(<template><RovingFocusComboboxExample /></template>);
+
+      assert
+        .dom(".roving-demo__combobox-trigger")
+        .doesNotHaveAttribute(
+          "aria-controls",
+          "collapsed, there is nothing for the reference to resolve to"
+        );
+
+      await click(".roving-demo__combobox-trigger");
+      const listbox = document.querySelector(".roving-demo__combobox-listbox");
+
+      assert
+        .dom(".roving-demo__combobox-trigger")
+        .hasAttribute(
+          "aria-controls",
+          listbox.id,
+          "open, the reference names the listbox it actually controls"
+        );
     });
   }
 );
@@ -564,6 +762,33 @@ module(
         document.querySelector(".roving-demo__field"),
         "the boundary report is what sends it back, since the modifier does not know the field is there"
       );
+    });
+
+    test("the entry gesture mirrors under rtl", async function (assert) {
+      await render(
+        <template>
+          <div dir="rtl"><RovingFocusAdjacentGroupsExample /></div>
+        </template>
+      );
+
+      const field = document.querySelector(".roving-demo__field");
+      field.focus();
+      await triggerKeyEvent(field, "keydown", "ArrowLeft");
+
+      assert.strictEqual(
+        document.activeElement,
+        field,
+        "the left arrow is a live caret key here, so it must stay with the text"
+      );
+
+      await triggerKeyEvent(field, "keydown", "ArrowRight");
+
+      assert
+        .dom(document.activeElement)
+        .hasClass(
+          "roving-demo__filter",
+          "the arrow pointing at the filters is the one that steps into them"
+        );
     });
   }
 );
