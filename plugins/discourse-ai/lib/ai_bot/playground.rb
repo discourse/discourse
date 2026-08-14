@@ -126,8 +126,8 @@ module DiscourseAi
           # mentioning a different bot used to pick the replied-to bot first)
           mentioned = mentionables.find { |mentionable| mentions.include?(mentionable[:username]) }
 
-          # fallback: replying to a bot's post without mentioning another bot
-          if !mentioned && post.reply_to_post_number && post.reply_to_post&.user
+          # fallback: replying to a bot's post without mentioning anyone
+          if !mentioned && post.mentions.empty? && post.reply_to_post_number && post.reply_to_post&.user
             mentioned =
               mentionables.find do |mentionable|
                 mentionable[:username] == post.reply_to_post.user.username_lower
