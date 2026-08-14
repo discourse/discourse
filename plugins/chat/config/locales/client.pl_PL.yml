@@ -75,15 +75,13 @@ pl_PL:
       pinned_messages:
         title: "Przypięte wiadomości"
         close: "Zamknij przypięte wiadomości"
-        dismiss: "Odrzuć przypięte wiadomości"
-        show: "Pokaż przypięte wiadomości"
+        dismiss: "Odrzuć przypięty baner dla mnie"
+        show: "Pokaż przypięty baner"
         pinned_by_you: "Przypięte przez Ciebie"
         pinned_by_user: "Przypięte przez %{username}"
       pinned_bar:
         title: "Przypięta"
-        see_all: "Zobacz wszystkie przypięte wiadomości"
         jump_to_pinned: "Przejdź do przypiętej wiadomości"
-        dismiss: "Odrzuć przypiętą wiadomość"
       no_pinned_messages: "Żadnych przypiętych wiadomości na tym kanale."
       pin_message: "Przypnij wiadomość"
       unpin_message: "Odepnij wiadomość"
@@ -495,6 +493,7 @@ pl_PL:
         empty_state:
           title: "To jest początek %{channelName}"
           joined_title: "Jesteś pierwszy w %{channelName}"
+          direct_message_title: "Rozpocznij rozmowę z %{name}"
           guest_tip: "Czytasz jako gość. Rozmowa zaczyna się w momencie, gdy użytkownicy coś napiszą — dołącz do nich i bądź jednym z nich."
           joined_tip: "Bądź pierwszy, który opublikuje wpis i rozpocznie dyskusję."
           members_here:

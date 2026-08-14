@@ -171,6 +171,9 @@ nb_NO:
       llms:
         display_name: "Navn"
         provider: "Tilbyder"
+        vision_modes:
+          disabled:
+            title: "Deaktivert"
         save: "Lagre"
         edit: "Rediger"
         delete: Slett

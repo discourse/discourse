@@ -1,14 +1,13 @@
-/* eslint-disable ember/no-classic-components, ember/no-observers */
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import { observes, on } from "@ember-decorators/object";
+import { on } from "@ember-decorators/object";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
-import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse/lib/debounce";
 import getURL from "discourse/lib/get-url";
 import { convertIconClass } from "discourse/lib/icon-library";
+import { ensureSpriteSymbol } from "discourse/lib/svg-sprite-loader";
 import { or } from "discourse/truth-helpers";
 import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
@@ -36,38 +35,11 @@ export default class GroupFlairInputs extends Component {
   }
 
   @on("didInsertElement")
-  @observes("model.flair_icon")
-  _loadSVGIcon(flairIcon) {
-    if (flairIcon) {
-      discourseDebounce(this, this._loadIcon, 1000);
-    }
-  }
-
   _loadIcon() {
-    if (!this.model.flair_icon) {
-      return;
-    }
+    const icon = convertIconClass(this.model.flair_icon || "");
 
-    const icon = convertIconClass(this.model.flair_icon),
-      c = "#svg-sprites",
-      h = "ajax-icon-holder",
-      singleIconEl = `${c} .${h}`;
-
-    if (!icon) {
-      return;
-    }
-
-    if (!document.querySelector(`${c} symbol#${icon}`)) {
-      ajax(`/svg-sprite/search/${icon}`).then((data) => {
-        if (!document.querySelector(singleIconEl)) {
-          document
-            .querySelector(c)
-            .insertAdjacentHTML("beforeend", `<div class="${h}"></div>`);
-        }
-
-        document.querySelector(singleIconEl).innerHTML =
-          `<svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>${data}</svg>`;
-      });
+    if (icon) {
+      ensureSpriteSymbol(icon);
     }
   }
 
@@ -139,6 +111,7 @@ export default class GroupFlairInputs extends Component {
             @value={{this.model.flair_icon}}
             @onChange={{fn (mut this.model.flair_icon)}}
             @showCaret={{true}}
+            @onlyAvailable={{false}}
             @label={{unless this.model.flair_icon (i18n "select_placeholder")}}
           />
         {{else if this.flairPreviewImage}}

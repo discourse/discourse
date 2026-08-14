@@ -120,6 +120,7 @@ export default class DiscourseReactionsUsersMenu extends Component {
 
   <template>
     <UsersPopup
+      @autofocus={{true}}
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
       @totalUsers={{this.activeFilterTotalUsers}}

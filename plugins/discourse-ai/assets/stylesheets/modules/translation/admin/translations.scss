@@ -6,6 +6,14 @@
     border-radius: var(--d-border-radius);
   }
 
+  &__language-switcher {
+    margin-block: var(--space-3);
+  }
+
+  &__language-switcher label {
+    font-weight: 600;
+  }
+
   &__toggle-container {
     margin-block-end: var(--space-3);
   }
@@ -60,6 +68,26 @@
     .setting-controls__undo {
       margin-inline-start: auto;
     }
+  }
+
+  &__locale-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-2);
+  }
+
+  &__locale-count {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &__category-scope-desc {
+    padding: 0;
+    margin-block-end: var(--space-2);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
   }
 
   .settings .setting {

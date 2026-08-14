@@ -16,6 +16,8 @@ hy:
         image_generation_custom:
           name: "Մասնավոր"
     ai_bot:
+      read_post:
+        unknown_post: "գրառում"
       tool_summary:
         search: "Որոնում"
         time: "Ժամ"

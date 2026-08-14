@@ -4,7 +4,7 @@ require "landlock"
 
 module Discourse
   class SafeExec
-    DEFAULT_READ_PATHS = %w[/bin /etc /lib /lib64 /usr].freeze
+    DEFAULT_READ_PATHS = %w[/bin /lib /lib64 /usr].freeze
     DEFAULT_EXECUTE_PATHS = %w[/bin /lib /lib64 /usr].freeze
 
     def self.capture(

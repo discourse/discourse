@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
@@ -29,6 +30,9 @@ const PERIOD_COPY_KEYS = {
 };
 
 export default class DashboardTraffic extends Component {
+  @service currentUser;
+  @service siteSettings;
+
   hiddenLabels = ["page_view_crawler"];
 
   get browserPageviews() {
@@ -153,6 +157,20 @@ export default class DashboardTraffic extends Component {
       start_date: moment(this.args.startDate).format("YYYY-MM-DD"),
       end_date: moment(this.args.endDate).format("YYYY-MM-DD"),
     };
+  }
+
+  get explorerQuery() {
+    if (this.args.period === "custom") {
+      return { range: this.args.period, ...this.reportQuery };
+    }
+
+    return { range: this.args.period };
+  }
+
+  get showTrafficExplorerLink() {
+    return (
+      this.currentUser.admin && this.siteSettings.enable_site_traffic_explorer
+    );
   }
 
   formatHeadlineCount(value) {
@@ -385,18 +403,29 @@ export default class DashboardTraffic extends Component {
               class="db-section__traffic-chart-canvas"
             />
           </div>
-          <LinkTo
-            class="db-traffic__see-details"
-            @route="adminReports.show"
-            @model="site_traffic"
-            @query={{hash
-              start_date=this.reportQuery.start_date
-              end_date=this.reportQuery.end_date
-            }}
-          >
-            {{i18n "admin.dashboard.site_traffic.see_details"}}
-            {{dIcon "arrow-right"}}
-          </LinkTo>
+          {{#if this.showTrafficExplorerLink}}
+            <LinkTo
+              class="db-traffic__see-details"
+              @route="adminSiteTraffic"
+              @query={{this.explorerQuery}}
+            >
+              {{i18n "admin.dashboard.site_traffic.see_details"}}
+              {{dIcon "arrow-right"}}
+            </LinkTo>
+          {{else}}
+            <LinkTo
+              class="db-traffic__see-details"
+              @route="adminReports.show"
+              @model="site_traffic"
+              @query={{hash
+                start_date=this.reportQuery.start_date
+                end_date=this.reportQuery.end_date
+              }}
+            >
+              {{i18n "admin.dashboard.site_traffic.see_details"}}
+              {{dIcon "arrow-right"}}
+            </LinkTo>
+          {{/if}}
         {{else}}
           <div class="db-section__traffic-chart">
             <div class="db-section__traffic-chart-shell"></div>

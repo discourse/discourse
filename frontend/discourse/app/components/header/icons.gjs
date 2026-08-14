@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
+import { languageSwitcherEnabled } from "discourse/lib/content-localization";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
@@ -81,19 +82,15 @@ export default class Icons extends Component {
   }
 
   get showLanguageSwitcher() {
-    if (!this.siteSettings.content_localization_enabled) {
+    if (!languageSwitcherEnabled(this.siteSettings)) {
       return false;
     }
 
-    const has_locales =
-      !!this.siteSettings.content_localization_supported_locales;
     switch (this.siteSettings.content_localization_language_switcher) {
-      case "none":
-        return false;
       case "anonymous":
-        return !this.currentUser && has_locales;
+        return !this.currentUser;
       case "all":
-        return has_locales;
+        return true;
       default:
         return false;
     }

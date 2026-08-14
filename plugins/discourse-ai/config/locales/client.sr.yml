@@ -165,6 +165,9 @@ sr:
           required: "Potrebno"
       llms:
         display_name: "Ime foruma"
+        vision_modes:
+          disabled:
+            title: "Isključeno"
         save: "Sačuvaj"
         edit: "Izmeni"
         delete: Obriši

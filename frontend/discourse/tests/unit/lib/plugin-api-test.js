@@ -6,6 +6,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { block } from "discourse/blocks";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
+import { _INTERNAL_SOURCE_KEY, apiInitializer } from "discourse/lib/api";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
@@ -474,6 +475,166 @@ module("Unit | Utility | plugin-api", function (hooks) {
           );
         });
       });
+    });
+  });
+
+  module("Customization source", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      resetBlockRegistryForTesting();
+    });
+
+    // The build emits a frozen source, so these mirror it.
+    function pluginOpts(name, opts) {
+      const source = Object.freeze({ type: "plugin", name });
+      return { ...opts, [_INTERNAL_SOURCE_KEY]: source };
+    }
+
+    function themeOpts(id, opts) {
+      const source = Object.freeze({ type: "theme", id });
+      return { ...opts, [_INTERNAL_SOURCE_KEY]: source };
+    }
+
+    test("binds the source from opts to the api", function (assert) {
+      let boundSource, receivedOpts;
+
+      withPluginApi(
+        (api, opts) => {
+          boundSource = api.source;
+          receivedOpts = opts;
+        },
+        pluginOpts("chat", { foo: 1 })
+      );
+
+      assert.strictEqual(boundSource.type, "plugin");
+      assert.strictEqual(boundSource.name, "chat");
+      assert.strictEqual(receivedOpts.foo, 1, "user opts are preserved");
+    });
+
+    test("core code (no source) gets a core source", function (assert) {
+      let api;
+      withPluginApi((a) => (api = a));
+
+      assert.deepEqual(api.source, { type: "core" });
+      assert.strictEqual(
+        typeof api.getCurrentUser,
+        "function",
+        "the api methods are available"
+      );
+    });
+
+    test("every call gets its own api carrying its own source", function (assert) {
+      let first, second, other;
+
+      withPluginApi((api) => (first = api), pluginOpts("chat"));
+      withPluginApi((api) => (second = api), pluginOpts("chat"));
+      withPluginApi((api) => (other = api), themeOpts(1));
+
+      assert.notStrictEqual(first, second, "instances are not shared");
+      assert.deepEqual(first.source, second.source);
+      assert.deepEqual(other.source, { type: "theme", id: 1 });
+      assert.strictEqual(
+        typeof first.getCurrentUser,
+        "function",
+        "each one exposes the full PluginApi surface"
+      );
+    });
+
+    test("legacy version-string signature still binds the source", function (assert) {
+      let boundSource;
+
+      withPluginApi(
+        // eslint-disable-next-line discourse/plugin-api-no-version -- intentionally exercising the legacy version-string signature
+        "1.0",
+        (api) => (boundSource = api.source),
+        pluginOpts("chat")
+      );
+
+      assert.strictEqual(boundSource.type, "plugin");
+      assert.strictEqual(boundSource.name, "chat");
+    });
+
+    test("apiInitializer forwards the source to the callback", function (assert) {
+      let boundSource;
+
+      const initializer = apiInitializer(
+        (api) => (boundSource = api.source),
+        pluginOpts("chat")
+      );
+      initializer.initialize();
+
+      assert.strictEqual(boundSource.type, "plugin");
+      assert.strictEqual(boundSource.name, "chat");
+    });
+
+    test("attribution comes from the source, not the call stack", function (assert) {
+      // Code with no source is core and may use any namespace, whatever frames
+      // are on the stack.
+      @block("any-namespace-block")
+      class CoreNamespacedBlock extends Component {}
+
+      withPluginApi((api) => api.registerBlock(CoreNamespacedBlock));
+      assert.true(
+        hasBlock("any-namespace-block"),
+        "core code may register any name"
+      );
+
+      // A plugin source enforces the plugin namespace.
+      @block("unnamespaced-from-plugin")
+      class PluginBlock extends Component {}
+
+      withPluginApi((api) => {
+        assert.throws(
+          () => api.registerBlock(PluginBlock),
+          /Plugin blocks must use the "namespace:block-name" format/
+        );
+      }, pluginOpts("chat"));
+
+      // The same plugin can register a correctly namespaced block.
+      @block("chat:source-block")
+      class NamespacedPluginBlock extends Component {}
+
+      withPluginApi(
+        (api) => api.registerBlock(NamespacedPluginBlock),
+        pluginOpts("chat")
+      );
+      assert.true(hasBlock("chat:source-block"));
+    });
+
+    test("the api can invoke methods that use private members", function (assert) {
+      // modifyClass touches a #private, which brand-checks, so the api has to be
+      // a real instance rather than something made with Object.create.
+      class SourceThing {}
+      getOwner(this).register("source-thing:main", SourceThing);
+
+      withPluginApi((api) => {
+        api.modifyClass(
+          "source-thing:main",
+          (Superclass) => class extends Superclass {}
+        );
+      }, pluginOpts("chat"));
+
+      assert.true(true, "modifyClass works on a source-carrying api");
+    });
+
+    test("source cannot be reassigned or mutated", function (assert) {
+      let api;
+      withPluginApi((a) => (api = a), pluginOpts("chat"));
+
+      assert.throws(
+        () => (api.source = { type: "plugin", name: "evil" }),
+        TypeError,
+        "the source binding cannot be reassigned"
+      );
+      assert.throws(
+        () => (api.source.name = "evil"),
+        TypeError,
+        "the source object is frozen by the build"
+      );
+      assert.strictEqual(
+        api.source.name,
+        "chat",
+        "the source is unchanged after both attempts"
+      );
     });
   });
 });

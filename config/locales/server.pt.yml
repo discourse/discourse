@@ -608,6 +608,9 @@ pt:
       iphone: "iPhone"
     os:
       android: "Android"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anónimo"
   change_email:
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja a ser utilizado?"
     error_staged: "Ocorreu um erro ao alterar o seu endereço de email. O endereço de email já está a ser utilizado por um utilizador temporário."
@@ -1798,9 +1801,6 @@ pt:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     digest:
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos tópicos"
@@ -2078,6 +2078,9 @@ pt:
   safe_mode:
     title: "Entrar em modo de segurança"
     enter: "Entrar em Modo de Segurança"
+  design_wizard:
+    palette_pairs:
+      default: "Predefinição"
   wizard:
     title: "Configuração do Discourse"
     step:

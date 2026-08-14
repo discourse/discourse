@@ -31,12 +31,6 @@ export default class DashboardReports extends Component {
 
   constructor() {
     super(...arguments);
-    this.cards = this.items.map((item) => ({
-      ...item,
-      payload: null,
-      error: false,
-      isLoading: true,
-    }));
     this.loadPayloads();
   }
 
@@ -77,6 +71,13 @@ export default class DashboardReports extends Component {
       this.cards = [];
       return;
     }
+
+    this.cards = this.items.map((item) => ({
+      ...item,
+      payload: null,
+      error: false,
+      isLoading: true,
+    }));
 
     this.loading = true;
     try {

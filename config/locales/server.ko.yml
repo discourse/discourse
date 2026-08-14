@@ -51,7 +51,7 @@ ko:
   anonymous: "익명"
   remove_posts_deleted_by_author: "작성자가 삭제함"
   redirect_warning: "선택한 링크가 실제로 포럼에 게시되어 있는지 확인할 수 없습니다. 계속 진행하려면 아래 링크를 선택하세요."
-  on_another_topic: "다른 주제"
+  on_another_topic: "다른 글"
   topic_tag_changed:
     added: "%{added}에 추가됨"
   inline_oneboxer:
@@ -104,7 +104,7 @@ ko:
       invalid_yaml: "YAML 번역이 유효하지 않습니다"
   emails:
     incoming:
-      default_subject: "이 주제에는 제목이 필요합니다"
+      default_subject: "이 글에는 제목이 필요합니다."
       show_trimmed_content: "일부 콘텐츠만 표시"
       maximum_staged_user_per_email_reached: "이메일당 생성할 수 있는 스테이징된 사용자의 최대치에 도달했습니다."
       no_subject: "(제목 없음)"
@@ -293,7 +293,7 @@ ko:
       other: "%{count}개의 좋아요"
     last_reply: "마지막 답장"
     created: "생성일"
-    new_topic: "새 주제 생성"
+    new_topic: "새글 쓰기"
   no_mentions_allowed: "다른 사용자를 멘션할 수 없습니다."
   too_many_mentions:
     other: "이 게시물에서 %{count}명의 사용자만 멘션할 수 있습니다."
@@ -337,12 +337,12 @@ ko:
     other: "%{count}개의 게시물"
   rss_num_participants:
     other: "%{count}명의 참여자"
-  read_full_topic: "전체 주제 읽기"
+  read_full_topic: "전체 글 읽기"
   private_message_abbrev: "메시지"
   rss_description:
-    hot: "인기 주제"
-    latest: "최신 주제"
-    top: "주요 주제"
+    hot: "인기 글"
+    latest: "최신 글"
+    top: "주요 글"
     top_all: "전체 기간의 주요 주제"
     top_yearly: "연간 주요 주제"
     top_quarterly: "분기별 주요 주제"
@@ -670,6 +670,13 @@ ko:
       macos: "맥OS"
       windows: "마이크로소프트 윈도우"
       unknown: "알 수 없는 운영체제"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "익명"
+    browsers:
+      edge: "마이크로소프트 엣지"
+      firefox: "파이어폭스"
+      safari: "사파리"
   change_email:
     error: "이메일 주소 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일일 수 있습니다."
     doesnt_exist: "해당 이메일 주소는 계정과 연결되어 있지 않습니다."
@@ -787,7 +794,7 @@ ko:
     hidden_content: "<p>무시된 콘텐츠</p>"
   archetypes:
     regular:
-      title: "일반 주제"
+      title: "일반 글"
     banner:
       title: "배너 주제"
       message:
@@ -1107,7 +1114,7 @@ ko:
       title: "주요 참조 주제"
       labels:
         num_clicks: "클릭수"
-        topic: "주제"
+        topic: "글"
       description: "외부 소스에서 가장 많은 클릭 수를 받은 주제입니다."
     page_view_anon_reqs:
       title: "익명"
@@ -2136,7 +2143,7 @@ ko:
   system_messages:
     reviewables_reminder:
       subject_template: "검토 대기열에 검토가 필요한 항목이 있습니다."
-    private_topic_title: "주제 #%{id}"
+    private_topic_title: "글 #%{id}"
     contents_hidden: "콘텐츠를 보려면 게시물을 방문하세요."
     post_hidden:
       title: "숨겨진 게시물"
@@ -2908,9 +2915,6 @@ ko:
     user_posted_pm_staged:
       title: "사용자가 개인 메시지를 게시함, 스테이징됨"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
@@ -2957,12 +2961,12 @@ ko:
       subject_template_improved: "2단계 인증 사용 안 함"
     digest:
       since_last_visit: "마지막 방문 이후"
-      new_topics: "새 주제"
+      new_topics: "새 글"
       unread_notifications: "읽지 않은 알림"
       unread_high_priority: "읽지 않은 높은 우선순위 알림"
       liked_received: "받은 좋아요 수"
       new_users: "신규 사용자"
-      popular_topics: "인기 주제"
+      popular_topics: "인기 글"
       join_the_discussion: "더 보기"
       popular_posts: "인기 게시물"
       more_new: "맞춤 신규 항목"
@@ -3307,18 +3311,18 @@ ko:
       long_description: |
         이 배지는 작성한 댓글에서 좋아요 50개를 받으면 부여됩니다. 댓글이 상당한 영감과 아이디어를 주었고 흥미롭고 재미있었으며 커뮤니티에서 많은 사랑을 받았습니다.
     nice_topic:
-      name: 멋진 주제
-      description: 주제에 좋아요 10개 받음
+      name: 좋은 글 이네요.
+      description: 글에 좋아요 10개 받음
       long_description: |
         이 배지는 주제에서 좋아요 10개를 받으면 부여됩니다. 커뮤니티가 좋아하는 흥미로운 대화를 시작하셨네요.
     good_topic:
-      name: 훌륭한 주제
+      name: 좋은 글입니다.
       description: 주제에 좋아요 25개 받음
       long_description: |
         이 배지는 주제에서 좋아요 25개를 받으면 부여됩니다. 커뮤니티에서 아주 활발한 대화를 시작하셨네요.
     great_topic:
-      name: 최고의 주제
-      description: 주제에 좋아요 50개 받음
+      name: 훌륭한 글입니다.
+      description: 글에 좋아요 50개 받음
       long_description: |
         이 배지는 주제에서 좋아요 50개를 받으면 부여됩니다. 흥미로운 대화를 시작하여 토론으로 이끌었으며 커뮤니티의 많은 사랑을 받았습니다.
     nice_share:
@@ -3531,6 +3535,9 @@ ko:
     title: "안전 모드 시작"
     enter: "안전 모드 시작"
     must_select: "안전 모드를 시작하려면 옵션을 하나 이상 선택하세요."
+  design_wizard:
+    palette_pairs:
+      default: "기본"
   wizard:
     title: "Discourse Setup"
     step:

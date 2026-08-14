@@ -422,6 +422,67 @@ module SystemHelpers
     page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
   end
 
+  # Drives a press-drag-release with the real mouse, for the surfaces built on
+  # pointer events rather than native drag-and-drop.
+  #
+  # `from:` is a CSS selector for the element to press. `to:` is an absolute
+  # viewport point; `by:` is an offset from the press point, for when the distance
+  # matters more than the destination. Movement is broken into `steps:` so a
+  # gesture with a movement threshold actually crosses it, and so anything driven
+  # by intermediate moves sees more than one.
+  #
+  # This bypasses Capybara's client-settle wait, so assert through a retrying
+  # matcher rather than a value read once.
+  #
+  # The mouse moves through absolute viewport coordinates. An element below the
+  # fold would otherwise be measured where it cannot be pressed, so it is scrolled
+  # into view first and measured after.
+  #
+  # Pass a block to assert on the page while the gesture is still open: it runs
+  # after the pointer has moved and before the release, so anything a drag holds
+  # for its own duration is still there to be seen. Without one, asserting only
+  # that such a mark is absent afterwards would pass just as well against a drag
+  # that never started.
+  def drag_with_pointer(from:, to: nil, by: nil, steps: 10)
+    raise ArgumentError, "pass exactly one of to: or by:" if to.nil? == by.nil?
+
+    page.driver.with_playwright_page do |pw_page|
+      # Waited for rather than queried once: `query_selector` returns nil without
+      # waiting, so a not-yet-rendered element would fail as a `NoMethodError` on
+      # nil, naming neither the selector nor the timing.
+      # Capybara's budget, not Playwright's 30s default: the driver is registered
+      # without `default_timeout`, so a missing handle would otherwise stall the
+      # example for half a minute before failing.
+      node =
+        pw_page.wait_for_selector(
+          from,
+          state: "visible",
+          timeout: Capybara.default_max_wait_time * 1000,
+        )
+      node.scroll_into_view_if_needed
+      box = node.bounding_box
+      start_x = box["x"] + box["width"] / 2
+      start_y = box["y"] + box["height"] / 2
+      end_x = to ? to[:x] : start_x + by.fetch(:x, 0)
+      end_y = to ? to[:y] : start_y + by.fetch(:y, 0)
+
+      pw_page.mouse.move(start_x, start_y)
+      pw_page.mouse.down
+      # Stepped rather than a single jump: a gesture with a threshold needs to be
+      # seen crossing it, not teleported past it.
+      pw_page.mouse.move(end_x, end_y, steps: steps)
+    end
+
+    begin
+      # Outside the driver block, so Capybara's own matchers work normally in it.
+      yield if block_given?
+    ensure
+      # Released even when an in-gesture assertion fails, so the example does not
+      # run its remaining hooks with the button still held.
+      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+    end
+  end
+
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
   end

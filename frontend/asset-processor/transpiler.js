@@ -56,28 +56,4 @@ globalThis.transpile = function (source, options = {}) {
   }
 };
 
-// mini_racer doesn't have native support for getting the result of an async operation.
-// To work around that, we provide a getMinifyResult which can be used to fetch the result
-// in a followup method call.
-let lastMinifyError, lastMinifyResult;
-
-globalThis.minify = async function (sources, options) {
-  lastMinifyError = lastMinifyResult = null;
-  try {
-    lastMinifyResult = await terserMinify(sources, options);
-  } catch (e) {
-    lastMinifyError = e;
-  }
-};
-
-globalThis.getMinifyResult = function () {
-  const error = lastMinifyError;
-  const result = lastMinifyResult;
-
-  lastMinifyError = lastMinifyResult = null;
-
-  if (error) {
-    throw error.toString();
-  }
-  return result;
-};
+globalThis.minify = terserMinify;

@@ -126,11 +126,17 @@ export interface TooltipOptions {
   /** Whether FloatKit attaches the trigger event listeners itself, rather than the caller driving it through the service API. */
   listeners: boolean;
 
+  /** How long to keep an interactive float open after the pointer leaves it. */
+  hoverGracePeriod: number;
+
   /**
    * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Pass
    * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
    * silently wins over the matched width and a trigger wider than the cap gets a narrower
    * overlay.
+   *
+   * A number is additionally capped to the width the viewport leaves the float, so it can never
+   * overflow the document; a string is applied verbatim and gets no such cap.
    */
   maxWidth: number | string;
 
@@ -218,9 +224,15 @@ export interface MenuOptions extends TooltipOptions {
    * trigger.
    *
    * The non-containing alternative to `trapTab`, for a menu that is dismissable but whose content
-   * holds focus. A menu with nothing focusable in it is unaffected in either direction, so this
-   * is safe to set on a menu that only sometimes renders a control. Desktop only, since the
-   * mobile modal is a real `aria-modal` dialog that owns its own containment.
+   * holds focus. Setting it turns `trapTab` off on its own, so the two never have to be passed
+   * together; a caller that asks for the trap explicitly gets an assertion instead, since only a
+   * contradiction remains. The trap is also what applies `autofocus`, so a menu using this option
+   * opens with focus still on the trigger, which is where tabbing into the content starts from.
+   *
+   * A menu with nothing focusable in it is unaffected in either direction, so this is safe to set
+   * on a menu that only sometimes renders a control. It does not reach a menu that also sets
+   * `modalForMobile`, which on mobile renders as a real `aria-modal` dialog that owns its own
+   * containment.
    */
   inlineTabOrder: boolean;
 
@@ -352,6 +364,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
     inline: null,
     interactive: false,
     listeners: false,
+    hoverGracePeriod: 0,
     maxWidth: 350,
     data: null,
     offset: 10,
@@ -386,6 +399,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     identifier: null,
     interactive: true,
     listeners: false,
+    hoverGracePeriod: 0,
     maxWidth: 400,
     data: null,
     offset: 10,

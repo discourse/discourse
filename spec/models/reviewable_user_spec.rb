@@ -138,12 +138,33 @@ RSpec.describe ReviewableUser, type: :model do
       assert_require_reject_reason(:delete_user_block, true)
     end
 
-    def assert_require_reject_reason(id, expected)
-      actions = reviewable.actions_for(Guardian.new(moderator))
+    it "doesn't add a confirmation when a rejection reason is already required" do
+      action = find_action(:delete_user)
 
-      expect(actions.to_a.find { |a| a.server_action.to_sym == id }.require_reject_reason).to eq(
-        expected,
-      )
+      expect(action.confirm_message).to be_nil
+      expect(action.confirm_destructive).to be_nil
+    end
+
+    it "asks for confirmation when no rejection reason is required" do
+      reviewable.reviewable_scores.build(user: admin, reason: "suspect_user")
+
+      %i[delete_user delete_user_block].each do |id|
+        action = find_action(id)
+
+        expect(action.confirm_destructive).to eq(true)
+        expect(action.confirm_message_args).to eq(username: reviewable.target.username)
+        expect(I18n.t(action.confirm_message, **action.confirm_message_args)).to include(
+          "@#{reviewable.target.username}",
+        )
+      end
+    end
+
+    def find_action(id)
+      reviewable.actions_for(Guardian.new(moderator)).to_a.find { |a| a.server_action.to_sym == id }
+    end
+
+    def assert_require_reject_reason(id, expected)
+      expect(find_action(id).require_reject_reason).to eq(expected)
     end
   end
 

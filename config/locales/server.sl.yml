@@ -480,6 +480,13 @@ sl:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimni"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Prišlo je do napake med spremembo vašega e-naslova. Mogoče je e-naslov že uporabljen?"
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."
@@ -1535,9 +1542,6 @@ sl:
     user_posted_pm_staged:
       title: "Uporabnik je objavil ZS prirejeni"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Suspendiran račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
@@ -1951,6 +1955,9 @@ sl:
     resend_email:
       title: "Ponovno pošlji aktivacijsko e-sporočilo"
       message: "<p>Ponovno smo poslali aktivacijsko e-sporočilo na<b>%{email}</b>"
+  design_wizard:
+    palette_pairs:
+      default: "Privzeto"
   wizard:
     title: "Postavitev Discourse"
     step:

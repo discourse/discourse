@@ -321,6 +321,9 @@ bs_BA:
     title: "Resetuj Šifru"
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anoniman"
   change_email:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
   activation:
@@ -1053,6 +1056,9 @@ bs_BA:
       button: "Registriraj"
     resend_email:
       title: "Pošalji ponovo email aktivacije"
+  design_wizard:
+    palette_pairs:
+      default: "Uobičajen"
   wizard:
     step:
       setup:

@@ -14,6 +14,8 @@ sl:
         image_generation_custom:
           name: "Po meri"
     ai_bot:
+      read_post:
+        unknown_post: "prispevek"
       tool_summary:
         search: "Išči"
         time: "Čas"

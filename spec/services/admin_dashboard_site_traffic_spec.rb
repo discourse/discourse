@@ -640,6 +640,13 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result).not_to have_key(:top_referrers)
       end
 
+      it "omits top_countries and top_referrers when legacy pageviews are enabled" do
+        SiteSetting.use_legacy_pageviews = true
+
+        result = build_traffic(start_date: nil, end_date: nil)
+        expect(result.keys).to contain_exactly(:kpis, :pageview_series)
+      end
+
       it "returns top_countries and top_referrers with rows and no error when matching events exist" do
         6.times do
           Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")

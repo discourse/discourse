@@ -10,6 +10,8 @@ be:
       title: "😐 нейтральны"
   discourse_ai:
     ai_bot:
+      read_post:
+        unknown_post: "пост"
       tool_summary:
         search: "Пошук"
       tool_help:

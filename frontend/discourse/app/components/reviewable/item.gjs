@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { concat, fn } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -19,6 +19,11 @@ import ReviewableTimeline from "discourse/components/reviewable/timeline";
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
+import ReviewableFieldCategory from "discourse/components/reviewable-field-category";
+import ReviewableFieldEditor from "discourse/components/reviewable-field-editor";
+import ReviewableFieldTags from "discourse/components/reviewable-field-tags";
+import ReviewableFieldText from "discourse/components/reviewable-field-text";
+import ReviewableFieldTextarea from "discourse/components/reviewable-field-textarea";
 import editableValue from "discourse/helpers/editable-value";
 import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
@@ -27,6 +32,7 @@ import { bind } from "discourse/lib/decorators";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { showAlert } from "discourse/lib/post-action-feedback";
+import { resolveReviewableComponent } from "discourse/lib/reviewable-registry";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
@@ -34,6 +40,7 @@ import { PENDING } from "discourse/models/reviewable";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import Topic from "discourse/models/topic";
 import { eq, not } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -42,7 +49,13 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-let _components = {};
+const fieldComponents = {
+  category: ReviewableFieldCategory,
+  editor: ReviewableFieldEditor,
+  tags: ReviewableFieldTags,
+  text: ReviewableFieldText,
+  textarea: ReviewableFieldTextarea,
+};
 
 export const pluginReviewableParams = {};
 const reviewableTypeLabels = {};
@@ -82,10 +95,6 @@ export function registerReviewableActionModal(actionName, modalClass) {
  */
 export function registerReviewableTypeLabel(reviewableType, labelKey) {
   reviewableTypeLabels[reviewableType] = labelKey;
-}
-
-function lookupComponent(context, name) {
-  return getOwner(context).resolveRegistration(`component:${name}`);
 }
 
 @tagName("")
@@ -129,6 +138,11 @@ export default class ReviewableItem extends Component {
       this.activeTab = "timeline";
       this.insightsOpened = false;
     }
+  }
+
+  @bind
+  resolveReviewableComponent(type) {
+    return resolveReviewableComponent(getOwner(this), type);
   }
 
   @computed(
@@ -247,35 +261,6 @@ export default class ReviewableItem extends Component {
     }
 
     return this.siteSettings?.reviewable_claiming !== "required";
-  }
-
-  // Find a component to render, if one exists. For example:
-  // `ReviewableUser` will return `reviewable/user` or `reviewable-user`.
-  // The former is the new reviewable component, so will only be returned if it exists.
-  @computed("reviewable.type")
-  get reviewableComponent() {
-    if (_components[this.reviewable?.type] !== undefined) {
-      return _components[this.reviewable?.type];
-    }
-
-    const owner = getOwner(this);
-    const dasherized = dasherize(this.reviewable?.type);
-    const componentNames = [
-      dasherized.replace("reviewable-", "reviewable-refresh/"),
-      dasherized.replace("reviewable-", "reviewable/"),
-      dasherized,
-    ];
-
-    for (const componentName of componentNames) {
-      const componentExists =
-        owner.hasRegistration(`component:${componentName}`) ||
-        owner.hasRegistration(`template:components/${componentName}`);
-      if (componentExists) {
-        _components[this.reviewable?.type] = componentName;
-        break;
-      }
-    }
-    return _components[this.reviewable?.type] || null;
   }
 
   @computed("_updates.category_id", "reviewable.category.id")
@@ -662,10 +647,18 @@ export default class ReviewableItem extends Component {
 
     if (message) {
       if (await this.#claimReviewable()) {
-        this.dialog.confirm({
+        const confirmOptions = {
           message,
           didConfirm: () => this._performConfirmed(performableAction),
-        });
+          // Claiming happens before the prompt, so release it if nothing is performed.
+          didCancel: () => this.#unclaimAutomaticReviewable(),
+        };
+
+        if (performableAction.get("confirm_destructive")) {
+          this.dialog.deleteConfirm(confirmOptions);
+        } else {
+          this.dialog.confirm(confirmOptions);
+        }
       }
     } else if (actionModalClass) {
       if (await this.#claimReviewable()) {
@@ -755,10 +748,7 @@ export default class ReviewableItem extends Component {
               <div class="editable-fields">
                 {{#each this.reviewable.editable_fields as |f|}}
                   <div class="editable-field {{dDasherize f.id}}">
-                    {{#let
-                      (lookupComponent this (concat "reviewable-field-" f.type))
-                      as |FieldComponent|
-                    }}
+                    {{#let (get fieldComponents f.type) as |FieldComponent|}}
                       <FieldComponent
                         @tagName=""
                         @value={{editableValue this.reviewable f.id}}
@@ -771,16 +761,25 @@ export default class ReviewableItem extends Component {
                 {{/each}}
               </div>
             {{else}}
-
-              {{#let
-                (lookupComponent this this.reviewableComponent)
-                as |ReviewableComponent|
-              }}
-                <ReviewableComponent
-                  @reviewable={{this.reviewable}}
-                  @tagName=""
-                />
-              {{/let}}
+              <DAsyncContent
+                @asyncData={{this.resolveReviewableComponent}}
+                @context={{this.reviewable.type}}
+              >
+                <:content as |ReviewableComponent|>
+                  <ReviewableComponent
+                    @reviewable={{this.reviewable}}
+                    @tagName=""
+                  />
+                </:content>
+                <:empty>
+                  <div class="alert alert-error review-item__no-component">
+                    {{i18n
+                      "review.no_component_found"
+                      type=this.reviewable.type
+                    }}
+                  </div>
+                </:empty>
+              </DAsyncContent>
             {{/if}}
           </div>
 

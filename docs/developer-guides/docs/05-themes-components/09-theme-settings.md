@@ -43,7 +43,7 @@ So until this point we've covered the simplest way to define settings. In the ne
 
 ## :symbols: Supported types
 
-There are 8 types of settings:
+There are 9 types of settings:
 
 1. `integer`
 2. `float`
@@ -53,6 +53,7 @@ There are 8 types of settings:
 6. `enum`
 7. `objects` (replacement for `json_schema`)
 8. `upload` (for images)
+9. `icon` (for a single icon from the Discourse icon set)
 
 And you can specify type by adding a `type` attribute to your setting like this:
 
@@ -69,7 +70,7 @@ float_setting:
   default: 3.14
 ```
 
-That said, you _need_ to set a type attribute when working with **`list`** and **`enum`** settings, otherwise Discourse will not recognize them correctly.
+That said, you _need_ to set a type attribute when working with **`list`**, **`enum`** and **`icon`** settings, otherwise Discourse will not recognize them correctly.
 
 **List Setting:**
 
@@ -100,6 +101,16 @@ You can set the default list of values for the setting by joining the values wit
 You can see a real-world use case for list settings here: https://meta.discourse.org/t/linkify-words-in-post-theme-component/82193?u=osama.
 
 > :loudspeaker: **Note**: Pay attention to indentation when working with YAML because YAML is very picky about spaces and will throw a syntax error if your code indentation is incorrect.
+
+**Icon Setting:**
+
+```yaml
+banner_icon:
+  default: bullhorn
+  type: icon
+```
+
+Icon settings give site owners a searchable icon picker, and the value is the icon name. Discourse adds the selected icon to the sprite sheet, so you can render it in your theme without registering it separately.
 
 ### `objects` type
 

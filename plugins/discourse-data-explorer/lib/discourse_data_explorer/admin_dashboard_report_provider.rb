@@ -54,6 +54,18 @@ module DiscourseDataExplorer
       end
     end
 
+    def self.prewarm(identifiers, guardian:, filters: {})
+      return if guardian&.user.nil?
+
+      params = filters.with_indifferent_access
+      load_queries(identifiers).each do |query|
+        query_params = params.slice(*query.params.map(&:identifier))
+        next if !query.groups.empty? || !prewarmable?(query, query_params)
+
+        QueryRunner.run(query, query_params, current_user: guardian.user)
+      end
+    end
+
     def self.build_resolved(query)
       ::AdminDashboard::Reports::ResolvedReport.new(
         source: SOURCE_NAME,
@@ -91,6 +103,14 @@ module DiscourseDataExplorer
       queries
     end
     private_class_method :load_queries
+
+    def self.prewarmable?(query, params)
+      QueryRunner.cacheable?(query) &&
+        query.params.all? do |param|
+          param.default.present? || param.nullable || params.key?(param.identifier)
+        end
+    end
+    private_class_method :prewarmable?
 
     def self.persisted_after(search:, after:, limit:)
       scope = Query.where(hidden: false)

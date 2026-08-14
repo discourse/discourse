@@ -1,6 +1,17 @@
-import { click, fillIn, find, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { translateModKey } from "discourse/lib/utilities";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
+import {
+  acceptance,
+  metaModifier,
+} from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -15,7 +26,7 @@ acceptance("Details Button", function (needs) {
     await categoryChooser.selectRowByValue(2);
 
     await click(".toolbar-menu__options-trigger");
-    await click(`button[title="${i18n("details.title")}"]`);
+    await click("[data-name='details']");
 
     assert
       .dom(".d-editor-input")
@@ -33,7 +44,7 @@ acceptance("Details Button", function (needs) {
     textarea.selectionEnd = textarea.value.length;
 
     await click(".toolbar-menu__options-trigger");
-    await click(`button[title="${i18n("details.title")}"]`);
+    await click("[data-name='details']");
 
     assert
       .dom(".d-editor-input")
@@ -61,7 +72,7 @@ acceptance("Details Button", function (needs) {
     textarea.selectionEnd = 28;
 
     await click(".toolbar-menu__options-trigger");
-    await click(`button[title="${i18n("details.title")}"]`);
+    await click("[data-name='details']");
 
     assert
       .dom(".d-editor-input")
@@ -89,7 +100,7 @@ acceptance("Details Button", function (needs) {
     textarea.selectionEnd = 29;
 
     await click(".toolbar-menu__options-trigger");
-    await click(`button[title="${i18n("details.title")}"]`);
+    await click("[data-name='details']");
 
     assert
       .dom(".d-editor-input")
@@ -127,7 +138,7 @@ acceptance("Details Button", function (needs) {
     textarea.selectionEnd = textarea.value.length;
 
     await click(".toolbar-menu__options-trigger");
-    await click(`button[title="${i18n("details.title")}"]`);
+    await click("[data-name='details']");
 
     assert
       .dom(".d-editor-input")
@@ -137,5 +148,42 @@ acceptance("Details Button", function (needs) {
         )}"]\n${multilineInput}\n[/details]\n`,
         "contains the right output"
       );
+  });
+
+  test("details button displays its keyboard shortcut", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    await click(".toolbar-menu__options-trigger");
+
+    const separator = PLATFORM_KEY_MODIFIER === "meta" ? "" : " ";
+    assert
+      .dom("[data-name='details'] kbd")
+      .hasText(
+        translateModKey(`${PLATFORM_KEY_MODIFIER}+Shift+D`, separator),
+        "shows the platform-specific shortcut"
+      );
+  });
+
+  test("keyboard shortcut inserts a details block in the rich text editor", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
+    await click(".composer-toggle-switch");
+
+    await triggerKeyEvent(".ProseMirror", "keydown", "D", {
+      ...metaModifier,
+      shiftKey: true,
+    });
+
+    assert.dom(".d-editor-input details").exists("inserts a details block");
+    assert
+      .dom(".d-editor-input details summary")
+      .hasText(i18n("composer.details_title"), "inserts the default summary");
+    assert
+      .dom(".d-editor-input details p")
+      .hasText(i18n("composer.details_text"), "inserts the default body");
   });
 });

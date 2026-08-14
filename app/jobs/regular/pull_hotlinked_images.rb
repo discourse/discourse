@@ -28,47 +28,41 @@ module Jobs
 
       changed_hotlink_records = false
 
-      extract_images_from(post.cooked).each do |node|
-        download_src =
-          original_src = node["src"] || node[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] || node["href"]
-        download_src = replace_encoded_src(download_src)
-        download_src =
-          "#{SiteSetting.force_https ? "https" : "http"}:#{original_src}" if original_src.start_with?(
-          "//",
-        )
-        normalized_src = normalize_src(download_src)
+      HotlinkedMedia
+        .extract_candidates(post.cooked)
+        .each do |node|
+          download_src = HotlinkedMedia.download_src_for(node)
+          normalized_src = normalize_src(download_src)
 
-        next if !should_download_image?(download_src, post)
+          next if !should_download_image?(download_src, post)
 
-        hotlink_record = hotlinked_map[normalized_src]
+          hotlink_record = hotlinked_map[normalized_src]
 
-        if hotlink_record.nil?
-          hotlinked_map[normalized_src] = hotlink_record =
-            PostHotlinkedMedia.new(post: post, url: normalized_src)
-          begin
-            hotlink_record.upload = attempt_download(download_src, post.user_id)
-            hotlink_record.status = :downloaded
-          rescue ImageTooLargeError
-            hotlink_record.status = :too_large
-          rescue ImageBrokenError
-            hotlink_record.status = :download_failed
-          rescue UploadCreateError
-            hotlink_record.status = :upload_create_failed
+          if hotlink_record.nil?
+            hotlinked_map[normalized_src] = hotlink_record =
+              PostHotlinkedMedia.new(post: post, url: normalized_src)
+            status, upload =
+              HotlinkedMedia.download(
+                download_src,
+                post.user_id,
+                tmp_file_name: "discourse-hotlinked",
+              )
+            hotlink_record.upload = upload
+            hotlink_record.status = status
           end
-        end
 
-        if hotlink_record.changed?
-          changed_hotlink_records = true
-          hotlink_record.save!
+          if hotlink_record.changed?
+            changed_hotlink_records = true
+            hotlink_record.save!
+          end
+        rescue => e
+          raise e if Rails.env.test?
+          log(
+            :error,
+            "Failed to pull hotlinked image (#{download_src}) post: #{@post_id}\n" + e.message +
+              "\n" + e.backtrace.join("\n"),
+          )
         end
-      rescue => e
-        raise e if Rails.env.test?
-        log(
-          :error,
-          "Failed to pull hotlinked image (#{download_src}) post: #{@post_id}\n" + e.message +
-            "\n" + e.backtrace.join("\n"),
-        )
-      end
 
       if changed_hotlink_records
         post.trigger_post_process(
@@ -84,81 +78,19 @@ module Jobs
       end
     end
 
-    def download(src)
-      downloaded = nil
-
-      begin
-        retries ||= 3
-
-        if SiteSetting.verbose_upload_logging
-          Rails.logger.warn("Verbose Upload Logging: Downloading hotlinked image from #{src}")
-        end
-
-        downloaded =
-          FileHelper.download(
-            src,
-            max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-            retain_on_max_file_size_exceeded: true,
-            tmp_file_name: "discourse-hotlinked",
-            follow_redirect: true,
-            read_timeout: 15,
-          )
-      rescue => e
-        if SiteSetting.verbose_upload_logging
-          Rails.logger.warn("Verbose Upload Logging: Error '#{e.message}' while downloading #{src}")
-        end
-
-        if (retries -= 1) > 0 && !Rails.env.test?
-          sleep 1
-          retry
-        end
-      end
-
-      downloaded
-    end
-
-    class ImageTooLargeError < StandardError
-    end
-
-    class ImageBrokenError < StandardError
-    end
-
-    class UploadCreateError < StandardError
-    end
+    # Error classes live on HotlinkedMediaDownloader now; these aliases keep the
+    # `rescue ImageTooLargeError` call sites in the
+    # PullUserProfileHotlinkedImages subclass working unchanged.
+    ImageTooLargeError = HotlinkedMediaDownloader::ImageTooLargeError
+    ImageBrokenError = HotlinkedMediaDownloader::ImageBrokenError
+    UploadCreateError = HotlinkedMediaDownloader::UploadCreateError
 
     def attempt_download(src, user_id)
-      # secure-uploads endpoint prevents anonymous downloads, so we
-      # need the presigned S3 URL here
-      if Upload.secure_uploads_url?(src)
-        src = Upload.signed_url_from_secure_uploads_url(src, include_content_disposition: false)
-      end
-
-      hotlinked = download(src)
-      raise ImageBrokenError if !hotlinked
-      if File.size(hotlinked.path) > SiteSetting.max_image_size_kb.kilobytes
-        raise ImageTooLargeError
-      end
-
-      filename = File.basename(URI.parse(src).path)
-      filename << File.extname(hotlinked.path) unless filename["."]
-      upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(user_id)
-
-      if upload.persisted?
-        upload
-      else
-        log(
-          :info,
-          "Failed to persist downloaded hotlinked image for post: #{@post_id}: #{src} - #{upload.errors.full_messages.join("\n")}",
-        )
-        raise UploadCreateError
-      end
+      HotlinkedMediaDownloader.download(src, user_id, tmp_file_name: "discourse-hotlinked")
     end
 
     def extract_images_from(html)
-      doc = Nokogiri::HTML5.fragment(html)
-
-      doc.css("img[src], [#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}], a.lightbox[href]") -
-        doc.css("img.avatar") - doc.css(".lightbox img[src]")
+      HotlinkedMedia.extract_candidates(html)
     end
 
     def should_download_image?(src, post = nil)
@@ -226,10 +158,6 @@ module Jobs
       return false if access_control_post.blank?
 
       guardian.can_see_post?(access_control_post)
-    end
-
-    def replace_encoded_src(src)
-      PostHotlinkedMedia.normalize_src(src, reset_scheme: false)
     end
 
     def normalize_src(src)

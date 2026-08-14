@@ -277,6 +277,16 @@ lv:
     admin_onboarding_banner:
       start_posting:
         back: "Atpakaļ"
+    design_wizard:
+      back: "Atpakaļ"
+      next: "Nākamais"
+      sections:
+        theme: "Tēma"
+      homepage:
+        topics: "Tēmas"
+        categories: "Sadaļas"
+        styles:
+          boxes: "Kastes"
     about:
       simple_title: "Par"
       title: "Par %{title}"
@@ -397,9 +407,6 @@ lv:
         optional: "pēc izvēles"
       claim_help:
         optional: "Jūs varat pieprasīt šo vienumu, lai citi to nevarētu pārskatīt."
-        required: "Jums ir jāpieprasa vienumi, pirms jūs varat tos pārskatīt."
-        claimed_by_you: "Jūs pieprasījāt šo vienumu un varat to pārskatīt."
-        claimed_by_other: "Šo vienumu var pārskatīt tikai <b>%{username}</b>."
       awaiting_approval: "Gaida apstiprinājumu"
       delete: "Dzēst"
       settings:
@@ -1678,6 +1685,8 @@ lv:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Ievadīt"
+    category_row:
+      subcategories: "+ Apakšsadaļas"
     select_kit:
       delete_item: "Izdzēst %{name}"
       create: "Izveidot: '%{content}'"
@@ -3063,11 +3072,22 @@ lv:
         default_value: "Noklusējums"
       search:
         title: "Meklēt"
+      site_traffic_explorer:
+        pageviews: "Lapu skatījumi"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP adrese"
+        filters:
+          ip: "IP adrese"
+        metrics:
+          pageviews:
+            label: "Lapu skatījumi"
+        series:
+          anonymous_human: "Anonīmi"
       dashboard:
         title: "Administrācijas panelis"
         version: "Versija"
         up_to_date: "Tu seko līdzi laikam!"
-        critical_available: "Ir pieejams kritisks atjauninājums."
         updates_available: "Ir pieejami atjauninājumi."
         no_check_performed: "Nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
         stale_data: "Pēdējā laikā nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."

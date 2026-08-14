@@ -23,6 +23,11 @@ he:
         code: "קוד"
         continue: "המשך"
         authorize_title: 'אישור של „%{application_name}”'
+        expiry_notice: "תפוגה: %{expires_at}"
+        no_expiry_warning: "המפתח הזה לא יפוג אוטומטית. כדאי לאשר את זה רק אם היישום אמין לחלוטין בעיניך."
+        complete: "אימות הושלם"
+        denied: "אימות נדחה"
+        return_to_cli: "אפשר לחזור עכשיו למסוף או היישום שלך."
     blocks:
       ghost:
         status: "מצב"
@@ -43,6 +48,8 @@ he:
       manage:
         access_permission_editor: "עורכים"
         access_permission_remove: "הסרה"
+        mandatory: "חובה"
+        disallowed: "אסור"
     carousel:
       go_to_slide: "מעבר לשקופית %{index}"
       previous: "השקופית הקודמת"
@@ -544,11 +551,6 @@ he:
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
     admin_onboarding_banner:
-      select_theme:
-        action: "בחירת ערכת עיצוב"
-        modal_title: "בחירת ערכת עיצוב"
-        enabled: "נבחרים"
-        browse_all: "ניהול ערכות עיצוב"
       invite_collaborators:
         action: "יצירת הזמנה"
       start_posting:
@@ -568,6 +570,26 @@ he:
             body: "מה הדבר הכי מגניב שראית או חווית היום? זה יכול להיות כל דבר, החל משקיעה יפה ועד מחווה אדיבה אקראית. אני אתחיל: ראיתי כלב שעוזר לאדם מבוגר לחצות את הכביש!"
           what_is_your_favorite_food:
             title: "מה המאכל האהוב עליך או עלייך?"
+    design_wizard:
+      back: "חזרה"
+      next: "הבא"
+      sections:
+        theme: "תמה"
+        fonts: "גופנים"
+        homepage: "דף הבית"
+      theme:
+        selected: "נבחרים"
+      colors:
+        light: "בהיר"
+        dark: "כהה"
+      fonts:
+        base_font: "גופן בסיס"
+        heading_font: "גופן כותרת"
+      homepage:
+        topics: "נושאים"
+        categories: "קטגוריות"
+        styles:
+          boxes: "תיבות"
     about:
       edit: "עריכת עמוד זה"
       simple_title: "על אודות"
@@ -787,6 +809,7 @@ he:
           many: "+%{count} טיוטות נוספות"
           other: "+%{count} טיוטות נוספות"
     embed_mode:
+      allow_access: "לאפשר גישה"
       editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
@@ -871,6 +894,7 @@ he:
       date_filter: "פורסם בין"
       in_reply_to: "בתגובה ל"
       filtered_flagged_by: "סומן על ידי"
+      no_component_found: "לא נמצא רכיב עבור %{type}"
       unknown:
         instruction: "אי אפשר להציג אותם כראוי עד להפעלת התוסף המתאים. נא להפעיל את התוסף ולרענן את העמוד. לחלופין, אפשר להתעלם מהם. <a href='%{url}' target='_blank'>מידע נוסף…</a>"
         reviewable_unknown_source: "%{reviewableType} (תוסף לא ידוע)"
@@ -904,10 +928,6 @@ he:
         optional: "רשות"
       claim_help:
         optional: "אפשר לדרוש את הפריט כדי למנוע מאחרים לסקור אותו."
-        required: "עליך לדרוש פריטים לפני שיתאפשר לך לסקור אותם."
-        claimed_by_you: "דרשת את הפריט הזה ועכשיו יתאפשר לך לסקור אותו."
-        claimed_by_other: "הפריט הזה זמין לסריקה רק על ידי <b>%{username}</b>."
-        automatically_claimed_by: "הפריט הזה נבדק כרגע על ידי <b>%{username}</b>."
       claim:
         title: "דרישת נושא זה"
       unclaim:
@@ -3069,6 +3089,7 @@ he:
         two: "+%{count} תת־קטגוריות"
         many: "+%{count} תת־קטגוריות"
         other: "+%{count} תת־קטגוריות"
+      subcategories: "+ תת־קטגוריות"
       topic_count:
         one: "נושא %{count} בקטגוריה הזו"
         two: "%{count} נושאים בקטגוריה הזו"
@@ -3509,7 +3530,6 @@ he:
         other: "%{count} בקשות חברות לקבוצה ‚%{group_name}’ ממתינות"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - הסתיים"
       new_features: "יכולות חדשות זמינות!"
       admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
       upcoming_changes:
@@ -6671,13 +6691,34 @@ he:
       new_features:
         title: "מה חדש?"
         check_for_updates: "חיפוש עדכונים"
+      site_traffic_explorer:
+        pageviews: "צפיות-דף"
+        view_more: "להציג עוד"
+        cards:
+          pages: "עמודים"
+          visitors: "מבקרים"
+        columns:
+          referrers: "מקור ההפניה"
+          countries: "ארץ"
+          top_urls: "כתובת"
+          browsers: "דפדפן"
+          ip_addresses: "כתובת IP"
+        filters:
+          referrer: "מקור ההפניה"
+          country: "ארץ"
+          browser: "דפדפן"
+          ip: "כתובת IP"
+        metrics:
+          pageviews:
+            label: "צפיות-דף"
+        series:
+          anonymous_human: "אלמוני"
       dashboard:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
         discourse_last_updated: "עדכון Discourse:"
         version: "גירסה"
         up_to_date: "הכול עדכני!"
-        critical_available: "עדכון קריטי מוכן להתקנה."
         updates_available: "עדכונים מוכנים."
         please_update: "נא לעדכן!"
         no_check_performed: "לא בוצעה בדיקה לעדכונים. וודא ש-sidekiq פועל."

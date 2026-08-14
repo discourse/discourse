@@ -61,7 +61,7 @@ type DMenuOptionArgs<Data> = Partial<
   onRegisterApi?: (instance: DMenuInstance) => void;
 };
 
-interface DMenuSignature<Data = unknown> {
+export interface DMenuSignature<Data = unknown> {
   Element: HTMLElement;
   Args: DMenuOptionArgs<Data> & {
     // Arguments the component reads directly and forwards to the trigger button;
@@ -173,7 +173,10 @@ export default class DMenu<Data = unknown> extends Component<
     // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
     const parentHandlerResult = this.args.onKeydown?.(event);
 
-    if (!this.#body) {
+    // Inline ordering owns Tab on the trigger, in the capture phase, and decides whether the
+    // panel is entered. Pulling focus into the body here would override a decision to pass over
+    // a panel that offers no stop.
+    if (!this.#body || this.options.inlineTabOrder) {
       return parentHandlerResult;
     }
 
@@ -249,10 +252,20 @@ export default class DMenu<Data = unknown> extends Component<
     }>;
   }
 
+  /**
+   * Filling the gaps with defaults here would produce the same merged options, but it would erase
+   * the difference between "left unset" and "explicitly set to the default", which the instance
+   * needs in order to let one option imply another.
+   *
+   * @returns Only the options the caller supplied, keyed as in `MENU.options`.
+   */
   get allowedProperties() {
     const properties: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(MENU.options)) {
-      properties[key] = (this.args as Record<string, unknown>)[key] ?? value;
+    for (const key of Object.keys(MENU.options)) {
+      const value = (this.args as Record<string, unknown>)[key];
+      if (value != null) {
+        properties[key] = value;
+      }
     }
     return properties;
   }

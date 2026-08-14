@@ -39,3 +39,8 @@ bg:
       custom_range_from: "От"
       admin:
         name: "Име "
+    discourse_workflows:
+      gamification_score:
+        username: "Потребител"
+        date: "Дата"
+        description: "Описание"

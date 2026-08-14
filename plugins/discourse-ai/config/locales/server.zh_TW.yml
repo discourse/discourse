@@ -16,6 +16,8 @@ zh_TW:
         image_generation_custom:
           name: "客製"
     ai_bot:
+      read_post:
+        unknown_post: "貼文"
       tool_summary:
         silence_user: "使用者靜音"
         search: "搜尋"

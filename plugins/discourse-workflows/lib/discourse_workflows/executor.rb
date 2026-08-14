@@ -927,7 +927,7 @@ module DiscourseWorkflows
       if wait_request.workflow_call?
         begin_workflow_call_wait!(wait_request)
       else
-        begin_timed_wait!(wait_request.waiting_until)
+        begin_timed_wait!(wait_request.waiting_until, timeout_action: wait_request.timeout_action)
       end
     rescue => e
       @store.fail!(error: e, steps: @steps)
@@ -942,13 +942,18 @@ module DiscourseWorkflows
       @context.store_pending_queue(@queue.drop(@queue_index || 0))
     end
 
-    def begin_timed_wait!(waiting_until)
+    def begin_timed_wait!(waiting_until, timeout_action: nil)
       now = Time.current
       ceiling = now + MAX_WAIT_DURATION_SECONDS
       resolved = waiting_until.blank? ? ceiling : [waiting_until, ceiling].min
 
       execution =
-        @store.pause_waiting_execution!(node: @waiting_node, waiting_until: resolved, steps: @steps)
+        @store.pause_waiting_execution!(
+          node: @waiting_node,
+          waiting_until: resolved,
+          timeout_action: timeout_action,
+          steps: @steps,
+        )
 
       Jobs.enqueue_in(
         [resolved - now, 0].max,

@@ -16,7 +16,6 @@ module DiscourseUpdates
           latest_version: latest_version,
           latest_pretty_version: latest_pretty_version,
           latest_sha: latest_sha,
-          critical_updates: critical_updates_available?,
           missing_versions_count: missing_versions_count,
         )
       end
@@ -46,10 +45,7 @@ module DiscourseUpdates
           Jobs.enqueue(:call_discourse_hub, all_sites: true)
           version_info.version_check_pending = true
 
-          unless version_info.updated_at.nil?
-            version_info.missing_versions_count = 0
-            version_info.critical_updates = false
-          end
+          version_info.missing_versions_count = 0 unless version_info.updated_at.nil?
         end
 
         version_info.stale_data =
@@ -99,14 +95,6 @@ module DiscourseUpdates
 
     def missing_versions_count=(arg)
       Discourse.redis.set(missing_versions_count_key, arg)
-    end
-
-    def critical_updates_available?
-      (Discourse.redis.get(critical_updates_available_key) || false) == "true"
-    end
-
-    def critical_updates_available=(arg)
-      Discourse.redis.set(critical_updates_available_key, arg)
     end
 
     def updated_at
@@ -332,7 +320,6 @@ module DiscourseUpdates
         latest_version_key,
         latest_pretty_version_key,
         latest_sha_key,
-        critical_updates_available_key,
         missing_versions_count_key,
         updated_at_key,
         missing_versions_list_key,
@@ -375,10 +362,6 @@ module DiscourseUpdates
 
     def latest_sha_key
       "discourse_latest_sha"
-    end
-
-    def critical_updates_available_key
-      "critical_updates_available"
     end
 
     def missing_versions_count_key

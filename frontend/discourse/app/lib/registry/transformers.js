@@ -128,6 +128,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "poster-name-user-title",
   "preferences-save-attributes",
   "quote-params",
+  "reviewable-component",
   "route-to-url",
   "select-content",
   "sidebar-anonymous-default-categories",

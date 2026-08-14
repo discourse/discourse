@@ -108,6 +108,74 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(captured_kwargs.first[:extra_model_params]).to be_nil
     end
 
+    it "adds subagent attribution without leaking unrelated context metadata" do
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: [{ type: :user, content: "test" }],
+          feature_context: {
+            :source => "context",
+            "subagent_depth" => 1,
+            "subagent_agent_id" => 7,
+          },
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["Done"],
+      ) do |_endpoint, _llm, _, options|
+        bot.reply(
+          context,
+          llm_args: {
+            feature_context: {
+              post_id: 42,
+              source: "caller",
+              subagent_depth: 99,
+            },
+          },
+        )
+
+        expect(options.first[:feature_context]).to eq(
+          "post_id" => 42,
+          "source" => "caller",
+          "subagent_depth" => 1,
+          "subagent_agent_id" => 7,
+        )
+      end
+    end
+
+    it "uses the reserved final completion when the shared completion budget is exhausted" do
+      execution_context =
+        DiscourseAi::Completions::ExecutionContext.new(
+          token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
+        )
+      state =
+        DiscourseAi::Agents::SubagentExecutionState.new(
+          execution_context: execution_context,
+          root_token_budget: 10_000,
+        )
+      (DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1).times do
+        expect(state.reserve_completion).to eq(true)
+      end
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: [{ type: :user, content: "test" }],
+          execution_context: execution_context,
+          subagent_execution_state: state,
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["Final answer"],
+      ) do |_endpoint, _llm, prompts|
+        bot.reply(context)
+
+        expect(prompts.first.tool_choice).to eq(:none)
+        expect(prompts.first.messages.last[:content]).to eq(
+          described_class::TOKEN_BUDGET_FINAL_ANSWER_HINT,
+        )
+      end
+    end
+
     context "when using function chaining" do
       it "yields a loading placeholder while proceeds to invoke the command" do
         tool = DiscourseAi::Agents::Tools::ListCategories.new({}, bot_user: nil, llm: nil)
@@ -129,6 +197,109 @@ RSpec.describe DiscourseAi::Agents::Bot do
           bot.reply(context) do |_bot_reply_post, cancel, placeholder|
             expect(placeholder).to eq(partial_placeholder) if placeholder
           end
+        end
+      end
+    end
+
+    context "with tool invocation limits" do
+      fab!(:agent_record) do
+        Fabricate(
+          :ai_agent,
+          tools: [["Search", { "max_results" => 3, "max_invocations" => 1 }, false]],
+        )
+      end
+
+      it "keeps delegation available after a limited evidence tool is exhausted" do
+        Group.refresh_automatic_groups!
+        child =
+          Fabricate(
+            :ai_agent,
+            default_llm_id: gpt_4.id,
+            allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+          )
+        parent =
+          Fabricate(
+            :ai_agent,
+            default_llm_id: gpt_4.id,
+            allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+            subagent_ids: [child.id],
+            tools: [["Search", { "max_results" => 3, "max_invocations" => 1 }, false]],
+          )
+        search_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "search-1",
+            name: "search",
+            parameters: {
+              search_query: "distinctive phrase",
+            },
+          )
+        spawn_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "spawn-1",
+            name: "spawn_agent",
+            parameters: {
+              agent_id: child.id,
+              prompt: "Check the evidence",
+            },
+          )
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Verify this" }],
+          )
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [search_call, spawn_call, "Child result", "Final answer"],
+        ) do |_endpoint, _llm, prompts|
+          agent_bot = described_class.as(bot_user, agent: parent.class_instance.new)
+          raw_context = agent_bot.reply(context) { |_partial| }
+
+          expect(raw_context.last.first).to eq("Final answer")
+          expect(prompts[1].tool_choice).not_to eq(:none)
+          expect(prompts.last.tool_choice).not_to eq(:none)
+        end
+      end
+
+      it "runs one invocation and requests a final answer when a model emits parallel calls" do
+        first_tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "call_1",
+            name: "search",
+            parameters: {
+              search_query: "distinctive phrase",
+            },
+          )
+        second_tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "call_2",
+            name: "search",
+            parameters: {
+              search_query: "rephrased distinctive phrase",
+            },
+          )
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Find the source" }],
+          )
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [[first_tool_call, second_tool_call], "Final answer"],
+        ) do |_endpoint, _llm, prompts|
+          agent_bot = described_class.as(bot_user, agent: agent_record.class_instance.new)
+          raw_context = agent_bot.reply(context) { |_partial| }
+          tool_results = prompts.last.messages.select { |message| message[:type] == :tool }
+
+          expect(raw_context.last.first).to eq("Final answer")
+          expect(prompts.map(&:tool_choice)).to eq([nil, :none])
+          expect(tool_results.length).to eq(2)
+          expect(
+            tool_results.count { |result| JSON.parse(result[:content])["status"] == "error" },
+          ).to eq(1)
+          expect(prompts.last.messages.last).to eq(
+            type: :user,
+            content: described_class::TOOL_INVOCATION_BUDGET_FINAL_ANSWER_HINT,
+          )
         end
       end
     end

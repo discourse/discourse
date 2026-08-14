@@ -92,6 +92,36 @@ RSpec.describe DiscourseAi::Agents::Agent do
     AiAgent.agent_cache.flush!
   end
 
+  it "includes read_post in the configurable tool catalog" do
+    expect(described_class.all_available_tools).to include(DiscourseAi::Agents::Tools::ReadPost)
+  end
+
+  it "never resolves a custom spawn_agent through the fallback tool path" do
+    custom_tool = Fabricate(:ai_tool, tool_name: "spawn_agent")
+    child = Fabricate(:ai_agent)
+    agent_record = Fabricate(:ai_agent, subagent_ids: [child.id])
+    agent_record.update_columns(tools: [["custom-#{custom_tool.id}", nil, false]])
+    tool_call =
+      DiscourseAi::Completions::ToolCall.new(
+        id: "spawn-1",
+        name: "spawn_agent",
+        parameters: {
+          agent_id: child.id,
+          prompt: "Check this",
+        },
+      )
+
+    resolved =
+      agent_record.class_instance.new.find_tool(
+        tool_call,
+        bot_user: user,
+        llm: nil,
+        context: DiscourseAi::Agents::BotContext.new(user: user),
+      )
+
+    expect(resolved).to be_nil
+  end
+
   it "renders the system prompt" do
     freeze_time
 

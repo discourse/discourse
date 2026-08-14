@@ -37,7 +37,9 @@ interface FloatKitTabOrderInlineSignature {
  *   and continues from the TRIGGER. Forward that is the stop after the trigger; backward it is
  *   the trigger's own last stop, which is where the reader came in.
  *
- * Presses that merely move between the float's own controls are left to the browser.
+ * The float is treated as one logical segment beside the trigger. Every Tab within the segment is
+ * handled from a freshly computed local sequence, so dynamic controls, radio groups, and positive
+ * tabindex values cannot make the browser and the edge check disagree.
  *
  * This is the alternative to `trapTab`, not a companion to it. Containment suits a float that is
  * genuinely modal — a real `aria-modal` dialog, which owns the screen until dismissed — and
@@ -49,14 +51,14 @@ interface FloatKitTabOrderInlineSignature {
  * such an element consumes a Tab press while being absent from the enumerations below.
  */
 export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInlineSignature> {
-  #boundTrigger: HTMLElement | null = null;
   #close?: () => void;
   #content?: HTMLElement;
-  #trigger?: HTMLElement | null;
+  #departing = false;
+  #trigger: HTMLElement | null = null;
 
   constructor(owner: Owner, args: ArgsFor<FloatKitTabOrderInlineSignature>) {
     super(owner, args);
-    registerDestructor(this, (instance) => instance.cleanup());
+    registerDestructor(this, () => this.#cleanup());
   }
 
   modify(
@@ -64,7 +66,6 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     [trigger, close]: FloatKitTabOrderInlineSignature["Args"]["Positional"]
   ) {
     this.#content = element;
-    this.#trigger = trigger;
     this.#close = close;
 
     element.removeEventListener("keydown", this.handleContentKeydown);
@@ -75,22 +76,16 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     // entering it is meaningful. Rebound rather than assumed stable, since `modify` re-runs
     // whenever the trigger argument changes.
     //
-    // CAPTURE phase, because a control inside the trigger may stop Tab from bubbling: a combobox
-    // input does exactly that, to keep Tab from being pulled into a panel holding nothing but a
-    // list. Capture is the only phase certain to see the press. That guard is preserved rather
-    // than defeated — this handler declines a float with no stop of its own, so the press
-    // continues to the trigger's own handling untouched.
-    this.#boundTrigger?.removeEventListener(
+    // CAPTURE phase, because a control inside the trigger may stop Tab from bubbling. When the
+    // panel has a stop, inline ordering is authoritative and intentionally precedes consumer
+    // bubbling handlers. With no panel stop, the event continues untouched.
+    this.#trigger?.removeEventListener(
       "keydown",
       this.handleTriggerKeydown,
       true
     );
-    this.#boundTrigger = trigger ?? null;
-    this.#boundTrigger?.addEventListener(
-      "keydown",
-      this.handleTriggerKeydown,
-      true
-    );
+    this.#trigger = trigger ?? null;
+    this.#trigger?.addEventListener("keydown", this.handleTriggerKeydown, true);
   }
 
   /** Forward Tab at the trigger's last stop enters the float, when the float has a stop to offer. */
@@ -100,7 +95,8 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
       event.key !== "Tab" ||
       event.shiftKey ||
       event.isComposing ||
-      event.defaultPrevented
+      event.defaultPrevented ||
+      this.#departing
     ) {
       return;
     }
@@ -115,7 +111,7 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     // element in the page, which is what a native Shift+Tab reaches.
     const triggerStops = tabStopsWithin(trigger);
     const lastTriggerStop = triggerStops.at(-1);
-    if (lastTriggerStop && document.activeElement !== lastTriggerStop) {
+    if (!lastTriggerStop || document.activeElement !== lastTriggerStop) {
       return;
     }
 
@@ -128,10 +124,15 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     contentStops[0].focus();
   }
 
-  /** A Tab that would step off the end of the float's own stops leaves it, from the trigger. */
+  /** Moves within the float's logical segment, or leaves it from the trigger's page position. */
   @bind
   handleContentKeydown(event: KeyboardEvent) {
-    if (event.key !== "Tab" || event.isComposing || event.defaultPrevented) {
+    if (
+      event.key !== "Tab" ||
+      event.isComposing ||
+      event.defaultPrevented ||
+      this.#departing
+    ) {
       return;
     }
 
@@ -142,29 +143,28 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     }
 
     const forward = !event.shiftKey;
-    const stops = tabStopsWithin(content);
-    const edge = forward ? stops.at(-1) : stops[0];
     const active = document.activeElement;
-
-    // Still moving between the float's own controls: the browser already does the right thing.
-    // Focus resting on something that is not a stop at all counts as the edge, since a native
-    // Tab has nothing further to reach from there either.
-    if (
-      active !== edge &&
-      active instanceof HTMLElement &&
-      stops.includes(active)
-    ) {
+    if (!(active instanceof HTMLElement)) {
       return;
     }
 
-    // Backward lands on the trigger's LAST stop rather than the trigger element itself: on a
-    // trigger that is not focusable in its own right (a typeahead, whose stop is the input it
-    // wraps) focusing the wrapper would drop focus entirely.
-    const target = forward
-      ? adjacentTabStop(trigger, { forward: true, ignore: content })
-      : (tabStopsWithin(trigger).at(-1) ?? trigger);
+    const internalTarget = adjacentTabStop(active, { forward, root: content });
+    if (internalTarget) {
+      event.preventDefault();
+      internalTarget.focus();
+      return;
+    }
 
-    event.preventDefault();
+    const triggerAnchor = tabStopsWithin(trigger).at(-1);
+    const target = forward
+      ? triggerAnchor &&
+        adjacentTabStop(triggerAnchor, { forward: true, ignore: content })
+      : triggerAnchor;
+
+    this.#departing = true;
+    if (target) {
+      event.preventDefault();
+    }
 
     // Focus BEFORE dismissing. Dismissal unmounts the content and would drop focus to `<body>`,
     // and it may settle asynchronously, so moving focus afterwards races the teardown instead of
@@ -173,9 +173,9 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     this.#close?.();
   }
 
-  cleanup() {
+  #cleanup() {
     this.#content?.removeEventListener("keydown", this.handleContentKeydown);
-    this.#boundTrigger?.removeEventListener(
+    this.#trigger?.removeEventListener(
       "keydown",
       this.handleTriggerKeydown,
       true

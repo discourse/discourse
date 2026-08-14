@@ -10,10 +10,12 @@ import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
-import { and } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ChatMessageReactionsUsers from "discourse/plugins/chat/discourse/components/chat-message-reactions-users";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
+
+let descriptionSequence = 0;
 
 export default class ChatMessageReaction extends Component {
   @service currentUser;
@@ -32,7 +34,7 @@ export default class ChatMessageReaction extends Component {
     }
 
     const instance = this.tooltip.register(element, {
-      content: trustHTML(this.popoverContent),
+      content: this.description,
       identifier: "chat-message-reaction-tooltip",
       animated: false,
       placement: "top",
@@ -93,6 +95,12 @@ export default class ChatMessageReaction extends Component {
         this.scheduleCloseReactionsUsersPopup,
         { passive: true }
       );
+      element.addEventListener("focus", this.openReactionsUsersPopup, {
+        passive: true,
+      });
+      element.addEventListener("blur", this.scheduleCloseReactionsUsersPopup, {
+        passive: true,
+      });
     }
 
     return () => {
@@ -105,10 +113,17 @@ export default class ChatMessageReaction extends Component {
         "pointerleave",
         this.scheduleCloseReactionsUsersPopup
       );
+      element.removeEventListener("focus", this.openReactionsUsersPopup);
+      element.removeEventListener(
+        "blur",
+        this.scheduleCloseReactionsUsersPopup
+      );
       instance.destroy();
       this.#reactionsUsersPopupInstance = null;
     };
   });
+
+  descriptionId = `chat-message-reaction-description-${descriptionSequence++}`;
   #reactionsUsersPopupInstance = null;
   #closeReactionsUsersPopupTimer = null;
 
@@ -120,6 +135,12 @@ export default class ChatMessageReaction extends Component {
     this.#closeReactionsUsersPopupTimer = discourseLater(() => {
       this.#reactionsUsersPopupInstance?.close({ focusTrigger: false });
     }, 250);
+  }
+
+  @bind
+  openReactionsUsersPopup() {
+    this.cancelCloseReactionsUsersPopup();
+    this.#reactionsUsersPopupInstance?.show();
   }
 
   @bind
@@ -172,6 +193,10 @@ export default class ChatMessageReaction extends Component {
     return emojiUnescape(getReactionText(this.args.reaction, this.currentUser));
   }
 
+  get description() {
+    return this.popoverContent ? trustHTML(this.popoverContent) : undefined;
+  }
+
   <template>
     {{#if (and @reaction this.emojiUrl)}}
       <button
@@ -181,7 +206,9 @@ export default class ChatMessageReaction extends Component {
         type="button"
         title={{this.emojiString}}
         data-emoji-name={{@reaction.emoji}}
-        tabindex={{if @interactive "0" "-1"}}
+        tabindex={{if (eq @interactive false) "-1" "0"}}
+        aria-pressed={{if @reaction.reacted "true" "false"}}
+        aria-describedby={{if this.description this.descriptionId}}
         class={{dConcatClass
           "chat-message-reaction"
           (if @reaction.reacted "reacted")
@@ -200,6 +227,13 @@ export default class ChatMessageReaction extends Component {
           <span class="count">{{@reaction.count}}</span>
         {{/if}}
       </button>
+
+      {{#if this.description}}
+        <span
+          id={{this.descriptionId}}
+          class="sr-only"
+        >{{this.description}}</span>
+      {{/if}}
     {{/if}}
   </template>
 }

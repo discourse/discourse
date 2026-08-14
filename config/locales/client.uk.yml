@@ -584,26 +584,16 @@ uk:
       pill: "Запропоновано"
       pm_title: "Схожі повідомлення"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Запуск за %{step_count} простих кроків"
       congrats_onboarding_complete: "Вітаємо із завершенням процесу адаптації!"
       select_theme:
         title: "Налаштуйте свій сайт"
-        description: "Виберіть початкову тему для вашої спільноти"
-        action: "Виберіть тему"
-        modal_title: "Виберіть тему"
-        use_theme: "Використати вибрану тему"
-        enabled: "Вибрано"
-        applying_theme: "Застосування теми..."
-        browse_all: "Керування темами"
         show_light_screenshot: "Показувати світлий скріншот"
         show_dark_screenshot: "Показати темний скріншот"
       invite_collaborators:
         title: "Запросити співавторів"
-        description: "Перші члени допомагають оживити вашу спільноту"
         action: "Створити запрошення"
       start_posting:
         title: "Розпочати публікацію"
-        description: "Дайте людям щось, про що можна поговорити разом"
         action: "Переглянути ідеї"
         choose_option: "З чого б ви хотіли почати?"
         predefined_topics: "Шаблони криголамів"
@@ -624,6 +614,27 @@ uk:
           what_is_your_favorite_food:
             title: "Яка ваша улюблена їжа?"
             body: "Поділіться своєю улюбленою їжею зі спільнотою! Я почну: Я люблю піцу, особливо з додатковим сиром і пепероні."
+    design_wizard:
+      title: "Налаштуйте свій сайт"
+      back: "Назад"
+      next: "Далі"
+      sections:
+        theme: "Кольорова схема"
+        fonts: "Шрифти"
+        homepage: "Головна сторінка"
+      theme:
+        selected: "Вибрано"
+      colors:
+        light: "Світла"
+        dark: "Темна"
+      fonts:
+        base_font: "Базовий шрифт"
+        heading_font: "Шрифт заголовка"
+      homepage:
+        topics: "Теми"
+        categories: "Розділи"
+        styles:
+          boxes: "Блоки"
     about:
       edit: "Редагувати цю сторінку"
       simple_title: "Інформація"
@@ -984,10 +995,6 @@ uk:
       stale_help: "Цей пункт вирішено користувачем <b>%{username}</b>."
       claim_help:
         optional: "Ви можете заявити права на цей елемент, щоб інші не могли його розглядати."
-        required: "Ви повинні заявити права на елементи, перш ніж ви зможете розглядати їх."
-        claimed_by_you: "Ви заявили права на цей елемент і можете розглядати його."
-        claimed_by_other: "Цей елемент може розглядати лише <b>%{username}</b>."
-        automatically_claimed_by: "Зараз цей елемент переглядає <b>%{username}</b>."
       claim:
         title: "Заявити права на цю тему"
       unclaim:
@@ -3273,6 +3280,7 @@ uk:
         few: "+%{count} підрозділи"
         many: "+%{count} підрозділів"
         other: "+%{count} підрозділів"
+      subcategories: "+ Підрозділи"
       topic_count:
         one: "в цьому розділі %{count} тема"
         few: "в цьому розділі %{count} теми"
@@ -3359,6 +3367,7 @@ uk:
       toggle: "Перемкнути випадаючі фільтри"
     d_icon_grid_picker:
       select_icon: "Виберіть іконку"
+      search_label: "Пошук значків"
       search_placeholder: "Пошук значків..."
       no_results: "Не знайдено піктограм"
       results_count:
@@ -3847,7 +3856,6 @@ uk:
         other: "%{count} відкритих запитів на членство до '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - завершено"
       new_features: "Доступні нові функції!"
       admin_problems: "Нова порада на інформаційній панелі вашого сайту"
       upcoming_changes:
@@ -7430,6 +7438,34 @@ uk:
       new_features:
         title: "Що нового?"
         check_for_updates: "Перевірте наявність оновлень"
+      site_traffic_explorer:
+        pageviews: "Переглядів"
+        view_more: "Переглянути більше"
+        cards:
+          pages: "Сторінки"
+          visitors: "Відвідувачі"
+        columns:
+          referrers: "Реферер"
+          countries: "Країна"
+          top_urls: "Посилання"
+          browsers: "Оглядач"
+          ip_addresses: "IP-адреса"
+        filters:
+          referrer: "Реферер"
+          country: "Країна"
+          browser: "Оглядач"
+          ip: "IP-адреса"
+        metrics:
+          pageviews:
+            label: "Переглядів"
+          logged_in_share:
+            label: "Зареєстровано спільний доступ"
+          bounce_rate:
+            label: "Показник відмов"
+        series:
+          logged_in_human: "Ви увійшли"
+          anonymous_human: "Анонімний"
+          likely_crawler: "Ймовірні сканери"
       dashboard:
         title: "Майстерня"
         last_updated: "Інформаційна панель оновлена:"
@@ -7441,7 +7477,6 @@ uk:
           few: "Ви використовуєте найновішу версію, але доступні %{count} нові оновлення."
           many: "Ви використовуєте найновішу версію, але доступні %{count} нові оновлення."
           other: "Ви використовуєте найновішу версію, але доступні %{count} нові оновлення."
-        critical_available: "Доступне критичне оновлення."
         updates_available: "Доступні оновлення."
         please_update: "Будь ласка, оновіть!"
         no_check_performed: "Не виконано перевірку на наявність оновлень. Перевірте, чи працює sidekiq."

@@ -983,6 +983,13 @@ hu:
       macos: "MacOS"
       windows: "Microsoft Windows"
       unknown: "ismeretlen operációs rendszer"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Névtelen"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Hiba történt az e-mail-cím módosításakor. Lehet, hogy már használatban van?"
     doesnt_exist: "Ez az e-mail-cím nincs a fiókjához társítva."
@@ -2364,7 +2371,6 @@ hu:
     revoke_user_api_keys_unused_days: "A felhasználói API kulcs utolsó használata óta eltelt napok száma, mielőtt automatikusan visszavonásra kerül (0 esetén soha)"
     revoke_user_api_keys_maxlife_days: "A felhasználói API kulcs automatikus visszavonása előtti napok száma (0 esetén soha)"
     tagging_enabled: "Engedélyezi a címkéket a témákhoz? További információért tekintse meg az <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Adminisztrátori útmutató a címkékhez</a> című cikket a Meta oldalon."
-    create_tag_allowed_groups: "Címkék létrehozására jogosult csoportok. Az adminisztrátorok és a moderátorok mindig létrehozhatnak címkéket."
     edit_tags_allowed_groups: "Csoportok, amelyek jogosultak címkék, címkeleírások és címkeszinonimák szerkesztésére."
     max_tags_per_topic: "A témához maximálisan hozzárendelhető címkék száma."
     max_tags_per_email_subject: "Az e-mail tárgyában található címkék maximális száma"
@@ -2437,7 +2443,6 @@ hu:
     default_composition_mode: "Állítsd be a közösséged szövegszerkesztőjének alapértelmezett módját. A Rich Text mód modernebb, ismerősebb írási élményt nyújt a legtöbb felhasználó számára, míg a Markdown mód a technikaibb közönség számára lehet alkalmasabb. A tagok a szövegszerkesztő eszköztárán található kapcsolóval válthatnak a módok között."
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
     content_localization_use_default_locale_when_unsupported: "A webhely alapértelmezett területi beállításainak megfelelően lokalizált tartalmat jelenítsen meg azoknak a felhasználóknak, akiknek az előnyben részesített nyelve nem szerepel a „tartalom lokalizációjában támogatott területek” listában."
-    content_localization_allow_author_localization: "Lehetővé teheti a szerzők számára saját témáik és bejegyzéseik lokalizációjának frissítését a bejegyzések menüjén keresztül."
     floating_dismiss_topics_on_mobile: "Megjelenít egy lebegő „Elvetés...” gombot mobilon a témalistához a könnyebb hozzáférés és a témalista tetején lévő hely felszabadítása érdekében."
     enable_simplified_category_creation: "Leegyszerűsített kategória-létrehozási folyamatot tesz lehetővé kevesebb opcióval és letisztultabb felülettel."
     reporting_improvements: "Navigációs, megjelenésbeli és használhatósági fejlesztések a Discourse adminisztrátori jelentéseihez."
@@ -3850,9 +3855,6 @@ hu:
     user_posted_pm_staged:
       title: "Ideiglenes felhasználó meghívva PÜ-be"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Fiók felfüggesztve"
       subject_template: "[%{email_prefix}] Fiókja fel lett függesztve"
@@ -4658,6 +4660,10 @@ hu:
     title: "Fejlesztői mód"
     enable_rack_mini_profiler: "Engedélyezze a Rack Mini Profiler 1 órás megőrzését a munkamenet-változások között"
     enter: "Belépés a Fejlesztői módba"
+  design_wizard:
+    palette_pairs:
+      default: "Alapértelmezett"
+      dracula: "Drakula"
   wizard:
     title: "Discourse telepítő"
     step:

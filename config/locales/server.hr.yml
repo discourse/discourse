@@ -726,6 +726,13 @@ hr:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "nepoznati operacijski sustav"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimno"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Dogodila se greška u promijeni tvog e-maila. Možda se ta adresa već koristi?"
     doesnt_exist: "Ta adresa e-pošte nije povezana s vašim računom."
@@ -2211,9 +2218,6 @@ hr:
     user_posted_pm_staged:
       title: "Korisnik je objavio PM"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Korisnički račun je suspendiran"
       subject_template: "[%{email_prefix}] Vaš račun je suspendiran"
@@ -2750,6 +2754,9 @@ hr:
       help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
+  design_wizard:
+    palette_pairs:
+      default: "Zadano"
   wizard:
     step:
       setup:

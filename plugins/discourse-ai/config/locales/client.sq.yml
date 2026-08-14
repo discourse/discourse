@@ -166,6 +166,9 @@ sq:
           required: "E nevojshme"
       llms:
         display_name: "Emri"
+        vision_modes:
+          disabled:
+            title: "E çaktivizuar"
         save: "Ruani"
         edit: "Redaktoni"
         delete: Fshij

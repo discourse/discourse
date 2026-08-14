@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -140,6 +141,79 @@ module("Integration | Component | DashboardReports", function (hooks) {
     assert
       .dom('[data-identifier="test_source:signups"] .fake-report-renderer')
       .hasText("signups", "a successful report renders its content");
+  });
+
+  test("shows a loading spinner immediately when the date range changes, instead of the stale chart", async function (assert) {
+    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+
+    let resolveSecondFetch;
+    let fetchCount = 0;
+    pretender.post("/admin/dashboard/reports/bulk", () => {
+      fetchCount++;
+      if (fetchCount === 1) {
+        return response({
+          items: [
+            {
+              source: "test_source",
+              identifier: "signups",
+              key: "test_source:signups",
+              data: { type: "signups", empty: false },
+            },
+          ],
+        });
+      }
+      return new Promise((resolve) => (resolveSecondFetch = resolve));
+    });
+
+    class State {
+      @tracked startDate = "2026-01-01";
+    }
+    const state = new State();
+    const singleItem = [ITEMS[0]];
+
+    await render(
+      <template>
+        <DashboardReports
+          @data={{hash items=singleItem}}
+          @startDate={{state.startDate}}
+        />
+      </template>
+    );
+
+    assert
+      .dom('[data-identifier="test_source:signups"] .fake-report-renderer')
+      .exists("the initial load renders real content");
+
+    state.startDate = "2026-02-01";
+    await waitFor(
+      '[data-identifier="test_source:signups"] .loading-container.visible'
+    );
+    assert
+      .dom('[data-identifier="test_source:signups"] .loading-container.visible')
+      .exists("changing the date range shows a loading spinner immediately");
+    assert
+      .dom('[data-identifier="test_source:signups"] .fake-report-renderer')
+      .doesNotExist(
+        "the stale chart is replaced by the spinner rather than left showing"
+      );
+
+    resolveSecondFetch(
+      response({
+        items: [
+          {
+            source: "test_source",
+            identifier: "signups",
+            key: "test_source:signups",
+            data: { type: "signups", empty: false },
+          },
+        ],
+      })
+    );
+    await settled();
+
+    assert
+      .dom('[data-identifier="test_source:signups"] .fake-report-renderer')
+      .exists("the chart renders again once the new range's data resolves");
   });
 
   test("clears every card's loading state when the whole bulk request fails", async function (assert) {

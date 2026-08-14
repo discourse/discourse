@@ -61,15 +61,18 @@ en:
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
 
+  access_control_list:
+    errors:
+      user_will_not_have_permission: "If you remove this ACL entry you will lose access to this entity."
+      user_will_not_have_permission_on_create: "If you create this entity with these permissions, you will not have access to it. Continue?"
+
   topic_category_changed: "From %{from} to %{to}"
   topic_tag_changed:
     added_and_removed: "Added %{added} and removed %{removed}"
     added: "Added %{added}"
     removed: "Removed %{removed}"
-
   topics_bulk_action:
     too_many_topic_ids: "You can only perform a bulk action on up to %{limit} topics at once."
-
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -441,11 +444,10 @@ en:
     domain_not_allowed: "Your email cannot be used to redeem this invite."
     domain_not_allowed_admin: "This domain cannot be used for invites."
     max_redemptions_allowed_one: "for email invites should be 1."
+    max_redemptions_allowed_one_staff: "for admin or moderator invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
-    admin_invite_requires_email: "Admin invites must be sent to an email address"
     admin_invite_requires_admin_inviter: "Only admins can create admin invites"
-    moderator_invite_requires_email: "Moderator invites must be sent to an email address"
     moderator_invite_requires_staff_inviter: "Only staff can create moderator invites"
     existing_user_success: "Invite redeemed successfully"
     email_invites_disabled: "Sending invite emails is disabled"
@@ -1104,6 +1106,7 @@ en:
       opera: "Opera"
       safari: "Safari"
       unknown: "unknown browser"
+
     device:
       android: "Android Device"
       chromebook: "Chrome OS"
@@ -1123,6 +1126,19 @@ en:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "unknown operating system"
+
+  admin_site_traffic_explorer:
+    direct_or_unknown: "Direct / unknown"
+    traffic_types:
+      logged_in: "Logged in"
+      anonymous: "Anonymous"
+      likely_crawler: "Likely crawlers"
+    browsers:
+      chrome: "Chrome"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
+      unknown: "Unknown browser"
 
   change_email:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
@@ -2525,6 +2541,7 @@ en:
     auto_generated_allowlist: "List of email addresses that won't be checked for auto-generated content. Example: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
     ignore_by_title: "Ignore incoming emails based on their title."
+    ignore_by_title_regex: "Ignore incoming emails based on their title using a regular expression."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     sendgrid_verification_key: "Sendgrid verification key used to verify webhook messages."
     aws_sns_topic_arn_allowlist: "SNS topic ARNs allowed to send Amazon SES bounce webhook notifications."
@@ -2895,6 +2912,7 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
+    enable_site_traffic_explorer: "Link the admin dashboard's site traffic details action to the Site Traffic Explorer."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
@@ -3074,7 +3092,7 @@ en:
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
-      content_localization_language_switcher_requirements: "The language switcher requires {{setting:set_locale_from_cookie}} and {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
+      content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "You must first enable 'set locale from param' before enabling this setting."
       mediaconvert_role_arn_required: "AWS IAM role ARN is required when using AWS MediaConvert for video conversion."
       mediaconvert_output_subdirectory_required: "MediaConvert output subdirectory is required."
@@ -4806,6 +4824,8 @@ en:
 
         %{message}
 
+        %{respond_instructions}
+
     account_suspended:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
@@ -5634,6 +5654,8 @@ en:
       This document is CC-BY-SA. It was last updated [INSERT LAST UPDATE DATE HERE].
 
   badges:
+    errors:
+      cant_delete_system_badge: System badges cannot be deleted.
     mass_award:
       errors:
         invalid_csv: We encountered an error on line %{line_number}. Please confirm the CSV has one email per line.
@@ -6273,10 +6295,12 @@ en:
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
+          confirm: "Are you sure you want to delete @%{username}?"
           complete: "User deleted."
         block:
           title: "Delete and block user"
           description: "Delete the user and block their email and IP address"
+          confirm: "Are you sure you want to delete and block @%{username}?"
           complete: "User deleted and blocked."
       confirm_spam:
         title: "Yes"

@@ -478,17 +478,12 @@ nl:
       pill: "Voorgesteld"
       pm_title: "Voorgestelde berichten"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Start in %{step_count} eenvoudige stappen"
       congrats_onboarding_complete: "Gefeliciteerd met het voltooien van het onboardingproces!"
-      select_theme:
-        enabled: "Geselecteerd"
       invite_collaborators:
         title: "Deelnemers uitnodigen"
-        description: "Vroege leden helpen je community tot leven te brengen"
         action: "Uitnodiging maken"
       start_posting:
         title: "Begin met plaatsen"
-        description: "Geef mensen iets om samen over te praten"
         action: "Ideeën bekijken"
         choose_option: "Hoe wil je starten?"
         predefined_topics: "IJsbrekersjablonen"
@@ -509,6 +504,26 @@ nl:
           what_is_your_favorite_food:
             title: "Wat is je favoriete eten?"
             body: "Deel je favoriete eten met de community! Ik begin: ik hou van pizza, vooral met extra kaas en pepperoni."
+    design_wizard:
+      back: "Terug"
+      next: "Volgende"
+      sections:
+        theme: "Thema"
+        fonts: "Lettertypen"
+        homepage: "Startpagina"
+      theme:
+        selected: "Geselecteerd"
+      colors:
+        light: "Licht"
+        dark: "Donker"
+      fonts:
+        base_font: "Basislettertype"
+        heading_font: "Lettertype kop"
+      homepage:
+        topics: "Topics"
+        categories: "Categorieën"
+        styles:
+          boxes: "Vakken"
     about:
       edit: "Deze pagina bewerken"
       simple_title: "Over"
@@ -807,10 +822,6 @@ nl:
       stale_help: "Dit item is afgehandeld door <b>%{username}</b>."
       claim_help:
         optional: "Je kunt dit item claimen om te voorkomen dat anderen het beoordelen."
-        required: "Je moet items claimen voordat je ze kunt beoordelen."
-        claimed_by_you: "Je hebt dit item geclaimd en kunt het beoordelen."
-        claimed_by_other: "Dit item kan alleen worden beoordeeld door <b>%{username}</b>."
-        automatically_claimed_by: "Dit item wordt momenteel beoordeeld door <b>%{username}</b>."
       claim:
         title: "Dit topic claimen"
       unclaim:
@@ -2858,6 +2869,7 @@ nl:
       subcategory_count:
         one: "+%{count} subcategorie"
         other: "+%{count} subcategorieën"
+      subcategories: "+ Subcategorieën"
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
@@ -2930,6 +2942,7 @@ nl:
       toggle: "Vervolgkeuzemenufilters in-/uitschakelen"
     d_icon_grid_picker:
       select_icon: "Selecteer pictogram"
+      search_label: "Pictogrammen zoeken"
       search_placeholder: "Pictogrammen zoeken..."
       no_results: "Geen pictogrammen gevonden"
       results_count:
@@ -3267,7 +3280,6 @@ nl:
         other: "%{count} openstaande lidmaatschapsverzoeken voor '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - voltooid"
       new_features: "Nieuwe functies beschikbaar!"
       admin_problems: "Nieuw advies op je websitedashboard"
       upcoming_changes:
@@ -6315,13 +6327,32 @@ nl:
       new_features:
         title: "Wat is er nieuw?"
         check_for_updates: "Controleren op updates"
+      site_traffic_explorer:
+        pageviews: "Paginaweergaven"
+        view_more: "Meer weergeven"
+        cards:
+          pages: "Pagina's"
+          visitors: "Bezoekers"
+        columns:
+          countries: "Land"
+          top_urls: "URL"
+          browsers: "Browser"
+          ip_addresses: "IP-adres"
+        filters:
+          country: "Land"
+          browser: "Browser"
+          ip: "IP-adres"
+        metrics:
+          pageviews:
+            label: "Paginaweergaven"
+        series:
+          anonymous_human: "Anoniem"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard bijgewerkt:"
         discourse_last_updated: "Discourse bijgewerkt:"
         version: "Versie"
         up_to_date: "Je bent helemaal bij!"
-        critical_available: "Er is een kritieke update beschikbaar."
         updates_available: "Er zijn updates beschikbaar."
         please_update: "Werk bij!"
         no_check_performed: "Er is niet op updates gecontroleerd. Zorg dat Sidekiq actief is."

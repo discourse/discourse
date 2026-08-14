@@ -60,6 +60,6 @@ module DiscourseDataExplorer
       parsed.is_a?(Hash) ? parsed : {}
     end
 
-    private_class_method :resolve_params, :cacheable?, :default_limit?
+    private_class_method :resolve_params, :default_limit?
   end
 end

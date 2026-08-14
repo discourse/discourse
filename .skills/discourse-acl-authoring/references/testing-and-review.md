@@ -8,8 +8,19 @@ For target models:
 
 - Include `AclTarget`.
 - Cover `mandatory_acl` if the target defines one.
+- Cover `loss_warning_permissions` when the target requires confirmation before the current actor loses a permission.
 - Cover domain helper methods such as `anonymous_can_read?` or `can_write?` that wrap `permission_acl`.
 - Cover `.with_acl_permission` and `.with_any_acl_permissions` when index/list actions depend on the shared scopes.
+
+For `AccessControlList::EvaluateModification`:
+
+- Unknown target types fail model lookup.
+- Requests with a target id use edit wording, while requests without one use creation wording.
+- Mandatory ACL entries are included before evaluating the current user's proposed access.
+- Direct user and group grants applying to the current user are recognized.
+- Losing all access fails `user_will_have_permission`.
+- Losing any configured `loss_warning_permissions` value fails `user_will_not_lose_permission`.
+- Targets without loss warning permissions can proceed while the current user retains some access.
 
 For Guardian methods:
 
@@ -63,6 +74,15 @@ For `DAccessControl` consumers:
 - `onChange` writes updated ACL arrays into parent state.
 - The final save payload includes the intended ACL array.
 
+For `DAccessControlField` consumers:
+
+- `@mustHavePermissions` adds a visible field error when no ACL entry has an allowed permission.
+- Omitting `@mustHavePermissions` permits removal of the final manager when that is the intended confirmed flow.
+- A loss-warning response displays the target-specific server message for confirmation.
+- Confirming proceeds and does not prompt again for the same ACL fingerprint.
+- Cancelling prevents commit and `@onSubmit` without adding a visible error.
+- A later submission attempt is evaluated again when the ACL differs or the previous attempt was cancelled.
+
 Use `.skills/discourse-writing-js-tests` for QUnit patterns.
 
 ## Review Checklist
@@ -74,7 +94,9 @@ Ask these questions during code review:
 - Does the service distinguish omitted ACL params from explicit empty ACL params when that matters?
 - Are mandatory ACLs enforced in both backend writes and frontend display?
 - Are banned ACLs enforced in backend writes and filtered from the frontend for matching grantees?
-- Does the UI `@aclTarget` string match the target's `acl_target_key`?
+- Does `@aclTarget.type` contain the registered Ruby class name, and does the target retain the default matching `acl_target_key`?
+- If the target defines `loss_warning_permissions`, does it provide the matching `access_control_list.errors.<acl_target_key>_user_will_lose_permission` server translation?
+- Does a FormKit ACL editor use `DAccessControlField` or deliberately document why its validation flow differs?
 - Is ACL serialization limited to users who can manage the specific target?
 - Are list/index queries using `Target.with_acl_permission`, `Target.with_any_acl_permissions`, `guardian.target_ids_with_acl_permission`, or `target_ids_with_any_acl_permissions` instead of ad hoc SQL?
 - Are group and user IDs validated before persistence when they come from params?
@@ -89,5 +111,8 @@ Ask these questions during code review:
 - `DAccessControl` remains group-first and does not provide complete user ACL editing yet.
 - `DAccessControl` injects mandatory rows for display but does not notify the parent on render.
 - `DAccessControl` filters banned permission options for UX, but hidden options are not authorization. The manager policy is the enforcement point.
+- `DAccessControlField` cancellation leaves the proposed ACL in draft state. `preventSubmit` is not a rollback API.
+- `DAccessControlField` uses `@aclTarget.type` for class lookup and frontend metadata lookup, while site metadata is keyed by `acl_target_key`. A custom key cannot currently satisfy both paths.
+- Loss confirmation is browser UX, not write-path proof. API clients can bypass it unless the write service has a separate confirmation contract.
 - Mandatory ACLs from site settings need extra care in migrations because raw stored settings may omit `mandatory_values`.
 - `flattened_list` skips stale group IDs, stale user IDs, and unknown target classes, so a missing row can disappear from serialized ACL output while cleanup or validation catches up.

@@ -128,6 +128,11 @@ export default class AdminReportStackedChart extends Component {
               const ci = legend.chart;
               const req = chartData[index].req;
 
+              if (chartOptions.onLegendClick) {
+                chartOptions.onLegendClick(req);
+                return;
+              }
+
               if (ci.isDatasetVisible(index)) {
                 ci.hide(index);
                 if (!chartOptions.hiddenLabels.includes(req)) {
@@ -210,7 +215,10 @@ export default class AdminReportStackedChart extends Component {
               display: !chartOptions.hideYAxisGridLines,
             },
             ticks: {
-              callback: (label) => number(label),
+              callback: (_label, index, ticks) => {
+                const value = ticks[index]?.value;
+                return Number.isInteger(Number(value)) ? number(value) : null;
+              },
               sampleSize: 5,
               maxRotation: 25,
               minRotation: 0,

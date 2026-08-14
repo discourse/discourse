@@ -94,13 +94,19 @@ class AccessControlList < ActiveRecord::Base
         ->(group) { allowing_any_group([group.id]).or(allowing_users_in_group(group.id)) }
 
   def self.inject_mandatory_acl(flattened_acl, target)
-    return flattened_acl if !target.class.has_mandatory_acl?
+    target_klass =
+      if target.is_a?(String)
+        target.safe_constantize
+      else
+        target.class
+      end
+
+    return flattened_acl if !target_klass.has_mandatory_acl?
 
     flattened_acl = dedup_flattened_list(flattened_acl)
 
-    target.class.mandatory_acl.each do |mandatory_acl|
+    target_klass.mandatory_acl.each do |mandatory_acl|
       next if flattened_acl.any? { |acl| AclTarget.acl_matches?(acl, mandatory_acl) }
-
       flattened_acl << mandatory_acl
     end
 

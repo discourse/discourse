@@ -438,6 +438,8 @@ en:
         title: "Translations"
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
+        max_locales_reached: "You can only select up to %{max} languages."
+        locale_count: "Using %{count} of %{max} available languages."
         category_scope: "Categories"
         category_scope_description: "Choose whether automatic translations apply to content in all categories, public categories, or selected categories."
         cached_results_notice: "Showing cached results from %{relative_time}."
@@ -521,6 +523,8 @@ en:
           localization_settings: "App language settings"
           enable_translations: "Enable automatic translations"
           enable_translations_disabled: "You must add a supported language to enable translations"
+          show_language_switcher: "Show a language switcher in the header"
+          show_language_switcher_description: "Lets everyone pick a language and see your site in it."
         stats:
           title: "Translation statistics"
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
@@ -653,6 +657,18 @@ en:
         ai_tools: "Tools"
         native_tools_help: "Provider-native tools, such as web search or page fetch, appear when \"Always use default language model\" is enabled and the selected default language model supports them."
         mcp_servers: "MCP servers"
+        subagents: "Subagents"
+        subagents_help: "Allow this agent to delegate tasks to selected agents. A spawn tool is added only when at least one selected agent is available."
+        subagents_summary:
+          one: "This agent can delegate to %{count} agent."
+          other: "This agent can delegate to %{count} agents."
+        subagent_disabled: "%{name} (disabled)"
+        subagent_tool_name: "Subagent delegation (upper bound)"
+        invalid_subagent_ids: "Subagent IDs must be a list of integers"
+        too_many_subagents: "An agent can have at most %{max} subagents"
+        subagent_self: "An agent cannot select itself as a subagent"
+        subagents_not_found: "The selected subagent IDs do not exist: %{ids}"
+        subagent_tool_collision: "An agent with subagents cannot configure a tool named spawn_agent"
         mcp_server_tools_help: "Selected MCP servers expose all of their tools by default. Narrow them per agent to reduce token usage and keep tool choice focused."
         mcp_server_tool_count:
           one: "%{count} tool"
@@ -677,6 +693,7 @@ en:
         export: "Export"
         import: "Import"
         import_error_conflict: "Conflict detected importing %{name}, would you like to update the existing agent?"
+        import_error_missing_subagents: "The following subagents must exist before importing this agent: %{names}."
         overwrite: "Overwrite"
         description: "Description"
         no_llm_selected: "No language model selected"
@@ -686,7 +703,7 @@ en:
         compression_threshold: "Compression threshold"
         compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
         vision_enabled: Include image uploads
-        vision_enabled_help: If enabled, this agent can include images from posts and chats when the selected model supports image input.
+        vision_enabled_help: If enabled, this agent can include images from posts and chats when the selected model uses native image input or delegates image handling to another model.
         vision_max_pixels: Maximum image size
         vision_max_pixel_sizes:
           low: Low quality - cheapest (256x256)
@@ -1010,6 +1027,18 @@ en:
         url: "URL of the service hosting the model"
         api_key: "API Key of the service hosting the model"
         vision_enabled: "Supports image input"
+        vision_mode: "Image handling"
+        vision_mode_help: "Disabled prevents image processing. Use another model adds a view image tool backed by a native vision model. Native image input sends images directly to this model."
+        vision_modes:
+          disabled:
+            title: "Disabled"
+          delegated:
+            title: "Use another model"
+          native:
+            title: "Native image input"
+        vision_model: "Vision model"
+        vision_model_help: "Delegation adds model requests, latency, and cost. Only models with native image input are available."
+        no_native_vision_models: "Configure a model with native image input before using another model for vision."
         allowed_attachment_types: "Allowed document attachments"
         attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "AI bot User"
@@ -1061,6 +1090,7 @@ en:
           ai_embeddings_semantic_search: "AI search"
           ai_spam: "Spam"
           automation: "Automation (%{agent})"
+          vision_delegate: "Vision for model (%{agent})"
         in_use_warning:
           one: "This model is currently used by %{settings}. If misconfigured, the feature won't work as expected."
           other: "This model is currently used by the following: %{settings}. If misconfigured, features won't work as expected. "
