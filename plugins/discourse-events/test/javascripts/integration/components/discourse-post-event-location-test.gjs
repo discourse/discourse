@@ -19,6 +19,9 @@ module(
       assert
         .dom(".event-location")
         .includesText("Conference Room A", "shows the location text");
+      assert
+        .dom(".event-location .d-icon-location-pin")
+        .exists("a physical venue keeps the map pin");
     });
 
     test("renders server-rendered links and opens them in a new tab", async function (assert) {
@@ -39,6 +42,9 @@ module(
       assert
         .dom(".event-location")
         .includesText("(room 2)", "keeps the text around the link");
+      assert
+        .dom(".event-location .d-icon-location-pin")
+        .exists("a link plus surrounding text is still a place");
     });
 
     test("renders a URL-only location for non-Zoom events", async function (assert) {
@@ -53,6 +59,9 @@ module(
       assert
         .dom(".event-location a")
         .hasAttribute("href", "https://youtube.com/watch?v=123");
+      assert
+        .dom(".event-location .d-icon-link")
+        .exists("an online venue reads as a link, not a place");
     });
 
     test("does not render the URL for Zoom-only livestreams", async function (assert) {

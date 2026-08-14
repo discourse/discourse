@@ -7,6 +7,8 @@ if defined?(DiscourseWorkflows)
         class V1 < DiscourseWorkflows::NodeType
           include ChatChannelSelection
 
+          ACTION_IDS = %w[approve deny].freeze
+
           APPROVAL_OUTPUT_SCHEMA = {
             "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
             "type" => "object",

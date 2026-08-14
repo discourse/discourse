@@ -52,6 +52,9 @@ pl_PL:
   remove_posts_deleted_by_author: "Usunięte przez autora"
   redirect_warning: "Nie byliśmy w stanie zweryfikować, że wybrany przez Ciebie link został rzeczywiście wysłany na forum. Aby kontynować mimo tego, wybierz link poniżej."
   on_another_topic: "Na innym temacie"
+  access_control_list:
+    errors:
+      user_will_not_have_permission: "Jeśli usuniesz ten wpis listy ACL, utracisz dostęp do tego obiektu."
   topic_category_changed: "Od %{from} do %{to}"
   topic_tag_changed:
     added_and_removed: "Dodano %{added} i usunięto %{removed}"
@@ -464,11 +467,10 @@ pl_PL:
     domain_not_allowed: "Twój adres e-mail nie może zostać użyty do zrealizowania tego zaproszenia."
     domain_not_allowed_admin: "Ta domena nie może być używana do zaproszeń."
     max_redemptions_allowed_one: "dla zaproszeń e-mail powinno wynosić 1."
+    max_redemptions_allowed_one_staff: "w przypadku zaproszeń administratora lub moderatora liczba powinna wynosić 1."
     redemption_count_less_than_max: "powinien być mniejszy niż %{max_redemptions_allowed}."
     email_xor_domain: "Pola adresu e-mail i domeny nie są dozwolone jednocześnie"
-    admin_invite_requires_email: "Zaproszenia administratora muszą być wysyłane na adres e-mail"
     admin_invite_requires_admin_inviter: "Tylko administratorzy mogą tworzyć zaproszenia administratorów"
-    moderator_invite_requires_email: "Zaproszenia moderatorów muszą być wysyłane na adres e-mail"
     moderator_invite_requires_staff_inviter: "Tylko personel może tworzyć zaproszenia moderatorów"
     existing_user_success: "Zaproszenie zostało pomyślnie zrealizowane"
     email_invites_disabled: "Wysyłanie zaproszeń e-mailem jest wyłączone"
@@ -1202,9 +1204,11 @@ pl_PL:
       anonymous: "Anonimowi"
       likely_crawler: "Prawdopodobne roboty indeksujące"
     browsers:
+      chrome: "Chrome"
       edge: "Microsoft Edge"
       firefox: "Firefox"
       safari: "Safari"
+      unknown: "Nieznana przeglądarka"
   change_email:
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
@@ -2508,6 +2512,7 @@ pl_PL:
     auto_generated_allowlist: "Lista adresów e-mail, które nie będą sprawdzane pod kątem zawartości generowanej automatycznie. Przykład: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Odrzucaj przychodzące e-maile zidentyfikowane jako generowane automatycznie."
     ignore_by_title: "Ignoruj przychodzące wiadomości e-mail w oparciu o ich tytuł."
+    ignore_by_title_regex: "Ignoruj przychodzące wiadomości e-mail na podstawie ich tytułu, używając wyrażenia regularnego."
     mailgun_api_key: "Klucz Mailgun Secret API używany do weryfikacji wiadomości webhook."
     sendgrid_verification_key: "Klucz weryfikacyjny Sendgrid używany do weryfikacji wiadomości webhook."
     aws_sns_topic_arn_allowlist: "Tematy SNS o numerach ARN mogą wysyłać powiadomienia webhook dotyczące odrzuconych wiadomości Amazon SES."
@@ -2798,6 +2803,7 @@ pl_PL:
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
     dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
+    enable_site_traffic_explorer: "Połącz działanie panelu administracyjnego ze szczegółami ruchu w witrynie przeglądarki ruchu."
     gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Wyłączenie tej opcji uniemożliwi użytkownikom przełączanie się na Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
     gravatar_base_url: "Podaj adres URL umożliwiający dostęp do API serwisu Gravatar. To ustawienie jest niezbędne do konwersji adresów e-mail na adresy URL Gravatar, gdzie przechowywane są obrazy awatarów."
@@ -4644,6 +4650,8 @@ pl_PL:
       text_body_template: |2
 
         %{message}
+
+        %{respond_instructions}
     account_suspended:
       title: "Konto zawieszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"

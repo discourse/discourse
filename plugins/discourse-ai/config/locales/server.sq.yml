@@ -11,6 +11,8 @@ sq:
         image_generation_custom:
           name: "Grupet e krijuara"
     ai_bot:
+      read_post:
+        unknown_post: "postim"
       tool_summary:
         search: "Kërko"
         time: "Koha"

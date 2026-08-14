@@ -15,6 +15,7 @@ For target models:
 For `AccessControlList::EvaluateModification`:
 
 - Unknown target types fail model lookup.
+- Requests with a target id use edit wording, while requests without one use creation wording.
 - Mandatory ACL entries are included before evaluating the current user's proposed access.
 - Direct user and group grants applying to the current user are recognized.
 - Losing all access fails `user_will_have_permission`.

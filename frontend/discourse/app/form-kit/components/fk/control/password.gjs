@@ -41,7 +41,7 @@ export default class FKControlPassword extends FKBaseControl {
 
   @action
   handleInput(event) {
-    const value = event.target.value === "" ? undefined : event.target.value;
+    const value = event.target.value === "" ? null : event.target.value;
     this.args.field.set(value);
   }
 

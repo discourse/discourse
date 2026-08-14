@@ -38,6 +38,7 @@ export default class SiteSettingDefaultCategories extends Component {
         />
         <DButton
           @action={{this.cancel}}
+          class="btn-default"
           @label="admin.site_settings.default_categories.modal_no"
         />
       </:footer>

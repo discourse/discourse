@@ -10,5 +10,6 @@ plugins:
     client: false
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     validator: "AtLeastOneGroupValidator"
     area: "group_permissions"

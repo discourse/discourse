@@ -13,6 +13,8 @@ ur:
       title: 'پَیٹریئون'
       header:
         rules: 'فِلٹر'
+      unconfigured: "Patreon ابھی تک منسلک نہیں ہے۔ تفصیلات کے لئے براہ کرم <a href='%{url}' target='_blank'>Discourse Meta پر دستاویزات</a> ملاحظہ کریں۔"
+      configure_tokens: 'ترتیبات دیکھیں'
       group: 'گروپ'
       rewards: 'انعامات'
       filter: 'فِلٹر'

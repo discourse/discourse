@@ -5,6 +5,7 @@ class AccessControlList::EvaluateModification
 
   params do
     attribute :new_acl, :array
+    attribute :target_id, :integer
     attribute :target_type, :string
 
     validates :target_type, presence: true

@@ -305,6 +305,8 @@ ur:
       billing:
         email: اِی میل
       admin:
+        unconfigured: "پٹی درست طریقے سے ترتیب نہیں دی گئی ہے۔ تفصیلات کے لیے براہِ کرم <a href='%{url}' target='_blank'>Discourse Meta پر دستاویزات</a> ملاحظہ کریں۔"
+        configure_stripe: ترتیبات دیکھیں
         dashboard:
           title: ڈَیش بورڈ
           table:

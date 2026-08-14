@@ -422,6 +422,8 @@ uk:
       default_pm_prefix: "[ПП від ШІ-бота без назви]"
       thinking: "Мислення"
       tool_pending_approval: "Ця дія потребує схвалення модератора, перш ніж її можна буде виконати."
+      read_post:
+        unknown_post: "допис"
       chat_tool_approval:
         approved: "Схвалено @%{username}."
         rejected: "Відхилено користувачем @%{username}."

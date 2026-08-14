@@ -27,6 +27,8 @@ lt:
         explain: "Paaiškinkite"
         replace_dates: "Išmaniosios datos"
     ai_bot:
+      read_post:
+        unknown_post: "įrašai"
       agents:
         custom_prompt:
           name: "Pasirinktinis raginimas"

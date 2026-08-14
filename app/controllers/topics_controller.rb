@@ -429,7 +429,7 @@ class TopicsController < ApplicationController
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
-    if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
+    if params.key?(:category_id) && (params[:category_id].to_i != topic.category_id.to_i)
       if topic.shared_draft
         topic.shared_draft.update(category_id: params[:category_id])
         params.delete(:category_id)

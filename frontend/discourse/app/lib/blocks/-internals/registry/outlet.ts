@@ -1,5 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
+import type { CustomizationSource } from "discourse/lib/customization-source";
 import { isTesting } from "discourse/lib/environment";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import {
@@ -100,12 +101,14 @@ interface RegisterOutletOptions {
  *
  * @param outletName - The outlet name (must follow naming conventions).
  * @param options - Outlet options.
+ * @param source - The plugin or theme the call came from.
  *
  * @internal
  */
 export function _registerOutlet(
   outletName: string,
-  options: RegisterOutletOptions = {}
+  options: RegisterOutletOptions = {},
+  source?: CustomizationSource
 ): void {
   if (
     !assertRegistryNotFrozen({
@@ -141,6 +144,7 @@ export function _registerOutlet(
     !validateSourceNamespace({
       name: outletName,
       entityType: "outlet",
+      source,
     })
   ) {
     return;

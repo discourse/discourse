@@ -357,6 +357,8 @@ tr_TR:
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
       thinking: "Düşünme"
       tool_pending_approval: "Bu işlemin gerçekleştirilebilmesi için moderatör onayı gereklidir."
+      read_post:
+        unknown_post: "gönderi"
       chat_tool_approval:
         unexpected_error: "beklenmedik bir hata oluştu"
       agents:

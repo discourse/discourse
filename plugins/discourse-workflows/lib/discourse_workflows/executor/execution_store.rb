@@ -97,12 +97,13 @@ module DiscourseWorkflows
         create_execution_with_status(:rate_limited, trigger_data: { "rate_limited" => true })
       end
 
-      def pause_waiting_execution!(node:, waiting_until: nil, steps: [])
+      def pause_waiting_execution!(node:, waiting_until: nil, timeout_action: nil, steps: [])
         execution.update!(
           status: :waiting,
           waiting_node_id: node.id,
           waiting_until: waiting_until,
           resume_token: @execution_context.resume_token,
+          timeout_action: timeout_action,
         )
         save!(steps)
         publish_waiting_form_notification(node)

@@ -99,6 +99,16 @@ RSpec.describe BrowserPageviewEvent do
       piggyback = Fabricate(:browser_pageview_event, source: :piggyback)
       Fabricate(:browser_pageview_event, source: :beacon)
 
+      bounded_condition =
+        described_class.rollup_source_condition(
+          start_date: Date.new(2026, 6, 1),
+          end_date: Date.new(2026, 6, 20),
+        )
+
+      expect(described_class.rollup_source_condition).to eq(
+        "source = #{described_class::SOURCE_PIGGYBACK}",
+      )
+      expect(bounded_condition).to eq("source = #{described_class::SOURCE_PIGGYBACK}")
       expect(described_class.where(described_class.rollup_source_condition)).to contain_exactly(
         piggyback,
       )
@@ -130,6 +140,45 @@ RSpec.describe BrowserPageviewEvent do
       condition = described_class.rollup_source_condition(table: "e")
 
       expect(condition).to eq("e.source = #{described_class::SOURCE_PIGGYBACK}")
+    end
+
+    it "matches only piggyback events when the bounded range ends at the cutover" do
+      described_class.stubs(:beacon_cutover_date).returns(Date.new(2026, 6, 10))
+
+      condition =
+        described_class.rollup_source_condition(
+          start_date: Date.new(2026, 6, 1),
+          end_date: Date.new(2026, 6, 10),
+        )
+
+      expect(condition).to eq("source = #{described_class::SOURCE_PIGGYBACK}")
+    end
+
+    it "matches only beacon events when the bounded range starts at the cutover" do
+      described_class.stubs(:beacon_cutover_date).returns(Date.new(2026, 6, 10))
+
+      condition =
+        described_class.rollup_source_condition(
+          start_date: Date.new(2026, 6, 10),
+          end_date: Date.new(2026, 6, 20),
+        )
+
+      expect(condition).to eq("source = #{described_class::SOURCE_BEACON}")
+    end
+
+    it "keeps the mixed source condition when the bounded range crosses the cutover" do
+      described_class.stubs(:beacon_cutover_date).returns(Date.new(2026, 6, 10))
+
+      condition =
+        described_class.rollup_source_condition(
+          start_date: Date.new(2026, 6, 1),
+          end_date: Date.new(2026, 6, 20),
+        )
+
+      expect(condition).to include(
+        "created_at < '2026-06-10' AND source = #{described_class::SOURCE_PIGGYBACK}",
+        "created_at >= '2026-06-10' AND source = #{described_class::SOURCE_BEACON}",
+      )
     end
   end
 

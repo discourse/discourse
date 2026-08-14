@@ -64,6 +64,13 @@ export function isLivestreamUrl(url, siteSettings) {
   );
 }
 
+// Mirrors `Event#livestream_url` on the server: location takes precedence,
+// url only carries the livestream when no location is set. A blank location
+// counts as absent, matching what `buildParams` serializes.
+export function livestreamSource(location, url) {
+  return location?.trim() ? location : url;
+}
+
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
   const start = startsAt ? moment(startsAt) : null;
   const end = endsAt ? moment(endsAt) : null;

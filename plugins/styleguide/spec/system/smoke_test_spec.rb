@@ -150,19 +150,6 @@ RSpec.describe "Styleguide Smoke Test" do
     end
   end
 
-  context "when the styleguide is enabled for everyone" do
-    before do
-      Capybara.reset_sessions!
-      SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
-    end
-
-    it "renders a page using HighlightedCode for anonymous users" do
-      visit "/styleguide/atoms/font-scale"
-      expect(styleguide).to have_heading("Font System")
-      expect(page).to have_css("code.hljs")
-    end
-  end
-
   context "when the styleguide is only enabled for staff" do
     before { SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:staff] }
 

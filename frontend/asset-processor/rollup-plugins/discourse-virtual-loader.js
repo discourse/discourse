@@ -1,4 +1,25 @@
-import rollupVirtualImports from "../rollup-virtual-imports";
+import rollupVirtualImports, {
+  privateVirtualImports,
+} from "../rollup-virtual-imports";
+
+// Core modules that plugin and theme code reaches through a generated wrapper,
+// so registrations carry the plugin or theme they came from.
+const ATTRIBUTED_MODULES = {
+  "discourse/lib/plugin-api": "virtual:attributed-plugin-api",
+  "discourse/lib/api": "virtual:attributed-api-initializer",
+};
+
+// The leading null byte marks a synthetic module, and keeps the id out of reach
+// of anything a plugin or theme could write in an import.
+function privateId(basePath, name) {
+  return `\0${basePath}${name}`;
+}
+
+function isPrivateId(id, basePath) {
+  return Object.keys(privateVirtualImports).some(
+    (name) => id === privateId(basePath, name)
+  );
+}
 
 export default function discourseVirtualLoader({
   basePath,
@@ -14,7 +35,16 @@ export default function discourseVirtualLoader({
 
   return {
     name: "discourse-virtual-loader",
-    resolveId(source) {
+    resolveId(source, importer) {
+      const attributed = ATTRIBUTED_MODULES[source];
+      if (attributed) {
+        // A wrapper's own import must reach the real module.
+        if (!isPrivateId(importer, basePath)) {
+          return privateId(basePath, attributed);
+        }
+        return;
+      }
+
       if (
         availableVirtualImports[source] ||
         source.startsWith("virtual:entrypoint:")
@@ -23,6 +53,10 @@ export default function discourseVirtualLoader({
       }
     },
     load(id) {
+      if (isPrivateId(id, basePath)) {
+        return privateVirtualImports[id.slice(1 + basePath.length)](opts);
+      }
+
       if (!id.startsWith(basePath)) {
         return;
       }

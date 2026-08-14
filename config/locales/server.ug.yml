@@ -3739,9 +3739,6 @@ ug:
     user_posted_pm_staged:
       title: "ئىشلەتكۈچى يوللىغان شەخسىي ئۇچۇر ۋاقىتلىق ساقلاندى"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ھېسابات توختىتىلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز توختىتىلدى"

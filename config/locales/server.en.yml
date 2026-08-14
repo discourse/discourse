@@ -64,6 +64,7 @@ en:
   access_control_list:
     errors:
       user_will_not_have_permission: "If you remove this ACL entry you will lose access to this entity."
+      user_will_not_have_permission_on_create: "If you create this entity with these permissions, you will not have access to it. Continue?"
 
   topic_category_changed: "From %{from} to %{to}"
   topic_tag_changed:
@@ -443,11 +444,10 @@ en:
     domain_not_allowed: "Your email cannot be used to redeem this invite."
     domain_not_allowed_admin: "This domain cannot be used for invites."
     max_redemptions_allowed_one: "for email invites should be 1."
+    max_redemptions_allowed_one_staff: "for admin or moderator invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
-    admin_invite_requires_email: "Admin invites must be sent to an email address"
     admin_invite_requires_admin_inviter: "Only admins can create admin invites"
-    moderator_invite_requires_email: "Moderator invites must be sent to an email address"
     moderator_invite_requires_staff_inviter: "Only staff can create moderator invites"
     existing_user_success: "Invite redeemed successfully"
     email_invites_disabled: "Sending invite emails is disabled"
@@ -6295,10 +6295,12 @@ en:
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
+          confirm: "Are you sure you want to delete @%{username}?"
           complete: "User deleted."
         block:
           title: "Delete and block user"
           description: "Delete the user and block their email and IP address"
+          confirm: "Are you sure you want to delete and block @%{username}?"
           complete: "User deleted and blocked."
       confirm_spam:
         title: "Yes"
