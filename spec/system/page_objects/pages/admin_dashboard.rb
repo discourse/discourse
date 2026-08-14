@@ -182,9 +182,7 @@ module PageObjects
       end
 
       def toggle_section(id)
-        within(".db-configure__row[data-section-id='#{id}']") do
-          find(".d-toggle-switch__label").click
-        end
+        within(configure_row_selector(id)) { find(".d-toggle-switch__label").click }
         self
       end
 
@@ -200,7 +198,7 @@ module PageObjects
 
       def drag_section(source_id, target_id)
         drag_and_drop(
-          source: "#{configure_row_selector(source_id)} .db-configure__drag-handle",
+          source: "#{configure_row_selector(source_id)} .d-reorderable-list__handle",
           target: configure_row_selector(target_id),
           target_position: {
             x: 100,
@@ -217,7 +215,7 @@ module PageObjects
       end
 
       def configure_row_selector(id)
-        ".db-configure__row[data-section-id='#{id}']"
+        ".db-configure__row[data-reorderable-key='#{id}']"
       end
 
       def custom_range_params(from:, to:)

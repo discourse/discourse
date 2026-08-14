@@ -75,7 +75,7 @@
     }
   }
 
-  &__grip {
+  .d-reorderable-list__handle {
     color: var(--primary-low-mid);
     visibility: hidden;
 
@@ -84,7 +84,7 @@
     }
   }
 
-  &__arrows {
+  .d-reorderable-list__arrows {
     visibility: hidden;
 
     .manage-reports__list.--reorderable .manage-reports__row.--enabled & {

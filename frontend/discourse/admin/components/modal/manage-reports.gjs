@@ -41,11 +41,11 @@ const ReportRowContent = <template>
   </div>
 
   <DToggleSwitch
-    @state={{@row.enabled}}
+    @state={{@enabled}}
     disabled={{@toggleDisabled}}
     aria-label={{i18n
       (if
-        @row.enabled
+        @enabled
         "admin.dashboard.reports_section.modal.disable"
         "admin.dashboard.reports_section.modal.enable"
       )
@@ -311,6 +311,7 @@ export default class ManageReports extends Component {
             <:default as |row|>
               <ReportRowContent
                 @row={{row}}
+                @enabled={{true}}
                 @toggleDisabled={{this.toggleDisabled row}}
                 @onToggle={{this.toggle}}
               />
@@ -323,6 +324,7 @@ export default class ManageReports extends Component {
                 >
                   <ReportRowContent
                     @row={{row}}
+                    @enabled={{false}}
                     @toggleDisabled={{this.toggleDisabled row}}
                     @onToggle={{this.toggle}}
                   />
