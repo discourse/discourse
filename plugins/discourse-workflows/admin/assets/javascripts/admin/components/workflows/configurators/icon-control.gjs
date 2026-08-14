@@ -1,3 +1,4 @@
+import { not } from "discourse/truth-helpers";
 import ExpressionWrapper from "./expression-wrapper";
 
 export default <template>
@@ -9,6 +10,6 @@ export default <template>
     @dynamicValueHint={{@dynamicValueHint}}
     @session={{@session}}
   >
-    <@field.Control />
+    <@field.Control @allowClear={{not @schema.required}} />
   </ExpressionWrapper>
 </template>

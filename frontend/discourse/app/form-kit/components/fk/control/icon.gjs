@@ -15,6 +15,7 @@ export default class FKControlIcon extends FKBaseControl {
       @value={{@field.value}}
       @onChange={{this.handleInput}}
       @disabled={{@field.disabled}}
+      @allowClear={{@allowClear}}
       @showCaret={{true}}
       @showSelectedName={{true}}
       class="form-kit__control-icon"
