@@ -14,6 +14,8 @@ nb_NO:
         image_generation_custom:
           name: "Egendefinert"
     ai_bot:
+      read_post:
+        unknown_post: "innlegg"
       tool_summary:
         search: "Søk"
         time: "Tid"

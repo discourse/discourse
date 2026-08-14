@@ -413,6 +413,8 @@ zh_CN:
       default_pm_prefix: "[无标题 AI 机器人私信]"
       thinking: "正在思考"
       tool_pending_approval: "此操作需要版主批准，然后才能执行。"
+      read_post:
+        unknown_post: "帖子"
       chat_tool_approval:
         approved: "由 @%{username} 批准。"
         rejected: "由 @%{username} 拒绝。"

@@ -28,6 +28,8 @@ ur:
     spam_detection:
       bot_user_update_failed: "اسپام اسکیننگ بوٹ رکن کو اپ ڈیٹ کرنے میں ناکام"
     ai_bot:
+      read_post:
+        unknown_post: "دھاگہ"
       agents:
         default_llm_required: "چیٹ کو فعال کرنے سے پہلے ڈیفالٹ LLM ماڈل درکار ہے۔"
       tool_options:

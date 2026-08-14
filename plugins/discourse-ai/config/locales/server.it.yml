@@ -246,6 +246,8 @@ it:
     ai_bot:
       reply_error: "Spiacenti, il nostro sistema ha riscontrato un problema imprevisto durante il tentativo di risposta.\n\n[details='Dettagli errore']\n%{details}\n[/details]"
       default_pm_prefix: "[MP di bot IA senza titolo]"
+      read_post:
+        unknown_post: "messaggio"
       agents:
         default_llm_required: "Il modello LLM predefinito è obbligatorio prima di abilitare la chat"
         cannot_have_duplicate_tools: "Non sono ammessi strumenti duplicati"
