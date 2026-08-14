@@ -1,39 +1,53 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import icon from "discourse/ui-kit/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 /**
  * Node view for block nodes wrapping the source of something that can be
- * rendered, showing the rendered result with an instant toggle to the source.
+ * rendered, showing the rendered result with a control to show the source.
  *
- * The node holds its source in a single `code_block` child, so editing it is
- * ordinary code editing — syntax highlighting, undo and redo all come from the
- * editor itself. The wrapper must be `isolating` so that editing around it
- * cannot merge neighboring text into the source.
+ * The node holds its source in a single `preview_source` child, so editing it
+ * is ordinary code editing — highlighting, undo and redo all come from the
+ * editor itself. The wrapper must be an `atom`, so the editor moves over it as
+ * a unit rather than stepping into source it is not showing, and `isolating`,
+ * so editing around it cannot merge neighboring text into the source.
  *
  * ```js
- * nodeSpec: { my_node: { content: "code_block", isolating: true, ... } },
+ * nodeSpec: { my_node: { content: "preview_source", atom: true, isolating: true, ... } },
  * nodeViews: {
  *   my_node: {
  *     component: PreviewNodeView,
  *     hasContent: true,
- *     options: { preview: MyPreviewComponent },
+ *     options: {
+ *       preview: MyPreviewComponent,
+ *       controls: [{ icon, label, action }],
+ *     },
  *   },
  * }
  * ```
  *
- * The preview component is rendered with `@source` (the source text) and
- * `@node`.
+ * The preview component is rendered with `@source` and `@node`. Controls a
+ * feature contributes join the one the editor provides, and are called with
+ * `{ node, view, getPos, context }`.
  */
 export default class PreviewNodeView extends Component {
-  // nothing to preview yet when an empty node was just inserted
-  @tracked showingSource = !this.args.node.textContent;
+  @tracked showingSource;
+
+  // the source as it was last rendered: while it is being edited the preview
+  // keeps showing this, so it neither re-renders on every keystroke nor
+  // rebuilds itself for a half-typed source
+  @tracked renderedSource;
 
   constructor() {
     super(...arguments);
+
+    this.renderedSource = this.args.node.textContent;
+    // nothing to preview yet when an empty node was just inserted
+    this.showingSource = !this.renderedSource;
+
     this.args.dom.classList.add("composer-preview-node");
     this.args.contentDOM?.classList.add("composer-preview-node__source");
     this.#syncMode();
@@ -51,10 +65,13 @@ export default class PreviewNodeView extends Component {
   }
 
   @action
-  toggleSource(event) {
-    event.preventDefault();
-
+  toggleSource() {
     this.showingSource = !this.showingSource;
+
+    if (!this.showingSource) {
+      this.renderedSource = this.source;
+    }
+
     this.#syncMode();
 
     const pos = this.args.getPos();
@@ -66,7 +83,6 @@ export default class PreviewNodeView extends Component {
     const { NodeSelection, TextSelection } = this.args.pluginParams.pmState;
     const tr = view.state.tr;
 
-    // the source is hidden while previewing, so the selection cannot stay in it
     tr.setSelection(
       this.showingSource
         ? TextSelection.create(tr.doc, pos + 2 + this.source.length)
@@ -77,6 +93,16 @@ export default class PreviewNodeView extends Component {
     view.focus();
   }
 
+  @action
+  runControl(control) {
+    control.action({
+      node: this.args.node,
+      view: this.args.view,
+      getPos: this.args.getPos,
+      context: this.args.pluginParams.getContext(),
+    });
+  }
+
   selectNode() {
     this.args.dom.classList.add("ProseMirror-selectednode");
   }
@@ -85,8 +111,8 @@ export default class PreviewNodeView extends Component {
     this.args.dom.classList.remove("ProseMirror-selectednode");
   }
 
-  // reaching the source with the caret — by arrowing into the node, or clicking
-  // where it would be — has to reveal it, or the caret lands out of sight
+  // reaching the source with the caret has to reveal it, or the caret lands
+  // somewhere out of sight
   setSelection() {
     if (!this.showingSource) {
       this.showingSource = true;
@@ -94,9 +120,13 @@ export default class PreviewNodeView extends Component {
     }
   }
 
-  // the preview is not editable, and the source is a node of its own
-  stopEvent() {
-    return false;
+  // the controls are the node view's own, so the editor should not treat
+  // clicking them as clicking into the document
+  stopEvent(event) {
+    return (
+      event.target instanceof Node &&
+      !!event.target.closest?.(".composer-preview-node__controls")
+    );
   }
 
   #syncMode() {
@@ -104,22 +134,28 @@ export default class PreviewNodeView extends Component {
   }
 
   <template>
-    {{~! strip whitespace ~}}<button
-      type="button"
-      class="composer-preview-node__toggle btn-flat"
-      title={{this.toggleLabel}}
-      aria-label={{this.toggleLabel}}
-      aria-pressed={{if this.showingSource "true" "false"}}
+    {{~! strip whitespace ~}}<div
+      class="composer-preview-node__preview"
       contenteditable="false"
-      {{on "click" this.toggleSource}}
-    >{{icon (if this.showingSource "eye" "code")}}</button>{{#unless
-      this.showingSource
-    }}<div class="composer-preview-node__preview" contenteditable="false">{{#let
-          @options.preview
-          as |Preview|
-        }}<Preview
-            @source={{this.source}}
-            @node={{@node}}
-          />{{/let}}</div>{{/unless}}{{~! strip whitespace ~}}
+      aria-hidden={{if this.showingSource "true" "false"}}
+    >{{#let @options.preview as |Preview|}}<Preview
+          @source={{this.renderedSource}}
+          @node={{@node}}
+        />{{/let}}</div><div
+      class="composer-preview-node__controls"
+      contenteditable="false"
+      role="group"
+    >{{#each @options.controls as |control|}}<DButton
+          @icon={{control.icon}}
+          @title={{control.label}}
+          @action={{fn this.runControl control}}
+          class="btn-flat composer-preview-node__control"
+        />{{/each}}<DButton
+        @icon={{if this.showingSource "eye" "code"}}
+        @title={{this.toggleLabel}}
+        @action={{this.toggleSource}}
+        aria-pressed={{if this.showingSource "true" "false"}}
+        class="btn-flat composer-preview-node__control composer-preview-node__toggle"
+      /></div>{{~! strip whitespace ~}}
   </template>
 }

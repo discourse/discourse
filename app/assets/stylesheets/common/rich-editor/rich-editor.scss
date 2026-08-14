@@ -340,52 +340,77 @@
     }
   }
 
+  // A block showing a rendered result in place of its source. Both faces share
+  // one cell, so the block keeps its footprint when they are swapped and the
+  // document below it does not move.
   .composer-preview-node {
-    position: relative;
+    display: grid;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    margin-block: var(--space-4);
+    overflow: hidden;
+
+    > * {
+      grid-area: 1 / 1;
+    }
 
     &.ProseMirror-selectednode {
       outline: 2px solid var(--tertiary);
       outline-offset: 2px;
-      border-radius: var(--d-border-radius);
     }
 
-    // clicking the rendered result selects the node rather than doing nothing
-    .composer-preview-node__preview {
-      cursor: pointer;
-    }
-
-    // the source is a code block of its own, shown in place of the preview
-    &:not(.--source) .composer-preview-node__source {
-      display: none;
+    // hidden, but still holding its space: swapping faces must not resize
+    &:not(.--source) .composer-preview-node__source,
+    &.--source .composer-preview-node__preview {
+      visibility: hidden;
     }
 
     .composer-preview-node__source pre {
       margin: 0;
-    }
-
-    // renderers mark the raw source hidden once they have replaced it; the
-    // editor's own display rules would otherwise override that
-    .composer-preview-node__preview [hidden] {
-      display: none;
-    }
-
-    .composer-preview-node__toggle {
-      position: absolute;
-      z-index: 1;
-      top: var(--space-1);
-      right: var(--space-1);
-      color: var(--primary-medium);
-      background-color: var(--secondary);
-      border: none;
-      cursor: pointer;
-
-      &:hover {
-        color: var(--primary);
-      }
+      height: 100%;
+      overflow: auto;
     }
 
     .composer-preview-node__preview {
       user-select: none;
+      cursor: pointer;
+
+      // renderers mark the raw source hidden once they have replaced it; the
+      // editor's own display rules would otherwise override that
+      [hidden] {
+        display: none;
+      }
+    }
+
+    .composer-preview-node__controls {
+      z-index: 1;
+      justify-self: end;
+      align-self: start;
+      display: flex;
+      gap: var(--space-half);
+      margin: var(--space-1);
+      border-radius: var(--d-border-radius);
+      background-color: var(--secondary);
+      box-shadow: var(--shadow-card);
+    }
+
+    html.no-touch & .composer-preview-node__controls {
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    html.no-touch &:hover .composer-preview-node__controls,
+    html.no-touch &:focus-within .composer-preview-node__controls {
+      opacity: 1;
+    }
+
+    .composer-preview-node__control {
+      color: var(--primary-medium);
+
+      &:hover,
+      &:focus-visible {
+        color: var(--primary);
+      }
     }
   }
 
