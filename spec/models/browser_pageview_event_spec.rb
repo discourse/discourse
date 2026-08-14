@@ -182,36 +182,6 @@ RSpec.describe BrowserPageviewEvent do
     end
   end
 
-  describe ".classify_browser" do
-    it "classifies supported browser families before their shared rendering engines" do
-      user_agents = {
-        edge: "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
-        opera: "Mozilla/5.0 Chrome/124.0 Safari/537.36 OPR/109.0",
-        samsung_internet: "Mozilla/5.0 Chrome/120.0 Mobile Safari/537.36 SamsungBrowser/24.0",
-        uc_browser: "Mozilla/5.0 Chrome/70.0 Mobile Safari/537.36 UCBrowser/13.4.0",
-        qq_browser: "Mozilla/5.0 Chrome/70.0 Mobile Safari/537.36 MQQBrowser/13.1",
-        baidu_browser: "Mozilla/5.0 Chrome/70.0 Mobile Safari/537.36 BIDUBrowser/7.6",
-        kaios_browser: "Mozilla/5.0 Mobile KaiOS/2.5 Firefox/84.0",
-        ie: "Mozilla/5.0 Trident/7.0; rv:11.0",
-        firefox: "Mozilla/5.0 Firefox/126.0",
-        chrome: "Mozilla/5.0 Chrome/124.0 Safari/537.36",
-        android_browser: "Mozilla/5.0 Android 4.4 Version/4.0 Mobile Safari/537.36",
-        safari: "Mozilla/5.0 Version/17.0 Mobile/15E148 Safari/604.1",
-        unknown: "ExampleBrowser/1.0",
-      }
-
-      classifications =
-        user_agents.transform_values { |user_agent| described_class.classify_browser(user_agent) }
-
-      expect(classifications).to eq(user_agents.keys.index_with(&:itself))
-      expect(
-        described_class.classify_browser(
-          "Mozilla/5.0 (Linux; Android 4.4.2) Version/4.0 Chrome/30.0 Safari/537.36",
-        ),
-      ).to eq(:chrome)
-    end
-  end
-
   describe ".create_from_payload!" do
     it "persists the classified browser" do
       event =
@@ -225,6 +195,20 @@ RSpec.describe BrowserPageviewEvent do
         )
 
       expect(event.browser).to eq("edge")
+    end
+
+    it "stores unsupported browser classifications as unknown" do
+      event =
+        described_class.create_from_payload!(
+          url: "https://discourse.example/t/topic/1",
+          ip_address: "1.2.3.4",
+          user_agent: "Discourse/163 CFNetwork/978.0.7 Darwin/18.6.0",
+          session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
+          source: described_class::SOURCE_BEACON,
+          occurred_at: Time.zone.parse("2026-05-27 10:30:00").iso8601(6),
+        )
+
+      expect(event.browser).to eq("unknown")
     end
   end
 

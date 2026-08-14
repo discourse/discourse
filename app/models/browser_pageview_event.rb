@@ -122,37 +122,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
       Discourse.redis.del(REDIS_QUEUE_KEY)
     end
 
-    def classify_browser(user_agent)
-      case user_agent
-      when %r{Edg(?:A|iOS)?/}i, %r{Edge/}i
-        :edge
-      when %r{OPR/}i, %r{OPiOS/}i, /Opera (?:Mini|Mobi)/i, %r{Opera/}i
-        :opera
-      when %r{SamsungBrowser/}i
-        :samsung_internet
-      when %r{(?:UCBrowser|UC Browser)[/ ]}i
-        :uc_browser
-      when %r{(?:MQQBrowser|QQBrowser)/}i
-        :qq_browser
-      when %r{(?:BIDUBrowser|BaiduBrowser)/}i
-        :baidu_browser
-      when %r{KaiOS/}i
-        :kaios_browser
-      when /MSIE|Trident|IEMobile/i
-        :ie
-      when %r{Firefox/}i, %r{FxiOS/}i
-        :firefox
-      when %r{Chrome/}i, %r{CriOS/}i
-        :chrome
-      when %r{Android.+Version/[\d.]+.+Safari/}i
-        :android_browser
-      when %r{Safari/}i
-        :safari
-      else
-        :unknown
-      end
-    end
-
     def postgres_readonly_error?(error)
       error.cause.is_a?(PG::ReadOnlySqlTransaction)
     end
@@ -232,7 +201,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
         normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         user_agent: user_agent,
-        browser: classify_browser(user_agent),
+        browser: BROWSERS.fetch(BrowserDetection.browser(user_agent), BROWSER_UNKNOWN),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],
         topic_id: payload[:topic_id],

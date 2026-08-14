@@ -598,7 +598,12 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
             user_agent: "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
             browser: nil,
           )
-        unknown = Fabricate(:browser_pageview_event, user_agent: "ExampleBrowser/1.0", browser: nil)
+        unknown =
+          Fabricate(
+            :browser_pageview_event,
+            user_agent: "Discourse/163 CFNetwork/978.0.7 Darwin/18.6.0",
+            browser: nil,
+          )
 
         job.execute({})
 

@@ -219,7 +219,8 @@ module Jobs
       browsers =
         rows.map do |row|
           BrowserPageviewEvent.browsers.fetch(
-            BrowserPageviewEvent.classify_browser(row.user_agent).to_s,
+            BrowserDetection.browser(row.user_agent).to_s,
+            BrowserPageviewEvent::BROWSER_UNKNOWN,
           )
         end
 

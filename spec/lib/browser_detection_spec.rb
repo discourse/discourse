@@ -147,4 +147,34 @@ RSpec.describe BrowserDetection do
       expect(BrowserDetection.os(user_agent)).to eq(os)
     end
   end
+
+  describe ".browser" do
+    it "detects supported browser families before their shared rendering engines" do
+      user_agents = {
+        edge: "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
+        opera: "Mozilla/5.0 Chrome/124.0 Safari/537.36 OPR/109.0",
+        samsung_internet: "Mozilla/5.0 Chrome/120.0 Mobile Safari/537.36 SamsungBrowser/24.0",
+        uc_browser: "Mozilla/5.0 Chrome/70.0 Mobile Safari/537.36 UCBrowser/13.4.0",
+        qq_browser: "Mozilla/5.0 Chrome/70.0 Mobile Safari/537.36 MQQBrowser/13.1",
+        baidu_browser: "Mozilla/5.0 Chrome/70.0 Mobile Safari/537.36 BIDUBrowser/7.6",
+        kaios_browser: "Mozilla/5.0 Mobile KaiOS/2.5 Firefox/84.0",
+        ie: "Mozilla/5.0 IEMobile/11.0",
+        firefox: "Mozilla/5.0 FxiOS/126.0 Mobile/15E148 Safari/605.1.15",
+        chrome: "Mozilla/5.0 CriOS/124.0 Mobile/15E148 Safari/604.1",
+        android_browser: "Mozilla/5.0 Android 4.4 Version/4.0 Mobile Safari/537.36",
+        safari: "Mozilla/5.0 Version/17.0 Mobile/15E148 Safari/604.1",
+        unknown: "ExampleBrowser/1.0",
+      }
+
+      classifications =
+        user_agents.transform_values { |user_agent| described_class.browser(user_agent) }
+
+      expect(classifications).to eq(user_agents.keys.index_with(&:itself))
+      expect(
+        described_class.browser(
+          "Mozilla/5.0 (Linux; Android 4.4.2) Version/4.0 Chrome/30.0 Safari/537.36",
+        ),
+      ).to eq(:chrome)
+    end
+  end
 end
