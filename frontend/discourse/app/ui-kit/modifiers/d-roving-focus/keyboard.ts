@@ -51,6 +51,7 @@ export default class KeyboardRouter {
           config.focusStrategy === "active-descendant" &&
           this.#isEditable(context.controller),
         logicalCount: config.logicalCount,
+        mountedCount: () => scope.all().length,
         items: () => scope.items(),
         currentIndex: (items) => this.#currentIndex(items, context),
         activate: context.activate,

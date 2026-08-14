@@ -195,10 +195,10 @@ export interface DRovingFocusArgs {
    * reactivity plumbing. Nothing in the practice page asks for any of them, and they are marked
    * so the conformance surface stays legible from the surface itself.
    *
-   * The total number of navigable logical rows. Setting it is what makes PageUp/PageDown page:
-   * without it those keys are left alone entirely so a scrollable container pages natively, Home
-   * and End address the mounted items positionally, and {@link DRovingFocusArgs.onJump} is never
-   * called.
+   * The size of the logical index space addressed by `data-logical-index` or `data-index`,
+   * including disabled rows. Setting it is what makes PageUp/PageDown page: without it those keys
+   * are left alone entirely so a scrollable container pages natively, Home and End address the
+   * mounted items positionally, and {@link DRovingFocusArgs.onJump} is never called.
    */
   logicalCount?: number;
   /**

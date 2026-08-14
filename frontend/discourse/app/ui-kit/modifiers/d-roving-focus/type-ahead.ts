@@ -10,6 +10,9 @@ export interface TypeAheadContext {
   enabled: boolean;
   editableController: boolean;
   logicalCount: number | undefined;
+
+  /** Returns the number of selector-matched items currently mounted. */
+  mountedCount: () => number;
   items: () => HTMLElement[];
   currentIndex: (items: HTMLElement[]) => number;
   activate: (item: HTMLElement) => void;
@@ -24,6 +27,12 @@ export default class TypeAhead {
   #namerPending = false;
   #destroyed = false;
   #enabled = false;
+  #loader: typeof loadAccessibleName;
+
+  /** @param loader Loads the accessible-name implementation. */
+  constructor(loader: typeof loadAccessibleName = loadAccessibleName) {
+    this.#loader = loader;
+  }
 
   configure(enabled: boolean): void {
     this.#enabled = enabled;
@@ -31,12 +40,17 @@ export default class TypeAhead {
       return;
     }
     this.#namerPending = true;
-    loadAccessibleName().then((namer) => {
-      this.#namerPending = false;
-      if (!this.#destroyed && this.#enabled) {
-        this.#accessibleName = namer;
+    this.#loader().then(
+      (namer) => {
+        this.#namerPending = false;
+        if (!this.#destroyed && this.#enabled) {
+          this.#accessibleName = namer;
+        }
+      },
+      () => {
+        this.#namerPending = false;
       }
-    });
+    );
   }
 
   handle(event: KeyboardEvent, context: TypeAheadContext): boolean {
@@ -48,7 +62,10 @@ export default class TypeAhead {
       return true;
     }
     const items = context.items();
-    if (context.logicalCount != null && context.logicalCount > items.length) {
+    if (
+      context.logicalCount != null &&
+      context.logicalCount > context.mountedCount()
+    ) {
       context.warnWindowed();
       return true;
     }
@@ -104,7 +121,7 @@ export default class TypeAhead {
     from: number,
     offset: number
   ): HTMLElement | undefined {
-    const start = (Math.max(from, 0) + offset) % items.length;
+    const start = from < 0 ? 0 : (from + offset) % items.length;
     for (let step = 0; step < items.length; step++) {
       const candidate = items[(start + step) % items.length];
       const name = this.#accessibleName?.(candidate) ?? "";
