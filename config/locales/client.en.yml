@@ -395,6 +395,7 @@ en:
     skip_user_nav: "Skip to profile content"
 
     reorder_announcement: "Moved %{label} to position %{position} of %{total}"
+    reorder_announcement_cross_list: "Moved %{label} to %{list}, position %{position} of %{total}"
 
     reorder:
       drag_handle: "Drag %{label}"

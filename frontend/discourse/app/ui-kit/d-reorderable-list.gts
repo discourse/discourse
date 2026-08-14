@@ -2,11 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import type { TOC } from "@ember/component/template-only";
 import { assert } from "@ember/debug";
-import { isDestroyed, isDestroying } from "@ember/destroyable";
+import {
+  isDestroyed,
+  isDestroying,
+  registerDestructor,
+} from "@ember/destroyable";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import type Owner from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import type { ComponentLike, ModifierLike } from "@glint/template";
@@ -23,6 +28,7 @@ import dDragAndDropSource, {
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget, {
   DropTargetEvent,
+  registerDragAndDropTarget,
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
@@ -110,6 +116,56 @@ interface RowClassContext {
 }
 
 /**
+ * What a member list registers with its group: identity, the optional
+ * translated list name for cross-list announcements, and closures reading the
+ * member's live state — closures rather than snapshots, so a drop resolves
+ * against the source list as it stands at drop time.
+ */
+export interface ReorderableGroupMember {
+  listId: string;
+  listLabel?: string;
+
+  /** The member's current visible items. */
+  getItems: () => readonly unknown[];
+
+  /**
+   * The source half of a cross-list move: resolves the dragged key against
+   * the member's current rows and returns the item, its visible index, and
+   * the member's proposed order without it — or `undefined` when the key no
+   * longer resolves to a movable row.
+   */
+  removalProjection: (key: string) =>
+    | {
+        item: unknown;
+        fromIndex: number;
+        proposedFromItems: readonly unknown[];
+      }
+    | undefined;
+}
+
+/**
+ * The API a `DReorderableListGroup` yields to its block. Member lists receive
+ * it as `@group`; everything on it is wiring between the group and its
+ * members rather than a consumer surface.
+ */
+export interface ReorderableGroupApi {
+  /**
+   * The shared drag discriminator. Members adopt it in place of their own, so
+   * drags travel freely inside the group and nowhere else.
+   */
+  token: string;
+
+  /** Adds a member; returns its deregistration. Duplicate listIds assert. */
+  registerMember: (member: ReorderableGroupMember) => () => void;
+
+  /** The member registered under a listId, if it still exists. */
+  lookupMember: (listId: string) => ReorderableGroupMember | undefined;
+
+  /** The group's single move callback, shared by every member. */
+  onMove: (move: ReorderableMove) => void | false;
+}
+
+/**
  * The internal per-row view model the component renders from. Rows are
  * recomputed from `@items` on every relevant change, so anything an event
  * handler needs later is re-resolved by `key` rather than captured.
@@ -165,8 +221,27 @@ interface DReorderableListSignature<T> {
      * The single move callback. Pointer drops and arrow presses both arrive
      * here, already normalized and no-op-suppressed. Return `false` to veto
      * the announcement; the consumer then owns whatever feedback replaces it.
+     * Required for a standalone list; a grouped member omits it — the group's
+     * own callback receives every member move instead.
      */
-    onMove: (move: ReorderableMove<T>) => void | false;
+    onMove?: (move: ReorderableMove<T>) => void | false;
+
+    /**
+     * The API yielded by a surrounding `DReorderableListGroup`. Joining a
+     * group makes cross-list drags between members possible and routes every
+     * move through the group's callback. Requires `@listId`.
+     */
+    group?: ReorderableGroupApi;
+
+    /** This member's identity inside its group. Required with `@group`. */
+    listId?: string;
+
+    /**
+     * Translated name for this list, spoken in cross-list announcements when
+     * an item lands here from another member. Without it the standard
+     * announcement is used.
+     */
+    listLabel?: string;
 
     /**
      * Rows failing this predicate are frozen: they render no controls, are
@@ -288,6 +363,7 @@ interface HandlePartSignature {
   Args: {
     row: Row<unknown>;
     dragType: string;
+    sourceListId: string;
     onDragStart: (event: { source: DragSource }) => void;
     onDragEnd: () => void;
   };
@@ -305,7 +381,7 @@ const HandlePart: TOC<HandlePartSignature> = <template>
   <DDragHandle
     {{dDragAndDropSource
       type=@dragType
-      data=(hash key=@row.key)
+      data=(hash key=@row.key listId=@sourceListId)
       onDragStart=@onDragStart
       onDragEnd=@onDragEnd
     }}
@@ -349,6 +425,7 @@ interface ReorderControlsSignature {
   Args: {
     row: Row<unknown>;
     dragType: string;
+    sourceListId: string;
     arrowsLayout?: "stacked" | "inline";
     onDragStart: (event: { source: DragSource }) => void;
     onDragEnd: () => void;
@@ -366,6 +443,7 @@ const ReorderControls: TOC<ReorderControlsSignature> = <template>
   <HandlePart
     @row={{@row}}
     @dragType={{@dragType}}
+    @sourceListId={{@sourceListId}}
     @onDragStart={{@onDragStart}}
     @onDragEnd={{@onDragEnd}}
   />
@@ -486,11 +564,6 @@ export default class DReorderableList<T> extends Component<
 > {
   @service declare a11y: A11yService;
 
-  /**
-   * The drag discriminator for this list. Generated per instance, so two
-   * unrelated lists on one page can never accept each other's drags.
-   */
-  dragType = `d-reorderable-list:${guidFor(this)}`;
   rowClassFor = (row: Row<T>): string | undefined => {
     const { rowClass } = this.args;
     if (typeof rowClass === "function") {
@@ -498,7 +571,6 @@ export default class DReorderableList<T> extends Component<
     }
     return rowClass;
   };
-
   /**
    * Applied by the arrow pair wherever it renders, so the component knows the
    * row kept its keyboard path regardless of where a manual placement put it.
@@ -541,6 +613,25 @@ export default class DReorderableList<T> extends Component<
    * Deferred a tick because the teardown runs inside a render pass that has
    * already read the key.
    */
+  /**
+   * Registers the list's root element as a drop target while the list is an
+   * empty group member — the one state with no rows to land on. Applied
+   * statically and registered imperatively: a conditionally curried modifier
+   * breaks on the classic-component element wrapper the shell falls back to
+   * for non-shortcut tags. Deliberately consumes `acceptsRootDrops`, so it
+   * re-registers exactly when the items or group change — never mid-drag.
+   */
+  rootDropTarget = modifier((element: Element) => {
+    if (!this.acceptsRootDrops) {
+      return;
+    }
+    return registerDragAndDropTarget(element, () => ({
+      accepts: this.dragType,
+      position: "inside" as const,
+      onDrop: this.onEmptyRootDrop,
+    }));
+  });
+
   trackRowDragState = modifier((element: Element) => {
     // The key is read from the element for the same reason as in
     // `verifyKeyboardPath`: consuming a reactive argument would re-run this
@@ -562,6 +653,9 @@ export default class DReorderableList<T> extends Component<
       });
     };
   });
+  /** The private drag discriminator used when the list stands alone. */
+  #ownDragType = `d-reorderable-list:${guidFor(this)}`;
+
   /** The keys whose arrow pair is currently rendered, for the manual guard. */
   #keyboardPathKeys = new Set<string>();
 
@@ -571,6 +665,82 @@ export default class DReorderableList<T> extends Component<
    * because the host may replace its items mid-drag.
    */
   @tracked _draggingKey: string | null = null;
+
+  constructor(owner: Owner, args: DReorderableListSignature<T>["Args"]) {
+    super(owner, args);
+
+    const { group } = this.args;
+    if (group && !this.args.listId) {
+      // Reported after render rather than thrown here: an exception unwinding
+      // a half-built render corrupts it. The list simply stays unregistered.
+      schedule("afterRender", () => {
+        if (isDestroying(this) || isDestroyed(this)) {
+          return;
+        }
+        assert(
+          "d-reorderable-list: @listId is required when the list joins a group",
+          false
+        );
+      });
+    } else if (group) {
+      const unregister = group.registerMember({
+        listId: this.args.listId!,
+        listLabel: this.args.listLabel,
+        getItems: () => this.args.items,
+        removalProjection: (key: string) => {
+          const rows = this.rows;
+          const moved = rows.find((candidate) => candidate.key === key);
+          if (!moved?.movable) {
+            return undefined;
+          }
+          // The same slot model as an in-list move: frozen rows keep their
+          // exact visible indices while the remaining movable items refill
+          // the movable slots in order, and the list shrinks by its last
+          // slot. A frozen row that sat on the dropped final slot has no
+          // index to keep and joins the end of the refill queue.
+          const size = rows.length - 1;
+          const empty = Symbol("empty");
+          const proposed: (T | typeof empty)[] = new Array(size).fill(empty);
+          const overflow: T[] = [];
+          for (const row of rows) {
+            if (!row.movable) {
+              if (row.index < size) {
+                proposed[row.index] = row.item;
+              } else {
+                overflow.push(row.item);
+              }
+            }
+          }
+          const queue = rows
+            .filter((row) => row.movable && row.key !== key)
+            .map((row) => row.item)
+            .concat(overflow);
+          let cursor = 0;
+          for (let index = 0; index < size; index++) {
+            if (proposed[index] === empty) {
+              proposed[index] = queue[cursor++]!;
+            }
+          }
+          return {
+            item: moved.item,
+            fromIndex: moved.index,
+            proposedFromItems: proposed as readonly T[],
+          };
+        },
+      });
+      registerDestructor(this, unregister);
+    }
+  }
+
+  /**
+   * The drag discriminator in force: the group's shared token when the list
+   * is a member — which is what lets drags travel between members — and a
+   * private per-instance one otherwise, so unrelated lists on one page can
+   * never accept each other's drags.
+   */
+  get dragType(): string {
+    return this.args.group?.token ?? this.#ownDragType;
+  }
 
   get listTag(): string {
     return this.args.tag ?? "ul";
@@ -590,6 +760,23 @@ export default class DReorderableList<T> extends Component<
 
   get revealControls(): boolean {
     return this.args.controlsVisibility === "reveal";
+  }
+
+  /** This list's move-payload identity: its group listId, or `"default"`. */
+  get listIdOrDefault(): string {
+    return this.args.listId ?? "default";
+  }
+
+  /**
+   * Whether the list's root element accepts drops: only as an empty group
+   * member, where there are no rows to land on. Reads `@items` directly
+   * rather than `rows`, so the conditional target below re-curries only when
+   * the items themselves change — never on drag-state churn.
+   */
+  get acceptsRootDrops(): boolean {
+    return (
+      !!this.args.group && this.args.items.length === 0 && !this.args.disabled
+    );
   }
 
   /**
@@ -696,11 +883,22 @@ export default class DReorderableList<T> extends Component<
   @action
   onRowDrop(targetKey: string, { position, source }: DropTargetEvent) {
     const rows = this.rows;
+    const targetRow = rows.find((candidate) => candidate.key === targetKey);
+    if (!targetRow?.movable) {
+      return;
+    }
+
+    const sourceListId = source.data.listId as string | undefined;
+    if (this.args.group && sourceListId !== this.listIdOrDefault) {
+      const toIndex = targetRow.index + (position === "after" ? 1 : 0);
+      this.#commitCrossMove(sourceListId, source.data.key as string, toIndex);
+      return;
+    }
+
     const sourceRow = rows.find(
       (candidate) => candidate.key === source.data.key
     );
-    const targetRow = rows.find((candidate) => candidate.key === targetKey);
-    if (!sourceRow?.movable || !targetRow?.movable) {
+    if (!sourceRow?.movable) {
       return;
     }
 
@@ -715,6 +913,24 @@ export default class DReorderableList<T> extends Component<
     }
 
     this.#commitSeqMove("drag", rows, seq, from, to);
+  }
+
+  /**
+   * The drop path for the list's own root element, registered only while the
+   * list is an empty group member — the one state with no rows to land on.
+   *
+   * @param event - The target modifier's drop payload.
+   */
+  @action
+  onEmptyRootDrop({ source }: DropTargetEvent) {
+    if (this.rows.length > 0) {
+      return;
+    }
+    this.#commitCrossMove(
+      source.data.listId as string | undefined,
+      source.data.key as string,
+      0
+    );
   }
 
   #keyFor(item: T, index: number): string {
@@ -765,20 +981,76 @@ export default class DReorderableList<T> extends Component<
     const toIndex = seq[to]!.index;
 
     const { items } = this.args;
-    const move: ReorderableMove<T> = {
+    const listId = this.listIdOrDefault;
+    this.#finalize({
       method,
       item: moved.item,
-      fromList: "default",
-      toList: "default",
+      fromList: listId,
+      toList: listId,
       fromIndex: moved.index,
       toIndex,
       fromItems: items,
       toItems: items,
       proposedFromItems: proposed,
       proposedToItems: proposed,
-    };
+    });
+  }
 
-    if (this.args.onMove(move) === false) {
+  /**
+   * The destination half of a cross-list move: resolves the source member
+   * through the group, asks it for its removal projection, splices the item
+   * into this list's visible order, and finalizes. A source member that
+   * unregistered mid-drag, or a key that no longer resolves there, refuses
+   * the drop silently.
+   *
+   * @param sourceListId - The group listId the payload named as its origin.
+   * @param key - The dragged row's key in the source member.
+   * @param toIndex - The visible landing index in this list.
+   */
+  #commitCrossMove(
+    sourceListId: string | undefined,
+    key: string,
+    toIndex: number
+  ) {
+    const { group } = this.args;
+    if (!group || !sourceListId) {
+      return;
+    }
+    const member = group.lookupMember(sourceListId);
+    const removal = member?.removalProjection(key);
+    if (!member || !removal) {
+      return;
+    }
+
+    const proposedTo = [...this.args.items] as T[];
+    proposedTo.splice(toIndex, 0, removal.item as T);
+
+    this.#finalize({
+      method: "drag",
+      item: removal.item as T,
+      fromList: sourceListId,
+      toList: this.listIdOrDefault,
+      fromIndex: removal.fromIndex,
+      toIndex,
+      fromItems: member.getItems() as readonly T[],
+      toItems: this.args.items,
+      proposedFromItems: removal.proposedFromItems as readonly T[],
+      proposedToItems: proposedTo,
+    });
+  }
+
+  /**
+   * The single exit for every committed move: routes the callback to the
+   * group when the list is a member (its own `@onMove` otherwise), honors the
+   * veto and the `@announceMove` override, and speaks exactly one
+   * announcement — the cross-list variant when an item landed here from
+   * another member and this list carries a `@listLabel`.
+   *
+   * @param move - The normalized move to report.
+   */
+  #finalize(move: ReorderableMove<T>) {
+    const handler = this.args.group?.onMove ?? this.args.onMove;
+    if (handler?.(move) === false) {
       return;
     }
 
@@ -790,11 +1062,19 @@ export default class DReorderableList<T> extends Component<
       }
       message = custom;
     } else {
-      message = i18n("reorder_announcement", {
-        label: this.args.label(moved.item),
-        position: toIndex + 1,
-        total: proposed.length,
-      });
+      const label = this.args.label(move.item);
+      const position = move.toIndex + 1;
+      const total = move.proposedToItems.length;
+      if (move.fromList !== move.toList && this.args.listLabel) {
+        message = i18n("reorder_announcement_cross_list", {
+          label,
+          list: this.args.listLabel,
+          position,
+          total,
+        });
+      } else {
+        message = i18n("reorder_announcement", { label, position, total });
+      }
     }
 
     this.a11y.announce(message);
@@ -808,6 +1088,7 @@ export default class DReorderableList<T> extends Component<
           (if this.revealControls "--reveal-controls")
         }}
         role={{@role}}
+        {{this.rootDropTarget}}
         ...attributes
       >
         {{yield to="header"}}
@@ -838,6 +1119,7 @@ export default class DReorderableList<T> extends Component<
                     <ReorderControls
                       @row={{row}}
                       @dragType={{this.dragType}}
+                      @sourceListId={{this.listIdOrDefault}}
                       @arrowsLayout={{@arrowsLayout}}
                       @onDragStart={{this.onSourceDragStart}}
                       @onDragEnd={{this.onSourceDragEnd}}
@@ -859,6 +1141,7 @@ export default class DReorderableList<T> extends Component<
                           HandlePart
                           row=row
                           dragType=this.dragType
+                          sourceListId=this.listIdOrDefault
                           onDragStart=this.onSourceDragStart
                           onDragEnd=this.onSourceDragEnd
                         )
@@ -879,6 +1162,7 @@ export default class DReorderableList<T> extends Component<
                           ReorderControls
                           row=row
                           dragType=this.dragType
+                          sourceListId=this.listIdOrDefault
                           arrowsLayout=@arrowsLayout
                           onDragStart=this.onSourceDragStart
                           onDragEnd=this.onSourceDragEnd
@@ -892,6 +1176,7 @@ export default class DReorderableList<T> extends Component<
                     <ReorderControls
                       @row={{row}}
                       @dragType={{this.dragType}}
+                      @sourceListId={{this.listIdOrDefault}}
                       @arrowsLayout={{@arrowsLayout}}
                       @onDragStart={{this.onSourceDragStart}}
                       @onDragEnd={{this.onSourceDragEnd}}
