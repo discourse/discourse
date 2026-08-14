@@ -234,7 +234,7 @@ export default class ComposerMessages extends Component {
     }
 
     // We don't care about similar topics when creating with a form template
-    if (this.composer?.category?.form_template_ids.length > 0) {
+    if (this.composer?.category?.form_template_ids?.length > 0) {
       return;
     }
 
