@@ -211,8 +211,8 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       .hasText("Some declines in engagement in the selected period");
     assert
       .dom(".db-section__subintro p")
-      .includesText(
-        "Investigate the decline to see which members have disengaged.",
+      .hasText(
+        "Stickiness and daily engagement are down, but new signups are holding steady. Investigate the decline to see which members have disengaged.",
         "recommends investigating disengaged members for the largest displayed decline"
       );
   });
@@ -252,8 +252,8 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
 
     assert
       .dom(".db-section__subintro p")
-      .includesText(
-        "Take a look at the activity by category",
+      .hasText(
+        "Stickiness and daily engagement are down, but new signups are holding steady. Take a look at the activity by category to see which areas of your community may need your attention.",
         "recommends reviewing activity by category for equal displayed declines"
       );
   });
