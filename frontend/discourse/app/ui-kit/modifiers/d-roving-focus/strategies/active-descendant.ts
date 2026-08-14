@@ -13,7 +13,7 @@ export default class ActiveDescendantStrategy {
   #config: DRovingFocusConfig;
   #controller: HTMLElement | null;
   #activeId: string | null = null;
-  #mintedIds = new Map<HTMLElement, string>();
+  #mintedIds = new Set<string>();
   #pendingSeed: MutationObserver | null = null;
   #reannounceTimer?: ReturnType<typeof nextRunloop>;
   #destroyed = false;
@@ -168,8 +168,8 @@ export default class ActiveDescendantStrategy {
     this.#cancelReannounce();
     this.#controller?.removeAttribute("aria-activedescendant");
     this.#clearClass(this.#config.activeClass, this.#scope);
-    for (const [item, id] of this.#mintedIds) {
-      if (item.id === id) {
+    for (const item of this.#scope.all()) {
+      if (this.#mintedIds.has(item.id)) {
         item.removeAttribute("id");
       }
     }
@@ -181,7 +181,7 @@ export default class ActiveDescendantStrategy {
     if (!item.id) {
       const id = this.mintId();
       item.id = id;
-      this.#mintedIds.set(item, id);
+      this.#mintedIds.add(id);
     }
     return item.id;
   }

@@ -508,5 +508,48 @@ module(
         .dom(".b")
         .hasAttribute("tabindex", "0", "the cursor becomes the tab stop again");
     });
+
+    test("restoring lost focus copes with the selector matching nothing", async function (assert) {
+      const state = new (class {
+        @tracked
+        rows = [
+          { id: "a", nav: true },
+          { id: "b", nav: true },
+          { id: "c", nav: true },
+        ];
+        @tracked key = 0;
+      })();
+
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus itemSelector="[data-nav]" itemsKey=state.key}}
+          >
+            {{#each state.rows key="id" as |row|}}
+              <button
+                class="opt-{{row.id}}"
+                role="option"
+                data-nav={{if row.nav "true"}}
+              >{{row.id}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+
+      await focus(".opt-a");
+      state.rows = [
+        { id: "b", nav: false },
+        { id: "c", nav: false },
+      ];
+      state.key++;
+      await settled();
+
+      assert.strictEqual(
+        document.activeElement,
+        document.body,
+        "with nothing left to match, restoration declines instead of throwing"
+      );
+    });
   }
 );
