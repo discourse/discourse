@@ -130,12 +130,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   /** The current active-descendant strategy session, when that mode owns the cursor. */
   #activeStrategy: ActiveDescendantStrategy | null = null;
 
-  /**
-   * Items already demoted to `tabindex="-1"` by this group. Keyed on element IDENTITY rather
-   * than on whether the attribute is missing: items may arrive carrying an author-supplied
-   * `tabindex="0"`, and skipping those would leave the group with more than one tab stop.
-   * A `WeakSet` so removed items are not retained.
-   */
   #itemSelector?: string;
   #keyboard = new KeyboardRouter();
   #onActiveChange?: (
@@ -149,23 +143,11 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   /** The container the shared `mousedown`/`focusin` listeners are currently bound to. */
   #boundContainer: HTMLElement | null = null;
 
-  /** Armed only while a seed is owed to a container that had no items yet. */
-
   /** Whether `modify()` has run at least once, so the first run is not mistaken for a reset. */
   #hasRun = false;
 
-  /** Set once a group has reported a two-dimensional layout it cannot measure, so it warns once. */
+  /** Owns the once-per-group development diagnostics. */
   #diagnostics = new RovingFocusDiagnostics();
-
-  /**
-   * Focus mode — the item that last held focus, and its index among ALL items, navigable or not.
-   * Kept so a removal can be told apart from focus simply moving away, and so the replacement
-   * item can be addressed positionally once the old one is gone.
-   */
-  /**
-   * The items present at the end of the previous `modify()`. Only ever asked whether ANY of them
-   * survives, which is what separates an item being deleted from the whole list being replaced.
-   */
 
   /**
    * Monotonic counter behind minted ids. Never reset, so an id cannot be reissued to a second
@@ -173,8 +155,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * selector change clears the bookkeeping.
    */
   #mintCounter = 0;
-
-  /** Pending restore of a dropped `aria-activedescendant` — see `reannounceActive`. */
 
   /**
    * The last `resetKey` seen. The sentinel is a fresh symbol so the first `modify()` always counts
@@ -218,10 +198,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     reannounce: () => this.#activeStrategy?.reannounce() ?? false,
   });
 
-  /**
-   * Active mode only — the set of item `id`s this modifier minted, so cleanup
-   * removes only its own and never strips an author-supplied id.
-   */
   /** The callback already given the stable API, retained to avoid render-time churn. */
   #registeredApiCallback?: (api: DRovingFocusApi | null) => void;
 
@@ -417,7 +393,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       element.addEventListener("focusin", this.#handleFocusIn);
     }
 
-    // Recorded before seeding, since seeding is the act that writes to the DOM.
     if (this.#mode === "active-descendant") {
       this.#diagnostics.warnMissingFocusIndicator(
         Boolean(config.activeClass || config.onActiveChange)
@@ -549,22 +524,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   /**
-   * Warns, once per group, when a container that LOOKS two-dimensional resolved to one column.
-   *
-   * Only a CSS grid publishes a track list, so a flex-wrap or multi-column tile set reports a
-   * single column and its second axis silently disappears — the cursor steps one tile at a time
-   * where the reader sees rows. Deliberately narrow: a plain block container resolving to one
-   * column is the overwhelmingly common case and is CORRECT, so warning on every such group
-   * would train the warning away. The fix is to lay the group out with CSS grid, which is also
-   * what makes the derivation responsive.
-   *
-   * @param style - The container's resolved style, already read for the track list.
-   */
-  /**
-   * Resolves the cursor to an ELEMENT, mirroring {@link #currentIndex} but over the raw item set,
-   * so nothing has to be measured to find it. Deliberately the same resolution order — active id,
-   * then innermost-first containment of `document.activeElement`, then the established tab stop —
-   * so the two can never disagree about which item holds the cursor.
+   * Resolves the cursor through the current strategy without measuring the item set.
    */
   #currentElement(items: HTMLElement[]): HTMLElement | null {
     if (this.#mode === "active-descendant") {

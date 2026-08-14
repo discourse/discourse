@@ -5,6 +5,7 @@ function hasCurrentToken(item: HTMLElement): boolean {
   return current !== null && current !== "" && current !== "false";
 }
 
+/** Returns whether entry should prefer a marked item. */
 export function prefersSelected(config: DRovingFocusConfig): boolean {
   return (
     config.entryFocus === "selected-or-first" ||
@@ -12,12 +13,14 @@ export function prefersSelected(config: DRovingFocusConfig): boolean {
   );
 }
 
+/** Returns whether entry may fall back to the first eligible item. */
 export function fallsBackToFirst(config: DRovingFocusConfig): boolean {
   return (
     config.entryFocus === "first" || config.entryFocus === "selected-or-first"
   );
 }
 
+/** Returns whether an item carries any supported chosen-value marker. */
 export function isMarked(item: HTMLElement): boolean {
   return (
     item.getAttribute("aria-selected") === "true" ||
@@ -26,6 +29,10 @@ export function isMarked(item: HTMLElement): boolean {
   );
 }
 
+/**
+ * Finds the highest-priority eligible marker, searching by attribute before document order so
+ * explicit selection consistently outranks a merely current item.
+ */
 export function findMarked(
   items: HTMLElement[],
   eligible: (item: HTMLElement) => boolean = () => true
@@ -41,6 +48,7 @@ export function findMarked(
   );
 }
 
+/** Chooses the active-descendant entry target under the configured fallback policy. */
 export function activeSeed(
   items: HTMLElement[],
   config: DRovingFocusConfig
