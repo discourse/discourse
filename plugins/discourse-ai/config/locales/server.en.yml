@@ -114,7 +114,7 @@ en:
     ai_helper_allowed_in_pm: "Enable the composer's AI helper in PMs."
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
-    ai_helper_enabled_features: "Select the features to enable in the AI helper."
+    ai_helper_enabled_features: "Select the features to enable in the AI helper. Title suggestions in the composer are offered through the AI helper menu and also require the context_menu feature."
     ai_image_caption_agent: "The agent to use for AI image captions. Custom agents must have image uploads enabled and use a vision-capable LLM."
     ai_post_image_captions_enabled: "Enable AI captions for post images. Generating missing captions requires a configured {{setting:ai_image_caption_agent}}."
     ai_post_image_captions_per_post_limit: "Maximum number of post images to caption per post."
@@ -388,7 +388,7 @@ en:
         unknown_error: "An unexpected error occurred while generating thumbnails. Please try again."
       prompts:
         translate: Translate to %{language}
-        generate_titles: Suggest topic titles
+        generate_titles: Suggest topic title
         proofread: Proofread text
         markdown_table: Generate Markdown table
         custom_prompt: "Custom Prompt"

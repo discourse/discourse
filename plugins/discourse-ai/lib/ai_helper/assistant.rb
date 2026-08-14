@@ -443,7 +443,7 @@ module DiscourseAi
         when TRANSLATE
           "language"
         when GENERATE_TITLES
-          "heading"
+          "discourse-h1"
         when PROOFREAD
           "spell-check"
         when MARKDOWN_TABLE
