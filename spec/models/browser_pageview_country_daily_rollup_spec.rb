@@ -81,5 +81,22 @@ RSpec.describe BrowserPageviewCountryDailyRollup do
         described_class.aggregate(start_date: start_date, end_date: end_date)
       }.not_to change { described_class.count }
     end
+
+    it "records the crawler share of a country's pageviews alongside the total" do
+      user = Fabricate(:user)
+      Fabricate(:browser_pageview_event, country_code: "US", score: 90)
+      Fabricate(:browser_pageview_event, country_code: "US", score: 90, user_id: user.id)
+      Fabricate(:browser_pageview_event, country_code: "US", score: 10)
+      Fabricate(:browser_pageview_event, country_code: "US", score: nil, user_id: user.id)
+
+      described_class.aggregate(start_date: start_date, end_date: end_date)
+
+      expect(described_class.find_by(country_code: "US")).to have_attributes(
+        count: 4,
+        logged_in_count: 2,
+        likely_crawler_count: 2,
+        likely_crawler_logged_in_count: 1,
+      )
+    end
   end
 end

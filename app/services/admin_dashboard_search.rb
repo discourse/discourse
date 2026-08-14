@@ -44,6 +44,7 @@ class AdminDashboardSearch
       trending: trending,
       trending_period: trending_period,
       content_gaps: content_gaps,
+      search_type: search_type,
     }
   end
 
@@ -100,7 +101,7 @@ class AdminDashboardSearch
 
   def trending
     rows =
-      non_staff_search_logs_in(window_start: start_date, window_end: end_date)
+      human_search_logs_in(window_start: start_date, window_end: end_date)
         .select(<<~SQL)
           lower(search_logs.term) AS term,
           COUNT(*) AS searches,
@@ -123,7 +124,7 @@ class AdminDashboardSearch
 
   def content_gaps
     rows =
-      non_staff_search_logs_in(window_start: start_date, window_end: end_date)
+      human_search_logs_in(window_start: start_date, window_end: end_date)
         .select(<<~SQL)
           lower(search_logs.term) AS term,
           COUNT(*) AS searches,
@@ -148,12 +149,12 @@ class AdminDashboardSearch
 
   def window_stats(window_start:, window_end:)
     term_stats =
-      non_staff_search_logs_in(window_start: window_start, window_end: window_end).select(
-        <<~SQL,
+      human_search_logs_in(window_start: window_start, window_end: window_end).select(<<~SQL).group(
           COUNT(*) AS searches,
           SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
         SQL
-      ).group("lower(search_logs.term)")
+        "lower(search_logs.term)",
+      )
 
     row = SearchLog.from("(#{term_stats.to_sql}) term_stats").select(<<~SQL).take
           COALESCE(SUM(searches), 0)::bigint AS total,
@@ -163,8 +164,12 @@ class AdminDashboardSearch
     { total: row.total, no_match: row.no_match }
   end
 
-  def non_staff_search_logs_in(window_start:, window_end:)
-    SearchLog.non_staff.where(created_at: window_start..window_end)
+  def human_search_logs_in(window_start:, window_end:)
+    SearchLog.human_scope.where(created_at: window_start..window_end)
+  end
+
+  def search_type
+    CrawlerScorer.enabled? ? "human_only" : "non_staff_only"
   end
 
   def parse_date(value)

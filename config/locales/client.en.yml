@@ -7574,7 +7574,7 @@ en:
             kpi:
               total_searches:
                 label: "Total searches"
-                tooltip: "The number of searches performed by members in your community."
+                tooltip: "The number of searches performed in your community."
               no_result_rate:
                 label: "No-result rate"
                 tooltip: "The percentage of searches where members didn't click any result (0% CTR). This indicates that members may be searching for content your community doesn't have."
@@ -7584,7 +7584,7 @@ en:
               status: "Status"
             trending:
               title: "Trending searches"
-              tooltip: "The most popular search terms among members."
+              tooltip: "The most popular search terms in your community."
               empty: "No searches in this period."
             content_gaps:
               title: "Content gaps"
@@ -9223,6 +9223,7 @@ en:
             full_page: "Full page"
             click_through_only: "All (click through only)"
             non_staff_only: "Non-staff users"
+            human_only: "Excluding staff and crawlers"
           header_search_results: "Header search results"
         logster:
           title: "Error logs"

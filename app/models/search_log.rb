@@ -9,6 +9,14 @@ class SearchLog < ActiveRecord::Base
   belongs_to :user
 
   scope :non_staff, -> { joins(:user).where(users: { admin: false, moderator: false }) }
+  scope :non_staff_or_anonymous,
+        -> do
+          left_outer_joins(:user).where(
+            "users.id IS NULL OR (NOT users.admin AND NOT users.moderator)",
+          )
+        end
+  scope :human, -> { where(likely_crawler: false) }
+  scope :human_scope, -> { CrawlerScorer.enabled? ? non_staff_or_anonymous.human : non_staff }
 
   def ctr
     return 0 if click_through == 0 || searches == 0
@@ -74,6 +82,8 @@ class SearchLog < ActiveRecord::Base
           ip_address: ip_address,
           user_agent: user_agent,
           user_id: user_id,
+          likely_crawler:
+            user_id.nil? && user_agent.present? && CrawlerDetection.crawler?(user_agent),
         )
 
       result = [:created, log.id]
@@ -82,6 +92,31 @@ class SearchLog < ActiveRecord::Base
     Discourse.redis.setex(key, 5, "#{result[1]},#{term}")
 
     result
+  end
+
+  BACKFILL_AGENT_BATCH_SIZE = 100
+
+  def self.backfill_likely_crawler!
+    agents = DB.query_single(<<~SQL)
+      SELECT DISTINCT user_agent
+      FROM search_logs
+      WHERE user_id IS NULL
+        AND NOT likely_crawler
+        AND user_agent IS NOT NULL
+    SQL
+
+    crawler_agents = agents.select { |agent| CrawlerDetection.crawler?(agent) }
+    return 0 if crawler_agents.empty?
+
+    crawler_agents
+      .each_slice(BACKFILL_AGENT_BATCH_SIZE)
+      .sum { |batch| DB.exec(<<~SQL, agents: batch) }
+        UPDATE search_logs
+        SET likely_crawler = TRUE
+        WHERE user_id IS NULL
+          AND NOT likely_crawler
+          AND user_agent IN (:agents)
+      SQL
   end
 
   def self.term_details(term, period = :weekly, search_type = :all)
@@ -98,6 +133,7 @@ class SearchLog < ActiveRecord::Base
       search_type == :full_page
     result = result.where.not(search_result_id: nil) if search_type == :click_through_only
     result = result.non_staff if search_type == :non_staff_only
+    result = result.human_scope if search_type == :human_only
 
     result
       .order("date")
@@ -138,6 +174,8 @@ class SearchLog < ActiveRecord::Base
 
     if search_type == :non_staff_only
       result = result.non_staff
+    elsif search_type == :human_only
+      result = result.human_scope
     elsif search_type != :all
       result = result.where("search_type = ?", search_types[search_type])
     end
@@ -183,6 +221,7 @@ end
 #
 #  id                 :integer          not null, primary key
 #  ip_address         :inet
+#  likely_crawler     :boolean          default(FALSE), not null
 #  search_result_type :integer
 #  search_type        :integer          not null
 #  term               :string           not null
@@ -193,6 +232,7 @@ end
 #
 # Indexes
 #
-#  index_search_logs_on_created_at              (created_at)
-#  index_search_logs_on_user_id_and_created_at  (user_id,created_at) WHERE (user_id IS NOT NULL)
+#  index_search_logs_on_created_at                     (created_at)
+#  index_search_logs_on_created_at_not_likely_crawler  (created_at) WHERE (NOT likely_crawler)
+#  index_search_logs_on_user_id_and_created_at         (user_id,created_at) WHERE (user_id IS NOT NULL)
 #

@@ -16,4 +16,26 @@ RSpec.describe Jobs::DetectCrawlerPageviews do
 
     described_class.new.execute({})
   end
+
+  it "flags anonymous searches that correlate with crawler traffic in the window" do
+    SiteSetting.improved_crawler_detection = true
+    user_agent = "Mozilla/5.0 (X11; Linux x86_64) HeadlessChrome/120.0.0.0"
+    Fabricate(
+      :browser_pageview_event,
+      ip_address: "1.2.3.4",
+      user_agent: user_agent,
+      created_at: 45.minutes.ago,
+    )
+    log =
+      Fabricate(
+        :search_log,
+        ip_address: "1.2.3.4",
+        user_agent: user_agent,
+        created_at: 45.minutes.ago,
+      )
+
+    described_class.new.execute({})
+
+    expect(log.reload.likely_crawler).to eq(true)
+  end
 end

@@ -728,6 +728,20 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(second[:top_countries][:rows]).to be_empty
       end
 
+      it "invalidates the cached payload when crawler detection is toggled" do
+        SiteSetting.improved_crawler_detection = false
+        3.times { Fabricate(:browser_pageview_event, country_code: "US", score: 90) }
+        1.times { Fabricate(:browser_pageview_event, country_code: "US", score: 10) }
+        aggregate_rollups
+
+        first = build_traffic(start_date: nil, end_date: nil)
+        expect(first[:top_countries][:rows].first[:count]).to eq(4)
+
+        SiteSetting.improved_crawler_detection = true
+        second = build_traffic(start_date: nil, end_date: nil)
+        expect(second[:top_countries][:rows].first[:count]).to eq(1)
+      end
+
       it "invalidates the cached payload when current_hostname changes" do
         Discourse.stubs(:current_hostname).returns("forum-a.example.com")
         Fabricate(:browser_pageview_event, normalized_referrer: "forum-b.example.com/path")
@@ -823,6 +837,41 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
           average_session_duration_seconds: {
             value: nil,
+          },
+        )
+      end
+
+      it "excludes likely crawler pageviews from the direct traffic share once crawler detection is enabled" do
+        SiteSetting.improved_crawler_detection = true
+        3.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: nil,
+            score: 10,
+            created_at: "2026-05-01",
+          )
+        end
+        9.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            score: 90,
+            created_at: "2026-05-01",
+          )
+        end
+        1.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            score: 10,
+            created_at: "2026-05-01",
+          )
+        end
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to include(
+          direct_traffic: {
+            value: 75,
           },
         )
       end
@@ -983,6 +1032,54 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
           average_session_duration_seconds: {
             value: 30,
+          },
+        )
+      end
+
+      it "excludes likely crawler sessions once crawler detection is enabled" do
+        SiteSetting.improved_crawler_detection = true
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 14,
+          bounced: 11,
+          engaged_seconds_total: 700,
+          likely_crawler_sessions: 6,
+          likely_crawler_bounced: 6,
+          likely_crawler_engaged_seconds_total: 100,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to include(
+          bounce_rate: {
+            value: 63,
+          },
+          average_session_duration_seconds: {
+            value: 75,
+          },
+        )
+      end
+
+      it "counts likely crawler sessions while crawler detection is disabled" do
+        SiteSetting.improved_crawler_detection = false
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 14,
+          bounced: 11,
+          engaged_seconds_total: 700,
+          likely_crawler_sessions: 6,
+          likely_crawler_bounced: 6,
+          likely_crawler_engaged_seconds_total: 100,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to include(
+          bounce_rate: {
+            value: 79,
+          },
+          average_session_duration_seconds: {
+            value: 50,
           },
         )
       end

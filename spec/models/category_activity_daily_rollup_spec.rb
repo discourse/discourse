@@ -25,6 +25,111 @@ RSpec.describe CategoryActivityDailyRollup do
       )
     end
 
+    it "records likely crawler pageviews from browser events separately" do
+      topic = Fabricate(:topic, category: category, created_at: 3.days.ago)
+      TopicViewStat.create!(
+        topic: topic,
+        viewed_at: 3.days.ago.to_date,
+        anonymous_views: 7,
+        logged_in_views: 3,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        topic_id: topic.id,
+        ip_address: "1.1.1.1",
+        created_at: 3.days.ago,
+        score: 90,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        topic_id: topic.id,
+        ip_address: "2.2.2.2",
+        created_at: 3.days.ago,
+        score: 90,
+      )
+      Fabricate(:browser_pageview_event, topic_id: topic.id, created_at: 3.days.ago, score: 10)
+
+      described_class.aggregate(start_date: 5.days.ago, end_date: Time.zone.today)
+
+      expect(described_class.find_by(category: category, date: 3.days.ago.to_date)).to(
+        have_attributes(page_views: 10, likely_crawler_page_views: 2),
+      )
+    end
+
+    it "counts a crawler revisiting the same topic once a day, matching topic view stats" do
+      topic = Fabricate(:topic, category: category, created_at: 3.days.ago)
+      TopicViewStat.create!(
+        topic: topic,
+        viewed_at: 3.days.ago.to_date,
+        anonymous_views: 5,
+        logged_in_views: 0,
+      )
+      20.times do
+        Fabricate(
+          :browser_pageview_event,
+          topic_id: topic.id,
+          ip_address: "1.1.1.1",
+          created_at: 3.days.ago,
+          score: 90,
+        )
+      end
+
+      described_class.aggregate(start_date: 5.days.ago, end_date: Time.zone.today)
+
+      expect(described_class.find_by(category: category, date: 3.days.ago.to_date)).to(
+        have_attributes(page_views: 5, likely_crawler_page_views: 1),
+      )
+    end
+
+    it "does not create a row for a day whose only signal is crawler pageviews" do
+      topic = Fabricate(:topic, category: category, created_at: 10.days.ago)
+      Fabricate(:browser_pageview_event, topic_id: topic.id, created_at: 3.days.ago, score: 90)
+
+      described_class.aggregate(start_date: 5.days.ago, end_date: Time.zone.today)
+
+      expect(described_class.where(date: 3.days.ago.to_date)).to be_empty
+    end
+
+    it "keeps crawler pageviews for dates whose source events have been pruned" do
+      topic = Fabricate(:topic, category: category, created_at: 3.days.ago)
+      TopicViewStat.create!(
+        topic: topic,
+        viewed_at: 3.days.ago.to_date,
+        anonymous_views: 10,
+        logged_in_views: 0,
+      )
+      Fabricate(:browser_pageview_event, topic_id: topic.id, created_at: 3.days.ago, score: 90)
+      described_class.aggregate(start_date: 5.days.ago, end_date: Time.zone.today)
+
+      BrowserPageviewEvent.delete_all
+      described_class.aggregate(start_date: 5.days.ago, end_date: Time.zone.today)
+
+      expect(described_class.find_by(category: category, date: 3.days.ago.to_date)).to(
+        have_attributes(page_views: 10, likely_crawler_page_views: 1),
+      )
+    end
+
+    it "recomputes crawler pageviews downward while the source events remain" do
+      topic = Fabricate(:topic, category: category, created_at: 3.days.ago)
+      TopicViewStat.create!(
+        topic: topic,
+        viewed_at: 3.days.ago.to_date,
+        anonymous_views: 10,
+        logged_in_views: 0,
+      )
+      crawler_event =
+        Fabricate(:browser_pageview_event, topic_id: topic.id, created_at: 3.days.ago, score: 90)
+      Fabricate(:browser_pageview_event, topic_id: topic.id, created_at: 3.days.ago, score: 10)
+      described_class.aggregate(start_date: 5.days.ago, end_date: Time.zone.today)
+
+      crawler_event.update!(score: 10)
+      described_class.aggregate(start_date: 5.days.ago, end_date: Time.zone.today)
+
+      expect(described_class.find_by(category: category, date: 3.days.ago.to_date)).to(
+        have_attributes(page_views: 10, likely_crawler_page_views: 0),
+      )
+    end
+
     it "ignores deleted topics, deleted posts and private messages" do
       Fabricate(:topic, category: category, created_at: 1.day.ago, deleted_at: Time.zone.now)
       Fabricate(:private_message_topic, category: category, created_at: 1.day.ago)
@@ -137,6 +242,72 @@ RSpec.describe CategoryActivityDailyRollup do
       expect(row.page_views_current).to eq(4)
       expect(row.topics_prior).to eq(5)
       expect(row.topics_current).to be_a(Integer)
+    end
+
+    it "subtracts likely crawler pageviews once crawler detection is enabled" do
+      SiteSetting.improved_crawler_detection = true
+      Fabricate(
+        :category_activity_daily_rollup,
+        category: category,
+        date: 2.days.ago,
+        topics: 0,
+        posts: 0,
+        page_views: 10,
+        likely_crawler_page_views: 4,
+      )
+
+      row =
+        described_class.period_totals(
+          prev_start: 14.days.ago.to_date,
+          current_start: 7.days.ago.to_date,
+          current_end: Time.zone.today,
+        ).first
+
+      expect(row.page_views_current).to eq(6)
+    end
+
+    it "clamps to zero when crawler pageviews overshoot the topic view stats" do
+      SiteSetting.improved_crawler_detection = true
+      Fabricate(
+        :category_activity_daily_rollup,
+        category: category,
+        date: 2.days.ago,
+        topics: 1,
+        posts: 0,
+        page_views: 3,
+        likely_crawler_page_views: 9,
+      )
+
+      row =
+        described_class.period_totals(
+          prev_start: 14.days.ago.to_date,
+          current_start: 7.days.ago.to_date,
+          current_end: Time.zone.today,
+        ).first
+
+      expect(row.page_views_current).to eq(0)
+    end
+
+    it "counts likely crawler pageviews while crawler detection is disabled" do
+      SiteSetting.improved_crawler_detection = false
+      Fabricate(
+        :category_activity_daily_rollup,
+        category: category,
+        date: 2.days.ago,
+        topics: 0,
+        posts: 0,
+        page_views: 10,
+        likely_crawler_page_views: 4,
+      )
+
+      row =
+        described_class.period_totals(
+          prev_start: 14.days.ago.to_date,
+          current_start: 7.days.ago.to_date,
+          current_end: Time.zone.today,
+        ).first
+
+      expect(row.page_views_current).to eq(10)
     end
 
     it "excludes categories outside the requested ids" do

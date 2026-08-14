@@ -20,7 +20,7 @@ module Jobs
     private
 
     def aggregate_crawlers
-      return if !UpcomingChanges.enabled?(:improved_crawler_detection)
+      return if !CrawlerScorer.enabled?
 
       start_date, end_date = crawler_aggregation_window
       return if start_date.nil?

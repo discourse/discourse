@@ -181,5 +181,26 @@ RSpec.describe BrowserPageviewReferrerDailyRollup do
         [["google.com", 1]],
       )
     end
+
+    it "records the crawler share of a referrer's pageviews alongside the total" do
+      user = Fabricate(:user)
+      Fabricate(:browser_pageview_event, normalized_referrer: "google.com", score: 90)
+      Fabricate(
+        :browser_pageview_event,
+        normalized_referrer: "google.com",
+        score: 90,
+        user_id: user.id,
+      )
+      Fabricate(:browser_pageview_event, normalized_referrer: "google.com", score: 10)
+
+      described_class.aggregate(start_date: 7.days.ago.to_date, end_date: Date.today)
+
+      expect(described_class.find_by(normalized_referrer: "google.com")).to have_attributes(
+        count: 3,
+        logged_in_count: 1,
+        likely_crawler_count: 2,
+        likely_crawler_logged_in_count: 1,
+      )
+    end
   end
 end

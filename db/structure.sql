@@ -1957,7 +1957,9 @@ CREATE TABLE public.browser_pageview_country_daily_rollups (
     date date NOT NULL,
     country_code character varying(2),
     count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2105,7 +2107,9 @@ CREATE TABLE public.browser_pageview_referrer_daily_rollups (
     date date NOT NULL,
     normalized_referrer character varying(2000),
     count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2138,7 +2142,10 @@ CREATE TABLE public.browser_pageview_session_engagement_daily_rollups (
     logged_in boolean NOT NULL,
     sessions bigint NOT NULL,
     bounced bigint NOT NULL,
-    engaged_seconds_total bigint NOT NULL
+    engaged_seconds_total bigint NOT NULL,
+    likely_crawler_sessions bigint DEFAULT 0 NOT NULL,
+    likely_crawler_bounced bigint DEFAULT 0 NOT NULL,
+    likely_crawler_engaged_seconds_total bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2281,7 +2288,8 @@ CREATE TABLE public.category_activity_daily_rollups (
     category_id integer NOT NULL,
     topics integer DEFAULT 0 NOT NULL,
     posts integer DEFAULT 0 NOT NULL,
-    page_views bigint DEFAULT 0 NOT NULL
+    page_views bigint DEFAULT 0 NOT NULL,
+    likely_crawler_page_views bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -8803,7 +8811,8 @@ CREATE TABLE public.search_logs (
     search_type integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     search_result_type integer,
-    user_agent character varying(2000)
+    user_agent character varying(2000),
+    likely_crawler boolean DEFAULT false NOT NULL
 );
 
 
@@ -21274,6 +21283,13 @@ CREATE INDEX index_search_logs_on_created_at ON public.search_logs USING btree (
 
 
 --
+-- Name: index_search_logs_on_created_at_not_likely_crawler; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_search_logs_on_created_at_not_likely_crawler ON public.search_logs USING btree (created_at) WHERE (NOT likely_crawler);
+
+
+--
 -- Name: index_search_logs_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23178,6 +23194,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260814060100'),
 ('20260814060000'),
 ('20260813202233'),
+('20260813071230'),
+('20260813071223'),
 ('20260812094609'),
 ('20260811231259'),
 ('20260810154331'),

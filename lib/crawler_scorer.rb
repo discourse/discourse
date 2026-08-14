@@ -44,6 +44,47 @@ class CrawlerScorer
   MISSING_ENGAGEMENT_HIGH_SCORE = 40
   ENGAGEMENT_LOOKBACK = 6.hours
 
+  def self.enabled?
+    UpcomingChanges.enabled?(:improved_crawler_detection)
+  end
+
+  def self.likely_crawler_condition(table: nil)
+    prefix = table ? "#{table}." : ""
+    "#{prefix}score > #{BOT_SCORE_THRESHOLD}"
+  end
+
+  # Anonymous searches carry no pageview session, so they are matched to scored
+  # traffic by address and user agent within this window.
+  SEARCH_CORRELATION_WINDOW = 1.hour
+
+  def self.flag_search_logs!(window_start:, window_end:)
+    DB.exec(
+      <<~SQL,
+        UPDATE search_logs
+        SET likely_crawler = TRUE
+        WHERE search_logs.user_id IS NULL
+          AND NOT search_logs.likely_crawler
+          AND search_logs.created_at >= :window_start
+          AND search_logs.created_at < :window_end
+          AND search_logs.ip_address IS NOT NULL
+          AND search_logs.user_agent IS NOT NULL
+          AND EXISTS (
+            SELECT 1
+            FROM browser_pageview_events event
+            WHERE event.ip_address = search_logs.ip_address
+              AND event.user_agent = left(search_logs.user_agent, :max_user_agent_length)
+              AND #{likely_crawler_condition(table: "event")}
+              AND event.created_at >= search_logs.created_at - :correlation_window::interval
+              AND event.created_at <= search_logs.created_at + :correlation_window::interval
+          )
+      SQL
+      window_start: window_start,
+      window_end: window_end,
+      correlation_window: "#{SEARCH_CORRELATION_WINDOW.to_i} seconds",
+      max_user_agent_length: BrowserPageviewEvent::MAX_USER_AGENT_LENGTH,
+    )
+  end
+
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
     crawler_detection_datacenter_asns =

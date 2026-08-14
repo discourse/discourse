@@ -1974,6 +1974,19 @@ RSpec.describe Report do
     end
   end
 
+  describe ".cache_key" do
+    it "changes when crawler detection is toggled so the two modes cannot share an entry" do
+      report = Report.find("signups")
+
+      SiteSetting.improved_crawler_detection = false
+      disabled_key = Report.cache_key(report)
+
+      SiteSetting.improved_crawler_detection = true
+
+      expect(Report.cache_key(report)).not_to eq(disabled_key)
+    end
+  end
+
   describe "top_uploads" do
     context "with no data" do
       it "works" do

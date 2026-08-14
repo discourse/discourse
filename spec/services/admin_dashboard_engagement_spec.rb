@@ -237,12 +237,39 @@ describe AdminDashboardEngagement do
     end
 
     describe "activity_by_category" do
+      def page_views_for(result, category)
+        result[:activity_by_category][:rows].find { |row| row[:category_id] == category.id }[
+          :page_views
+        ]
+      end
+
       it "includes the activity_by_category block with rows and total" do
         result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
         activity = result[:activity_by_category]
 
         expect(activity).to have_key(:rows)
         expect(activity).to have_key(:total)
+      end
+
+      it "invalidates the cached rows when crawler detection is toggled" do
+        SiteSetting.improved_crawler_detection = false
+        category = Fabricate(:category)
+        Fabricate(
+          :category_activity_daily_rollup,
+          category: category,
+          date: "2026-04-10",
+          topics: 0,
+          posts: 0,
+          page_views: 10,
+          likely_crawler_page_views: 4,
+        )
+
+        first = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        expect(page_views_for(first, category)).to eq(10)
+
+        SiteSetting.improved_crawler_detection = true
+        second = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        expect(page_views_for(second, category)).to eq(6)
       end
 
       it "honours category visibility when current_user is a moderator" do

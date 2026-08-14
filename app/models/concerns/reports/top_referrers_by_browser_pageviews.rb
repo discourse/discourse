@@ -22,7 +22,7 @@ module Reports::TopReferrersByBrowserPageviews
         },
       ]
 
-      count_expr = SiteSetting.login_required ? "logged_in_count" : "count"
+      count_expr = BrowserPageviewEvent.rollup_count_expr
       end_date_exclusive = report.end_date.to_date + 1
 
       host = BrowserPageviewEventUrlNormalizer.normalize_host(Discourse.current_hostname)
