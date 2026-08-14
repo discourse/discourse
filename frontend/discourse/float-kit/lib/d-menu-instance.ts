@@ -123,7 +123,6 @@ export default class DMenuInstance extends FloatKitInstance {
     await super.close(options);
   }
 
-  /** Whether focus has fallen back to the document, i.e. nothing meaningful holds it. */
   get #focusIsUnowned(): boolean {
     const { activeElement } = document;
     return !activeElement || activeElement === document.body;

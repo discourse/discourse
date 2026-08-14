@@ -172,7 +172,6 @@ export default class UsersPopup extends Component {
                   {{this.displayName user}}
                 </DUserLink>
                 {{#unless this.siteSettings.prioritize_username_in_ux}}
-                  {{! the name above links to the same profile, so a second announced link would read every user twice }}
                   <DUserLink
                     @ariaHidden={{true}}
                     @username={{user.username}}
