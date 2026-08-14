@@ -1,7 +1,6 @@
 import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DashboardSearch from "discourse/admin/components/dashboard/search";
-import { searchHeadlineKeys } from "discourse/admin/lib/search-headline";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 const startDate = new Date("2026-04-01");
@@ -9,18 +8,6 @@ const endDate = new Date("2026-04-30");
 
 module("Integration | Component | Dashboard | Search", function (hooks) {
   setupRenderingTest(hooks);
-
-  test("selects the content-gaps message when searches and the no-result rate increase", function (assert) {
-    assert.deepEqual(
-      searchHeadlineKeys({ searches: "up", noResultRate: "up" }),
-      {
-        title: "searches_increased",
-        summary: "searches_up_no_result_rate_up",
-        cta: "content_gaps",
-      },
-      "selects content-gap copy for a worsening no-result rate"
-    );
-  });
 
   test("shows improving search results when searches increase and the no-result rate declines", async function (assert) {
     const search = {

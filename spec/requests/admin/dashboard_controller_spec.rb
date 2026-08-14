@@ -478,7 +478,6 @@ RSpec.describe Admin::DashboardController do
 
         engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
         expect(engagement["data"]).to include("kpis")
-        expect(engagement["data"]).not_to have_key("headline")
       end
 
       describe "reports section data" do

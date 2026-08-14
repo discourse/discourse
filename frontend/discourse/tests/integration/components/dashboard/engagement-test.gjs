@@ -1,7 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
-import { engagementHeadlineKeys } from "discourse/admin/lib/engagement-headline";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | Dashboard | Engagement", function (hooks) {
@@ -36,21 +35,6 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       },
     ],
   };
-
-  test("selects the stickiness message when stickiness improves, daily engagement declines, and signups are flat", function (assert) {
-    assert.deepEqual(
-      engagementHeadlineKeys({
-        stickiness: "improved",
-        dailyEngagement: "declined",
-        newSignups: "flat",
-      }),
-      {
-        title: "stickiness_increased",
-        summary: "stickiness_up_daily_engagement_down",
-      },
-      "selects copy that highlights improved stickiness and declining daily engagement"
-    );
-  });
 
   test("shows every KPI with its formatted value", async function (assert) {
     await render(

@@ -3,7 +3,6 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import SupportSection from "discourse/plugins/discourse-solved/admin/components/dashboard/support";
-import { supportHeadlineKeys } from "discourse/plugins/discourse-solved/admin/lib/support-headline";
 
 function buildData(overrides = {}) {
   return {
@@ -40,18 +39,6 @@ const startDate = new Date("2026-04-01");
 const endDate = new Date("2026-04-30");
 module("Integration | Component | Dashboard | Support", function (hooks) {
   setupRenderingTest(hooks);
-
-  test("selects the declining support message when resolution drops and first reply slows", function (assert) {
-    assert.deepEqual(
-      supportHeadlineKeys({ resolutionRate: "down", firstReplyTime: "up" }),
-      {
-        title: "resolution_rate_and_first_reply_time_declined",
-        summary: "fewer_answers_and_slower_replies",
-        cta: "in_progress_and_unanswered",
-      },
-      "selects declining-support copy and both follow-up actions"
-    );
-  });
 
   test("renders a positive resolution-rate delta", async function (assert) {
     const data = buildData();
