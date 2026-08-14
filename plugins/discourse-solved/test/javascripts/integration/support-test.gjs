@@ -476,7 +476,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       );
   });
 
-  test("preserves the no-data headline when no metric is measurable", async function (assert) {
+  test("shows the no-data message when no metric is measurable", async function (assert) {
     const data = {
       category_options: [],
       kpis: {
