@@ -19,6 +19,14 @@ import { i18n } from "discourse-i18n";
 const unfilteredIconCache = new Map();
 
 /**
+ * Clears the cached unfiltered icon list. Called by the test harness between
+ * tests so stubbed icon lists can't leak from one test into another.
+ */
+export function resetUnfilteredIconCache() {
+  unfilteredIconCache.clear();
+}
+
+/**
  * The content panel rendered inside the DMenu dropdown or modal.
  * Handles icon search, favorites row, and the async-loaded icon grid.
  *

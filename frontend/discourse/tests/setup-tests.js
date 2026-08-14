@@ -46,6 +46,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
+import { resetUnfilteredIconCache } from "discourse/ui-kit/d-icon-grid-picker/content";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
@@ -291,6 +292,7 @@ export default async function setupTests(config) {
     resetSite();
 
     resetCategoryCache();
+    resetUnfilteredIconCache();
 
     // Access the container that's set up in createApplication
     const scrollManager = app.__container__.lookup("service:scroll-manager");
