@@ -865,7 +865,7 @@
     cursor: pointer;
 
     // The highlight is drawn from a class the modifier toggles, not from focus, because focus
-    // never arrives here. Selection is a separate mark and can sit on a different row.
+    // never arrives here.
     &.--active {
       background: var(--tertiary-low);
     }
@@ -935,8 +935,7 @@
     padding: 0.25em 0.5em;
     cursor: pointer;
 
-    // The rows are a flat list, so depth has to be drawn from aria-level rather than from
-    // nesting. Logical padding so the right-to-left copy indents from the other edge.
+    // The rows are a flat list, so depth has to be drawn from aria-level rather than from nesting.
     &[aria-level="2"] {
       padding-inline-start: 2em;
     }

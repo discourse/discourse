@@ -20,7 +20,9 @@ export type Orientation = "grid" | "horizontal" | "vertical";
  * currently empty (e.g. a re-render dropped every item), when the index fails the member's own
  * numeric predicate, or, for
  * {@link DRovingFocusApi.focusLogicalIndex}, when the target row is not mounted — so the caller
- * can fall back. {@link DRovingFocusApi.reannounceActive} moves nothing and carries its own
+ * can fall back. The two stepping members are the exception: they report a three-valued
+ * {@link DRovingFocusStepResult}, because "already at the end" and "nothing to step through" want
+ * different fallbacks. {@link DRovingFocusApi.reannounceActive} moves nothing and carries its own
  * return contract.
  */
 export interface DRovingFocusApi {
@@ -125,8 +127,11 @@ export type DRovingFocusEntry =
 export type DRovingFocusStepResult = "moved" | "edge" | "unavailable";
 
 export interface DRovingFocusArgs {
-  /** Which focus-management strategy the group uses. Default `"roving-tabindex"`. */
-  /* Shape dictated by: Managing Focus in Composites, which names these two strategies. */
+  /**
+   * Which focus-management strategy the group uses. Default `"roving-tabindex"`.
+   *
+   * Shape dictated by: Managing Focus in Composites, which names these two strategies.
+   */
   focusStrategy?: DRovingFocusStrategy;
   /**
    * Navigation axes; `"grid"` (default) allows both, `"horizontal"`/`"vertical"` one. Ignored
@@ -141,15 +146,11 @@ export interface DRovingFocusArgs {
    * Called when an item is activated: Enter or Space in `"roving-tabindex"` mode, Enter only in `"active-descendant"`
    * mode, where Space belongs to the controller's caret. Only fires when the key landed on the
    * item itself, so a control nested inside an item keeps its own activation.
+   *
+   * See {@link DRovingFocusArgs.onActiveChange} for choosing between wiring selection to this and
+   * wiring it to the cursor.
    */
   onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
-  /*
-   * Together with `onActiveChange` below, this pair IS the practice page's selection-follows-
-   * focus switch, which is why both exist rather than one. Wire selection to `onActivate` to
-   * make the reader commit deliberately; wire it to `onActiveChange` to have it follow the
-   * cursor. The page's "Deciding When to Make Selection Automatically Follow Focus" is the
-   * guidance on which to choose, and a radio group and a listbox land on opposite answers.
-   */
   /**
    * Called whenever the cursor is placed on an item, or with `null` (and no `meta`) when the
    * highlight is cleared. `meta.pointer` is `true` when a pointer press placed it, which a
@@ -159,6 +160,12 @@ export interface DRovingFocusArgs {
    * Driven by actual cursor movement, so in `"roving-tabindex"` mode it reports arrow keys, pointer
    * presses and the API — not the tab stop being seeded or re-seeded, which moves no cursor —
    * and the `null` clear is an active-mode signal only.
+   *
+   * With {@link DRovingFocusArgs.onActivate} this pair is the practice page's
+   * selection-follows-focus switch, which is why both exist rather than one. Wire selection here
+   * to have it follow the cursor, or to `onActivate` to make the reader commit deliberately. The
+   * page's "Deciding When to Make Selection Automatically Follow Focus" is the guidance on which
+   * to choose, and a radio group and a listbox land on opposite answers.
    */
   onActiveChange?: (
     item: HTMLElement | null,
@@ -189,12 +196,6 @@ export interface DRovingFocusArgs {
     axis: DRovingFocusAxis
   ) => void;
   /**
-   * DELIBERATE EXTENSION beyond the keyboard-interface practice, as are `onJump`,
-   * `onRegisterApi`, `itemsKey` and `resetKey`. The first three exist to pair the cursor with a
-   * virtualised list, where the DOM holds a window rather than the whole set; the last two are
-   * reactivity plumbing. Nothing in the practice page asks for any of them, and they are marked
-   * so the conformance surface stays legible from the surface itself.
-   *
    * The size of the logical index space addressed by `data-logical-index` or `data-index`,
    * including disabled rows. Setting it is what makes PageUp/PageDown page: without it those keys
    * are left alone entirely so a scrollable container pages natively, Home and End address the
@@ -215,8 +216,11 @@ export interface DRovingFocusArgs {
   onRegisterApi?: (api: DRovingFocusApi | null) => void;
   /** Whether navigation wraps at the ends (default `false` = clamp). */
   wrap?: boolean;
-  /** Focus mode: whether one item is reachable with Tab (default `true`). */
-  /* Shape dictated by: Navigation Between Components — the single-tab-stop contract. */
+  /**
+   * Focus mode: whether one item is reachable with Tab (default `true`).
+   *
+   * Shape dictated by: Navigation Between Components, the single-tab-stop contract.
+   */
   tabStop?: boolean;
   /**
    * Focus mode: whether removing the item that holds focus moves the cursor to the item that
@@ -235,8 +239,11 @@ export interface DRovingFocusArgs {
    * Turn it off to place focus yourself, e.g. onto a control outside the group.
    */
   restoreLostFocus?: boolean;
-  /** Class toggled on the active item in `"active-descendant"` mode. */
-  /* Shape dictated by: Discernible and Predictable Focus — the indicator must stay visible. */
+  /**
+   * Class toggled on the active item in `"active-descendant"` mode.
+   *
+   * Shape dictated by: Discernible and Predictable Focus, where the indicator must stay visible.
+   */
   activeClass?: string | null;
   /**
    * A reactive key (e.g. the filter string) that re-reconciles the cursor when it changes. The
@@ -266,8 +273,9 @@ export interface DRovingFocusArgs {
    * A selector is resolved when the arguments change, not continuously, so a controller that is
    * destroyed and re-created under the same selector must be signalled — pass the element itself,
    * or change another argument — or the listener stays on the detached node.
+   *
+   * Shape dictated by: Managing Focus in Composites Using aria-activedescendant.
    */
-  /* Shape dictated by: Managing Focus in Composites Using aria-activedescendant. */
   controllerElement?: HTMLElement | string | null;
   /**
    * Where the cursor goes when there is no surviving one to keep. Default
@@ -298,8 +306,9 @@ export interface DRovingFocusArgs {
    *
    * In focus mode the two no-fallback values leave the group with no tab stop unless the author
    * supplies one, which is a deliberate way to hand that choice back rather than an oversight.
+   *
+   * Shape dictated by: Navigation Inside Components, and its three entry conventions.
    */
-  /* Shape dictated by: Navigation Inside Components — the three entry conventions. */
   entryFocus?: DRovingFocusEntry;
   /**
    * Whether {@link DRovingFocusArgs.entryFocus}'s first-item fallback skips items the consumer
@@ -308,10 +317,6 @@ export interface DRovingFocusArgs {
    * The case it exists for is a multi-select whose Enter *toggles*: seeding the fallback onto an
    * already-selected row arms the very first Enter to discard a value the reader never navigated
    * to. Arrow keys still reach those rows, where removing them is deliberate.
-   *
-   * Stated as the focus instruction rather than as the activation semantics behind it, because
-   * what activation does is the consumer's business and the modifier only needs to know where
-   * not to land.
    *
    * Constrains the fallback only, never a restored selection: the reader chose that row
    * themselves and can see it is marked, so it is seeded even where activating it would remove
@@ -345,8 +350,9 @@ export interface DRovingFocusArgs {
    * Note the asymmetry with native `disabled`, which no value can override: the platform
    * refuses focus to such a control outright, so targeting one would strand focus on `body`
    * rather than move it. Only the ARIA spelling is affected.
+   *
+   * Shape dictated by: Focusability of disabled controls.
    */
-  /* Shape dictated by: Focusability of disabled controls. */
   disabledItems?: DRovingFocusDisabledItems;
   /**
    * Called for an arrow press on the axis this group does NOT navigate, so the keys a

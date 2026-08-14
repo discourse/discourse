@@ -334,7 +334,7 @@ en:
             label: "Fruit"
             example: "Listbox with type-ahead"
             example_description: "Typing moves the cursor to the option whose name starts with what was typed, which is what the practice page specifies and what a screen reader reads out. The count beside each option is decorative, so it belongs to the row's text but not to its name."
-            try_this: "Arrow through the options, then type a letter such as b. Type ap quickly to reach Apricot rather than Apple, pause, and type a single letter again to start over. Typing a digit matches nothing, because the counts are not part of any name."
+            try_this: "Arrow through the options, then type a letter such as b. Press a repeatedly to walk the options sharing that initial, then pause and type apr to land on Apricot directly. Typing a digit matches nothing, because the counts are not part of any name."
             apple: "Apple"
             apricot: "Apricot"
             banana: "Banana"

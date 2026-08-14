@@ -106,12 +106,15 @@ module(
       await focus(".a");
       pressKey(".a", "b");
       pressKey(".b", "a");
-      pressKey(".b", "z");
+      pressKey(".b", "r");
       await settled();
 
       assert
         .dom(document.activeElement)
-        .hasClass("b", "the third character selects between the two matches");
+        .hasClass(
+          "a",
+          "the lone b walks off Bar onto Baz, so only an accumulated bar brings the cursor back"
+        );
     });
 
     test("Shift produces a capital rather than being rejected as a chord", async function (assert) {

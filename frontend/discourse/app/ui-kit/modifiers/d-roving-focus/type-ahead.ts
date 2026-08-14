@@ -1,9 +1,15 @@
 import loadAccessibleName from "discourse/lib/load-accessible-name";
 
+/**
+ * Base sensitivity folds case AND diacritics, so `e` reaches a name starting with `É`. Case
+ * folding alone would leave a reader unable to type an accented label on an unaccented keyboard.
+ */
 const COLLATOR = new Intl.Collator(undefined, {
   sensitivity: "base",
   usage: "search",
 });
+
+/** How long a buffered query survives without a keystroke before the next one starts afresh. */
 const LAPSE_MS = 1000;
 
 /** Operations and state needed to resolve a type-ahead keypress. */

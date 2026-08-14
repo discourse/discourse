@@ -336,13 +336,12 @@ module(
       assert.false(digit.defaultPrevented, "and the key is not consumed");
     });
 
-    test("a second character narrows within the shared initial", async function (assert) {
+    test("a single character walks the rows sharing an initial", async function (assert) {
       await render(<template><RovingFocusListboxExample /></template>);
 
       findAll(".roving-demo__option")[0].focus();
 
       pressKey(document.activeElement, "a");
-      pressKey(document.activeElement, "p");
       await settled();
 
       assert
@@ -350,7 +349,26 @@ module(
         .hasAttribute(
           "data-option-id",
           "apricot",
-          "ap passes over Apple, which only matches the first character"
+          "a lone character passes over the row it starts on, so repeating it walks the group"
+        );
+    });
+
+    test("a longer query addresses a row a single character cannot reach", async function (assert) {
+      await render(<template><RovingFocusListboxExample /></template>);
+
+      findAll(".roving-demo__option")[1].focus();
+
+      pressKey(document.activeElement, "a");
+      pressKey(document.activeElement, "p");
+      pressKey(document.activeElement, "r");
+      await settled();
+
+      assert
+        .dom(document.activeElement)
+        .hasAttribute(
+          "data-option-id",
+          "apricot",
+          "the lone a lands on Apple, and only the accumulated apr names Apricot from there"
         );
     });
   }

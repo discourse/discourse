@@ -5,6 +5,10 @@ import { scan, step, type StepOutcome, stepRow } from "./navigation";
 import TypeAhead from "./type-ahead";
 import type { DRovingFocusApi, DRovingFocusAxis } from "./types";
 
+/**
+ * Input types with no text caret, so an arrow key means navigation there rather than a cursor
+ * move the field owns.
+ */
 const NON_ARROW_INPUT_TYPES = new Set([
   "button",
   "checkbox",
@@ -243,6 +247,10 @@ export default class KeyboardRouter {
     return current ? items.indexOf(current) : -1;
   }
 
+  /**
+   * Runs one step and commits a landing. Travels the row axis whenever there is no cursor yet,
+   * because the column walk has no anchor to count from.
+   */
   #applyStep(
     axis: DRovingFocusAxis,
     delta: 1 | -1,
@@ -321,6 +329,10 @@ export default class KeyboardRouter {
     }
   }
 
+  /**
+   * Moves to an absolute logical index, handing off to the consumer when that row is not mounted.
+   * The key is left un-prevented when neither can service it, so it stays a dead key nowhere.
+   */
   #jump(
     target: number,
     direction: "forward" | "backward",
@@ -335,6 +347,10 @@ export default class KeyboardRouter {
     }
   }
 
+  /**
+   * The absolute index a mounted row stands for, falling back to its position when the consumer
+   * stamps neither attribute, which is what a non-windowed group looks like.
+   */
   #logicalIndex(cells: HTMLElement[], current: number): number {
     const element = cells[current];
     const value = element?.dataset.logicalIndex ?? element?.dataset.index;
@@ -345,6 +361,10 @@ export default class KeyboardRouter {
     return Number.isFinite(parsed) ? parsed : current;
   }
 
+  /**
+   * Mirrors the horizontal arrows under a right-to-left container, so every path downstream reads
+   * a key as the direction a reader means by it rather than as a physical side.
+   */
   #logicalKey(key: string, container: HTMLElement): string {
     if (getComputedStyle(container).direction !== "rtl") {
       return key;
@@ -355,6 +375,7 @@ export default class KeyboardRouter {
     return key === "ArrowRight" ? "ArrowLeft" : key;
   }
 
+  /** Whether a target owns a text caret, and so owns the keys that move one. */
   #isEditable(target: EventTarget | null): boolean {
     if (!(target instanceof HTMLElement)) {
       return false;
