@@ -37,7 +37,12 @@ import {
   normalizeNodeConfiguration,
   removeNodesFromGraph,
 } from "./graph-utils";
-import { createNode, generateNodeName } from "./node-factory";
+import {
+  createNode,
+  defaultNodeName,
+  takenNodeNames,
+  uniqueNodeName,
+} from "./node-factory";
 import UndoManager from "./undo-manager";
 
 const MAX_NODES = 50;
@@ -83,12 +88,21 @@ export function buildPastedGraph({
 }) {
   const newNodes = [];
   const remappedClientIds = new Map();
+  const takenNames = takenNodeNames(existingNodes);
 
   for (const copiedNode of copiedNodes) {
+    const copiedName =
+      typeof copiedNode.name === "string" ? copiedNode.name.trim() : "";
+    const name = uniqueNodeName(
+      copiedName || defaultNodeName(copiedNode.type),
+      takenNames
+    );
+    takenNames.add(name);
+
     const newNode = WorkflowNode.create({
       type: copiedNode.type,
       typeVersion: copiedNode.typeVersion,
-      name: generateNodeName(copiedNode.type, [...existingNodes, ...newNodes]),
+      name,
       configuration: structuredClone(copiedNode.configuration || {}),
       position: copiedNode.position
         ? { x: copiedNode.position.x, y: copiedNode.position.y }
