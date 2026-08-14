@@ -14,6 +14,8 @@ sw:
         image_generation_custom:
           name: "Binafsi"
     ai_bot:
+      read_post:
+        unknown_post: "ujumbe"
       tool_summary:
         search: "Tafuta"
         time: "Muda"

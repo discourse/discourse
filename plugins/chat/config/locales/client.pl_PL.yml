@@ -75,6 +75,8 @@ pl_PL:
       pinned_messages:
         title: "Przypięte wiadomości"
         close: "Zamknij przypięte wiadomości"
+        dismiss: "Odrzuć przypięty baner dla mnie"
+        show: "Pokaż przypięty baner"
         pinned_by_you: "Przypięte przez Ciebie"
         pinned_by_user: "Przypięte przez %{username}"
       pinned_bar:
