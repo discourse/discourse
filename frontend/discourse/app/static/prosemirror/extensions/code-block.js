@@ -193,7 +193,7 @@ const extension = {
   async plugins({ getContext }) {
     return highlightPlugin(
       (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
-      ["code_block", "html_block"],
+      ["code_block", "html_block", "preview_source"],
 
       // NOTE: If the language has not been set with the code block, we default to plain
       // text rather than autodetecting. This is to work around an infinite loop issue

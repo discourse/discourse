@@ -340,6 +340,55 @@
     }
   }
 
+  .composer-preview-node {
+    position: relative;
+
+    &.ProseMirror-selectednode {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+      border-radius: var(--d-border-radius);
+    }
+
+    // clicking the rendered result selects the node rather than doing nothing
+    .composer-preview-node__preview {
+      cursor: pointer;
+    }
+
+    // the source is a code block of its own, shown in place of the preview
+    &:not(.--source) .composer-preview-node__source {
+      display: none;
+    }
+
+    .composer-preview-node__source pre {
+      margin: 0;
+    }
+
+    // renderers mark the raw source hidden once they have replaced it; the
+    // editor's own display rules would otherwise override that
+    .composer-preview-node__preview [hidden] {
+      display: none;
+    }
+
+    .composer-preview-node__toggle {
+      position: absolute;
+      z-index: 1;
+      top: var(--space-1);
+      right: var(--space-1);
+      color: var(--primary-medium);
+      background-color: var(--secondary);
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+
+    .composer-preview-node__preview {
+      user-select: none;
+    }
+  }
+
   .onebox-loading {
     border-radius: var(--d-border-radius);
     padding: 0 0.125rem;

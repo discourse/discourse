@@ -113,7 +113,9 @@ type NodeViewComponent = ComponentLike<{
     view: EditorView;
     getPos: () => number | undefined;
     dom: HTMLElement;
+    contentDOM?: HTMLElement;
     pluginParams: PluginParams;
+    options: Record<string, unknown>;
     onSetup: (instance: unknown) => void;
   };
 }>;
@@ -477,7 +479,9 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
           @view={{nodeView.view}}
           @getPos={{nodeView.getPos}}
           @dom={{nodeView.dom}}
+          @contentDOM={{nodeView.contentDOM}}
           @pluginParams={{nodeView.pluginParams}}
+          @options={{nodeView.options}}
           @onSetup={{nodeView.setComponentInstance}}
         />
       {{~/in-element~}}

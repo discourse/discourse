@@ -22,6 +22,7 @@ import onebox from "./onebox";
 import oneboxToolbar from "./onebox-toolbar";
 import orderedList from "./ordered-list";
 import overrideDragGhost from "./override-drag-ghost";
+import previewSource from "./preview-source";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
@@ -65,6 +66,7 @@ const defaultExtensions: RichEditorExtension[] = [
   hardBreak,
   grid,
   uploadPlaceholder,
+  previewSource,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

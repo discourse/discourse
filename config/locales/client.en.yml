@@ -3727,6 +3727,10 @@ en:
         remove_preview: "Remove preview"
         link_copied: "Link copied!"
 
+      preview_node:
+        show_source: "Show source"
+        show_preview: "Show preview"
+
       unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
     notifications:
