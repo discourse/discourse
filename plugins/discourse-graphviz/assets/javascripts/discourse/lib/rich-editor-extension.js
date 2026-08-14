@@ -1,4 +1,6 @@
 import PreviewNodeView from "discourse/components/composer/preview-node-view";
+import { i18n } from "discourse-i18n";
+import GraphvizFullscreen from "../components/graphviz-fullscreen";
 import GraphvizPreview from "../components/graphviz-preview";
 
 // highlight.js calls the DOT language "dot"; sites whose highlighted_languages
@@ -38,7 +40,19 @@ const extension = {
     graphviz: {
       component: PreviewNodeView,
       hasContent: true,
-      options: { preview: GraphvizPreview },
+      options: {
+        preview: GraphvizPreview,
+        controls: [
+          {
+            icon: "discourse-expand",
+            label: i18n("graphviz.fullscreen"),
+            action: ({ node, context }) =>
+              context.modal.show(GraphvizFullscreen, {
+                model: { src: node.textContent, engine: node.attrs.engine },
+              }),
+          },
+        ],
+      },
     },
   },
 
