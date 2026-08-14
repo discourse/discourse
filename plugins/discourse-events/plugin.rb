@@ -232,6 +232,20 @@ Dir
   .each { |f| require(f) }
 
 after_initialize do
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_events/events/workflows/schema"
+      require_relative "lib/discourse_workflows/nodes/post_event_scoping"
+      require_relative "lib/discourse_workflows/nodes/event_ended/v1"
+      require_relative "lib/discourse_workflows/nodes/event_participation_changed/v1"
+
+      [
+        DiscourseWorkflows::Nodes::EventEnded::V1,
+        DiscourseWorkflows::Nodes::EventParticipationChanged::V1,
+      ]
+    end
+  end
+
   reloadable_patch do
     register_category_type(DiscourseEvents::Categories::Types::Events)
     Category.register_custom_field_type("sort_topics_by_event_start_date", :boolean)
@@ -1012,6 +1026,9 @@ after_initialize do
   end
 
   on(:discourse_calendar_post_event_invitee_status_changed) do |invitee|
+    # Withdrawing leaves no attendance to sync, and the record is already gone.
+    next if invitee.destroyed?
+
     topic = invitee.event.post.topic
     topic_chat_channel = topic.topic_chat_channel
 
