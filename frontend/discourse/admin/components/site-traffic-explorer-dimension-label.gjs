@@ -5,10 +5,14 @@ import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const BROWSER_ICONS = {
-  edge: "fab-microsoft",
+  android_browser: "fab-android",
+  edge: "fab-edge",
   firefox: "fab-firefox-browser",
   chrome: "fab-chrome",
-  safari: "fab-apple",
+  ie: "fab-internet-explorer",
+  opera: "fab-opera",
+  qq_browser: "fab-qq",
+  safari: "fab-safari",
   unknown: "globe",
 };
 

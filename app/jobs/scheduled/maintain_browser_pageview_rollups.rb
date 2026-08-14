@@ -14,6 +14,7 @@ module Jobs
       aggregate_crawlers
       backfill_referrers
       backfill_urls
+      backfill_browsers
     end
 
     private
@@ -208,6 +209,41 @@ module Jobs
         normalized: normalized,
         version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
       )
+    end
+
+    def backfill_browsers
+      rows = browser_batch
+      return if rows.empty?
+
+      ids = rows.map(&:id)
+      browsers =
+        rows.map do |row|
+          BrowserPageviewEvent.browsers.fetch(
+            BrowserPageviewEvent.classify_browser(row.user_agent).to_s,
+          )
+        end
+
+      DB.exec(<<~SQL, ids: ids, browsers: browsers)
+          UPDATE browser_pageview_events AS e
+          SET browser = data.browser
+          FROM unnest(
+            ARRAY[:ids]::bigint[],
+            ARRAY[:browsers]::smallint[]
+          ) AS data(id, browser)
+          WHERE e.id = data.id
+        SQL
+    end
+
+    def browser_batch
+      DB.query(<<~SQL, retention_cutoff: BrowserPageviewEvent.retention_cutoff, limit: batch_size)
+          SELECT id, user_agent
+          FROM browser_pageview_events
+          WHERE created_at >= :retention_cutoff
+            AND #{BrowserPageviewEvent.rollup_source_condition}
+            AND browser IS NULL
+          ORDER BY created_at DESC, id DESC
+          LIMIT :limit
+        SQL
     end
 
     def url_batch

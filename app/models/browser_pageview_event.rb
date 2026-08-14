@@ -10,6 +10,22 @@ class BrowserPageviewEvent < ActiveRecord::Base
   RETENTION_PERIOD = 3.months
   SOURCE_PIGGYBACK = 1
   SOURCE_BEACON = 2
+  BROWSER_UNKNOWN = 0
+  BROWSERS = {
+    unknown: BROWSER_UNKNOWN,
+    chrome: 1,
+    edge: 2,
+    safari: 3,
+    firefox: 4,
+    opera: 5,
+    ie: 6,
+    samsung_internet: 7,
+    uc_browser: 8,
+    android_browser: 9,
+    qq_browser: 10,
+    baidu_browser: 11,
+    kaios_browser: 12,
+  }.freeze
   REDIS_QUEUE_KEY = "browser_pageview_events:pending"
   REDIS_FLUSH_LOCK_KEY = "browser_pageview_events:flush"
   REDIS_FLUSH_BATCH_SIZE = 1000
@@ -17,6 +33,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
   REDIS_QUEUE_TTL = 1.day
 
   enum :source, { piggyback: SOURCE_PIGGYBACK, beacon: SOURCE_BEACON }, scopes: false
+  enum :browser, BROWSERS, prefix: true, scopes: false
 
   class << self
     def enqueue_for_later(payload)
@@ -105,6 +122,37 @@ class BrowserPageviewEvent < ActiveRecord::Base
       Discourse.redis.del(REDIS_QUEUE_KEY)
     end
 
+    def classify_browser(user_agent)
+      case user_agent
+      when %r{Edg(?:A|iOS)?/}i, %r{Edge/}i
+        :edge
+      when %r{OPR/}i, %r{OPiOS/}i, /Opera (?:Mini|Mobi)/i, %r{Opera/}i
+        :opera
+      when %r{SamsungBrowser/}i
+        :samsung_internet
+      when %r{(?:UCBrowser|UC Browser)[/ ]}i
+        :uc_browser
+      when %r{(?:MQQBrowser|QQBrowser)/}i
+        :qq_browser
+      when %r{(?:BIDUBrowser|BaiduBrowser)/}i
+        :baidu_browser
+      when %r{KaiOS/}i
+        :kaios_browser
+      when /MSIE|Trident|IEMobile/i
+        :ie
+      when %r{Firefox/}i, %r{FxiOS/}i
+        :firefox
+      when %r{Chrome/}i, %r{CriOS/}i
+        :chrome
+      when %r{Android.+Version/[\d.]+.+Safari/}i
+        :android_browser
+      when %r{Safari/}i
+        :safari
+      else
+        :unknown
+      end
+    end
+
     def postgres_readonly_error?(error)
       error.cause.is_a?(PG::ReadOnlySqlTransaction)
     end
@@ -171,6 +219,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
     def attributes_from_payload(payload)
       normalized_referrer = BrowserPageviewEventUrlNormalizer.normalize_referrer(payload[:referrer])
       normalized_url = BrowserPageviewEventUrlNormalizer.normalize_site_path(payload[:url])
+      user_agent = payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH)
 
       {
         url: payload[:url]&.slice(0, MAX_URL_LENGTH),
@@ -182,7 +231,8 @@ class BrowserPageviewEvent < ActiveRecord::Base
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
         normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
-        user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
+        user_agent: user_agent,
+        browser: classify_browser(user_agent),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],
         topic_id: payload[:topic_id],
@@ -257,6 +307,7 @@ end
 #
 #  id                          :bigint           not null, primary key
 #  asn                         :integer
+#  browser                     :integer
 #  country_code                :string(2)
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)

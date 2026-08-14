@@ -123,16 +123,21 @@ module SvgSprite
         fab-chrome
         fab-discord
         fab-discourse
+        fab-edge
         fab-facebook
         fab-facebook-square
         fab-firefox-browser
         fab-github
         fab-google
         fab-instagram
+        fab-internet-explorer
         fab-linkedin-in
         fab-linux
         fab-microsoft
         fab-markdown
+        fab-opera
+        fab-qq
+        fab-safari
         fab-threads
         fab-threads-square
         fab-twitter

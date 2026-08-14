@@ -2071,7 +2071,8 @@ CREATE TABLE public.browser_pageview_events (
     normalized_referrer_version smallint,
     source smallint DEFAULT 1 NOT NULL,
     normalized_url character varying(2000),
-    normalized_url_version integer
+    normalized_url_version integer,
+    browser smallint
 );
 
 
@@ -17593,6 +17594,13 @@ CREATE INDEX idx_bpe_beacon_created_at_id ON public.browser_pageview_events USIN
 
 
 --
+-- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (source, created_at DESC, id DESC) WHERE (browser IS NULL);
+
+
+--
 -- Name: idx_bpe_created_at_country_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23160,6 +23168,8 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260817054353'),
+('20260814060100'),
+('20260814060000'),
 ('20260812094609'),
 ('20260811231259'),
 ('20260810154331'),
@@ -25586,4 +25596,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-
