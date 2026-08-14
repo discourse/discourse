@@ -17,7 +17,7 @@ RSpec.describe DiscourseAi::Automation do
         ReviewableScoreSerializer.new(score, scope: Discourse.system_user.guardian, root: nil)
 
       expect(serialized.reason).to match_html(<<~HTML)
-        <p><b>Triggered by the <a href="/admin/plugins/automation/1">Test</a> rule.</b></p>
+        <p><b>Triggered by the <a href="/admin/plugins/automation/automation/1">Test</a> rule.</b></p>
         <p>Response from the model: <strong>Details</strong></p>
         <ul>
           <li>first</li>
