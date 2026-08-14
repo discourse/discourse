@@ -805,10 +805,13 @@ module(
 
     test("input fields of type icon", async function (assert) {
       pretender.get("/svg-sprite/picker-search", () =>
-        response(200, [
-          { id: "gamepad", name: "gamepad" },
-          { id: "heart", name: "heart" },
-        ])
+        response(200, {
+          icons: [
+            { id: "gamepad", name: "gamepad" },
+            { id: "heart", name: "heart" },
+          ],
+          has_more: false,
+        })
       );
 
       const setting = ThemeSettings.create({

@@ -8,14 +8,10 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n, { i18n } from "discourse-i18n";
-import BlockDebugButton from "./block-debug/button";
-import PluginOutletDebugButton from "./plugin-outlet-debug/button";
-import SafeModeButton from "./safe-mode/button";
-import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
-import VerboseLocalizationButton from "./verbose-localization/button";
+import { CORE_TOOLS } from "./tools";
 
 export default class Toolbar extends Component {
-  @tracked activeDragOffset = null;
+  @tracked activeDragOffset: number | null = null;
   @tracked ownSize = 0;
   @tracked top = 250;
 
@@ -39,12 +35,12 @@ export default class Toolbar extends Component {
   }
 
   @action
-  didStartDrag(event) {
-    const realTop = event.target
-      .closest(".dev-tools-toolbar")
-      .getBoundingClientRect().top;
-    const dragStartedAtY = event.pageY;
-    this.activeDragOffset = dragStartedAtY - realTop;
+  didStartDrag(event: PointerEvent) {
+    // The gripper renders inside the toolbar, so the press always has an
+    // ancestor to measure against.
+    const toolbar = (event.target as Element).closest(".dev-tools-toolbar")!;
+
+    this.activeDragOffset = event.pageY - toolbar.getBoundingClientRect().top;
   }
 
   @action
@@ -53,13 +49,14 @@ export default class Toolbar extends Component {
   }
 
   @action
-  dragMove(event) {
-    const dragY = event.pageY;
-    this.top = dragY - this.activeDragOffset;
+  dragMove(event: PointerEvent) {
+    // Only ever called between a drag starting and ending, so the offset the
+    // start captured is always there.
+    this.top = event.pageY - this.activeDragOffset!;
   }
 
   @action
-  onResize(entries) {
+  onResize(entries: ResizeObserverEntry[]) {
     this.ownSize = entries[0].contentRect.height;
   }
 
@@ -85,11 +82,9 @@ export default class Toolbar extends Component {
       >
         {{dIcon "grip-vertical"}}
       </button>
-      <PluginOutletDebugButton />
-      <BlockDebugButton />
-      <UpcomingChangesDebugButton />
-      <SafeModeButton />
-      <VerboseLocalizationButton />
+      {{#each CORE_TOOLS key="id" as |tool|}}
+        <tool.component />
+      {{/each}}
       <button
         type="button"
         title={{i18n "dev_tools.disable_dev_tools"}}

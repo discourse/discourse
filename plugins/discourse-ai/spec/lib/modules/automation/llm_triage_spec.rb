@@ -515,7 +515,7 @@ describe DiscourseAi::Automation::LlmTriage do
     expect(reviewable.target_id).to eq(post.id)
     expect(reviewable.target_type).to eq("Post")
     expect(reviewable.reviewable_scores.first.reason).to include(
-      "<a href=\"#{Discourse.base_path}/admin/plugins/automation/",
+      "<a href=\"#{Discourse.base_path}/admin/plugins/automation/automation/",
     )
   end
 
@@ -540,7 +540,7 @@ describe DiscourseAi::Automation::LlmTriage do
       <p>
         <b>
           Triggered by the
-          <a href="/admin/plugins/automation/#{automation.id}">
+          <a href="/admin/plugins/automation/automation/#{automation.id}">
             #{CGI.escapeHTML(automation.name)}
           </a>
           rule.

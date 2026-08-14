@@ -126,7 +126,7 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
       <p>
         <b>
           Triggered by the
-          <a href="/admin/plugins/automation/123">#{CGI.escapeHTML(automation_name)}</a>
+          <a href="/admin/plugins/automation/automation/123">#{CGI.escapeHTML(automation_name)}</a>
           rule.
         </b>
       </p>
