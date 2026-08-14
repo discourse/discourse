@@ -1,6 +1,6 @@
 import type { DRovingFocusConfig } from "./config";
-import RovingFocusDiagnostics from "./diagnostics";
-import ItemScope from "./item-scope";
+import type RovingFocusDiagnostics from "./diagnostics";
+import type ItemScope from "./item-scope";
 import { scan, step, type StepOutcome, stepRow } from "./navigation";
 import TypeAhead from "./type-ahead";
 import type { DRovingFocusApi, DRovingFocusAxis } from "./types";
@@ -46,7 +46,6 @@ export default class KeyboardRouter {
     if (
       config.typeAhead &&
       this.#typeAhead.handle(event, {
-        enabled: true,
         editableController:
           config.focusStrategy === "active-descendant" &&
           this.#isEditable(context.controller),

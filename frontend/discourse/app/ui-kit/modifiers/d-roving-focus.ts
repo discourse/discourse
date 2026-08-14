@@ -326,7 +326,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    */
   modify(element: HTMLElement, _positional: [], named: DRovingFocusArgs): void {
     const config = normalizeConfig(named);
-    const previousElement = this.#element;
     const previousMode = this.#config?.focusStrategy ?? this.#mode;
     const previousItemSelector =
       this.#config?.itemSelector ?? this.#itemSelector;
@@ -337,17 +336,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     // Adopting them first would aim the cleanup at the new item set and strand the old one.
     if (
       previousItemSelector !== config.itemSelector ||
-      previousMode !== nextMode ||
-      previousElement !== element
+      previousMode !== nextMode
     ) {
-      if (
-        previousItemSelector !== config.itemSelector ||
-        previousMode !== nextMode ||
-        previousElement !== element
-      ) {
-        this.#exitEnteredModes();
-        this.#activeStrategy?.disarmPendingSeed();
-      }
+      this.#exitEnteredModes();
     }
 
     this.#element = element;
@@ -375,10 +366,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.#itemSelector = config.itemSelector;
     this.#keyboard.configure(config);
     this.#onActiveChange = config.onActiveChange;
-    // The read itself is the whole point: consuming the tag is what makes a changed
-    // `itemsKey` re-run `modify()` and reconcile the cursor. The value is never needed,
-    // so it is discarded rather than stored.
-    void config.itemsKey;
     // Never on the first run: the sentinel guarantees a difference there, and treating that as a
     // reset would discard an author-supplied `tabindex="0"` before the group has done anything.
     const resetKeyChanged = this.#hasRun && config.resetKey !== this.#resetKey;
@@ -583,18 +570,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     if (this.#mode === "active-descendant") {
       return this.#activeStrategy?.current(items) ?? null;
     }
-    if (this.#rovingStrategy) {
-      return this.#rovingStrategy.current(items);
-    }
-    const active = document.activeElement;
-    // Innermost first, for the reason given in `#currentIndex`: tree order places an item that
-    // CONTAINS another before it, so a forward scan resolves a nested item to its ancestor.
-    for (let i = items.length - 1; i >= 0; i--) {
-      if (items[i] === active || items[i].contains(active)) {
-        return items[i];
-      }
-    }
-    return items.find((el) => el.getAttribute("tabindex") === "0") ?? null;
+    return this.#rovingStrategy?.current(items) ?? null;
   }
 
   /**
