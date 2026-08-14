@@ -36,7 +36,7 @@ export default class TypeAhead {
   #enabled = false;
   #loader: typeof loadAccessibleName;
 
-  /** @param loader Loads the accessible-name implementation. */
+  /** @param loader - Loads the accessible-name implementation. */
   constructor(loader: typeof loadAccessibleName = loadAccessibleName) {
     this.#loader = loader;
   }
