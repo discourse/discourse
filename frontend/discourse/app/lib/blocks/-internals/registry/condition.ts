@@ -2,6 +2,7 @@ import { DEBUG } from "@glimmer/env";
 import type { BlockCondition } from "discourse/blocks/conditions";
 import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
+import type { CustomizationSource } from "discourse/lib/customization-source";
 import { isTesting } from "discourse/lib/environment";
 import {
   assertRegistryNotFrozen,
@@ -84,6 +85,7 @@ export function _freezeConditionTypeRegistry(): void {
  *   because untyped callers can hand `api.registerBlockConditionType()` a bad
  *   import; that call must report the decorator error, not a property-read
  *   failure.
+ * @param source - The plugin or theme the call came from.
  *
  * @example
  * ```javascript
@@ -102,7 +104,8 @@ export function _freezeConditionTypeRegistry(): void {
  * @internal
  */
 export function _registerConditionType(
-  ConditionClass: typeof BlockCondition | null | undefined
+  ConditionClass: typeof BlockCondition | null | undefined,
+  source?: CustomizationSource
 ): void {
   if (
     !assertRegistryNotFrozen({
@@ -132,7 +135,9 @@ export function _registerConditionType(
   }
 
   // Validate namespace requirements for plugins/themes and enforce consistency
-  if (!validateSourceNamespace({ name: type, entityType: "condition" })) {
+  if (
+    !validateSourceNamespace({ name: type, entityType: "condition", source })
+  ) {
     return;
   }
 

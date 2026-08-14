@@ -134,6 +134,10 @@ module DiscoursePostEvent
         end
       end
 
+      if !EventParser.valid_url?(extracted_event[:url])
+        @post.errors.add(:base, I18n.t("discourse_post_event.errors.models.event.invalid_url"))
+      end
+
       true
     end
 

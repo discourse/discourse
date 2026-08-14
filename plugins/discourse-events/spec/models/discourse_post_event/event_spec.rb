@@ -1529,3 +1529,33 @@ describe DiscoursePostEvent::Event, "#capacity" do
     expect(event.at_capacity?).to eq(true)
   end
 end
+
+describe DiscoursePostEvent::Event, "#url" do
+  fab!(:post)
+
+  before { SiteSetting.discourse_post_event_enabled = true }
+
+  it "accepts a URI, with or without a scheme" do
+    event = Fabricate.build(:event, post: post, url: "meet.google.com/phv-rbyy-gsh")
+
+    expect(event).to be_valid
+  end
+
+  it "rejects a value that would resolve nowhere" do
+    event = Fabricate.build(:event, post: post, url: "Room 5")
+
+    expect(event).not_to be_valid
+    expect(event.errors.full_messages.join).to include("valid web address")
+  end
+
+  it "leaves an existing bad url editable" do
+    event = Fabricate(:event, post: post)
+    event.update_column(:url, "Room 5")
+
+    event.reload.name = "Renamed"
+    expect(event).to be_valid
+
+    event.url = nil
+    expect(event).to be_valid
+  end
+end

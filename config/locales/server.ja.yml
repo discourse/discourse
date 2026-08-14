@@ -3767,9 +3767,6 @@ ja:
     user_posted_pm_staged:
       title: "ユーザーがステージングに PM を投稿しました"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "アカウントが凍結されました"
       subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"

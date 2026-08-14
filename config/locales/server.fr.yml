@@ -407,9 +407,7 @@ fr:
     max_redemptions_allowed_one: "pour les invitations par e-mail, la valeur doit être 1"
     redemption_count_less_than_max: "doit être inférieur à %{max_redemptions_allowed}."
     email_xor_domain: "Les champs e-mail et domaine ne sont pas autorisés en même temps"
-    admin_invite_requires_email: "Les invitations d'administrateur doivent être envoyées à une adresse e-mail"
     admin_invite_requires_admin_inviter: "Seuls les administrateurs peuvent créer des invitations d'administrateur."
-    moderator_invite_requires_email: "Les invitations de modérateur doivent être envoyées à une adresse e-mail"
     moderator_invite_requires_staff_inviter: "Seuls les responsables peuvent créer des invitations de modérateur"
     existing_user_success: "Invitation utilisée avec succès"
     email_invites_disabled: "L'envoi d'e-mails d'invitation est désactivé"
@@ -4384,9 +4382,6 @@ fr:
     user_posted_pm_staged:
       title: "Compte provisoire a publié un MP"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"

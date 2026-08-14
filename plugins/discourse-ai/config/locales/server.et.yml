@@ -16,6 +16,8 @@ et:
         image_generation_custom:
           name: "Individuaalne"
     ai_bot:
+      read_post:
+        unknown_post: "postitus"
       tool_summary:
         search: "Otsi"
         time: "Aeg"

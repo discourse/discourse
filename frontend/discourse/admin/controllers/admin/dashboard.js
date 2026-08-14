@@ -26,13 +26,12 @@ export default class AdminDashboardController extends Controller {
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
-  @tracked version = null;
   @tracked loadedSections = null;
   @tracked loadingSections = false;
   @tracked sectionsFetchError = false;
   @autoTrackedArray problems;
 
-  queryParams = ["range", "start_date", "end_date", "version"];
+  queryParams = ["range", "start_date", "end_date"];
 
   isLoading = false;
   dashboardFetchedAt = null;
@@ -165,11 +164,7 @@ export default class AdminDashboardController extends Controller {
     }
 
     try {
-      const model = await AdminDashboard.fetch({
-        startDate,
-        endDate,
-        version: this.version,
-      });
+      const model = await AdminDashboard.fetch({ startDate, endDate });
 
       if (id !== this._sectionsLoadId) {
         return;
@@ -201,9 +196,6 @@ export default class AdminDashboardController extends Controller {
   }
 
   get showRedesign() {
-    if (this.version === "alt") {
-      return !this.siteSettings.dashboard_improvements;
-    }
     return this.siteSettings.dashboard_improvements;
   }
 
@@ -261,7 +253,7 @@ export default class AdminDashboardController extends Controller {
     ) {
       this.set("isLoading", true);
 
-      AdminDashboard.fetch({ version: this.version })
+      AdminDashboard.fetch()
         .then((model) => {
           let properties = {
             dashboardFetchedAt: new Date(),

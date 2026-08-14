@@ -16,6 +16,8 @@ da:
         image_generation_custom:
           name: "Tilpasset"
     ai_bot:
+      read_post:
+        unknown_post: "indlæg"
       tool_summary:
         search: "Søg"
         time: "Tidspunkt"

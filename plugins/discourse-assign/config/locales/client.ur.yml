@@ -117,7 +117,7 @@ ur:
         assigned: "تفویض کردہ"
     edit_assignments_modal:
       topic: "موضوع"
-      post: "پوسٹ"
+      post: "دھاگہ"
     discourse_workflows:
       nodes:
         "trigger:assigned": "تفویض کردہ"

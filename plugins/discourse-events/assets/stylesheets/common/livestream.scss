@@ -310,3 +310,19 @@ body.discourse-calendar-livestream-zoom-full {
 .notistack-SnackbarContainer {
   display: none !important;
 }
+
+// Full page client view Zoom overrides
+#zmmtg-root {
+  #sdk-footer-sortable-list #chat {
+    display: none;
+  }
+}
+
+// we need to raise the z-index of the actions outlet
+// so they appear above the modal
+.livestream-chat-modal-active {
+  .chat-message-actions-desktop-outlet {
+    position: relative;
+    z-index: z("max");
+  }
+}

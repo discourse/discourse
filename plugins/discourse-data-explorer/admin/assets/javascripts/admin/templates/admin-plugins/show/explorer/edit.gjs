@@ -54,7 +54,7 @@ export default class QueriesEdit extends Component {
               <DButton
                 @action={{@controller.exitEdit}}
                 @icon="xmark"
-                class="previous"
+                class="btn-default previous"
               />
               <div class="name-text-field">
                 <DTextField

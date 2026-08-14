@@ -2915,9 +2915,6 @@ ko:
     user_posted_pm_staged:
       title: "사용자가 개인 메시지를 게시함, 스테이징됨"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"

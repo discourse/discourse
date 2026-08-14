@@ -293,6 +293,8 @@ ja:
       reply_error: "返信中に予期しない問題が発生したようです。\n\n\n[details='エラーの詳細']\n%{details}\n[/details]"
       default_pm_prefix: "[無題の AI ボット PM]"
       thinking: "思考中"
+      read_post:
+        unknown_post: "投稿"
       agents:
         default_llm_required: "チャットを有効にする前に、デフォルトの LLM モデルが必要です"
         cannot_have_duplicate_tools: "重複するツールは使用できません"

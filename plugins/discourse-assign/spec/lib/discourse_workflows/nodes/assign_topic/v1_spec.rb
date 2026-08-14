@@ -15,6 +15,34 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
     SiteSetting.assign_enabled = true
   end
 
+  describe ".property_schema" do
+    it "selects a topic by default and conditionally requires the target ID" do
+      schema = described_class.property_schema
+
+      expect(schema[:resource]).to include(
+        default: "topic",
+        options: %w[topic post],
+        no_data_expression: true,
+      )
+      expect(schema[:topic_id]).to include(
+        required: true,
+        display_options: {
+          show: {
+            resource: ["topic"],
+          },
+        },
+      )
+      expect(schema[:post_id]).to include(
+        required: true,
+        display_options: {
+          show: {
+            resource: ["post"],
+          },
+        },
+      )
+    end
+  end
+
   def execute_node(configuration:, item:, run_as_user: Discourse.system_user)
     action = described_class.new(parameters: configuration)
     input_items = [item]
@@ -174,6 +202,81 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
 
         expect(topic.assignment.assigned_by_user_id).to eq(Discourse.system_user.id)
       end
+
+      it "assigns a post to a user when the post resource is selected", :aggregate_failures do
+        config = {
+          "resource" => "post",
+          "operation" => "assign",
+          "post_id" => post.id.to_s,
+          "assignee" => user.username,
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["assignee"]["type"]).to eq("user")
+        expect(result["assignee"]["user"]["id"]).to eq(user.id)
+        expect(Assignment.exists?(target: post, assigned_to: user)).to eq(true)
+        expect(result).to match_node_output_schema(described_class)
+      end
+
+      it "assigns a post to a group when the post resource is selected", :aggregate_failures do
+        SiteSetting.assign_allowed_on_groups = "#{assign_allowed_group.id}|#{group.id}"
+        group.update!(assignable_level: Group::ALIAS_LEVELS[:everyone])
+        config = {
+          "resource" => "post",
+          "operation" => "assign",
+          "post_id" => post.id.to_s,
+          "assignee" => group.name,
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["assignee"]["type"]).to eq("group")
+        expect(result["assignee"]["group"]["id"]).to eq(group.id)
+        expect(Assignment.exists?(target: post, assigned_to: group)).to eq(true)
+      end
+
+      it "replaces an existing post assignment", :aggregate_failures do
+        other_user = Fabricate(:moderator)
+        ::Assigner.new(post, Discourse.system_user).assign(other_user)
+        config = {
+          "resource" => "post",
+          "operation" => "assign",
+          "post_id" => post.id.to_s,
+          "assignee" => user.username,
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["previously_assigned"]["user"]["username"]).to eq(other_user.username)
+        expect(Assignment.find_by(target: post).assigned_to).to eq(user)
+      end
+
+      it "raises when the selected post does not exist" do
+        config = {
+          "resource" => "post",
+          "operation" => "assign",
+          "post_id" => "-1",
+          "assignee" => user.username,
+        }
+
+        expect { execute_node(configuration: config, item: item) }.to raise_error(
+          ActiveRecord::RecordNotFound,
+        )
+      end
+
+      it "raises a node error when the actor cannot assign the selected post" do
+        config = {
+          "resource" => "post",
+          "operation" => "assign",
+          "post_id" => post.id.to_s,
+          "assignee" => user.username,
+        }
+
+        expect do
+          execute_node(configuration: config, item: item, run_as_user: Fabricate(:user))
+        end.to raise_error(DiscourseWorkflows::NodeError, /Failed to assign:/)
+      end
     end
 
     context "with unassign operation" do
@@ -195,6 +298,16 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
         config = { "operation" => "unassign", "topic_id" => topic.id.to_s }
 
         expect { execute_node(configuration: config, item: item) }.not_to raise_error
+      end
+
+      it "unassigns a post when the post resource is selected" do
+        ::Assigner.new(post, Discourse.system_user).assign(user)
+        config = { "resource" => "post", "operation" => "unassign", "post_id" => post.id.to_s }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["previously_assigned"]["user"]["username"]).to eq(user.username)
+        expect(Assignment.exists?(target: post)).to eq(false)
       end
     end
   end

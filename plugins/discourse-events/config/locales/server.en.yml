@@ -150,6 +150,7 @@ en:
           end_must_be_a_valid_date: "End date must be a valid date."
           invalid_recurrence: "Recurrence must be one of: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Timezone not recognized."
+          invalid_url: "URL must be a valid web address."
           acting_user_not_allowed_to_create_event: "Current user is not allowed to create events."
           acting_user_not_allowed_to_act_on_this_event: "Current user is not allowed to act on this event."
           invalid_allowed_groups: "Invalid allowed groups."

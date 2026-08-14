@@ -117,7 +117,7 @@ module(
           .get(() => ({ providerName: "youtube", id: "dQw4w9WgXcQ" }));
 
         withPluginApi((api) => {
-          preventCloak = sinon.stub(api, "preventCloak");
+          preventCloak = sinon.stub(Object.getPrototypeOf(api), "preventCloak");
         });
       });
 
@@ -175,7 +175,7 @@ module(
         sinon.stub(ZoomMeetingSession.prototype, "performJoin").resolves();
 
         withPluginApi((api) => {
-          preventCloak = sinon.stub(api, "preventCloak");
+          preventCloak = sinon.stub(Object.getPrototypeOf(api), "preventCloak");
         });
       });
 

@@ -108,7 +108,11 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
     }
 
     if (["top_urls", "entry_urls"].includes(this.activeTab.dimension)) {
-      return { href: getURL(row.value) };
+      return {
+        href: getURL(row.value),
+        rel: "noopener noreferrer",
+        target: "_blank",
+      };
     }
 
     return null;
@@ -208,7 +212,7 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                     data-test-site-traffic-row
                     {{on "click" (fn this.filter row)}}
                   >
-                    <span>
+                    <span class="site-traffic-explorer__row-label">
                       <SiteTrafficExplorerDimensionLabel
                         @dimension={{this.activeTab.dimension}}
                         @row={{row}}

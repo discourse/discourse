@@ -28,6 +28,7 @@ import {
   defaultReminderFor,
   getCustomFieldNames,
   isLivestreamUrl,
+  livestreamSource,
   reconcileDefaultReminder,
 } from "../../lib/raw-event-helper";
 import CompactEventEditor from "../compact-event-editor";
@@ -49,13 +50,14 @@ export default class PostEventBuilder extends Component {
     this.event.status === "standalone" ? "public" : this.event.status;
   @tracked previousMaxAttendees = this.event.maxAttendees || null;
   @tracked attendanceMode = this.#initAttendanceMode();
+  @tracked urlRevealed = !!this.event.url;
 
   // FormKit clones @data once on mount and treats it as immutable. Reading
   // tracked event properties from a getter would invalidate this on every
   // mirror-write and reinitialize the form (losing focus mid-keystroke).
   // Snapshot once at construction; refresh only when toggleAdvanced enters
   // the advanced screen.
-  formData = this.#snapshotFormData();
+  @tracked formData = this.#snapshotFormData();
 
   #initAttendanceMode() {
     if (this.event.status === "standalone") {
@@ -148,11 +150,18 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  syncLocationToEvent(value, { set }) {
-    set("location", value);
-    this.event.location = value;
+  syncLinkToEvent(field, value, { set }) {
+    set(field, value);
+    this.event[field] = value;
+    this.#resetInvalidLivestream(set);
+  }
 
-    if (!isLivestreamUrl(value, this.siteSettings)) {
+  #livestreamSource() {
+    return livestreamSource(this.event.location, this.event.url);
+  }
+
+  #resetInvalidLivestream(set) {
+    if (!isLivestreamUrl(this.#livestreamSource(), this.siteSettings)) {
       set("livestream", false);
       this.event.livestream = false;
     }
@@ -324,9 +333,20 @@ export default class PostEventBuilder extends Component {
     ];
   }
 
+  @action
+  revealUrl() {
+    this.urlRevealed = true;
+  }
+
+  get locationLabel() {
+    return this.urlRevealed
+      ? "discourse_post_event.builder_modal.location.label"
+      : "discourse_post_event.builder_modal.location.label_or_url";
+  }
+
   get showLivestream() {
     return (
-      isLivestreamUrl(this.event.location, this.siteSettings) &&
+      isLivestreamUrl(this.#livestreamSource(), this.siteSettings) &&
       this.siteSettings.chat_enabled
     );
   }
@@ -491,6 +511,7 @@ export default class PostEventBuilder extends Component {
       // Entering advanced — re-snapshot from the (possibly compact-edited)
       // event before the form mounts.
       this.formData = this.#snapshotFormData();
+      this.urlRevealed ||= !!this.event.url;
       this.screen = "advanced";
     }
   }
@@ -561,8 +582,12 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  setCustomField(field, value) {
-    this.event.customFields[field] = value;
+  setCustomField(field, value, { set, name }) {
+    set(name, value);
+    this.event.customFields = EmberObject.create({
+      ...this.event.customFields,
+      [field]: value,
+    });
   }
 
   @action
@@ -841,12 +866,10 @@ export default class PostEventBuilder extends Component {
 
                 <form.Field
                   @name="location"
-                  @title={{i18n
-                    "discourse_post_event.builder_modal.location.label"
-                  }}
+                  @title={{i18n this.locationLabel}}
                   @type="input"
                   @format="full"
-                  @onSet={{this.syncLocationToEvent}}
+                  @onSet={{fn this.syncLinkToEvent "location"}}
                   as |field|
                 >
                   <field.Control
@@ -855,6 +878,34 @@ export default class PostEventBuilder extends Component {
                     }}
                   />
                 </form.Field>
+
+                {{#if this.urlRevealed}}
+                  <form.Field
+                    @name="url"
+                    @title={{i18n
+                      "discourse_post_event.builder_modal.url.label"
+                    }}
+                    @type="input"
+                    @format="full"
+                    @onSet={{fn this.syncLinkToEvent "url"}}
+                    as |field|
+                  >
+                    <field.Control
+                      placeholder={{i18n
+                        "discourse_post_event.builder_modal.url.placeholder"
+                      }}
+                    />
+                  </form.Field>
+                {{else}}
+                  <form.Container @format="full">
+                    <DButton
+                      @action={{this.revealUrl}}
+                      @icon="plus"
+                      @label="discourse_post_event.builder_modal.url.add"
+                      class="btn-default add-event-url"
+                    />
+                  </form.Container>
+                {{/if}}
 
                 {{#if this.showLivestream}}
                   <form.Field

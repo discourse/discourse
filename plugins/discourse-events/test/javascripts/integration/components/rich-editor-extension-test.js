@@ -78,6 +78,17 @@ module("Integration | Component | RichEditorExtension", function (hooks) {
     );
   });
 
+  test("event preserves url through a round trip", async function (assert) {
+    await testMarkdown(
+      assert,
+      `[event start="2025-03-21 15:41" status="public" timezone="Europe/Paris" location="meet.example.com/new" url="https://meet.example.com/old"]\n[/event]\n`,
+      (a) => {
+        a.dom(".composer-event-node").exists("Event node should be rendered");
+      },
+      `[event start="2025-03-21 15:41" location=meet.example.com/new url=https://meet.example.com/old status=public timezone=Europe/Paris]\n[/event]\n`
+    );
+  });
+
   test("event preserves custom fields with uppercase letters", async function (assert) {
     this.siteSettings.discourse_post_event_allowed_custom_fields = "dress_CODE";
 

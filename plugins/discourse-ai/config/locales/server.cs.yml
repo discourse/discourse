@@ -27,6 +27,8 @@ cs:
         replace_dates: "Chytré datumy"
     ai_bot:
       default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
+      read_post:
+        unknown_post: "příspěvek"
       agents:
         custom_prompt:
           name: "Vlastní pokyn"

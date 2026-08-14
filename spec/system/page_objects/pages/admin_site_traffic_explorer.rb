@@ -158,6 +158,11 @@ module PageObjects
           has_css?("#{selector} .d-table__body .d-table__row")
       end
 
+      def has_expanded_url_link?(label:)
+        selector = ".site-traffic-breakdown-modal[role='dialog']"
+        has_css?("#{selector} a[href='#{label}']", exact_text: label)
+      end
+
       def filter_expanded_row(label:)
         within(".site-traffic-breakdown-modal[role='dialog']") do
           within("tr", text: label) { find("button[aria-label^='Filter by #{label},']").click }

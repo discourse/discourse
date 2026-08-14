@@ -26,6 +26,10 @@ module DiscourseAi
           nil
         end
 
+        def subagent_ids
+          []
+        end
+
         def compression_threshold
           nil
         end
@@ -95,6 +99,7 @@ module DiscourseAi
             Tools::Time,
             Tools::Search,
             Tools::Read,
+            Tools::ReadPost,
             Tools::FlagPost,
             Tools::CloseTopic,
             Tools::SuspendUser,
@@ -323,13 +328,53 @@ module DiscourseAi
       end
 
       def runtime_tools(llm: nil, context: nil)
-        tools = available_tools.reject { |tool| tool.signature[:name] == Tools::ViewImage.name }
+        reserved_spawn_agent = self.class.subagent_ids.present?
+        tools =
+          available_tools.reject do |tool|
+            tool_name = tool.signature[:name]
+            tool_name == Tools::ViewImage.name ||
+              reserved_spawn_agent && tool_name.to_s.casecmp(Tools::SpawnAgent.name).zero?
+          end
 
-        if automatic_vision_tool_enabled?(context) && llm&.llm_model&.delegated_vision?
-          tools += [Tools::ViewImage]
+        if (spawn_agent_tool = spawn_agent_tool_class(context))
+          tools.unshift(spawn_agent_tool)
         end
 
-        tools.uniq
+        if automatic_vision_tool_enabled?(context) && llm&.llm_model&.delegated_vision?
+          tools << Tools::ViewImage
+        end
+
+        tools.uniq { |tool| tool.signature[:name].to_s.downcase }
+      end
+
+      def spawn_agent_tool_class(context)
+        return if self.class.subagent_ids.blank?
+        return if context&.server_owned_tools == false || context&.user.nil?
+        return if context.subagent_depth.to_i >= SubagentRunner::MAX_SUBAGENT_DEPTH
+
+        state = context.subagent_execution_state
+        if !state&.spawn_available? || !state.completion_available? || state.remaining_tokens <= 0
+          return
+        end
+
+        records_by_id = AiAgent.where(id: self.class.subagent_ids, enabled: true).index_by(&:id)
+        models_by_agent_id = SubagentRunner.resolve_models(records_by_id.values)
+        usable_agents =
+          self.class.subagent_ids.filter_map do |subagent_id|
+            record = records_by_id[subagent_id]
+            next if !record
+            next if !context.user.in_any_groups?(record.allowed_group_ids)
+            next if !models_by_agent_id[subagent_id]
+            if record.system?
+              required_tools = record.class_instance.new.required_tools
+              next if (required_tools - self.class.all_available_tools).present?
+            end
+
+            record
+          end
+        return if usable_agents.empty?
+
+        Tools::SpawnAgent.class_instance(id, usable_agents)
       end
 
       def automatic_vision_tool_enabled?(context)
@@ -522,7 +567,12 @@ module DiscourseAi
                context.runtime_tools_llm_model_id == llm&.llm_model&.id
             context.runtime_tools
           else
-            available_tools.reject { |tool| tool.signature[:name] == Tools::ViewImage.name }
+            available_tools.reject do |tool|
+              tool_name = tool.signature[:name]
+              tool_name == Tools::ViewImage.name ||
+                self.class.subagent_ids.present? &&
+                  tool_name.to_s.casecmp(Tools::SpawnAgent.name).zero?
+            end
           end
         tool_klass = exposed_tools.find { |tool| tool.signature.dig(:name) == function_name }
         return nil if tool_klass.nil?

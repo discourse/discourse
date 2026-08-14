@@ -523,9 +523,7 @@ ar:
     max_redemptions_allowed_one: "يجب أن تكون 1 لدعوات البريد الإلكتروني."
     redemption_count_less_than_max: "ينبغي أن يكون أقل من %{max_redemptions_allowed}."
     email_xor_domain: "غير مسموح بحقول البريد الإلكتروني والنطاق في الوقت نفسه"
-    admin_invite_requires_email: "يجب إرسال دعوات دور المسؤول إلى عنوان بريد إلكتروني"
     admin_invite_requires_admin_inviter: "يمكن للمسؤولين فقط إنشاء دعوات لدور المسؤول"
-    moderator_invite_requires_email: "يجب إرسال دعوات دور المشرف إلى عنوان بريد إلكتروني"
     moderator_invite_requires_staff_inviter: "يمكن لطاقم العمل فقط إنشاء دعوات لدور المشرف"
     existing_user_success: "تم استخدام الدعوة بنجاح"
     email_invites_disabled: "إرسال رسائل الدعوة عبر البريد الإلكتروني معطَّل"
@@ -4825,9 +4823,6 @@ ar:
     user_posted_pm_staged:
       title: "نشر مستخدم مؤقت موضوعك في رسالة خاصة"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "تم تعليق الحساب"
       subject_template: "[%{email_prefix}] تم تعليق حسابك"

@@ -288,6 +288,8 @@ ru:
     ai_bot:
       reply_error: "Извините, похоже, наша система столкнулась с неожиданной проблемой при попытке ответить.\n\n[details='Сведения об ошибке']\n%{details}\n[/details]"
       default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
+      read_post:
+        unknown_post: "публикация"
       agents:
         default_llm_required: "Для включения чата требуется модель LLM по умолчанию"
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"

@@ -16,6 +16,8 @@ gl:
         image_generation_custom:
           name: "Personalizado"
     ai_bot:
+      read_post:
+        unknown_post: "publicación"
       tool_summary:
         search: "Buscar"
         time: "Hora"

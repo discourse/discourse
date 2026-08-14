@@ -357,6 +357,8 @@ nl:
       default_pm_prefix: "[Ongetitelde PB van AI-bot]"
       thinking: "Denken"
       tool_pending_approval: "Deze actie vereist goedkeuring van een moderator voordat deze kan worden uitgevoerd."
+      read_post:
+        unknown_post: "bericht"
       chat_tool_approval:
         unexpected_error: "er is een onverwachte fout opgetreden"
       agents:

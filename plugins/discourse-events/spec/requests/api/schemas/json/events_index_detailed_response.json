@@ -217,6 +217,9 @@
               "null"
             ]
           },
+          "url_restates_location": {
+            "type": "boolean"
+          },
           "watching_invitee": {
             "type": [
               "object",
