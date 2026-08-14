@@ -184,3 +184,89 @@ module("Integration | ui-kit | DReorderButtons", function (hooks) {
       .hasAttribute("data-test-marker", "present");
   });
 });
+
+module("Integration | ui-kit | DReorderButtons | layout", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("layout defaults to the stacked pair", async function (assert) {
+    const noop = () => {};
+
+    await render(
+      <template>
+        <DReorderButtons
+          @onMoveUp={{noop}}
+          @onMoveDown={{noop}}
+          @upLabel="Move up"
+          @downLabel="Move down"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-reorder-buttons")
+      .doesNotHaveClass(
+        "--inline",
+        "without @layout the pair keeps its stacked default"
+      );
+  });
+
+  test("layout inline marks the pair for side-by-side placement", async function (assert) {
+    const calls = [];
+    const up = () => calls.push("up");
+    const down = () => calls.push("down");
+
+    await render(
+      <template>
+        <DReorderButtons
+          @onMoveUp={{up}}
+          @onMoveDown={{down}}
+          @upLabel="Move up"
+          @downLabel="Move down"
+          @layout="inline"
+        />
+      </template>
+    );
+
+    // The marker is a standalone modifier class, so a short row can lay the
+    // two buttons out horizontally where the stacked pair would drive its
+    // height.
+    assert
+      .dom(".d-reorder-buttons")
+      .hasClass("--inline", "the inline marker lands on the pair's root")
+      .hasClass(
+        "d-reorder-buttons",
+        "while the base class stays for shared styling"
+      );
+
+    await click(".d-reorder-buttons__button:first-child");
+    await click(".d-reorder-buttons__button:last-child");
+    assert.deepEqual(
+      calls,
+      ["up", "down"],
+      "the layout is presentation only: both directions still run"
+    );
+  });
+
+  test("layout stacked is accepted as the explicit default", async function (assert) {
+    const noop = () => {};
+
+    await render(
+      <template>
+        <DReorderButtons
+          @onMoveUp={{noop}}
+          @onMoveDown={{noop}}
+          @upLabel="Move up"
+          @downLabel="Move down"
+          @layout="stacked"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-reorder-buttons")
+      .doesNotHaveClass(
+        "--inline",
+        "naming the default changes nothing about the rendered pair"
+      );
+  });
+});

@@ -4,7 +4,9 @@ import { isDestroyed, isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { modifier } from "ember-modifier";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
  * Invoked when a direction is pressed. Variadic because a consumer normally
@@ -49,13 +51,19 @@ interface DReorderButtonsSignature {
 
     /** Translated name for the downward direction. See `upLabel`. */
     downLabel: string;
+
+    /**
+     * Controls whether the buttons are stacked or arranged inline. Defaults to
+     * stacked.
+     */
+    layout?: "stacked" | "inline";
   };
   Element: HTMLSpanElement;
 }
 
 /**
- * The keyboard path for a reorderable list: a stacked pair of buttons that move
- * one item up or down.
+ * The keyboard path for a reorderable list: a pair of buttons that move one
+ * item up or down, stacked by default or arranged inline when requested.
  *
  * A drag is unreachable by keyboard, so any list whose only way to reorder is a
  * drag has no keyboard path at all. This is what a reorder surface pairs with
@@ -156,7 +164,13 @@ export default class DReorderButtons extends Component<DReorderButtonsSignature>
   }
 
   <template>
-    <span class="d-reorder-buttons" ...attributes>
+    <span
+      class={{dConcatClass
+        "d-reorder-buttons"
+        (if (eq @layout "inline") "--inline")
+      }}
+      ...attributes
+    >
       <DButton
         {{this.captureButton "up"}}
         @icon="chevron-up"
