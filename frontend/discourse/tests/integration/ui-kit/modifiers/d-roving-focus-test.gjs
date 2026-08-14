@@ -3274,6 +3274,77 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       );
   });
 
+  test("entry ignores aria-current tokens that mean not current", async function (assert) {
+    const emptyToken = "";
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            entryFocus="selected-or-first"
+          }}
+        >
+          <button
+            class="item a"
+            role="option"
+            aria-current={{emptyToken}}
+          >A</button>
+          <button class="item b" role="option" aria-current="false">B</button>
+          <button class="item c" role="option" aria-current="page">C</button>
+          <button class="item d" role="option">D</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasAttribute(
+        "aria-current",
+        "",
+        "the empty token is genuinely present on the first row"
+      );
+    assert
+      .dom(".c")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "only a token that means current marks the row the entry seed prefers"
+      );
+  });
+
+  test("fallbackSkipsMarked does not treat aria-current=false as marked", async function (assert) {
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-current-lb" />
+        <div
+          id="rf-current-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".search"
+            itemSelector=".item"
+            activeClass="--active"
+            entryFocus="first"
+            fallbackSkipsMarked=true
+          }}
+        >
+          <button class="item a" role="option" aria-current="false">A</button>
+          <button class="item b" role="option" aria-current="false">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasClass(
+        "--active",
+        "rows that only say they are not current leave the fallback free to seed"
+      );
+  });
+
   test("changing itemSelector releases the items it no longer matches", async function (assert) {
     const state = new (class {
       @tracked selector = ".one";

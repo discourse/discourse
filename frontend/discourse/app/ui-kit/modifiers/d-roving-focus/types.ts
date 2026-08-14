@@ -280,8 +280,8 @@ export interface DRovingFocusArgs {
    * - `"selected-or-first"` — the marked item, else the first.
    * - `"selected-or-none"` — the marked item, else nothing.
    *
-   * "Marked" means `aria-selected="true"`, `aria-checked="true"` or any `aria-current`. The
-   * consumer owns those attributes; this only reads them.
+   * "Marked" means `aria-selected="true"`, `aria-checked="true"` or an `aria-current` token other
+   * than `"false"` or empty. The consumer owns those attributes; this only reads them.
    *
    * The two modes answer different questions with the same values. Under
    * `focusStrategy="roving-tabindex"` this is the entry convention from the keyboard-interface practice:
