@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 
-export default class ReorderableListGrabExample extends Component {
+export default class ReorderableListButtonsExample extends Component {
   items = trackedArray([
     { id: "monday", name: "Monday" },
     { id: "tuesday", name: "Tuesday" },
@@ -23,7 +23,7 @@ export default class ReorderableListGrabExample extends Component {
       @items={{this.items}}
       @key="id"
       @label={{this.itemLabel}}
-      @keyboard="grab"
+      @keyboard="buttons"
       @onMove={{this.applyMove}}
       class="styleguide-reorderable-list"
       as |item|

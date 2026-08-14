@@ -9,6 +9,7 @@ export default class ReorderableListPoliciesExample extends Component {
     { id: "first", name: "First movable" },
     { id: "second", name: "Second movable" },
     { id: "third", name: "Third movable" },
+    { id: "pinned-bottom", name: "Pinned at the bottom", pinned: true },
   ]);
 
   itemLabel = (item) => item.name;
@@ -27,6 +28,7 @@ export default class ReorderableListPoliciesExample extends Component {
       @label={{this.itemLabel}}
       @movable={{this.movable}}
       @wrap={{true}}
+      @controls="split"
       @arrowsLayout="inline"
       @controlsVisibility="reveal"
       @onMove={{this.applyMove}}
