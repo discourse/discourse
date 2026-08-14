@@ -35,10 +35,9 @@ export function hasSpriteSymbol(id) {
  * @param {Element} target - Element the missing symbols are appended to.
  * @param {Array<{id: string, symbol?: string}>} icons - Icons and, for those the
  *   target cannot already render, their `<symbol>` markup.
- * @param {ParentNode} [searchRoot] - Scope the existing-symbol lookup runs against.
- *   Defaults to `target`.
+ * @param {ParentNode} searchRoot - Scope the existing-symbol lookup runs against.
  */
-export function appendSymbols(target, icons, searchRoot = target) {
+function appendSymbols(target, icons, searchRoot) {
   const candidates = icons.filter(({ symbol }) => symbol);
 
   if (!candidates.length) {

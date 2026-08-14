@@ -701,7 +701,7 @@ module("Integration | Component | DIconGridPicker | paging", function (hooks) {
       "searches every icon"
     );
     assert
-      .dom(`.d-icon-grid-picker__symbols symbol#${UNBUNDLED}`, document.body)
+      .dom(`[data-icon-id="${UNBUNDLED}"] symbol#${UNBUNDLED}`, document.body)
       .exists("renders the symbol so the grid can display it");
     assert.false(
       hasSpriteSymbol(UNBUNDLED),

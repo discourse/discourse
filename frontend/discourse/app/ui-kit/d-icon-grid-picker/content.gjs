@@ -6,15 +6,16 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { suppressMissingIconWarnings } from "discourse/lib/icon-library";
 import {
-  addExtraSpriteSymbols,
-  appendSymbols,
-} from "discourse/lib/svg-sprite-loader";
+  suppressMissingIconWarnings,
+  SVG_NAMESPACE,
+} from "discourse/lib/icon-library";
+import { addExtraSpriteSymbols } from "discourse/lib/svg-sprite-loader";
 import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
@@ -36,23 +37,41 @@ const ICON_TOOLTIP = "d-icon-grid-picker-icon";
  * @property {(icon: {id: string, symbol?: string}) => void} Args.onSelect - Called with the picked icon.
  */
 
-/** @type {import("@ember/component/template-only").TemplateOnlyComponent<IconButtonSignature>} */
-const IconButton = <template>
-  <button
-    type="button"
-    role="option"
-    aria-label={{@icon.id}}
-    aria-selected={{if @selected "true" "false"}}
-    class={{dConcatClass
-      "d-icon-grid-picker__icon"
-      (if @selected "--selected")
-    }}
-    data-icon-id={{@icon.id}}
-    {{on "click" (fn @onSelect @icon)}}
-  >
-    {{dIcon @icon.id}}
-  </button>
-</template>;
+/** @extends {Component<IconButtonSignature>} */
+class IconButton extends Component {
+  /**
+   * The icon's own `<symbol>`, for icons the page sprite cannot render. The
+   * `<svg>` wrapper puts it in the SVG namespace when inserted as HTML, and it
+   * renders in the cell that uses it, so it is torn down with that cell.
+   */
+  get symbol() {
+    const { symbol } = this.args.icon;
+
+    return symbol
+      ? trustHTML(
+          `<svg xmlns="${SVG_NAMESPACE}" style="display: none">${symbol}</svg>`
+        )
+      : null;
+  }
+
+  <template>
+    <button
+      type="button"
+      role="option"
+      aria-label={{@icon.id}}
+      aria-selected={{if @selected "true" "false"}}
+      class={{dConcatClass
+        "d-icon-grid-picker__icon"
+        (if @selected "--selected")
+      }}
+      data-icon-id={{@icon.id}}
+      {{on "click" (fn @onSelect @icon)}}
+    >
+      {{this.symbol}}
+      {{dIcon @icon.id}}
+    </button>
+  </template>
+}
 
 /**
  * The content panel rendered inside the DMenu dropdown or modal.
@@ -79,11 +98,6 @@ export default class DIconGridPickerContent extends Component {
   @tracked hasMore = false;
   @tracked loadingMore = false;
   @tracked gridWrapper = null;
-
-  registerSymbols = modifier((/** @type {SVGElement} */ element) => {
-    this.#symbols = element;
-    return () => (this.#symbols = null);
-  });
 
   registerGridWrapper = modifier((/** @type {HTMLElement} */ element) => {
     this.gridWrapper = element;
@@ -166,8 +180,6 @@ export default class DIconGridPickerContent extends Component {
   #search = 0;
 
   #page = 0;
-
-  #symbols = null;
 
   constructor(owner, args) {
     super(owner, args);
@@ -392,18 +404,6 @@ export default class DIconGridPickerContent extends Component {
   }
 
   /**
-   * The grid needs symbols the page sprite does not have. They live with the
-   * picker; only the picked icon graduates to the page itself.
-   *
-   * @param {Array<{id: string, symbol?: string}>} icons
-   */
-  #showSymbols(icons) {
-    if (this.#symbols) {
-      appendSymbols(this.#symbols, icons);
-    }
-  }
-
-  /**
    * Loads the first page of icons. Used as the `@asyncData` callback for the
    * `AsyncContent` loader, which debounces it and aborts superseded searches.
    *
@@ -417,7 +417,6 @@ export default class DIconGridPickerContent extends Component {
     const { icons, has_more: hasMore } = await this.#fetchPage(0, signal);
 
     if (this.#isCurrent(search)) {
-      this.#showSymbols(icons);
       this.icons = icons;
       this.hasMore = hasMore;
       this.#page = 0;
@@ -444,7 +443,6 @@ export default class DIconGridPickerContent extends Component {
         return;
       }
 
-      this.#showSymbols(icons);
       this.icons = [...this.icons, ...icons];
       this.hasMore = hasMore;
       this.#page++;
@@ -600,13 +598,6 @@ export default class DIconGridPickerContent extends Component {
         {{/if}}
       </div>
 
-      <svg
-        class="d-icon-grid-picker__symbols"
-        xmlns="http://www.w3.org/2000/svg"
-        style="display: none"
-        aria-hidden="true"
-        {{this.registerSymbols}}
-      ></svg>
       <div class="sr-only" aria-live="polite" role="status">
         {{this.resultAnnouncement}}
       </div>
