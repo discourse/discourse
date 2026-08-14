@@ -32,12 +32,34 @@ interface TabStopsOptions {
   ignore?: HTMLElement | null;
 }
 
+/**
+ * The state shared by one enumeration.
+ *
+ * Both caches exist because the same DOM reads repeat heavily within a single scan, and both are
+ * expensive in the way that matters: the tabbability test forces layout, and resolving a radio
+ * group queries its whole tree. Without them, a page-wide scan re-queries the tree and re-probes
+ * the layout of every radio once for each radio it is asked about. A scan is created per public
+ * call and thrown away with it, so no answer can outlive the layout it was measured against.
+ */
+interface TabStopScan {
+  /** An element whose subtree is excluded from the enumeration, if any. */
+  ignore?: HTMLElement | null;
+
+  tabbable: Map<HTMLElement, boolean>;
+
+  /** Every radio in a tree, so a group is resolved from memory after the first lookup. */
+  radios: Map<Node, HTMLInputElement[]>;
+}
+
+function createScan(ignore?: HTMLElement | null): TabStopScan {
+  return { ignore, tabbable: new Map(), radios: new Map() };
+}
+
 function isIgnored(element: HTMLElement, ignore?: HTMLElement | null) {
   return Boolean(ignore && (element === ignore || ignore.contains(element)));
 }
 
-/** Whether `element` can actually be reached by sequential focus right now. */
-function isTabbable(element: HTMLElement): boolean {
+function computeTabbable(element: HTMLElement): boolean {
   if (element.tabIndex < 0 || element.matches(":disabled")) {
     return false;
   }
@@ -57,9 +79,37 @@ function isTabbable(element: HTMLElement): boolean {
   );
 }
 
+/** Whether `element` can actually be reached by sequential focus right now. */
+function isTabbable(element: HTMLElement, scan: TabStopScan): boolean {
+  const cached = scan.tabbable.get(element);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const tabbable = computeTabbable(element);
+  scan.tabbable.set(element, tabbable);
+  return tabbable;
+}
+
+function radiosWithin(
+  tree: Document | ShadowRoot,
+  scan: TabStopScan
+): HTMLInputElement[] {
+  const cached = scan.radios.get(tree);
+  if (cached) {
+    return cached;
+  }
+
+  const radios = Array.from(
+    tree.querySelectorAll<HTMLInputElement>("input[type='radio']")
+  );
+  scan.radios.set(tree, radios);
+  return radios;
+}
+
 function radioGroupRepresentative(
   radio: HTMLInputElement,
-  ignore?: HTMLElement | null
+  scan: TabStopScan
 ): HTMLInputElement | null {
   if (!radio.name) {
     return radio;
@@ -70,14 +120,12 @@ function radioGroupRepresentative(
     return radio;
   }
 
-  const members = Array.from(
-    tree.querySelectorAll<HTMLInputElement>("input[type='radio']")
-  ).filter(
+  const members = radiosWithin(tree, scan).filter(
     (member) =>
       member.name === radio.name &&
       member.form === radio.form &&
-      !isIgnored(member, ignore) &&
-      isTabbable(member)
+      !isIgnored(member, scan.ignore) &&
+      isTabbable(member, scan)
   );
 
   return members.find((member) => member.checked) ?? members[0] ?? null;
@@ -115,6 +163,10 @@ export function tabStopsWithin(
   root: HTMLElement,
   { ignore }: TabStopsOptions = {}
 ): HTMLElement[] {
+  return collectTabStops(root, createScan(ignore));
+}
+
+function collectTabStops(root: HTMLElement, scan: TabStopScan): HTMLElement[] {
   const found = Array.from(
     root.querySelectorAll<HTMLElement>(TAB_STOP_SELECTOR)
   );
@@ -123,10 +175,10 @@ export function tabStopsWithin(
   return all
     .filter(
       (element) =>
-        !isIgnored(element, ignore) &&
-        isTabbable(element) &&
+        !isIgnored(element, scan.ignore) &&
+        isTabbable(element, scan) &&
         (!isRadio(element) ||
-          radioGroupRepresentative(element, ignore) === element)
+          radioGroupRepresentative(element, scan) === element)
     )
     .map((element, documentIndex) => ({ element, documentIndex }))
     .sort(compareTabOrder)
@@ -161,7 +213,10 @@ export function adjacentTabStop(
     root?: HTMLElement;
   }
 ): HTMLElement | null {
-  let stops = tabStopsWithin(root, { ignore });
+  // One scan for the whole query, so resolving the anchor's own group below reuses what
+  // enumerating the stops already measured instead of walking the tree a second time.
+  const scan = createScan(ignore);
+  let stops = collectTabStops(root, scan);
   const index = stops.indexOf(anchor);
 
   if (index !== -1) {
@@ -169,7 +224,7 @@ export function adjacentTabStop(
   }
 
   if (isRadio(anchor)) {
-    const representative = radioGroupRepresentative(anchor, ignore);
+    const representative = radioGroupRepresentative(anchor, scan);
     // Script can focus another member of an unchecked group, but Tab leaves the group from there
     // instead of visiting the representative that sequential entry would use.
     if (representative && !representative.checked) {

@@ -59,6 +59,14 @@ export default class DMenuInstance extends FloatKitInstance {
 
     setOwner(this, owner);
     this.options = { ...MENU.options, ...options };
+
+    // `trapTab` defaults to true and the two are alternatives, so asking for inline ordering has
+    // to be enough on its own, or every caller would carry a second flag. An explicit `trapTab`
+    // still wins, and `DFloatBody` asserts on that contradiction rather than resolving it.
+    if (options.inlineTabOrder && options.trapTab === undefined) {
+      this.options.trapTab = false;
+    }
+
     this.portalOutletOverrideElement = options.portalOutletElement;
   }
 

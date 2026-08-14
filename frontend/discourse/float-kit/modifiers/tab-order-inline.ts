@@ -51,15 +51,14 @@ interface FloatKitTabOrderInlineSignature {
  * such an element consumes a Tab press while being absent from the enumerations below.
  */
 export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInlineSignature> {
-  #boundTrigger: HTMLElement | null = null;
   #close?: () => void;
   #content?: HTMLElement;
   #departing = false;
-  #trigger?: HTMLElement | null;
+  #trigger: HTMLElement | null = null;
 
   constructor(owner: Owner, args: ArgsFor<FloatKitTabOrderInlineSignature>) {
     super(owner, args);
-    registerDestructor(this, (instance) => instance.cleanup());
+    registerDestructor(this, () => this.#cleanup());
   }
 
   modify(
@@ -67,7 +66,6 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     [trigger, close]: FloatKitTabOrderInlineSignature["Args"]["Positional"]
   ) {
     this.#content = element;
-    this.#trigger = trigger;
     this.#close = close;
 
     element.removeEventListener("keydown", this.handleContentKeydown);
@@ -81,17 +79,13 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     // CAPTURE phase, because a control inside the trigger may stop Tab from bubbling. When the
     // panel has a stop, inline ordering is authoritative and intentionally precedes consumer
     // bubbling handlers. With no panel stop, the event continues untouched.
-    this.#boundTrigger?.removeEventListener(
+    this.#trigger?.removeEventListener(
       "keydown",
       this.handleTriggerKeydown,
       true
     );
-    this.#boundTrigger = trigger ?? null;
-    this.#boundTrigger?.addEventListener(
-      "keydown",
-      this.handleTriggerKeydown,
-      true
-    );
+    this.#trigger = trigger ?? null;
+    this.#trigger?.addEventListener("keydown", this.handleTriggerKeydown, true);
   }
 
   /** Forward Tab at the trigger's last stop enters the float, when the float has a stop to offer. */
@@ -179,9 +173,9 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     this.#close?.();
   }
 
-  cleanup() {
+  #cleanup() {
     this.#content?.removeEventListener("keydown", this.handleContentKeydown);
-    this.#boundTrigger?.removeEventListener(
+    this.#trigger?.removeEventListener(
       "keydown",
       this.handleTriggerKeydown,
       true

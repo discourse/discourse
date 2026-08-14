@@ -224,9 +224,15 @@ export interface MenuOptions extends TooltipOptions {
    * trigger.
    *
    * The non-containing alternative to `trapTab`, for a menu that is dismissable but whose content
-   * holds focus. A menu with nothing focusable in it is unaffected in either direction, so this
-   * is safe to set on a menu that only sometimes renders a control. Desktop only, since the
-   * mobile modal is a real `aria-modal` dialog that owns its own containment.
+   * holds focus. Setting it turns `trapTab` off on its own, so the two never have to be passed
+   * together; a caller that asks for the trap explicitly gets an assertion instead, since only a
+   * contradiction remains. The trap is also what applies `autofocus`, so a menu using this option
+   * opens with focus still on the trigger, which is where tabbing into the content starts from.
+   *
+   * A menu with nothing focusable in it is unaffected in either direction, so this is safe to set
+   * on a menu that only sometimes renders a control. It does not reach a menu that also sets
+   * `modalForMobile`, which on mobile renders as a real `aria-modal` dialog that owns its own
+   * containment.
    */
   inlineTabOrder: boolean;
 

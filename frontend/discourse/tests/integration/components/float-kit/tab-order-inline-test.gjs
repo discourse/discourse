@@ -19,14 +19,18 @@ import dElement from "discourse/ui-kit/helpers/d-element";
 /**
  * `inlineTabOrder` only means anything when the content is portaled away from its trigger, and
  * float-kit renders floats IN PLACE under tests (`DFloatPortal`, `@inline ?? isTesting()`). So
- * every case here forces the portal on with `@inline={{false}}` and points it at an outlet that
- * sits LAST in the document — reproducing the real arrangement, where the portal's position is
- * not the trigger's, and where native Tab out of the panel would therefore land in the wrong
- * place.
+ * every case here forces the portal on with `@inline={{false}}` and points it at an outlet placed
+ * away from the trigger, reproducing the real arrangement, where the portal's position is not the
+ * trigger's, and where native Tab out of the panel would therefore land in the wrong place.
+ *
+ * The outlet usually sits LAST in the document, so DOM order is trigger → neighbour → portal. One
+ * case moves it BETWEEN the two instead, which is the only arrangement where the panel is itself
+ * the next stop after the trigger, and so the only one that can pin that the search for that stop
+ * excludes the panel.
  *
  * Each menu waits on `{{#if this.outlet}}`: the outlet element only exists after its own insert
  * hook runs, and `{{#in-element}}` rejects a nullish destination. The menu still renders in its
- * template position, so DOM order stays trigger → neighbour → portal.
+ * template position.
  *
  * The `tab()` helper dispatches a cancelable, bubbling `keydown` and moves focus only when the
  * default is not prevented, so the modifier's handling is exercised rather than bypassed.
@@ -56,7 +60,6 @@ module(
           {{#if this.outlet}}
             <DMenu
               @inline={{false}}
-              @trapTab={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
               @portalOutletElement={{this.outlet}}
@@ -102,13 +105,136 @@ module(
         .doesNotExist("leaving the panel also dismisses it");
     });
 
+    test("the option alone is enough, without turning containment off by hand", async function (assert) {
+      await render(
+        <template>
+          {{#if this.outlet}}
+            <DMenu
+              @inline={{false}}
+              @inlineTabOrder={{true}}
+              @label="trigger"
+              @portalOutletElement={{this.outlet}}
+            >
+              <:content>
+                <button type="button" id="in-panel">panel action</button>
+              </:content>
+            </DMenu>
+          {{/if}}
+          <button type="button" id="after-trigger">after</button>
+          <div id="outlet" {{didInsert this.setOutlet}}></div>
+        </template>
+      );
+
+      await click(".fk-d-menu__trigger");
+
+      // A menu traps Tab by default, so the option has to be enough on its own: requiring the
+      // trap to be switched off too would make every call site carry a second flag.
+      await tab();
+      assert
+        .dom("#in-panel")
+        .isFocused(
+          "Tab enters the panel without the trap being switched off too"
+        );
+
+      await tab();
+      assert
+        .dom("#after-trigger")
+        .isFocused("and leaving it still resumes beside the trigger");
+    });
+
+    test("Tab visits every panel control before the float is left", async function (assert) {
+      await render(
+        <template>
+          {{#if this.outlet}}
+            <DMenu
+              @inline={{false}}
+              @inlineTabOrder={{true}}
+              @label="trigger"
+              @portalOutletElement={{this.outlet}}
+            >
+              <:content>
+                <input id="panel-filter" aria-label="filter" />
+                <button type="button" id="panel-action">panel action</button>
+              </:content>
+            </DMenu>
+          {{/if}}
+          <button type="button" id="after-trigger">after</button>
+          <div id="outlet" {{didInsert this.setOutlet}}></div>
+        </template>
+      );
+
+      await click(".fk-d-menu__trigger");
+
+      await tab();
+      assert
+        .dom("#panel-filter")
+        .isFocused("Tab enters at the panel's first stop");
+
+      // Movement WITHIN the panel: the modifier drives it from its own local sequence rather than
+      // leaving it to the browser, so a second control must be reached before the float is left.
+      await tab();
+      assert
+        .dom("#panel-action")
+        .isFocused("Tab reaches the panel's next control instead of leaving");
+
+      await tab({ backwards: true });
+      assert
+        .dom("#panel-filter")
+        .isFocused("Shift+Tab moves back within the panel");
+
+      await tab();
+      await tab();
+      assert
+        .dom("#after-trigger")
+        .isFocused("only the stop past the LAST control leaves the panel");
+      assert
+        .dom("#panel-action")
+        .doesNotExist("and leaving it dismisses the float");
+    });
+
+    test("the forward exit steps over the panel to reach the trigger's neighbour", async function (assert) {
+      await render(
+        <template>
+          {{#if this.outlet}}
+            <DMenu
+              @inline={{false}}
+              @inlineTabOrder={{true}}
+              @label="trigger"
+              @portalOutletElement={{this.outlet}}
+            >
+              <:content>
+                <button type="button" id="in-panel">panel action</button>
+              </:content>
+            </DMenu>
+          {{/if}}
+          {{! The outlet sits BETWEEN the trigger and its neighbour, so the panel's own control is
+              the next stop in document order. Searching the page for the stop after the trigger
+              has to exclude the panel, or the forward exit lands back inside the float it is
+              dismissing. }}
+          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <button type="button" id="after-trigger">after</button>
+        </template>
+      );
+
+      await click(".fk-d-menu__trigger");
+      await tab();
+      assert.dom("#in-panel").isFocused();
+
+      await tab();
+      assert
+        .dom("#after-trigger")
+        .isFocused(
+          "the panel is not a candidate for the stop after the trigger"
+        );
+      assert.dom("#in-panel").doesNotExist("the float is dismissed on the way");
+    });
+
     test("a non-focusable trigger wrapper resumes from its last stop", async function (assert) {
       await render(
         <template>
           {{#if this.outlet}}
             <DMenu
               @inline={{false}}
-              @trapTab={{false}}
               @inlineTabOrder={{true}}
               @triggerComponent={{dElement "div"}}
               @portalOutletElement={{this.outlet}}
@@ -145,7 +271,6 @@ module(
           {{#if this.outlet}}
             <DMenu
               @inline={{false}}
-              @trapTab={{false}}
               @inlineTabOrder={{true}}
               @triggerComponent={{dElement "div"}}
               @portalOutletElement={{this.outlet}}
@@ -197,7 +322,6 @@ module(
           {{#if this.outlet}}
             <DMenu
               @inline={{false}}
-              @trapTab={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
               @portalOutletElement={{this.outlet}}
@@ -230,7 +354,6 @@ module(
           {{#if this.outlet}}
             <DMenu
               @inline={{false}}
-              @trapTab={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
               @portalOutletElement={{this.outlet}}
@@ -457,6 +580,39 @@ module(
           "regular-last",
         ],
         "positive values are ascending and ties retain document order"
+      );
+    });
+
+    test("tab stops drop an ignored subtree and the stops inside it", async function (assert) {
+      await render(
+        <template>
+          <div id="root">
+            <button id="before-panel">before</button>
+            <div id="panel">
+              <input id="panel-filter" aria-label="filter" />
+              <button id="panel-action">panel action</button>
+            </div>
+            <button id="after-panel">after</button>
+          </div>
+        </template>
+      );
+
+      const root = find("#root");
+      const panel = find("#panel");
+
+      assert.deepEqual(
+        tabStopsWithin(root, { ignore: panel }).map((element) => element.id),
+        ["before-panel", "after-panel"],
+        "the ignored element and its descendants are both excluded"
+      );
+      assert.strictEqual(
+        adjacentTabStop(find("#before-panel"), {
+          forward: true,
+          ignore: panel,
+          root,
+        })?.id,
+        "after-panel",
+        "the stop after an anchor skips the ignored subtree entirely"
       );
     });
 

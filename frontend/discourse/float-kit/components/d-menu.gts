@@ -173,6 +173,9 @@ export default class DMenu<Data = unknown> extends Component<
     // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
     const parentHandlerResult = this.args.onKeydown?.(event);
 
+    // Inline ordering claims Tab on the trigger itself, in the capture phase, and decides whether
+    // the panel is entered at all. Pulling focus into the body from here would override that
+    // decision after the fact, including for a panel that offers no stop and should be passed over.
     if (!this.#body || this.options.inlineTabOrder) {
       return parentHandlerResult;
     }
@@ -249,10 +252,24 @@ export default class DMenu<Data = unknown> extends Component<
     }>;
   }
 
+  /**
+   * The arguments that mirror a menu option, as a partial bag for the instance to merge over
+   * `MENU.options`.
+   *
+   * Only arguments the caller actually supplied are included. Filling the gaps here with the
+   * defaults would produce the same merged options, but it would erase the difference between
+   * "left unset" and "explicitly set to the default value", which the instance needs in order to
+   * let one option imply another.
+   *
+   * @returns The supplied options, keyed as in `MENU.options`.
+   */
   get allowedProperties() {
     const properties: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(MENU.options)) {
-      properties[key] = (this.args as Record<string, unknown>)[key] ?? value;
+    for (const key of Object.keys(MENU.options)) {
+      const value = (this.args as Record<string, unknown>)[key];
+      if (value != null) {
+        properties[key] = value;
+      }
     }
     return properties;
   }
