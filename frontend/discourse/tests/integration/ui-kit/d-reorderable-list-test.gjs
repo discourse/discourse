@@ -5,6 +5,7 @@ import {
   fillIn,
   find,
   findAll,
+  focus,
   render,
   resetOnerror,
   settled,
@@ -3145,3 +3146,721 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     );
   });
 });
+
+module(
+  "Integration | ui-kit | DReorderableList | grab keyboard mode",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const moveKeys = [
+      "method",
+      "item",
+      "fromList",
+      "toList",
+      "fromIndex",
+      "toIndex",
+      "fromItems",
+      "toItems",
+      "proposedFromItems",
+      "proposedToItems",
+    ].sort();
+
+    function grabSelector(key, root = "") {
+      return `${rowSelector(key, root)} button.d-reorderable-list__handle.--grab`;
+    }
+
+    function moveSnapshot(move) {
+      return {
+        method: move.method,
+        item: move.item,
+        fromList: move.fromList,
+        toList: move.toList,
+        fromIndex: move.fromIndex,
+        toIndex: move.toIndex,
+        fromItems: Array.from(move.fromItems),
+        toItems: Array.from(move.toItems),
+        proposedFromItems: Array.from(move.proposedFromItems),
+        proposedToItems: Array.from(move.proposedToItems),
+      };
+    }
+
+    test("renders grab handles and one shared instruction while omitting frozen controls and arrows", async function (assert) {
+      const items = objectItems();
+      const frozenItem = items[1];
+      const movable = (item) => item !== frozenItem;
+      const accessibleName = await loadAccessibleName();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @movable={{movable}}
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const movableItems = items.filter(movable);
+      const instructionsSelector = ".d-reorderable-list .sr-only";
+      assert
+        .dom(instructionsSelector)
+        .exists({ count: 1 }, "the list renders one shared instruction")
+        .hasText(
+          "Press Space to grab, use the arrow keys to move, press Space to drop, or Escape to cancel",
+          "the shared instruction explains the complete grab interaction"
+        );
+      const instructions = find(instructionsSelector);
+      const instructionsId = instructions?.id;
+      assert.notStrictEqual(
+        instructionsId,
+        undefined,
+        "the shared instruction is available to the grab controls"
+      );
+      assert.notStrictEqual(
+        instructionsId,
+        "",
+        "the shared instruction has an id that controls can reference"
+      );
+
+      assert
+        .dom(".d-reorder-buttons")
+        .doesNotExist("grab mode renders no arrow pair");
+      assert
+        .dom("button.d-reorderable-list__handle.--grab")
+        .exists(
+          { count: movableItems.length },
+          "each movable row renders one grab button"
+        );
+
+      for (const item of movableItems) {
+        const selector = grabSelector(item.id);
+        assert
+          .dom(`${rowSelector(item.id)} button`)
+          .exists({ count: 1 }, `${label(item)} has one real row control`);
+        assert
+          .dom(selector)
+          .hasTagName("button", `${label(item)} uses a real button`)
+          .hasClass(
+            "d-reorderable-list__handle",
+            `${label(item)} keeps the handle class`
+          )
+          .hasClass("--grab", `${label(item)} has the grab modifier class`)
+          .hasAttribute("type", "button", `${label(item)} is non-submitting`)
+          .hasAttribute(
+            "aria-pressed",
+            "false",
+            `${label(item)} starts ungrabbed`
+          )
+          .hasAttribute(
+            "aria-describedby",
+            instructionsId ?? "",
+            `${label(item)} references the shared instruction`
+          );
+        const handle = find(selector);
+        assert.strictEqual(
+          handle ? accessibleName(handle) : null,
+          `Reorder ${label(item)}`,
+          `${label(item)} has the translated grab-handle name`
+        );
+      }
+
+      assert
+        .dom(`${rowSelector(frozenItem.id)} button`)
+        .doesNotExist("the frozen row renders no control");
+      assert
+        .dom(`${rowSelector(frozenItem.id)} .d-reorderable-list__handle`)
+        .doesNotExist("the frozen row renders no handle");
+    });
+
+    test("keeps buttons keyboard mode isolated from grab controls", async function (assert) {
+      const items = objectItems().slice(0, 2);
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            id="default-keyboard-list"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @keyboard="buttons"
+            id="buttons-keyboard-list"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      for (const root of ["#default-keyboard-list", "#buttons-keyboard-list"]) {
+        assert
+          .dom(`${root} .d-reorder-buttons`)
+          .exists(
+            { count: items.length },
+            `${root} renders one arrow pair per row`
+          );
+        assert
+          .dom(`${root} button.d-reorderable-list__handle.--grab`)
+          .doesNotExist(`${root} renders no grab button`);
+      }
+    });
+
+    test("uses roving focus without reordering or announcing while ungrabbed", async function (assert) {
+      const items = objectItems();
+      const onMove = sinon.spy();
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const first = grabSelector(items[0].id);
+      const second = grabSelector(items[1].id);
+      assert
+        .dom("button.d-reorderable-list__handle.--grab[tabindex='0']")
+        .exists({ count: 1 }, "exactly one grab button is the tab stop");
+      assert
+        .dom(first)
+        .hasAttribute("tabindex", "0", "the first grab button is the tab stop");
+      assert
+        .dom(second)
+        .hasAttribute("tabindex", "-1", "the second grab button is untabbable");
+      assert
+        .dom(grabSelector(items[2].id))
+        .hasAttribute("tabindex", "-1", "the third grab button is untabbable");
+
+      await focus(first);
+      await triggerKeyEvent(find(first), "keydown", "ArrowDown");
+      assert.dom(second).isFocused("ArrowDown focuses the next grab button");
+      assert
+        .dom(second)
+        .hasAttribute("tabindex", "0", "the tab stop follows focus down");
+
+      await triggerKeyEvent(find(second), "keydown", "ArrowUp");
+      assert.dom(first).isFocused("ArrowUp focuses the previous grab button");
+      assert
+        .dom(first)
+        .hasAttribute("tabindex", "0", "the tab stop follows focus up");
+      assert.deepEqual(
+        renderedItemOrder(),
+        items.map((item) => item.id),
+        "ungrabbed arrow navigation preserves row order"
+      );
+      assert.strictEqual(
+        onMove.callCount,
+        0,
+        "ungrabbed arrow navigation commits no move"
+      );
+      assert.strictEqual(
+        announce.callCount,
+        0,
+        "ungrabbed arrow navigation makes no announcement"
+      );
+    });
+
+    test("Space grabs, moves once through the buttons funnel, and drops", async function (assert) {
+      const sourceItems = objectItems();
+      const items = trackedArray(sourceItems);
+      const movedItem = sourceItems[1];
+      const fromIndex = sourceItems.indexOf(movedItem);
+      const toIndex = fromIndex + 1;
+      const total = sourceItems.length;
+      const proposed = [...sourceItems];
+      proposed.splice(fromIndex, 1);
+      proposed.splice(toIndex, 0, movedItem);
+      const commits = [];
+      const onMove = (move) => {
+        commits.push({
+          move,
+          snapshot: moveSnapshot(move),
+          inputArraysShareReference: move.fromItems === move.toItems,
+          proposedArraysShareReference:
+            move.proposedFromItems === move.proposedToItems,
+        });
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const selector = grabSelector(movedItem.id);
+      await focus(selector);
+      await triggerKeyEvent(find(selector), "keydown", " ");
+
+      assert
+        .dom(selector)
+        .hasAttribute("aria-pressed", "true", "Space marks the item grabbed");
+      assert
+        .dom(rowSelector(movedItem.id))
+        .hasClass("--grabbed", "Space marks the grabbed row");
+      assert.strictEqual(
+        announce.firstCall.args[0],
+        `Grabbed ${label(movedItem)}, position ${fromIndex + 1} of ${total}`,
+        "the grab announcement uses the measured starting position"
+      );
+
+      await triggerKeyEvent(find(selector), "keydown", "ArrowDown");
+
+      assert.strictEqual(
+        commits.length,
+        1,
+        "one grabbed ArrowDown commits once"
+      );
+      assert.deepEqual(
+        Object.keys(commits[0].move).sort(),
+        moveKeys,
+        "the grabbed move exposes only the normalized public payload"
+      );
+      assert.deepEqual(
+        commits[0].snapshot,
+        {
+          method: "buttons",
+          item: movedItem,
+          fromList: "default",
+          toList: "default",
+          fromIndex,
+          toIndex,
+          fromItems: sourceItems,
+          toItems: sourceItems,
+          proposedFromItems: proposed,
+          proposedToItems: proposed,
+        },
+        "the grabbed ArrowDown emits the same measured payload as one down button press"
+      );
+      assert.true(
+        commits[0].inputArraysShareReference,
+        "the grabbed single-list source arrays share one reference"
+      );
+      assert.true(
+        commits[0].proposedArraysShareReference,
+        "the grabbed single-list proposed arrays share one reference"
+      );
+      assert.deepEqual(
+        renderedItemOrder(),
+        proposed.map((item) => item.id),
+        "the host adopts the grabbed move"
+      );
+      assert
+        .dom(selector)
+        .isFocused("focus stays with the moved item's grab button")
+        .hasAttribute("aria-pressed", "true", "the moved item remains grabbed");
+      assert
+        .dom(rowSelector(movedItem.id))
+        .hasClass("--grabbed", "the moved row remains marked grabbed");
+      assert.strictEqual(
+        announce.secondCall.args[0],
+        `Moved ${label(movedItem)} to position ${toIndex + 1} of ${total}`,
+        "the grabbed step uses the standard measured move announcement"
+      );
+
+      await triggerKeyEvent(find(selector), "keydown", " ");
+
+      assert.strictEqual(commits.length, 1, "dropping adds no reorder commit");
+      assert
+        .dom(selector)
+        .hasAttribute("aria-pressed", "false", "Space drops the item");
+      assert
+        .dom(rowSelector(movedItem.id))
+        .doesNotHaveClass("--grabbed", "dropping clears the row state");
+      assert.deepEqual(
+        announce.getCalls().map((call) => call.args[0]),
+        [
+          `Grabbed ${label(movedItem)}, position ${fromIndex + 1} of ${total}`,
+          `Moved ${label(movedItem)} to position ${toIndex + 1} of ${total}`,
+          `Dropped ${label(movedItem)}, final position ${toIndex + 1} of ${total}`,
+        ],
+        "grab, move, and drop each announce exactly once"
+      );
+    });
+
+    test("Enter grabs and Escape cancels without a restoring move when unchanged", async function (assert) {
+      const items = objectItems();
+      const movedItem = items[1];
+      const position = items.indexOf(movedItem) + 1;
+      const onMove = sinon.spy();
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const selector = grabSelector(movedItem.id);
+      await focus(selector);
+      await triggerKeyEvent(find(selector), "keydown", "Enter");
+      assert
+        .dom(selector)
+        .hasAttribute("aria-pressed", "true", "Enter grabs the focused item");
+      assert
+        .dom(rowSelector(movedItem.id))
+        .hasClass("--grabbed", "Enter marks the row grabbed");
+
+      await triggerKeyEvent(find(selector), "keydown", "Escape");
+
+      assert.strictEqual(
+        onMove.callCount,
+        0,
+        "cancelling an unchanged grab commits no restoring move"
+      );
+      assert
+        .dom(selector)
+        .hasAttribute("aria-pressed", "false", "Escape clears pressed state");
+      assert
+        .dom(rowSelector(movedItem.id))
+        .doesNotHaveClass("--grabbed", "Escape clears the grabbed row state");
+      assert.deepEqual(
+        announce.getCalls().map((call) => call.args[0]),
+        [
+          `Grabbed ${label(movedItem)}, position ${position} of ${items.length}`,
+          `Reorder cancelled, ${label(movedItem)} returned to position ${position}`,
+        ],
+        "Enter grab and unchanged cancellation each announce once"
+      );
+    });
+
+    test("Escape restores a multiply moved item with one silent restoring commit", async function (assert) {
+      const sourceItems = [
+        ...objectItems(),
+        { id: "delta", identity: { value: "delta-key" }, name: "Delta" },
+      ];
+      const items = trackedArray(sourceItems);
+      const movedItem = sourceItems[0];
+      const startIndex = sourceItems.indexOf(movedItem);
+      const firstMovedIndex = startIndex + 1;
+      const movedIndex = startIndex + 2;
+      const movedOrder = [...sourceItems];
+      movedOrder.splice(startIndex, 1);
+      movedOrder.splice(movedIndex, 0, movedItem);
+      const commits = [];
+      const onMove = (move) => {
+        commits.push({
+          move,
+          snapshot: moveSnapshot(move),
+          inputArraysShareReference: move.fromItems === move.toItems,
+          proposedArraysShareReference:
+            move.proposedFromItems === move.proposedToItems,
+        });
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const selector = grabSelector(movedItem.id);
+      await focus(selector);
+      await triggerKeyEvent(find(selector), "keydown", " ");
+      await triggerKeyEvent(find(selector), "keydown", "ArrowDown");
+      await triggerKeyEvent(find(selector), "keydown", "ArrowDown");
+      await triggerKeyEvent(find(selector), "keydown", "Escape");
+
+      assert.strictEqual(
+        commits.length,
+        3,
+        "Escape adds one restoring commit after two grabbed moves"
+      );
+      assert.deepEqual(
+        Object.keys(commits[2].move).sort(),
+        moveKeys,
+        "the restoring commit exposes only the normalized public payload"
+      );
+      assert.deepEqual(
+        commits[2].snapshot,
+        {
+          method: "buttons",
+          item: movedItem,
+          fromList: "default",
+          toList: "default",
+          fromIndex: movedIndex,
+          toIndex: startIndex,
+          fromItems: movedOrder,
+          toItems: movedOrder,
+          proposedFromItems: sourceItems,
+          proposedToItems: sourceItems,
+        },
+        "the restoring commit returns the item to its measured grab-start index"
+      );
+      assert.true(
+        commits[2].inputArraysShareReference,
+        "the restoring source arrays share one reference"
+      );
+      assert.true(
+        commits[2].proposedArraysShareReference,
+        "the restoring proposed arrays share one reference"
+      );
+      assert.deepEqual(
+        renderedItemOrder(),
+        sourceItems.map((item) => item.id),
+        "Escape restores the visible order"
+      );
+      assert
+        .dom(selector)
+        .hasAttribute("aria-pressed", "false", "Escape clears pressed state");
+      assert
+        .dom(rowSelector(movedItem.id))
+        .doesNotHaveClass("--grabbed", "Escape clears the grabbed row state");
+      assert.deepEqual(
+        announce.getCalls().map((call) => call.args[0]),
+        [
+          `Grabbed ${label(movedItem)}, position ${startIndex + 1} of ${sourceItems.length}`,
+          `Moved ${label(movedItem)} to position ${firstMovedIndex + 1} of ${sourceItems.length}`,
+          `Moved ${label(movedItem)} to position ${movedIndex + 1} of ${sourceItems.length}`,
+          `Reorder cancelled, ${label(movedItem)} returned to position ${startIndex + 1}`,
+        ],
+        "the restoring commit adds no standard step announcement"
+      );
+    });
+
+    test("does nothing when a grabbed item moves down at the last movable slot", async function (assert) {
+      const items = objectItems();
+      const movedItem = items.at(-1);
+      const position = items.indexOf(movedItem) + 1;
+      const onMove = sinon.spy();
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const selector = grabSelector(movedItem.id);
+      await focus(selector);
+      await triggerKeyEvent(find(selector), "keydown", " ");
+      const announcementCountAfterGrab = announce.callCount;
+      await triggerKeyEvent(find(selector), "keydown", "ArrowDown");
+
+      assert.strictEqual(
+        onMove.callCount,
+        0,
+        "ArrowDown at the last movable slot commits nothing"
+      );
+      assert.strictEqual(
+        announce.callCount,
+        announcementCountAfterGrab,
+        "ArrowDown at the last movable slot announces nothing"
+      );
+      assert.strictEqual(
+        announce.firstCall.args[0],
+        `Grabbed ${label(movedItem)}, position ${position} of ${items.length}`,
+        "only the measured grab announcement was made"
+      );
+      assert
+        .dom(selector)
+        .isFocused("focus stays at the last movable slot")
+        .hasAttribute(
+          "aria-pressed",
+          "true",
+          "the boundary item stays grabbed"
+        );
+    });
+
+    test("hops frozen rows during a grabbed move", async function (assert) {
+      const sourceItems = objectItems();
+      const items = trackedArray(sourceItems);
+      const movedItem = sourceItems[0];
+      const frozenItem = sourceItems[1];
+      const destinationItem = sourceItems[2];
+      const movable = (item) => item !== frozenItem;
+      const fromIndex = sourceItems.indexOf(movedItem);
+      const toIndex = sourceItems.indexOf(destinationItem);
+      const proposed = [destinationItem, frozenItem, movedItem];
+      const commits = [];
+      const onMove = (move) => {
+        commits.push(moveSnapshot(move));
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @movable={{movable}}
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const selector = grabSelector(movedItem.id);
+      await focus(selector);
+      await triggerKeyEvent(find(selector), "keydown", " ");
+      await triggerKeyEvent(find(selector), "keydown", "ArrowDown");
+
+      assert.strictEqual(
+        commits.length,
+        1,
+        "one grabbed ArrowDown across a frozen row commits once"
+      );
+      assert.deepEqual(
+        commits[0],
+        {
+          method: "buttons",
+          item: movedItem,
+          fromList: "default",
+          toList: "default",
+          fromIndex,
+          toIndex,
+          fromItems: sourceItems,
+          toItems: sourceItems,
+          proposedFromItems: proposed,
+          proposedToItems: proposed,
+        },
+        "the grabbed move hops to the next movable visible slot and preserves the frozen slot"
+      );
+      assert.deepEqual(
+        renderedItemOrder(),
+        proposed.map((item) => item.id),
+        "the frozen row keeps its visible index"
+      );
+      assert
+        .dom(selector)
+        .isFocused("focus follows the item across the frozen row")
+        .hasAttribute("aria-pressed", "true", "the moved item stays grabbed");
+      assert.strictEqual(
+        announce.secondCall.args[0],
+        `Moved ${label(movedItem)} to position ${toIndex + 1} of ${sourceItems.length}`,
+        "the frozen-row hop uses the standard measured announcement"
+      );
+    });
+
+    test("keeps the grab button as the drag handle", async function (assert) {
+      const items = objectItems();
+      const sourceItem = items[0];
+      const targetItem = items.at(-1);
+      const fromIndex = items.indexOf(sourceItem);
+      const targetIndex = items.indexOf(targetItem);
+      const toIndex = targetIndex - Number(fromIndex < targetIndex);
+      const proposed = [...items];
+      proposed.splice(fromIndex, 1);
+      proposed.splice(toIndex, 0, sourceItem);
+      const moves = [];
+      const onMove = (move) => moves.push(move);
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{onMove}}
+            @keyboard="grab"
+            as |item|
+          ><span
+              data-test-item={{item.id}}
+            >{{item.name}}</span></DReorderableList>
+        </template>
+      );
+
+      const source = rowSelector(sourceItem.id);
+      const sourceHandle = grabSelector(sourceItem.id);
+      const target = rowSelector(targetItem.id);
+      assert
+        .dom(sourceHandle)
+        .hasAttribute(
+          "data-drag-source",
+          "",
+          "the grab button is registered as the drag source"
+        );
+      assertDragRegistered(sourceHandle, target);
+      await simulateDrag(source, target, {
+        dataTransfer: new DataTransfer(),
+        targetCoordinates: dropCoordinates(target, "before"),
+      });
+
+      assert.strictEqual(moves.length, 1, "one grab-handle drag commits once");
+      assert.deepEqual(
+        moves[0],
+        {
+          method: "drag",
+          item: sourceItem,
+          fromList: "default",
+          toList: "default",
+          fromIndex,
+          toIndex,
+          fromItems: items,
+          toItems: items,
+          proposedFromItems: proposed,
+          proposedToItems: proposed,
+        },
+        "the grab handle emits the normal measured drag payload"
+      );
+    });
+  }
+);
