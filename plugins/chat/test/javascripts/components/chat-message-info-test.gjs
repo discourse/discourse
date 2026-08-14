@@ -40,6 +40,22 @@ module("Component | ChatMessageInfo", function (hooks) {
       .hasText(this.message.user.username);
   });
 
+  test("the username is a control a keyboard can reach", async function (assert) {
+    this.message = new ChatFabricators(getOwner(this)).message({
+      user: { username: "discobot" },
+    });
+
+    await render(
+      <template><Info @message={{this.message}} @show={{true}} /></template>
+    );
+
+    assert.dom(".chat-message-info__username__name").hasTagName("button");
+    assert
+      .dom(".chat-message-info__username__name")
+      .hasAttribute("data-user-card", "discobot");
+    assert.dom(".chat-message-info__username").doesNotHaveAttribute("role");
+  });
+
   test("date", async function (assert) {
     this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },

@@ -1,48 +1,103 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import {
-  computePosition,
-  flip,
-  hide,
-  limitShift,
-  offset,
-  shift,
-} from "@floating-ui/dom";
+import { modifier } from "ember-modifier";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
-import chatMessageContainer from "discourse/plugins/chat/discourse/lib/chat-message-container";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
-const MSG_ACTIONS_USER_INFO_VERTICAL_OFFSET = -24;
-const MSG_ACTIONS_VERTICAL_OFFSET = -6;
 const FULL = "full";
 const REDUCED = "reduced";
 const REDUCED_WIDTH_THRESHOLD = 500;
 
 export default class ChatMessageActionsDesktop extends Component {
-  @service chat;
   @service site;
 
   @tracked size = FULL;
 
+  // eslint-disable-next-line no-unused-vars -- `size` is taken to re-run the modifier, not read
+  rovingToolbar = modifier((element, [size]) => {
+    const items = () =>
+      [...element.children]
+        .map((child) =>
+          child.matches("button, summary")
+            ? child
+            : child.querySelector("button, summary")
+        )
+        .filter((item) => item && !item.disabled);
+
+    const setTabStop = (target) => {
+      const all = items();
+      const stop = all.includes(target) ? target : all[0];
+      all.forEach((item) =>
+        item.setAttribute("tabindex", item === stop ? "0" : "-1")
+      );
+    };
+
+    const onKeyDown = (event) => {
+      const all = items();
+      const index = all.indexOf(document.activeElement);
+
+      if (index === -1) {
+        return;
+      }
+
+      let target;
+      switch (event.key) {
+        case "ArrowRight":
+          target = all[(index + 1) % all.length];
+          break;
+        case "ArrowLeft":
+          target = all[(index - 1 + all.length) % all.length];
+          break;
+        case "Home":
+          target = all[0];
+          break;
+        case "End":
+          target = all[all.length - 1];
+          break;
+        default:
+          return;
+      }
+
+      event.preventDefault();
+      setTabStop(target);
+      target.focus();
+    };
+
+    // Re-asserted on focus: these controls re-render on their own schedule and restore
+    // the tabindex they were rendered with.
+    const onFocusIn = (event) => {
+      if (items().includes(event.target)) {
+        setTabStop(event.target);
+      }
+    };
+
+    setTabStop(null);
+    element.addEventListener("keydown", onKeyDown);
+    element.addEventListener("focusin", onFocusIn);
+
+    return () => {
+      element.removeEventListener("keydown", onKeyDown);
+      element.removeEventListener("focusin", onFocusIn);
+    };
+  });
+
   get message() {
-    return this.chat.activeMessage.model;
+    return this.args.message;
   }
 
   get context() {
-    return this.chat.activeMessage.context;
+    return this.args.context;
   }
 
   @cached
@@ -58,8 +113,16 @@ export default class ChatMessageActionsDesktop extends Component {
     return this.size === FULL && this.message.channel?.isFollowing;
   }
 
-  get messageContainer() {
-    return chatMessageContainer(this.message.id, this.context);
+  // A bookmark's reminder makes a useful name once one is set, but the button needs one
+  // before that too — it is icon-only, so its name is all a screen reader has to go on.
+  get bookmarkLabel() {
+    if (!this.message.bookmark) {
+      return i18n("chat.bookmark_message");
+    }
+
+    return (
+      this.message.bookmark.reminderTitle || i18n("chat.bookmark_message_edit")
+    );
   }
 
   @action
@@ -69,90 +132,29 @@ export default class ChatMessageActionsDesktop extends Component {
   }
 
   @action
-  setup(element) {
-    const container = this.messageContainer;
+  setSize(element) {
+    const boundary = element.closest(".chat-messages-scroller");
 
-    if (!container) {
-      return;
+    if (boundary) {
+      this.size =
+        boundary.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
     }
-
-    const boundary = container.closest(".chat-messages-scroller");
-
-    if (!boundary) {
-      return;
-    }
-
-    this.size = boundary.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
-
-    next(() => {
-      computePosition(container, element, {
-        placement: "top-end",
-        strategy: "fixed",
-        middleware: [
-          offset({
-            mainAxis: this.chat.activeMessage?.hideUserInfo
-              ? MSG_ACTIONS_VERTICAL_OFFSET
-              : MSG_ACTIONS_USER_INFO_VERTICAL_OFFSET,
-            crossAxis: -2,
-          }),
-          flip({
-            boundary,
-            fallbackPlacements: ["bottom-end"],
-          }),
-          shift({ limiter: limitShift() }),
-          hide({ strategy: "referenceHidden" }),
-          hide({ strategy: "escaped" }),
-        ],
-      }).then(({ x, y, middlewareData }) => {
-        const style = {
-          left: `${x}px`,
-          top: `${y}px`,
-        };
-
-        if (
-          middlewareData.hide?.referenceHidden ||
-          middlewareData.hide?.escaped
-        ) {
-          style.visibility = "hidden";
-          style.pointerEvents = "none";
-        } else {
-          style.visibility = "visible";
-          style.pointerEvents = "auto";
-        }
-
-        Object.assign(element.style, style);
-      });
-    });
-  }
-
-  @action
-  redirectScroll(event) {
-    event.preventDefault();
-
-    const targetElement = this.messageContainer.closest(
-      ".chat-messages-scroller"
-    );
-
-    if (!targetElement) {
-      return;
-    }
-
-    targetElement.scrollTop += event.deltaY;
   }
 
   <template>
-    {{#if (and this.site.desktopView this.chat.activeMessage.model.persisted)}}
+    {{#if (and this.site.desktopView @message.persisted)}}
       <div
-        {{didInsert this.setup}}
-        {{didUpdate this.setup this.chat.activeMessage.model.id}}
+        {{didInsert this.setSize}}
         class={{dConcatClass
           "chat-message-actions-container"
           (concat "is-size-" this.size)
         }}
         data-id={{this.message.id}}
-        {{on "wheel" this.redirectScroll}}
       >
         <div
+          role="toolbar"
+          aria-label={{i18n "chat.message_actions"}}
+          {{this.rovingToolbar this.size}}
           class={{dConcatClass
             "chat-message-actions"
             (unless
@@ -178,6 +180,7 @@ export default class ChatMessageActionsDesktop extends Component {
               @action={{this.openEmojiPicker}}
               @forwardEvent={{true}}
               @icon="discourse-emojis"
+              @title="chat.react"
               class="btn-flat react-btn"
             />
           {{/if}}
@@ -186,7 +189,8 @@ export default class ChatMessageActionsDesktop extends Component {
             <DButton
               @action={{this.messageInteractor.toggleBookmark}}
               class="btn-flat bookmark-btn"
-              @translatedTitle={{this.message.bookmark.reminderTitle}}
+              @translatedTitle={{this.bookmarkLabel}}
+              @translatedAriaLabel={{this.bookmarkLabel}}
             >
               <BookmarkIcon @bookmark={{this.message.bookmark}} />
             </DButton>
@@ -213,6 +217,7 @@ export default class ChatMessageActionsDesktop extends Component {
                 placement="left"
                 customStyle="true"
                 btnCustomClasses="btn-flat"
+                headerAriaLabel=(i18n "chat.more_message_actions")
               }}
               @content={{this.messageInteractor.secondaryActions}}
               @onChange={{this.messageInteractor.handleSecondaryActions}}

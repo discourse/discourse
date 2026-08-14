@@ -6,7 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { cancel, schedule } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import EmojiPicker from "discourse/components/emoji-picker";
@@ -26,6 +26,7 @@ import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/m
 import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/message/info";
 import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
 import ChatMessageBlocks from "discourse/plugins/chat/discourse/components/chat-message/blocks";
+import ChatMessageActionsDesktop from "discourse/plugins/chat/discourse/components/chat-message-actions-desktop";
 import ChatMessageActionsMobileModal from "discourse/plugins/chat/discourse/components/chat-message-actions-mobile";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
@@ -148,6 +149,13 @@ export default class ChatMessage extends Component {
     );
   }
 
+  get showActions() {
+    return (
+      this.chat.activeMessage?.model?.id === this.args.message.id &&
+      this.chat.activeMessage?.context === this.args.context
+    );
+  }
+
   get secondaryActionsIsExpanded() {
     return document.querySelector(
       ".more-buttons.secondary-actions.is-expanded"
@@ -187,6 +195,7 @@ export default class ChatMessage extends Component {
     cancel(this._disableMessageActionsHandler);
     cancel(this._makeMessageActiveHandler);
     cancel(this._onMouseEnterMessageDebouncedHandler);
+    cancel(this._clearActiveMessageHandler);
     this.#teardownMentionedUsers();
     this.chat.activeMessage = null;
   }
@@ -322,6 +331,49 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  onFocusIn(event) {
+    const container = event.currentTarget;
+
+    next(() => {
+      if (container.isConnected && container.contains(document.activeElement)) {
+        this._setActiveMessage({ fromKeyboard: true });
+      }
+    });
+  }
+
+  @action
+  onFocusOut(event) {
+    const container = event.currentTarget;
+
+    // The actions render inside the message, so focus moving into them stays contained.
+    if (container.contains(event.relatedTarget)) {
+      return;
+    }
+
+    // Deferred for the same reason as raising them, and rechecked: `relatedTarget` is not
+    // always where focus comes to rest.
+    this._clearActiveMessageHandler = next(() => {
+      // The emoji picker and the secondary actions menu both take focus into a portal
+      // outside the message, and both are anchored to the toolbar this would unmount.
+      if (
+        this.interactedChatMessage.emojiPickerOpen ||
+        this.secondaryActionsIsExpanded
+      ) {
+        return;
+      }
+
+      if (
+        container.isConnected &&
+        !container.contains(document.activeElement) &&
+        this.chat.activeMessage?.model?.id === this.args.message.id &&
+        this.chat.activeMessage?.context === this.args.context
+      ) {
+        this.chat.activeMessage = null;
+      }
+    });
+  }
+
+  @action
   onMouseLeave(event) {
     cancel(this._onMouseEnterMessageDebouncedHandler);
 
@@ -353,8 +405,16 @@ export default class ChatMessage extends Component {
     this._setActiveMessage();
   }
 
-  _setActiveMessage() {
-    if (this.args.disableMouseEvents || this.args.interactive === false) {
+  // `disableMouseEvents` suppresses the toolbar while the list is being scrolled with the
+  // pointer. Focus is not a pointer, so the keyboard path opts out of that check.
+  _setActiveMessage({ fromKeyboard = false } = {}) {
+    // A pending clear from focus leaving would otherwise land after this and undo it.
+    cancel(this._clearActiveMessageHandler);
+
+    if (
+      (!fromKeyboard && this.args.disableMouseEvents) ||
+      this.args.interactive === false
+    ) {
       return;
     }
 
@@ -365,6 +425,15 @@ export default class ChatMessage extends Component {
     }
 
     if (!this.args.message.expanded) {
+      return;
+    }
+
+    // Focus moving between the message's own controls re-reports it as active. Assigning
+    // a fresh hash each time invalidates what render just read from it.
+    if (
+      this.chat.activeMessage?.model?.id === this.args.message.id &&
+      this.chat.activeMessage?.context === this.args.context
+    ) {
       return;
     }
 
@@ -561,7 +630,6 @@ export default class ChatMessage extends Component {
   }
 
   <template>
-    {{! eslint-disable ember/template-no-invalid-interactive }}
     {{#if this.shouldRender}}
       {{#if this.includeSeparator}}
         <ChatMessageSeparator
@@ -570,6 +638,9 @@ export default class ChatMessage extends Component {
         />
       {{/if}}
 
+      {{! The message is not itself a control: these observe pointer and focus moving over
+      it to raise its actions, and the controls they raise are the interactive parts. }}
+      {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
       <div
         class={{dConcatClass
           "chat-message-container"
@@ -600,6 +671,8 @@ export default class ChatMessage extends Component {
         data-id={{@message.id}}
         data-thread-id={{@message.thread.id}}
         {{willDestroy this.willDestroyMessage}}
+        {{on "focusin" this.onFocusIn passive=true}}
+        {{on "focusout" this.onFocusOut passive=true}}
         {{on "mouseenter" this.onMouseEnter passive=true}}
         {{on "mouseleave" this.onMouseLeave passive=true}}
         {{on "mousemove" this.onMouseMove passive=true}}
@@ -723,6 +796,13 @@ export default class ChatMessage extends Component {
               {{/if}}
             </div>
           {{/if}}
+        {{/if}}
+
+        {{#if this.showActions}}
+          <ChatMessageActionsDesktop
+            @message={{@message}}
+            @context={{@context}}
+          />
         {{/if}}
       </div>
     {{/if}}

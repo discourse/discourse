@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 
 module("Component | ChatMessageReaction", function (hooks) {
@@ -36,6 +37,68 @@ module("Component | ChatMessageReaction", function (hooks) {
 
     assert.dom(".chat-message-reaction").hasAttribute("title", ":heart:");
     assert.dom(".chat-message-reaction img").hasAttribute("alt", ":heart:");
+  });
+
+  test("names itself as a reaction rather than just an emoji", async function (assert) {
+    await render(
+      <template>
+        <ChatMessageReaction @reaction={{hash emoji="heart" count=3}} />
+      </template>
+    );
+
+    assert
+      .dom(".chat-message-reaction")
+      .hasAria(
+        "label",
+        i18n("chat.reactions.counted", { emoji: "heart", count: 3 }),
+        "a counted reaction is named by what it stands for"
+      );
+  });
+
+  test("names itself by its action where it is only a way to react", async function (assert) {
+    await render(
+      <template>
+        <ChatMessageReaction
+          @reaction={{hash emoji="heart"}}
+          @showCount={{false}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-message-reaction")
+      .hasAria("label", i18n("chat.reactions.add", { emoji: "heart" }));
+  });
+
+  test("reports whether the reaction is the current user's", async function (assert) {
+    await render(
+      <template>
+        <ChatMessageReaction
+          @reaction={{hash emoji="heart" count=1 reacted=true}}
+        />
+        <ChatMessageReaction
+          @reaction={{hash emoji="+1" count=1 reacted=false}}
+        />
+      </template>
+    );
+
+    assert.dom("[data-emoji-name='heart']").hasAria("pressed", "true");
+    assert.dom("[data-emoji-name='+1']").hasAria("pressed", "false");
+  });
+
+  test("is not a toggle where it is only a way to react", async function (assert) {
+    await render(
+      <template>
+        <ChatMessageReaction
+          @reaction={{hash emoji="heart" reacted=true}}
+          @showCount={{false}}
+        />
+      </template>
+    );
+
+    // named for its action, so announcing a pressed state on top of that describes
+    // neither the control nor its effect
+    assert.dom(".chat-message-reaction").doesNotHaveAria("pressed");
   });
 
   test("count of reactions", async function (assert) {
