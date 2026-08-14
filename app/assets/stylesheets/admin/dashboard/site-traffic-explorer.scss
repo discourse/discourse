@@ -79,10 +79,6 @@
     }
 
     @include viewport.until(sm) {
-      .db-skeleton__metric-row {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
       .db-skeleton__chart {
         height: 18rem;
       }
@@ -119,12 +115,6 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         width: 100%;
-      }
-    }
-
-    @include viewport.until(sm) {
-      .db-section__metrics {
-        grid-template-columns: minmax(0, 1fr);
       }
     }
   }
@@ -358,6 +348,12 @@
 }
 
 .site-traffic-breakdown-modal {
+  @include viewport.until(md) {
+    .d-table {
+      table-layout: fixed;
+    }
+  }
+
   &__dimension {
     max-width: 0;
     overflow: hidden;
