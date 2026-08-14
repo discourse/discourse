@@ -76,7 +76,7 @@ describe "Admin Dashboard Configure menu" do
       dashboard.visit
       dashboard.open_configure_menu
 
-      expect(page).to have_css(".db-configure__drag-handle")
+      expect(page).to have_css(".d-reorderable-list__handle")
     end
 
     it "reorders sections with a real browser drag" do

@@ -199,9 +199,8 @@ $db-bar-height: var(--space-2);
     margin-right: var(--space-2);
   }
 
-  &__drag-handle {
+  .d-reorderable-list__handle {
     color: var(--primary-low-mid);
-    cursor: grab;
   }
 
   .d-toggle-switch {

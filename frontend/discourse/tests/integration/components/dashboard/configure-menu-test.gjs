@@ -26,21 +26,21 @@ const FOUR_SECTIONS = [
 ];
 
 function rowSelector(id) {
-  return `[data-section-id="${id}"]`;
+  return `[data-reorderable-key="${id}"]`;
 }
 
 // A drag starts on the grip rather than anywhere on the row, so a press meant to
 // scroll still scrolls and the row's own text stays selectable. The grip is what
 // carries the registration, so that is where the events go.
 function gripSelector(id) {
-  return `${rowSelector(id)} .db-configure__drag-handle`;
+  return `${rowSelector(id)} .d-reorderable-list__handle`;
 }
 
 async function dragSection(sourceId, targetId, position) {
   const source = rowSelector(sourceId);
   const target = rowSelector(targetId);
 
-  assertDragRegistered(source, target);
+  assertDragRegistered(gripSelector(sourceId), target);
 
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {
@@ -136,10 +136,10 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     assert.dom(".db-configure__row").exists({ count: 4 });
-    assert.dom('[data-section-id="highlights"]').exists();
-    assert.dom('[data-section-id="reports"]').exists();
-    assert.dom('[data-section-id="traffic"]').exists();
-    assert.dom('[data-section-id="engagement"]').exists();
+    assert.dom('[data-reorderable-key="highlights"]').exists();
+    assert.dom('[data-reorderable-key="reports"]').exists();
+    assert.dom('[data-reorderable-key="traffic"]').exists();
+    assert.dom('[data-reorderable-key="engagement"]').exists();
   });
 
   test(`${REORDER_TEST_PREFIX} toggle click fires @onToggleVisibility with the section id`, async function (assert) {
@@ -158,7 +158,9 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       </template>
     );
 
-    await click('[data-section-id="highlights"] .d-toggle-switch__checkbox');
+    await click(
+      '[data-reorderable-key="highlights"] .d-toggle-switch__checkbox'
+    );
     assert.deepEqual(calls, ["highlights"]);
   });
 
@@ -205,10 +207,16 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     assert
-      .dom(".db-configure__row[data-drag-source][data-drop-target]")
+      .dom(".db-configure__row[data-drop-target]")
       .exists(
         { count: FOUR_SECTIONS.length },
-        "every configure row is both a shared drag source and drop target"
+        "every configure row is a drop target"
+      );
+    assert
+      .dom(".db-configure__row .d-reorderable-list__handle[data-drag-source]")
+      .exists(
+        { count: FOUR_SECTIONS.length },
+        "every configure row's grip carries the drag registration"
       );
   });
 
@@ -349,7 +357,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-configure__drag-handle").exists({ count: 4 });
+    assert.dom(".d-reorderable-list__handle").exists({ count: 4 });
     assert
       .dom(".d-reorder-buttons__button")
       .exists(
@@ -383,7 +391,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     const downArrow =
-      '[data-section-id="highlights"] .d-reorder-buttons__button:last-child';
+      '[data-reorderable-key="highlights"] .d-reorder-buttons__button:last-child';
     await click(downArrow);
 
     assert.deepEqual(
@@ -417,7 +425,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     await click(
-      '[data-section-id="reports"] .d-reorder-buttons__button:first-child'
+      '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
     );
     assert.deepEqual(
       calls.at(-1),
@@ -426,7 +434,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     await click(
-      '[data-section-id="highlights"] .d-reorder-buttons__button:last-child'
+      '[data-reorderable-key="highlights"] .d-reorder-buttons__button:last-child'
     );
     assert.deepEqual(
       calls.at(-1),
@@ -552,7 +560,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     await click(
-      '[data-section-id="reports"] .d-reorder-buttons__button:first-child'
+      '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
     );
     assert.strictEqual(
       a11y.politeMessage,
@@ -561,7 +569,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     await click(
-      '[data-section-id="highlights"] .d-reorder-buttons__button:last-child'
+      '[data-reorderable-key="highlights"] .d-reorder-buttons__button:last-child'
     );
     assert.strictEqual(
       a11y.politeMessage,
@@ -642,21 +650,23 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     assert
-      .dom(".db-configure__drag-handle")
+      .dom(".d-reorderable-list__handle")
       .hasAttribute(
         "tabindex",
         "-1",
         "the handle stays out of the tab order — the arrows carry the keyboard path"
       );
     assert
-      .dom('[data-section-id="reports"] .d-reorder-buttons__button:first-child')
+      .dom(
+        '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
+      )
       .doesNotHaveAttribute(
         "tabindex",
         "the arrows keep their native button tab stop"
       );
     assert
       .dom(
-        '[data-section-id="highlights"] .d-reorder-buttons__button:first-child'
+        '[data-reorderable-key="highlights"] .d-reorder-buttons__button:first-child'
       )
       .hasAttribute(
         "aria-disabled",
@@ -665,7 +675,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       );
     assert
       .dom(
-        '[data-section-id="engagement"] .d-reorder-buttons__button:last-child'
+        '[data-reorderable-key="engagement"] .d-reorder-buttons__button:last-child'
       )
       .hasAttribute(
         "aria-disabled",
@@ -673,7 +683,9 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
         "last row's down arrow is unavailable"
       );
     assert
-      .dom('[data-section-id="reports"] .d-reorder-buttons__button:first-child')
+      .dom(
+        '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
+      )
       .doesNotHaveAttribute(
         "aria-disabled",
         "middle row's up arrow is available"
@@ -706,7 +718,7 @@ module(
 
       // Both paths render: a touch screen can drag from the grip and has no
       // keyboard, so neither is a substitute for the other here.
-      assert.dom(".db-configure__drag-handle").exists({ count: 4 });
+      assert.dom(".d-reorderable-list__handle").exists({ count: 4 });
       assert.dom(".d-reorder-buttons__button").exists({ count: 8 });
     });
 
@@ -724,16 +736,16 @@ module(
       );
 
       assert
-        .dom(".db-configure__drag-handle")
+        .dom(".d-reorderable-list__handle")
         .exists(
           "the grip renders on mobile, so the drag has a target to press"
         );
       assert
-        .dom(".db-configure__row")
+        .dom(".db-configure__row .d-reorderable-list__handle")
         .hasAttribute(
           "data-drag-source",
           "",
-          "a mobile row carries an active drag-source registration"
+          "a mobile grip carries an active drag-source registration"
         );
     });
 
@@ -754,12 +766,12 @@ module(
       );
 
       await click(
-        '[data-section-id="reports"] .d-reorder-buttons__button:first-child'
+        '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
       );
       assert.deepEqual(calls.at(-1), [1, 0]);
 
       await click(
-        '[data-section-id="highlights"] .d-reorder-buttons__button:last-child'
+        '[data-reorderable-key="highlights"] .d-reorder-buttons__button:last-child'
       );
       assert.deepEqual(calls.at(-1), [0, 1]);
     });
@@ -780,7 +792,7 @@ module(
 
       assert
         .dom(
-          '[data-section-id="highlights"] .d-reorder-buttons__button:first-child'
+          '[data-reorderable-key="highlights"] .d-reorder-buttons__button:first-child'
         )
         .hasAttribute(
           "aria-disabled",
@@ -789,7 +801,7 @@ module(
         );
       assert
         .dom(
-          '[data-section-id="engagement"] .d-reorder-buttons__button:last-child'
+          '[data-reorderable-key="engagement"] .d-reorder-buttons__button:last-child'
         )
         .hasAttribute(
           "aria-disabled",
@@ -798,7 +810,7 @@ module(
         );
       assert
         .dom(
-          '[data-section-id="reports"] .d-reorder-buttons__button:first-child'
+          '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
         )
         .doesNotHaveAttribute(
           "aria-disabled",
