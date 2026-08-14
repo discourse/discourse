@@ -1,0 +1,33 @@
+/* The reorderable-list shell. The interaction pieces carry their own styles
+   (d-drag-handle, d-reorder-buttons, d-drag-and-drop); what lives here is only
+   what the list itself owns. */
+
+.d-reorderable-list {
+  /* Reveal mode hides with opacity rather than display, because the arrows are
+     the keyboard path: they must keep their tab stops and reveal themselves the
+     moment one is focused. A touch screen has no hover to reveal with, so the
+     controls stay visible there. */
+
+  &.--reveal-controls {
+    .d-reorderable-list__handle,
+    .d-reorderable-list__arrows {
+      opacity: 0;
+      transition: opacity 0.15s ease-in-out;
+    }
+
+    .d-reorderable-list__row:hover,
+    .d-reorderable-list__row:focus-within {
+      .d-reorderable-list__handle,
+      .d-reorderable-list__arrows {
+        opacity: 1;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .d-reorderable-list__handle,
+      .d-reorderable-list__arrows {
+        opacity: 1;
+      }
+    }
+  }
+}

@@ -396,6 +396,11 @@ en:
 
     reorder_announcement: "Moved %{label} to position %{position} of %{total}"
 
+    reorder:
+      drag_handle: "Drag %{label}"
+      move_up: "Move %{label} up"
+      move_down: "Move %{label} down"
+
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
