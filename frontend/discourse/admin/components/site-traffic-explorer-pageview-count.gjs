@@ -2,10 +2,12 @@ import {
   formatExactPageviewCount,
   formatPageviewCount,
 } from "discourse/admin/lib/format-pageview-count";
-import DTooltip from "discourse/float-kit/components/d-tooltip";
 
 export default <template>
-  <DTooltip @content={{formatExactPageviewCount @value}}>
-    <:trigger>{{yield (formatPageviewCount @value)}}</:trigger>
-  </DTooltip>
+  <span
+    class="fk-d-tooltip__trigger"
+    title={{formatExactPageviewCount @value}}
+  ><span class="fk-d-tooltip__trigger-container">{{yield
+        (formatPageviewCount @value)
+      }}</span></span>
 </template>

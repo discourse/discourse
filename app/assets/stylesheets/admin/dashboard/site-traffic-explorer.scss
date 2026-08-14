@@ -37,8 +37,11 @@
   }
 
   &__empty {
+    border: 1px dashed var(--content-border-color);
     border-radius: var(--d-border-radius);
     padding: var(--space-3) var(--space-4);
+    background: var(--primary-very-low);
+    text-align: center;
   }
 
   &__skeleton {
@@ -97,10 +100,41 @@
   &__metrics {
     .db-section__subintro {
       flex: 1 1 15rem;
+
+      h3 {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: baseline;
+        gap: var(--space-1);
+        color: var(--primary);
+        font-size: var(--font-up-1);
+        font-weight: 700;
+      }
     }
 
     .db-section__metrics {
       align-items: flex-start;
+    }
+
+    .db-section__metric {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      min-width: 0;
+    }
+
+    .db-section__metric-number {
+      overflow-wrap: anywhere;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .db-section__metric-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      width: max-content;
+      max-width: 100%;
+      overflow-wrap: anywhere;
     }
 
     @include viewport.until(md) {
@@ -117,48 +151,6 @@
         width: 100%;
       }
     }
-  }
-
-  &__metric {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    min-width: 0;
-
-    &.--primary {
-      flex-flow: row wrap;
-      align-items: baseline;
-
-      .site-traffic-explorer__metric-value,
-      .site-traffic-explorer__metric-label {
-        color: var(--primary);
-        font-size: var(--font-up-1);
-        font-weight: 700;
-      }
-    }
-  }
-
-  &__metric-value {
-    overflow-wrap: anywhere;
-    font-variant-numeric: tabular-nums;
-  }
-
-  &__metric-label-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    width: max-content;
-    max-width: 100%;
-  }
-
-  &__metric-label {
-    overflow-wrap: anywhere;
-  }
-
-  &__empty {
-    border: 1px dashed var(--content-border-color);
-    background: var(--primary-very-low);
-    text-align: center;
   }
 
   &__cards {
@@ -230,10 +222,6 @@
     color: var(--primary);
     font: inherit;
     text-align: start;
-  }
-
-  &__row-label {
-    @include ellipsis;
   }
 
   &__row-count {
@@ -319,7 +307,6 @@
   }
 
   &__dimension-text {
-    @include ellipsis;
     flex: 1 1 auto;
     min-width: 0;
   }

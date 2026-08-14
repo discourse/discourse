@@ -212,7 +212,7 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                     data-test-site-traffic-row
                     {{on "click" (fn this.filter row)}}
                   >
-                    <span class="site-traffic-explorer__row-label">
+                    <span class="overflow-ellipsis">
                       <SiteTrafficExplorerDimensionLabel
                         @dimension={{this.activeTab.dimension}}
                         @row={{row}}

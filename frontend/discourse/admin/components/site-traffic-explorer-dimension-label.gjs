@@ -36,7 +36,10 @@ export default class SiteTrafficExplorerDimensionLabel extends Component {
           class="site-traffic-explorer__dimension-prefix"
         }}
       {{/if}}
-      <span class="site-traffic-explorer__dimension-text" title={{@row.label}}>
+      <span
+        class="site-traffic-explorer__dimension-text overflow-ellipsis"
+        title={{@row.label}}
+      >
         {{@row.label}}
       </span>
     </span>

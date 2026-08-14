@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -6,7 +7,8 @@ import AdminReportStackedChart from "discourse/admin/components/admin-report-sta
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import SiteTrafficExplorerBreakdownCard from "discourse/admin/components/site-traffic-explorer-breakdown-card";
 import SiteTrafficExplorerFilterPills from "discourse/admin/components/site-traffic-explorer-filter-pills";
-import SiteTrafficExplorerMetric from "discourse/admin/components/site-traffic-explorer-metric";
+import SiteTrafficExplorerPageviewCount from "discourse/admin/components/site-traffic-explorer-pageview-count";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -336,24 +338,47 @@ export default class SiteTrafficExplorer extends Component {
                       {{i18n "admin.site_traffic_explorer.summary"}}
                     </h2>
                     <div class="db-section__subintro">
-                      <SiteTrafficExplorerMetric
-                        @name={{this.primaryMetric.name}}
-                        @label={{this.primaryMetric.label}}
-                        @tooltip={{this.primaryMetric.tooltip}}
-                        @value={{this.primaryMetric.value}}
-                        @compact={{this.primaryMetric.compact}}
-                        @primary={{true}}
-                      />
+                      <h3
+                        data-test-site-traffic-metric={{this.primaryMetric.name}}
+                      >
+                        <SiteTrafficExplorerPageviewCount
+                          @value={{this.primaryMetric.value}}
+                          as |formattedValue|
+                        >
+                          <span>{{formattedValue}}</span>
+                        </SiteTrafficExplorerPageviewCount>
+                        {{this.primaryMetric.label}}
+                      </h3>
                     </div>
                     <div class="db-section__metrics">
                       {{#each this.secondaryMetrics as |metric|}}
-                        <SiteTrafficExplorerMetric
-                          @name={{metric.name}}
-                          @label={{metric.label}}
-                          @tooltip={{metric.tooltip}}
-                          @value={{metric.value}}
-                          @compact={{metric.compact}}
-                        />
+                        <div
+                          class="db-section__metric"
+                          data-test-site-traffic-metric={{metric.name}}
+                        >
+                          <div class="db-section__metric-number">
+                            {{metric.value}}
+                          </div>
+                          <div class="db-section__metric-label">
+                            {{metric.label}}
+                            {{#if metric.tooltip}}
+                              <DTooltip
+                                class="db-section__info"
+                                @identifier={{concat
+                                  "site-traffic-explorer-"
+                                  metric.name
+                                  "-tooltip"
+                                }}
+                                @icon="far-circle-question"
+                                @title={{i18n
+                                  "admin.site_traffic_explorer.metric_information"
+                                }}
+                              >
+                                <:content>{{metric.tooltip}}</:content>
+                              </DTooltip>
+                            {{/if}}
+                          </div>
+                        </div>
                       {{/each}}
                     </div>
                   </section>
