@@ -54,6 +54,7 @@ export default class NewCategory extends DiscourseRoute {
       required_tag_groups: [],
       form_template_ids: [],
       minimum_required_tags: 0,
+      subcategory_list_style: "rows_with_featured_topics",
       category_localizations: [],
     });
   }

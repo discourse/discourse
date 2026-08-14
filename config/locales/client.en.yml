@@ -3338,6 +3338,9 @@ en:
       results_count:
         one: "%{count} icon found"
         other: "%{count} icons found"
+      results_loaded:
+        one: "%{count} icon loaded, more available"
+        other: "%{count} icons loaded, more available"
       favorites: "Favorites"
       selected_icon: "Selected icon: %{iconName}"
       clear: "Clear icon"

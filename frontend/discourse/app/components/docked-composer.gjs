@@ -18,8 +18,8 @@ import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin"
 import { clipboardHelpers } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DEditor from "discourse/ui-kit/d-editor";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 import { i18n } from "discourse-i18n";
 
 // Reusable chat-style "docked" composer. There is deliberately no
@@ -392,24 +392,16 @@ export default class DockedComposer extends Component {
         {{willDestroy this.teardown}}
       >
         {{#if this.resizable}}
-          <div
+          <DResizeSeparator
             class="docked-composer__resize-handle"
-            role="separator"
-            aria-orientation="horizontal"
-            aria-label={{i18n "composer.resize"}}
-            aria-valuenow={{this.dragOffset}}
-            aria-valuemin="0"
-            aria-valuemax={{this.resizeAriaMax}}
-            tabindex="0"
-            {{dResizeEdge
-              value=this.dragOffset
-              min=0
-              max=this.resizeAriaMax
-              axis="vertical"
-              side="end"
-              onResize=this.onResize
-            }}
-          ></div>
+            @axis="vertical"
+            @side="end"
+            @value={{this.dragOffset}}
+            @min={{0}}
+            @max={{this.resizeAriaMax}}
+            @label={{i18n "composer.resize"}}
+            @onResize={{this.onResize}}
+          />
         {{/if}}
         {{#if (has-block "header")}}
           <div class="docked-composer__header">

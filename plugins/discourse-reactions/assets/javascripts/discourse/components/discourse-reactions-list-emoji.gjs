@@ -10,7 +10,7 @@ export default class DiscourseReactionsListEmoji extends Component {
   }
 
   <template>
-    <div class="discourse-reactions-list-emoji" id={{this.elementId}}>
+    <span class="discourse-reactions-list-emoji" id={{this.elementId}}>
       {{#if @reaction.count}}
         {{dEmoji
           @reaction.id
@@ -21,6 +21,6 @@ export default class DiscourseReactionsListEmoji extends Component {
           )
         }}
       {{/if}}
-    </div>
+    </span>
   </template>
 }

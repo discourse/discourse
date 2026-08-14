@@ -1,0 +1,4 @@
+category:
+  reaction_flair:
+    type: icon
+    default: ""

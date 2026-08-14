@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../../chat/schemas/message_blocks"
+
 if defined?(DiscourseWorkflows)
   module DiscourseWorkflows
     module Nodes
@@ -8,6 +10,8 @@ if defined?(DiscourseWorkflows)
           MAX_BUTTONS = 10
           MAX_LABEL_LENGTH = 75
           MAX_VALUE_LENGTH = 2000
+          MAX_ICON_LENGTH = Chat::Schemas::BUTTON_ICON_MAX_LENGTH
+          BUTTON_STYLES = Chat::Schemas::BUTTON_STYLES
           TIMEOUT_ACTIONS = %w[continue fail].freeze
           ACTION_IDS = Array.new(MAX_BUTTONS) { |index| "button_#{index}" }.freeze
 
@@ -119,6 +123,20 @@ if defined?(DiscourseWorkflows)
                         value: {
                           type: :string,
                           required: true,
+                          no_data_expression: true,
+                        },
+                        style: {
+                          type: :options,
+                          required: false,
+                          options: BUTTON_STYLES,
+                          no_data_expression: true,
+                          control_options: {
+                            none: "discourse_workflows.chat_approval.style_none",
+                          },
+                        },
+                        icon: {
+                          type: :icon,
+                          required: false,
                           no_data_expression: true,
                         },
                       },
@@ -251,6 +269,8 @@ if defined?(DiscourseWorkflows)
             rows.each_with_index do |row, index|
               label = row.is_a?(Hash) ? row["label"].to_s : ""
               value = row.is_a?(Hash) ? row["value"].to_s : ""
+              style = row.is_a?(Hash) ? row["style"].to_s : ""
+              icon = row.is_a?(Hash) ? row["icon"].to_s : ""
               position = index + 1
 
               if label.blank?
@@ -276,6 +296,22 @@ if defined?(DiscourseWorkflows)
                   "discourse_workflows.errors.chat_approval.button_value_too_long",
                   position: position,
                   max: MAX_VALUE_LENGTH,
+                )
+              end
+
+              if style.present? && BUTTON_STYLES.exclude?(style)
+                errors << I18n.t(
+                  "discourse_workflows.errors.chat_approval.button_style_invalid",
+                  position: position,
+                  styles: BUTTON_STYLES.join(", "),
+                )
+              end
+
+              if icon.length > MAX_ICON_LENGTH
+                errors << I18n.t(
+                  "discourse_workflows.errors.chat_approval.button_icon_too_long",
+                  position: position,
+                  max: MAX_ICON_LENGTH,
                 )
               end
             end
@@ -313,11 +349,15 @@ if defined?(DiscourseWorkflows)
                 "type" => "actions",
                 "elements" =>
                   buttons.map.with_index do |button, index|
-                    button_block(
-                      button["label"].to_s,
-                      exec_ctx.resume_action_id(ACTION_IDS[index]),
-                      button["value"].to_s,
-                    )
+                    block =
+                      button_block(
+                        button["label"].to_s,
+                        exec_ctx.resume_action_id(ACTION_IDS[index]),
+                        button["value"].to_s,
+                      )
+                    block["style"] = button["style"].to_s if button["style"].present?
+                    block["icon"] = button["icon"].to_s if button["icon"].present?
+                    block
                   end,
               },
             ]

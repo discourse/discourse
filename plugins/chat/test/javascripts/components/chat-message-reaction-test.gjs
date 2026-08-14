@@ -1,9 +1,13 @@
 import { hash } from "@ember/helper";
-import { click, render } from "@ember/test-helpers";
+import { getOwner } from "@ember/owner";
+import { blur, click, focus, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Component | ChatMessageReaction", function (hooks) {
   setupRenderingTest(hooks);
@@ -37,6 +41,71 @@ module("Component | ChatMessageReaction", function (hooks) {
 
     assert.dom(".chat-message-reaction").hasAttribute("title", ":heart:");
     assert.dom(".chat-message-reaction img").hasAttribute("alt", ":heart:");
+  });
+
+  test("is reachable by keyboard unless explicitly non-interactive", async function (assert) {
+    await render(
+      <template>
+        <ChatMessageReaction @reaction={{hash emoji="heart"}} />
+      </template>
+    );
+
+    assert
+      .dom(".chat-message-reaction")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "an omitted @interactive still means interactive"
+      );
+
+    await render(
+      <template>
+        <ChatMessageReaction
+          @reaction={{hash emoji="heart"}}
+          @interactive={{false}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-message-reaction")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "a display-only reaction stays out of the tab order"
+      );
+  });
+
+  test("opens the users popup on focus, not only on hover", async function (assert) {
+    this.siteSettings.enable_new_chat_reactions_popup = true;
+
+    const fabricators = new ChatFabricators(getOwner(this));
+    const message = fabricators.message();
+    const reaction = fabricators.reaction({ emoji: "heart", count: 1 });
+
+    pretender.get(
+      `/chat/${message.channel.id}/${message.id}/reactions-users`,
+      () => response({ users: [], total_rows: 0 })
+    );
+
+    await render(
+      <template>
+        <DMenus />
+        <ChatMessageReaction @reaction={{reaction}} @message={{message}} />
+      </template>
+    );
+
+    await focus(".chat-message-reaction");
+
+    assert
+      .dom("[data-identifier='chat-message-reaction-users']")
+      .exists("focusing the reaction opens the popup");
+
+    await blur(".chat-message-reaction");
+
+    assert
+      .dom("[data-identifier='chat-message-reaction-users']")
+      .doesNotExist("leaving the reaction closes it again");
   });
 
   test("names itself as a reaction rather than just an emoji", async function (assert) {
@@ -82,8 +151,12 @@ module("Component | ChatMessageReaction", function (hooks) {
       </template>
     );
 
-    assert.dom("[data-emoji-name='heart']").hasAria("pressed", "true");
-    assert.dom("[data-emoji-name='+1']").hasAria("pressed", "false");
+    assert
+      .dom("[data-emoji-name='heart']")
+      .hasAria("pressed", "true", "a reaction the user added is pressed");
+    assert
+      .dom("[data-emoji-name='+1']")
+      .hasAria("pressed", "false", "one they have not added is not pressed");
   });
 
   test("is not a toggle where it is only a way to react", async function (assert) {
@@ -99,6 +172,44 @@ module("Component | ChatMessageReaction", function (hooks) {
     // named for its action, so announcing a pressed state on top of that describes
     // neither the control nor its effect
     assert.dom(".chat-message-reaction").doesNotHaveAria("pressed");
+  });
+
+  test("describes who reacted, without folding them into the name", async function (assert) {
+    const reaction = {
+      emoji: "heart",
+      count: 2,
+      users: [
+        { id: 1, username: "bob" },
+        { id: 2, username: "jane" },
+      ],
+    };
+
+    await render(
+      <template><ChatMessageReaction @reaction={{reaction}} /></template>
+    );
+
+    const descriptionId = document
+      .querySelector(".chat-message-reaction")
+      .getAttribute("aria-describedby");
+
+    assert.dom(`#${descriptionId}`).hasClass("sr-only");
+    assert.dom(`#${descriptionId}`).includesText("bob");
+    assert
+      .dom(`.chat-message-reaction #${descriptionId}`)
+      .doesNotExist("the description sits outside the button");
+  });
+
+  test("has no description when nobody has reacted", async function (assert) {
+    await render(
+      <template>
+        <ChatMessageReaction @reaction={{hash emoji="heart" count=0}} />
+      </template>
+    );
+
+    assert
+      .dom(".chat-message-reaction")
+      .doesNotHaveAttribute("aria-describedby");
+    assert.dom(".sr-only").doesNotExist();
   });
 
   test("count of reactions", async function (assert) {

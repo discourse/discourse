@@ -802,6 +802,13 @@ class Reviewable < ActiveRecord::Base
     score
   end
 
+  # The account that the delete user actions destroy. Subclasses that delete a
+  # different account must override this, otherwise the confirmation prompt will
+  # name the wrong user.
+  def target_user
+    target_type == "User" ? target : target_created_by
+  end
+
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(
@@ -810,11 +817,21 @@ class Reviewable < ActiveRecord::Base
         label: "reviewables.actions.reject_user.title",
       )
 
+    # The reject reason modal already acts as a confirmation step, so only ask
+    # for a separate confirmation when it isn't shown.
+    username = target_user&.username
+    confirmable = !require_reject_reason && username.present?
+
     actions.add(:delete_user, bundle: bundle) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.description = "reviewables.actions.reject_user.delete.description"
       a.require_reject_reason = require_reject_reason
+      if confirmable
+        a.confirm_message = "reviewables.actions.reject_user.delete.confirm"
+        a.confirm_message_args = { username: username }
+        a.confirm_destructive = true
+      end
     end
 
     actions.add(:delete_user_block, bundle: bundle) do |a|
@@ -822,6 +839,11 @@ class Reviewable < ActiveRecord::Base
       a.label = "reviewables.actions.reject_user.block.title"
       a.require_reject_reason = require_reject_reason
       a.description = "reviewables.actions.reject_user.block.description"
+      if confirmable
+        a.confirm_message = "reviewables.actions.reject_user.block.confirm"
+        a.confirm_message_args = { username: username }
+        a.confirm_destructive = true
+      end
     end
   end
 

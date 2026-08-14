@@ -19,8 +19,9 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V2 do
       ).to eq(described_class)
     end
 
-    it "declares editable label and value rows with Chat's collection limits" do
+    it "declares editable button rows with Chat's collection limits" do
       buttons = described_class.property_schema.fetch(:buttons)
+      values = buttons.dig(:options, 0, :values)
 
       expect(buttons).to include(
         type: :fixed_collection,
@@ -29,16 +30,26 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V2 do
         default: described_class.default_buttons,
       )
       expect(buttons.dig(:type_options, :sortable)).to eq(true)
-      expect(buttons.dig(:options, 0, :values, :label)).to include(
+      expect(values.fetch(:label)).to include(
         type: :string,
         required: true,
         no_data_expression: true,
       )
-      expect(buttons.dig(:options, 0, :values, :value)).to include(
+      expect(values.fetch(:value)).to include(
         type: :string,
         required: true,
         no_data_expression: true,
       )
+      expect(values.fetch(:style)).to eq(
+        type: :options,
+        required: false,
+        options: Chat::Schemas::BUTTON_STYLES,
+        no_data_expression: true,
+        control_options: {
+          none: "discourse_workflows.chat_approval.style_none",
+        },
+      )
+      expect(values.fetch(:icon)).to eq(type: :icon, required: false, no_data_expression: true)
       expect(described_class.property_schema.fetch(:timeout_action)).to include(
         options: %w[continue fail],
         default: "continue",
@@ -102,8 +113,15 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V2 do
       errors
     end
 
-    it "accepts one through ten buttons at the label and value length boundaries" do
-      one_button = [{ "label" => "L" * 75, "value" => "v" * 2000 }]
+    it "accepts one through ten buttons at all length boundaries" do
+      one_button = [
+        {
+          "label" => "L" * 75,
+          "value" => "v" * 2000,
+          "style" => "transparent",
+          "icon" => "i" * 255,
+        },
+      ]
       ten_buttons =
         Array.new(10) { |index| { "label" => "Button #{index}", "value" => index.to_s } }
 
@@ -116,6 +134,15 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V2 do
         { "label" => "First", "value" => "review:later" },
         { "label" => "Second", "value" => "review:later" },
       ]
+
+      expect(errors_for(rows)).to be_empty
+    end
+
+    it "accepts every supported style" do
+      rows =
+        Chat::Schemas::BUTTON_STYLES.map do |style|
+          { "label" => style, "value" => style, "style" => style }
+        end
 
       expect(errors_for(rows)).to be_empty
     end
@@ -148,6 +175,24 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V2 do
       )
       expect(errors_for([{ "label" => "Choose", "value" => "" }])[:base]).to include(
         I18n.t("discourse_workflows.errors.chat_approval.button_value_required", position: 1),
+      )
+      expect(
+        errors_for([{ "label" => "Choose", "value" => "choice", "style" => "unknown" }])[:base],
+      ).to include(
+        I18n.t(
+          "discourse_workflows.errors.chat_approval.button_style_invalid",
+          position: 1,
+          styles: Chat::Schemas::BUTTON_STYLES.join(", "),
+        ),
+      )
+      expect(
+        errors_for([{ "label" => "Choose", "value" => "choice", "icon" => "i" * 256 }])[:base],
+      ).to include(
+        I18n.t(
+          "discourse_workflows.errors.chat_approval.button_icon_too_long",
+          position: 1,
+          max: 255,
+        ),
       )
     end
   end
@@ -203,14 +248,25 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V2 do
       expect(buttons.map { |button| [button.dig("text", "text"), button["value"]] }).to eq(
         [%w[Approve approve], %w[Deny deny]],
       )
+      expect(buttons.map { |button| button.slice("style", "icon") }).to eq([{}, {}])
     end
 
-    it "creates indexed signed actions for custom, duplicate, punctuation, and long values" do
+    it "creates indexed signed actions and emits only nonblank presentation attributes" do
       long_value = "v" * 2000
       rows = [
-        { "label" => "Review later", "value" => "review:later" },
-        { "label" => "Same outcome", "value" => "review:later" },
-        { "label" => "Long outcome", "value" => long_value },
+        {
+          "label" => "Review later",
+          "value" => "review:later",
+          "style" => "success",
+          "icon" => "check",
+        },
+        {
+          "label" => "Same outcome",
+          "value" => "review:later",
+          "style" => "default",
+          "icon" => "",
+        },
+        { "label" => "Long outcome", "value" => long_value, "style" => "", "icon" => nil },
       ]
       config = {
         "message" => "Choose",
@@ -231,10 +287,34 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V2 do
       expect(buttons.map { |button| button["value"] }).to eq(
         ["review:later", "review:later", long_value],
       )
+      expect(buttons.map { |button| button.slice("style", "icon") }).to eq(
+        [{ "style" => "success", "icon" => "check" }, { "style" => "default" }, {}],
+      )
       expect(payloads.map { |payload| payload["action"] }).to eq(%w[button_0 button_1 button_2])
       expect(buttons.map { |button| button["action_id"] }).to all(
         satisfy { |action_id| action_id.length <= 255 && !action_id.include?(long_value) },
       )
+    end
+
+    it "rejects unsupported presentation attributes before sending a message" do
+      config = {
+        "message" => "Choose",
+        "buttons" => {
+          "values" => [{ "label" => "Choose", "value" => "choice", "style" => "unknown" }],
+        },
+        "channel_id" => channel.id.to_s,
+      }
+      instance = described_class.new(parameters: config)
+
+      expect { instance.execute(build_v2_exec_ctx(config)) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t(
+          "discourse_workflows.errors.chat_approval.button_style_invalid",
+          position: 1,
+          styles: Chat::Schemas::BUTTON_STYLES.join(", "),
+        ),
+      )
+      expect(channel.chat_messages).to be_empty
     end
 
     it "treats an explicitly empty button collection as invalid" do

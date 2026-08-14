@@ -466,11 +466,30 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     svgs_for(SiteSetting.default_theme_id)[searched_icon.strip] || false
   end
 
-  def self.icon_picker_search(keyword, only_available = false)
-    symbols = svgs_for(SiteSetting.default_theme_id)
-    symbols.slice!(*all_icons(SiteSetting.default_theme_id)) if only_available
-    symbols.reject! { |icon_id, _sym| !icon_id.include?(keyword) } if keyword.present?
-    symbols.sort_by(&:first).map { |id, symbol| { id:, symbol: } }
+  def self.icon_picker_search(keyword, only_available, page:, per_page:, theme_id: nil)
+    ids = picker_icon_ids(theme_id, only_available)
+    ids = ids.lazy.select { |id| id.include?(keyword) } if keyword.present?
+    ids = ids.drop(page * per_page).first(per_page + 1)
+
+    has_more = ids.size > per_page
+    ids = ids.take(per_page)
+
+    missing = only_available ? [] : (ids - picker_icon_ids(theme_id, true)).to_set
+    return { icons: ids.map { |id| { id: } }, has_more: } if missing.empty?
+
+    custom = theme_id.present? ? custom_svgs(theme_id) : {}
+    icons =
+      ids.map { |id| missing.include?(id) ? { id:, symbol: custom[id] || core_svgs[id] } : { id: } }
+    { icons:, has_more: }
+  end
+
+  def self.picker_icon_ids(theme_id, only_available)
+    get_set_cache("picker_icon_ids_#{Theme.transform_ids(theme_id).join(",")}_#{only_available}") do
+      symbols = svgs_for(theme_id)
+      in_sprite = all_icons(theme_id).select { |id| symbols.key?(id) }
+
+      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite).sort
+    end
   end
 
   # For use in no_ember .html.erb layouts
@@ -505,11 +524,16 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.settings_icons
     get_set_cache("settings_icons") do
-      # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
+      # includes svg_icon_subset, icon type settings, and any settings containing
+      # _icon (incl. plugin settings)
       site_setting_icons = []
 
       SiteSetting.settings_hash.each do |key, value|
-        site_setting_icons |= value.split("|") if key.to_s.include?("_icon") && String === value
+        next unless String === value
+
+        if key.to_s.include?("_icon") || SiteSetting.type_supervisor.get_type(key) == :icon
+          site_setting_icons |= value.split("|")
+        end
       end
 
       site_setting_icons
@@ -538,12 +562,16 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     Theme
       .where(id: theme_ids)
       .each do |theme|
-        _settings =
-          theme.cached_settings.each do |key, value|
-            if key.to_s.include?("_icon") && String === value
-              theme_icon_settings |= value.split("|")
-            end
+        settings = theme.cached_settings
+        type_info = settings["theme_setting_type_info"] || {}
+
+        settings.each do |key, value|
+          next unless String === value
+
+          if key.to_s.include?("_icon") || type_info.dig(key, :type) == "icon"
+            theme_icon_settings |= value.split("|")
           end
+        end
       end
 
     theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
