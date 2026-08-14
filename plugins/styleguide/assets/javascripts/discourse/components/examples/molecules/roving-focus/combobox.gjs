@@ -53,6 +53,33 @@ export default class RovingFocusComboboxExample extends Component {
   }
 
   @action
+  handleListboxClick(event) {
+    const option = event.target.closest("[data-option-id]");
+    if (option) {
+      this.choose(option);
+    }
+  }
+
+  @action
+  handleListboxMouseDown(event) {
+    event.preventDefault();
+  }
+
+  @action
+  handleTriggerKeydown(event) {
+    if (event.key === "Escape" && this.expanded) {
+      event.preventDefault();
+      this.expanded = false;
+    } else if (
+      !this.expanded &&
+      (event.key === "ArrowDown" || event.key === "ArrowUp")
+    ) {
+      event.preventDefault();
+      this.expanded = true;
+    }
+  }
+
+  @action
   toggle() {
     this.expanded = !this.expanded;
   }
@@ -64,10 +91,11 @@ export default class RovingFocusComboboxExample extends Component {
         class="roving-demo__combobox-trigger"
         role="combobox"
         aria-expanded={{if this.expanded "true" "false"}}
-        aria-controls="roving-demo-combobox-listbox"
+        aria-controls={{if this.expanded "roving-demo-combobox-listbox"}}
         aria-label={{i18n "styleguide.sections.roving_focus.combobox.label"}}
         {{didInsert this.captureController}}
         {{on "click" this.toggle}}
+        {{on "keydown" this.handleTriggerKeydown}}
       >{{this.selectedLabel}}</button>
 
       {{#if this.expanded}}
@@ -75,11 +103,14 @@ export default class RovingFocusComboboxExample extends Component {
           id="roving-demo-combobox-listbox"
           class="roving-demo__combobox-listbox"
           role="listbox"
+          {{on "click" this.handleListboxClick}}
+          {{! eslint-disable ember/template-no-pointer-down-event-binding }}
+          {{on "mousedown" this.handleListboxMouseDown}}
           {{dRovingFocus
             focusStrategy="active-descendant"
             controllerElement=this.controller
             itemSelector=".roving-demo__combobox-option"
-            activeClass="roving-demo__combobox-option--active"
+            activeClass="--active"
             entryFocus="selected-or-first"
             onActivate=this.choose
           }}

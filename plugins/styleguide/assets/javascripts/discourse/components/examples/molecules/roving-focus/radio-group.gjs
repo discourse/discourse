@@ -45,10 +45,10 @@ export default class RovingFocusRadioGroupExample extends Component {
       role="radiogroup"
       aria-label={{i18n "styleguide.sections.roving_focus.radio.label"}}
       {{dRovingFocus
-        orientation="horizontal"
         itemSelector=".roving-demo__radio"
         entryFocus="selected-or-first"
         onActiveChange=this.check
+        wrap=true
       }}
     >
       {{#each this.choices key="id" as |choice|}}

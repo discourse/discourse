@@ -531,10 +531,14 @@
   }
 
   &__combobox-listbox {
+    position: absolute;
+    top: 100%;
+    inset-inline-start: 0;
+    z-index: z("dropdown");
     margin: 0.25em 0 0;
     padding: 0.25em;
     list-style: none;
-    min-width: 10em;
+    min-width: 100%;
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
     background: var(--secondary);
@@ -546,7 +550,7 @@
 
     // The highlight is drawn from a class the modifier toggles, not from focus, because focus
     // never arrives here. Selection is a separate mark and can sit on a different row.
-    &--active {
+    &.--active {
       background: var(--tertiary-low);
     }
 
@@ -625,6 +629,10 @@
       content: "▸";
       display: inline-block;
       width: 1em;
+    }
+
+    &[aria-expanded="false"]:dir(rtl)::before {
+      content: "◂";
     }
 
     &[aria-expanded="true"]::before {
