@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseEvents::SiteSettings::TimeOfDayValidator do
+describe DiscourseEvents::Configuration::TimeOfDayValidator do
   def expect_invalid(val)
     expect(subject.valid_value?(val)).to eq(false)
   end

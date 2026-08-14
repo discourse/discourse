@@ -10,10 +10,10 @@
 libdir = File.join(File.dirname(__FILE__), "vendor/holidays/lib")
 $LOAD_PATH.unshift(libdir) if $LOAD_PATH.exclude?(libdir)
 
-require_relative "lib/discourse_events/site_settings/time_of_day_validator"
-require_relative "lib/discourse_events/site_settings/event_custom_fields_validator"
-require_relative "lib/discourse_events/site_settings/first_day_of_week"
-require_relative "lib/discourse_events/site_settings/upcoming_events_default_view"
+require_relative "lib/discourse_events/configuration/time_of_day_validator"
+require_relative "lib/discourse_events/configuration/event_custom_fields_validator"
+require_relative "lib/discourse_events/configuration/first_day_of_week"
+require_relative "lib/discourse_events/configuration/upcoming_events_default_view"
 
 enabled_site_setting :discourse_events_enabled
 
@@ -228,7 +228,7 @@ require_relative "lib/discourse_events/livestream/chat_channel_extension"
 require_relative "lib/discourse_events/livestream/zoom_url_parser"
 
 Dir
-  .glob(File.expand_path("../lib/discourse_events/site_settings/*.rb", __FILE__))
+  .glob(File.expand_path("../lib/discourse_events/configuration/*.rb", __FILE__))
   .each { |f| require(f) }
 
 after_initialize do

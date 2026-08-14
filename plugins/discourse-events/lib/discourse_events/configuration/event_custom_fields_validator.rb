@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseEvents
-  module SiteSettings
+  module Configuration
     class EventCustomFieldsValidator
       NAME_FORMAT = /\A[a-z0-9]+([_.-][a-z0-9]+)*\z/i
 

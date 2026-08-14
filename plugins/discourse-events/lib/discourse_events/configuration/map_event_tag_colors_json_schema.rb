@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseEvents
-  module SiteSettings
+  module Configuration
     class MapEventTagColorsJsonSchema
       def self.schema
         @schema ||= {

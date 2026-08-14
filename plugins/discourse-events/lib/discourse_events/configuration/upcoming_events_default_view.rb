@@ -3,7 +3,7 @@
 require_dependency "enum_site_setting"
 
 module DiscourseEvents
-  module SiteSettings
+  module Configuration
     class UpcomingEventsDefaultView < EnumSiteSetting
       def self.valid_value?(val)
         values.any? { |v| v[:value].to_s == val.to_s }

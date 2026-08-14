@@ -14,11 +14,11 @@ discourse_calendar:
   all_day_event_start_time:
     default: ""
     client: true
-    validator: "DiscourseEvents::SiteSettings::TimeOfDayValidator"
+    validator: "DiscourseEvents::Configuration::TimeOfDayValidator"
   all_day_event_end_time:
     default: ""
     client: true
-    validator: "DiscourseEvents::SiteSettings::TimeOfDayValidator"
+    validator: "DiscourseEvents::Configuration::TimeOfDayValidator"
   calendar_categories:
     type: list
     list_type: simple
@@ -101,7 +101,7 @@ discourse_calendar:
     list_type: simple
     client: true
     default: ""
-    validator: "DiscourseEvents::SiteSettings::EventCustomFieldsValidator"
+    validator: "DiscourseEvents::Configuration::EventCustomFieldsValidator"
   events_calendar_categories:
     type: category_list
     client: true
@@ -118,19 +118,19 @@ discourse_calendar:
   map_events_to_color:
     client: true
     default: "[]"
-    json_schema: DiscourseEvents::SiteSettings::MapEventTagColorsJsonSchema
+    json_schema: DiscourseEvents::Configuration::MapEventTagColorsJsonSchema
   map_events_title:
     client: true
     default: ""
-    json_schema: DiscourseEvents::SiteSettings::MapEventsTitleJsonSchema
+    json_schema: DiscourseEvents::Configuration::MapEventsTitleJsonSchema
   calendar_first_day_of_week:
     type: enum
-    enum: "DiscourseEvents::SiteSettings::FirstDayOfWeek"
+    enum: "DiscourseEvents::Configuration::FirstDayOfWeek"
     default: monday
     client: true
   calendar_upcoming_events_default_view:
     type: enum
-    enum: "DiscourseEvents::SiteSettings::UpcomingEventsDefaultView"
+    enum: "DiscourseEvents::Configuration::UpcomingEventsDefaultView"
     default: month
     client: true
   enable_events_category_type_setup:
