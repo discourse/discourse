@@ -13,6 +13,7 @@ import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { NO_VALUE_OPTION } from "discourse/ui-kit/d-select";
 import I18n, { i18n } from "discourse-i18n";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
@@ -1021,6 +1022,137 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert.dom(".workflows-property-engine__collection-row").exists();
     assert.strictEqual(this.formApi.get("entries.values").length, 1);
+  });
+
+  test("edits optional fixed collection styles and icons without expressions", async function (assert) {
+    this.setProperties({
+      configuration: {
+        buttons: {
+          values: [{ label: "Approve", value: "approve" }],
+        },
+      },
+      formApi: null,
+      nodeType: "action:chat_approval",
+      schema: {
+        buttons: {
+          type: "fixed_collection",
+          options: [
+            {
+              name: "values",
+              values: {
+                label: {
+                  type: "string",
+                  required: true,
+                  no_data_expression: true,
+                },
+                value: {
+                  type: "string",
+                  required: true,
+                  no_data_expression: true,
+                },
+                style: {
+                  type: "options",
+                  required: false,
+                  options: [
+                    "default",
+                    "primary",
+                    "danger",
+                    "success",
+                    "flat",
+                    "transparent",
+                  ],
+                  no_data_expression: true,
+                  control_options: {
+                    none: "none_placeholder",
+                  },
+                },
+                icon: {
+                  type: "icon",
+                  required: false,
+                  no_data_expression: true,
+                },
+              },
+            },
+          ],
+          type_options: {
+            multiple_values: true,
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const row = ".workflows-property-engine__collection-row";
+    const styleField = '[data-name="buttons.values.0.style"]';
+    const iconField = '[data-name="buttons.values.0.icon"]';
+
+    assert.dom(styleField).exists("the optional style is always shown");
+    assert.dom(iconField).exists("the optional icon is always shown");
+    assert
+      .dom(`${row} .workflows-property-engine__mode-control`)
+      .doesNotExist("the button fields do not offer expression controls");
+
+    await select(`${styleField} select`, "primary");
+
+    assert.strictEqual(
+      this.formApi.get("buttons.values.0.style"),
+      "primary",
+      "the nested style is selected"
+    );
+    assert
+      .dom(`${styleField} option[value="${NO_VALUE_OPTION}"]`)
+      .hasText(
+        i18n("none_placeholder"),
+        "the opt-in no-value option remains available after selection"
+      );
+
+    await click(`${iconField} .d-icon-grid-picker-trigger`);
+    await waitFor("[data-icon-id='gear']");
+    await click("[data-icon-id='gear']");
+
+    assert.strictEqual(
+      this.formApi.get("buttons.values.0.icon"),
+      "gear",
+      "the nested icon is selected"
+    );
+    assert
+      .dom(`${iconField} .d-icon-grid-picker__clear`)
+      .exists("the optional icon can be cleared");
+
+    await select(`${styleField} select`, NO_VALUE_OPTION);
+    await click(`${iconField} .d-icon-grid-picker__clear`);
+
+    assert.strictEqual(
+      this.formApi.get("buttons.values.0.style"),
+      null,
+      "the nested style is cleared"
+    );
+    assert.strictEqual(
+      this.formApi.get("buttons.values.0.icon"),
+      null,
+      "the nested icon is cleared"
+    );
   });
 
   test("reorders sortable fixed collection items", async function (assert) {
