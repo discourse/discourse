@@ -505,11 +505,16 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.settings_icons
     get_set_cache("settings_icons") do
-      # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
+      # includes svg_icon_subset, icon type settings, and any settings containing
+      # _icon (incl. plugin settings)
       site_setting_icons = []
 
       SiteSetting.settings_hash.each do |key, value|
-        site_setting_icons |= value.split("|") if key.to_s.include?("_icon") && String === value
+        next unless String === value
+
+        if key.to_s.include?("_icon") || SiteSetting.type_supervisor.get_type(key) == :icon
+          site_setting_icons |= value.split("|")
+        end
       end
 
       site_setting_icons
@@ -538,12 +543,16 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     Theme
       .where(id: theme_ids)
       .each do |theme|
-        _settings =
-          theme.cached_settings.each do |key, value|
-            if key.to_s.include?("_icon") && String === value
-              theme_icon_settings |= value.split("|")
-            end
+        settings = theme.cached_settings
+        type_info = settings["theme_setting_type_info"] || {}
+
+        settings.each do |key, value|
+          next unless String === value
+
+          if key.to_s.include?("_icon") || type_info.dig(key, :type) == "icon"
+            theme_icon_settings |= value.split("|")
           end
+        end
       end
 
     theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
