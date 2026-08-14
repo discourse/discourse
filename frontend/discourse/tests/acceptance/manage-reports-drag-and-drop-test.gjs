@@ -48,19 +48,19 @@ const REPORTS = [
 ];
 
 function rowSelector(key) {
-  return `.manage-reports__row[data-identifier="${key}"]`;
+  return `.manage-reports__row[data-reorderable-key="${key}"]`;
 }
 
 // A drag starts on the grip rather than anywhere on the row, so a press meant to
 // scroll still scrolls. The row owns the source data, while the shared helper
 // dispatches the browser events on the grip carrying the draggable registration.
 function gripSelector(key) {
-  return `${rowSelector(key)} .manage-reports__grip`;
+  return `${rowSelector(key)} .d-reorderable-list__handle`;
 }
 
 function enabledKeys() {
   return findAll(".manage-reports__row.--enabled").map(
-    (row) => row.dataset.identifier
+    (row) => row.dataset.reorderableKey
   );
 }
 
@@ -74,7 +74,7 @@ async function dragReport(sourceKey, targetKey, position) {
   const source = rowSelector(sourceKey);
   const target = rowSelector(targetKey);
 
-  assertDragRegistered(source, target);
+  assertDragRegistered(gripSelector(sourceKey), target);
 
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {
@@ -128,11 +128,11 @@ acceptance("Manage reports drag and drop", function (needs) {
   test(`${REORDER_TEST_PREFIX} renders the grip alongside the arrows on desktop`, async function (assert) {
     await openModal(this);
 
-    assert.dom(".manage-reports__grip").exists({ count: 3 });
+    assert.dom(".d-reorderable-list__handle").exists({ count: 2 });
     assert
       .dom(".d-reorder-buttons__button")
       .exists(
-        { count: 6 },
+        { count: 4 },
         "desktop keeps a keyboard path to reorder, not only the pointer drag"
       );
   });
@@ -246,10 +246,15 @@ acceptance("Manage reports drag and drop", function (needs) {
     );
 
     assert
-      .dom(".manage-reports__row.--enabled[data-drag-source][data-drop-target]")
+      .dom(".manage-reports__row.--enabled[data-drop-target]")
+      .exists({ count: 2 }, "every enabled reorderable row is a drop target");
+    assert
+      .dom(
+        ".manage-reports__row.--enabled .d-reorderable-list__handle[data-drag-source]"
+      )
       .exists(
         { count: 2 },
-        "every enabled reorderable row is both a shared source and target"
+        "every enabled row's grip carries the drag registration"
       );
   });
 

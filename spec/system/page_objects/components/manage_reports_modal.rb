@@ -21,15 +21,15 @@ module PageObjects
       end
 
       def enabled_identifiers
-        all("#{MODAL} #{ENABLED_ROW}").map { |el| el["data-identifier"] }
+        all("#{MODAL} #{ENABLED_ROW}").map { |el| el["data-reorderable-key"] }
       end
 
       def has_all_row?(identifier)
-        has_css?("#{MODAL} #{ROW}[data-identifier='#{identifier}']")
+        has_css?("#{MODAL} #{ROW}[data-reorderable-key='#{identifier}']")
       end
 
       def has_no_all_row?(identifier)
-        has_no_css?("#{MODAL} #{ROW}[data-identifier='#{identifier}']")
+        has_no_css?("#{MODAL} #{ROW}[data-reorderable-key='#{identifier}']")
       end
 
       def toggle(identifier)
@@ -38,17 +38,17 @@ module PageObjects
       end
 
       def has_toggle_on?(identifier)
-        has_css?("#{MODAL} #{ENABLED_ROW}[data-identifier='#{identifier}']")
+        has_css?("#{MODAL} #{ENABLED_ROW}[data-reorderable-key='#{identifier}']")
       end
 
       def has_toggle_off?(identifier)
-        has_css?("#{MODAL} #{ROW}[data-identifier='#{identifier}']") &&
-          has_no_css?("#{MODAL} #{ENABLED_ROW}[data-identifier='#{identifier}']")
+        has_css?("#{MODAL} #{ROW}[data-reorderable-key='#{identifier}']") &&
+          has_no_css?("#{MODAL} #{ENABLED_ROW}[data-reorderable-key='#{identifier}']")
       end
 
       def toggle_for(identifier)
         PageObjects::Components::DToggleSwitch.new(
-          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] .d-toggle-switch__checkbox",
+          "#{MODAL} #{ROW}[data-reorderable-key='#{identifier}'] .d-toggle-switch__checkbox",
         )
       end
 
@@ -96,7 +96,7 @@ module PageObjects
 
       def drag_report(source_identifier, target_identifier)
         drag_and_drop(
-          source: "#{row_selector(source_identifier)} .manage-reports__grip",
+          source: "#{row_selector(source_identifier)} .d-reorderable-list__handle",
           target: row_selector(target_identifier),
           target_position: {
             x: 100,
@@ -114,12 +114,12 @@ module PageObjects
         # order.
         state = disabled ? "[aria-disabled='true']" : ":not([aria-disabled])"
 
-        "#{row_selector(identifier)} .manage-reports__arrows " \
+        "#{row_selector(identifier)} .d-reorder-buttons " \
           "button#{state} .d-icon-chevron-#{direction}"
       end
 
       def row_selector(identifier)
-        "#{MODAL} #{ROW}[data-identifier='#{identifier}']"
+        "#{MODAL} #{ROW}[data-reorderable-key='#{identifier}']"
       end
     end
   end
