@@ -59,6 +59,17 @@ RSpec.describe GitUtils do
     end
   end
 
+  describe ".last_commit_date" do
+    it "disables signature output" do
+      timestamp = "1786671289"
+      GitUtils
+        .expects(:try_git)
+        .with('git -c log.showSignature=false log -1 --format="%ct"', nil)
+        .returns(timestamp)
+      expect(GitUtils.last_commit_date).to eq(DateTime.strptime(timestamp, "%s"))
+    end
+  end
+
   describe ".has_commit?" do
     it "validates commit existence and format" do
       within_temp_git_repo do
