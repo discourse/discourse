@@ -561,7 +561,6 @@ module(
       typeAhead.handle(
         new KeyboardEvent("keydown", { key: "b", cancelable: true }),
         {
-          enabled: true,
           editableController: false,
           logicalCount: undefined,
           items: () => [apple, banana],

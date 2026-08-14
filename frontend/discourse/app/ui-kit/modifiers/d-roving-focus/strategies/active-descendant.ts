@@ -49,13 +49,6 @@ export default class ActiveDescendantStrategy {
     }
     this.#scope = scope;
     this.#config = config;
-    const target = this.current(this.#scope.all());
-    if (target && this.#activeId) {
-      if (config.activeClass) {
-        target.classList.add(config.activeClass);
-      }
-      this.#controller?.setAttribute("aria-activedescendant", this.#activeId);
-    }
   }
 
   current(items: HTMLElement[]): HTMLElement | null {

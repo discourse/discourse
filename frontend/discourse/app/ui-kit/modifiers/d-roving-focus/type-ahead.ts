@@ -7,7 +7,6 @@ const COLLATOR = new Intl.Collator(undefined, {
 const LAPSE_MS = 1000;
 
 export interface TypeAheadContext {
-  enabled: boolean;
   editableController: boolean;
   logicalCount: number | undefined;
 
@@ -103,7 +102,7 @@ export default class TypeAhead {
   }
 
   #claims(event: KeyboardEvent, context: TypeAheadContext): boolean {
-    if (!context.enabled || event.key.length !== 1) {
+    if (event.key.length !== 1) {
       return false;
     }
     if (event.metaKey || (event.ctrlKey && !event.altKey)) {

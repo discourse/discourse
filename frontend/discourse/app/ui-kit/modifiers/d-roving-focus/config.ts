@@ -45,6 +45,8 @@ export function normalizeConfig(named: DRovingFocusArgs): DRovingFocusConfig {
     tabStop: named.tabStop ?? true,
     restoreLostFocus: named.restoreLostFocus ?? true,
     activeClass: named.activeClass ?? null,
+    // This read is load-bearing even though the value is never consulted: consuming the
+    // tag is what makes a changed `itemsKey` re-run `modify()` and reconcile the cursor.
     itemsKey: named.itemsKey,
     resetKey: named.resetKey,
     controllerElement: named.controllerElement,
