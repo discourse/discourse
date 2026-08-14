@@ -116,6 +116,12 @@ interface DReorderableListSignature<T> {
      * value `"@index"` opts into index-based identity for primitive
      * collections whose values may repeat. Omitted, object identity is used,
      * which is only safe when the same objects are passed on every render.
+     *
+     * Index identity is positional by definition: after a move, rows keep
+     * their positions while items flow through them, so focus and drag state
+     * stay with a position rather than following the moved item. That is how
+     * position-addressed value lists already behave, and is the trade-off
+     * accepted when items carry no identity of their own.
      */
     key?: string;
 
@@ -158,7 +164,12 @@ interface DReorderableListSignature<T> {
     /** Optional ARIA role for the list element. */
     role?: string;
 
-    /** Optional ARIA role for each row element. */
+    /**
+     * Optional ARIA role for each row element. Use roles that permit
+     * interactive descendants (such as `row`): a role whose children are
+     * presentational (`option`, `menuitem`, `tab`) flattens the rendered
+     * controls out of the accessibility tree.
+     */
     itemRole?: string;
 
     /**
@@ -367,11 +378,15 @@ export default class DReorderableList<T> extends Component<
     });
 
     const movableRows = rows.filter((row) => row.movable);
+    // With a single movable item every direction is a no-op, so both arrows
+    // are marked unavailable even under `@wrap` — wrapping a list of one
+    // would otherwise leave enabled-looking controls that never do anything.
+    const alone = movableRows.length < 2;
     for (const [seqIndex, row] of movableRows.entries()) {
       row.isFirst = seqIndex === 0;
       row.isLast = seqIndex === movableRows.length - 1;
-      row.disableUp = !wrap && row.isFirst;
-      row.disableDown = !wrap && row.isLast;
+      row.disableUp = alone || (!wrap && row.isFirst);
+      row.disableDown = alone || (!wrap && row.isLast);
     }
 
     return rows;
