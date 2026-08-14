@@ -96,7 +96,16 @@ module DiscourseAi
       end
 
       def self.schedule_reply(post)
-        return if is_bot_user_id?(post.user_id)
+        if is_bot_user_id?(post.user_id)
+          # Rule 4: an AI's post may also summon via Rule 2, but only as a
+          # single hop directly after a human post. This lets a model that
+          # mentions another agent in its answer (e.g. "I'll ask @ai_x to
+          # regenerate") actually trigger it, while preventing bot->bot
+          # chains and feedback loops.
+          previous =
+            post.topic.posts.where("post_number < ?", post.post_number).order(:post_number).last
+          return if previous.nil? || is_bot_user_id?(previous.user_id)
+        end
         mentionables = nil
 
         if post.topic.private_message?
@@ -118,24 +127,19 @@ module DiscourseAi
 
         mentions = nil
         if mentionables.present? || (bot_user && post.topic.private_message?)
-          mentions = post.mentions.map(&:downcase)
+          mentions = explicit_mentions(post)
         end
 
         if mentionables.present?
-          # explicit @mentions take priority (fix: replying to a bot's post and
-          # mentioning a different bot used to pick the replied-to bot first)
-          mentioned = mentionables.find { |mentionable| mentions.include?(mentionable[:username]) }
+          # Rule 2: the FIRST explicitly mentioned agent (typing order) wins.
+          # Only one responder, ever.
+          mentionables_by_username = mentionables.index_by { |m| m[:username] }
+          mentioned = mentions.lazy.filter_map { |username| mentionables_by_username[username] }.first
 
-          # fallback: replying to a bot's post without mentioning anyone
-          if !mentioned && post.mentions.empty? && post.reply_to_post_number && post.reply_to_post&.user
-            mentioned =
-              mentionables.find do |mentionable|
-                mentionable[:username] == post.reply_to_post.user.username_lower
-              end
-          end
-
-          # direct PM to mentionable
-          if !mentioned && bot_user
+          # PMs keep the stock dynamic: a bot invited to the conversation may
+          # answer messages that do not mention it (Rule 3 applies to public
+          # topics only).
+          if !mentioned && post.topic.private_message? && bot_user
             mentioned = mentionables.find { |mentionable| bot_user.id == mentionable[:user_id] }
           end
 
@@ -143,8 +147,12 @@ module DiscourseAi
           bot_user ||= User.find_by(id: mentioned[:user_id]) if mentioned
         end
 
+        # Rule 3: no proactive replies in public topics — explicit mentions are
+        # the only trigger.
+        return if !mentioned && !post.topic.private_message?
+
         if !mentioned && bot_user && post.reply_to_post_number && !post.reply_to_post.user&.bot?
-          # replying to a non-bot user
+          # replying to a non-bot user (PM)
           return
         end
 
@@ -197,9 +205,23 @@ module DiscourseAi
 
           bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
 
+          # dedup guard: one post -> at most one enqueued AI request
+          return if !Discourse.redis.set("ai_reply_dedup:#{post.id}", "1", nx: true, ex: 600)
+
           bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new)
           new(bot).update_playground_with(post, authorization_user: authorization_user)
         end
+      end
+
+      def self.explicit_mentions(post)
+        # Mentions the user actually typed, excluding [quote] blocks and
+        # preserving typing order (Rule 2).
+        raw = post.raw.to_s.gsub(/\[quote[^\]]*\].*?\[\/quote\]/m, " ")
+        raw
+          .scan(/(?:^|[\s(>])@([a-zA-Z0-9_.-]+)/)
+          .flatten
+          .map(&:downcase)
+          .uniq
       end
 
       def self.reply_to_post(
@@ -577,6 +599,7 @@ module DiscourseAi
               PostCreator.create!(
                 reply_user,
                 topic_id: post.topic_id,
+                reply_to_post_number: post.reply_to_post_number,
                 raw: "",
                 skip_validations: true,
                 skip_jobs: true,
@@ -701,6 +724,7 @@ module DiscourseAi
             PostCreator.create!(
               reply_user,
               topic_id: post.topic_id,
+              reply_to_post_number: post.reply_to_post_number,
               raw: reply,
               skip_validations: true,
               post_type: post_type,
@@ -740,6 +764,7 @@ module DiscourseAi
           PostCreator.create!(
             bot.bot_user,
             topic_id: post.topic_id,
+            reply_to_post_number: post.reply_to_post_number,
             raw: error_message,
             skip_validations: true,
             skip_guardian: true,
