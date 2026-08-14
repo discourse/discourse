@@ -203,19 +203,24 @@ en:
       node_unavailable:
         requires_assign: "Requires the Assign plugin to be enabled"
       nodes:
-        "action:assign_topic": "Assign topic"
+        "action:assign_topic": "Assign topic or post"
         "action:check_assignment": "Check assignment"
         "trigger:assigned": "Assigned"
       node_descriptions:
-        "action:assign_topic": "Assign or unassign a topic"
+        "action:assign_topic": "Assign or unassign a topic or post"
         "action:check_assignment": "Check whether a user or group is assigned to a topic or post"
         "trigger:assigned": "Fires when a topic or post is assigned"
       assign_topic:
+        resource: "Resource"
+        resources:
+          topic: "Topic"
+          post: "Post"
         operation: "Operation"
         operations:
           assign: "Assign"
           unassign: "Unassign"
         topic_id: "Topic ID"
+        post_id: "Post ID"
         assignee: "Assignee"
         replace_existing: "Replace existing assignment"
       check_assignment:

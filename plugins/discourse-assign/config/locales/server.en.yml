@@ -61,7 +61,7 @@ en:
       quarterly: "quarterly"
     discourse_workflows:
       assign_topic:
-        error: "Failed to assign topic: %{reason}"
+        error: "Failed to assign: %{reason}"
       check_assignment:
         unknown_target_type: "Unknown assignment target type: %{target_type}"
   assign_mailer:
