@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
 import {
+  clearRender,
   find,
   render,
   settled,
@@ -12,7 +13,10 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import {
+  settleGestureFrame,
+  stubPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 
 module("Integration | ui-kit | DResizeSeparator", function (hooks) {
@@ -456,7 +460,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
             @min={{100}}
             @max={{500}}
             @label="Resize the thing"
-            @observe={{resolve}}
+            @measure={{resolve}}
             class="my-handle"
           />
         </div>
@@ -549,7 +553,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
           @min={{100}}
           @max={{500}}
           @label="Resize the thing"
-          @observe={{state.target}}
+          @measure={{state.target}}
           class="my-handle"
         />
       </template>
@@ -600,8 +604,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       clientY: 400,
     });
     await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
-    await new Promise(requestAnimationFrame);
-    await settled();
+    await settleGestureFrame();
     await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: 360 });
 
     // Without a starting size there is nothing to resize *from*, so the honest
@@ -779,5 +782,372 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
         "400",
         "a size beyond the maximum is announced as the maximum"
       );
+  });
+
+  test("@measure supplies the size and bounds when none are given", async function (assert) {
+    const previews = [];
+    const commits = [];
+    const preview = (size) => previews.push(size);
+    const commit = (size) => commits.push(size);
+    const findBox = (separator) =>
+      separator.closest(".fixture")?.querySelector(".box");
+
+    await render(
+      <template>
+        <div class="fixture">
+          <div
+            class="box"
+            style="height: 300px; min-height: 100px; max-height: 500px"
+          ></div>
+          <DResizeSeparator
+            @axis="vertical"
+            @side="end"
+            @measure={{findBox}}
+            @label="Resize the thing"
+            @onResize={{preview}}
+            @onResizeEnd={{commit}}
+            class="my-handle"
+          />
+        </div>
+      </template>
+    );
+
+    const { element: handle } = stubPointerCapture(".my-handle");
+    await triggerEvent(handle, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 400,
+    });
+    await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
+    await settleGestureFrame();
+    await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: 360 });
+
+    // On the outcome rather than the cadence, as the sibling drags do: how many
+    // previews precede a commit belongs to the modifier's own suite.
+    assert.deepEqual(
+      commits,
+      [340],
+      "the gesture runs from the box's own height without being told it"
+    );
+    assert.true(previews.length > 0, "previews arrived at all");
+    assert.true(
+      previews.every((size) => size === 340),
+      "and every one of them agrees with the commit"
+    );
+    assert
+      .dom(".my-handle")
+      .hasAttribute("aria-valuemin", "100", "the minimum comes from the box")
+      .hasAttribute("aria-valuemax", "500", "and so does the maximum");
+  });
+
+  test("@measure re-reads the box, so a second drag starts where the first left it", async function (assert) {
+    const commits = [];
+    const commit = (size) => commits.push(size);
+    const findBox = (separator) =>
+      separator.closest(".fixture")?.querySelector(".box");
+    // The box really takes the size, the way a consumer applies it.
+    const apply = (size) => (find(".box").style.height = `${size}px`);
+
+    await render(
+      <template>
+        <div class="fixture">
+          <div class="box" style="height: 300px; min-height: 100px"></div>
+          <DResizeSeparator
+            @axis="vertical"
+            @side="end"
+            @measure={{findBox}}
+            @max={{900}}
+            @label="Resize the thing"
+            @onResize={{apply}}
+            @onResizeEnd={{commit}}
+            class="my-handle"
+          />
+        </div>
+      </template>
+    );
+
+    const { element: handle } = stubPointerCapture(".my-handle");
+    for (const [from, to] of [
+      [400, 360],
+      [400, 380],
+    ]) {
+      await triggerEvent(handle, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientY: from,
+      });
+      await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: to });
+      await settleGestureFrame();
+      await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: to });
+    }
+
+    // Read once and frozen, the second drag would start from 300 again and
+    // commit 320. This is the trap that made every consumer pass a function.
+    assert.deepEqual(
+      commits,
+      [340, 360],
+      "the second gesture grows from the size the first one left"
+    );
+  });
+
+  test("explicit sizes win over @measure", async function (assert) {
+    const reports = [];
+    const record = (size) => reports.push(size);
+    const findBox = (separator) =>
+      separator.closest(".fixture")?.querySelector(".box");
+    const size = () => 120;
+
+    await render(
+      <template>
+        <div class="fixture">
+          <div
+            class="box"
+            style="height: 300px; min-height: 20px; max-height: 700px"
+          ></div>
+          <DResizeSeparator
+            @axis="vertical"
+            @side="end"
+            @measure={{findBox}}
+            @value={{size}}
+            @min={{0}}
+            @max={{800}}
+            @label="Resize the thing"
+            @onResizeEnd={{record}}
+            class="my-handle"
+          />
+        </div>
+      </template>
+    );
+
+    const { element: handle } = stubPointerCapture(".my-handle");
+    await triggerEvent(handle, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 400,
+    });
+    await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
+    await settleGestureFrame();
+    await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: 360 });
+
+    // A consumer whose number is not a measurement of the box keeps its own,
+    // and the box's own 20/700 are not what bound it either.
+    assert.deepEqual(
+      reports,
+      [160],
+      "the supplied size is used, not the box's 300"
+    );
+    assert
+      .dom(".my-handle")
+      .hasAttribute("aria-valuemin", "0", "the supplied minimum wins")
+      .hasAttribute("aria-valuemax", "800", "and so does the supplied maximum");
+  });
+
+  test("@measure takes its bounds from the axis being resized", async function (assert) {
+    const findBox = (separator) =>
+      separator.closest(".fixture")?.querySelector(".box");
+
+    await render(
+      <template>
+        <div class="fixture">
+          <div
+            class="box"
+            style="width: 220px; min-width: 60px; max-width: 400px;
+              height: 300px; min-height: 111px; max-height: 999px"
+          ></div>
+          <DResizeSeparator
+            @axis="horizontal"
+            @measure={{findBox}}
+            @label="Resize the panel"
+            class="my-handle"
+          />
+        </div>
+      </template>
+    );
+
+    // The vertical values are deliberately distinctive: reading `minHeight` or
+    // `maxHeight` here would announce 111 or 999, which a size-only assertion
+    // would not notice. Which viewport dimension caps which axis is pinned
+    // separately below, since a declared maximum sits under both.
+    assert
+      .dom(".my-handle")
+      .hasAttribute(
+        "aria-valuemin",
+        "60",
+        "the width minimum, not the height's"
+      )
+      .hasAttribute("aria-valuemax", "400", "and the width maximum");
+  });
+
+  test("an undeclared maximum is capped by the viewport dimension of its own axis", async function (assert) {
+    const findBox = (separator) =>
+      separator.closest(".fixture")?.querySelector(".box");
+
+    await render(
+      <template>
+        <div class="fixture">
+          <div class="box" style="width: 220px; height: 300px"></div>
+          <DResizeSeparator
+            @axis="horizontal"
+            @measure={{findBox}}
+            @label="Resize the panel"
+            class="my-handle"
+          />
+        </div>
+      </template>
+    );
+
+    // With nothing declared, the cap is all that bounds it, so this is the only
+    // place the axis of the cap itself is observable. Every other fixture
+    // declares a maximum below both viewport dimensions.
+    assert
+      .dom(".my-handle")
+      .hasAttribute(
+        "aria-valuemax",
+        String(document.documentElement.clientWidth),
+        "the width of the viewport, not its height"
+      );
+  });
+
+  test("a minimum that is not a pixel length falls back to the floor", async function (assert) {
+    const findBox = (separator) =>
+      separator.closest(".fixture")?.querySelector(".box");
+
+    await render(
+      <template>
+        <div class="fixture" style="height: 800px">
+          {{! A percentage is the dangerous one: unlike `min-content` it parses
+            to a plausible number, so only checking the unit catches it. }}
+          <div class="box" style="height: 300px; min-height: 50%"></div>
+          <DResizeSeparator
+            @axis="vertical"
+            @measure={{findBox}}
+            @label="Resize the thing"
+            class="my-handle"
+          />
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".my-handle")
+      .hasAttribute(
+        "aria-valuemin",
+        "250",
+        "the floor stands in, rather than 50 being read as pixels"
+      );
+    // The floor is also what an unresolved box reports, so this separates
+    // "fell back" from "never found the box at all".
+    assert
+      .dom(".my-handle")
+      .hasAttribute("aria-valuenow", /\d/, "and the box itself was measured");
+  });
+
+  test("@measure reads the axis being resized", async function (assert) {
+    const findBox = (separator) =>
+      separator.closest(".fixture")?.querySelector(".box");
+
+    await render(
+      <template>
+        <div class="fixture">
+          <div class="box" style="width: 220px; height: 300px"></div>
+          <DResizeSeparator
+            @axis="horizontal"
+            @measure={{findBox}}
+            @label="Resize the panel"
+            class="my-handle"
+          />
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".my-handle")
+      .hasAttribute(
+        "aria-valuenow",
+        "220",
+        "a horizontal resize measures width, not height"
+      );
+  });
+
+  test("a gesture that already ended is not committed again at teardown", async function (assert) {
+    const ends = [];
+    const record = (size) => ends.push(size);
+    const size = () => 300;
+
+    await render(
+      <template>
+        <DResizeSeparator
+          @axis="vertical"
+          @side="end"
+          @value={{size}}
+          @min={{100}}
+          @max={{500}}
+          @label="Resize the thing"
+          @onResizeEnd={{record}}
+          class="my-handle"
+        />
+      </template>
+    );
+
+    const { element: handle } = stubPointerCapture(".my-handle");
+    await triggerEvent(handle, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 400,
+    });
+    await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
+    await settleGestureFrame();
+    await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: 360 });
+
+    assert.deepEqual(ends, [340], "the release committed once");
+
+    await clearRender();
+
+    // Leaving the gesture marked open on a normal end would commit the same
+    // size a second time here, which the sibling test above cannot see.
+    assert.deepEqual(ends, [340], "and teardown has nothing left to commit");
+  });
+
+  test("a gesture still open at teardown is closed once", async function (assert) {
+    const ends = [];
+    const record = (size) => ends.push(size);
+    const size = () => 300;
+
+    await render(
+      <template>
+        <DResizeSeparator
+          @axis="vertical"
+          @side="end"
+          @value={{size}}
+          @min={{100}}
+          @max={{500}}
+          @label="Resize the thing"
+          @onResizeEnd={{record}}
+          class="my-handle"
+        />
+      </template>
+    );
+
+    const { element: handle } = stubPointerCapture(".my-handle");
+    await triggerEvent(handle, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 400,
+    });
+    await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
+    await settleGestureFrame();
+
+    assert.deepEqual(ends, [], "nothing committed while the gesture is held");
+
+    // The pointer is still down. The gesture engine reports nothing when the
+    // element goes, so without this the consumer never learns the gesture ended
+    // and whatever it opened at the start stays open.
+    await clearRender();
+
+    assert.deepEqual(
+      ends,
+      [340],
+      "teardown commits the last size the gesture reported"
+    );
   });
 });

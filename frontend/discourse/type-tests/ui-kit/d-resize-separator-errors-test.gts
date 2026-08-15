@@ -19,6 +19,12 @@ const Negatives = <template>
     @max={{px}}
     @label="Resize"
   />
+
+  <DResizeSeparator
+    {{! @glint-expect-error - the box is an element or a function returning one }}
+    @measure={{px}}
+    @label="Resize"
+  />
 </template>;
 
 export default Negatives;

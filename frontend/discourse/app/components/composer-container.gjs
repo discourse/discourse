@@ -25,11 +25,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import {
-  measuredHeight,
-  measuredMaxHeight,
-  measuredMinHeight,
-} from "discourse/lib/resize-measurements";
-import {
   dampenedOverdrag,
   shouldDeferSwipeToContent,
   SWIPE_DISTANCE_THRESHOLD,
@@ -112,22 +107,9 @@ export default class ComposerContainer extends Component {
   #swipeEditor = null;
   #swipeSlide = 0;
 
-  /** Whether a resize is open — `resize-started` announced, its end still owed. */
-  #resizeOpen = false;
-
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.composerResizeDebounceHandler);
-    // The resize modifier deliberately fires no callback when torn down
-    // mid-gesture (its own JSDoc says gesture-held state must also be released
-    // on the consumer's destruction), so the state a live resize opened is
-    // closed here: a subscriber suppressing transitions for the gesture's
-    // length would otherwise hold that past the composer's death.
-    if (this.#resizeOpen) {
-      this.#resizeOpen = false;
-      this.#replyControl?.classList.remove("clear-transitions");
-      this.appEvents.trigger("composer:resize-ended");
-    }
   }
 
   get composerRedesign() {
@@ -217,10 +199,6 @@ export default class ComposerContainer extends Component {
       }));
   }
 
-  get #replyControl() {
-    return document.getElementById("reply-control");
-  }
-
   @action
   async updateSelectedTranslationLocale(locale) {
     const { model } = this.composer;
@@ -265,56 +243,14 @@ export default class ComposerContainer extends Component {
     }
   }
 
-  /**
-   * The box the separator announces, found from the separator's own position the
-   * way the composer's retired observer did.
-   *
-   * @param {HTMLElement} separator - The separator element.
-   * @returns {HTMLElement|null} The composer, or null before it is in the DOM.
-   */
+  /** The box being resized. A function, because the separator resolves it. */
   @bind
-  replyControlFor(separator) {
-    return separator.closest("#reply-control");
-  }
-
-  /**
-   * The height the next drag grows or shrinks from.
-   *
-   * Passed as a function because it is a live measurement: an arg whose compute
-   * reads no tracked state is cached for the modifier's lifetime, so a plain
-   * number would pin every drag to the first one's starting height.
-   *
-   * @returns {number|null} The composer's current height in pixels, or null.
-   */
-  @bind
-  composerHeight() {
-    return measuredHeight(this.#replyControl);
-  }
-
-  /**
-   * The smallest height the composer may be dragged to.
-   *
-   * @returns {number} The minimum height, in pixels.
-   */
-  @bind
-  minComposerHeight() {
-    return measuredMinHeight(this.#replyControl);
-  }
-
-  /**
-   * The largest height the composer may be dragged to, leaving the header
-   * visible. Live, because it moves with the window.
-   *
-   * @returns {number} The maximum height, in pixels.
-   */
-  @bind
-  maxComposerHeight() {
-    return measuredMaxHeight(this.#replyControl);
+  replyControl() {
+    return document.getElementById("reply-control");
   }
 
   @bind
   onResizeStart() {
-    this.#resizeOpen = true;
     this.appEvents.trigger("composer:resize-started");
   }
 
@@ -322,9 +258,7 @@ export default class ComposerContainer extends Component {
   onResizeDrag(size) {
     this.appEvents.trigger("composer:div-resizing");
 
-    // Added on the first move rather than on the press, so a press that never
-    // becomes a drag does not suppress the composer's transitions.
-    this.#replyControl?.classList.add("clear-transitions");
+    this.replyControl()?.classList.add("clear-transitions");
 
     const height = `${size}px`;
     // resuming from minimized restores the height from the model
@@ -339,8 +273,7 @@ export default class ComposerContainer extends Component {
 
   @bind
   onResizeEnd(size) {
-    this.#resizeOpen = false;
-    this.#replyControl?.classList.remove("clear-transitions");
+    this.replyControl()?.classList.remove("clear-transitions");
     // Announced before persisting, because the write can throw — storage quota —
     // and a subscriber that undoes its own drag-time state has to hear the end of
     // every resize regardless.
@@ -376,11 +309,8 @@ export default class ComposerContainer extends Component {
         class="grippie"
         @axis="vertical"
         @side="end"
-        @value={{this.composerHeight}}
-        @min={{this.minComposerHeight}}
-        @max={{this.maxComposerHeight}}
+        @measure={{this.replyControl}}
         @label={{i18n "composer.resize"}}
-        @observe={{this.replyControlFor}}
         @onResizeStart={{this.onResizeStart}}
         @onResize={{this.onResizeDrag}}
         @onResizeEnd={{this.onResizeEnd}}
