@@ -245,7 +245,7 @@ export function registerPointerDrag(
   // suppressing movement again mid-drag.
   let engaged = false;
   // Separate from `engaged`, which is already true at the press when no
-  // threshold is set. This is what tells a release apart from a click.
+  // threshold is set.
   let moved = false;
   // The class actually added at the start of this gesture. `draggingClass` can
   // change between gestures, so the value really on the element is snapshotted
@@ -378,14 +378,11 @@ export function registerPointerDrag(
     };
 
     const args = getArgsRef();
-    // Before the dispatch below, which reports them. Left set by a press that
-    // goes on to be vetoed, which is harmless: nothing reads them until the next
-    // press overwrites them.
+    // Before the dispatch below, which reports them.
     originX = event.clientX;
     originY = event.clientY;
     moved = false;
 
-    // The caller may veto by returning false.
     let vetoed;
     try {
       vetoed = args.onDragStart?.(event, dragInfo(event)) === false;
@@ -461,8 +458,7 @@ export function registerPointerDrag(
       }
       engaged = true;
     }
-    // Latched before the dispatch, so this report already counts as movement to
-    // the callback receiving it.
+    // Latched before the dispatch, so this report already counts as movement.
     moved = true;
     args.onDrag?.(event, dragInfo(event));
   };

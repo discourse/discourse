@@ -408,8 +408,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
 
     // A vetoed press starts no gesture, so no terminal callback will ever
     // arrive to clean up after it. Observed through the listeners rather than
-    // the session map, because a later press on the same pointer id would
-    // overwrite a stranded session and hide the leak.
+    // the gesture map, because a later press on the same pointer id would
+    // overwrite a stranded entry and hide the leak.
     assert.true(
       removeSpy
         .getCalls()
@@ -507,7 +507,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     });
 
     const removeSpy = sinon.spy(window, "removeEventListener");
-    // Waiting for the session map to empty would keep a document-wide listener
+    // Waiting for the gesture map to empty would keep a document-wide listener
     // alive for the rest of a gesture that has nothing for it to do.
     await triggerEvent(east, "pointerup", {
       pointerId: 1,
@@ -808,9 +808,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
 
     // The payload comes from the callback's own binding rather than a snapshot
     // taken at the press, so it always names the descriptor the handler is
-    // currently bound to. Pinned here because the per-pointer session holds the
-    // press coordinates and could plausibly be made to hold the payload too,
-    // which would freeze it at what was pressed.
+    // currently bound to. Pinned here because the per-pointer gesture entry
+    // could plausibly be made to hold the payload too, which would freeze it at
+    // what was pressed.
     assert.deepEqual(
       events,
       ["first", "second"],

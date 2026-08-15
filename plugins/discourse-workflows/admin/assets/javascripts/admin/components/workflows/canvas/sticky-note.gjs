@@ -274,10 +274,16 @@ export default class StickyNote extends Component {
 
   @action
   onNoteDragEnd(event, info) {
-    if (info.moved) {
-      this.#applyNoteDrag(info);
+    // Closed in a `finally` because the geometry below reaches consumer
+    // callbacks: one that throws on the commit would otherwise leave the counter
+    // above zero for good, silently unbracketing every later gesture.
+    try {
+      if (info.moved) {
+        this.#applyNoteDrag(info);
+      }
+    } finally {
+      this.#closeNoteDrag();
     }
-    this.#closeNoteDrag();
   }
 
   @action
@@ -309,11 +315,15 @@ export default class StickyNote extends Component {
   @action
   onEdgeResizeEnd(edge, dragInfo) {
     // The release can carry a newer position than the last move the browser
-    // delivered, so the box is recomputed rather than assumed to match.
-    if (dragInfo.moved) {
-      this.#applyEdgeResize(edge, dragInfo);
+    // delivered, so the box is recomputed rather than assumed to match. Closed
+    // in a `finally` for the reason given on the note drag's release.
+    try {
+      if (dragInfo.moved) {
+        this.#applyEdgeResize(edge, dragInfo);
+      }
+    } finally {
+      this.#closeEdgeResize(dragInfo);
     }
-    this.#closeEdgeResize(dragInfo);
   }
 
   @action

@@ -33,6 +33,8 @@ function onReport(
   const origin: { x: number; y: number } = dragInfo.origin;
   const current: { x: number; y: number } = dragInfo.current;
   const delta: { x: number; y: number } = dragInfo.delta;
+  const moved: boolean = dragInfo.moved;
+  const session: object = dragInfo.session;
   const measured: Element | null = dragInfo.measured;
   const measuredRect: DOMRect | null = dragInfo.measuredRect;
   void [
@@ -42,6 +44,8 @@ function onReport(
     origin,
     current,
     delta,
+    moved,
+    session,
     measured,
     measuredRect,
   ];

@@ -98,19 +98,14 @@ export interface DResizeHandleDragInfo<
 
   /**
    * The bounds of the element named by `@measure`, or `null` when none was
-   * named. In CSS pixels relative to the viewport, with the element's own
-   * transform and its ancestors' already applied. Under a uniform, unrotated
-   * scale that means `width` and `height` come back scaled and a consumer
-   * working in unscaled units divides them by that factor; `left` and `top` are
-   * viewport positions, so a translation has to come off before they mean
-   * anything in the consumer's own space.
+   * named. Viewport-relative and with transforms applied, so a consumer working
+   * in unscaled units divides the dimensions by the scale factor and takes any
+   * translation off `left` and `top`.
    *
-   * A LIVE reading, not a frozen one: taken at the press and re-read on scroll
-   * and viewport resize, so a consumer projecting the pointer into the box's
-   * own space (which grid cell is under the pointer) stays correct when the box
-   * moves under a held pointer. It is not re-read when the element merely
-   * changes SIZE, nor on a layout shift, transform or transition, none of which
-   * raise either event.
+   * A LIVE reading: re-read on scroll and viewport resize, so a consumer
+   * projecting the pointer into the box's own space stays correct when the box
+   * moves under a held pointer. Not re-read when the element merely changes
+   * SIZE, nor on a layout shift or transform, none of which raise either event.
    */
   readonly measuredRect: DOMRect | null;
 }
@@ -197,36 +192,28 @@ interface DResizeHandlesSignature<
     threshold?: number;
 
     /**
-     * Whether a gesture cut short reports through `@onResizeEnd` rather than
-     * `@onResizeCancel`, which leaves the latter unreachable. Cut short covers
-     * more than the OS taking the pointer: losing the capture, and another
-     * registration claiming the same pointer, arrive the same way.
+     * Whether a gesture cut short — `pointercancel`, a lost capture, or another
+     * registration claiming the pointer — reports through `@onResizeEnd` rather
+     * than `@onResizeCancel`, leaving the latter unreachable.
      *
-     * Reach for it only when the two would do the same thing. A consumer that
-     * commits the terminal event's position must NOT set this: a cancel carries
-     * no position the user chose, so the commit would write a coordinate the
-     * pointer was never at. Handle the two separately instead.
+     * A consumer that commits the terminal event's position must NOT set this: a
+     * cancel carries no position the user chose, so the commit would write a
+     * coordinate the pointer was never at.
      */
     cancelCommits?: boolean;
 
     /**
      * The box being resized, so it and its bounds ride along on every report.
      * Either the element, or a function receiving the pressed handle and
-     * returning it.
-     *
-     * Without this a consumer that projects the pointer into the box's own
-     * space has to resolve the element, measure it at the press and re-measure
-     * it on scroll itself, which is the bookkeeping this component exists to
-     * own. See `measuredRect` for what is and is not re-read.
+     * returning it. See `measuredRect` for what is and is not re-read.
      */
     measure?: MeasureTarget;
 
     /**
      * Whether an accepted press stops propagating. Defaults to `false`, since
      * document-level listeners depend on seeing `pointerdown`. Required when the
-     * handles sit inside another gesture: the press bubbles, the enclosing
-     * element claims the pointer last and so wins it, and the handle would be
-     * released the instant it was pressed.
+     * handles sit inside another gesture, which would otherwise claim the pointer
+     * last and so win it, releasing the handle the instant it was pressed.
      */
     stopPropagation?: boolean;
   };
@@ -239,8 +226,9 @@ interface DResizeHandlesSignature<
  *
  * It reports pointer geometry rather than a size, so the consumer's `@onResize`
  * does the math in whatever units it thinks in, paints its own preview, and
- * commits on `@onResizeEnd`. Every gesture gets exactly one terminal callback,
- * teardown included, and each carries a `session` to hang press-time state on.
+ * commits on `@onResizeEnd`. A gesture gets one terminal callback, teardown
+ * included and the known gap below excepted, and carries a `session` to hang
+ * press-time state on.
  *
  * The common case — a box's 8 edge/corner handles — is built in through
  * `@handleClass`. Anything else passes explicit `@handles` descriptors.
@@ -280,10 +268,9 @@ export default class DResizeHandles<
   /**
    * The in-flight gestures, keyed by pointer.
    *
-   * Keyed rather than held singly because every handle registers its own
-   * gesture and the engine keeps concurrent pointers alive, while these handlers
-   * are shared across all of them: two fingers on two handles of one box arrive
-   * here indistinguishable but for the pointer they came on.
+   * Keyed rather than held singly because these handlers are shared across every
+   * handle: two fingers on two handles of one box arrive here indistinguishable
+   * but for the pointer they came on.
    */
   #gestures = new Map<
     number,
@@ -301,10 +288,9 @@ export default class DResizeHandles<
   /**
    * Re-measures every live gesture's box.
    *
-   * Bound to scroll and resize for the length of a gesture because the reported
-   * bounds are viewport-relative: the box can move under a held pointer without
-   * changing size, and a consumer hit-testing against stale bounds would place
-   * the pointer in the wrong cell.
+   * Bound to scroll and resize for the gesture's length because the bounds are
+   * viewport-relative: the box can move under a held pointer without changing
+   * size, and stale bounds put the pointer in the wrong place.
    */
   #onReflow = () => {
     for (const gesture of this.#gestures.values()) {
@@ -324,9 +310,7 @@ export default class DResizeHandles<
 
   /**
    * The resolved handle descriptors: explicit `@handles` when named, otherwise
-   * the built-in 8-direction box from `@handleClass`. Any string `style` is
-   * wrapped so a consumer can pass a plain inline-style string without tripping
-   * the dynamic `style` XSS warning.
+   * the built-in box from `@handleClass`.
    *
    * Keyed on whether `@handles` was NAMED rather than on whether it holds
    * anything, because that is the condition `Payload` is inferred from. A
@@ -370,9 +354,8 @@ export default class DResizeHandles<
       throw error;
     }
 
-    // A vetoed press starts no gesture, so no terminal callback arrives to
-    // close it and the entry would otherwise describe a drag that never
-    // happened.
+    // A vetoed press starts no gesture, so no terminal callback arrives to close
+    // the entry it would otherwise leave behind.
     if (started === false) {
       this.#reset(event);
     }
@@ -388,8 +371,7 @@ export default class DResizeHandles<
   @action
   onHandleUp(payload: Payload, event: PointerEvent, info: DPointerDragInfo) {
     // Released in a `finally` so a throwing consumer cannot strand the gesture
-    // and leave the reflow listeners attached, matching the guarantee
-    // `dPointerDrag` makes for the gesture underneath.
+    // and leave the reflow listeners attached.
     try {
       this.args.onResizeEnd?.(payload, this.#dragInfo(payload, event, info));
     } finally {
@@ -411,11 +393,9 @@ export default class DResizeHandles<
   }
 
   /**
-   * Ends every gesture still held, on the way out.
-   *
-   * The engine reports nothing when the handles go, so a consumer that opened
-   * something at the press would otherwise never get to close it, and destroying
-   * this component would not release it either.
+   * Ends every gesture still held, on the way out. The engine reports nothing
+   * when the handles go, so a consumer that opened something at the press would
+   * otherwise never get to close it.
    */
   #closeHeldGestures() {
     const held = [...this.#gestures.values()];

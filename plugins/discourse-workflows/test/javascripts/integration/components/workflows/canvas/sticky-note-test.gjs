@@ -914,6 +914,78 @@ module(
       );
     });
 
+    test("a commit callback that throws still closes the mutation it opened", async function (assert) {
+      const beforeMutations = [];
+      const afterMutations = [];
+      const note = noteFixture();
+      const onBeforeMutation = () => beforeMutations.push(true);
+      const onAfterMutation = () => afterMutations.push(true);
+      // Throws only on the release, so the gesture opens and runs normally and
+      // only the terminal geometry blows up.
+      let reports = 0;
+      const onResize = (size) => {
+        reports += 1;
+        if (reports > 1) {
+          throw new Error("consumer blew up committing the size");
+        }
+        note.size = { ...size };
+      };
+
+      await render(
+        <template>
+          <StickyNote
+            @note={{note}}
+            @zoom={{1}}
+            @onResize={{onResize}}
+            @onBeforeMutation={{onBeforeMutation}}
+            @onAfterMutation={{onAfterMutation}}
+          />
+        </template>
+      );
+
+      pressable(".workflow-sticky-note");
+      const east = pressable("[data-resize-handle='e']");
+
+      await triggerEvent(east, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+      await triggerEvent(east, "pointermove", {
+        pointerId: 1,
+        clientX: 40,
+        clientY: 0,
+      });
+
+      assert.deepEqual(beforeMutations, [true], "the drag opened a mutation");
+
+      // The throw is the consumer's bug and is rethrown, so it surfaces as an
+      // uncaught error rather than a rejected promise. Swallowed here so the
+      // assertion below is about the bracket rather than about the throw.
+      const priorOnError = window.onerror;
+      window.onerror = (...args) =>
+        args[4]?.message === "consumer blew up committing the size" ||
+        priorOnError?.(...args);
+      try {
+        await triggerEvent(east, "pointerup", {
+          pointerId: 1,
+          clientX: 40,
+          clientY: 0,
+        });
+      } finally {
+        window.onerror = priorOnError;
+      }
+
+      // Left open, the counter never returns to zero and every later gesture on
+      // this note silently stops bracketing its undo entry.
+      assert.strictEqual(
+        afterMutations.length,
+        1,
+        "the mutation closes exactly once even though the commit threw"
+      );
+    });
+
     test("a resize during an edit does not close the edit's mutation", async function (assert) {
       const beforeMutations = [];
       const afterMutations = [];
