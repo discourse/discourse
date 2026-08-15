@@ -60,29 +60,13 @@ export default class StickyNote extends Component {
     }
   };
 
-  /** Where the pointer went down, so a move reports its total travel. */
-  #pressX = 0;
-  #pressY = 0;
-
-  /** The note's position when the move gesture began. */
   #dragOrigin = { x: 0, y: 0 };
+  #dragZoom = null;
+  #noteDragOpen = false;
 
   /** How much of the move has already been handed to co-selected notes. */
   #appliedDx = 0;
   #appliedDy = 0;
-
-  /** The canvas zoom in force when the note drag began. */
-  #dragZoom = null;
-
-  /** Whether the note drag ever passed its threshold and reported a move. */
-  #noteMoved = false;
-
-  /**
-   * Live edge gestures keyed by pointer, each holding the note's box and the
-   * zoom at its own press. The handles support two gestures at once, and a
-   * shared origin would rebase the first the moment the second pressed.
-   */
-  #resizeSessions = new Map();
 
   /**
    * How many gestures and edits are inside the open mutation. Counted rather
@@ -101,10 +85,9 @@ export default class StickyNote extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.closeColorPicker();
-    // A gesture or edit torn down mid-flight reports nothing of its own, so
-    // whatever it opened is closed here. Left open, the owner keeps its pending
-    // before-state and the next action's undo baseline becomes this one's, so a
-    // single undo jumps further back than the user ever went.
+    // The note drag and an open edit report nothing of their own on teardown.
+    // Left open, the next action's undo baseline becomes this one's, so a single
+    // undo jumps further back than the user ever went.
     this.#abandonMutation();
   }
 
@@ -144,14 +127,12 @@ export default class StickyNote extends Component {
   }
 
   /**
-   * Converts a pointer delta from screen pixels into canvas units. The canvas is
-   * scaled, so a 10px pointer move is a smaller move of the note when zoomed in.
+   * Converts a pointer delta from screen pixels into canvas units.
    *
    * @param {{x: number, y: number}} delta - The pointer delta in screen pixels.
-   * @param {number} [zoom] - The zoom snapshotted when the gesture began.
-   *   Zooming mid-gesture would otherwise re-divide the whole accumulated delta
-   *   by the new factor and make the note jump, because the delta is measured
-   *   from the original press.
+   * @param {number} [zoom] - The zoom snapshotted when the gesture began. Reading
+   *   it live would re-divide the whole accumulated delta by the new factor and
+   *   make the note jump, since the delta is measured from the original press.
    * @returns {{dx: number, dy: number}} The same delta in canvas units.
    */
   #inCanvasUnits(delta, zoom) {
@@ -163,19 +144,17 @@ export default class StickyNote extends Component {
    * Emits the box this gesture's edge implies, working in edge space.
    *
    * Each boundary moves from where it sat at this gesture's own press, and the
-   * three it does not own are read live. Two gestures can therefore hold
-   * opposite edges of one axis and compose, where deriving a width from a
-   * press-time snapshot makes whichever reports later overwrite the other. Each
-   * minimum clamps against the opposite boundary rather than a snapshotted size,
-   * so it holds even while that boundary is being dragged too.
+   * three it does not own are read live, so two gestures can hold opposite edges
+   * of one axis and compose. Deriving a width from a press-time snapshot instead
+   * makes whichever reports later overwrite the other.
    *
    * @param {string} edge - The compass edge being dragged.
-   * @param {object} dragInfo - The gesture report carrying the pointer delta.
-   * @param {object} session - The box and zoom snapshotted at this press.
+   * @param {object} dragInfo - The gesture report, carrying the pointer delta
+   *   and the box and zoom this gesture snapshotted at its own press.
    */
-  #applyEdgeResize(edge, dragInfo, session) {
-    const origin = session.origin;
-    const { dx, dy } = this.#inCanvasUnits(dragInfo.delta, session.zoom);
+  #applyEdgeResize(edge, dragInfo) {
+    const { origin, zoom } = dragInfo.session;
+    const { dx, dy } = this.#inCanvasUnits(dragInfo.delta, zoom);
 
     const live = { ...this.args.note.position, ...this.args.note.size };
     let left = live.x;
@@ -204,19 +183,8 @@ export default class StickyNote extends Component {
     }
   }
 
-  /**
-   * Emits the position the pointer implies, from the press-time origin.
-   *
-   * @param {PointerEvent} event - The event carrying the pointer's position.
-   */
-  #applyNoteDrag(event) {
-    const { dx, dy } = this.#inCanvasUnits(
-      {
-        x: event.clientX - this.#pressX,
-        y: event.clientY - this.#pressY,
-      },
-      this.#dragZoom
-    );
+  #applyNoteDrag(info) {
+    const { dx, dy } = this.#inCanvasUnits(info.delta, this.#dragZoom);
 
     this.args.onMove?.({
       x: this.#dragOrigin.x + dx,
@@ -234,7 +202,6 @@ export default class StickyNote extends Component {
     this.#appliedDy = dy;
   }
 
-  /** Opens the mutation on the first gesture to need it. */
   #openMutation() {
     this.#openGestures += 1;
     if (this.#openGestures === 1) {
@@ -242,7 +209,6 @@ export default class StickyNote extends Component {
     }
   }
 
-  /** Closes it once the last gesture has finished. */
   #closeMutation() {
     if (this.#openGestures === 0) {
       return;
@@ -253,7 +219,21 @@ export default class StickyNote extends Component {
     }
   }
 
-  /** Closes it outright, however many gestures were still holding it. */
+  #closeNoteDrag() {
+    if (this.#noteDragOpen) {
+      this.#closeMutation();
+    }
+    this.#noteDragOpen = false;
+    this.#dragZoom = null;
+  }
+
+  #closeEdgeResize(dragInfo) {
+    if (dragInfo.session.opened) {
+      dragInfo.session.opened = false;
+      this.#closeMutation();
+    }
+  }
+
   #abandonMutation() {
     if (this.#openGestures === 0) {
       return;
@@ -264,12 +244,8 @@ export default class StickyNote extends Component {
 
   @action
   onNoteDragStart(event) {
-    // The toolbar's own buttons stop the press themselves, but the strip around
-    // them does not, and pressing it has never dragged the note.
-    //
-    // The handles carry `stopPropagation`, but a handle already holding a
-    // gesture refuses a second contact *before* stopping it, so that press
-    // arrives here. It is a resize press either way and must not move the note.
+    // The handles carry `stopPropagation`, but one already holding a gesture
+    // refuses a second contact *before* stopping it, so that press arrives here.
     if (
       event.target.closest(".workflow-canvas-toolbar") ||
       event.target.closest(".workflow-sticky-note__edge")
@@ -278,97 +254,72 @@ export default class StickyNote extends Component {
     }
 
     this.args.onSelect?.();
-    // The mutation opens on the first real move, not here. A press that only
-    // selects the note would otherwise bracket an undo entry whose before and
-    // after are identical.
+    // The mutation waits for the first real move: a press that only selects would
+    // otherwise bracket an undo entry whose before and after are identical.
     this.#dragZoom = this.args.zoom ?? 1;
-    this.#pressX = event.clientX;
-    this.#pressY = event.clientY;
     this.#dragOrigin = { ...this.args.note.position };
     this.#appliedDx = 0;
     this.#appliedDy = 0;
-    this.#noteMoved = false;
+    this.#noteDragOpen = false;
   }
 
   @action
-  onNoteDrag(event) {
-    if (!this.#noteMoved) {
+  onNoteDrag(event, info) {
+    if (!this.#noteDragOpen) {
+      this.#noteDragOpen = true;
       this.#openMutation();
     }
-    this.#noteMoved = true;
-    this.#applyNoteDrag(event);
+    this.#applyNoteDrag(info);
   }
 
   @action
-  onNoteDragEnd(event) {
-    // Same reason as the edge release: the last move the browser delivered is
-    // not necessarily where the pointer ended up.
-    // Closed only by the gesture that opened it, which is the one that moved.
-    if (this.#noteMoved) {
-      this.#applyNoteDrag(event);
-      this.#closeMutation();
+  onNoteDragEnd(event, info) {
+    if (info.moved) {
+      this.#applyNoteDrag(info);
     }
-    this.#noteMoved = false;
-    this.#dragZoom = null;
+    this.#closeNoteDrag();
   }
 
   @action
   onNoteDragCancel() {
-    // Deliberately no geometry, unlike the release handler. A cancel arrives as
-    // `pointercancel`, a lost capture, or a superseding press, none of which
-    // carry a position the user chose. The last move already applied where the
-    // note was dragged to, which is what an interruption should keep.
-    if (this.#noteMoved) {
-      this.#closeMutation();
-    }
-    this.#noteMoved = false;
-    this.#dragZoom = null;
+    // Deliberately no geometry, unlike the release handler: a cancel carries no
+    // position the user chose, and the last move already applied where the note
+    // was dragged to.
+    this.#closeNoteDrag();
   }
 
   @action
   onEdgeResizeStart(edge, dragInfo) {
-    // As with the note drag, the mutation waits for a real move.
-    this.#resizeSessions.set(dragInfo.event.pointerId, {
-      origin: { ...this.args.note.position, ...this.args.note.size },
-      zoom: this.args.zoom ?? 1,
-    });
+    dragInfo.session.origin = {
+      ...this.args.note.position,
+      ...this.args.note.size,
+    };
+    dragInfo.session.zoom = this.args.zoom ?? 1;
   }
 
   @action
   onEdgeResize(edge, dragInfo) {
-    const session = this.#resizeSessions.get(dragInfo.event.pointerId);
-    if (!session) {
-      return;
-    }
-    if (!session.moved) {
+    if (!dragInfo.session.opened) {
+      dragInfo.session.opened = true;
       this.#openMutation();
     }
-    session.moved = true;
-    this.#applyEdgeResize(edge, dragInfo, session);
+    this.#applyEdgeResize(edge, dragInfo);
   }
 
   @action
   onEdgeResizeEnd(edge, dragInfo) {
-    const session = this.#resizeSessions.get(dragInfo.event.pointerId);
     // The release can carry a newer position than the last move the browser
-    // delivered, so the committed box is computed from it rather than assumed to
-    // match. Only when something moved: a press that never became a drag has no
-    // box of its own to commit.
-    if (session?.moved) {
-      this.#applyEdgeResize(edge, dragInfo, session);
-      this.#closeMutation();
+    // delivered, so the box is recomputed rather than assumed to match.
+    if (dragInfo.moved) {
+      this.#applyEdgeResize(edge, dragInfo);
     }
-    this.#resizeSessions.delete(dragInfo.event.pointerId);
+    this.#closeEdgeResize(dragInfo);
   }
 
   @action
   onEdgeResizeCancel(edge, dragInfo) {
     // No geometry, for the reason given on `onNoteDragCancel`.
-    const session = this.#resizeSessions.get(dragInfo.event.pointerId);
-    if (session?.moved) {
-      this.#closeMutation();
-    }
-    this.#resizeSessions.delete(dragInfo.event.pointerId);
+    this.#closeEdgeResize(dragInfo);
   }
 
   @action
@@ -536,8 +487,6 @@ export default class StickyNote extends Component {
           @onResizeStart={{this.onEdgeResizeStart}}
           @onResize={{this.onEdgeResize}}
           @onResizeEnd={{this.onEdgeResizeEnd}}
-          {{! Separate from the release handler because only a release carries a
-            pointer position worth committing. }}
           @onResizeCancel={{this.onEdgeResizeCancel}}
         />
       </div>

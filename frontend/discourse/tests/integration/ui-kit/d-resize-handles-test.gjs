@@ -1,5 +1,11 @@
 import { tracked } from "@glimmer/tracking";
-import { find, render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  clearRender,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -995,6 +1001,161 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       events,
       ["resize:12", "end"],
       "past the threshold the full delta from the press origin is reported"
+    );
+  });
+
+  test("a gesture still held at teardown is cancelled once", async function (assert) {
+    const handles = [{ payload: "e", class: "handle-e" }];
+    const events = [];
+    const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
+    const onResizeEnd = (payload) => events.push(`end:${payload}`);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{handles}}
+          @onResizeCancel={{onResizeCancel}}
+          @onResizeEnd={{onResizeEnd}}
+        />
+      </template>
+    );
+
+    stubPointerCapture(".handle-e");
+    await triggerEvent(".handle-e", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+    await triggerEvent(".handle-e", "pointermove", {
+      pointerId: 1,
+      clientX: 30,
+      clientY: 0,
+    });
+
+    await clearRender();
+
+    // The engine reports nothing when the element goes, so whatever the consumer
+    // opened at the press would stay open with no callback left to close it.
+    assert.deepEqual(
+      events,
+      ["cancel:e"],
+      "the held gesture is cancelled exactly once on the way out"
+    );
+  });
+
+  test("a gesture that already ended is not cancelled again at teardown", async function (assert) {
+    const handles = [{ payload: "e", class: "handle-e" }];
+    const events = [];
+    const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
+    const onResizeEnd = (payload) => events.push(`end:${payload}`);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{handles}}
+          @onResizeCancel={{onResizeCancel}}
+          @onResizeEnd={{onResizeEnd}}
+        />
+      </template>
+    );
+
+    stubPointerCapture(".handle-e");
+    await triggerEvent(".handle-e", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+    await triggerEvent(".handle-e", "pointerup", {
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+
+    assert.deepEqual(events, ["end:e"], "the release reported once");
+
+    await clearRender();
+
+    assert.deepEqual(
+      events,
+      ["end:e"],
+      "and teardown has nothing left to close"
+    );
+  });
+
+  test("@cancelCommits routes a gesture held at teardown to the commit callback", async function (assert) {
+    const handles = [{ payload: "e", class: "handle-e" }];
+    const events = [];
+    const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
+    const onResizeEnd = (payload) => events.push(`end:${payload}`);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{handles}}
+          @cancelCommits={{true}}
+          @onResizeCancel={{onResizeCancel}}
+          @onResizeEnd={{onResizeEnd}}
+        />
+      </template>
+    );
+
+    stubPointerCapture(".handle-e");
+    await triggerEvent(".handle-e", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+    await triggerEvent(".handle-e", "pointermove", {
+      pointerId: 1,
+      clientX: 30,
+      clientY: 0,
+    });
+
+    await clearRender();
+
+    // Teardown is an end the pointer was never released for, so it reports the
+    // way every other such end does rather than inventing a third route.
+    assert.deepEqual(
+      events,
+      ["end:e"],
+      "the held gesture commits instead of cancelling"
+    );
+  });
+
+  test("a throwing consumer cannot abort the teardown of its siblings", async function (assert) {
+    const handles = [{ payload: "e", class: "handle-e" }];
+    const onResizeCancel = () => {
+      throw new Error("consumer blew up on teardown");
+    };
+    const errors = sinon.stub(console, "error");
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{handles}}
+          @onResizeCancel={{onResizeCancel}}
+        />
+      </template>
+    );
+
+    stubPointerCapture(".handle-e");
+    await triggerEvent(".handle-e", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+
+    // A destructor throws into the flush tearing down every sibling component,
+    // and would take their cleanup with it.
+    await clearRender();
+
+    assert.true(
+      errors.calledOnce,
+      "the consumer's exception is reported rather than escaping the flush"
     );
   });
 });

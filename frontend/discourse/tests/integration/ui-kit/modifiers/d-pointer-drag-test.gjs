@@ -46,6 +46,126 @@ function caughtError(callback) {
 module("Integration | ui-kit | d-pointer-drag", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("reports the gesture geometry alongside every event", async function (assert) {
+    const seen = [];
+    const record = (phase) => (event, info) =>
+      seen.push(
+        `${phase}:origin=${info.origin.x},${info.origin.y}` +
+          ` current=${info.current.x},${info.current.y}` +
+          ` delta=${info.delta.x},${info.delta.y}` +
+          ` moved=${info.moved}`
+      );
+
+    await render(
+      <template>
+        <div
+          class="dpd-target"
+          {{dPointerDrag
+            onDragStart=(record "start")
+            onDrag=(record "drag")
+            onDragEnd=(record "end")
+          }}
+        ></div>
+      </template>
+    );
+
+    stubPointerCapture(".dpd-target");
+    await triggerEvent(".dpd-target", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 10,
+      clientY: 20,
+    });
+    await triggerEvent(".dpd-target", "pointermove", {
+      pointerId: 1,
+      clientX: 40,
+      clientY: 25,
+    });
+    await triggerEvent(".dpd-target", "pointerup", {
+      pointerId: 1,
+      clientX: 40,
+      clientY: 25,
+    });
+
+    assert.deepEqual(
+      seen,
+      [
+        "start:origin=10,20 current=10,20 delta=0,0 moved=false",
+        "drag:origin=10,20 current=40,25 delta=30,5 moved=true",
+        "end:origin=10,20 current=40,25 delta=30,5 moved=true",
+      ],
+      "the origin is the press, the delta is measured from it, and moved latches on the first report"
+    );
+  });
+
+  test("a release that never moved says so, so a click is not a drag", async function (assert) {
+    const ends = [];
+    const onDragEnd = (event, info) => ends.push(info.moved);
+
+    await render(
+      <template>
+        <div class="dpd-target" {{dPointerDrag onDragEnd=onDragEnd}}></div>
+      </template>
+    );
+
+    stubPointerCapture(".dpd-target");
+    await triggerEvent(".dpd-target", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 5,
+      clientY: 5,
+    });
+    await triggerEvent(".dpd-target", "pointerup", {
+      pointerId: 1,
+      clientX: 5,
+      clientY: 5,
+    });
+
+    // A commit guarded on this is the difference between a resize and a click
+    // writing an entry into whatever history the commit feeds.
+    assert.deepEqual(ends, [false], "a press and release reports no movement");
+  });
+
+  test("each report is its own snapshot, not a view that keeps changing", async function (assert) {
+    const stashed = [];
+    const onDrag = (event, info) => stashed.push(info);
+
+    await render(
+      <template>
+        <div class="dpd-target" {{dPointerDrag onDrag=onDrag}}></div>
+      </template>
+    );
+
+    stubPointerCapture(".dpd-target");
+    await triggerEvent(".dpd-target", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+    await triggerEvent(".dpd-target", "pointermove", {
+      pointerId: 1,
+      clientX: 10,
+      clientY: 0,
+    });
+    await triggerEvent(".dpd-target", "pointermove", {
+      pointerId: 1,
+      clientX: 90,
+      clientY: 0,
+    });
+
+    assert.deepEqual(
+      [stashed[0].delta.x, stashed[1].delta.x],
+      [10, 90],
+      "a report kept by the consumer still holds the numbers it was handed"
+    );
+    assert.notStrictEqual(
+      stashed[0],
+      stashed[1],
+      "and each report is a distinct object rather than one mutated in place"
+    );
+  });
+
   test("dispatches start → drag → end and toggles the dragging class", async function (assert) {
     const calls = [];
     const onDragStart = () => calls.push("start");

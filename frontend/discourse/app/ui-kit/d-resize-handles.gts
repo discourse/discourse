@@ -4,7 +4,9 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import { type SafeString, type TrustedHTML, trustHTML } from "@ember/template";
-import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
+import dPointerDrag, {
+  type DPointerDragInfo,
+} from "discourse/ui-kit/modifiers/d-pointer-drag";
 
 /** One of the eight compass directions of the built-in box resize. */
 export type BoxDirection = "n" | "ne" | "e" | "se" | "s" | "sw" | "w" | "nw";
@@ -46,29 +48,53 @@ export interface DResizeHandleDescriptor<Payload extends string | number> {
 /**
  * The pointer geometry of a move, reported to every callback. Deliberately raw:
  * the consumer decides what a pixel delta means in its own units.
+ *
+ * Everything here is a snapshot of the moment it was handed over, EXCEPT
+ * `session`, which is the one thing that lives for the gesture.
  */
-export interface DResizeHandleDragInfo<Payload extends string | number> {
+export interface DResizeHandleDragInfo<
+  Payload extends string | number,
+  Session extends object = object,
+> {
   /** The handle being dragged — the same value the callback's first argument carries. */
-  payload: Payload;
+  readonly payload: Payload;
 
   /** The pointer event that produced this report. */
-  event: PointerEvent;
+  readonly event: PointerEvent;
 
   /** Where the press landed, in client coordinates. */
-  origin: { x: number; y: number };
+  readonly origin: Readonly<{ x: number; y: number }>;
 
   /** Where the pointer is now, in client coordinates. */
-  current: { x: number; y: number };
+  readonly current: Readonly<{ x: number; y: number }>;
 
   /** How far the pointer has travelled since the press. */
-  delta: { x: number; y: number };
+  readonly delta: Readonly<{ x: number; y: number }>;
+
+  /**
+   * Whether `@onResize` has fired at least once for THIS gesture, which is what
+   * tells a resize apart from a click that landed on a handle. Commit on
+   * `@onResizeEnd` only when it is set, or a bare click writes an entry into
+   * whatever history the commit feeds.
+   */
+  readonly moved: boolean;
+
+  /**
+   * Scratch for the length of one gesture, and the same object throughout it.
+   *
+   * Per gesture rather than per component because every handle registers its
+   * own, and a touch screen can hold two at once: state hung on the consumer
+   * would be rebased the moment the second pressed. Write the press-time
+   * snapshot here in `@onResizeStart` and read it back on every later report.
+   */
+  readonly session: Session;
 
   /**
    * The element named by `@measure`, or `null` when none was named. Handed back
    * so a consumer that also needs the element itself (to paint a preview on it,
    * say) does not resolve it a second time.
    */
-  measured: Element | null;
+  readonly measured: Element | null;
 
   /**
    * The bounds of the element named by `@measure`, or `null` when none was
@@ -82,16 +108,11 @@ export interface DResizeHandleDragInfo<Payload extends string | number> {
    * A LIVE reading, not a frozen one: taken at the press and re-read on scroll
    * and viewport resize, so a consumer projecting the pointer into the box's
    * own space (which grid cell is under the pointer) stays correct when the box
-   * moves under a held pointer.
-   *
-   * Not re-read when the element merely changes SIZE, nor on a layout shift,
-   * transform or transition, none of which raise either event. A consumer that
-   * wants a fixed base to add `delta` to should snapshot this at the press
-   * rather than read it on every report: a box that resizes as a result of its
-   * own gesture would otherwise move the base while the delta accumulates from
-   * the press, and double-count.
+   * moves under a held pointer. It is not re-read when the element merely
+   * changes SIZE, nor on a layout shift, transform or transition, none of which
+   * raise either event.
    */
-  measuredRect: DOMRect | null;
+  readonly measuredRect: DOMRect | null;
 }
 
 /**
@@ -102,7 +123,10 @@ type MeasureTarget =
   | Element
   | ((handle: HTMLElement) => Element | null | undefined);
 
-interface DResizeHandlesSignature<Payload extends string | number> {
+interface DResizeHandlesSignature<
+  Payload extends string | number,
+  Session extends object = object,
+> {
   Args: {
     /**
      * BEM block for the built-in 8-direction box. Each handle is classed
@@ -125,7 +149,8 @@ interface DResizeHandlesSignature<Payload extends string | number> {
     handles?: DResizeHandleDescriptor<Payload>[];
 
     /**
-     * The gesture began. Return `false` to veto it.
+     * The gesture began. Snapshot the press-time state onto `dragInfo.session`
+     * here. Return `false` to veto it.
      *
      * The callbacks are `NoInfer` positions so the payload type is decided by
      * `@handles` alone. Otherwise a handler taking, say, a number would infer
@@ -134,37 +159,32 @@ interface DResizeHandlesSignature<Payload extends string | number> {
      */
     onResizeStart?: (
       payload: NoInfer<Payload>,
-      dragInfo: DResizeHandleDragInfo<NoInfer<Payload>>
+      dragInfo: DResizeHandleDragInfo<NoInfer<Payload>, Session>
     ) => boolean | void;
 
     /** Fired on every move. Compute and preview here. */
     onResize?: (
       payload: NoInfer<Payload>,
-      dragInfo: DResizeHandleDragInfo<NoInfer<Payload>>
+      dragInfo: DResizeHandleDragInfo<NoInfer<Payload>, Session>
     ) => void;
 
     /**
-     * Fired once on release. Commit here.
-     *
-     * Fires for ANY release on the handle, including a click that never reached
-     * `@threshold` and so saw no `@onResize` at all. Read the pointer position
-     * rather than assuming movement happened, and skip the commit when nothing
-     * moved, or a bare click writes an empty entry into whatever history the
-     * commit feeds.
+     * Fired once on release, and on teardown for a gesture still held. Commit
+     * here, guarded on `dragInfo.moved`.
      */
     onResizeEnd?: (
       payload: NoInfer<Payload>,
-      dragInfo: DResizeHandleDragInfo<NoInfer<Payload>>
+      dragInfo: DResizeHandleDragInfo<NoInfer<Payload>, Session>
     ) => void;
 
     /**
-     * Fired when the gesture is cancelled rather than released. Mutually
-     * exclusive with `@cancelCommits`, which routes cancels to `@onResizeEnd`
-     * and so leaves this one unreachable.
+     * Fired when the gesture is cancelled rather than released, teardown with a
+     * gesture still held included. Mutually exclusive with `@cancelCommits`,
+     * which routes cancels to `@onResizeEnd` and so leaves this one unreachable.
      */
     onResizeCancel?: (
       payload: NoInfer<Payload>,
-      dragInfo: DResizeHandleDragInfo<NoInfer<Payload>>
+      dragInfo: DResizeHandleDragInfo<NoInfer<Payload>, Session>
     ) => void;
 
     /** A class toggled on the active handle while it is being dragged. */
@@ -213,24 +233,17 @@ interface DResizeHandlesSignature<Payload extends string | number> {
 }
 
 /**
- * Renders a set of drag handles and wires each to the pointer-drag lifecycle,
- * dispatching normalized drag events back to the consumer. It owns the
- * boilerplate the consumers used to repeat — the handle loop, the per-handle
- * pointer wiring, and the single active-drag session — while leaving the
- * domain-specific work (units, preview, commit) to the consumer's handlers.
+ * Renders a set of drag handles and drives each through the pointer-drag
+ * lifecycle, owning what every consumer would otherwise repeat: the handle loop,
+ * the per-handle pointer wiring, and one gesture's state for as long as it runs.
  *
- * Generic over what's being resized: it reports pointer geometry (origin /
- * current / delta), not pixels-vs-grid-lines-vs-fractions. The consumer's
- * `@onResize` does the math (e.g. map the pointer to a grid cell, or a px
- * delta, or a column fraction), paints its own preview, and commits on
- * `@onResizeEnd`. Each handle drags independently, and a touch screen can hold
- * two at once, so what a gesture was pressed at is tracked per pointer.
+ * It reports pointer geometry rather than a size, so the consumer's `@onResize`
+ * does the math in whatever units it thinks in, paints its own preview, and
+ * commits on `@onResizeEnd`. Every gesture gets exactly one terminal callback,
+ * teardown included, and each carries a `session` to hang press-time state on.
  *
- * The common case — a box's 8 edge/corner handles — is built in: pass
- * `@handleClass` and the component renders the eight compass handles, each
- * classed `<handleClass> --<dir>` with `payload` set to the
- * direction. For anything else (e.g. N column-gutter handles at computed
- * offsets), pass explicit `@handles` descriptors as an escape hatch.
+ * The common case — a box's 8 edge/corner handles — is built in through
+ * `@handleClass`. Anything else passes explicit `@handles` descriptors.
  *
  * @example
  * Box (edges + corners) from a BEM block:
@@ -244,28 +257,17 @@ interface DResizeHandlesSignature<Payload extends string | number> {
  * <DResizeHandles @handles={{this.columnHandles}} @onResize={{this.onResize}} />
  * ```
  *
- * This is the TWO-dimensional shape. `role="separator"` is wrong here and must not
- * be used: a box resized from its corners has no single value to report.
+ * `role="separator"` is wrong here and must not be used: a box resized from its
+ * corners has no single value to report.
  *
- * Deliberately POINTER-ONLY. The handles are decorative affordances, marked
- * `aria-hidden` and left out of the tab order: eight tab stops per box would be
- * hostile, and no ARIA role describes a corner drag. Keyboard operation belongs
- * on the resized object itself, where the consumer knows what its units mean —
- * arrows to move, a modifier plus arrows to resize. A consumer that offers no
- * such path has made its box mouse-only, which is a gap in that feature rather
- * than something this component can supply.
+ * Deliberately POINTER-ONLY. The handles are `aria-hidden` and out of the tab
+ * order, because eight tab stops per box would be hostile and no ARIA role
+ * describes a corner drag. Keyboard operation belongs on the resized object
+ * itself, where the consumer knows what its units mean.
  *
  * Known gap: shrinking `@handles` or `@directions` mid-gesture destroys the LAST
- * handle, since they are keyed positionally. A gesture held on that one is
- * stranded, because the engine reports nothing on teardown; a gesture on any
- * other handle keeps running and rebinds to its new payload. What this component
- * holds is bounded: a mouse reuses its pointer id and overwrites the entry on
- * its next press, and the sessions and listeners go when it is destroyed. What
- * the CONSUMER holds is not. That gesture has already had its `@onResizeStart`
- * and will never get a terminal callback, so anything opened against it stays
- * open, and destroying this component does not close it. Until then, if the
- * gesture was measuring, its session also keeps the reflow listeners attached,
- * so every scroll re-measures a box nobody is dragging.
+ * handle, since they are keyed positionally, stranding a gesture held on it with
+ * no terminal callback.
  *
  * @see The `DResizeSeparator` component for a ONE-axis resize between two regions, which is
  *   operable by keyboard and announced.
@@ -273,21 +275,26 @@ interface DResizeHandlesSignature<Payload extends string | number> {
  */
 export default class DResizeHandles<
   Payload extends string | number = BoxDirection,
-> extends Component<DResizeHandlesSignature<Payload>> {
+  Session extends object = object,
+> extends Component<DResizeHandlesSignature<Payload, Session>> {
   /**
-   * What each in-flight gesture was pressed at, keyed by its pointer.
+   * The in-flight gestures, keyed by pointer.
    *
-   * Per pointer rather than per component: every handle registers its own
-   * gesture, and the engine keeps concurrent pointers alive, so two fingers on
-   * two handles of the same box would otherwise share and overwrite one origin.
+   * Keyed rather than held singly because every handle registers its own
+   * gesture and the engine keeps concurrent pointers alive, while these handlers
+   * are shared across all of them: two fingers on two handles of one box arrive
+   * here indistinguishable but for the pointer they came on.
    */
-  #sessions = new Map<
+  #gestures = new Map<
     number,
     {
-      originX: number;
-      originY: number;
+      payload: Payload;
+      /** The last report, so teardown can close the gesture where it stood. */
+      event: PointerEvent;
+      info: DPointerDragInfo;
       measured: Element | null;
       measuredRect: DOMRect | null;
+      session: Session;
     }
   >();
 
@@ -300,22 +307,19 @@ export default class DResizeHandles<
    * the pointer in the wrong cell.
    */
   #onReflow = () => {
-    for (const session of this.#sessions.values()) {
-      session.measuredRect = session.measured?.getBoundingClientRect() ?? null;
+    for (const gesture of this.#gestures.values()) {
+      gesture.measuredRect = gesture.measured?.getBoundingClientRect() ?? null;
     }
   };
 
-  /** Whether the reflow listeners are attached for a live gesture. */
   #watchingReflow = false;
 
-  constructor(owner: Owner, args: DResizeHandlesSignature<Payload>["Args"]) {
+  constructor(
+    owner: Owner,
+    args: DResizeHandlesSignature<Payload, Session>["Args"]
+  ) {
     super(owner, args);
-    // A gesture torn down mid-flight reports nothing, so the listeners it left
-    // attached are released here rather than waiting for an end that never comes.
-    registerDestructor(this, () => {
-      this.#sessions.clear();
-      this.#unwatchReflow();
-    });
+    registerDestructor(this, () => this.#closeHeldGestures());
   }
 
   /**
@@ -343,13 +347,15 @@ export default class DResizeHandles<
   }
 
   @action
-  onHandleDown(payload: Payload, event: PointerEvent) {
+  onHandleDown(payload: Payload, event: PointerEvent, info: DPointerDragInfo) {
     const measured = this.#measureTarget(event.currentTarget as HTMLElement);
-    this.#sessions.set(event.pointerId, {
-      originX: event.clientX,
-      originY: event.clientY,
+    this.#gestures.set(event.pointerId, {
+      payload,
+      event,
+      info,
       measured,
       measuredRect: measured?.getBoundingClientRect() ?? null,
+      session: {} as Session,
     });
     this.#watchReflow();
 
@@ -357,7 +363,7 @@ export default class DResizeHandles<
     try {
       started = this.args.onResizeStart?.(
         payload,
-        this.#dragInfo(payload, event)
+        this.#dragInfo(payload, event, info)
       );
     } catch (error) {
       this.#reset(event);
@@ -365,7 +371,7 @@ export default class DResizeHandles<
     }
 
     // A vetoed press starts no gesture, so no terminal callback arrives to
-    // close it and the session would otherwise describe a drag that never
+    // close it and the entry would otherwise describe a drag that never
     // happened.
     if (started === false) {
       this.#reset(event);
@@ -375,28 +381,68 @@ export default class DResizeHandles<
   }
 
   @action
-  onHandleMove(payload: Payload, event: PointerEvent) {
-    this.args.onResize?.(payload, this.#dragInfo(payload, event));
+  onHandleMove(payload: Payload, event: PointerEvent, info: DPointerDragInfo) {
+    this.args.onResize?.(payload, this.#dragInfo(payload, event, info));
   }
 
   @action
-  onHandleUp(payload: Payload, event: PointerEvent) {
-    // Released in a `finally` so a throwing consumer cannot strand the session
+  onHandleUp(payload: Payload, event: PointerEvent, info: DPointerDragInfo) {
+    // Released in a `finally` so a throwing consumer cannot strand the gesture
     // and leave the reflow listeners attached, matching the guarantee
     // `dPointerDrag` makes for the gesture underneath.
     try {
-      this.args.onResizeEnd?.(payload, this.#dragInfo(payload, event));
+      this.args.onResizeEnd?.(payload, this.#dragInfo(payload, event, info));
     } finally {
       this.#reset(event);
     }
   }
 
   @action
-  onHandleCancel(payload: Payload, event: PointerEvent) {
+  onHandleCancel(
+    payload: Payload,
+    event: PointerEvent,
+    info: DPointerDragInfo
+  ) {
     try {
-      this.args.onResizeCancel?.(payload, this.#dragInfo(payload, event));
+      this.args.onResizeCancel?.(payload, this.#dragInfo(payload, event, info));
     } finally {
       this.#reset(event);
+    }
+  }
+
+  /**
+   * Ends every gesture still held, on the way out.
+   *
+   * The engine reports nothing when the handles go, so a consumer that opened
+   * something at the press would otherwise never get to close it, and destroying
+   * this component would not release it either.
+   */
+  #closeHeldGestures() {
+    const held = [...this.#gestures.values()];
+    this.#gestures.clear();
+    this.#unwatchReflow();
+
+    for (const gesture of held) {
+      const dragInfo = {
+        ...gesture.info,
+        payload: gesture.payload,
+        event: gesture.event,
+        session: gesture.session,
+        measured: gesture.measured,
+        measuredRect: gesture.measuredRect,
+      };
+      try {
+        if (this.args.cancelCommits) {
+          this.args.onResizeEnd?.(gesture.payload, dragInfo);
+        } else {
+          this.args.onResizeCancel?.(gesture.payload, dragInfo);
+        }
+      } catch (error) {
+        // Swallowed only here: a destructor throws into the flush tearing down
+        // every sibling component, and would take their cleanup with it.
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
     }
   }
 
@@ -417,49 +463,49 @@ export default class DResizeHandles<
 
   #dragInfo(
     payload: Payload,
-    event: PointerEvent
-  ): DResizeHandleDragInfo<Payload> {
-    const session = this.#sessions.get(event.pointerId);
-    const originX = session?.originX ?? event.clientX;
-    const originY = session?.originY ?? event.clientY;
+    event: PointerEvent,
+    info: DPointerDragInfo
+  ): DResizeHandleDragInfo<Payload, Session> {
+    const gesture = this.#gestures.get(event.pointerId);
+    if (gesture) {
+      gesture.event = event;
+      gesture.info = info;
+    }
 
     return {
-      // The callback's own payload rather than the session snapshot: with
+      // The callback's own payload rather than the gesture's snapshot: with
       // positional keys, a descriptor list that changes mid-drag rebinds the
       // handler while the snapshot still holds what was pressed.
       payload,
       event,
-      origin: { x: originX, y: originY },
-      current: { x: event.clientX, y: event.clientY },
-      delta: {
-        x: event.clientX - originX,
-        y: event.clientY - originY,
-      },
-      measured: session?.measured ?? null,
-      measuredRect: session?.measuredRect ?? null,
+      origin: info.origin,
+      current: info.current,
+      delta: info.delta,
+      moved: info.moved,
+      session: gesture?.session ?? ({} as Session),
+      measured: gesture?.measured ?? null,
+      measuredRect: gesture?.measuredRect ?? null,
     };
   }
 
   #reset(event: PointerEvent) {
-    this.#sessions.delete(event.pointerId);
+    this.#gestures.delete(event.pointerId);
     // Detached as soon as nothing is left to re-measure, which is not the same
     // as no gesture being left: an unmeasured gesture can outlive a measured one.
-    if (!this.#hasMeasuredSession()) {
+    if (!this.#hasMeasuredGesture()) {
       this.#unwatchReflow();
     }
   }
 
-  /** Whether any live gesture has a box worth re-measuring. */
-  #hasMeasuredSession(): boolean {
-    for (const session of this.#sessions.values()) {
-      if (session.measured) {
+  #hasMeasuredGesture(): boolean {
+    for (const gesture of this.#gestures.values()) {
+      if (gesture.measured) {
         return true;
       }
     }
     return false;
   }
 
-  /** Resolves `@measure` for the handle that was pressed. */
   #measureTarget(handle: HTMLElement): Element | null {
     const target = this.args.measure;
     return (typeof target === "function" ? target(handle) : target) ?? null;
@@ -469,7 +515,7 @@ export default class DResizeHandles<
     // Nothing to re-measure without `@measure`, which is the common case: the
     // built-in box reports no rect, so a document-wide capture-phase scroll
     // listener would run on every scroll to write null over null.
-    if (this.#watchingReflow || !this.#hasMeasuredSession()) {
+    if (this.#watchingReflow || !this.#hasMeasuredGesture()) {
       return;
     }
     this.#watchingReflow = true;
@@ -487,9 +533,9 @@ export default class DResizeHandles<
   }
 
   <template>
-    {{! Keyed by index: handles hold no cross-render state (the drag session
-      lives on this component), and a payload (e.g. a column index) may repeat
-      across handles, so positional keys are both safe and collision-free. }}
+    {{! Keyed by index: the handles themselves hold no state, since a gesture is
+      tracked here against its pointer, and a payload may repeat across handles.
+      Positional keys are therefore both safe and collision-free. }}
     {{#each this.handles key="@index" as |handle|}}
       <span
         class={{handle.class}}
