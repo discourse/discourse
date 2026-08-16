@@ -16,11 +16,7 @@ const extension = {
       code: true,
       defining: true,
       marks: "",
-      parseDOM: [
-        { tag: "pre.preview-source", preserveWhitespace: "full" },
-        // a plain code block pasted into a preview block is its source
-        { tag: "pre", preserveWhitespace: "full" },
-      ],
+      parseDOM: [{ tag: "pre.preview-source", preserveWhitespace: "full" }],
       toDOM: () => ["pre", { class: "preview-source" }, ["code", 0]],
     },
   },

@@ -7,6 +7,12 @@ import GraphvizPreview from "../components/graphviz-preview";
 // exclude it simply get an unhighlighted code block
 const LANGUAGE = "dot";
 
+// kept in step with the engines the markdown rule accepts, so a diagram parsed
+// from pasted HTML cannot serialize an engine the bbcode tag would not survive
+const ENGINES = ["dot", "neato", "circo", "fdp", "osage", "twopi"];
+
+const toEngine = (engine) => (ENGINES.includes(engine) ? engine : "dot");
+
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
   nodeSpec: {
@@ -25,7 +31,7 @@ const extension = {
       parseDOM: [
         {
           tag: "div.graphviz",
-          getAttrs: (dom) => ({ engine: dom.dataset.engine || "dot" }),
+          getAttrs: (dom) => ({ engine: toEngine(dom.dataset.engine) }),
         },
       ],
       toDOM: (node) => [
@@ -45,7 +51,9 @@ const extension = {
         controls: [
           {
             icon: "discourse-expand",
-            label: i18n("graphviz.fullscreen"),
+            get label() {
+              return i18n("graphviz.fullscreen");
+            },
             action: ({ node, context }) =>
               context.modal.show(GraphvizFullscreen, {
                 model: { src: node.textContent, engine: node.attrs.engine },
@@ -59,7 +67,7 @@ const extension = {
   parse: {
     graphviz: (state, token) => {
       state.openNode(state.schema.nodes.graphviz, {
-        engine: token.attrGet("data-engine") || "dot",
+        engine: toEngine(token.attrGet("data-engine")),
       });
       state.openNode(state.schema.nodes.preview_source, { params: LANGUAGE });
       state.addText(token.content.trim());

@@ -58,6 +58,13 @@ export default class PreviewNodeView extends Component {
     return this.args.node.textContent;
   }
 
+  // the preview follows the source, except while it is being edited: there it
+  // holds still, so it neither re-renders on every keystroke nor rebuilds
+  // itself for a half-typed source
+  get previewSource() {
+    return this.showingSource ? this.renderedSource : this.source;
+  }
+
   get toggleLabel() {
     return this.showingSource
       ? i18n("composer.preview_node.show_preview")
@@ -66,12 +73,12 @@ export default class PreviewNodeView extends Component {
 
   @action
   toggleSource() {
-    this.showingSource = !this.showingSource;
-
     if (!this.showingSource) {
+      // freeze what the preview shows for as long as the source is being edited
       this.renderedSource = this.source;
     }
 
+    this.showingSource = !this.showingSource;
     this.#syncMode();
 
     const pos = this.args.getPos();
@@ -111,15 +118,6 @@ export default class PreviewNodeView extends Component {
     this.args.dom.classList.remove("ProseMirror-selectednode");
   }
 
-  // reaching the source with the caret has to reveal it, or the caret lands
-  // somewhere out of sight
-  setSelection() {
-    if (!this.showingSource) {
-      this.showingSource = true;
-      this.#syncMode();
-    }
-  }
-
   // the controls are the node view's own, so the editor should not treat
   // clicking them as clicking into the document
   stopEvent(event) {
@@ -139,7 +137,7 @@ export default class PreviewNodeView extends Component {
       contenteditable="false"
       aria-hidden={{if this.showingSource "true" "false"}}
     >{{#let @options.preview as |Preview|}}<Preview
-          @source={{this.renderedSource}}
+          @source={{this.previewSource}}
           @node={{@node}}
         />{{/let}}</div><div
       class="composer-preview-node__controls"
