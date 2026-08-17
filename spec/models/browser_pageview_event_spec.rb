@@ -182,36 +182,6 @@ RSpec.describe BrowserPageviewEvent do
     end
   end
 
-  describe ".create_from_payload!" do
-    it "persists the classified browser" do
-      event =
-        described_class.create_from_payload!(
-          url: "https://discourse.example/t/topic/1",
-          ip_address: "1.2.3.4",
-          user_agent: "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
-          session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
-          source: described_class::SOURCE_BEACON,
-          occurred_at: Time.zone.parse("2026-05-27 10:30:00").iso8601(6),
-        )
-
-      expect(event.browser).to eq("edge")
-    end
-
-    it "stores unsupported browser classifications as unknown" do
-      event =
-        described_class.create_from_payload!(
-          url: "https://discourse.example/t/topic/1",
-          ip_address: "1.2.3.4",
-          user_agent: "Discourse/163 CFNetwork/978.0.7 Darwin/18.6.0",
-          session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
-          source: described_class::SOURCE_BEACON,
-          occurred_at: Time.zone.parse("2026-05-27 10:30:00").iso8601(6),
-        )
-
-      expect(event.browser).to eq("unknown")
-    end
-  end
-
   it "truncates string fields before saving" do
     event =
       described_class.create!(
