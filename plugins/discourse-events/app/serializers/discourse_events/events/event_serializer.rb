@@ -28,6 +28,7 @@ module DiscourseEvents
       attributes :description_html
       attributes :location
       attributes :location_html
+      attributes :url_restates_location
       attributes :watching_invitee
       attributes :chat_enabled
       attributes :livestream
@@ -213,7 +214,13 @@ module DiscourseEvents
       end
 
       def location_html
-        Parser.cook_inline(object.location, post: object.post)
+        @location_html ||= Parser.cook_location(object.location, post: object.post)
+      end
+
+      def url_restates_location
+        return false if object.location.blank?
+
+        Parser.url_restates_location?(object.url, object.location, cooked_location: location_html)
       end
     end
   end

@@ -26,6 +26,7 @@ module DiscourseEvents
       ]
 
       LEGACY_ESCAPED_ATTRS = %w[data-location]
+      SCHEME_PREFIX = /\A[a-z][a-z0-9+.\-]*:/i
 
       def self.extract_events(post)
         cooked = PrettyText.cook(post.raw, topic_id: post.topic_id, user_id: post.user_id)
@@ -115,6 +116,18 @@ module DiscourseEvents
           end
       end
 
+      def self.cook_location(text, post: nil)
+        text = text.to_s
+        add_nofollow = post.nil? || post.add_nofollow?
+
+        Discourse
+          .cache
+          .fetch(
+            "post-event-location:#{INLINE_CACHE_VERSION}:#{Digest::SHA1.hexdigest(text)}:#{add_nofollow}",
+            expires_in: 1.week,
+          ) { normalize_links(cook_inline(text, post:)) }
+      end
+
       def self.inline_text(text)
         cooked = cook_inline(text)
         PrettyText.excerpt(cooked, cooked.length, strip_links: true, text_entities: true)
@@ -124,6 +137,60 @@ module DiscourseEvents
         url = url.to_s.downcase
         schemes = %w[http https mailto] | SiteSetting.allowed_href_schemes.split("|")
         schemes.any? { |scheme| url.start_with?("#{scheme}:") }
+      end
+
+      def self.valid_url?(value)
+        value = value.to_s.strip
+        return true if value.blank?
+        # Rejected before encoding, which would otherwise make a CR/LF payload parse.
+        return false if value.match?(/\s/)
+
+        candidate = value.match?(SCHEME_PREFIX) ? value : "https://#{value}"
+        uri = URI.parse(UrlHelper.encode(candidate))
+        uri.scheme == "mailto" ? uri.opaque.present? : uri.host.present?
+      rescue URI::Error, Addressable::URI::InvalidURIError
+        false
+      end
+
+      def self.normalize_link(value)
+        value.to_s.strip.downcase.sub(%r{\Ahttps?://}, "").sub(%r{/+\z}, "")
+      end
+
+      def self.display_link(value)
+        value.to_s.strip.sub(%r{\Ahttps?://}i, "")
+      end
+
+      # A location is cooked, so its links arrive as anchors. Present them the same
+      # way the url row is presented: no scheme on screen, https when the author
+      # did not write one. Anchors carrying custom text are left alone.
+      def self.normalize_links(html)
+        fragment = Nokogiri::HTML5.fragment(html.to_s)
+        anchors =
+          fragment.css("a[href]").select { |a| [a.text, "http://#{a.text}"].include?(a["href"]) }
+        return html if anchors.empty?
+
+        anchors.each do |anchor|
+          text = anchor.text
+          if anchor["href"] == text
+            anchor.content = display_link(text)
+          else
+            anchor["href"] = "https://#{text}"
+          end
+        end
+
+        fragment.to_html
+      end
+
+      def self.url_restates_location?(url, location, cooked_location: nil)
+        return false if url.blank? || location.blank?
+
+        target = normalize_link(url)
+        return true if normalize_link(location) == target
+
+        Nokogiri::HTML5
+          .fragment(cooked_location || cook_location(location))
+          .css("a[href]")
+          .any? { |anchor| normalize_link(anchor["href"]) == target }
       end
 
       def self.to_markdown(node)
