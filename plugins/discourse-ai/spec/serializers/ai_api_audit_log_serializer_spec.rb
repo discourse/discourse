@@ -20,6 +20,8 @@ RSpec.describe AiApiAuditLogSerializer do
       AiApiAuditLog.new(
         provider_id: AiApiAuditLog::Provider::OpenAI,
         response_status: 200,
+        duration_msecs: 22_300,
+        time_to_first_token_msecs: 125,
         request_attempts: [
           { "status" => 429, "delay_ms" => 0 },
           { "status" => 200, "delay_ms" => 2000 },
@@ -32,5 +34,15 @@ RSpec.describe AiApiAuditLogSerializer do
       [{ "status" => 429, "delay_ms" => 0 }, { "status" => 200, "delay_ms" => 2000 }],
     )
     expect(serialized[:response_status]).to eq(200)
+    expect(serialized[:duration_msecs]).to eq(22_300)
+    expect(serialized[:time_to_first_token_msecs]).to eq(125)
+  end
+
+  it "includes a null time to first token for historical logs" do
+    log = AiApiAuditLog.new(provider_id: AiApiAuditLog::Provider::OpenAI)
+
+    serialized = described_class.new(log).as_json[:ai_api_audit_log]
+
+    expect(serialized[:time_to_first_token_msecs]).to be_nil
   end
 end
