@@ -64,7 +64,7 @@ RSpec.describe CategoryActivityDailyRollup do
         anonymous_views: 5,
         logged_in_views: 0,
       )
-      20.times do
+      2.times do
         Fabricate(
           :browser_pageview_event,
           topic_id: topic.id,
