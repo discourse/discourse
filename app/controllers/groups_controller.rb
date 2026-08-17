@@ -468,8 +468,6 @@ class GroupsController < ApplicationController
       group.notify_added_to_group(user, owner: true) if params[:notify_users].to_s == "true"
     end
 
-    group.restore_user_count!
-
     render json: success_json.merge!(usernames: users.pluck(:username))
   end
 
