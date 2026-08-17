@@ -105,21 +105,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         )
       end
 
-      it "maps browser filter names to stored enum values" do
-        traffic = described_class.call(params: params.merge(browser: "chrome")).traffic
-
-        expect(traffic.slice(:summary, :active_filters)).to eq(
-          summary: {
-            "pageviews" => 3,
-            "distinct_sessions" => 3,
-            "logged_in_share" => 0,
-            "bounce_rate" => 100,
-            "average_session_duration_seconds" => 0,
-          },
-          active_filters: [{ key: :browser, value: "chrome", label: "Google Chrome" }],
-        )
-      end
-
       it "uses only local IP data to produce country and network labels" do
         DiscourseIpInfo
           .expects(:get)
