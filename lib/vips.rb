@@ -40,7 +40,7 @@ class Vips
         *command,
         env: environment,
         unsetenv_others: true,
-        read: [*Discourse::SafeExec.default_read_paths, *read],
+        read: [*Discourse::SafeExec.default_read_paths, "/etc/ld.so.cache", *read],
         write: [scratch, *write],
         execute: Discourse::SafeExec.default_execute_paths,
         timeout: timeout || DEFAULT_TIMEOUT,
