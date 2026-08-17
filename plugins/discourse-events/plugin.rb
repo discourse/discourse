@@ -957,7 +957,9 @@ after_initialize do
     DiscoursePostEvent::Invitee.statuses[invitee.status] if invitee
   end
 
-  Chat::ChannelSerializer.include(DiscourseCalendar::Livestream::ChannelSerializerExtension)
+  reloadable_patch do
+    Chat::ChannelSerializer.include(DiscourseCalendar::Livestream::ChannelSerializerExtension)
+  end
 
   register_modifier(:chat_channel_fetcher_public_includes) do |includes|
     includes + [{ livestream_topic_chat_channel: { topic: { first_post: :event } } }]
