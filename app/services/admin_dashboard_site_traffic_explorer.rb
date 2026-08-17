@@ -132,7 +132,7 @@ class AdminDashboardSiteTrafficExplorer
   def query_params(start_date:, end_date:, filters:)
     retention_cutoff = BrowserPageviewEvent.retention_cutoff.to_date
     effective_start_date = [start_date, retention_cutoff].max
-    cap = SiteSetting.admin_site_traffic_event_cap
+    cap = SiteSetting.site_traffic_explorer_event_limit
 
     {
       start_date: effective_start_date,
@@ -565,7 +565,7 @@ class AdminDashboardSiteTrafficExplorer
       {
         reason: "retention_and_pageview_limit",
         available_start_date: BrowserPageviewEvent.retention_cutoff.to_date.iso8601,
-        pageview_limit: SiteSetting.admin_site_traffic_event_cap,
+        pageview_limit: SiteSetting.site_traffic_explorer_event_limit,
       }
     elsif retention_limited
       {
@@ -573,7 +573,7 @@ class AdminDashboardSiteTrafficExplorer
         available_start_date: BrowserPageviewEvent.retention_cutoff.to_date.iso8601,
       }
     else
-      { reason: "pageview_limit", pageview_limit: SiteSetting.admin_site_traffic_event_cap }
+      { reason: "pageview_limit", pageview_limit: SiteSetting.site_traffic_explorer_event_limit }
     end
   end
 

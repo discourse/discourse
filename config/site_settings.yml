@@ -4647,7 +4647,7 @@ dashboard:
       - user_to_user_private_messages_with_replies
       - signups
     area: "reports"
-  admin_site_traffic_event_cap:
+  site_traffic_explorer_event_limit:
     default: 200000
     type: integer
     min: 1
