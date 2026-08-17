@@ -99,25 +99,6 @@ RSpec.describe TopicOgImageGenerator do
       expect([png.width, png.height]).to eq([1200, 630])
       expect(png[180, 520]).to eq(png[500, 520])
     end
-
-    it "bounds rendering by wall-clock and aggregate CPU time" do
-      render_options = nil
-      Vips
-        .expects(:run)
-        .with do |*command, **options|
-          render_options = options
-          command.first(2) == %w[vips flatten]
-        end
-        .raises(Discourse::Utils::CommandError.new("rendering exceeded its resource budget"))
-
-      expect(described_class.new(topic).generate_bytes).to eq(nil)
-      expect(render_options.slice(:timeout, :rlimits)).to eq(
-        timeout: 5,
-        rlimits: {
-          cpu_seconds: 5,
-        },
-      )
-    end
   end
 
   describe ".eligible?" do

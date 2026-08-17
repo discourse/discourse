@@ -3,14 +3,14 @@
 require "tmpdir"
 
 class Vips
-  DEFAULT_TIMEOUT = 30
+  DEFAULT_TIMEOUT = 5
   private_constant :DEFAULT_TIMEOUT
 
   LIBVIPS_DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
   private_constant :LIBVIPS_DYNAMIC_LINKER_CACHE_PATH
 
   RLIMITS = {
-    cpu_seconds: 300,
+    cpu_seconds: 5,
     memory_bytes: 4 * 1024 * 1024 * 1024,
     file_size_bytes: 10 * 1024 * 1024 * 1024,
     open_files: 1024,
@@ -23,7 +23,6 @@ class Vips
     write: [],
     timeout: nil,
     nice: nil,
-    rlimits: {},
     allow_untrusted: false,
     failure_message: ""
   )
@@ -48,7 +47,7 @@ class Vips
         write: [scratch, *write],
         execute: Discourse::SafeExec.default_execute_paths,
         timeout: timeout || DEFAULT_TIMEOUT,
-        rlimits: RLIMITS.merge(rlimits),
+        rlimits: RLIMITS,
         failure_message:,
         seccomp_deny_network: true,
       )
