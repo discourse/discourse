@@ -1110,7 +1110,7 @@ en:
     safari: "Safari"
     samsung_browser: "Samsung Browser"
     uc_browser: "UC Browser"
-    unknown: "unknown browser"
+    unknown: "Unknown browser"
 
   user_auth_tokens:
     device:
