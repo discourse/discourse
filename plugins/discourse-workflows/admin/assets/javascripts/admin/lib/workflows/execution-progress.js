@@ -41,8 +41,18 @@ export function formatDuration(startedAt, finishedAt, currentTime) {
     : `${(milliseconds / 1000).toFixed(1)}s`;
 }
 
+export class ExecutionProgressStream {
   @tracked currentTime = Date.now();
+
+  #channel = null;
+  #lastMessageId = 0;
+  #messageBus;
+  #messageHandler = null;
+  #onGap;
+  #onMessage;
   #onRetry;
+  #retryCount = 0;
+  #retryTimer = null;
   #ticker = null;
 
   constructor(messageBus, { onMessage, onGap, onRetry }) {
