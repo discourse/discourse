@@ -212,7 +212,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   }
 
   get keymapFromArgs(): Record<string, Command> {
-    const replacements: Record<string, string> = { tab: "Tab" };
+    const replacements: Record<string, string> = {
+      shift: "Shift",
+      tab: "Tab",
+    };
     const result: Record<string, Command> = {};
     for (const [key, value] of Object.entries(this.args.keymap ?? {})) {
       const pmKey = key

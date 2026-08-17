@@ -127,5 +127,27 @@ module(
         "each selected line is outdented as far as possible"
       );
     });
+
+    test("Tab still nests list items", async function (assert) {
+      const [editor] = await setupRichEditor(assert, "* first\n* second");
+      const { view } = editor;
+
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, 12))
+      );
+      await triggerKeyEvent(".ProseMirror", "keydown", "Tab");
+
+      assert
+        .dom(".ProseMirror > ul > li > ul > li")
+        .hasText("second", "the second item is nested under the first");
+
+      await triggerKeyEvent(".ProseMirror", "keydown", "Tab", {
+        shiftKey: true,
+      });
+
+      assert
+        .dom(".ProseMirror > ul > li")
+        .exists({ count: 2 }, "Shift-Tab lifts the nested item");
+    });
   }
 );

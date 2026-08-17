@@ -9,13 +9,13 @@ const INDENT = "  ";
 // cached hljs instance with custom plugins/languages
 let hljs;
 
-function selectedCodeBlockLines(state) {
+function selectedCodeLines(state) {
   const { selection } = state;
   if (
     !(selection instanceof TextSelection) ||
     selection.empty ||
     selection.$from.parent !== selection.$to.parent ||
-    selection.$from.parent.type !== state.schema.nodes.code_block
+    !selection.$from.parent.type.spec.code
   ) {
     return;
   }
@@ -40,7 +40,7 @@ function selectedCodeBlockLines(state) {
 
 function indentCodeBlock(outdent = false) {
   return (state, dispatch) => {
-    const selectedLines = selectedCodeBlockLines(state);
+    const selectedLines = selectedCodeLines(state);
     if (!selectedLines) {
       return false;
     }

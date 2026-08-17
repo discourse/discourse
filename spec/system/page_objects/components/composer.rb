@@ -403,6 +403,14 @@ module PageObjects
         select_all_content("#{RICH_EDITOR} pre code")
       end
 
+      def has_nested_list_item?(text)
+        has_css?("#{RICH_EDITOR} li > ul > li", text:, exact_text: true)
+      end
+
+      def has_top_level_list_item?(text)
+        has_css?("#{RICH_EDITOR} > ul > li", text:, exact_text: true)
+      end
+
       def submit
         find("#{@composer_id} .save-or-cancel .create").click
       end
