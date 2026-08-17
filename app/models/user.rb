@@ -1513,7 +1513,12 @@ class User < ActiveRecord::Base
 
   def activate
     email_token = email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
-    EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
+    # this programmatic confirmation proves nothing about deliverability
+    EmailToken.confirm(
+      email_token.token,
+      scope: EmailToken.scopes[:signup],
+      skip_reset_bounce_score: true,
+    )
     reload
   end
 

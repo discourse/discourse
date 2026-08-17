@@ -36,13 +36,14 @@ class WebhooksController < ActionController::Base
         # so we set the error code to 5.1.2 which translates to permanent failure bad destination system address.
         error_code = "5.1.2" if !error_code && event["type"] == "blocked"
 
-        if error_code&.[](Email::SMTP_STATUS_TRANSIENT_FAILURE)
-          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
-        else
-          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
-        end
+        process_bounce(
+          message_id,
+          to_address,
+          permanent: !Email.smtp_transient_failure?(error_code),
+          bounce_error_code: error_code,
+        )
       elsif event["event"] == "dropped"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+        process_bounce(message_id, to_address, permanent: true, bounce_error_code: error_code)
       end
     end
 
@@ -61,11 +62,7 @@ class WebhooksController < ActionController::Base
       message_id = event["CustomID"]
       to_address = event["email"]
       if event["event"] == "bounce"
-        if event["hard_bounce"]
-          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
-        else
-          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
-        end
+        process_bounce(message_id, to_address, permanent: !!event["hard_bounce"])
       end
     end
 
@@ -87,9 +84,9 @@ class WebhooksController < ActionController::Base
 
     case status
     when "bounced"
-      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+      process_bounce(message_id, to_address, permanent: true)
     when "deferred"
-      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+      process_bounce(message_id, to_address, permanent: false)
     end
 
     success
@@ -111,9 +108,9 @@ class WebhooksController < ActionController::Base
 
         case event["event"]
         when "hard_bounce"
-          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+          process_bounce(message_id, to_address, permanent: true, bounce_error_code: error_code)
         when "soft_bounce"
-          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+          process_bounce(message_id, to_address, permanent: false, bounce_error_code: error_code)
         end
       end
 
@@ -141,9 +138,9 @@ class WebhooksController < ActionController::Base
     type = params["Type"]
     case type
     when "HardBounce", "SpamNotification", "SpamComplaint"
-      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+      process_bounce(message_id, to_address, permanent: true)
     when "SoftBounce"
-      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+      process_bounce(message_id, to_address, permanent: false)
     end
 
     success
@@ -171,9 +168,9 @@ class WebhooksController < ActionController::Base
       # bounce class definitions: https://support.sparkpost.com/customer/portal/articles/1929896
       if bounce_class < 80
         if bounce_class == 10 || bounce_class == 25 || bounce_class == 30
-          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+          process_bounce(message_id, to_address, permanent: true)
         else
-          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+          process_bounce(message_id, to_address, permanent: false)
         end
       end
     end
@@ -235,15 +232,16 @@ class WebhooksController < ActionController::Base
     event = params["event"]
     message_id = Email::MessageIdService.message_id_clean(params["Message-Id"])
     to_address = params["recipient"]
-    error_code = params["code"]
+    # older payloads only carry the status inside the free-form diagnostic
+    error_code = params["code"].presence || Email.extract_smtp_status(params["error"])
 
     # only handle soft bounces, because hard bounces are also handled
     # by the "dropped" event and we don't want to increase bounce score twice
     # for the same message
-    if event == "bounced" && params["error"]&.[](Email::SMTP_STATUS_TRANSIENT_FAILURE)
-      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+    if event == "bounced" && Email.smtp_transient_failure?(error_code)
+      process_bounce(message_id, to_address, permanent: false, bounce_error_code: error_code)
     elsif event == "dropped"
-      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+      process_bounce(message_id, to_address, permanent: true, bounce_error_code: error_code)
     end
 
     success
@@ -260,16 +258,16 @@ class WebhooksController < ActionController::Base
     end
 
     data = params["event-data"]
-    error_code = params.dig("delivery-status", "code")
+    error_code = data.dig("delivery-status", "code")
     message_id = data.dig("message", "headers", "message-id")
     to_address = data["recipient"]
     severity = data["severity"]
 
     if data["event"] == "failed"
       if severity == "temporary"
-        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+        process_bounce(message_id, to_address, permanent: false, bounce_error_code: error_code)
       elsif severity == "permanent"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+        process_bounce(message_id, to_address, permanent: true, bounce_error_code: error_code)
       end
     end
 
@@ -338,15 +336,14 @@ class WebhooksController < ActionController::Base
     ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.sparkpost_webhook_token)
   end
 
-  def process_bounce(message_id, to_address, bounce_score, bounce_error_code = nil)
+  def process_bounce(message_id, to_address, permanent:, bounce_error_code: nil)
     return if message_id.blank? || to_address.blank?
 
     email_log = EmailLog.find_by(message_id: message_id, to_address: to_address)
-    return if email_log.nil?
-
-    email_log.update_columns(bounced: true, bounce_error_code: bounce_error_code)
-    return if email_log.user.nil? || email_log.user.email.blank?
-
-    Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
+    Email::Receiver.record_bounce(
+      email_log,
+      permanent: permanent,
+      bounce_error_code: bounce_error_code,
+    )
   end
 end

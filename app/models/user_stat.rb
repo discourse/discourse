@@ -285,6 +285,8 @@ class UserStat < ActiveRecord::Base
   end
 
   def reset_bounce_score!
+    return if bounce_score == 0 && reset_bounce_score_after.nil?
+
     update_columns(reset_bounce_score_after: nil, bounce_score: 0)
   end
 

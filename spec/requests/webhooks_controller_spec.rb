@@ -43,6 +43,189 @@ RSpec.describe WebhooksController do
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
 
+    it "applies the soft bounce score to transient failures" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailgun.json",
+           params: {
+             "token" => token,
+             "timestamp" => timestamp,
+             "event" => "bounced",
+             "recipient" => email,
+             "Message-Id" => "<#{message_id}>",
+             "signature" => signature,
+             "error" =>
+               "smtp; 450 4.2.1 The user you are trying to contact is receiving mail too quickly.",
+             "code" => "4.2.1",
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("4.2.1")
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
+    end
+
+    it "applies the soft bounce score when the status is only in the diagnostic text" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailgun.json",
+           params: {
+             "token" => token,
+             "timestamp" => timestamp,
+             "event" => "bounced",
+             "recipient" => email,
+             "Message-Id" => "<#{message_id}>",
+             "signature" => signature,
+             "error" =>
+               "smtp; 450 4.2.1 The user you are trying to contact is receiving mail too quickly.",
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
+    end
+
+    it "reads a status that trails the relaying host in the diagnostic text" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailgun.json",
+           params: {
+             "token" => token,
+             "timestamp" => timestamp,
+             "event" => "bounced",
+             "recipient" => email,
+             "Message-Id" => "<#{message_id}>",
+             "signature" => signature,
+             "error" =>
+               "smtp; host mx.example.com[74.125.24.27] said: 450 4.2.1 The user you are trying to contact is receiving mail too quickly.",
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("450")
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
+    end
+
+    it "does not read a status out of the octets of the relaying host's IP" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailgun.json",
+           params: {
+             "token" => token,
+             "timestamp" => timestamp,
+             "event" => "dropped",
+             "recipient" => email,
+             "Message-Id" => "<#{message_id}>",
+             "signature" => signature,
+             "error" => "Error: mail.example.com[5.1.24.7]:25: Connection refused",
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_PERMANENT)
+    end
+
+    it "ignores a diagnostic that carries no status" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailgun.json",
+           params: {
+             "token" => token,
+             "timestamp" => timestamp,
+             "event" => "bounced",
+             "recipient" => email,
+             "Message-Id" => "<#{message_id}>",
+             "signature" => signature,
+             "error" => "Error: mail.example.com[93.184.216.34]:25: Connection timed out",
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(false)
+      expect(email_log.user.user_stat.bounce_score).to eq(0)
+    end
+
+    it "does not apply the soft bounce score to permanent 5.4.x failures" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailgun.json",
+           params: {
+             "token" => token,
+             "timestamp" => timestamp,
+             "event" => "bounced",
+             "recipient" => email,
+             "Message-Id" => "<#{message_id}>",
+             "signature" => signature,
+             "error" => "smtp; 550-5.4.7 Delivery time expired.",
+             "code" => "5.4.7",
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(false)
+      expect(email_log.user.user_stat.bounce_score).to eq(0)
+    end
+
+    it "escalates a transient bounce to a hard bounce when the message is later dropped" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailgun.json",
+           params: {
+             "token" => token,
+             "timestamp" => timestamp,
+             "event" => "bounced",
+             "recipient" => email,
+             "Message-Id" => "<#{message_id}>",
+             "signature" => signature,
+             "error" =>
+               "smtp; 450 4.2.1 The user you are trying to contact is receiving mail too quickly.",
+             "code" => "4.2.1",
+           }
+      expect(response.status).to eq(200)
+
+      other_token = token.reverse
+      post "/webhooks/mailgun.json",
+           params: {
+             "token" => other_token,
+             "timestamp" => timestamp,
+             "event" => "dropped",
+             "recipient" => email,
+             "Message-Id" => "<#{message_id}>",
+             "signature" =>
+               OpenSSL::HMAC.hexdigest(
+                 "SHA256",
+                 SiteSetting.mailgun_api_key,
+                 "#{timestamp}#{other_token}",
+               ),
+             "error" => "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+             "code" => "5.1.1",
+           }
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounce_error_code).to eq("5.1.1")
+      expect(email_log.user.user_stat.reload.bounce_score).to eq(
+        SiteSetting.soft_bounce_score + SiteSetting.hard_bounce_score,
+      )
+    end
+
     it "works (new)" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
@@ -63,12 +246,12 @@ RSpec.describe WebhooksController do
                    "message-id" => message_id,
                  },
                },
-             },
-             "delivery-status" => {
-               "message" =>
-                 "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
-               "code" => "5.1.1",
-               "description" => "",
+               "delivery-status" => {
+                 "message" =>
+                   "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+                 "code" => "5.1.1",
+                 "description" => "",
+               },
              },
            }
 
@@ -76,8 +259,48 @@ RSpec.describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
+      # the payload reports a permanent code at a temporary severity: the code is
+      # what the provider said, the severity is what we scored
       expect(email_log.bounce_error_code).to eq("5.1.1")
+      expect(email_log.bounce_permanent).to eq(false)
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
+    end
+
+    it "scores a permanent severity as a hard bounce (new)" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailgun.json",
+           params: {
+             "signature" => {
+               "token" => token,
+               "timestamp" => timestamp,
+               "signature" => signature,
+             },
+             "event-data" => {
+               "event" => "failed",
+               "severity" => "permanent",
+               "recipient" => email,
+               "message" => {
+                 "headers" => {
+                   "message-id" => message_id,
+                 },
+               },
+               "delivery-status" => {
+                 "message" =>
+                   "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+                 "code" => 550,
+                 "description" => "",
+               },
+             },
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("550")
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
 
     context "when readonly mode is enabled" do
@@ -150,6 +373,29 @@ RSpec.describe WebhooksController do
       email_log.reload
       expect(email_log.bounced).to eq(true)
       expect(email_log.bounce_error_code).to eq("5.0.0")
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "applies the hard bounce score to permanent 5.4.x statuses" do
+      SiteSetting.sendgrid_verification_key = "test"
+      WebhooksController.any_instance.stubs(:valid_sendgrid_signature?).returns(true)
+
+      post "/webhooks/sendgrid.json",
+           params: {
+             "_json" => [
+               {
+                 "email" => email,
+                 "smtp-id" => "<12345@il.com>",
+                 "event" => "bounce",
+                 "status" => "5.4.7",
+               },
+             ],
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
 
@@ -293,8 +539,70 @@ RSpec.describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.bounce_error_code).to eq(nil) # mailjet doesn't give us this
+      # mailjet doesn't report an error code, so a generic one is stored
+      expect(email_log.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_PERMANENT)
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "does not increase the bounce score for duplicate events" do
+      SiteSetting.mailjet_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      2.times do
+        post "/webhooks/mailjet.json?t=foo",
+             params: {
+               "event" => "bounce",
+               "email" => email,
+               "hard_bounce" => true,
+               "CustomID" => message_id,
+             }
+
+        expect(response.status).to eq(200)
+      end
+
+      expect(email_log.reload.bounced).to eq(true)
+      expect(email_log.user.user_stat.reload.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "leaves the bounce score unchanged when the user has since changed their email address" do
+      SiteSetting.mailjet_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+      user.primary_email.update!(email: "fixed@email.com")
+
+      post "/webhooks/mailjet.json?t=foo",
+           params: {
+             "event" => "bounce",
+             "email" => email,
+             "hard_bounce" => true,
+             "CustomID" => message_id,
+           }
+
+      expect(response.status).to eq(200)
+      expect(email_log.reload.bounced).to eq(true)
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+    end
+
+    it "does not increase the bounce score of another user who now owns the recipient address" do
+      SiteSetting.mailjet_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+      user.primary_email.update!(email: "fixed@email.com")
+      other_user = Fabricate(:user, email: email)
+
+      post "/webhooks/mailjet.json?t=foo",
+           params: {
+             "event" => "bounce",
+             "email" => email,
+             "hard_bounce" => true,
+             "CustomID" => message_id,
+           }
+
+      expect(response.status).to eq(200)
+      expect(email_log.reload.bounced).to eq(true)
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+      expect(other_user.user_stat.reload.bounce_score).to eq(0)
     end
 
     it "verifies signatures" do
@@ -369,8 +677,35 @@ RSpec.describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.bounce_error_code).to eq(nil) # mailpace doesn't give us this
+      # mailpace doesn't report an error code, so a generic one is stored
+      expect(email_log.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_PERMANENT)
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "escalates a deferred email to a hard bounce when it later bounces" do
+      SiteSetting.mailpace_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      %w[deferred bounced].each do |status|
+        post "/webhooks/mailpace.json?t=foo",
+             params: {
+               event: "email.#{status}",
+               payload: {
+                 status: status,
+                 to: email,
+                 message_id: "<#{message_id}>",
+               },
+             }
+
+        expect(response.status).to eq(200)
+      end
+
+      email_log.reload
+      expect(email_log.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_PERMANENT)
+      expect(email_log.user.user_stat.reload.bounce_score).to eq(
+        SiteSetting.soft_bounce_score + SiteSetting.hard_bounce_score,
+      )
     end
 
     it "soft bounces" do
@@ -392,7 +727,8 @@ RSpec.describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.bounce_error_code).to eq(nil) # mailpace doesn't give us this
+      # mailpace doesn't report an error code, so a generic one is stored
+      expect(email_log.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_TRANSIENT)
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
 
@@ -578,7 +914,8 @@ RSpec.describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.bounce_error_code).to eq(nil) # postmark doesn't give us this
+      # postmark doesn't report an error code, so a generic one is stored
+      expect(email_log.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_PERMANENT)
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
 
@@ -597,7 +934,8 @@ RSpec.describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.bounce_error_code).to eq(nil) # postmark doesn't give us this
+      # postmark doesn't report an error code, so a generic one is stored
+      expect(email_log.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_TRANSIENT)
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
 
@@ -794,6 +1132,7 @@ RSpec.describe WebhooksController do
     let(:topic_arn) { "arn:aws:sns:us-east-1:123456789012:discourse-bounces" }
     let(:other_topic_arn) { "arn:aws:sns:us-east-1:999999999999:attacker-topic" }
     let(:bounce_status) { "5.1.1" }
+    let(:bounce_type) { "Permanent" }
     let(:payload) do
       {
         "Type" => "Notification",
@@ -801,7 +1140,7 @@ RSpec.describe WebhooksController do
         "Message" => {
           "notificationType" => "Bounce",
           :bounce => {
-            "bounceType" => "Permanent",
+            "bounceType" => bounce_type,
             "reportingMTA" => "dns; email.example.com",
             :bouncedRecipients => [
               {
@@ -907,6 +1246,75 @@ RSpec.describe WebhooksController do
 
       expect(email_log.reload.bounced).to eq(true)
       expect(email_log.user.user_stat.reload.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "applies the hard bounce score to permanent bounces regardless of the current bounce score" do
+      user = Fabricate(:user, email: email)
+      user.user_stat.update!(bounce_score: 4.2)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+      expect(response.status).to eq(200)
+
+      expect(email_log.reload.bounced).to eq(true)
+      expect(user.user_stat.reload.bounce_score).to eq(4.2 + SiteSetting.hard_bounce_score)
+    end
+
+    it "leaves the bounce score unchanged when the user has since changed their email address" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+      user.primary_email.update!(email: "fixed@email.com")
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+      expect(response.status).to eq(200)
+
+      expect(email_log.reload.bounced).to eq(true)
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+    end
+
+    context "with a transient SMTP status" do
+      let(:bounce_status) { "4.4.7" }
+
+      it "applies the hard bounce score, since the provider gave up on the address" do
+        user = Fabricate(:user, email: email)
+        email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+        post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+        expect(response.status).to eq(200)
+
+        expect(email_log.reload.bounced).to eq(true)
+        expect(email_log.bounce_error_code).to eq("4.4.7")
+        expect(user.user_stat.reload.bounce_score).to eq(SiteSetting.hard_bounce_score)
+      end
+
+      it "does not score a notification redelivered for a bounce recorded before the severity was tracked" do
+        user = Fabricate(:user, email: email)
+        email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+        # a bounce recorded straight onto the columns, which is all a NULL severity can mean
+        email_log.update_columns(bounced: true, bounce_error_code: bounce_status)
+        user.user_stat.update!(bounce_score: SiteSetting.hard_bounce_score)
+
+        post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+        expect(response.status).to eq(200)
+
+        expect(email_log.reload.bounce_error_code).to eq("4.4.7")
+        expect(user.user_stat.reload.bounce_score).to eq(SiteSetting.hard_bounce_score)
+      end
+    end
+
+    context "with a transient bounce type" do
+      let(:bounce_type) { "Transient" }
+
+      it "applies the soft bounce score" do
+        user = Fabricate(:user, email: email)
+        email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+        post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+        expect(response.status).to eq(200)
+
+        expect(email_log.reload.bounced).to eq(true)
+        expect(user.user_stat.reload.bounce_score).to eq(SiteSetting.soft_bounce_score)
+      end
     end
 
     context "with a non-normalized bounce status" do
