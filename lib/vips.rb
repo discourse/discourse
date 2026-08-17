@@ -6,6 +6,9 @@ class Vips
   DEFAULT_TIMEOUT = 30
   private_constant :DEFAULT_TIMEOUT
 
+  LIBVIPS_DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
+  private_constant :LIBVIPS_DYNAMIC_LINKER_CACHE_PATH
+
   RLIMITS = {
     cpu_seconds: 300,
     memory_bytes: 4 * 1024 * 1024 * 1024,
@@ -40,7 +43,7 @@ class Vips
         *command,
         env: environment,
         unsetenv_others: true,
-        read: [*Discourse::SafeExec.default_read_paths, "/etc/ld.so.cache", *read],
+        read: [*Discourse::SafeExec.default_read_paths, LIBVIPS_DYNAMIC_LINKER_CACHE_PATH, *read],
         write: [scratch, *write],
         execute: Discourse::SafeExec.default_execute_paths,
         timeout: timeout || DEFAULT_TIMEOUT,
