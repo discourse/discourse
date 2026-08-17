@@ -233,6 +233,10 @@ body.has-full-page-chat {
   > p:last-of-type {
     margin-bottom: 0.1em;
   }
+
+  iframe.reddit-onebox {
+    margin: var(--space-2) 0;
+  }
 }
 
 .reviewable-chat-message {
