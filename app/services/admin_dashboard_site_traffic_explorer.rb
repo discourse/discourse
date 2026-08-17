@@ -625,7 +625,7 @@ class AdminDashboardSiteTrafficExplorer
     when "networks"
       network_label(value, representative_ip)
     when "browsers"
-      I18n.t("admin_site_traffic_explorer.browsers.#{value}", default: value)
+      I18n.t("browsers.#{value}", default: value)
     else
       value
     end

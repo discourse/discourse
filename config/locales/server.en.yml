@@ -1096,23 +1096,23 @@ en:
   email_login_code:
     invalid_code: "That code is incorrect or has expired. Request a new code and try again."
 
-  user_auth_tokens:
-    browser:
-      android_browser: "Android Browser"
-      baidu_browser: "Baidu Browser"
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      kaios_browser: "KaiOS Browser"
-      opera: "Opera"
-      qq_browser: "QQ Browser"
-      safari: "Safari"
-      samsung_internet: "Samsung Internet"
-      uc_browser: "UC Browser"
-      unknown: "unknown browser"
+  browsers:
+    android_browser: "Android Browser"
+    baidu_browser: "Baidu Browser"
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    kaios_browser: "KaiOS Browser"
+    opera: "Opera"
+    qq_browser: "QQ Browser"
+    safari: "Safari"
+    samsung_internet: "Samsung Internet"
+    uc_browser: "UC Browser"
+    unknown: "unknown browser"
 
+  user_auth_tokens:
     device:
       android: "Android Device"
       chromebook: "Chrome OS"
@@ -1139,21 +1139,6 @@ en:
       logged_in: "Logged in"
       anonymous: "Anonymous"
       likely_crawler: "Likely crawlers"
-    browsers:
-      android_browser: "Android Browser"
-      baidu_browser: "Baidu Browser"
-      chrome: "Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      kaios_browser: "KaiOS Browser"
-      opera: "Opera"
-      qq_browser: "QQ Browser"
-      safari: "Safari"
-      samsung_internet: "Samsung Internet"
-      uc_browser: "UC Browser"
-      unknown: "Unknown browser"
-
   change_email:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
     doesnt_exist: "That email address is not associated with your account."

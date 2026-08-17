@@ -96,8 +96,8 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
 
         expect(browser_dimensions).to eq(
           [
-            { value: "unknown", label: "Unknown browser", pageviews: 4 },
-            { value: "chrome", label: "Chrome", pageviews: 3 },
+            { value: "unknown", label: "unknown browser", pageviews: 4 },
+            { value: "chrome", label: "Google Chrome", pageviews: 3 },
             { value: "safari", label: "Safari", pageviews: 2 },
             { value: "edge", label: "Microsoft Edge", pageviews: 1 },
             { value: "firefox", label: "Firefox", pageviews: 1 },
@@ -116,7 +116,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             "bounce_rate" => 100,
             "average_session_duration_seconds" => 0,
           },
-          active_filters: [{ key: :browser, value: "chrome", label: "Chrome" }],
+          active_filters: [{ key: :browser, value: "chrome", label: "Google Chrome" }],
         )
       end
 
