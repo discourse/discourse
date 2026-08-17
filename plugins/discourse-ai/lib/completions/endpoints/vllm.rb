@@ -150,6 +150,8 @@ module DiscourseAi
         end
 
         def thinking_template_kwargs
+          return {} if thinking_config&.explicit_none?
+
           override = active_custom_param("thinking_override")
 
           if override
