@@ -46,6 +46,6 @@ class AddLikelyCrawlerColumns < ActiveRecord::Migration[8.0]
                null: false,
                default: 0
 
-    add_column :search_logs, :likely_crawler, :boolean, null: false, default: false
+    add_column :search_logs, :crawler, :boolean, null: false, default: false
   end
 end

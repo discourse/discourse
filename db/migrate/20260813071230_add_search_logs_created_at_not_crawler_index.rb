@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-class AddSearchLogsCreatedAtNotLikelyCrawlerIndex < ActiveRecord::Migration[8.0]
+class AddSearchLogsCreatedAtNotCrawlerIndex < ActiveRecord::Migration[8.0]
   disable_ddl_transaction!
 
-  INDEX_NAME = "index_search_logs_on_created_at_not_likely_crawler"
+  INDEX_NAME = "index_search_logs_on_created_at_not_crawler"
 
   def up
     remove_index :search_logs, name: INDEX_NAME, algorithm: :concurrently, if_exists: true
     add_index :search_logs,
               :created_at,
               name: INDEX_NAME,
-              where: "NOT likely_crawler",
+              where: "NOT crawler",
               algorithm: :concurrently
   end
 

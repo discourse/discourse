@@ -19,18 +19,11 @@ task "admin_dashboard:rebuild_rollups", [:name] => :environment do |_, args|
   each_dashboard_db { DashboardRollupRebuilder.rebuild!(name) }
 end
 
-desc "Classify existing search logs as crawler traffic, for sites enabling crawler detection"
+desc "Classify existing search logs from known crawler user agents as crawler traffic"
 task "admin_dashboard:backfill_search_log_crawlers" => :environment do
   each_dashboard_db do
     db = RailsMultisite::ConnectionManagement.current_db
-    flagged = SearchLog.backfill_likely_crawler!
+    flagged = SearchLog.backfill_crawler!
     puts "#{db}: flagged #{flagged} search logs from known crawler user agents"
-
-    next if !CrawlerScorer.enabled?
-
-    window_start = BrowserPageviewEvent.retention_cutoff
-    correlated =
-      CrawlerScorer.flag_search_logs!(window_start: window_start, window_end: Time.zone.now)
-    puts "#{db}: flagged #{correlated} more by correlating with scored pageviews"
   end
 end

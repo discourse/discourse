@@ -75,14 +75,14 @@ describe "Admin Dashboard Redesign | Search section" do
       10,
       :search_log,
       term: "crawlerbot",
-      likely_crawler: true,
+      crawler: true,
       created_at: "2026-05-10 09:00",
     )
     Fabricate.times(
       2,
       :clicked_search_log,
       term: "ruby",
-      likely_crawler: true,
+      crawler: true,
       created_at: "2026-05-10 09:30",
     )
 

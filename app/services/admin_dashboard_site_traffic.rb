@@ -182,12 +182,12 @@ class AdminDashboardSiteTraffic
   def direct_traffic_value
     return nil if !SiteSetting.persist_browser_pageview_events
 
-    count_column = BrowserPageviewEvent.rollup_count_expr
+    count_sql = BrowserPageviewEvent.rollup_count_sql
 
     row = DB.query(<<~SQL, start_date: start_date.to_date, end_date: end_date.to_date).first
           SELECT
-            COALESCE(SUM(#{count_column}), 0)::bigint AS total,
-            COALESCE(SUM(#{count_column}) FILTER (WHERE normalized_referrer IS NULL), 0)::bigint AS direct
+            COALESCE(SUM(#{count_sql}), 0)::bigint AS total,
+            COALESCE(SUM(#{count_sql}) FILTER (WHERE normalized_referrer IS NULL), 0)::bigint AS direct
           FROM browser_pageview_referrer_daily_rollups
           WHERE date >= :start_date
             AND date <= :end_date

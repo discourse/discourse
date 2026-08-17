@@ -23,20 +23,20 @@ module Reports::TopCountriesByBrowserPageviews
         },
       ]
 
-      count_expr = BrowserPageviewEvent.rollup_count_expr
+      count_sql = BrowserPageviewEvent.rollup_count_sql
       end_date_exclusive = report.end_date.to_date + 1
 
       sql = <<~SQL
         WITH ranked AS (
           SELECT
             country_code,
-            SUM(#{count_expr}) AS count,
-            SUM(SUM(#{count_expr})) OVER () AS total
+            SUM(#{count_sql}) AS count,
+            SUM(SUM(#{count_sql})) OVER () AS total
           FROM browser_pageview_country_daily_rollups
           WHERE date >= :start_date
             AND date < :end_date_exclusive
           GROUP BY country_code
-          HAVING SUM(#{count_expr}) > 0
+          HAVING SUM(#{count_sql}) > 0
         )
         SELECT country_code, count,
                CASE WHEN total = 0 THEN 0

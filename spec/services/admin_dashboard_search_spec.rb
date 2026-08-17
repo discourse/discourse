@@ -68,14 +68,14 @@ RSpec.describe AdminDashboardSearch do
         30,
         :search_log,
         term: "crawler-bait",
-        likely_crawler: true,
+        crawler: true,
         created_at: "2026-05-05 12:00",
       )
       Fabricate.times(
         20,
         :search_log,
         term: "crawler-bait",
-        likely_crawler: true,
+        crawler: true,
         created_at: "2026-04-26 09:00",
       )
 

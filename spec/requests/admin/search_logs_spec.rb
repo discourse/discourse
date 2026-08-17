@@ -56,7 +56,7 @@ RSpec.describe Admin::SearchLogsController do
         Fabricate(:search_log, term: "member-search", user: user)
         Fabricate(:search_log, term: "admin-search", user: admin)
         Fabricate(:search_log, term: "anonymous-search", user: nil)
-        Fabricate(:search_log, term: "crawler-search", user: nil, likely_crawler: true)
+        Fabricate(:search_log, term: "crawler-search", user: nil, crawler: true)
 
         get "/admin/logs/search_logs.json", params: { search_type: "human_only" }
 

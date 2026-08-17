@@ -15,7 +15,7 @@ class SearchLog < ActiveRecord::Base
             "users.id IS NULL OR (NOT users.admin AND NOT users.moderator)",
           )
         end
-  scope :human, -> { where(likely_crawler: false) }
+  scope :human, -> { where(crawler: false) }
   scope :human_scope, -> { CrawlerScorer.enabled? ? non_staff_or_anonymous.human : non_staff }
 
   def ctr
@@ -82,8 +82,7 @@ class SearchLog < ActiveRecord::Base
           ip_address: ip_address,
           user_agent: user_agent,
           user_id: user_id,
-          likely_crawler:
-            user_id.nil? && user_agent.present? && CrawlerDetection.crawler?(user_agent),
+          crawler: user_id.nil? && user_agent.present? && CrawlerDetection.crawler?(user_agent),
         )
 
       result = [:created, log.id]
@@ -96,12 +95,12 @@ class SearchLog < ActiveRecord::Base
 
   BACKFILL_AGENT_BATCH_SIZE = 100
 
-  def self.backfill_likely_crawler!
+  def self.backfill_crawler!
     agents = DB.query_single(<<~SQL)
       SELECT DISTINCT user_agent
       FROM search_logs
       WHERE user_id IS NULL
-        AND NOT likely_crawler
+        AND NOT crawler
         AND user_agent IS NOT NULL
     SQL
 
@@ -112,9 +111,9 @@ class SearchLog < ActiveRecord::Base
       .each_slice(BACKFILL_AGENT_BATCH_SIZE)
       .sum { |batch| DB.exec(<<~SQL, agents: batch) }
         UPDATE search_logs
-        SET likely_crawler = TRUE
+        SET crawler = TRUE
         WHERE user_id IS NULL
-          AND NOT likely_crawler
+          AND NOT crawler
           AND user_agent IN (:agents)
       SQL
   end
@@ -220,8 +219,8 @@ end
 # Table name: search_logs
 #
 #  id                 :integer          not null, primary key
+#  crawler            :boolean          default(FALSE), not null
 #  ip_address         :inet
-#  likely_crawler     :boolean          default(FALSE), not null
 #  search_result_type :integer
 #  search_type        :integer          not null
 #  term               :string           not null
@@ -233,6 +232,6 @@ end
 # Indexes
 #
 #  index_search_logs_on_created_at                     (created_at)
-#  index_search_logs_on_created_at_not_likely_crawler  (created_at) WHERE (NOT likely_crawler)
+#  index_search_logs_on_created_at_not_crawler         (created_at) WHERE (NOT crawler)
 #  index_search_logs_on_user_id_and_created_at         (user_id,created_at) WHERE (user_id IS NOT NULL)
 #

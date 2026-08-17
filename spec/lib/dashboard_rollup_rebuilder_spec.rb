@@ -4,7 +4,7 @@ RSpec.describe DashboardRollupRebuilder do
   subject(:rebuilder) { described_class.new(io: StringIO.new) }
 
   describe "#rebuild!" do
-    it "reconstructs country and referrer rollups that were wiped" do
+    it "rebuilds country and referrer rollups from the events they summarise" do
       Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
       BrowserPageviewCountryDailyRollup.aggregate(start_date: 1.day.ago, end_date: Time.zone.today)
       BrowserPageviewReferrerDailyRollup.aggregate(start_date: 1.day.ago, end_date: Time.zone.today)
@@ -17,7 +17,7 @@ RSpec.describe DashboardRollupRebuilder do
       expect(BrowserPageviewReferrerDailyRollup.sum(:count)).to eq(1)
     end
 
-    it "picks up crawler columns added after the rollups were first built" do
+    it "populates crawler counts on rollups that were built without them" do
       SiteSetting.improved_crawler_detection = true
       Fabricate(:browser_pageview_event, country_code: "US", score: 90)
       BrowserPageviewCountryDailyRollup.aggregate(start_date: 1.day.ago, end_date: Time.zone.today)
@@ -37,13 +37,13 @@ RSpec.describe DashboardRollupRebuilder do
       expect(BrowserPageviewReferrerDailyRollup.count).to eq(0)
     end
 
-    it "skips browser pageview rollups when no events exist" do
+    it "leaves browser pageview rollups empty when no events exist" do
       expect { rebuilder.rebuild!("browser_pageview_country") }.not_to change {
         BrowserPageviewCountryDailyRollup.count
       }
     end
 
-    it "skips user visit rollups when nobody has visited" do
+    it "leaves user visit rollups empty when nobody has visited" do
       UserVisit.delete_all
 
       expect { rebuilder.rebuild!("user_visit") }.not_to change { UserVisitDailyRollup.count }
