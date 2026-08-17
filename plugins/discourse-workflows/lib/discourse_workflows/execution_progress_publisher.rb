@@ -38,9 +38,7 @@ module DiscourseWorkflows
         execution: execution_progress(execution),
         refresh: refresh,
       }
-      if step
-        payload[:step] = step.to_h.slice(*STEP_FIELDS).merge("error" => step.error)
-      end
+      payload[:step] = step.to_h.slice(*STEP_FIELDS).merge("error" => step.error) if step
 
       MessageBus.publish(execution_channel(execution.id), payload, **publish_options)
       publish_list_update(execution) unless step
