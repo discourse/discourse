@@ -4866,7 +4866,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/408429"
       permanent_warning: false
