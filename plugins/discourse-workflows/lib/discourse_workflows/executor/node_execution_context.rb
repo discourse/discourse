@@ -7,6 +7,7 @@ module DiscourseWorkflows
       WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
       WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
       NODE_ID_FIELD = "discourse_workflows_node_id"
+
       MISSING = ParameterResolver::MISSING
       RUN_CODE = CodeRunner::RUN_CODE
       RUN_ONCE_FOR_ALL_ITEMS = CodeRunner::RUN_ONCE_FOR_ALL_ITEMS

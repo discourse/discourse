@@ -293,7 +293,6 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         timeout_action: nil,
       )
     end
-
   end
 
   describe "#set_metadata" do
