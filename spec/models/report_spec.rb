@@ -1975,7 +1975,7 @@ RSpec.describe Report do
   end
 
   describe ".cache_key" do
-    it "changes when crawler detection is toggled so the two modes cannot share an entry" do
+    it "includes the crawler detection state in the cache key" do
       report = Report.find("signups")
 
       SiteSetting.improved_crawler_detection = false
