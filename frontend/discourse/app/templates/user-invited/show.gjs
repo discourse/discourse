@@ -235,7 +235,7 @@ export default <template>
                             />
                             {{i18n
                               "user.invited.invited_via_link"
-                              key=invite.invite_key
+                              key=invite.shortKey
                               count=invite.redemption_count
                               max=invite.max_redemptions_allowed
                             }}
