@@ -336,13 +336,14 @@ RSpec.describe Admin::DashboardController do
           expect(response.status).to eq(200)
           expect(search_data).to eq(
             "logging_enabled" => true,
-            "headline_state" => "healthy",
             "kpis" => {
               "total_searches" => {
                 "value" => 2,
+                "previous_value" => 0,
               },
               "no_result_rate" => {
                 "value" => 0,
+                "previous_value" => nil,
                 "exceeds_threshold" => false,
               },
             },
@@ -457,7 +458,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/dashboard.json"
 
         engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
-        expect(engagement["data"]).to include("kpis", "headline")
+        expect(engagement["data"]).to include("kpis")
       end
 
       describe "reports section data" do
@@ -1752,7 +1753,7 @@ RSpec.describe Admin::DashboardController do
 
       before do
         sign_in(admin)
-        SiteSetting.admin_site_traffic_event_cap = 2
+        SiteSetting.site_traffic_explorer_event_limit = 2
       end
 
       it "returns no more than the configured pageview cap" do
@@ -1847,7 +1848,7 @@ RSpec.describe Admin::DashboardController do
 
       it "returns both partial-data reasons" do
         sign_in(admin)
-        SiteSetting.admin_site_traffic_event_cap = 2
+        SiteSetting.site_traffic_explorer_event_limit = 2
 
         get "/admin/dashboard/site-traffic-explorer.json",
             params: request_params.merge(start_date: "2026-01-01")

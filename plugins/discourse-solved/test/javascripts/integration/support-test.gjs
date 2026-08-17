@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -16,17 +16,6 @@ function buildData(overrides = {}) {
       },
       staff_involvement: { value: 19, previous_value: 25 },
       avg_first_reply: { value: 11100, previous_value: 10620 },
-    },
-    headline: {
-      key: "healthy",
-      resolution_rate: 72,
-      resolution_direction: "up",
-      answerers_focus: "members",
-      answerers_share: 82,
-      first_reply_seconds: 11100,
-      first_reply_direction: "slower",
-      first_reply_delta_seconds: 480,
-      unanswered_count: 3,
     },
     topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 3 },
     whos_answering: {
@@ -48,7 +37,6 @@ function buildData(overrides = {}) {
 
 const startDate = new Date("2026-04-01");
 const endDate = new Date("2026-04-30");
-
 module("Integration | Component | Dashboard | Support", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -140,52 +128,51 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
     assert.dom(".db-section__metrics .db-pill").doesNotExist();
   });
 
-  test("composes a trend-aware headline summary from each metric's direction", async function (assert) {
-    const positive = buildData();
-
-    await render(
-      <template>
-        <SupportSection
-          @data={{positive}}
-          @startDate={{startDate}}
-          @endDate={{endDate}}
-        />
-      </template>
-    );
-
-    assert.dom(".db-section__subintro p").includesText("climbed to 72%");
-    assert
-      .dom(".db-section__subintro p")
-      .includesText("Members are handling 82%");
-
-    const negative = buildData({
-      headline: {
-        key: "struggling",
-        resolution_rate: 34,
-        resolution_direction: "down",
-        answerers_focus: "staff",
-        answerers_share: 81,
-        first_reply_seconds: 51720,
-        first_reply_direction: "slower",
-        first_reply_delta_seconds: 31200,
-        unanswered_count: 47,
+  test("shows declining support when resolution drops and first reply slows", async function (assert) {
+    const data = {
+      category_options: [],
+      kpis: {
+        resolution_rate: { value: 48, previous_value: 60, report_query: {} },
+        staff_involvement: { value: 19, previous_value: 25 },
+        avg_first_reply: { value: 15_000, previous_value: 12_000 },
       },
-    });
+      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 3 },
+      whos_answering: {
+        rows: [{ type: "staff", count: 1, share: 100 }],
+        total: 1,
+      },
+      response_time_distribution: {
+        buckets: [
+          { key: "lt_1h", count: 1, share: 100 },
+          { key: "1_4h", count: 0, share: 0 },
+          { key: "4_24h", count: 0, share: 0 },
+          { key: "gt_24h", count: 0, share: 0 },
+        ],
+        trend: { direction: "flat", seconds: 0 },
+      },
+    };
 
     await render(
       <template>
         <SupportSection
-          @data={{negative}}
+          @data={{data}}
+          @period="custom"
           @startDate={{startDate}}
           @endDate={{endDate}}
         />
       </template>
     );
-
-    assert.dom(".db-section__subintro p").includesText("dropped to 34%");
-    assert
-      .dom(".db-section__subintro p")
-      .includesText("47 topics from this period still have zero replies");
+    assert.deepEqual(
+      [
+        find(".db-section__subintro h3").textContent.trim(),
+        find(".db-section__subintro p").textContent.trim(),
+      ],
+      [
+        "Resolution rate and time to first reply have declined in the selected period",
+        "Members are getting fewer answers and are waiting longer for their first reply. Investigate the in progress and unanswered topics to make sure members are getting timely responses.",
+      ],
+      "renders the exact scenario headline and summary"
+    );
   });
 
   test("shows a placeholder when the average first reply is unknown", async function (assert) {
@@ -424,6 +411,97 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       .doesNotHaveAttribute(
         "aria-hidden",
         "the count stays exposed to assistive tech"
+      );
+  });
+
+  test("summarizes the measurable metric when reply time is unavailable", async function (assert) {
+    const data = {
+      category_options: [],
+      kpis: {
+        resolution_rate: { value: 72, previous_value: 60, report_query: {} },
+        staff_involvement: { value: null, previous_value: null },
+        avg_first_reply: { value: null, previous_value: null },
+      },
+      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 0 },
+      whos_answering: { rows: [], total: 0 },
+      response_time_distribution: {
+        buckets: [],
+        trend: { direction: "flat", seconds: 0 },
+      },
+    };
+
+    await render(
+      <template>
+        <SupportSection @data={{data}} @period="last_30_days" />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "The resolution rate has improved in the selected period More questions are getting answered."
+      );
+  });
+
+  test("shows improved resolution and slower replies when the prior period has no support activity", async function (assert) {
+    const data = {
+      category_options: [],
+      kpis: {
+        resolution_rate: {
+          value: 72,
+          previous_value: null,
+          report_query: {},
+        },
+        staff_involvement: { value: 50, previous_value: null },
+        avg_first_reply: { value: 0, previous_value: null },
+      },
+      topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 0 },
+      whos_answering: { rows: [], total: 0 },
+      response_time_distribution: {
+        buckets: [],
+        trend: { direction: "flat", seconds: 0 },
+      },
+    };
+
+    await render(
+      <template>
+        <SupportSection @data={{data}} @period="last_30_days" />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "The resolution rate has improved in the selected period More questions are getting answered, but the time to first reply has increased. Check out the unanswered topics to see which you can address."
+      );
+  });
+
+  test("shows the no-data message when no metric is measurable", async function (assert) {
+    const data = {
+      category_options: [],
+      kpis: {
+        resolution_rate: { value: null, previous_value: null },
+        staff_involvement: { value: null, previous_value: null },
+        avg_first_reply: { value: null, previous_value: null },
+      },
+      topic_outcomes: { resolved: 0, in_progress: 0, unanswered: 0 },
+      whos_answering: { rows: [], total: 0 },
+      response_time_distribution: {
+        buckets: [],
+        trend: { direction: "flat", seconds: 0 },
+      },
+    };
+
+    await render(
+      <template>
+        <SupportSection @data={{data}} @period="last_30_days" />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "Not enough support activity yet There's no support activity in this period yet. Once topics come in, you'll see how your community is handling them."
       );
   });
 });
