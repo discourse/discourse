@@ -82,50 +82,43 @@ acceptance("Create event composer action", function (needs) {
     await visit("/");
     await click("#create-topic");
     const categoryChooser = selectKit(".category-chooser");
-    const composerActions = selectKit(".composer-actions");
 
     // Non-events category — neither plugin option appears
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(1);
-    await composerActions.expand();
+    await click(".composer-actions-trigger");
     assert
-      .dom(`.composer-actions .select-kit-row[data-value="create_event"]`)
+      .dom(".composer-actions-dropdown [data-action-id='create_event']")
       .doesNotExist();
     assert
-      .dom(
-        `.composer-actions .select-kit-row[data-value="create_regular_topic"]`
-      )
+      .dom(".composer-actions-dropdown [data-action-id='create_regular_topic']")
       .doesNotExist();
-    await composerActions.collapse();
+    await click(".composer-actions-trigger");
 
     // Events-type category — auto-enters event mode; Create topic switch-back appears
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
-    await composerActions.expand();
+    await click(".composer-actions-trigger");
     assert
-      .dom(`.composer-actions .select-kit-row[data-value="create_event"]`)
+      .dom(".composer-actions-dropdown [data-action-id='create_event']")
       .doesNotExist();
     assert
-      .dom(
-        `.composer-actions .select-kit-row[data-value="create_regular_topic"]`
-      )
+      .dom(".composer-actions-dropdown [data-action-id='create_regular_topic']")
       .exists();
 
     // Picking Create topic exits event mode and surfaces Create event
-    await composerActions.selectRowByValue("create_regular_topic");
+    await click("[data-action-id='create_regular_topic']");
     assert.dom(".d-editor-input").hasNoValue("skeleton is cleared on exit");
     assert
       .dom(".save-or-cancel button.create")
       .hasText(i18n("composer.create_topic"));
 
-    await composerActions.expand();
+    await click(".composer-actions-trigger");
     assert
-      .dom(`.composer-actions .select-kit-row[data-value="create_event"]`)
+      .dom(".composer-actions-dropdown [data-action-id='create_event']")
       .exists();
     assert
-      .dom(
-        `.composer-actions .select-kit-row[data-value="create_regular_topic"]`
-      )
+      .dom(".composer-actions-dropdown [data-action-id='create_regular_topic']")
       .doesNotExist();
   });
 
@@ -256,10 +249,9 @@ acceptance("Create event composer action", function (needs) {
       .dom(".save-or-cancel button.create")
       .hasText(i18n("composer.create_topic"), "stays in topic mode");
 
-    const composerActions = selectKit(".composer-actions");
-    await composerActions.expand();
+    await click(".composer-actions-trigger");
     assert
-      .dom(`.composer-actions .select-kit-row[data-value="create_event"]`)
+      .dom(".composer-actions-dropdown [data-action-id='create_event']")
       .exists("Create event is still offered as an explicit opt-in");
   });
 
@@ -322,14 +314,13 @@ acceptance(
         .dom(".save-or-cancel button.create")
         .hasText(i18n("composer.create_topic"));
 
-      const composerActions = selectKit(".composer-actions");
-      await composerActions.expand();
+      await click(".composer-actions-trigger");
       assert
-        .dom(`.composer-actions .select-kit-row[data-value="create_event"]`)
+        .dom(".composer-actions-dropdown [data-action-id='create_event']")
         .doesNotExist("Create event option is not offered");
       assert
         .dom(
-          `.composer-actions .select-kit-row[data-value="create_regular_topic"]`
+          ".composer-actions-dropdown [data-action-id='create_regular_topic']"
         )
         .doesNotExist();
     });

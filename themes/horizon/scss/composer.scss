@@ -1,18 +1,5 @@
 @use "lib/viewport";
 
-#reply-control
-  .select-kit.dropdown-select-box.composer-actions
-  .select-kit-header {
-  border: 1px solid var(--tertiary-700);
-  background: var(--secondary);
-
-  &:hover {
-    .d-icon {
-      color: var(--accent-color);
-    }
-  }
-}
-
 #reply-control.hide-preview:not(.draft) {
   @include viewport.from(sm) {
     background: var(--d-content-background);

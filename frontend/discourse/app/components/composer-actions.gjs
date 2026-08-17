@@ -7,6 +7,7 @@ import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ComposerActionItemBuilder } from "discourse/lib/composer/action-items";
+import { registeredComposerActions } from "discourse/lib/composer/actions-registry";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import {
   applyBehaviorTransformer,
@@ -21,7 +22,6 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import { registeredComposerActions } from "discourse/select-kit/components/composer-actions";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -443,7 +443,7 @@ export default class ComposerActions extends Component {
           @onRegisterApi={{this.registerDmenuApi}}
           @triggerClass="composer-actions-trigger btn-flat btn-icon-text"
           @contentClass="composer-actions-dropdown"
-          class="composer-actions-new"
+          class="composer-actions"
         >
           <:trigger>
             {{dIcon "angle-down" class="composer-actions-caret"}}
