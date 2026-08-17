@@ -20,7 +20,6 @@ export default class SiteSettingDefaultCategories extends Component {
 
   <template>
     <DModal
-      class="incoming-emails"
       @title={{trustHTML @model.siteSetting.key}}
       @closeModal={{this.cancel}}
     >
