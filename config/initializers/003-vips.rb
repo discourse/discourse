@@ -2,7 +2,7 @@
 
 if Rails.env.local?
   begin
-    Discourse::Utils.execute_command("vips", "--version", timeout: 5)
+    Discourse::Utils.execute_command("vips", "--version")
   rescue Discourse::Utils::CommandError, Errno::ENOENT
     raise Discourse::Utils::CommandError, <<~TEXT.strip
             vips --version
