@@ -26,48 +26,39 @@ describe "Admin Dashboard Redesign | Search section" do
   it "lets staff review search health, inspect tooltips, and drill into terms",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     Fabricate.times(
-      15,
+      2,
       :clicked_search_log,
       term: "ruby",
       user: user,
       created_at: "2026-05-10 10:00",
     )
-    Fabricate.times(10, :search_log, term: "ruby", user: user, created_at: "2026-05-10 11:00")
-    Fabricate.times(5, :search_log, term: "ruby", user: user, created_at: "2026-04-20 10:00")
+    Fabricate.times(3, :search_log, term: "ruby", user: user, created_at: "2026-05-10 11:00")
+    Fabricate(:search_log, term: "ruby", user: user, created_at: "2026-04-20 10:00")
 
-    Fabricate.times(
-      2,
+    Fabricate(
       :clicked_search_log,
       term: "markdown tables",
       user: user,
       created_at: "2026-04-20 11:00",
-    )
-
-    Fabricate.times(
-      13,
-      :search_log,
-      term: "markdown tables",
-      user: user,
-      created_at: "2026-04-20 12:00",
     )
     Fabricate.times(
       3,
       :search_log,
       term: "markdown tables",
       user: user,
-      created_at: "2026-05-03 10:00",
+      created_at: "2026-04-20 12:00",
     )
+    Fabricate(:search_log, term: "markdown tables", user: user, created_at: "2026-05-03 10:00")
 
-    Fabricate.times(2, :search_log, term: "discobot", user: user, created_at: "2026-05-10 12:00")
+    Fabricate(:search_log, term: "discobot", user: user, created_at: "2026-04-20 13:00")
 
     Fabricate.times(
-      20,
+      6,
       :clicked_search_log,
       term: "ruby",
       user: user,
       created_at: "2026-03-20 10:00",
     )
-    Fabricate.times(20, :search_log, term: "ruby", user: user, created_at: "2026-03-20 11:00")
 
     Fabricate(:search_log, term: "admin-search", user: current_user, created_at: "2026-05-10 08:00")
     Fabricate(:clicked_search_log, term: "ruby", user: moderator, created_at: "2026-05-10 08:30")
@@ -81,14 +72,14 @@ describe "Admin Dashboard Redesign | Search section" do
     # Searches flagged as crawler traffic must be excluded from every metric. If they
     # were counted, "crawlerbot" would top trending and the no-result rate would spike.
     Fabricate.times(
-      100,
+      10,
       :search_log,
       term: "crawlerbot",
       likely_crawler: true,
       created_at: "2026-05-10 09:00",
     )
     Fabricate.times(
-      50,
+      2,
       :clicked_search_log,
       term: "ruby",
       likely_crawler: true,
@@ -106,8 +97,8 @@ describe "Admin Dashboard Redesign | Search section" do
         "increased. Review the content gaps to see what's missing.",
     )
 
-    expect(search).to have_total_searches_kpi("50", improving_delta: "+25%")
-    expect(search).to have_no_result_rate_kpi("4%", worsening_delta: "+4%")
+    expect(search).to have_total_searches_kpi("12", improving_delta: "+100%")
+    expect(search).to have_no_result_rate_kpi("8%", worsening_delta: "+8%")
 
     search.hover_total_searches_tooltip
     expect(search).to have_total_searches_tooltip(
@@ -125,9 +116,9 @@ describe "Admin Dashboard Redesign | Search section" do
 
     expect(search).to have_trending_rows(
       [
-        { term: "ruby", searches: 30 },
-        { term: "markdown tables", searches: 18 },
-        { term: "discobot", searches: 2 },
+        { term: "ruby", searches: 6 },
+        { term: "markdown tables", searches: 5 },
+        { term: "discobot", searches: 1 },
       ],
     )
     expect(search).to have_no_trending_term("admin-search")
@@ -135,8 +126,8 @@ describe "Admin Dashboard Redesign | Search section" do
 
     expect(search).to have_content_gap_rows(
       [
-        { term: "markdown tables", searches: 18, badge: "Poor match" },
-        { term: "discobot", searches: 2, badge: "No match" },
+        { term: "markdown tables", searches: 5, badge: "Poor match" },
+        { term: "discobot", searches: 1, badge: "No match" },
       ],
     )
 
@@ -158,8 +149,8 @@ describe "Admin Dashboard Redesign | Search section" do
         "looking for more often.",
     )
 
-    expect(search).to have_total_searches_kpi("27", improving_delta: "+800%")
-    expect(search).to have_no_result_rate_kpi("7%", improving_delta: "-93%")
+    expect(search).to have_total_searches_kpi("5", improving_delta: "+400%")
+    expect(search).to have_no_result_rate_kpi("0%", improving_delta: "-100%")
 
     search.click_trending_term("ruby")
 
