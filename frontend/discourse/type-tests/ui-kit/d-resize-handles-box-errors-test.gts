@@ -1,6 +1,6 @@
-/** Verifies that built-in handles always report compass directions. Keep ONE error source inside each guarded element: a
- * directive suppresses every error in the element it guards, so a second
- * mistake added alongside this one would be absorbed silently.
+/** The box handles always report compass directions. Keep one mistake per guarded element. A
+ * directive hides every error in the element it covers, so a second mistake
+ * alongside this one would pass unnoticed.
  */
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 

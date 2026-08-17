@@ -1,6 +1,6 @@
-/** Verifies that explicit handle descriptors determine the callback payload. Keep ONE error source inside each guarded element: a
- * directive suppresses every error in the element it guards, so a second
- * mistake added alongside this one would be absorbed silently.
+/** Your own handles decide the payload type the callbacks receive. Keep one mistake per guarded element. A
+ * directive hides every error in the element it covers, so a second mistake
+ * alongside this one would pass unnoticed.
  */
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 

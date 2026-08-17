@@ -6,7 +6,8 @@ import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gestu
 import StickyNote from "discourse/plugins/discourse-workflows/admin/components/workflows/canvas/sticky-note";
 
 /**
- * The element a synthetic press can actually reach, ready to receive one.
+ * The element to press, with pointer capture stubbed so a synthetic press reaches
+ * it.
  *
  * @param {string} selector - The element that will receive the press.
  * @returns {HTMLElement} That element.
@@ -231,8 +232,8 @@ module(
         clientX: 120,
         clientY: 100,
       });
-      // The OS taking the pointer away. The undo-mutation pair opened at the
-      // press must still close, or the canvas is left holding an open mutation.
+      // The system taking the pointer away. The undo entry opened at the press must
+      // still close, or the canvas is left holding an open one.
       await triggerEvent(element, "pointercancel", {
         pointerId: 1,
         clientX: 0,
@@ -244,9 +245,9 @@ module(
         1,
         "the interruption closes the mutation the press opened"
       );
-      // A cancel is not a release: its coordinates describe no pointer position
-      // the user chose. The last move already committed where the note was
-      // dragged to, so the interruption must add nothing of its own.
+      // An interruption is not a release, and its coordinates are not a position the
+      // user chose. The last move already saved where the note was dragged to, so
+      // this must add nothing.
       assert.deepEqual(
         moves,
         [{ x: 30, y: 20 }],
@@ -313,8 +314,8 @@ module(
       const note = noteFixture();
       const onResize = (size) => {
         resizes.push(size);
-        // Committed the way the canvas commits, which is what makes a second
-        // gesture's press-time box differ from the first's.
+        // Saved the way the canvas saves it, which is what makes a second gesture
+        // start from a different box than the first.
         note.size = { ...size };
       };
 
@@ -340,8 +341,8 @@ module(
         clientY: 0,
       });
 
-      // A second finger starts on another edge after the first already grew
-      // the note. Its press-time box must not become the first gesture's base.
+      // A second finger presses another edge after the first has already grown the
+      // note. The box it starts from must not become the first gesture's base.
       await triggerEvent(south, "pointerdown", {
         button: 0,
         pointerId: 2,
@@ -412,9 +413,9 @@ module(
         clientY: 0,
       });
 
-      // Both gestures own the horizontal axis, one boundary each. Each must move
-      // its own edge and leave the other's alone, or the last to report wins and
-      // the box loses whichever boundary the other was holding.
+      // Both gestures work on the horizontal axis, one edge each. Each must move its
+      // own edge and leave the other alone, or whichever reports last wins and the
+      // box loses the edge the other was holding.
       await triggerEvent(east, "pointermove", {
         pointerId: 2,
         clientX: 50,
@@ -477,14 +478,14 @@ module(
         clientY: 0,
       });
 
-      // West grows the note leftwards, so its origin moves to -50.
+      // Dragging west grows the note to the left, so its origin moves to -50.
       await triggerEvent(west, "pointermove", {
         pointerId: 1,
         clientX: -60,
         clientY: 0,
       });
-      // South owns only the vertical axis. It must leave x where west put it;
-      // re-asserting its own press-time x would snap the note 60px right.
+      // The south edge only works vertically. It has to leave x where the west edge
+      // put it. Sending its own press-time x would snap the note 60px to the right.
       await triggerEvent(south, "pointermove", {
         pointerId: 2,
         clientX: 0,
@@ -526,8 +527,8 @@ module(
         clientX: 50,
         clientY: 0,
       });
-      // The browser can coalesce moves, so the release may carry a newer
-      // position than the last move ever reported.
+      // The browser can merge moves together, so the release can sit further on than
+      // the last move it sent.
       await triggerEvent(east, "pointerup", {
         pointerId: 1,
         clientX: 80,
@@ -612,8 +613,8 @@ module(
 
     test("co-selected notes are translated by the increment, not the total", async function (assert) {
       const translates = [];
-      // The note the user grabbed is replaced on every move, the way the canvas
-      // replaces it, so a stale read of the previous object would show up here.
+      // The note object is replaced on every move, as the canvas replaces it, so
+      // reading the old one would show up here.
       const state = new (class {
         @tracked note = noteFixture();
       })();
@@ -651,9 +652,9 @@ module(
         clientY: 0,
       });
 
-      // The others are translated relative to wherever they now sit, so each
-      // report must carry only what changed since the previous one. Handing
-      // over the running total instead makes them accelerate away.
+      // The other notes each move from wherever they now sit, so every report must
+      // carry only what changed since the last one. Sending the running total makes
+      // them speed away.
       assert.deepEqual(
         translates,
         [
@@ -684,9 +685,9 @@ module(
         clientX: 0,
         clientY: 0,
       });
-      // The handle is already holding a gesture, so it refuses this press. A
-      // refused press is not stopped from propagating, so it reaches the note
-      // behind the handle, which must not treat it as the start of a note drag.
+      // The handle is already being dragged, so it refuses this press. A refused
+      // press still bubbles, so it reaches the note behind the handle, which must not
+      // start dragging.
       await triggerEvent(east, "pointerdown", {
         button: 0,
         pointerId: 2,
@@ -723,10 +724,10 @@ module(
       const element = pressable(".workflow-sticky-note");
       const edge = pressable("[data-resize-handle='e']");
 
-      // Selecting a note, and a press on the narrow resize strip that never
-      // became a drag. Bracketing these captures an undo entry whose before and
-      // after are identical, and the history is short enough that a handful of
-      // them push the user's real last edit out of reach.
+      // Selecting a note, then a press on the narrow resize strip that never becomes
+      // a drag. Opening an undo entry for either would record one where nothing
+      // changed, and the history is short enough that a few of those push the user's
+      // real last edit out of reach.
       await triggerEvent(element, "pointerdown", {
         button: 0,
         pointerId: 1,
@@ -753,8 +754,8 @@ module(
       assert.deepEqual(beforeMutations, [], "neither click opened a mutation");
       assert.deepEqual(afterMutations, [], "so neither closed one");
 
-      // The positive control: without it, the two assertions above would hold
-      // just as well if the mutation wiring had been removed entirely.
+      // The positive control. Without it, the two assertions above would pass just as
+      // well if the undo wiring had been deleted.
       await triggerEvent(element, "pointerdown", {
         button: 0,
         pointerId: 1,
@@ -855,13 +856,13 @@ module(
         clientY: 0,
       });
 
-      // The positive control: without it, an assertion that the end fired once
-      // could not tell a closed mutation from one that never opened.
+      // The positive control. Without it, one end callback could mean either a closed
+      // undo entry or one that never opened.
       assert.deepEqual(beforeMutations, [true], "the drag opened a mutation");
       assert.deepEqual(afterMutations, [], "and has not closed it yet");
 
-      // The gesture is still held. The drag engine deliberately reports nothing
-      // when the element is destroyed, so the consumer has to close its own.
+      // The gesture is still being held. The drag layer says nothing when the element
+      // is destroyed, so the note has to close its own undo entry.
       await clearRender();
 
       assert.deepEqual(
@@ -920,8 +921,8 @@ module(
       const note = noteFixture();
       const onBeforeMutation = () => beforeMutations.push(true);
       const onAfterMutation = () => afterMutations.push(true);
-      // Throws only on the release, so the gesture opens and runs normally and
-      // only the terminal geometry blows up.
+      // Throws only on the release, so the gesture opens and runs as normal and only
+      // the final save fails.
       let reports = 0;
       const onResize = (size) => {
         reports += 1;
@@ -960,9 +961,9 @@ module(
 
       assert.deepEqual(beforeMutations, [true], "the drag opened a mutation");
 
-      // The throw is the consumer's bug and is rethrown, so it surfaces as an
-      // uncaught error rather than a rejected promise. Swallowed here so the
-      // assertion below is about the bracket rather than about the throw.
+      // The error belongs to the consumer and is passed on, so it arrives uncaught
+      // rather than as a rejected promise. Caught here so the assertion below is
+      // about the undo entry, not about the error.
       const priorOnError = window.onerror;
       window.onerror = (...args) =>
         args[4]?.message === "consumer blew up committing the size" ||
@@ -977,8 +978,8 @@ module(
         window.onerror = priorOnError;
       }
 
-      // Left open, the counter never returns to zero and every later gesture on
-      // this note silently stops bracketing its undo entry.
+      // Left open, the count never returns to zero and every later gesture on this
+      // note quietly stops getting its own undo entry.
       assert.strictEqual(
         afterMutations.length,
         1,
@@ -1007,10 +1008,9 @@ module(
       await triggerEvent(".workflow-sticky-note", "dblclick");
       assert.deepEqual(beforeMutations, [true], "editing opened one mutation");
 
-      // The press does not move focus, because the gesture cancels it, so the
-      // note is still being edited while the resize runs. Both write to the same
-      // pair of hooks, so the resize must nest inside the edit rather than open
-      // and close a bracket of its own.
+      // The gesture cancels the press, so focus stays put and the note is still being
+      // edited while the resize runs. Both use the same two callbacks, so the resize
+      // has to sit inside the edit's undo entry rather than open one of its own.
       const edge = pressable("[data-resize-handle='e']");
       await triggerEvent(edge, "pointerdown", {
         button: 0,
@@ -1060,13 +1060,12 @@ module(
         </template>
       );
 
-      // The hook belongs to the owner and can fail. If the throw were to leave
-      // the note flagged as holding an edit it never entered, no textarea would
-      // render, so no blur could ever release it and the note could never be
-      // edited again.
+      // The callback belongs to the parent and can fail. If the error left the note
+      // marked as editing without a textarea, no blur could ever clear it and the
+      // note could never be edited again.
       const priorOnError = window.onerror;
-      // Only the throw under test. Anything else still reaches the harness,
-      // which would otherwise go quiet for the whole interaction.
+      // Only the error under test is swallowed. Anything else still reaches the test
+      // harness.
       window.onerror = (...args) =>
         args[4]?.message === "owner failure" || priorOnError?.(...args);
       try {
@@ -1079,9 +1078,9 @@ module(
         .dom(".workflow-sticky-note__textarea")
         .exists("the note entered editing despite the hook throwing");
 
-      // And what the failed hook opened is still releasable. Without this, a
-      // note left flagged as editing but not as holding a mutation would pass
-      // the assertion above while pinning the count for every later gesture.
+      // What the failed callback opened can still be closed. Without this, a note
+      // marked as editing but not as holding an undo entry would pass the assertion
+      // above while pinning the count for every later gesture.
       await triggerEvent(".workflow-sticky-note__textarea", "blur");
 
       assert.deepEqual(
@@ -1109,9 +1108,9 @@ module(
         </template>
       );
 
-      // Editing opens a capture on the same wire a gesture does. Removing a
-      // focused textarea does not reliably fire blur, so teardown has to close
-      // it for the same reason teardown mid-gesture does.
+      // Editing opens an undo entry the same way a gesture does. Removing a focused
+      // textarea does not reliably fire blur, so teardown has to close it, for the
+      // same reason it closes a held gesture.
       await triggerEvent(".workflow-sticky-note", "dblclick");
 
       assert.deepEqual(beforeMutations, [true], "editing opened a mutation");

@@ -24,10 +24,10 @@ const DEFAULT_TOUCH_ACTION: TouchActionToken = "none";
 type Point = Readonly<{ x: number; y: number }>;
 
 /**
- * Where the gesture is, reported alongside every callback's event.
+ * Where the gesture is, passed to every callback beside the event.
  *
- * A snapshot rather than a live view: a fresh one is built per dispatch, so a
- * consumer that keeps one keeps the numbers it was handed.
+ * Each one is a fresh snapshot, so a copy you keep holds the numbers you were
+ * given rather than changing under you.
  */
 export interface DPointerDragInfo {
   /** Where the press landed. */
@@ -40,11 +40,11 @@ export interface DPointerDragInfo {
   readonly delta: Point;
 
   /**
-   * Whether `onDrag` has fired at least once for THIS gesture, which is what
-   * separates a drag from a click that happened to land on the handle.
+   * True once `onDrag` has fired in this gesture. False means the user clicked the
+   * handle without dragging it.
    *
-   * Not the same as having passed `threshold`: with no threshold set a gesture
-   * is eligible to report from the press, having still reported nothing.
+   * This is not the same as passing `threshold`. With no threshold a gesture may
+   * report from the press onwards, but until it does, nothing has moved.
    */
   readonly moved: boolean;
 }
@@ -55,9 +55,9 @@ interface DPointerDragSignature {
   Args: {
     Named: {
       /**
-       * Return `false` to ABORT the gesture (e.g. an anchor isn't resolvable);
-       * any other return starts it. An exception thrown here is rethrown, having
-       * released the pointer capture and started no gesture.
+       * Return `false` to refuse the gesture, for example when there is nothing to
+       * anchor it to. Anything else starts it. If this throws, the error is passed
+       * on and no gesture starts.
        */
       onDragStart?: (
         event: PointerEvent,
@@ -65,23 +65,22 @@ interface DPointerDragSignature {
       ) => boolean | void;
 
       /**
-       * Compute and preview the new value. Only fires during an active gesture,
-       * and only once `threshold` has been exceeded.
+       * Work out the new value and show it. Only fires during a gesture, and only
+       * once the pointer has moved past `threshold`.
        */
       onDrag?: (event: PointerEvent, info: DPointerDragInfo) => void;
 
       /**
-       * Compute and commit the new value. Runs BEFORE the pointer capture is
-       * released. Fires for any release on this element, including one that never
-       * reached `threshold` and so saw no `onDrag` at all, which `info.moved`
-       * distinguishes.
+       * Save the new value. Runs before the pointer capture is released. Fires for
+       * every release on this element, including a click that never passed
+       * `threshold`. Check `info.moved` to tell the two apart.
        */
       onDragEnd?: (event: PointerEvent, info: DPointerDragInfo) => void;
 
       /**
-       * Release any preview without committing. Neither this nor `onDragEnd`
-       * runs when the element is destroyed mid-gesture; see the modifier's own
-       * docs for what to do with state that outlives the handle.
+       * Drop your preview without saving. Neither this nor `onDragEnd` runs if the
+       * element is destroyed mid-gesture. See the modifier docs below for state
+       * that outlives the handle.
        */
       onDragCancel?: (event: PointerEvent, info: DPointerDragInfo) => void;
 
@@ -244,8 +243,7 @@ export function registerPointerDrag(
   // the rest of the gesture: returning inside the threshold must not start
   // suppressing movement again mid-drag.
   let engaged = false;
-  // Separate from `engaged`, which is already true at the press when no
-  // threshold is set.
+  // Separate from `engaged`, which is true from the press when no threshold is set.
   let moved = false;
   // The class actually added at the start of this gesture. `draggingClass` can
   // change between gestures, so the value really on the element is snapshotted
@@ -378,7 +376,7 @@ export function registerPointerDrag(
     };
 
     const args = getArgsRef();
-    // Before the dispatch below, which reports them.
+    // Set before the call below, which reports them.
     originX = event.clientX;
     originY = event.clientY;
     moved = false;
@@ -458,7 +456,7 @@ export function registerPointerDrag(
       }
       engaged = true;
     }
-    // Latched before the dispatch, so this report already counts as movement.
+    // Set first, so this report already counts as movement.
     moved = true;
     args.onDrag?.(event, dragInfo(event));
   };

@@ -54,10 +54,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("naming @handles opts out of the box even when it resolves to nothing", async function (assert) {
-    // `Payload` is inferred from `@handles`, so a consumer whose descriptors are
-    // momentarily undefined has callbacks typed for its own payload. Falling
-    // back to the box here would hand those callbacks compass strings instead,
-    // type-checked and wrong.
+    // The payload type comes from `@handles`. Falling back to the box when the list
+    // is briefly undefined would hand the callbacks compass strings instead.
     const noHandles = undefined;
 
     await render(
@@ -145,8 +143,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     assert
       .dom(".handle-gutter")
       .hasAttribute("style", "grid-column: 3", "the style reaches the element");
-    // The wrap exists precisely so a consumer can pass a plain string here. If
-    // it stopped wrapping, the style would still land and only this would notice.
+    // A plain string is trusted for the consumer. If that stopped, the style would
+    // still be applied and only this test would notice.
     assert.false(
       warn.getCalls().some((call) => String(call.args[0]).includes("style")),
       "and does so without tripping the dynamic-style warning"
@@ -314,15 +312,14 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     });
     const before = rects.at(-1).left;
 
-    // The box moves without changing size, as a scroll would move it. Bounds
-    // frozen at press-time would land the pointer in the wrong place for the
-    // rest of the gesture.
+    // The box moves without changing size, as a scroll would move it. Bounds taken
+    // once at the press would put the pointer in the wrong place from here on.
     find(".box").style.marginLeft = "40px";
     window.dispatchEvent(new Event("scroll"));
     await settled();
 
-    // Read rather than computed: the test container is scaled, so the viewport
-    // delta is not the margin that produced it.
+    // Read, not calculated: the test container is scaled, so the viewport delta is
+    // not the same as the margin that caused it.
     const moved = find(".box").getBoundingClientRect().left;
     assert.notStrictEqual(moved, before, "control: the box really did move");
 
@@ -363,7 +360,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 0,
     });
 
-    // Spied only from here, so the release's own detach is the one observed.
+    // Spied from here on, so the release's own cleanup is what gets counted.
     const removeSpy = sinon.spy(window, "removeEventListener");
     await triggerEvent(east, "pointerup", {
       pointerId: 1,
@@ -406,10 +403,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 0,
     });
 
-    // A vetoed press starts no gesture, so no terminal callback will ever
-    // arrive to clean up after it. Observed through the listeners rather than
-    // the gesture map, because a later press on the same pointer id would
-    // overwrite a stranded entry and hide the leak.
+    // A refused press starts no gesture, so no callback will arrive to clean up
+    // after it. Checked through the listeners, not the gesture map: a later press
+    // on the same pointer id would overwrite a leaked entry and hide it.
     assert.true(
       removeSpy
         .getCalls()
@@ -447,9 +443,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     });
 
     const removeSpy = sinon.spy(window, "removeEventListener");
-    // The throw is the consumer's bug and is rethrown, so it surfaces as an
-    // uncaught error rather than a rejected promise. Swallowed here so the
-    // assertion below is about cleanup rather than about the throw.
+    // The error belongs to the consumer and is passed on, so it arrives uncaught
+    // rather than as a rejected promise. Caught here so the assertion below is
+    // about cleanup, not about the error.
     const priorOnError = window.onerror;
     window.onerror = (...args) =>
       args[4]?.message === "consumer failure" || priorOnError?.(...args);
@@ -472,8 +468,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("the reflow listeners go once nothing measured is left, not once nothing is left", async function (assert) {
-    // Only the east handle resolves a box, so the two concurrent gestures differ
-    // in whether they have anything to re-measure.
+    // Only the east handle finds a box, so of the two gestures held at once, only
+    // one has anything to measure.
     const measureEastOnly = (handle) =>
       handle.dataset.resizeHandle === "e"
         ? handle.closest(".fixture")?.querySelector(".box")
@@ -507,8 +503,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     });
 
     const removeSpy = sinon.spy(window, "removeEventListener");
-    // Waiting for the gesture map to empty would keep a document-wide listener
-    // alive for the rest of a gesture that has nothing for it to do.
+    // Waiting for every gesture to end would keep a page-wide listener alive for a
+    // gesture that has nothing to measure.
     await triggerEvent(east, "pointerup", {
       pointerId: 1,
       clientX: 0,
@@ -581,9 +577,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 20,
     });
 
-    // Detaching on every release would leave this gesture reporting press-time
-    // bounds for the rest of its life, which is the stale hit-test the live
-    // rect exists to prevent.
+    // Removing the listeners on every release would leave this gesture reporting
+    // its press-time bounds, which is the stale reading they exist to prevent.
     assert.strictEqual(
       rects.at(-1).left,
       moved,
@@ -631,9 +626,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       <template><DResizeHandles @handleClass="my-block__handle" /></template>
     );
 
-    // They are pointer affordances with no accessible name and no tab stop, so
-    // exposing them would announce eight nameless nodes per box. Keyboard
-    // operation is the consumer's job, on the resized object itself.
+    // They are pointer targets with no name and no tab stop, so showing them would
+    // announce eight nameless nodes per box. Keyboard support belongs on the object
+    // being resized.
     assert
       .dom("[data-resize-handle='ne']")
       .hasAttribute("aria-hidden", "true", "each handle is hidden from AT");
@@ -742,10 +737,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       "returning false from the start callback refuses the drag outright"
     );
 
-    // The same pointer presses again, elsewhere, and is accepted this time.
-    // Each press records where it began under the pointer's own id, so this
-    // measures from 200 rather than carrying anything over from the press that
-    // was refused.
+    // The same pointer presses again somewhere else, and is accepted this time.
+    // Each press stores its own start point, so this one measures from 200 and
+    // carries nothing over from the press that was refused.
     state.veto = false;
     await triggerEvent(".handle-e", "pointerdown", {
       button: 0,
@@ -806,11 +800,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 50,
     });
 
-    // The payload comes from the callback's own binding rather than a snapshot
-    // taken at the press, so it always names the descriptor the handler is
-    // currently bound to. Pinned here because the per-pointer gesture entry
-    // could plausibly be made to hold the payload too, which would freeze it at
-    // what was pressed.
+    // The payload comes from the callback's current binding, not from a copy saved
+    // at the press. Worth a test, because storing it on the gesture would look
+    // reasonable and would freeze it at whatever was pressed.
     assert.deepEqual(
       events,
       ["first", "second"],
@@ -842,9 +834,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     stubPointerCapture(".handle-nw");
     stubPointerCapture(".handle-se");
 
-    // Two fingers on two handles of the same box. Each gesture has its own
-    // pointer id, so the engine keeps both live, and one must not overwrite the
-    // other's origin.
+    // Two fingers on two handles of one box. Each gesture has its own pointer id and
+    // both stay live, so neither may overwrite the other's start point.
     await triggerEvent(".handle-nw", "pointerdown", {
       button: 0,
       pointerId: 1,
@@ -940,9 +931,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 0,
     });
 
-    // Read through `defaultPrevented`, which only an accepted press sets. A press
-    // that started no gesture bubbles too, so the ancestor seeing it proves
-    // nothing on its own.
+    // Checked through `defaultPrevented`, which only an accepted press sets. A press
+    // that started no gesture also bubbles, so the ancestor seeing one proves
+    // nothing by itself.
     assert.deepEqual(
       ancestorPresses,
       ["accepted"],
@@ -1035,7 +1026,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
 
     await clearRender();
 
-    // The engine reports nothing when the element goes, so whatever the consumer
+    // The gesture layer says nothing when the element goes, so anything the consumer
     // opened at the press would stay open with no callback left to close it.
     assert.deepEqual(
       events,
@@ -1116,8 +1107,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
 
     await clearRender();
 
-    // Teardown is an end the pointer was never released for, so it reports the
-    // way every other such end does rather than inventing a third route.
+    // Teardown ends a gesture that was never released, so it reports the same way
+    // every other interruption does.
     assert.deepEqual(
       events,
       ["end:e"],
@@ -1149,8 +1140,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 0,
     });
 
-    // A destructor throws into the flush tearing down every sibling component,
-    // and would take their cleanup with it.
+    // This runs while every sibling component is being destroyed, so throwing here
+    // would stop their cleanup too.
     await clearRender();
 
     assert.true(

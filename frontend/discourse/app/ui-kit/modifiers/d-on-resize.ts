@@ -23,8 +23,8 @@ interface DOnResizeSignature {
  * Calls `callback` with the observed `ResizeObserverEntry`s whenever the element
  * resizes, throttled through the runloop. Cleans up the observer on teardown.
  *
- * @see The `DResizeSeparator` / `dResizeEdge` / `DResizeHandles` primitives to let a user
- *   PERFORM a resize. The similar names are the trap; this one only watches.
+ * @see `DResizeSeparator`, `dResizeEdge` and `DResizeHandles` to let a user resize
+ *   something. Despite the similar names, this one only watches.
  */
 export default class DOnResize extends Modifier<DOnResizeSignature> {
   #resizeObserver?: ResizeObserver;

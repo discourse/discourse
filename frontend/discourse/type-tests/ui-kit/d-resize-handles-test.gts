@@ -1,6 +1,6 @@
 /**
- * Positive template invocations for DResizeHandles. This file intentionally has
- * no Glint error directives, so a broken public signature cannot be suppressed.
+ * Uses of DResizeHandles that must type-check. There are no Glint error
+ * directives in this file, so nothing here can hide a broken public signature.
  */
 import { array } from "@ember/helper";
 import DResizeHandles, {
@@ -21,8 +21,8 @@ declare function measureFrom(handle: HTMLElement): Element | null;
 declare function veto(direction: BoxDirection): boolean;
 
 /**
- * Reads every field of the report, so the shape of the public callback payload
- * is checked rather than merely its first argument.
+ * Reads every field of the report, so the whole callback payload is checked and
+ * not just its first argument.
  */
 function onReport(
   direction: BoxDirection,
