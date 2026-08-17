@@ -4,10 +4,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
-import {
-  formatDashboardHeadlinePeriod,
-  formatDeltaPercent,
-} from "discourse/admin/lib/dashboard-format";
+import { formatDeltaPercent } from "discourse/admin/lib/dashboard-format";
 import { searchHeadlineKeys } from "discourse/admin/lib/search-headline";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
@@ -60,7 +57,6 @@ export default class DashboardSearch extends Component {
       noResultRate,
       noResultRate.point_change
     );
-    const period = formatDashboardHeadlinePeriod(this.args.period);
     const headlineKeys = searchHeadlineKeys({
       searches: searchesDirection,
       noResultRate: noResultDirection,
@@ -71,7 +67,7 @@ export default class DashboardSearch extends Component {
       : null;
 
     return {
-      title: i18n(`${prefix}.titles.${headlineKeys.title}`, { period }),
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`),
       summary: cta ? `${summary} ${cta}` : summary,
     };
   }

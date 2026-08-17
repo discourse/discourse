@@ -18,7 +18,7 @@ export default <template>
       </div>
     {{else}}
       {{#if @engagement}}
-        <EngagementHeadline @kpis={{@engagement.kpis}} @period={{@period}} />
+        <EngagementHeadline @kpis={{@engagement.kpis}} />
       {{/if}}
 
       <div class="db-section__row-group">

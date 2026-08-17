@@ -6,7 +6,6 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DashboardSection from "discourse/admin/components/dashboard/section";
-import { formatDashboardHeadlinePeriod } from "discourse/admin/lib/dashboard-format";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -90,7 +89,6 @@ export default class SupportSection extends Component {
       };
     }
 
-    const period = formatDashboardHeadlinePeriod(this.args.period);
     const headlineKeys = supportHeadlineKeys({
       resolutionRate: resolutionDirection,
       firstReplyTime: replyDirection,
@@ -100,7 +98,7 @@ export default class SupportSection extends Component {
       ? i18n(`${prefix}.cta.${headlineKeys.cta}`)
       : null;
     return {
-      title: i18n(`${prefix}.titles.${headlineKeys.title}`, { period }),
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`),
       summary: cta ? `${summary} ${cta}` : summary,
     };
   }

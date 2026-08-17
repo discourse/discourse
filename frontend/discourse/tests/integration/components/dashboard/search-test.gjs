@@ -46,7 +46,7 @@ module("Integration | Component | Dashboard | Search", function (hooks) {
         find(".db-section__subintro p").textContent.trim(),
       ],
       [
-        "Searches have increased and the no-result rate has declined in the last 30 days",
+        "Searches have increased and the no-result rate has declined in the selected period",
         "Members are conducting more searches in your community and are finding what they're looking for more often.",
       ],
       "renders the exact scenario headline and summary"
@@ -78,7 +78,7 @@ module("Integration | Component | Dashboard | Search", function (hooks) {
     assert
       .dom(".db-section__subintro")
       .hasText(
-        "The total number of searches has increased in the last 30 days Members are conducting more searches in your community, but the no-result rate has increased. Review the content gaps to see what's missing."
+        "The total number of searches has increased in the selected period Members are conducting more searches in your community, but the no-result rate has increased. Review the content gaps to see what's missing."
       );
   });
 });

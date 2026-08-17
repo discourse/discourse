@@ -18,13 +18,13 @@ en:
             headline:
               titles:
                 insufficient_activity: "Not enough support activity yet"
-                resolution_rate_and_first_reply_time_improved: "Resolution rate and time to first reply have improved in %{period}"
-                resolution_rate_improved: "The resolution rate has improved in %{period}"
-                first_reply_time_decreased: "The time to first reply has decreased in %{period}"
-                resolution_rate_and_first_reply_time_declined: "Resolution rate and time to first reply have declined in %{period}"
-                resolution_rate_decreased: "The resolution rate has decreased in %{period}"
-                first_reply_time_increased: "The time to first reply has increased in %{period}"
-                support_steady: "Support is steady in %{period}"
+                resolution_rate_and_first_reply_time_improved: "Resolution rate and time to first reply have improved in the selected period"
+                resolution_rate_improved: "The resolution rate has improved in the selected period"
+                first_reply_time_decreased: "The time to first reply has decreased in the selected period"
+                resolution_rate_and_first_reply_time_declined: "Resolution rate and time to first reply have declined in the selected period"
+                resolution_rate_decreased: "The resolution rate has decreased in the selected period"
+                first_reply_time_increased: "The time to first reply has increased in the selected period"
+                support_steady: "Support is steady in the selected period"
               summaries:
                 insufficient_activity: "There's no support activity in this period yet. Once topics come in, you'll see how your community is handling them."
                 more_answers_and_faster_replies: "More questions are getting answered, and they're getting answered faster."

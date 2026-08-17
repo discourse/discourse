@@ -88,7 +88,7 @@ describe "Admin Dashboard Redesign | Search section" do
     search = dashboard.search
 
     expect(search).to have_headline(
-      "The total number of searches has increased in the last 30 days",
+      "The total number of searches has increased in the selected period",
       "Members are conducting more searches in your community, but the no-result rate has " \
         "increased. Review the content gaps to see what's missing.",
     )
@@ -140,7 +140,7 @@ describe "Admin Dashboard Redesign | Search section" do
     dashboard.select_preset("last_7_days")
 
     expect(search).to have_headline(
-      "Searches have increased and the no-result rate has declined in the last 7 days",
+      "Searches have increased and the no-result rate has declined in the selected period",
       "Members are conducting more searches in your community and are finding what they're " \
         "looking for more often.",
     )
@@ -161,7 +161,7 @@ describe "Admin Dashboard Redesign | Search section" do
     dashboard.select_preset("last_3_months")
 
     expect(dashboard.search).to have_headline(
-      "The total number of searches has increased in the last 3 months",
+      "The total number of searches has increased in the selected period",
       "Members are conducting more searches in your community, but the no-result rate has " \
         "increased. Review the content gaps to see what's missing.",
     )
@@ -186,7 +186,7 @@ describe "Admin Dashboard Redesign | Search section" do
     search = dashboard.search
 
     expect(search).to have_headline(
-      "The total number of searches has increased in the last 30 days",
+      "The total number of searches has increased in the selected period",
       "Members are conducting more searches in your community, but the no-result rate has " \
         "increased. Review the content gaps to see what's missing.",
     )

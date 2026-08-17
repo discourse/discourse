@@ -41,7 +41,6 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       <template>
         <DashboardEngagement
           @engagement={{engagement}}
-          @period="last_30_days"
           @startDate={{start}}
           @endDate={{end}}
         />
@@ -110,17 +109,14 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
 
     await render(
       <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-        />
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
       </template>
     );
 
     assert
       .dom(".db-section__subintro")
       .hasText(
-        "New signups have increased in the last 30 days New signups are up."
+        "New signups have increased in the selected period New signups are up."
       );
   });
 
@@ -131,10 +127,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
 
     await render(
       <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-        />
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
       </template>
     );
 
@@ -159,17 +152,14 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
 
     await render(
       <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-        />
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
       </template>
     );
 
     assert
       .dom(".db-section__subintro")
       .hasText(
-        "Engagement has declined in the last 30 days Stickiness is down. Take a look at the activity by category to see which areas of your community may need your attention."
+        "Engagement has declined in the selected period Stickiness is down. Take a look at the activity by category to see which areas of your community may need your attention."
       );
   });
 
@@ -199,10 +189,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
 
     await render(
       <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="custom"
-        />
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
       </template>
     );
 
@@ -243,10 +230,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
 
     await render(
       <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-        />
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
       </template>
     );
 
@@ -284,17 +268,14 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
 
     await render(
       <template>
-        <DashboardEngagement
-          @engagement={{scenarioEngagement}}
-          @period="last_30_days"
-        />
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
       </template>
     );
 
     assert
       .dom(".db-section__subintro")
       .hasText(
-        "Daily engagement has increased in the last 30 days Daily engagement is up, but new signups are flat."
+        "Daily engagement has increased in the selected period Daily engagement is up, but new signups are flat."
       );
   });
 });

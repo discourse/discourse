@@ -146,7 +146,7 @@ describe "Admin Dashboard Redesign | Engagement section" do
     dashboard.visit
 
     expect(engagement).to have_headline(
-      "Engagement is up in the last 30 days",
+      "Engagement is up in the selected period",
       "Stickiness, daily engagement, and new signups have all improved, showing that more " \
         "members are joining and participating in your community.",
     )

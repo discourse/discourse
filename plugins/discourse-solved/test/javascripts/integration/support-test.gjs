@@ -439,7 +439,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
     assert
       .dom(".db-section__subintro")
       .hasText(
-        "The resolution rate has improved in the last 30 days More questions are getting answered."
+        "The resolution rate has improved in the selected period More questions are getting answered."
       );
   });
 
@@ -472,7 +472,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
     assert
       .dom(".db-section__subintro")
       .hasText(
-        "The resolution rate has improved in the last 30 days More questions are getting answered, but the time to first reply has increased. Check out the unanswered topics to see which you can address."
+        "The resolution rate has improved in the selected period More questions are getting answered, but the time to first reply has increased. Check out the unanswered topics to see which you can address."
       );
   });
 

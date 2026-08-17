@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import {
-  formatDashboardHeadlinePeriod,
   formatDeltaPercent,
   formatKpiValue,
   roundDeltaPercent,
@@ -149,9 +148,7 @@ export default class EngagementHeadline extends Component {
     const cta = ctaOwner ? i18n(`${prefix}.cta.${ctaOwner}`) : null;
 
     return {
-      title: i18n(`${prefix}.titles.${headlineKeys.title}`, {
-        period: formatDashboardHeadlinePeriod(this.args.period),
-      }),
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`),
       summary: cta ? `${summary} ${cta}` : summary,
     };
   }

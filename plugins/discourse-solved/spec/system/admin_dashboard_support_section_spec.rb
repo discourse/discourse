@@ -37,7 +37,7 @@ describe "Admin dashboard Support section" do
 
     expect(support).to have_section
     expect(support).to have_headline(
-      "The resolution rate has improved in the last 30 days",
+      "The resolution rate has improved in the selected period",
       "More questions are getting answered, but the time to first reply has increased. Check " \
         "out the unanswered topics to see which you can address.",
     )
