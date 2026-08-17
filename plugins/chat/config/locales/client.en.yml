@@ -313,6 +313,8 @@ en:
       remove_upload: "Remove file"
       react: "React with emoji"
       reply: "Reply"
+      message_actions: "Message actions"
+      more_message_actions: "More message actions"
       edit: "Edit"
       copy_link: "Copy link"
       copy_text: "Copy text"
@@ -539,6 +541,11 @@ en:
         message_in_channel: "Channel"
 
       reactions:
+        add: "React with %{emoji}"
+        remove: "Remove your %{emoji} reaction"
+        counted:
+          one: "%{emoji} reaction, %{count} person"
+          other: "%{emoji} reaction, %{count} people"
         only_you: "<span>You reacted with </span>:%{emoji}:"
         you_and_single_user: "<span>You and %{username} reacted with </span>:%{emoji}:"
         you_and_multiple_users: "<span>You, %{commaSeparatedUsernames} and %{username} reacted with </span>:%{emoji}:"

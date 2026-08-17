@@ -317,12 +317,3 @@ body.discourse-calendar-livestream-zoom-full {
     display: none;
   }
 }
-
-// we need to raise the z-index of the actions outlet
-// so they appear above the modal
-.livestream-chat-modal-active {
-  .chat-message-actions-desktop-outlet {
-    position: relative;
-    z-index: z("max");
-  }
-}

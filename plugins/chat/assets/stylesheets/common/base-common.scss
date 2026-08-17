@@ -146,6 +146,14 @@ html.ios-device.has-full-page-chat body #main-outlet {
 
   .chat-message-container {
     display: grid;
+    position: relative;
+
+    // A chained message's author stays clipped while focused, so the message shows where
+    // focus is on its behalf.
+    &:has(.chat-message-info.-author-only :focus-visible) {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+    }
 
     &.-selectable {
       grid-template-columns: 1.5em 1fr;
