@@ -1306,6 +1306,10 @@
   .d-table.user-invite-list {
     margin-top: var(--space-4);
 
+    .invite-link-target {
+      display: none;
+    }
+
     .d-table__cell {
       &.--overview {
         .d-icon {

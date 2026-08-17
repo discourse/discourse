@@ -1,4 +1,4 @@
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import SvgEnvelopeZero from "discourse/components/svg/envelope-zero";
@@ -7,6 +7,7 @@ import bodyClass from "discourse/helpers/body-class";
 import rawDate from "discourse/helpers/raw-date";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -225,9 +226,16 @@ export default <template>
                         {{else}}
                           {{dIcon "link"}}
                           {{#if invite.invite_key}}
+                            <input
+                              type="text"
+                              id={{concat "invite-link-" invite.id}}
+                              class="invite-link-target"
+                              value={{invite.link}}
+                              disabled={{true}}
+                            />
                             {{i18n
                               "user.invited.invited_via_link"
-                              key=invite.shortKey
+                              key=invite.invite_key
                               count=invite.redemption_count
                               max=invite.max_redemptions_allowed
                             }}
@@ -324,6 +332,24 @@ export default <template>
                                     }}
                                   />
                                 </dropdown.item>
+                                {{#if invite.link}}
+                                  <dropdown.item>
+                                    <DCopyButton
+                                      @selector={{concat
+                                        "#invite-link-"
+                                        invite.id
+                                      }}
+                                      @icon="copy"
+                                      @copyClass="btn-transparent"
+                                      @translatedLabel={{i18n
+                                        "user.invited.invite.copy_link"
+                                      }}
+                                      @translatedLabelAfterCopy={{i18n
+                                        "user.invited.invite.link_copied"
+                                      }}
+                                    />
+                                  </dropdown.item>
+                                {{/if}}
                               </DDropdownMenu>
                             </:content>
                           </DMenu>
