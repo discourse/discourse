@@ -28,7 +28,7 @@ describe Chat::OneboxHandler do
           <aside class="onebox chat-onebox">
             <article class="onebox-body chat-onebox-body">
               <h3 class="chat-onebox-title">
-                <a href="/chat/c/-/#{public_channel.id}">
+                <a href="#{public_channel.relative_url}">
                   <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
                     <svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg>
                   </span>
@@ -55,7 +55,7 @@ describe Chat::OneboxHandler do
           <aside class="onebox chat-onebox">
             <article class="onebox-body chat-onebox-body">
               <h3 class="chat-onebox-title">
-                <a href="/chat/c/-/#{public_channel.id}">
+                <a href="#{public_channel.relative_url}">
                   <img src="/images/emoji/twitter/tada.png?v=15" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20">
                   <span class="clear-badge">#{public_channel.name}</span>
                 </a>
@@ -113,9 +113,9 @@ describe Chat::OneboxHandler do
               </div>
               <div class="chat-transcript-username">#{user.username}</div>
               <div class="chat-transcript-datetime">
-                <a href="/chat/c/-/#{public_channel.id}/#{public_message.id}" title="#{public_message.created_at}">#{public_message.created_at}</a>
+                <a href="#{public_channel.relative_url}/#{public_message.id}" title="#{public_message.created_at}">#{public_message.created_at}</a>
               </div>
-              <a class="chat-transcript-channel" href="/chat/c/-/#{public_channel.id}">
+              <a class="chat-transcript-channel" href="#{public_channel.relative_url}">
                 <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
                   <svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg>
                 </span>
@@ -176,7 +176,7 @@ describe Chat::OneboxHandler do
             <article class="onebox-body chat-onebox-body">
               <div class="chat-transcript-user">
                 <h3 class="chat-onebox-title">
-                  <a href="/chat/c/-/#{public_channel.id}/t/#{public_thread.id}">
+                  <a href="#{public_thread.relative_url}">
                     <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
                       <svg class="fa d-icon d-icon-discourse-threads svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#discourse-threads"></use></svg>
                     </span>
@@ -184,7 +184,7 @@ describe Chat::OneboxHandler do
                   </a>
                 </h3>
                 <span class="thread-title-connector">in</span>
-                <a href="/chat/c/-/#{public_channel.id}">
+                <a href="#{public_channel.relative_url}">
                   <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
                     <svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg>
                   </span>
@@ -226,7 +226,7 @@ describe Chat::OneboxHandler do
           <aside class="onebox chat-onebox">
             <article class="onebox-body chat-onebox-body">
               <h3 class="chat-onebox-title">
-                <a href="/chat/c/-/#{public_channel.id}">
+                <a href="#{public_channel.relative_url}">
                   <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
                     <svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg>
                   </span>
@@ -243,6 +243,72 @@ describe Chat::OneboxHandler do
           </aside>
         HTML
       end
+    end
+  end
+
+  context "when Discourse is installed in a subfolder" do
+    before { set_subfolder "/forum" }
+
+    fab!(:message) do
+      Fabricate(:chat_message, chat_channel: public_channel, user: user, message: "Hello world!")
+    end
+    fab!(:thread_original_message) do
+      Fabricate(:chat_message, chat_channel: public_channel, user: user, message: "Thread starter")
+    end
+    fab!(:thread) do
+      Fabricate(:chat_thread, channel: public_channel, original_message: thread_original_message)
+    end
+
+    it "prefixes channel onebox links with the subfolder" do
+      onebox_html = Chat::OneboxHandler.handle(public_chat_url, { channel_id: public_channel.id })
+
+      expect(onebox_html).to include(%(href="/forum/chat/c/))
+      expect(onebox_html).not_to include(%(href="/chat/c/))
+    end
+
+    it "prefixes message onebox links with the subfolder" do
+      onebox_html =
+        Chat::OneboxHandler.handle(
+          "#{public_chat_url}/#{message.id}",
+          { channel_id: public_channel.id, message_id: message.id },
+        )
+
+      expect(onebox_html).to include(%(href="/forum/chat/c/))
+      expect(onebox_html).to include(%(/#{public_channel.id}/#{message.id}"))
+      expect(onebox_html).not_to include(%(href="/chat/c/))
+    end
+
+    it "prefixes threaded-message onebox links with the subfolder" do
+      threaded_message =
+        Fabricate(
+          :chat_message,
+          chat_channel: public_channel,
+          user: user,
+          thread: thread,
+          message: "In the thread",
+        )
+
+      onebox_html =
+        Chat::OneboxHandler.handle(
+          "#{public_chat_url}/#{threaded_message.id}",
+          { channel_id: public_channel.id, message_id: threaded_message.id },
+        )
+
+      expect(onebox_html).to include(%(href="/forum/chat/c/))
+      expect(onebox_html).to include(%(/t/#{thread.id}/#{threaded_message.id}"))
+      expect(onebox_html).to include(%(/t/#{thread.id}"))
+      expect(onebox_html).not_to include(%(href="/chat/c/))
+    end
+
+    it "prefixes thread onebox links with the subfolder" do
+      onebox_html =
+        Chat::OneboxHandler.handle(
+          "#{public_chat_url}/t/#{thread.id}",
+          { channel_id: public_channel.id, thread_id: thread.id },
+        )
+
+      expect(onebox_html).to include(%(href="/forum/chat/c/))
+      expect(onebox_html).not_to include(%(href="/chat/c/))
     end
   end
 end

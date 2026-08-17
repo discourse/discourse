@@ -40,6 +40,7 @@ module Chat
       {
         channel_id: chat_channel.id,
         channel_name: chat_channel.name,
+        channel_url: chat_channel.relative_url,
         color: chat_channel.chatable.color,
         channel_badge: build_channel_badge(chat_channel),
       }
@@ -57,6 +58,7 @@ module Chat
         cooked: build_thread_snippet(thread),
         thread_id: thread.id,
         thread_title: thread.title,
+        thread_url: thread.relative_url,
         thread_title_connector: I18n.t("chat.onebox.thread_title_connector"),
         images: get_image_uploads(thread),
       )
@@ -67,6 +69,7 @@ module Chat
     def self.render_message_onebox(args, message, thread)
       args.merge!(
         message_id: message.id,
+        message_url: "#{thread&.relative_url || message.chat_channel.relative_url}/#{message.id}",
         username: message.user.username,
         avatar_url: message.user.avatar_template_url.gsub("{size}", "20"),
         cooked: message.cooked,
@@ -74,6 +77,7 @@ module Chat
         created_at_str: message.created_at.iso8601,
         thread_id: message.thread_id,
         thread_title: thread&.title,
+        thread_url: thread&.relative_url,
         images: get_image_uploads(message),
       )
 
