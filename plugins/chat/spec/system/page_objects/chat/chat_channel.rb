@@ -124,7 +124,7 @@ module PageObjects
         if emoji_name
           message.find(".chat-message-actions [data-emoji-name=\"#{emoji_name}\"]").click
         else
-          message.find(".react-btn").click
+          message.find(".chat-message-react-btn").click
         end
       end
 

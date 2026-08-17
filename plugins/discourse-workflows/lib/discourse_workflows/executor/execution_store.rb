@@ -61,6 +61,7 @@ module DiscourseWorkflows
           timeout_action: nil,
         )
         publish_execution_run_data
+        publish_progress(refresh: true)
         if @options.workflow_call_child?
           DiscourseWorkflows::WorkflowCallContinuation.child_succeeded!(execution)
         end
@@ -83,6 +84,7 @@ module DiscourseWorkflows
         publish_execution_run_data(
           force: @options.draft_execution || @options.workflow_snapshot.present?,
         )
+        publish_progress(refresh: true)
         if @options.workflow_call_child?
           DiscourseWorkflows::WorkflowCallContinuation.child_failed!(execution)
         end
@@ -107,6 +109,7 @@ module DiscourseWorkflows
         )
         save!(steps)
         publish_waiting_form_notification(node)
+        publish_progress(refresh: true)
         execution
       end
 
@@ -120,6 +123,10 @@ module DiscourseWorkflows
         )
       end
 
+      def publish_progress(step: nil, refresh: false)
+        ExecutionProgressPublisher.publish(execution, step: step, refresh: refresh)
+      end
+
       private
 
       def create_execution!
@@ -128,6 +135,7 @@ module DiscourseWorkflows
 
       def persist_execution!(status:, trigger_data:, finished_at: nil)
         @execution = @options.existing_execution || DiscourseWorkflows::Execution.new
+        created = @execution.new_record?
         @execution_context.execution = @execution if @options.existing_execution
         @execution.update!(
           workflow_id: workflow.id,
@@ -140,6 +148,9 @@ module DiscourseWorkflows
           finished_at: finished_at,
         )
         attach_workflow_call_run!
+        if created
+          ExecutionProgressPublisher.publish_created(@execution, workflow_name: workflow.name)
+        end
         @execution
       end
 

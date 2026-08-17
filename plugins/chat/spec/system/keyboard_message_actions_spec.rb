@@ -103,9 +103,11 @@ RSpec.describe "Chat | keyboard access to message actions" do
     expect(page).to have_css(
       ".chat-message-actions[role='toolbar'][aria-label='#{I18n.t("js.chat.message_actions")}']",
     )
-    expect(page).to have_css(".react-btn[title='#{I18n.t("js.chat.react")}']")
-    expect(page).to have_css(".reply-btn[title='#{I18n.t("js.chat.reply")}']")
-    expect(page).to have_css(".bookmark-btn[aria-label='#{I18n.t("js.chat.bookmark_message")}']")
+    expect(page).to have_css(".chat-message-actions .react-btn[title='#{I18n.t("js.chat.react")}']")
+    expect(page).to have_css(".chat-message-actions .reply-btn[title='#{I18n.t("js.chat.reply")}']")
+    expect(page).to have_css(
+      ".chat-message-actions .bookmark-btn[aria-label='#{I18n.t("js.chat.bookmark_message")}']",
+    )
     expect(page).to have_css(
       ".more-buttons [aria-label='#{I18n.t("js.chat.more_message_actions")}']",
     )
