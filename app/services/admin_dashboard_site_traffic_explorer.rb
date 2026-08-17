@@ -23,7 +23,7 @@ class AdminDashboardSiteTrafficExplorer
   }.freeze
   private_constant :FILTER_DIMENSIONS
 
-  BROWSER_VALUES = %w[edge firefox chrome safari unknown].freeze
+  BROWSER_VALUES = BrowserPageviewEvent.browsers.keys.freeze
   private_constant :BROWSER_VALUES
 
   TRAFFIC_TYPE_VALUES = %w[logged_in anonymous likely_crawler].freeze
@@ -144,7 +144,7 @@ class AdminDashboardSiteTrafficExplorer
       referrer: filters[:referrer],
       country: filters[:country],
       network_asn: filters[:network],
-      browser: filters[:browser],
+      browser: filters[:browser] && BrowserPageviewEvent.browsers.fetch(filters[:browser]),
       ip_address: filters[:ip],
       traffic_type_filtered: filters[:traffic_type].present?,
       include_logged_in: filters[:traffic_type]&.include?("logged_in"),
@@ -174,7 +174,7 @@ class AdminDashboardSiteTrafficExplorer
           bpe.country_code,
           bpe.asn,
           bpe.ip_address,
-          bpe.user_agent,
+          COALESCE(bpe.browser, #{BrowserPageviewEvent::BROWSER_UNKNOWN}) AS browser,
           bpe.score
         FROM browser_pageview_events bpe
         WHERE bpe.created_at >= :start_date
@@ -201,20 +201,6 @@ class AdminDashboardSiteTrafficExplorer
           population_stats.row_count,
           population_stats.oldest_created_at
       ),
-      browser_values AS MATERIALIZED (
-        SELECT
-          user_agent,
-          CASE
-            WHEN user_agent ~* 'Edg' THEN 'edge'
-            WHEN user_agent ~* '(Opera|OPR)' THEN 'unknown'
-            WHEN user_agent ~* 'Firefox' THEN 'firefox'
-            WHEN user_agent ~* '(Chrome|CriOS)' THEN 'chrome'
-            WHEN user_agent ~* 'Safari' THEN 'safari'
-            ELSE 'unknown'
-          END AS browser
-        FROM population
-        GROUP BY user_agent
-      ),
       classified AS (
         SELECT
           population.created_at,
@@ -225,7 +211,7 @@ class AdminDashboardSiteTrafficExplorer
           population.country_code,
           population.asn,
           population.ip_address,
-          browser_values.browser,
+          population.browser,
           (
             population.normalized_referrer IS NULL
             OR split_part(
@@ -239,8 +225,6 @@ class AdminDashboardSiteTrafficExplorer
             AND COALESCE(population.score, 0) > :crawler_threshold
           ) AS likely_crawler
         FROM population
-        JOIN browser_values
-          ON browser_values.user_agent = population.user_agent
       ),
       dimensioned AS (
         SELECT
@@ -624,6 +608,7 @@ class AdminDashboardSiteTrafficExplorer
 
   def decorate_dimension_row(dimension, row)
     value = row.fetch("value")
+    value = BrowserPageviewEvent.browsers.key(value.to_i) || "unknown" if dimension == "browsers"
     {
       value: value,
       label: dimension_label(dimension, value, row["representative_ip"]),
@@ -640,7 +625,7 @@ class AdminDashboardSiteTrafficExplorer
     when "networks"
       network_label(value, representative_ip)
     when "browsers"
-      I18n.t("admin_site_traffic_explorer.browsers.#{value}", default: value)
+      I18n.t("browsers.#{value}", default: value)
     else
       value
     end

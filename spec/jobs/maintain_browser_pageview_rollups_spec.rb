@@ -588,5 +588,31 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(event.reload.normalized_url_version).to be_nil
       end
     end
+
+    context "when backfilling browsers" do
+      it "resumes bounded batches and classifies unknown user agents" do
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        edge =
+          Fabricate(
+            :browser_pageview_event,
+            user_agent: "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
+            browser: nil,
+          )
+        unknown =
+          Fabricate(
+            :browser_pageview_event,
+            user_agent: "Discourse/163 CFNetwork/978.0.7 Darwin/18.6.0",
+            browser: nil,
+          )
+
+        job.execute({})
+
+        expect([edge.reload.browser, unknown.reload.browser]).to eq([nil, "unknown"])
+
+        job.execute({})
+
+        expect(edge.reload.browser).to eq("edge")
+      end
+    end
   end
 end

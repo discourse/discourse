@@ -1529,7 +1529,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 3 },
               ],
               "browsers" => [
-                { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
+                { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
               "ip_addresses" => [
@@ -1700,7 +1700,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
               ],
               "browsers" => [
-                { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+                { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
               "ip_addresses" => [
@@ -1797,7 +1797,7 @@ RSpec.describe Admin::DashboardController do
               "networks" => [
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
               ],
-              "browsers" => [{ "value" => "chrome", "label" => "Chrome", "pageviews" => 2 }],
+              "browsers" => [{ "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
               ],
@@ -1919,7 +1919,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
               ],
               "browsers" => [
-                { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+                { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
               "ip_addresses" => [

@@ -79,7 +79,7 @@ class UserNotifications < ActionMailer::Base
       locale: user_locale(user),
       client_ip: opts[:client_ip],
       location: location.presence || I18n.t("staff_action_logs.unknown"),
-      browser: I18n.t("user_auth_tokens.browser.#{browser}"),
+      browser: I18n.t("browsers.#{browser}"),
       device: I18n.t("user_auth_tokens.device.#{device}"),
       os: I18n.t("user_auth_tokens.os.#{os}"),
       recipient_user: user,
