@@ -19,7 +19,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
     firefox: 4,
     opera: 5,
     ie: 6,
-    samsung_internet: 7,
+    samsung_browser: 7,
     uc_browser: 8,
     android_browser: 9,
     qq_browser: 10,

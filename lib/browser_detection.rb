@@ -8,7 +8,7 @@ module BrowserDetection
     when /Opera/i, /OPR/i
       :opera
     when %r{SamsungBrowser/}i
-      :samsung_internet
+      :samsung_browser
     when %r{(?:UCBrowser|UC Browser)[/ ]}i
       :uc_browser
     when %r{(?:MQQBrowser|QQBrowser)/}i

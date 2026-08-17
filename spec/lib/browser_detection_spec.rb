@@ -164,7 +164,7 @@ RSpec.describe BrowserDetection do
     it "detects Samsung Browser" do
       user_agent = "Mozilla/5.0 Chrome/120.0 Mobile Safari/537.36 SamsungBrowser/24.0"
 
-      expect(described_class.browser(user_agent)).to eq(:samsung_internet)
+      expect(described_class.browser(user_agent)).to eq(:samsung_browser)
     end
 
     it "detects UC Browser" do
