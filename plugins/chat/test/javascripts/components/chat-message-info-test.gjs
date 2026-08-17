@@ -56,6 +56,42 @@ module("Component | ChatMessageInfo", function (hooks) {
     assert.dom(".chat-message-info__username").doesNotHaveAttribute("role");
   });
 
+  test("the username is display-only where the message is not interactive", async function (assert) {
+    this.message = new ChatFabricators(getOwner(this)).message({
+      user: { username: "discobot" },
+    });
+
+    await render(
+      <template>
+        <Info @message={{this.message}} @show={{true}} @interactive={{false}} />
+      </template>
+    );
+
+    assert.dom(".chat-message-info__username__name").hasTagName("span");
+    assert.dom(".chat-message-info__username__name").hasText("discobot");
+    assert
+      .dom(".chat-message-info__username__name")
+      .doesNotHaveAttribute("data-user-card");
+  });
+
+  test("a chained message adds no author control where it is not interactive", async function (assert) {
+    this.message = new ChatFabricators(getOwner(this)).message({
+      user: { username: "discobot" },
+    });
+
+    await render(
+      <template>
+        <Info
+          @message={{this.message}}
+          @show={{false}}
+          @interactive={{false}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-message-info.-author-only").doesNotExist();
+  });
+
   test("date", async function (assert) {
     this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },

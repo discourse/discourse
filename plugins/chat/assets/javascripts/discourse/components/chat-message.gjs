@@ -332,6 +332,10 @@ export default class ChatMessage extends Component {
 
   @action
   onFocusIn(event) {
+    if (this.site.mobileView) {
+      return;
+    }
+
     const container = event.currentTarget;
 
     next(() => {
@@ -343,6 +347,10 @@ export default class ChatMessage extends Component {
 
   @action
   onFocusOut(event) {
+    if (this.site.mobileView) {
+      return;
+    }
+
     const container = event.currentTarget;
 
     // The actions render inside the message, so focus moving into them stays contained.
@@ -508,7 +516,8 @@ export default class ChatMessage extends Component {
   get hasActiveState() {
     return (
       this.isActive ||
-      this.chat.activeMessage?.model?.id === this.args.message.id
+      (this.chat.activeMessage?.model?.id === this.args.message.id &&
+        this.chat.activeMessage?.context === this.args.context)
     );
   }
 
@@ -735,6 +744,7 @@ export default class ChatMessage extends Component {
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
                   @context={{@context}}
+                  @interactive={{@interactive}}
                   @threadContext={{this.threadContext}}
                   @dateMode={{@dateMode}}
                 />

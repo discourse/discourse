@@ -184,6 +184,10 @@ export default class ChatMessageReaction extends Component {
       });
     }
 
+    if (this.args.reaction.reacted) {
+      return i18n("chat.reactions.remove", { emoji });
+    }
+
     return i18n("chat.reactions.add", { emoji });
   }
 

@@ -82,7 +82,11 @@ export default class ChatMessageActionsDesktop extends Component {
       }
     };
 
-    setTabStop(null);
+    // Re-runs on a size change, which swaps the toolbar's items. Keeping the tab stop on
+    // whatever holds focus stops a resize from putting a keyboard user back to the start.
+    setTabStop(
+      element.contains(document.activeElement) ? document.activeElement : null
+    );
     element.addEventListener("keydown", onKeyDown);
     element.addEventListener("focusin", onFocusIn);
 
@@ -164,7 +168,10 @@ export default class ChatMessageActionsDesktop extends Component {
           }}
         >
           {{#if this.shouldRenderFavoriteReactions}}
-            {{#each this.messageInteractor.emojiReactions as |reaction|}}
+            {{#each
+              this.messageInteractor.emojiReactions key="emoji"
+              as |reaction|
+            }}
               <ChatMessageReaction
                 @reaction={{reaction}}
                 @onReaction={{this.messageInteractor.react}}

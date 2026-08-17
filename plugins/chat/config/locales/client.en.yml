@@ -542,6 +542,7 @@ en:
 
       reactions:
         add: "React with %{emoji}"
+        remove: "Remove your %{emoji} reaction"
         counted:
           one: "%{emoji} reaction, %{count} person"
           other: "%{emoji} reaction, %{count} people"

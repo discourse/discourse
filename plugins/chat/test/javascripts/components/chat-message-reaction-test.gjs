@@ -172,6 +172,13 @@ module("Component | ChatMessageReaction", function (hooks) {
     // named for its action, so announcing a pressed state on top of that describes
     // neither the control nor its effect
     assert.dom(".chat-message-reaction").doesNotHaveAria("pressed");
+    assert
+      .dom(".chat-message-reaction")
+      .hasAria(
+        "label",
+        i18n("chat.reactions.remove", { emoji: "heart" }),
+        "and the action it names is the one it performs"
+      );
   });
 
   test("describes who reacted, without folding them into the name", async function (assert) {
