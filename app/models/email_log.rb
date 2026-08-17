@@ -36,11 +36,52 @@ class EmailLog < ActiveRecord::Base
       )
     SQL
 
-  before_save do
-    if bounce_error_code.present?
-      match = SMTP_ERROR_CODE_REGEXP.match(bounce_error_code)
-      self.bounce_error_code = match.present? ? match[0] : nil
+  before_save { self.bounce_error_code = self.class.normalize_bounce_error_code(bounce_error_code) }
+
+  # generic enhanced statuses, used when a provider reports a bounce without
+  # one so that the severity of the claim is still recorded
+  BOUNCE_ERROR_CODE_TRANSIENT = "4.0.0"
+  BOUNCE_ERROR_CODE_PERMANENT = "5.0.0"
+
+  def self.normalize_bounce_error_code(bounce_error_code)
+    bounce_error_code.to_s[SMTP_ERROR_CODE_REGEXP]
+  end
+
+  # Atomically claims a bounce report for this log so that duplicate or
+  # concurrent reports of the same bounce are recorded (and scored) only once.
+  # A permanent failure may supersede an earlier transient report of the same
+  # message, since providers often retry after a transient failure and then
+  # report a final permanent one.
+  def claim_bounce(permanent:, bounce_error_code: nil)
+    generic = permanent ? BOUNCE_ERROR_CODE_PERMANENT : BOUNCE_ERROR_CODE_TRANSIENT
+    code = self.class.normalize_bounce_error_code(bounce_error_code)
+    # the stored code has to agree with the severity it was claimed at, or the
+    # escalation below cannot tell the two apart: it would either match the code
+    # this method itself stored and re-score on every retry, or refuse a real
+    # escalation because a transient claim happened to report a 5.x status
+    code = generic if code.nil? || code[0] != generic[0]
+
+    if !bounced? &&
+         self
+           .class
+           .where(id: id, bounced: false)
+           .update_all(bounced: true, bounce_error_code: code) == 1
+      assign_attributes(bounced: true, bounce_error_code: code)
+      return true
     end
+
+    return false if !permanent
+
+    escalated =
+      self
+        .class
+        .where(id: id)
+        .where("bounce_error_code LIKE '4%'")
+        .update_all(bounce_error_code: code) == 1
+
+    assign_attributes(bounce_error_code: code) if escalated
+
+    escalated
   end
 
   after_create do

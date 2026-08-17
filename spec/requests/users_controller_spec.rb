@@ -104,6 +104,23 @@ RSpec.describe UsersController do
         end
       end
 
+      context "with a bounce score accrued before activation" do
+        it "resets the bounce score, since the address is proven deliverable" do
+          user_deferred.update(active: false)
+          user_deferred.user_stat.update!(
+            bounce_score: 3.0,
+            reset_bounce_score_after: 1.week.from_now,
+          )
+
+          put "/u/activate-account/#{email_token.token}"
+          expect(response.status).to eq(200)
+
+          user_deferred.user_stat.reload
+          expect(user_deferred.user_stat.bounce_score).to eq(0)
+          expect(user_deferred.user_stat.reset_bounce_score_after).to eq(nil)
+        end
+      end
+
       context "with response" do
         it "correctly logs on user" do
           email_token
@@ -4962,6 +4979,16 @@ RSpec.describe UsersController do
         SiteSetting.blocked_email_domains = "example.com"
         put "/u/update-activation-email.json", params: { email: "test@example.com" }
         expect(response.status).to eq(422)
+      end
+
+      it "keeps the bounce score until the new email is confirmed" do
+        user = post_user
+        user.user_stat.update!(bounce_score: 3.0)
+
+        put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
+
+        expect(response.status).to eq(200)
+        expect(user.user_stat.reload.bounce_score).to eq(3.0)
       end
 
       it "can be updated" do

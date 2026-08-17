@@ -48,7 +48,7 @@ class EmailToken < ActiveRecord::Base
     @token
   end
 
-  def self.confirm(token, scope: nil, skip_reviewable: false)
+  def self.confirm(token, scope: nil, skip_reviewable: false, skip_reset_bounce_score: false)
     User.transaction do
       email_token = confirmable(token, scope: scope)
       return if email_token.blank?
@@ -62,6 +62,10 @@ class EmailToken < ActiveRecord::Base
       user.custom_fields.delete("activation_reminder")
       user.save!
       user.create_reviewable if !skip_reviewable
+      # the user acted on an email sent to this address, so it is proven
+      # deliverable and previous bounces (e.g. from a typo fixed on the
+      # activation screen) no longer apply
+      user.user_stat&.reset_bounce_score! if !skip_reset_bounce_score
       user.set_automatic_groups
       DiscourseEvent.trigger(:user_confirmed_email, user, scope)
       Invite.redeem_for_existing_user(user) if scope == EmailToken.scopes[:signup]
