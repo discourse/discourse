@@ -27,13 +27,6 @@ class LetterAvatar
   private_constant :SVG_TEXT_BASELINE
   FONT_LIST_TIMEOUT_SECONDS = 10
   private_constant :FONT_LIST_TIMEOUT_SECONDS
-  VIPS_INSTALLATION_FAILURE_MESSAGE = <<~TEXT.strip
-    Discourse requires the `vips` command for image processing, but it could not be run.
-
-    Install libvips, then restart Discourse:
-    https://www.libvips.org/install.html
-  TEXT
-  private_constant :VIPS_INSTALLATION_FAILURE_MESSAGE
 
   class << self
     def version
@@ -113,11 +106,8 @@ class LetterAvatar
           .lines
           .sort
           .join
-      failure_message = Rails.env.production? ? "" : VIPS_INSTALLATION_FAILURE_MESSAGE
       @vips_version =
-        Digest::MD5.hexdigest(
-          [VERSION.to_s, Vips.run("vips", "--version", failure_message:), fonts].join("\0"),
-        )
+        Digest::MD5.hexdigest([VERSION.to_s, Vips.run("vips", "--version"), fonts].join("\0"))
     end
 
     def cleanup_old
