@@ -245,6 +245,33 @@ body.has-full-page-chat {
   iframe.reddit-onebox {
     margin: var(--space-2) 0;
   }
+
+  .onebox.twitterstatus {
+    max-width: 500px;
+
+    .tweet-images {
+      .tweet-video {
+        height: calc(576px / (var(--aspect-ratio)));
+        max-height: 400px;
+      }
+    }
+
+    .aspect-image-full-size {
+      object-fit: initial;
+      max-height: 400px;
+
+      .tweet-image {
+        object-fit: initial;
+        max-height: 400px;
+      }
+    }
+
+    .thumbnail.onebox-avatar {
+      max-width: 38px;
+      margin-right: var(--space-2);
+      margin-top: var(--space-1);
+    }
+  }
 }
 
 .reviewable-chat-message {
