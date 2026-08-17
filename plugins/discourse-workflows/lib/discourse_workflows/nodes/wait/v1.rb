@@ -152,7 +152,7 @@ module DiscourseWorkflows
             waiting_until = amount.public_send(unit).from_now
           end
 
-          exec_ctx.put_execution_to_wait(waiting_until)
+          exec_ctx.put_execution_to_wait(waiting_until, kind: resume_mode)
           [exec_ctx.input_items]
         end
 

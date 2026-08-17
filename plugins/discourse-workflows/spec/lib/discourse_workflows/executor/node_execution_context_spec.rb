@@ -293,6 +293,35 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         timeout_action: nil,
       )
     end
+
+    it "continues in-process for time intervals below the offload threshold" do
+      allow(ctx).to receive(:sleep)
+
+      freeze_time { ctx.put_execution_to_wait(5.seconds.from_now, kind: :time_interval) }
+
+      expect(runtime_state.wait_request).to be_nil
+      expect(ctx).to have_received(:sleep).with(5)
+    end
+
+    it "persists time intervals above the offload threshold" do
+      freeze_time do
+        waiting_until = 66.seconds.from_now
+
+        ctx.put_execution_to_wait(waiting_until, kind: :time_interval)
+
+        expect(runtime_state.wait_request.waiting_until).to eq_time(waiting_until)
+      end
+    end
+
+    it "persists webhook waits below the time interval offload threshold" do
+      freeze_time do
+        waiting_until = 5.seconds.from_now
+
+        ctx.put_execution_to_wait(waiting_until, kind: :webhook)
+
+        expect(runtime_state.wait_request.waiting_until).to eq_time(waiting_until)
+      end
+    end
   end
 
   describe "#set_metadata" do
