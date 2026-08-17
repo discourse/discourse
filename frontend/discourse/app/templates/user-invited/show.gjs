@@ -220,19 +220,21 @@ export default <template>
                   <tr class="d-table__row">
                     <td class="d-table__cell --overview invite-type">
                       <div class="invite-shortkey">
+                        {{#if invite.link}}
+                          <input
+                            type="text"
+                            id={{concat "invite-link-" invite.id}}
+                            class="invite-link-target"
+                            value={{invite.link}}
+                            disabled={{true}}
+                          />
+                        {{/if}}
                         {{#if invite.email}}
                           {{dIcon "envelope"}}
                           {{invite.email}}
                         {{else}}
                           {{dIcon "link"}}
                           {{#if invite.invite_key}}
-                            <input
-                              type="text"
-                              id={{concat "invite-link-" invite.id}}
-                              class="invite-link-target"
-                              value={{invite.link}}
-                              disabled={{true}}
-                            />
                             {{i18n
                               "user.invited.invited_via_link"
                               key=invite.shortKey
