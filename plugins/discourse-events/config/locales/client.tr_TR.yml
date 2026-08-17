@@ -443,7 +443,8 @@ tr_TR:
               description: "Özel bir etkinliğe yalnızca davet edilen kullanıcılar katılabilir."
       composer:
         name_placeholder: "Etkinlik adı"
-        location_placeholder: "Konum veya URL ekle"
+        location_or_url_placeholder: "Konum veya URL ekle"
+        url_placeholder: "URL ekle"
         description_placeholder: "Etkinlik açıklaması ekle"
         event_title_placeholder: "Etkinlik adı"
         create_event_button: "Etkinlik oluştur"
@@ -515,7 +516,12 @@ tr_TR:
           label: "Sohbet entegrasyonu"
           checkbox_label: "Etkinliğe özel sohbet kanalı oluşturun ve yönetin"
         location:
+          label: "Konum"
           placeholder: "Konum, bağlantı veya başka bir şey ekleyin."
+        url:
+          label: "URL"
+          placeholder: "İsteğe bağlı"
+          add: "URL ekle"
         description:
           label: "Açıklama"
           placeholder: "İnsanlara etkinliğiniz hakkında biraz daha bilgi verin. Yeni hatlar ve bağlantılar desteklenir."

@@ -96,7 +96,18 @@ da:
       nodes:
         "trigger:assigned": "Tildelt"
       assign_topic:
+        resource: "Ressource"
+        resources:
+          topic: "Emne"
+          post: "Indlæg"
         operations:
           assign: "Tildel"
           unassign: "Fjern tildeling"
         topic_id: "Emne ID"
+        post_id: "Indlæg ID"
+      check_assignment:
+        target_types:
+          topic: "Emne"
+          post: "Indlæg"
+        topic_id: "Emne ID"
+        post_id: "Indlæg ID"

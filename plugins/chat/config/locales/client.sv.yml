@@ -698,4 +698,10 @@ sv:
         message: "Meddelande"
       chat_approval:
         message: "Meddelande"
+        buttons: "Knappar"
+        value: "Värde"
+        style_default: "Standard"
+        style_primary: "Primär"
+        style_success: "Lyckades"
+        icon: "Ikon"
         channel_id: "Kanal"

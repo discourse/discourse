@@ -50,6 +50,7 @@ gl:
             private:
               title: "Privada"
       composer:
+        url_placeholder: "Engadir URL"
         reminder:
           units:
             minutes:
@@ -84,6 +85,12 @@ gl:
             last: "último"
         attendance:
           none: "Ningunha"
+        location:
+          label: "Localización"
+        url:
+          label: "URL"
+          placeholder: "Opcional"
+          add: "Engadir URL"
         description:
           label: "Descrición"
         event_type:

@@ -66,4 +66,15 @@ vi:
       nodes:
         "trigger:assigned": "Được chỉ định"
       assign_topic:
+        resource: "Nguồn"
+        resources:
+          topic: "Chủ đề"
+          post: "Tút"
         topic_id: "ID Chủ đề"
+        post_id: "ID Tút"
+      check_assignment:
+        target_types:
+          topic: "Chủ đề"
+          post: "Tút"
+        topic_id: "ID Chủ đề"
+        post_id: "ID Tút"

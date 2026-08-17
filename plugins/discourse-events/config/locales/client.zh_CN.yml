@@ -458,7 +458,8 @@ zh_CN:
       composer:
         name_placeholder: "活动名称"
         end_date_placeholder: "结束日期"
-        location_placeholder: "添加位置或网址"
+        location_or_url_placeholder: "添加位置或网址"
+        url_placeholder: "添加 URL"
         max_attendees_placeholder: "参与人数不限"
         max_attendees_display:
           other: "最多 %{count} 位与会者"
@@ -565,8 +566,13 @@ zh_CN:
           label: "直播"
           checkbox_label: "将 URL 嵌入为视频，并开启直播聊天功能供与会者使用"
         location:
-          label: "位置或 URL"
+          label: "位置"
+          label_or_url: "位置或 URL"
           placeholder: "添加地点、链接或其他内容。"
+        url:
+          label: "URL"
+          placeholder: "可选"
+          add: "添加 URL"
         description:
           label: "描述"
           placeholder: "向人们详细介绍您的活动。支持换行和链接。"

@@ -222,19 +222,29 @@ ar:
       node_unavailable:
         requires_assign: "يتطلَّب تفعيل المكوِّن الإضافي لتعيين الموضوعات"
       nodes:
-        "action:assign_topic": "تعيين موضوع"
         "trigger:assigned": "تم التعيين"
       node_descriptions:
-        "action:assign_topic": "تعيين أو إلغاء تعيين موضوع"
         "trigger:assigned": "يتم تشغيله عند تعيين موضوع أو منشور"
       assign_topic:
+        resource: "المورد"
+        resources:
+          topic: "الموضوع"
+          post: "المنشور"
         operation: "العملية"
         operations:
           assign: "تعيين"
           unassign: "إلغاء التعيين"
         topic_id: "معرِّف الموضوع"
+        post_id: "معرِّف المنشور"
         assignee: "المعيَّن"
         replace_existing: "استبدال التعيين الحالي"
+      check_assignment:
+        target_types:
+          topic: "الموضوع"
+          post: "المنشور"
+        topic_id: "معرِّف الموضوع"
+        post_id: "معرِّف المنشور"
+        assignee: "المعيَّن"
       assigned:
         topic_assignments_only: "التشغيل فقط عندما يكون هدف التعيين هو الموضوع وليس منشورًا فرديًا"
         topic_assignments_only_description: "تعيينات الموضوعات فقط"

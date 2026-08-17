@@ -663,4 +663,10 @@ el:
         message: "Μήνυμα"
       chat_approval:
         message: "Μήνυμα"
+        buttons: "Κουμπιά"
+        value: "Τιμή"
+        style: "Στυλ"
+        style_default: "Προεπιλογή"
+        style_success: "Επιτυχία"
+        icon: "Εικονίδιο"
         channel_id: "Κανάλι"

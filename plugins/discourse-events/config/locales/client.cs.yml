@@ -444,7 +444,8 @@ cs:
               description: "Soukromé události se můžou účastnit jen pozvaní uživatelé."
       composer:
         name_placeholder: "Název události"
-        location_placeholder: "Přidat polohu nebo adresu URL"
+        location_or_url_placeholder: "Přidat polohu nebo adresu URL"
+        url_placeholder: "Přidat URL"
         description_placeholder: "Přidat popis události"
         event_title_placeholder: "Název události"
         create_event_button: "Vytvořit událost"
@@ -520,7 +521,12 @@ cs:
           label: "Integrace chatu"
           checkbox_label: "Vytvoří a spravuje speciální kanál chatu pro tuto událost"
         location:
+          label: "Poloha"
           placeholder: "Přidejte místo, odkaz, atp."
+        url:
+          label: "URL"
+          placeholder: "Volitelné"
+          add: "Přidat URL"
         description:
           label: "Popis"
           placeholder: "Řekněte lidem o své akci něco víc. Podporovány jsou nové řádky a odkazy."

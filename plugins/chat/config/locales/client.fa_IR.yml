@@ -444,4 +444,10 @@ fa_IR:
         message: "پیام"
       chat_approval:
         message: "پیام"
+        buttons: "دکمه‌ها"
+        value: "مقدار"
+        style_default: "پیش‌فرض"
+        style_primary: "اصلی"
+        style_success: "موفقیت"
+        icon: "آیکن"
         channel_id: "کانال"

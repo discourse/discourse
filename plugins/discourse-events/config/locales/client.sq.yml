@@ -51,6 +51,7 @@ sq:
             private:
               title: "Private"
       composer:
+        url_placeholder: "Shto URL"
         reminder:
           units:
             minutes:
@@ -79,6 +80,12 @@ sq:
             after: "pas"
         attendance:
           none: "Asnjë"
+        location:
+          label: "Vendndodhja"
+        url:
+          label: "URL"
+          placeholder: "Fakultative"
+          add: "Shto URL"
         description:
           label: "Përshkrimi"
         event_type:

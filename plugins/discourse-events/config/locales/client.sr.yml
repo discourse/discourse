@@ -57,5 +57,10 @@ sr:
             last: "poslednji"
         attendance:
           none: "Ništa"
+        location:
+          label: "Lokacija"
+        url:
+          label: "URL"
+          placeholder: "Opciono"
         description:
           label: "Opis"

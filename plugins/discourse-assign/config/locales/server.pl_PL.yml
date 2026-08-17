@@ -67,7 +67,9 @@ pl_PL:
       quarterly: "kwartalnie"
     discourse_workflows:
       assign_topic:
-        error: "Nie udało się przypisać tematu: %{reason}"
+        error: "Nie udało się przypisać: %{reason}"
+      check_assignment:
+        unknown_target_type: "Nieznany typ celu przypisania: %{target_type}"
   assign_mailer:
     title: "Przypisz mailera"
     subject_template: "[%{email_prefix}] %{assignee_name} przypisał Cię do '%{topic_title}'!"

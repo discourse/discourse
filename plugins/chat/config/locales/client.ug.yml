@@ -759,4 +759,11 @@ ug:
         message: "ئۇچۇر"
       chat_approval:
         message: "ئۇچۇر"
+        buttons: "توپچە"
+        value: "قىممەت"
+        style: "ئۇسلۇب"
+        style_default: "كۆڭۈلدىكى"
+        style_primary: "ئاساسىي"
+        style_success: "مۇۋەپپەقىيەتلىك"
+        icon: "سىنبەلگە"
         channel_id: "قانال"

@@ -197,3 +197,7 @@ sq:
         message: "Mesazh"
       chat_approval:
         message: "Mesazh"
+        value: "Vlera"
+        style_default: "Paracaktuar"
+        style_primary: "Kryesor"
+        icon: "Ikonë"

@@ -52,6 +52,7 @@ hy:
             private:
               title: "Մասնավոր"
       composer:
+        url_placeholder: "Ավելացնել URL"
         reminder:
           units:
             minutes:
@@ -85,6 +86,12 @@ hy:
             last: "օգտագործել ամսաթվի և ժամանակի վերջին գրառումը  "
         attendance:
           none: "Ոչ մի"
+        location:
+          label: "Տեղակայություն"
+        url:
+          label: "URL"
+          placeholder: "Ընտրովի"
+          add: "Ավելացնել URL"
         description:
           label: "Նկարագրություն"
         event_type:

@@ -345,7 +345,8 @@ el:
       composer:
         name_placeholder: "Όνομα εκδήλωσης"
         end_date_placeholder: "Ημερομηνία λήξης"
-        location_placeholder: "Προσθέστε τοποθεσία ή URL"
+        location_or_url_placeholder: "Προσθέστε τοποθεσία ή URL"
+        url_placeholder: "Προσθήκη URL"
         max_attendees_placeholder: "Απεριόριστοι συμμετέχοντες"
         max_attendees_display:
           one: "Μέγιστο %{count} συμμετέχων"
@@ -447,7 +448,12 @@ el:
           label: "Ενσωμάτωση συνομιλίας"
           checkbox_label: "Δημιουργία και διαχείριση συγκεκριμένου καναλιού συνομιλίας για την εκδήλωση"
         location:
+          label: "Τοποθεσία"
           placeholder: "Προσθέστε μια τοποθεσία, έναν σύνδεσμο ή κάτι άλλο."
+        url:
+          label: "URL"
+          placeholder: "Προαιρετικό"
+          add: "Προσθήκη URL"
         description:
           label: "Περιγραφή"
           placeholder: "Πείτε στον κόσμο λίγο περισσότερα για την εκδήλωσή σας. Υποστηρίζονται νέες γραμμές και σύνδεσμοι."

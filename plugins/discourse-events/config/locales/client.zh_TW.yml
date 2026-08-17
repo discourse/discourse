@@ -63,6 +63,7 @@ zh_TW:
             private:
               title: "私密"
       composer:
+        url_placeholder: "加入網址"
         reminder:
           units:
             minutes:
@@ -92,6 +93,12 @@ zh_TW:
           every_day: "每天"
         attendance:
           none: "無"
+        location:
+          label: "位置"
+        url:
+          label: "網址"
+          placeholder: "可選"
+          add: "加入網址"
         description:
           label: "描述"
         event_type:

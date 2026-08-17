@@ -45,6 +45,7 @@ bs_BA:
             private:
               title: "Privatno"
       composer:
+        url_placeholder: "Add URL"
         reminder:
           units:
             days:
@@ -72,6 +73,12 @@ bs_BA:
             last: "posljednji"
         attendance:
           none: "Ništa"
+        location:
+          label: "Lokacija"
+        url:
+          label: "URL"
+          placeholder: "Opcionalno"
+          add: "Add URL"
         description:
           label: "Opis"
         event_type:

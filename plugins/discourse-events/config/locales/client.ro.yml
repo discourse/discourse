@@ -82,6 +82,7 @@ ro:
             private:
               title: "Privat"
       composer:
+        url_placeholder: "Adaugă URL"
         reminder:
           units:
             minutes:
@@ -122,6 +123,12 @@ ro:
           placeholder: "Fără limită"
         attendance:
           none: "Nimic"
+        location:
+          label: "Locație"
+        url:
+          label: "URL"
+          placeholder: "Opțional"
+          add: "Adaugă URL"
         description:
           label: "Descriere"
         event_type:
