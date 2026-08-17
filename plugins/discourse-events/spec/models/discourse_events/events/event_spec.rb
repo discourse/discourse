@@ -1556,7 +1556,7 @@ describe DiscourseEvents::Events::Event, "#capacity" do
   end
 end
 
-describe DiscoursePostEvent::Event, "#url" do
+describe DiscourseEvents::Events::Event, "#url" do
   fab!(:post)
 
   before { SiteSetting.discourse_post_event_enabled = true }

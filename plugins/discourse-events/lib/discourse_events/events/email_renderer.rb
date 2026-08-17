@@ -91,21 +91,28 @@ module DiscourseEvents
         muted_row(label && CGI.escape_html(label))
       end
 
-      def location_row
-        location = event_node["data-location"]
-        return "" if location.blank?
+      def cooked_location
+        @cooked_location ||= Parser.cook_location(event_node["data-location"], post:)
+      end
 
-        muted_row(Parser.cook_inline(location, post:))
+      def location_row
+        return "" if event_node["data-location"].blank?
+
+        muted_row(cooked_location)
       end
 
       def url_row
         url = event_node["data-url"].to_s.strip
+        location = event_node["data-location"]
         return "" if url.blank?
+        if location.present? && Parser.url_restates_location?(url, location, cooked_location:)
+          return ""
+        end
 
         href = Parser.linkable_url?(url) ? url : "https://#{url}"
         <<~HTML
         <tr>
-          <td style="padding: 0 12px 12px;"><a href="#{CGI.escape_html(href)}">#{CGI.escape_html(url)}</a></td>
+          <td style="padding: 0 12px 12px;"><a href="#{CGI.escape_html(href)}">#{CGI.escape_html(Parser.display_link(url))}</a></td>
         </tr>
       HTML
       end
