@@ -1117,6 +1117,14 @@ export default class WorkflowsEditor extends Component {
     this.#captureUndo();
     const existingConnections = this.formApi.get("connections");
 
+    // imported connections are already resolved to client ids, so renaming a
+    // node here cannot orphan them
+    const takenNames = takenNodeNames(existingNodes);
+    for (const node of newNodes) {
+      node.name = uniqueNodeName(node.name, takenNames);
+      takenNames.add(node.name);
+    }
+
     this.formApi.set("nodes", [...existingNodes, ...newNodes]);
     this.formApi.set("connections", [
       ...existingConnections,

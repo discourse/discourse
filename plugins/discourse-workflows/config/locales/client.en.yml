@@ -105,6 +105,7 @@ en:
       edit: "Edit"
       save: "Save"
       cancel: "Cancel"
+      node_name_taken: "Another node already uses this name"
       more_options: "More options"
       publish: "Publish"
       discard_changes: "Discard changes"
