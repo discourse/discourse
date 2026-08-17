@@ -296,7 +296,7 @@ RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
       )
 
       human_event =
-        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 10, 10), score: 10)
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 11, 10), score: 10)
       Fabricate(
         :browser_pageview_session_engagement,
         session_id: human_event.session_id,
@@ -307,12 +307,22 @@ RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
 
       expect(described_class.all).to contain_exactly(
         have_attributes(
-          sessions: 2,
+          date: Date.new(2026, 6, 10),
+          sessions: 1,
           bounced: 1,
-          engaged_seconds_total: 43,
+          engaged_seconds_total: 3,
           likely_crawler_sessions: 1,
           likely_crawler_bounced: 1,
           likely_crawler_engaged_seconds_total: 3,
+        ),
+        have_attributes(
+          date: Date.new(2026, 6, 11),
+          sessions: 1,
+          bounced: 0,
+          engaged_seconds_total: 40,
+          likely_crawler_sessions: 0,
+          likely_crawler_bounced: 0,
+          likely_crawler_engaged_seconds_total: 0,
         ),
       )
     end
