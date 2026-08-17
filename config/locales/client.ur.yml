@@ -3878,6 +3878,39 @@ ur:
       unread_indicator: "کسی رکن نے ابھی تک اِس موضوع کا آخری دھاگہ نہیں پڑھا۔"
       sr_read: "رِیڈ"
       participant_groups: "شرکاء گروپس"
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {یہاں <a href="{unreadUrl}"># بغیر پڑھا</a> ہے}
+              other {یہاں <a href="{unreadUrl}"># بغیر پڑھے</a> ہیں}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { اور <a href="{newUrl}"># نیا</a> موضوع باقی ہے،}
+              other { اور and <a href="{newUrl}"># نئے</a> موضوعات باقی ہیں،}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {یہاں <a href="{unreadUrl}"># بغیر پڑھا</a> موضوع باقی ہے،}
+              other {یہاں <a href="{unreadUrl}"># بغیر پڑھے</a> مضوعات باقی ہیں،}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {یہاں <a href="{newUrl}"># نیا</a> موضوع باقی ہے،}
+              other {یہاں <a href="{newUrl}"># نئے</a> موضوعات باقی ہیں،}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { یا {categoryLink} میں مزید موضوعات دیکھیں}
+          false { یا <a href="{basePath}/latest">تازہ ترین موضوعات</a> دیکھیں}
+          other {}
+        }
       reply_count_link:
         one: "%{count} جواب، پہلے دھاگہ پر جائیں"
         other: "%{count} جوابات،، پہلے دھاگہ پر جائیں"

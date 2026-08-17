@@ -6,7 +6,9 @@
 
 ur:
   solved: "حل شدہ"
+  unsolved: "غیر حل شدہ"
   posted: "پوسٹ کیا"
+  by_username: "@%{username} کی تخلیق"
   replied: "جواب دیا"
   vote_count:
     one: "%{count} ووٹ"
@@ -19,3 +21,6 @@ ur:
     other: "%{count} جوابات"
   theme_metadata:
     description: "ایک سادہ، خوبصورت تھیم جو ڈسکورس سائٹس کے آؤٹ آف دی باکس تجربے کو بہتر بناتی ہے۔"
+    settings:
+      topic_card_high_context:
+        description: "فعال ہو تو، ٹاپک کارڈز پر اضافی سیاق و سباق بشمول ٹیگز، اقتباسات، حل شدہ حیثیت، تفویض کردہ صارفین، اور ووٹوں کی تعداد دکھاتا ہے"
