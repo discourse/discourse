@@ -439,7 +439,7 @@ en:
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
         max_locales_reached: "You can only select up to %{max} languages."
-        locale_count: "Using %{count} of %{max} available languages."
+        locale_count: "%{count}/%{max} selected"
         category_scope: "Categories"
         category_scope_description: "Choose whether automatic translations apply to content in all categories, public categories, or selected categories."
         cached_results_notice: "Showing cached results from %{relative_time}."
