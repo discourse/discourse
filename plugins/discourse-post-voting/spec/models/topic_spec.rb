@@ -53,6 +53,31 @@ describe Topic do
           [I18n.t("topic.post_voting.errors.subtype_not_allowed")],
         )
       end
+
+      it "should not allow Post Voting topics to be created when the category is not allowed" do
+        SiteSetting.post_voting_enabled = true
+        SiteSetting.post_voting_category_mode = "opt_in"
+        allowed_category = Fabricate(:category)
+        allowed_category.custom_fields[PostVoting::ALLOW_POST_VOTING] = "true"
+        allowed_category.save!
+
+        topic =
+          Fabricate.build(
+            :topic,
+            category: category,
+            archetype: Archetype.default,
+            subtype: Topic::POST_VOTING_SUBTYPE,
+          )
+
+        expect(topic.valid?).to eq(false)
+        expect(topic.errors.full_messages).to eq(
+          [I18n.t("topic.post_voting.errors.post_voting_not_enabled_in_category")],
+        )
+
+        topic.category = allowed_category
+
+        expect(topic.valid?).to eq(true)
+      end
     end
   end
 
@@ -101,11 +126,28 @@ describe Topic do
   describe "#is_post_voting?" do
     before { SiteSetting.post_voting_enabled = true }
 
+    it "returns true in every category in the default mode" do
+      expect(topic).to be_is_post_voting
+    end
+
     it "returns false when the topic renders as nested" do
       SiteSetting.nested_replies_enabled = true
       Fabricate(:nested_topic, topic: topic)
 
       expect(topic).not_to be_is_post_voting
+    end
+
+    it "returns false when the topic category has not opted in" do
+      SiteSetting.post_voting_category_mode = "opt_in"
+      allowed_category = Fabricate(:category)
+      allowed_category.custom_fields[PostVoting::ALLOW_POST_VOTING] = "true"
+      allowed_category.save!
+
+      expect(topic).not_to be_is_post_voting
+
+      topic.update!(category_id: allowed_category.id)
+
+      expect(topic).to be_is_post_voting
     end
   end
 
