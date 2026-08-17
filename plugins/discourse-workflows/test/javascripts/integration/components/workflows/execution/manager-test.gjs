@@ -84,7 +84,7 @@ module(
         .exists("running rows use an animated spinner");
       assert
         .dom(".workflows-executions-manager__run-time")
-        .containsText("2.0s", "running rows show deterministic elapsed time");
+        .containsText("2s", "running rows show deterministic elapsed time");
 
       messageBus.publish(
         channel,

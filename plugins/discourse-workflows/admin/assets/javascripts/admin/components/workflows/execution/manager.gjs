@@ -10,11 +10,14 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import {
+  ExecutionProgressStream,
   formatDuration,
   isRunning,
 } from "../../../lib/workflows/execution-progress";
 import AdminTable from "../admin-table";
 import EmptyState from "../empty-state";
+
+const EXECUTIONS_CHANNEL = "/discourse-workflows/executions";
 
 const STATUS_ICONS = {
   pending: "clock",
@@ -58,28 +61,28 @@ export default class ExecutionsManager extends Component {
   @tracked loadMoreUrl = null;
   @tracked loadingMore = false;
   @tracked bulkMode = false;
-  @tracked currentTime = Date.now();
 
-  #channel = "/discourse-workflows/executions";
-  #lastMessageId = 0;
   #loadMoreToken = 0;
   #loading = false;
-  #messageHandler;
-  #refreshRetryCount = 0;
-  #refreshRetryTimer;
-  #subscribed = false;
-  #timer;
+  #progress;
 
   constructor() {
     super(...arguments);
+    this.#progress = new ExecutionProgressStream(this.messageBus, {
+      onMessage: (message) => this.#applyProgress(message),
+      onGap: () => this.loadExecutions(),
+      onRetry: () => this.loadExecutions(),
+    });
     this.loadExecutions();
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.#unsubscribe();
-    this.#stopTimer();
-    this.#clearRefreshRetry();
+    this.#progress.destroy();
+  }
+
+  get currentTime() {
+    return this.#progress.currentTime;
   }
 
   async loadExecutions() {
@@ -89,7 +92,7 @@ export default class ExecutionsManager extends Component {
 
     this.#loading = true;
     this.#loadMoreToken++;
-    this.#unsubscribe();
+    this.#progress.unsubscribe();
 
     try {
       const url = this.args.workflowId
@@ -102,82 +105,20 @@ export default class ExecutionsManager extends Component {
 
       this.executions = result.executions;
       this.loadMoreUrl = result.meta?.load_more_executions;
-      this.#lastMessageId = result.meta?.message_bus_last_id ?? 0;
-      this.#refreshRetryCount = 0;
-      this.#clearRefreshRetry();
-      this.#subscribe();
+      this.#progress.resetRetry();
+      this.#progress.lastMessageId = result.meta?.message_bus_last_id ?? 0;
+      this.#progress.subscribe(EXECUTIONS_CHANNEL);
       this.#syncTimer();
     } catch (error) {
       if (!this.isDestroying && !this.isDestroyed) {
-        this.#scheduleRefreshRetry(error);
+        this.#progress.scheduleRetry(error);
       }
     } finally {
       this.#loading = false;
     }
   }
 
-  #scheduleRefreshRetry(error) {
-    if (this.#refreshRetryTimer) {
-      return;
-    }
-
-    if (this.#refreshRetryCount >= 3) {
-      this.#subscribe();
-      this.#syncTimer();
-      popupAjaxError(error);
-      return;
-    }
-
-    this.#refreshRetryCount++;
-    this.#refreshRetryTimer = window.setTimeout(() => {
-      this.#refreshRetryTimer = null;
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.loadExecutions();
-      }
-    }, 2000 * this.#refreshRetryCount);
-  }
-
-  #clearRefreshRetry() {
-    if (this.#refreshRetryTimer) {
-      window.clearTimeout(this.#refreshRetryTimer);
-      this.#refreshRetryTimer = null;
-    }
-  }
-
-  #subscribe() {
-    if (this.#subscribed) {
-      return;
-    }
-
-    this.#messageHandler = (message, _globalId, messageId) =>
-      this.#handleProgress(message, messageId);
-    this.messageBus.subscribe(
-      this.#channel,
-      this.#messageHandler,
-      this.#lastMessageId
-    );
-    this.#subscribed = true;
-  }
-
-  #unsubscribe() {
-    if (!this.#subscribed) {
-      return;
-    }
-
-    this.messageBus.unsubscribe(this.#channel, this.#messageHandler);
-    this.#messageHandler = null;
-    this.#subscribed = false;
-  }
-
-  #handleProgress(message, messageId) {
-    if (messageId !== this.#lastMessageId + 1) {
-      this.loadExecutions();
-      return;
-    }
-    this.#lastMessageId = messageId;
-    this.#refreshRetryCount = 0;
-    this.#clearRefreshRetry();
-
+  #applyProgress(message) {
     if (!this.executions) {
       this.loadExecutions();
       return;
@@ -215,23 +156,9 @@ export default class ExecutionsManager extends Component {
 
   #syncTimer() {
     if ((this.executions || []).some(isRunning)) {
-      this.#startTimer();
+      this.#progress.startTicker();
     } else {
-      this.#stopTimer();
-    }
-  }
-
-  #startTimer() {
-    this.currentTime = Date.now();
-    this.#timer ||= window.setInterval(() => {
-      this.currentTime = Date.now();
-    }, 1000);
-  }
-
-  #stopTimer() {
-    if (this.#timer) {
-      window.clearInterval(this.#timer);
-      this.#timer = null;
+      this.#progress.stopTicker();
     }
   }
 

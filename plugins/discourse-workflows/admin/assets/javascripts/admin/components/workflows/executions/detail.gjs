@@ -6,13 +6,13 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import {
+  ExecutionProgressStream,
   formatDuration,
   isLive,
   isPending,
@@ -213,7 +213,6 @@ export default class ExecutionDetail extends Component {
   @service workflowsNodeTypes;
 
   @tracked liveExecution;
-  @tracked currentTime = Date.now();
 
   operationLabel = (step) => {
     const value = step?.metadata?.operation;
@@ -234,30 +233,31 @@ export default class ExecutionDetail extends Component {
     return propertyOptionLabel(definition, "operation", { value });
   };
 
-  #channel;
-
-  #lastMessageId = 0;
-
-  #messageHandler;
-
-  #timer;
+  #progress;
 
   #refreshing = false;
 
   #refreshRequested = false;
 
-  #refreshRetryCount = 0;
-
-  #refreshRetryTimer;
-
   #refreshToken = 0;
+
+  constructor() {
+    super(...arguments);
+    this.#progress = new ExecutionProgressStream(this.messageBus, {
+      onMessage: (message) => this.#applyProgress(message),
+      onGap: () => this.#resyncExecution(),
+      onRetry: () => this.#refreshExecution(),
+    });
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.#refreshToken++;
-    this.#unsubscribe();
-    this.#stopTimer();
-    this.#clearRefreshRetry();
+    this.#progress.destroy();
+  }
+
+  get currentTime() {
+    return this.#progress.currentTime;
   }
 
   get execution() {
@@ -288,7 +288,7 @@ export default class ExecutionDetail extends Component {
 
   @action
   async initialize() {
-    this.#lastMessageId = this.execution.message_bus_last_id ?? 0;
+    this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
     this.#syncLiveUpdates();
     await this.workflowsNodeTypes.load();
   }
@@ -298,44 +298,30 @@ export default class ExecutionDetail extends Component {
     this.#refreshToken++;
     this.#refreshing = false;
     this.#refreshRequested = false;
-    this.#refreshRetryCount = 0;
-    this.#clearRefreshRetry();
+    this.#progress.resetRetry();
     this.liveExecution = null;
-    this.#lastMessageId = this.execution.message_bus_last_id ?? 0;
-    this.#unsubscribe();
+    this.#progress.unsubscribe();
+    this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
     this.#syncLiveUpdates();
   }
 
   #syncLiveUpdates() {
-    if (this.isLive && !this.#channel) {
-      this.#channel = `/discourse-workflows/execution/${this.execution.id}`;
-      this.#messageHandler = (message, _globalId, messageId) =>
-        this.#handleProgress(message, messageId);
-      this.messageBus.subscribe(
-        this.#channel,
-        this.#messageHandler,
-        this.#lastMessageId
+    if (this.isLive) {
+      this.#progress.subscribe(
+        `/discourse-workflows/execution/${this.execution.id}`
       );
-    } else if (!this.isLive) {
-      this.#unsubscribe();
+    } else {
+      this.#progress.unsubscribe();
     }
 
     if (this.isRunning) {
-      this.#startTimer();
+      this.#progress.startTicker();
     } else {
-      this.#stopTimer();
+      this.#progress.stopTicker();
     }
   }
 
-  #handleProgress(message, messageId) {
-    if (messageId !== this.#lastMessageId + 1) {
-      this.#resyncExecution();
-      return;
-    }
-    this.#lastMessageId = messageId;
-    this.#refreshRetryCount = 0;
-    this.#clearRefreshRetry();
-
+  #applyProgress(message) {
     if (
       message.type !== "execution_progress" ||
       message.execution?.id !== this.execution.id
@@ -373,7 +359,7 @@ export default class ExecutionDetail extends Component {
   }
 
   #resyncExecution() {
-    this.#unsubscribe();
+    this.#progress.unsubscribe();
     this.#refreshExecution();
   }
 
@@ -403,9 +389,8 @@ export default class ExecutionDetail extends Component {
         ...result.execution,
         message_bus_last_id: result.meta?.message_bus_last_id ?? 0,
       };
-      this.#lastMessageId = this.execution.message_bus_last_id;
-      this.#refreshRetryCount = 0;
-      this.#clearRefreshRetry();
+      this.#progress.lastMessageId = this.execution.message_bus_last_id;
+      this.#progress.resetRetry();
       this.#syncLiveUpdates();
     } catch (error) {
       if (
@@ -413,7 +398,7 @@ export default class ExecutionDetail extends Component {
         !this.isDestroyed &&
         refreshToken === this.#refreshToken
       ) {
-        this.#scheduleRefreshRetry(error);
+        this.#progress.scheduleRetry(error);
       }
     } finally {
       if (refreshToken === this.#refreshToken) {
@@ -423,55 +408,6 @@ export default class ExecutionDetail extends Component {
           this.#refreshExecution();
         }
       }
-    }
-  }
-
-  #scheduleRefreshRetry(error) {
-    if (this.#refreshRetryTimer) {
-      return;
-    }
-
-    if (this.#refreshRetryCount >= 3) {
-      this.#syncLiveUpdates();
-      popupAjaxError(error);
-      return;
-    }
-
-    this.#refreshRetryCount++;
-    this.#refreshRetryTimer = window.setTimeout(() => {
-      this.#refreshRetryTimer = null;
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.#refreshExecution();
-      }
-    }, 2000 * this.#refreshRetryCount);
-  }
-
-  #clearRefreshRetry() {
-    if (this.#refreshRetryTimer) {
-      window.clearTimeout(this.#refreshRetryTimer);
-      this.#refreshRetryTimer = null;
-    }
-  }
-
-  #startTimer() {
-    this.currentTime = Date.now();
-    this.#timer ||= window.setInterval(() => {
-      this.currentTime = Date.now();
-    }, 1000);
-  }
-
-  #stopTimer() {
-    if (this.#timer) {
-      window.clearInterval(this.#timer);
-      this.#timer = null;
-    }
-  }
-
-  #unsubscribe() {
-    if (this.#channel) {
-      this.messageBus.unsubscribe(this.#channel, this.#messageHandler);
-      this.#channel = null;
-      this.#messageHandler = null;
     }
   }
 

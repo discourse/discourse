@@ -64,7 +64,11 @@ module DiscourseWorkflows
         on_success do |execution:|
           render json: {
                    execution:
-                     serialize_data(execution, DiscourseWorkflows::ExecutionSerializer)[:execution],
+                     serialize_data(
+                       execution,
+                       DiscourseWorkflows::ExecutionSerializer,
+                       root: false,
+                     ),
                    meta: {
                      message_bus_last_id: message_bus_last_id,
                    },

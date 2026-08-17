@@ -441,7 +441,7 @@ module(
         .exists("a spinner communicates ongoing work");
       assert
         .dom(".workflows-execution-detail__progress-time")
-        .hasText("2.0s", "the elapsed time advances in whole seconds");
+        .hasText("2s", "the elapsed time advances in whole seconds");
 
       this.owner.lookup("service:message-bus").publish(
         "/discourse-workflows/execution/11473",
