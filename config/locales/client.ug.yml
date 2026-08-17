@@ -528,6 +528,7 @@ ug:
       homepage:
         topics: "تېما"
         categories: "سەھىپە"
+        topic_page_type: "تېما بەت تۈرى"
         styles:
           boxes: "قۇتا"
     about:

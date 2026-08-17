@@ -741,4 +741,11 @@ hu:
         message: "Üzenet"
       chat_approval:
         message: "Üzenet"
+        buttons: "Gombok"
+        value: "Érték"
+        style: "Stílus"
+        style_default: "Alapértelmezett"
+        style_primary: "Elsődleges"
+        style_success: "Sikeres"
+        icon: "Ikon"
         channel_id: "Csatorna"

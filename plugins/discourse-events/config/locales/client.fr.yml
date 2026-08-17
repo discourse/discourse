@@ -463,7 +463,8 @@ fr:
       composer:
         name_placeholder: "Nom de l'événement"
         end_date_placeholder: "Date de fin"
-        location_placeholder: "Ajouter un lieu ou une URL"
+        location_or_url_placeholder: "Ajouter un lieu ou une URL"
+        url_placeholder: "Ajouter une URL"
         max_attendees_placeholder: "Nombre illimité de participants"
         max_attendees_display:
           one: "%{count} participant maximum"
@@ -575,8 +576,13 @@ fr:
           label: "Diffusion en direct"
           checkbox_label: "Intégrez l'URL sous forme de vidéo et ouvrez le chat de diffusion en direct pour les participants."
         location:
-          label: "Emplacement ou URL"
+          label: "Emplacement"
+          label_or_url: "Emplacement ou URL"
           placeholder: "Ajoutez un lieu, un lien ou autre."
+        url:
+          label: "URL"
+          placeholder: "Facultatif"
+          add: "Ajouter une URL"
         description:
           label: "Description"
           placeholder: "Donnez aux participants quelques informations supplémentaires sur votre événement. Les retours à la ligne et les liens sont pris en charge."

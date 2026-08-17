@@ -463,7 +463,8 @@ de:
       composer:
         name_placeholder: "Name des Ereignisses"
         end_date_placeholder: "Enddatum"
-        location_placeholder: "Ort oder URL hinzufügen"
+        location_or_url_placeholder: "Ort oder URL hinzufügen"
+        url_placeholder: "URL hinzufügen"
         max_attendees_placeholder: "Unbegrenzte Teilnehmerzahl"
         max_attendees_display:
           one: "Max. %{count} Teilnehmer"
@@ -575,8 +576,13 @@ de:
           label: "Livestream"
           checkbox_label: "URL als Video einbetten und Livestream-Chat für Teilnehmer öffnen"
         location:
-          label: "Ort oder URL"
+          label: "Ort"
+          label_or_url: "Ort oder URL"
           placeholder: "Füge einen Ort, einen Link oder etwas anderes hinzu."
+        url:
+          label: "URL"
+          placeholder: "Optional"
+          add: "URL hinzufügen"
         description:
           label: "Beschreibung"
           placeholder: "Erzähle ein bisschen mehr über deine Veranstaltung. Neue Zeilen und Links werden unterstützt."

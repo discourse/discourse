@@ -89,7 +89,6 @@ tr_TR:
     ai_helper_allowed_in_pm: "Kişisel mesajlarda bestecinin YZ yardımcıyı etkinleştirin."
     ai_helper_automatic_chat_thread_title_delay: "YZ yardımcının sohbet dizisi başlığını otomatik olarak ayarlamasından önceki dakika cinsinden gecikme."
     ai_helper_automatic_chat_thread_title: "Sohbet konu başlıklarını konu içeriklerine göre otomatik olarak ayarlayın."
-    ai_helper_enabled_features: "YZ yardımcıda etkinleştirilecek özellikleri seçin."
     post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcı özelliklerine erişmesine izin verilen kullanıcı grupları"
     ai_helper_post_illustrator_agent: "AI yardımcısının \"gönderiyi görselleştir\" özelliği için kullanılacak araç. Not: Bu özelliğin çalışması için ayrıca bir görsel oluşturma aracı oluşturmanız gerekir (Yönetici > Eklentiler > Discourse AI > Araçlar)."
     ai_helper_chat_thread_title_agent: "Sohbet başlıklarını oluşturmak için kullanılacak işleyici."
@@ -326,7 +325,6 @@ tr_TR:
         unknown_error: "Küçük resimler oluşturulurken beklenmedik bir hata oluştu. Lütfen tekrar deneyin."
       prompts:
         translate: '%{language} diline çevir'
-        generate_titles: Konu başlıkları öner
         proofread: Yazım hataları düzeltilmiş metin
         markdown_table: Markdown tablosu oluştur
         custom_prompt: "Özel İstem"

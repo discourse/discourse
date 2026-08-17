@@ -49,8 +49,6 @@ ar:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_score_reason: |
-          <b>تم تشغيله من قِبل قاعدة <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "تمت إزالة منشورك مؤقتًا للمراجعة."
           body: |
@@ -111,7 +109,6 @@ ar:
     ai_helper_allowed_in_pm: "تفعيل مساعد الذكاء الاصطناعي في الرسائل الخاصة."
     ai_helper_automatic_chat_thread_title_delay: "التأخير بالدقائق قبل أن يقوم مساعد الذكاء الاصطناعي بتعيين عنوان سلسلة الدردشة تلقائيًا."
     ai_helper_automatic_chat_thread_title: "تعيين عناوين سلسلة الدردشة تلقائيًا بناءً على محتويات السلسلة."
-    ai_helper_enabled_features: "حدِّد الميزات التي تريد تفعيلها في مساعد الذكاء الاصطناعي."
     ai_image_caption_agent: "الوكيل المُستخدَم للتعليق على الصور بالذكاء الاصطناعي. يجب تفعيل تحميلات الصور للوكلاء المخصَّصين واستخدام نموذج لغة كبير (LLM) قادر على معالجة الصور"
     ai_post_image_captions_enabled: "تفعيل تعليقات الذكاء الاصطناعي لصور المنشور. يتطلَّب إنشاء التعليقات المفقودة تهيئة الإعداد {{setting:ai_image_caption_agent}}."
     ai_post_image_captions_per_post_limit: "الحد الأقصى لعدد صور المنشور التي يمكن إضافة تعليق عليها لكل منشور"
@@ -374,7 +371,6 @@ ar:
         unknown_error: "حدث خطأ غير متوقع أثناء إنشاء الصور المصغرة. يرجى المحاولة مرة أخرى."
       prompts:
         translate: الترجمة إلى %{language}
-        generate_titles: اقتراح عناوين للموضوعات
         proofread: تدقيق النص لغويًا
         markdown_table: إنشاء جدول Markdown
         custom_prompt: "رسالة مطالبة مخصَّصة"

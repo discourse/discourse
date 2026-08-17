@@ -55,6 +55,7 @@ pl_PL:
   access_control_list:
     errors:
       user_will_not_have_permission: "Jeśli usuniesz ten wpis listy ACL, utracisz dostęp do tego obiektu."
+      user_will_not_have_permission_on_create: "Jeśli utworzysz ten podmiot z tymi uprawnieniami, nie będziesz mieć do niego dostępu. Kontynuować?"
   topic_category_changed: "Od %{from} do %{to}"
   topic_tag_changed:
     added_and_removed: "Dodano %{added} i usunięto %{removed}"
@@ -6067,10 +6068,12 @@ pl_PL:
         delete:
           title: "Usuń użytkownika"
           description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
+          confirm: "Czy na pewno chcesz usunąć @%{username}?"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
           description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
+          confirm: "Czy na pewno chcesz usunąć i zablokować @%{username}?"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:
         title: "Tak"

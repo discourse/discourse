@@ -5,20 +5,32 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_topic_voting: "Discourse عنوانات کی ووٹنگ"
   js:
     category:
       sort_options:
         votes: "ووٹ"
     topic_voting:
       notification_label:
+        vote_released: "ووٹ کی واپسی"
         voting_closed: "ووٹنگ بند"
+      hot_nav_help: "سرفہرست حالیہ عنوانات، بشمول حالیہ ووٹ"
       voted: "آپ نے اِس ٹاپک پر ووٹ کیا"
       vote_title: "ووٹ"
       vote_title_plural: "ووٹ"
+      voting_closed_description: "اس موضوع کے لیے ووٹنگ بند ہے"
+      see_votes: "آپ کے %{count}/%{max} ووٹ باقی ہیں"
+      locked_description: "ووٹ دینے کے لیے اپنے فعالیت کے درجہ میں اضافہ کریں"
       votes:
         one: "%{count} ووٹ"
         other: "%{count} ووٹ"
       remove_vote: "ووٹ ہٹا دیں"
+      watch_topic: "مجھے نئے دھاگوں کے بارے میں مطلع کریں"
+      no_votes_yet: "اسے ابھی تک کسی نے ووٹ نہیں دیا"
       and_more_voters: "اور %{count} مزید۔۔۔"
       show_voters: "دکھایں جنہوں نے ووٹ دیا"
       vote_count_thousands: "%{count} هزار"
@@ -27,6 +39,7 @@ ur:
     filters:
       votes:
         title: "ووٹ"
+        help: "سب سے زیادہ ووٹوں والے موضوعات"
       my_votes:
         title: "میرے ووٹ"
         help: "جن موضوعات پر آپ نے ووٹ دیا"
@@ -39,5 +52,13 @@ ur:
           topic_upvote: "جب رکن کسی موضوع پر ووٹ دیتا ہے"
           topic_unvote: "جب رکن کسی موضوع پر ووٹ نہیں ڈالتا ہے"
     discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "موضوع کی ووٹنگ کو فعال ہونی چاہیے"
+      nodes:
+        "trigger:topic_received_vote": "موضوع کو ووٹ ملا"
+      node_descriptions:
+        "trigger:topic_received_vote": "یہ دکھائی دیتا ہے جب صارف کسی موضوع پر ووٹ دیتا ہے"
       topic_received_vote:
+        category_ids_description: "صرف ان زمروں میں عنوانات کے لیے آگاہی دیں۔ تمام زمروں کے لیے خالی چھوڑ دیں۔"
         tag_names: "ٹیگز"
+        tag_names_description: "صرف ان عنوانات کے لیے آگاہی دیں جن میں کم از کم ان میں سے ایک ٹیگ ہو۔"

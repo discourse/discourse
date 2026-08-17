@@ -429,7 +429,8 @@ ja:
               description: "非公開イベントは招待されたユーザーのみが参加できます。"
       composer:
         name_placeholder: "イベント名"
-        location_placeholder: "場所または URL を追加"
+        location_or_url_placeholder: "場所または URL を追加"
+        url_placeholder: "URL を追加"
         description_placeholder: "イベントの説明を追加"
         event_title_placeholder: "イベント名"
         create_event_button: "イベントを作成"
@@ -495,7 +496,12 @@ ja:
           label: "チャットの統合"
           checkbox_label: "イベント専用のチャットチャンネルを作成して管理する"
         location:
+          label: "場所"
           placeholder: "場所、リンクなどを追加します。"
+        url:
+          label: "URL"
+          placeholder: "オプション"
+          add: "URL を追加"
         description:
           label: "説明"
           placeholder: "イベントについてもう少し詳しく伝えましょう。改行やリンクがサポートされています。"

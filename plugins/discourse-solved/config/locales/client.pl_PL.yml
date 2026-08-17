@@ -22,31 +22,10 @@ pl_PL:
             fetch_error: "Nie udało się załadować danych pomocniczych."
             save_error: "Nie udało się zapisać wyboru na następny raz."
             headline:
-              healthy:
-                title: "Społeczność rozwiązuje swoje problemy sama."
-              struggling:
-                title: "Na większość pytań nie ma odpowiedzi."
-              mixed:
-                title: "Wsparcie jest zróżnicowane."
-              no_data:
-                title: "Za mało jeszcze aktywności wsparcia"
-                summary: "W tym okresie nie ma jeszcze żadnych działań wspierających. Gdy pojawią się tematy, zobaczysz, jak Twoja społeczność sobie z nimi radzi."
-              resolution:
-                up: "Wskaźnik rozwiązywania wzrósł do %{rate}%."
-                down: "Wskaźnik rozwiązywania spadł do %{rate}%."
-                flat: "Wskaźnik rozwiązywania utrzymał się na poziomie %{rate}%."
-              answerers:
-                members: "Członkowie odpowiadają na %{share}% odpowiedzi."
-                staff: "Personel odpowiada na %{share}% odpowiedzi."
-              reply:
-                faster: "Czas pierwszej odpowiedzi skrócił się do %{time}, %{delta} szybciej niż w poprzednim okresie."
-                slower: "Czas pierwszej odpowiedzi spadł do %{time}, %{delta} wolniej niż w poprzednim okresie."
-                flat: "Czas pierwszej odpowiedzi wynosił %{time}."
-              unanswered:
-                one: "%{count} temat z tego okresu nadal nie ma żadnych odpowiedzi."
-                few: "%{count} tematy z tego okresu nadal nie ma żadnych odpowiedzi."
-                many: "%{count} tematów z tego okresu nadal nie ma żadnych odpowiedzi."
-                other: "%{count} tematów z tego okresu nadal nie ma żadnych odpowiedzi."
+              titles:
+                insufficient_activity: "Za mało jeszcze aktywności wsparcia"
+              summaries:
+                insufficient_activity: "W tym okresie nie ma jeszcze żadnych działań wspierających. Gdy pojawią się tematy, zobaczysz, jak Twoja społeczność sobie z nimi radzi."
             kpi:
               resolution_rate:
                 label: "Współczynnik rozwiązywania"

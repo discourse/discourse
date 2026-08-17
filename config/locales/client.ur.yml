@@ -3892,6 +3892,39 @@ ur:
       unread_indicator: "کسی رکن نے ابھی تک اِس موضوع کا آخری دھاگہ نہیں پڑھا۔"
       sr_read: "رِیڈ"
       participant_groups: "شرکاء گروپس"
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {یہاں <a href="{unreadUrl}"># بغیر پڑھا</a> ہے}
+              other {یہاں <a href="{unreadUrl}"># بغیر پڑھے</a> ہیں}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { اور <a href="{newUrl}"># نیا</a> موضوع باقی ہے،}
+              other { اور and <a href="{newUrl}"># نئے</a> موضوعات باقی ہیں،}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {یہاں <a href="{unreadUrl}"># بغیر پڑھا</a> موضوع باقی ہے،}
+              other {یہاں <a href="{unreadUrl}"># بغیر پڑھے</a> مضوعات باقی ہیں،}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {یہاں <a href="{newUrl}"># نیا</a> موضوع باقی ہے،}
+              other {یہاں <a href="{newUrl}"># نئے</a> موضوعات باقی ہیں،}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { یا {categoryLink} میں مزید موضوعات دیکھیں}
+          false { یا <a href="{basePath}/latest">تازہ ترین موضوعات</a> دیکھیں}
+          other {}
+        }
       reply_count_link:
         one: "%{count} جواب، پہلے دھاگہ پر جائیں"
         other: "%{count} جوابات،، پہلے دھاگہ پر جائیں"
@@ -6324,31 +6357,11 @@ ur:
                   other: "-%{count} گرا"
               stable_aria: "کوئی حرکت نہیں"
             headline:
-              engaged_but_shrinking:
-                title: "اراکین فعال ہیں، لیکن فورم سکڑ رہا ہے۔"
-                summary: "شراکت برقرار ہے، لیکن روزانہ کی مشغولیت یا نئے سائن اپ میں کمی آئی ہے۔"
-              growing_but_distracted:
-                title: "نئے ارکان شامل ہو رہے ہیں، لیکن وہ ٹھہر نہیں رہے۔"
               metrics:
                 new_signups: "نئے جڑنے والے"
                 daily_engaged_users: "روزانہ کی شراکت"
           search:
             title: "تلاش کریں"
-            count_headline:
-              last_7_days:
-                one: "اراکین نے گزشتہ 7 دنوں میں فورم پر %{formatted_count} تلاش کی"
-                other: "اراکین نے گزشتہ 7 دنوں میں فورم پر %{formatted_count} تلاشیں کیں۔"
-              last_30_days:
-                one: "اراکین نے گزشتہ 30 دنوں میں فورم پر %{formatted_count} تلاش کی۔"
-                other: "اراکین نے گزشتہ 30 دنوں میں فورم پر %{formatted_count} تلاشیں کیں۔"
-              last_3_months:
-                one: "اراکین نے گزشتہ 3 مہینوں میں فورم پر %{formatted_count} تلاش کی۔"
-                other: "اراکین نے گزشتہ 3 مہینوں میں فورم پر %{formatted_count} تلاشیں کیں۔"
-              selected_period:
-                one: "اراکین نے منتخب مدت میں فورم پر %{formatted_count} تلاش کی۔"
-                other: "اراکین نے منتخب مدت میں فورم پر %{formatted_count} تلاشیں کیں۔"
-            headline:
-              content_gaps: "اس عرصے میں 10% سے زیادہ اراکین تلاشیں بغیر کلک کے ختم ہوئیں۔ نیچے دیے گئے مواد کے خلاؤں کا جائزہ لیں تاکہ معلوم ہو سکے کہ کیا غائب ہے۔"
             kpi:
               total_searches:
                 label: "کل تلاش"

@@ -884,5 +884,12 @@ ru:
         message: "Сообщение"
       chat_approval:
         message: "Сообщение"
+        buttons: "Кнопки"
+        value: "Значение"
+        style: "Стиль"
+        style_default: "Домашнюю страницу"
+        style_primary: "Основная"
+        style_success: "Успех"
+        icon: "Значок"
         channel_id: "Канал"
         timeout_minutes: "Тайм-аут (минуты)"

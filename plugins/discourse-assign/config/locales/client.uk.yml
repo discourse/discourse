@@ -214,19 +214,29 @@ uk:
       node_unavailable:
         requires_assign: "Потрібно ввімкнути плагін Assign"
       nodes:
-        "action:assign_topic": "Призначити тему"
         "trigger:assigned": "Призначено"
       node_descriptions:
-        "action:assign_topic": "Призначити або скасувати призначення теми"
         "trigger:assigned": "Спрацьовує, коли призначено тему або публікацію"
       assign_topic:
+        resource: "Ресурс"
+        resources:
+          topic: "Тема"
+          post: "Допис"
         operation: "Операція"
         operations:
           assign: "Призначити"
           unassign: "Скасувати призначення"
         topic_id: "ID теми"
+        post_id: "ID допису"
         assignee: "Правонаступник"
         replace_existing: "Замінити існуюче завдання"
+      check_assignment:
+        target_types:
+          topic: "Тема"
+          post: "Допис"
+        topic_id: "ID теми"
+        post_id: "ID допису"
+        assignee: "Правонаступник"
       assigned:
         topic_assignments_only: "Активується лише тоді, коли метою завдання є тема, а не окремий допис"
         topic_assignments_only_description: "Тільки завдання за темами"

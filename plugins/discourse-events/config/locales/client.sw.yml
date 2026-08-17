@@ -41,6 +41,7 @@ sw:
             private:
               title: "Binafsi"
       composer:
+        url_placeholder: "Ongeza anwani ya mtandao"
         reminder:
           units:
             days:
@@ -62,6 +63,12 @@ sw:
           none: "Hakuna kurudia"
         attendance:
           none: "Hakuna"
+        location:
+          label: "Sehemu"
+        url:
+          label: "Anwani ya mtandao"
+          placeholder: "Sio Muhimu"
+          add: "Ongeza anwani ya mtandao"
         description:
           label: "Maelezo"
         event_type:

@@ -478,7 +478,9 @@ pl_PL:
       composer:
         name_placeholder: "Nazwa wydarzenia"
         end_date_placeholder: "Data zakończenia"
-        location_placeholder: "Dodaj lokalizację lub adres URL"
+        location_or_url_placeholder: "Dodaj lokalizację lub adres URL"
+        location_placeholder: "Dodaj lokalizację"
+        url_placeholder: "Dodaj URL"
         max_attendees_placeholder: "Nieograniczona liczba uczestników"
         max_attendees_display:
           one: "Maksymalnie %{count} uczestnik"
@@ -600,8 +602,13 @@ pl_PL:
           label: "Transmisja na żywo"
           checkbox_label: "Osadź adres URL jako wideo i otwórz czat na żywo dla uczestników"
         location:
-          label: "Lokalizacja lub adres URL"
+          label: "Lokalizacja"
+          label_or_url: "Lokalizacja lub adres URL"
           placeholder: "Dodaj lokalizację, link lub coś takiego."
+        url:
+          label: "Adres URL"
+          placeholder: "Opcjonalnie"
+          add: "Dodaj adres URL"
         description:
           label: "Opis"
           placeholder: "Opowiedz ludziom trochę więcej o swoim wydarzeniu. Nowe linie i linki są obsługiwane."

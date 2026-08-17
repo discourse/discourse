@@ -83,6 +83,7 @@ vi:
             private:
               title: "Riêng tư"
       composer:
+        url_placeholder: "Thêm URL"
         reminder:
           units:
             minutes:
@@ -115,6 +116,12 @@ vi:
             last: "cuối cùng"
         attendance:
           none: "Không"
+        location:
+          label: "Vị trí"
+        url:
+          label: "URL"
+          placeholder: "Tùy chọn"
+          add: "Thêm URL"
         description:
           label: "Mô tả"
         event_type:

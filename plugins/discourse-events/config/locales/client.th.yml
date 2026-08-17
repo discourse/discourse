@@ -42,6 +42,7 @@ th:
             private:
               title: "ส่วนตัว"
       composer:
+        url_placeholder: "เพิ่ม URL"
         reminder:
           units:
             days:
@@ -67,6 +68,12 @@ th:
             last: "ล่าสุด"
         attendance:
           none: "ไม่มี"
+        location:
+          label: "ที่อยู่"
+        url:
+          label: "URL"
+          placeholder: "ทางเลือก"
+          add: "เพิ่ม URL"
         description:
           label: "รายละเอียด"
         event_type:

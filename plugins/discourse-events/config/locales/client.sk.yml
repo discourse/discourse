@@ -439,6 +439,7 @@ sk:
               description: "K súkromnej udalosti sa môžu pripojiť len pozvaní používatelia."
       composer:
         name_placeholder: "Názov udalosti"
+        url_placeholder: "Pridaj URL"
         event_title_placeholder: "Názov udalosti"
         create_event_button: "Vytvoriť udalosť"
         reminder:
@@ -509,7 +510,12 @@ sk:
           label: "Integrácia chatu"
           checkbox_label: "Vytvorenie a správa kanála chatu pre konkrétnu udalosť"
         location:
+          label: "Poloha"
           placeholder: "Pridajte miesto, odkaz alebo niečo podobné."
+        url:
+          label: "URL"
+          placeholder: "Voliteľné"
+          add: "Pridaj URL"
         description:
           label: "Popis"
           placeholder: "Povedzte ľuďom niečo viac o vašej udalosti. Podporované sú nové riadky a odkazy."

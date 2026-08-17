@@ -336,3 +336,10 @@ vi:
         message: "Nhắn tin"
       chat_approval:
         message: "Nhắn tin"
+        buttons: "Nút"
+        value: "Giá trị"
+        style: "Phong cách"
+        style_default: "Mặc định"
+        style_primary: "Chính"
+        style_success: "Thành công"
+        icon: "Biểu tượng"

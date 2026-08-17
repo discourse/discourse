@@ -60,7 +60,6 @@ fi:
     ai_helper_allowed_in_pm: "Ota kirjoitustoiminnon tekoälyavustaja käyttöön yksityisviesteissä."
     ai_helper_automatic_chat_thread_title_delay: "Viive minuuteissa ennen kuin tekoälyapuohjelma asettaa chat-ketjun otsikon automaattisesti."
     ai_helper_automatic_chat_thread_title: "Aseta chat-ketjujen otsikot automaattisesti ketjun sisällön perusteella."
-    ai_helper_enabled_features: "Valitse ominaisuudet, jotka otetaan käyttöön tekoälyavustajassa."
     post_ai_helper_allowed_groups: "Käyttäjäryhmät, joilla on oikeus käyttää tekoälyavustajan ominaisuuksia viesteissä"
     ai_embeddings_selected_model: "Käytä valittua mallia upotusten luomiseen."
     ai_embeddings_generate_for_pms: "Luo upotuksia yksityisviesteille."
@@ -218,7 +217,6 @@ fi:
         completion_request_failed: "Jokin meni vikaan yritettäessä antaa ehdotuksia. Yritä uudelleen."
       prompts:
         translate: Käännä kielelle %{language}
-        generate_titles: Ehdota ketjujen otsikoita
         proofread: Oikolue teksti
         markdown_table: Luo markdown-taulukko
         custom_prompt: "Mukautettu kehote"

@@ -806,4 +806,11 @@ nl:
         message: "Bericht"
       chat_approval:
         message: "Bericht"
+        buttons: "Knoppen"
+        value: "Waarde"
+        style: "Stijl"
+        style_default: "Standaard"
+        style_primary: "Primair"
+        style_success: "Succes"
+        icon: "Pictogram"
         channel_id: "Kanaal"

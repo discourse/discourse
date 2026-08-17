@@ -963,6 +963,13 @@ uk:
         message: "Повідомлення"
       chat_approval:
         message: "Повідомлення"
+        buttons: "Кнопки"
+        value: "Значення"
+        style: "Стиль"
+        style_default: "Стандартна"
+        style_primary: "Основна"
+        style_success: "Успіх"
+        icon: "Іконка"
         approve_label: "Напис на кнопці «Підтвердити»"
         approve_label_description: "Якщо залишити поле порожнім, за замовчуванням використовується значення «Схвалено»."
         deny_label: "Напис на кнопці «Відхилити»"

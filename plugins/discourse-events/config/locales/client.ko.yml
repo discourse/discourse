@@ -130,6 +130,7 @@ ko:
               title: "비공개"
       composer:
         name_placeholder: "이벤트 이름"
+        url_placeholder: "URL 추가"
         event_title_placeholder: "이벤트 이름"
         create_event_button: "이벤트 만들기"
         reminder:
@@ -173,6 +174,12 @@ ko:
             last: "마지막"
         attendance:
           none: "없음"
+        location:
+          label: "위치"
+        url:
+          label: "URL"
+          placeholder: "선택 사항"
+          add: "URL 추가"
         description:
           label: "내용"
         name:
