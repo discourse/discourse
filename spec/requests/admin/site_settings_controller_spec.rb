@@ -20,6 +20,23 @@ RSpec.describe Admin::SiteSettingsController do
         expect(locale.length).to eq(1)
       end
 
+      it "returns the Site Traffic Explorer event cap" do
+        get "/admin/site_settings.json"
+
+        setting =
+          response.parsed_body["site_settings"].find do |site_setting|
+            site_setting["setting"] == "admin_site_traffic_event_cap"
+          end
+
+        expect(setting.slice("default", "value", "min", "max", "primary_area")).to eq(
+          "default" => "200000",
+          "value" => "200000",
+          "min" => 1,
+          "max" => 1_000_000,
+          "primary_area" => "reports",
+        )
+      end
+
       it "does not return hidden site settings" do
         get "/admin/site_settings.json"
         expect(response.status).to eq(200)

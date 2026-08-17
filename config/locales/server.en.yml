@@ -2913,6 +2913,7 @@ en:
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
     enable_site_traffic_explorer: "Link the admin dashboard's site traffic details action to the Site Traffic Explorer."
+    admin_site_traffic_event_cap: "Maximum number of browser pageview events the Site Traffic Explorer analyzes per query. Higher values include more traffic but can cause reports to time out on lower-resource database servers."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
