@@ -88,9 +88,9 @@ describe "Admin Dashboard Redesign | Search section" do
     search = dashboard.search
 
     expect(search).to have_headline(
-      "Members ran 50 on-site searches in the last 30 days",
-      "The no-result rate is climbing compared with the previous period. " \
-        "Keep an eye on the content gaps below.",
+      "The total number of searches has increased in the selected period",
+      "Members are conducting more searches in your community, but the no-result rate has " \
+        "increased. Review the content gaps to see what's missing.",
     )
 
     expect(search).to have_total_searches_kpi("50", improving_delta: "+25%")
@@ -140,8 +140,9 @@ describe "Admin Dashboard Redesign | Search section" do
     dashboard.select_preset("last_7_days")
 
     expect(search).to have_headline(
-      "Members ran 27 on-site searches in the last 7 days",
-      "Members keep finding what they search for, and search volume is steady or growing.",
+      "Searches have increased and the no-result rate has declined in the selected period",
+      "Members are conducting more searches in your community and are finding what they're " \
+        "looking for more often.",
     )
 
     expect(search).to have_total_searches_kpi("27", improving_delta: "+800%")
@@ -160,8 +161,9 @@ describe "Admin Dashboard Redesign | Search section" do
     dashboard.select_preset("last_3_months")
 
     expect(dashboard.search).to have_headline(
-      "Members ran 90 on-site searches in the last 3 months",
-      "Members keep finding what they search for, and search volume is steady or growing.",
+      "The total number of searches has increased in the selected period",
+      "Members are conducting more searches in your community, but the no-result rate has " \
+        "increased. Review the content gaps to see what's missing.",
     )
 
     dashboard.search.click_content_gap_term("discobot")
@@ -184,9 +186,9 @@ describe "Admin Dashboard Redesign | Search section" do
     search = dashboard.search
 
     expect(search).to have_headline(
-      "Members ran 10 on-site searches in the last 30 days",
-      "More than 10% of member searches ended without a click this period. " \
-        "Review the content gaps below to see what's missing.",
+      "The total number of searches has increased in the selected period",
+      "Members are conducting more searches in your community, but the no-result rate has " \
+        "increased. Review the content gaps to see what's missing.",
     )
     expect(search).to have_total_searches_kpi("10")
     expect(search).to have_alert_no_result_rate_kpi("50%")
@@ -244,9 +246,8 @@ describe "Admin Dashboard Redesign | Search section" do
     search = dashboard.search
 
     expect(search).to have_headline(
-      "Members ran 3 on-site searches in the selected period",
-      "Search volume is down compared with the previous period, " \
-        "while most searches still lead to content.",
+      "The no-result rate has decreased in the selected period",
+      "Members are finding what they're looking for, and total search volume has decreased.",
     )
     expect(search).to have_total_searches_kpi("3", worsening_delta: "-40%")
     expect(search).to have_no_result_rate_kpi("0%", improving_delta: "-100%")
@@ -264,9 +265,9 @@ describe "Admin Dashboard Redesign | Search section" do
     dashboard.visit_with_query(range: "custom", start_date: "2026-04-25", end_date: "2026-04-25")
 
     expect(search).to have_headline(
-      "Members ran 1 on-site search in the selected period",
-      "More than 10% of member searches ended without a click this period. " \
-        "Review the content gaps below to see what's missing.",
+      "The total number of searches has increased in the selected period",
+      "Members are conducting more searches in your community, but the no-result rate has " \
+        "increased. Review the content gaps to see what's missing.",
     )
   end
 end

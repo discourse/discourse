@@ -40,7 +40,6 @@ class AdminDashboardSearch
 
     {
       logging_enabled: true,
-      headline_state: headline_state(current: current, kpis: kpis),
       kpis: kpis,
       trending: trending,
       trending_period: trending_period,
@@ -60,7 +59,7 @@ class AdminDashboardSearch
   end
 
   def total_searches_kpi(current:, prior:)
-    kpi = { value: current[:total] }
+    kpi = { value: current[:total], previous_value: prior[:total] }
 
     if current[:total].positive? && prior[:total].positive?
       change = formatted_change((current[:total] - prior[:total]) * 100.0 / prior[:total])
@@ -71,10 +70,14 @@ class AdminDashboardSearch
   end
 
   def no_result_rate_kpi(current:, prior:)
-    return { value: nil, exceeds_threshold: false } if current[:total].zero?
+    previous_value = no_result_rate(prior).round if prior[:total].positive?
+    if current[:total].zero?
+      return { value: nil, previous_value: previous_value, exceeds_threshold: false }
+    end
 
     kpi = {
       value: no_result_rate(current).round,
+      previous_value: previous_value,
       exceeds_threshold: current[:no_match] * 100 > current[:total] * ALARM_THRESHOLD_PERCENT,
     }
 
@@ -93,15 +96,6 @@ class AdminDashboardSearch
   def formatted_change(value)
     rounded = value.abs < 1 ? value.round(1) : value.round
     rounded.zero? ? nil : rounded
-  end
-
-  def headline_state(current:, kpis:)
-    return "no_signal" if current[:total].zero?
-    return "content_gaps" if kpis[:no_result_rate][:exceeds_threshold]
-    return "rate_climbing" if kpis[:no_result_rate][:point_change].to_f.positive?
-    return "shrinking" if kpis[:total_searches][:percent_change].to_f.negative?
-
-    "healthy"
   end
 
   def trending

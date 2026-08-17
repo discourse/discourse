@@ -127,7 +127,6 @@ export default class RedesignedAdminDashboard extends Component {
               class={{concat "--" section.id}}
               data-section-id={{section.id}}
               @engagement={{section.data}}
-              @period={{@loadedSections.period}}
               @loading={{@loadingSections}}
               @fetchError={{section.error}}
               @startDate={{@loadedSections.startDate}}
