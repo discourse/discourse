@@ -5345,7 +5345,8 @@ CREATE TABLE public.email_logs (
     topic_id integer,
     bounce_error_code character varying,
     smtp_transaction_response character varying(500),
-    bcc_addresses text
+    bcc_addresses text,
+    bounce_permanent boolean
 );
 
 
@@ -23190,6 +23191,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260818162304'),
 ('20260817054353'),
 ('20260817054044'),
 ('20260814083721'),

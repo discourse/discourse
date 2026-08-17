@@ -23,6 +23,7 @@ module DiscourseDev
           bounced: true,
           bounce_key: bounce_key,
           bounce_error_code: "5.0.0",
+          bounce_permanent: true,
         )
 
       # Bounced email logs require a matching incoming email record

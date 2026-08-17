@@ -15,9 +15,6 @@ class EmailLog < ActiveRecord::Base
               signup_after_approval
             ]
 
-  # cf. https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml
-  SMTP_ERROR_CODE_REGEXP = Regexp.new(/\d\.\d\.\d+|\d{3}/).freeze
-
   belongs_to :user
   belongs_to :post
   belongs_to :smtp_group, class_name: "Group"
@@ -36,11 +33,52 @@ class EmailLog < ActiveRecord::Base
       )
     SQL
 
-  before_save do
-    if bounce_error_code.present?
-      match = SMTP_ERROR_CODE_REGEXP.match(bounce_error_code)
-      self.bounce_error_code = match.present? ? match[0] : nil
+  before_save { self.bounce_error_code = self.class.normalize_bounce_error_code(bounce_error_code) }
+
+  # generic enhanced statuses, stored when a provider reports a bounce without
+  # one, so that the column always says something about the failure
+  BOUNCE_ERROR_CODE_TRANSIENT = "4.0.0"
+  BOUNCE_ERROR_CODE_PERMANENT = "5.0.0"
+
+  # every channel reports the status differently, from a bare code to the whole
+  # free-form diagnostic, so they all get read the same way
+  def self.normalize_bounce_error_code(bounce_error_code)
+    Email.extract_smtp_status(bounce_error_code)
+  end
+
+  # Atomically claims a bounce report for this log so that duplicate or
+  # concurrent reports of the same bounce are recorded (and scored) only once.
+  # A permanent failure may supersede an earlier transient report of the same
+  # message, since providers often retry after a transient failure and then
+  # report a final permanent one.
+  def claim_bounce(permanent:, bounce_error_code: nil)
+    generic = permanent ? BOUNCE_ERROR_CODE_PERMANENT : BOUNCE_ERROR_CODE_TRANSIENT
+    attributes = {
+      bounced: true,
+      bounce_error_code: self.class.normalize_bounce_error_code(bounce_error_code) || generic,
+      bounce_permanent: permanent,
+    }
+
+    if !bounced? && self.class.where(id: id, bounced: false).update_all(attributes) == 1
+      assign_attributes(attributes)
+      return true
     end
+
+    return false if !permanent
+
+    # `bounce_permanent` is NULL for bounces recorded before the severity was
+    # tracked. Their error code says what the provider reported, not what they
+    # were scored at, so escalating off it would charge a second hard bounce as
+    # often as it would catch a real escalation
+    escalated =
+      self
+        .class
+        .where(id: id, bounced: true, bounce_permanent: false)
+        .update_all(bounce_error_code: attributes[:bounce_error_code], bounce_permanent: true) == 1
+
+    assign_attributes(attributes) if escalated
+
+    escalated
   end
 
   after_create do
@@ -126,6 +164,7 @@ end
 #  bcc_addresses             :text
 #  bounce_error_code         :string
 #  bounce_key                :uuid
+#  bounce_permanent          :boolean
 #  bounced                   :boolean          default(FALSE), not null
 #  cc_addresses              :text
 #  cc_user_ids               :integer          is an Array

@@ -316,19 +316,27 @@ module Email
       @incoming_email.update_columns(is_bounce: true)
       mail_error_statuses = Array.wrap(@mail.error_status)
 
+      # a DSN can report one status per recipient: any transient one keeps the
+      # whole report transient, so record the status the decision was made on
+      transient_status = mail_error_statuses.find { |status| Email.smtp_transient_failure?(status) }
+      permanent = transient_status.nil?
+
       if email_log.present?
-        email_log.update_columns(bounced: true, bounce_error_code: mail_error_statuses.first)
+        Email::Receiver.record_bounce(
+          email_log,
+          permanent: permanent,
+          bounce_error_code: transient_status || mail_error_statuses.first,
+        )
         post = email_log.post
         topic = email_log.topic
+      else
+        Email::Receiver.update_bounce_score(
+          @from_email,
+          permanent ? SiteSetting.hard_bounce_score : SiteSetting.soft_bounce_score,
+        )
       end
 
       DiscourseEvent.trigger(:email_bounce, @mail, @incoming_email, @email_log)
-
-      if mail_error_statuses.any? { |s| s.start_with?(Email::SMTP_STATUS_TRANSIENT_FAILURE) }
-        Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
-      else
-        Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
-      end
 
       if SiteSetting.whispers_allowed_groups.present? && @from_user&.staged?
         return if email_log.blank?
@@ -369,30 +377,56 @@ module Email
       @email_log ||= EmailLog.find_by(bounce_key: bounce_key)
     end
 
+    # Records a bounce for an email we sent: claims the email log so that
+    # duplicate reports of the same bounce score only once, then applies the
+    # score — but only when the bounced address still belongs to the user the
+    # email was sent to, so late reports can't penalize an unrelated account.
+    def self.record_bounce(email_log, permanent:, bounce_error_code: nil)
+      return false if email_log.nil?
+      if !email_log.claim_bounce(permanent: permanent, bounce_error_code: bounce_error_code)
+        return false
+      end
+
+      if email_log.user_id.present?
+        user = User.find_by_email(email_log.to_address)
+        if user && user.id == email_log.user_id
+          score = permanent ? SiteSetting.hard_bounce_score : SiteSetting.soft_bounce_score
+          update_bounce_score_for(user, score)
+        end
+      end
+
+      true
+    end
+
     def self.update_bounce_score(email, score)
       if user = User.find_by_email(email)
-        old_bounce_score = user.user_stat.bounce_score
+        update_bounce_score_for(user, score)
+      end
+    end
+
+    def self.update_bounce_score_for(user, score)
+      user_stat = user.user_stat
+      crossed_threshold = false
+
+      user_stat.with_lock do
+        threshold = SiteSetting.bounce_score_threshold
+        old_bounce_score = user_stat.bounce_score
         new_bounce_score = old_bounce_score + score
-        range = (old_bounce_score + 1..new_bounce_score)
+        crossed_threshold = old_bounce_score < threshold && new_bounce_score >= threshold
 
-        user.user_stat.bounce_score = new_bounce_score
-        user.user_stat.reset_bounce_score_after =
-          SiteSetting.reset_bounce_score_after_days.days.from_now
-        user.user_stat.save!
+        user_stat.bounce_score = new_bounce_score
+        user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
+        user_stat.save!
+      end
 
-        if range === SiteSetting.bounce_score_threshold
-          # NOTE: we check bounce_score before sending emails
-          # So log we revoked the email...
-          reason =
-            I18n.t(
-              "user.email.revoked",
-              email: user.email,
-              date: user.user_stat.reset_bounce_score_after,
-            )
-          StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
-          # ... and PM the user
-          SystemMessage.create_from_system_user(user, :email_revoked)
-        end
+      if crossed_threshold
+        # NOTE: we check bounce_score before sending emails
+        # So log we revoked the email...
+        reason =
+          I18n.t("user.email.revoked", email: user.email, date: user_stat.reset_bounce_score_after)
+        StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
+        # ... and PM the user
+        SystemMessage.create_from_system_user(user, :email_revoked)
       end
     end
 
