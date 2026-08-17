@@ -96,7 +96,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
 
         expect(browser_dimensions).to eq(
           [
-            { value: "unknown", label: "unknown browser", pageviews: 4 },
+            { value: "unknown", label: "Unknown browser", pageviews: 4 },
             { value: "chrome", label: "Google Chrome", pageviews: 3 },
             { value: "safari", label: "Safari", pageviews: 2 },
             { value: "edge", label: "Microsoft Edge", pageviews: 1 },
