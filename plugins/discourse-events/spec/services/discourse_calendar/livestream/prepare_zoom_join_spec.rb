@@ -27,7 +27,7 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
     let(:params) { { topic_id: topic.id } }
 
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       SiteSetting.livestream_zoom_enabled = true
       SiteSetting.livestream_zoom_sdk_key = "sdk-key"

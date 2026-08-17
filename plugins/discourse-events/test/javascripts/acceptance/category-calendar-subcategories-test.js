@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Category Events Calendar - subcategory filter", function (needs) {
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     events_calendar_categories: "1",
     calendar_categories: "",

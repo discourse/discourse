@@ -8,7 +8,7 @@ describe "Event card" do
   let(:category_page) { PageObjects::Pages::Category.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.events_calendar_categories = category.id.to_s
     sign_in(admin)

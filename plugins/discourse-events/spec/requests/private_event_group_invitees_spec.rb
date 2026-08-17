@@ -24,7 +24,7 @@ module DiscoursePostEvent
 
     before do
       Jobs.run_immediately!
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       invited_group.add(invitee_user)
     end

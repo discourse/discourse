@@ -5,11 +5,11 @@ module Admin::DiscourseCalendar
     fab!(:admin) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:member, :user)
 
-    before { SiteSetting.calendar_enabled = calendar_enabled }
+    before { SiteSetting.discourse_events_enabled = discourse_events_enabled }
 
     describe "#index" do
       context "when the calendar plugin is enabled" do
-        let(:calendar_enabled) { true }
+        let(:discourse_events_enabled) { true }
 
         context "when an admin is signed in" do
           before { sign_in(admin) }
@@ -54,7 +54,7 @@ module Admin::DiscourseCalendar
       end
 
       context "when the calendar plugin is not enabled" do
-        let(:calendar_enabled) { false }
+        let(:discourse_events_enabled) { false }
 
         it "returns a 404 for an admin" do
           sign_in(admin)
@@ -74,7 +74,7 @@ module Admin::DiscourseCalendar
 
     describe "#disable" do
       context "when the calendar plugin is enabled" do
-        let(:calendar_enabled) { true }
+        let(:discourse_events_enabled) { true }
         let(:dia_de_la_independencia) do
           { holiday_name: "Día de la Independencia", region_code: "mx" }
         end
@@ -157,7 +157,7 @@ module Admin::DiscourseCalendar
 
     describe "#enable" do
       context "when the calendar plugin is enabled" do
-        let(:calendar_enabled) { true }
+        let(:discourse_events_enabled) { true }
 
         context "when an admin is signed in" do
           before { sign_in(admin) }

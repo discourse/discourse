@@ -202,7 +202,7 @@ export default {
 
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
-    if (siteSettings.calendar_enabled) {
+    if (siteSettings.discourse_events_enabled) {
       withPluginApi(initializeDiscourseCalendar);
     }
   },

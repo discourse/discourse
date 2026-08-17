@@ -5,7 +5,7 @@ describe "Disabling topic list sorting" do
   let(:category_page) { PageObjects::Pages::Category.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     Fabricate.times(2, :topic, category:)
   end
 

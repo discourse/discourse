@@ -8,7 +8,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Event Title Decorator", function (needs) {
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
   });
 

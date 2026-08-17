@@ -11,7 +11,7 @@ describe "Composer - Event location" do
   MD
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     sign_in(admin)
   end

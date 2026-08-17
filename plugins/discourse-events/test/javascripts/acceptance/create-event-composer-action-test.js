@@ -18,7 +18,7 @@ function markCategoryAsEvents(categoryId) {
 acceptance("Create event composer action", function (needs) {
   needs.user({ can_create_discourse_post_event: true });
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     discourse_post_event_allowed_on_groups: "",
     discourse_post_event_allowed_custom_fields: "",
@@ -282,7 +282,7 @@ acceptance(
   function (needs) {
     needs.user({ can_create_discourse_post_event: false });
     needs.settings({
-      calendar_enabled: true,
+      discourse_events_enabled: true,
       discourse_post_event_enabled: true,
       discourse_post_event_allowed_on_groups: "",
       discourse_post_event_allowed_custom_fields: "",

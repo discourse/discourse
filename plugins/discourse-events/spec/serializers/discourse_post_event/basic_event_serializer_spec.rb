@@ -2,7 +2,7 @@
 
 describe DiscoursePostEvent::BasicEventSerializer do
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.discourse_post_event_allowed_custom_fields = "team"
     Jobs.run_immediately!
