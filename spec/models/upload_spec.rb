@@ -950,6 +950,12 @@ RSpec.describe Upload do
       upload.update(url: Discourse.store.store_upload(file, upload))
       upload
     end
+    let(:unsupported_image_content) do
+      upload = Fabricate(:upload, extension: "png")
+      file = file_from_fixtures("tiff_as.bin")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
+      upload
+    end
 
     it "correctly identifies and stores an image's dominant color" do
       expect(white_image.dominant_color).to eq(nil)
@@ -1011,16 +1017,20 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq("")
     end
 
-    it "raises when vips produces a pixel with an unexpected number of channels" do
+    it "stores an empty string when the image content uses an unsupported format" do
+      expect(unsupported_image_content.dominant_color).to eq(nil)
+      expect(unsupported_image_content.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(unsupported_image_content.dominant_color).to eq("")
+    end
+
+    it "stores an empty string when vips produces a pixel with an unexpected channel count" do
       expect(white_image.dominant_color).to eq(nil)
 
       Vips.stubs(:run)
       File.stubs(:binread).returns("\0" * 5)
 
-      expect { white_image.dominant_color(calculate_if_missing: true) }.to raise_error(
-        "Calculated dominant color but unable to read the output pixel",
-      )
-      expect(white_image.dominant_color).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color).to eq("")
     end
 
     it "correctly handles error when file is too large to download" do

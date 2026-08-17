@@ -394,6 +394,11 @@ class Upload < ActiveRecord::Base
         color = ""
       end
 
+      if color.nil?
+        image_type = FastImage.type(local_path)
+        color = "" if image_type == :svg || !FileHelper.supported_images.include?(image_type.to_s)
+      end
+
       color ||=
         begin
           Dir.mktmpdir("dominant-color") do |directory|
@@ -424,9 +429,11 @@ class Upload < ActiveRecord::Base
               when 3, 4
                 components.first(3)
               end
-            raise "Calculated dominant color but unable to read the output pixel" if rgb.nil?
-
-            rgb.map { |component| component.to_s(16).rjust(2, "0") }.join.upcase
+            if rgb
+              rgb.map { |component| component.to_s(16).rjust(2, "0") }.join.upcase
+            else
+              ""
+            end
           end
         rescue Discourse::Utils::CommandError
           # Timeout or unable to parse image

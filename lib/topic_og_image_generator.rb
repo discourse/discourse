@@ -11,6 +11,9 @@ class TopicOgImageGenerator
   AVATAR_SIZE = 72
   SIDE_MARGIN = 80
   FONT_FAMILY = "sans-serif"
+  RENDER_TIMEOUT_SECONDS = 5
+  RENDER_CPU_LIMIT_SECONDS = 5
+  private_constant :RENDER_TIMEOUT_SECONDS, :RENDER_CPU_LIMIT_SECONDS
 
   # OG images are embedded in public topic pages for external crawlers and
   # link previewers, so we must not generate them for content that is not
@@ -380,7 +383,10 @@ class TopicOgImageGenerator
         read: [dir],
         write: [dir],
         nice: 10,
-        timeout: 20,
+        timeout: RENDER_TIMEOUT_SECONDS,
+        rlimits: {
+          cpu_seconds: RENDER_CPU_LIMIT_SECONDS,
+        },
         allow_untrusted: true,
       )
 

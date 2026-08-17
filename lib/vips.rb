@@ -23,6 +23,7 @@ class Vips
     write: [],
     timeout: nil,
     nice: nil,
+    rlimits: {},
     allow_untrusted: false,
     failure_message: ""
   )
@@ -47,7 +48,7 @@ class Vips
         write: [scratch, *write],
         execute: Discourse::SafeExec.default_execute_paths,
         timeout: timeout || DEFAULT_TIMEOUT,
-        rlimits: RLIMITS,
+        rlimits: RLIMITS.merge(rlimits),
         failure_message:,
         seccomp_deny_network: true,
       )
