@@ -27,10 +27,6 @@ export default class DCopyButton extends Component {
     return this.showCopied ? `${baseClass} ok` : baseClass;
   }
 
-  get copyLabel() {
-    return this.showCopied ? "user.invited.link_copied" : this.args.label;
-  }
-
   get copyTranslatedLabel() {
     return this.showCopied
       ? this.args.translatedLabelAfterCopy
@@ -77,7 +73,6 @@ export default class DCopyButton extends Component {
       @action={{this.copy}}
       class="copy-button {{this.copyClass}}"
       @ariaLabel={{@ariaLabel}}
-      @label={{this.copyLabel}}
       @translatedLabel={{this.copyTranslatedLabel}}
     />
     <span
