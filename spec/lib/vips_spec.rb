@@ -2,11 +2,11 @@
 
 RSpec.describe Vips do
   describe ".run" do
-    it "preserves default resource limits when overriding a limit" do
+    it "applies bounded wall-clock and CPU time by default" do
       Discourse::SafeExec
         .expects(:capture)
         .with do |*command, **options|
-          command == %w[vips --version] &&
+          command == %w[vips --version] && options[:timeout] == 5 &&
             options[:rlimits] ==
               {
                 cpu_seconds: 5,
@@ -17,9 +17,7 @@ RSpec.describe Vips do
         end
         .returns("vips-8.18.4\n")
 
-      expect(described_class.run("vips", "--version", rlimits: { cpu_seconds: 5 })).to eq(
-        "vips-8.18.4\n",
-      )
+      expect(described_class.run("vips", "--version")).to eq("vips-8.18.4\n")
     end
   end
 end
