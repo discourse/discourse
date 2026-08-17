@@ -29,7 +29,7 @@ module Jobs
 
       accessible_ids = topic.all_allowed_users.where(id: user_ids).pluck(:id)
       if !SiteSetting.suppress_secured_categories_from_admin
-        accessible_ids |= User.where(id: user_ids, admin: true).pluck(:id)
+        accessible_ids |= User.admin_ids & user_ids
       end
       user_ids - accessible_ids
     end

@@ -5,7 +5,7 @@ module Jobs
     every 1.day
 
     def execute(args)
-      admin_ids = User.human_users.where(admin: true).pluck(:id)
+      admin_ids = User.admin_ids
 
       # Before we download the latest list from Meta:
       #
