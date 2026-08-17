@@ -36,6 +36,7 @@ import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
