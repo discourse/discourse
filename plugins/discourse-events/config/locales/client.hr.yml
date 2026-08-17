@@ -57,6 +57,7 @@ hr:
             private:
               title: "Privatno"
       composer:
+        url_placeholder: "Dodaj URL"
         reminder:
           units:
             minutes:
@@ -94,6 +95,12 @@ hr:
             last: "zadnji"
         attendance:
           none: "Ništa"
+        location:
+          label: "Lokacija"
+        url:
+          label: "URL"
+          placeholder: "Neobvezno"
+          add: "Dodaj URL"
         description:
           label: "Opis"
         event_type:

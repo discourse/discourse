@@ -48,6 +48,7 @@ et:
             private:
               title: "Privaatne"
       composer:
+        url_placeholder: "Lisa URL"
         reminder:
           units:
             minutes:
@@ -80,6 +81,12 @@ et:
             last: "viimane"
         attendance:
           none: "Pole"
+        location:
+          label: "Asukoht"
+        url:
+          label: "URL"
+          placeholder: "Valikuline"
+          add: "Lisa URL"
         description:
           label: "Kirjeldus"
         event_type:

@@ -52,6 +52,7 @@ nb_NO:
             private:
               title: "Privat"
       composer:
+        url_placeholder: "Legg til URL"
         reminder:
           units:
             minutes:
@@ -84,6 +85,12 @@ nb_NO:
           every_day: "Hver dag"
         attendance:
           none: "Ingen"
+        location:
+          label: "Sted"
+        url:
+          label: "URL"
+          placeholder: "Valgfritt"
+          add: "Legg til URL"
         description:
           label: "Beskrivelse"
         event_type:

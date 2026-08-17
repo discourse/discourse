@@ -22,29 +22,10 @@ de:
             fetch_error: "Die Unterstützungsdaten konnten nicht geladen werden."
             save_error: "Deine Auswahl konnte nicht für das nächste Mal gespeichert werden."
             headline:
-              healthy:
-                title: "Die Community löst ihre eigenen Probleme."
-              struggling:
-                title: "Die meisten Fragen werden nicht beantwortet."
-              mixed:
-                title: "Die Unterstützung ist uneinheitlich."
-              no_data:
-                title: "Noch nicht genügend Unterstützungsaktivitäten"
-                summary: "In diesem Zeitraum gibt es noch keine Unterstützungsaktivitäten. Sobald Themen eingehen, wirst du sehen, wie deine Community damit umgeht."
-              resolution:
-                up: "Die Lösungsrate stieg auf %{rate} %."
-                down: "Die Lösungsrate sank auf %{rate} %."
-                flat: "Die Lösungsrate blieb bei %{rate} %."
-              answerers:
-                members: "Die Mitglieder geben %{share} % der Antworten."
-                staff: "Die Teammitglieder geben %{share} % der Antworten."
-              reply:
-                faster: "Die Zeit bis zur ersten Antwort hat sich auf %{time} verbessert und ist damit um %{delta} schneller als im vorangegangenen Zeitraum."
-                slower: "Die Zeit bis zur ersten Antwort hat sich auf %{time} verschlechtert und ist damit um %{delta} langsamer als im vorangegangenen Zeitraum."
-                flat: "Die Zeit bis zur ersten Antwort blieb bei %{time}."
-              unanswered:
-                one: "%{count} Thema aus diesem Zeitraum hat immer noch keine Antworten."
-                other: "%{count} Themen aus diesem Zeitraum haben immer noch keine Antworten."
+              titles:
+                insufficient_activity: "Noch nicht genügend Unterstützungsaktivitäten"
+              summaries:
+                insufficient_activity: "In diesem Zeitraum gibt es noch keine Unterstützungsaktivitäten. Sobald Themen eingehen, wirst du sehen, wie deine Community damit umgeht."
             kpi:
               resolution_rate:
                 label: "Lösungsrate"

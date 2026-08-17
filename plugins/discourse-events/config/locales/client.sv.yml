@@ -380,6 +380,7 @@ sv:
               description: "Endast inbjudna användare kan besöka ett privat evenemang."
       composer:
         name_placeholder: "Evenemangsnamn"
+        url_placeholder: "Lägg till URL"
         event_title_placeholder: "Evenemangsnamn"
         create_event_button: "Skapa händelse"
         reminder:
@@ -430,6 +431,12 @@ sv:
             last: "senaste"
         attendance:
           none: "Ingen"
+        location:
+          label: "Plats"
+        url:
+          label: "URL"
+          placeholder: "Valfritt"
+          add: "Lägg till URL"
         description:
           label: "Beskrivning"
         name:

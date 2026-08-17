@@ -459,7 +459,8 @@ ru:
       composer:
         name_placeholder: "Название события"
         end_date_placeholder: "Дата окончания"
-        location_placeholder: "Добавить местоположение или URL"
+        location_or_url_placeholder: "Добавить местоположение или URL"
+        url_placeholder: "Добавить URL"
         max_attendees_placeholder: "Неограниченное количество участников"
         no_rsvps_label: "Не ведется учет посещаемости"
         description_placeholder: "Добавить описание события"
@@ -567,7 +568,12 @@ ru:
           label: "Интеграция чата"
           checkbox_label: "Создать и настроить чат-канал для конкретного события"
         location:
+          label: "Расположение"
           placeholder: "Добавьте местоположение, ссылку или что-то еще."
+        url:
+          label: "URL-адрес"
+          placeholder: "Опционально"
+          add: "Добавить URL"
         description:
           label: "Описание"
           placeholder: "Расскажите людям немного больше о своем событии. Поддерживаются новые строки и ссылки."

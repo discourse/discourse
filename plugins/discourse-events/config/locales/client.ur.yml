@@ -70,6 +70,7 @@ ur:
             private:
               title: "ذاتی"
       composer:
+        url_placeholder: "URL شامل کریں"
         reminder:
           units:
             minutes:
@@ -119,6 +120,12 @@ ur:
           none: "کوئی نہیں"
         allow_chat:
           label: "چیٹ انٹیگریشن"
+        location:
+          label: "محل وقوع"
+        url:
+          label: "URL"
+          placeholder: "اختیاری"
+          add: "URL شامل کریں"
         description:
           label: "تفصیل"
         event_type:

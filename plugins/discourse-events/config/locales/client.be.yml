@@ -36,6 +36,7 @@ be:
             private:
               title: "прыватны"
       composer:
+        url_placeholder: "Дадаць URL"
         reminder:
           units:
             days:
@@ -54,6 +55,11 @@ be:
             after: "пасля"
         attendance:
           none: "Няма"
+        location:
+          label: "Месцазнаходжанне"
+        url:
+          label: "URL-адрас"
+          add: "Дадаць URL"
         description:
           label: "Апісанне"
         event_type:

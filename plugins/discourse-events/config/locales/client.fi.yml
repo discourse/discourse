@@ -430,6 +430,7 @@ fi:
               description: "Yksityiseen tapahtumaan voivat liittyä vain kutsutut käyttäjät."
       composer:
         name_placeholder: "Tapahtuman nimi"
+        url_placeholder: "Lisää URL"
         event_title_placeholder: "Tapahtuman nimi"
         create_event_button: "Luo tapahtuma"
         reminder:
@@ -494,7 +495,12 @@ fi:
           label: "Chat-integraatio"
           checkbox_label: "Luo ja hallitse tapahtumakohtaista chat-kanavaa"
         location:
+          label: "Paikka"
           placeholder: "Lisää sijainti, linkki tai jotain."
+        url:
+          label: "URL"
+          placeholder: "Valinnainen"
+          add: "Lisää URL"
         description:
           label: "Kuvaus"
           placeholder: "Kerro ihmisille hieman lisää tapahtumastasi. Uusia rivejä ja linkkejä tuetaan."

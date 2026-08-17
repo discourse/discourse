@@ -288,8 +288,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.remove_filter("network")
 
     traffic.select_tab(card: "visitors", tab: "Browsers")
-    traffic.filter_row(card: "visitors", label: "Chrome")
-    expect(traffic).to have_filter_pill(dimension: "browser", label: "Chrome")
+    traffic.filter_row(card: "visitors", label: "Google Chrome")
+    expect(traffic).to have_filter_pill(dimension: "browser", label: "Google Chrome")
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",

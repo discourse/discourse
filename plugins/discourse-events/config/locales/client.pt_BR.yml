@@ -434,7 +434,8 @@ pt_BR:
               description: "Um evento privado só pode ter a participação de usuários(as) convidados(as)."
       composer:
         name_placeholder: "Nome do evento"
-        location_placeholder: "Adicionar local ou URL"
+        location_or_url_placeholder: "Adicionar local ou URL"
+        url_placeholder: "Adicionar URL"
         description_placeholder: "Adicionar descrição do evento"
         event_title_placeholder: "Nome do evento"
         create_event_button: "Criar evento"
@@ -504,7 +505,12 @@ pt_BR:
           label: "Integração com chat"
           checkbox_label: "Criar e gerenciar canal de chat específico de evento"
         location:
+          label: "Local"
           placeholder: "Adicione um link, local ou qualquer outra coisa."
+        url:
+          label: "URL"
+          placeholder: "Opcional"
+          add: "Adicionar URL"
         description:
           label: "Descrição"
           placeholder: "Fale um pouco sobre o seu evento. Linhas e links novos são compatíveis."

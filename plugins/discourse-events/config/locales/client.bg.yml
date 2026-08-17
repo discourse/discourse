@@ -52,6 +52,7 @@ bg:
             private:
               title: "Затворени"
       composer:
+        url_placeholder: "Добавяне на URL"
         reminder:
           units:
             minutes:
@@ -80,6 +81,12 @@ bg:
             after: "след"
         attendance:
           none: "Без"
+        location:
+          label: "Локация"
+        url:
+          label: "URL"
+          placeholder: "По избор"
+          add: "Добавяне на URL"
         description:
           label: "Описание"
         event_type:

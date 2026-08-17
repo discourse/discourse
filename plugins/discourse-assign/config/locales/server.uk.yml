@@ -65,9 +65,6 @@ uk:
       weekly: "щотижня"
       monthly: "щомісяця"
       quarterly: "щоквартально"
-    discourse_workflows:
-      assign_topic:
-        error: "Не вдалося призначити тему: %{reason}"
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} призначив вас за '%{topic_title}'!"

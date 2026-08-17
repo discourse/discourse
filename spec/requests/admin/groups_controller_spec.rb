@@ -40,6 +40,40 @@ RSpec.describe Admin::GroupsController do
         expect(group.users).to contain_exactly(admin, user)
       end
 
+      it "returns the persisted user count for initial members and owners" do
+        member = Fabricate(:user)
+        owner = Fabricate(:user)
+
+        post "/admin/groups.json",
+             params: {
+               group: {
+                 name: "builders",
+                 usernames: [member.username, owner.username].join(","),
+                 owner_usernames: owner.username,
+               },
+             }
+
+        expect(response).to have_http_status(:ok)
+
+        created_group = Group.find(response.parsed_body.dig("basic_group", "id"))
+
+        expect(created_group.users).to contain_exactly(member, owner)
+        expect(created_group.user_count).to eq(2)
+        expect(response.parsed_body.dig("basic_group", "user_count")).to eq(2)
+      end
+
+      it "returns a zero user count for a group without initial members" do
+        post "/admin/groups.json", params: { group: { name: "empty-group" } }
+
+        expect(response).to have_http_status(:ok)
+
+        created_group = Group.find(response.parsed_body.dig("basic_group", "id"))
+
+        expect(created_group.users).to be_empty
+        expect(created_group.user_count).to eq(0)
+        expect(response.parsed_body.dig("basic_group", "user_count")).to eq(0)
+      end
+
       context "with custom_fields" do
         before do
           plugin = Plugin::Instance.new

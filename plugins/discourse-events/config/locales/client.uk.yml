@@ -476,7 +476,8 @@ uk:
       composer:
         name_placeholder: "Назва події"
         end_date_placeholder: "Дата завершення"
-        location_placeholder: "Додати місцезнаходження або URL-адресу"
+        location_or_url_placeholder: "Додати місцезнаходження або URL-адресу"
+        url_placeholder: "Додати URL"
         max_attendees_placeholder: "Необмежена кількість учасників"
         max_attendees_display:
           one: "Макс. кількість учасників %{count}"
@@ -598,8 +599,13 @@ uk:
           label: "Пряма трансляція"
           checkbox_label: "Вставте URL-адресу як відео та відкрийте чат прямої трансляції для учасників"
         location:
-          label: "Місцезнаходження або URL-адреса"
+          label: "Місцеположення"
+          label_or_url: "Місцезнаходження або URL-адреса"
           placeholder: "Додайте місце розташування, посилання або щось інше."
+        url:
+          label: "Посилання"
+          placeholder: "Опціонально"
+          add: "Додати URL"
         description:
           label: "Опис"
           placeholder: "Розкажіть людям трохи більше про вашу подію. Підтримуються нові рядки та посилання."

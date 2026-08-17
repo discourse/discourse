@@ -206,19 +206,29 @@ de:
       node_unavailable:
         requires_assign: "Erfordert die Aktivierung des Zuordnen-Plug-ins."
       nodes:
-        "action:assign_topic": "Thema zuordnen"
         "trigger:assigned": "Zugeordnet"
       node_descriptions:
-        "action:assign_topic": "Ein Thema zuordnen oder die Zuordnung aufheben"
         "trigger:assigned": "Wird ausgelöst, wenn ein Thema oder ein Beitrag zugeordnet wird"
       assign_topic:
+        resource: "Ressource"
+        resources:
+          topic: "Thema"
+          post: "Beitrag"
         operation: "Aktion"
         operations:
           assign: "Zuordnen"
           unassign: "Zuordnung aufheben"
         topic_id: "Themen-ID"
+        post_id: "Beitrags-ID"
         assignee: "Zugeordnete Person"
         replace_existing: "Bestehende Zuordnung ersetzen"
+      check_assignment:
+        target_types:
+          topic: "Thema"
+          post: "Beitrag"
+        topic_id: "Themen-ID"
+        post_id: "Beitrags-ID"
+        assignee: "Zugeordnete Person"
       assigned:
         topic_assignments_only: "Nur auslösen, wenn das Zuordnungsziel das Thema ist, nicht ein einzelner Beitrag"
         topic_assignments_only_description: "Nur Themenzuordnungen"

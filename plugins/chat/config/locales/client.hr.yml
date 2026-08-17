@@ -372,4 +372,11 @@ hr:
         message: "Poruka"
       chat_approval:
         message: "Poruka"
+        buttons: "Gumbi"
+        value: "Vrijednost"
+        style: "Stil"
+        style_default: "Zadano"
+        style_primary: "Primarna"
+        style_success: "Uspjeh"
+        icon: "Ikona"
         channel_id: "Kanal"

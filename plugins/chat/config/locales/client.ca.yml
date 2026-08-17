@@ -181,4 +181,8 @@ ca:
         message: "Missatge"
       chat_approval:
         message: "Missatge"
+        value: "Valor"
+        style_default: "Per defecte"
+        style_success: "Èxit"
+        icon: "Icona"
         channel_id: "Canal"

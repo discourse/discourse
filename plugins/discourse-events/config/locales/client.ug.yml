@@ -61,6 +61,7 @@ ug:
             private:
               title: "شەخسىي"
       composer:
+        url_placeholder: "تور ئادرېسى قوش"
         reminder:
           units:
             minutes:
@@ -95,6 +96,12 @@ ug:
           every_day: "ھەر كۈنى"
         attendance:
           none: "يوق"
+        location:
+          label: "ئورنى"
+        url:
+          label: "تور ئادرېسى"
+          placeholder: "تاللاشچان"
+          add: "تور ئادرېسى قوش"
         description:
           label: "چۈشەندۈرۈش"
         event_type:

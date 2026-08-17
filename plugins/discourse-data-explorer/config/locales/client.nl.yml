@@ -122,7 +122,6 @@ nl:
       nodes:
         "action:sql": "Gegevensverkenner"
       sql:
-        queries: "Query's"
         query_id: "Query"
         add_param: "Parameter toevoegen"
         param_value: "Waarde"

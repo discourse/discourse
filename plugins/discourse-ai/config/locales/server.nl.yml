@@ -89,7 +89,6 @@ nl:
     ai_helper_allowed_in_pm: "Schakel de AI-hulp van de editor in in PB's."
     ai_helper_automatic_chat_thread_title_delay: "Vertraging in minuten voordat de AI-helper automatisch de titel van de chatthread instelt."
     ai_helper_automatic_chat_thread_title: "Stel automatisch de titel van chatthreads in op basis van de threadinhoud."
-    ai_helper_enabled_features: "Selecteer de functies die je wilt inschakelen in de AI-helper."
     post_ai_helper_allowed_groups: "Gebruikersgroepen die toegang hebben tot AI-helperfuncties in berichten"
     ai_helper_post_illustrator_agent: "De te gebruiken agent voor de berichtillustratiefunctie van de opstellings-AI-helper. Opmerking: je moet ook een hulpmiddel tool voor het genereren van afbeeldingen maken (Beheerde > Plug-ins > Discourse AI > Tools) om deze functie te laten werken."
     ai_helper_chat_thread_title_agent: "De te gebruiken agent voor het genereren van chatthreadtitels."
@@ -326,7 +325,6 @@ nl:
         unknown_error: "Er is een onverwachte fout opgetreden tijdens het genereren van miniaturen. Probeer het opnieuw."
       prompts:
         translate: Vertalen naar %{language}
-        generate_titles: Topictitels voorstellen
         proofread: Tekst proeflezen
         markdown_table: Markdowntabel genereren
         custom_prompt: "Aangepaste prompt"

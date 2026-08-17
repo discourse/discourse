@@ -421,6 +421,11 @@ sl:
             last: "zadnji"
         attendance:
           none: "Brez"
+        location:
+          label: "Lokacija"
+        url:
+          label: "URL"
+          placeholder: "Neobvezno"
         description:
           label: "Opis"
         name:

@@ -147,6 +147,7 @@ pl_PL:
           end_must_be_a_valid_date: "Data zakończenia musi być prawidłową datą."
           invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Strefa czasowa nie została rozpoznana."
+          invalid_url: "Adres URL musi być prawidłowym adresem internetowym."
           acting_user_not_allowed_to_create_event: "Bieżący użytkownik nie ma uprawnień do tworzenia wydarzeń."
           acting_user_not_allowed_to_act_on_this_event: "Obecny użytkownik nie może działać w związku z tym wydarzeniem."
           invalid_allowed_groups: "Nieprawidłowe dozwolone grupy."

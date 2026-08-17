@@ -206,19 +206,29 @@ fr:
       node_unavailable:
         requires_assign: "Nécessite l'activation de l'extension Assign"
       nodes:
-        "action:assign_topic": "Attribuer un sujet"
         "trigger:assigned": "Attribué(e)"
       node_descriptions:
-        "action:assign_topic": "Attribuer un sujet ou annuler son attribution"
         "trigger:assigned": "Se déclenche lors de l'attribution d'un sujet ou d'une publication"
       assign_topic:
+        resource: "Ressource"
+        resources:
+          topic: "Sujet"
+          post: "Publication"
         operation: "Opération"
         operations:
           assign: "Attribuer"
           unassign: "Annuler l'attribution"
         topic_id: "ID du sujet"
+        post_id: "ID du message"
         assignee: "Attributaire"
         replace_existing: "Remplacer l'attribution existante"
+      check_assignment:
+        target_types:
+          topic: "Sujet"
+          post: "Publication"
+        topic_id: "ID du sujet"
+        post_id: "ID du message"
+        assignee: "Attributaire"
       assigned:
         topic_assignments_only: "Déclencher uniquement lorsque l'attribution porte sur le sujet, et non sur une publication précise"
         topic_assignments_only_description: "Attributions de sujets uniquement"

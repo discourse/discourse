@@ -86,7 +86,6 @@ pt_BR:
     ai_helper_allowed_in_pm: "Ative o ajudante de IA do compositor em MPs."
     ai_helper_automatic_chat_thread_title_delay: "O atraso, em minutos, até que o ajudante de IA defina automaticamente o título da thread do bate-papo."
     ai_helper_automatic_chat_thread_title: "Defina automaticamente os títulos das linhas de discussão do bate-papo com base no conteúdo delas."
-    ai_helper_enabled_features: "Selecione os recursos para ativar no ajudante de IA."
     post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
     ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
     ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
@@ -286,7 +285,6 @@ pt_BR:
         unknown_error: "Ocorreu um erro inesperado ao gerar as miniaturas. Tente novamente."
       prompts:
         translate: Traduzir para %{language}
-        generate_titles: Sugerir títulos de tópicos
         proofread: Revisar texto
         markdown_table: Gerar tabela de Markdown
         custom_prompt: "Prompt personalizado"
