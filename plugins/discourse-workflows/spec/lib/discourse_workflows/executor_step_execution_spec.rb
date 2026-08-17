@@ -374,7 +374,7 @@ RSpec.describe DiscourseWorkflows::Executor do
                  name: "Wait",
                  configuration: {
                    "resume" => "time_interval",
-                   "wait_amount" => 66,
+                   "wait_amount" => 1,
                    "wait_unit" => "seconds",
                  }
         end

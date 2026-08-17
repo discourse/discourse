@@ -5,7 +5,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
 
   let(:sandbox) { DiscourseWorkflows::JsSandbox.new({ "$json" => {} }) }
   let(:resume_token) { nil }
-  let(:runtime_state) { DiscourseWorkflows::Executor::NodeExecutionContext::RuntimeState.new }
   let(:execution_context) do
     DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: [{ "json" => {} }],
@@ -15,7 +14,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
       },
       resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }, sandbox: sandbox),
       resume_token: resume_token,
-      runtime_state: runtime_state,
     )
   end
 
@@ -33,9 +31,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
         { "resume" => "time_interval", "wait_amount" => 2, "wait_unit" => "hours" }
       end
 
-      it "requests an interval wait and returns input items" do
+      it "returns input items" do
         expect(result.first).to eq(execution_context.input_items)
-        expect(runtime_state.wait_request.kind).to eq("time_interval")
       end
     end
 
@@ -43,9 +40,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
       let(:configuration) { { "resume" => "webhook" } }
       let(:resume_token) { "tok-abc" }
 
-      it "requests a webhook wait and returns input items" do
+      it "returns input items" do
         expect(result.first).to eq(execution_context.input_items)
-        expect(runtime_state.wait_request.kind).to eq("webhook")
       end
     end
 

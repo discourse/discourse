@@ -412,7 +412,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       [
         "flow wait",
         "flow:wait",
-        { "resume" => "time_interval", "wait_amount" => 66, "wait_unit" => "seconds" },
+        { "resume" => "time_interval", "wait_amount" => 1, "wait_unit" => "seconds" },
       ],
       ["webhook wait", "flow:wait", { "resume" => "webhook" }],
       [

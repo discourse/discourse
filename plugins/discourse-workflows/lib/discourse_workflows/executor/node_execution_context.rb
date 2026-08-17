@@ -7,8 +7,6 @@ module DiscourseWorkflows
       WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
       WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
       NODE_ID_FIELD = "discourse_workflows_node_id"
-      MINIMUM_OFFLOADED_WAIT_SECONDS = 65
-
       MISSING = ParameterResolver::MISSING
       RUN_CODE = CodeRunner::RUN_CODE
       RUN_ONCE_FOR_ALL_ITEMS = CodeRunner::RUN_ONCE_FOR_ALL_ITEMS
@@ -414,11 +412,6 @@ module DiscourseWorkflows
         payload: {},
         timeout_action: nil
       )
-        if kind.to_s == "time_interval" && waiting_until
-          wait_seconds = [waiting_until - Time.current, 0].max
-          return sleep(wait_seconds) if wait_seconds < MINIMUM_OFFLOADED_WAIT_SECONDS
-        end
-
         @runtime_state.request_wait(
           waiting_until,
           kind: kind,
