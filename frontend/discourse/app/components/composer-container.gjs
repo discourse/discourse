@@ -31,13 +31,13 @@ import {
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/lib/swipe-events";
 import PostLocalization from "discourse/models/post-localization";
-import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import DTextField from "discourse/ui-kit/d-text-field";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -243,8 +243,14 @@ export default class ComposerContainer extends Component {
     }
   }
 
+  /** The box being resized. A function, because the separator resolves it. */
   @bind
-  onResizeDragStart() {
+  replyControl() {
+    return document.getElementById("reply-control");
+  }
+
+  @bind
+  onResizeStart() {
     this.appEvents.trigger("composer:resize-started");
   }
 
@@ -252,10 +258,11 @@ export default class ComposerContainer extends Component {
   onResizeDrag(size) {
     this.appEvents.trigger("composer:div-resizing");
 
+    this.replyControl()?.classList.add("clear-transitions");
+
     const height = `${size}px`;
     // resuming from minimized restores the height from the model
     this.composer.model?.set("composerHeight", height);
-    this.keyValueStore.set({ key: "composerHeight", value: height });
     document.documentElement.style.setProperty(
       "--composer-height",
       size ? height : ""
@@ -265,8 +272,16 @@ export default class ComposerContainer extends Component {
   }
 
   @bind
-  onResizeDragEnd() {
+  onResizeEnd(size) {
+    this.replyControl()?.classList.remove("clear-transitions");
+    // Announced before persisting, because the write can throw — storage quota —
+    // and a subscriber that undoes its own drag-time state has to hear the end of
+    // every resize regardless.
     this.appEvents.trigger("composer:resize-ended");
+    // Persisted once per resize rather than on every report: the size is now
+    // reported once per animation frame instead of on a fixed throttle, and this
+    // write is the only thing that cared about the cadence.
+    this.keyValueStore.set({ key: "composerHeight", value: `${size}px` });
   }
 
   _triggerComposerResized() {
@@ -290,18 +305,16 @@ export default class ComposerContainer extends Component {
       @cancelled={{this.composer.cancelled}}
       @save={{this.composer.saveAction}}
     >
-      <div
+      <DResizeSeparator
         class="grippie"
-        {{grippieDragResize
-          "#reply-control"
-          "top"
-          (hash
-            onResizeStart=this.onResizeDragStart
-            onThrottledDrag=this.onResizeDrag
-            onResizeEnd=this.onResizeDragEnd
-          )
-        }}
-      ></div>
+        @axis="vertical"
+        @side="end"
+        @measure={{this.replyControl}}
+        @label={{i18n "composer.resize"}}
+        @onResizeStart={{this.onResizeStart}}
+        @onResize={{this.onResizeDrag}}
+        @onResizeEnd={{this.onResizeEnd}}
+      />
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
 

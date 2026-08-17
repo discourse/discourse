@@ -1,8 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { modifier } from "ember-modifier";
+import {
+  measuredMax,
+  measuredMin,
+  measuredSize,
+  type ResizeAxis,
+} from "discourse/lib/resize-measurements";
 import dResizeEdge, {
   type ResizeReportMeta,
 } from "discourse/ui-kit/modifiers/d-resize-edge";
@@ -29,9 +37,9 @@ type Bound = number | (() => number);
  * The box being resized: the element itself, or a function receiving the
  * separator's own element and returning it.
  */
-type ObserveTarget =
-  | Element
-  | ((separator: HTMLElement) => Element | null | undefined);
+type MeasureTarget =
+  | HTMLElement
+  | ((separator: HTMLElement) => HTMLElement | null | undefined);
 
 /**
  * Which cursor is held while a gesture on each axis runs, mapped by
@@ -42,25 +50,26 @@ const CURSOR_CLASS = {
   horizontal: "d-resizing-ew",
 };
 
-interface ObserveResizedSignature {
+interface MeasureBoxSignature {
   Element: HTMLElement;
   Args: {
-    Positional: [separator: DResizeSeparator, target?: ObserveTarget];
+    Positional: [separator: DResizeSeparator, target?: MeasureTarget];
   };
 }
 
 /**
- * Watches the box being resized so the announced size keeps up with changes no
- * gesture caused.
+ * Resolves the box being resized and holds it for the component, then watches it
+ * so the announced size keeps up with changes no gesture caused.
  *
  * Re-runs when `target` changes, which is what lets a consumer pass the element
  * itself once it exists. A function `target` is resolved on each run, so a stable
  * function reference is never retried — that form suits a box already around the
  * separator when it renders.
  */
-const observeResized = modifier<ObserveResizedSignature>(
+const measureBox = modifier<MeasureBoxSignature>(
   (separator, [separatorComponent, target]) => {
     const element = typeof target === "function" ? target(separator) : target;
+    separatorComponent.measuredBox = element ?? null;
     if (!element) {
       return;
     }
@@ -68,7 +77,10 @@ const observeResized = modifier<ObserveResizedSignature>(
     const observer = new ResizeObserver(() => separatorComponent.refresh());
     observer.observe(element);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      separatorComponent.measuredBox = null;
+    };
   }
 );
 
@@ -102,7 +114,7 @@ interface DResizeSeparatorSignature {
      * `"vertical"` to resize height, `"horizontal"` to resize width. Defaults to
      * `"vertical"`.
      */
-    axis?: "vertical" | "horizontal";
+    axis?: ResizeAxis;
 
     /**
      * The edge of the resized box the handle sits on, naming the edge OPPOSITE
@@ -112,16 +124,31 @@ interface DResizeSeparatorSignature {
     side?: "start" | "end";
 
     /**
-     * The current size. Pass a function whenever the number is a live
-     * measurement rather than tracked state.
+     * The box being resized. Given this, the separator measures its own size and
+     * bounds along `@axis` and keeps the announced values up to date, which is
+     * all an ordinary consumer needs.
+     *
+     * Either the element, or a function receiving the separator's own element
+     * and returning it. Resolved when the arg itself changes, so a stable
+     * function reference is called exactly once: pass that form for a box
+     * already around the separator when it renders, and the element form when it
+     * appears later, since replacing the element re-resolves.
      */
-    value: Measurement;
+    measure?: MeasureTarget;
 
-    /** The smallest size the box may be dragged to. */
-    min: Bound;
+    /**
+     * The current size, when it is NOT the measured extent of `@measure` — a
+     * number in the consumer's own units, say, or an offset from a resting size.
+     * Overrides the measurement. Pass a function whenever the number is a live
+     * reading rather than tracked state.
+     */
+    value?: Measurement;
 
-    /** The largest size the box may be dragged to. */
-    max: Bound;
+    /** The smallest size the box may be dragged to. Overrides the measurement. */
+    min?: Bound;
+
+    /** The largest size the box may be dragged to. Overrides the measurement. */
+    max?: Bound;
 
     /**
      * What the separator is called, already translated. Required: a focusable
@@ -136,20 +163,15 @@ interface DResizeSeparatorSignature {
     /** Fired throughout the gesture. Preview here. */
     onResize?: (size: number) => void;
 
-    /** Fired once at the end. Commit here. */
-    onResizeEnd?: (size: number) => void;
-
     /**
-     * The box being resized, so the announced size keeps up with changes no
-     * gesture caused, such as a panel opening or a preview toggling. Viewport
-     * changes are picked up regardless and need no arg.
+     * Fired once at the end. Commit here.
      *
-     * Either the element, or a function receiving the separator's own element and
-     * returning it. Pass the element when it may not exist at first render, since
-     * a change to it re-attaches the observer; a function is resolved once, which
-     * suits a box already around the separator when it renders.
+     * Also fired if the separator is destroyed with a gesture still held, since
+     * the engine beneath reports nothing on teardown and a consumer that opened
+     * something at the start would otherwise never get to close it. The size is
+     * the last one reported.
      */
-    observe?: ObserveTarget;
+    onResizeEnd?: (size: number) => void;
   };
   Blocks: {
     /**
@@ -183,22 +205,35 @@ interface DResizeSeparatorSignature {
  *    element a drag began on survives the pointer leaving it is engine-dependent,
  *    so the intent is stated on the page instead of left to the handle.
  *
- * Sizes carry no unit of their own: they are whatever `@value`, `@min` and `@max`
- * are expressed in, which is a height for a stacked splitter and a width for a
- * side panel.
+ * Point it at the box with `@measure` and it reads the size and both bounds
+ * itself, along whichever axis it is resizing. Supply `@value`, `@min` or `@max`
+ * only when the number is NOT that measurement — an offset from a resting size,
+ * or a count in the consumer's own units — and each one given overrides what
+ * would have been measured.
  *
  * @example
+ * The ordinary case, where the separator resizes a box on the page:
  * ```gjs
  * <DResizeSeparator
  *   @axis="vertical"
  *   @side="end"
- *   @value={{this.height}}
- *   @min={{this.minHeight}}
- *   @max={{this.maxHeight}}
+ *   @measure={{this.panel}}
  *   @label={{i18n "composer.resize"}}
  *   @onResize={{this.preview}}
  *   @onResizeEnd={{this.commit}}
  *   class="my-block__handle"
+ * />
+ * ```
+ *
+ * @example
+ * Sizes that are not a measurement, so the consumer supplies all three:
+ * ```gjs
+ * <DResizeSeparator
+ *   @value={{this.dragOffset}}
+ *   @min={{0}}
+ *   @max={{this.maxOffset}}
+ *   @label={{i18n "composer.resize"}}
+ *   @onResize={{this.preview}}
  * />
  * ```
  *
@@ -210,6 +245,19 @@ interface DResizeSeparatorSignature {
  * @see The `dOnResize` modifier to merely OBSERVE a size change. It is not a gesture.
  */
 export default class DResizeSeparator extends Component<DResizeSeparatorSignature> {
+  /**
+   * The box resolved from `@measure`, written by the modifier that resolves it.
+   * Untracked: the size args read it when the gesture asks, and the modifier
+   * refreshes the announcement itself once it has one.
+   */
+  measuredBox: HTMLElement | null = null;
+
+  /** The last size a live gesture reported, so teardown can commit it. */
+  #reportedSize: number | null = null;
+
+  /** Whether a gesture has begun and not yet ended. */
+  #gestureOpen = false;
+
   /** The size and bounds as last read, for assistive technology to announce. */
   @tracked
   _announced: {
@@ -218,8 +266,34 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
     max: number | undefined;
   } | null = null;
 
+  constructor(owner: Owner, args: DResizeSeparatorSignature["Args"]) {
+    super(owner, args);
+    // The engine reports nothing when the element goes, so a gesture held at
+    // teardown would leave whatever the consumer opened at the start unclosed.
+    registerDestructor(this, () => this.#closeHeldGesture());
+  }
+
   get axis() {
     return this.args.axis ?? "vertical";
+  }
+
+  /**
+   * The size args as the gesture will see them: the consumer's own when it gave
+   * any, otherwise measurements of `@measure`.
+   *
+   * Owning the measuring functions keeps a trap off the public surface: a size
+   * given as a plain number is read once and frozen for the modifier's lifetime.
+   */
+  get resolvedValue(): Measurement {
+    return this.args.value ?? this.measureValue;
+  }
+
+  get resolvedMin(): Bound {
+    return this.args.min ?? this.measureMin;
+  }
+
+  get resolvedMax(): Bound {
+    return this.args.max ?? this.measureMax;
   }
 
   /** A separator's orientation is its own direction, not the axis it moves. */
@@ -236,7 +310,7 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
    * is left off rather than reporting a number nothing measured.
    */
   get valueNow() {
-    const now = this.#announce("value", "now");
+    const now = this.#announce(this.resolvedValue, "now");
     if (now === undefined) {
       return undefined;
     }
@@ -251,17 +325,39 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
   }
 
   get valueMin() {
-    return this.#announce("min", "min");
+    return this.#announce(this.resolvedMin, "min");
   }
 
   get valueMax() {
-    return this.#announce("max", "max");
+    return this.#announce(this.resolvedMax, "max");
   }
 
   /** Re-reads the size. Called on insert, after every report, and by the observer. */
   @action
   refresh() {
     this.#snapshot();
+  }
+
+  @action
+  measureValue() {
+    return measuredSize(this.measuredBox, this.axis);
+  }
+
+  @action
+  measureMin() {
+    return measuredMin(this.measuredBox, this.axis);
+  }
+
+  @action
+  measureMax() {
+    return measuredMax(this.measuredBox, this.axis);
+  }
+
+  @action
+  onResizeStart() {
+    this.#gestureOpen = true;
+    this.#reportedSize = null;
+    this.args.onResizeStart?.();
   }
 
   /**
@@ -282,6 +378,7 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
    */
   @action
   onResize(size: number, meta: ResizeReportMeta) {
+    this.#reportedSize = size;
     this.args.onResize?.(size);
 
     // A held arrow key is one gesture spanning every repeat, so the commit that
@@ -297,8 +394,36 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
 
   @action
   onResizeEnd(size: number) {
+    this.#gestureOpen = false;
+    this.#reportedSize = null;
     this.args.onResizeEnd?.(size);
     this.#snapshot(size);
+  }
+
+  /** Ends a gesture the engine abandoned, on the way out. */
+  #closeHeldGesture() {
+    if (!this.#gestureOpen) {
+      return;
+    }
+    this.#gestureOpen = false;
+
+    // Falls back so a gesture that opened something before reporting still
+    // closes it. Through `valueNow`, not the mirror behind it: only that clamps,
+    // and the raw reading can sit outside bounds the gesture would have applied.
+    const size = this.#reportedSize ?? this.valueNow;
+    this.#reportedSize = null;
+    if (size == null) {
+      return;
+    }
+
+    try {
+      this.args.onResizeEnd?.(size);
+    } catch (error) {
+      // Swallowed only here: a destructor throws into the flush tearing down
+      // every sibling component, and would take their cleanup with it.
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
   }
 
   /**
@@ -313,10 +438,9 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
    * @param mirrorKey - Its key in the mirror.
    */
   #announce(
-    argName: "value" | "min" | "max",
+    arg: Measurement | Bound,
     mirrorKey: "now" | "min" | "max"
   ): number | undefined {
-    const arg = this.args[argName];
     if (typeof arg === "function") {
       return this._announced?.[mirrorKey] ?? undefined;
     }
@@ -332,9 +456,9 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
     // measures the DOM applies the new size through tracked state, which has not
     // rendered yet while this runs inside its callback, so re-reading would
     // announce the size the box is moving away from.
-    const now = reportedSize ?? this.#read(this.args.value) ?? undefined;
-    const min = this.#read(this.args.min);
-    const max = this.#read(this.args.max);
+    const now = reportedSize ?? this.#read(this.resolvedValue) ?? undefined;
+    const min = this.#read(this.resolvedMin);
+    const max = this.#read(this.resolvedMax);
     const announced = this._announced;
 
     // Assigning invalidates whether or not the numbers differ, so a refresh that
@@ -377,17 +501,18 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
       aria-valuenow={{this.valueNow}}
       aria-valuemin={{this.valueMin}}
       aria-valuemax={{this.valueMax}}
+      {{! Before the refresh below, which reads the box this resolves. }}
+      {{measureBox this @measure}}
       {{didInsert this.refresh}}
-      {{observeResized this @observe}}
       {{refreshOnViewportChange this}}
       {{dResizeEdge
-        value=@value
-        min=@min
-        max=@max
+        value=this.resolvedValue
+        min=this.resolvedMin
+        max=this.resolvedMax
         axis=this.axis
         side=@side
         bodyClass=this.cursorClass
-        onResizeStart=@onResizeStart
+        onResizeStart=this.onResizeStart
         onResize=this.onResize
         onResizeEnd=this.onResizeEnd
       }}
