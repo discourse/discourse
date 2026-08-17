@@ -8812,7 +8812,9 @@ CREATE TABLE public.search_logs (
     created_at timestamp without time zone NOT NULL,
     search_result_type integer,
     user_agent character varying(2000),
-    crawler boolean DEFAULT false NOT NULL
+    crawler boolean DEFAULT false NOT NULL,
+    likely_crawler boolean DEFAULT false NOT NULL,
+    session_id character varying(32)
 );
 
 
@@ -21283,10 +21285,10 @@ CREATE INDEX index_search_logs_on_created_at ON public.search_logs USING btree (
 
 
 --
--- Name: index_search_logs_on_created_at_not_crawler; Type: INDEX; Schema: public; Owner: -
+-- Name: index_search_logs_on_created_at_excluding_crawlers; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_search_logs_on_created_at_not_crawler ON public.search_logs USING btree (created_at) WHERE (NOT crawler);
+CREATE INDEX index_search_logs_on_created_at_excluding_crawlers ON public.search_logs USING btree (created_at) WHERE ((NOT crawler) AND (NOT likely_crawler));
 
 
 --

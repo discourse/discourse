@@ -165,7 +165,7 @@ class AdminDashboardSearch
   end
 
   def human_search_logs_in(window_start:, window_end:)
-    SearchLog.human_scope.where(created_at: window_start..window_end)
+    SearchLog.human_only.where(created_at: window_start..window_end)
   end
 
   def search_type

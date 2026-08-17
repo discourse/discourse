@@ -11,8 +11,10 @@ module Jobs
       return if !CrawlerScorer.enabled?
 
       window_end = Time.now - WINDOW_DELAY
+      window_start = window_end - LOOKBACK
 
-      CrawlerScorer.score!(window_start: window_end - LOOKBACK, window_end: window_end)
+      CrawlerScorer.score!(window_start: window_start, window_end: window_end)
+      SearchLog.flag_likely_crawlers!(window_start: window_start, window_end: window_end)
     end
   end
 end

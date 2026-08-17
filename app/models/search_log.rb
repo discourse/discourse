@@ -2,6 +2,7 @@
 
 class SearchLog < ActiveRecord::Base
   MAXIMUM_USER_AGENT_LENGTH = 2000
+  MAXIMUM_SESSION_ID_LENGTH = BrowserPageviewEvent::MAX_SESSION_ID_LENGTH
 
   validates :term, presence: true
   validates :user_agent, length: { maximum: MAXIMUM_USER_AGENT_LENGTH }
@@ -15,8 +16,9 @@ class SearchLog < ActiveRecord::Base
             "users.id IS NULL OR (NOT users.admin AND NOT users.moderator)",
           )
         end
-  scope :human, -> { where(crawler: false) }
-  scope :human_scope, -> { CrawlerScorer.enabled? ? non_staff_or_anonymous.human : non_staff }
+  scope :excluding_crawlers, -> { where(crawler: false, likely_crawler: false) }
+  scope :human_only,
+        -> { CrawlerScorer.enabled? ? non_staff_or_anonymous.excluding_crawlers : non_staff }
 
   def ctr
     return 0 if click_through == 0 || searches == 0
@@ -45,7 +47,7 @@ class SearchLog < ActiveRecord::Base
     Discourse.redis.keys("__SEARCH__LOG_*").each { |k| Discourse.redis.del(k) }
   end
 
-  def self.log(term:, search_type:, ip_address:, user_agent: nil, user_id: nil)
+  def self.log(term:, search_type:, ip_address:, user_agent: nil, user_id: nil, session_id: nil)
     return [:error] if term.blank?
 
     can_log_search =
@@ -82,6 +84,7 @@ class SearchLog < ActiveRecord::Base
           ip_address: ip_address,
           user_agent: user_agent,
           user_id: user_id,
+          session_id: session_id&.slice(0, MAXIMUM_SESSION_ID_LENGTH),
           crawler: user_id.nil? && user_agent.present? && CrawlerDetection.crawler?(user_agent),
         )
 
@@ -118,6 +121,23 @@ class SearchLog < ActiveRecord::Base
       SQL
   end
 
+  def self.flag_likely_crawlers!(window_start:, window_end:)
+    DB.exec(<<~SQL, window_start: window_start, window_end: window_end)
+        UPDATE search_logs
+        SET likely_crawler = TRUE
+        WHERE NOT search_logs.likely_crawler
+          AND search_logs.session_id IS NOT NULL
+          AND search_logs.created_at >= :window_start
+          AND search_logs.created_at < :window_end
+          AND EXISTS (
+            SELECT 1
+            FROM browser_pageview_events event
+            WHERE event.session_id = search_logs.session_id
+              AND #{CrawlerScorer.likely_crawler_condition(table: "event")}
+          )
+      SQL
+  end
+
   def self.term_details(term, period = :weekly, search_type = :all)
     details = []
 
@@ -132,7 +152,7 @@ class SearchLog < ActiveRecord::Base
       search_type == :full_page
     result = result.where.not(search_result_id: nil) if search_type == :click_through_only
     result = result.non_staff if search_type == :non_staff_only
-    result = result.human_scope if search_type == :human_only
+    result = result.human_only if search_type == :human_only
 
     result
       .order("date")
@@ -174,7 +194,7 @@ class SearchLog < ActiveRecord::Base
     if search_type == :non_staff_only
       result = result.non_staff
     elsif search_type == :human_only
-      result = result.human_scope
+      result = result.human_only
     elsif search_type != :all
       result = result.where("search_type = ?", search_types[search_type])
     end
@@ -221,8 +241,10 @@ end
 #  id                 :integer          not null, primary key
 #  crawler            :boolean          default(FALSE), not null
 #  ip_address         :inet
+#  likely_crawler     :boolean          default(FALSE), not null
 #  search_result_type :integer
 #  search_type        :integer          not null
+#  session_id         :string(32)
 #  term               :string           not null
 #  user_agent         :string(2000)
 #  created_at         :datetime         not null
@@ -232,6 +254,6 @@ end
 # Indexes
 #
 #  index_search_logs_on_created_at                     (created_at)
-#  index_search_logs_on_created_at_not_crawler         (created_at) WHERE (NOT crawler)
+#  index_search_logs_on_created_at_excluding_crawlers  (created_at) WHERE ((NOT crawler) AND (NOT likely_crawler))
 #  index_search_logs_on_user_id_and_created_at         (user_id,created_at) WHERE (user_id IS NOT NULL)
 #

@@ -25,5 +25,14 @@ task "admin_dashboard:backfill_search_log_crawlers" => :environment do
     db = RailsMultisite::ConnectionManagement.current_db
     flagged = SearchLog.backfill_crawler!
     puts "#{db}: flagged #{flagged} search logs from known crawler user agents"
+
+    next if !CrawlerScorer.enabled?
+
+    likely =
+      SearchLog.flag_likely_crawlers!(
+        window_start: BrowserPageviewEvent.retention_cutoff,
+        window_end: Time.zone.now,
+      )
+    puts "#{db}: flagged #{likely} more from sessions scored as likely crawlers"
   end
 end

@@ -214,6 +214,18 @@ RSpec.describe SearchLog, type: :model do
       expect(SearchLog.find(id).crawler).to eq(false)
     end
 
+    it "records the pageview session the search was made from" do
+      _status, id =
+        SearchLog.log(
+          term: "ruby",
+          search_type: :header,
+          ip_address: "127.0.0.1",
+          session_id: "a" * (SearchLog::MAXIMUM_SESSION_ID_LENGTH + 10),
+        )
+
+      expect(SearchLog.find(id).session_id).to eq("a" * SearchLog::MAXIMUM_SESSION_ID_LENGTH)
+    end
+
     it "does not flag an anonymous search that arrived without a user agent" do
       _status, id = SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1")
 
@@ -231,6 +243,80 @@ RSpec.describe SearchLog, type: :model do
         )
 
       expect(SearchLog.find(id).crawler).to eq(false)
+    end
+  end
+
+  describe ".flag_likely_crawlers!" do
+    let(:session_id) { SecureRandom.hex(16) }
+    let(:crawler_score) { CrawlerScorer::BOT_SCORE_THRESHOLD + 1 }
+
+    def flag!
+      described_class.flag_likely_crawlers!(window_start: 1.hour.ago, window_end: Time.now)
+    end
+
+    it "flags a search made from a session scored as a likely crawler" do
+      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 30.minutes.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(true)
+    end
+
+    it "leaves a search whose session was scored below the crawler threshold" do
+      Fabricate(
+        :browser_pageview_event,
+        session_id: session_id,
+        score: CrawlerScorer::BOT_SCORE_THRESHOLD,
+      )
+      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 30.minutes.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(false)
+    end
+
+    it "leaves a search that carries no session" do
+      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      log = Fabricate(:search_log, user: nil, session_id: nil, created_at: 30.minutes.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(false)
+    end
+
+    it "leaves a search whose session has no scored pageviews at all" do
+      Fabricate(:browser_pageview_event, session_id: SecureRandom.hex(16), score: crawler_score)
+      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 30.minutes.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(false)
+    end
+
+    it "flags a logged-in search whose session is scored as a crawler" do
+      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      log =
+        Fabricate(
+          :search_log,
+          user: Fabricate(:user),
+          ip_address: nil,
+          session_id: session_id,
+          created_at: 30.minutes.ago,
+        )
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(true)
+    end
+
+    it "leaves searches outside the window alone" do
+      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 5.hours.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(false)
     end
   end
 
