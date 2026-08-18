@@ -354,11 +354,24 @@ RSpec.describe UserSearch do
       expect(results).to be_blank
 
       results = search_for(staged.username, include_staged_users: true)
+      expect(results).to be_blank
+
+      results = search_for(staged.username, include_staged_users: true, searching_user: admin)
+      expect(results).to eq [staged.username]
+
+      results = search_for(staged.username, include_staged_users: true, user_directory_search: true)
       expect(results).to eq [staged.username]
 
       # mrb is omitted since they're the searching user
       results = search_for("", topic_id: topic.id, searching_user: mr_b)
       expect(results).to eq [mr_pink, mr_orange].map(&:username)
+    end
+
+    it "does not return last-seen suggestions when staged users are included" do
+      results =
+        search_for("", include_staged_users: true, last_seen_users: true, searching_user: admin)
+
+      expect(results).to be_blank
     end
 
     it "works with last_seen_users option" do

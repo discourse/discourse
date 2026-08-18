@@ -131,7 +131,6 @@ module DiscourseAssign
       group = Group.find_by(name: params[:group_name])
 
       guardian.ensure_can_see_group_and_members!(group)
-      raise Discourse::InvalidAccess if !guardian.can_assign_globally?
 
       users_with_assignments_count =
         User
