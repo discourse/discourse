@@ -174,15 +174,23 @@ module PageObjects
       end
 
       def has_apply_filters?(count:)
-        has_button?("Apply #{count}", exact: true)
+        selector = "[data-test-site-traffic-apply-filters]"
+
+        has_css?(selector, text: "Apply", count: 1) &&
+          has_css?("#{selector} [data-test-site-traffic-apply-count]", exact_text: count.to_s)
       end
 
       def has_no_apply_filters?
         has_no_button?("Apply", exact: false)
       end
 
-      def apply_filters(count:)
-        find_button("Apply #{count}", exact: true).click
+      def apply_filters
+        find("[data-test-site-traffic-apply-filters]").click
+        self
+      end
+
+      def clear_all_filters
+        find_button("Clear all filters", exact: true).click
         self
       end
 

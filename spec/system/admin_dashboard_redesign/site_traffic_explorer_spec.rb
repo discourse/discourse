@@ -197,7 +197,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     )
     expect(traffic).to have_grouped_filter_pill(
       dimension: "traffic_type",
-      label: "Traffic type is Logged in +1",
+      label: "Traffic type is Logged in or Anonymous",
     )
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
@@ -215,7 +215,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.go_forward
     expect(traffic).to have_grouped_filter_pill(
       dimension: "traffic_type",
-      label: "Traffic type is Logged in +1",
+      label: "Traffic type is Logged in or Anonymous",
     )
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
 
@@ -409,7 +409,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "top_url",
-      label: "Top URL is #{additional_paths.first} +1",
+      label: "Top URL is #{additional_paths.first} or #{additional_paths.second}",
     )
     expect(traffic).to have_filter_pill(dimension: "browser", label: "Unknown browser")
     expect(traffic).to have_no_expanded_table
@@ -453,7 +453,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "referrer",
-      label: "Referrer is one.example +1",
+      label: "Referrer is one.example or two.example",
     )
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
     expect(traffic).to have_apply_filters(count: 3)
@@ -472,11 +472,11 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_row_unselected(card: "acquisition", label: "two.example")
 
     traffic.select_filter_row(card: "acquisition", label: "two.example")
-    traffic.apply_filters(count: 3)
+    traffic.apply_filters
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "referrer",
-      label: "Referrer is one.example +1",
+      label: "Referrer is one.example or two.example",
     )
     expect(traffic).to have_no_apply_filters
     expect(traffic).to have_metric(label: "Pageviews", value: "2")
@@ -488,10 +488,18 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "referrer",
-      label: "Referrer is one.example +1",
+      label: "Referrer is one.example or two.example",
     )
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
     expect(traffic).to have_metric(label: "Pageviews", value: "2")
+
+    traffic.clear_all_filters
+
+    expect(traffic).to have_no_filter_pills
+    expect(traffic).to have_metric(label: "Pageviews", value: "4")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+    )
   end
 
   it "warns an admin when the selected range has incomplete traffic data",

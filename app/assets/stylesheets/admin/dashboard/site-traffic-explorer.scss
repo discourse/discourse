@@ -31,6 +31,13 @@
     }
   }
 
+  &__filter-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-inline-start: auto;
+  }
+
   &__filter-pill {
     display: inline-flex;
     align-items: center;
@@ -60,7 +67,21 @@
   }
 
   &__apply-filters {
-    margin-inline-start: auto;
+    gap: var(--space-1);
+  }
+
+  &__apply-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5em;
+    min-height: 1.5em;
+    padding-inline: 0.35em;
+    border-radius: 2em;
+    background: var(--secondary);
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    line-height: 1;
   }
 
   &__partial-warning {
@@ -289,6 +310,8 @@
 
   &__row-label {
     @include ellipsis;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   &__row-count {
@@ -300,7 +323,7 @@
 
   &__row-link {
     display: block;
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
     color: inherit;
@@ -323,6 +346,7 @@
 
   label.site-traffic-explorer__row {
     cursor: pointer;
+    font-weight: inherit;
 
     &:focus-visible {
       background: var(--token-color-surface-hovered);
@@ -446,5 +470,9 @@
     justify-content: space-between;
     gap: var(--space-2);
     padding-inline-start: var(--space-2);
+  }
+
+  .site-traffic-explorer__filter-dropdown-clear {
+    padding-inline: 0;
   }
 }

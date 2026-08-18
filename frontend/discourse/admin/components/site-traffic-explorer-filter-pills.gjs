@@ -11,6 +11,8 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const MAX_VISIBLE_FILTER_VALUES = 3;
+
 export default class SiteTrafficExplorerFilterPills extends Component {
   @action
   filterLabel(key) {
@@ -34,10 +36,21 @@ export default class SiteTrafficExplorerFilterPills extends Component {
 
   @action
   groupedFilterDescription(filter) {
+    const visibleValues = filter.values
+      .slice(0, MAX_VISIBLE_FILTER_VALUES)
+      .map((value) => `<strong>${escapeExpression(value.label)}</strong>`)
+      .join(i18n("admin.site_traffic_explorer.filter_value_separator"));
+    const remainingCount = filter.values.length - MAX_VISIBLE_FILTER_VALUES;
+
     return i18n("admin.site_traffic_explorer.grouped_filter_description", {
       filter: escapeExpression(this.filterLabel(filter.key)),
-      value: escapeExpression(filter.values[0].label),
-      count: filter.values.length - 1,
+      values: visibleValues,
+      remaining:
+        remainingCount > 0
+          ? i18n("admin.site_traffic_explorer.additional_filter_values", {
+              count: remainingCount,
+            })
+          : "",
     });
   }
 
@@ -66,17 +79,6 @@ export default class SiteTrafficExplorerFilterPills extends Component {
   @action
   filterId(filter) {
     return `site-traffic-filter-pill-${filter.key}`;
-  }
-
-  @action
-  applyLabel() {
-    if (this.args.pendingFilterCount === 0) {
-      return i18n("admin.site_traffic_explorer.apply");
-    }
-
-    return i18n("admin.site_traffic_explorer.apply_with_count", {
-      count: this.args.pendingFilterCount,
-    });
   }
 
   <template>
@@ -135,7 +137,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                         {{/each}}
                       </ul>
                       <DButton
-                        class="btn-flat"
+                        class="btn-flat site-traffic-explorer__filter-dropdown-clear"
                         @label="admin.site_traffic_explorer.clear_all"
                         @action={{fn @clearFilter filter.key}}
                       />
@@ -157,14 +159,32 @@ export default class SiteTrafficExplorerFilterPills extends Component {
           {{/each}}
         </div>
 
-        {{#if @hasPendingFilters}}
-          <DButton
-            class="btn-primary site-traffic-explorer__apply-filters"
-            data-test-site-traffic-apply-filters
-            @translatedLabel={{this.applyLabel}}
-            @action={{@applyFilters}}
-          />
-        {{/if}}
+        <div class="site-traffic-explorer__filter-actions">
+          {{#if @hasAppliedFilters}}
+            <DButton
+              class="btn-flat"
+              @label="admin.site_traffic_explorer.clear_all_filters"
+              @action={{@clearAllFilters}}
+            />
+          {{/if}}
+
+          {{#if @hasPendingFilters}}
+            <button
+              type="button"
+              class="btn btn-primary site-traffic-explorer__apply-filters"
+              data-test-site-traffic-apply-filters
+              {{on "click" @applyFilters}}
+            >
+              <span>{{i18n "admin.site_traffic_explorer.apply"}}</span>
+              {{#if (gt @pendingFilterCount 0)}}
+                <span
+                  class="site-traffic-explorer__apply-count"
+                  data-test-site-traffic-apply-count
+                >{{@pendingFilterCount}}</span>
+              {{/if}}
+            </button>
+          {{/if}}
+        </div>
       </div>
     {{/if}}
   </template>
