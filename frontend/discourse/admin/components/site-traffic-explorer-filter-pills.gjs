@@ -89,7 +89,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
         aria-label={{i18n "admin.site_traffic_explorer.active_filters"}}
       >
         <div class="site-traffic-explorer__filters">
-          {{#each @filters as |filter|}}
+          {{#each @filters key="key" as |filter|}}
             <span
               class="site-traffic-explorer__filter-pill
                 {{if filter.pending 'is-pending'}}"
