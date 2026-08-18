@@ -7321,8 +7321,8 @@ en:
           likely_crawler: "Likely crawlers"
         partial:
           retention: "Detailed pageview activity before %{date} is no longer available, so these results cover only part of the selected date range."
-          pageview_limit: "These results are limited to the most recent %{limit} pageviews in the selected date range. Choose a shorter date range to include all available traffic."
-          combined: "Detailed pageview activity before %{date} is no longer available, so these results cover only part of the selected date range. They are also limited to the most recent %{limit} pageviews. Choose a shorter date range within the available dates to include all available pageview activity."
+          pageview_limit: "Results include the most recent %{limit} pageviews, beginning %{date} at %{time}. Earlier pageviews in the selected date range are not included."
+          combined: "Detailed pageview activity before %{date} is no longer available. Results include the most recent %{limit} pageviews, beginning %{pageviewLimitDate} at %{pageviewLimitTime}. Earlier pageviews in the selected date range are not included."
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"

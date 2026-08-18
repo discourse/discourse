@@ -403,7 +403,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   end
 
   it "warns an admin when the selected range has incomplete traffic data",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0),
+     timezone: "UTC" do
     sign_in(admin)
     SiteSetting.site_traffic_explorer_event_limit = 2
 
@@ -425,7 +426,35 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_partial_data_warning(
       reason:
-        "Detailed pageview activity before Feb 14, 2026 is no longer available, so these results cover only part of the selected date range. They are also limited to the most recent 2 pageviews. Choose a shorter date range within the available dates to include all available pageview activity.",
+        "Detailed pageview activity before Feb 14, 2026 is no longer available. Results include the most recent 2 pageviews, beginning May 10, 2026 at 10:00 AM. Earlier pageviews in the selected date range are not included.",
+    )
+  end
+
+  it "shows when results begin after reaching the pageview limit",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0),
+     timezone: "UTC" do
+    sign_in(admin)
+    SiteSetting.site_traffic_explorer_event_limit = 2
+
+    [
+      ["/oldest", "2026-05-09 09:00:00"],
+      ["/middle", "2026-05-10 10:00:00"],
+      ["/latest", "2026-05-12 11:00:00"],
+    ].each do |url, created_at|
+      Fabricate(
+        :browser_pageview_event,
+        url: url,
+        session_id: url.delete_prefix("/"),
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: created_at,
+      )
+    end
+
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
+
+    expect(traffic).to have_partial_data_warning(
+      reason:
+        "Results include the most recent 2 pageviews, beginning May 10, 2026 at 10:00 AM. Earlier pageviews in the selected date range are not included.",
     )
   end
 
