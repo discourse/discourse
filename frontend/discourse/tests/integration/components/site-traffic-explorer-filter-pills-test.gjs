@@ -105,7 +105,7 @@ module(
         .dom(
           "[data-test-site-traffic-filter-pill='top_url'] .fk-d-menu__trigger"
         )
-        .doesNotExist("the dropdown is removed when every value fits");
+        .exists("the dropdown remains available to remove individual values");
 
       valuesOverflow = true;
       run(() => resize(300));

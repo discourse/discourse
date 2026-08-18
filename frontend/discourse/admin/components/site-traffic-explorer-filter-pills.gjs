@@ -32,11 +32,6 @@ export default class SiteTrafficExplorerFilterPills extends Component {
   }
 
   @action
-  hasHiddenValues(filter, visibleCount) {
-    return filter.values.length > visibleCount;
-  }
-
-  @action
   maximumVisibleCount(filter) {
     return Math.min(filter.values.length, MAX_VISIBLE_FILTER_VALUES);
   }
@@ -149,9 +144,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                   this.setVisibleValueCount
                 }}
               >
-                {{#if
-                  (this.hasHiddenValues filter (this.visibleValueCount filter))
-                }}
+                {{#if (gt filter.values.length 1)}}
                   <DMenu
                     @identifier={{this.filterId filter}}
                     @inline={{true}}
@@ -203,14 +196,6 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                       </div>
                     </:content>
                   </DMenu>
-                {{else if (gt filter.values.length 1)}}
-                  <span
-                    class="site-traffic-explorer__filter-pill-label"
-                  >{{trustHTML
-                      (this.groupedFilterDescription
-                        filter (this.visibleValueCount filter)
-                      )
-                    }}</span>
                 {{else}}
                   <span
                     class="site-traffic-explorer__filter-pill-label"
