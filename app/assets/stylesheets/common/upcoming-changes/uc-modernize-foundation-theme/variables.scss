@@ -1,9 +1,7 @@
 :where(.uc-modernize-foundation-theme) {
   // New Variables
-  --webkit-font-smoothing: antialiased;
   --welcome-banner-text-align: center;
   --welcome-banner-search-menu-margin-inline: auto;
-  -webkit-font-smoothing: var(--webkit-font-smoothing);
 
   // Misc
   --d-nav-underline-height: var(--space-half);
