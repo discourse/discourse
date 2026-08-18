@@ -9,7 +9,7 @@ ur:
     admin:
       site_settings:
         categories:
-          poll: "ڈسکورس پول"
+          poll: "Discourse پول"
       logs:
         staff_actions:
           actions:

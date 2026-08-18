@@ -9,7 +9,7 @@ ur:
     admin:
       site_settings:
         categories:
-          discourse_reactions: "ڈسکورس ری ایکشنز"
+          discourse_reactions: "Discourse ری ایکشنز"
   js:
     discourse_reactions:
       reactions_title: "ری ایکشنز"

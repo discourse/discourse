@@ -14,7 +14,7 @@ ur:
               search: "اے آئی تلاش کی اجازت دیتا ہے"
       site_settings:
         categories:
-          discourse_ai: "ڈسکورس اے آئی"
+          discourse_ai: "Discourse AI"
       dashboard:
         emotion:
           title: "جذبات"
