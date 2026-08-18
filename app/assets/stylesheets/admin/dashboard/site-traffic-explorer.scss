@@ -82,11 +82,21 @@
   }
 
   &__filter-pill-label {
+    display: flex;
     flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  &__filter-pill-values {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__filter-pill-remaining {
+    flex: 0 0 auto;
   }
 
   &__filter-remove {
@@ -511,7 +521,20 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
+    min-width: 0;
     padding-inline-start: var(--space-2);
+
+    .btn {
+      flex: 0 0 auto;
+    }
+  }
+
+  &-value {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .site-traffic-explorer__filter-dropdown-clear {
