@@ -202,14 +202,16 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                         @row={{row}}
                       />
                     </a>
-                    <SiteTrafficExplorerPageviewCount
-                      @value={{row.pageviews}}
-                      as |formattedValue|
-                    >
-                      <span class="site-traffic-explorer__row-count">
-                        {{formattedValue}}
-                      </span>
-                    </SiteTrafficExplorerPageviewCount>
+                    <span class="site-traffic-explorer__row-count-wrapper">
+                      <SiteTrafficExplorerPageviewCount
+                        @value={{row.pageviews}}
+                        as |formattedValue|
+                      >
+                        <span class="site-traffic-explorer__row-count">
+                          {{formattedValue}}
+                        </span>
+                      </SiteTrafficExplorerPageviewCount>
+                    </span>
                   </span>
                 {{else}}
                   <label
@@ -228,14 +230,16 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                         @row={{row}}
                       />
                     </span>
-                    <SiteTrafficExplorerPageviewCount
-                      @value={{row.pageviews}}
-                      as |formattedValue|
-                    >
-                      <span class="site-traffic-explorer__row-count">
-                        {{formattedValue}}
-                      </span>
-                    </SiteTrafficExplorerPageviewCount>
+                    <span class="site-traffic-explorer__row-count-wrapper">
+                      <SiteTrafficExplorerPageviewCount
+                        @value={{row.pageviews}}
+                        as |formattedValue|
+                      >
+                        <span class="site-traffic-explorer__row-count">
+                          {{formattedValue}}
+                        </span>
+                      </SiteTrafficExplorerPageviewCount>
+                    </span>
                   </label>
                 {{/if}}
               {{/let}}

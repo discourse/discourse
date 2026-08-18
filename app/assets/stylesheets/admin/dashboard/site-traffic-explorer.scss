@@ -20,6 +20,10 @@
     gap: var(--space-2);
   }
 
+  &__filter-slot {
+    min-block-size: calc(var(--space-8) + var(--space-2));
+  }
+
   &__filter-controls {
     display: flex;
     align-items: flex-start;
@@ -256,7 +260,6 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     width: calc(100% + 2 * var(--space-2));
     min-width: 0;
     gap: var(--space-1);
@@ -278,19 +281,24 @@
   }
 
   &__row-count {
-    flex-shrink: 0;
-    margin-inline-start: auto;
     color: var(--primary-medium);
     font-variant-numeric: tabular-nums;
     pointer-events: none;
   }
 
+  &__row-count-wrapper {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+
   &__row-link {
     position: relative;
     z-index: 2;
-    display: block;
-    flex: 1 1 auto;
+    display: inline-block;
+    flex: 0 1 auto;
     min-width: 0;
+    width: fit-content;
+    max-width: 100%;
     overflow: hidden;
     color: inherit;
     text-decoration: none;
