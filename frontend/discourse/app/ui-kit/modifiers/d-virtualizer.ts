@@ -1,3 +1,4 @@
+import { DEBUG } from "@glimmer/env";
 import {
   isDestroyed,
   isDestroying,
@@ -247,6 +248,7 @@ export default class DVirtualizer<T> extends Modifier<
   #lastEmittedRange: VisibleRange | null = null;
   #named: DVirtualizerSignature<T>["Args"]["Named"] | null = null;
   #virtualizer: VirtualizerApi | null = null;
+  #warnedZeroHeight = false;
 
   /**
    * The start latch begins satisfied (mount at the top is not a "reached start"
@@ -679,6 +681,20 @@ export default class DVirtualizer<T> extends Modifier<
       return;
     }
 
+    const count = this.#named?.items.length ?? 0;
+    if (
+      DEBUG &&
+      count > 0 &&
+      !this.#warnedZeroHeight &&
+      this.#element?.clientHeight === 0
+    ) {
+      this.#warnedZeroHeight = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[d-virtual-list] The scroll viewport has zero height; give it a height so virtualized rows can render."
+      );
+    }
+
     // Sweep disconnected rows out of the engine's ResizeObserver. A ResizeObserver
     // does not fire on removal, and the engine only self-heals opportunistically,
     // so without this the element cache grows with every row ever scrolled past.
@@ -694,7 +710,6 @@ export default class DVirtualizer<T> extends Modifier<
     const virtualItems = this.#virtualizer.getVirtualItems();
     const totalSize = this.#virtualizer.getTotalSize();
     const range = this.#virtualizer.range;
-    const count = this.#named?.items.length ?? 0;
 
     const signature = this.#stateSignature(virtualItems, totalSize, range);
 
