@@ -150,6 +150,7 @@ module Chat
 
     def can_preview_chat_channel?(chat_channel)
       return false if !chat_channel&.chatable
+
       can_see_chatable?(chat_channel.chatable)
     end
 
