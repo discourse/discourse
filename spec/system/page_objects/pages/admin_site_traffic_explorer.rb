@@ -118,6 +118,25 @@ module PageObjects
         self
       end
 
+      def select_filter_row(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
+        end
+        self
+      end
+
+      def has_filter_row_selected?(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_checked_field?("Filter by #{label},", exact: false)
+        end
+      end
+
+      def has_filter_row_unselected?(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_unchecked_field?("Filter by #{label},", exact: false)
+        end
+      end
+
       def has_filter_pill?(dimension:, label:)
         selector = "[data-test-site-traffic-filter-pill='#{dimension}']"
         remove_label =
@@ -133,6 +152,48 @@ module PageObjects
 
       def has_no_filter_pills?
         has_no_css?("[data-test-site-traffic-filter-pill]")
+      end
+
+      def has_grouped_filter_pill?(dimension:, label:)
+        has_css?(
+          "[data-test-site-traffic-filter-pill='#{dimension}']",
+          exact_text: label,
+          count: 1,
+        )
+      end
+
+      def expand_filter_pill(dimension)
+        within("[data-test-site-traffic-filter-pill='#{dimension}']") do
+          find_button.click
+        end
+        self
+      end
+
+      def has_filter_dropdown?(values:)
+        selector = "[data-test-site-traffic-filter-dropdown-value]"
+
+        has_css?(selector, count: values.length) &&
+          values.all? { |value| has_css?(selector, exact_text: value, count: 1) }
+      end
+
+      def remove_filter_value(value)
+        within("[data-test-site-traffic-filter-dropdown]") do
+          find_button("Remove #{value}").click
+        end
+        self
+      end
+
+      def has_apply_filters?(count:)
+        has_button?("Apply #{count}", exact: true)
+      end
+
+      def has_no_apply_filters?
+        has_no_button?("Apply", exact: false)
+      end
+
+      def apply_filters(count:)
+        find_button("Apply #{count}", exact: true).click
+        self
       end
 
       def remove_filter(name, label: nil)
@@ -166,6 +227,22 @@ module PageObjects
       def filter_expanded_row(label:)
         within(".site-traffic-breakdown-modal[role='dialog']") do
           within("tr", text: label) { find("button[aria-label^='Filter by #{label},']").click }
+        end
+        self
+      end
+
+      def select_expanded_filter_row(label:)
+        within(".site-traffic-breakdown-modal[role='dialog']") do
+          within("tr", text: label) do
+            find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
+          end
+        end
+        self
+      end
+
+      def apply_expanded_filters
+        within(".site-traffic-breakdown-modal[role='dialog']") do
+          find_button("Apply filters", exact: true).click
         end
         self
       end
