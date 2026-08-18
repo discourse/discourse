@@ -169,13 +169,14 @@ class Admin::DashboardController < Admin::StaffController
       value = params[key]
       next if value.nil?
 
-      values = value.is_a?(Array) ? value : [value]
-      raise Discourse::InvalidParameters.new(key) if values.any? { |item| !item.is_a?(String) }
+      if !value.is_a?(Array) || value.any? { |item| !item.is_a?(String) }
+        raise Discourse::InvalidParameters.new(key)
+      end
 
       permitted[key] = if key == :traffic_type
-        values.flat_map { |item| item.split(",") }
+        value.flat_map { |item| item.split(",") }
       else
-        values
+        value
       end
     end
 
