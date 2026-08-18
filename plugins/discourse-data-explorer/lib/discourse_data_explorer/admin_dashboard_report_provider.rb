@@ -17,19 +17,22 @@ module DiscourseDataExplorer
       return {} if guardian.nil?
 
       load_queries(identifiers).each_with_object({}) do |query, hash|
-        next if !guardian.user_can_access_query?(query)
+        next if !guardian.user_can_access_query?(query) || !mountable?(query)
         hash[query.id.to_s] = build_resolved(query)
       end
     end
 
     def self.list_all(search: nil, after: nil, limit: nil)
       persisted =
-        persisted_after(search: search, after: after, limit: limit).map do |query|
-          build_resolved(query)
-        end
+        persisted_after(search: search, after: after, limit: limit)
+          .select { |query| mountable?(query) }
+          .map { |query| build_resolved(query) }
       unpersisted =
         seek(
-          Query.unpersisted_defaults(search: search).map { |query| build_resolved(query) },
+          Query
+            .unpersisted_defaults(search: search)
+            .select { |query| mountable?(query) }
+            .map { |query| build_resolved(query) },
           after: after,
           limit: limit,
         )
@@ -45,7 +48,7 @@ module DiscourseDataExplorer
       params = filters.with_indifferent_access
 
       load_queries(identifiers).each_with_object({}) do |query, hash|
-        next if !guardian.user_can_access_query?(query)
+        next if !guardian.user_can_access_query?(query) || !mountable?(query)
         result =
           QueryRunner.cached_result(query, params, max_age: CACHE_MAX_AGE) ||
             QueryRunner.run(query, params, current_user: guardian.user)
@@ -103,6 +106,11 @@ module DiscourseDataExplorer
       queries
     end
     private_class_method :load_queries
+
+    def self.mountable?(query)
+      query.params.all? { |param| param.internal? || param.nullable || param.default.present? }
+    end
+    private_class_method :mountable?
 
     def self.prewarmable?(query, params)
       QueryRunner.cacheable?(query) &&
