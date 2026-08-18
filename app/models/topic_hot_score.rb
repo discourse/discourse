@@ -102,23 +102,25 @@ class TopicHotScore < ActiveRecord::Base
           SELECT
               t.id AS topic_id,
               COUNT(DISTINCT p.user_id) AS unique_participants,
-              (
-                SELECT COUNT(distinct pa.user_id)
-                FROM post_actions pa
-                JOIN posts p2 ON p2.id = pa.post_id
-                WHERE p2.topic_id = t.id
-                  AND p2.post_type = :regular
-                  AND p2.deleted_at IS NULL
-                  AND p2.user_deleted = false
-                  AND pa.post_action_type_id = 2 -- action_type for 'like'
-                  AND pa.created_at >= :recent_cutoff
-                  AND pa.deleted_at IS NULL
-              ) AS likes_count,
+              recent_likes.likes_count,
               MIN(p.created_at) AS first_bumped_at
           FROM
               topics t
           JOIN
               posts p ON t.id = p.topic_id
+          LEFT OUTER JOIN
+              (
+                SELECT p2.topic_id, COUNT(distinct pa.user_id) AS likes_count
+                FROM post_actions pa
+                JOIN posts p2 ON p2.id = pa.post_id
+                WHERE p2.post_type = :regular
+                  AND p2.deleted_at IS NULL
+                  AND p2.user_deleted = false
+                  AND pa.post_action_type_id = 2 -- action_type for 'like'
+                  AND pa.created_at >= :recent_cutoff
+                  AND pa.deleted_at IS NULL
+                GROUP BY p2.topic_id
+              ) AS recent_likes ON recent_likes.topic_id = t.id
           WHERE
               p.created_at >= :recent_cutoff
               AND t.archetype <> 'private_message'
@@ -132,11 +134,13 @@ class TopicHotScore < ActiveRecord::Base
               AND p.created_at >= :recent_cutoff
               AND p.post_type = :regular
           GROUP BY
-              t.id
+              t.id, recent_likes.likes_count
         ) AS new_values
       ON ths.topic_id = new_values.topic_id
 
       WHERE thsOrig.topic_id = ths.topic_id
+        AND (thsOrig.recent_likes <> COALESCE(new_values.likes_count, 0)
+        OR thsOrig.recent_posters <> COALESCE(new_values.unique_participants, 0))
     SQL
 
     # we may end up update 2x batch size, this is ok
