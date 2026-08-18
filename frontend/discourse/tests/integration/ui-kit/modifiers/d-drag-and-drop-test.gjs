@@ -937,73 +937,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       dataTransfer,
       ...centerOf("#src"),
     });
-
-    assert
-      .dom("#outer")
-      .doesNotHaveClass(
-        "--drag-inside",
-        "dropping on the child clears the parent indicator"
-      );
-  });
-
-  test("a drop clears an ancestor indicator that never saw another drag event", async function (assert) {
-    await render(
-      <template>
-        <div id="src" {{dDragAndDropSource type="row"}}>src</div>
-        <div
-          id="outer"
-          style="height: 100px"
-          {{dDragAndDropTarget accepts="row" position="inside"}}
-        >
-          outer
-          <div
-            id="inner"
-            {{dDragAndDropTarget accepts="row" position="inside"}}
-          >inner</div>
-        </div>
-      </template>
-    );
-
-    const dataTransfer = new DataTransfer();
-    const outerRect = find("#outer").getBoundingClientRect();
-
-    await dragEvent("#src", "dragstart", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-    await dragEvent("#outer", "dragenter", {
-      dataTransfer,
-      clientX: outerRect.left + 5,
-      clientY: outerRect.top + 5,
-    });
-    await dragEvent("#outer", "dragover", {
-      dataTransfer,
-      clientX: outerRect.left + 5,
-      clientY: outerRect.top + 5,
-    });
-
-    assert
-      .dom("#outer")
-      .hasClass("--drag-inside", "the ancestor is showing an indicator");
-
-    // Straight from the ancestor to a drop on the child, with no drag event in
-    // between: the ancestor's own enter/drag clears never run again, so the
-    // unconditional clear in `onDrop` is the only thing left to drop it.
-    await dragEvent("#inner", "drop", {
-      dataTransfer,
-      ...centerOf("#inner"),
-    });
-    await dragEvent("#src", "dragend", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-
-    assert
-      .dom("#outer")
-      .doesNotHaveClass(
-        "--drag-inside",
-        "a drop clears the ancestor even though it is no longer the deepest target"
-      );
   });
 
   test("target modifier picks up arg changes without re-registering", async function (assert) {
@@ -2269,6 +2202,204 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ["enter", "drop", "enter", "leave"],
         "each drag gets its own enter, and the second one is still paired with a leave"
       );
+    });
+  });
+
+  /**
+   * The library tells a target about a hierarchy change synchronously, but only
+   * throttles the drag update that follows to a frame. A drop cancels that frame,
+   * so anything a target learns only from the drag update is lost to a fast release.
+   */
+  module("a hierarchy change is observed in the same frame", function () {
+    /**
+     * Dispatches natively and returns at once, so a second event can follow in
+     * the same task with no animation frame between the two.
+     */
+    function dispatchNow(selector, type, { dataTransfer, clientX, clientY }) {
+      find(selector).dispatchEvent(
+        new DragEvent(type, {
+          bubbles: true,
+          cancelable: true,
+          dataTransfer,
+          clientX,
+          clientY,
+        })
+      );
+    }
+
+    test("an ancestor superseded by a child is left in the same frame, before the drop", async function (assert) {
+      const events = [];
+      const onOuterEnter = () => events.push("outer:enter");
+      const onOuterLeave = () => events.push("outer:leave");
+      const onInnerDrop = () => events.push("inner:drop");
+
+      await render(
+        <template>
+          <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+          <div
+            id="outer"
+            style="height: 100px"
+            {{dDragAndDropTarget
+              accepts="row"
+              position="inside"
+              onDragEnter=onOuterEnter
+              onDragLeave=onOuterLeave
+            }}
+          >
+            outer
+            <div
+              id="inner"
+              {{dDragAndDropTarget
+                accepts="row"
+                position="inside"
+                onDrop=onInnerDrop
+              }}
+            >inner</div>
+          </div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      const outerRect = find("#outer").getBoundingClientRect();
+
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#outer", "dragenter", {
+        dataTransfer,
+        clientX: outerRect.left + 5,
+        clientY: outerRect.top + 5,
+      });
+      await dragEvent("#outer", "dragover", {
+        dataTransfer,
+        clientX: outerRect.left + 5,
+        clientY: outerRect.top + 5,
+      });
+
+      assert
+        .dom("#outer")
+        .hasClass("--drag-inside", "the ancestor is entered and lit");
+
+      // The child takes over and the drop lands in the same task: no frame in
+      // between for a throttled drag update to tell the ancestor anything.
+      dispatchNow("#inner", "dragenter", {
+        dataTransfer,
+        ...centerOf("#inner"),
+      });
+
+      assert.deepEqual(
+        events,
+        ["outer:enter", "outer:leave"],
+        "the ancestor is left the moment the child takes over, without waiting for a frame"
+      );
+      assert
+        .dom("#outer")
+        .doesNotHaveClass(
+          "--drag-inside",
+          "and its indicator goes with the role"
+        );
+
+      dispatchNow("#inner", "drop", { dataTransfer, ...centerOf("#inner") });
+      await settled();
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(
+        events,
+        ["outer:enter", "outer:leave", "inner:drop"],
+        "the drop lands on the child with the ancestor already left"
+      );
+    });
+
+    test("flipping indicator off mid-hover clears the class already shown", async function (assert) {
+      const state = new (class {
+        @tracked indicator = true;
+      })();
+
+      await render(
+        <template>
+          <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget
+              accepts="row"
+              position="before"
+              indicator=state.indicator
+            }}
+          >tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      assert.dom("#tgt").hasClass("--drag-above", "lit while indicating");
+
+      state.indicator = false;
+      await settled();
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      assert
+        .dom("#tgt")
+        .doesNotHaveClass(
+          "--drag-above",
+          "turning the indicator off clears what was already painted, not only what comes next"
+        );
+    });
+
+    test("a drop clears the indicator of the target it lands on", async function (assert) {
+      await render(
+        <template>
+          <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget accepts="row" position="before"}}
+          >tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      assert.dom("#tgt").hasClass("--drag-above", "lit while hovered");
+
+      // The drop follows without a frame, so the throttled drag update it would
+      // have cancelled is not what clears the class.
+      dispatchNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await settled();
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert
+        .dom("#tgt")
+        .doesNotHaveClass(
+          "--drag-above",
+          "the drop itself clears the indicator of the target it lands on"
+        );
     });
   });
 

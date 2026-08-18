@@ -90,6 +90,7 @@ type DropTargetRegistrationArgs<Payload> = {
   element: Element;
   canDrop: (args: LibraryFeedbackArgs<Payload>) => boolean;
   getDropEffect: (args: LibraryFeedbackArgs<Payload>) => DropEffect | undefined;
+  onDropTargetChange: (args: LibraryEventArgs<Payload>) => void;
   onDragEnter: (args: LibraryEventArgs<Payload>) => void;
   onDrag: (args: LibraryEventArgs<Payload>) => void;
   onDragLeave: (args: LibraryEventArgs<Payload>) => void;
@@ -296,7 +297,9 @@ export function registerDropTargetKernel<
 
     const args = getArgs();
     const position = resolvePosition(location.current.input);
-    if (args.indicator !== false) {
+    if (args.indicator === false) {
+      indicator.clear();
+    } else {
       indicator.show(position, args.axis ?? "vertical");
     }
     // A target can become deepest on a drag update without receiving a fresh
@@ -341,6 +344,8 @@ export function registerDropTargetKernel<
       ),
     onDragEnter: ({ source, location }) =>
       reportActive(source, location, false),
+    onDropTargetChange: ({ source, location }) =>
+      reportActive(source, location, false),
     onDrag: ({ source, location }) => reportActive(source, location, true),
     onDragLeave: ({ source, location }) => {
       indicator.clear();
@@ -350,7 +355,8 @@ export function registerDropTargetKernel<
       // Every target in the settled hierarchy receives the drop, including an
       // ancestor that is no longer deepest but might still show stale feedback.
       indicator.clear();
-      // A drop closes the drag without also reporting a leave.
+      // A non-deepest target was already left by the synchronous hierarchy
+      // update; the drop only closes any pairing that remains.
       pairing.reset();
       if (!isDeepestTarget(location, element)) {
         return;
