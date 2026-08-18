@@ -3,6 +3,7 @@
  * no Glint error directives, so a broken public signature cannot be suppressed.
  */
 import { array } from "@ember/helper";
+import type { TrustedHTML } from "@ember/template";
 import DResizeHandles, {
   BOX_DIRECTIONS,
   type BoxDirection,
@@ -10,9 +11,10 @@ import DResizeHandles, {
 } from "discourse/ui-kit/d-resize-handles";
 
 declare const columnHandles: {
+  key: string;
   payload: number;
   class?: string;
-  style?: string;
+  style?: TrustedHTML;
 }[];
 declare const box: Element;
 declare function onColumnResize(column: number): void;

@@ -4,7 +4,7 @@
  */
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 
-declare const columnHandles: { payload: number }[];
+declare const columnHandles: { key: string; payload: number }[];
 declare function onDirectionResize(direction: string): void;
 
 const Negative = <template>

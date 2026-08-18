@@ -70,8 +70,9 @@ export default class StickyNote extends Component {
 
   /**
    * How many gestures and edits are inside the open mutation. Counted rather
-   * than flagged because two handles can be dragged at once, and the first to
-   * finish must not close a capture the second is still writing into.
+   * than flagged because a resize can begin while an edit is already open. The
+   * first of the two to finish must not close a capture the other is still
+   * writing into.
    */
   #openGestures = 0;
 
@@ -85,9 +86,8 @@ export default class StickyNote extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.closeColorPicker();
-    // The note drag and an open edit report nothing of their own on teardown.
-    // Left open, the next action's undo baseline becomes this one's, so a single
-    // undo jumps further back than the user ever went.
+    // A note drag and an open edit report nothing on teardown. Left open, they
+    // make the next undo jump further back than the user ever went.
     this.#abandonMutation();
   }
 
@@ -144,9 +144,9 @@ export default class StickyNote extends Component {
    * Emits the box this gesture's edge implies, working in edge space.
    *
    * Each boundary moves from where it sat at this gesture's own press, and the
-   * three it does not own are read live, so two gestures can hold opposite edges
-   * of one axis and compose. Deriving a width from a press-time snapshot instead
-   * makes whichever reports later overwrite the other.
+   * three it does not own are read live. That way dragging one edge and then the
+   * opposite one composes. Deriving a width from a press-time snapshot instead
+   * would make the second drag overwrite the first.
    *
    * @param {string} edge - The compass edge being dragged.
    * @param {object} dragInfo - The gesture report, carrying the pointer delta
@@ -254,7 +254,7 @@ export default class StickyNote extends Component {
     }
 
     this.args.onSelect?.();
-    // The mutation waits for the first real move: a press that only selects would
+    // The mutation waits for the first real move. A press that only selects would
     // otherwise bracket an undo entry whose before and after are identical.
     this.#dragZoom = this.args.zoom ?? 1;
     this.#dragOrigin = { ...this.args.note.position };
@@ -274,9 +274,8 @@ export default class StickyNote extends Component {
 
   @action
   onNoteDragEnd(event, info) {
-    // Closed in a `finally` because the geometry below reaches consumer
-    // callbacks: one that throws on the commit would otherwise leave the counter
-    // above zero for good, silently unbracketing every later gesture.
+    // Closed in a `finally`. A consumer that throws on the commit would otherwise
+    // leave the counter above zero and unbracket every later gesture.
     try {
       if (info.moved) {
         this.#applyNoteDrag(info);
@@ -288,9 +287,8 @@ export default class StickyNote extends Component {
 
   @action
   onNoteDragCancel() {
-    // Deliberately no geometry, unlike the release handler: a cancel carries no
-    // position the user chose, and the last move already applied where the note
-    // was dragged to.
+    // Deliberately no geometry, unlike the release handler. A cancel carries no
+    // position the user chose, and the last move already applied the note's box.
     this.#closeNoteDrag();
   }
 
@@ -314,9 +312,8 @@ export default class StickyNote extends Component {
 
   @action
   onEdgeResizeEnd(edge, dragInfo) {
-    // The release can carry a newer position than the last move the browser
-    // delivered, so the box is recomputed rather than assumed to match. Closed
-    // in a `finally` for the reason given on the note drag's release.
+    // The release can carry a newer position than the last move, so the box is
+    // recomputed. Closed in a `finally`, as on the note drag's release.
     try {
       if (dragInfo.moved) {
         this.#applyEdgeResize(edge, dragInfo);
@@ -338,12 +335,11 @@ export default class StickyNote extends Component {
     if (this.#editingOpen) {
       return;
     }
-    // Through the same counter the gestures use: a press does not move focus off
-    // the textarea, so a resize begun mid-edit must nest inside it rather than
-    // close it. Entered before the hook, so a hook that throws still leaves the
-    // note editable and able to release what it opened.
+    // Same counter the gestures use. A press does not move focus off the
+    // textarea, so a resize begun mid-edit nests inside it instead of closing it.
     this.#editingOpen = true;
     this.isEditing = true;
+    // Flags set first, so a throwing hook still leaves the note editable.
     this.#openMutation();
   }
 

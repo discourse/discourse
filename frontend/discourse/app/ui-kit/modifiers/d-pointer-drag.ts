@@ -26,8 +26,8 @@ type Point = Readonly<{ x: number; y: number }>;
 /**
  * Where the gesture is, reported alongside every callback's event.
  *
- * A snapshot rather than a live view: a fresh one is built per dispatch, so a
- * consumer that keeps one keeps the numbers it was handed.
+ * A snapshot, not a live view. A fresh one is built per dispatch, so a consumer
+ * that stores it keeps the numbers it was given.
  */
 export interface DPointerDragInfo {
   /** Where the press landed. */
@@ -40,11 +40,11 @@ export interface DPointerDragInfo {
   readonly delta: Point;
 
   /**
-   * Whether `onDrag` has fired at least once for THIS gesture, which is what
-   * separates a drag from a click that happened to land on the handle.
+   * Whether `onDrag` has fired at least once for THIS gesture. It separates a
+   * drag from a click that landed on the handle.
    *
-   * Not the same as having passed `threshold`: with no threshold set a gesture
-   * is eligible to report from the press, having still reported nothing.
+   * This is not the same as passing `threshold`. With no threshold a gesture can
+   * report from the press onwards, but it may still have reported nothing.
    */
   readonly moved: boolean;
 }
@@ -55,9 +55,9 @@ interface DPointerDragSignature {
   Args: {
     Named: {
       /**
-       * Return `false` to ABORT the gesture (e.g. an anchor isn't resolvable);
-       * any other return starts it. An exception thrown here is rethrown, having
-       * released the pointer capture and started no gesture.
+       * Return `false` to ABORT the gesture, for example when an anchor cannot
+       * be resolved. Any other return starts it. An exception here is rethrown
+       * after the pointer capture is released, and no gesture starts.
        */
       onDragStart?: (
         event: PointerEvent,
@@ -73,8 +73,7 @@ interface DPointerDragSignature {
       /**
        * Compute and commit the new value. Runs BEFORE the pointer capture is
        * released. Fires for any release on this element, including one that never
-       * reached `threshold` and so saw no `onDrag` at all, which `info.moved`
-       * distinguishes.
+       * reached `threshold` and saw no `onDrag`. Use `info.moved` to tell them apart.
        */
       onDragEnd?: (event: PointerEvent, info: DPointerDragInfo) => void;
 

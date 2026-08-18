@@ -1,9 +1,12 @@
 import { tracked } from "@glimmer/tracking";
+import { trustHTML } from "@ember/template";
 import {
   clearRender,
   find,
   render,
+  resetOnerror,
   settled,
+  setupOnerror,
   triggerEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -17,8 +20,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
 
   test("renders a handle per descriptor and passes its class through", async function (assert) {
     const handles = [
-      { payload: "e", class: "handle-e" },
-      { payload: "s", class: "handle-s" },
+      { payload: "e", key: "e", class: "handle-e" },
+      { payload: "s", key: "s", class: "handle-s" },
     ];
 
     await render(<template><DResizeHandles @handles={{handles}} /></template>);
@@ -134,10 +137,15 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       .doesNotHaveClass("--dragging", "and it is dropped on release");
   });
 
-  test("a descriptor's plain style string is applied without a dynamic-style warning", async function (assert) {
+  test("a descriptor's trusted style is applied without a dynamic-style warning", async function (assert) {
     const warn = sinon.stub(console, "warn");
     const handles = [
-      { payload: "gutter", class: "handle-gutter", style: "grid-column: 3" },
+      {
+        payload: "gutter",
+        key: "gutter",
+        class: "handle-gutter",
+        style: trustHTML("grid-column: 3"),
+      },
     ];
 
     await render(<template><DResizeHandles @handles={{handles}} /></template>);
@@ -145,12 +153,65 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     assert
       .dom(".handle-gutter")
       .hasAttribute("style", "grid-column: 3", "the style reaches the element");
-    // The wrap exists precisely so a consumer can pass a plain string here. If
-    // it stopped wrapping, the style would still land and only this would notice.
+    // The component passes the trusted value straight through. If it re-wrapped
+    // or stringified it, the style would still land and only this would catch it.
     assert.false(
       warn.getCalls().some((call) => String(call.args[0]).includes("style")),
       "and does so without tripping the dynamic-style warning"
     );
+  });
+
+  test("a descriptor's plain style string is refused rather than trusted", async function (assert) {
+    const consoleError = sinon.stub(console, "error");
+    const handles = [
+      {
+        payload: "gutter",
+        key: "gutter",
+        class: "handle-gutter",
+        style: "grid-column: 3",
+      },
+    ];
+    let errors = 0;
+
+    // Only the caller knows whether it interpolated anything unsafe, so the
+    // component will not trust the string on its behalf.
+    setupOnerror((error) => {
+      assert.true(
+        error.message.includes("trustHTML"),
+        "the assertion names the call the consumer has to make"
+      );
+      errors++;
+    });
+
+    await render(<template><DResizeHandles @handles={{handles}} /></template>);
+
+    assert.strictEqual(errors, 1, "the untrusted style is reported once");
+
+    resetOnerror();
+    consoleError.restore();
+  });
+
+  test("a descriptor with no key is refused rather than keyed by position", async function (assert) {
+    const consoleError = sinon.stub(console, "error");
+    const handles = [{ payload: "gutter", class: "handle-gutter" }];
+    let errors = 0;
+
+    // Glimmer would fall back to position here, which is the bug keys exist to
+    // remove, and it would do it without saying anything.
+    setupOnerror((error) => {
+      assert.true(
+        error.message.includes("every handle descriptor needs"),
+        "the assertion names what is missing"
+      );
+      errors++;
+    });
+
+    await render(<template><DResizeHandles @handles={{handles}} /></template>);
+
+    assert.strictEqual(errors, 1, "the missing key is reported once");
+
+    resetOnerror();
+    consoleError.restore();
   });
 
   test("@measure reports the resized box's bounds, not the handle's", async function (assert) {
@@ -471,123 +532,65 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     );
   });
 
-  test("the reflow listeners go once nothing measured is left, not once nothing is left", async function (assert) {
-    // Only the east handle resolves a box, so the two concurrent gestures differ
-    // in whether they have anything to re-measure.
-    const measureEastOnly = (handle) =>
-      handle.dataset.resizeHandle === "e"
-        ? handle.closest(".fixture")?.querySelector(".box")
-        : null;
+  test("a second press is refused while a gesture is held", async function (assert) {
+    const handles = [
+      { payload: "nw", key: "nw", class: "handle-nw" },
+      { payload: "se", key: "se", class: "handle-se" },
+    ];
+    const events = [];
+    const onResizeStart = (payload) => events.push(`start:${payload}`);
+    const onResize = (payload, info) =>
+      events.push(`resize:${payload}:${info.delta.x}`);
+    const onResizeEnd = (payload) => events.push(`end:${payload}`);
 
     await render(
       <template>
-        <div class="fixture">
-          <div class="box" style="width: 220px; height: 90px"></div>
-          <DResizeHandles
-            @handleClass="my-block__handle"
-            @measure={{measureEastOnly}}
-          />
-        </div>
+        <DResizeHandles
+          @handles={{handles}}
+          @onResizeStart={{onResizeStart}}
+          @onResize={{onResize}}
+          @onResizeEnd={{onResizeEnd}}
+        />
       </template>
     );
 
-    const east = stubPointerCapture("[data-resize-handle='e']").element;
-    const south = stubPointerCapture("[data-resize-handle='s']").element;
-    await triggerEvent(east, "pointerdown", {
+    stubPointerCapture(".handle-nw");
+    stubPointerCapture(".handle-se");
+
+    await triggerEvent(".handle-nw", "pointerdown", {
       button: 0,
       pointerId: 1,
-      clientX: 0,
-      clientY: 0,
+      clientX: 100,
+      clientY: 100,
     });
-    await triggerEvent(south, "pointerdown", {
+    // A second finger on another handle of the same box. One gesture at a time,
+    // so this press never starts.
+    await triggerEvent(".handle-se", "pointerdown", {
       button: 0,
       pointerId: 2,
-      clientX: 0,
-      clientY: 0,
+      clientX: 400,
+      clientY: 400,
     });
-
-    const removeSpy = sinon.spy(window, "removeEventListener");
-    // Waiting for the gesture map to empty would keep a document-wide listener
-    // alive for the rest of a gesture that has nothing for it to do.
-    await triggerEvent(east, "pointerup", {
-      pointerId: 1,
-      clientX: 0,
-      clientY: 0,
-    });
-
-    assert.true(
-      removeSpy
-        .getCalls()
-        .some((call) => call.args[0] === "scroll" && call.args[2] === true),
-      "the listener goes with the last gesture that had a box"
-    );
-  });
-
-  test("a released gesture does not stop the one still held from re-reading", async function (assert) {
-    const rects = [];
-    const onResize = (payload, info) => rects.push(info.measuredRect);
-    const findBox = (handle) =>
-      handle.closest(".fixture")?.querySelector(".box");
-
-    await render(
-      <template>
-        <div class="fixture">
-          <div class="box" style="width: 220px; height: 90px"></div>
-          <DResizeHandles
-            @handleClass="my-block__handle"
-            @measure={{findBox}}
-            @onResize={{onResize}}
-          />
-        </div>
-      </template>
-    );
-
-    const east = stubPointerCapture("[data-resize-handle='e']").element;
-    const south = stubPointerCapture("[data-resize-handle='s']").element;
-    await triggerEvent(east, "pointerdown", {
-      button: 0,
-      pointerId: 1,
-      clientX: 0,
-      clientY: 0,
-    });
-    await triggerEvent(south, "pointerdown", {
-      button: 0,
+    await triggerEvent(".handle-se", "pointermove", {
       pointerId: 2,
-      clientX: 0,
-      clientY: 0,
+      clientX: 430,
+      clientY: 430,
     });
-    await triggerEvent(east, "pointerup", {
+    await triggerEvent(".handle-nw", "pointermove", {
       pointerId: 1,
-      clientX: 0,
-      clientY: 0,
+      clientX: 120,
+      clientY: 100,
     });
-    await triggerEvent(south, "pointermove", {
-      pointerId: 2,
-      clientX: 0,
-      clientY: 10,
-    });
-    const before = rects.at(-1).left;
-
-    find(".box").style.marginLeft = "40px";
-    window.dispatchEvent(new Event("scroll"));
-    await settled();
-
-    const moved = find(".box").getBoundingClientRect().left;
-    assert.notStrictEqual(moved, before, "control: the box really did move");
-
-    await triggerEvent(south, "pointermove", {
-      pointerId: 2,
-      clientX: 0,
-      clientY: 20,
+    await triggerEvent(".handle-nw", "pointerup", {
+      pointerId: 1,
+      clientX: 120,
+      clientY: 100,
     });
 
-    // Detaching on every release would leave this gesture reporting press-time
-    // bounds for the rest of its life, which is the stale hit-test the live
-    // rect exists to prevent.
-    assert.strictEqual(
-      rects.at(-1).left,
-      moved,
-      "the surviving gesture keeps its bounds up to date"
+    assert.deepEqual(
+      events,
+      ["start:nw", "resize:nw:20", "end:nw"],
+      "the refused press reports nothing and the held gesture is untouched"
     );
   });
 
@@ -640,7 +643,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("explicit @handles take precedence over @handleClass", async function (assert) {
-    const handles = [{ payload: "only", class: "explicit-handle" }];
+    const handles = [
+      { payload: "only", key: "only", class: "explicit-handle" },
+    ];
 
     await render(
       <template>
@@ -655,7 +660,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("dispatches start / resize / end with the payload and the pointer delta", async function (assert) {
-    const handles = [{ payload: "e", class: "handle-e" }];
+    const handles = [{ payload: "e", key: "e", class: "handle-e" }];
     const events = [];
     const onResizeStart = (payload) => events.push(`start:${payload}`);
     const onResize = (payload, info) =>
@@ -699,7 +704,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("a vetoed press starts no gesture and does not spoil the next one", async function (assert) {
-    const handles = [{ payload: "e", class: "handle-e" }];
+    const handles = [{ payload: "e", key: "e", class: "handle-e" }];
     const events = [];
     const state = { veto: true };
     const onResizeStart = () => (state.veto ? false : undefined);
@@ -771,16 +776,22 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     );
   });
 
-  test("the reported payload follows a descriptor list that changes mid-drag", async function (assert) {
+  test("replacing a held descriptor ends its gesture rather than rebinding it", async function (assert) {
     const state = new (class {
-      @tracked handles = [{ payload: "first", class: "handle-x" }];
+      @tracked
+      handles = [{ payload: "first", key: "first", class: "handle-x" }];
     })();
     const events = [];
-    const onResize = (payload) => events.push(payload);
+    const onResize = (payload) => events.push(`resize:${payload}`);
+    const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
 
     await render(
       <template>
-        <DResizeHandles @handles={{state.handles}} @onResize={{onResize}} />
+        <DResizeHandles
+          @handles={{state.handles}}
+          @onResize={{onResize}}
+          @onResizeCancel={{onResizeCancel}}
+        />
       </template>
     );
 
@@ -797,7 +808,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 50,
     });
 
-    state.handles = [{ payload: "second", class: "handle-x" }];
+    state.handles = [{ payload: "second", key: "second", class: "handle-x" }];
     await settled();
 
     await triggerEvent(".handle-x", "pointermove", {
@@ -806,15 +817,13 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 50,
     });
 
-    // The payload comes from the callback's own binding rather than a snapshot
-    // taken at the press, so it always names the descriptor the handler is
-    // currently bound to. Pinned here because the per-pointer gesture entry
-    // could plausibly be made to hold the payload too, which would freeze it at
-    // what was pressed.
+    // The handle the user grabbed is gone, so the gesture ends on the payload it
+    // started with. Reporting the descriptor that replaced it would commit
+    // something the user never touched.
     assert.deepEqual(
       events,
-      ["first", "second"],
-      "the payload tracks the rebound descriptor"
+      ["resize:first", "cancel:first"],
+      "the gesture ends rather than retargeting the replacement"
     );
 
     await triggerEvent(".handle-x", "pointerup", {
@@ -822,73 +831,375 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientX: 140,
       clientY: 50,
     });
-  });
-
-  test("two handles dragged at once keep their own origins", async function (assert) {
-    const handles = [
-      { payload: "nw", class: "handle-nw" },
-      { payload: "se", class: "handle-se" },
-    ];
-    const events = [];
-    const onResize = (payload, info) =>
-      events.push(`${payload}:${info.delta.x},${info.delta.y}`);
-
-    await render(
-      <template>
-        <DResizeHandles @handles={{handles}} @onResize={{onResize}} />
-      </template>
-    );
-
-    stubPointerCapture(".handle-nw");
-    stubPointerCapture(".handle-se");
-
-    // Two fingers on two handles of the same box. Each gesture has its own
-    // pointer id, so the engine keeps both live, and one must not overwrite the
-    // other's origin.
-    await triggerEvent(".handle-nw", "pointerdown", {
-      button: 0,
-      pointerId: 1,
-      clientX: 100,
-      clientY: 100,
-    });
-    await triggerEvent(".handle-se", "pointerdown", {
-      button: 0,
-      pointerId: 2,
-      clientX: 400,
-      clientY: 400,
-    });
-
-    await triggerEvent(".handle-nw", "pointermove", {
-      pointerId: 1,
-      clientX: 120,
-      clientY: 120,
-    });
-    await triggerEvent(".handle-se", "pointermove", {
-      pointerId: 2,
-      clientX: 430,
-      clientY: 430,
-    });
 
     assert.deepEqual(
       events,
-      ["nw:20,20", "se:30,30"],
-      "each handle reports the delta from its own press, not from the other's"
+      ["resize:first", "cancel:first"],
+      "and the release of a gesture already ended reports nothing further"
+    );
+  });
+
+  test("removing the held handle ends its gesture and leaves its neighbours in place", async function (assert) {
+    const state = new (class {
+      @tracked
+      handles = [
+        { payload: "a", key: "a", class: "handle-a" },
+        { payload: "b", key: "b", class: "handle-b" },
+        { payload: "c", key: "c", class: "handle-c" },
+      ];
+    })();
+    const events = [];
+    const onResize = (payload) => events.push(`resize:${payload}`);
+    const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{state.handles}}
+          @onResize={{onResize}}
+          @onResizeCancel={{onResizeCancel}}
+        />
+      </template>
     );
 
-    await triggerEvent(".handle-nw", "pointerup", {
+    const cBefore = find(".handle-c");
+    stubPointerCapture(".handle-b");
+    await triggerEvent(".handle-b", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 50,
+    });
+    await triggerEvent(".handle-b", "pointermove", {
       pointerId: 1,
       clientX: 120,
-      clientY: 120,
+      clientY: 50,
     });
-    await triggerEvent(".handle-se", "pointerup", {
-      pointerId: 2,
-      clientX: 430,
-      clientY: 430,
+
+    state.handles = [
+      { payload: "a", key: "a", class: "handle-a" },
+      { payload: "c", key: "c", class: "handle-c" },
+    ];
+    await settled();
+
+    assert.deepEqual(
+      events,
+      ["resize:b", "cancel:b"],
+      "the gesture on the removed handle is closed exactly once"
+    );
+    assert
+      .dom(".handle-b")
+      .doesNotExist("the removed descriptor's handle is gone");
+    // With positional keys the LAST handle goes instead. That destroys `c` and
+    // leaves `b` bound to whatever moved into its slot.
+    assert.strictEqual(
+      find(".handle-c"),
+      cBefore,
+      "a handle that was not removed keeps its element"
+    );
+  });
+
+  test("@directions shrinking mid-gesture ends the gesture on the handle it removed", async function (assert) {
+    const state = new (class {
+      @tracked directions = ["n", "e", "s"];
+    })();
+    const events = [];
+    const onResize = (payload) => events.push(`resize:${payload}`);
+    const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handleClass="my-block__handle"
+          @directions={{state.directions}}
+          @onResize={{onResize}}
+          @onResizeCancel={{onResizeCancel}}
+        />
+      </template>
+    );
+
+    stubPointerCapture("[data-resize-handle='e']");
+    await triggerEvent("[data-resize-handle='e']", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 50,
     });
+    await triggerEvent("[data-resize-handle='e']", "pointermove", {
+      pointerId: 1,
+      clientX: 120,
+      clientY: 50,
+    });
+
+    state.directions = ["n", "s"];
+    await settled();
+
+    assert.deepEqual(
+      events,
+      ["resize:e", "cancel:e"],
+      "the built-in box closes the gesture on the direction it dropped"
+    );
+  });
+
+  test("@cancelCommits routes a removed handle's gesture to the commit callback", async function (assert) {
+    const state = new (class {
+      @tracked
+      handles = [
+        { payload: "a", key: "a", class: "handle-a" },
+        { payload: "b", key: "b", class: "handle-b" },
+      ];
+    })();
+    const ends = [];
+    const cancels = [];
+    const onResizeEnd = (payload, info) =>
+      ends.push(`${payload}:moved=${info.moved}`);
+    const onResizeCancel = (payload) => cancels.push(payload);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{state.handles}}
+          @cancelCommits={{true}}
+          @onResizeEnd={{onResizeEnd}}
+          @onResizeCancel={{onResizeCancel}}
+        />
+      </template>
+    );
+
+    stubPointerCapture(".handle-b");
+    await triggerEvent(".handle-b", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 50,
+    });
+    await triggerEvent(".handle-b", "pointermove", {
+      pointerId: 1,
+      clientX: 130,
+      clientY: 50,
+    });
+
+    state.handles = [{ payload: "a", key: "a", class: "handle-a" }];
+    await settled();
+
+    // `moved` has to survive. A handle destroyed before the first move must not
+    // look like a resize worth committing.
+    assert.deepEqual(ends, ["b:moved=true"], "the commit callback gets it");
+    assert.deepEqual(cancels, [], "and the cancel callback stays unreachable");
+  });
+
+  test("a recompute that changes nothing leaves a live gesture alone", async function (assert) {
+    const state = new (class {
+      @tracked seed = 0;
+
+      // A getter over tracked state returns fresh objects on every read. Keys
+      // based on object identity would rebuild every handle here and cancel the
+      // gesture, which is worse than the bug this fixes. The seed rides along in
+      // the class so the test can prove the recompute really happened.
+      get handles() {
+        return [
+          { payload: "a", key: "a", class: `handle-a seed-${this.seed}` },
+          { payload: "b", key: "b", class: `handle-b seed-${this.seed}` },
+        ];
+      }
+    })();
+    const events = [];
+    const onResize = (payload) => events.push(`resize:${payload}`);
+    const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
+    const onResizeEnd = (payload) => events.push(`end:${payload}`);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{state.handles}}
+          @onResize={{onResize}}
+          @onResizeCancel={{onResizeCancel}}
+          @onResizeEnd={{onResizeEnd}}
+        />
+      </template>
+    );
+
+    const bBefore = find(".handle-b");
+    stubPointerCapture(".handle-b");
+    await triggerEvent(".handle-b", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 50,
+    });
+
+    state.seed = 1;
+    await settled();
+
+    // Without this the test would pass by never re-rendering at all.
+    assert
+      .dom(".handle-b")
+      .hasClass("seed-1", "control: the descriptors really were rebuilt");
+
+    await triggerEvent(".handle-b", "pointermove", {
+      pointerId: 1,
+      clientX: 120,
+      clientY: 50,
+    });
+    await triggerEvent(".handle-b", "pointerup", {
+      pointerId: 1,
+      clientX: 120,
+      clientY: 50,
+    });
+
+    assert.strictEqual(
+      find(".handle-b"),
+      bBefore,
+      "the handle keeps its element across the recompute"
+    );
+    assert.deepEqual(
+      events,
+      ["resize:b", "end:b"],
+      "and the gesture runs to its own release, uninterrupted"
+    );
+  });
+
+  test("handles sharing a payload are told apart", async function (assert) {
+    const state = new (class {
+      @tracked
+      handles = [
+        { payload: 0, key: "run-a", class: "handle-run-a" },
+        { payload: 0, key: "run-b", class: "handle-run-b" },
+        { payload: 1, key: "other", class: "handle-other" },
+      ];
+    })();
+    const events = [];
+    const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{state.handles}}
+          @onResizeCancel={{onResizeCancel}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("[data-resize-handle]")
+      .exists({ count: 3 }, "a repeated payload is not a duplicate key");
+
+    const runABefore = find(".handle-run-a");
+    stubPointerCapture(".handle-run-b");
+    await triggerEvent(".handle-run-b", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 50,
+    });
+
+    // One run of a gridline disappears while another run of the same line is
+    // being dragged. Both carry the same payload, so the key has to tell them
+    // apart.
+    state.handles = [
+      { payload: 0, key: "run-a", class: "handle-run-a" },
+      { payload: 1, key: "other", class: "handle-other" },
+    ];
+    await settled();
+
+    assert.deepEqual(
+      events,
+      ["cancel:0"],
+      "only the removed run's gesture is closed"
+    );
+    assert.strictEqual(
+      find(".handle-run-a"),
+      runABefore,
+      "the surviving run of the same payload keeps its element"
+    );
+  });
+
+  test("removing an earlier twin leaves a gesture on the later one alone", async function (assert) {
+    const state = new (class {
+      @tracked
+      handles = [
+        { payload: 0, key: "run-a", class: "handle-run-a" },
+        { payload: 0, key: "run-b", class: "handle-run-b" },
+      ];
+    })();
+    const events = [];
+    const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{state.handles}}
+          @onResizeCancel={{onResizeCancel}}
+        />
+      </template>
+    );
+
+    const runBBefore = find(".handle-run-b");
+    stubPointerCapture(".handle-run-b");
+    await triggerEvent(".handle-run-b", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 50,
+    });
+
+    // The dragged run survives and the one before it goes. Anything positional
+    // would shift here and cancel a live gesture; the key does not move.
+    state.handles = [{ payload: 0, key: "run-b", class: "handle-run-b" }];
+    await settled();
+
+    assert.deepEqual(events, [], "the surviving run keeps its gesture");
+    assert.strictEqual(
+      find(".handle-run-b"),
+      runBBefore,
+      "and its element is not rebuilt"
+    );
+  });
+
+  test("removing a measured handle mid-gesture releases the reflow listeners", async function (assert) {
+    const state = new (class {
+      @tracked
+      handles = [
+        { payload: "a", key: "a", class: "handle-a" },
+        { payload: "b", key: "b", class: "handle-b" },
+      ];
+    })();
+    const findBox = (handle) =>
+      handle.closest(".fixture")?.querySelector(".box");
+
+    await render(
+      <template>
+        <div class="fixture">
+          <div class="box" style="width: 220px; height: 90px"></div>
+          <DResizeHandles @handles={{state.handles}} @measure={{findBox}} />
+        </div>
+      </template>
+    );
+
+    stubPointerCapture(".handle-b");
+    await triggerEvent(".handle-b", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 50,
+    });
+
+    const removeSpy = sinon.spy(window, "removeEventListener");
+    state.handles = [{ payload: "a", key: "a", class: "handle-a" }];
+    await settled();
+
+    // A stranded gesture used to leave this document-wide scroll listener
+    // attached for the rest of the component's life.
+    assert.true(
+      removeSpy
+        .getCalls()
+        .some((call) => call.args[0] === "scroll" && call.args[2] === true),
+      "the destroyed handle takes its listeners with it"
+    );
   });
 
   test("@stopPropagation keeps the press from reaching an ancestor", async function (assert) {
-    const handles = [{ payload: "e", class: "handle-e" }];
+    const handles = [{ payload: "e", key: "e", class: "handle-e" }];
     const ancestorPresses = [];
 
     await render(
@@ -918,7 +1229,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("a press reaches an ancestor by default", async function (assert) {
-    const handles = [{ payload: "e", class: "handle-e" }];
+    const handles = [{ payload: "e", key: "e", class: "handle-e" }];
     const ancestorPresses = [];
 
     await render(
@@ -951,7 +1262,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("@threshold suppresses jitter before the first resize", async function (assert) {
-    const handles = [{ payload: "e", class: "handle-e" }];
+    const handles = [{ payload: "e", key: "e", class: "handle-e" }];
     const events = [];
     const onResize = (payload, info) => events.push(`resize:${info.delta.x}`);
     const onResizeEnd = () => events.push("end");
@@ -1005,7 +1316,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("a gesture still held at teardown is cancelled once", async function (assert) {
-    const handles = [{ payload: "e", class: "handle-e" }];
+    const handles = [{ payload: "e", key: "e", class: "handle-e" }];
     const events = [];
     const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
     const onResizeEnd = (payload) => events.push(`end:${payload}`);
@@ -1045,7 +1356,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("a gesture that already ended is not cancelled again at teardown", async function (assert) {
-    const handles = [{ payload: "e", class: "handle-e" }];
+    const handles = [{ payload: "e", key: "e", class: "handle-e" }];
     const events = [];
     const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
     const onResizeEnd = (payload) => events.push(`end:${payload}`);
@@ -1085,7 +1396,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("@cancelCommits routes a gesture held at teardown to the commit callback", async function (assert) {
-    const handles = [{ payload: "e", class: "handle-e" }];
+    const handles = [{ payload: "e", key: "e", class: "handle-e" }];
     const events = [];
     const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
     const onResizeEnd = (payload) => events.push(`end:${payload}`);
@@ -1126,7 +1437,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("a throwing consumer cannot abort the teardown of its siblings", async function (assert) {
-    const handles = [{ payload: "e", class: "handle-e" }];
+    const handles = [{ payload: "e", key: "e", class: "handle-e" }];
     const onResizeCancel = () => {
       throw new Error("consumer blew up on teardown");
     };

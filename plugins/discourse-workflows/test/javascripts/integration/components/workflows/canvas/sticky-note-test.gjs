@@ -308,13 +308,14 @@ module(
       );
     });
 
-    test("two edge gestures at once keep their own origins", async function (assert) {
+    test("a second edge press leaves the gesture already held alone", async function (assert) {
       const resizes = [];
       const note = noteFixture();
       const onResize = (size) => {
         resizes.push(size);
-        // Committed the way the canvas commits, which is what makes a second
-        // gesture's press-time box differ from the first's.
+        // Committed the way the canvas does. If the gesture used the note's
+        // current size as its base instead of the press-time size, the numbers
+        // below would change.
         note.size = { ...size };
       };
 
@@ -340,18 +341,12 @@ module(
         clientY: 0,
       });
 
-      // A second finger starts on another edge after the first already grew
-      // the note. Its press-time box must not become the first gesture's base.
+      // A second finger lands on another edge while the first still holds the
+      // note. One gesture at a time, so it never starts.
       await triggerEvent(south, "pointerdown", {
         button: 0,
         pointerId: 2,
         clientX: 0,
-        clientY: 0,
-      });
-
-      await triggerEvent(east, "pointermove", {
-        pointerId: 1,
-        clientX: 60,
         clientY: 0,
       });
       await triggerEvent(south, "pointermove", {
@@ -360,14 +355,19 @@ module(
         clientY: 40,
       });
 
+      await triggerEvent(east, "pointermove", {
+        pointerId: 1,
+        clientX: 60,
+        clientY: 0,
+      });
+
       assert.deepEqual(
         resizes,
         [
           { width: 250, height: 150 },
           { width: 260, height: 150 },
-          { width: 260, height: 190 },
         ],
-        "each gesture owns its own axis and leaves the other's alone"
+        "the refused press resizes nothing and the held gesture keeps its origin"
       );
     });
 
@@ -399,30 +399,40 @@ module(
       const west = pressable("[data-resize-handle='w']");
       const east = pressable("[data-resize-handle='e']");
 
+      // Each handle owns one boundary and reads the other three live. Drag one
+      // edge, then the other. The second drag has to move its own boundary and
+      // keep the first's.
       await triggerEvent(west, "pointerdown", {
         button: 0,
         pointerId: 1,
         clientX: 0,
         clientY: 0,
       });
+      await triggerEvent(west, "pointermove", {
+        pointerId: 1,
+        clientX: -30,
+        clientY: 0,
+      });
+      await triggerEvent(west, "pointerup", {
+        pointerId: 1,
+        clientX: -30,
+        clientY: 0,
+      });
+
       await triggerEvent(east, "pointerdown", {
         button: 0,
         pointerId: 2,
         clientX: 0,
         clientY: 0,
       });
-
-      // Both gestures own the horizontal axis, one boundary each. Each must move
-      // its own edge and leave the other's alone, or the last to report wins and
-      // the box loses whichever boundary the other was holding.
       await triggerEvent(east, "pointermove", {
         pointerId: 2,
         clientX: 50,
         clientY: 0,
       });
-      await triggerEvent(west, "pointermove", {
-        pointerId: 1,
-        clientX: -30,
+      await triggerEvent(east, "pointerup", {
+        pointerId: 2,
+        clientX: 50,
         clientY: 0,
       });
 
@@ -435,66 +445,6 @@ module(
         moves.at(-1),
         { x: -20, y: 20 },
         "and the west edge still carries the origin with it"
-      );
-    });
-
-    test("two edge gestures at once do not drag each other's position back", async function (assert) {
-      const moves = [];
-      const note = noteFixture();
-      const onMove = (position) => {
-        moves.push(position);
-        note.position = { ...position };
-      };
-      const onResize = (size) => {
-        note.size = { ...size };
-      };
-
-      await render(
-        <template>
-          <StickyNote
-            @note={{note}}
-            @zoom={{1}}
-            @onMove={{onMove}}
-            @onResize={{onResize}}
-          />
-        </template>
-      );
-
-      pressable(".workflow-sticky-note");
-      const west = pressable("[data-resize-handle='w']");
-      const south = pressable("[data-resize-handle='s']");
-
-      await triggerEvent(west, "pointerdown", {
-        button: 0,
-        pointerId: 1,
-        clientX: 0,
-        clientY: 0,
-      });
-      await triggerEvent(south, "pointerdown", {
-        button: 0,
-        pointerId: 2,
-        clientX: 0,
-        clientY: 0,
-      });
-
-      // West grows the note leftwards, so its origin moves to -50.
-      await triggerEvent(west, "pointermove", {
-        pointerId: 1,
-        clientX: -60,
-        clientY: 0,
-      });
-      // South owns only the vertical axis. It must leave x where west put it;
-      // re-asserting its own press-time x would snap the note 60px right.
-      await triggerEvent(south, "pointermove", {
-        pointerId: 2,
-        clientX: 0,
-        clientY: 30,
-      });
-
-      assert.deepEqual(
-        moves.at(-1),
-        { x: -50, y: 20 },
-        "the vertical gesture leaves the horizontal gesture's origin alone"
       );
     });
 

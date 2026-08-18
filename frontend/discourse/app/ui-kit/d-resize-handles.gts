@@ -1,9 +1,12 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { assert } from "@ember/debug";
 import { registerDestructor } from "@ember/destroyable";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
-import { type SafeString, type TrustedHTML, trustHTML } from "@ember/template";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { isTrustedHTML, type TrustedHTML } from "@ember/template";
 import dPointerDrag, {
   type DPointerDragInfo,
 } from "discourse/ui-kit/modifiers/d-pointer-drag";
@@ -32,17 +35,41 @@ export const BOX_DIRECTIONS: BoxDirection[] = [
  * when the handles are not a rectangle's edges and corners.
  */
 export interface DResizeHandleDescriptor<Payload extends string | number> {
-  /** Identifies the handle. Handed back to every callback. */
+  /**
+   * What makes this handle itself. It must be unique among its siblings and
+   * stable across recomputes, so that a list changing under a held pointer
+   * destroys the handle that really went rather than the last one.
+   *
+   * Not derived from `payload`, which says what a handle means rather than which
+   * one it is. Several handles can legitimately mean the same thing.
+   */
+  key: string;
+
+  /** What the handle means. Handed back to every callback, and may repeat. */
   payload: Payload;
 
   /** Positions and styles the handle. */
   class?: string;
 
   /**
-   * Inline positioning. A plain string is wrapped here, so a consumer can pass
-   * one without tripping the dynamic-`style` XSS warning.
+   * Inline positioning. Wrap the string in `trustHTML` before passing it here.
+   * Only the caller knows whether the values it interpolated are safe, so this
+   * component will not make that call for it.
    */
-  style?: string | SafeString | TrustedHTML;
+  style?: TrustedHTML;
+}
+
+/** What one gesture carries for as long as it runs. */
+interface Gesture<Payload, Session> {
+  payload: Payload;
+  /** The element pressed, so its teardown can close this gesture. */
+  handle: HTMLElement;
+  /** The last report, so teardown can close the gesture at its last position. */
+  event: PointerEvent;
+  info: DPointerDragInfo;
+  measured: Element | null;
+  measuredRect: DOMRect | null;
+  session: Session;
 }
 
 /**
@@ -72,20 +99,18 @@ export interface DResizeHandleDragInfo<
   readonly delta: Readonly<{ x: number; y: number }>;
 
   /**
-   * Whether `@onResize` has fired at least once for THIS gesture, which is what
-   * tells a resize apart from a click that landed on a handle. Commit on
-   * `@onResizeEnd` only when it is set, or a bare click writes an entry into
-   * whatever history the commit feeds.
+   * Whether `@onResize` has fired at least once for THIS gesture. It tells a
+   * resize apart from a click that landed on a handle. Commit on `@onResizeEnd`
+   * only when it is set, or a bare click records a no-op change.
    */
   readonly moved: boolean;
 
   /**
    * Scratch for the length of one gesture, and the same object throughout it.
    *
-   * Per gesture rather than per component because every handle registers its
-   * own, and a touch screen can hold two at once: state hung on the consumer
-   * would be rebased the moment the second pressed. Write the press-time
-   * snapshot here in `@onResizeStart` and read it back on every later report.
+   * Write the press-time snapshot here in `@onResizeStart` and read it back on
+   * every later report. It lives here rather than on the consumer so that each
+   * gesture starts with a fresh one.
    */
   readonly session: Session;
 
@@ -98,14 +123,12 @@ export interface DResizeHandleDragInfo<
 
   /**
    * The bounds of the element named by `@measure`, or `null` when none was
-   * named. Viewport-relative and with transforms applied, so a consumer working
-   * in unscaled units divides the dimensions by the scale factor and takes any
-   * translation off `left` and `top`.
+   * named. Viewport-relative, with transforms applied, so a consumer working in
+   * unscaled units divides by the scale factor and subtracts `left` and `top`.
    *
-   * A LIVE reading: re-read on scroll and viewport resize, so a consumer
-   * projecting the pointer into the box's own space stays correct when the box
-   * moves under a held pointer. Not re-read when the element merely changes
-   * SIZE, nor on a layout shift or transform, none of which raise either event.
+   * A LIVE reading, re-read on scroll and viewport resize, so it stays correct
+   * when the box moves under a held pointer. It is NOT re-read when the element
+   * changes size, or on a layout shift or transform. Those raise no event.
    */
   readonly measuredRect: DOMRect | null;
 }
@@ -147,10 +170,9 @@ interface DResizeHandlesSignature<
      * The gesture began. Snapshot the press-time state onto `dragInfo.session`
      * here. Return `false` to veto it.
      *
-     * The callbacks are `NoInfer` positions so the payload type is decided by
-     * `@handles` alone. Otherwise a handler taking, say, a number would infer
-     * `Payload` as `number` on the built-in box, which hands back compass
-     * strings — the mismatch would be hidden instead of reported.
+     * The callbacks sit in `NoInfer` positions so that `@handles` alone decides
+     * the payload type. Without it a handler taking a number would infer
+     * `Payload` as `number` on the built-in box, hiding a real mismatch.
      */
     onResizeStart?: (
       payload: NoInfer<Payload>,
@@ -210,10 +232,9 @@ interface DResizeHandlesSignature<
     measure?: MeasureTarget;
 
     /**
-     * Whether an accepted press stops propagating. Defaults to `false`, since
-     * document-level listeners depend on seeing `pointerdown`. Required when the
-     * handles sit inside another gesture, which would otherwise claim the pointer
-     * last and so win it, releasing the handle the instant it was pressed.
+     * Whether an accepted press stops propagating. Defaults to `false`, because
+     * document-level listeners need to see `pointerdown`. Set it when the handles
+     * sit inside another gesture that would otherwise steal the pointer.
      */
     stopPropagation?: boolean;
   };
@@ -224,13 +245,18 @@ interface DResizeHandlesSignature<
  * lifecycle, owning what every consumer would otherwise repeat: the handle loop,
  * the per-handle pointer wiring, and one gesture's state for as long as it runs.
  *
- * It reports pointer geometry rather than a size, so the consumer's `@onResize`
- * does the math in whatever units it thinks in, paints its own preview, and
- * commits on `@onResizeEnd`. A gesture gets one terminal callback, teardown
- * included and the known gap below excepted, and carries a `session` to hang
- * press-time state on.
+ * It reports pointer geometry rather than a size. The consumer does the math in
+ * its own units, paints its own preview, and commits on `@onResizeEnd`.
  *
- * The common case — a box's 8 edge/corner handles — is built in through
+ * Every gesture ends with exactly one terminal callback, whether it ends on
+ * release, on its handle being removed, or on the component being destroyed.
+ * Each gesture carries a `session` for press-time state.
+ *
+ * ONE gesture at a time. A press arriving while another is held is refused, so
+ * two handles on one box can never fight over the same geometry. Two separate
+ * boxes still drag at once, because each renders its own handles.
+ *
+ * The common case, a box's 8 edge and corner handles, is built in through
  * `@handleClass`. Anything else passes explicit `@handles` descriptors.
  *
  * @example
@@ -249,13 +275,8 @@ interface DResizeHandlesSignature<
  * corners has no single value to report.
  *
  * Deliberately POINTER-ONLY. The handles are `aria-hidden` and out of the tab
- * order, because eight tab stops per box would be hostile and no ARIA role
- * describes a corner drag. Keyboard operation belongs on the resized object
- * itself, where the consumer knows what its units mean.
- *
- * Known gap: shrinking `@handles` or `@directions` mid-gesture destroys the LAST
- * handle, since they are keyed positionally, stranding a gesture held on it with
- * no terminal callback.
+ * order: eight tab stops per box would be hostile, and no ARIA role describes a
+ * corner drag. Put keyboard resizing on the resized object itself.
  *
  * @see The `DResizeSeparator` component for a ONE-axis resize between two regions, which is
  *   operable by keyboard and announced.
@@ -265,36 +286,20 @@ export default class DResizeHandles<
   Payload extends string | number = BoxDirection,
   Session extends object = object,
 > extends Component<DResizeHandlesSignature<Payload, Session>> {
-  /**
-   * The in-flight gestures, keyed by pointer.
-   *
-   * Keyed rather than held singly because these handlers are shared across every
-   * handle: two fingers on two handles of one box arrive here indistinguishable
-   * but for the pointer they came on.
-   */
-  #gestures = new Map<
-    number,
-    {
-      payload: Payload;
-      /** The last report, so teardown can close the gesture where it stood. */
-      event: PointerEvent;
-      info: DPointerDragInfo;
-      measured: Element | null;
-      measuredRect: DOMRect | null;
-      session: Session;
-    }
-  >();
+  /** The gesture in flight, or `null` when nothing is held. */
+  #gesture: Gesture<Payload, Session> | null = null;
 
   /**
-   * Re-measures every live gesture's box.
+   * Re-measures the live gesture's box.
    *
    * Bound to scroll and resize for the gesture's length because the bounds are
    * viewport-relative: the box can move under a held pointer without changing
    * size, and stale bounds put the pointer in the wrong place.
    */
   #onReflow = () => {
-    for (const gesture of this.#gestures.values()) {
-      gesture.measuredRect = gesture.measured?.getBoundingClientRect() ?? null;
+    if (this.#gesture) {
+      this.#gesture.measuredRect =
+        this.#gesture.measured?.getBoundingClientRect() ?? null;
     }
   };
 
@@ -305,124 +310,175 @@ export default class DResizeHandles<
     args: DResizeHandlesSignature<Payload, Session>["Args"]
   ) {
     super(owner, args);
-    registerDestructor(this, () => this.#closeHeldGestures());
+    registerDestructor(this, () => this.#closeGesture());
   }
 
   /**
    * The resolved handle descriptors: explicit `@handles` when named, otherwise
    * the built-in box from `@handleClass`.
    *
-   * Keyed on whether `@handles` was NAMED rather than on whether it holds
-   * anything, because that is the condition `Payload` is inferred from. A
-   * consumer whose descriptors are momentarily undefined has callbacks typed for
-   * its own payload, and falling through to the box would hand them compass
-   * strings instead — type-checked and wrong.
+   * The branch tests whether `@handles` was NAMED, not whether it holds
+   * anything, because naming it is what `Payload` is inferred from. Falling
+   * through to the box would hand compass strings to differently-typed callbacks.
    */
   get handles() {
     const source =
       "handles" in this.args ? (this.args.handles ?? []) : this.#boxHandles();
-    return source.map((handle) => ({
-      ...handle,
-      style:
-        typeof handle.style === "string"
-          ? trustHTML(handle.style)
-          : handle.style,
-    }));
+
+    if (DEBUG) {
+      const seen = new Set<string>();
+      for (const handle of source) {
+        assert(
+          "DResizeHandles: wrap a descriptor's `style` in `trustHTML` before passing it",
+          handle.style == null || isTrustedHTML(handle.style)
+        );
+        // Glimmer reports neither a missing nor a duplicate key. It derives a
+        // positional one, which is what keying exists to avoid.
+        assert(
+          "DResizeHandles: every handle descriptor needs a unique `key`",
+          handle.key != null
+        );
+        assert(
+          `DResizeHandles: two handles share the key \`${handle.key}\``,
+          !seen.has(handle.key)
+        );
+        seen.add(handle.key);
+      }
+    }
+
+    return source;
   }
 
   @action
   onHandleDown(payload: Payload, event: PointerEvent, info: DPointerDragInfo) {
-    const measured = this.#measureTarget(event.currentTarget as HTMLElement);
-    this.#gestures.set(event.pointerId, {
+    // Returning false vetoes the press, so only one gesture runs at a time.
+    if (this.#gesture) {
+      return false;
+    }
+
+    const handle = event.currentTarget as HTMLElement;
+    const measured = this.#measureTarget(handle);
+    const gesture: Gesture<Payload, Session> = {
       payload,
+      handle,
       event,
       info,
       measured,
       measuredRect: measured?.getBoundingClientRect() ?? null,
       session: {} as Session,
-    });
+    };
+    this.#gesture = gesture;
     this.#watchReflow();
 
     let started;
     try {
       started = this.args.onResizeStart?.(
         payload,
-        this.#dragInfo(payload, event, info)
+        this.#dragInfo(gesture, event, info)
       );
     } catch (error) {
-      this.#reset(event);
+      this.#reset();
       throw error;
     }
 
-    // A vetoed press starts no gesture, so no terminal callback arrives to close
-    // the entry it would otherwise leave behind.
+    // The press was vetoed, so no terminal callback will arrive to clear it.
     if (started === false) {
-      this.#reset(event);
+      this.#reset();
     }
 
     return started;
   }
 
   @action
-  onHandleMove(payload: Payload, event: PointerEvent, info: DPointerDragInfo) {
-    this.args.onResize?.(payload, this.#dragInfo(payload, event, info));
+  onHandleMove(event: PointerEvent, info: DPointerDragInfo) {
+    const gesture = this.#gesture;
+    if (!gesture) {
+      return;
+    }
+    // Build the report first. `onResize?.()` skips its arguments when there is
+    // no handler, and the gesture's snapshot has to update either way.
+    const dragInfo = this.#dragInfo(gesture, event, info);
+    this.args.onResize?.(gesture.payload, dragInfo);
   }
 
   @action
-  onHandleUp(payload: Payload, event: PointerEvent, info: DPointerDragInfo) {
+  onHandleUp(event: PointerEvent, info: DPointerDragInfo) {
+    const gesture = this.#gesture;
+    if (!gesture) {
+      return;
+    }
+    const dragInfo = this.#dragInfo(gesture, event, info);
     // Released in a `finally` so a throwing consumer cannot strand the gesture
     // and leave the reflow listeners attached.
     try {
-      this.args.onResizeEnd?.(payload, this.#dragInfo(payload, event, info));
+      this.args.onResizeEnd?.(gesture.payload, dragInfo);
     } finally {
-      this.#reset(event);
+      this.#reset();
     }
   }
 
   @action
-  onHandleCancel(
-    payload: Payload,
-    event: PointerEvent,
-    info: DPointerDragInfo
-  ) {
+  onHandleCancel(event: PointerEvent, info: DPointerDragInfo) {
+    const gesture = this.#gesture;
+    if (!gesture) {
+      return;
+    }
+    const dragInfo = this.#dragInfo(gesture, event, info);
     try {
-      this.args.onResizeCancel?.(payload, this.#dragInfo(payload, event, info));
+      this.args.onResizeCancel?.(gesture.payload, dragInfo);
     } finally {
-      this.#reset(event);
+      this.#reset();
     }
   }
 
   /**
-   * Ends every gesture still held, on the way out. The engine reports nothing
-   * when the handles go, so a consumer that opened something at the press would
-   * otherwise never get to close it.
+   * Closes the gesture when the handle holding it is destroyed. That happens
+   * when `@handles` or `@directions` drops a handle while the pointer is down.
+   *
+   * The engine reports nothing when its element goes. Without this, the consumer
+   * would never get to close what it opened at the press.
+   *
+   * @param element - The handle being torn down.
    */
-  #closeHeldGestures() {
-    const held = [...this.#gestures.values()];
-    this.#gestures.clear();
-    this.#unwatchReflow();
+  @action
+  onHandleTeardown(element: Element) {
+    if (this.#gesture?.handle === element) {
+      this.#closeGesture();
+    }
+  }
 
-    for (const gesture of held) {
-      const dragInfo = {
-        ...gesture.info,
-        payload: gesture.payload,
-        event: gesture.event,
-        session: gesture.session,
-        measured: gesture.measured,
-        measuredRect: gesture.measuredRect,
-      };
-      try {
-        if (this.args.cancelCommits) {
-          this.args.onResizeEnd?.(gesture.payload, dragInfo);
-        } else {
-          this.args.onResizeCancel?.(gesture.payload, dragInfo);
-        }
-      } catch (error) {
-        // Swallowed only here: a destructor throws into the flush tearing down
-        // every sibling component, and would take their cleanup with it.
-        // eslint-disable-next-line no-console
-        console.error(error);
+  /**
+   * Ends a gesture that is still held. Runs both when a single handle is
+   * destroyed and when the whole component is.
+   */
+  #closeGesture() {
+    const gesture = this.#gesture;
+    if (!gesture) {
+      return;
+    }
+    // Clear it first. At teardown the handle and the component both close the
+    // gesture, and whichever runs second has to do nothing.
+    this.#reset();
+
+    const dragInfo = {
+      ...gesture.info,
+      payload: gesture.payload,
+      event: gesture.event,
+      session: gesture.session,
+      measured: gesture.measured,
+      measuredRect: gesture.measuredRect,
+    };
+    try {
+      if (this.args.cancelCommits) {
+        this.args.onResizeEnd?.(gesture.payload, dragInfo);
+      } else {
+        this.args.onResizeCancel?.(gesture.payload, dragInfo);
       }
+    } catch (error) {
+      // Swallowed only here. A throw from a destructor aborts the teardown
+      // flush and takes every sibling's cleanup with it.
+      // eslint-disable-next-line no-console
+      console.error(error);
     }
   }
 
@@ -433,57 +489,39 @@ export default class DResizeHandles<
     }
     const directions = this.args.directions ?? BOX_DIRECTIONS;
     return directions.map((dir) => ({
-      // Only `@handles` can pin `Payload` to something other than a compass
-      // direction, and supplying it makes this branch unreachable — the getter
-      // above prefers the descriptors. TypeScript cannot correlate the two.
+      // A direction appears once in a box, so it is the handle's identity too.
+      key: dir,
+      // The cast is safe. Only `@handles` pins `Payload` to something else, and
+      // supplying it makes this branch unreachable. TypeScript cannot see that.
       payload: dir as Payload,
       class: `${handleClass} --${dir}`,
     }));
   }
 
   #dragInfo(
-    payload: Payload,
+    gesture: Gesture<Payload, Session>,
     event: PointerEvent,
     info: DPointerDragInfo
   ): DResizeHandleDragInfo<Payload, Session> {
-    const gesture = this.#gestures.get(event.pointerId);
-    if (gesture) {
-      gesture.event = event;
-      gesture.info = info;
-    }
+    gesture.event = event;
+    gesture.info = info;
 
     return {
-      // The callback's own payload rather than the gesture's snapshot: with
-      // positional keys, a descriptor list that changes mid-drag rebinds the
-      // handler while the snapshot still holds what was pressed.
-      payload,
+      payload: gesture.payload,
       event,
       origin: info.origin,
       current: info.current,
       delta: info.delta,
       moved: info.moved,
-      session: gesture?.session ?? ({} as Session),
-      measured: gesture?.measured ?? null,
-      measuredRect: gesture?.measuredRect ?? null,
+      session: gesture.session,
+      measured: gesture.measured,
+      measuredRect: gesture.measuredRect,
     };
   }
 
-  #reset(event: PointerEvent) {
-    this.#gestures.delete(event.pointerId);
-    // Detached as soon as nothing is left to re-measure, which is not the same
-    // as no gesture being left: an unmeasured gesture can outlive a measured one.
-    if (!this.#hasMeasuredGesture()) {
-      this.#unwatchReflow();
-    }
-  }
-
-  #hasMeasuredGesture(): boolean {
-    for (const gesture of this.#gestures.values()) {
-      if (gesture.measured) {
-        return true;
-      }
-    }
-    return false;
+  #reset() {
+    this.#gesture = null;
+    this.#unwatchReflow();
   }
 
   #measureTarget(handle: HTMLElement): Element | null {
@@ -492,10 +530,9 @@ export default class DResizeHandles<
   }
 
   #watchReflow() {
-    // Nothing to re-measure without `@measure`, which is the common case: the
-    // built-in box reports no rect, so a document-wide capture-phase scroll
-    // listener would run on every scroll to write null over null.
-    if (this.#watchingReflow || !this.#hasMeasuredGesture()) {
+    // Skip the listeners when nothing is measured, which is the common case.
+    // Otherwise a document-wide scroll listener fires on every scroll for nothing.
+    if (this.#watchingReflow || !this.#gesture?.measured) {
       return;
     }
     this.#watchingReflow = true;
@@ -513,20 +550,21 @@ export default class DResizeHandles<
   }
 
   <template>
-    {{! Keyed by index: the handles themselves hold no state, since a gesture is
-      tracked here against its pointer, and a payload may repeat across handles.
-      Positional keys are therefore both safe and collision-free. }}
-    {{#each this.handles key="@index" as |handle|}}
+    {{! Keyed by identity so that removing a handle destroys the right one. With
+      positional keys the last handle goes instead. That strands its gesture, and
+      leaves the handles after the gap bound to descriptors nobody pressed. }}
+    {{#each this.handles key="key" as |handle|}}
       <span
         class={{handle.class}}
         style={{handle.style}}
         data-resize-handle={{handle.payload}}
         aria-hidden="true"
+        {{willDestroy this.onHandleTeardown}}
         {{dPointerDrag
           onDragStart=(fn this.onHandleDown handle.payload)
-          onDrag=(fn this.onHandleMove handle.payload)
-          onDragEnd=(fn this.onHandleUp handle.payload)
-          onDragCancel=(fn this.onHandleCancel handle.payload)
+          onDrag=this.onHandleMove
+          onDragEnd=this.onHandleUp
+          onDragCancel=this.onHandleCancel
           draggingClass=@draggingClass
           threshold=@threshold
           stopPropagation=@stopPropagation
