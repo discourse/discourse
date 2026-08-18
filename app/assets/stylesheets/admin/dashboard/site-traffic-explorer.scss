@@ -14,9 +14,9 @@
 
   &__filters {
     display: flex;
-    flex-direction: column;
     flex: 1 1 auto;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-2);
   }
 
