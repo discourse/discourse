@@ -97,12 +97,7 @@ RSpec.describe Jobs::PurgeAiApiAuditLogs do
           created_at: 181.days.ago,
         )
       summary_logs =
-        Fabricate.times(
-          5,
-          :ai_api_audit_log,
-          raw_request_payload: "strip",
-          created_at: 31.days.ago,
-        )
+        Fabricate.times(5, :ai_api_audit_log, raw_request_payload: "strip", created_at: 31.days.ago)
 
       job.execute({})
 
