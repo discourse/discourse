@@ -18,13 +18,15 @@ class LetterAvatar
   end
 
   # BUMP UP if avatar algorithm changes
-  VERSION = 6
+  VERSION = 7
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
   POINTSIZE = 280
-  SVG_TEXT_BASELINE = 245
-  private_constant :SVG_TEXT_BASELINE
+  FONT_FILENAME = "NotoSans-Regular.woff2"
+  DEFAULT_FONT_FAMILY = "Noto Sans"
+  MACOS_FONT_FAMILY = "Helvetica"
+  private_constant :FONT_FILENAME, :DEFAULT_FONT_FAMILY, :MACOS_FONT_FAMILY
 
   class << self
     def version
@@ -71,36 +73,36 @@ class LetterAvatar
       color = identity.color
       filename = fullsize_path(identity)
 
-      Tempfile.create(%w[letter-avatar .svg]) do |svg|
-        svg.write(svg_for(identity))
-        svg.flush
-
-         Vips.run(
-           "vips",
-           "flatten",
-          svg.path,
-          filename,
-          "--background",
-          color.join(" "),
-          read: [svg.path],
-          write: [File.dirname(filename)],
-           allow_untrusted: true,
-         )
-       end
-       filename
+      Dir.mktmpdir("letter-avatar") do |directory|
+        glyph_path = File.join(directory, "glyph.png")
+        canvas_path = File.join(directory, "canvas.png")
+        Vips.run(
+          ["text", glyph_path, ERB::Util.html_escape(identity.letter), *font_arguments, "--rgba"],
+          [
+            "gravity",
+            glyph_path,
+            canvas_path,
+            "centre",
+            FULLSIZE.to_s,
+            FULLSIZE.to_s,
+            "--extend",
+            "background",
+            "--background",
+            "#{color.join(" ")} 255",
+          ],
+          ["flatten", canvas_path, filename, "--background", color.join(" ")],
+          read: [font_path].compact,
+          write: [directory, File.dirname(filename)],
+        )
+      end
+      filename
     end
 
     def vips_version
       return @vips_version if @vips_version
 
-      fonts =
-        Vips
-          .run("fc-list", "--format", "%{file}\t%{family}\t%{style}\t%{fontversion}\n")
-          .lines
-          .sort
-          .join
       @vips_version =
-        Digest::MD5.hexdigest([VERSION.to_s, Vips.run("vips", "--version"), fonts].join("\0"))
+        Digest::MD5.hexdigest([VERSION.to_s, Vips.run("--version"), font_version].join("\0"))
     end
 
     def cleanup_old
@@ -124,7 +126,6 @@ class LetterAvatar
       Tempfile.create(%w[letter-avatar-resized .png], binmode: true) do |resized|
         resized.close
         Vips.run(
-          "vips",
           "thumbnail",
           from,
           "#{resized.path}[compression=6,strip]",
@@ -142,7 +143,6 @@ class LetterAvatar
           nice: 10,
         )
         Vips.run(
-          "vips",
           "sharpen",
           resized.path,
           output,
@@ -157,27 +157,27 @@ class LetterAvatar
       end
     end
 
-    def svg_for(identity)
-      color = identity.color.join(",")
-      letter = ERB::Util.html_escape(identity.letter)
-      baseline = SVG_TEXT_BASELINE + vertical_offset
-
-      <<~SVG
-        <svg xmlns="http://www.w3.org/2000/svg" width="#{FULLSIZE}" height="#{FULLSIZE}" viewBox="0 0 #{FULLSIZE} #{FULLSIZE}">
-          <rect width="#{FULLSIZE}" height="#{FULLSIZE}" fill="rgb(#{color})"/>
-          <text x="#{FULLSIZE / 2}" y="#{baseline}" fill="white" fill-opacity="0.8" font-family="#{font_family}" font-size="#{POINTSIZE}" text-anchor="middle" dominant-baseline="central">#{letter}</text>
-        </svg>
-      SVG
+    def font_path
+      return if macos?
+      @font_path ||= File.join(DiscourseFonts.path_for_fonts, FONT_FILENAME)
     end
 
-    # Use Helvetica on macOS because Nimbus Sans is unavailable there.
+    def font_arguments
+      arguments = ["--font", "#{font_family} #{POINTSIZE}"]
+      arguments.unshift("--fontfile", font_path) if font_path
+      arguments
+    end
+
     def font_family
-      RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "Nimbus Sans"
+      macos? ? MACOS_FONT_FAMILY : DEFAULT_FONT_FAMILY
     end
 
-    # Helvetica needs a larger offset to keep the glyph vertically centered.
-    def vertical_offset
-      font_family == "Helvetica" ? 26 : 34
+    def font_version
+      font_path ? Digest::MD5.file(font_path).hexdigest : font_family
+    end
+
+    def macos?
+      RbConfig::CONFIG["host_os"].match?(/darwin/i)
     end
   end
 

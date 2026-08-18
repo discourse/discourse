@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "tmpdir"
+require "shellwords"
 
 class Vips
   DEFAULT_TIMEOUT = 5
@@ -21,7 +22,7 @@ class Vips
   private_constant :RLIMITS
 
   def self.run(
-    *command,
+    *operations,
     read: [],
     write: [],
     timeout: nil,
@@ -34,6 +35,14 @@ class Vips
             "Cannot run libvips because Landlock sandboxing is unavailable"
     end
 
+    operations = [operations] if !operations.first.is_a?(Array)
+    commands = operations.map { |operation| ["vips", *operation] }
+    command =
+      if commands.one?
+        commands.first
+      else
+        ["sh", "-c", commands.map { |item| Shellwords.join(item) }.join(" && ")]
+      end
     command = ["nice", "-n", nice.to_s, *command] if nice
     Dir.mktmpdir("discourse-vips-") do |scratch|
       environment = {
