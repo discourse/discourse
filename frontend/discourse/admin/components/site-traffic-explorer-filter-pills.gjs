@@ -178,9 +178,8 @@ export default class SiteTrafficExplorerFilterPills extends Component {
               <span>{{i18n "admin.site_traffic_explorer.apply"}}</span>
               {{#if (gt @pendingFilterCount 0)}}
                 <span
-                  class="site-traffic-explorer__apply-count"
                   data-test-site-traffic-apply-count
-                >{{@pendingFilterCount}}</span>
+                >({{@pendingFilterCount}})</span>
               {{/if}}
             </button>
           {{/if}}

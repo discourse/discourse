@@ -70,20 +70,6 @@
     gap: var(--space-1);
   }
 
-  &__apply-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 1.5em;
-    min-height: 1.5em;
-    padding-inline: 0.35em;
-    border-radius: 2em;
-    background: var(--secondary);
-    color: var(--primary);
-    font-size: var(--font-down-1);
-    line-height: 1;
-  }
-
   &__partial-warning {
     margin: 0;
   }
