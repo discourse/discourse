@@ -199,8 +199,8 @@ importers:
   frontend/discourse:
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
-        specifier: ^1.7.4
-        version: 1.8.1
+        specifier: ^3.0.0
+        version: 3.0.0
       '@codemirror/autocomplete':
         specifier: ^6.20.3
         version: 6.20.3
@@ -977,8 +977,8 @@ packages:
   '@asamuzakjp/css-color@3.2.0':
     resolution: {integrity: sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw==}
 
-  '@atlaskit/pragmatic-drag-and-drop@1.8.1':
-    resolution: {integrity: sha512-uXWNPpL8n4OmTVbduH7nq8pk8htqGo/prR5cYEE8sVCPJGAUMWn6lzvWTfI+4VCeQvHiDRODVz4YzH06OVAxhw==}
+  '@atlaskit/pragmatic-drag-and-drop@3.0.0':
+    resolution: {integrity: sha512-EEKBELv757wrvhMHBAoFcXjfzGZ4Y2FJ2xnSsWovsOKywkN1Q4IWRH52hQpPmJnATLcmO9viVhoXWSXFBLKSLQ==}
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -8466,7 +8466,7 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 10.4.3
 
-  '@atlaskit/pragmatic-drag-and-drop@1.8.1':
+  '@atlaskit/pragmatic-drag-and-drop@3.0.0':
     dependencies:
       '@babel/runtime': 7.29.7
       bind-event-listener: 3.0.0

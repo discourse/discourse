@@ -1,10 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
+import { next } from "@ember/runloop";
 import Service from "@ember/service";
 import {
   type ElementDragPayload,
   monitorForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+} from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import { isTesting } from "discourse/lib/environment";
+import { reportClientError } from "discourse/lib/report-client-error";
 
 /** The in-flight element drag, as the source described it. */
 export interface DragPayload {
@@ -43,6 +46,41 @@ export const DRAG_BODY = "discourse:dragBody";
  */
 export function dragTypeOf(data?: Record<string, unknown>) {
   return data?.type as string | undefined;
+}
+
+/**
+ * Calls a consumer callback that is allowed to throw, so nothing it throws reaches the
+ * caller.
+ *
+ * The library calls us from inside its own event dispatch and reaches its end-of-drag
+ * cleanup on the next statement, unguarded. An escaping exception skips that cleanup and
+ * is reported as uncaught, where nothing in the application can handle it.
+ *
+ * The source's deferred end-of-drag pair needs the same guard: its second callback and its
+ * waiting teardown both still have to run.
+ *
+ * Reported through `discourse-error`, which attributes it to whichever theme or plugin it
+ * came from. Under test it is raised as well, so a consumer's mistake fails the test it
+ * happened in rather than passing quietly.
+ *
+ * @param run - The consumer callback.
+ * @param fallback - Returned when it throws. Omit for a callback returning nothing. Give a
+ *   gate the conservative answer, since a gate that threw has decided nothing.
+ */
+export function consumerMayThrow<T>(run: () => T, fallback?: T): T | undefined {
+  try {
+    return run();
+  } catch (error) {
+    reportClientError(error, "broken_drag_and_drop_alert");
+    if (isTesting()) {
+      // Thrown here, the library would skip the cleanup that ends the drag, and
+      // it starts no new drag while it still thinks one is running.
+      next(() => {
+        throw error;
+      });
+    }
+    return fallback;
+  }
 }
 
 /**
@@ -107,9 +145,6 @@ export function normalizeDragSource(
  * Use this to READ drag state for rendering. Use `dDragAndDropMonitor` to
  * RESPOND to a drag imperatively — rendering from its callbacks means
  * hand-maintaining state this service already keeps.
- *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  */
 export default class DragAndDropService extends Service {
   @tracked currentDrag: DragPayload | null = null;
@@ -178,8 +213,13 @@ export default class DragAndDropService extends Service {
   /**
    * Does the in-flight drag's `type` match the supplied `accepts` filter?
    *
-   * @param accepts - Single type string or array. A nullish filter matches
-   *   nothing, so a target can pass its unset arg straight through.
+   * The opposite default from the drop target and the monitor, on purpose. There an
+   * omitted filter accepts every drag, because a target that filters nothing is a real
+   * configuration.
+   *
+   * Here a nullish filter means the caller has not decided, so it matches nothing.
+   *
+   * @param accepts - Single type string or array. Nullish matches nothing.
    */
   accepts(accepts?: string | string[] | null) {
     if (!this.currentDrag || !accepts) {

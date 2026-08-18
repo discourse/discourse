@@ -5,12 +5,12 @@ import {
   draggable,
   type ElementDropTargetEventBasePayload,
   type ElementGetFeedbackArgs,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
-import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/prevent-unhandled";
+} from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/utils/pointer-outside-of-preview";
+import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/utils/prevent-unhandled";
+import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/utils/set-custom-native-drag-preview";
 import Modifier, { type ArgsFor } from "ember-modifier";
-import { DRAG_BODY } from "discourse/services/drag-and-drop";
+import { consumerMayThrow, DRAG_BODY } from "discourse/services/drag-and-drop";
 
 /** The pointer position as the underlying library reports it. */
 type DragInput = ElementGetFeedbackArgs["input"];
@@ -395,11 +395,13 @@ export function registerDragAndDropSource(
       if (!args.canDrag) {
         return true;
       }
-      return (
-        args.canDrag({
-          source: { type: args.type, data: args.data, element },
-          input,
-        }) !== false
+      return consumerMayThrow(
+        () =>
+          args.canDrag!({
+            source: { type: args.type, data: args.data, element },
+            input,
+          }) !== false,
+        false
       );
     },
     onGenerateDragPreview: ({ nativeSetDragImage }) => {
@@ -438,7 +440,9 @@ export function registerDragAndDropSource(
           // where TypeScript sees the whole `Element | DragPreviewRenderer`
           // union again.
           render: ({ container }) =>
-            (args.dragPreview as DragPreviewRenderer)({ container, element }),
+            consumerMayThrow(() =>
+              (args.dragPreview as DragPreviewRenderer)({ container, element })
+            ),
         });
         return;
       }
@@ -459,7 +463,10 @@ export function registerDragAndDropSource(
     },
     getInitialData: () => {
       const args = getArgsRef();
-      const resolved = args.getInitialData?.() ?? args.data ?? {};
+      const resolved = consumerMayThrow(
+        () => args.getInitialData?.() ?? args.data ?? {},
+        {}
+      );
       // Stamped last: the discriminator is the primitive's, and a payload
       // carrying its own `type` — which domain objects routinely do — would
       // otherwise decide which targets accept the drag.
@@ -478,10 +485,12 @@ export function registerDragAndDropSource(
         data: consumerData(event.source.data),
         element,
       };
-      args.onDragStart?.({
-        source: sourcePayload,
-        input: event.location?.current?.input,
-      });
+      consumerMayThrow(() =>
+        args.onDragStart?.({
+          source: sourcePayload,
+          input: event.location?.current?.input,
+        })
+      );
     },
     onDrop: (event) => {
       const args = getArgsRef();
@@ -526,9 +535,16 @@ export function registerDragAndDropSource(
           // Lifecycle before dispatch: a consumer that only needs to undo its
           // drag-time state hears about every drag, while one that performs an
           // operation is not asked to perform it for a drag the user gave up on.
-          consumerOnDragEnd?.({ source: sourcePayload, location });
+          //
+          // Guarded one at a time. A lifecycle callback that throws must not
+          // cost the drag the operation it landed.
+          consumerMayThrow(() =>
+            consumerOnDragEnd?.({ source: sourcePayload, location })
+          );
           if (landed) {
-            consumerOnDrop?.({ source: sourcePayload, location });
+            consumerMayThrow(() =>
+              consumerOnDrop?.({ source: sourcePayload, location })
+            );
           }
         } finally {
           // A teardown that was held back for this drag. Run last, so the
@@ -646,8 +662,8 @@ export function registerDragAndDropSource(
  * Playwright) rather than Capybara's `drag_to`, whose synthetic mouse
  * events can silently stall mid-drag.
  *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ * Pointer-only. A native drag has no keyboard equivalent, so a surface built on this
+ * needs a keyboard route to the same operation beside it.
  *
  * @see The `dPointerDrag` modifier when there is no drop target and no payload — a
  *   press that changes a value continuously is a different gesture.
@@ -741,12 +757,15 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
    *   lives on asks for the pending drop dispatch to be kept.
    */
   #detach({ cancelPending = true }: { cancelPending?: boolean } = {}) {
+    // A detach with nothing registered can still land while a registration this
+    // let go of earlier is mid-drag. That drag's mark is the registration's.
+    const held = Boolean(this.#cleanup);
     const work = this.#cleanup?.({ cancelPending }) ?? null;
     if (work) {
       // The drag this work is waiting on is still in flight, so the element
       // keeps its mark; the deferred teardown removes it when the drag ends.
       this.#detached.add(work);
-    } else {
+    } else if (held) {
       this.#element?.classList.remove("--dragging");
     }
     this.#pruneDetached();

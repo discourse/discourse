@@ -47,10 +47,20 @@
 /* Every target draws from one position vocabulary, so "a drop would land above
    this row" has one visual meaning across consumers. */
 
+/* The line is a pseudo-element, so it needs a containing block. Declared at zero
+   specificity because a target that positions itself must keep its own value. */
+
+:where(
+  [data-drop-target].--drag-above,
+  [data-drop-target].--drag-below,
+  [data-drop-target].--drag-left,
+  [data-drop-target].--drag-right
+) {
+  position: relative;
+}
+
 [data-drop-target] {
   &.--drag-above {
-    position: relative;
-
     &::before {
       @include d-drag-line-horizontal;
       top: -1px;
@@ -58,8 +68,6 @@
   }
 
   &.--drag-below {
-    position: relative;
-
     &::after {
       @include d-drag-line-horizontal;
       bottom: -1px;
@@ -71,8 +79,6 @@
      the opposite side from where the drop resolves. */
 
   &.--drag-left {
-    position: relative;
-
     &::before {
       @include d-drag-line-vertical;
 
@@ -82,8 +88,6 @@
   }
 
   &.--drag-right {
-    position: relative;
-
     &::after {
       @include d-drag-line-vertical;
 

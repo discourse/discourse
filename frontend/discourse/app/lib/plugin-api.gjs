@@ -101,6 +101,7 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
+import { reportClientError } from "discourse/lib/report-client-error";
 import {
   addLogSearchLinkClickedCallbacks,
   addSearchResultsCallback,
@@ -195,11 +196,7 @@ function wrapWithErrorHandler(func, messageKey) {
     try {
       return func.call(this, ...arguments);
     } catch (error) {
-      document.dispatchEvent(
-        new CustomEvent("discourse-error", {
-          detail: { messageKey, error },
-        })
-      );
+      reportClientError(error, messageKey);
       if (isTesting()) {
         throw error;
       }

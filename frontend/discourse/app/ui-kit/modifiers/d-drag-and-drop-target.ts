@@ -3,9 +3,10 @@ import {
   type ElementDragPayload,
   type ElementDropTargetEventBasePayload,
   type ElementDropTargetGetFeedbackArgs,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+} from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { modifier } from "ember-modifier";
 import {
+  consumerMayThrow,
   DRAG_BODY,
   normalizeDragSource,
 } from "discourse/services/drag-and-drop";
@@ -395,12 +396,14 @@ export function registerDragAndDropTarget(
       return true;
     }
 
-    return (
-      args.canDrop({
-        source: normalizeSource(source, element),
-        input,
-        element,
-      }) !== false
+    return consumerMayThrow(
+      () =>
+        args.canDrop!({
+          source: normalizeSource(source, element),
+          input,
+          element,
+        }) !== false,
+      false
     );
   };
 
@@ -423,12 +426,14 @@ export function registerDragAndDropTarget(
    */
   const reportLeave = (source: ElementDragPayload, location: DragLocation) =>
     pairing.leave(() =>
-      getArgsRef().onDragLeave?.({
-        source: normalizeSource(source, element),
-        position: null,
-        location,
-        element,
-      })
+      consumerMayThrow(() =>
+        getArgsRef().onDragLeave?.({
+          source: normalizeSource(source, element),
+          position: null,
+          location,
+          element,
+        })
+      )
     );
 
   // See the note in `registerDragAndDropSource`: the stylesheet gates the state
@@ -442,16 +447,23 @@ export function registerDragAndDropTarget(
     // The consumer's metadata is deliberately typed as a plain object, which the
     // underlying library's index-signature shape does not accept as-is.
     getData: () =>
-      (getArgsRef().getData?.() ?? {}) as Record<string | symbol, unknown>,
-    getDropEffect: ({ source, input }) => {
-      const args = getArgsRef();
-      return args.getDropEffect?.({
-        source: normalizeSource(source, element),
-        input,
-        element,
-      });
-    },
-    getIsSticky: () => getArgsRef().getIsSticky?.() === true,
+      consumerMayThrow(() => getArgsRef().getData?.() ?? {}, {}) as Record<
+        string | symbol,
+        unknown
+      >,
+    getDropEffect: ({ source, input }) =>
+      consumerMayThrow(() =>
+        getArgsRef().getDropEffect?.({
+          source: normalizeSource(source, element),
+          input,
+          element,
+        })
+      ),
+    getIsSticky: () =>
+      consumerMayThrow(
+        () => getArgsRef().getIsSticky?.() === true,
+        false
+      ) as boolean,
     onDragEnter: ({ source, location }) => {
       // Ceasing to be the deepest target makes any indicator this element is
       // showing stale, and the library keeps an ancestor in the hierarchy rather
@@ -467,12 +479,14 @@ export function registerDragAndDropTarget(
         indicator.apply(pos, args.axis ?? "y");
       }
       pairing.enter(() =>
-        args.onDragEnter?.({
-          source: normalizeSource(source, element),
-          position: pos,
-          location,
-          element,
-        })
+        consumerMayThrow(() =>
+          args.onDragEnter?.({
+            source: normalizeSource(source, element),
+            position: pos,
+            location,
+            element,
+          })
+        )
       );
     },
     onDrag: ({ source, location }) => {
@@ -491,19 +505,23 @@ export function registerDragAndDropTarget(
       // consumer is told it entered here instead: this is the target a drop
       // would land on now, and without it the leave would be unmatched.
       pairing.enter(() =>
-        args.onDragEnter?.({
+        consumerMayThrow(() =>
+          args.onDragEnter?.({
+            source: normalizeSource(source, element),
+            position: pos,
+            location,
+            element,
+          })
+        )
+      );
+      consumerMayThrow(() =>
+        args.onDrag?.({
           source: normalizeSource(source, element),
           position: pos,
           location,
           element,
         })
       );
-      args.onDrag?.({
-        source: normalizeSource(source, element),
-        position: pos,
-        location,
-        element,
-      });
     },
     onDragLeave: ({ source, location }) => {
       indicator.clear();
@@ -527,12 +545,14 @@ export function registerDragAndDropTarget(
         return;
       }
       const pos = resolvePosition(location.current.input);
-      getArgsRef().onDrop?.({
-        source: normalizeSource(source, element),
-        position: pos,
-        location,
-        element,
-      });
+      consumerMayThrow(() =>
+        getArgsRef().onDrop?.({
+          source: normalizeSource(source, element),
+          position: pos,
+          location,
+          element,
+        })
+      );
     },
   });
 
@@ -579,9 +599,6 @@ export function registerDragAndDropTarget(
  * tests use `SystemHelpers#drag_and_drop` (a real native drag via
  * Playwright) rather than Capybara's `drag_to`, whose synthetic mouse
  * events can silently stall mid-drag.
- *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  *
  * This modifier only receives registered element sources. File uploads continue
  * to use the existing upload target.

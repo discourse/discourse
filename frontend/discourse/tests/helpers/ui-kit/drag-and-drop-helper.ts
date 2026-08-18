@@ -133,6 +133,7 @@ export async function simulateDrag(
     targetCoordinates?: Partial<ClientPoint>;
   }
 ) {
+  assertDragRegistered(sourceSelector, targetSelector);
   const source = { ...centerOf(sourceSelector), ...sourceCoordinates };
   const target = { ...centerOf(targetSelector), ...targetCoordinates };
   const registered = registeredElementFor(sourceSelector);

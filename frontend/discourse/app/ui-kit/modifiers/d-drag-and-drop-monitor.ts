@@ -2,9 +2,10 @@ import {
   type ElementDragPayload,
   type ElementEventBasePayload,
   monitorForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+} from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { modifier } from "ember-modifier";
 import {
+  consumerMayThrow,
   dragTypeOf,
   type NormalizedDragSource,
   normalizeDragSource,
@@ -93,9 +94,12 @@ export function registerDragAndDropMonitor(
   });
   return monitorForElements({
     canMonitor: ({ source }) => matchesDragType(getArgsRef().types, source),
-    onDragStart: (event) => getArgsRef().onDragStart?.(normalized(event)),
-    onDrag: (event) => getArgsRef().onDrag?.(normalized(event)),
-    onDrop: (event) => getArgsRef().onDrop?.(normalized(event)),
+    onDragStart: (event) =>
+      consumerMayThrow(() => getArgsRef().onDragStart?.(normalized(event))),
+    onDrag: (event) =>
+      consumerMayThrow(() => getArgsRef().onDrag?.(normalized(event))),
+    onDrop: (event) =>
+      consumerMayThrow(() => getArgsRef().onDrop?.(normalized(event))),
   });
 }
 
@@ -112,9 +116,6 @@ export function registerDragAndDropMonitor(
  * ```hbs
  * <div {{dDragAndDropMonitor types=this.dragTypes onDrag=this.onDrag}}></div>
  * ```
- *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  *
  * @see The `dragAndDrop` service to *read* drag state reactively. This modifier is
  *   for *responding* imperatively; rendering from it duplicates what the service keeps.
