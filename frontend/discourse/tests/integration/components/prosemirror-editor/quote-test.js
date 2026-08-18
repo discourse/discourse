@@ -1,6 +1,10 @@
+import { click, find, settled, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
+import {
+  setupRichEditor,
+  testMarkdown,
+} from "discourse/tests/helpers/rich-editor-helper";
 
 module(
   "Integration | Component | prosemirror-editor - quote extension",
@@ -47,6 +51,155 @@ module(
       test(name, async function (assert) {
         await testMarkdown(assert, markdown, html, expectedMarkdown);
       });
+    });
+
+    test("avatar from the host editor's topic", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `[quote="Full Name, post:123, topic:456, username:quoted_user"]\nQuoted text.\n\n[/quote]`,
+        {
+          markdownOptions: {
+            lookupAvatarTemplateByPostNumber: (postNumber, topicId) =>
+              postNumber === 123 && topicId === 456
+                ? "/images/avatar/{size}.png"
+                : null,
+          },
+        }
+      );
+
+      assert
+        .dom("aside.quote .title img.avatar")
+        .hasAttribute(
+          "src",
+          /^\/images\/avatar\/\d+\.png$/,
+          "the avatar is rendered at a resolved size"
+        );
+      assert
+        .dom("aside.quote .title")
+        .hasText("Full Name:", "the display name is shown");
+
+      assert.strictEqual(
+        editor.value,
+        `[quote="Full Name, post:123, topic:456, username:quoted_user"]\nQuoted text.\n\n[/quote]\n\n`,
+        "avatar does not leak into the serialized markdown"
+      );
+    });
+
+    test("no avatar when the quoted post is not in the topic", async function (assert) {
+      await setupRichEditor(
+        assert,
+        `[quote="User, post:99, topic:11"]\nQuoted text.\n\n[/quote]`,
+        {
+          markdownOptions: {
+            lookupAvatarTemplateByPostNumber: () => undefined,
+          },
+        }
+      );
+
+      assert
+        .dom("aside.quote .title img.avatar")
+        .doesNotExist("no avatar is rendered for an unresolved post");
+      assert
+        .dom("aside.quote .title")
+        .hasText("User:", "the username is still shown");
+    });
+
+    test("quote without a username renders no title", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `[quote="removed_user"]\nQuoted text.\n\n[/quote]`
+      );
+
+      const { view } = editor;
+      // the quote node sits at the document root in this fixture
+      view.dispatch(
+        view.state.tr.setNodeMarkup(0, null, {
+          ...view.state.doc.nodeAt(0).attrs,
+          username: null,
+        })
+      );
+      await settled();
+
+      assert
+        .dom("aside.quote .title")
+        .doesNotExist("the header is removed with the username");
+      assert
+        .dom("aside.quote blockquote")
+        .hasText("Quoted text.", "the quoted content is kept");
+    });
+
+    test("quote can be selected and removed", async function (assert) {
+      await setupRichEditor(assert, `[quote="User"]\nQuoted text.\n\n[/quote]`);
+
+      await click("aside.quote .title");
+
+      assert
+        .dom("aside.quote")
+        .hasClass("ProseMirror-selectednode", "the quote is selected");
+
+      await triggerKeyEvent(".ProseMirror", "keydown", "Backspace");
+
+      assert.dom("aside.quote").doesNotExist("the selected quote is removed");
+    });
+
+    test("the header is not rebuilt while typing in the quote", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `[quote="User, post:1, topic:2"]\nText.\n\n[/quote]`,
+        {
+          markdownOptions: {
+            lookupAvatarTemplateByPostNumber: () => "/a/{size}.png",
+          },
+        }
+      );
+
+      const title = find("aside.quote .title");
+      const avatar = find("aside.quote .title img");
+
+      const { view } = editor;
+      view.dispatch(view.state.tr.insertText("x", 3));
+      await settled();
+
+      assert.strictEqual(
+        title,
+        find("aside.quote .title"),
+        "the title element is reused"
+      );
+      assert.strictEqual(
+        avatar,
+        find("aside.quote .title img"),
+        "the avatar element is reused"
+      );
+    });
+
+    test("a hostile avatar template cannot inject markup", async function (assert) {
+      await setupRichEditor(
+        assert,
+        `[quote="User, post:1, topic:2"]\nQuoted text.\n\n[/quote]`,
+        {
+          markdownOptions: {
+            lookupAvatarTemplateByPostNumber: () =>
+              `/a/{size}.png" onerror="throw new Error('injected')`,
+          },
+        }
+      );
+
+      assert
+        .dom("aside.quote .title img.avatar")
+        .doesNotHaveAttribute("onerror", "the template cannot add attributes");
+      assert
+        .dom("aside.quote .title script")
+        .doesNotExist("the template cannot add elements");
+    });
+
+    test("quote survives repeated node view teardown", async function (assert) {
+      await testMarkdown(
+        assert,
+        `[quote="User"]\nQuoted text.\n\n[/quote]`,
+        `<aside class="quote" data-username="User" data-full="false"><div class="title">User:</div><blockquote><p>Quoted text.</p></blockquote></aside>`,
+        `[quote="User"]\nQuoted text.\n\n[/quote]\n\n`,
+        { multiToggle: true }
+      );
     });
   }
 );

@@ -183,6 +183,28 @@ export default class ComposerEditor extends Component {
     }
   }
 
+  @bind
+  lookupAvatarTemplateByPostNumber(postNumber, topicId) {
+    const topic = this.topic;
+    if (!topic || topicId !== topic.get("id")) {
+      return;
+    }
+
+    const quotedPost = topic
+      .get("postStream.posts")
+      ?.find((p) => p.post_number === postNumber);
+
+    if (!quotedPost) {
+      return;
+    }
+
+    return applyValueTransformer(
+      "composer-editor-quoted-post-avatar-template",
+      quotedPost.get("avatar_template"),
+      { post: quotedPost }
+    );
+  }
+
   @computed
   get markdownOptions() {
     return {
@@ -191,24 +213,15 @@ export default class ComposerEditor extends Component {
       formatUsername,
 
       lookupAvatarByPostNumber: (postNumber, topicId) => {
-        const topic = this.topic;
-        if (!topic) {
-          return;
-        }
+        const avatarTemplate = this.lookupAvatarTemplateByPostNumber(
+          postNumber,
+          topicId
+        );
 
-        const posts = topic.get("postStream.posts");
-        if (posts && topicId === topic.get("id")) {
-          const quotedPost = posts.find((p) => p.post_number === postNumber);
-          if (quotedPost) {
-            const avatarTemplate = applyValueTransformer(
-              "composer-editor-quoted-post-avatar-template",
-              quotedPost.get("avatar_template"),
-              { post: quotedPost }
-            );
-            return tinyAvatar(avatarTemplate);
-          }
-        }
+        return avatarTemplate ? tinyAvatar(avatarTemplate) : undefined;
       },
+
+      lookupAvatarTemplateByPostNumber: this.lookupAvatarTemplateByPostNumber,
 
       lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
         const topic = this.topic;

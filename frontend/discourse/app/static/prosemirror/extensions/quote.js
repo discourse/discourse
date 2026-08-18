@@ -1,7 +1,125 @@
 import { schema } from "prosemirror-markdown";
+import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
+
+// null values are omitted, both when serialized and applied by the node view
+function quoteDataAttrs(node) {
+  const { username, displayName, postNumber, topicId, full } = node.attrs;
+
+  return {
+    "data-username": username,
+    "data-post": postNumber,
+    "data-topic": topicId,
+    "data-full": full === "true" ? "true" : "false",
+    "data-display-name": displayName,
+  };
+}
+
+function avatarElement(avatarTemplate) {
+  const size = translateSize("tiny");
+  const src = avatarUrl(avatarTemplate, size);
+
+  if (!src) {
+    return null;
+  }
+
+  const img = document.createElement("img");
+  img.className = "avatar";
+  img.alt = "";
+  img.src = src;
+  img.width = size;
+  img.height = size;
+
+  return img;
+}
+
+function createQuoteNodeView({ getContext }) {
+  return class QuoteNodeView {
+    #title;
+
+    constructor(node) {
+      this.node = node;
+
+      this.dom = document.createElement("aside");
+      // set once, as the editor also manages classes on this element
+      this.dom.className = "quote";
+
+      this.contentDOM = document.createElement("blockquote");
+      this.dom.append(this.contentDOM);
+
+      this.#render(node);
+    }
+
+    update(node) {
+      // update() also fires for content edits; the header depends only on markup
+      if (!this.node.sameMarkup(node)) {
+        this.#render(node);
+      }
+
+      this.node = node;
+
+      return true;
+    }
+
+    selectNode() {
+      this.dom.classList.add("ProseMirror-selectednode");
+    }
+
+    deselectNode() {
+      this.dom.classList.remove("ProseMirror-selectednode");
+    }
+
+    #render(node) {
+      for (const [name, value] of Object.entries(quoteDataAttrs(node))) {
+        if (value == null) {
+          this.dom.removeAttribute(name);
+        } else {
+          this.dom.setAttribute(name, value);
+        }
+      }
+
+      this.#title?.remove();
+      this.#title = this.#buildTitle(node);
+
+      if (this.#title) {
+        this.dom.insertBefore(this.#title, this.contentDOM);
+      }
+    }
+
+    #buildTitle(node) {
+      const { username, displayName, postNumber, topicId } = node.attrs;
+
+      if (!username) {
+        return null;
+      }
+
+      const title = document.createElement("div");
+      title.className = "title";
+
+      const avatarTemplate =
+        postNumber &&
+        topicId &&
+        getContext().markdownOptions?.lookupAvatarTemplateByPostNumber?.(
+          parseInt(postNumber, 10),
+          parseInt(topicId, 10)
+        );
+
+      const img = avatarTemplate && avatarElement(avatarTemplate);
+
+      if (img) {
+        title.append(img);
+      }
+
+      title.append(`${displayName || username}:`);
+
+      return title;
+    }
+  };
+}
 
 /** @type {RichEditorExtension} */
 const extension = {
+  nodeViews: { quote: createQuoteNodeView },
+
   nodeSpec: {
     blockquote: {
       createGapCursor: true,
@@ -35,17 +153,9 @@ const extension = {
         },
       ],
       toDOM(node) {
-        const { username, displayName, postNumber, topicId, full } = node.attrs;
-        const attrs = { class: "quote" };
-        attrs["data-username"] = username;
-        attrs["data-post"] = postNumber;
-        attrs["data-topic"] = topicId;
-        attrs["data-full"] = full === "true" ? "true" : "false";
-        if (displayName) {
-          attrs["data-display-name"] = displayName;
-        }
+        const { username, displayName } = node.attrs;
 
-        const domSpec = ["aside", attrs];
+        const domSpec = ["aside", { class: "quote", ...quoteDataAttrs(node) }];
 
         if (username) {
           domSpec.push([
@@ -181,7 +291,7 @@ const extension = {
         handleClickOn(view, pos, node, nodePos, event) {
           if (
             node.type.name === "quote" &&
-            event.target.classList.contains("title")
+            event.target.closest("aside.quote > .title")
           ) {
             view.dispatch(
               view.state.tr.setSelection(
