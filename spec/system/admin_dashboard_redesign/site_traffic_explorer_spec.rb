@@ -403,7 +403,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   end
 
   it "warns an admin when the selected range has incomplete traffic data",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0),
+     timezone: "UTC" do
     sign_in(admin)
     SiteSetting.site_traffic_explorer_event_limit = 2
 
@@ -425,7 +426,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_partial_data_warning(
       reason:
-        "Detailed pageview activity before Feb 14, 2026 is no longer available, so these results cover only part of the selected date range. They are also limited to the most recent 2 pageviews. Choose a shorter date range within the available dates to include all available pageview activity.",
+        "Results include the most recent 2 pageviews, beginning May 10, 2026 at 10:00 AM. Earlier pageviews in the selected date range are not included; pageview data before Feb 14, 2026 is no longer available.",
     )
   end
 

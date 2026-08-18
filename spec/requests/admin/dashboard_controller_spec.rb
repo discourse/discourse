@@ -1765,6 +1765,7 @@ RSpec.describe Admin::DashboardController do
             "partial_data" => {
               "reason" => "pageview_limit",
               "pageview_limit" => 2,
+              "pageview_limit_start_at" => "2026-05-10T10:00:00Z",
             },
             "summary" => {
               "pageviews" => 2,
@@ -1860,6 +1861,7 @@ RSpec.describe Admin::DashboardController do
               "reason" => "retention_and_pageview_limit",
               "available_start_date" => "2026-02-14",
               "pageview_limit" => 2,
+              "pageview_limit_start_at" => "2026-05-10T10:00:00Z",
             },
             "summary" => {
               "pageviews" => 2,

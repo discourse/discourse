@@ -103,7 +103,12 @@ class AdminDashboardSiteTrafficExplorer
     row = execute_query(start_date: params.start_date, end_date: params.end_date, filters:)
 
     traffic = {
-      partial_data: partial_data(row.fetch("pageview_limited"), start_date: params.start_date),
+      partial_data:
+        partial_data(
+          row.fetch("pageview_limited"),
+          pageview_limit_start_at: row["oldest_pageview_at"],
+          start_date: params.start_date,
+        ),
       summary: row.fetch("summary"),
       series: row.fetch("series"),
       series_colors: series_colors,
@@ -348,6 +353,10 @@ class AdminDashboardSiteTrafficExplorer
             )
           FROM population_boundary
         ) AS pageview_limited,
+        (
+          SELECT population_boundary.oldest_created_at
+          FROM population_boundary
+        ) AS oldest_pageview_at,
         jsonb_build_object(
           'country', (
             SELECT host(MIN(ip_address))
@@ -541,7 +550,7 @@ class AdminDashboardSiteTrafficExplorer
     SQL
   end
 
-  def partial_data(pageview_limited, start_date:)
+  def partial_data(pageview_limited, pageview_limit_start_at:, start_date:)
     retention_limited = start_date < BrowserPageviewEvent.retention_cutoff.to_date
     return nil if !retention_limited && !pageview_limited
 
@@ -550,6 +559,7 @@ class AdminDashboardSiteTrafficExplorer
         reason: "retention_and_pageview_limit",
         available_start_date: BrowserPageviewEvent.retention_cutoff.to_date.iso8601,
         pageview_limit: SiteSetting.site_traffic_explorer_event_limit,
+        pageview_limit_start_at: pageview_limit_start_at.iso8601,
       }
     elsif retention_limited
       {
@@ -557,7 +567,11 @@ class AdminDashboardSiteTrafficExplorer
         available_start_date: BrowserPageviewEvent.retention_cutoff.to_date.iso8601,
       }
     else
-      { reason: "pageview_limit", pageview_limit: SiteSetting.site_traffic_explorer_event_limit }
+      {
+        reason: "pageview_limit",
+        pageview_limit: SiteSetting.site_traffic_explorer_event_limit,
+        pageview_limit_start_at: pageview_limit_start_at.iso8601,
+      }
     end
   end
 
