@@ -211,8 +211,8 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
         )
 
-      # Filter out likes for reactions that are not longer enabled,
-      # which match up to a ReactionUser in historical data.
+      # Exclude likes that shadow a historical ReactionUser whose reaction is no
+      # longer enabled, so a disabled reaction isn't double-counted as a plain like.
       historical_reaction_likes =
         likes
           .joins(
@@ -257,22 +257,23 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     reactions_for_counts << main_reaction if main_reaction&.[](:reaction_users_count)
     reaction_user_counts = filtered_reaction_users_counts(reactions_for_counts)
 
-    if likes.present?
-      count = likes.length
-      users = format_likes_users(likes)
+    # Legacy main-reaction reactions created a ReactionUser as well as a
+    # plain like, so the entry must be returned even when no plain likes
+    # remain after filtering. New main_reaction_id records only make a PostAction.
+    like_count = likes&.count.to_i
+    main_reaction_count = main_reaction ? reaction_user_counts[main_reaction.id].to_i : 0
 
-      # Also include ReactionUser records for main_reaction_id
-      # if they have been created in the past; new records created
-      # using main_reaction_id will only make a PostAction.
-      if main_reaction && main_reaction[:reaction_users_count]
+    if like_count > 0 || main_reaction_count > 0
+      users = like_count > 0 ? format_likes_users(likes) : []
+
+      if main_reaction_count > 0
         (users << get_users(main_reaction)).flatten!
         users.sort_by! { |user| user[:created_at] }
-        count += reaction_user_counts[main_reaction.id].to_i
       end
 
       reaction_users << {
         id: main_reaction_id,
-        count: count,
+        count: like_count + main_reaction_count,
         users: users.reverse.slice(0, MAX_USERS_COUNT + 1),
       }
     end
