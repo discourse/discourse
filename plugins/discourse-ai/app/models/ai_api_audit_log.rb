@@ -9,6 +9,17 @@ class AiApiAuditLog < ActiveRecord::Base
   belongs_to :user
   belongs_to :llm_model, foreign_key: :llm_id, optional: true
 
+  # Keep this predicate compatible with idx_ai_api_audit_logs_failed_id.
+  FAILURE_CONDITION =
+    "(response_status IS NOT NULL AND response_status NOT BETWEEN 200 AND 299) OR " \
+      "(response_status IS NULL AND COALESCE(response_tokens, 0) <= 0)"
+  SUCCESS_CONDITION =
+    "(response_status BETWEEN 200 AND 299) OR " \
+      "(response_status IS NULL AND COALESCE(response_tokens, 0) > 0)"
+
+  scope :failed_requests, -> { where(FAILURE_CONDITION) }
+  scope :successful_requests, -> { where(SUCCESS_CONDITION) }
+
   module Provider
     OpenAI = 1
     Anthropic = 2
@@ -50,11 +61,11 @@ class AiApiAuditLog < ActiveRecord::Base
   end
 
   def next_log_id
-    self.class.where("id > ?", id).where(topic_id: topic_id).order(id: :asc).pluck(:id).first
+    self.class.where("id > ?", id).where(topic_id: topic_id).order(id: :asc).pick(:id)
   end
 
   def prev_log_id
-    self.class.where("id < ?", id).where(topic_id: topic_id).order(id: :desc).pluck(:id).first
+    self.class.where("id < ?", id).where(topic_id: topic_id).order(id: :desc).pick(:id)
   end
 end
 
@@ -87,6 +98,11 @@ end
 #
 # Indexes
 #
+#  idx_ai_api_audit_logs_failed_id                           (id) WHERE (((response_status IS NOT NULL) AND ((response_status < 200) OR (response_status > 299))) OR ((response_status IS NULL) AND (COALESCE(response_tokens, 0) <= 0)))
+#  idx_ai_api_audit_logs_feature_name_id                     (feature_name,id) WHERE (feature_name IS NOT NULL)
+#  idx_ai_api_audit_logs_payload_id                          (id) WHERE ((raw_request_payload IS NOT NULL) OR (raw_response_payload IS NOT NULL))
+#  idx_ai_api_audit_logs_retried_id                          (id) WHERE (request_attempts IS NOT NULL)
+#  idx_ai_api_audit_logs_user_id_id                          (user_id,id)
 #  index_ai_api_audit_logs_on_created_at_and_feature_name    (created_at,feature_name)
 #  index_ai_api_audit_logs_on_created_at_and_language_model  (created_at,language_model)
 #  index_ai_api_audit_logs_on_created_at_and_user_id         (created_at,user_id)

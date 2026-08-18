@@ -106,6 +106,32 @@ te:
         username: "సభ్యనామం"
         total_requests: "మొత్తం అభ్యర్థనలు"
         total: "మొత్తం"
+      logs:
+        short_title: "లాగులు"
+        apply: "దరఖాస్తు చేసుకోండి"
+        successful: "విజయవంతమైంది"
+        failed: "విఫలం"
+        topic_id: "విషయపు ఐడీ"
+        post_id: "పోస్ట్ ఐడీ"
+        time: "కాలం"
+        when: "ఎప్పుడు"
+        request: "అభ్యర్థన"
+        user: "సభ్యుడు"
+        context: "సందర్భం"
+        topic: "విషయం"
+        post: "పోస్ట్"
+        post_short: "పోస్ట్ %{id}"
+        duration: "వ్యవధి"
+        actions: "చర్యలు"
+        periods:
+          custom: "అనురూప"
+        detail:
+          request: "అభ్యర్థన"
+          response: "ప్రతిస్పందన"
+          context: "సందర్భం"
+        retention:
+          summary_stage: "సారాంశం"
+          save: "సేవ్ చేయండి"
       ai_agent:
         name: "పేరు"
         edit: "సవరించండి"
@@ -209,6 +235,7 @@ te:
           fake: "అనుకూల"
       ai_bot:
         debug_ai_modal:
+          duration_label: "వ్యవధి:"
           request: "అభ్యర్థన"
           response: "ప్రతిస్పందన"
           next_log: "తదుపరి"

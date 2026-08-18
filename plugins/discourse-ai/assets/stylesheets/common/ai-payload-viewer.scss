@@ -1,0 +1,34 @@
+.ai-payload-viewer {
+  &__notice {
+    color: var(--danger);
+    font-weight: 600;
+  }
+
+  &__content {
+    max-height: 60vh;
+    margin: 0 0 var(--space-2);
+    padding: var(--space-3);
+    overflow: auto;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    color: var(--primary);
+    font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-medium);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+    }
+  }
+
+  &__empty {
+    padding: var(--space-6);
+    border: 1px dashed var(--content-border-color);
+    color: var(--primary-high);
+    text-align: center;
+  }
+}

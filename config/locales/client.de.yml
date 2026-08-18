@@ -6948,7 +6948,6 @@ de:
             kpi:
               total_searches:
                 label: "Gesamtzahl der Suchanfragen"
-                tooltip: "Die Anzahl der Suchanfragen, die von Mitgliedern in deiner Community durchgeführt wurden."
               no_result_rate:
                 label: "Anteil ohne Ergebnis"
                 tooltip: "Der Prozentsatz der Suchanfragen, bei denen Mitglieder kein Ergebnis angeklickt haben (0 % CTR). Das deutet darauf hin, dass Mitglieder möglicherweise nach Inhalten suchen, die deine Community nicht bietet."
@@ -6958,7 +6957,6 @@ de:
               status: "Status"
             trending:
               title: "Angesagte Suchbegriffe"
-              tooltip: "Die beliebtesten Suchbegriffe unter den Mitgliedern."
               empty: "Keine Suchanfragen in diesem Zeitraum."
             content_gaps:
               title: "Inhaltslücken"

@@ -1,0 +1,823 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { fn, hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { next } from "@ember/runloop";
+import { service } from "@ember/service";
+import Form from "discourse/components/form";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import UserChooser from "discourse/select-kit/components/user-chooser";
+import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import { i18n } from "discourse-i18n";
+import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log-row";
+import AiLogDetailModal from "./modal/ai-log-detail-modal";
+import AiLogRetentionModal from "./modal/ai-log-retention-modal";
+
+const ALL_FILTER_VALUE = "__all__";
+const MAX_SAFE_ID = Number.MAX_SAFE_INTEGER;
+const PERIODS = {
+  hour: 1,
+  day: 24,
+  week: 24 * 7,
+};
+
+export default class AiLogs extends Component {
+  @service currentUser;
+  @service modal;
+  @service router;
+  @service toasts;
+
+  @tracked logs = [];
+  @tracked meta = {};
+  @tracked models = [];
+  @tracked features = [];
+  @tracked loading = false;
+  @tracked loadingMore = false;
+  @tracked selectedPeriod;
+  @tracked selectedOutcome;
+  @tracked hasRetries = false;
+  @tracked selectedModel;
+  @tracked selectedFeature;
+  @tracked selectedUsernames = [];
+  @tracked unattributed = false;
+  @tracked idType = "id";
+  @tracked idValue;
+  @tracked startDate;
+  @tracked endDate;
+
+  filterFormApi;
+  _requestId = 0;
+  _openLogId;
+
+  constructor() {
+    super(...arguments);
+    window.addEventListener("popstate", this.syncDetailsFromLocation);
+    this.logs = this.args.model.logs || [];
+    this.meta = this.args.model.meta || {};
+    this.models = this.args.model.models || [];
+    this.features = this.mergedFeatures(this.args.model.features, this.logs);
+    this.initializeFilters(this.args.queryParams);
+    this.filterFormData = this.buildFilterFormData();
+
+    if (this.args.queryParams.details) {
+      next(() =>
+        this.openDetails(this.args.queryParams.details, { updateUrl: false })
+      );
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("popstate", this.syncDetailsFromLocation);
+    if (this._openLogId) {
+      this.modal.close();
+    }
+  }
+
+  @action
+  syncDetailsFromLocation() {
+    const logId = new URL(window.location.href).searchParams.get("details");
+    if (logId && String(logId) !== String(this._openLogId)) {
+      this.openDetails(logId, { updateUrl: false });
+    } else if (!logId && this._openLogId) {
+      this._openLogId = undefined;
+      this.modal.close();
+    }
+  }
+
+  mergedFeatures(features = [], logs = []) {
+    return [
+      ...new Set([
+        ...features,
+        ...logs.map((log) => log.feature_name).filter(Boolean),
+      ]),
+    ].sort();
+  }
+
+  initializeFilters(params = {}) {
+    this.selectedPeriod = params.period || undefined;
+    this.selectedOutcome = params.outcome || undefined;
+    this.hasRetries =
+      params.has_retries === "true" || params.has_retries === true;
+    this.selectedModel = params.model ? String(params.model) : undefined;
+    this.selectedFeature = params.feature || undefined;
+    this.selectedUsernames = params.username ? [params.username] : [];
+    this.unattributed =
+      params.unattributed === "true" || params.unattributed === true;
+    this.idType = params.id_type || "id";
+    this.idValue = params.id_value || undefined;
+    this.startDate = params.start_date
+      ? moment(params.start_date).toDate()
+      : moment().subtract(24, "hours").toDate();
+    this.endDate = params.end_date
+      ? moment(params.end_date).toDate()
+      : new Date();
+  }
+
+  // must stay referentially stable: a new object passed as Form @data
+  // recreates the form and drops input focus
+  buildFilterFormData() {
+    return {
+      period: this.selectedPeriod,
+      date_range: { from: this.startDate, to: this.endDate },
+      outcome: this.selectedOutcome || ALL_FILTER_VALUE,
+      model: this.selectedModel || ALL_FILTER_VALUE,
+      feature: this.selectedFeature,
+      usernames: this.selectedUsernames,
+      has_retries: this.hasRetries,
+      unattributed: this.unattributed,
+      id_type: this.idType,
+      id_value: this.idValue,
+    };
+  }
+
+  get periodOptions() {
+    return [
+      { id: "hour", name: i18n("discourse_ai.logs.periods.hour") },
+      { id: "day", name: i18n("discourse_ai.logs.periods.day") },
+      { id: "week", name: i18n("discourse_ai.logs.periods.week") },
+      { id: "custom", name: i18n("discourse_ai.logs.periods.custom") },
+    ];
+  }
+
+  get outcomeOptions() {
+    return [
+      { id: "successful", name: i18n("discourse_ai.logs.successful") },
+      { id: "failed", name: i18n("discourse_ai.logs.failed") },
+    ];
+  }
+
+  get idTypeOptions() {
+    return [
+      { id: "id", name: i18n("discourse_ai.logs.log_id") },
+      { id: "topic_id", name: i18n("discourse_ai.logs.topic_id") },
+      { id: "post_id", name: i18n("discourse_ai.logs.post_id") },
+    ];
+  }
+
+  get modelOptions() {
+    return this.models.map((model) => ({
+      id: String(model.id),
+      name: model.name,
+    }));
+  }
+
+  get hasFilters() {
+    return Boolean(
+      this.selectedPeriod ||
+      this.selectedOutcome ||
+      this.hasRetries ||
+      this.selectedModel ||
+      this.selectedFeature ||
+      this.selectedUsernames.length ||
+      this.unattributed ||
+      this.idValue
+    );
+  }
+
+  get lifecycleSummary() {
+    const detailed = this.meta.retention?.detailed_days ?? 0;
+    const summary = this.meta.retention?.summary_days ?? 0;
+
+    if (detailed === 0 && summary === 0) {
+      return i18n("discourse_ai.logs.retention.lifecycle.complete_forever");
+    }
+    if (detailed === 0) {
+      return i18n("discourse_ai.logs.retention.lifecycle.detail_until_delete", {
+        summary,
+      });
+    }
+    if (summary === 0) {
+      return i18n("discourse_ai.logs.retention.lifecycle.summary_forever", {
+        detailed,
+      });
+    }
+    return i18n("discourse_ai.logs.retention.lifecycle.finite", {
+      detailed,
+      summary,
+    });
+  }
+
+  get requestParams() {
+    const params = {
+      outcome: this.selectedOutcome || undefined,
+      has_retries: this.hasRetries || undefined,
+      llm_id: this.selectedModel || undefined,
+      feature: this.selectedFeature || undefined,
+      username: this.selectedUsernames[0] || undefined,
+      unattributed: this.unattributed || undefined,
+    };
+
+    if (this.idValue) {
+      params[this.idType] = this.idValue;
+      return params;
+    }
+
+    if (this.selectedPeriod === "custom") {
+      params.start_date = moment(this.startDate).format("YYYY-MM-DD");
+      params.end_date = moment(this.endDate).format("YYYY-MM-DD");
+      params.timezone =
+        this.currentUser?.user_option?.timezone || moment.tz.guess();
+    } else if (this.selectedPeriod) {
+      params.start_date = moment()
+        .subtract(PERIODS[this.selectedPeriod], "hours")
+        .toISOString();
+      params.end_date = moment().toISOString();
+    }
+
+    return params;
+  }
+
+  get queryParams() {
+    return {
+      period: this.selectedPeriod || null,
+      start_date:
+        this.selectedPeriod === "custom"
+          ? moment(this.startDate).format("YYYY-MM-DD")
+          : null,
+      end_date:
+        this.selectedPeriod === "custom"
+          ? moment(this.endDate).format("YYYY-MM-DD")
+          : null,
+      outcome: this.selectedOutcome || null,
+      has_retries: this.hasRetries ? "true" : null,
+      model: this.selectedModel || null,
+      feature: this.selectedFeature || null,
+      username: this.selectedUsernames[0] || null,
+      unattributed: this.unattributed ? "true" : null,
+      id_type: this.idValue ? this.idType : null,
+      id_value: this.idValue || null,
+    };
+  }
+
+  updateUrl(extra = {}) {
+    this.router.transitionTo(this.router.currentRouteName, {
+      queryParams: { ...this.queryParams, ...extra },
+    });
+  }
+
+  @action
+  async refresh() {
+    const requestId = ++this._requestId;
+    this.loading = true;
+    this.loadingMore = false;
+    try {
+      const result = await ajax("/admin/plugins/discourse-ai/ai-logs.json", {
+        data: this.requestParams,
+      });
+      if (
+        requestId !== this._requestId ||
+        this.isDestroying ||
+        this.isDestroyed
+      ) {
+        return;
+      }
+
+      this.logs = result.logs;
+      this.meta = { ...this.meta, ...result.meta };
+      this.models = result.models || this.models;
+      this.features = this.mergedFeatures(
+        result.features || this.features,
+        result.logs
+      );
+      this.updateUrl();
+    } catch (error) {
+      if (
+        requestId === this._requestId &&
+        !this.isDestroying &&
+        !this.isDestroyed
+      ) {
+        popupAjaxError(error);
+      }
+    } finally {
+      if (
+        requestId === this._requestId &&
+        !this.isDestroying &&
+        !this.isDestroyed
+      ) {
+        this.loading = false;
+      }
+    }
+  }
+
+  @action
+  async loadMore() {
+    if (!this.meta.has_more || this.loadingMore) {
+      return;
+    }
+
+    const requestId = this._requestId;
+    const cursor = this.meta.next_cursor;
+    this.loadingMore = true;
+    try {
+      const result = await ajax("/admin/plugins/discourse-ai/ai-logs.json", {
+        data: { ...this.requestParams, cursor },
+      });
+      if (
+        requestId !== this._requestId ||
+        cursor !== this.meta.next_cursor ||
+        this.isDestroying ||
+        this.isDestroyed
+      ) {
+        return;
+      }
+
+      this.logs = [...this.logs, ...result.logs];
+      this.features = this.mergedFeatures(this.features, result.logs);
+      this.meta = { ...this.meta, ...result.meta };
+    } catch (error) {
+      if (
+        requestId === this._requestId &&
+        !this.isDestroying &&
+        !this.isDestroyed
+      ) {
+        popupAjaxError(error);
+      }
+    } finally {
+      if (
+        requestId === this._requestId &&
+        !this.isDestroying &&
+        !this.isDestroyed
+      ) {
+        this.loadingMore = false;
+      }
+    }
+  }
+
+  @action
+  registerFilterFormApi(api) {
+    this.filterFormApi = api;
+  }
+
+  @action
+  applyFilterForm(data) {
+    this.selectedPeriod = data.period || undefined;
+    this.startDate = data.date_range?.from || this.startDate;
+    this.endDate = data.date_range?.to || this.endDate;
+    this.selectedOutcome =
+      data.outcome === ALL_FILTER_VALUE ? undefined : data.outcome;
+    this.selectedModel =
+      data.model === ALL_FILTER_VALUE ? undefined : data.model;
+    this.selectedFeature = data.feature || undefined;
+    this.hasRetries = Boolean(data.has_retries);
+    this.unattributed = Boolean(data.unattributed);
+    this.selectedUsernames = this.unattributed ? [] : data.usernames || [];
+    this.idType = data.id_type || "id";
+    this.idValue = data.id_value || undefined;
+    this.refresh();
+  }
+
+  @action
+  selectPeriod(period) {
+    this.selectedPeriod = this.selectedPeriod === period ? undefined : period;
+    this.filterFormApi?.set("period", this.selectedPeriod);
+    if (this.selectedPeriod && this.selectedPeriod !== "custom") {
+      this.endDate = new Date();
+      this.startDate = moment()
+        .subtract(PERIODS[this.selectedPeriod], "hours")
+        .toDate();
+      this.filterFormApi?.set("date_range", {
+        from: this.startDate,
+        to: this.endDate,
+      });
+    }
+    this.refresh();
+  }
+
+  @action
+  changeDateRange(value) {
+    this.filterFormApi?.set("date_range", value);
+    this.startDate = value.from;
+    this.endDate = value.to;
+  }
+
+  @action
+  changeOutcome(value, { set }) {
+    set("outcome", value);
+    this.selectedOutcome =
+      value === ALL_FILTER_VALUE ? undefined : value || undefined;
+    this.refresh();
+  }
+
+  @action
+  changeModel(value, { set }) {
+    set("model", value);
+    this.selectedModel =
+      value === ALL_FILTER_VALUE ? undefined : value || undefined;
+    this.refresh();
+  }
+
+  @action
+  changeUser(usernames) {
+    const selectedUsernames = usernames || [];
+    this.filterFormApi?.set("usernames", selectedUsernames);
+    this.filterFormApi?.set("unattributed", false);
+    this.selectedUsernames = selectedUsernames;
+    this.unattributed = false;
+    this.refresh();
+  }
+
+  @action
+  toggleRetries(value, { set }) {
+    set("has_retries", value);
+    this.hasRetries = Boolean(value);
+    this.refresh();
+  }
+
+  @action
+  toggleUnattributed(value, { set }) {
+    set("unattributed", value);
+    this.unattributed = Boolean(value);
+    if (this.unattributed) {
+      set("usernames", []);
+      this.selectedUsernames = [];
+    }
+    this.refresh();
+  }
+
+  @action
+  setFeature(value, { set }) {
+    set("feature", value);
+    this.selectedFeature = value || undefined;
+  }
+
+  @action
+  setIdValue(value, { set }) {
+    set("id_value", value);
+    this.idValue = value || undefined;
+  }
+
+  @action
+  changeIdType(value, { set }) {
+    set("id_type", value);
+    this.idType = value;
+    if (this.idValue) {
+      this.refresh();
+    }
+  }
+
+  @action
+  clearFilters() {
+    const cleared = {
+      period: undefined,
+      date_range: {
+        from: moment().subtract(24, "hours").toDate(),
+        to: new Date(),
+      },
+      outcome: ALL_FILTER_VALUE,
+      model: ALL_FILTER_VALUE,
+      feature: undefined,
+      usernames: [],
+      has_retries: false,
+      unattributed: false,
+      id_type: "id",
+      id_value: undefined,
+    };
+    this.filterFormApi?.setProperties(cleared);
+    this.selectedPeriod = undefined;
+    this.startDate = cleared.date_range.from;
+    this.endDate = cleared.date_range.to;
+    this.selectedOutcome = undefined;
+    this.hasRetries = false;
+    this.selectedModel = undefined;
+    this.selectedFeature = undefined;
+    this.selectedUsernames = [];
+    this.unattributed = false;
+    this.idType = "id";
+    this.idValue = undefined;
+    this.refresh();
+  }
+
+  @action
+  openDetails(logId, { updateUrl = true } = {}) {
+    this._openLogId = String(logId);
+    if (updateUrl) {
+      this.updateUrl({ details: this._openLogId });
+    }
+    this.modal.show(AiLogDetailModal, {
+      model: {
+        logId,
+        onClose: () => {
+          this._openLogId = undefined;
+          this.updateUrl({ details: null });
+        },
+      },
+    });
+  }
+
+  @action
+  configureRetention() {
+    this.modal.show(AiLogRetentionModal, {
+      model: {
+        retention: this.meta.retention,
+        storage: this.meta.storage,
+        onSave: (retention) => {
+          this.meta = { ...this.meta, retention };
+          this.toasts.success({
+            data: { message: i18n("discourse_ai.logs.retention.saved") },
+          });
+        },
+      },
+    });
+  }
+
+  <template>
+    <section class="ai-logs admin-detail">
+      <DPageSubheader
+        @titleLabel={{i18n "discourse_ai.logs.short_title"}}
+        @descriptionLabel={{i18n "discourse_ai.logs.description"}}
+      >
+        <:actions as |actions|>
+          <actions.Primary
+            @action={{this.configureRetention}}
+            @icon="clock"
+            @label="discourse_ai.logs.retention.configure"
+          />
+          <actions.Default
+            @action={{this.refresh}}
+            @icon="arrows-rotate"
+            @label="discourse_ai.logs.refresh"
+          />
+        </:actions>
+      </DPageSubheader>
+
+      <aside class="ai-logs__retention">
+        <p class="ai-logs__retention-warning">{{i18n
+            "discourse_ai.logs.sensitive_warning"
+          }}</p>
+        <DButton
+          class="btn-transparent ai-logs__retention-action"
+          @action={{this.configureRetention}}
+          @translatedLabel={{this.lifecycleSummary}}
+        />
+      </aside>
+
+      <Form
+        class="ai-logs__filters"
+        @data={{this.filterFormData}}
+        @onRegisterApi={{this.registerFilterFormApi}}
+        @onSubmit={{this.applyFilterForm}}
+        as |form|
+      >
+        <form.Fieldset
+          class="ai-logs__period-field"
+          @name="period-filter"
+          @title={{i18n "discourse_ai.logs.filters.period"}}
+        >
+          <div class="ai-logs__periods">
+            {{#each this.periodOptions as |period|}}
+              <DButton
+                class={{if
+                  (eq this.selectedPeriod period.id)
+                  "btn-primary"
+                  "btn-default"
+                }}
+                @action={{fn this.selectPeriod period.id}}
+                @ariaPressed={{eq this.selectedPeriod period.id}}
+                @translatedLabel={{period.name}}
+              />
+            {{/each}}
+          </div>
+        </form.Fieldset>
+
+        {{#if (eq this.selectedPeriod "custom")}}
+          <form.Fieldset
+            class="ai-logs__date-range-field"
+            @name="date-range-filter"
+            @title={{i18n "discourse_ai.logs.filters.date_range"}}
+          >
+            <div class="ai-logs__date-range">
+              <DDateTimeInputRange
+                @from={{this.startDate}}
+                @to={{this.endDate}}
+                @showFromTime={{false}}
+                @showToTime={{false}}
+                @onChange={{this.changeDateRange}}
+              />
+              <form.Submit
+                class="btn-default"
+                @label="discourse_ai.logs.apply"
+              />
+            </div>
+          </form.Fieldset>
+        {{/if}}
+
+        <div class="ai-logs__filter-grid">
+          <form.Field
+            class="ai-logs__outcome-filter"
+            @name="outcome"
+            @title={{i18n "discourse_ai.logs.outcome"}}
+            @type="select"
+            @onSet={{this.changeOutcome}}
+            as |field|
+          >
+            <field.Control @includeNone={{false}} as |select|>
+              <select.Option @value={{ALL_FILTER_VALUE}}>{{i18n
+                  "discourse_ai.logs.all_outcomes"
+                }}</select.Option>
+              {{#each this.outcomeOptions as |outcome|}}
+                <select.Option @value={{outcome.id}}>
+                  {{outcome.name}}
+                </select.Option>
+              {{/each}}
+            </field.Control>
+          </form.Field>
+
+          <form.Field
+            class="ai-logs__model-filter"
+            @name="model"
+            @title={{i18n "discourse_ai.logs.model"}}
+            @type="select"
+            @onSet={{this.changeModel}}
+            as |field|
+          >
+            <field.Control @includeNone={{false}} as |select|>
+              <select.Option @value={{ALL_FILTER_VALUE}}>{{i18n
+                  "discourse_ai.logs.all_models"
+                }}</select.Option>
+              {{#each this.modelOptions as |model|}}
+                <select.Option @value={{model.id}}>
+                  {{model.name}}
+                </select.Option>
+              {{/each}}
+            </field.Control>
+          </form.Field>
+
+          <form.Field
+            class="ai-logs__feature-filter"
+            @name="feature"
+            @title={{i18n "discourse_ai.logs.feature"}}
+            @type="input"
+            @onSet={{this.setFeature}}
+            as |field|
+          >
+            <field.Control
+              placeholder={{i18n "discourse_ai.logs.feature_placeholder"}}
+              list="ai-log-features"
+            />
+          </form.Field>
+          <datalist id="ai-log-features">
+            {{#each this.features as |feature|}}
+              <option value={{feature}}></option>
+            {{/each}}
+          </datalist>
+
+          <form.Fieldset
+            class="ai-logs__user-filter"
+            @name="user-filter"
+            @title={{i18n "discourse_ai.logs.user"}}
+          >
+            <UserChooser
+              @value={{this.selectedUsernames}}
+              @onChange={{this.changeUser}}
+              @options={{hash
+                maximum=1
+                none="discourse_ai.logs.user_placeholder"
+                filterPlaceholder="discourse_ai.logs.user_placeholder"
+                headerAriaLabel=(i18n "discourse_ai.logs.user_placeholder")
+              }}
+            />
+          </form.Fieldset>
+
+          <form.Field
+            class="ai-logs__toggle"
+            @name="has_retries"
+            @title={{i18n "discourse_ai.logs.has_retries"}}
+            @type="checkbox"
+            @onSet={{this.toggleRetries}}
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+
+          <form.Field
+            class="ai-logs__toggle"
+            @name="unattributed"
+            @title={{i18n "discourse_ai.logs.unattributed"}}
+            @type="checkbox"
+            @onSet={{this.toggleUnattributed}}
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        </div>
+
+        <div class="ai-logs__id-filter">
+          <form.Field
+            @name="id_type"
+            @title={{i18n "discourse_ai.logs.filters.id_type"}}
+            @type="select"
+            @onSet={{this.changeIdType}}
+            as |field|
+          >
+            <field.Control @includeNone={{false}} as |select|>
+              {{#each this.idTypeOptions as |idType|}}
+                <select.Option @value={{idType.id}}>
+                  {{idType.name}}
+                </select.Option>
+              {{/each}}
+            </field.Control>
+          </form.Field>
+
+          <form.Field
+            @name="id_value"
+            @title={{i18n "discourse_ai.logs.filters.id_value"}}
+            @type="input-number"
+            @onSet={{this.setIdValue}}
+            as |field|
+          >
+            <field.Control
+              min="1"
+              max={{MAX_SAFE_ID}}
+              placeholder={{i18n "discourse_ai.logs.id_placeholder"}}
+            />
+          </form.Field>
+
+          <form.Submit
+            class="btn-default ai-logs__find"
+            @label="discourse_ai.logs.find"
+          />
+          {{#if this.hasFilters}}
+            <DButton
+              class="btn-transparent ai-logs__clear"
+              @action={{this.clearFilters}}
+              @label="discourse_ai.logs.clear_filters"
+            />
+          {{/if}}
+        </div>
+      </Form>
+
+      <DConditionalLoadingSpinner @condition={{this.loading}}>
+        {{#if this.logs.length}}
+          <DLoadMore
+            @action={{this.loadMore}}
+            @enabled={{this.meta.has_more}}
+            @isLoading={{this.loadingMore}}
+          >
+            <div class="ai-logs__table-wrapper">
+              <table class="d-table ai-logs__table">
+                <caption class="sr-only">{{i18n
+                    "discourse_ai.logs.table_caption"
+                  }}</caption>
+                <thead class="d-table__header">
+                  <tr class="d-table__row">
+                    <th class="ai-logs__col-outcome" scope="col"><span
+                        class="sr-only"
+                      >{{i18n "discourse_ai.logs.outcome"}}</span></th>
+                    <th class="ai-logs__col-time" scope="col">{{i18n
+                        "discourse_ai.logs.when"
+                      }}</th>
+                    <th class="ai-logs__col-request" scope="col">{{i18n
+                        "discourse_ai.logs.request"
+                      }}</th>
+                    <th class="ai-logs__col-user" scope="col">{{i18n
+                        "discourse_ai.logs.user"
+                      }}</th>
+                    <th class="ai-logs__col-duration" scope="col">{{i18n
+                        "discourse_ai.logs.duration_tokens"
+                      }}</th>
+                    <th class="ai-logs__col-context" scope="col">{{i18n
+                        "discourse_ai.logs.context"
+                      }}</th>
+                    <th class="ai-logs__col-actions" scope="col"><span
+                        class="sr-only"
+                      >{{i18n "discourse_ai.logs.actions"}}</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each this.logs as |currentLog|}}
+                    <AiLogRow
+                      @log={{currentLog}}
+                      @onOpen={{this.openDetails}}
+                    />
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+          </DLoadMore>
+        {{else}}
+          <div class="ai-logs__empty">
+            <p>{{if
+                this.hasFilters
+                (i18n "discourse_ai.logs.no_results")
+                (i18n "discourse_ai.logs.no_logs")
+              }}</p>
+            {{#if this.hasFilters}}
+              <DButton
+                class="btn-default"
+                @action={{this.clearFilters}}
+                @label="discourse_ai.logs.clear_filters"
+              />
+            {{/if}}
+          </div>
+        {{/if}}
+      </DConditionalLoadingSpinner>
+    </section>
+  </template>
+}

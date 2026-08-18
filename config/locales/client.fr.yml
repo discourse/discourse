@@ -6947,7 +6947,6 @@ fr:
             kpi:
               total_searches:
                 label: "Nombre total de recherches"
-                tooltip: "Le nombre de recherches effectuées par les membres de votre communauté."
               no_result_rate:
                 label: "Taux d'absence de résultats"
                 tooltip: "Le pourcentage de recherches pour lesquelles les membres n'ont cliqué sur aucun résultat (0 % de taux de clics) indique que les membres recherchent peut-être du contenu que votre communauté ne propose pas."
@@ -6957,7 +6956,6 @@ fr:
               status: "Statut"
             trending:
               title: "Recherches populaires"
-              tooltip: "Les termes de recherche les plus populaires parmi les membres."
               empty: "Aucune recherche n'a été effectuée durant cette période."
             content_gaps:
               title: "Lacunes en matière de contenu"

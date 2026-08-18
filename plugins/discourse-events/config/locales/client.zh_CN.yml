@@ -36,7 +36,6 @@ zh_CN:
       livestream:
         zoom:
           join: "加入 Zoom"
-          chat: "聊天"
           open_in_zoom: "在 Zoom 中打开"
           load_error: "您已离开网络研讨会，或者我们无法在此页面加载 Zoom。"
           too_early: "您可以在临近活动开始时间加入网络研讨会"

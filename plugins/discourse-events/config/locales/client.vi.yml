@@ -26,7 +26,6 @@ vi:
       livestream:
         zoom:
           join: "Tham gia Zoom"
-          chat: "Trò chuyện"
           open_in_zoom: "Mở trong ứng dụng Zoom"
           load_error: "Bạn đã rời khỏi buổi hội thảo (Webinar) hoặc không thể tải Zoom trên trang này."
           too_early: "Bạn có thể tham gia hội thảo khi gần đến giờ bắt đầu sự kiện"

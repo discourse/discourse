@@ -998,16 +998,15 @@ de:
     title: "E-Mail-Anmeldung"
   email_login_code:
     invalid_code: "Dieser Code ist falsch oder abgelaufen. Fordere einen neuen Code an und versuche es erneut."
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub-App"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub-App"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "unbekannter Browser"
     device:
       android: "Android-Gerät"
       chromebook: "Chrome OS"
@@ -1031,10 +1030,6 @@ de:
     traffic_types:
       logged_in: "Angemeldet"
       anonymous: "Anonym"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Es gab einen Fehler beim Ändern deiner E-Mail-Adresse. Wird vielleicht diese Adresse bereits verwendet?"
     doesnt_exist: "Diese E-Mail-Adresse ist nicht mit deinem Konto verknüpft."
@@ -2648,7 +2643,6 @@ de:
     enable_new_checkbox_style: "Aktiviere den neu gestalteten Kontrollkästchen-Stil für FormKit-Kontrollkästchen."
     enable_new_post_reactions_menu: "Aktiviere das überarbeitete Menü für „Gefällt mir“-Angaben und Reaktionen bei Beiträgen mit Endlos-Scrolling und einer nativen mobilen Benutzererfahrung."
     enable_composer_redesign: "Aktiviere den überarbeiteten Editor."
-    enable_new_composer_actions: "Aktiviere das neu gestaltete Aktionsmenü des Editors und die kombinierte Speichern-Schaltfläche, wobei neben der Speicherfunktion die Schaltflächen für „Flüstern“, „Nicht nach oben verschieben“ und „Unsichtbar machen“ angezeigt werden."
     prioritize_recently_used_tags: "Wenn beim Erstellen oder Bearbeiten eines Themas Schlagwörter hinzugefügt werden, zeige die Schlagwörter, die das Mitglied kürzlich in seinen eigenen Themen verwendet hat, ganz oben in der Liste an – noch vor den beliebtesten Tags des Forums."
     experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."

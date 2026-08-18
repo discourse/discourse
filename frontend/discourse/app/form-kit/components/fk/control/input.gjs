@@ -1,6 +1,8 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
+import { siteDir } from "discourse/lib/text-direction";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const SUPPORTED_TYPES = [
@@ -23,6 +25,8 @@ const SUPPORTED_TYPES = [
 
 export default class FKControlInput extends FKBaseControl {
   static controlType = "input";
+
+  @service siteSettings;
 
   constructor(owner, args) {
     super(owner, args);
@@ -50,6 +54,14 @@ export default class FKControlInput extends FKBaseControl {
 
   get type() {
     return this.args.type ?? "text";
+  }
+
+  get dir() {
+    if (!this.siteSettings.support_mixed_text_direction) {
+      return;
+    }
+
+    return this.args.field.value ? "auto" : siteDir();
   }
 
   get displayValue() {
@@ -104,6 +116,7 @@ export default class FKControlInput extends FKBaseControl {
 
       <input
         type={{this.type}}
+        dir={{this.dir}}
         value={{this.displayValue}}
         class={{dConcatClass
           "form-kit__control-input"

@@ -54,6 +54,8 @@ zh_CN:
       cast-votes:
         title: "投票"
         label: "立即投票！"
+      keep-vote:
+        label: "返回"
       show-results:
         title: "显示投票结果"
         label: "结果"

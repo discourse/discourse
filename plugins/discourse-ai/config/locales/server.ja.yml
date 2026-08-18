@@ -121,7 +121,6 @@ ja:
     ai_translation_include_bot_content: "有効にすると、ボット (0 未満のユーザー ID) が書き込んだコンテンツも翻訳に送信されます。"
     ai_translation_backfill_hourly_rate: "バックフィル操作中に 1 時間あたりに翻訳する投稿とトピックの数。既存のコンテンツの翻訳の自動バックフィルを無効にする場合は 0 に設定します。"
     ai_usage_rollup_after_days: "日次集計にロールアップするまでに、リクエストごとの AI 使用統計を保持する日数。ロールアップを無効にする場合は 0 に設定します。"
-    ai_audit_logs_purge_after_days: "この日数より古い AI API 監査ログを削除します。デフォルトは約 6 か月です。無期限に保持する場合は 0 に設定します。"
   reviewables:
     reasons:
       flagged_by_toxicity: AI プラグインは、これを毒コメントとして分類した後に通報しました。

@@ -4,6 +4,7 @@ module DiscourseDataExplorer
   class AdminDashboardReportProvider < ::AdminDashboard::Reports::SourceProvider
     SOURCE_NAME = "data_explorer_query"
     CACHE_MAX_AGE = 1.hour
+    DASHBOARD_SUPPLIED_PARAMS = %w[start_date end_date].freeze
 
     def self.source_name
       SOURCE_NAME
@@ -17,7 +18,7 @@ module DiscourseDataExplorer
       return {} if guardian.nil?
 
       load_queries(identifiers).each_with_object({}) do |query, hash|
-        next if !guardian.user_can_access_query?(query)
+        next if !guardian.user_can_access_query?(query) || !mountable?(query)
         hash[query.id.to_s] = build_resolved(query)
       end
     end
@@ -29,7 +30,9 @@ module DiscourseDataExplorer
         end
       unpersisted =
         seek(
-          Query.unpersisted_defaults(search: search).map { |query| build_resolved(query) },
+          Query
+            .unpersisted_defaults(search: search)
+            .filter_map { |query| build_resolved(query) if mountable?(query) },
           after: after,
           limit: limit,
         )
@@ -45,7 +48,7 @@ module DiscourseDataExplorer
       params = filters.with_indifferent_access
 
       load_queries(identifiers).each_with_object({}) do |query, hash|
-        next if !guardian.user_can_access_query?(query)
+        next if !guardian.user_can_access_query?(query) || !mountable?(query)
         result =
           QueryRunner.cached_result(query, params, max_age: CACHE_MAX_AGE) ||
             QueryRunner.run(query, params, current_user: guardian.user)
@@ -104,6 +107,14 @@ module DiscourseDataExplorer
     end
     private_class_method :load_queries
 
+    def self.mountable?(query)
+      query.params.all? do |param|
+        param.internal? || param.nullable || param.default.present? ||
+          DASHBOARD_SUPPLIED_PARAMS.include?(param.identifier)
+      end
+    end
+    private_class_method :mountable?
+
     def self.prewarmable?(query, params)
       QueryRunner.cacheable?(query) &&
         query.params.all? do |param|
@@ -113,6 +124,33 @@ module DiscourseDataExplorer
     private_class_method :prewarmable?
 
     def self.persisted_after(search:, after:, limit:)
+      if limit.nil?
+        return(
+          persisted_batch(search: search, after: after, limit: nil).select do |query|
+            mountable?(query)
+          end
+        )
+      end
+
+      mountable_queries = []
+      cursor = after
+
+      loop do
+        batch = persisted_batch(search: search, after: cursor, limit: limit)
+        break if batch.empty?
+
+        mountable_queries.concat(batch.select { |query| mountable?(query) })
+        break if mountable_queries.size >= limit || batch.size < limit
+
+        last = batch.last
+        cursor = { title: last.name, key: "#{SOURCE_NAME}:#{last.id}" }
+      end
+
+      mountable_queries.first(limit)
+    end
+    private_class_method :persisted_after
+
+    def self.persisted_batch(search:, after:, limit:)
       scope = Query.where(hidden: false)
       if search.present?
         scope =
@@ -140,6 +178,6 @@ module DiscourseDataExplorer
       scope = scope.limit(limit) if limit
       scope.to_a
     end
-    private_class_method :persisted_after
+    private_class_method :persisted_batch
   end
 end

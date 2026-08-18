@@ -52,7 +52,9 @@ module(
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
-        await testMarkdown(assert, markdown, html, expectedMarkdown, true);
+        await testMarkdown(assert, markdown, html, expectedMarkdown, {
+          multiToggle: true,
+        });
       });
     });
 
@@ -73,7 +75,7 @@ module(
           );
         },
         "```\nconsole.log('Hello, world!');\n```",
-        true
+        { multiToggle: true }
       );
     });
 

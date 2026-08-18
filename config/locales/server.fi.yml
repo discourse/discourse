@@ -939,16 +939,15 @@ fi:
   email_login:
     invalid_token: 'Käyttämäsi linkki ei enää toimi. Voit <a href="%{base_url}/login">kirjautua sisään</a> nyt. Jos olet unohtanut salasanasi, voit <a href="%{base_url}/password-reset">pyytää linkkiä</a> sen palauttamiseksi.'
     title: "Sähköpostikirjautuminen"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub-sovellus"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub-sovellus"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "tuntematon selain"
     device:
       android: "Android-laite"
       chromebook: "Chrome OS"
@@ -971,10 +970,6 @@ fi:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonyymeja"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä tämä sähköpostiosoite on jo käytössä?"
     doesnt_exist: "Sähköpostiosoitetta ei ole liitetty tiliisi."
