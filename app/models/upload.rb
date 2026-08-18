@@ -10,7 +10,6 @@ class Upload < ActiveRecord::Base
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX = %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
-  DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
   # the maximum length of a base62 encoded sha1
   MAX_BASE62_SHA1_LENGTH = 27
 
@@ -418,7 +417,6 @@ class Upload < ActiveRecord::Base
                read: [local_path],
               write: [directory],
               nice: 10,
-              timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
             )
 
             components = File.binread(pixel).bytes
