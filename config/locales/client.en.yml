@@ -7694,6 +7694,13 @@ en:
             title: "Top referrers"
             empty: "No referrer data for this period."
             error: "Couldn't load top referrers. Try refreshing the page."
+          top_entry_urls:
+            title: "Top entry URLs"
+            tooltip: "The first page recorded for each Discourse browser session in the available analytics period."
+            pending: "Entry URL analytics will appear after new traffic is recorded."
+            unavailable: "Entry URL data is available from %{date}. Choose a date range within the available period."
+            empty: "No entry URL data for this period."
+            error: "Couldn't load top entry URLs. Try refreshing the page."
           series:
             logged_in: "Logged in"
             anonymous: "Anonymous"

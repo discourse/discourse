@@ -28,7 +28,7 @@ class Report
     storage_stats: :storage_stats,
   }
 
-  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
+  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs top_entry_urls]
 
   HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
     consolidated_page_views_browser_detection
@@ -40,12 +40,14 @@ class Report
     admin_logins
     top_uploads
     topic_view_stats
+    top_entry_urls
     top_referrers_by_browser_pageviews
     top_countries_by_browser_pageviews
   ]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
   BROWSER_PAGEVIEW_REPORTS = %w[
     top_countries_by_browser_pageviews
+    top_entry_urls
     top_referrers_by_browser_pageviews
   ]
 
@@ -122,6 +124,7 @@ class Report
   include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
   include Reports::TopCountriesByBrowserPageviews
+  include Reports::TopEntryUrls
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
   include Reports::TopReferrers

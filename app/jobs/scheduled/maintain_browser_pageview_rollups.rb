@@ -13,7 +13,8 @@ module Jobs
       aggregate_engagement
       aggregate_crawlers
       backfill_referrers
-      backfill_urls
+      backfilled_url_dates = backfill_urls
+      aggregate_entry_urls(backfilled_url_dates)
       backfill_browsers
     end
 
@@ -54,6 +55,30 @@ module Jobs
         start_date: start_date,
         end_date: end_date,
       )
+    end
+
+    def aggregate_entry_urls(backfilled_url_dates)
+      start_date, end_date = entry_url_aggregation_window
+      return if start_date.nil?
+
+      BrowserPageviewEntryUrlDailyRollup.aggregate(start_date:, end_date:)
+      Array(backfilled_url_dates).each do |date|
+        next if date >= start_date && date <= end_date
+
+        BrowserPageviewEntryUrlDailyRollup.aggregate(start_date: date, end_date: date)
+      end
+    end
+
+    def entry_url_aggregation_window
+      end_date = Time.zone.today
+      start_date =
+        if BrowserPageviewEntryUrlDailyRollupDate.none?
+          earliest_event_date
+        else
+          1.day.ago.to_date
+        end
+
+      [start_date, end_date]
     end
 
     def engagement_aggregation_window
@@ -188,7 +213,7 @@ module Jobs
 
     def backfill_urls
       rows = url_batch
-      return if rows.empty?
+      return [] if rows.empty?
 
       ids = rows.map(&:id)
       normalized = rows.map { |row| BrowserPageviewEventUrlNormalizer.normalize_site_path(row.url) }
@@ -209,6 +234,8 @@ module Jobs
         normalized: normalized,
         version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
       )
+
+      BrowserPageviewEvent.where(id: ids).distinct.pluck(Arel.sql("created_at::date"))
     end
 
     def backfill_browsers

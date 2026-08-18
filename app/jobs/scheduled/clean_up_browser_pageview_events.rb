@@ -21,6 +21,8 @@ module Jobs
       BrowserPageviewSessionEngagement
         .where("created_at < ?", cutoff)
         .in_batches(of: BATCH_SIZE) { |session_engagements| session_engagements.delete_all }
+
+      BrowserPageviewEntryUrlSession.cleanup!
     end
   end
 end

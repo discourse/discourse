@@ -623,7 +623,7 @@ RSpec.describe AdminDashboardSiteTraffic do
       )
     end
 
-    context "for top countries and top referrers" do
+    context "for top countries, top referrers, and top entry URLs" do
       before { SiteSetting.persist_browser_pageview_events = true }
 
       def aggregate_rollups
@@ -632,12 +632,13 @@ RSpec.describe AdminDashboardSiteTraffic do
         BrowserPageviewReferrerDailyRollup.aggregate(**range)
       end
 
-      it "omits top_countries and top_referrers when persist_browser_pageview_events is disabled" do
+      it "omits browser pageview cards when persist_browser_pageview_events is disabled" do
         SiteSetting.persist_browser_pageview_events = false
 
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result).not_to have_key(:top_countries)
         expect(result).not_to have_key(:top_referrers)
+        expect(result).not_to have_key(:top_entry_urls)
       end
 
       it "omits top_countries and top_referrers when legacy pageviews are enabled" do
@@ -685,6 +686,49 @@ RSpec.describe AdminDashboardSiteTraffic do
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: nil)
         expect(result[:top_referrers]).to eq(rows: [], error: nil)
+        expect(result[:top_entry_urls]).to eq(
+          rows: [],
+          error: nil,
+          availability: {
+            state: "pending",
+            available_from: nil,
+          },
+        )
+      end
+
+      it "returns entry URL rows with available coverage" do
+        Fabricate(
+          :browser_pageview_event,
+          session_id: "entry-session",
+          url: "https://test.localhost/t/topic/1",
+          created_at: "2026-05-12",
+        )
+        BrowserPageviewEntryUrlDailyRollup.aggregate(
+          start_date: "2026-05-12".to_date,
+          end_date: "2026-05-14".to_date,
+        )
+
+        result = build_traffic(start_date: "2026-05-12", end_date: "2026-05-14")
+
+        expect(result[:top_entry_urls]).to eq(
+          rows: [{ entry_url: "/t/topic/1", count: 1, percent: 100 }],
+          error: nil,
+          availability: {
+            state: "available",
+            available_from: "2026-05-12",
+          },
+        )
+      end
+
+      it "marks ranges before entry URL coverage as unavailable" do
+        BrowserPageviewEntryUrlDailyRollupDate.create!(date: "2026-05-12")
+
+        result = build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")
+
+        expect(result[:top_entry_urls][:availability]).to eq(
+          state: "unavailable",
+          available_from: "2026-05-12",
+        )
       end
 
       it "returns an exception error payload when the underlying report cannot be built" do

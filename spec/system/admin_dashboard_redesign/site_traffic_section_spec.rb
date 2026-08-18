@@ -362,11 +362,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       Jobs::MaintainBrowserPageviewRollups.new.execute({})
 
-      dashboard.visit_with_query(
-        range: "custom",
-        start_date: "2026-05-12",
-        end_date: "2026-05-12",
-      )
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-12", end_date: "2026-05-12")
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_entry_url_rows(
@@ -382,9 +378,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       expect(traffic).to have_no_top_entry_url("/t/should-not-count-after-search/98")
       expect(traffic).to have_no_top_entry_url("/latest")
       expect(traffic).to have_no_top_entry_url("/unread")
-      sensitive_entry_paths.each do |path|
-        expect(traffic).to have_no_top_entry_url(path)
-      end
+      sensitive_entry_paths.each { |path| expect(traffic).to have_no_top_entry_url(path) }
       expect(traffic).to have_no_top_entry_url("/t/should-not-count")
 
       traffic.hover_top_entry_urls_tooltip
@@ -424,11 +418,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       )
       Jobs::MaintainBrowserPageviewRollups.new.execute({})
 
-      dashboard.visit_with_query(
-        range: "custom",
-        start_date: "2025-05-14",
-        end_date: "2026-05-14",
-      )
+      dashboard.visit_with_query(range: "custom", start_date: "2025-05-14", end_date: "2026-05-14")
 
       expect(dashboard.site_traffic).to have_top_entry_urls_unavailable_state(
         "Entry URL data is available from May 12, 2026. Choose a date range within the available period.",
@@ -457,11 +447,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       )
       Jobs::MaintainBrowserPageviewRollups.new.execute({})
 
-      dashboard.visit_with_query(
-        range: "custom",
-        start_date: "2026-05-02",
-        end_date: "2026-05-14",
-      )
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-02", end_date: "2026-05-14")
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_countries_empty_state
