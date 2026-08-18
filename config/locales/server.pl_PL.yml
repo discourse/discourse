@@ -52,6 +52,10 @@ pl_PL:
   remove_posts_deleted_by_author: "Usunięte przez autora"
   redirect_warning: "Nie byliśmy w stanie zweryfikować, że wybrany przez Ciebie link został rzeczywiście wysłany na forum. Aby kontynować mimo tego, wybierz link poniżej."
   on_another_topic: "Na innym temacie"
+  access_control_list:
+    errors:
+      user_will_not_have_permission: "Jeśli usuniesz ten wpis listy ACL, utracisz dostęp do tego obiektu."
+      user_will_not_have_permission_on_create: "Jeśli utworzysz ten podmiot z tymi uprawnieniami, nie będziesz mieć do niego dostępu. Kontynuować?"
   topic_category_changed: "Od %{from} do %{to}"
   topic_tag_changed:
     added_and_removed: "Dodano %{added} i usunięto %{removed}"
@@ -464,11 +468,10 @@ pl_PL:
     domain_not_allowed: "Twój adres e-mail nie może zostać użyty do zrealizowania tego zaproszenia."
     domain_not_allowed_admin: "Ta domena nie może być używana do zaproszeń."
     max_redemptions_allowed_one: "dla zaproszeń e-mail powinno wynosić 1."
+    max_redemptions_allowed_one_staff: "w przypadku zaproszeń administratora lub moderatora liczba powinna wynosić 1."
     redemption_count_less_than_max: "powinien być mniejszy niż %{max_redemptions_allowed}."
     email_xor_domain: "Pola adresu e-mail i domeny nie są dozwolone jednocześnie"
-    admin_invite_requires_email: "Zaproszenia administratora muszą być wysyłane na adres e-mail"
     admin_invite_requires_admin_inviter: "Tylko administratorzy mogą tworzyć zaproszenia administratorów"
-    moderator_invite_requires_email: "Zaproszenia moderatorów muszą być wysyłane na adres e-mail"
     moderator_invite_requires_staff_inviter: "Tylko personel może tworzyć zaproszenia moderatorów"
     existing_user_success: "Zaproszenie zostało pomyślnie zrealizowane"
     email_invites_disabled: "Wysyłanie zaproszeń e-mailem jest wyłączone"
@@ -1195,6 +1198,18 @@ pl_PL:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "nieznany system operacyjny"
+  admin_site_traffic_explorer:
+    direct_or_unknown: "Bezpośredni / nieznany"
+    traffic_types:
+      logged_in: "Zalogowani"
+      anonymous: "Anonimowi"
+      likely_crawler: "Prawdopodobne roboty indeksujące"
+    browsers:
+      chrome: "Chrome"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
+      unknown: "Nieznana przeglądarka"
   change_email:
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
@@ -2498,6 +2513,7 @@ pl_PL:
     auto_generated_allowlist: "Lista adresów e-mail, które nie będą sprawdzane pod kątem zawartości generowanej automatycznie. Przykład: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Odrzucaj przychodzące e-maile zidentyfikowane jako generowane automatycznie."
     ignore_by_title: "Ignoruj przychodzące wiadomości e-mail w oparciu o ich tytuł."
+    ignore_by_title_regex: "Ignoruj przychodzące wiadomości e-mail na podstawie ich tytułu, używając wyrażenia regularnego."
     mailgun_api_key: "Klucz Mailgun Secret API używany do weryfikacji wiadomości webhook."
     sendgrid_verification_key: "Klucz weryfikacyjny Sendgrid używany do weryfikacji wiadomości webhook."
     aws_sns_topic_arn_allowlist: "Tematy SNS o numerach ARN mogą wysyłać powiadomienia webhook dotyczące odrzuconych wiadomości Amazon SES."
@@ -2788,6 +2804,7 @@ pl_PL:
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
     dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
+    enable_site_traffic_explorer: "Połącz działanie panelu administracyjnego ze szczegółami ruchu w witrynie przeglądarki ruchu."
     gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Wyłączenie tej opcji uniemożliwi użytkownikom przełączanie się na Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
     gravatar_base_url: "Podaj adres URL umożliwiający dostęp do API serwisu Gravatar. To ustawienie jest niezbędne do konwersji adresów e-mail na adresy URL Gravatar, gdzie przechowywane są obrazy awatarów."
@@ -2970,7 +2987,7 @@ pl_PL:
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
       content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
-      content_localization_language_switcher_requirements: "Przełącznik języka wymaga włączenia opcji {{setting:set_locale_from_cookie}} i {{setting:allow_user_locale}} , a także ustawienia opcji {{setting:content_localization_supported_locales}} , co najmniej jednego języka. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
+      content_localization_language_switcher_requirements: "Przełącznik języka wymaga włączenia opcji {{setting:allow_user_locale}} i ustawienia co najmniej jednego języka dla opcji {{setting:content_localization_supported_locales}} . {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "Przed włączeniem tego ustawienia należy najpierw włączyć opcję „ustaw ustawienia regionalne z parametrów”."
       mediaconvert_role_arn_required: "Rola AWS IAM ARN jest wymagana w przypadku korzystania z AWS MediaConvert do konwersji wideo."
       mediaconvert_output_subdirectory_required: "Podkatalog wyjściowy MediaConvert jest wymagany."
@@ -4634,6 +4651,8 @@ pl_PL:
       text_body_template: |2
 
         %{message}
+
+        %{respond_instructions}
     account_suspended:
       title: "Konto zawieszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"
@@ -5391,6 +5410,8 @@ pl_PL:
 
       Ten dokument jest na licencji CC-BY-SA. Ostatnia aktualizacja miała miejsce [WSTAW TUTAJ DATĘ OSTATNIEJ AKTUALIZACJI].
   badges:
+    errors:
+      cant_delete_system_badge: Odznak systemowych nie można usunąć.
     mass_award:
       errors:
         invalid_csv: Natrafiliśmy na błąd w linii %{line_number}. Upewnij się, że plik CSV zawiera jeden adres w każdej linii.
@@ -6047,10 +6068,12 @@ pl_PL:
         delete:
           title: "Usuń użytkownika"
           description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
+          confirm: "Czy na pewno chcesz usunąć @%{username}?"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
           description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
+          confirm: "Czy na pewno chcesz usunąć i zablokować @%{username}?"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:
         title: "Tak"

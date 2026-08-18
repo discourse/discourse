@@ -179,7 +179,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
 
   before { enable_current_plugin }
 
-  def capture_payload_for_completion
+  def capture_payload_for_completion(**generation_args)
     captured_payload = nil
     stub =
       stub_request(:post, "https://test.dev/v1/chat/completions")
@@ -189,7 +189,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
         end
         .to_return(status: 200, body: completion_response_body)
 
-    llm.generate("say hello", user: Discourse.system_user)
+    llm.generate("say hello", user: Discourse.system_user, **generation_args)
 
     expect(stub).to have_been_requested
     captured_payload
@@ -393,6 +393,21 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
 
       payload = capture_payload_for_completion
       expect(payload["chat_template_kwargs"]).to eq("enable_thinking" => true)
+    end
+
+    it "suppresses thinking overrides when reasoning is explicitly disabled" do
+      llm_model.update!(
+        provider_params: {
+          "reasoning_parser" => "deepseek_v4",
+          "reasoning_effort" => "high",
+          "thinking_override" => "on",
+        },
+      )
+
+      payload = capture_payload_for_completion(thinking_effort: "none")
+
+      expect(payload).not_to have_key("chat_template_kwargs")
+      expect(payload["reasoning_effort"]).to eq("none")
     end
 
     it "sends thinking for Granite thinking overrides" do

@@ -14,7 +14,7 @@ ar:
     discourse_reactions:
       reactions_title: "التفاعلات"
       reaction:
-        forbidden: "لا يُسمح لك بالتفاعل أو تغيير تفاعلك مع هذا المنشور."
+        forbidden: "غير مسموح لك بالتفاعل أو تغيير تفاعلك مع هذا المنشور."
       picker:
         react_with: "تفاعل مع هذا المنشور باستخدام: %{reaction}"
         cant_remove_reaction: "لم يعد بإمكانك إزالة تفاعلك"

@@ -41,7 +41,7 @@ export default class FKControlPassword extends FKBaseControl {
 
   @action
   handleInput(event) {
-    const value = event.target.value === "" ? undefined : event.target.value;
+    const value = event.target.value === "" ? null : event.target.value;
     this.args.field.set(value);
   }
 
@@ -64,8 +64,10 @@ export default class FKControlPassword extends FKBaseControl {
         disabled={{@field.disabled}}
         id={{@field.id}}
         name={{@field.name}}
+        autocomplete="new-password"
         aria-invalid={{if @field.error "true"}}
         aria-describedby={{@field.describedBy}}
+        placeholder={{@field.placeholder}}
         ...attributes
         {{on "input" this.handleInput}}
         {{this.focusState}}

@@ -48,8 +48,6 @@ uk:
           %{score_reason}
           %{response}
         flagged_post_response: "Відповідь від моделі: %{llm_response}"
-        flagged_post_score_reason: |
-          <b>Активується правилом <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Вашу публікацію тимчасово видалено для перевірки"
           body: |
@@ -110,7 +108,6 @@ uk:
     ai_helper_allowed_in_pm: "Увімкнути Помічник ШІ в особистих повідомленнях."
     ai_helper_automatic_chat_thread_title_delay: "Затримка в хвилинах перед тим, як ШІ-помічник автоматично встановить заголовок теми чату."
     ai_helper_automatic_chat_thread_title: "Автоматично встановлювати заголовки тем чату на основі вмісту теми."
-    ai_helper_enabled_features: "Оберіть функції для активації в ШІ-помічнику."
     ai_image_caption_agent: "Агент, який використовується для підписів зображень AI. Користувацькі агенти повинні мати увімкнене завантаження зображень і використовувати LLM з можливістю перегляду."
     ai_post_image_captions_enabled: "Увімкнути створення підписів за допомогою штучного інтелекту для зображень у публікаціях. Для генерації відсутніх підписів необхідно налаштувати файл {{setting:ai_image_caption_agent}}."
     ai_post_image_captions_per_post_limit: "Максимальна кількість зображень для підпису до публікації."
@@ -372,7 +369,6 @@ uk:
         unknown_error: "Під час створення мініатюр сталася неочікувана помилка. Спробуйте ще раз."
       prompts:
         translate: Перекласти на %{language}
-        generate_titles: Запропонувати заголовки тем
         proofread: Перевірити текст
         markdown_table: Створити таблицю у форматі Markdown
         custom_prompt: "Користувацький запит"
@@ -422,6 +418,8 @@ uk:
       default_pm_prefix: "[ПП від ШІ-бота без назви]"
       thinking: "Мислення"
       tool_pending_approval: "Ця дія потребує схвалення модератора, перш ніж її можна буде виконати."
+      read_post:
+        unknown_post: "допис"
       chat_tool_approval:
         approved: "Схвалено @%{username}."
         rejected: "Відхилено користувачем @%{username}."

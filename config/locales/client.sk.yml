@@ -6041,13 +6041,30 @@ sk:
       new_features:
         title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
+      site_traffic_explorer:
+        pageviews: "Zobrazenia stránky"
+        view_more: "Zobraziť viac"
+        cards:
+          pages: "Stránky"
+          visitors: "Návštevníci"
+        columns:
+          top_urls: "URL"
+          browsers: "Prehliadač"
+          ip_addresses: "IP adresy"
+        filters:
+          browser: "Prehliadač"
+          ip: "IP adresy"
+        metrics:
+          pageviews:
+            label: "Zobrazenia stránky"
+        series:
+          anonymous_human: "Anonymný"
       dashboard:
         title: "Ovládací panel"
         last_updated: "Informačný panel bol aktualizovaný:"
         discourse_last_updated: "Discourse bol aktualizovaný:"
         version: "Verzia"
         up_to_date: "Máte nainštalovanú najnovšiu verziu!"
-        critical_available: "Je dostupná kritická aktualizácia."
         updates_available: "Aktualizácie sú k dispozícii."
         please_update: "Aktualizujte prosím!"
         no_check_performed: "Neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."

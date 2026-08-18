@@ -27,6 +27,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     output_contracts_by_type.transform_values { |contract| contract.fetch(:fields) }
   end
 
+  it "excludes nodes hidden from the palette" do
+    hidden_node_type = DiscourseWorkflows::Nodes::LoopOverItems::V1.identifier
+
+    result = invoke_tool(query: hidden_node_type)
+
+    expect(result[:nodes]).to be_empty
+  end
+
   it "finds the external chat integration action by provider keywords" do
     SiteSetting.chat_integration_enabled = true
 

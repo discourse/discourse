@@ -74,8 +74,6 @@ el:
       sql:
         operation: "Λειτουργία"
         operation_description: "Πώς να εκτελέσετε το ερώτημα"
-        queries: "Ερωτήματα"
-        raw: "Ακατέργαστη SQL"
         query_id: "Ερώτημα"
         query_id_description: "Επιλέξτε ένα αποθηκευμένο ερώτημα για εκτέλεση"
         query_params: "Παράμετροι ερωτήματος"

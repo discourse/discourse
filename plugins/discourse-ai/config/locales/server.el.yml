@@ -40,6 +40,8 @@ el:
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
+      read_post:
+        unknown_post: "ανάρτηση"
       agents:
         post_raw_translator:
           name: "Μεταφραστής ανάρτησης"

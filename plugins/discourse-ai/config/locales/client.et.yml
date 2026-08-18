@@ -162,6 +162,9 @@ et:
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"
+        vision_modes:
+          disabled:
+            title: "Välja lülitatud"
         save: "Salvesta"
         edit: "Muuda"
         delete: Kustuta

@@ -1121,6 +1121,13 @@ sk:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznámy operačný systém"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonymný"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Nastala chyba pri aktualizácii emailu. Nieje už náhodou použitý?"
     doesnt_exist: "Táto e-mailová adresa nie je priradená k vášmu účtu."
@@ -3986,9 +3993,6 @@ sk:
     user_posted_pm_staged:
       title: "Používateľ odoslal PM nezaktívnený"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Účet pozastavený"
       subject_template: "[%{email_prefix}] Váš účet bol pozastavený"

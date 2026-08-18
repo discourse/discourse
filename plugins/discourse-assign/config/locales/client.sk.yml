@@ -192,8 +192,20 @@ sk:
       nodes:
         "trigger:assigned": "Priradené"
       assign_topic:
+        resource: "Zdroje"
+        resources:
+          topic: "Téma"
+          post: "Príspevok"
         operations:
           assign: "Priradiť"
           unassign: "Nepriradené"
         topic_id: "ID témy"
+        post_id: "ID príspevku"
+        assignee: "Príjemca"
+      check_assignment:
+        target_types:
+          topic: "Téma"
+          post: "Príspevok"
+        topic_id: "ID témy"
+        post_id: "ID príspevku"
         assignee: "Príjemca"

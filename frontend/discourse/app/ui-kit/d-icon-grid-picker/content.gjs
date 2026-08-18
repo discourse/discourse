@@ -4,19 +4,71 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SVG_NAMESPACE } from "discourse/lib/icon-library";
+import { addExtraSpriteSymbols } from "discourse/lib/svg-sprite-loader";
 import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
-/* Module-level cache for the unfiltered icon list, keyed by onlyAvailable flag */
-const unfilteredIconCache = new Map();
+const ICON_TOOLTIP = "d-icon-grid-picker-icon";
+
+/**
+ * @typedef IconButtonSignature
+ *
+ * @property {object} Args
+ *
+ * @property {{id: string, symbol?: string}} Args.icon - The icon to render.
+ * @property {boolean} [Args.selected] - Whether the icon is the currently selected value.
+ * @property {(icon: {id: string, symbol?: string}) => void} Args.onSelect - Called with the picked icon.
+ */
+
+/** @extends {Component<IconButtonSignature>} */
+class IconButton extends Component {
+  /**
+   * The icon's own `<symbol>`, for icons the page sprite cannot render. The
+   * `<svg>` wrapper puts it in the SVG namespace when inserted as HTML, and it
+   * renders in the cell that uses it, so it is torn down with that cell.
+   */
+  get symbol() {
+    const { symbol } = this.args.icon;
+
+    return symbol
+      ? trustHTML(
+          `<svg xmlns="${SVG_NAMESPACE}" style="display: none">${symbol}</svg>`
+        )
+      : null;
+  }
+
+  <template>
+    <button
+      type="button"
+      role="option"
+      aria-label={{@icon.id}}
+      aria-selected={{if @selected "true" "false"}}
+      class={{dConcatClass
+        "d-icon-grid-picker__icon"
+        (if @selected "--selected")
+      }}
+      data-icon-id={{@icon.id}}
+      {{on "click" (fn @onSelect @icon)}}
+    >
+      {{this.symbol}}
+      {{dIcon @icon.id ignoreMissing=true}}
+    </button>
+  </template>
+}
 
 /**
  * The content panel rendered inside the DMenu dropdown or modal.
@@ -27,7 +79,7 @@ const unfilteredIconCache = new Map();
  * @param {string[]} [favorites] - Icon IDs to display in a pinned favorites row above the grid.
  * @param {boolean} [showSelectedName] - When true, the selected favorite chip also displays
  *   the icon name alongside the icon.
- * @param {boolean} [onlyAvailable] - When true, only shows icons available in the
+ * @param {boolean} [onlyAvailable] - When true, only offers icons available in the
  *   current SVG sprite set. Defaults to true.
  */
 export default class DIconGridPickerContent extends Component {
@@ -36,7 +88,18 @@ export default class DIconGridPickerContent extends Component {
   @service tooltip;
 
   @tracked filter = "";
-  @tracked resultCount = null;
+
+  /** @type {Array<{id: string, symbol?: string}>?} Null until the first page resolves. */
+  @tracked icons = null;
+
+  @tracked hasMore = false;
+  @tracked loadingMore = false;
+  @tracked gridWrapper = null;
+
+  registerGridWrapper = modifier((/** @type {HTMLElement} */ element) => {
+    this.gridWrapper = element;
+    return () => (this.gridWrapper = null);
+  });
 
   /**
    * Modifier that measures the natural content width of the selected-chip element
@@ -61,28 +124,59 @@ export default class DIconGridPickerContent extends Component {
   });
 
   /**
-   * Modifier that registers a hover tooltip showing the icon ID on each grid cell.
-   * Skips the selected-chip element since it already displays the name inline.
+   * Modifier that shows a hover tooltip with the icon ID for any cell in the
+   * grid. One delegated tooltip rather than one per cell, since the grid grows
+   * by a page at a time. The selected chip is skipped: it shows its name inline.
    */
-  registerIconTooltip = modifier((/** @type {HTMLElement} */ element) => {
-    const iconId = element.dataset.iconId;
-    if (
-      !iconId ||
-      element.classList.contains("d-icon-grid-picker__selected-chip")
-    ) {
-      return;
-    }
+  iconTooltips = modifier((/** @type {HTMLElement} */ element) => {
+    /** @type {HTMLElement?} */
+    let current = null;
 
-    const instance = this.tooltip.register(element, {
-      content: iconId,
-      placement: "top",
-      fallbackPlacements: ["bottom"],
-      triggers: ["hover"],
-      animated: false,
-    });
+    const closeTooltip = () => {
+      current = null;
+      this.tooltip.close(ICON_TOOLTIP);
+    };
 
-    return () => instance.destroy();
+    const onPointerOver = (/** @type {PointerEvent} */ event) => {
+      const cell = /** @type {HTMLElement?} */ (
+        /** @type {HTMLElement} */ (event.target).closest?.(
+          ".d-icon-grid-picker__icon[data-icon-id]:not(.d-icon-grid-picker__selected-chip)"
+        )
+      );
+
+      if (cell === current) {
+        return;
+      }
+
+      current = cell;
+
+      if (!cell) {
+        this.tooltip.close(ICON_TOOLTIP);
+        return;
+      }
+
+      this.tooltip.show(cell, {
+        identifier: ICON_TOOLTIP,
+        content: cell.dataset.iconId,
+        placement: "top",
+        fallbackPlacements: ["bottom"],
+        animated: false,
+      });
+    };
+
+    element.addEventListener("pointerover", onPointerOver);
+    element.addEventListener("pointerleave", closeTooltip);
+
+    return () => {
+      element.removeEventListener("pointerover", onPointerOver);
+      element.removeEventListener("pointerleave", closeTooltip);
+      this.tooltip.close(ICON_TOOLTIP);
+    };
   });
+
+  #search = 0;
+
+  #page = 0;
 
   /**
    * Returns the list of favorite icon IDs to display, with the currently
@@ -116,21 +210,17 @@ export default class DIconGridPickerContent extends Component {
   }
 
   /**
-   * Updates the tracked filter string as the user types in the search input.
+   * Starts a new search: paging belongs to the search that produced it, so the
+   * grid stops growing and any page still in flight is discarded on arrival.
    *
    * @param {string} value - The current input value.
    */
   @action
-  onFilterInput(value) {
+  setFilter(value) {
     this.filter = value;
-  }
-
-  /**
-   * Clears the search filter, restoring the full icon list and favorites row.
-   */
-  @action
-  clearFilter() {
-    this.filter = "";
+    this.hasMore = false;
+    this.loadingMore = false;
+    this.#search++;
   }
 
   /**
@@ -176,28 +266,44 @@ export default class DIconGridPickerContent extends Component {
       case "ArrowDown": {
         event.preventDefault();
         event.stopPropagation();
-        const below = allIcons
-          .filter((el) => el.offsetTop > target.offsetTop)
-          .find((el) => el.offsetLeft === target.offsetLeft);
+        let below = null;
+        let nextRow = null;
+        for (let i = idx + 1; i < allIcons.length; i++) {
+          const el = allIcons[i];
+          if (el.offsetTop <= target.offsetTop) {
+            continue;
+          }
+          nextRow ??= el;
+          if (el.offsetLeft === target.offsetLeft) {
+            below = el;
+            break;
+          }
+        }
         if (below) {
           below.focus();
-        } else {
+        } else if (nextRow) {
           /* No exact column match (e.g. selected chip spans columns);
              jump to first icon on the next row */
-          const nextRow = allIcons.find(
-            (el) => el.offsetTop > target.offsetTop
-          );
-          nextRow?.focus();
+          nextRow.focus();
+        } else {
+          this.loadMoreAndFocus();
         }
         break;
       }
       case "ArrowUp": {
         event.preventDefault();
         event.stopPropagation();
-        const above = [...allIcons]
-          .reverse()
-          .filter((el) => el.offsetTop < target.offsetTop)
-          .find((el) => el.offsetLeft === target.offsetLeft);
+        let above = null;
+        for (let i = idx - 1; i >= 0; i--) {
+          const el = allIcons[i];
+          if (el.offsetTop >= target.offsetTop) {
+            continue;
+          }
+          if (el.offsetLeft === target.offsetLeft) {
+            above = el;
+            break;
+          }
+        }
         if (above) {
           above.focus();
         } else {
@@ -245,41 +351,132 @@ export default class DIconGridPickerContent extends Component {
   }
 
   get resultAnnouncement() {
-    if (this.resultCount === null) {
+    if (!this.icons) {
       return "";
     }
-    return i18n("d_icon_grid_picker.results_count", {
-      count: this.resultCount,
+
+    return i18n(
+      this.hasMore
+        ? "d_icon_grid_picker.results_loaded"
+        : "d_icon_grid_picker.results_count",
+      { count: this.icons.length }
+    );
+  }
+
+  /**
+   * @param {number} page
+   * @param {AbortSignal} [signal]
+   * @returns {Promise<{icons: Array<{id: string, symbol?: string}>, has_more: boolean}>}
+   */
+  async #fetchPage(page, signal) {
+    const request = /** @type {Promise<any> & {abort: () => void}} */ (
+      ajax("/svg-sprite/picker-search", {
+        data: {
+          filter: this.filter.trim(),
+          only_available: this.args.onlyAvailable ?? true,
+          page,
+        },
+      })
+    );
+
+    signal?.addEventListener("abort", () => request.abort(), { once: true });
+
+    return await request;
+  }
+
+  /**
+   * Whether an async continuation still belongs to the live component and to
+   * the search that started it.
+   *
+   * @param {number} search
+   * @returns {boolean}
+   */
+  #isCurrent(search) {
+    return this.#search === search && !this.isDestroying && !this.isDestroyed;
+  }
+
+  /**
+   * Loads the first page of icons. Used as the `@asyncData` callback for the
+   * `AsyncContent` loader, which debounces it and aborts superseded searches.
+   *
+   * @param {string} _filter - Tracked by `@context`; read from `this.filter`.
+   * @param {{signal: AbortSignal}} options
+   * @returns {Promise<Array<{id: string, symbol?: string}>>} The first page.
+   */
+  @action
+  async fetchIcons(_filter, { signal }) {
+    const search = this.#search;
+    const { icons, has_more: hasMore } = await this.#fetchPage(0, signal);
+
+    if (this.#isCurrent(search)) {
+      this.icons = icons;
+      this.hasMore = hasMore;
+      this.#page = 0;
+    }
+
+    return icons;
+  }
+
+  @action
+  async loadMore() {
+    if (this.loadingMore || !this.hasMore) {
+      return;
+    }
+
+    const search = this.#search;
+    this.loadingMore = true;
+
+    try {
+      const { icons, has_more: hasMore } = await this.#fetchPage(
+        this.#page + 1
+      );
+
+      if (!this.#isCurrent(search)) {
+        return;
+      }
+
+      this.icons = [...this.icons, ...icons];
+      this.hasMore = hasMore;
+      this.#page++;
+    } catch (error) {
+      if (this.#isCurrent(search)) {
+        this.hasMore = false;
+        popupAjaxError(error);
+      }
+    } finally {
+      if (this.#isCurrent(search)) {
+        this.loadingMore = false;
+      }
+    }
+  }
+
+  /**
+   * Loads the next page on behalf of the keyboard, which has no sentinel to
+   * scroll into, and moves focus onto the first icon that arrives.
+   */
+  async loadMoreAndFocus() {
+    const next = this.icons.length;
+    await this.loadMore();
+
+    schedule("afterRender", () => {
+      /** @type {HTMLElement | undefined} */ (
+        this.gridWrapper?.querySelector(
+          `.d-icon-grid-picker__grid [data-icon-id="${this.icons[next]?.id}"]`
+        )
+      )?.focus();
     });
   }
 
   /**
-   * Fetches icons from the server, optionally filtered by a search term.
-   * Used as the `@asyncData` callback for the `AsyncContent` loader.
+   * Keeps the picked icon rendering once the picker closes, until the value is
+   * saved and the icon becomes part of the sprite.
    *
-   * @param {string} filter - The search string to filter icons by name.
-   * @returns {Promise<Array<{id: string, symbol: string}>>} Array of matching icons.
+   * @param {{id: string, symbol?: string}} icon
    */
   @action
-  async fetchIcons(filter) {
-    const onlyAvailable = this.args.onlyAvailable ?? true;
-
-    if (!filter && unfilteredIconCache.has(onlyAvailable)) {
-      const cached = unfilteredIconCache.get(onlyAvailable);
-      this.resultCount = cached.length;
-      return cached;
-    }
-
-    const icons = await ajax("/svg-sprite/picker-search", {
-      data: { filter: filter || "", only_available: onlyAvailable },
-    });
-
-    if (!filter) {
-      unfilteredIconCache.set(onlyAvailable, icons);
-    }
-
-    this.resultCount = icons.length;
-    return icons;
+  selectIcon(icon) {
+    addExtraSpriteSymbols([icon]);
+    this.args.onSelect(icon.id);
   }
 
   <template>
@@ -295,8 +492,8 @@ export default class DIconGridPickerContent extends Component {
           aria-controls="d-icon-grid-picker-listbox"
           placeholder={{i18n "d_icon_grid_picker.search_placeholder"}}
           @value={{this.filter}}
-          @filterAction={{withEventValue this.onFilterInput}}
-          @onClearInput={{this.clearFilter}}
+          @filterAction={{withEventValue this.setFilter}}
+          @onClearInput={{fn this.setFilter ""}}
           @icons={{hash left="magnifying-glass"}}
           @containerClass="d-icon-grid-picker__filter"
         />
@@ -305,6 +502,8 @@ export default class DIconGridPickerContent extends Component {
       <div
         class="d-icon-grid-picker__grid-wrapper"
         id="d-icon-grid-picker-listbox"
+        {{this.registerGridWrapper}}
+        {{this.iconTooltips}}
         role="listbox"
         aria-label={{i18n "d_icon_grid_picker.select_icon"}}
       >
@@ -327,11 +526,10 @@ export default class DIconGridPickerContent extends Component {
                     (if @showSelectedName "d-icon-grid-picker__selected-chip")
                   }}
                   data-icon-id={{favIcon}}
-                  {{this.registerIconTooltip}}
                   {{this.snapToGrid}}
-                  {{on "click" (fn @onSelect favIcon)}}
+                  {{on "click" (fn this.selectIcon (hash id=favIcon))}}
                 >
-                  {{dIcon favIcon}}
+                  {{dIcon favIcon ignoreMissing=true}}
                   {{#if @showSelectedName}}
                     <span
                       class="d-icon-grid-picker__selected-name"
@@ -339,19 +537,10 @@ export default class DIconGridPickerContent extends Component {
                   {{/if}}
                 </button>
               {{else}}
-                {{! eslint-disable ember/template-require-context-role }}
-                <button
-                  type="button"
-                  role="option"
-                  aria-label={{favIcon}}
-                  aria-selected="false"
-                  class="d-icon-grid-picker__icon"
-                  data-icon-id={{favIcon}}
-                  {{this.registerIconTooltip}}
-                  {{on "click" (fn @onSelect favIcon)}}
-                >
-                  {{dIcon favIcon}}
-                </button>
+                <IconButton
+                  @icon={{hash id=favIcon}}
+                  @onSelect={{this.selectIcon}}
+                />
               {{/if}}
             {{/each}}
           </div>
@@ -365,27 +554,16 @@ export default class DIconGridPickerContent extends Component {
           >
             <:loading>
               <div class="d-icon-grid-picker__loading">
-                <div class="spinner"></div>
+                {{dLoadingSpinner}}
               </div>
             </:loading>
-            <:content as |icons|>
-              {{#each icons as |item|}}
-                {{! eslint-disable ember/template-require-context-role }}
-                <button
-                  type="button"
-                  role="option"
-                  aria-label={{item.id}}
-                  aria-selected={{if (eq item.id @value) "true" "false"}}
-                  class={{dConcatClass
-                    "d-icon-grid-picker__icon"
-                    (if (eq item.id @value) "--selected")
-                  }}
-                  data-icon-id={{item.id}}
-                  {{this.registerIconTooltip}}
-                  {{on "click" (fn @onSelect item.id)}}
-                >
-                  {{dIcon item.id}}
-                </button>
+            <:content>
+              {{#each this.icons as |item|}}
+                <IconButton
+                  @icon={{item}}
+                  @selected={{eq item.id @value}}
+                  @onSelect={{this.selectIcon}}
+                />
               {{/each}}
             </:content>
             <:empty>
@@ -395,7 +573,23 @@ export default class DIconGridPickerContent extends Component {
             </:empty>
           </DAsyncContent>
         </div>
+
+        {{#if this.loadingMore}}
+          <div class="d-icon-grid-picker__loading-more">
+            {{dLoadingSpinner}}
+          </div>
+        {{/if}}
+
+        {{#if this.hasMore}}
+          <DLoadMore
+            @action={{this.loadMore}}
+            @isLoading={{this.loadingMore}}
+            @root={{this.gridWrapper}}
+            class="d-icon-grid-picker__sentinel"
+          />
+        {{/if}}
       </div>
+
       <div class="sr-only" aria-live="polite" role="status">
         {{this.resultAnnouncement}}
       </div>

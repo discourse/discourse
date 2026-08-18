@@ -44,11 +44,13 @@ import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
+import { _clearRegisteredActions } from "discourse/lib/composer/actions-registry";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated, { clearBacklog } from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import { resetElementClassLeasesForTesting } from "discourse/lib/element-class-lease";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -93,7 +95,6 @@ import Site from "discourse/models/site";
 import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
-import { _clearSnapshots as _clearComposerActionsSnapshotsOld } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import {
   clearDisabledDefaultKeyboardBindings,
@@ -113,6 +114,7 @@ import {
 } from "discourse/tests/helpers/site-settings";
 import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
+import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
@@ -234,7 +236,7 @@ export function testCleanup(container, app) {
   clearNavItems();
   setTopicList(null);
   container?.lookup?.("service:composer-action-state")?.clear();
-  _clearComposerActionsSnapshotsOld();
+  _clearRegisteredActions();
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();
   cleanUpComposerUploadPreProcessor();
@@ -288,6 +290,8 @@ export function testCleanup(container, app) {
   _resetOutletLayoutsForTesting();
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
+  resetPointerDragForTesting();
+  resetElementClassLeasesForTesting();
   clearBacklog();
 }
 

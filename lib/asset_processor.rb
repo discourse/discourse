@@ -124,15 +124,11 @@ class AssetProcessor
     @ctx
   end
 
-  # Call a method in the global scope of the v8 context.
-  # The `fetch_result_call` kwarg provides a workaround for the lack of mini_racer async
-  # result support. The first call can perform some async operation, and then `fetch_result_call`
-  # will be called to fetch the result.
-  def self.v8_call(*args, **kwargs)
-    fetch_result_call = kwargs.delete(:fetch_result_call)
+  # Call a method in the global scope of the v8 context. Promise results are
+  # awaited and returned as values.
+  def self.v8_call(*args)
     mutex.synchronize do
-      result = v8.call(*args, **kwargs)
-      result = v8.call(fetch_result_call) if fetch_result_call
+      result = v8.call_await(*args)
       v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
       result
     end
@@ -206,14 +202,14 @@ class AssetProcessor
   end
 
   def terser(tree, opts)
-    self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
+    self.class.v8_call("minify", tree, opts)
   end
 
   def rollup(tree, opts)
-    self.class.v8_call("rollup", tree, opts, fetch_result_call: "getRollupResult")
+    self.class.v8_call("rollup", tree, opts)
   end
 
   def post_css(css:, map:, source_map_file:)
-    self.class.v8_call("postCss", css, map, source_map_file, fetch_result_call: "getPostCssResult")
+    self.class.v8_call("postCss", css, map, source_map_file)
   end
 end

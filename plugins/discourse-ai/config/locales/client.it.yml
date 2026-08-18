@@ -546,6 +546,9 @@ it:
         max_output_tokens: "Massimo token di output"
         url: "URL del servizio che ospita il modello"
         api_key: "Chiave API del servizio che ospita il modello"
+        vision_modes:
+          disabled:
+            title: "Disabilitati"
         ai_bot_user: "Utente bot IA"
         cost_input: "Costo di input"
         cost_cached_input: "Costo di ingresso in cache"

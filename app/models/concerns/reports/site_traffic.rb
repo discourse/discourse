@@ -26,7 +26,7 @@ module Reports::SiteTraffic
           page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
         ).first
 
-      likely_crawlers_enabled = UpcomingChanges.enabled?(:improved_crawler_detection)
+      likely_crawlers_enabled = CrawlerScorer.enabled?
 
       data =
         DB.query(

@@ -20,7 +20,6 @@ export default class SiteSettingDefaultCategories extends Component {
 
   <template>
     <DModal
-      class="incoming-emails"
       @title={{trustHTML @model.siteSetting.key}}
       @closeModal={{this.cancel}}
     >
@@ -38,6 +37,7 @@ export default class SiteSettingDefaultCategories extends Component {
         />
         <DButton
           @action={{this.cancel}}
+          class="btn-default"
           @label="admin.site_settings.default_categories.modal_no"
         />
       </:footer>

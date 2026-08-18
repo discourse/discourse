@@ -1,11 +1,15 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  fixturesByUrl,
+} from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { NO_VALUE_OPTION } from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
 
 function latestCategorySavePayload() {
@@ -535,3 +539,96 @@ acceptance("Category Edit - no permission to edit", function (needs) {
     assert.strictEqual(currentURL(), "/404");
   });
 });
+
+function seededCategory(overrides) {
+  const category = cloneJSON(fixturesByUrl["/c/1/show.json"]).category;
+  return { ...category, can_edit: true, ...overrides };
+}
+
+acceptance("Category Edit - resetting selects to default", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/c/bug/find_by_slug.json", () =>
+      helper.response(200, {
+        category: seededCategory({
+          default_view: "top",
+          sort_order: "views",
+          sort_ascending: false,
+        }),
+      })
+    );
+  });
+
+  test("sends null for cleared selects instead of dropping them", async function (assert) {
+    await visit("/c/bug/edit/images");
+
+    assert.strictEqual(
+      formKit().field("default_view").value(),
+      "top",
+      "seeds the default view"
+    );
+    assert.strictEqual(
+      formKit().field("sort_order").value(),
+      "views",
+      "seeds the sort order"
+    );
+    assert.strictEqual(
+      formKit().field("sort_ascending").value(),
+      "false",
+      "seeds the sort direction"
+    );
+
+    await formKit().field("default_view").select(NO_VALUE_OPTION);
+    await formKit().field("sort_order").select(NO_VALUE_OPTION);
+
+    assert
+      .dom("[data-name='sort_ascending']")
+      .doesNotExist("hides the sort direction once the sort order is cleared");
+
+    await click(".admin-changes-banner .btn-primary");
+
+    const payload = latestCategorySavePayload();
+
+    assert.strictEqual(payload.default_view, null, "clears the default view");
+    assert.strictEqual(payload.sort_order, null, "clears the sort order");
+    assert.strictEqual(
+      payload.sort_ascending,
+      null,
+      "clears the sort direction alongside the sort order"
+    );
+  });
+});
+
+acceptance(
+  "Category Edit - sort order stored outside the core list",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/c/bug/find_by_slug.json", () =>
+        helper.response(200, {
+          category: seededCategory({ sort_order: "votes" }),
+        })
+      );
+    });
+
+    test("renders the stored value, and can clear it", async function (assert) {
+      await visit("/c/bug/edit/images");
+
+      assert
+        .dselect("[data-name='sort_order'] .d-select")
+        .hasSelectedOption(
+          { value: "votes", label: "votes" },
+          "renders and selects a stored value the core list doesn't provide"
+        );
+
+      await formKit().field("sort_order").select(NO_VALUE_OPTION);
+      await click(".admin-changes-banner .btn-primary");
+
+      assert.strictEqual(
+        latestCategorySavePayload().sort_order,
+        null,
+        "clears the stored value"
+      );
+    });
+  }
+);

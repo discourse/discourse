@@ -76,7 +76,7 @@ export default class DAccessControlGranteeChooser extends EmailGroupUserChooser 
       const results = await ajax(ACCESS_CONTROL_GRANTEE_SEARCH_URL, {
         data: {
           term: filter,
-          acl_target: this.selectKit.options.aclTarget,
+          acl_target: this.selectKit.options.aclTargetType,
         },
       });
       return this.excludeSelectedGrantees(

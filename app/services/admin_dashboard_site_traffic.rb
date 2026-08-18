@@ -105,7 +105,7 @@ class AdminDashboardSiteTraffic
   def likely_crawlers_enabled?
     return @likely_crawlers_enabled if defined?(@likely_crawlers_enabled)
 
-    @likely_crawlers_enabled = UpcomingChanges.enabled?(:improved_crawler_detection)
+    @likely_crawlers_enabled = CrawlerScorer.enabled?
   end
 
   def kpis(totals, prior_rows)
@@ -144,15 +144,24 @@ class AdminDashboardSiteTraffic
       DB
         .query_hash(<<~SQL, start_date: start_date.to_date, end_date: end_date.to_date)
           SELECT
-            COALESCE(SUM(sessions), 0)::bigint AS sessions,
-            COALESCE(SUM(bounced), 0)::bigint AS bounced,
-            COALESCE(SUM(engaged_seconds_total), 0)::bigint AS engaged_seconds_total
+            COALESCE(SUM(#{human_column("sessions", "likely_crawler_sessions")}), 0)::bigint AS sessions,
+            COALESCE(SUM(#{human_column("bounced", "likely_crawler_bounced")}), 0)::bigint AS bounced,
+            COALESCE(
+              SUM(#{human_column("engaged_seconds_total", "likely_crawler_engaged_seconds_total")}),
+              0
+            )::bigint AS engaged_seconds_total
           FROM browser_pageview_session_engagement_daily_rollups
           WHERE date >= :start_date
             AND date <= :end_date
         SQL
         .first
         .symbolize_keys
+  end
+
+  def human_column(column, crawler_column)
+    return column if !likely_crawlers_enabled?
+
+    "GREATEST(#{column} - #{crawler_column}, 0)"
   end
 
   def browser_pageviews_kpi(totals, prior_rows)
@@ -173,12 +182,12 @@ class AdminDashboardSiteTraffic
   def direct_traffic_value
     return nil if !SiteSetting.persist_browser_pageview_events
 
-    count_column = login_required? ? "logged_in_count" : "count"
+    count_sql = BrowserPageviewEvent.rollup_count_sql
 
     row = DB.query(<<~SQL, start_date: start_date.to_date, end_date: end_date.to_date).first
           SELECT
-            COALESCE(SUM(#{count_column}), 0)::bigint AS total,
-            COALESCE(SUM(#{count_column}) FILTER (WHERE normalized_referrer IS NULL), 0)::bigint AS direct
+            COALESCE(SUM(#{count_sql}), 0)::bigint AS total,
+            COALESCE(SUM(#{count_sql}) FILTER (WHERE normalized_referrer IS NULL), 0)::bigint AS direct
           FROM browser_pageview_referrer_daily_rollups
           WHERE date >= :start_date
             AND date <= :end_date

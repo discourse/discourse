@@ -220,6 +220,7 @@ class Report
       SCHEMA_VERSION,
       guardian&.user&.id || report.current_user&.id,
       guardian&.can_see_ip?,
+      CrawlerScorer.enabled?,
     ].compact.map(&:to_s).join(":")
   end
 

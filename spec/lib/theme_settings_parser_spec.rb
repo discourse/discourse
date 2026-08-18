@@ -44,6 +44,7 @@ RSpec.describe ThemeSettingsParser do
     expect(loader.find_by_name(:float_setting)[:type]).to eq(types[:float])
     expect(loader.find_by_name(:list_setting)[:type]).to eq(types[:list])
     expect(loader.find_by_name(:enum_setting)[:type]).to eq(types[:enum])
+    expect(loader.find_by_name(:icon_setting)[:type]).to eq(types[:icon])
   end
 
   describe "description locale" do

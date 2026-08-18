@@ -70,7 +70,17 @@ nb_NO:
       nodes:
         "trigger:assigned": "Tildelt"
       assign_topic:
+        resources:
+          topic: "Emne"
+          post: "Innlegg"
         operations:
           assign: "Tildel"
           unassign: "Fjern tildelning"
         topic_id: "Emne-ID"
+        post_id: "Innleggs-ID"
+      check_assignment:
+        target_types:
+          topic: "Emne"
+          post: "Innlegg"
+        topic_id: "Emne-ID"
+        post_id: "Innleggs-ID"

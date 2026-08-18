@@ -18,6 +18,10 @@ export default class DiscourseReactionsCounter extends Component {
     }`;
   }
 
+  get expanded() {
+    return this.menu.getByIdentifier(MENU_IDENTIFIER)?.id === this.elementId;
+  }
+
   @action
   mouseDown(event) {
     event.stopImmediatePropagation();
@@ -26,14 +30,6 @@ export default class DiscourseReactionsCounter extends Component {
   @action
   mouseUp(event) {
     event.stopImmediatePropagation();
-  }
-
-  @action
-  keyDown(event) {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      this.#toggleMenu(event.currentTarget);
-    }
   }
 
   @action
@@ -52,22 +48,18 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   get classes() {
-    const classes = [];
+    const classes = ["discourse-reactions-counter"];
     const mainReaction =
       this.siteSettings.discourse_reactions_reaction_for_like;
 
-    const { post } = this.args;
+    const { reactions } = this.args.post;
 
     if (
-      post.reactions &&
-      post.reactions.length === 1 &&
-      post.reactions[0].id === mainReaction
+      reactions &&
+      reactions.length === 1 &&
+      reactions[0].id === mainReaction
     ) {
       classes.push("only-like");
-    }
-
-    if (post.reaction_users_count > 0) {
-      classes.push("discourse-reactions-counter");
     }
 
     return classes.join(" ");
@@ -80,11 +72,7 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   #toggleMenu(trigger) {
-    const virtualElement = {
-      getBoundingClientRect: () => trigger.getBoundingClientRect(),
-    };
-
-    this.menu.show(virtualElement, {
+    this.menu.show(trigger, {
       identifier: MENU_IDENTIFIER,
       component: DiscourseReactionsUsersMenu,
       modalForMobile: true,
@@ -98,24 +86,24 @@ export default class DiscourseReactionsCounter extends Component {
 
   <template>
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
-    <div
-      id={{this.elementId}}
-      class={{this.classes}}
-      role="button"
-      tabindex="0"
-      aria-label={{this.counterAriaLabel}}
-      {{on "mousedown" this.mouseDown}}
-      {{on "mouseup" this.mouseUp}}
-      {{on "click" this.click}}
-      {{on "keydown" this.keyDown}}
-    >
-      {{#if @post.reaction_users_count}}
+    {{#if @post.reaction_users_count}}
+      <button
+        id={{this.elementId}}
+        type="button"
+        class={{this.classes}}
+        aria-label={{this.counterAriaLabel}}
+        aria-haspopup="dialog"
+        aria-expanded={{if this.expanded "true" "false"}}
+        {{on "mousedown" this.mouseDown}}
+        {{on "mouseup" this.mouseUp}}
+        {{on "click" this.click}}
+      >
         <DiscourseReactionsList @post={{@post}} />
 
         <span class="reactions-counter" aria-hidden="true">
           {{@post.reaction_users_count}}
         </span>
-      {{/if}}
-    </div>
+      </button>
+    {{/if}}
   </template>
 }

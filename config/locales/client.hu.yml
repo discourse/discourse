@@ -6137,13 +6137,32 @@ hu:
       new_features:
         title: "Újdonságok"
         check_for_updates: "Frissítések keresése"
+      site_traffic_explorer:
+        pageviews: "Oldalmegtekintések"
+        view_more: "Több megtekintése"
+        cards:
+          pages: "Oldalak"
+          visitors: "Látogatók"
+        columns:
+          countries: "Ország"
+          top_urls: "Webcím"
+          browsers: "Böngésző"
+          ip_addresses: "ip cím"
+        filters:
+          country: "Ország"
+          browser: "Böngésző"
+          ip: "ip cím"
+        metrics:
+          pageviews:
+            label: "Oldalmegtekintések"
+        series:
+          anonymous_human: "Névtelen"
       dashboard:
         title: "Vezérlőpult"
         last_updated: "Az irányítópult frissítve:"
         discourse_last_updated: "Discourse frissítve:"
         version: "Verzió"
         up_to_date: "A rendszer naprakész!"
-        critical_available: "Egy fontos frissítés érhető el!"
         updates_available: "Frissítések érhetőek el!"
         please_update: "Kérjük, frissítsd!"
         no_check_performed: "A frissítések ellenőrzése nem történt meg. Győződjön meg arról, hogy a Sidekiq fut."

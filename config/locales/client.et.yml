@@ -2942,12 +2942,23 @@ et:
         default_value: "Vaikimisi"
       search:
         title: "Otsi"
+      site_traffic_explorer:
+        pageviews: "Lehekülje vaatamisi"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP-aadress"
+        filters:
+          ip: "IP-aadress"
+        metrics:
+          pageviews:
+            label: "Lehekülje vaatamisi"
+        series:
+          anonymous_human: "Anonüümne"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
         version: "Versioon"
         up_to_date: "Oled ajakohane!"
-        critical_available: "Kriitiline uuendus on saadaval."
         updates_available: "Uuendused on saadaval."
         no_check_performed: "Uuenduste kontrolli pole tehtud. Kontrolli, et Sidekiq töötab."
         stale_data: "Uuenduste kontrolli pole ammu tehtud. Kontrolli, et Sidekiq töötab."

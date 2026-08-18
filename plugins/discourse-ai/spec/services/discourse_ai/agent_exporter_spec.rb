@@ -33,6 +33,23 @@ RSpec.describe DiscourseAi::AgentExporter do
       end
     end
 
+    context "when the agent has subagents" do
+      fab!(:first_subagent) { Fabricate(:ai_agent, name: "zebra") }
+      fab!(:second_subagent) { Fabricate(:ai_agent, name: "Alpha") }
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          subagent_ids: [first_subagent.id, second_subagent.id, first_subagent.id],
+        )
+      end
+
+      let(:exporter) { described_class.new(agent: ai_agent) }
+
+      it "preserves subagent selection order" do
+        expect(export_json["agent"]["subagents"]).to eq(%w[zebra Alpha])
+      end
+    end
+
     context "when the agent has assigned mcp servers" do
       fab!(:ai_mcp_server) { Fabricate(:ai_mcp_server, name: "Jira") }
       fab!(:ai_agent) { Fabricate(:ai_agent, tools: []) }

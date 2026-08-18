@@ -3631,13 +3631,26 @@ gl:
         default_value: "Predeterminado"
       search:
         title: "Buscar"
+      site_traffic_explorer:
+        pageviews: "Visualizacións de páxinas"
+        columns:
+          top_urls: "URL"
+          browsers: "Navegador"
+          ip_addresses: "Enderezo IP"
+        filters:
+          browser: "Navegador"
+          ip: "Enderezo IP"
+        metrics:
+          pageviews:
+            label: "Visualizacións de páxinas"
+        series:
+          anonymous_human: "Anónimo"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
         discourse_last_updated: "Actualización de Discourse:"
         version: "Versión"
         up_to_date: "Está actualizado/a!"
-        critical_available: "Está dispoñíbel unha actualización crítica."
         updates_available: "Hai actualizacións dispoñíbeis."
         no_check_performed: "Non se efectuou unha busca de actualizacións. Asegúrese de que sidekiq está executándose."
         stale_data: "Non se efectuou unha busca de actualizacións ultimamente. Asegúrese de que sidekiq está executándose."

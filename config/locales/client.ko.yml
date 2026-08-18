@@ -4034,13 +4034,30 @@ ko:
         default_value: "기본"
       search:
         title: "검색"
+      site_traffic_explorer:
+        pageviews: "페이지뷰"
+        view_more: "자세히 보기"
+        cards:
+          pages: "페이지"
+          visitors: "방문자"
+        columns:
+          top_urls: "URL"
+          browsers: "브라우저"
+          ip_addresses: "IP 주소"
+        filters:
+          browser: "브라우저"
+          ip: "IP 주소"
+        metrics:
+          pageviews:
+            label: "페이지뷰"
+        series:
+          anonymous_human: "익명"
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 업데이트됨:"
         discourse_last_updated: "Discourse 업데이트됨:"
         version: "버전"
         up_to_date: "최신상태입니다!"
-        critical_available: "중요 업데이트를 사용할 수 있습니다."
         updates_available: "업데이트를 사용할 수 있습니다."
         please_update: "업데이트해 주세요!"
         no_check_performed: "업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."

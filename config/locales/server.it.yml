@@ -968,6 +968,13 @@ it:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operativo sconosciuto"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimo"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Si è verificato un errore durante la modifica del tuo indirizzo email. Forse l'indirizzo è già in uso?"
     doesnt_exist: "Questo indirizzo email non è associato al tuo account."
@@ -3653,9 +3660,6 @@ it:
     user_posted_pm_staged:
       title: "Pubblicazione MP da Utente Temporaneo"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"

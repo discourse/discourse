@@ -168,17 +168,22 @@ class NewPostManager
       end
     elsif manager.args[:category]
       category = Category.find_by(id: manager.args[:category])
+      skip_topic_validations =
+        manager.args[:via_email] && manager.user.staged? && manager.args[:skip_validations]
 
-      unless manager.user.guardian.can_create_topic_on_category?(category)
+      unless skip_topic_validations || manager.user.guardian.can_create_topic_on_category?(category)
         result = NewPostResult.new(:created_post, false)
         result.errors.add(:base, I18n.t("js.errors.reasons.forbidden"))
         return result
       end
     end
 
-    result = manager.enqueue(reason)
+    creator_opts = skip_topic_validations ? { skip_validations: true } : {}
+    result = manager.enqueue(reason, creator_opts: creator_opts)
 
     if result.success? || (reason == :email_spam && is_first_post?(manager))
+      reviewable_id = result.reviewable&.id
+
       I18n.with_locale(SiteSetting.default_locale) do
         if is_fast_typer?(manager)
           UserSilencer.auto_silence(
@@ -186,6 +191,7 @@ class NewPostManager
             Discourse.system_user,
             keep_posts: true,
             reason: I18n.t("user.new_user_typed_too_fast"),
+            reviewable_id:,
           )
         elsif auto_silence?(manager) || matches_auto_silence_regex?(manager)
           UserSilencer.auto_silence(
@@ -193,6 +199,7 @@ class NewPostManager
             Discourse.system_user,
             keep_posts: true,
             reason: I18n.t("user.content_matches_auto_silence_regex"),
+            reviewable_id:,
           )
         elsif reason == :email_spam && is_first_post?(manager)
           UserSilencer.auto_silence(
@@ -200,6 +207,7 @@ class NewPostManager
             Discourse.system_user,
             keep_posts: true,
             reason: I18n.t("user.email_in_spam_header"),
+            reviewable_id:,
           )
         end
       end

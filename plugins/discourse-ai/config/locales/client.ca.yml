@@ -172,6 +172,9 @@ ca:
       llms:
         display_name: "Nom"
         provider: "Proveïdor"
+        vision_modes:
+          disabled:
+            title: "Desactivat"
         save: "Desa"
         edit: "Edita"
         delete: Suprimeix

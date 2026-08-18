@@ -6353,13 +6353,32 @@ tr_TR:
       new_features:
         title: "Yenilikler"
         check_for_updates: "Güncellemeleri kontrol et"
+      site_traffic_explorer:
+        pageviews: "Sayfa Görüntülemeleri"
+        view_more: "Daha fazla görüntüle"
+        cards:
+          pages: "Sayfa"
+          visitors: "Ziyaretçiler"
+        columns:
+          countries: "Ülke"
+          top_urls: "URL"
+          browsers: "Tarayıcı"
+          ip_addresses: "IP adresi"
+        filters:
+          country: "Ülke"
+          browser: "Tarayıcı"
+          ip: "IP adresi"
+        metrics:
+          pageviews:
+            label: "Sayfa Görüntülemeleri"
+        series:
+          anonymous_human: "Anonim"
       dashboard:
         title: "Pano"
         last_updated: "Pano güncellendi:"
         discourse_last_updated: "Discourse güncellendi:"
         version: "Sürüm"
         up_to_date: "Güncelsiniz!"
-        critical_available: "Kritik bir güncelleme mevcut."
         updates_available: "Güncellemeler mevcut."
         please_update: "Lütfen güncelleyin!"
         no_check_performed: "Güncellemeler için bir kontrol yapılmadı. Sidekiq'in çalıştığından emin olun."

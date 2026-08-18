@@ -466,9 +466,7 @@ uk:
     max_redemptions_allowed_one: "для запрошень електронною поштою має бути 1."
     redemption_count_less_than_max: "має бути менше %{max_redemptions_allowed}."
     email_xor_domain: "Поля електронної пошти та домену не можна використовувати одночасно"
-    admin_invite_requires_email: "Запрошення адміністратора повинні бути надіслані на електронну адресу"
     admin_invite_requires_admin_inviter: "Тільки адміністратори можуть надсилати запрошення адміністраторам"
-    moderator_invite_requires_email: "Запрошення модератора повинні бути надіслані на електронну адресу"
     moderator_invite_requires_staff_inviter: "Тільки співробітники можуть створювати запрошення для модераторів"
     existing_user_success: "Запрошення активовано"
     email_invites_disabled: "Надсилання запрошень електронною поштою вимкнено"
@@ -1195,6 +1193,15 @@ uk:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "невідома операційна система"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Ви увійшли"
+      anonymous: "Анонімний"
+      likely_crawler: "Ймовірні сканери"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Під час зміни адреси електронної пошти сталася помилка. Можливо, адреса вже використовується?"
     doesnt_exist: "Ця адреса е-пошти не пов’язана з вашим обліковим записом."
@@ -2968,7 +2975,6 @@ uk:
       invalid_uncategorized_category_setting: 'Категорію «Без категорії» неможливо вибрати, якщо не ввімкнено «дозволити теми без категорії».'
       invalid_search_ranking_weights: "Значення є недійсним для параметра search_ranking_weights сайту. Приклад: '{0.1,0.2,0.3,1.0}'. Зверніть увагу, що максимальне значення для кожної ваги дорівнює 1.0."
       content_localization_locale_limit: "Кількість підтримуваних локалізацій не може перевищувати %{max}."
-      content_localization_language_switcher_requirements: "Для перемикача мов потрібно, щоб {{setting:set_locale_from_cookie}} та {{setting:allow_user_locale}} були ввімкнені, а {{setting:content_localization_supported_locales}} мала принаймні одну мову. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "Перш ніж увімкнути цей параметр, потрібно спочатку ввімкнути «встановити локаль з параметра»."
       mediaconvert_role_arn_required: "Роль AWS IAM ARN необхідна при використанні AWS MediaConvert для конвертації відео."
       mediaconvert_output_subdirectory_required: "Підкаталог виводу MediaConvert обов'язковий."
@@ -4573,9 +4579,6 @@ uk:
     user_posted_pm_staged:
       title: "Користувач написав у PM"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Обліковий запис призупинено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис призупинено"

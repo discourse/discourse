@@ -471,7 +471,8 @@ CREATE TABLE public.ai_agents (
     max_turn_tokens integer,
     compression_threshold integer DEFAULT 80 NOT NULL,
     require_approval boolean DEFAULT false NOT NULL,
-    thinking_effort character varying
+    thinking_effort character varying,
+    subagent_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL
 );
 
 
@@ -519,7 +520,8 @@ CREATE TABLE public.ai_api_audit_logs (
     llm_id bigint,
     response_status integer,
     request_attempts jsonb,
-    estimated_cost numeric(20,10)
+    estimated_cost numeric(20,10),
+    time_to_first_token_msecs integer
 );
 
 
@@ -1955,7 +1957,9 @@ CREATE TABLE public.browser_pageview_country_daily_rollups (
     date date NOT NULL,
     country_code character varying(2),
     count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2068,7 +2072,10 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL
+    source smallint DEFAULT 1 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer,
+    browser smallint
 );
 
 
@@ -2100,7 +2107,9 @@ CREATE TABLE public.browser_pageview_referrer_daily_rollups (
     date date NOT NULL,
     normalized_referrer character varying(2000),
     count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2133,7 +2142,10 @@ CREATE TABLE public.browser_pageview_session_engagement_daily_rollups (
     logged_in boolean NOT NULL,
     sessions bigint NOT NULL,
     bounced bigint NOT NULL,
-    engaged_seconds_total bigint NOT NULL
+    engaged_seconds_total bigint NOT NULL,
+    likely_crawler_sessions bigint DEFAULT 0 NOT NULL,
+    likely_crawler_bounced bigint DEFAULT 0 NOT NULL,
+    likely_crawler_engaged_seconds_total bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2276,7 +2288,8 @@ CREATE TABLE public.category_activity_daily_rollups (
     category_id integer NOT NULL,
     topics integer DEFAULT 0 NOT NULL,
     posts integer DEFAULT 0 NOT NULL,
-    page_views bigint DEFAULT 0 NOT NULL
+    page_views bigint DEFAULT 0 NOT NULL,
+    likely_crawler_page_views bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -8798,7 +8811,10 @@ CREATE TABLE public.search_logs (
     search_type integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     search_result_type integer,
-    user_agent character varying(2000)
+    user_agent character varying(2000),
+    crawler boolean DEFAULT false NOT NULL,
+    likely_crawler boolean DEFAULT false NOT NULL,
+    session_id character varying(32)
 );
 
 
@@ -11804,7 +11820,11 @@ CREATE TABLE public.user_options (
     push_notification_level integer DEFAULT 1 NOT NULL,
     automatically_translate boolean DEFAULT true NOT NULL,
     understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
-    send_shortcut integer DEFAULT 0 NOT NULL
+    send_shortcut integer DEFAULT 0 NOT NULL,
+    ai_search_discoveries_mode integer DEFAULT 1 NOT NULL,
+    ai_search_discoveries_show_summary boolean DEFAULT true NOT NULL,
+    ai_search_discoveries_summary_detail integer DEFAULT 1 NOT NULL,
+    ai_search_discoveries_related_count integer DEFAULT 2 NOT NULL
 );
 
 
@@ -17583,6 +17603,20 @@ CREATE UNIQUE INDEX idx_bpcrawler_rollups_date_logged_in_unique ON public.browse
 
 
 --
+-- Name: idx_bpe_beacon_created_at_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_beacon_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (source = 2);
+
+
+--
+-- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (source, created_at DESC, id DESC) WHERE (browser IS NULL);
+
+
+--
 -- Name: idx_bpe_created_at_country_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17608,6 +17642,13 @@ CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING bt
 --
 
 CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_events USING btree (normalized_referrer_version) WHERE (referrer IS NOT NULL);
+
+
+--
+-- Name: idx_bpe_normalized_url_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events USING btree (normalized_url_version);
 
 
 --
@@ -21160,6 +21201,13 @@ CREATE INDEX index_reviewables_on_status_and_type ON public.reviewables USING bt
 
 
 --
+-- Name: index_reviewables_on_target_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviewables_on_target_created_by_id ON public.reviewables USING btree (target_created_by_id);
+
+
+--
 -- Name: index_reviewables_on_target_id_where_post_type_eq_post; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21234,6 +21282,13 @@ CREATE UNIQUE INDEX index_screened_urls_on_url ON public.screened_urls USING btr
 --
 
 CREATE INDEX index_search_logs_on_created_at ON public.search_logs USING btree (created_at);
+
+
+--
+-- Name: index_search_logs_on_created_at_excluding_crawlers; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_search_logs_on_created_at_excluding_crawlers ON public.search_logs USING btree (created_at) WHERE ((NOT crawler) AND (NOT likely_crawler));
 
 
 --
@@ -23135,7 +23190,21 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260817054353'),
+('20260817054044'),
+('20260814083721'),
+('20260814060100'),
+('20260814060000'),
+('20260813202233'),
+('20260813071230'),
+('20260813071223'),
+('20260812094609'),
+('20260811231259'),
+('20260810154331'),
 ('20260810012238'),
+('20260807182856'),
+('20260806074210'),
+('20260806074204'),
 ('20260803015314'),
 ('20260731055703'),
 ('20260730183114'),

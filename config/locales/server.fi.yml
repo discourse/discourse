@@ -968,6 +968,13 @@ fi:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "tuntematon käyttöjärjestelmä"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonyymeja"
+    browsers:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      safari: "Safari"
   change_email:
     error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä tämä sähköpostiosoite on jo käytössä?"
     doesnt_exist: "Sähköpostiosoitetta ei ole liitetty tiliisi."
@@ -3770,9 +3777,6 @@ fi:
     user_posted_pm_staged:
       title: "Esikäyttäjälle lähetettiin YV"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Tili hyllytetty"
       subject_template: "[%{email_prefix}] Tilisi on hyllytetty"

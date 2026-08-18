@@ -522,6 +522,13 @@ te:
       macos: "macOS"
       windows: "మైక్రోసాఫ్ట్ విండోస్"
       unknown: "తెలియని ఆపరేటింగ్ సిస్టమ్"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "అనామక"
+    browsers:
+      edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
+      firefox: "ఫైర్‌ఫాక్స్"
+      safari: "సఫారి"
   change_email:
     error: "మీ ఈమెయిల్ చిరునామా మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఈసరికే వాడుకలో ఉందా?"
     confirm: "నిర్ధారించండి"
@@ -1985,10 +1992,6 @@ te:
     user_posted_pm:
       title: "సభ్యుడు పోస్ట్ చేసిన PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-    user_posted_pm_staged:
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ఖాతా నిలిపివేయబడింది"
     account_suspended_forever:

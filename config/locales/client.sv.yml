@@ -4595,13 +4595,26 @@ sv:
         default_value: "Standard"
       search:
         title: "Sök"
+      site_traffic_explorer:
+        pageviews: "Sidvisningar"
+        columns:
+          top_urls: "URL"
+          browsers: "Webbläsare"
+          ip_addresses: "IP-adress"
+        filters:
+          browser: "Webbläsare"
+          ip: "IP-adress"
+        metrics:
+          pageviews:
+            label: "Sidvisningar"
+        series:
+          anonymous_human: "Anonym"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
         discourse_last_updated: "Discourse uppdaterad:"
         version: "Version"
         up_to_date: "Du är aktuell!"
-        critical_available: "En kritisk uppdatering är tillgänglig."
         updates_available: "Uppdateringar är tillgängliga."
         no_check_performed: "En sökning efter uppdateringar har ej genomförts. Kontrollera att sidekiq körs."
         stale_data: "En sökning efter uppdateringar har inte genomförts på sistone. Kontrollera att sidekiq körs."

@@ -22,7 +22,7 @@ class GitUtils
   end
 
   def self.last_commit_date
-    git_cmd = 'git log -1 --format="%ct"'
+    git_cmd = "git rev-list -1 --no-commit-header --format=%ct HEAD"
     seconds = try_git(git_cmd, nil)
     seconds.nil? ? nil : DateTime.strptime(seconds, "%s")
   end

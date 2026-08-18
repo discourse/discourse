@@ -106,6 +106,12 @@
       .d-icon-tag {
         color: var(--primary-low-mid) !important;
       }
+
+      .multi-select-header__selected-count {
+        @include viewport.from(sm) {
+          display: none;
+        }
+      }
     }
 
     .has-selection {

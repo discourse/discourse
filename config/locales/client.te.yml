@@ -4538,13 +4538,26 @@ te:
         default_value: "అప్రమేయ"
       search:
         title: "వెతుకు"
+      site_traffic_explorer:
+        pageviews: "పేజీ వీక్షణలు"
+        columns:
+          top_urls: "URL"
+          browsers: "బ్రౌజర్"
+          ip_addresses: "ఐపీ చిరునామా"
+        filters:
+          browser: "బ్రౌజర్"
+          ip: "ఐపీ చిరునామా"
+        metrics:
+          pageviews:
+            label: "పేజీ వీక్షణలు"
+        series:
+          anonymous_human: "అనామక"
       dashboard:
         title: "ప్రధాన పేజీ"
         last_updated: "డాష్‌బోర్డ్ నవీకరించబడింది:"
         discourse_last_updated: "డిస్కోర్స్ నవీకరించబడింది:"
         version: "సంస్కరణ"
         up_to_date: "మీరు తాజాగా ఉన్నారు! "
-        critical_available: "ఒక క్రిటికల్ ఉన్నతీకరణ అందుబాటులో ఉంది."
         updates_available: "ఉన్నతీకరణలు అందుబాటులో ఉన్నాయి."
         no_check_performed: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
         stale_data: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."

@@ -6327,13 +6327,32 @@ nl:
       new_features:
         title: "Wat is er nieuw?"
         check_for_updates: "Controleren op updates"
+      site_traffic_explorer:
+        pageviews: "Paginaweergaven"
+        view_more: "Meer weergeven"
+        cards:
+          pages: "Pagina's"
+          visitors: "Bezoekers"
+        columns:
+          countries: "Land"
+          top_urls: "URL"
+          browsers: "Browser"
+          ip_addresses: "IP-adres"
+        filters:
+          country: "Land"
+          browser: "Browser"
+          ip: "IP-adres"
+        metrics:
+          pageviews:
+            label: "Paginaweergaven"
+        series:
+          anonymous_human: "Anoniem"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard bijgewerkt:"
         discourse_last_updated: "Discourse bijgewerkt:"
         version: "Versie"
         up_to_date: "Je bent helemaal bij!"
-        critical_available: "Er is een kritieke update beschikbaar."
         updates_available: "Er zijn updates beschikbaar."
         please_update: "Werk bij!"
         no_check_performed: "Er is niet op updates gecontroleerd. Zorg dat Sidekiq actief is."

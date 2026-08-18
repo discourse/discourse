@@ -3933,13 +3933,21 @@ sl:
         default_value: "Privzeto"
       search:
         title: "Išči"
+      site_traffic_explorer:
+        pageviews: "Ogledov strani"
+        columns:
+          top_urls: "URL"
+        metrics:
+          pageviews:
+            label: "Ogledov strani"
+        series:
+          anonymous_human: "Anonimni"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
         discourse_last_updated: "Discourse posodobljen:"
         version: "Verzija"
         up_to_date: "Imate zadnjo verzijo!"
-        critical_available: "Nujna posodobitev je na voljo."
         updates_available: "Posodobitve so na voljo."
         no_check_performed: "Preverjanje posodobitev se ni izvedlo. Preverite da sidekiq teče."
         stale_data: "Zadnje čase se preverjanje posodobitev ni izvedlo. Preverite ali se sidekiq izvaja."

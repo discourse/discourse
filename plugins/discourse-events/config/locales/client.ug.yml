@@ -1,0 +1,112 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  admin_js:
+    admin:
+      calendar: "پائالىيەت"
+      site_settings:
+        categories:
+          discourse_calendar: "پائالىيەت"
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: تېما كىملىكى
+    discourse_calendar:
+      livestream:
+        zoom:
+          chat: "سۆھبەت"
+      disable_holiday: "چەكلە"
+      enable_holiday: "قوزغات"
+      date: "چېسلا"
+      region:
+        none: "يوق"
+      toolbar_button:
+        today: "بۈگۈن"
+        month: "ئاي"
+        week: "ھەپتە"
+        day: "كۈن"
+        year: "يىل"
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "تېخىمۇ كۆپ كۆرسەت"
+        show_less: "ئازراق كۆرسەت"
+      show_all: "ھەممىنى كۆرسەت"
+      add_to_calendar: "يىلنامەگە قوش"
+      created_by: "قۇرغۇچى"
+      bulk_invite: "توپ تەكلىپ"
+      bulk_invite_modal:
+        confirm: "جەزملە"
+        title: "توپ تەكلىپ"
+        error: "كەچۈرۈڭ ، ھۆججەت CSV پىچىمىدا بولۇشى كېرەك."
+        send_bulk_invites: "تەكلىپ يوللا"
+      upcoming_events:
+        creator: "قۇرغۇچى"
+        status: "ھالەت"
+      models:
+        event:
+          expired: "ۋاقتى توشتى"
+          closed: "تاقالدى"
+          status:
+            public:
+              title: "ئاممىۋى"
+            private:
+              title: "شەخسىي"
+      composer:
+        url_placeholder: "تور ئادرېسى قوش"
+        reminder:
+          units:
+            minutes:
+              one: "مىنۇت"
+              other: "مىنۇت"
+            hours:
+              one: "سائەت"
+              other: "سائەت"
+            days:
+              one: "كۈن"
+              other: "كۈن"
+      builder_modal:
+        custom_fields:
+          placeholder: "تاللاشچان"
+        create: "قۇر"
+        update: "ساقلا"
+        timezone:
+          label: ۋاقىت رايونى
+        starts_at:
+          label: "باشلىنىش ۋاقتى"
+        reminders:
+          units:
+            minutes: "مىنۇت"
+            hours: "سائەت"
+            days: "كۈن"
+          periods:
+            before: "ئىلگىرى"
+            after: "كېيىن"
+        recurrence:
+          label: "تەكرار"
+          none: "تەكرارلانمايدۇ"
+          every_day: "ھەر كۈنى"
+        attendance:
+          none: "يوق"
+        location:
+          label: "ئورنى"
+        url:
+          label: "تور ئادرېسى"
+          placeholder: "تاللاشچان"
+          add: "تور ئادرېسى قوش"
+        description:
+          label: "چۈشەندۈرۈش"
+        event_type:
+          public:
+            title: "ئاممىۋى"
+      invite_user_or_group:
+        invite: "يوللا"
+        success: "تەكلىپ يوللاندى"

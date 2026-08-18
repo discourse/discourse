@@ -46,6 +46,8 @@ class Reviewable < ActiveRecord::Base
                     :label,
                     :description,
                     :confirm_message,
+                    :confirm_message_args,
+                    :confirm_destructive,
                     :client_action,
                     :require_reject_reason,
                     :custom_modal,

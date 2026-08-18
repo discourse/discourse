@@ -132,6 +132,14 @@ module DiscourseAi
           result
         end
 
+        def max_invocations
+          options[:max_invocations].to_i
+        end
+
+        def invocation_limited?
+          max_invocations.positive?
+        end
+
         def chain_next_response?
           true
         end

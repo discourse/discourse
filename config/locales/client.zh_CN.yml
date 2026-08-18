@@ -63,6 +63,7 @@ zh_CN:
         mandatory_acl_tooltip: "此权限是 %{name} 的必要权限，无法移除"
         mandatory: "必要"
         disallowed: "不允许"
+        required_permission_not_added: "此 %{typeName} 至少需要一名授权对象拥有 %{permission} 权限"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -803,6 +804,7 @@ zh_CN:
       date_filter: "发布时间介于"
       in_reply_to: "回复给"
       filtered_flagged_by: "举报者"
+      no_component_found: "未找到 %{type} 的组件"
       unknown:
         title:
           other: "您有来自已禁用插件的待审核队列条目："
@@ -6152,7 +6154,7 @@ zh_CN:
             apple_touch_icon:
               title: "Apple 触控图标"
               description: "用于 Apple 触控设备的图标。如果留空，将使用 large_icon。"
-              help_text: "建议尺寸为 180 x 180 像素。请勿使用SVG图像，不建议使用透明背景。"
+              help_text: "建议尺寸为 180 x 180 像素。请勿使用SVG 图片，不建议使用透明背景。"
             digest_logo:
               title: "摘要徽标"
               description: "您的站点的电子邮件摘要顶部使用的备用徽标图片。如果留空，将使用 `logo` 设置中的图片。"
@@ -6518,6 +6520,48 @@ zh_CN:
       new_features:
         title: "最新变化"
         check_for_updates: "检查更新"
+      site_traffic_explorer:
+        title: "网站流量浏览器"
+        loading: "正在加载流量…"
+        errors:
+          timeout: "本次流量查询耗时过长。请选择较短的日期范围重试。"
+          unexpected: "网站流量加载失败，请重试。"
+        empty: "没有匹配的页面浏览量"
+        summary: "流量摘要"
+        traffic_over_time: "一段时间内的流量"
+        pageviews: "页面浏览量"
+        metric_information: "关于这项指标"
+        filter_description: "%{filter} 是 <strong>%{value}</strong>"
+        filter_by:
+          other: "按 %{label}, %{count} 网页浏览量筛选"
+        remove_filter: "移除 %{filter} 过滤器"
+        remove_traffic_type_filter: "移除 %{value} 流量过滤器"
+        view_more: "展开"
+        cards:
+          pages: "页面"
+          visitors: "访客"
+        columns:
+          referrers: "推荐人"
+          countries: "国家/地区"
+          top_urls: "URL"
+          browsers: "浏览器"
+          ip_addresses: "IP 地址"
+        filters:
+          referrer: "推荐人"
+          country: "国家/地区"
+          browser: "浏览器"
+          ip: "IP 地址"
+        metrics:
+          pageviews:
+            label: "页面浏览量"
+          logged_in_share:
+            label: "登录成员占比"
+          bounce_rate:
+            label: "跳出率"
+        series:
+          logged_in_human: "登录成员"
+          anonymous_human: "匿名"
+          likely_crawler: "疑似爬虫"
       dashboard:
         title: "信息中心"
         last_updated: "信息中心更新："
@@ -6526,7 +6570,6 @@ zh_CN:
         up_to_date: "您已经是最新版本！"
         up_to_date_newer_commits:
           other: "您当前使用的是最新版本，但有 %{count} 条可用的新更改。"
-        critical_available: "有一个可用的关键更新。"
         updates_available: "有可用的更新。"
         please_update: "请更新！"
         no_check_performed: "尚未执行更新检查。确保 sidekiq 正在运行。"
@@ -6643,24 +6686,10 @@ zh_CN:
                 other: "%{count} 个用户已降级至此信任级别"
               stable_aria: "不变"
             headline:
-              healthy_growth:
-                title: "成员们正在养成回来的习惯。"
-                summary: "在此期间，用户黏性、日活跃用户和新注册用户数均有所增长。"
-              declining:
-                title: "成员回来的频率降低。"
-                summary: "在此期间，用户黏性、日活跃用户和新注册用户数均有所下降。"
-              engaged_but_shrinking:
-                title: "成员保持活跃，但社区规模正在缩小。"
-                summary: "用户粘性保持稳定，但日活跃用户或新注册用户数均有所下滑。"
-              growing_but_distracted:
-                title: "虽然有新成员注册，但他们并没有留下来。"
-                summary: "注册用户数量有所上升，但用户粘性有所下降。"
-              mixed:
-                title: "此期间的用户参与度趋势喜忧参半。"
-                summary: "部分指标上升，部分指标下降 — 打开下方图块查看详细信息。"
-              no_signal:
-                title: "活动量不足，无法总结参与情况。"
-                summary: "请选择更长的日期范围，或者等您的社区有更多活动后再回来。"
+              titles:
+                insufficient_activity: "活动量不足，无法总结参与情况。"
+              summaries:
+                insufficient_activity: "请选择更长的日期范围，或者等您的社区有更多活动后再回来。"
               metrics:
                 new_signups: "新注册用户"
                 dau_mau: "DAU / MAU 粘性"
@@ -6670,22 +6699,11 @@ zh_CN:
             fetch_error: "无法加载搜索数据。请尝试刷新页面。"
             logging_disabled: '搜索日志记录已禁用，因此不会收集搜索数据。请启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">日志搜索查询</a>以开始收集。'
             logging_disabled_moderator: "搜索日志记录已禁用，因此不会收集搜索数据。请联系管理员启用日志搜索查询以开始收集。"
-            count_headline:
-              last_7_days:
-                other: "成员在过去 7 天内进行了 %{formatted_count} 次站内搜索"
-              last_30_days:
-                other: "成员在过去 30 天内进行了 %{formatted_count} 次站内搜索"
-              last_3_months:
-                other: "成员在过去 3 个月内进行了 %{formatted_count} 次站内搜索"
-              selected_period:
-                other: "成员在所选期间内进行了 %{formatted_count} 次站内搜索"
             headline:
-              no_signal_title: "搜索活动量不足，暂时无法总结。"
-              no_signal: "请选择更长的日期范围，或者等成员搜索更多内容后再回来。"
-              content_gaps: "此期间内有超过 10% 的成员搜索最终没有点击。请查看以下内容差距，看看缺少什么。"
-              rate_climbing: "与上一个期间相比，无结果率有所上升。请密切关注以下内容差距。"
-              shrinking: "与上一个期间相比，搜索量有所下降，但大多数搜索仍能找到相关内容。"
-              healthy: "成员总能找到他们搜索的内容，搜索量保持稳定或有所增长。"
+              titles:
+                insufficient_activity: "搜索活动量不足，暂时无法总结。"
+              summaries:
+                insufficient_activity: "请选择更长的日期范围，或者等成员搜索更多内容后再回来。"
             kpi:
               total_searches:
                 label: "总搜索次数"
@@ -9144,7 +9162,7 @@ zh_CN:
         select_to_export: "选择以导出"
         import: "导入"
         import_heading: "导入表情符号"
-        import_description: "上传包含 emojis.csv 清单和图像文件的 ZIP 文件。"
+        import_description: "上传包含 emojis.csv 清单和图片文件的 ZIP 文件。"
         import_download_sample: "下载示例模板。"
         import_preview_heading: "检查导入"
         import_summary: "%{new} 个新增 · %{conflicts} 个冲突 · %{unchanged} 个未更改 · %{invalid} 个错误"

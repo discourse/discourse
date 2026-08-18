@@ -158,6 +158,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
 
   describe "non-streaming completion" do
     it "completes a simple prompt" do
+      described_class.any_instance.stubs(:monotonic_milliseconds).returns(1_000, 1_180)
       response = mock_converse_response(text: "Test response", input_tokens: 15, output_tokens: 8)
       client = stub_sdk_client(response: response)
 
@@ -165,8 +166,11 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       result = llm.generate("hello", user: user)
 
       expect(result).to eq("Test response")
-      expect(AiApiAuditLog.last.request_tokens).to eq(15)
-      expect(AiApiAuditLog.last.response_tokens).to eq(8)
+      expect(AiApiAuditLog.last).to have_attributes(
+        request_tokens: 15,
+        response_tokens: 8,
+        time_to_first_token_msecs: 180,
+      )
     end
 
     it "passes thinking config for Claude models" do
@@ -260,6 +264,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
 
   describe "streaming completion" do
     it "streams text responses" do
+      described_class.any_instance.stubs(:monotonic_milliseconds).returns(1_000, 1_090, 9_999)
       partials = []
 
       stub_sdk_client do |listeners|
@@ -276,8 +281,42 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       llm.generate("hello", user: user) { |partial| partials << partial }
 
       expect(partials).to eq(["Hello", " ", "world"])
-      expect(AiApiAuditLog.last.request_tokens).to eq(10)
-      expect(AiApiAuditLog.last.response_tokens).to eq(3)
+      expect(AiApiAuditLog.last).to have_attributes(
+        request_tokens: 10,
+        response_tokens: 3,
+        time_to_first_token_msecs: 90,
+      )
+    end
+
+    it "waits for non-empty structured output before recording time to first token" do
+      described_class.any_instance.stubs(:monotonic_milliseconds).returns(1_000, 1_120)
+      stub_sdk_client do |listeners|
+        fire_message_start(listeners)
+        fire_content_block_delta(listeners, text: "")
+        fire_content_block_delta(listeners, text: '{"message":"Hello"}')
+        fire_content_block_stop(listeners)
+        fire_message_stop(listeners)
+        fire_metadata(listeners)
+      end
+
+      llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+      llm.generate(
+        "hello",
+        user: user,
+        response_format: {
+          json_schema: {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      ) { |_partial| }
+
+      expect(AiApiAuditLog.last.time_to_first_token_msecs).to eq(120)
     end
   end
 

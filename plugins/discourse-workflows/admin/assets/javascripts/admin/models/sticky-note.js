@@ -1,4 +1,5 @@
 export const STICKY_NOTE_TYPE = "flow:sticky_note";
+export const STICKY_NOTE_NAME = "Sticky Note";
 
 const DEFAULT_WIDTH = 200;
 const DEFAULT_HEIGHT = 150;
@@ -14,7 +15,7 @@ export default class StickyNote {
       id: note.id || note.clientId,
       type: STICKY_NOTE_TYPE,
       typeVersion: "1.0",
-      name: "Sticky Note",
+      name: STICKY_NOTE_NAME,
       parameters: {
         content: note.text,
         width: note.size.width,

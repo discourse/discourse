@@ -58,7 +58,7 @@ module Reports::SuspiciousLogins
           data[:avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
           data[:client_ip] = row.client_ip.to_s if can_see_ip
           data[:location] = ipinfo[:location]
-          data[:browser] = I18n.t("user_auth_tokens.browser.#{browser}")
+          data[:browser] = I18n.t("browsers.#{browser}")
           data[:device] = I18n.t("user_auth_tokens.device.#{device}")
           data[:os] = I18n.t("user_auth_tokens.os.#{os}")
           data[:login_time] = row.login_time

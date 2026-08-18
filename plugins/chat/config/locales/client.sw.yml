@@ -172,4 +172,8 @@ sw:
         message: "Ujumbe"
       chat_approval:
         message: "Ujumbe"
+        value: "Thamani"
+        style_default: "Halisi"
+        style_success: "Mafanikio"
+        icon: "ikoni"
         channel_id: "Chaneli"

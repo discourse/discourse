@@ -508,6 +508,9 @@ nb_NO:
       iphone: "iPhone"
     os:
       android: "Android"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonym"
   change_email:
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."

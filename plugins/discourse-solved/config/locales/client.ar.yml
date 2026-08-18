@@ -19,14 +19,53 @@ ar:
         sections:
           support:
             title: "الدعم"
+            fetch_error: "تعذَّر تحميل بيانات الدعم."
+            save_error: "تعذَّر حفظ تحديدك للمرة القادمة."
+            headline:
+              titles:
+                insufficient_activity: "نشاط الدعم غير كافٍ بعد."
+              summaries:
+                insufficient_activity: "لا يوجد نشاط دعم في هذه الفترة بعد. بمجرد ورود الموضوعات، سترى كيف يتعامل مجتمعك معها."
+            kpi:
+              resolution_rate:
+                label: "معدَّل الحل"
+                tooltip: "نسبة موضوعات الدعم المفتوحة التي تم حلها."
+              staff_involvement:
+                label: "مشاركة فريق العمل"
+                tooltip: "نسبة موضوعات الدعم المفتوحة التي كان أحد أعضاء فريق العمل أول من ردّ عليها."
+              avg_first_reply:
+                label: "متوسط الوقت حتى الرد الأول"
+                tooltip: "متوسط الوقت بين وقت نشر موضوع دعم ووقت تلقِّي أول رد عليه"
+            outcomes:
+              title: "نتائج الموضوع"
+              resolved:
+                label: "تم حلها"
+                tooltip: "عدد الموضوعات التي تم وضع علامة \"تم الحل\" عليها."
+              in_progress:
+                label: "قيد التقدُّم"
+                tooltip: "عدد الموضوعات التي تلقَّت ردًا واحدًا على الأقل."
+              unanswered:
+                label: "دون إجابة"
+                tooltip: "عدد الموضوعات التي لم تتلقَّ ردودًا."
             answerers:
+              title: "مَن يجيب؟"
+              empty: "لا توجد ردود في هذه الفترة."
               staff: "فريق العمل"
+              leader: "القادة"
+              regular: "المستخدمون المنتظمون"
               member: "الأعضاء"
               basic: "أولي"
             response_time:
+              title: "توزيع وقت الاستجابة"
               buckets:
                 lt_1h: "< ساعة واحدة"
+                "1_4h": "1–4 ساعات"
+                "4_24h": "4–24 ساعة"
                 gt_24h: "> 24 ساعة"
+              trend:
+                faster: "أسرع بمقدار %{duration}"
+                slower: "أبطأ بمقدار %{duration}"
+                tooltip: "اتجاه متوسط وقت الاستجابة"
   js:
     notifications:
       alt:
@@ -89,6 +128,10 @@ ar:
       shared_issue:
         label: "أنا أيضًا"
         label_with_count: "‏%{label} ‏(%{count})"
+        title: "أنا أواجه هذه المشكلة أيضًا."
+        author_title: "أنت مَن بدأت هذا الموضوع"
+        closed_title: "هذا الموضوع مغلق"
+        archived_title: "هذا الموضوع مؤرشف"
       no_answer:
         title: هل تمت الإجابة على سؤالك؟
         description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."

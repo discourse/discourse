@@ -1,22 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, fn } from "@ember/helper";
+import { array } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import DButton from "discourse/ui-kit/d-button";
-import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 import {
-  isAiCreditLimitError,
-  popupAiCreditLimitError,
-} from "../../lib/ai-errors";
-import {
+  fetchTitleSuggestions,
   MIN_CHARACTER_COUNT,
   showSuggestionsError,
 } from "../../lib/ai-helper-suggestions";
+import AiTitleSuggestionsList from "./ai-title-suggestions-list";
 
 export default class AiTitleSuggester extends Component {
   @tracked loading = false;
@@ -33,9 +27,6 @@ export default class AiTitleSuggester extends Component {
       this.content?.length > MIN_CHARACTER_COUNT ||
       this.args.topicState === "edit";
 
-    document
-      .querySelector(".composer-fields")
-      ?.classList.toggle("showing-ai-suggestions", showTrigger);
     document
       .querySelector(".edit-topic-title")
       ?.classList.toggle("showing-ai-suggestions", showTrigger);
@@ -55,35 +46,24 @@ export default class AiTitleSuggester extends Component {
 
     this.loading = true;
     this.triggerIcon = "spinner";
-    const data = {};
 
-    if (this.content) {
-      data.text = this.content;
-    } else {
-      data.topic_id = this.args.buffered.content.id;
+    const suggestions = await fetchTitleSuggestions({
+      text: this.content,
+      topicId: this.args.buffered?.content?.id,
+    });
+
+    this.loading = false;
+    this.triggerIcon = "rotate";
+
+    if (suggestions == null) {
+      return;
     }
 
-    try {
-      const { suggestions } = await ajax(
-        "/discourse-ai/ai-helper/suggest_title",
-        { method: "POST", data }
-      );
+    this.suggestions = suggestions;
 
-      this.suggestions = suggestions;
-
-      if (suggestions?.length === 0) {
-        showSuggestionsError(this, this.loadSuggestions.bind(this));
-        return;
-      }
-    } catch (error) {
-      if (isAiCreditLimitError(error)) {
-        popupAiCreditLimitError(error);
-      } else {
-        popupAjaxError(error);
-      }
-    } finally {
-      this.loading = false;
-      this.triggerIcon = "rotate";
+    if (suggestions.length === 0) {
+      showSuggestionsError(this, this.loadSuggestions.bind(this));
+      return;
     }
 
     return this.suggestions;
@@ -135,19 +115,10 @@ export default class AiTitleSuggester extends Component {
       >
         <:content>
           {{#if this.showDropdown}}
-            <DDropdownMenu as |dropdown|>
-              {{#each this.suggestions as |suggestion index|}}
-                <dropdown.item>
-                  <DButton
-                    @translatedLabel={{suggestion}}
-                    @action={{fn this.applySuggestion suggestion}}
-                    data-name={{suggestion}}
-                    data-value={{index}}
-                    title={{suggestion}}
-                  />
-                </dropdown.item>
-              {{/each}}
-            </DDropdownMenu>
+            <AiTitleSuggestionsList
+              @suggestions={{this.suggestions}}
+              @onSelect={{this.applySuggestion}}
+            />
           {{/if}}
         </:content>
       </DMenu>

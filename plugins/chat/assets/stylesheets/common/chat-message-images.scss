@@ -73,6 +73,33 @@ $max_image_height: 150px;
     }
   }
 
+  .onebox.twitterstatus {
+    max-width: 500px;
+
+    .tweet-images {
+      .tweet-video {
+        height: calc(576px / (var(--aspect-ratio)));
+        max-height: 400px;
+      }
+    }
+
+    .aspect-image-full-size {
+      object-fit: initial;
+      max-height: 400px;
+
+      .tweet-image {
+        object-fit: initial;
+        max-height: 400px;
+      }
+    }
+
+    .thumbnail.onebox-avatar {
+      max-width: 38px;
+      margin-right: var(--space-2);
+      margin-top: var(--space-1);
+    }
+  }
+
   .chat-message-collapser
     .chat-message-collapser-header
     + div

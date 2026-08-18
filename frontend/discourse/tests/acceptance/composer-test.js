@@ -4,7 +4,9 @@ import {
   fillIn,
   find,
   focus,
+  resetOnerror,
   settled,
+  setupOnerror,
   triggerEvent,
   triggerKeyEvent,
   visit,
@@ -14,6 +16,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { translateModKey } from "discourse/lib/utilities";
 import Composer, { CREATE_TOPIC } from "discourse/models/composer";
@@ -24,9 +27,38 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   metaModifier,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import {
+  dragPointer,
+  settleGestureFrame,
+  stubPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
+
+function composerResizeMeasurements() {
+  const replyControl = find("#reply-control");
+  const currentHeight = replyControl.offsetHeight;
+  const minimumHeight = parseInt(getComputedStyle(replyControl).minHeight, 10);
+  const maximumHeight = window.innerHeight - headerOffset();
+  const targetHeight = Math.floor(
+    minimumHeight + (maximumHeight - minimumHeight) / 2
+  );
+
+  return {
+    currentHeight,
+    minimumHeight,
+    maximumHeight,
+    targetHeight,
+  };
+}
+
+function dragCoordinatesForHeight(currentHeight, targetHeight) {
+  const from = 500;
+
+  return { from, to: from + currentHeight - targetHeight };
+}
 
 acceptance(`Composer`, function (needs) {
   needs.user({
@@ -128,41 +160,77 @@ acceptance(`Composer`, function (needs) {
     );
   });
 
-  test("Composer height adjustment", async function (assert) {
+  test("persists and restores a dragged height", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    await triggerEvent(".grippie", "mousedown");
-    await triggerEvent(".grippie", "mousemove");
-    await triggerEvent(".grippie", "mouseup");
+    const { currentHeight, minimumHeight, maximumHeight, targetHeight } =
+      composerResizeMeasurements();
+    const expectedHeight = `${targetHeight}px`;
+
+    assert.true(
+      targetHeight > minimumHeight,
+      "selects a target above the measured minimum clamp"
+    );
+    assert.true(
+      targetHeight < maximumHeight,
+      "selects a target below the measured maximum clamp"
+    );
+
+    await dragPointer(
+      ".grippie",
+      dragCoordinatesForHeight(currentHeight, targetHeight)
+    );
+
+    assert.strictEqual(
+      localStorage.getItem("__test_discourse_composerHeight"),
+      expectedHeight,
+      "persists the specific measured mid-range height"
+    );
+
     await visit("/"); // reload page
     await click("#create-topic");
 
-    const expectedHeight = localStorage.getItem(
-      "__test_discourse_composerHeight"
-    );
-    const actualHeight =
-      document.documentElement.style.getPropertyValue("--composer-height");
-
     assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
       expectedHeight,
-      actualHeight,
-      "Updated height is persistent"
+      "restores that specific height on a later visit"
     );
   });
 
-  test("restores the resized height when resuming a minimized draft", async function (assert) {
+  test("restores the dragged height when resuming a minimized draft", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "this draft has been resized");
 
-    // drag past the minimum so the height clamps to a known value
-    await triggerEvent(".grippie", "mousedown", { clientY: 500 });
-    await triggerEvent(".grippie", "mousemove", { clientY: 3000 });
-    await triggerEvent(".grippie", "mouseup");
+    const { currentHeight, minimumHeight, maximumHeight, targetHeight } =
+      composerResizeMeasurements();
+    const resizedHeight = `${targetHeight}px`;
 
-    const resizedHeight =
-      document.documentElement.style.getPropertyValue("--composer-height");
-    assert.strictEqual(resizedHeight, "255px", "applies the dragged height");
+    assert.true(
+      targetHeight > minimumHeight,
+      "selects a target above the measured minimum clamp"
+    );
+    assert.true(
+      targetHeight < maximumHeight,
+      "selects a target below the measured maximum clamp"
+    );
+
+    await dragPointer(
+      ".grippie",
+      dragCoordinatesForHeight(currentHeight, targetHeight)
+    );
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      resizedHeight,
+      "first applies a height that is neither the default nor the minimum"
+    );
+
+    await dragPointer(".grippie", { from: 500, to: 500 });
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      resizedHeight,
+      "starts a later resize from the current live composer height"
+    );
 
     await click(".toggle-minimize");
     assert.strictEqual(
@@ -177,6 +245,288 @@ acceptance(`Composer`, function (needs) {
       resizedHeight,
       "restores the resized height instead of the default when resumed"
     );
+  });
+
+  test("the grippie is an operable separator", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const { currentHeight, minimumHeight, maximumHeight } =
+      composerResizeMeasurements();
+
+    assert
+      .dom(".grippie")
+      .hasAttribute("role", "separator", "identifies the resize separator")
+      .hasAttribute(
+        "aria-orientation",
+        "horizontal",
+        "describes the separator's visual orientation"
+      )
+      .hasAttribute("aria-label", i18n("composer.resize"), "labels the grippie")
+      .hasAttribute("tabindex", "0", "makes the grippie keyboard focusable")
+      .hasAttribute(
+        "aria-valuenow",
+        `${currentHeight}`,
+        "exposes the current composer height"
+      )
+      .hasAttribute(
+        "aria-valuemin",
+        `${minimumHeight}`,
+        "exposes the computed minimum height"
+      )
+      .hasAttribute(
+        "aria-valuemax",
+        `${maximumHeight}`,
+        "exposes the current viewport maximum"
+      );
+
+    // Held throughout, so all three keys are one gesture. What a release commits
+    // is covered by the ComposerContainer rendering tests, which is also where it
+    // belongs: a release inside the composer schedules an unrelated
+    // similar-topics lookup that has nothing to do with resizing.
+    await triggerKeyEvent(".grippie", "keydown", "Home");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      `${minimumHeight}px`,
+      "Home resizes to the computed minimum"
+    );
+
+    await triggerKeyEvent(".grippie", "keydown", "ArrowUp");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      `${minimumHeight + 16}px`,
+      "ArrowUp grows the composer away from the minimum clamp"
+    );
+
+    await triggerKeyEvent(".grippie", "keydown", "End");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      `${maximumHeight}px`,
+      "End resizes to the current viewport maximum"
+    );
+  });
+
+  test("a pointer resize fires each lifecycle event once", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const appEvents = this.container.lookup("service:app-events");
+    appEvents.on("composer:resize-started", () => assert.step("started"));
+    appEvents.on("composer:resize-ended", () => assert.step("ended"));
+
+    const { currentHeight, targetHeight } = composerResizeMeasurements();
+    await dragPointer(
+      ".grippie",
+      dragCoordinatesForHeight(currentHeight, targetHeight)
+    );
+
+    assert.verifySteps(
+      ["started", "ended"],
+      "fires each resize lifecycle event exactly once"
+    );
+  });
+
+  test("a click on the grippie opens no resize", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const appEvents = this.container.lookup("service:app-events");
+    appEvents.on("composer:resize-started", () => assert.step("started"));
+    appEvents.on("composer:resize-ended", () => assert.step("ended"));
+
+    const grippie = find(".grippie");
+    stubPointerCapture(grippie);
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      clientY: 400,
+      pointerId: 1,
+    });
+    await triggerEvent(grippie, "pointerup", {
+      button: 0,
+      clientY: 400,
+      pointerId: 1,
+    });
+
+    // A started without an ended strands every subscriber that undoes something
+    // on the end. Chat suppresses the drawer's transitions for the length of a
+    // composer resize and only restores them on the end, so an unclosed gesture
+    // leaves them suppressed for the rest of the session.
+    assert.verifySteps(
+      [],
+      "a press that never resized opens no gesture, so nothing is left waiting to be closed"
+    );
+  });
+
+  test("a failed persistence write still ends the resize", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const appEvents = this.container.lookup("service:app-events");
+    appEvents.on("composer:resize-ended", () => assert.step("ended"));
+
+    const keyValueStore = this.container.lookup("service:key-value-store");
+    const setStub = sinon
+      .stub(keyValueStore, "set")
+      .throws(new Error("simulated localStorage quota failure"));
+
+    const { currentHeight, targetHeight } = composerResizeMeasurements();
+    setupOnerror((error) => {
+      if (error.message !== "simulated localStorage quota failure") {
+        throw error;
+      }
+    });
+    try {
+      await dragPointer(
+        ".grippie",
+        dragCoordinatesForHeight(currentHeight, targetHeight)
+      );
+    } finally {
+      resetOnerror();
+    }
+
+    assert.true(
+      setStub.calledOnce,
+      "the resize attempts the persistence write"
+    );
+    assert.verifySteps(
+      ["ended"],
+      "composer:resize-ended fires after a failed persistence write"
+    );
+  });
+
+  test("a window resize refreshes the announced maximum", async function (assert) {
+    const initialWindowHeight = 900;
+    const expandedWindowHeight = 1200;
+    const innerHeightStub = sinon
+      .stub(window, "innerHeight")
+      .value(initialWindowHeight);
+
+    await visit("/");
+    const replyControl = find("#reply-control");
+    const headerHeight = headerOffset();
+    replyControl.style.maxHeight = `${initialWindowHeight - headerHeight}px`;
+    await click("#create-topic");
+
+    const initialComposerHeight = replyControl.offsetHeight;
+
+    innerHeightStub.value(expandedWindowHeight);
+    replyControl.style.maxHeight = `${expandedWindowHeight - headerHeight}px`;
+    window.dispatchEvent(new Event("resize"));
+    await settled();
+
+    assert.strictEqual(
+      replyControl.offsetHeight,
+      initialComposerHeight,
+      "the window resize leaves the fixed-height composer unchanged"
+    );
+    assert
+      .dom(".grippie")
+      .hasAttribute(
+        "aria-valuemax",
+        `${expandedWindowHeight - headerHeight}`,
+        "a window resize publishes the composer's new maximum height"
+      );
+  });
+
+  test("persists once, when the resize ends", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const keyValueStore = this.container.lookup("service:key-value-store");
+    const setSpy = sinon.spy(keyValueStore, "set");
+    const { currentHeight, minimumHeight, maximumHeight, targetHeight } =
+      composerResizeMeasurements();
+    const expectedHeight = `${targetHeight}px`;
+    const { from, to } = dragCoordinatesForHeight(currentHeight, targetHeight);
+    const grippie = find(".grippie");
+    stubPointerCapture(grippie);
+
+    assert.true(
+      targetHeight > minimumHeight,
+      "selects a target above the measured minimum clamp"
+    );
+    assert.true(
+      targetHeight < maximumHeight,
+      "selects a target below the measured maximum clamp"
+    );
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      clientY: from,
+      pointerId: 1,
+    });
+    await triggerEvent(grippie, "pointermove", {
+      button: 0,
+      clientY: to,
+      pointerId: 1,
+    });
+    await settleGestureFrame();
+
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      expectedHeight,
+      "applies the resized height on the animation-frame move"
+    );
+    assert.strictEqual(
+      setSpy.callCount,
+      0,
+      "does not persist during the animation-frame move"
+    );
+
+    await triggerEvent(grippie, "pointerup", {
+      button: 0,
+      clientY: to,
+      pointerId: 1,
+    });
+
+    assert.strictEqual(setSpy.callCount, 1, "persists once when resizing ends");
+    assert.deepEqual(
+      setSpy.firstCall?.args,
+      [{ key: "composerHeight", value: expectedHeight }],
+      "persists the final height"
+    );
+  });
+
+  test("clears transitions from the first move to the end", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const replyControl = find("#reply-control");
+    const { currentHeight, targetHeight } = composerResizeMeasurements();
+    const { from, to } = dragCoordinatesForHeight(currentHeight, targetHeight);
+    const grippie = find(".grippie");
+    stubPointerCapture(grippie);
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      clientY: from,
+      pointerId: 1,
+    });
+    assert
+      .dom(replyControl)
+      .doesNotHaveClass("clear-transitions", "keeps transitions on at press");
+
+    await triggerEvent(grippie, "pointermove", {
+      button: 0,
+      clientY: to,
+      pointerId: 1,
+    });
+    await settleGestureFrame();
+    assert
+      .dom(replyControl)
+      .hasClass("clear-transitions", "clears transitions on the first move");
+
+    await triggerEvent(grippie, "pointerup", {
+      button: 0,
+      clientY: to,
+      pointerId: 1,
+    });
+    assert
+      .dom(replyControl)
+      .doesNotHaveClass(
+        "clear-transitions",
+        "restores transitions at resize end"
+      );
   });
 
   test("fires resize event after width transition", async function (assert) {
@@ -383,13 +733,13 @@ acceptance(`Composer`, function (needs) {
 
     await click("#post_1 .reply.create");
     assert
-      .dom(".reply-details a.topic-link")
-      .hasText("Internationalization / localization");
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.composer_actions.reply_to_topic.trigger"));
 
     await click("#post_1 .reply.create");
     assert
-      .dom(".reply-details a.topic-link")
-      .hasText("Internationalization / localization");
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.composer_actions.reply_to_topic.trigger"));
   });
 
   test("Can edit a post after starting a reply", async function (assert) {
@@ -771,24 +1121,30 @@ acceptance(`Composer`, function (needs) {
   });
 
   test("Composer can toggle whispers when whisperer user", async function (assert) {
-    const menu = selectKit(".composer-actions");
-
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post[data-post-number='1'] button.reply");
 
-    await menu.expand();
-    await menu.selectRowByValue("toggle_whisper");
+    await click(".composer-actions-trigger");
 
     assert
-      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .dom(".composer-toggle-whisper")
+      .exists("whisper toggle item is visible in dropdown");
+
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
+
+    assert
+      .dom(
+        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='true']"
+      )
       .exists("sets the post type to whisper");
 
-    await menu.expand();
-    await menu.selectRowByValue("toggle_whisper");
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
     assert
-      .dom(".composer-actions svg.d-icon-far-eye-slash")
-      .doesNotExist("removes the whisper mode");
+      .dom(
+        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='false']"
+      )
+      .exists("removes the whisper mode");
   });
 
   test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
@@ -853,103 +1209,168 @@ acceptance(`Composer`, function (needs) {
     "Composer can switch between new topic and new PM in different contexts",
     function () {
       test("within post/topic context", async function (assert) {
+        const composer = this.owner.lookup("service:composer");
+
         await visit("/t/this-is-a-test-topic/54081");
         await click(".topic-post[data-post-number='1'] button.reply");
-        await selectKit(".composer-actions").expand();
-        assert.notStrictEqual(
-          selectKit(".composer-actions")
-            .rowByValue("create_private_message")
-            .exists(),
-          "New message option is not present when in reply mode"
-        );
+        await click(".composer-actions-trigger");
+        assert
+          .dom(
+            ".composer-actions-dropdown [data-action-id='create_private_message']"
+          )
+          .doesNotExist("New message option is not present when in reply mode");
+        await click(".composer-actions-trigger");
 
-        await click("#reply-control .discard-button");
         await visit("/");
-        await click("#create-topic");
-        await selectKit(".composer-actions").expand();
-        assert.true(
-          selectKit(".composer-actions").rowByValue("reply_to_topic").exists(),
-          "composer topic context is preserved when reopened"
-        );
+        await composer.openNewTopic();
+        await settled();
+        await click(".composer-actions-trigger");
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
+          .doesNotExist(
+            "stale topic context is cleared when opening a fresh new-topic composer"
+          );
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_post']")
+          .doesNotExist(
+            "stale post context is cleared when opening a fresh new-topic composer"
+          );
 
-        await selectKit(".composer-actions").selectRowByValue(
-          "create_private_message"
-        );
-        assert.dom(".action-title").hasText(i18n("topic.private_message"));
+        await click("[data-action-id='create_private_message']");
         assert
           .dom(".save-or-cancel button")
           .hasText(i18n("composer.create_pm"));
 
-        await selectKit(".composer-actions").expand();
-        await selectKit(".composer-actions").selectRowByValue("create_topic");
-        assert.dom(".action-title").hasText(i18n("topic.create_long"));
+        await click(".composer-actions-trigger");
+        await click("[data-action-id='create_topic']");
         assert
           .dom(".save-or-cancel button")
           .hasText(i18n("composer.create_topic"));
+      });
+
+      test("fresh new message clears stale reply context", async function (assert) {
+        const composer = this.owner.lookup("service:composer");
+
+        await visit("/t/this-is-a-test-topic/54081");
+        await click(".topic-post[data-post-number='1'] button.reply");
+
+        await visit("/");
+        await composer.openNewMessage({ recipients: "shade" });
+        await settled();
+
+        await click(".composer-actions-trigger");
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
+          .doesNotExist(
+            "stale topic context is cleared when opening a fresh message composer"
+          );
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_post']")
+          .doesNotExist(
+            "stale post context is cleared when opening a fresh message composer"
+          );
+      });
+
+      test("topic context is cleared after a successful save", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await click("article#post_3 button.reply");
+        await fillIn(".d-editor-input", "this is a successful reply");
+        await click("#reply-control button.create");
+
+        await visit("/");
+        await click("#create-topic");
+        await click(".composer-actions-trigger");
+
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
+          .doesNotExist(
+            "reply_to_topic is not surfaced after the previous composer was saved"
+          );
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_post']")
+          .doesNotExist(
+            "reply_to_post is not surfaced after the previous composer was saved"
+          );
       });
     }
   );
 
   test("Composer can toggle between reply and createTopic", async function (assert) {
+    updateCurrentUser({ admin: true });
     await visit("/t/this-is-a-test-topic/54081");
     await click(".topic-post[data-post-number='1'] button.reply");
 
-    await selectKit(".composer-actions").expand();
-
-    await selectKit(".composer-actions").selectRowByValue("toggle_whisper");
+    await click(".composer-actions-trigger");
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
     assert
-      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .dom(
+        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='true']"
+      )
       .exists("sets the post type to whisper");
+    await click(".composer-actions-trigger");
 
     await visit("/");
     assert.dom("#create-topic").exists("the create topic button is visible");
 
     await click("#create-topic");
     assert
-      .dom(".reply-details .whisper .d-icon-far-eye-slash")
+      .dom(".composer-whisper-indicator.--whispering")
       .doesNotExist("should reset the state of the composer's model");
+    assert
+      .dom(".save-or-cancel button .d-icon-far-eye-slash")
+      .doesNotExist("the save button should not use the whisper icon");
 
-    await selectKit(".composer-actions").expand();
-    await selectKit(".composer-actions").selectRowByValue("toggle_unlisted");
+    await click(".composer-actions-trigger");
+    await click(".composer-toggle-unlisted .d-toggle-switch__checkbox");
 
     assert
-      .dom(".reply-details .unlist")
-      .includesText(i18n("composer.unlist"), "sets the topic to unlisted");
+      .dom(
+        ".composer-toggle-unlisted .d-toggle-switch__checkbox[aria-checked='true']"
+      )
+      .exists("sets the topic to unlisted");
 
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post[data-post-number='1'] button.reply");
     assert
-      .dom(".reply-details .whisper")
+      .dom(".composer-whisper-indicator.--whispering")
       .doesNotExist("should reset the state of the composer's model");
+    assert
+      .dom(".composer-whisper-indicator.--public")
+      .exists("the closed-state whisper indicator shows the reply is public");
   });
 
-  test("Composer can toggle whisper when switching from reply to whisper to reply to topic", async function (assert) {
+  test("Composer whisper toggle not shown when replying to whisper", async function (assert) {
     await visit("/t/topic-with-whisper/960");
 
     await click(".topic-post[data-post-number='3'] button.reply");
-    await click(".reply-details summary div");
+    await click(".composer-actions-trigger");
     assert
-      .dom('.reply-details li[data-value="toggle_whisper"]')
-      .doesNotExist("toggle whisper is not available when reply to whisper");
-    await click('.reply-details li[data-value="reply_to_topic"]');
-    await click(".reply-details summary div");
+      .dom(".composer-toggle-whisper")
+      .doesNotExist("whisper toggle is not available when reply to whisper");
+    await click(".composer-actions-trigger");
+
+    await click(".composer-actions-trigger");
+    await click("[data-action-id='reply_to_topic']");
+
+    await click(".composer-actions-trigger");
     assert
-      .dom('.reply-details li[data-value="toggle_whisper"]')
-      .exists("toggle whisper is available when reply to topic");
+      .dom(".composer-toggle-whisper")
+      .exists("whisper toggle is available when reply to topic");
   });
 
-  test("Composer can toggle whisper when clicking reply to topic after reply to whisper", async function (assert) {
+  test("Composer whisper toggle available when replying to topic after whisper", async function (assert) {
     await visit("/t/topic-with-whisper/54081");
 
     await click(".topic-post[data-post-number='3'] button.reply");
     await click("#reply-control .discard-button");
     await click(".timeline-footer-controls button.create");
-    await click(".reply-details summary div");
+
+    await click(".composer-actions-trigger");
     assert
-      .dom('.reply-details li[data-value="toggle_whisper"]')
-      .exists("toggle whisper is available when reply to topic");
+      .dom(".composer-toggle-whisper")
+      .exists("whisper toggle is available when reply to topic");
   });
 
   test("Composer restores whisper state from draft", async function (assert) {
@@ -1040,14 +1461,16 @@ acceptance(`Composer`, function (needs) {
     await fillIn(".d-editor-input", longText);
 
     assert
-      .dom('.action-title a[href="/t/internationalization-localization/280"]')
-      .exists("the mode should be: reply to post");
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.reply_to_topic.trigger"),
+        "the mode should be: reply to topic"
+      );
 
     await click("article#post_3 button.reply");
 
-    const composerActions = selectKit(".composer-actions");
-    await composerActions.expand();
-    await composerActions.selectRowByValue("reply_as_new_topic");
+    await click(".composer-actions-trigger");
+    await click("[data-action-id='reply_as_new_topic']");
 
     assert.dom(".d-modal__body").doesNotExist("abandon popup shouldn't come");
 
@@ -1056,8 +1479,11 @@ acceptance(`Composer`, function (needs) {
       .includesValue(longText, "entered text should still be there");
 
     assert
-      .dom('.action-title a[href="/t/internationalization-localization/280"]')
-      .doesNotExist("mode should have changed");
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.create_topic.label"),
+        "mode should have changed to create topic"
+      );
   });
 
   test("Does not replace recipient when another draft exists", async function (assert) {
@@ -1252,12 +1678,17 @@ acceptance(`Composer - Customizations`, function (needs) {
   test("Supports text customization", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    assert.dom(".action-title").hasText(i18n("topic.create_long"));
+    assert
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.create_topic.label"),
+        "trigger shows create topic label"
+      );
     assert.dom(".save-or-cancel button").hasText(i18n("composer.create_topic"));
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
     await tags.selectRowByName("monkey");
-    assert.dom(".action-title").hasText("custom text");
+    assert.dom(".composer-actions-trigger").includesText("custom text");
     assert.dom(".save-or-cancel button").hasText(i18n("composer.emoji"));
   });
 });
@@ -1728,7 +2159,7 @@ acceptance(`composer buttons API`, function (needs) {
     await visit("/t/34");
     await click("article#post_3 button.reply");
 
-    assert.dom(".reply-details .user-link").hasText("NewNameHere");
+    assert.dom(".composer-actions-trigger").includesText("NewNameHere");
   });
 
   test("modified avatar when replying to a post", async function (assert) {
@@ -1744,13 +2175,11 @@ acceptance(`composer buttons API`, function (needs) {
     await visit("/t/34");
     await click("article#post_3 button.reply");
 
-    assert
-      .dom(".reply-details .action-title img")
-      .hasAttribute(
-        "src",
-        /\/images\/avatar\.png/,
-        "Reply avatar can be customized"
-      );
+    const composer = this.owner.lookup("service:composer");
+    assert.true(
+      composer.model.replyOptions.userAvatar.includes("/images/avatar.png"),
+      "reply avatar can be customized"
+    );
   });
 
   test("modified avatar in quote", async function (assert) {

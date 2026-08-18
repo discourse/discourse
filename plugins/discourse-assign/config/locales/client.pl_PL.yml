@@ -214,19 +214,34 @@ pl_PL:
       node_unavailable:
         requires_assign: "Wymaga włączenia wtyczki Przypisz"
       nodes:
-        "action:assign_topic": "Przypisz temat"
+        "action:assign_topic": "Przypisz temat lub wpis"
+        "action:check_assignment": "Sprawdź przypisanie"
         "trigger:assigned": "Przypisany"
       node_descriptions:
-        "action:assign_topic": "Przypisz lub anuluj przypisanie tematu"
+        "action:assign_topic": "Przypisz lub usuń przypisanie tematu lub wpisu"
+        "action:check_assignment": "Sprawdź, czy użytkownik lub grupa jest przypisany do tematu lub wpisu"
         "trigger:assigned": "Wyzwala się, gdy przypisany zostanie temat lub wpis"
       assign_topic:
+        resource: "Zasób"
+        resources:
+          topic: "Temat"
+          post: "Wpis"
         operation: "Działanie"
         operations:
           assign: "Przypisz"
           unassign: "Cofnij przypisanie"
         topic_id: "ID tematu"
+        post_id: "Identyfikator wpisu"
         assignee: "Przypisany"
         replace_existing: "Zastąp istniejące zadanie"
+      check_assignment:
+        target_type: "Typ docelowego"
+        target_types:
+          topic: "Temat"
+          post: "Wpis"
+        topic_id: "Identyfikator tematu"
+        post_id: "ID wpisu"
+        assignee: "Przypisany"
       assigned:
         topic_assignments_only: "Wyzwalaj tylko wtedy, gdy celem zadania jest temat, a nie pojedynczy wpis"
         topic_assignments_only_description: "Tylko przypisania tematów"

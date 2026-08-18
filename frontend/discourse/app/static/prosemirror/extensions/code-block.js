@@ -4,8 +4,77 @@ import { schema as markdownSchema } from "prosemirror-markdown";
 import { TextSelection } from "prosemirror-state";
 import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
 
+const INDENT = "  ";
+
 // cached hljs instance with custom plugins/languages
 let hljs;
+
+function selectedCodeLines(state) {
+  const { selection } = state;
+  if (
+    !(selection instanceof TextSelection) ||
+    selection.empty ||
+    selection.$from.parent !== selection.$to.parent ||
+    !selection.$from.parent.type.spec.code
+  ) {
+    return;
+  }
+
+  const codeBlock = selection.$from.parent;
+  const blockStart = selection.$from.start();
+  const from = selection.from - blockStart;
+  const to = selection.to - blockStart;
+  const text = codeBlock.textContent;
+  const firstLineStart = text.lastIndexOf("\n", from - 1) + 1;
+  const effectiveTo = text[to - 1] === "\n" ? to - 1 : to;
+  const lineStarts = [firstLineStart];
+
+  let nextLineStart = text.indexOf("\n", firstLineStart) + 1;
+  while (nextLineStart > 0 && nextLineStart <= effectiveTo) {
+    lineStarts.push(nextLineStart);
+    nextLineStart = text.indexOf("\n", nextLineStart) + 1;
+  }
+
+  return { blockStart, lineStarts, text };
+}
+
+function indentCodeBlock(outdent = false) {
+  return (state, dispatch) => {
+    const selectedLines = selectedCodeLines(state);
+    if (!selectedLines) {
+      return false;
+    }
+
+    if (!dispatch) {
+      return true;
+    }
+
+    const { blockStart, lineStarts, text } = selectedLines;
+    const tr = state.tr;
+
+    for (const lineStart of lineStarts.reverse()) {
+      const pos = blockStart + lineStart;
+      if (outdent) {
+        const line = text.slice(lineStart);
+        const spaces = line.startsWith(INDENT)
+          ? INDENT.length
+          : Number(line.startsWith(" "));
+        if (spaces) {
+          tr.delete(pos, pos + spaces);
+        }
+      } else {
+        tr.insertText(INDENT, pos);
+      }
+    }
+
+    if (tr.docChanged) {
+      tr.setSelection(state.selection.map(tr.doc, tr.mapping));
+      dispatch(tr.scrollIntoView());
+    }
+
+    return true;
+  };
+}
 
 class CodeBlockWithLangSelectorNodeView {
   #selectAdded = false;
@@ -161,6 +230,10 @@ const extension = {
     },
   },
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
+  keymap: () => ({
+    Tab: indentCodeBlock(),
+    "Shift-Tab": indentCodeBlock(true),
+  }),
   commands: ({ schema }) => ({
     formatCode() {
       return (state, dispatch) => {

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class SvgSpriteController < ApplicationController
+  ICONS_PER_PAGE = 100
+  MAX_PAGE = 1000
+
   skip_before_action :preload_json,
                      :redirect_to_login_if_required,
                      :redirect_to_profile_if_required,
@@ -44,13 +47,24 @@ class SvgSpriteController < ApplicationController
   end
 
   def icon_picker_search
-    params.permit(:filter, :only_available)
-    filter = params[:filter] || ""
-    only_available = params[:only_available]
+    permitted = params.permit(:filter, :only_available)
 
-    icons = SvgSprite.icon_picker_search(filter, only_available).take(500)
+    only_available =
+      ActiveModel::Type::Boolean.new.cast(permitted[:only_available].presence || true)
+    filter = permitted[:filter].to_s
+    page = fetch_page_from_params(max: MAX_PAGE)
 
-    render json: icons, root: false
+    etag = [Discourse.git_version, SvgSprite.version(@theme_id), filter, only_available, page]
+    return if !stale?(etag:)
+
+    render json:
+             SvgSprite.icon_picker_search(
+               filter,
+               only_available,
+               page:,
+               per_page: ICONS_PER_PAGE,
+               theme_id: @theme_id,
+             )
   end
 
   def svg_icon

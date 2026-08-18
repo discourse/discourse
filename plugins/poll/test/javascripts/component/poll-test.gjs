@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
-import { click, render, settled } from "@ember/test-helpers";
+import { click, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -100,8 +100,35 @@ module("Component | Poll", function (hooks) {
       <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
     );
 
-    assert.dom(".poll-buttons .cast-votes:disabled").doesNotExist();
+    assert
+      .dom(".poll-voted-choices__choice")
+      .exists({ count: 3 }, "the saved ranked choices are shown");
+
+    await click(".poll-buttons .amend-vote");
+
     assert.dom(".poll-buttons .cast-votes").exists();
+    assert
+      .dom(".poll-buttons .cast-votes")
+      .hasText(
+        i18n("poll.cast-votes.update_label"),
+        "the cast button offers to update the existing vote"
+      );
+    assert
+      .dom(".poll-buttons .cast-votes")
+      .isDisabled("an unchanged selection cannot be re-cast");
+
+    await click(
+      ".ranked-choice-poll-option[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button"
+    );
+    await click(".dropdown-menu__item:nth-child(3) button");
+    await click(
+      ".ranked-choice-poll-option[data-poll-option-id='d7ebc3a9beea2e680815a1e4f57d6db6'] button"
+    );
+    await click(".dropdown-menu__item:nth-child(2) button");
+
+    assert
+      .dom(".poll-buttons .cast-votes")
+      .isEnabled("a changed valid selection can be cast");
   });
 
   test("invalid ranks with which you cannot vote", async function (assert) {
@@ -277,8 +304,14 @@ module("Component | Poll", function (hooks) {
       .dom(".results-staff-only")
       .exists("the staff-only results notice is shown instead");
     assert
+      .dom(".poll-voted-choices__choice")
+      .exists({ count: 2 }, "the voter sees their recorded choices");
+
+    await click(".poll-buttons .amend-vote");
+
+    assert
       .dom(".ranked-choice-poll-option")
-      .exists("the ballot options are shown to the voter");
+      .exists("the ballot options are shown when changing the vote");
   });
 
   test("can vote", async function (assert) {
@@ -708,5 +741,308 @@ module("Component | Poll", function (hooks) {
 
     await click(".poll-buttons .cast-votes");
     assert.dom(".chosen").exists();
+  });
+
+  const YES = "1f972d1df351de3ce35a787c89faad29";
+  const NO = "d7ebc3a9beea2e680815a1e4f57d6db6";
+  const optionButton = (id) => `li[data-poll-option-id='${id}'] button`;
+  const optionCheckedIcon = (id) =>
+    `li[data-poll-option-id='${id}'] .d-icon-far-square-check`;
+
+  function hiddenResultsPoll(overrides = {}) {
+    return trackedObject({
+      name: "poll",
+      type: "multiple",
+      status: "open",
+      results: "on_close",
+      min: 1,
+      max: 2,
+      options: [
+        { id: YES, html: "yes" },
+        { id: NO, html: "no" },
+      ],
+      voters: 0,
+      chart_type: "bar",
+      ...overrides,
+    });
+  }
+
+  function hiddenResultsPost(votes) {
+    return EmberObject.create({
+      id: 42,
+      topic: { archived: false },
+      user_id: 29,
+      ...(votes ? { polls_votes: { poll: votes } } : {}),
+    });
+  }
+
+  function stubHiddenResultsVote(overrides = {}) {
+    pretender.put("/polls/vote", () =>
+      response({ poll: hiddenResultsPoll({ voters: 1, ...overrides }) })
+    );
+  }
+
+  async function renderHiddenResultsPoll(ctx, { votes, ...overrides } = {}) {
+    ctx.setProperties({
+      post: hiddenResultsPost(votes),
+      poll: hiddenResultsPoll(overrides),
+    });
+
+    await render(
+      <template><Poll @post={{ctx.post}} @poll={{ctx.poll}} /></template>
+    );
+  }
+
+  test("shows the voted choices instead of the ballot after voting on a hidden-results poll", async function (assert) {
+    stubHiddenResultsVote();
+    await renderHiddenResultsPoll(this);
+
+    assert.dom("ul.options").exists();
+    assert
+      .dom(".poll-buttons .cast-votes")
+      .hasText(i18n("poll.cast-votes.label"));
+
+    await click(optionButton(YES));
+    await click(".poll-buttons .cast-votes");
+
+    assert.dom("ul.options").doesNotExist("the ballot is replaced");
+    assert.dom("ul.results").doesNotExist("results stay hidden");
+    assert
+      .dom(".poll-voted-choices__choice")
+      .exists({ count: 1 }, "the recorded choice is shown");
+    assert.dom(".poll-voted-choices__choice").hasText("yes");
+    assert.dom(".poll-buttons .cast-votes").doesNotExist();
+    assert.dom(".poll-buttons .amend-vote").exists();
+    assert
+      .dom(".poll-buttons .remove-vote")
+      .doesNotExist("undo only appears while changing the vote");
+    assert
+      .dom(".poll-info_instructions .vote-recorded")
+      .exists("the info column confirms the recorded vote");
+    assert
+      .dom(".poll-info_instructions .multiple-help-text")
+      .doesNotExist("the confirmation takes the help text's slot");
+    assert
+      .dom(".results-on-close")
+      .exists("the results hint is unchanged by voting");
+  });
+
+  test("can change the vote from the voted choices view", async function (assert) {
+    stubHiddenResultsVote();
+    await renderHiddenResultsPoll(this, { votes: [YES], voters: 1 });
+
+    assert.dom(".poll-voted-choices__choice").exists({ count: 1 });
+
+    await click(".poll-buttons .amend-vote");
+
+    assert.dom("ul.options").exists("the ballot is shown again");
+    assert
+      .dom(optionCheckedIcon(YES))
+      .exists("the saved choice is preselected");
+    assert
+      .dom(".poll-buttons .cast-votes")
+      .hasText(i18n("poll.cast-votes.update_label"));
+    assert
+      .dom(".poll-buttons .cast-votes")
+      .isDisabled("an unchanged selection cannot be re-cast");
+
+    await click(optionButton(NO));
+
+    assert.dom(".poll-buttons .cast-votes").isEnabled();
+
+    await click(".poll-buttons .cast-votes");
+
+    assert
+      .dom(".poll-voted-choices__choice")
+      .exists({ count: 2 }, "the updated choices are shown");
+  });
+
+  test("keeps the current vote when going back from the ballot", async function (assert) {
+    await renderHiddenResultsPoll(this, { votes: [YES], voters: 1 });
+
+    requests = 0;
+
+    await click(".poll-buttons .amend-vote");
+    await click(optionButton(NO));
+    await click(".poll-buttons .keep-vote");
+
+    assert.strictEqual(requests, 0, "no vote is cast");
+    assert
+      .dom(".poll-voted-choices__choice")
+      .exists({ count: 1 }, "the recorded vote is unchanged");
+
+    await click(".poll-buttons .amend-vote");
+
+    assert
+      .dom(optionCheckedIcon(NO))
+      .doesNotExist("the abandoned selection is discarded");
+  });
+
+  test("returns to the ballot after undoing the vote", async function (assert) {
+    pretender.delete("/polls/vote", () =>
+      response({ poll: hiddenResultsPoll() })
+    );
+
+    await renderHiddenResultsPoll(this, { votes: [YES], voters: 1 });
+
+    await click(".poll-buttons .amend-vote");
+
+    assert
+      .dom(".poll-buttons .remove-vote")
+      .exists("undo is available while changing the vote");
+
+    await click(".poll-buttons .remove-vote");
+
+    assert.dom(".poll-voted-choices__choice").doesNotExist();
+    assert.dom("ul.options").exists("the pristine ballot is shown");
+    assert
+      .dom(".poll-buttons .cast-votes")
+      .hasText(i18n("poll.cast-votes.label"));
+    assert.dom(".poll-buttons .keep-vote").doesNotExist();
+  });
+
+  test("keeps the voted choices view after the poll component is re-rendered", async function (assert) {
+    await renderHiddenResultsPoll(this, { votes: [YES], voters: 1 });
+
+    assert.dom(".poll-voted-choices__choice").exists({ count: 1 });
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    assert
+      .dom(".poll-voted-choices__choice")
+      .exists({ count: 1 }, "the voted choices survive a re-render");
+
+    await click(".poll-buttons .amend-vote");
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    assert
+      .dom("ul.options")
+      .exists("an in-progress vote change survives a re-render");
+  });
+
+  test("shows the voted choices after voting on a staff_only poll as non-staff", async function (assert) {
+    stubHiddenResultsVote({ results: "staff_only" });
+    await renderHiddenResultsPoll(this, { results: "staff_only" });
+
+    await click(optionButton(YES));
+    await click(".poll-buttons .cast-votes");
+
+    assert.dom("ul.results").doesNotExist("results stay hidden");
+    assert.dom(".poll-voted-choices__choice").exists({ count: 1 });
+    assert.dom(".poll-info_instructions .vote-recorded").exists();
+    assert.dom(".results-staff-only").exists();
+  });
+
+  test("casts a single vote when the cast button is clicked twice quickly", async function (assert) {
+    let voteRequests = 0;
+    let resolveVote;
+    pretender.put("/polls/vote", () => {
+      voteRequests++;
+      return new Promise((resolve) => {
+        resolveVote = resolve;
+      });
+    });
+
+    await renderHiddenResultsPoll(this);
+
+    await click(optionButton(YES));
+
+    const castButton = document.querySelector(".poll-buttons .cast-votes");
+    castButton.click();
+    castButton.click();
+
+    await waitUntil(() => resolveVote);
+    resolveVote(response({ poll: hiddenResultsPoll({ voters: 1 }) }));
+    await settled();
+
+    assert.strictEqual(voteRequests, 1, "only one vote request is sent");
+    assert.dom(".poll-voted-choices__choice").exists({ count: 1 });
+  });
+
+  test("moves focus to the change vote button after casting", async function (assert) {
+    stubHiddenResultsVote();
+    await renderHiddenResultsPoll(this);
+
+    await click(optionButton(YES));
+    await click(".poll-buttons .cast-votes");
+
+    assert.dom(".poll-buttons .amend-vote").isFocused();
+  });
+
+  test("keeps the vote when re-clicking the current choice while changing a single-choice vote", async function (assert) {
+    let deleteRequests = 0;
+    pretender.delete("/polls/vote", () => {
+      deleteRequests++;
+      return response({ poll: hiddenResultsPoll({ type: "regular" }) });
+    });
+
+    await renderHiddenResultsPoll(this, {
+      votes: [YES],
+      type: "regular",
+      voters: 1,
+    });
+
+    await click(".poll-buttons .amend-vote");
+    await click(optionButton(YES));
+
+    assert.strictEqual(deleteRequests, 0, "the vote is not deleted");
+    assert
+      .dom(".poll-voted-choices__choice")
+      .exists({ count: 1 }, "the recorded vote is kept");
+  });
+
+  test("shows the results when a hidden-results poll is closed while displayed", async function (assert) {
+    await renderHiddenResultsPoll(this, { votes: [YES], voters: 1 });
+
+    assert.dom(".poll-voted-choices__choice").exists({ count: 1 });
+
+    Object.assign(this.poll, {
+      status: "closed",
+      options: [
+        { id: YES, html: "yes", votes: 1 },
+        { id: NO, html: "no", votes: 0 },
+      ],
+    });
+    await settled();
+
+    assert
+      .dom("ul.results")
+      .exists("the summary flips to results once counts arrive");
+  });
+
+  test("shows the automatic close countdown only while the poll is open", async function (assert) {
+    await renderHiddenResultsPoll(this, { close: "2035-01-01 12:00:00 UTC" });
+
+    assert
+      .dom(".poll-info_instructions li .d-icon-far-clock")
+      .exists("an open poll with a close date shows the countdown");
+
+    this.poll.status = "closed";
+    await settled();
+
+    assert
+      .dom(".poll-info_instructions li .d-icon-far-clock")
+      .doesNotExist("a manually closed poll does not promise a countdown");
+  });
+
+  test("shows the voted choice after voting on a single-choice hidden-results poll", async function (assert) {
+    stubHiddenResultsVote({ type: "regular" });
+    await renderHiddenResultsPoll(this, {
+      type: "regular",
+      min: null,
+      max: null,
+    });
+
+    await click(optionButton(YES));
+
+    assert
+      .dom(".poll-voted-choices__choice")
+      .exists({ count: 1 }, "the recorded choice replaces the ballot");
+    assert.dom(".poll-buttons .amend-vote").exists();
   });
 });

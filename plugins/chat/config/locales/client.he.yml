@@ -827,4 +827,11 @@ he:
         message: "הודעה"
       chat_approval:
         message: "הודעה"
+        buttons: "כפתורים"
+        value: "ערך"
+        style: "סגנון"
+        style_default: "ברירת מחדל"
+        style_primary: "ראשית"
+        style_success: "הצלחה"
+        icon: "סמל"
         channel_id: "ערוץ"

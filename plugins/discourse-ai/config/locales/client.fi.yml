@@ -546,6 +546,9 @@ fi:
         max_output_tokens: "Tuotossaneiden enimmäismäärä"
         url: "Mallia isännöivän palvelun URL-osoite"
         api_key: "Mallia isännöivän palvelun API-avain"
+        vision_modes:
+          disabled:
+            title: "Pois käytöstä"
         ai_bot_user: "Tekoälybottikäyttäjä"
         cost_input: "Syötekustannukset"
         cost_cached_input: "Välimuistissa olevan syötteen hinta"

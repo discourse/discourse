@@ -133,9 +133,11 @@ export default class ChatDrawer extends Component {
       return;
     }
 
+    // The flag can be set while the container is absent — `_performCheckSize`
+    // null-checks the same selector for that reason.
     document
       .querySelector(".chat-drawer-outlet-container")
-      .classList.add("clear-transitions");
+      ?.classList.add("clear-transitions");
   }
 
   _clearDynamicCheckSize() {
@@ -145,7 +147,7 @@ export default class ChatDrawer extends Component {
 
     document
       .querySelector(".chat-drawer-outlet-container")
-      .classList.remove("clear-transitions");
+      ?.classList.remove("clear-transitions");
     this._checkSize();
   }
 

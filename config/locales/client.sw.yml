@@ -2606,11 +2606,22 @@ sw:
         default_value: "Halisi"
       search:
         title: "Tafuta"
+      site_traffic_explorer:
+        pageviews: "Ukurasa Umeonwa Mara"
+        columns:
+          top_urls: "Anwani ya mtandao"
+          ip_addresses: "Anwani ya Mtandao"
+        filters:
+          ip: "Anwani ya Mtandao"
+        metrics:
+          pageviews:
+            label: "Ukurasa Umeonwa Mara"
+        series:
+          anonymous_human: "Asiyejulikana"
       dashboard:
         title: "Ubao"
         version: "Toleo"
         up_to_date: "Una toleo la sasa!"
-        critical_available: "Sasisho muhimu linapatikana."
         updates_available: "Masashisho yanapatikana."
         no_check_performed: "Utafutaji wa toleo la sasa haujafanywa. Hakikisha sidekiq inafanya kazi."
         stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."

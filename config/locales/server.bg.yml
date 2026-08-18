@@ -416,6 +416,9 @@ bg:
       iphone: "iPhone"
     os:
       android: "Android"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Анонимен"
   change_email:
     error: "Възникна грешка при промяната на вашия имейл адрес. Може би адресът вече се използва?"
   activation:

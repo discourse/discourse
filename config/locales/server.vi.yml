@@ -219,9 +219,7 @@ vi:
       invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
     requires_groups: "Lời mời không được lưu vì không thể truy cập được chủ đề được chỉ định. Thêm một trong các nhóm sau: %{groups}."
     domain_not_allowed: "Email của bạn không thể được sử dụng để đổi lời mời này."
-    admin_invite_requires_email: "Lời mời quản trị viên phải được gửi đến một địa chỉ thư điện tử (Email)"
     admin_invite_requires_admin_inviter: "Chỉ quản trị viên mới có thể tạo lời mời quản trị viên"
-    moderator_invite_requires_email: "Lời mời điều hành viên phải được gửi đến một địa chỉ thư điện tử (Email)"
     moderator_invite_requires_staff_inviter: "Chỉ ban quản trị mới có thể tạo lời mời điều hành viên"
   bulk_invite:
     file_should_be_csv: "Tệp được tải lên phải có định dạng csv."
@@ -621,6 +619,9 @@ vi:
       mobile: "Thiết bị di động"
       windows: "Máy tính Windows"
       unknown: "thiết bị không rõ"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Ẩn danh"
   change_email:
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
     error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."
@@ -1442,7 +1443,6 @@ vi:
       pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
-      content_localization_language_switcher_requirements: "Bộ chuyển đổi ngôn ngữ yêu cầu phải bật {{setting:set_locale_from_cookie}} cùng {{setting:allow_user_locale}}, đồng thời {{setting:content_localization_supported_locales}} phải có ít nhất một ngôn ngữ. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|Tất cả cài đặt bắt buộc}}"
       content_localization_crawler_param_requirements: "Bạn cần bật tùy chọn 'Đặt ngôn ngữ từ tham số' trước khi kích hoạt cài đặt này."
   search:
     within_post: "#%{post_number} bởi %{username}"

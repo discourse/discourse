@@ -402,4 +402,10 @@ ko:
         message: "메시지 보내기"
       chat_approval:
         message: "메시지 보내기"
+        buttons: "버튼"
+        value: "값"
+        style_default: "기본"
+        style_primary: "기본"
+        style_success: "성공"
+        icon: "아이콘"
         channel_id: "채널"

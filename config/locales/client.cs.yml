@@ -6557,13 +6557,30 @@ cs:
       new_features:
         title: "Co je nového?"
         check_for_updates: "Aktualizovat"
+      site_traffic_explorer:
+        pageviews: "Zobrazení stránky"
+        view_more: "Zobrazit více"
+        cards:
+          pages: "Stránek"
+          visitors: "Návštěvníci"
+        columns:
+          top_urls: "URL"
+          browsers: "Prohlížeč"
+          ip_addresses: "IP adresa"
+        filters:
+          browser: "Prohlížeč"
+          ip: "IP adresa"
+        metrics:
+          pageviews:
+            label: "Zobrazení stránky"
+        series:
+          anonymous_human: "Anonymní"
       dashboard:
         title: "Nástěnka"
         last_updated: "Nástěnka aktualizována:"
         discourse_last_updated: "Discourse aktualizován:"
         version: "Verze Discourse"
         up_to_date: "Máte aktuální!"
-        critical_available: "K dispozici je důležitá aktualizace."
         updates_available: "Jsou k dispozici aktualizace."
         please_update: "Prosím, aktualizujte!"
         no_check_performed: "Kontrola na aktualizace nebyla provedena. Ujistěte se, že běží služby sidekiq."

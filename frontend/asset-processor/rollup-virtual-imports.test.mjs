@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import rollupVirtualImports from "./rollup-virtual-imports";
+import rollupVirtualImports, {
+  privateVirtualImports,
+} from "./rollup-virtual-imports";
 
 function entrypoint(moduleFilenames, opts = {}, extra) {
   return rollupVirtualImports["virtual:entrypoint"](
@@ -278,5 +280,48 @@ describe("virtual:entrypoint", () => {
       // The separately-split child does not belong to the parent bundle.
       expect(bundle).not.toContain('"discourse/routes/chat/visualizer":');
     });
+  });
+});
+
+describe("privateVirtualImports", () => {
+  it("wraps withPluginApi for a plugin", () => {
+    const code = privateVirtualImports["virtual:attributed-plugin-api"]({
+      pluginName: "chat",
+    });
+
+    expect(code).toContain(
+      'import { _INTERNAL_SOURCE_KEY } from "discourse/lib/api";'
+    );
+    expect(code).toContain(
+      'import { withPluginApi as _withPluginApi } from "discourse/lib/plugin-api";'
+    );
+    expect(code).toContain('Object.freeze({"type":"plugin","name":"chat"})');
+    expect(code).toContain("export function withPluginApi(...args)");
+    expect(code).toContain("[_INTERNAL_SOURCE_KEY]: SOURCE");
+    expect(code).toContain("return _withPluginApi(...args);");
+  });
+
+  it("wraps apiInitializer for a theme", () => {
+    const code = privateVirtualImports["virtual:attributed-api-initializer"]({
+      themeId: 42,
+    });
+
+    expect(code).toContain(
+      'import { apiInitializer as _apiInitializer } from "discourse/lib/api";'
+    );
+    expect(code).toContain('Object.freeze({"type":"theme","id":42})');
+    expect(code).toContain("export function apiInitializer(...args)");
+    expect(code).toContain("return _apiInitializer(...args);");
+  });
+
+  it("puts the source on opts, after the legacy version argument", () => {
+    const code = privateVirtualImports["virtual:attributed-plugin-api"]({
+      pluginName: "chat",
+    });
+
+    expect(code).toContain('typeof args[0] === "string" ? 2 : 1');
+    expect(code).toContain(
+      "args[optsIndex] = { ...args[optsIndex], [_INTERNAL_SOURCE_KEY]: SOURCE };"
+    );
   });
 });

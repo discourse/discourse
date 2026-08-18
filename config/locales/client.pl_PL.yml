@@ -63,6 +63,7 @@ pl_PL:
         mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
         mandatory: "Obowiązkowe"
         disallowed: "Niedozwolone"
+        required_permission_not_added: "Co najmniej jeden beneficjent musi mieć %{permission} uprawnień do tego %{typeName}"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -976,6 +977,7 @@ pl_PL:
       date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
       filtered_flagged_by: "Oflagowany przez"
+      no_component_found: "Nie znaleziono żadnego komponentu dla %{type}"
       unknown:
         title:
           one: "Masz elementy oczekujące na sprawdzenie w kolejce z wyłączonej wtyczki:"
@@ -3399,6 +3401,11 @@ pl_PL:
         few: "Znaleziono %{count} ikony"
         many: "Znaleziono %{count} ikon"
         other: "Znaleziono %{count} ikon"
+      results_loaded:
+        one: "Załadowano %{count} ikonę, więcej jest dostępnych"
+        few: "Załadowano %{count} ikony, więcej jest dostępnych"
+        many: "Załadowano %{count} ikon, więcej jest dostępnych"
+        other: "Załadowano %{count} ikon, więcej jest dostępnych"
       favorites: "Ulubione"
       selected_icon: "Wybrana ikona: %{iconName}"
       clear: "Wyczyść ikonę"
@@ -7461,6 +7468,77 @@ pl_PL:
       new_features:
         title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
+      site_traffic_explorer:
+        title: "Eksplorator ruchu w witrynie"
+        loading: "Ładowanie ruchu…"
+        errors:
+          timeout: "To zapytanie o ruch trwało za długo. Wybierz krótszy zakres dat i spróbuj ponownie."
+          unexpected: "Nie można załadować ruchu w witrynie. Spróbuj ponownie."
+        empty: "Brak pasujących wyświetleń stron"
+        summary: "Podsumowanie ruchu"
+        traffic_over_time: "Ruch w czasie"
+        pageviews: "Wyświetlenia strony"
+        metric_information: "O tej metryce"
+        active_filters: "Aktywne filtry ruchu"
+        filter_description: "%{filter} to <strong>%{value}</strong>"
+        filter_by:
+          one: "Filtruj według %{label}, %{count} odsłona strony"
+          few: "Filtruj według %{label}, %{count} odsłony strony"
+          many: "Filtruj według %{label}, %{count} odsłon stron"
+          other: "Filtruj według %{label}, %{count} odsłon stron"
+        remove_filter: "Usuń filtr %{filter}"
+        remove_traffic_type_filter: "Usuń filtr ruchu %{value}"
+        view_more: "Zobacz więcej"
+        no_dimension_data: "Brak danych dla tego podziału."
+        direct_or_unknown: "Bezpośredni / nieznany"
+        cards:
+          acquisition: "Nabytek"
+          pages: "Stron"
+          visitors: "Odwiedzający"
+        dimensions:
+          referrers: "Polecający"
+          countries: "Kraje"
+          networks: "Sieci"
+          top_urls: "Najpopularniejsze adresy URL"
+          entry_urls: "Wpisowe adresy URL"
+          browsers: "Przeglądarki"
+          ip_addresses: "Adresy IP"
+        columns:
+          referrers: "Polecający"
+          countries: "Kraj"
+          networks: "Sieć"
+          top_urls: "URL"
+          entry_urls: "Wpisowy adres URL"
+          browsers: "Przeglądarka"
+          ip_addresses: "Adres IP"
+        filters:
+          traffic_type: "Rodzaj ruchu"
+          top_url: "Najpopularniejszy adres URL"
+          entry_url: "Wpisowy adres URL"
+          referrer: "Polecający"
+          country: "Kraj"
+          network: "Sieć"
+          browser: "Przeglądarka"
+          ip: "Adres IP"
+        metrics:
+          pageviews:
+            label: "Wyświetlenia strony"
+          distinct_sessions:
+            label: "Różne sesje"
+          logged_in_share:
+            label: "Udział zalogowanych"
+          bounce_rate:
+            label: "Współczynnik odrzuceń"
+          average_session_duration:
+            label: "Średni czas trwania sesji"
+        series:
+          logged_in_human: "Zalogowani"
+          anonymous_human: "Anonimowi"
+          likely_crawler: "Prawdopodobne roboty indeksujące"
+        partial:
+          retention: "Szczegółowe dane dotyczące aktywności wyświetleń stron przed %{date} nie są już dostępne, dlatego wyniki te obejmują tylko część wybranego zakresu dat."
+          pageview_limit: "Te wyniki są ograniczone do ostatnich %{limit} wyświetleń stron w wybranym zakresie dat. Wybierz krótszy zakres dat, aby uwzględnić cały dostępny ruch."
+          combined: "Szczegółowa aktywność odsłon sprzed %{date} nie jest już dostępna, dlatego wyniki obejmują tylko część wybranego zakresu dat. Są one również ograniczone do ostatnich %{limit} odsłon. Wybierz krótszy zakres dat w ramach dostępnych dat, aby uwzględnić całą dostępną aktywność odsłon."
       dashboard:
         title: "Panel"
         last_updated: "Panel zaktualizowany:"
@@ -7472,7 +7550,6 @@ pl_PL:
           few: "Korzystasz z najnowszej wersji, ale dostępne są %{count} nowe zmiany."
           many: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
           other: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
-        critical_available: "Ważna aktualizacja jest dostępna."
         updates_available: "Aktualizacje są dostępne."
         please_update: "Koniecznie zaktualizuj!"
         no_check_performed: "Sprawdzanie aktualizacji nie zostało przeprowadzone. Upewnij się, że sidekiq jest uruchomiony."
@@ -7613,24 +7690,10 @@ pl_PL:
                 other: "%{count} członków zostało zdegradowanych do tego poziomu zaufania"
               stable_aria: "brak ruchu"
             headline:
-              healthy_growth:
-                title: "Członkowie wyrabiają sobie nawyk powracania."
-                summary: "W tym okresie wzrosła lojalność, codzienne zaangażowanie i liczba nowych rejestracji."
-              declining:
-                title: "Członkowie powracają coraz rzadziej."
-                summary: "W tym okresie spadła lojalność, codzienne zaangażowanie i liczba nowych rejestracji."
-              engaged_but_shrinking:
-                title: "Członkowie są zaangażowani, ale społeczność się kurczy."
-                summary: "Przyczepność utrzymuje się na dobrym poziomie, ale dzienne zaangażowanie i liczba nowych rejestracji spadły."
-              growing_but_distracted:
-                title: "Nowi członkowie zapisują się, ale nie zostają na dłużej."
-                summary: "Liczba zapisów wzrosła, ale zainteresowanie spadło w tym okresie."
-              mixed:
-                title: "Trendy zaangażowania są w tym okresie zróżnicowane."
-                summary: "Niektóre wskaźniki rosną, a inne spadają — otwórz kafelki poniżej, aby zobaczyć szczegóły."
-              no_signal:
-                title: "Za mało aktywności, aby podsumować zaangażowanie."
-                summary: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
+              titles:
+                insufficient_activity: "Za mało aktywności, aby podsumować zaangażowanie."
+              summaries:
+                insufficient_activity: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
               metrics:
                 new_signups: "Nowe rejestracje"
                 dau_mau: "Lepkość DAU / MAU"
@@ -7640,34 +7703,11 @@ pl_PL:
             fetch_error: "Nie udało się wczytać danych wyszukiwania. Spróbuj odświeżyć stronę."
             logging_disabled: 'Rejestrowanie wyszukiwania jest wyłączone, więc żadne dane nie są gromadzone. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zapytań wyszukiwania w dzienniku</a> , aby rozpocząć ich gromadzenie.'
             logging_disabled_moderator: "Rejestrowanie wyszukiwania jest wyłączone, więc żadne dane nie są gromadzone. Poproś administratora o włączenie rejestrowania zapytań wyszukiwania, aby rozpocząć ich gromadzenie."
-            count_headline:
-              last_7_days:
-                one: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwanie na stronie"
-                few: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwania na stronie"
-                many: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-                other: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-              last_30_days:
-                one: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwanie na stronie"
-                few: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwania na stronie"
-                many: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-                other: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-              last_3_months:
-                one: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwanie na stronie"
-                few: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwania na stronie"
-                many: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-                other: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-              selected_period:
-                one: "Członkowie przeprowadzili %{formatted_count} wyszukiwanie na miejscu w wybranym okresie"
-                few: "Członkowie przeprowadzili %{formatted_count} wyszukiwania na miejscu w wybranym okresie"
-                many: "Członkowie przeprowadzili %{formatted_count} wyszukiwań na miejscu w wybranym okresie"
-                other: "Członkowie przeprowadzili %{formatted_count} wyszukiwań na miejscu w wybranym okresie"
             headline:
-              no_signal_title: "Za mało aktywności wyszukiwania, aby dokonać podsumowania."
-              no_signal: "Wybierz dłuższy przedział dat lub wróć, gdy członkowie przeszukają więcej tematów."
-              content_gaps: "Ponad 10% wyszukiwań członków zakończyło się w tym okresie bez kliknięcia. Sprawdź poniższe luki w treściach, aby dowiedzieć się, czego brakuje."
-              rate_climbing: "Wskaźnik braku rezultatów rośnie w porównaniu z poprzednim okresem. Zwróć uwagę na luki w treściach poniżej."
-              shrinking: "W porównaniu z poprzednim okresem liczba wyszukiwań zmalała, jednak większość wyszukiwań nadal prowadzi do treści."
-              healthy: "Użytkownicy wciąż znajdują to, czego szukają, a liczba wyszukiwań jest stała lub rośnie."
+              titles:
+                insufficient_activity: "Za mało aktywności wyszukiwania, aby dokonać podsumowania."
+              summaries:
+                insufficient_activity: "Wybierz dłuższy przedział dat lub wróć, gdy członkowie przeszukają więcej tematów."
             kpi:
               total_searches:
                 label: "Łączna liczba wyszukiwań"

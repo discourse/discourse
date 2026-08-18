@@ -480,33 +480,55 @@ ug:
       pill: "تەۋسىيە"
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
+      launch_in_easy_steps: "جامائەت تەڭشىكى"
+      launch_in_easy_steps_subtitle: "%{completed_steps}/%{step_count} قەدەم تاماملاندى"
+      expand: "تەڭشەك قەدىمىنى ياي"
+      collapse: "تەڭشەش قەدىمىنى يىغ"
+      dismiss: "تەڭشەشكە پەرۋا قىلما"
       select_theme:
+        description: "رەڭ، خەت نۇسخا ۋە باش بەت تاللىنىدۇ."
+        action: "تاللانما كۆرسەت"
+        completed: "تاللانما ئۆزگەرت"
         show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
         show_dark_screenshot: "قېنىق ئېكران كۆرۈنۈشىنى كۆرسەت"
       invite_collaborators:
         title: "ھەمكارلاشقۇچى تەكلىپ قىل"
+        description: "دەسلەپكى ئەزالار بۇنى جانلاندۇرىدۇ."
         action: "تەكلىپ قۇر"
+        completed: "تېخىمۇ كۆپ تەكلىپ"
       start_posting:
         title: "يوللاشنى باشلا"
+        description: "كىشىلەرگە سۆھبەت تېمىسى تەمىنلەيدۇ."
+        completed: "تېخىمۇ كۆپ ئىدىيە كۆرسەت"
         back: "كەينى"
     design_wizard:
+      title: "تور بېكىتىڭىزنى خاسلاشتۇرىدۇ"
+      subtitle: "رەڭ، خەت نۇسخا ۋە باش بەت تاللىنىدۇ."
+      step_label: "%{index}-قەدەمگە يۆتكەل"
+      save: "ساقلا ۋە تاماملا"
       back: "كەينى"
       next: "كېيىنكى"
       sections:
         theme: "ئۆرنەك"
+        colors: "كۆڭۈلدىكى رەڭ"
         fonts: "خەت نۇسخا"
         homepage: "باش بەت"
       theme:
         selected: "تاللاندى"
+        custom_theme_notice: "تور بېكىتىڭىز نۆۋەتتە %{name} نى كۆڭۈلدىكى ئۆرنەك سۈپىتىدە ئىشلىتىۋاتىدۇ. تۆۋەندىكى ئۆرنەكتىن بىرىنى تاللاپ ئالدىن كۆزىتىڭ. ساقلانسا نۆۋەتتىكى ئۆرنەكنىڭ ئورنىنى ئالىدۇ."
       colors:
         light: "يورۇق"
         dark: "قاراڭغۇ"
+        dark_only: "%{name} نىڭ قاراڭغۇ ھالىتىلا بار"
+        both_modes: "ھەر بىر رەڭ تاختىسىنىڭ يورۇق ۋە قاراڭغۇ ھالىتى بار"
+        user_selectable: "ئەزانىڭ رەڭ تاختىسىنى ئالماشتۇرۇشىغا يول قويىدۇ"
       fonts:
         base_font: "ئاساسى خەت نۇسخىسى"
         heading_font: "ماۋزۇ خەت نۇسخىسى"
       homepage:
         topics: "تېما"
         categories: "سەھىپە"
+        topic_page_type: "تېما بەت تۈرى"
         styles:
           boxes: "قۇتا"
     about:
@@ -5948,13 +5970,30 @@ ug:
       new_features:
         title: "يېڭىلىق?"
         check_for_updates: "يېڭىلانمىنى تەكشۈر"
+      site_traffic_explorer:
+        pageviews: "بەت كۆرۈلۈشى"
+        view_more: "تېخىمۇ كۆپ كۆرسەت"
+        cards:
+          pages: "بەت"
+          visitors: "زىيارەتچى"
+        columns:
+          top_urls: "تور ئادرېسى"
+          browsers: "توركۆرگۈ"
+          ip_addresses: "IP ئادرېس"
+        filters:
+          browser: "توركۆرگۈ"
+          ip: "IP ئادرېس"
+        metrics:
+          pageviews:
+            label: "بەت كۆرۈلۈشى"
+        series:
+          anonymous_human: "نامسىز"
       dashboard:
         title: "باشقۇرۇش تاختا"
         last_updated: "باشقۇرۇش تاختا يېڭىلاندى:"
         discourse_last_updated: "Discourse يېڭىلاندى:"
         version: "نەشرى"
         up_to_date: "سىزنىڭ ئەڭ يېڭى نەشرى!"
-        critical_available: "ھالقىلىق يېڭىلانما بار."
         updates_available: "يېڭىلانما بار."
         please_update: "يېڭىلاڭ!"
         no_check_performed: "يېڭىلانما تەكشۈرۈش ئىجرا قىلىنمىدى. Sidekiq ئىجرا قىلىنىۋاتقانلىقىنى جەزملەڭ."
