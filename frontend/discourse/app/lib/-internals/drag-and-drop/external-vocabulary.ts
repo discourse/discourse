@@ -1,23 +1,15 @@
-import {
-  type ExternalDragPayload as NativeExternalDragPayload,
-  type NativeMediaType,
-} from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
-import {
-  containsFiles,
-  getFiles,
-} from "@atlaskit/pragmatic-drag-and-drop/external/file";
-import {
-  containsHTML,
-  getHTML,
-} from "@atlaskit/pragmatic-drag-and-drop/external/html";
-import {
-  containsText,
-  getText,
-} from "@atlaskit/pragmatic-drag-and-drop/external/text";
-import {
-  containsURLs,
-  getURLs,
-} from "@atlaskit/pragmatic-drag-and-drop/external/url";
+import type {
+  ExternalDragPayload as NativeExternalDragPayload,
+  NativeMediaType,
+} from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
+import { containsFiles } from "@atlaskit/pragmatic-drag-and-drop/utils/contains-files";
+import { containsHTML } from "@atlaskit/pragmatic-drag-and-drop/utils/contains-html";
+import { containsText } from "@atlaskit/pragmatic-drag-and-drop/utils/contains-text";
+import { containsURLs } from "@atlaskit/pragmatic-drag-and-drop/utils/contains-ur-ls";
+import { getFiles } from "@atlaskit/pragmatic-drag-and-drop/utils/get-files";
+import { getHTML } from "@atlaskit/pragmatic-drag-and-drop/utils/get-html";
+import { getText } from "@atlaskit/pragmatic-drag-and-drop/utils/get-text";
+import { getURLs } from "@atlaskit/pragmatic-drag-and-drop/utils/get-ur-ls";
 
 /**
  * The in-flight external drag, with the read helpers bound to it so consumers

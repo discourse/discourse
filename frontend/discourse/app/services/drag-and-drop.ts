@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service from "@ember/service";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
-import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
+import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/adapter/monitor-for-external";
 import {
   decorateExternalSource,
   EXTERNAL_KIND_PREDICATES,

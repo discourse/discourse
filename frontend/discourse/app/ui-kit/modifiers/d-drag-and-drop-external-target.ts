@@ -1,7 +1,5 @@
-import {
-  dropTargetForExternal,
-  type ExternalDragPayload as NativeExternalDragPayload,
-} from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
+import { dropTargetForExternal } from "@atlaskit/pragmatic-drag-and-drop/adapter/drop-target-for-external";
+import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
 import type {
   DragLocationHistory,
   Input,
@@ -269,9 +267,6 @@ export function registerDragAndDropExternalTarget(
  * doesn't double-handle a drop the child already claimed. An ancestor that
  * should stay lit throughout should therefore read `@service dragAndDrop`
  * rather than register a target of its own.
- *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  *
  * This modifier hands the consumer the raw payload and stops; it does not upload
  * anything.

@@ -1,5 +1,5 @@
-import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
+import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
 import {
   autoScrollForElements,
   autoScrollWindowForElements,
@@ -165,9 +165,6 @@ export function registerDragAndDropAutoScroll(
  *   {{dDragAndDropAutoScroll types=(array "card") accepts="urls"}}
  * >
  * ```
- *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  *
  * @see The `dDragAndDropTarget` modifier, which this complements — auto-scroll moves the
  *   container, it never accepts a drop of its own.
