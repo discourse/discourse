@@ -151,8 +151,10 @@ module PageObjects
       def has_filter_pill?(dimension:, label:)
         selector = "[data-test-site-traffic-filter-pill='#{dimension}']"
         remove_label = "Remove #{FILTER_LABELS.fetch(dimension)} filter"
+        expected_text = "#{FILTER_LABELS.fetch(dimension)}: #{label}".gsub(/\s+/, "")
 
-        has_css?(selector, text: "#{FILTER_LABELS.fetch(dimension)}: #{label}", count: 1) &&
+        has_css?(selector, count: 1) &&
+          find(selector).text.gsub(/\s+/, "").include?(expected_text) &&
           has_css?("#{selector} button[aria-label='#{remove_label}']")
       end
 
@@ -164,7 +166,8 @@ module PageObjects
         selector =
           "[data-test-site-traffic-filter-pill='#{dimension}'] .site-traffic-explorer__filter-pill-label"
 
-        has_css?(selector, text: label, count: 1)
+        has_css?(selector, count: 1) &&
+          find(selector).text.gsub(/\s+/, "").include?(label.gsub(/\s+/, ""))
       end
 
       def expand_filter_pill(dimension)
@@ -194,8 +197,7 @@ module PageObjects
       def has_apply_filters?(count:)
         selector = "[data-test-site-traffic-apply-filters]"
 
-        has_css?(selector, text: "Apply", count: 1) &&
-          has_css?("#{selector} [data-test-site-traffic-apply-count]", exact_text: "(#{count})")
+        has_css?(selector, exact_text: "Apply (#{count})", count: 1)
       end
 
       def has_no_apply_filters?

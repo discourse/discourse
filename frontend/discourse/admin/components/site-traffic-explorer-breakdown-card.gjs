@@ -176,7 +176,7 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
         }}
       >
         <ul class="site-traffic-explorer__breakdown-list">
-          {{#each this.visibleRows as |row|}}
+          {{#each this.visibleRows as |row index|}}
             <li>
               {{#let (this.rowLink row) as |rowLink|}}
                 {{#if rowLink}}
@@ -185,18 +185,18 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                     data-test-site-traffic-row
                   >
                     <input
+                      id={{concat "site-traffic-" @name "-filter-" index}}
                       type="checkbox"
                       aria-label={{this.filterLabel row}}
                       checked={{this.isSelected row}}
                       {{on "change" (fn this.toggleFilter row)}}
                     />
-                    <button
-                      type="button"
+                    <label
+                      for={{concat "site-traffic-" @name "-filter-" index}}
                       class="site-traffic-explorer__row-filter-target"
-                      aria-hidden="true"
-                      tabindex="-1"
-                      {{on "click" (fn this.toggleFilter row)}}
-                    ></button>
+                    >
+                      <span class="sr-only">{{this.filterLabel row}}</span>
+                    </label>
                     <a
                       href={{rowLink.href}}
                       rel={{rowLink.rel}}
