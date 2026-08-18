@@ -72,6 +72,8 @@ uk:
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосувати!"
+      keep-vote:
+        label: "Назад"
       show-results:
         title: "Показати результати опитування"
         label: "Результати"

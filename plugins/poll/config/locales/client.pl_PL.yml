@@ -69,9 +69,20 @@ pl_PL:
             many: "Wybierz <strong>%{count} opcji</strong>."
             other: "Wybierz <strong>%{count} opcji</strong>."
           between_min_and_max_options: "Wybierz pomiędzy <strong>%{min} a %{max} opcjami</strong>."
+      vote_recorded: "Twój głos został zarejestrowany."
+      voted_choices:
+        title: "Głosowałeś na:"
       cast-votes:
         title: "Oddaj głos"
         label: "Oddaj głos!"
+        update_title: "Zaktualizuj swój głos"
+        update_label: "Zaktualizuj głos"
+      amend-vote:
+        title: "Zmień swój głos"
+        label: "Zmień głos"
+      keep-vote:
+        title: "Wstecz bez zmiany swojego głosu"
+        label: "Wstecz"
       show-results:
         title: "Wyświetl wyniki ankiety"
         label: "Wyniki"

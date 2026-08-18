@@ -36,7 +36,6 @@ fr:
       livestream:
         zoom:
           join: "Rejoindre dans Zoom"
-          chat: "Discussion"
           open_in_zoom: "Ouvrir dans Zoom"
           load_error: "Vous avez quitté le webinaire ou nous ne parvenons pas à charger Zoom sur cette page."
           too_early: "Vous pourrez rejoindre le webinaire à l'approche de l'heure de début de l'événement."

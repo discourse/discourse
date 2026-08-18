@@ -869,16 +869,15 @@ ja:
   email_login:
     invalid_token: 'おっとっと！使用したリンクは機能しなくなっています。今すぐ<a href="%{base_url}/login">ログイン</a>しましょう。パスワードを忘れた場合は、リセットするための<a href="%{base_url}/password-reset">リンクをリクエスト</a>できます。'
     title: "メールログイン"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub アプリ"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub アプリ"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "不明なブラウザ"
     device:
       android: "Android デバイス"
       chromebook: "Chrome OS"
@@ -901,10 +900,6 @@ ja:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "匿名ユーザー"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
     doesnt_exist: "そのメールアドレスは、あなたのアカウントに関連付けられていません。"

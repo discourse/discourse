@@ -642,16 +642,15 @@ el:
     success_unapproved: "Αλλάξατε επιτυχώς τον κωδικό πρόσβασής σας"
   email_login:
     title: "Σύνδεση μέσω email"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Εφαρμογή DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Εφαρμογή DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "άγνωστος περιηγητής"
     device:
       android: "Συσκευή Android"
       chromebook: "Chrome OS"
@@ -675,10 +674,6 @@ el:
     traffic_types:
       logged_in: "Συνδεδεμένοι"
       anonymous: "Ανώνυμοι"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Ίσως αυτή η διεύθυνση είναι ήδη σε χρήση;"
     error_staged: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Η δεύθυνση αυτή χρησιμοποιείται ήδη από αλλό χρήστη. "

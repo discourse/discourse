@@ -36,7 +36,7 @@ pl_PL:
       livestream:
         zoom:
           join: "Dołącz do spotkania na Zoomie"
-          chat: "Czat"
+          frame_title: "Webinarium Zoom"
           open_in_zoom: "Otwórz w Zoomie"
           load_error: "Opuściłeś webinarium lub nie możemy załadować Zoom na tej stronie."
           too_early: "Możesz dołączyć do webinarium bliżej czasu rozpoczęcia wydarzenia"

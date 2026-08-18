@@ -60,6 +60,8 @@ de:
       cast-votes:
         title: "Gib deine Stimmen ab"
         label: "Jetzt abstimmen!"
+      keep-vote:
+        label: "Zurück"
       show-results:
         title: "Das Ergebnis der Umfrage anzeigen"
         label: "Ergebnisse"

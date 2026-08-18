@@ -925,16 +925,15 @@ zh_CN:
     title: "电子邮件登录"
   email_login_code:
     invalid_code: "该验证码错误或已过期。请申请新的验证码并重试。"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub 应用"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub 应用"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "未知浏览器"
     device:
       android: "Android 设备"
       chromebook: "Chrome OS"
@@ -959,10 +958,6 @@ zh_CN:
       logged_in: "登录成员"
       anonymous: "匿名"
       likely_crawler: "疑似爬虫"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "更改您的电子邮件地址时出错。也许该地址已被使用？"
     doesnt_exist: "该电子邮件地址未与您的帐户关联。"
@@ -2581,7 +2576,6 @@ zh_CN:
     enable_new_checkbox_style: "为 FormKit 复选框启用重新设计的复选框样式。"
     enable_new_post_reactions_menu: "启用重新设计的帖子点赞和回应菜单，支持无限滚动和原生移动体验。"
     enable_composer_redesign: "启用重新设计的编辑器。"
-    enable_new_composer_actions: "启用重新设计的编辑器操作菜单和组合保存按钮，保存操作旁边会显示密语、不顶帖和取消公开切换按钮。"
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"

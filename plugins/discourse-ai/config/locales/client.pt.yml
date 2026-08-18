@@ -199,6 +199,40 @@ pt:
         periods:
           last_day: "Últimas 24 horas"
           custom: "Personalizar..."
+      logs:
+        short_title: "Logs"
+        apply: "Aplicar"
+        successful: "Sucesso"
+        failed: "Falhado"
+        unknown: "Desconhecido"
+        topic_id: "Id. do Tópico"
+        post_id: "Id. da Publicação"
+        time: "Hora"
+        when: "Quando"
+        feature: "Funcionalidade"
+        model: "Modelo"
+        request: "Pedido"
+        provider: "Provedor"
+        user: "Utilizador"
+        context: "Contexto"
+        topic: "Tópico"
+        post: "Publicação"
+        post_short: "Publicação %{id}"
+        duration: "Duração"
+        actions: "Ações"
+        periods:
+          day: "Últimas 24 horas"
+          week: "Últimos 7 Dias"
+          custom: "Personalizar"
+        detail:
+          request: "Pedido"
+          response: "Resposta"
+          context: "Contexto"
+          network_error: "Erro de rede"
+        retention:
+          summary_stage: "Resumo"
+          deleted_stage: "Eliminado"
+          save: "Guardar"
       ai_agent:
         name: "Nome"
         edit: "Editar"
@@ -322,6 +356,7 @@ pt:
       ai_bot:
         llm: "Modelo:"
         debug_ai_modal:
+          duration_label: "Duração:"
           request: "Pedido"
           response: "Resposta"
           next_log: "Próximo"

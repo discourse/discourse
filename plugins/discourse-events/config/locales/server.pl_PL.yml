@@ -111,6 +111,10 @@ pl_PL:
     livestream:
       chat:
         topic_reference_message: "Ten kanał jest przeznaczony na wydarzenie [%{title}](%{url}) — odwiedź temat, aby uzyskać więcej szczegółów i potwierdzić obecność."
+      zoom:
+        frame_title: "Webinarium Zoom"
+        frame_join: "Dołącz do webinarium"
+        frame_joining: "Łączenie…"
     calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."
     more_than_one_calendar: "W poście nie można umieścić więcej niż jednego kalendarza."
     more_than_two_dates: "Post w temacie kalendarza nie może zawierać więcej niż dwóch dat."

@@ -111,6 +111,35 @@ gl:
         total: "Total"
         periods:
           custom: "Personalizar..."
+      logs:
+        short_title: "Rexistros"
+        apply: "Aplicar"
+        successful: "Feito"
+        failed: "Fallou"
+        unknown: "Descoñecido"
+        topic_id: "ID do tema"
+        post_id: "ID da publicación"
+        time: "Hora"
+        when: "Cando"
+        request: "Petición"
+        provider: "Fornecedor"
+        user: "Usuario"
+        context: "Contexto"
+        topic: "Tema"
+        post: "Publicación"
+        post_short: "Publicación %{id}"
+        duration: "Duración"
+        actions: "Accións"
+        periods:
+          custom: "Personalizado"
+        detail:
+          request: "Petición"
+          response: "Resposta"
+          context: "Contexto"
+        retention:
+          summary_stage: "Resumo"
+          deleted_stage: "Eliminado"
+          save: "Gardar"
       ai_agent:
         name: "Nome"
         edit: "Editar"
@@ -222,6 +251,7 @@ gl:
           fake: "Personalizado"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Duración:"
           request: "Petición"
           response: "Resposta"
           next_log: "Seguinte"

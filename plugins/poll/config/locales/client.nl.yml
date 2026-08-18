@@ -54,6 +54,8 @@ nl:
       cast-votes:
         title: "Je stemmen uitbrengen"
         label: "Stem nu!"
+      keep-vote:
+        label: "Terug"
       show-results:
         title: "De pollresultaten weergeven"
         label: "Resultaten"

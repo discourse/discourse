@@ -133,7 +133,6 @@ nl:
     ai_translation_backfill_hourly_rate: "Het aantal te vertalen berichten en topics per uur tijdens aanvulbewerkingen. Stel in op 0 om automatisch aanvullen van vertalingen voor bestaande content uit te schakelen."
     ai_translation_backfill_parallel_jobs: "Het aantal parallelle postlokalisatietaken dat wordt uitgevoerd per aanvulcyclus. Hogere waarden verhogen de doorvoer, maar verbruiken meer bronnen."
     ai_usage_rollup_after_days: "Aantal dagen dat de AI-gebruiksstatistieken per verzoek worden bewaard voordat ze in de dagelijkse aggregaten worden opgenomen. Stel in op 0 om samentellen uit te schakelen."
-    ai_audit_logs_purge_after_days: "Verwijder AI-API-auditlogs ouder dan dit aantal dagen. Standaard ongeveer 6 maanden. Stel in op 0 om onbeperkt te bewaren."
   reviewables:
     reasons:
       flagged_by_toxicity: De AI-plug-in heeft dit gemarkeerd nadat het als toxisch was geclassificeerd.
