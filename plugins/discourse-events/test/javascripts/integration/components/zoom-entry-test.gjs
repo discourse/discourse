@@ -56,6 +56,24 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       .doesNotExist("inline embedding was replaced by the /zoom route");
   });
 
+  test("asks for the zoom route by name rather than leaving the click to the interceptor", async function (assert) {
+    const transitionTo = sinon.stub(
+      getOwner(this).lookup("service:router"),
+      "transitionTo"
+    );
+
+    await render(
+      <template><LivestreamZoomEntry @event={{this.event}} /></template>
+    );
+
+    await click(JOIN_BUTTON_SELECTOR);
+
+    assert.true(
+      transitionTo.calledWith("topic-zoom", "test-topic", 1),
+      "the meeting is reached, not the topic it hangs off"
+    );
+  });
+
   test("tags the body while the zoom entry is on screen", async function (assert) {
     await render(
       <template><LivestreamZoomEntry @event={{this.event}} /></template>

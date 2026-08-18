@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -49,14 +50,18 @@ export default class LivestreamZoomEntry extends Component {
 
   @action
   joinZoom(event) {
-    if (this.currentUser) {
+    if (!this.currentUser) {
+      event.preventDefault();
+      getOwner(this).lookup("route:application").send("showCreateAccount");
       return;
     }
 
-    // Nothing to join yet: the meeting is only served to a signed-in user, and
-    // chat alongside it needs an account of its own.
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
     event.preventDefault();
-    getOwner(this).lookup("route:application").send("showCreateAccount");
+    this.router.transitionTo("topic-zoom", this.topic.slug, this.topic.id);
   }
 
   <template>
