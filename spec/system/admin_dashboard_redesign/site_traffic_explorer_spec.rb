@@ -465,6 +465,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
+
     traffic.expand_filter_pill("referrer")
 
     expect(traffic).to have_filter_dropdown(
@@ -472,7 +473,11 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     )
     traffic.remove_filter_value("three.example")
 
-    expect(traffic).to have_no_filter_dropdown
+    expect(traffic).to have_filter_dropdown(
+      values: ["one.example", "two.example", "Direct / unknown"],
+    )
+    traffic.expand_filter_pill("referrer")
+
     expect(traffic).to have_grouped_filter_pill(
       dimension: "referrer",
       label: "Referrer: one.example, two.example, Direct / unknown",
