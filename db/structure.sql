@@ -2014,40 +2014,6 @@ ALTER SEQUENCE public.browser_pageview_crawler_daily_rollups_id_seq OWNED BY pub
 
 
 --
--- Name: browser_pageview_entry_url_daily_rollups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.browser_pageview_entry_url_daily_rollups (
-    id bigint NOT NULL,
-    date date NOT NULL,
-    entry_url character varying(2000) NOT NULL,
-    count bigint NOT NULL,
-    logged_in_count bigint NOT NULL,
-    likely_crawler_count bigint DEFAULT 0 NOT NULL,
-    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
-);
-
-
---
--- Name: browser_pageview_entry_url_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.browser_pageview_entry_url_daily_rollups_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: browser_pageview_entry_url_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.browser_pageview_entry_url_daily_rollups_id_seq OWNED BY public.browser_pageview_entry_url_daily_rollups.id;
-
-
---
 -- Name: browser_pageview_event_scores; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12853,13 +12819,6 @@ ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups ALTER COLUMN id S
 
 
 --
--- Name: browser_pageview_entry_url_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_entry_url_daily_rollups_id_seq'::regclass);
-
-
---
 -- Name: browser_pageview_event_scores id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15158,14 +15117,6 @@ ALTER TABLE ONLY public.browser_pageview_country_daily_rollups
 
 ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups
     ADD CONSTRAINT browser_pageview_crawler_daily_rollups_pkey PRIMARY KEY (id);
-
-
---
--- Name: browser_pageview_entry_url_daily_rollups browser_pageview_entry_url_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups
-    ADD CONSTRAINT browser_pageview_entry_url_daily_rollups_pkey PRIMARY KEY (id);
 
 
 --
@@ -17740,13 +17691,6 @@ CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events US
 --
 
 CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
-
-
---
--- Name: idx_bpeu_daily_rollups_date_url_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_bpeu_daily_rollups_date_url_unique ON public.browser_pageview_entry_url_daily_rollups USING btree (date, entry_url);
 
 
 --
@@ -23281,7 +23225,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260818081537'),
+('20260818143417'),
 ('20260818045317'),
 ('20260818045314'),
 ('20260818045311'),
