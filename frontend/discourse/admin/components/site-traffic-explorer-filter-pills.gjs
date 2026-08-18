@@ -33,12 +33,12 @@ const fitFilterPill = modifier(
           return;
         }
 
-        const label = element.querySelector(
-          ".site-traffic-explorer__filter-pill-label"
+        const values = element.querySelector(
+          ".site-traffic-explorer__filter-pill-values"
         );
         if (
-          label &&
-          label.scrollWidth > label.clientWidth + 1 &&
+          values &&
+          values.scrollWidth > values.clientWidth + 1 &&
           visibleCount > 1
         ) {
           fit(visibleCount - 1);
@@ -136,15 +136,17 @@ export default class SiteTrafficExplorerFilterPills extends Component {
       .map((value) => `<strong>${escapeExpression(value.label)}</strong>`)
       .join(i18n("admin.site_traffic_explorer.filter_value_separator"));
     const remainingCount = filter.values.length - visibleCount;
+    const values = `<span class="site-traffic-explorer__filter-pill-values">${visibleValues}</span>`;
 
     return i18n("admin.site_traffic_explorer.grouped_filter_description", {
       filter: escapeExpression(this.filterLabel(filter.key)),
-      values: visibleValues,
+      values,
       remaining:
         remainingCount > 0
-          ? i18n("admin.site_traffic_explorer.additional_filter_values", {
-              count: remainingCount,
-            })
+          ? `<span class="site-traffic-explorer__filter-pill-remaining">${i18n(
+              "admin.site_traffic_explorer.additional_filter_values",
+              { count: remainingCount }
+            )}</span>`
           : "",
     });
   }
@@ -225,7 +227,10 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                         <ul>
                           {{#each filter.values as |value|}}
                             <li data-test-site-traffic-filter-dropdown-value>
-                              <span>{{value.label}}</span>
+                              <span
+                                class="site-traffic-explorer__filter-dropdown-value"
+                                title={{value.label}}
+                              >{{value.label}}</span>
                               <button
                                 type="button"
                                 class="btn btn-flat"
