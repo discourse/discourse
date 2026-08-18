@@ -257,6 +257,13 @@ export default class DVirtualizer<T> extends Modifier<
   #endLatched = false;
 
   /**
+   * True while an edge callback is running. `armEdge` is inert then: the callback
+   * would be clearing the latch this evaluation has just set, and the flush it
+   * schedules would fire the same callback again, with no yield in between.
+   */
+  #inEdgeCallback = false;
+
+  /**
    * The edge keys the latches were last evaluated against. A latch can only be
    * re-armed by a range retreat, which an `@items` change never produces: rows
    * arriving beyond the viewport move the BAND, not the range. Watching the keys
@@ -520,6 +527,25 @@ export default class DVirtualizer<T> extends Modifier<
           align: edge === "end" ? "end" : "start",
         });
         this.#syncScrollOffset(before);
+      },
+      armEdge: (edge) => {
+        if (
+          !this.#virtualizer ||
+          this.#inEdgeCallback ||
+          isDestroying(this) ||
+          isDestroyed(this)
+        ) {
+          return;
+        }
+        if (edge === "end") {
+          this.#endLatched = false;
+        } else {
+          this.#startLatched = false;
+        }
+        // Clearing the latch is all this does. The callback fires from the next
+        // flush's edge evaluation, and only if the range is still in the band, so
+        // a consumer cannot drive its own callback by calling this.
+        this.#scheduleFlush();
       },
       measure: () => this.#virtualizer?.measure(),
       remeasureViewport: () => {
@@ -855,9 +881,14 @@ export default class DVirtualizer<T> extends Modifier<
     if (range.startIndex <= startBand) {
       if (!this.#startLatched) {
         this.#startLatched = true;
-        this.#safely("onReachStart", () =>
-          this.#named?.onReachStart?.({ ...range, count })
-        );
+        this.#inEdgeCallback = true;
+        try {
+          this.#safely("onReachStart", () =>
+            this.#named?.onReachStart?.({ ...range, count })
+          );
+        } finally {
+          this.#inEdgeCallback = false;
+        }
       }
     } else if (range.startIndex > startBand + EDGE_HYSTERESIS) {
       this.#startLatched = false;
@@ -866,9 +897,14 @@ export default class DVirtualizer<T> extends Modifier<
     if (range.endIndex >= endBand) {
       if (!this.#endLatched) {
         this.#endLatched = true;
-        this.#safely("onReachEnd", () =>
-          this.#named?.onReachEnd?.({ ...range, count })
-        );
+        this.#inEdgeCallback = true;
+        try {
+          this.#safely("onReachEnd", () =>
+            this.#named?.onReachEnd?.({ ...range, count })
+          );
+        } finally {
+          this.#inEdgeCallback = false;
+        }
       }
     } else if (range.endIndex < endBand - EDGE_HYSTERESIS) {
       this.#endLatched = false;

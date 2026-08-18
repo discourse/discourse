@@ -96,6 +96,22 @@ export interface DVirtualListApi {
   scrollToEdge(edge: "start" | "end"): void;
 
   /**
+   * Let an edge callback fire again.
+   *
+   * An edge callback fires once and then latches, and re-arms on its own only when the reader
+   * retreats from the band or a boundary row changes. A consumer whose fetch FAILED has
+   * neither: the item set is byte-for-byte what it was, so nothing re-arms and the callback
+   * never fires again. On a list short enough that the range never leaves the band, that is
+   * permanent. This is the lever for that case.
+   *
+   * Arming is not firing. The callback runs on the next evaluation, and only if the range is
+   * still inside the band.
+   *
+   * @param edge - Which edge to re-arm. The other is left alone.
+   */
+  armEdge(edge: "start" | "end"): void;
+
+  /**
    * Discard every cached row measurement so the next window re-measures from
    * `@estimateSize`. Leaves the viewport measurement untouched.
    */
