@@ -219,7 +219,9 @@ module PageObjects
         else
           find("button[aria-label='#{remove_label}']").click
         end
-        find("[data-test-site-traffic-apply-filters]").click
+        if has_css?("[data-test-site-traffic-apply-filters]", wait: 0)
+          find("[data-test-site-traffic-apply-filters]").click
+        end
         self
       end
 

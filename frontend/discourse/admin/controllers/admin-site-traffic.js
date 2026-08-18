@@ -384,6 +384,16 @@ export default class AdminSiteTrafficController extends Controller {
 
   #setDraftValues(key, values) {
     this.draftFilters = { ...this.draftFilters, [key]: values };
+
+    const hasDraftFilters = FILTER_KEYS.some(
+      (filterKey) => this.draftFilters[filterKey].length
+    );
+    const hasAppliedFilters = FILTER_KEYS.some(
+      (filterKey) => this.#appliedValues(filterKey).length
+    );
+    if (!hasDraftFilters && hasAppliedFilters) {
+      this.applyFilters();
+    }
   }
 
   #sameValues(first, second) {
