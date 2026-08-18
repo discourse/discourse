@@ -49,6 +49,7 @@
     gap: 0;
     min-width: 0;
     max-width: 100%;
+    overflow: hidden;
     padding-inline-start: var(--space-3);
     border: 1px solid transparent;
     border-radius: 2rem;
@@ -79,6 +80,11 @@
         padding: 0;
         background: transparent;
         color: inherit;
+
+        .site-traffic-explorer__filter-pill-remaining,
+        .d-icon-angle-down {
+          color: var(--primary);
+        }
       }
 
       &.-expanded .d-icon-angle-down {
