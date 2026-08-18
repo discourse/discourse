@@ -13,17 +13,19 @@ const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 // system, or via the resolver's suffix trie — and which therefore have to be registered with
 // `define()` even when the rest of the bundle is reached through static imports.
 //
+// `routes`, `controllers` and `templates` are absent on purpose. A route is reached through the
+// bundle its route map put it in, so registering it by name as well would defeat the split. That
+// also drops `templates/connectors` and `templates/components`, the pre-`.gjs` spellings of a
+// connector and a component template — a plugin opting into `staticModules` writes neither.
+//
 // Anchored to the top-level segment, the way Embroider anchors them at the app root:
-// `discourse/routes/channel` is a route, but `discourse/components/chat/routes/channel` is a
-// component which happens to sit in a directory called `routes`.
+// `discourse/services/chat` is a service, but `discourse/components/chat/services/chat` is a
+// component which happens to sit in a directory called `services`.
 const EAGER_DIRECTORIES = [
   "connectors",
   "services",
   "models",
   "adapters",
-  "routes",
-  "controllers",
-  "templates",
   "discourse-markdown",
 ];
 
@@ -131,60 +133,52 @@ function routeNameFor(compatModuleName) {
   return path.split("/").join(".");
 }
 
-// `splitAtRoutes` values are route-name patterns with at most one trailing star. A star means
-// "this route and everything beneath it" — but splitting a route always claims its descendants
-// anyway, so `chat.*` and `chat` are the same thing. Reduce both to the base route name.
-function splitBasesFor(frontendConfig) {
-  return Object.values(frontendConfig?.splitAtRoutes ?? {}).map((pattern) =>
-    pattern.replace(/\.?\*$/, "")
-  );
-}
+// Ember creates these without a `this.route` call, so they are never in a route map. They
+// belong to the bundle of the route they hang off.
+const IMPLICIT_ROUTE_SUFFIXES = ["index", "loading", "error"];
 
-// The bundle a route belongs to is its nearest splitting ancestor, or itself. Matching the
-// longest base gives that directly: `chat.visualizer` beats `chat` for `chat.visualizer`, which
-// is what keeps a more specific split out of its parent's bundle.
-function splitBaseFor(routeName, splitBases) {
-  let match = null;
+function bundleNameFor(routeName, bundleByRoute) {
+  let name = routeName;
 
-  for (const base of splitBases) {
-    const claims = routeName === base || routeName.startsWith(`${base}.`);
-
-    if (claims && (match === null || base.length > match.length)) {
-      match = base;
+  while (name) {
+    if (bundleByRoute[name]) {
+      return bundleByRoute[name];
     }
+
+    const dot = name.lastIndexOf(".");
+
+    if (!IMPLICIT_ROUTE_SUFFIXES.includes(name.slice(dot + 1))) {
+      return null;
+    }
+
+    name = dot === -1 ? "" : name.slice(0, dot);
   }
 
-  return match;
+  return null;
 }
 
-// Groups the route files which `splitAtRoutes` claims into one lazy bundle per base route.
-// Anything unclaimed is left for the eager set.
-export function routeBundlesFor(records, frontendConfig) {
-  const splitBases = splitBasesFor(frontendConfig);
+// Groups route files into the lazy bundle their route map declared, one per `bundleName`.
+// Anything with no bundle is left for the eager set.
+export function routeBundlesFor(records, bundleByRoute) {
   const bundles = new Map();
 
-  if (splitBases.length === 0) {
+  if (!bundleByRoute) {
     return [];
   }
 
   for (const record of records) {
     const routeName = routeNameFor(record.compatModuleName);
+    const bundleName = routeName && bundleNameFor(routeName, bundleByRoute);
 
-    if (!routeName) {
+    if (!bundleName) {
       continue;
     }
 
-    const base = splitBaseFor(routeName, splitBases);
-
-    if (!base) {
-      continue;
-    }
-
-    let bundle = bundles.get(base);
+    let bundle = bundles.get(bundleName);
 
     if (!bundle) {
-      bundle = { base, names: new Set(), records: [] };
-      bundles.set(base, bundle);
+      bundle = { bundleName, names: new Set(), records: [] };
+      bundles.set(bundleName, bundle);
     }
 
     bundle.names.add(routeName);
@@ -248,13 +242,12 @@ export default {
       })
     );
 
-    const bundles = routeBundlesFor(records, frontendConfig);
-    const split = new Set(bundles.flatMap((bundle) => bundle.records));
+    const bundles = routeBundlesFor(records, opts.routeTables?.bundleByRoute);
 
-    // Route files claimed by a `splitAtRoutes` bundle are loaded lazily, so they must not also
-    // be registered eagerly here — that would defeat the split.
-    const eager = records.filter(
-      (record) => isEagerModule(record.compatModuleName) && !split.has(record)
+    // A module that merely lives under `routes/` is reached through a plain import, the same way
+    // components and lib already are. What no route map names, and nothing imports, is dropped.
+    const eager = records.filter((record) =>
+      isEagerModule(record.compatModuleName)
     );
     const shared = records.filter((record) =>
       sharedPaths.has(stripExtension(record.importPath))
@@ -278,7 +271,7 @@ export default {
       ...bundles.map(
         (bundle) =>
           `  { names: ${JSON.stringify(bundle.names)},` +
-          ` load: () => import("virtual:route:${bundle.base}") },`
+          ` load: () => import("virtual:route:${bundle.bundleName}") },`
       ),
       "];",
       "export { compatModules };",
@@ -288,19 +281,20 @@ export default {
   },
   // One lazy route bundle. `@embroider/router` awaits this and hands the default export to
   // `Resolver#addModules`, so the shape must be a plain module map.
-  "virtual:route": (moduleFilenames, opts, routeName) => {
+  "virtual:route": (moduleFilenames, opts, bundleName) => {
     const label = opts.pluginName
       ? `PLUGIN ${opts.pluginName}`
       : `THEME ${opts.themeId}`;
 
     const { records } = normalizeModules(moduleFilenames, label);
-    const bundle = routeBundlesFor(records, opts.frontendConfig).find(
-      (candidate) => candidate.base === routeName
-    );
+    const bundle = routeBundlesFor(
+      records,
+      opts.routeTables?.bundleByRoute
+    ).find((candidate) => candidate.bundleName === bundleName);
 
     if (!bundle) {
       throw new Error(
-        `[${label}] No route bundle for "${routeName}" — no route files matched it.`
+        `[${label}] No route bundle for "${bundleName}" — no route files matched it.`
       );
     }
 

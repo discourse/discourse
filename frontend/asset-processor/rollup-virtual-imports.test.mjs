@@ -93,11 +93,20 @@ describe("virtual:entrypoint", () => {
         // `.gjs` connectors keep their path; only `.hbs` connectors are rewritten under
         // `templates/connectors/`.
         "discourse/connectors/user-menu/chat",
+      ]) {
+        expect(compatModules, name).toContain(`"${name}":`);
+      }
+    });
+
+    it("does not register routes, controllers or route templates", () => {
+      // A route is reached through the bundle its route map put it in, so registering it here
+      // as well would defeat the split.
+      for (const name of [
         "discourse/routes/chat/channel",
         "discourse/controllers/chat/channel",
         "discourse/templates/chat/channel",
       ]) {
-        expect(compatModules, name).toContain(`"${name}":`);
+        expect(compatModules, name).not.toContain(`"${name}":`);
       }
     });
 
@@ -181,7 +190,7 @@ describe("virtual:entrypoint", () => {
     });
   });
 
-  describe("splitAtRoutes", () => {
+  describe("route bundles", () => {
     const ROUTE_MODULES = [
       "discourse/routes/chat.js",
       "discourse/routes/chat/channel.js",
@@ -197,23 +206,39 @@ describe("virtual:entrypoint", () => {
       "discourse/components/chat/routes/channel.gjs",
     ];
 
-    const frontendConfig = {
-      staticModules: true,
-      splitAtRoutes: {
-        "chat/visualizer": "chat.visualizer",
-        "chat/*": "chat.*",
+    const frontendConfig = { staticModules: true };
+
+    // What a route map declaring `bundleName` derives to. `chat.visualizer` names a second
+    // bundle, so it is not swept into `chat` with the rest of the subtree.
+    const routeTables = {
+      bundleByRoute: {
+        chat: "chat",
+        "chat.channel": "chat",
+        "chat.visualizer": "visualizer",
       },
     };
 
-    const output = entrypoint(ROUTE_MODULES, { frontendConfig });
+    const output = entrypoint(ROUTE_MODULES, { frontendConfig, routeTables });
 
-    it("groups routes into a bundle per split base, nearest ancestor winning", () => {
-      // `chat.visualizer` is split separately, so it must not be swept into the `chat` bundle.
+    it("groups routes into a bundle per declared name", () => {
       expect(output).toContain(
-        `{ names: ["chat.visualizer"], load: () => import("virtual:route:chat.visualizer") },`
+        `{ names: ["chat.visualizer"], load: () => import("virtual:route:visualizer") },`
       );
       expect(output).toContain(
         `{ names: ["chat","chat.channel"], load: () => import("virtual:route:chat") },`
+      );
+    });
+
+    it("puts an implicit index route in its parent's bundle", () => {
+      // Ember creates `index`, `loading` and `error` without a `this.route` call, so they are
+      // never in a route map and would otherwise fall back to the eager set.
+      const withIndex = entrypoint(
+        [...ROUTE_MODULES, "discourse/routes/chat/index.js"],
+        { frontendConfig, routeTables }
+      );
+
+      expect(withIndex).toContain(
+        `{ names: ["chat","chat.channel","chat.index"], load: () => import("virtual:route:chat") },`
       );
     });
 
@@ -227,26 +252,20 @@ describe("virtual:entrypoint", () => {
       expect(compatModules).not.toContain('"discourse/routes/chat/channel"');
       expect(compatModules).not.toContain('"discourse/templates/chat/channel"');
 
-      // Unclaimed routes stay eager.
-      expect(compatModules).toContain('"discourse/routes/browse":');
+      // A route no map names is not registered either. Nothing can resolve it, so it is only in
+      // the build at all if something imports it.
+      expect(compatModules).not.toContain('"discourse/routes/browse":');
+
       expect(compatModules).toContain('"discourse/services/chat":');
     });
 
     it("does not mistake connectors or component templates for routes", () => {
-      const compatModules = output.slice(
-        output.indexOf("const compatModules"),
-        output.indexOf("const sharedModules")
-      );
-
       // Discourse nests these under `templates/`, unlike a core app. Treating them as routes
-      // would give bundles named `connectors.*` / `components.*` and drop them from the
-      // eager set.
-      expect(compatModules).toContain(
-        '"discourse/templates/connectors/user-menu/chat":'
-      );
-      expect(compatModules).toContain(
-        '"discourse/templates/components/chat-message":'
-      );
+      // would give bundles named `connectors.*` and `components.*`.
+      expect(output).not.toContain('import("virtual:route:connectors');
+      expect(output).not.toContain('import("virtual:route:components');
+      expect(output).not.toContain('"connectors.user-menu.chat"');
+      expect(output).not.toContain('"components.chat-message"');
     });
 
     it("only treats top-level routes/controllers/templates as routes", () => {
@@ -267,7 +286,7 @@ describe("virtual:entrypoint", () => {
     it("renders a route bundle as a plain module map", () => {
       const bundle = rollupVirtualImports["virtual:route"](
         ROUTE_MODULES,
-        { pluginName: "chat", frontendConfig },
+        { pluginName: "chat", frontendConfig, routeTables },
         "chat"
       );
 

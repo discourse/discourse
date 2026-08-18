@@ -1,8 +1,11 @@
 # Route bundles from the route map
 
 A plugin declares its lazy bundles inline in its route map, with a `bundleName` option. The build
-parses the map and derives both the route names in each bundle and the URLs that reach them.
+parses the map and derives both the route names in each bundle and the urls that reach them.
 `splitAtRoutes` in `about.json` goes away.
+
+Under `staticModules`, no route is eager. Everything a route map names goes in a bundle, and
+`routes`, `controllers` and route `templates` are no longer registered by name at all.
 
 ```js
 // plugins/chat/assets/javascripts/discourse/chat-route-map.js
@@ -21,10 +24,14 @@ sync by hand. The route map already holds both.
 Route maps are parsed, never run. Plugin and theme code is not trusted enough to evaluate in the
 asset processor.
 
-Rollup has already parsed the plugin's own maps. `isEagerModule` keeps every `*-route-map` in the
-eager set (`rollup-virtual-imports.js:44`), so each one is a module in the graph. A `moduleParsed`
-hook reads `ModuleInfo.ast` off each. Core's two maps are not in the graph, so pass their source to
-`this.parse`. Both give the same ESTree `Program`, so one walker covers them.
+`discourse-route-maps` parses every map in a `buildStart` hook, with the `this.parse` rollup gives
+every plugin. It cannot wait for `moduleParsed`: the entrypoint's own source is generated from the
+derived tables, and the maps only enter the module graph because that entrypoint imports them.
+`buildStart` runs before any module loads, which is early enough.
+
+Themes reach the same rollup config through `ThemeJavascriptCompiler`, which supplies no core
+maps, so a `resource` mount could not be resolved for them. Themes derive no bundles at all, which
+is what they do today.
 
 Two default export shapes are valid:
 
@@ -69,10 +76,34 @@ For each route:
   alone. A name that already contains dots is literal.
 - **Path.** `opts.path ?? name`, joined onto the parent path.
 - **Glob.** The path with each `:segment` replaced by `*`.
-- **Bundle.** `opts.bundleName`, or the nearest ancestor that sets one. No bundle means eager.
+- **Bundle.** `opts.bundleName`, or the nearest ancestor that sets one, or `default`. Only core's
+  own routes can end up with no bundle.
+
+Ember creates `index`, `loading` and `error` routes with no `this.route` call, so no route map
+names them. A route file with one of those suffixes takes the bundle of the route it hangs off,
+or it drops out of the bundle its siblings are in.
 
 Each entrypoint yields two tables in the manifest: route name to bundle name, and bundle name to
 the URL globs that reach it.
+
+## Eagerness
+
+`EAGER_DIRECTORIES` exists because Discourse looks these modules up by name at runtime. `routes`,
+`controllers` and `templates` come out of it. `@embroider/router` asks for a bundle, and the bundle
+carries the route, its controller and its template, so registering them by name as well would
+defeat the split. What is left is `connectors`, `services`, `models`, `adapters` and
+`discourse-markdown`.
+
+Dropping `templates` also drops `templates/connectors` and `templates/components`, the pre-`.gjs`
+spellings of a connector and a component template. `staticModules` is opt-in and a plugin taking it
+up writes neither. Chat has none.
+
+A module that merely lives under `routes/` is unaffected. Chat's `routes/chat-channel-decorator` is
+a mixin imported by two route files, and it reaches the bundle through that import, the way
+components and lib already do.
+
+What no route map names, and nothing imports, is in no chunk at all. That is the intent: it is
+unreachable at runtime either way, and it used to be carried anyway.
 
 ## Consumers
 
@@ -86,8 +117,9 @@ the URL globs that reach it.
 - `asset-processor-rollup.js:163` is unchanged apart from the key.
 - `urls_by_route` and `route_bundles_for` (`js_manager.rb:267`, `:256`) read the manifest instead
   of `about.json`.
-- `route_bundle_for_path` (`js_manager.rb:71`) keeps `File.fnmatch?`, but sorts globs by literal
-  segment count first. `chat/c/*/*` must beat `chat` whatever the emission order.
+- `route_bundle_for_path` (`js_manager.rb:64`) is unchanged. It matches first-one-wins, so the
+  build emits urls sorted by literal segment count: `u/*/preferences/chat/*` must beat `chat/*`
+  whatever order the routes were declared in.
 - `about.json` keeps `staticModules` and `sharedModules`. `splitAtRoutes` is deleted.
 
 ## Cross-check
@@ -98,15 +130,17 @@ walks (`rollup-virtual-imports.js:113`). Either disagreement fails the compile:
 - A `bundleName` on a route with no route, controller or template file.
 - A route file whose derived name is in no route map.
 
-Two things the second check has to allow, or it fires on correct code:
+The implicit `index`, `loading` and `error` routes are already handled when deriving, so they do
+not need exempting again. The check does have to compare against all of a plugin's maps together:
+`preferences.chat` is a file under chat's `routes/`, and its DSL entry is in
+`preferences-chat-route-map.js`.
 
-- Ember creates `index`, `loading` and `error` routes with no DSL entry. Exempt those suffixes.
-- Compare against all of a plugin's maps together. `preferences.chat` is a file under chat's
-  `routes/`, and its DSL entry is in `preferences-chat-route-map.js`.
+Chat has four files no route map names. `chat-channel-decorator` is a false positive: it is a
+mixin, imported rather than resolved. The check has to allow that, which means it cannot run on
+file paths alone — it needs to know what the bundle actually pulled in.
 
-Chat still has four files left over after that: `chat-channel-decorator`, `chat-channel-legacy`,
-`chat-draft-channel` and `chat.channel.info.search`. Each is either dead or missing a DSL entry.
-They have to be resolved before this check can land.
+The other three — `chat-channel-legacy`, `chat-draft-channel` and `chat.channel.info.search` — are
+unreachable, and are now absent from the build entirely.
 
 ## Known gaps
 
@@ -125,12 +159,14 @@ They have to be resolved before this check can land.
 
 ## Increments
 
-1. **Parser only.** Parse the plugin's own maps, write the tree to the manifest, consume nothing.
-   Unreadable maps fail the compile from here on. Test the tree against the runtime one for a
-   spread of plugins.
-2. **Core maps and `resource` mounts.** Add the two core files to the tree and the digest. Still
-   consume nothing.
-3. **Bundles.** Route name to bundle drives chunking. `splitAtRoutes` still owns preload URLs, so
-   diff the two on chat.
-4. **URLs.** Preload globs come from the derived tree. Delete `splitAtRoutes`.
-5. **Cross-check.** Both checks as build errors, once chat's leftovers are resolved.
+1. **Parser only.** Done. Unreadable maps fail the compile.
+2. **Core maps and `resource` mounts.** Done. All 28 resource maps across the 50 installed plugins
+   mount, so an unmounted `resource` is a build error.
+3. **Bundles.** Done. Chat's three bundles come out one for one against `splitAtRoutes`.
+4. **URLs.** Done. `splitAtRoutes` deleted.
+4b. **No eager routes.** Done. `routes`, `controllers` and `templates` leave `EAGER_DIRECTORIES`,
+   and every plugin route falls into `default` if its map names no bundle.
+5. **Cross-check.** Not started, and still blocked on chat's four leftovers.
+
+Still owed from increment 1: a test comparing the derived tree against the runtime one from
+`mapRoutes()`. Nothing but that test will catch the naming rules drifting apart.

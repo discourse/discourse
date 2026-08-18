@@ -14,11 +14,6 @@
       "discourse/components/chat-channel-card",
       "discourse/lib/fabricators",
       "discourse/components/chat-channel-preview-card"
-    ],
-    "splitAtRoutes": {
-      "chat/*": "chat.*",
-      "u/*/preferences/chat": "preferences.chat",
-      "admin/plugins/chat/hooks/*": "admin-plugins.show.discourse-chat-incoming-webhooks.*"
-    }
+    ]
   }
 }
