@@ -56,6 +56,10 @@ module Migrations
           private
 
           def find_unconfigured_tables
+            # `all_other_tables` ignores everything that isn't configured or
+            # explicitly listed, so there is nothing left to report as drift.
+            return [] if @schema.ignored_tables&.all_other_tables?
+
             configured = @schema.tables.each_value.filter_map(&:source_table_name).to_set
             ignored = @scope.ignored_table_name_set
 
