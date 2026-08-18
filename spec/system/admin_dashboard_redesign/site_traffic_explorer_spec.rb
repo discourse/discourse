@@ -455,31 +455,39 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.select_filter_row(card: "acquisition", label: "one.example")
     traffic.select_filter_row(card: "acquisition", label: "two.example")
     traffic.select_filter_row(card: "acquisition", label: "three.example")
+    traffic.select_filter_row(card: "acquisition", label: "Direct / unknown")
     traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.select_filter_row(card: "acquisition", label: "United States")
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "referrer",
-      label: "Referrer is one.example or two.example or three.example",
+      label: "Referrer is one.example or two.example or three.example +1",
     )
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
-    expect(traffic).to have_apply_filters(count: 4)
+    expect(traffic).to have_apply_filters(count: 5)
     expect(traffic).to have_metric(label: "Pageviews", value: "5")
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
     traffic.expand_filter_pill("referrer")
 
-    expect(traffic).to have_filter_dropdown(values: %w[one.example two.example three.example])
+    expect(traffic).to have_filter_dropdown(
+      values: ["one.example", "two.example", "three.example", "Direct / unknown"],
+    )
     traffic.remove_filter_value("three.example")
 
-    expect(traffic).to have_filter_dropdown(values: %w[one.example two.example])
+    expect(traffic).to have_no_filter_dropdown
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "referrer",
+      label: "Referrer is one.example or two.example or Direct / unknown",
+    )
 
     traffic.select_tab(card: "acquisition", tab: "Referrers")
 
     expect(traffic).to have_filter_row_selected(card: "acquisition", label: "one.example")
     expect(traffic).to have_filter_row_unselected(card: "acquisition", label: "three.example")
 
+    traffic.select_filter_row(card: "acquisition", label: "Direct / unknown")
     traffic.select_filter_row(card: "acquisition", label: "three.example")
     traffic.apply_filters
 

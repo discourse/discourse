@@ -20,6 +20,19 @@ export default class SiteTrafficExplorerFilterPills extends Component {
   }
 
   @action
+  filteringToLabel(filter) {
+    return i18n("admin.site_traffic_explorer.filtering_to", {
+      count: filter.values.length,
+      filter: i18n(`admin.site_traffic_explorer.filter_plurals.${filter.key}`),
+    });
+  }
+
+  @action
+  hasHiddenValues(filter) {
+    return filter.values.length > MAX_VISIBLE_FILTER_VALUES;
+  }
+
+  @action
   removeLabel(filter) {
     return i18n("admin.site_traffic_explorer.remove_filter", {
       filter: this.filterLabel(filter.key),
@@ -97,14 +110,16 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                 id={{this.filterId filter}}
                 data-test-site-traffic-filter-pill={{filter.key}}
               >
-                {{#if (gt filter.values.length 1)}}
+                {{#if (this.hasHiddenValues filter)}}
                   <DMenu
                     @identifier={{this.filterId filter}}
                     @inline={{true}}
                     @title={{this.filterLabel filter.key}}
                   >
                     <:trigger>
-                      <span>{{trustHTML
+                      <span
+                        class="site-traffic-explorer__filter-pill-label"
+                      >{{trustHTML
                           (this.groupedFilterDescription filter)
                         }}</span>
                       {{dIcon "angle-down"}}
@@ -114,10 +129,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                         class="site-traffic-explorer__filter-dropdown"
                         data-test-site-traffic-filter-dropdown
                       >
-                        <strong>{{i18n
-                            "admin.site_traffic_explorer.selected_filter_values"
-                            filter=(this.filterLabel filter.key)
-                          }}</strong>
+                        <strong>{{this.filteringToLabel filter}}</strong>
                         <ul>
                           {{#each filter.values as |value|}}
                             <li data-test-site-traffic-filter-dropdown-value>
@@ -145,8 +157,14 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                       </div>
                     </:content>
                   </DMenu>
+                {{else if (gt filter.values.length 1)}}
+                  <span
+                    class="site-traffic-explorer__filter-pill-label"
+                  >{{trustHTML (this.groupedFilterDescription filter)}}</span>
                 {{else}}
-                  <span>{{trustHTML (this.filterDescription filter)}}</span>
+                  <span
+                    class="site-traffic-explorer__filter-pill-label"
+                  >{{trustHTML (this.filterDescription filter)}}</span>
                 {{/if}}
                 <button
                   type="button"
