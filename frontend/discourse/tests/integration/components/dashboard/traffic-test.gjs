@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 const startDate = new Date("2026-05-01");
 const endDate = new Date("2026-05-14");
-const entryUrlCard = ".db-section__row-block:nth-child(3)";
+const entryUrlCard = ".db-section__row-block:nth-child(2)";
 
 function trafficWithEntryUrls(topEntryUrls) {
   return {
@@ -36,7 +36,7 @@ module("Integration | Component | Dashboard | Traffic", function (hooks) {
       .exists({ count: 3 }, "shows all three loading placeholders");
     assert
       .dom(`${entryUrlCard} .db-section__row-block-title`)
-      .hasText("Top entry URLs", "labels the third placeholder");
+      .hasText("Top entry URLs", "places it beside Top referrers");
   });
 
   test("renders the entry URL report error", async function (assert) {
