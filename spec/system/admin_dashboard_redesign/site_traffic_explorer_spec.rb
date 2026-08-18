@@ -490,6 +490,14 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       label: "May 10, 2026, 11:00 AM: tooltip point",
     )
 
+    traffic.cancel_chart_drag(from: 0.25, to: 0.75)
+
+    expect(traffic).to have_no_brush_selection
+    expect(traffic).to have_date_range("May 10, 2026, 10:00 AM – 12:00 PM UTC")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_at=2026-05-10T12%3A00%3A00Z&end_date=2026-05-10&grouping=hour&range=custom&start_at=2026-05-10T10%3A00%3A00Z&start_date=2026-05-10",
+    )
+
     traffic.drag_chart(from: 0.25, to: 0.75) do
       expect(traffic).to have_brush_selection
       expect(traffic).to have_live_brush_range("May 10, 2026, 10:30 AM – 11:30 AM UTC")

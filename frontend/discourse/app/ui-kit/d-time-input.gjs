@@ -128,6 +128,10 @@ export default class DTimeInput extends Component {
       options = [this.time].concat(options);
     }
 
+    if (this.includeEndOfDay && !options.includes(1439)) {
+      options.push(1439);
+    }
+
     options = options.sort((a, b) => a - b);
 
     return options.map((opt) => {

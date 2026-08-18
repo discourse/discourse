@@ -228,6 +228,7 @@ en:
       start_date: "Start date"
       end_date: "End date"
       date_placeholder: "yyyy/mm/dd"
+      times_shown_in_timezone: "Times shown in %{timezone}"
       presets:
         label: "Date range presets"
         last_7_days: "Last 7 days"
@@ -7265,12 +7266,21 @@ en:
         traffic_over_time: "Traffic over time"
         brush:
           instructions: "Drag across the chart to select a precise time range."
-          selected_range: "%{start} – %{end} UTC"
+          selected_range: "%{start} – %{end} %{timezone}"
+          hover_marker: "%{date}: tooltip point"
           reset: "Zoom out"
           grouping:
-            day: "Grouped by day"
-            hour: "Grouped by hour"
-            minute: "Grouped by minute"
+            label: "Group by"
+            automatic_with_interval: "Automatic (%{interval})"
+            intervals:
+              day: "day"
+              hour: "hour"
+              minute: "minute"
+            options:
+              automatic: "Automatic"
+              day: "Day"
+              hour: "Hour"
+              minute: "Minute"
         pageviews: "Pageviews"
         metric_information: "About this metric"
         active_filters: "Active traffic filters"

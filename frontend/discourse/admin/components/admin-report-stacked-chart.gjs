@@ -71,6 +71,46 @@ const gradientPlugin = {
   },
 };
 
+export function formatTimeScaleTick({
+  value,
+  timeUnit,
+  timezone,
+  startDate,
+  endDate,
+  isFirstTick = false,
+}) {
+  const date = moment.utc(value);
+  if (timezone) {
+    date.tz(timezone);
+  }
+
+  const start = moment(startDate);
+  const end = moment(endDate);
+  if (timezone) {
+    start.tz(timezone);
+    end.tz(timezone);
+  }
+  const spansYears =
+    start.isValid() && end.isValid() && start.year() !== end.year();
+  const dateFormat = spansYears ? "D MMM YYYY" : "D MMM";
+
+  if (timeUnit === "month") {
+    return date.format("MMM YYYY");
+  }
+  if (timeUnit === "minute") {
+    return date.format("LT");
+  }
+  if (timeUnit === "hour") {
+    if (moment(endDate).diff(moment(startDate), "days", true) > 2) {
+      return isFirstTick || date.hours() === 0 ? date.format(dateFormat) : null;
+    }
+    return isFirstTick || date.hours() === 0
+      ? [date.format(dateFormat), date.format("LT")]
+      : date.format("LT");
+  }
+  return date.format(dateFormat);
+}
+
 export default class AdminReportStackedChart extends Component {
   get chartConfig() {
     const { model, options } = this.args;
@@ -112,7 +152,11 @@ export default class AdminReportStackedChart extends Component {
     return {
       type: "bar",
       data,
-      plugins: [gradientPlugin, emptyTooltipPlugin],
+      plugins: [
+        gradientPlugin,
+        emptyTooltipPlugin,
+        ...(chartOptions.chartPlugins ?? []),
+      ],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -235,16 +279,19 @@ export default class AdminReportStackedChart extends Component {
             max: chartOptions.timeScale ? model.end_date : undefined,
             time: chartOptions.timeScale ? { unit: timeUnit } : undefined,
             ticks: {
-              callback: (value) =>
+              callback: (value, index) =>
                 this.#tickLabel(
                   value,
                   data.labels,
                   timeUnit,
-                  chartOptions.timeScale
+                  chartOptions.timeScale,
+                  index
                 ),
               sampleSize: 5,
               maxRotation: 50,
               minRotation: 0,
+              maxTicksLimit: chartOptions.timeScale ? 8 : undefined,
+              major: { enabled: chartOptions.timeScale },
             },
           },
         },
@@ -285,14 +332,25 @@ export default class AdminReportStackedChart extends Component {
     return `${startDate.format("ll")} - ${endDate.format("ll")}`;
   }
 
-  #tickLabel(value, labels, timeUnit, timeScale) {
+  #tickLabel(value, labels, timeUnit, timeScale, index) {
     const label = timeScale ? value : (labels[value] ?? value);
 
-    return this.#formatDateLabel(label, timeUnit, timeScale);
+    return this.#formatDateLabel(label, timeUnit, timeScale, index);
   }
 
-  #formatDateLabel(label, timeUnit, timeScale) {
-    const date = timeScale ? moment.utc(label) : this.#dateLabelMoment(label);
+  #formatDateLabel(label, timeUnit, timeScale, index) {
+    if (timeScale) {
+      return formatTimeScaleTick({
+        value: label,
+        timeUnit,
+        timezone: this.args.options?.timezone,
+        startDate: this.args.model.start_date,
+        endDate: this.args.model.end_date,
+        isFirstTick: index === 0,
+      });
+    }
+
+    const date = this.#dateLabelMoment(label);
 
     if (timeUnit === "month") {
       return date.format("MMM YYYY");
@@ -310,6 +368,9 @@ export default class AdminReportStackedChart extends Component {
   }
 
   #dateLabelMoment(value) {
-    return typeof value === "string" ? moment.utc(value) : moment(value);
+    const date = typeof value === "string" ? moment.utc(value) : moment(value);
+    return this.args.options?.timezone
+      ? date.tz(this.args.options.timezone)
+      : date;
   }
 }

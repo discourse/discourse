@@ -106,6 +106,10 @@ export default class SiteTrafficExplorer extends Component {
     };
   }
 
+  get effectiveBucket() {
+    return this.args.traffic?.bucket ?? "day";
+  }
+
   get series() {
     const rows = this.args.traffic?.series ?? [];
     const series = [
@@ -139,7 +143,10 @@ export default class SiteTrafficExplorer extends Component {
       ...item,
       total: rows.reduce((sum, row) => sum + (row[item.column] ?? 0), 0),
       data: rows.map((row) => ({
-        x: moment.utc(row.date).toISOString(),
+        x:
+          this.effectiveBucket === "day"
+            ? moment.tz(row.date, this.args.browserTimezone).toISOString()
+            : moment.utc(row.date).toISOString(),
         y: row[item.column] ?? 0,
       })),
     }));
@@ -262,8 +269,11 @@ export default class SiteTrafficExplorer extends Component {
         <:actions>
           <DashboardDateRange
             @period={{@period}}
-            @startDate={{@parentStartDate}}
-            @endDate={{@parentEndDate}}
+            @startDate={{@startDate}}
+            @endDate={{@endDate}}
+            @hasPreciseRange={{@hasPreciseRange}}
+            @showTime={{true}}
+            @timezone={{@browserTimezone}}
             @setPeriod={{@setPeriod}}
             @setCustomDateRange={{@setCustomDateRange}}
           />
@@ -383,10 +393,13 @@ export default class SiteTrafficExplorer extends Component {
                       @options={{this.chartOptions}}
                       @startDate={{@startDate}}
                       @endDate={{@endDate}}
-                      @bucket={{@traffic.bucket}}
+                      @effectiveBucket={{this.effectiveBucket}}
+                      @timezone={{@browserTimezone}}
+                      @grouping={{@grouping}}
                       @hasPreciseRange={{@hasPreciseRange}}
                       @onSelect={{@setPreciseRange}}
                       @onClear={{@clearPreciseRange}}
+                      @onGroupingChange={{@setGrouping}}
                     />
                     <div class="sr-only">
                       {{#each this.series as |series|}}

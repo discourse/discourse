@@ -67,6 +67,8 @@ class Admin::DashboardController < Admin::StaffController
         :end_date,
         :start_at,
         :end_at,
+        :grouping,
+        :timezone,
         :traffic_type,
         :top_url,
         :entry_url,

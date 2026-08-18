@@ -79,4 +79,21 @@ module("Integration | ui-kit | DTimeInput", function (hooks) {
       I18n.translations[I18n.locale].js.dates.time = originalFormat;
     }
   });
+
+  test("can include the final minute of the day", async function (assert) {
+    this.setProperties({ hours: "12", minutes: "0" });
+
+    await render(
+      <template>
+        <DTimeInput
+          @hours={{this.hours}}
+          @minutes={{this.minutes}}
+          @includeEndOfDay={{true}}
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    assert.true(this.subject.rowByValue(1439).exists());
+  });
 });

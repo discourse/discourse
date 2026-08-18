@@ -58,6 +58,38 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         ],
       ).to eq([true, false, false, false, false])
     end
+
+    it "accepts supported groupings and IANA timezones" do
+      base = { start_date: Date.new(2026, 5, 10), end_date: Date.new(2026, 5, 12) }
+
+      expect(
+        [
+          described_class.new(**base, grouping: "hour", timezone: "Asia/Kolkata").valid?,
+          described_class.new(**base, grouping: "day", timezone: "America/New_York").valid?,
+          described_class.new(**base, grouping: "week", timezone: "UTC").valid?,
+          described_class.new(**base, grouping: "hour", timezone: "Mars/Olympus_Mons").valid?,
+        ],
+      ).to eq([true, true, false, false])
+    end
+
+    it "resolves skipped and repeated local midnights" do
+      skipped_midnight =
+        described_class.new(
+          start_date: Date.new(2020, 3, 8),
+          end_date: Date.new(2020, 3, 8),
+          timezone: "America/Havana",
+        )
+      repeated_midnight =
+        described_class.new(
+          start_date: Date.new(2020, 11, 1),
+          end_date: Date.new(2020, 11, 1),
+          timezone: "America/Havana",
+        )
+
+      expect([skipped_midnight.query_range.first, repeated_midnight.query_range.first]).to eq(
+        [Time.utc(2020, 3, 8, 5), Time.utc(2020, 11, 1, 4)],
+      )
+    end
   end
 
   describe ".call" do
@@ -170,6 +202,23 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         expect([minute_traffic[:bucket], hourly_traffic[:bucket], daily_traffic[:bucket]]).to eq(
           %w[minute hour day],
         )
+      end
+
+      it "honors explicit grouping outside the automatic thresholds" do
+        hourly_traffic =
+          described_class.call(params: params.merge(grouping: "hour", timezone: "UTC")).traffic
+        daily_traffic =
+          described_class.call(
+            params:
+              params.merge(
+                start_at: "2026-05-10T09:00:00Z",
+                end_at: "2026-05-10T09:30:00Z",
+                grouping: "day",
+                timezone: "UTC",
+              ),
+          ).traffic
+
+        expect([hourly_traffic[:bucket], daily_traffic[:bucket]]).to eq(%w[hour day])
       end
 
       it "groups stored browser values and displays rows awaiting backfill as unknown" do

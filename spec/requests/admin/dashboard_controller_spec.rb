@@ -1583,6 +1583,40 @@ RSpec.describe Admin::DashboardController do
         ).to eq([200, "hour", 3, ["2026-05-10 15:00", "2026-05-11 15:00"]])
       end
 
+      it "uses the requested timezone for date-only range boundaries" do
+        [
+          "2026-05-09 18:29:59 UTC",
+          "2026-05-09 18:30:00 UTC",
+          "2026-05-10 18:29:59 UTC",
+          "2026-05-10 18:30:00 UTC",
+        ].each_with_index do |created_at, index|
+          Fabricate(
+            :browser_pageview_event,
+            url: "/local-day",
+            session_id: "local-day-session-#{index}",
+            source: BrowserPageviewEvent::SOURCE_BEACON,
+            created_at:,
+          )
+        end
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: {
+              start_date: "2026-05-10",
+              end_date: "2026-05-10",
+              grouping: "day",
+              timezone: "Asia/Kolkata",
+              top_url: "/local-day",
+            }
+
+        expect(
+          [
+            response.status,
+            response.parsed_body.dig("summary", "pageviews"),
+            response.parsed_body["series"].pluck("date", "pageviews"),
+          ],
+        ).to eq([200, 2, [["2026-05-10", 2]]])
+      end
+
       it "rejects an unknown grouping" do
         get "/admin/dashboard/site-traffic-explorer.json",
             params: request_params.merge(grouping: "week", timezone: "UTC")
@@ -1598,7 +1632,10 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "keeps repeated daylight-saving hours in separate buckets" do
-        ["2026-11-01 05:30:00 UTC", "2026-11-01 06:30:00 UTC"].each_with_index do |created_at, index|
+        [
+          "2026-11-01 05:30:00 UTC",
+          "2026-11-01 06:30:00 UTC",
+        ].each_with_index do |created_at, index|
           Fabricate(
             :browser_pageview_event,
             url: "/dst-traffic",
@@ -1621,9 +1658,7 @@ RSpec.describe Admin::DashboardController do
             Time.zone.parse(row["date"]).in_time_zone("America/New_York").strftime("%H:%M %:z")
           end
 
-        expect([response.status, local_buckets]).to eq(
-          [200, ["01:00 -04:00", "01:00 -05:00"]],
-        )
+        expect([response.status, local_buckets]).to eq([200, ["01:00 -04:00", "01:00 -05:00"]])
       end
 
       it "applies the direct referrer filter" do

@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -16,6 +17,16 @@ function toDayMoment(value) {
 
 function formatDate(value, pattern) {
   return value ? moment(value).format(pattern) : "";
+}
+
+function withTime(day, source, fallback) {
+  const result = day.clone();
+  const time = source ?? fallback;
+  return result.hours(time.hours()).minutes(time.minutes()).seconds(0);
+}
+
+function toTimeMoment(value, timezone) {
+  return value ? moment(value).tz(timezone) : null;
 }
 
 export default class DashboardDateRangePicker extends Component {
@@ -63,24 +74,54 @@ export default class DashboardDateRangePicker extends Component {
   }
 
   get currentStart() {
-    return this.committed ? toDayMoment(this.args.from) : this.pendingStart;
+    if (!this.committed) {
+      return this.pendingStart;
+    }
+    return this.args.showTime
+      ? toTimeMoment(this.args.from, this.resolvedTimezone)
+      : toDayMoment(this.args.from);
   }
 
   get currentEnd() {
-    return this.committed ? toDayMoment(this.args.to) : this.pendingEnd;
+    if (!this.committed) {
+      return this.pendingEnd;
+    }
+    return this.args.showTime
+      ? toTimeMoment(this.args.to, this.resolvedTimezone)
+      : toDayMoment(this.args.to);
+  }
+
+  get resolvedTimezone() {
+    return this.args.timezone || moment.tz.guess();
   }
 
   get applyDisabled() {
     if (!this.pendingStart || !this.pendingEnd) {
       return true;
     }
+    if (this.args.showTime && !this.pendingStart.isBefore(this.pendingEnd)) {
+      return true;
+    }
     if (!this.args.from || !this.args.to) {
       return false;
     }
+    const precision = this.args.showTime ? "minute" : "day";
     return (
-      this.pendingStart.isSame(toDayMoment(this.args.from), "day") &&
-      this.pendingEnd.isSame(toDayMoment(this.args.to), "day")
+      this.pendingStart.isSame(this.currentCommittedStart, precision) &&
+      this.pendingEnd.isSame(this.currentCommittedEnd, precision)
     );
+  }
+
+  get currentCommittedStart() {
+    return this.args.showTime
+      ? toTimeMoment(this.args.from, this.resolvedTimezone)
+      : toDayMoment(this.args.from);
+  }
+
+  get currentCommittedEnd() {
+    return this.args.showTime
+      ? toTimeMoment(this.args.to, this.resolvedTimezone)
+      : toDayMoment(this.args.to);
   }
 
   get showTwoMonths() {
@@ -271,15 +312,21 @@ export default class DashboardDateRangePicker extends Component {
       return;
     }
     if (this.committed || this.pendingEnd) {
-      this.pendingStart = day.clone();
+      this.pendingStart = this.args.showTime
+        ? withTime(day, this.currentStart, moment().startOf("day"))
+        : day.clone();
       this.pendingEnd = null;
       this.focusedDay = day.clone();
       return;
     }
     if (day.isBefore(this.pendingStart, "day")) {
-      this.pendingStart = day.clone();
+      this.pendingStart = this.args.showTime
+        ? withTime(day, this.pendingStart, moment().startOf("day"))
+        : day.clone();
     } else {
-      this.pendingEnd = day.clone();
+      this.pendingEnd = this.args.showTime
+        ? withTime(day, this.currentCommittedEnd, moment().endOf("day"))
+        : day.clone();
     }
     this.focusedDay = day.clone();
   }
@@ -430,6 +477,20 @@ export default class DashboardDateRangePicker extends Component {
   }
 
   @action
+  changeStartDateTime(value) {
+    const end = this.currentEnd?.clone() ?? null;
+    this.pendingStart = value;
+    this.pendingEnd = end;
+  }
+
+  @action
+  changeEndDateTime(value) {
+    const start = this.currentStart?.clone() ?? null;
+    this.pendingStart = start;
+    this.pendingEnd = value;
+  }
+
+  @action
   focusStartInput() {
     const start = this.currentStart;
     if (!start) {
@@ -554,32 +615,70 @@ export default class DashboardDateRangePicker extends Component {
           </div>
         </div>
 
-        <div class="d-date-range-picker__inputs">
-          <input
-            type="text"
-            class="d-date-range-picker__input"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder={{i18n "date_range_picker.date_placeholder"}}
-            aria-label={{i18n "date_range_picker.start_date"}}
-            value={{this.startInputValue}}
-            {{on "focus" this.focusStartInput}}
-            {{on "change" this.commitStartInput}}
-            {{on "keydown" this.commitInputOnEnter}}
-          />
-          <input
-            type="text"
-            class="d-date-range-picker__input"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder={{i18n "date_range_picker.date_placeholder"}}
-            aria-label={{i18n "date_range_picker.end_date"}}
-            value={{this.endInputValue}}
-            {{on "focus" this.focusEndInput}}
-            {{on "change" this.commitEndInput}}
-            {{on "keydown" this.commitInputOnEnter}}
-          />
-        </div>
+        {{#if @showTime}}
+          <div class="d-date-range-picker__inputs --date-time">
+            <fieldset
+              class="d-date-range-picker__date-time-field"
+              data-test-date-time-start
+            >
+              <legend>{{i18n "date_range_picker.start_date"}}</legend>
+              <DDateTimeInput
+                @date={{this.currentStart}}
+                @onChange={{this.changeStartDateTime}}
+                @timezone={{this.resolvedTimezone}}
+              />
+            </fieldset>
+            <fieldset
+              class="d-date-range-picker__date-time-field"
+              data-test-date-time-end
+            >
+              <legend>{{i18n "date_range_picker.end_date"}}</legend>
+              <DDateTimeInput
+                @date={{this.currentEnd}}
+                @relativeDate={{this.currentStart}}
+                @onChange={{this.changeEndDateTime}}
+                @includeEndOfDay={{true}}
+                @timezone={{this.resolvedTimezone}}
+              />
+            </fieldset>
+          </div>
+          <p
+            class="d-date-range-picker__timezone"
+            data-test-date-range-timezone
+          >
+            {{i18n
+              "date_range_picker.times_shown_in_timezone"
+              timezone=this.resolvedTimezone
+            }}
+          </p>
+        {{else}}
+          <div class="d-date-range-picker__inputs">
+            <input
+              type="text"
+              class="d-date-range-picker__input"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder={{i18n "date_range_picker.date_placeholder"}}
+              aria-label={{i18n "date_range_picker.start_date"}}
+              value={{this.startInputValue}}
+              {{on "focus" this.focusStartInput}}
+              {{on "change" this.commitStartInput}}
+              {{on "keydown" this.commitInputOnEnter}}
+            />
+            <input
+              type="text"
+              class="d-date-range-picker__input"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder={{i18n "date_range_picker.date_placeholder"}}
+              aria-label={{i18n "date_range_picker.end_date"}}
+              value={{this.endInputValue}}
+              {{on "focus" this.focusEndInput}}
+              {{on "change" this.commitEndInput}}
+              {{on "keydown" this.commitInputOnEnter}}
+            />
+          </div>
+        {{/if}}
 
         <div class="d-date-range-picker__footer">
           <DButton

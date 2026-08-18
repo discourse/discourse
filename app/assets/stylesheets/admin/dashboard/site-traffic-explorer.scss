@@ -5,6 +5,16 @@
     margin-bottom: var(--space-4);
   }
 
+  @include viewport.until(sm) {
+    .db-date-range__trigger {
+      max-width: calc(100vw - var(--space-8));
+
+      .d-button-label {
+        @include ellipsis;
+      }
+    }
+  }
+
   &__content {
     display: flex;
     flex-direction: column;
@@ -364,6 +374,13 @@
 
   &__grouping {
     margin-inline-end: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    select {
+      margin: 0;
+    }
   }
 
   &__range {
@@ -376,7 +393,14 @@
     flex: 1;
     min-width: 0;
     min-height: 0;
+    overflow: hidden;
+  }
+
+  &__surface {
+    position: absolute;
     cursor: crosshair;
+    z-index: 1;
+    pointer-events: none;
 
     &.--selecting {
       user-select: none;
@@ -385,10 +409,19 @@
 
   &__selection {
     position: absolute;
-    inset: 0;
+    inset-block: 0;
     background: rgb(var(--tertiary-rgb) / 0.2);
     border-inline: 1px solid var(--tertiary);
     pointer-events: none;
+  }
+
+  &__hover-marker {
+    position: absolute;
+    inset-block: 0;
+    width: 1px;
+    background: var(--primary-medium);
+    pointer-events: none;
+    transform: translateX(-0.5px);
   }
 }
 

@@ -32,8 +32,8 @@ module PageObjects
         start_hours, start_minutes = start_time.split(":").map(&:to_i)
         end_hours, end_minutes = end_time.split(":").map(&:to_i)
 
-        has_css?("[data-test-date-time-start] .date-picker", value: start_date) &&
-          has_css?("[data-test-date-time-end] .date-picker", value: end_date) &&
+        has_date_value?("[data-test-date-time-start]", start_date) &&
+          has_date_value?("[data-test-date-time-end]", end_date) &&
           has_css?(
             "[data-test-date-time-start] .d-time-input .select-kit-header[data-value='#{start_hours * 60 + start_minutes}']",
           ) &&
@@ -62,11 +62,15 @@ module PageObjects
 
       private
 
+      def has_date_value?(context, value)
+        within(context) { has_field?("date", with: value) }
+      end
+
       def select_time(context, time)
         hours, minutes = time.split(":").map(&:to_i)
-        PageObjects::Components::SelectKit
-          .new("#{context} .d-time-input")
-          .select_row_by_value(hours * 60 + minutes)
+        PageObjects::Components::SelectKit.new(
+          "#{context} .d-time-input .select-kit",
+        ).select_row_by_value(hours * 60 + minutes)
       end
     end
   end

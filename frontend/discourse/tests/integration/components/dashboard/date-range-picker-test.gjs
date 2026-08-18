@@ -338,6 +338,37 @@ module(
       assert.strictEqual(applied.length, 0, "no commit happens on Cancel");
     });
 
+    test("time controls are opt-in and preserve exact endpoint minutes", async function (assert) {
+      const from = moment.tz("2026-05-10 10:30", "UTC");
+      const to = moment.tz("2026-05-10 11:45", "UTC");
+
+      await render(
+        <template>
+          <DashboardDateRangePicker
+            @from={{from}}
+            @to={{to}}
+            @showTime={{true}}
+            @timezone="UTC"
+          />
+        </template>
+      );
+
+      assert.dom("[data-test-date-time-start]").exists();
+      assert.dom("[data-test-date-time-end]").exists();
+      assert.dom("[data-test-date-time-start] legend").hasText("Start date");
+      assert.dom("[data-test-date-time-end] legend").hasText("End date");
+      assert
+        .dom("[data-test-date-time-start] .select-kit-header")
+        .hasAttribute("data-value", "630");
+      assert
+        .dom("[data-test-date-time-end] .select-kit-header")
+        .hasAttribute("data-value", "705");
+      assert
+        .dom("[data-test-date-range-timezone]")
+        .hasText("Times shown in UTC");
+      assert.dom(START_DATE_INPUT).doesNotExist();
+    });
+
     test("future dates are not selectable", async function (assert) {
       const from = moment("2026-04-27");
       const to = moment("2026-05-26");

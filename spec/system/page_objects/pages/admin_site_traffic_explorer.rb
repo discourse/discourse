@@ -116,6 +116,22 @@ module PageObjects
         self
       end
 
+      def cancel_chart_drag(from:, to:)
+        point_at_chart(fraction: from) do |playwright_page, start_x, start_y|
+          surface = playwright_page.locator("[data-test-site-traffic-brush-surface]")
+          box = surface.bounding_box
+          end_x = box["x"] + box["width"] * to
+
+          playwright_page.mouse.move(start_x, start_y)
+          playwright_page.mouse.down
+          playwright_page.mouse.move(end_x, start_y, steps: 10)
+          playwright_page.keyboard.press("Escape")
+          playwright_page.mouse.up
+        end
+
+        self
+      end
+
       def has_hover_marker?(fraction:, label:)
         return false if !has_css?("[data-test-site-traffic-hover-marker][aria-label='#{label}']")
 
@@ -132,6 +148,10 @@ module PageObjects
 
       def has_brush_selection?
         has_css?("[data-test-site-traffic-brush-selection]")
+      end
+
+      def has_no_brush_selection?
+        has_no_css?("[data-test-site-traffic-brush-selection]")
       end
 
       def has_live_brush_range?(label)
@@ -263,11 +283,7 @@ module PageObjects
           surface = playwright_page.locator("[data-test-site-traffic-brush-surface]")
           surface.scroll_into_view_if_needed
           box = surface.bounding_box
-          yield(
-            playwright_page,
-            box["x"] + box["width"] * fraction,
-            box["y"] + box["height"] / 2,
-          )
+          yield playwright_page, box["x"] + box["width"] * fraction, box["y"] + box["height"] / 2
         end
       end
 
