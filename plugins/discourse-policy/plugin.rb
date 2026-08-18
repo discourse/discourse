@@ -158,6 +158,8 @@ after_initialize do
             if add_to_group && Guardian.new(post.user).can_edit_group?(add_to_group)
               add_to_group.id
             end
+        else
+          post_policy.add_users_to_group = nil
         end
 
         if has_group
