@@ -255,7 +255,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.select_tab(card: "pages", tab: "Entry URLs")
     expect(traffic).to have_row(card: "pages", label: "/latest", count: "1")
     expect(traffic).to have_url_link(card: "pages", label: "/latest", href: "/latest")
-    traffic.filter_row(card: "pages", label: "/latest")
+    traffic.filter_by_clicking_row(card: "pages", label: "/latest")
     expect(traffic).to have_filter_pill(dimension: "entry_url", label: "/latest")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(

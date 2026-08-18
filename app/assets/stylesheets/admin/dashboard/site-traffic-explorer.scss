@@ -276,6 +276,7 @@
   }
 
   &__row {
+    position: relative;
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -305,9 +306,12 @@
     margin-inline-start: auto;
     color: var(--primary-medium);
     font-variant-numeric: tabular-nums;
+    pointer-events: none;
   }
 
   &__row-link {
+    position: relative;
+    z-index: 2;
     display: block;
     flex: 1 1 auto;
     min-width: 0;
@@ -338,6 +342,26 @@
       background: var(--token-color-surface-hovered);
       color: var(--tertiary);
     }
+  }
+
+  span.site-traffic-explorer__row {
+    cursor: pointer;
+
+    > input {
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+  &__row-filter-target {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    display: block;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
   }
 
   html.discourse-no-touch & .site-traffic-explorer__row:hover {
