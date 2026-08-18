@@ -287,7 +287,6 @@ end
 #  asn                         :integer
 #  browser                     :integer
 #  country_code                :string(2)
-#  entry_url_rollup_version    :integer
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
@@ -309,7 +308,6 @@ end
 #  idx_bpe_browser_backfill                     (source,created_at DESC,id DESC) WHERE (browser IS NULL)
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
-#  idx_bpe_entry_url_rollup_version             (entry_url_rollup_version,created_at)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
 #  idx_bpe_normalized_url_version               (normalized_url_version)

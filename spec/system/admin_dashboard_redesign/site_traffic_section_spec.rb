@@ -276,10 +276,12 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
     it "lets admins identify the URLs that started the most browser entries in the selected period",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      topic = Fabricate(:topic, title: "A very viral topic")
       Fabricate(
         :browser_pageview_event,
         session_id: "viral-topic-visit-1",
-        url: "https://test.localhost/t/viral-topic/1?utm_source=newsletter#post_1",
+        topic_id: topic.id,
+        url: "https://test.localhost/t/viral-topic/#{topic.id}?utm_source=newsletter#post_1",
         created_at: "2026-05-12 10:00:00",
         source: browser_pageview_source,
       )
@@ -294,13 +296,15 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         :browser_pageview_event,
         session_id: "search-entry-visit",
         url: "https://test.localhost/t/should-not-count-after-search/98",
+        referrer: "https://test.localhost/search?q=private",
         created_at: "2026-05-12 10:10:00",
         source: browser_pageview_source,
       )
       Fabricate(
         :browser_pageview_event,
         session_id: "viral-topic-visit-2",
-        url: "https://test.localhost/t/viral-topic/1",
+        topic_id: topic.id,
+        url: "https://test.localhost/t/viral-topic/#{topic.id}",
         created_at: "2026-05-12 11:00:00",
         source: browser_pageview_source,
       )
@@ -331,6 +335,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         :browser_pageview_event,
         session_id: "cross-midnight-visit",
         url: "https://test.localhost/latest",
+        referrer: "https://test.localhost/top",
         created_at: "2026-05-12 00:01:00",
         source: browser_pageview_source,
       )
@@ -355,6 +360,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
           :browser_pageview_event,
           session_id: "sensitive-path-visit-#{index}",
           url: "https://test.localhost/t/should-not-count/#{index}",
+          referrer: "https://test.localhost#{path}",
           created_at: "2026-05-12 13:05:00",
           source: browser_pageview_source,
         )
@@ -367,7 +373,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(traffic).to have_top_entry_url_rows(
         [
-          { path: "/t/viral-topic/1", percent: 33, count: 2 },
+          { path: "/t/#{topic.slug}/#{topic.id}", percent: 33, count: 2 },
           { path: "/categories", percent: 17, count: 1 },
           { path: "/faq", percent: 17, count: 1 },
           { path: "/guidelines", percent: 17, count: 1 },

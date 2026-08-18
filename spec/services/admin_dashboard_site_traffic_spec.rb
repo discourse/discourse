@@ -690,10 +690,12 @@ RSpec.describe AdminDashboardSiteTraffic do
       end
 
       it "returns entry URL rows" do
+        topic = Fabricate(:topic)
         Fabricate(
           :browser_pageview_event,
           session_id: "entry-session",
-          url: "https://test.localhost/t/topic/1",
+          topic_id: topic.id,
+          url: "https://test.localhost/t/topic/#{topic.id}",
           created_at: "2026-05-12",
         )
         BrowserPageviewEntryUrlDailyRollup.aggregate(
@@ -704,7 +706,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         result = build_traffic(start_date: "2026-05-12", end_date: "2026-05-14")
 
         expect(result[:top_entry_urls]).to eq(
-          rows: [{ entry_url: "/t/topic/1", count: 1, percent: 100 }],
+          rows: [{ entry_url: "/t/#{topic.slug}/#{topic.id}", count: 1, percent: 100 }],
           error: nil,
         )
       end

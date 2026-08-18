@@ -12,8 +12,11 @@ module Jobs
       aggregate_pageviews
       aggregate_engagement
       aggregate_crawlers
-      backfill_referrers
-      backfill_and_aggregate_entry_urls
+      entry_url_rollups_initialized =
+        BrowserPageviewEntryUrlDailyRollup.last_full_rebuild_date.present?
+      backfill_referrers(recompute_entry_urls: entry_url_rollups_initialized)
+      backfill_urls(recompute_entry_urls: entry_url_rollups_initialized)
+      aggregate_entry_urls if referrer_backfill_complete? && url_backfill_complete?
       backfill_browsers
     end
 
@@ -57,38 +60,19 @@ module Jobs
     end
 
     def aggregate_entry_urls
-      start_date, end_date = entry_url_aggregation_window
+      start_date, end_date, full_rebuild = entry_url_aggregation_window
 
-      BrowserPageviewEntryUrlDailyRollup.aggregate(start_date:, end_date:)
+      BrowserPageviewEntryUrlDailyRollup.aggregate(start_date:, end_date:) if start_date
+      BrowserPageviewEntryUrlDailyRollup.mark_full_rebuild(date: end_date) if full_rebuild
     end
 
     def entry_url_aggregation_window
       end_date = Time.zone.today
-      start_date = [1.day.ago.to_date, earliest_unprocessed_entry_url_event_date].compact.min
+      last_full_rebuild_date = BrowserPageviewEntryUrlDailyRollup.last_full_rebuild_date
+      full_rebuild = last_full_rebuild_date.nil? || last_full_rebuild_date < end_date
+      start_date = full_rebuild ? earliest_event_date : 1.day.ago.to_date
 
-      [start_date, end_date]
-    end
-
-    def earliest_unprocessed_entry_url_event_date
-      BrowserPageviewEvent
-        .where("created_at >= ?", BrowserPageviewEvent.retention_cutoff)
-        .where(BrowserPageviewEvent.rollup_source_condition)
-        .where(
-          "entry_url_rollup_version IS NULL OR entry_url_rollup_version < ?",
-          BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
-        )
-        .minimum(:created_at)
-        &.to_date
-    end
-
-    def backfill_and_aggregate_entry_urls
-      transaction_options =
-        BrowserPageviewEvent.connection.transaction_open? ? {} : { isolation: :repeatable_read }
-
-      BrowserPageviewEvent.transaction(**transaction_options) do
-        backfill_urls
-        aggregate_entry_urls if url_backfill_complete?
-      end
+      [start_date, end_date, full_rebuild]
     end
 
     def engagement_aggregation_window
@@ -118,19 +102,22 @@ module Jobs
         &.to_date
     end
 
-    def backfill_referrers
+    def backfill_referrers(recompute_entry_urls:)
       rows = next_batch
       return if rows.empty?
 
       ids = rows.map(&:id)
 
       store_normalized_referrers(rows)
-      BrowserPageviewReferrerDailyRollup.recompute(recomputable_dates(ids))
+      referrer_dates = recomputable_dates(ids)
+      entry_url_dates = entry_url_recomputable_dates(ids, backfill: :referrer)
+      BrowserPageviewReferrerDailyRollup.recompute(referrer_dates)
+      BrowserPageviewEntryUrlDailyRollup.recompute(entry_url_dates) if recompute_entry_urls
       stamp_version(ids)
     end
 
-    def next_batch
-      params = { version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION, limit: batch_size }
+    def next_batch(limit: batch_size)
+      params = { version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION, limit: }
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -221,36 +208,88 @@ module Jobs
       SQL
     end
 
-    def backfill_urls
+    def referrer_backfill_complete?
+      next_batch(limit: 1).empty?
+    end
+
+    def backfill_urls(recompute_entry_urls:)
       rows = url_batch
-      return false if rows.empty?
+      return if rows.empty?
 
       ids = rows.map(&:id)
       normalized = rows.map { |row| BrowserPageviewEventUrlNormalizer.normalize_site_path(row.url) }
 
-      DB.exec(
-        <<~SQL,
+      DB.exec(<<~SQL, ids: ids, normalized: normalized)
           UPDATE browser_pageview_events AS e
-          SET
-            normalized_url = data.normalized_url,
-            normalized_url_version = :version,
-            entry_url_rollup_version = NULL
+          SET normalized_url = data.normalized_url
           FROM unnest(
             ARRAY[:ids]::bigint[],
             ARRAY[:normalized]::text[]
           ) AS data(id, normalized_url)
           WHERE e.id = data.id
         SQL
-        ids: ids,
-        normalized: normalized,
-        version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
-      )
-
-      true
+      if recompute_entry_urls
+        BrowserPageviewEntryUrlDailyRollup.recompute(
+          entry_url_recomputable_dates(ids, backfill: :url),
+        )
+      end
+      stamp_url_version(ids)
     end
 
     def url_backfill_complete?
       url_batch(limit: 1).empty?
+    end
+
+    def entry_url_recomputable_dates(ids, backfill:)
+      url_batch_condition = backfill == :url ? "AND events.id NOT IN (:ids)" : ""
+      referrer_batch_condition = backfill == :referrer ? "AND events.id NOT IN (:ids)" : ""
+
+      DB.query_single(
+        <<~SQL,
+          WITH touched_dates AS (
+            SELECT DISTINCT created_at::date AS date
+            FROM browser_pageview_events
+            WHERE id IN (:ids)
+          )
+          SELECT touched_dates.date
+          FROM touched_dates
+          WHERE NOT EXISTS (
+            SELECT 1
+            FROM browser_pageview_events events
+            WHERE events.created_at >= touched_dates.date
+              AND events.created_at < touched_dates.date + 1
+              AND #{BrowserPageviewEvent.rollup_source_condition(table: "events")}
+              AND (
+                (
+                  (
+                    events.normalized_url_version IS NULL
+                    OR events.normalized_url_version < :url_version
+                  )
+                  #{url_batch_condition}
+                )
+                OR (
+                  events.referrer IS NOT NULL
+                  AND (
+                    events.normalized_referrer_version IS NULL
+                    OR events.normalized_referrer_version < :referrer_version
+                  )
+                  #{referrer_batch_condition}
+                )
+              )
+          )
+        SQL
+        ids:,
+        url_version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
+        referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+      )
+    end
+
+    def stamp_url_version(ids)
+      DB.exec(<<~SQL, version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION, ids: ids)
+        UPDATE browser_pageview_events
+        SET normalized_url_version = :version
+        WHERE id IN (:ids)
+      SQL
     end
 
     def backfill_browsers

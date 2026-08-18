@@ -2020,7 +2020,7 @@ ALTER SEQUENCE public.browser_pageview_crawler_daily_rollups_id_seq OWNED BY pub
 CREATE TABLE public.browser_pageview_entry_url_daily_rollups (
     id bigint NOT NULL,
     date date NOT NULL,
-    entry_url character varying(2000) NOT NULL,
+    entry_url character varying(2000),
     count bigint NOT NULL,
     logged_in_count bigint NOT NULL,
     likely_crawler_count bigint DEFAULT 0 NOT NULL,
@@ -2109,8 +2109,7 @@ CREATE TABLE public.browser_pageview_events (
     source smallint DEFAULT 1 NOT NULL,
     normalized_url character varying(2000),
     normalized_url_version integer,
-    browser smallint,
-    entry_url_rollup_version integer
+    browser smallint
 );
 
 
@@ -17716,13 +17715,6 @@ CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_e
 
 
 --
--- Name: idx_bpe_entry_url_rollup_version; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_entry_url_rollup_version ON public.browser_pageview_events USING btree (entry_url_rollup_version, created_at);
-
-
---
 -- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17754,7 +17746,7 @@ CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING 
 -- Name: idx_bpeu_daily_rollups_date_url_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_bpeu_daily_rollups_date_url_unique ON public.browser_pageview_entry_url_daily_rollups USING btree (date, entry_url);
+CREATE UNIQUE INDEX idx_bpeu_daily_rollups_date_url_unique ON public.browser_pageview_entry_url_daily_rollups USING btree (date, entry_url) NULLS NOT DISTINCT;
 
 
 --
@@ -23289,7 +23281,6 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260818081538'),
 ('20260818081537'),
 ('20260818045317'),
 ('20260818045314'),

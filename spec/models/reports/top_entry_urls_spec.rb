@@ -29,7 +29,13 @@ RSpec.describe Reports::TopEntryUrls do
     expect(report.labels.first).to include(type: :link, properties: %i[entry_url entry_url])
   end
 
-  it "ranks entry URLs and calculates percentages from all qualifying sessions" do
+  it "excludes the full rebuild marker" do
+    BrowserPageviewEntryUrlDailyRollup.mark_full_rebuild(date: start_date)
+
+    expect(report.data).to be_empty
+  end
+
+  it "ranks entry URLs and calculates percentages from all qualifying pageviews" do
     create_rollup("/t/topic/1", count: 5)
     create_rollup("/categories", count: 3)
     create_rollup("/faq", count: 2)

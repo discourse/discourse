@@ -2,30 +2,38 @@
 
 class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
   SAFE_ENTRY_ROUTE_PATTERN =
-    %r{/(?:t|c|tag|tags|g)(?:/.*)?|/(?:latest|top|new|categories|faq|guidelines|about|groups|badges)}
+    %r{/(?:t)(?:/.*)?|/(?:latest|top|new|categories|faq|guidelines|about|groups|badges|tags)}
+  TOPIC_ENTRY_ROUTE_PATTERN = %r{/t(?:/.*)?}
   private_constant :SAFE_ENTRY_ROUTE_PATTERN
+  private_constant :TOPIC_ENTRY_ROUTE_PATTERN
 
   def self.aggregate(start_date:, end_date:)
-    attributes = { start_date: start_date.to_date, end_date: end_date.to_date }
+    start_date = [start_date.to_date, BrowserPageviewEvent.retention_cutoff.to_date].max
+    start_date = rebuildable_start_date(start_date)
+    end_date = end_date.to_date
+    return if start_date > end_date
 
-    if connection.transaction_open?
-      aggregate_in_transaction(**attributes)
-    else
-      transaction(isolation: :repeatable_read) { aggregate_in_transaction(**attributes) }
-    end
-  end
+    exclusive_end_date = end_date + 1
+    source_condition =
+      BrowserPageviewEvent.rollup_source_condition(
+        table: "events",
+        start_date:,
+        end_date: exclusive_end_date,
+      )
+    entry_url_sql = <<~SQL.squish
+      CASE
+        WHEN events.normalized_url ~ :topic_entry_url_pattern
+        THEN CONCAT(:base_path, '/t/', entry_topics.slug, '/', entry_topics.id)
+        ELSE events.normalized_url
+      END
+    SQL
 
-  def self.aggregate_in_transaction(start_date:, end_date:)
-    processing_start_date = [start_date, BrowserPageviewEvent.retention_cutoff.to_date].max
-    start_date = rebuildable_start_date(processing_start_date)
-    source_condition = BrowserPageviewEvent.rollup_source_condition(table: "events")
-
-    if start_date <= end_date
-      exclusive_end_date = end_date + 1
+    transaction do
       DB.exec(<<~SQL, start_date:, end_date: exclusive_end_date)
         DELETE FROM browser_pageview_entry_url_daily_rollups rollup
         WHERE rollup.date >= :start_date
           AND rollup.date < :end_date
+          AND rollup.entry_url IS NOT NULL
           AND EXISTS (
             SELECT 1
             FROM browser_pageview_events events
@@ -37,27 +45,6 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
 
       DB.exec(
         <<~SQL,
-          WITH active_sessions AS (
-            SELECT DISTINCT events.session_id
-            FROM browser_pageview_events events
-            WHERE events.created_at >= :start_date
-              AND events.created_at < LEAST(:end_date::timestamp, :session_started_before::timestamp)
-              AND #{source_condition}
-          ),
-          session_entries AS (
-            SELECT DISTINCT ON (events.session_id)
-              events.created_at AS first_seen_at,
-              CASE
-                WHEN events.normalized_url ~ :safe_entry_url_pattern THEN events.normalized_url
-                ELSE NULL
-              END AS entry_url,
-              events.user_id IS NOT NULL AS logged_in,
-              COALESCE(#{CrawlerScorer.likely_crawler_condition(table: "events")}, false) AS likely_crawler
-            FROM browser_pageview_events events
-            JOIN active_sessions ON active_sessions.session_id = events.session_id
-            WHERE #{source_condition}
-            ORDER BY events.session_id, events.created_at, events.id
-          )
           INSERT INTO browser_pageview_entry_url_daily_rollups (
             date,
             entry_url,
@@ -67,43 +54,78 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
             likely_crawler_logged_in_count
           )
           SELECT
-            first_seen_at::date,
-            entry_url,
+            events.created_at::date,
+            #{entry_url_sql},
             COUNT(*),
-            COUNT(*) FILTER (WHERE logged_in),
-            COUNT(*) FILTER (WHERE likely_crawler),
-            COUNT(*) FILTER (WHERE logged_in AND likely_crawler)
-          FROM session_entries
-          WHERE first_seen_at >= :start_date
-            AND first_seen_at < :end_date
-            AND entry_url IS NOT NULL
-          GROUP BY first_seen_at::date, entry_url
+            COUNT(*) FILTER (WHERE events.user_id IS NOT NULL),
+            COUNT(*) FILTER (
+              WHERE COALESCE(#{CrawlerScorer.likely_crawler_condition(table: "events")}, false)
+            ),
+            COUNT(*) FILTER (
+              WHERE events.user_id IS NOT NULL
+                AND COALESCE(#{CrawlerScorer.likely_crawler_condition(table: "events")}, false)
+            )
+          FROM browser_pageview_events events
+          LEFT JOIN topics entry_topics ON entry_topics.id = events.topic_id
+          LEFT JOIN categories entry_categories ON entry_categories.id = entry_topics.category_id
+          WHERE events.created_at >= :start_date
+            AND events.created_at < :end_date
+            AND #{source_condition}
+            AND events.normalized_url ~ :safe_entry_url_pattern
+            AND (
+              events.normalized_url !~ :topic_entry_url_pattern
+              OR (
+                entry_topics.archetype <> :private_message_archetype
+                AND entry_topics.deleted_at IS NULL
+                AND entry_topics.visible
+                AND (
+                  entry_topics.category_id IS NULL
+                  OR NOT entry_categories.read_restricted
+                )
+              )
+            )
+            AND (
+              NULLIF(events.referrer, '') IS NULL
+              OR (
+                events.normalized_referrer IS NOT NULL
+                AND split_part(split_part(events.normalized_referrer, '/', 1), '?', 1)
+                  NOT IN (:site_hostnames)
+              )
+            )
+          GROUP BY events.created_at::date, #{entry_url_sql}
         SQL
         start_date:,
         end_date: exclusive_end_date,
-        session_started_before: BrowserPageviewSessionEngagement::BEACON_SETTLE_PERIOD.ago,
         safe_entry_url_pattern: safe_entry_url_pattern,
+        topic_entry_url_pattern: topic_entry_url_pattern,
+        base_path: Discourse.base_path,
+        private_message_archetype: Archetype.private_message,
+        site_hostnames:,
       )
     end
-
-    DB.exec(
-      <<~SQL,
-        UPDATE browser_pageview_events events
-        SET entry_url_rollup_version = :version
-        WHERE events.created_at >= :start_date
-          AND events.created_at < :end_date
-          AND #{source_condition}
-          AND (
-            events.entry_url_rollup_version IS NULL
-            OR events.entry_url_rollup_version < :version
-          )
-      SQL
-      start_date: processing_start_date,
-      end_date: end_date + 1,
-      version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
-    )
   end
-  private_class_method :aggregate_in_transaction
+
+  def self.recompute(dates)
+    Array(dates).map(&:to_date).uniq.each { |date| aggregate(start_date: date, end_date: date) }
+  end
+
+  def self.last_full_rebuild_date
+    where(entry_url: nil).maximum(:date)
+  end
+
+  def self.mark_full_rebuild(date:)
+    transaction do
+      where(entry_url: nil).delete_all
+      create!(
+        date: date.to_date,
+        entry_url: nil,
+        count: 0,
+        logged_in_count: 0,
+        likely_crawler_count: 0,
+        likely_crawler_logged_in_count: 0,
+      )
+    end
+  end
 
   def self.rebuildable_start_date(start_date)
     earliest_source_date =
@@ -114,7 +136,7 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
         &.to_date
     return start_date if earliest_source_date.nil? || start_date > earliest_source_date
 
-    has_older_rollups = where("date < ?", earliest_source_date).exists?
+    has_older_rollups = where.not(entry_url: nil).where("date < ?", earliest_source_date).exists?
     has_older_rollups ? earliest_source_date + 1 : start_date
   end
   private_class_method :rebuildable_start_date
@@ -125,6 +147,20 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
     "^(?:#{Regexp.escape(root_path)}|#{Regexp.escape(base_path)}(?:#{SAFE_ENTRY_ROUTE_PATTERN.source}))$"
   end
   private_class_method :safe_entry_url_pattern
+
+  def self.topic_entry_url_pattern
+    "^#{Regexp.escape(Discourse.base_path)}#{TOPIC_ENTRY_ROUTE_PATTERN.source}$"
+  end
+  private_class_method :topic_entry_url_pattern
+
+  def self.site_hostnames
+    hostnames =
+      RailsMultisite::ConnectionManagement.current_db_hostnames + [Discourse.current_hostname]
+    hostnames
+      .filter_map { |hostname| BrowserPageviewEventUrlNormalizer.normalize_host(hostname) }
+      .uniq
+  end
+  private_class_method :site_hostnames
 end
 
 # == Schema Information
@@ -134,12 +170,12 @@ end
 #  id                             :bigint           not null, primary key
 #  count                          :bigint           not null
 #  date                           :date             not null
-#  entry_url                      :string(2000)     not null
+#  entry_url                      :string(2000)
 #  likely_crawler_count           :bigint           default(0), not null
 #  likely_crawler_logged_in_count :bigint           default(0), not null
 #  logged_in_count                :bigint           not null
 #
 # Indexes
 #
-#  idx_bpeu_daily_rollups_date_url_unique  (date,entry_url) UNIQUE
+#  idx_bpeu_daily_rollups_date_url_unique  (date,entry_url) UNIQUE NULLS NOT DISTINCT
 #

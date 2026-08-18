@@ -31,6 +31,7 @@ module Reports::TopEntryUrls
                 FROM browser_pageview_entry_url_daily_rollups
                 WHERE date >= :start_date
                   AND date <= :end_date
+                  AND entry_url IS NOT NULL
                 GROUP BY entry_url
                 HAVING SUM(#{count_sql}) > 0
               )
