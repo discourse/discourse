@@ -78,7 +78,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
 
     aggregate
 
-    expect(described_class.order(:entry_url).pluck(:entry_url)).to eq(safe_paths.sort)
+    expect(described_class.pluck(:entry_url)).to contain_exactly(*safe_paths)
   end
 
   it "allows reviewed routes beneath the configured subfolder" do
