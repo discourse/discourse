@@ -17,6 +17,7 @@
     flex: 1 1 auto;
     flex-wrap: wrap;
     align-items: center;
+    min-width: 0;
     gap: var(--space-2);
   }
 
@@ -81,6 +82,7 @@
   }
 
   &__filter-pill-label {
+    flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
