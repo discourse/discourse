@@ -94,13 +94,12 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   get activeFilters() {
+    const pending = this.hasPendingFilters;
+
     return FILTER_KEYS.filter((key) => this.draftFilters[key].length).map(
       (key) => ({
         key,
-        pending: !this.#sameValues(
-          this.draftFilters[key],
-          this.#appliedValues(key)
-        ),
+        pending,
         values: this.draftFilters[key].map((value) => ({
           value,
           label: this.#filterLabel(key, value),
@@ -314,7 +313,6 @@ export default class AdminSiteTrafficController extends Controller {
       key,
       rows.map((row) => row.value)
     );
-    this.applyFilters();
   }
 
   @action
