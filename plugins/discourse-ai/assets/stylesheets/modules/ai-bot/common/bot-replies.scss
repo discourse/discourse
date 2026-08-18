@@ -182,18 +182,6 @@ span.onebox-ai-llm-title {
   align-self: center;
 }
 
-.ai-debug-modal__preview {
-  background-color: var(--primary-very-low);
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
-  padding: 0.75em 1em;
-  max-height: 60vh;
-  overflow: auto;
-  font-family: var(--d-font-family--monospace);
-  font-size: var(--font-down-1);
-  line-height: 1.45;
-}
-
 .d-modal ul.ai-debug-modal__nav {
   margin: 0 0 1em;
   padding: 0;
