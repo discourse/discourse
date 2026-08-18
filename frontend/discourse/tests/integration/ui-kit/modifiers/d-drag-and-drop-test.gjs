@@ -1,7 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { find, render, settled, setupOnerror } from "@ember/test-helpers";
+import {
+  clearRender,
+  find,
+  render,
+  settled,
+  setupOnerror,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -462,63 +468,47 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     assert.strictEqual(drops, 0, "the target refuses its own source element");
   });
 
-  test("acceptsSelf checks the raw source element without target fallback", async function (assert) {
-    let drops = 0;
-    let rawElement = "monitor never ran";
-    let normalisedElement = "canDrop never ran";
-    const onDrop = () => drops++;
-    const canDrop = ({ source }) => {
-      normalisedElement = source.element;
-      return true;
-    };
-    const cleanupMonitor = registerDragAndDropMonitor(() => ({
-      onDragStart: ({ source }) => {
-        delete source.element;
-        rawElement = source.element;
-      },
-    }));
+  test("a handled row with acceptsSelf=false refuses its own body, and a target reads the row as source.element", async function (assert) {
+    const drops = [];
+    const recordDrop = ({ source }) => drops.push(source.element);
+    const state = new (class {
+      @tracked dragHandle;
+      captureHandle = (element) => (this.dragHandle = element);
+    })();
 
     await render(
       <template>
-        <div id="src" {{dDragAndDropSource type="row"}}>source</div>
         <div
-          id="tgt"
+          id="row"
+          {{dDragAndDropSource type="row" dragHandle=state.dragHandle}}
           {{dDragAndDropTarget
             accepts="row"
             acceptsSelf=false
-            canDrop=canDrop
-            onDrop=onDrop
+            onDrop=recordDrop
           }}
-        >target</div>
+        >
+          <button id="grip" type="button" {{didInsert state.captureHandle}}>
+            grip
+          </button>
+        </div>
+        <div id="other" {{dDragAndDropTarget accepts="row" onDrop=recordDrop}}>
+          other
+        </div>
       </template>
     );
 
-    await simulateDrag("#src", "#tgt", {
-      dataTransfer: new DataTransfer(),
-    });
-    cleanupMonitor();
-
-    // Read back, because the whole fixture rests on this mutation landing: if the
-    // delete silently did nothing, the drop below would succeed for the ordinary
-    // reason and prove nothing about the fallback.
-    assert.strictEqual(
-      rawElement,
-      undefined,
-      "the raw source element really was removed"
-    );
-    // The source publishes the element it stands for in the payload, so the
-    // normalisation has something to name even once the raw one is gone and
-    // never reaches the fallback that would read as self. That is what makes a
-    // deleted raw element harmless rather than a refused drop.
-    assert.strictEqual(
-      normalisedElement,
-      find("#src"),
-      "the normalised payload still names the source, not the target it fell through to"
-    );
-    assert.strictEqual(
+    await simulateDrag("#row", "#row", { dataTransfer: new DataTransfer() });
+    assert.deepEqual(
       drops,
-      1,
-      "a missing raw source element is not treated as the target element"
+      [],
+      "the row refuses a drop of itself even though the grip is what was registered"
+    );
+
+    await simulateDrag("#row", "#other", { dataTransfer: new DataTransfer() });
+    assert.deepEqual(
+      drops,
+      [find("#row")],
+      "another target is handed the row, not the grip"
     );
   });
 
@@ -1936,6 +1926,296 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "nothing stays bound to a page with no drag sources left on it"
       );
     });
+
+    module("registration ownership across a handle change", function () {
+      test("a handle swapped mid-drag leaves the row registered and declaring its effect", async function (assert) {
+        const state = new (class {
+          @tracked useSecondHandle = false;
+          @tracked dragHandle;
+          captureHandle = (element) => (this.dragHandle = element);
+        })();
+
+        await render(
+          <template>
+            <div
+              id="src"
+              {{dDragAndDropSource type="row" dragHandle=state.dragHandle}}
+            >
+              {{#if state.useSecondHandle}}
+                <button
+                  id="second-handle"
+                  type="button"
+                  {{didInsert state.captureHandle}}
+                >second</button>
+              {{else}}
+                <button
+                  id="first-handle"
+                  type="button"
+                  {{didInsert state.captureHandle}}
+                >first</button>
+              {{/if}}
+            </div>
+            <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+          </template>
+        );
+
+        const dataTransfer = new DataTransfer();
+        await dragEvent("#first-handle", "dragstart", {
+          dataTransfer,
+          ...centerOf("#src"),
+        });
+        await dragEvent("#tgt", "dragenter", {
+          dataTransfer,
+          ...centerOf("#tgt"),
+        });
+
+        state.useSecondHandle = true;
+        await settled();
+
+        await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+        await dragEvent("#src", "dragend", {
+          dataTransfer,
+          ...centerOf("#src"),
+        });
+        await settled();
+
+        assert
+          .dom("#src")
+          .hasAttribute(
+            "data-drag-source",
+            "",
+            "the replaced registration's teardown does not strip the mark the live one owns"
+          );
+
+        const second = recordingTransfer();
+        await dragEvent("#second-handle", "dragstart", {
+          dataTransfer: second,
+          ...centerOf("#src"),
+        });
+        assert.strictEqual(
+          second.effectAllowed,
+          "move",
+          "and the live registration still declares what a drag from the new handle permits"
+        );
+        await dragEvent("#src", "dragend", {
+          dataTransfer: second,
+          ...centerOf("#src"),
+        });
+
+        const released = sinon.spy(window, "removeEventListener");
+        await clearRender();
+        assert.true(
+          released.calledWith("dragstart", sinon.match.func, { capture: true }),
+          "destroying the source unbinds the shared listener: the swap left no phantom registration counted"
+        );
+      });
+
+      test("a handle swapped mid-drag and then disabled keeps the row marked until the drag it started ends", async function (assert) {
+        const state = new (class {
+          @tracked useSecondHandle = false;
+          @tracked disabled = false;
+          @tracked dragHandle;
+          captureHandle = (element) => (this.dragHandle = element);
+        })();
+
+        await render(
+          <template>
+            <div
+              id="src"
+              {{dDragAndDropSource
+                type="row"
+                dragHandle=state.dragHandle
+                disabled=state.disabled
+              }}
+            >
+              {{#if state.useSecondHandle}}
+                <button
+                  id="second-handle"
+                  type="button"
+                  {{didInsert state.captureHandle}}
+                >second</button>
+              {{else}}
+                <button
+                  id="first-handle"
+                  type="button"
+                  {{didInsert state.captureHandle}}
+                >first</button>
+              {{/if}}
+            </div>
+            <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+          </template>
+        );
+
+        const dataTransfer = new DataTransfer();
+        await dragEvent("#first-handle", "dragstart", {
+          dataTransfer,
+          ...centerOf("#src"),
+        });
+        await dragEvent("#tgt", "dragenter", {
+          dataTransfer,
+          ...centerOf("#tgt"),
+        });
+
+        state.useSecondHandle = true;
+        await settled();
+        state.disabled = true;
+        await settled();
+
+        assert
+          .dom("#src")
+          .hasAttribute(
+            "data-drag-source",
+            "",
+            "the first handle's drag is still in flight, so the row stays a registered source"
+          );
+
+        await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+        await dragEvent("#src", "dragend", {
+          dataTransfer,
+          ...centerOf("#src"),
+        });
+        await settled();
+
+        assert
+          .dom("#src")
+          .doesNotHaveAttribute(
+            "data-drag-source",
+            "once that drag ends nothing is registered any more"
+          );
+      });
+
+      test("a natively draggable child of a source row is not answered", async function (assert) {
+        await render(
+          <template>
+            <div id="row" {{dDragAndDropSource type="row"}}>
+              row
+              <a id="link" href="/somewhere">link</a>
+            </div>
+          </template>
+        );
+
+        // The anchor is draggable on its own, so the browser targets it and the
+        // library never claims the drag; the source must not speak for it either.
+        const dataTransfer = recordingTransfer();
+        await dragEvent("#link", "dragstart", {
+          dataTransfer,
+          ...centerOf("#link"),
+        });
+
+        assert.strictEqual(
+          dataTransfer.effectAllowed,
+          "none",
+          "a drag the primitive did not start keeps whatever the browser gave it"
+        );
+      });
+    });
+  });
+
+  module("drag previews", function () {
+    test("the default preview of a handled row keeps the grab point", async function (assert) {
+      const state = new (class {
+        @tracked dragHandle;
+        captureHandle = (element) => (this.dragHandle = element);
+      })();
+
+      await render(
+        <template>
+          <div
+            id="src"
+            style="width: 300px; height: 40px; display: flex; justify-content: flex-end"
+            {{dDragAndDropSource type="row" dragHandle=state.dragHandle}}
+          >
+            <button
+              id="grip"
+              type="button"
+              style="width: 30px"
+              {{didInsert state.captureHandle}}
+            >grip</button>
+          </div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      const setDragImage = sinon.spy(dataTransfer, "setDragImage");
+      const rowRect = find("#src").getBoundingClientRect();
+      const grab = centerOf("#grip");
+
+      await dragEvent("#grip", "dragstart", { dataTransfer, ...grab });
+
+      assert.true(setDragImage.calledOnce, "the row stands in for the grip");
+      const [image, x, y] = setDragImage.firstCall.args;
+      assert.strictEqual(image, find("#src"), "the photograph is the row");
+      assert.strictEqual(
+        Math.round(x),
+        Math.round(grab.clientX - rowRect.left),
+        "the hotspot is where the user grabbed, measured from the row's left"
+      );
+      assert.strictEqual(
+        Math.round(y),
+        Math.round(grab.clientY - rowRect.top),
+        "and from its top, so the picture does not jump under the pointer"
+      );
+
+      await dragEvent("#src", "dragend", { dataTransfer, ...grab });
+    });
+
+    test("an Element preview that is not the row is photographed at its own origin", async function (assert) {
+      const state = new (class {
+        @tracked preview;
+        capturePreview = (element) => (this.preview = element);
+      })();
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource type="row" dragPreview=state.preview}}
+          >src</div>
+          <div id="ghost" {{didInsert state.capturePreview}}>ghost</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      const setDragImage = sinon.spy(dataTransfer, "setDragImage");
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+
+      assert.true(
+        setDragImage.calledOnceWithExactly(find("#ghost"), 0, 0),
+        "a foreign preview keeps the top-left hotspot"
+      );
+
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+    });
+
+    test("getInitialData supplies the payload and cannot override the type", async function (assert) {
+      const sources = [];
+      const recordDrop = ({ source }) => sources.push(source);
+      const describe = () => ({ id: 7, type: "impostor" });
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource type="row" getInitialData=describe}}
+          >src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget accepts="row" onDrop=recordDrop}}
+          >tgt</div>
+        </template>
+      );
+
+      await simulateDrag("#src", "#tgt", { dataTransfer: new DataTransfer() });
+
+      assert.deepEqual(
+        sources.map(({ type, data }) => ({ type, data })),
+        [{ type: "row", data: { id: 7, type: "row" } }],
+        "the payload comes from getInitialData and the primitive's type is stamped over the payload's own"
+      );
+    });
   });
 
   module("lifecycle callbacks stay paired", function () {
@@ -2761,6 +3041,172 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         reported.length >= 1,
         `and the throwing stickiness gate was raised (${reported.length} seen)`
       );
+    });
+
+    test("a throwing preview cleanup is reported and leaves no preview container behind", async function (assert) {
+      const reported = [];
+      setupOnerror((error) => reported.push(error));
+
+      const notices = [];
+      const collect = (event) => notices.push(event.detail.messageKey);
+      document.addEventListener("discourse-error", collect);
+
+      const drops = [];
+      const recordDrop = () => drops.push("drop");
+      const renderPreview = ({ container }) => {
+        container.dataset.previewMarker = "";
+        container.textContent = "preview";
+        return blowUp;
+      };
+
+      try {
+        await render(
+          <template>
+            <div
+              id="src"
+              {{dDragAndDropSource type="row" dragPreview=renderPreview}}
+            >src</div>
+            <div
+              id="tgt"
+              {{dDragAndDropTarget accepts="row" onDrop=recordDrop}}
+            >tgt</div>
+          </template>
+        );
+
+        await simulateDrag("#src", "#tgt", {
+          dataTransfer: new DataTransfer(),
+        });
+
+        assert.deepEqual(drops, ["drop"], "the drop still lands");
+        assert.deepEqual(
+          notices,
+          ["broken_drag_and_drop_alert"],
+          "the throwing cleanup is reported once, as a consumer error"
+        );
+        assert
+          .dom("[data-preview-marker]", document.body)
+          .doesNotExist("and the offscreen preview container is still removed");
+      } finally {
+        document.removeEventListener("discourse-error", collect);
+      }
+    });
+
+    test("a throwing preview renderer is reported and the drag still starts", async function (assert) {
+      const reported = [];
+      setupOnerror((error) => reported.push(error));
+
+      const drops = [];
+      const recordDrop = () => drops.push("drop");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource type="row" dragPreview=blowUp}}
+          >src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget accepts="row" onDrop=recordDrop}}
+          >tgt</div>
+        </template>
+      );
+
+      await simulateDrag("#src", "#tgt", { dataTransfer: new DataTransfer() });
+
+      assert.deepEqual(
+        drops,
+        ["drop"],
+        "the drag runs to a drop without a preview"
+      );
+      assert.true(
+        reported.length >= 1,
+        `and the throwing renderer was raised (${reported.length} seen)`
+      );
+    });
+
+    test("a throwing source onDragStart is reported and the drag still runs to its drop", async function (assert) {
+      const reported = [];
+      setupOnerror((error) => reported.push(error));
+
+      const drops = [];
+      const recordDrop = () => drops.push("drop");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource type="row" onDragStart=blowUp}}
+          >src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget accepts="row" onDrop=recordDrop}}
+          >tgt</div>
+        </template>
+      );
+
+      await simulateDrag("#src", "#tgt", { dataTransfer: new DataTransfer() });
+
+      assert.deepEqual(drops, ["drop"], "the target still receives the drop");
+      assert
+        .dom("#src")
+        .doesNotHaveClass(
+          "--dragging",
+          "and the source is cleaned up after it"
+        );
+      assert.true(reported.length >= 1, "the throwing callback was raised");
+    });
+
+    test("a throwing source onDrop still runs the teardown that was waiting on the drag", async function (assert) {
+      const reported = [];
+      setupOnerror((error) => reported.push(error));
+      const state = new (class {
+        @tracked disabled = false;
+      })();
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              onDrop=blowUp
+              disabled=state.disabled
+            }}
+          >src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      // Disabled mid-drag: the registration waits for the drag to end.
+      state.disabled = true;
+      await settled();
+      assert.dom("#src").hasAttribute("data-drag-source", "", "waiting");
+
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+      await settled();
+
+      assert
+        .dom("#src")
+        .doesNotHaveAttribute(
+          "data-drag-source",
+          "the consumer's throw does not leave the element registered"
+        );
+      assert.true(reported.length >= 1, "and the throw was raised");
     });
   });
 

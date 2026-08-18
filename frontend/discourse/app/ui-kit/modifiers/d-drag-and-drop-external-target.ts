@@ -111,9 +111,8 @@ export type DragAndDropExternalTargetArgs =
  * modifier. The modifier itself is a thin wrapper around this
  * function for the template-based common case.
  *
- * Library-agnostic by design: the dependency is imported only by the ui-kit
- * modifier files. Consumers talk to this helper rather than the adapter
- * directly.
+ * Consumers remain library-agnostic: they use this helper instead of importing
+ * the underlying library themselves.
  *
  * @param element - The element to register as a drop target.
  * @param getArgsRef - Closure returning the latest args. Adapter callbacks read

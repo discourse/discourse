@@ -11,7 +11,10 @@ import type {
   DragInput,
   DragLocation,
 } from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
-import { DRAG_BODY } from "discourse/lib/-internals/drag-and-drop/vocabulary";
+import {
+  DRAG_BODY,
+  normalizeOwnedDragSource,
+} from "discourse/lib/-internals/drag-and-drop/vocabulary";
 
 /**
  * Renders a drag preview into an isolated, offscreen container the browser
@@ -26,16 +29,7 @@ export type DragPreviewRenderer = (args: {
 }) => (() => void) | void;
 
 /** The dragged source, as the lifecycle callbacks receive it. */
-export interface DragSource {
-  /** The discriminator this source stamps, so targets can filter on it. */
-  type?: string;
-
-  /** The payload the drag carries, with `type` merged in. */
-  data: Record<string, unknown>;
-
-  /** The element the drag began on. */
-  element: HTMLElement;
-}
+export type DragSource = ReturnType<typeof normalizeOwnedDragSource>;
 
 interface DDragAndDropSourceSignature {
   /** The element to mark draggable. */
@@ -67,10 +61,11 @@ interface DDragAndDropSourceSignature {
 
       /**
        * A custom native drag preview, in one of two forms. An `Element` is
-       * photographed in place and the browser controls the hotspot. A render
-       * function mounts a fresh preview into an isolated, offscreen container,
-       * so nothing around the source element bleeds into the drag image.
-       * Defaults to the source element when omitted.
+       * photographed in place; when it is the source element, the hotspot is
+       * where the user grabbed it, while a foreign element uses its top-left.
+       * A render function mounts a fresh preview into an isolated, offscreen
+       * container, so nothing around the source element bleeds into the drag
+       * image. Defaults to the source element when omitted.
        */
       dragPreview?: Element | DragPreviewRenderer;
 
@@ -78,7 +73,7 @@ interface DDragAndDropSourceSignature {
        * CSS length values (e.g. `{x: "1rem", y: "0.5rem"}`) that push the preview
        * clear of the pointer for better drop accuracy. Applies only to the
        * render-function `dragPreview` form; ignored for an `Element` preview,
-       * whose hotspot the browser clamps to within the image.
+       * whose hotspot coordinates this primitive supplies directly.
        */
       dragPreviewOffset?: { x: string; y: string };
 
@@ -118,7 +113,8 @@ interface DDragAndDropSourceSignature {
 
       /**
        * Fires once at the end of EVERY drag, whether it landed on a target or the
-       * user abandoned it. This is where drag-time state gets undone.
+       * user abandoned it. A source destroyed before the deferred dispatch fires
+       * does not receive it. This is where drag-time state gets undone.
        *
        * Fires AFTER the full drop dispatch (target callbacks, monitor callbacks,
        * native bubble listeners), so it is safe to clear shared dispatch state
@@ -226,13 +222,21 @@ export interface DetachedSourceWork {
 export type DragAndDropSourceArgs =
   DDragAndDropSourceSignature["Args"]["Named"];
 
+type RegistrationToken = symbol;
+
 /**
  * Where to read a registered source element's current args. Weak because it
  * outlives no registration it should: a module-level strong reference to an
  * element keeps a removed subtree alive for the life of the tab, and a
  * registration this never hears the end of would be exactly that.
  */
-const effectDeclarers = new WeakMap<Element, () => DragAndDropSourceArgs>();
+let effectDeclarers = new WeakMap<
+  Element,
+  { token: RegistrationToken; getArgsRef: () => DragAndDropSourceArgs }
+>();
+
+/** Which live registrations own each body's source mark. */
+let dragSourceMarks = new WeakMap<Element, Set<RegistrationToken>>();
 
 /**
  * How many sources are registered, which a weak map cannot report and the
@@ -253,13 +257,13 @@ let stopDeclaringEffects: (() => void) | null = null;
  * the value once that dispatch has finished.
  */
 function declareEffectAllowed(event: DragEvent) {
-  const target = event.target as HTMLElement | null;
-  // The innermost registered source, so a drag begun inside a nested one is
-  // answered by that source rather than by whichever ancestor also registered.
-  const source = target?.closest?.("[data-drag-source]");
-  const getArgsRef = source && effectDeclarers.get(source);
-  if (getArgsRef && event.dataTransfer) {
-    event.dataTransfer.effectAllowed = getArgsRef().effectAllowed ?? "move";
+  const declarer =
+    event.target instanceof Element
+      ? effectDeclarers.get(event.target)
+      : undefined;
+  if (declarer && event.dataTransfer) {
+    event.dataTransfer.effectAllowed =
+      declarer.getArgsRef().effectAllowed ?? "move";
   }
 }
 
@@ -272,10 +276,13 @@ function declareEffectAllowed(event: DragEvent) {
  */
 function declareEffectFor(
   element: Element,
-  getArgsRef: () => DragAndDropSourceArgs
+  getArgsRef: () => DragAndDropSourceArgs,
+  token: RegistrationToken
 ) {
-  effectDeclarers.set(element, getArgsRef);
-  liveSourceCount += 1;
+  if (!effectDeclarers.has(element)) {
+    liveSourceCount += 1;
+  }
+  effectDeclarers.set(element, { token, getArgsRef });
   if (!stopDeclaringEffects) {
     window.addEventListener("dragstart", declareEffectAllowed, {
       capture: true,
@@ -290,9 +297,10 @@ function declareEffectFor(
     // Only the release that finds the entry still there counts. A teardown is
     // expected to be idempotent, and a second one decrementing again would take
     // the listener out from under a source that is still registered.
-    if (!effectDeclarers.delete(element)) {
+    if (effectDeclarers.get(element)?.token !== token) {
       return;
     }
+    effectDeclarers.delete(element);
     // Clamped because a reset zeroes the count while live registrations are
     // still holding a release, and a negative count would never reach zero.
     liveSourceCount = Math.max(0, liveSourceCount - 1);
@@ -305,19 +313,11 @@ function declareEffectFor(
 
 /** Test-only: forget every source and unbind the listener between tests. */
 export function resetDragSourcesForTesting() {
+  effectDeclarers = new WeakMap();
+  dragSourceMarks = new WeakMap();
   liveSourceCount = 0;
   stopDeclaringEffects?.();
   stopDeclaringEffects = null;
-}
-
-/**
- * The payload as a consumer should see it: the body a handled source publishes
- * for the target and the service to read is routing, not data anyone wrote.
- */
-function consumerData(data: Record<string, unknown> | null | undefined) {
-  const rest = { ...(data ?? {}) };
-  delete rest[DRAG_BODY];
-  return rest;
 }
 
 /**
@@ -330,8 +330,8 @@ function consumerData(data: Record<string, unknown> | null | undefined) {
  * importing the underlying library — parallel to
  * `registerDragAndDropTarget` / `registerDragAndDropMonitor`.
  *
- * Library-agnostic by design: the dependency is imported only by the ui-kit
- * modifier files.
+ * Consumers remain library-agnostic: they use this helper instead of importing
+ * the underlying library themselves.
  *
  * The consumer's end-of-drag callbacks are deferred to the next task so they
  * fire after the drop event has finished propagating: `onDragEnd` for every
@@ -348,25 +348,7 @@ export function registerDragAndDropSource(
   element: HTMLElement,
   getArgsRef: () => DragAndDropSourceArgs
 ) {
-  // Marks the element as owned by this primitive for the lifetime of the
-  // registration. The stylesheet gates the state modifiers below on it, so a
-  // generic state name cannot reach an element this never touched. An attribute
-  // rather than a class because consumers frequently bind `class` themselves,
-  // and a dynamic binding would drop anything written here.
-  element.setAttribute("data-drag-source", "");
-
-  // The end-of-drag consumer callbacks are deferred, so teardown has to be able
-  // to take them back: without this a route transition, or a re-render dropping
-  // the row, runs them against a destroyed component one task later.
-  let pendingConsumers: Parameters<typeof cancel>[0] | null = null;
-
-  /** Whether a drag from this element is in flight. */
-  let dragging = false;
-
-  /** A teardown waiting for the drag in flight to finish, if there is one. */
-  let teardownWhenIdle: (() => void) | null = null;
-
-  const stopDeclaringEffect = declareEffectFor(element, getArgsRef);
+  const token = Symbol("drag-source-registration");
 
   // A handle takes the registration, and this element stays the body. The
   // registration is what receives `draggable="true"`, and that attribute is what
@@ -382,6 +364,29 @@ export function registerDragAndDropSource(
   // changes is the modifier's job. Cast because `dragHandle` is the broader
   // `Element` for consumers, while the library needs an `HTMLElement`.
   const registered = (getArgsRef().dragHandle ?? element) as HTMLElement;
+
+  // Marks the element as owned by this primitive for the lifetime of the
+  // registration. The stylesheet gates the state modifiers below on it, so a
+  // generic state name cannot reach an element this never touched. An attribute
+  // rather than a class because consumers frequently bind `class` themselves,
+  // and a dynamic binding would drop anything written here.
+  const marks = dragSourceMarks.get(element) ?? new Set();
+  marks.add(token);
+  dragSourceMarks.set(element, marks);
+  element.setAttribute("data-drag-source", "");
+
+  // The end-of-drag consumer callbacks are deferred, so teardown has to be able
+  // to take them back: without this a route transition, or a re-render dropping
+  // the row, runs them against a destroyed component one task later.
+  let pendingConsumers: Parameters<typeof cancel>[0] | null = null;
+
+  /** Whether a drag from this element is in flight. */
+  let dragging = false;
+
+  /** A teardown waiting for the drag in flight to finish, if there is one. */
+  let teardownWhenIdle: (() => void) | null = null;
+
+  const stopDeclaringEffect = declareEffectFor(registered, getArgsRef, token);
 
   const cleanup = draggable({
     element: registered,
@@ -399,7 +404,7 @@ export function registerDragAndDropSource(
         false
       );
     },
-    onGenerateDragPreview: ({ nativeSetDragImage }) => {
+    onGenerateDragPreview: ({ nativeSetDragImage, location }) => {
       const args = getArgsRef();
 
       // Answers for the drag everywhere no target accepts it, so releasing over
@@ -434,16 +439,19 @@ export function registerDragAndDropSource(
           // The narrowing above does not survive into this nested callback,
           // where TypeScript sees the whole `Element | DragPreviewRenderer`
           // union again.
-          render: ({ container }) =>
-            consumerMayThrow(() =>
+          render: ({ container }) => {
+            const dispose = consumerMayThrow(() =>
               (args.dragPreview as DragPreviewRenderer)({ container, element })
-            ),
+            );
+            return typeof dispose === "function"
+              ? () => consumerMayThrow(dispose)
+              : undefined;
+          },
         });
         return;
       }
-      // An `Element` is photographed in place. The browser clamps the hotspot
-      // to within the element, so `dragPreviewOffset` cannot push it off the
-      // pointer here — it applies only to the render-function form above.
+      // An `Element` is photographed in place. `dragPreviewOffset` does not
+      // apply here: the platform records the coordinates it is given.
       //
       // With a handle, the body stands in when the consumer named no preview:
       // what the user is moving is the row, and the browser's own default would
@@ -453,7 +461,17 @@ export function registerDragAndDropSource(
       const preview =
         args.dragPreview ?? (registered === element ? null : element);
       if (preview) {
-        nativeSetDragImage(preview, 0, 0);
+        if (preview === element) {
+          const { clientX, clientY } = location.current.input;
+          const { left, top, width, height } = element.getBoundingClientRect();
+          nativeSetDragImage(
+            preview,
+            Math.max(0, Math.min(clientX - left, width)),
+            Math.max(0, Math.min(clientY - top, height))
+          );
+        } else {
+          nativeSetDragImage(preview, 0, 0);
+        }
       }
     },
     getInitialData: () => {
@@ -468,22 +486,18 @@ export function registerDragAndDropSource(
       //
       // The body rides along so a target can name the element the user is
       // moving rather than the handle the library registered. It is read back
-      // out in `d-drag-and-drop-target.ts` and never surfaces to consumers.
+      // out by `dragBodyOf` in `vocabulary.ts` and never surfaces to consumers.
       return { ...resolved, type: args.type, [DRAG_BODY]: element };
     },
     onDragStart: (event) => {
       const args = getArgsRef();
       dragging = true;
       element.classList.add("--dragging");
-      const sourcePayload = {
-        type: args.type,
-        data: consumerData(event.source.data),
-        element,
-      };
+      const sourcePayload = normalizeOwnedDragSource(event.source);
       consumerMayThrow(() =>
         args.onDragStart?.({
           source: sourcePayload,
-          input: event.location?.current?.input,
+          input: event.location.current.input,
         })
       );
     },
@@ -498,22 +512,12 @@ export function registerDragAndDropSource(
 
       // Snapshot the consumer callbacks + payload BEFORE deferring.
       // The modifier's argsRef can change across re-renders, and by
-      // the time the microtask fires a new drag could already have
+      // the time the task fires a new drag could already have
       // started — we want the consumers for THIS drag, with the
       // payload the library captured at THIS drag's start.
       const consumerOnDragEnd = args.onDragEnd;
       const consumerOnDrop = args.onDrop;
-      const sourcePayload = {
-        // Read from the captured payload rather than from the current args, so
-        // it agrees with `data` beside it. `type` is stamped into that payload
-        // when the drag starts, and a consumer that changed `@type` mid-drag
-        // would otherwise be handed a `type` its own `data.type` contradicts.
-        // The library types every payload value as `unknown`; this key is
-        // written by `getInitialData` above and is always the string `type`.
-        type: event.source.data?.type as string,
-        data: consumerData(event.source.data),
-        element,
-      };
+      const sourcePayload = normalizeOwnedDragSource(event.source);
       const location = event.location;
       // An abandoned drag — cancelled, or released outside every drop target —
       // arrives here too, and is what separates the two callbacks below.
@@ -558,7 +562,14 @@ export function registerDragAndDropSource(
     cleanup();
     stopDeclaringEffect();
     element.classList.remove("--dragging");
-    element.removeAttribute("data-drag-source");
+    const currentMarks = dragSourceMarks.get(element);
+    if (!currentMarks?.delete(token)) {
+      return;
+    }
+    if (currentMarks.size === 0) {
+      dragSourceMarks.delete(element);
+      element.removeAttribute("data-drag-source");
+    }
   };
 
   /**
@@ -665,9 +676,11 @@ export function registerDragAndDropSource(
  */
 export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSourceSignature> {
   #cleanup: ReturnType<typeof registerDragAndDropSource> | null = null;
-  #element: HTMLElement | null = null;
-  // Replaced by `modify` before any callback can read it; the empty bag only
-  // covers the window before the first run.
+
+  /**
+   * Replaced by `modify` before any callback can read it; the empty bag only
+   * covers the window before the first run.
+   */
   #args = {} as DragAndDropSourceArgs;
 
   /** The handle the live registration was created with, to detect a change. */
@@ -698,12 +711,7 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
     _positional: [],
     args: DragAndDropSourceArgs = {} as DragAndDropSourceArgs
   ) {
-    if (this.#element && this.#element !== element) {
-      this.#detach({ cancelPending: false });
-    }
-    this.#element = element;
-
-    if (args?.disabled) {
+    if (args.disabled) {
       this.#detach({ cancelPending: false });
       return;
     }
@@ -719,7 +727,6 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
     // run, and without this the element would keep dragging from anywhere.
     if (this.#cleanup && args.dragHandle !== this.#dragHandle) {
       this.#detach({ cancelPending: false });
-      this.#element = element;
     }
     this.#dragHandle = args.dragHandle;
 
@@ -752,20 +759,14 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
    *   lives on asks for the pending drop dispatch to be kept.
    */
   #detach({ cancelPending = true }: { cancelPending?: boolean } = {}) {
-    // A detach with nothing registered can still land while a registration this
-    // let go of earlier is mid-drag. That drag's mark is the registration's.
-    const held = Boolean(this.#cleanup);
     const work = this.#cleanup?.({ cancelPending }) ?? null;
     if (work) {
       // The drag this work is waiting on is still in flight, so the element
       // keeps its mark; the deferred teardown removes it when the drag ends.
       this.#detached.add(work);
-    } else if (held) {
-      this.#element?.classList.remove("--dragging");
     }
     this.#pruneDetached();
     this.#cleanup = null;
-    this.#element = null;
   }
 
   /**

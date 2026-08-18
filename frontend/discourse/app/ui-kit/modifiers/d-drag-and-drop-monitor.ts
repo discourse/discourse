@@ -59,7 +59,8 @@ export type DragAndDropMonitorArgs =
  * monitor imperatively (when a template modifier doesn't fit) without importing
  * the underlying library.
  *
- * Library-agnostic by design: the dependency is imported only here.
+ * Consumers remain library-agnostic: they use this helper instead of importing
+ * the underlying library themselves.
  *
  * @param getArgsRef - Closure returning the latest args. Library callbacks read
  *   this on every invocation.

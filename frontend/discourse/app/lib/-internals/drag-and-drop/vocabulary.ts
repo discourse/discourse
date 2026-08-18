@@ -11,6 +11,15 @@ import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapt
 export const DRAG_BODY = "discourse:dragBody";
 
 /**
+ * Resolves the body an element drag represents.
+ *
+ * @param source - The payload as the underlying library carries it.
+ */
+export function dragBodyOf(source: ElementDragPayload): Element | null {
+  return (source.data?.[DRAG_BODY] as Element) ?? source.element ?? null;
+}
+
+/**
  * The type a drag answers to in an `accepts` / `types` filter.
  *
  * @param data - A drag payload's `data`, as the underlying library carries it.
@@ -69,6 +78,28 @@ export interface NormalizedDragSource {
 }
 
 /**
+ * Normalizes a payload stamped by `dDragAndDropSource`.
+ *
+ * Unlike arbitrary element drags, an owned payload always carries a string
+ * discriminator and an HTML body.
+ *
+ * @param source - The owned payload as the underlying library carries it.
+ */
+export function normalizeOwnedDragSource(source: ElementDragPayload): {
+  /** The discriminator stamped by the source. */
+  type: string;
+
+  /** The consumer payload, including its discriminator. */
+  data: Record<string, unknown>;
+
+  /** The dragged body, rather than a handle registered on its behalf. */
+  element: HTMLElement;
+} {
+  const { type, data, element } = normalizeDragSource(source);
+  return { type: type as string, data, element: element as HTMLElement };
+}
+
+/**
  * Resolves a raw payload into the shape every reader reports.
  *
  * This is the single place the routing vocabulary above is interpreted. The
@@ -86,7 +117,8 @@ export function normalizeDragSource(
 ): NormalizedDragSource {
   // Lifted out first: the body is routing, not payload, so no consumer should
   // ever iterate onto it.
-  const { [DRAG_BODY]: body, ...data } = source.data ?? {};
+  const data = { ...(source.data ?? {}) };
+  delete data[DRAG_BODY];
 
   return {
     // The underlying library types every payload value as `unknown`, because
@@ -97,6 +129,6 @@ export function normalizeDragSource(
     // A source that registered a handle publishes the body it stands for, so a
     // consumer receives the element the user is moving rather than the grip
     // they happened to press.
-    element: (body as Element) ?? source.element ?? fallbackElement ?? null,
+    element: dragBodyOf(source) ?? fallbackElement ?? null,
   };
 }

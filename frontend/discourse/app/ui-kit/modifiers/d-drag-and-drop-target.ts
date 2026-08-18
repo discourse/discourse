@@ -12,7 +12,7 @@ import {
   registerDropTargetKernel,
 } from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
 import {
-  DRAG_BODY,
+  dragBodyOf,
   matchesDragType,
   type NormalizedDragSource,
   normalizeDragSource,
@@ -113,9 +113,8 @@ export type DragAndDropTargetArgs =
  * modifier. The modifier itself is a thin wrapper around this
  * function for the template-based common case.
  *
- * Library-agnostic by design: the dependency is imported only by the ui-kit
- * modifier files. Consumers talk to this helper rather than the dependency
- * directly.
+ * Consumers remain library-agnostic: they use this helper instead of importing
+ * the underlying library themselves.
  *
  * @param element - The element to register as a drop target.
  * @param getArgsRef - Closure returning the latest args. Library callbacks read
@@ -139,9 +138,7 @@ export function registerDragAndDropTarget(
         return false;
       }
 
-      // A handled source registers its grip but moves the body it represents.
-      const moving = (source.data?.[DRAG_BODY] as Element) ?? source.element;
-      return args.acceptsSelf !== false || moving !== element;
+      return args.acceptsSelf !== false || dragBodyOf(source) !== element;
     },
     getArgs: getArgsRef,
   });
