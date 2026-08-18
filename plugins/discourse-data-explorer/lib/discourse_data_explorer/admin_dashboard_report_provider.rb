@@ -4,6 +4,7 @@ module DiscourseDataExplorer
   class AdminDashboardReportProvider < ::AdminDashboard::Reports::SourceProvider
     SOURCE_NAME = "data_explorer_query"
     CACHE_MAX_AGE = 1.hour
+    DASHBOARD_SUPPLIED_PARAMS = %w[start_date end_date].freeze
 
     def self.source_name
       SOURCE_NAME
@@ -24,15 +25,14 @@ module DiscourseDataExplorer
 
     def self.list_all(search: nil, after: nil, limit: nil)
       persisted =
-        persisted_after(search: search, after: after, limit: limit)
-          .select { |query| mountable?(query) }
-          .map { |query| build_resolved(query) }
+        persisted_after(search: search, after: after, limit: limit).filter_map do |query|
+          build_resolved(query) if mountable?(query)
+        end
       unpersisted =
         seek(
           Query
             .unpersisted_defaults(search: search)
-            .select { |query| mountable?(query) }
-            .map { |query| build_resolved(query) },
+            .filter_map { |query| build_resolved(query) if mountable?(query) },
           after: after,
           limit: limit,
         )
@@ -108,7 +108,10 @@ module DiscourseDataExplorer
     private_class_method :load_queries
 
     def self.mountable?(query)
-      query.params.all? { |param| param.internal? || param.nullable || param.default.present? }
+      query.params.all? do |param|
+        param.internal? || param.nullable || param.default.present? ||
+          DASHBOARD_SUPPLIED_PARAMS.include?(param.identifier)
+      end
     end
     private_class_method :mountable?
 

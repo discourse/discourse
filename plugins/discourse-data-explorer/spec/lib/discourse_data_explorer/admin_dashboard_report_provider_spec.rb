@@ -128,6 +128,18 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
       result = described_class.resolve_many([query.id.to_s], guardian: admin_guardian)
       expect(result.keys).to eq([query.id.to_s])
     end
+
+    it "resolves a query whose required parameters are start_date and end_date" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- date :start_date\n-- date :end_date\n\nSELECT :start_date AS value",
+          user: admin,
+        )
+
+      result = described_class.resolve_many([query.id.to_s], guardian: admin_guardian)
+      expect(result.keys).to eq([query.id.to_s])
+    end
   end
 
   describe ".list_all" do
@@ -182,6 +194,19 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
           :query,
           name: "Has a nullable parameter",
           sql: "-- [params]\n-- null int :topic_id\n\nSELECT :topic_id AS value",
+          user: admin,
+        )
+
+      reports = described_class.list_all
+      expect(reports.map(&:identifier)).to include(query.id.to_s)
+    end
+
+    it "includes a query whose required parameters are start_date and end_date" do
+      query =
+        Fabricate(
+          :query,
+          name: "Uses dashboard date range",
+          sql: "-- [params]\n-- date :start_date\n-- date :end_date\n\nSELECT :start_date AS value",
           user: admin,
         )
 
@@ -288,6 +313,29 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
 
       result = described_class.fetch_many([query.id.to_s], guardian: admin_guardian)
       expect(result).to be_empty
+    end
+
+    it "runs a query whose required parameters are start_date and end_date, using the dashboard's date range" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- date :start_date\n-- date :end_date\n\nSELECT :start_date AS value",
+          user: admin,
+        )
+
+      result =
+        described_class.fetch_many(
+          [query.id.to_s],
+          guardian: admin_guardian,
+          filters: {
+            start_date: "2026-01-01",
+            end_date: "2026-01-30",
+          },
+        )
+
+      payload = result[query.id.to_s]
+      expect(payload[:success]).to eq(true)
+      expect(payload[:rows]).to eq([["2026-01-01"]])
     end
   end
 
