@@ -173,18 +173,19 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                                 class="site-traffic-explorer__filter-dropdown-value"
                                 title={{value.label}}
                               >{{value.label}}</span>
-                              <button
-                                type="button"
-                                class="btn btn-flat"
-                                aria-label={{this.removeValueLabel value}}
-                                title={{this.removeValueLabel value}}
-                                {{on
-                                  "click"
-                                  (fn this.removeFilterValue filter value)
+                              <DButton
+                                class="btn-flat"
+                                @icon="xmark"
+                                @translatedAriaLabel={{this.removeValueLabel
+                                  value
                                 }}
-                              >
-                                {{dIcon "xmark"}}
-                              </button>
+                                @translatedTitle={{this.removeValueLabel value}}
+                                @action={{fn
+                                  this.removeFilterValue
+                                  filter
+                                  value
+                                }}
+                              />
                             </li>
                           {{/each}}
                         </ul>
@@ -201,14 +202,12 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                     class="site-traffic-explorer__filter-pill-label"
                   >{{trustHTML (this.filterDescription filter)}}</span>
                 {{/if}}
-                <button
-                  type="button"
-                  class="btn btn-flat site-traffic-explorer__filter-remove"
-                  aria-label={{this.removeLabel filter}}
-                  {{on "click" (fn @clearFilter filter.key)}}
-                >
-                  {{dIcon "xmark"}}
-                </button>
+                <DButton
+                  class="btn-flat site-traffic-explorer__filter-remove"
+                  @icon="xmark"
+                  @translatedAriaLabel={{this.removeLabel filter}}
+                  @action={{fn @clearFilter filter.key}}
+                />
               </span>
             {{/each}}
           </div>

@@ -115,8 +115,7 @@
 
   &__filter-remove {
     flex: 0 0 auto;
-    padding-block: var(--space-1);
-    padding-inline: var(--space-1) var(--space-2);
+    padding: var(--space-1) var(--space-2);
   }
 
   &__apply-filters {
@@ -526,9 +525,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  .site-traffic-explorer__filter-dropdown-clear {
-    padding-inline: 0;
   }
 }
