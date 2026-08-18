@@ -104,6 +104,20 @@ RSpec.describe Email::Receiver do
       email_log.reload
       expect(email_log.bounced).to eq(true)
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
+      expect(EmailBounceScore.score_for(user.email)).to eq(SiteSetting.soft_bounce_score)
+    end
+
+    it "records the bounce for the address even when it no longer belongs to a user" do
+      user.primary_email.update!(email: "fixed@email.com")
+
+      expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+      expect(EmailBounceScore.score_for("linux-admin@b-s-c.co.jp")).to eq(
+        SiteSetting.soft_bounce_score,
+      )
     end
 
     it "deals with hard bounces" do

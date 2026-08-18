@@ -378,30 +378,46 @@ module Email
     end
 
     # Records a bounce for an email we sent: claims the email log so that
-    # duplicate reports of the same bounce score only once, then applies the
-    # score — but only when the bounced address still belongs to the user the
-    # email was sent to, so late reports can't penalize an unrelated account.
+    # duplicate reports of the same bounce score only once, then charges the
+    # address it was sent to — and the user as well, but only while that address
+    # is still theirs, so late reports can't penalize an unrelated account.
     def self.record_bounce(email_log, permanent:, bounce_error_code: nil)
       return false if email_log.nil?
-      if !email_log.claim_bounce(permanent: permanent, bounce_error_code: bounce_error_code)
-        return false
-      end
 
+      score = permanent ? SiteSetting.hard_bounce_score : SiteSetting.soft_bounce_score
+
+      # the claim can only be made once, so it shares a transaction with the
+      # score it authorizes: failing in between would leave the provider's
+      # retry with nothing to do
+      claimed =
+        EmailLog.transaction do
+          if !email_log.claim_bounce(permanent: permanent, bounce_error_code: bounce_error_code)
+            next false
+          end
+
+          EmailBounceScore.record_bounce!(email_log.to_address, score)
+          true
+        end
+
+      return false if !claimed
+
+      # deliberately outside the transaction above: crossing the threshold
+      # creates a topic, which has no business holding the claim's row lock
       if email_log.user_id.present?
         user = User.find_by_email(email_log.to_address)
-        if user && user.id == email_log.user_id
-          score = permanent ? SiteSetting.hard_bounce_score : SiteSetting.soft_bounce_score
-          update_bounce_score_for(user, score)
-        end
+        update_bounce_score_for(user, score) if user && user.id == email_log.user_id
       end
 
       true
     end
 
     def self.update_bounce_score(email, score)
-      if user = User.find_by_email(email)
-        update_bounce_score_for(user, score)
-      end
+      # unlike a bounce we can tie back to an email log, this address is taken
+      # from the report itself, so only trust it when it names a known account
+      return if !(user = User.find_by_email(email))
+
+      EmailBounceScore.record_bounce!(email, score)
+      update_bounce_score_for(user, score)
     end
 
     def self.update_bounce_score_for(user, score)

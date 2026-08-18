@@ -62,7 +62,6 @@ class UsersEmailController < ApplicationController
     if result.no_second_factors_enabled? || result.second_factor_auth_completed?
       updater = EmailUpdater.new
       if updater.confirm(params[:token]) == :complete
-        updater.user.user_stat.reset_bounce_score!
         render json: success_json
       else
         render json: { error: I18n.t("change_email.already_done") }, status: :bad_request

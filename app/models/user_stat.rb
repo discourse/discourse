@@ -147,6 +147,15 @@ class UserStat < ActiveRecord::Base
       .update_all(bounce_score: 0)
   end
 
+  def self.erode_bounce_score!(user_id, amount)
+    return if amount <= 0
+
+    UserStat
+      .where(user_id: user_id)
+      .where("bounce_score > 0")
+      .update_all(["bounce_score = GREATEST(bounce_score - ?, 0)", amount])
+  end
+
   # Updates the denormalized view counts for all users
   def self.update_view_counts(last_seen = 1.hour.ago)
     # NOTE: we only update the counts for users we have seen in the last hour

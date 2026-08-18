@@ -52,6 +52,7 @@ RSpec.describe UsersEmailController do
 
       it "confirms with a correct token" do
         user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
+        EmailBounceScore.record_bounce!("bubblegum@adventuretime.ooo", 42)
 
         put "/u/confirm-new-email/#{updater.change_req.new_email_token.token}.json"
 
@@ -60,6 +61,30 @@ RSpec.describe UsersEmailController do
         expect(user.user_stat.bounce_score).to eq(0)
         expect(user.user_stat.reset_bounce_score_after).to eq(nil)
         expect(user.email).to eq("bubblegum@adventuretime.ooo")
+        expect(EmailBounceScore.score_for("bubblegum@adventuretime.ooo")).to eq(0)
+      end
+    end
+
+    context "when adding a secondary email" do
+      let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
+
+      before do
+        SiteSetting.enable_secondary_emails = true
+        sign_in(user)
+        updater.change_to("bubblegum@adventuretime.ooo", add: true)
+      end
+
+      it "leaves the bounce state of the primary email alone" do
+        user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
+        EmailBounceScore.record_bounce!(user.email, 42)
+
+        put "/u/confirm-new-email/#{updater.change_req.new_email_token.token}.json"
+
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.secondary_emails).to contain_exactly("bubblegum@adventuretime.ooo")
+        expect(EmailBounceScore.score_for(user.email)).to eq(42)
+        expect(user.user_stat.bounce_score).to eq(42)
       end
     end
 
