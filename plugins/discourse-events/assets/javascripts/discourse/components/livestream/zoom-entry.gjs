@@ -8,7 +8,6 @@ import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class LivestreamZoomEntry extends Component {
-  @service capabilities;
   @service currentUser;
   @service router;
   @service siteSettings;
@@ -48,13 +47,6 @@ export default class LivestreamZoomEntry extends Component {
     return this.router.urlFor("topic-zoom", this.topic.slug, this.topic.id);
   }
 
-  // The meeting takes over the window it opens in, so on a desktop it is given
-  // one of its own and the topic is left where the user was reading it. A
-  // phone has no second window to speak of, so it goes there in place.
-  get opensInNewTab() {
-    return !!this.joinHref && this.capabilities.viewport.lg;
-  }
-
   @action
   joinZoom(event) {
     if (this.currentUser) {
@@ -78,8 +70,6 @@ export default class LivestreamZoomEntry extends Component {
             @icon="video"
             class="discourse-calendar-livestream-zoom-entry__join btn-primary"
             @disabled={{this.joinDisabled}}
-            target={{if this.opensInNewTab "_blank"}}
-            rel={{if this.opensInNewTab "noopener"}}
             {{on "click" this.joinZoom}}
           />
 

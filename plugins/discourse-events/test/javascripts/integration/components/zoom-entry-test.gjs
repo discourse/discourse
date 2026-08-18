@@ -12,22 +12,9 @@ const WAITING_SELECTOR = ".discourse-calendar-livestream-zoom-entry__waiting";
 module("Integration | Component | LivestreamZoomEntry", function (hooks) {
   setupRenderingTest(hooks);
 
-  // Whether the meeting is given a window of its own turns on the viewport, so
-  // it is stated here rather than left to the size the test runner happens to
-  // have.
-  function stubCapabilities(owner, viewport) {
-    owner.unregister("service:capabilities");
-    owner.register(
-      "service:capabilities",
-      { viewport },
-      { instantiate: false }
-    );
-  }
-
   hooks.beforeEach(function () {
     const siteSettings = getOwner(this).lookup("service:site-settings");
     siteSettings.livestream_zoom_enabled = true;
-    stubCapabilities(getOwner(this), { lg: true });
 
     this.event = {
       id: 42,
@@ -44,7 +31,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     };
   });
 
-  test("links to the zoom page, opening it beside the topic on a desktop", async function (assert) {
+  test("links to the zoom page, which the meeting takes over in place", async function (assert) {
     await render(
       <template><LivestreamZoomEntry @event={{this.event}} /></template>
     );
@@ -58,29 +45,15 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
         "/t/test-topic/1/zoom",
         "the link is a real one, so it can be opened however the user likes"
       );
-    assert.dom(JOIN_BUTTON_SELECTOR).hasAttribute("target", "_blank");
-    assert.dom(JOIN_BUTTON_SELECTOR).hasAttribute("rel", "noopener");
-    assert
-      .dom(".discourse-calendar-livestream-zoom-entry__frame")
-      .doesNotExist("inline embedding was replaced by the /zoom route");
-  });
-
-  test("goes to the zoom page in place below the desktop breakpoint", async function (assert) {
-    stubCapabilities(getOwner(this), { lg: false });
-
-    await render(
-      <template><LivestreamZoomEntry @event={{this.event}} /></template>
-    );
-
-    assert
-      .dom(JOIN_BUTTON_SELECTOR)
-      .hasAttribute("href", "/t/test-topic/1/zoom");
     assert
       .dom(JOIN_BUTTON_SELECTOR)
       .doesNotHaveAttribute(
         "target",
-        "a phone has no second window to leave the topic in"
+        "the meeting is the page, so it is not sent off to a window of its own"
       );
+    assert
+      .dom(".discourse-calendar-livestream-zoom-entry__frame")
+      .doesNotExist("inline embedding was replaced by the /zoom route");
   });
 
   test("tags the body while the zoom entry is on screen", async function (assert) {
