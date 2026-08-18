@@ -530,4 +530,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  &-clear {
+    padding-inline: 0;
+    color: var(--tertiary);
+  }
 }
