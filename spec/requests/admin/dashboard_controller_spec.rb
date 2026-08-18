@@ -336,7 +336,7 @@ RSpec.describe Admin::DashboardController do
           expect(response.status).to eq(200)
           expect(search_data).to eq(
             "logging_enabled" => true,
-            "search_type" => "non_staff_only",
+            "search_type" => "human_only",
             "kpis" => {
               "total_searches" => {
                 "value" => 2,
