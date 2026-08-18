@@ -499,25 +499,14 @@ RSpec.describe SearchLog, type: :model do
       )
     end
 
-    it "keeps anonymous searches minus known crawlers for human_only while crawler detection is disabled" do
+    it "falls back to members-only for human_only while crawler detection is disabled" do
       SiteSetting.improved_crawler_detection = false
       Fabricate(:search_log, term: "admin-search", user: Fabricate(:admin))
       Fabricate(:search_log, term: "anonymous-search", user: nil)
-      Fabricate(:search_log, term: "crawler-search", user: nil, crawler: true)
-      Fabricate(:search_log, term: "scored-crawler-search", user: nil, likely_crawler: true)
 
       results = SearchLog.trending(:all, :human_only).to_a
 
-      expect(results.map { |trend| [trend.term, trend.searches] }).to eq(
-        [
-          ["ruby", 3],
-          ["anonymous-search", 1],
-          ["java", 1],
-          ["php", 1],
-          ["scored-crawler-search", 1],
-          ["swift", 1],
-        ],
-      )
+      expect(results.map { |trend| [trend.term, trend.searches] }).to eq([["ruby", 1]])
     end
   end
 

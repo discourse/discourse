@@ -16,12 +16,9 @@ class SearchLog < ActiveRecord::Base
             "users.id IS NULL OR (NOT users.admin AND NOT users.moderator)",
           )
         end
-  scope :excluding_crawlers,
-        -> do
-          scope = where(crawler: false)
-          CrawlerScorer.enabled? ? scope.where(likely_crawler: false) : scope
-        end
-  scope :human_only, -> { non_staff_or_anonymous.excluding_crawlers }
+  scope :excluding_crawlers, -> { where(crawler: false, likely_crawler: false) }
+  scope :human_only,
+        -> { CrawlerScorer.enabled? ? non_staff_or_anonymous.excluding_crawlers : non_staff }
 
   def ctr
     return 0 if click_through == 0 || searches == 0

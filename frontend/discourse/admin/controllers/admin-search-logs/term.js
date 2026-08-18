@@ -1,8 +1,11 @@
 import Controller from "@ember/controller";
+import { service } from "@ember/service";
 import { DEFAULT_PERIOD } from "discourse/admin/controllers/admin-search-logs/index";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSearchLogsTermController extends Controller {
+  @service siteSettings;
+
   loading = false;
   term = null;
   period = DEFAULT_PERIOD;
@@ -18,10 +21,14 @@ export default class AdminSearchLogsTermController extends Controller {
         id: "non_staff_only",
         name: i18n("admin.logs.search_logs.types.non_staff_only"),
       },
-      {
-        id: "human_only",
-        name: i18n("admin.logs.search_logs.types.human_only"),
-      },
+      ...(this.siteSettings.improved_crawler_detection
+        ? [
+            {
+              id: "human_only",
+              name: i18n("admin.logs.search_logs.types.human_only"),
+            },
+          ]
+        : []),
       { id: "header", name: i18n("admin.logs.search_logs.types.header") },
       {
         id: "full_page",
