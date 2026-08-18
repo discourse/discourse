@@ -520,9 +520,13 @@
   min-width: min(18rem, calc(100vw - 2 * var(--space-4)));
   padding: var(--space-3);
 
-  > strong {
-    display: block;
+  &-title {
     margin-block-end: var(--space-2);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: normal;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
   ul {
