@@ -200,4 +200,73 @@ RSpec.describe EmailLog do
       expect(email_log.reload.bounce_error_code).to eq(nil)
     end
   end
+
+  describe "#claim_bounce" do
+    fab!(:email_log)
+
+    it "claims an unbounced log and stores the normalized error code" do
+      expect(email_log.claim_bounce(permanent: true, bounce_error_code: "5.1.1 (blah)")).to eq(true)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("5.1.1")
+    end
+
+    it "stores a generic error code reflecting the severity when none is reported" do
+      expect(email_log.claim_bounce(permanent: false)).to eq(true)
+      expect(email_log.reload.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_TRANSIENT)
+    end
+
+    it "claims an already bounced log only once" do
+      expect(email_log.claim_bounce(permanent: true, bounce_error_code: "5.1.1")).to eq(true)
+      expect(email_log.claim_bounce(permanent: false, bounce_error_code: "5.1.1")).to eq(false)
+      expect(email_log.claim_bounce(permanent: true, bounce_error_code: "5.1.1")).to eq(false)
+    end
+
+    it "lets a permanent failure supersede a transient one exactly once" do
+      expect(email_log.claim_bounce(permanent: false, bounce_error_code: "4.2.1")).to eq(true)
+      expect(email_log.claim_bounce(permanent: false, bounce_error_code: "4.4.7")).to eq(false)
+
+      expect(email_log.claim_bounce(permanent: true, bounce_error_code: "5.1.1")).to eq(true)
+      expect(email_log.reload.bounce_error_code).to eq("5.1.1")
+
+      expect(email_log.claim_bounce(permanent: true, bounce_error_code: "5.1.1")).to eq(false)
+    end
+
+    it "lets a permanent failure supersede a transient one reported without an error code" do
+      expect(email_log.claim_bounce(permanent: false)).to eq(true)
+      expect(email_log.claim_bounce(permanent: true)).to eq(true)
+      expect(email_log.reload.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_PERMANENT)
+    end
+
+    it "claims a permanent failure reported with a transient error code only once" do
+      diagnostic = "smtp; 450 4.2.1 mailbox is busy"
+
+      expect(email_log.claim_bounce(permanent: true, bounce_error_code: diagnostic)).to eq(true)
+      expect(email_log.reload.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_PERMANENT)
+
+      expect(email_log.claim_bounce(permanent: true, bounce_error_code: diagnostic)).to eq(false)
+      expect(email_log.claim_bounce(permanent: true, bounce_error_code: diagnostic)).to eq(false)
+    end
+
+    it "reflects the claim on the record in memory" do
+      email_log.claim_bounce(permanent: false, bounce_error_code: "4.2.1")
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("4.2.1")
+
+      email_log.claim_bounce(permanent: true, bounce_error_code: "5.1.1")
+      expect(email_log.bounce_error_code).to eq("5.1.1")
+    end
+
+    it "stores a generic code when the reported one contradicts the severity" do
+      expect(email_log.claim_bounce(permanent: false, bounce_error_code: "5.1.1")).to eq(true)
+      expect(email_log.reload.bounce_error_code).to eq(EmailLog::BOUNCE_ERROR_CODE_TRANSIENT)
+    end
+
+    it "escalates a transient claim that reported a permanent code" do
+      expect(email_log.claim_bounce(permanent: false, bounce_error_code: "5.1.1")).to eq(true)
+      expect(email_log.claim_bounce(permanent: true, bounce_error_code: "5.1.1")).to eq(true)
+      expect(email_log.reload.bounce_error_code).to eq("5.1.1")
+    end
+  end
 end

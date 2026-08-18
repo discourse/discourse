@@ -4,9 +4,10 @@ require "mail"
 
 module Email
   # See https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml#smtp-enhanced-status-codes-1
-  SMTP_STATUS_SUCCESS = "2."
-  SMTP_STATUS_TRANSIENT_FAILURE = "4."
-  SMTP_STATUS_PERMANENT_FAILURE = "5."
+  # both enhanced ("4.X.X") and basic ("4XX") statuses start with the class digit
+  def self.smtp_transient_failure?(status)
+    status.to_s.start_with?("4")
+  end
 
   def self.is_valid?(email)
     return false unless String === email
