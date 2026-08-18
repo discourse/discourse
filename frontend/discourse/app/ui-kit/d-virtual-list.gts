@@ -217,7 +217,8 @@ interface DVirtualListSignature<T> {
     overscan?: number;
     /**
      * Tag name for the inner container that carries `@role`, `...attributes`, and
-     * the rows (the semantic element — e.g. `"ul"` for a listbox). Default `"div"`.
+     * the rows (the semantic element — e.g. `"ul"` for a listbox). Resolved once
+     * at mount, with an omitted or empty value falling back to `"div"`.
      *
      * A container with a content model, such as `ul` or `ol`, requires
      * `@ownedRow`: the wrapped path emits `div` rows, which those elements do not
@@ -378,9 +379,12 @@ interface DVirtualListSignature<T> {
  * Structure: an outer role-less `.d-virtual-list` scroll VIEWPORT (the element the
  * `dVirtualizer` modifier drives) wraps an inner `@as` CONTAINER — the semantic
  * element that carries `@role`/`...attributes` and is the sizer (`height` = the
- * full total) — whose direct children are the rows, each absolutely positioned to
- * its virtual offset. The component owns the tracked window (`_virtualItems`/
- * `_totalSize`); the modifier owns the engine and pushes state in through `onState`.
+ * full total) — whose rows are direct children, each absolutely positioned to its
+ * virtual offset. The component owns the tracked window (`_virtualItems`); the
+ * modifier owns the engine and pushes state in through `onState`.
+ *
+ * The consumer must give the outer viewport a nonzero height. Without one,
+ * windowing has no visible area and renders no rows.
  *
  * Simple consumers yield content and let the primitive wrap it in a measured,
  * `@itemRole`-stamped row. A consumer that needs native row elements passes
@@ -406,6 +410,13 @@ interface DVirtualListSignature<T> {
 export default class DVirtualList<T> extends Component<
   DVirtualListSignature<T>
 > {
+  container = dElement(this.args.as || "div");
+  emptyContainer = dElement(
+    ["menu", "ol", "ul"].includes(this.args.as?.toLowerCase() ?? "")
+      ? "li"
+      : "div"
+  );
+
   /**
    * Makes the inner container a containing block for the absolutely positioned
    * rows. Cleared in the render-all fallback so rows flow normally.
@@ -475,7 +486,6 @@ export default class DVirtualList<T> extends Component<
   @tracked _api: DVirtualListApi | null = null;
 
   @tracked _virtualItems: readonly VirtualItem[] = [];
-  @tracked _totalSize = 0;
 
   /**
    * Whether rows are windowed. Reads a module-level flag rather than tracked
@@ -535,12 +545,6 @@ export default class DVirtualList<T> extends Component<
     };
   }
 
-  // The inner container tag (the semantic element carrying `@role`/`...attributes`
-  // and the rows). `dElement` types `...attributes` against the chosen tag.
-  get container() {
-    return dElement(this.args.as ?? "div");
-  }
-
   /** Whether `@itemRole` is one of the roles that defines position attributes. */
   get positionAwareItems() {
     return POSITION_AWARE_ROLES.has(this.args.itemRole ?? "");
@@ -575,7 +579,6 @@ export default class DVirtualList<T> extends Component<
     range: VisibleRange | null;
   }) {
     this._virtualItems = state.virtualItems;
-    this._totalSize = state.totalSize;
   }
 
   @action
@@ -586,8 +589,8 @@ export default class DVirtualList<T> extends Component<
     // Registration happens once (first-run only), so an initial scroll set up
     // here is inherently applied a single time and never re-fights the user on a
     // later `@items` change. It is deferred a tick because the first flush must
-    // publish `_totalSize` and the sizer must take that height before the
-    // viewport can scroll past its (initially zero) content.
+    // size the sizer before the viewport can scroll past its initially empty
+    // content.
     if (this.args.initialIndex != null) {
       const index = this.args.initialIndex;
       const align = this.args.initialAlign ?? "start";
@@ -627,7 +630,7 @@ export default class DVirtualList<T> extends Component<
           splattributes come first so the role and the sizer win a collision, and
           the sizer writes individual properties rather than a style attribute so a
           consumer's own styling survives. }}
-      {{#let this.container as |Container|}}
+      {{#let this.container this.emptyContainer as |Container EmptyContainer|}}
 
         <Container
           class="d-virtual-list__sizer"
@@ -657,7 +660,9 @@ export default class DVirtualList<T> extends Component<
               {{/if}}
             {{/each}}
           {{else}}
-            {{yield to="empty"}}
+            <EmptyContainer class="d-virtual-list__empty" role="presentation">
+              {{yield to="empty"}}
+            </EmptyContainer>
           {{/if}}
         </Container>
       {{/let}}
