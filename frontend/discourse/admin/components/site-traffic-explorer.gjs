@@ -273,7 +273,6 @@ export default class SiteTrafficExplorer extends Component {
         <SiteTrafficExplorerFilterPills
           @filters={{@activeFilters}}
           @hasPendingFilters={{@hasPendingFilters}}
-          @hasAppliedFilters={{@hasAppliedFilters}}
           @pendingFilterCount={{@pendingFilterCount}}
           @removeFilterValue={{@removeFilterValue}}
           @clearFilter={{@clearFilter}}

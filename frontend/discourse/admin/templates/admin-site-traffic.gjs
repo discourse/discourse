@@ -10,7 +10,6 @@ export default <template>
     @endDate={{@controller.endDate}}
     @activeFilters={{@controller.activeFilters}}
     @hasPendingFilters={{@controller.hasPendingFilters}}
-    @hasAppliedFilters={{@controller.hasAppliedFilters}}
     @pendingFilterCount={{@controller.pendingFilterCount}}
     @trafficTypes={{@controller.selectedTrafficTypes}}
     @setPeriod={{@controller.setPeriod}}

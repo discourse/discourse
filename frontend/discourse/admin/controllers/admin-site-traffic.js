@@ -131,10 +131,6 @@ export default class AdminSiteTrafficController extends Controller {
     );
   }
 
-  get hasAppliedFilters() {
-    return FILTER_KEYS.some((key) => this.#appliedValues(key).length);
-  }
-
   #customDate(value, edge) {
     if (this.safePeriod !== PERIOD_CUSTOM || !value) {
       return null;

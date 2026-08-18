@@ -152,7 +152,7 @@ module PageObjects
         selector = "[data-test-site-traffic-filter-pill='#{dimension}']"
         remove_label = "Remove #{FILTER_LABELS.fetch(dimension)} filter"
 
-        has_css?(selector, text: "#{FILTER_LABELS.fetch(dimension)} is #{label}", count: 1) &&
+        has_css?(selector, text: "#{FILTER_LABELS.fetch(dimension)}: #{label}", count: 1) &&
           has_css?("#{selector} button[aria-label='#{remove_label}']")
       end
 
