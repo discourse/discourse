@@ -9,6 +9,7 @@ import CategoryDrop, {
   ALL_CATEGORIES_ID,
   NO_CATEGORIES_ID,
 } from "discourse/select-kit/components/category-drop";
+import { FILTER_VISIBILITY_THRESHOLD } from "discourse/select-kit/components/select-kit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -380,3 +381,171 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     );
   });
 });
+
+function createSearchVisibilityCategory(context, attrs) {
+  const store = context.owner.lookup("service:store");
+  const name = attrs.name || `Category ${attrs.id}`;
+
+  return store.createRecord("category", {
+    color: "0088CC",
+    text_color: "FFFFFF",
+    style_type: "square",
+    slug: name.toLowerCase().replaceAll(" ", "-"),
+    topic_count: 1,
+    post_count: 1,
+    description: name,
+    description_text: name,
+    topic_url: `/c/${attrs.id}`,
+    read_restricted: false,
+    permission: 1,
+    notification_level: null,
+    ...attrs,
+  });
+}
+
+function initCategoriesWithSubSubcategoryThreshold(context) {
+  const topLevelCategories = Array.from(
+    { length: FILTER_VISIBILITY_THRESHOLD - 2 },
+    (_, index) =>
+      createSearchVisibilityCategory(context, {
+        id: 2000 + index,
+        name: `Parent ${index}`,
+      })
+  );
+  const subcategory = createSearchVisibilityCategory(context, {
+    id: 3000,
+    name: "Sub category",
+    parent_category_id: topLevelCategories[0].id,
+  });
+  const subSubcategory = createSearchVisibilityCategory(context, {
+    id: 3001,
+    name: "Sub sub category",
+    parent_category_id: subcategory.id,
+  });
+
+  context.site.set("categories", [
+    ...topLevelCategories,
+    subcategory,
+    subSubcategory,
+  ]);
+  context.setProperties({
+    category: null,
+    categories: topLevelCategories,
+    parentCategory: null,
+  });
+}
+
+module(
+  "Integration | Component | select-kit/category-drop | search visibility includes subcategories and sub-subcategories",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.set("subject", selectKit());
+      initCategoriesWithSubSubcategoryThreshold(this);
+    });
+
+    test("[TL0] shows search filter when sub-subcategories bring total up to threshold", async function (assert) {
+      set(this.currentUser, "trust_level", 0);
+      set(this.currentUser, "staff", false);
+      set(this.currentUser, "admin", false);
+
+      await render(
+        <template>
+          <CategoryDrop
+            @category={{this.category}}
+            @categories={{this.categories}}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      assert
+        .dom(".filter-input")
+        .exists(
+          "search is visible for TL0 user when sub-subcategories bring total up to threshold"
+        );
+    });
+
+    test("[admin] shows search filter when sub-subcategories bring total up to threshold", async function (assert) {
+      set(this.currentUser, "admin", true);
+
+      await render(
+        <template>
+          <CategoryDrop
+            @category={{this.category}}
+            @categories={{this.categories}}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      assert
+        .dom(".filter-input")
+        .exists(
+          "search is visible for admin when sub-subcategories bring total up to threshold"
+        );
+    });
+
+    test("hides search filter when rerendered into a below-threshold parent scope", async function (assert) {
+      await render(
+        <template>
+          <CategoryDrop
+            @category={{this.category}}
+            @categories={{this.categories}}
+            @options={{hash parentCategory=this.parentCategory}}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      assert
+        .dom(".filter-input")
+        .exists("search is visible before scoping to a parent category");
+
+      await this.subject.collapse();
+      this.set("parentCategory", this.categories[0]);
+      await this.subject.expand();
+
+      assert
+        .dom(".filter-input")
+        .doesNotExist(
+          "search is hidden when parent-scoped content remains below threshold"
+        );
+    });
+  }
+);
+
+module(
+  "Integration | Component | select-kit/category-drop | search visibility includes subcategories and sub-subcategories (anonymous)",
+  function (hooks) {
+    setupRenderingTest(hooks, { anonymous: true });
+
+    hooks.beforeEach(function () {
+      this.set("subject", selectKit());
+      initCategoriesWithSubSubcategoryThreshold(this);
+    });
+
+    test("[anon] shows search filter when sub-subcategories bring total up to threshold", async function (assert) {
+      await render(
+        <template>
+          <CategoryDrop
+            @category={{this.category}}
+            @categories={{this.categories}}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      assert
+        .dom(".filter-input")
+        .exists(
+          "search is visible for anonymous user when sub-subcategories bring total up to threshold"
+        );
+    });
+  }
+);
