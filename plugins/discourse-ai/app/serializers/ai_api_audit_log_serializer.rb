@@ -17,6 +17,8 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :language_model,
              :response_status,
              :request_attempts,
+             :duration_msecs,
+             :time_to_first_token_msecs,
              :created_at,
              :prev_log_id,
              :next_log_id,

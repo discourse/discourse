@@ -520,7 +520,8 @@ CREATE TABLE public.ai_api_audit_logs (
     llm_id bigint,
     response_status integer,
     request_attempts jsonb,
-    estimated_cost numeric(20,10)
+    estimated_cost numeric(20,10),
+    time_to_first_token_msecs integer
 );
 
 
@@ -23172,6 +23173,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260817054353'),
+('20260817054044'),
 ('20260814083721'),
 ('20260814060100'),
 ('20260814060000'),
