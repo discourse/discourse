@@ -20,10 +20,6 @@
     gap: var(--space-2);
   }
 
-  &__filter-slot {
-    min-block-size: calc(var(--space-8) + var(--space-2));
-  }
-
   &__filter-controls {
     display: flex;
     align-items: flex-start;
@@ -40,6 +36,10 @@
     align-items: center;
     gap: var(--space-2);
     margin-inline-start: auto;
+
+    .btn {
+      padding-block: var(--space-1);
+    }
   }
 
   &__filter-pill {
@@ -54,7 +54,6 @@
     &.is-pending {
       border-color: var(--tertiary);
       border-style: dashed;
-      background: transparent;
     }
 
     .fk-d-menu__trigger {
@@ -63,6 +62,14 @@
       padding: 0;
       background: transparent;
       color: inherit;
+
+      &:hover,
+      &.-expanded {
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+      }
     }
   }
 
