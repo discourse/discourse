@@ -56,7 +56,7 @@ RSpec.describe CategoryActivityDailyRollup do
       )
     end
 
-    it "counts a crawler revisiting the same topic once a day, matching topic view stats" do
+    it "counts a likely crawler revisiting the same topic once a day, matching topic view stats" do
       topic = Fabricate(:topic, category: category, created_at: 3.days.ago)
       TopicViewStat.create!(
         topic: topic,
@@ -81,7 +81,7 @@ RSpec.describe CategoryActivityDailyRollup do
       )
     end
 
-    it "does not create a row for a day whose only signal is crawler pageviews" do
+    it "does not create a row for a day whose only signal is likely crawler pageviews" do
       topic = Fabricate(:topic, category: category, created_at: 10.days.ago)
       Fabricate(:browser_pageview_event, topic_id: topic.id, created_at: 3.days.ago, score: 90)
 
@@ -90,7 +90,7 @@ RSpec.describe CategoryActivityDailyRollup do
       expect(described_class.where(date: 3.days.ago.to_date)).to be_empty
     end
 
-    it "keeps crawler pageviews for dates whose source events have been pruned" do
+    it "keeps likely crawler pageviews for dates whose source events have been pruned" do
       topic = Fabricate(:topic, category: category, created_at: 3.days.ago)
       TopicViewStat.create!(
         topic: topic,
@@ -109,7 +109,7 @@ RSpec.describe CategoryActivityDailyRollup do
       )
     end
 
-    it "recomputes crawler pageviews downward while the source events remain" do
+    it "recomputes likely crawler pageviews downward while the source events remain" do
       topic = Fabricate(:topic, category: category, created_at: 3.days.ago)
       TopicViewStat.create!(
         topic: topic,
@@ -266,7 +266,7 @@ RSpec.describe CategoryActivityDailyRollup do
       expect(row.page_views_current).to eq(6)
     end
 
-    it "clamps to zero when crawler pageviews overshoot the topic view stats" do
+    it "clamps to zero when likely crawler pageviews overshoot the topic view stats" do
       SiteSetting.improved_crawler_detection = true
       Fabricate(
         :category_activity_daily_rollup,

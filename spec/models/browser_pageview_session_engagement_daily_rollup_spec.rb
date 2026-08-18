@@ -286,7 +286,7 @@ RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
       )
     end
 
-    it "records the crawler share of sessions, bounces, and engaged seconds" do
+    it "records the likely crawler share of sessions, bounces, and engaged seconds" do
       crawler_event =
         Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 10, 9), score: 90)
       Fabricate(
@@ -327,7 +327,7 @@ RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
       )
     end
 
-    it "treats a session as a crawler when any of its pageviews scores above the threshold" do
+    it "treats a session as a likely crawler when any of its pageviews scores above the threshold" do
       session_id = SecureRandom.hex(16)
       Fabricate(
         :browser_pageview_event,

@@ -294,7 +294,7 @@ RSpec.describe SearchLog, type: :model do
       expect(log.reload.likely_crawler).to eq(false)
     end
 
-    it "flags a logged-in search whose session is scored as a crawler" do
+    it "flags a logged-in search whose session is scored as a likely crawler" do
       Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
       log =
         Fabricate(

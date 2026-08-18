@@ -17,7 +17,7 @@ RSpec.describe DashboardRollupRebuilder do
       expect(BrowserPageviewReferrerDailyRollup.sum(:count)).to eq(1)
     end
 
-    it "populates crawler counts on rollups that were built without them" do
+    it "populates likely crawler counts on rollups that were built without them" do
       SiteSetting.improved_crawler_detection = true
       Fabricate(:browser_pageview_event, country_code: "US", score: 90)
       BrowserPageviewCountryDailyRollup.aggregate(start_date: 1.day.ago, end_date: Time.zone.today)

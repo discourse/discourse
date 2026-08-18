@@ -1270,7 +1270,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         )
       end
 
-      it "excludes anonymous crawlers when login is required" do
+      it "excludes anonymous likely crawlers when login is required" do
         SiteSetting.login_required = true
 
         Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
