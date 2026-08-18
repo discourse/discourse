@@ -178,6 +178,10 @@ module PageObjects
           values.all? { |value| has_css?(selector, exact_text: value, count: 1) }
       end
 
+      def has_no_filter_dropdown?
+        has_no_css?("[data-test-site-traffic-filter-dropdown]")
+      end
+
       def remove_filter_value(value)
         within("[data-test-site-traffic-filter-dropdown]") { find_button("Remove #{value}").click }
         self

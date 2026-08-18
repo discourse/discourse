@@ -46,6 +46,8 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
+    min-width: 0;
+    max-width: 100%;
     padding-inline-start: var(--space-3);
     border: 1px solid transparent;
     border-radius: 2rem;
@@ -57,6 +59,7 @@
     }
 
     .fk-d-menu__trigger {
+      min-width: 0;
       gap: var(--space-1);
       border: 0;
       padding: 0;
@@ -70,10 +73,22 @@
         background: transparent;
         color: inherit;
       }
+
+      &.-expanded .d-icon-angle-down {
+        transform: rotate(180deg);
+      }
     }
   }
 
+  &__filter-pill-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   &__filter-remove {
+    flex: 0 0 auto;
     padding: var(--space-1) var(--space-2);
   }
 
