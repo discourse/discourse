@@ -195,8 +195,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       end_date: "2026-05-12",
       traffic_type: "logged_in,anonymous",
     )
-    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Logged in")
-    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Anonymous")
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "traffic_type",
+      label: "Traffic type is Logged in +1",
+    )
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
     expect(traffic).to have_series_total(label: "logged-in-human", value: "2")
@@ -211,8 +213,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_metric(label: "Pageviews", value: "4")
 
     traffic.go_forward
-    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Logged in")
-    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Anonymous")
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "traffic_type",
+      label: "Traffic type is Logged in +1",
+    )
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
 
     traffic.remove_filter("traffic_type", label: "Logged in")
@@ -390,6 +394,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     end
 
     traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
+    traffic.select_filter_row(card: "visitors", label: "Unknown browser")
 
     traffic.expand("pages")
 
@@ -400,15 +405,20 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_expanded_table(title: "Top URLs", column: "URL")
     expect(traffic).to have_metric(label: "Pageviews", value: "45")
-
     traffic.apply_expanded_filters
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "top_url",
       label: "Top URL is #{additional_paths.first} +1",
     )
+    expect(traffic).to have_filter_pill(dimension: "browser", label: "Unknown browser")
     expect(traffic).to have_no_expanded_table
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expected_path =
+      "/admin/dashboard/site-traffic-explorer?browser=unknown&end_date=2026-05-12&" \
+        "range=custom&start_date=2026-05-01&" \
+        "top_url=#{ERB::Util.url_encode(additional_paths.to_json)}"
+    expect(page).to have_current_path(expected_path)
   end
 
   it "lets an admin review and apply several filter values together",
@@ -416,9 +426,9 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     sign_in(admin)
 
     [
-      ["/first", "one.example", "US", "first-session"],
-      ["/second", "two.example", "US", "second-session"],
-      ["/third", "one.example", "GB", "third-session"],
+      %w[/first one.example US first-session],
+      %w[/second two.example US second-session],
+      %w[/third one.example GB third-session],
       ["/fourth", nil, "US", "fourth-session"],
     ].each do |url, normalized_referrer, country_code, session_id|
       Fabricate(
@@ -451,11 +461,9 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
-
     traffic.expand_filter_pill("referrer")
 
     expect(traffic).to have_filter_dropdown(values: %w[one.example two.example])
-
     traffic.remove_filter_value("two.example")
 
     traffic.select_tab(card: "acquisition", tab: "Referrers")

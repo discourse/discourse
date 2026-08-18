@@ -7265,6 +7265,13 @@ en:
         metric_information: "About this metric"
         active_filters: "Active traffic filters"
         filter_description: "%{filter} is <strong>%{value}</strong>"
+        grouped_filter_description: "%{filter} is <strong>%{value}</strong> +%{count}"
+        selected_filter_values: "Selected %{filter} values"
+        remove_filter_value: "Remove %{value}"
+        clear_all: "Clear all"
+        apply: "Apply"
+        apply_with_count: "Apply %{count}"
+        apply_filters: "Apply filters"
         filter_by:
           one: "Filter by %{label}, %{count} pageview"
           other: "Filter by %{label}, %{count} pageviews"

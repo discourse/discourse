@@ -1541,7 +1541,7 @@ RSpec.describe Admin::DashboardController do
         )
       end
 
-      it "applies the direct referrer filter" do
+      it "accepts a legacy scalar filter value" do
         get "/admin/dashboard/site-traffic-explorer.json",
             params: request_params.merge(referrer: "")
 
@@ -1569,7 +1569,14 @@ RSpec.describe Admin::DashboardController do
             "dimensions" => {
               "top_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
               "entry_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
-              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 1 }],
+              "referrers" => [
+                { "value" => "", "label" => "Direct / unknown", "pageviews" => 1 },
+                {
+                  "value" => "search.example/results?q=discourse",
+                  "label" => "search.example/results?q=discourse",
+                  "pageviews" => 1,
+                },
+              ],
               "countries" => [{ "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 }],
               "networks" => [
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 1 },
@@ -1584,6 +1591,83 @@ RSpec.describe Admin::DashboardController do
             ],
           },
         )
+      end
+
+      it "matches any selected value within a dimension and every selected dimension" do
+        referrers = ["search.example/results?q=discourse", ""]
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: referrers)
+
+        expect(response.parsed_body.slice("summary", "active_filters")).to eq(
+          "summary" => {
+            "pageviews" => 2,
+            "distinct_sessions" => 2,
+            "logged_in_share" => 50,
+            "bounce_rate" => 50,
+            "average_session_duration_seconds" => 30,
+          },
+          "active_filters" => [
+            {
+              "key" => "referrer",
+              "value" => "search.example/results?q=discourse",
+              "label" => "search.example/results?q=discourse",
+            },
+            { "key" => "referrer", "value" => "", "label" => "Direct / unknown" },
+          ],
+        )
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: referrers, country: ["US"])
+
+        expect(response.parsed_body.slice("summary", "active_filters")).to eq(
+          "summary" => {
+            "pageviews" => 1,
+            "distinct_sessions" => 1,
+            "logged_in_share" => 100,
+            "bounce_rate" => 0,
+            "average_session_duration_seconds" => 60,
+          },
+          "active_filters" => [
+            {
+              "key" => "referrer",
+              "value" => "search.example/results?q=discourse",
+              "label" => "search.example/results?q=discourse",
+            },
+            { "key" => "referrer", "value" => "", "label" => "Direct / unknown" },
+            { "key" => "country", "value" => "US", "label" => "United States" },
+          ],
+        )
+        expect(response.parsed_body.dig("dimensions", "referrers")).to eq(
+          [
+            {
+              "value" => "search.example/results?q=discourse",
+              "label" => "search.example/results?q=discourse",
+              "pageviews" => 1,
+            },
+          ],
+        )
+      end
+
+      it "rejects object-shaped filter values" do
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(country: { nested: "US" })
+
+        expect(response.status).to eq(400)
+      end
+
+      it "accepts the dimension limit and rejects one more filter value" do
+        referrers = 50.times.map { |index| "referrer-#{index}.example" }
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: referrers)
+
+        expect(response.status).to eq(200)
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: [*referrers, "one-too-many.example"])
+
+        expect(response.status).to eq(400)
       end
 
       it "treats same-site referrers as internal navigation" do
