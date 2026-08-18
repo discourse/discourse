@@ -50,5 +50,8 @@
     "yarn": "please-use-pnpm",
     "pnpm": "^10"
   },
-  "packageManager": "pnpm@10.28.0"
+  "packageManager": "pnpm@10.28.0",
+  "dependencies": {
+    "brace-expansion": "1.1.16"
+  }
 }
