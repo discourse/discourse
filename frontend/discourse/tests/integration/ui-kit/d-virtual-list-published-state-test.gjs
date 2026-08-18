@@ -35,6 +35,66 @@ module(
       disableVirtualization();
     });
 
+    test("the published range is an exact frozen snapshot or null", async function (assert) {
+      const populatedStates = [];
+      const emptyStates = [];
+      const onPopulatedState = (state) => populatedStates.push(state);
+      const onEmptyState = (state) => emptyStates.push(state);
+      const populatedItems = buildRows(100);
+      const emptyItems = [];
+
+      await render(
+        <template>
+          <div
+            class="populated-viewport"
+            style="height: 400px; overflow-y: auto"
+            {{dVirtualizer
+              items=populatedItems
+              estimateSize=estimate
+              key="id"
+              onState=onPopulatedState
+            }}
+          >
+            <div class="d-virtual-list__sizer"></div>
+          </div>
+          <div
+            class="empty-viewport"
+            style="height: 400px; overflow-y: auto"
+            {{dVirtualizer
+              items=emptyItems
+              estimateSize=estimate
+              key="id"
+              onState=onEmptyState
+            }}
+          >
+            <div class="d-virtual-list__sizer"></div>
+          </div>
+        </template>
+      );
+
+      assert.true(
+        populatedStates.length > 0,
+        "precondition: the populated modifier published state"
+      );
+      assert.true(
+        emptyStates.length > 0,
+        "precondition: the empty modifier published state"
+      );
+
+      const populatedRange = populatedStates.at(-1).range;
+      assert.deepEqual(
+        populatedRange,
+        { startIndex: 0, endIndex: 9 },
+        "the range carries exactly the visible start and end indices"
+      );
+      assert.true(Object.isFrozen(populatedRange), "the range is frozen");
+      assert.strictEqual(
+        emptyStates.at(-1).range,
+        null,
+        "state publishes null when there is no range"
+      );
+    });
+
     test("the published window is frozen and detached from the engine's array", async function (assert) {
       const items = buildRows(100);
       const published = [];

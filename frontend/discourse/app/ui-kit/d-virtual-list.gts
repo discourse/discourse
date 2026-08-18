@@ -49,9 +49,16 @@ interface RowContext<T> {
    * Positions the row (absolute + `translateY`) when windowing; inert in the
    * render-all fallback. Apply with the row's offset and index:
    * `{{row.place row.start row.index}}`.
+   *
+   * Apply it BEFORE {@link measure}. It stamps the `data-index` that measurement
+   * identifies the row by, and modifiers run in template order.
    */
   place: PlaceModifier;
-  /** Registers the row for height measurement. Arg-less and stable; apply once per row. */
+  /**
+   * Registers the row for height measurement. Arg-less and stable; apply once per row,
+   * AFTER {@link place} — a row reached before its `data-index` is stamped cannot be
+   * identified, so it is skipped and keeps rendering at `@estimateSize`.
+   */
   measure: ModifierLike<HTMLElement>;
   /**
    * The row's `aria-posinset`, or undefined when `@itemRole` is not a role that
@@ -125,8 +132,28 @@ export interface DVirtualListApi {
    * from `measure`, which clears the item-size cache and leaves the viewport untouched.
    */
   remeasureViewport(): void;
+  /**
+   * Registers one row element for height measurement.
+   *
+   * Internal plumbing for the row `measure` modifier, exposed because that modifier is
+   * yielded to consumers. The element must carry the `data-index` that `place` stamps;
+   * anything else is ignored rather than measured under a key that does not exist.
+   */
   measureElement(element: HTMLElement): void;
-  visibleRange(): { startIndex: number; endIndex: number } | undefined;
+
+  /**
+   * The visible index range, or undefined before the first measurement.
+   *
+   * A frozen snapshot, never the engine's own range object: the committed value of that
+   * object is what the engine's change memo compares against, so a consumer writing
+   * through it could silently stop the window updating. Successive calls return equal
+   * values while the range holds, and a fresh object once it moves.
+   */
+  visibleRange():
+    | Readonly<{ startIndex: number; endIndex: number }>
+    | undefined;
+
+  /** Whether the viewport is mid-scroll. */
   readonly isScrolling: boolean;
 }
 
