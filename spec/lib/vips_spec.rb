@@ -22,7 +22,26 @@ RSpec.describe Vips do
         end
         .returns("vips-8.18.4\n")
 
-      expect(described_class.run("vips", "--version")).to eq("vips-8.18.4\n")
+      expect(described_class.run("--version")).to eq("vips-8.18.4\n")
+    end
+
+    it "runs multiple operations in sequence" do
+      Discourse::SafeExec
+        .expects(:capture)
+        .with do |*command, **|
+          command ==
+            [
+              "sh",
+              "-c",
+              "vips text /tmp/glyph.png A\\;\\ touch\\ /tmp/exploit && vips gravity /tmp/glyph.png /tmp/avatar.png centre 360 360",
+            ]
+        end
+        .returns("")
+
+      described_class.run(
+        ["text", "/tmp/glyph.png", "A; touch /tmp/exploit"],
+        %w[gravity /tmp/glyph.png /tmp/avatar.png centre 360 360],
+      )
     end
 
     context "when running in production" do
@@ -31,7 +50,7 @@ RSpec.describe Vips do
       it "fails when Landlock is unavailable" do
         Discourse::SafeExec.stubs(landlock_supported?: false)
 
-        expect { described_class.run("vips", "--version") }.to raise_error(
+        expect { described_class.run("--version") }.to raise_error(
           Discourse::Utils::CommandError,
           "Cannot run libvips because Landlock sandboxing is unavailable",
         )
@@ -41,7 +60,7 @@ RSpec.describe Vips do
         Discourse::SafeExec.stubs(landlock_supported?: true)
         Discourse::SafeExec.stubs(capture: "vips-8.18.0\n")
 
-        expect(described_class.run("vips", "--version")).to eq("vips-8.18.0\n")
+        expect(described_class.run("--version")).to eq("vips-8.18.0\n")
       end
     end
 
@@ -50,7 +69,7 @@ RSpec.describe Vips do
         Discourse::SafeExec.stubs(landlock_supported?: false)
         Discourse::SafeExec.stubs(capture: "vips-8.18.0\n")
 
-        expect(described_class.run("vips", "--version")).to eq("vips-8.18.0\n")
+        expect(described_class.run("--version")).to eq("vips-8.18.0\n")
       end
     end
   end

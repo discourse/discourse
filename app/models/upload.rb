@@ -404,17 +404,16 @@ class Upload < ActiveRecord::Base
             pixel = File.join(directory, "pixel.raw")
 
             # Produce one raw pixel whose color channels represent the image's dominant color.
-             Vips.run(
-               "vips",
-               "thumbnail",
-               local_path,
-               pixel,
-               "1",
-               "--height",
-               "1",
-               "--size",
-               "force",
-               read: [local_path],
+            Vips.run(
+              "thumbnail",
+              local_path,
+              pixel,
+              "1",
+              "--height",
+              "1",
+              "--size",
+              "force",
+              read: [local_path],
               write: [directory],
               nice: 10,
             )

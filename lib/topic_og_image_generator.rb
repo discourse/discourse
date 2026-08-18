@@ -373,7 +373,6 @@ class TopicOgImageGenerator
       File.write(svg_path, build_svg(asset_directory: dir))
 
       Vips.run(
-        "vips",
         "flatten",
         svg_path,
         "#{png_path}[compression=9]",
