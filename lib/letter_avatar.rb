@@ -25,8 +25,6 @@ class LetterAvatar
   POINTSIZE = 280
   SVG_TEXT_BASELINE = 245
   private_constant :SVG_TEXT_BASELINE
-  FONT_LIST_TIMEOUT_SECONDS = 10
-  private_constant :FONT_LIST_TIMEOUT_SECONDS
 
   class << self
     def version
@@ -97,12 +95,7 @@ class LetterAvatar
 
        fonts =
         Discourse::Utils
-          .execute_command(
-            "fc-list",
-            "--format",
-            "%{file}\t%{family}\t%{style}\t%{fontversion}\n",
-            timeout: FONT_LIST_TIMEOUT_SECONDS,
-          )
+          .execute_command("fc-list", "--format", "%{file}\t%{family}\t%{style}\t%{fontversion}\n")
           .lines
           .sort
           .join
