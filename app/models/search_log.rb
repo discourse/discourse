@@ -243,11 +243,11 @@ end
 #  likely_crawler     :boolean          default(FALSE), not null
 #  search_result_type :integer
 #  search_type        :integer          not null
-#  session_id         :string(32)
 #  term               :string           not null
 #  user_agent         :string(2000)
 #  created_at         :datetime         not null
 #  search_result_id   :integer
+#  session_id         :string(32)
 #  user_id            :integer
 #
 # Indexes
