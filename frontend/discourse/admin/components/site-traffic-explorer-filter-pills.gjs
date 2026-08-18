@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { escapeExpression } from "discourse/lib/utilities";
 import { gt, or } from "discourse/truth-helpers";
@@ -13,7 +15,60 @@ import { i18n } from "discourse-i18n";
 
 const MAX_VISIBLE_FILTER_VALUES = 3;
 
+const fitFilterPill = modifier(
+  (element, [key, maximumVisibleCount, , setVisibleCount]) => {
+    const filters = element.closest(".site-traffic-explorer__filters");
+    let filtersWidth;
+    let destroyed = false;
+
+    const fit = (visibleCount = maximumVisibleCount) => {
+      if (destroyed) {
+        return;
+      }
+
+      setVisibleCount(key, visibleCount);
+
+      schedule("afterRender", () => {
+        if (destroyed) {
+          return;
+        }
+
+        const label = element.querySelector(
+          ".site-traffic-explorer__filter-pill-label"
+        );
+        if (
+          label &&
+          label.scrollWidth > label.clientWidth + 1 &&
+          visibleCount > 1
+        ) {
+          fit(visibleCount - 1);
+        }
+      });
+    };
+
+    const observer = new ResizeObserver(([entry]) => {
+      const width = entry.contentRect.width;
+      if (width !== filtersWidth) {
+        filtersWidth = width;
+        fit();
+      }
+    });
+
+    if (filters) {
+      observer.observe(filters);
+    }
+    schedule("afterRender", fit);
+
+    return () => {
+      destroyed = true;
+      observer.disconnect();
+    };
+  }
+);
+
 export default class SiteTrafficExplorerFilterPills extends Component {
+  @tracked visibleValueCounts = {};
+
   @action
   filterLabel(key) {
     return i18n(`admin.site_traffic_explorer.filters.${key}`);
@@ -28,8 +83,35 @@ export default class SiteTrafficExplorerFilterPills extends Component {
   }
 
   @action
-  hasHiddenValues(filter) {
-    return filter.values.length > MAX_VISIBLE_FILTER_VALUES;
+  hasHiddenValues(filter, visibleCount) {
+    return filter.values.length > visibleCount;
+  }
+
+  @action
+  maximumVisibleCount(filter) {
+    return Math.min(filter.values.length, MAX_VISIBLE_FILTER_VALUES);
+  }
+
+  @action
+  visibleValueCount(filter) {
+    return Math.min(
+      filter.values.length,
+      this.visibleValueCounts[filter.key] ?? this.maximumVisibleCount(filter)
+    );
+  }
+
+  @action
+  setVisibleValueCount(key, count) {
+    if (this.visibleValueCounts[key] === count) {
+      return;
+    }
+
+    this.visibleValueCounts = { ...this.visibleValueCounts, [key]: count };
+  }
+
+  @action
+  filterSignature(filter) {
+    return filter.values.map((value) => value.label).join("\0");
   }
 
   @action
@@ -48,12 +130,12 @@ export default class SiteTrafficExplorerFilterPills extends Component {
   }
 
   @action
-  groupedFilterDescription(filter) {
+  groupedFilterDescription(filter, visibleCount) {
     const visibleValues = filter.values
-      .slice(0, MAX_VISIBLE_FILTER_VALUES)
+      .slice(0, visibleCount)
       .map((value) => `<strong>${escapeExpression(value.label)}</strong>`)
       .join(i18n("admin.site_traffic_explorer.filter_value_separator"));
-    const remainingCount = filter.values.length - MAX_VISIBLE_FILTER_VALUES;
+    const remainingCount = filter.values.length - visibleCount;
 
     return i18n("admin.site_traffic_explorer.grouped_filter_description", {
       filter: escapeExpression(this.filterLabel(filter.key)),
@@ -109,8 +191,16 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                   {{if filter.pending 'is-pending'}}"
                 id={{this.filterId filter}}
                 data-test-site-traffic-filter-pill={{filter.key}}
+                {{fitFilterPill
+                  filter.key
+                  (this.maximumVisibleCount filter)
+                  (this.filterSignature filter)
+                  this.setVisibleValueCount
+                }}
               >
-                {{#if (this.hasHiddenValues filter)}}
+                {{#if
+                  (this.hasHiddenValues filter (this.visibleValueCount filter))
+                }}
                   <DMenu
                     @identifier={{this.filterId filter}}
                     @inline={{true}}
@@ -120,7 +210,9 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                       <span
                         class="site-traffic-explorer__filter-pill-label"
                       >{{trustHTML
-                          (this.groupedFilterDescription filter)
+                          (this.groupedFilterDescription
+                            filter (this.visibleValueCount filter)
+                          )
                         }}</span>
                       {{dIcon "angle-down"}}
                     </:trigger>
@@ -160,7 +252,11 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                 {{else if (gt filter.values.length 1)}}
                   <span
                     class="site-traffic-explorer__filter-pill-label"
-                  >{{trustHTML (this.groupedFilterDescription filter)}}</span>
+                  >{{trustHTML
+                      (this.groupedFilterDescription
+                        filter (this.visibleValueCount filter)
+                      )
+                    }}</span>
                 {{else}}
                   <span
                     class="site-traffic-explorer__filter-pill-label"
