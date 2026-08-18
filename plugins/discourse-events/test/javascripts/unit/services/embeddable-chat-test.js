@@ -93,4 +93,19 @@ module("Unit | Service | embeddable-chat", function (hooks) {
     assert.true(this.subject.canRenderChatChannel(true));
     assert.false(this.subject.canRenderChatChannel(false));
   });
+
+  test("shows the header chat icon below the breakpoint with a channel", function (assert) {
+    this.capabilities.viewport.lg = false;
+    assert.true(this.subject.showLivestreamHeaderChatIcon);
+
+    this.capabilities.viewport.lg = true;
+    assert.false(this.subject.showLivestreamHeaderChatIcon);
+  });
+
+  test("does not show the header chat icon without a channel", function (assert) {
+    this.capabilities.viewport.lg = false;
+    this.topicController.model = {};
+
+    assert.false(this.subject.showLivestreamHeaderChatIcon);
+  });
 });

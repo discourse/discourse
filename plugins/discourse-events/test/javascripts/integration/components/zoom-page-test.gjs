@@ -63,6 +63,21 @@ function stubMessageBus(context) {
   sinon.stub(messageBus, "unsubscribe");
 }
 
+function stubEventApi(context) {
+  const api = {
+    joinEvent: sinon.fake.resolves(),
+    updateEventAttendance: sinon.fake.resolves(),
+  };
+
+  const owner = getOwner(context);
+  owner.unregister("service:discourse-post-event-api");
+  owner.register("service:discourse-post-event-api", api, {
+    instantiate: false,
+  });
+
+  return api;
+}
+
 module("Integration | Component | LivestreamZoomPage", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -71,6 +86,7 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
     stubChat(this);
     stubMessageBus(this);
     stubFrameUrl(this);
+    this.eventApi = stubEventApi(this);
 
     this.topic = {
       id: 1,
@@ -149,5 +165,42 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
     );
 
     assert.dom(CHAT_SELECTOR).doesNotExist();
+  });
+  // Chat beside the meeting is read-only for anyone the event has no "going"
+  // answer from, so reaching the meeting is taken as that answer.
+  test("marks a user who has not answered the RSVP as going", async function (assert) {
+    this.topic.postStream.posts[0].event.can_update_attendance = true;
+
+    await render(
+      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
+    );
+
+    assert.true(
+      this.eventApi.joinEvent.calledWithMatch(sinon.match.any, {
+        status: "going",
+      }),
+      "the user is entered into the event on the way in"
+    );
+  });
+
+  test("leaves an answer the user has already given alone", async function (assert) {
+    const event = this.topic.postStream.posts[0].event;
+    event.can_update_attendance = true;
+    event.watching_invitee = { id: 5, status: "not_going" };
+
+    await render(
+      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
+    );
+
+    assert.false(this.eventApi.joinEvent.called, "no answer is overwritten");
+    assert.false(this.eventApi.updateEventAttendance.called);
+  });
+
+  test("does not answer for a user the event will not take one from", async function (assert) {
+    await render(
+      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
+    );
+
+    assert.false(this.eventApi.joinEvent.called);
   });
 });

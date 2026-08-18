@@ -38,10 +38,8 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     gap: 0.75rem;
     align-items: center;
 
-    p.discourse-calendar-livestream-zoom-entry__error {
-      margin: 0;
-      color: var(--danger);
-      margin-right: auto;
+    a {
+      width: 100%;
     }
   }
 
@@ -51,65 +49,18 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     text-align: center;
     width: 100%;
   }
-
-  &__audio-hint {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-1);
-    margin: 0;
-    padding: var(--space-2);
-
-    // intentionally hardcoded zoom values
-    border-radius: 9px;
-    background: rgb(36, 36, 36);
-    color: rgb(255, 255, 255);
-    border: 1px solid rgb(0, 255, 145);
-  }
-
-  &__frame {
-    // The frame has to lay out as soon as a join starts, not once Zoom mounts:
-    // the component view is initialized with a video size measured from this
-    // element, and a collapsed element measures zero.
-    display: none;
-
-    // Zoom sets `display` inline on this element when it mounts, which beats
-    // anything declared here. Only `justify-content` and `padding-top` apply
-    // from then on.
-    //
-    // Until the meeting is joined the widget is a small dialog (spinner,
-    // "meeting has not started"), so it is centred. Once joined it fills the
-    // frame and must sit flush.
-    &.--visible {
-      display: block;
-      justify-content: center;
-      padding-top: var(--space-4);
-    }
-
-    &.--joined {
-      justify-content: initial;
-      padding-top: 0;
-    }
-
-    // Get rid of the view mode buttons in zoom, they break the video stream
-    // when used
-    .zoom-MuiTabs-flexContainer[aria-label="view mode tabs"] {
-      display: none;
-    }
-
-    // Get rid of chat button in zoom, Discourse chat should be used,
-    // there is no way to hide this natively even if the webinar
-    // host has disabled chat
-    button.zoom-MuiButton-root[title="Chat"] {
-      display: none;
-    }
-  }
 }
 
 // The meeting is the page here, so it is given the viewport below the header
 // whole: anything the layout adds around it is height the page cannot have,
 // and overflowing it drags the meeting under the sticky header.
 body.discourse-calendar-livestream-zoom-full {
+  --d-max-width: 100vw;
+
+  #main-outlet-wrapper {
+    padding: 0;
+  }
+
   #main-outlet {
     padding: 0 !important; // override horizon styles
     height: calc(
@@ -322,6 +273,16 @@ body.discourse-calendar-livestream-zoom-full {
 // Full page client view Zoom overrides
 #zmmtg-root {
   #sdk-footer-sortable-list #chat {
+    display: none;
+  }
+}
+
+// On a zoom livestream the join button routes to the dedicated /zoom page,
+// which renders the chat inline, so the overlay chat header icon is redundant
+// while the zoom entry or the zoom page is on screen.
+body.discourse-calendar-livestream-zoom-topic,
+body.discourse-calendar-livestream-zoom-full {
+  .d-header-icons .livestream-header-icon {
     display: none;
   }
 }

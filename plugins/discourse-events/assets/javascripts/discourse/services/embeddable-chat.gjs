@@ -79,6 +79,10 @@ export default class EmbeddableChat extends Service {
     return !this.capabilities.viewport.lg;
   }
 
+  get showLivestreamHeaderChatIcon() {
+    return this.isMobileViewport && !!this.chatChannelId;
+  }
+
   get topicController() {
     return getOwner(this).lookup("controller:topic");
   }

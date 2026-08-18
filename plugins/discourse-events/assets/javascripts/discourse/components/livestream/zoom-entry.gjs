@@ -1,36 +1,17 @@
 import Component from "@glimmer/component";
-import { array } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { trustHTML } from "@ember/template";
-import { isEmpty } from "@ember/utils";
-import { bind } from "discourse/lib/decorators";
-import { iconHTML } from "discourse/lib/icon-library";
+import bodyClass from "discourse/helpers/body-class";
 import DButton from "discourse/ui-kit/d-button";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import ZoomMeetingSession from "../../lib/zoom-meeting-session";
-import zoomComponentViewLayout from "../../modifiers/zoom-component-view-layout";
 
 export default class LivestreamZoomEntry extends Component {
-  @service appEvents;
   @service capabilities;
   @service currentUser;
-  @service discoursePostEventApi;
+  @service router;
   @service siteSettings;
-
-  session = new ZoomMeetingSession(getOwner(this), {
-    topicId: this.topic.id,
-    canJoin: () => this.canJoinNow,
-    onBeforeJoinAttempt: this.markAsGoing,
-    onJoined: () => this.args.onJoined?.(),
-  });
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.session.teardown();
-  }
 
   get topic() {
     return this.args.event.post.topic;
@@ -52,153 +33,62 @@ export default class LivestreamZoomEntry extends Component {
     );
   }
 
-  get isDesktop() {
-    return this.capabilities.viewport.lg;
-  }
-
-  get showFallbackLink() {
-    return !isEmpty(this.session.errorMessage);
-  }
-
-  get showAudioHint() {
-    return this.session.isJoined && !this.session.hasJoinedAudio;
-  }
-
-  get joinAudioHint() {
-    return trustHTML(
-      i18n("discourse_calendar.livestream.zoom.join_audio_hint", {
-        icon: iconHTML("zoom-join-audio"),
-      })
-    );
-  }
-
   get joinDisabled() {
-    return (
-      this.session.isJoining ||
-      this.session.isWaitingForStart ||
-      !this.canJoinNow
-    );
+    return !this.canJoinNow;
   }
 
-  // Attendance is what follows a user into the livestream chat channel, so
-  // someone who joins the webinar without ever answering the RSVP would sit in
-  // front of a read-only chat. Anyone who has already made a choice, including
-  // an explicit "not going", keeps it.
-  @bind
-  async markAsGoing() {
-    const event = this.args.event;
-
-    if (!event.canUpdateAttendance || event.watchingInvitee?.status) {
-      return;
+  // A `disabled` anchor is still followable, and the meeting has nothing to
+  // show an anonymous user, so the button only carries a link once it leads
+  // somewhere: everything else is left to the click.
+  get joinHref() {
+    if (!this.canJoinNow || !this.currentUser) {
+      return null;
     }
 
-    const payload = { status: "going" };
-    const appEventData = { status: payload.status, postId: event.id };
+    return this.router.urlFor("topic-zoom", this.topic.slug, this.topic.id);
+  }
 
-    if (event.watchingInvitee) {
-      await this.discoursePostEventApi.updateEventAttendance(event, payload);
-      this.appEvents.trigger("calendar:update-invitee-status", appEventData);
-    } else {
-      await this.discoursePostEventApi.joinEvent(event, payload);
-      this.appEvents.trigger("calendar:create-invitee-status", appEventData);
-    }
+  // The meeting takes over the window it opens in, so on a desktop it is given
+  // one of its own and the topic is left where the user was reading it. A
+  // phone has no second window to speak of, so it goes there in place.
+  get opensInNewTab() {
+    return !!this.joinHref && this.capabilities.viewport.lg;
   }
 
   @action
-  joinZoom() {
-    if (!this.currentUser) {
-      return getOwner(this)
-        .lookup("route:application")
-        .send("showCreateAccount");
+  joinZoom(event) {
+    if (this.currentUser) {
+      return;
     }
 
-    this.session.join();
+    // Nothing to join yet: the meeting is only served to a signed-in user, and
+    // chat alongside it needs an account of its own.
+    event.preventDefault();
+    getOwner(this).lookup("route:application").send("showCreateAccount");
   }
 
   <template>
     {{#if this.shouldRender}}
+      {{bodyClass "discourse-calendar-livestream-zoom-topic"}}
       <div class="discourse-calendar-livestream-zoom-entry">
-        {{#if this.isDesktop}}
-          <div class="discourse-calendar-livestream-zoom-entry__actions">
-            {{#unless this.session.isJoined}}
-              <DButton
-                @action={{this.joinZoom}}
-                @label="discourse_calendar.livestream.zoom.join"
-                @icon="video"
-                class="btn-primary"
-                @disabled={{this.joinDisabled}}
-              />
-            {{/unless}}
+        <div class="discourse-calendar-livestream-zoom-entry__actions">
+          <DButton
+            @href={{this.joinHref}}
+            @label="discourse_calendar.livestream.zoom.join"
+            @icon="video"
+            class="discourse-calendar-livestream-zoom-entry__join btn-primary"
+            @disabled={{this.joinDisabled}}
+            target={{if this.opensInNewTab "_blank"}}
+            rel={{if this.opensInNewTab "noopener"}}
+            {{on "click" this.joinZoom}}
+          />
 
-            {{#unless this.canJoinNow}}
-              <p class="discourse-calendar-livestream-zoom-entry__waiting">
-                {{i18n "discourse_calendar.livestream.zoom.too_early"}}
-              </p>
-            {{/unless}}
-
-            {{#if this.session.isWaitingForStart}}
-              <p class="discourse-calendar-livestream-zoom-entry__waiting">
-                {{i18n
-                  "discourse_calendar.livestream.zoom.not_started_retrying"
-                  count=this.session.retryCountdown
-                }}
-              </p>
-            {{else if this.session.isRetryingNow}}
-              <p class="discourse-calendar-livestream-zoom-entry__waiting">
-                {{i18n
-                  "discourse_calendar.livestream.zoom.not_started_trying_again"
-                }}
-              </p>
-            {{/if}}
-
-            {{#if this.session.errorMessage}}
-              <p class="discourse-calendar-livestream-zoom-entry__error">
-                {{this.session.errorMessage}}
-              </p>
-            {{/if}}
-
-            {{#if this.showFallbackLink}}
-              <DButton
-                class="btn-default"
-                @href={{@event.livestreamUrl}}
-                @label="discourse_calendar.livestream.zoom.open_in_zoom"
-                @icon="up-right-from-square"
-              />
-            {{/if}}
-          </div>
-
-          <div
-            class={{dConcatClass
-              "discourse-calendar-livestream-zoom-entry__frame"
-              (if this.session.showZoomFrame "--visible")
-              (if this.session.isJoined "--joined")
-            }}
-            {{zoomComponentViewLayout this.session this.isDesktop}}
-          ></div>
-
-          {{#if this.showAudioHint}}
-            <p class="discourse-calendar-livestream-zoom-entry__audio-hint">
-              {{this.joinAudioHint}}
+          {{#unless this.canJoinNow}}
+            <p class="discourse-calendar-livestream-zoom-entry__waiting">
+              {{i18n "discourse_calendar.livestream.zoom.too_early"}}
             </p>
-          {{/if}}
-        {{else}}
-          <div class="discourse-calendar-livestream-zoom-entry__actions">
-            <DButton
-              @route="topic-zoom"
-              @routeModels={{array this.topic.slug this.topic.id}}
-              @label="discourse_calendar.livestream.zoom.join"
-              @icon="video"
-              class="btn-primary"
-              @disabled={{this.joinDisabled}}
-            />
-
-            {{#unless this.canJoinNow}}
-              <p class="discourse-calendar-livestream-zoom-entry__waiting">
-                {{i18n "discourse_calendar.livestream.zoom.too_early"}}
-              </p>
-            {{/unless}}
-          </div>
-        {{/if}}
+          {{/unless}}
+        </div>
       </div>
     {{/if}}
   </template>

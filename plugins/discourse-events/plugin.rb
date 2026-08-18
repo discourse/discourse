@@ -44,7 +44,6 @@ register_svg_icon "star"
 register_svg_icon "file-arrow-up"
 register_svg_icon "location-pin"
 register_svg_icon "arrows-up-to-line"
-register_svg_icon "zoom-join-audio"
 extend_content_security_policy(worker_src: %w[https://source.zoom.us blob:])
 
 module ::DiscourseCalendar
