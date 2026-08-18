@@ -11,6 +11,53 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
 
       expect(contract).not_to be_valid
     end
+
+    it "requires a complete, ordered precise range within the date range" do
+      valid_contract =
+        described_class.new(
+          start_date: Date.new(2026, 5, 10),
+          end_date: Date.new(2026, 5, 12),
+          start_at: Time.zone.local(2026, 5, 10, 10),
+          end_at: Time.zone.local(2026, 5, 10, 11),
+        )
+      incomplete_contract =
+        described_class.new(
+          start_date: Date.new(2026, 5, 10),
+          end_date: Date.new(2026, 5, 12),
+          start_at: Time.zone.local(2026, 5, 10, 10),
+        )
+      reversed_contract =
+        described_class.new(
+          start_date: Date.new(2026, 5, 10),
+          end_date: Date.new(2026, 5, 12),
+          start_at: Time.zone.local(2026, 5, 10, 11),
+          end_at: Time.zone.local(2026, 5, 10, 10),
+        )
+      outside_contract =
+        described_class.new(
+          start_date: Date.new(2026, 5, 10),
+          end_date: Date.new(2026, 5, 12),
+          start_at: Time.zone.local(2026, 5, 9, 23, 59),
+          end_at: Time.zone.local(2026, 5, 10, 10),
+        )
+      malformed_contract =
+        described_class.new(
+          start_date: Date.new(2026, 5, 10),
+          end_date: Date.new(2026, 5, 12),
+          start_at: "not-a-time",
+          end_at: "also-not-a-time",
+        )
+
+      expect(
+        [
+          valid_contract.valid?,
+          incomplete_contract.valid?,
+          reversed_contract.valid?,
+          outside_contract.valid?,
+          malformed_contract.valid?,
+        ],
+      ).to eq([true, false, false, false, false])
+    end
   end
 
   describe ".call" do
@@ -90,6 +137,40 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
 
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
+
+      it "uses precise datetime boundaries and minute buckets" do
+        traffic =
+          described_class.call(
+            params: params.merge(start_at: "2026-05-10T10:03:00Z", end_at: "2026-05-10T10:06:00Z"),
+          ).traffic
+
+        expect(
+          [
+            traffic[:bucket],
+            traffic.dig(:summary, "pageviews"),
+            traffic[:series].map { |row| Time.zone.parse(row["date"]).strftime("%H:%M") },
+          ],
+        ).to eq(["minute", 3, %w[10:03 10:04 10:05]])
+      end
+
+      it "selects readable buckets at the two-hour and seven-day thresholds" do
+        minute_traffic =
+          described_class.call(
+            params: params.merge(start_at: "2026-05-10T09:00:00Z", end_at: "2026-05-10T11:00:00Z"),
+          ).traffic
+        hourly_traffic =
+          described_class.call(
+            params: params.merge(start_at: "2026-05-10T09:00:00Z", end_at: "2026-05-10T11:00:01Z"),
+          ).traffic
+        daily_traffic =
+          described_class.call(
+            params: params.merge(start_at: "2026-05-01T00:00:00Z", end_at: "2026-05-08T00:00:01Z"),
+          ).traffic
+
+        expect([minute_traffic[:bucket], hourly_traffic[:bucket], daily_traffic[:bucket]]).to eq(
+          %w[minute hour day],
+        )
+      end
 
       it "groups stored browser values and displays rows awaiting backfill as unknown" do
         browser_dimensions = result.traffic.dig(:dimensions, "browsers")

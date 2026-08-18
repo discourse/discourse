@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import SiteTrafficExplorerBreakdownCard from "discourse/admin/components/site-traffic-explorer-breakdown-card";
 import SiteTrafficExplorerFilterPills from "discourse/admin/components/site-traffic-explorer-filter-pills";
 import SiteTrafficExplorerMetric from "discourse/admin/components/site-traffic-explorer-metric";
+import SiteTrafficTimeBrush from "discourse/admin/components/site-traffic-time-brush";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -85,14 +85,15 @@ export default class SiteTrafficExplorer extends Component {
 
   get chartModel() {
     return {
-      start_date: moment(this.args.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.args.endDate).format("YYYY-MM-DD"),
+      start_date: this.args.startDate.toISOString(),
+      end_date: this.args.endDate.toISOString(),
       data: this.series,
     };
   }
 
   get chartOptions() {
     return {
+      chartGrouping: "daily",
       hideYAxisGridLines: true,
       hiddenLabels: Object.entries(TRAFFIC_TYPE_BY_SERIES)
         .filter(
@@ -100,6 +101,8 @@ export default class SiteTrafficExplorer extends Component {
         )
         .map(([series]) => series),
       onLegendClick: this.toggleTrafficType,
+      timeUnit: this.args.traffic?.bucket ?? "day",
+      timeScale: true,
     };
   }
 
@@ -135,7 +138,10 @@ export default class SiteTrafficExplorer extends Component {
     return series.map((item) => ({
       ...item,
       total: rows.reduce((sum, row) => sum + (row[item.column] ?? 0), 0),
-      data: rows.map((row) => ({ x: row.date, y: row[item.column] ?? 0 })),
+      data: rows.map((row) => ({
+        x: moment.utc(row.date).toISOString(),
+        y: row[item.column] ?? 0,
+      })),
     }));
   }
 
@@ -256,8 +262,8 @@ export default class SiteTrafficExplorer extends Component {
         <:actions>
           <DashboardDateRange
             @period={{@period}}
-            @startDate={{@startDate}}
-            @endDate={{@endDate}}
+            @startDate={{@parentStartDate}}
+            @endDate={{@parentEndDate}}
             @setPeriod={{@setPeriod}}
             @setCustomDateRange={{@setCustomDateRange}}
           />
@@ -372,10 +378,15 @@ export default class SiteTrafficExplorer extends Component {
                       "admin.site_traffic_explorer.traffic_over_time"
                     }}
                   >
-                    <AdminReportStackedChart
+                    <SiteTrafficTimeBrush
                       @model={{this.chartModel}}
                       @options={{this.chartOptions}}
-                      class="db-section__traffic-chart-canvas"
+                      @startDate={{@startDate}}
+                      @endDate={{@endDate}}
+                      @bucket={{@traffic.bucket}}
+                      @hasPreciseRange={{@hasPreciseRange}}
+                      @onSelect={{@setPreciseRange}}
+                      @onClear={{@clearPreciseRange}}
                     />
                     <div class="sr-only">
                       {{#each this.series as |series|}}

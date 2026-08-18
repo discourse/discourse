@@ -347,6 +347,51 @@
   }
 }
 
+.site-traffic-time-brush {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__grouping {
+    margin-inline-end: auto;
+  }
+
+  &__range {
+    color: var(--primary-high);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__chart {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    cursor: crosshair;
+
+    &.--selecting {
+      user-select: none;
+    }
+  }
+
+  &__selection {
+    position: absolute;
+    inset: 0;
+    background: rgb(var(--tertiary-rgb) / 0.2);
+    border-inline: 1px solid var(--tertiary);
+    pointer-events: none;
+  }
+}
+
 .site-traffic-breakdown-modal {
   @include viewport.until(md) {
     .d-table {

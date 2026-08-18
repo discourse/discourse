@@ -9,6 +9,12 @@ class AdminDashboardSiteTrafficExplorer
   STATEMENT_TIMEOUT_MS = 10_000
   private_constant :STATEMENT_TIMEOUT_MS
 
+  MINUTE_BUCKET_MAX_DURATION = 2.hours
+  private_constant :MINUTE_BUCKET_MAX_DURATION
+
+  HOUR_BUCKET_MAX_DURATION = 7.days
+  private_constant :HOUR_BUCKET_MAX_DURATION
+
   FILTER_KEYS = %i[traffic_type top_url entry_url referrer country network browser ip].freeze
   private_constant :FILTER_KEYS
 
@@ -32,6 +38,8 @@ class AdminDashboardSiteTrafficExplorer
   params do
     attribute :start_date, :date
     attribute :end_date, :date
+    attribute :start_at, :datetime
+    attribute :end_at, :datetime
     attribute :traffic_type, :string
     attribute :top_url, :string
     attribute :entry_url, :string
@@ -43,9 +51,34 @@ class AdminDashboardSiteTrafficExplorer
 
     validates :start_date, :end_date, presence: true
     validate :start_date_precedes_end_date
+    validate :precise_range_is_complete
+    validate :precise_range_is_ordered
+    validate :precise_range_is_within_dates
 
     def filters
       FILTER_KEYS.to_h { |key| [key, normalize_filter(key, public_send(key))] }
+    end
+
+    def query_range
+      if start_at.present? && end_at.present?
+        [start_at, end_at]
+      else
+        [start_date.beginning_of_day, (end_date + 1.day).beginning_of_day]
+      end
+    end
+
+    def precise_range?
+      start_at.present? && end_at.present?
+    end
+
+    def bucket
+      return :day if !precise_range?
+
+      duration = end_at - start_at
+      return :minute if duration <= MINUTE_BUCKET_MAX_DURATION
+      return :hour if duration <= HOUR_BUCKET_MAX_DURATION
+
+      :day
     end
 
     private
@@ -54,6 +87,46 @@ class AdminDashboardSiteTrafficExplorer
       return if start_date.blank? || end_date.blank? || start_date <= end_date
 
       errors.add(:start_date, :invalid)
+    end
+
+    def precise_range_is_complete
+      return if !precise_range_requested?
+
+      errors.add(:start_at, :invalid) if start_at.blank?
+      errors.add(:end_at, :invalid) if end_at.blank?
+    end
+
+    def precise_range_is_ordered
+      return if start_at.blank? || end_at.blank? || start_at < end_at
+
+      errors.add(:start_at, :invalid)
+    end
+
+    def precise_range_is_within_dates
+      return if start_at.blank? || end_at.blank? || start_date.blank? || end_date.blank?
+      start_input_date = precise_range_input_date(:start_at)
+      end_input_date = precise_range_input_date(:end_at)
+      return if start_input_date.blank? || end_input_date.blank?
+      return if start_input_date >= start_date && end_input_date <= end_date
+
+      errors.add(:start_at, :invalid)
+    end
+
+    def precise_range_requested?
+      !precise_range_input(:start_at).nil? || !precise_range_input(:end_at).nil?
+    end
+
+    def precise_range_input_date(attribute)
+      input = precise_range_input(attribute)
+      return input.to_date if input.respond_to?(:to_date)
+
+      DateTime.iso8601(input.to_s).to_date
+    rescue Date::Error
+      nil
+    end
+
+    def precise_range_input(attribute)
+      @attributes[attribute.to_s].value_before_type_cast
     end
 
     def normalize_filter(key, value)
@@ -100,20 +173,23 @@ class AdminDashboardSiteTrafficExplorer
 
   def load_traffic(params:)
     filters = params.filters
-    row = execute_query(start_date: params.start_date, end_date: params.end_date, filters:)
+    start_at, end_at = params.query_range
+    bucket = params.bucket
+    row = execute_query(start_at:, end_at:, bucket:, filters:)
 
     traffic = {
       partial_data:
         partial_data(
           row.fetch("pageview_limited"),
           pageview_limit_start_at: row["oldest_pageview_at"],
-          start_date: params.start_date,
+          start_at:,
         ),
       summary: row.fetch("summary"),
       series: row.fetch("series"),
       series_colors: series_colors,
       dimensions: decorate_dimensions(row.fetch("dimensions")),
     }
+    traffic[:bucket] = bucket.to_s if params.precise_range?
     active_filters =
       decorate_active_filters(row.fetch("active_filter_representative_ips"), filters:)
     traffic[:active_filters] = active_filters if active_filters.any?
@@ -122,26 +198,26 @@ class AdminDashboardSiteTrafficExplorer
     fail!("traffic_query_timeout")
   end
 
-  def execute_query(start_date:, end_date:, filters:)
-    parameters = query_params(start_date:, end_date:, filters:)
+  def execute_query(start_at:, end_at:, bucket:, filters:)
+    parameters = query_params(start_at:, end_at:, filters:)
 
     ActiveRecord::Base.transaction(requires_new: true) do
       DB.exec("SET LOCAL statement_timeout = #{STATEMENT_TIMEOUT_MS}")
       DB.query_hash(
-        query(start_date: parameters[:start_date], end_date: parameters[:end_date]),
+        query(start_at: parameters[:start_at], end_at: parameters[:end_at], bucket:),
         parameters,
       ).first
     end
   end
 
-  def query_params(start_date:, end_date:, filters:)
-    retention_cutoff = BrowserPageviewEvent.retention_cutoff.to_date
-    effective_start_date = [start_date, retention_cutoff].max
+  def query_params(start_at:, end_at:, filters:)
+    retention_cutoff = BrowserPageviewEvent.retention_cutoff
+    effective_start_at = [start_at, retention_cutoff].max
     cap = SiteSetting.site_traffic_explorer_event_limit
 
     {
-      start_date: effective_start_date,
-      end_date: end_date + 1.day,
+      start_at: effective_start_at,
+      end_at:,
       cap: cap,
       site_host: BrowserPageviewEventUrlNormalizer.normalize_host(Discourse.current_hostname),
       top_url: filters[:top_url],
@@ -163,9 +239,14 @@ class AdminDashboardSiteTrafficExplorer
     }
   end
 
-  def query(start_date:, end_date:)
+  def query(start_at:, end_at:, bucket:)
     source_condition =
-      BrowserPageviewEvent.rollup_source_condition(table: "bpe", start_date:, end_date:)
+      BrowserPageviewEvent.rollup_source_condition(
+        table: "bpe",
+        start_date: start_at,
+        end_date: end_at.to_date + 1.day,
+      )
+    series_bucket = bucket == :day ? "created_at::date" : "date_trunc('#{bucket}', created_at)"
 
     <<~SQL
       WITH population AS MATERIALIZED (
@@ -182,8 +263,8 @@ class AdminDashboardSiteTrafficExplorer
           COALESCE(bpe.browser, #{BrowserPageviewEvent::BROWSER_UNKNOWN}) AS browser,
           bpe.score
         FROM browser_pageview_events bpe
-        WHERE bpe.created_at >= :start_date
-          AND bpe.created_at < :end_date
+        WHERE bpe.created_at >= :start_at
+          AND bpe.created_at < :end_at
           AND #{source_condition}
         ORDER BY bpe.created_at DESC, bpe.id DESC
         LIMIT :cap
@@ -304,7 +385,7 @@ class AdminDashboardSiteTrafficExplorer
       ),
       series_rows AS (
         SELECT
-          created_at::date AS date,
+          #{series_bucket} AS date,
           COUNT(*)::integer AS pageviews,
           COUNT(*) FILTER (
             WHERE NOT likely_crawler AND user_id IS NOT NULL
@@ -314,7 +395,7 @@ class AdminDashboardSiteTrafficExplorer
           )::integer AS anonymous_human_pageviews,
           COUNT(*) FILTER (WHERE likely_crawler)::integer AS likely_crawler_pageviews
         FROM filtered
-        GROUP BY created_at::date
+        GROUP BY #{series_bucket}
       ),
       traffic_summary AS (
         SELECT
@@ -342,8 +423,8 @@ class AdminDashboardSiteTrafficExplorer
             AND EXISTS (
               SELECT 1
               FROM browser_pageview_events bpe
-              WHERE bpe.created_at >= :start_date
-                AND bpe.created_at < :end_date
+              WHERE bpe.created_at >= :start_at
+                AND bpe.created_at < :end_at
                 AND #{source_condition}
                 AND (bpe.created_at, bpe.id) < (
                   population_boundary.oldest_created_at,
@@ -550,8 +631,8 @@ class AdminDashboardSiteTrafficExplorer
     SQL
   end
 
-  def partial_data(pageview_limited, pageview_limit_start_at:, start_date:)
-    retention_limited = start_date < BrowserPageviewEvent.retention_cutoff.to_date
+  def partial_data(pageview_limited, pageview_limit_start_at:, start_at:)
+    retention_limited = start_at < BrowserPageviewEvent.retention_cutoff
     return nil if !retention_limited && !pageview_limited
 
     if retention_limited && pageview_limited

@@ -1542,6 +1542,23 @@ RSpec.describe Admin::DashboardController do
         )
       end
 
+      it "applies precise datetime boundaries with a readable bucket" do
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params:
+              request_params.merge(start_at: "2026-05-10T10:00:00Z", end_at: "2026-05-10T10:02:00Z")
+
+        body = response.parsed_body
+
+        expect(
+          [
+            response.status,
+            body["bucket"],
+            body.dig("summary", "pageviews"),
+            body["series"].map { |row| Time.zone.parse(row["date"]).strftime("%H:%M") },
+          ],
+        ).to eq([200, "minute", 2, %w[10:00 10:01]])
+      end
+
       it "applies the direct referrer filter" do
         get "/admin/dashboard/site-traffic-explorer.json",
             params: request_params.merge(referrer: "")

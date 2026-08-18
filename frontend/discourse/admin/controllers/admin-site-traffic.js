@@ -43,6 +43,8 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
+  @tracked start_at = null;
+  @tracked end_at = null;
   @tracked traffic_type = null;
   @tracked top_url = null;
   @tracked entry_url = null;
@@ -55,7 +57,14 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked loading = false;
   @tracked fetchError = null;
 
-  queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
+  queryParams = [
+    "range",
+    "start_date",
+    "end_date",
+    "start_at",
+    "end_at",
+    ...FILTER_KEYS,
+  ];
 
   #fetchId = 0;
 
@@ -69,17 +78,40 @@ export default class AdminSiteTrafficController extends Controller {
     return this.range;
   }
 
-  get startDate() {
+  get parentStartDate() {
     return (
       this.#customDate(this.start_date, "startOf") ??
       calculatePresetStartDate(this.safePeriod)
     );
   }
 
-  get endDate() {
+  get parentEndDate() {
     return (
       this.#customDate(this.end_date, "endOf") ?? moment().endOf("day").toDate()
     );
+  }
+
+  get startDate() {
+    return this.preciseRange?.startDate ?? this.parentStartDate;
+  }
+
+  get endDate() {
+    return this.preciseRange?.endDate ?? this.parentEndDate;
+  }
+
+  get preciseRange() {
+    const startDate = this.#preciseDate(this.start_at);
+    const endDate = this.#preciseDate(this.end_at);
+
+    if (!startDate || !endDate || startDate >= endDate) {
+      return null;
+    }
+
+    return { startDate, endDate };
+  }
+
+  get hasPreciseRange() {
+    return this.preciseRange !== null;
   }
 
   get hasPageviews() {
@@ -146,11 +178,26 @@ export default class AdminSiteTrafficController extends Controller {
     return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
+  #preciseDate(value) {
+    if (!value) {
+      return null;
+    }
+
+    const parsed = moment.parseZone(value, moment.ISO_8601, true);
+    return parsed.isValid() ? parsed.toDate() : null;
+  }
+
   #requestParams() {
+    const preciseRange = this.preciseRange;
     const params = {
-      start_date: moment(this.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.endDate).format("YYYY-MM-DD"),
+      start_date: moment(this.parentStartDate).format("YYYY-MM-DD"),
+      end_date: moment(this.parentEndDate).format("YYYY-MM-DD"),
     };
+
+    if (preciseRange) {
+      params.start_at = this.start_at;
+      params.end_at = this.end_at;
+    }
 
     for (const key of FILTER_KEYS) {
       if (this[key] !== null) {
@@ -218,6 +265,7 @@ export default class AdminSiteTrafficController extends Controller {
     this.range = period;
     this.start_date = null;
     this.end_date = null;
+    this.clearPreciseRange();
   }
 
   @action
@@ -225,6 +273,19 @@ export default class AdminSiteTrafficController extends Controller {
     this.range = PERIOD_CUSTOM;
     this.start_date = moment(startDate).format("YYYY-MM-DD");
     this.end_date = moment(endDate).format("YYYY-MM-DD");
+    this.clearPreciseRange();
+  }
+
+  @action
+  setPreciseRange(startDate, endDate) {
+    this.start_at = moment(startDate).format();
+    this.end_at = moment(endDate).format();
+  }
+
+  @action
+  clearPreciseRange() {
+    this.start_at = null;
+    this.end_at = null;
   }
 
   @action
@@ -261,6 +322,8 @@ export default class AdminSiteTrafficController extends Controller {
     this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
+    this.start_at = null;
+    this.end_at = null;
     for (const key of FILTER_KEYS) {
       this[key] = null;
     }

@@ -26,6 +26,7 @@ export default class ChartComponent extends Component {
     }
 
     this.chart = new Chart(element.getContext("2d"), chartConfig);
+    this.args.onChartReady?.(this.chart);
   }
 
   <template>

@@ -106,7 +106,8 @@ export default class AdminReportStackedChart extends Component {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    const timeUnit = Report.unitForGrouping(chartGrouping);
+    const timeUnit =
+      chartOptions.timeUnit || Report.unitForGrouping(chartGrouping);
 
     return {
       type: "bar",
@@ -193,7 +194,7 @@ export default class AdminReportStackedChart extends Component {
                   count: I18n.toNumber(total, { precision: 0 }),
                 });
               },
-              title: (tooltipItem) => this.#tooltipTitle(tooltipItem),
+              title: (tooltipItem) => this.#tooltipTitle(tooltipItem, timeUnit),
             },
           },
         },
@@ -229,10 +230,18 @@ export default class AdminReportStackedChart extends Component {
             display: true,
 
             grid: { display: false },
-            type: "category",
+            type: chartOptions.timeScale ? "time" : "category",
+            min: chartOptions.timeScale ? model.start_date : undefined,
+            max: chartOptions.timeScale ? model.end_date : undefined,
+            time: chartOptions.timeScale ? { unit: timeUnit } : undefined,
             ticks: {
               callback: (value) =>
-                this.#categoryTickLabel(value, data.labels, timeUnit),
+                this.#tickLabel(
+                  value,
+                  data.labels,
+                  timeUnit,
+                  chartOptions.timeScale
+                ),
               sampleSize: 5,
               maxRotation: 50,
               minRotation: 0,
@@ -247,11 +256,12 @@ export default class AdminReportStackedChart extends Component {
     <Chart
       ...attributes
       @chartConfig={{this.chartConfig}}
+      @onChartReady={{@onChartReady}}
       class="admin-report-chart admin-report-stacked-chart"
     />
   </template>
 
-  #tooltipTitle(tooltipItem) {
+  #tooltipTitle(tooltipItem, timeUnit) {
     const point = tooltipItem[0].raw;
     const startDate = point?.x ?? tooltipItem[0].parsed.x;
 
@@ -259,7 +269,9 @@ export default class AdminReportStackedChart extends Component {
       return this.#tooltipDateRange(startDate, point.end_date);
     }
 
-    return this.#dateLabelMoment(startDate).format("LL");
+    return this.#dateLabelMoment(startDate).format(
+      ["minute", "hour"].includes(timeUnit) ? "LLL" : "LL"
+    );
   }
 
   #tooltipDateRange(startValue, endValue) {
@@ -273,25 +285,31 @@ export default class AdminReportStackedChart extends Component {
     return `${startDate.format("ll")} - ${endDate.format("ll")}`;
   }
 
-  #categoryTickLabel(value, labels, timeUnit) {
-    const label = labels[value] ?? value;
+  #tickLabel(value, labels, timeUnit, timeScale) {
+    const label = timeScale ? value : (labels[value] ?? value);
 
-    return this.#formatDateLabel(label, timeUnit);
+    return this.#formatDateLabel(label, timeUnit, timeScale);
   }
 
-  #formatDateLabel(label, timeUnit) {
-    const date = this.#dateLabelMoment(label);
+  #formatDateLabel(label, timeUnit, timeScale) {
+    const date = timeScale ? moment.utc(label) : this.#dateLabelMoment(label);
 
     if (timeUnit === "month") {
       return date.format("MMM YYYY");
+    }
+
+    if (timeUnit === "minute") {
+      return date.format("LT");
+    }
+
+    if (timeUnit === "hour") {
+      return date.format("D MMM, LT");
     }
 
     return date.format("D MMM");
   }
 
   #dateLabelMoment(value) {
-    return typeof value === "string"
-      ? moment.utc(value, "YYYY-MM-DD")
-      : moment(value);
+    return typeof value === "string" ? moment.utc(value) : moment(value);
   }
 }
