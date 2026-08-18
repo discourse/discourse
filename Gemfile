@@ -57,7 +57,9 @@ gem "discourse_math_bundle"
 
 gem "message_bus"
 
-gem "rails_multisite"
+gem "rails_multisite",
+    git: "https://github.com/discourse/rails_multisite",
+    branch: "raise-on-unknown-db"
 
 gem "fastimage"
 
