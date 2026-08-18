@@ -1,23 +1,17 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { cancel, next } from "@ember/runloop";
-import {
-  draggable,
-  type ElementDropTargetEventBasePayload,
-  type ElementGetFeedbackArgs,
-} from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import { draggable } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/utils/pointer-outside-of-preview";
 import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/utils/prevent-unhandled";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/utils/set-custom-native-drag-preview";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
+import type {
+  DragInput,
+  DragLocation,
+} from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
 import { DRAG_BODY } from "discourse/lib/-internals/drag-and-drop/vocabulary";
-
-/** The pointer position as the underlying library reports it. */
-type DragInput = ElementGetFeedbackArgs["input"];
-
-/** The drag's initial, previous and current locations. */
-type DragLocation = ElementDropTargetEventBasePayload["location"];
 
 /**
  * Renders a drag preview into an isolated, offscreen container the browser

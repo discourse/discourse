@@ -12,11 +12,22 @@ import dDragAndDropExternalTarget, {
 declare const noop: () => void;
 declare const acceptedTypes: string[];
 declare function onExternalDrop(event: ExternalDropTargetEvent): void;
+declare function describeTarget(): { slot: string };
+declare function isSticky(): boolean;
 
 const Positives = <template>
   {{! The external target speaks the kind vocabulary, not drag types }}
   <div
     {{dDragAndDropExternalTarget accepts="files" onDrop=onExternalDrop}}
+  ></div>
+
+  {{! Target-side metadata and stickiness are shared with the element target }}
+  <div
+    {{dDragAndDropExternalTarget
+      accepts="files"
+      getData=describeTarget
+      getIsSticky=isSticky
+    }}
   ></div>
   <div
     {{dDragAndDropExternalTarget

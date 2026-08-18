@@ -1,17 +1,13 @@
 import { dropTargetForExternal } from "@atlaskit/pragmatic-drag-and-drop/adapter/drop-target-for-external";
 import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
-import type {
-  DragLocationHistory,
-  Input,
-} from "@atlaskit/pragmatic-drag-and-drop/types";
 import { modifier } from "ember-modifier";
 import {
-  createPositionIndicator,
-  type DropAxis,
   type DropEffect,
   type DropPosition,
+  type DropTargetKernelArgs,
+  type DropTargetKernelEvent,
+  type DropTargetKernelFeedback,
   registerDropTargetKernel,
-  resolveDropPosition,
 } from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
 import {
   decorateExternalSource,
@@ -19,52 +15,17 @@ import {
   type ExternalDragPayload,
   matchesExternalKind,
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
-
-/** The pointer position as the underlying library reports it. */
-type DragInput = Input;
-
-/** The drag's initial, previous and current locations. */
-type DragLocation = DragLocationHistory;
+import type { Axis } from "discourse/lib/geometry";
 
 /** What a synchronous gate (`canDrop`, `getDropEffect`) is asked about. */
-export interface ExternalDropTargetFeedback {
-  /** The incoming payload, with the read helpers bound to it. */
-  source: ExternalDragPayload;
-
-  /** Where the pointer is. */
-  input: DragInput;
-
-  /** This target's element. */
-  element: Element;
-}
+export type ExternalDropTargetFeedback =
+  DropTargetKernelFeedback<ExternalDragPayload>;
 
 /** What a lifecycle callback is told. */
-export interface ExternalDropTargetEvent {
-  /** The incoming payload, with the read helpers bound to it. */
-  source: ExternalDragPayload;
+export type ExternalDropTargetEvent =
+  DropTargetKernelEvent<ExternalDragPayload>;
 
-  /**
-   * Where the drop would land, `null` when the drag has left and also when the
-   * target asked for no position at all — see `axis`.
-   */
-  position: DropPosition | null;
-
-  /** The drag's location history. */
-  location: DragLocation;
-
-  /** This target's element. */
-  element: Element;
-}
-
-/**
- * State modifier class toggled on the target while a compatible external drag
- * is hovering, for a target that resolves no position: it is a single
- * destination, so there is only one thing to say about it. A target that does
- * resolve a position uses the element variant's `--drag-above` / `--drag-below`
- * / `--drag-inside` instead, and never both — the two answer the same question
- * at different resolutions.
- */
-const INDICATOR_CLASS = "--drag-over-external";
+type SharedDropTargetArgs = DropTargetKernelArgs<ExternalDragPayload>;
 
 interface DDragAndDropExternalTargetSignature {
   /** The element to register as a drop target. */
@@ -78,6 +39,8 @@ interface DDragAndDropExternalTargetSignature {
       accepts?: ExternalDragKind | ExternalDragKind[];
 
       /**
+       * See {@link DropTargetKernelArgs}.
+       *
        * A fixed drop position. When set, `axis` and the midpoint logic are
        * ignored. Supplying it opts the target into resolving a position at all —
        * see `axis`.
@@ -85,6 +48,8 @@ interface DDragAndDropExternalTargetSignature {
       position?: DropPosition;
 
       /**
+       * See {@link DropTargetKernelArgs}.
+       *
        * Drives the indicator class selection and midpoint position math.
        *
        * Supplying either this or `position` is what opts a target into
@@ -94,50 +59,33 @@ interface DDragAndDropExternalTargetSignature {
        * in a list. Reach for an axis when the target IS a slot, such as a row a
        * dragged-in link should land above or below.
        */
-      axis?: DropAxis;
+      axis?: Axis;
 
-      /** Synchronous gate. Returning `false` refuses the drop. */
-      canDrop?: (feedback: ExternalDropTargetFeedback) => boolean | void;
+      /** See {@link DropTargetKernelArgs}. */
+      canDrop?: SharedDropTargetArgs["canDrop"];
 
-      /** Determines the cursor feedback browsers show during the drag. */
+      /** See {@link DropTargetKernelArgs}. */
+      getData?: () => object;
+
+      /** See {@link DropTargetKernelArgs}. */
       getDropEffect?: (feedback: ExternalDropTargetFeedback) => DropEffect;
 
-      /**
-       * `false` to suppress the `--drag-over-external` indicator class. Defaults
-       * to `true`.
-       */
+      /** See {@link DropTargetKernelArgs}. */
+      getIsSticky?: () => boolean;
+
+      /** See {@link DropTargetKernelArgs}. */
       indicator?: boolean;
 
-      /**
-       * This target became the one a drop would land on, with a compatible
-       * external drag in flight. Usually the cursor entering it, but also a
-       * nested target that was covering it going away, so it can fire without
-       * the cursor moving.
-       */
+      /** See {@link DropTargetKernelArgs}. */
       onDragEnter?: (event: ExternalDropTargetEvent) => void;
 
-      /**
-       * The drag progressed. Throttled; fires when the input or the drop-target
-       * hierarchy updates while this target is active.
-       */
+      /** See {@link DropTargetKernelArgs}. */
       onDrag?: (event: ExternalDropTargetEvent) => void;
 
-      /**
-       * This target stopped being the one a drop would land on. The cursor
-       * leaving it, or a nested target taking over while the cursor is still
-       * inside it. `position` is `null`.
-       *
-       * Tracks the role rather than the callbacks: fires only for a target that
-       * had taken the role, and only once each time it gives it up, whether or
-       * not an `onDragEnter` was supplied to observe it being taken.
-       *
-       * Not every taking is given up here, though. A drop ends the drag without
-       * a leave, and so does the target being torn down mid-drag, so drag-time
-       * state has to be released on the consumer's own destruction too.
-       */
+      /** See {@link DropTargetKernelArgs}. */
       onDragLeave?: (event: ExternalDropTargetEvent) => void;
 
-      /** The drag was released on this target. */
+      /** See {@link DropTargetKernelArgs}. */
       onDrop?: (event: ExternalDropTargetEvent) => void;
     };
     Positional: [];
@@ -177,42 +125,15 @@ export function registerDragAndDropExternalTarget(
   element: Element,
   getArgsRef: () => DragAndDropExternalTargetArgs
 ) {
-  let isIndicating = false;
-  const positionIndicator = createPositionIndicator(element);
-
   return registerDropTargetKernel({
     element,
     attribute: "data-drop-target-external",
     register: dropTargetForExternal,
-    decorateSource: decorateExternalSource,
-    accepts: (source: NativeExternalDragPayload) =>
-      matchesExternalKind(getArgsRef().accepts, source),
-    resolvePosition: (input: DragInput) => {
-      const { position, axis } = getArgsRef();
-      if (!position && !axis) {
-        return null;
-      }
-      return resolveDropPosition(element, input, { position, axis });
-    },
-    indicator: {
-      show: (position, axis) => {
-        if (position) {
-          positionIndicator.apply(position, axis);
-          return;
-        }
-        if (!isIndicating) {
-          element.classList.add(INDICATOR_CLASS);
-          isIndicating = true;
-        }
-      },
-      clear: () => {
-        positionIndicator.clear();
-        if (isIndicating) {
-          element.classList.remove(INDICATOR_CLASS);
-          isIndicating = false;
-        }
-      },
-    },
+    decorateSource: (source: NativeExternalDragPayload) =>
+      decorateExternalSource(source),
+    accepts: (source) => matchesExternalKind(getArgsRef().accepts, source),
+    resolvesPosition: (args) => !!(args.position || args.axis),
+    positionlessClass: "--drag-over-external",
     getArgs: getArgsRef,
   });
 }

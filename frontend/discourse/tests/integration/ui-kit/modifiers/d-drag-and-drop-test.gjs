@@ -829,6 +829,50 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     assert.deepEqual(drops, ["before"], "the midpoint is measured along x");
   });
 
+  test("a horizontal target in RTL reports the logical side and lights the physical one", async function (assert) {
+    const drops = [];
+    const onDrop = (payload) => drops.push(payload.position);
+
+    await render(
+      <template>
+        <div
+          id="src"
+          {{dDragAndDropSource type="col" data=(hash id=1)}}
+        >src</div>
+        <div
+          id="tgt"
+          style="width: 200px; height: 20px; direction: rtl"
+          {{dDragAndDropTarget accepts="col" axis="horizontal" onDrop=onDrop}}
+        >tgt</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    const rect = find("#tgt").getBoundingClientRect();
+    const nearLeftEdge = {
+      clientX: rect.left + 5,
+      clientY: rect.top + rect.height / 2,
+    };
+
+    await dragEvent("#src", "dragstart", { dataTransfer, ...centerOf("#src") });
+    await dragEvent("#tgt", "dragenter", { dataTransfer, ...nearLeftEdge });
+    await dragEvent("#tgt", "dragover", { dataTransfer, ...nearLeftEdge });
+
+    assert
+      .dom("#tgt")
+      .hasClass("--drag-left", "the line stays on the side under the pointer");
+    assert.dom("#tgt").doesNotHaveClass("--drag-right");
+
+    await dragEvent("#tgt", "drop", { dataTransfer, ...nearLeftEdge });
+    await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+    assert.deepEqual(
+      drops,
+      ["after"],
+      "in a right-to-left row the left half comes after the midpoint in reading order"
+    );
+  });
+
   test("nested targets — innermost accepting target wins drop", async function (assert) {
     const events = [];
     const onOuterDrop = () => events.push("outer");
@@ -2625,6 +2669,99 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           "and the source is never marked as dragging"
         );
     });
+
+    test("a throwing getData is reported and the drag record carries no data", async function (assert) {
+      const reported = [];
+      setupOnerror((error) => reported.push(error));
+
+      const targets = [];
+      const recordDrop = ({ location }) =>
+        targets.push(location.current.dropTargets[0].data);
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource type="row" onDrop=recordDrop}}
+          >src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget accepts="row" getData=blowUp}}
+          >tgt</div>
+        </template>
+      );
+
+      await simulateDrag("#src", "#tgt", { dataTransfer: new DataTransfer() });
+
+      assert.deepEqual(
+        targets,
+        [{}],
+        "the drop lands with an empty record in place of what the consumer failed to attach"
+      );
+      assert.true(
+        reported.length >= 1,
+        `and the throwing getData was raised (${reported.length} seen)`
+      );
+    });
+
+    test("a throwing getIsSticky is reported and treated as not sticky", async function (assert) {
+      const reported = [];
+      setupOnerror((error) => reported.push(error));
+
+      const events = [];
+      const onEnter = () => events.push("enter");
+      const onLeave = () => events.push("leave");
+
+      await render(
+        <template>
+          <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget
+              accepts="row"
+              position="before"
+              getIsSticky=blowUp
+              onDragEnter=onEnter
+              onDragLeave=onLeave
+            }}
+          >tgt</div>
+          <div id="away" style="height: 50px">away</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#away", "dragenter", {
+        dataTransfer,
+        ...centerOf("#away"),
+      });
+      await dragEvent("#away", "dragover", {
+        dataTransfer,
+        ...centerOf("#away"),
+      });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(
+        events,
+        ["enter", "leave"],
+        "a gate that threw decided nothing, so the target lets go when the pointer leaves"
+      );
+      assert.true(
+        reported.length >= 1,
+        `and the throwing stickiness gate was raised (${reported.length} seen)`
+      );
+    });
   });
 
   module("arg changes reach a drag already in flight", function () {
@@ -2892,6 +3029,80 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         [{ slot: "inbox" }],
         "the source reads what the target attached to its own record of the drag"
       );
+    });
+
+    test("a sticky target keeps its enter while the pointer is outside it and is left when stickiness ends", async function (assert) {
+      const state = new (class {
+        @tracked sticky = true;
+      })();
+      const isSticky = () => state.sticky;
+      const events = [];
+      const onEnter = () => events.push("enter");
+      const onLeave = () => events.push("leave");
+
+      await render(
+        <template>
+          <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget
+              accepts="row"
+              position="before"
+              getIsSticky=isSticky
+              onDragEnter=onEnter
+              onDragLeave=onLeave
+            }}
+          >tgt</div>
+          <div id="away" style="height: 50px">away</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#away", "dragenter", {
+        dataTransfer,
+        ...centerOf("#away"),
+      });
+      await dragEvent("#away", "dragover", {
+        dataTransfer,
+        ...centerOf("#away"),
+      });
+
+      assert.deepEqual(
+        events,
+        ["enter"],
+        "stickiness keeps the role while the pointer is outside"
+      );
+      assert
+        .dom("#tgt")
+        .hasClass("--drag-above", "and the indicator stays with the role");
+
+      state.sticky = false;
+      await settled();
+      await dragEvent("#away", "dragover", {
+        dataTransfer,
+        ...centerOf("#away"),
+      });
+
+      assert.deepEqual(
+        events,
+        ["enter", "leave"],
+        "once stickiness ends the target is left exactly once"
+      );
+      assert.dom("#tgt").doesNotHaveClass("--drag-above");
+
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
     });
 
     test("indicator=false drops the marker without dropping the callbacks", async function (assert) {

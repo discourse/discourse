@@ -506,6 +506,96 @@ module(
           "and reports no position, because it was never asked to resolve one"
         );
       });
+
+      test("an external target switching between destination and slot mid-hover shows one indicator family", async function (assert) {
+        const state = new (class {
+          @tracked axis = undefined;
+        })();
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              style="height: 100px"
+              {{dDragAndDropExternalTarget accepts="text" axis=state.axis}}
+            >ext</div>
+          </template>
+        );
+
+        const rect = find("#ext").getBoundingClientRect();
+        const dataTransfer = textTransfer();
+        const lowerHalf = {
+          clientX: rect.left + 5,
+          clientY: rect.top + rect.height - 5,
+        };
+
+        await externalDragOver("#ext", {
+          dataTransfer,
+          coordinates: lowerHalf,
+        });
+
+        assert
+          .dom("#ext")
+          .hasClass(
+            "--drag-over-external",
+            "a destination lights its one class"
+          )
+          .doesNotHaveClass("--drag-below");
+
+        state.axis = "vertical";
+        await settled();
+        await dragEvent("#ext", "dragover", { dataTransfer, ...lowerHalf });
+
+        assert
+          .dom("#ext")
+          .hasClass("--drag-below", "a slot lights the positional class")
+          .doesNotHaveClass(
+            "--drag-over-external",
+            "and drops the destination class it had"
+          );
+
+        state.axis = undefined;
+        await settled();
+        await dragEvent("#ext", "dragover", { dataTransfer, ...lowerHalf });
+
+        assert
+          .dom("#ext")
+          .hasClass("--drag-over-external", "back to a destination")
+          .doesNotHaveClass(
+            "--drag-below",
+            "the positional class goes with it"
+          );
+
+        await dragEvent("#ext", "drop", { dataTransfer, ...lowerHalf });
+      });
+
+      test("an external target's getData rides on the drag's record of it", async function (assert) {
+        const targets = [];
+        const describeTarget = () => ({ slot: "inbox" });
+        const recordDrop = ({ location }) =>
+          targets.push(location.current.dropTargets[0].data);
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              {{dDragAndDropExternalTarget
+                accepts="text"
+                getData=describeTarget
+                onDrop=recordDrop
+              }}
+            >ext</div>
+          </template>
+        );
+
+        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
+
+        assert.deepEqual(
+          targets,
+          [{ slot: "inbox" }],
+          "the target's own record of the drag carries what it attached"
+        );
+      });
     });
 
     module("nested external targets", function () {
@@ -920,6 +1010,40 @@ module(
         } finally {
           document.removeEventListener("discourse-error", collect);
         }
+      });
+
+      test("a throwing external getData is reported and the drop still lands", async function (assert) {
+        const reported = [];
+        setupOnerror((error) => reported.push(error));
+
+        const targets = [];
+        const recordDrop = ({ location }) =>
+          targets.push(location.current.dropTargets[0].data);
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              {{dDragAndDropExternalTarget
+                accepts="text"
+                getData=blowUp
+                onDrop=recordDrop
+              }}
+            >ext</div>
+          </template>
+        );
+
+        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
+
+        assert.deepEqual(
+          targets,
+          [{}],
+          "the drop lands with an empty record in place of what the consumer failed to attach"
+        );
+        assert.true(
+          reported.length >= 1,
+          `and the throwing getData was raised (${reported.length} seen)`
+        );
       });
 
       test("a throwing external getDropEffect is reported and the drop still lands", async function (assert) {

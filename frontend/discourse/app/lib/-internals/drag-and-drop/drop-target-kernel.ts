@@ -6,11 +6,14 @@ import type {
 import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
 import type { Axis } from "discourse/lib/geometry";
 
+/** The pointer position as the underlying library reports it. */
+export type DragInput = Input;
+
+/** The drag's initial, previous and current locations. */
+export type DragLocation = DragLocationHistory;
+
 /** Where a drop would land relative to its target. */
 export type DropPosition = "before" | "after" | "inside";
-
-/** The axis used for position math and indicator classes. */
-export type DropAxis = Axis;
 
 /** The cursor feedback the browser shows for a drop. */
 export type DropEffect = "copy" | "link" | "move";
@@ -21,7 +24,7 @@ export interface DropPositionOptions {
   position?: DropPosition;
 
   /** The axis whose midpoint is measured. Defaults to `"vertical"`. */
-  axis?: DropAxis;
+  axis?: Axis;
 }
 
 /** What a synchronous consumer gate is asked about. */
@@ -53,22 +56,48 @@ export interface DropTargetKernelEvent<Source> {
 
 /** Consumer callbacks and display options shared by every drop target. */
 export interface DropTargetKernelArgs<Source> extends DropPositionOptions {
-  /** Synchronous gate. Returning `false` refuses the drop. */
+  /**
+   * Synchronous gate. Returning `false` refuses the drop. The feedback carries
+   * the consumer-facing source, current pointer input, and target element.
+   */
   canDrop?: (feedback: DropTargetKernelFeedback<Source>) => boolean | void;
 
   /** Determines the cursor feedback browsers show during the drag. */
   getDropEffect?: (feedback: DropTargetKernelFeedback<Source>) => DropEffect;
 
-  /** `false` suppresses the target's indicator. */
+  /** Metadata attached to the drag's record of this target under `.data`. */
+  getData?: () => object;
+
+  /** Whether the target remains current briefly after the pointer leaves. */
+  getIsSticky?: () => boolean;
+
+  /** `false` suppresses the target's indicator. Defaults to `true`. */
   indicator?: boolean;
 
-  /** Called when this target becomes the deepest accepted target. */
+  /**
+   * Called when this target becomes the deepest accepted target. This usually
+   * means the pointer entered it, but can also mean a nested target that was
+   * covering it went away, so it can fire without the pointer moving.
+   */
   onDragEnter?: (event: DropTargetKernelEvent<Source>) => void;
 
-  /** Called while this target is the deepest accepted target. */
+  /**
+   * Called while this target is the deepest accepted target. It is throttled
+   * and fires when the input or drop-target hierarchy updates.
+   */
   onDrag?: (event: DropTargetKernelEvent<Source>) => void;
 
-  /** Called when this target stops being the deepest accepted target. */
+  /**
+   * Called when this target stops being the deepest accepted target. This can
+   * mean the pointer left or a nested target took over; `position` is `null`.
+   *
+   * This tracks the role rather than callback presence: it fires only after the
+   * target took the role, and once each time it gives it up, whether or not an
+   * `onDragEnter` callback observed it taking the role.
+   *
+   * A drop and teardown end the drag without a leave callback, so consumers
+   * must also release their own drag-time state when they are destroyed.
+   */
   onDragLeave?: (event: DropTargetKernelEvent<Source>) => void;
 
   /** Called when the drag is released on this target. */
@@ -86,10 +115,14 @@ type LibraryEventArgs<Payload> = {
   location: DragLocationHistory;
 };
 
-type DropTargetRegistrationArgs<Payload> = {
+export type DropTargetRegistrationArgs<Payload> = {
   element: Element;
   canDrop: (args: LibraryFeedbackArgs<Payload>) => boolean;
+  getData: (
+    args: LibraryFeedbackArgs<Payload>
+  ) => Record<string | symbol, unknown>;
   getDropEffect: (args: LibraryFeedbackArgs<Payload>) => DropEffect | undefined;
+  getIsSticky: (args: LibraryFeedbackArgs<Payload>) => boolean;
   onDropTargetChange: (args: LibraryEventArgs<Payload>) => void;
   onDragEnter: (args: LibraryEventArgs<Payload>) => void;
   onDrag: (args: LibraryEventArgs<Payload>) => void;
@@ -98,11 +131,7 @@ type DropTargetRegistrationArgs<Payload> = {
 };
 
 /** Adapter-specific configuration for the shared drop-target state machine. */
-export interface DropTargetKernelConfig<
-  Payload,
-  Source,
-  LibraryExtras extends object = object,
-> {
+export interface DropTargetKernelConfig<Payload, Source> {
   /** The element to register as a drop target. */
   element: Element;
 
@@ -110,9 +139,7 @@ export interface DropTargetKernelConfig<
   attribute: "data-drop-target" | "data-drop-target-external";
 
   /** Registers the callbacks with the adapter. */
-  register: (
-    args: DropTargetRegistrationArgs<Payload> & LibraryExtras
-  ) => CleanupFn;
+  register: (args: DropTargetRegistrationArgs<Payload>) => CleanupFn;
 
   /** Converts the adapter payload to the consumer-facing source. */
   decorateSource: (payload: Payload) => Source;
@@ -120,20 +147,11 @@ export interface DropTargetKernelConfig<
   /** Applies adapter-specific filters before the consumer's gate. */
   accepts: (payload: Payload) => boolean;
 
-  /** Resolves the position reported for the current pointer input. */
-  resolvePosition: (input: Input) => DropPosition | null;
+  /** Whether this adapter resolves a position for the current arguments. */
+  resolvesPosition?: (args: DropTargetKernelArgs<Source>) => boolean;
 
-  /** Displays and clears adapter-specific target feedback. */
-  indicator: {
-    /** Displays feedback for the current position and axis. */
-    show: (position: DropPosition | null, axis: DropAxis) => void;
-
-    /** Clears all feedback owned by this registration. */
-    clear: () => void;
-  };
-
-  /** Additional callbacks passed only to this adapter's registration. */
-  libraryExtras?: LibraryExtras;
+  /** The hover class used when this adapter resolves no position. */
+  positionlessClass?: string;
 
   /** Optional adapter teardown run after the shared cleanup. */
   onCleanup?: () => void;
@@ -155,18 +173,21 @@ const POSITION_CLASSES = Object.freeze({
  * @param element - The target element to measure against.
  * @param input - The current pointer position.
  * @param options - The consumer's position and axis options.
+ * @param rtl - Whether the target's sampled writing direction is right-to-left.
  */
-export function resolveDropPosition(
+function resolveDropPosition(
   element: Element,
   input: Input,
-  { position, axis = "vertical" }: DropPositionOptions
+  { position, axis = "vertical" }: DropPositionOptions,
+  rtl: boolean
 ): DropPosition {
   if (position) {
     return position;
   }
   const rect = element.getBoundingClientRect();
   if (axis === "horizontal") {
-    return input.clientX < rect.left + rect.width / 2 ? "before" : "after";
+    const isPhysicalLeft = input.clientX < rect.left + rect.width / 2;
+    return isPhysicalLeft === rtl ? "after" : "before";
   }
   return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
 }
@@ -176,12 +197,32 @@ export function resolveDropPosition(
  *
  * @param element - The element carrying the indicator class.
  */
-export function createPositionIndicator(element: Element) {
+function createPositionIndicator(element: Element, positionlessClass?: string) {
   let activeClass: string | null = null;
 
   return {
-    apply(position: DropPosition, axis: DropAxis) {
-      const className = POSITION_CLASSES[position]?.[axis];
+    show(position: DropPosition | null, axis: Axis, rtl: boolean) {
+      if (!position) {
+        if (activeClass) {
+          element.classList.remove(activeClass);
+          activeClass = null;
+        }
+        if (positionlessClass) {
+          element.classList.add(positionlessClass);
+        }
+        return;
+      }
+
+      if (positionlessClass) {
+        element.classList.remove(positionlessClass);
+      }
+      const physicalPosition =
+        axis === "horizontal" && rtl && position !== "inside"
+          ? position === "before"
+            ? "after"
+            : "before"
+          : position;
+      const className = POSITION_CLASSES[physicalPosition][axis];
       if (!className || activeClass === className) {
         return;
       }
@@ -196,6 +237,9 @@ export function createPositionIndicator(element: Element) {
         element.classList.remove(activeClass);
         activeClass = null;
       }
+      if (positionlessClass) {
+        element.classList.remove(positionlessClass);
+      }
     },
   };
 }
@@ -204,18 +248,26 @@ function isDeepestTarget(location: DragLocationHistory, element: Element) {
   return location.current.dropTargets[0]?.element === element;
 }
 
-function createEnterLeavePairing() {
+function createEnterLeavePairing(element: Element) {
   let entered = false;
+  let rtl: boolean | null = null;
 
   return {
-    enter(fire: () => void) {
+    enter() {
       if (entered) {
-        return;
+        return false;
       }
       entered = true;
-      fire();
+      return true;
+    },
+    isRtl() {
+      if (!entered) {
+        return false;
+      }
+      return (rtl ??= getComputedStyle(element).direction === "rtl");
     },
     leave(fire: () => void) {
+      rtl = null;
       if (!entered) {
         return;
       }
@@ -224,6 +276,7 @@ function createEnterLeavePairing() {
     },
     reset() {
       entered = false;
+      rtl = null;
     },
   };
 }
@@ -234,23 +287,28 @@ function createEnterLeavePairing() {
  * @param config - Adapter hooks and the latest consumer arguments.
  * @returns Cleanup for the adapter registration and its target state.
  */
-export function registerDropTargetKernel<
-  Payload,
-  Source,
-  LibraryExtras extends object = object,
->({
+export function registerDropTargetKernel<Payload, Source>({
   element,
   attribute,
   register,
   decorateSource,
   accepts,
-  resolvePosition,
-  indicator,
-  libraryExtras,
+  resolvesPosition = () => true,
+  positionlessClass,
   onCleanup,
   getArgs,
-}: DropTargetKernelConfig<Payload, Source, LibraryExtras>): CleanupFn {
-  const pairing = createEnterLeavePairing();
+}: DropTargetKernelConfig<Payload, Source>): CleanupFn {
+  const pairing = createEnterLeavePairing(element);
+  const indicator = createPositionIndicator(element, positionlessClass);
+
+  const positionFor = (
+    args: DropTargetKernelArgs<Source>,
+    input: Input,
+    rtl: boolean
+  ) =>
+    resolvesPosition(args)
+      ? resolveDropPosition(element, input, args, rtl)
+      : null;
 
   const passesGate = (source: Payload, input: Input) => {
     if (!accepts(source)) {
@@ -296,15 +354,17 @@ export function registerDropTargetKernel<
     }
 
     const args = getArgs();
-    const position = resolvePosition(location.current.input);
+    const entered = pairing.enter();
+    const rtl = pairing.isRtl();
+    const position = positionFor(args, location.current.input, rtl);
     if (args.indicator === false) {
       indicator.clear();
     } else {
-      indicator.show(position, args.axis ?? "vertical");
+      indicator.show(position, args.axis ?? "vertical", rtl);
     }
     // A target can become deepest on a drag update without receiving a fresh
     // enter, so taking the role and observing it stay active share this path.
-    pairing.enter(() =>
+    if (entered) {
       consumerMayThrow(() =>
         args.onDragEnter?.({
           source: decorateSource(source),
@@ -312,8 +372,8 @@ export function registerDropTargetKernel<
           location,
           element,
         })
-      )
-    );
+      );
+    }
     if (reportDrag) {
       consumerMayThrow(() =>
         args.onDrag?.({
@@ -331,9 +391,13 @@ export function registerDropTargetKernel<
   element.setAttribute(attribute, "");
 
   const cleanup = register({
-    ...libraryExtras,
     element,
     canDrop: ({ source, input }) => passesGate(source, input),
+    getData: () =>
+      consumerMayThrow(() => getArgs().getData?.() ?? {}, {}) as Record<
+        string | symbol,
+        unknown
+      >,
     getDropEffect: ({ source, input }) =>
       consumerMayThrow(() =>
         getArgs().getDropEffect?.({
@@ -342,6 +406,9 @@ export function registerDropTargetKernel<
           element,
         })
       ),
+    getIsSticky: () =>
+      consumerMayThrow(() => getArgs().getIsSticky?.() === true, false) ??
+      false,
     onDragEnter: ({ source, location }) =>
       reportActive(source, location, false),
     onDropTargetChange: ({ source, location }) =>
@@ -352,8 +419,11 @@ export function registerDropTargetKernel<
       reportLeave(source, location);
     },
     onDrop: ({ source, location }) => {
-      // Every target in the settled hierarchy receives the drop, including an
-      // ancestor that is no longer deepest but might still show stale feedback.
+      // Read before the pairing is reset, so the drop's position agrees with
+      // the direction the hover was measured against.
+      const rtl = pairing.isRtl();
+      // Every target in the settled hierarchy receives the drop; the deepest
+      // one still shows its indicator.
       indicator.clear();
       // A non-deepest target was already left by the synchronous hierarchy
       // update; the drop only closes any pairing that remains.
@@ -366,10 +436,11 @@ export function registerDropTargetKernel<
       if (!passesGate(source, location.current.input)) {
         return;
       }
+      const args = getArgs();
       consumerMayThrow(() =>
-        getArgs().onDrop?.({
+        args.onDrop?.({
           source: decorateSource(source),
-          position: resolvePosition(location.current.input),
+          position: positionFor(args, location.current.input, rtl),
           location,
           element,
         })

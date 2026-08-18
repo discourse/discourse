@@ -82,9 +82,9 @@
     }
   }
 
-  /* Kept physical: the class is assigned from the pointer's physical clientX
-     (before = left of the midpoint), so an rtlcss flip would draw the line on
-     the opposite side from where the drop resolves. */
+  /* The class names the physical side under the pointer while the reported
+     position is logical, so an rtlcss flip would move the line away from the
+     pointer. */
 
   &.--drag-left {
     &::before {
