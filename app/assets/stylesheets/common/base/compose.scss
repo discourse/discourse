@@ -772,8 +772,9 @@ html.composer-open:not(.has-full-page-chat) {
 
       .submit-panel,
       .composer-fields {
-        // this prevents touch events (i.e. accidental scrolls) from bubbling up
-        touch-action: none;
+        // prevents accidental scroll-panning from bubbling up while still
+        // allowing the browser's pinch-zoom gesture
+        touch-action: pinch-zoom;
       }
     }
 

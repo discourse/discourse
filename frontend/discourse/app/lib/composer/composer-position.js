@@ -8,6 +8,11 @@ export function setupComposerPosition(editor) {
   const html = document.documentElement;
 
   function editorTouchMove(event) {
+    // Multi-touch gestures (e.g. pinch-zoom) must be left to the browser
+    if (event.touches.length > 1) {
+      return;
+    }
+
     // This is an alternative to locking up the body
     // It stops scrolling in the given element from bubbling up to the body
     // when the editor does not have any content to scroll
