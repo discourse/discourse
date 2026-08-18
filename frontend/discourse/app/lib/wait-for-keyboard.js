@@ -1,3 +1,5 @@
+const KEYBOARD_DETECT_THRESHOLD = 150;
+
 export async function waitForClosedKeyboard(siteService, capabilitiesService) {
   if (!window.visualViewport) {
     return;
@@ -11,60 +13,56 @@ export async function waitForClosedKeyboard(siteService, capabilitiesService) {
     return;
   }
 
-  let timeout;
+  // the keyboard height is now applied optimistically, ahead of the viewport
+  // settling, so the class alone no longer means the keyboard has gone —
+  // wait on the geometry the callers actually measure against
   const initialWindowHeight = window.innerHeight;
-  let observer;
 
-  await Promise.race([
-    new Promise((resolve) => {
-      timeout = setTimeout(() => {
-        // eslint-disable-next-line no-console
-        console.warn("Keyboard visibility didn't change after 1s.");
-
-        resolve();
-      }, 1000);
-    }),
-    new Promise((resolve) => {
-      observer = new MutationObserver(() => {
-        if (!document.documentElement.classList.contains("keyboard-visible")) {
-          resolve();
-        }
-      });
-
-      observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ["class"],
-      });
-    }),
-  ]);
-
-  clearTimeout(timeout);
-  observer?.disconnect();
-
-  if ("virtualKeyboard" in navigator) {
-    if (navigator.virtualKeyboard.boundingRect.height > 0) {
-      // eslint-disable-next-line no-console
-      console.warn("Expected virtual keyboard to be closed but it wasn't.");
-      return;
+  const keyboardClosed = () => {
+    if ("virtualKeyboard" in navigator) {
+      return navigator.virtualKeyboard.boundingRect.height === 0;
     }
-  } else if (capabilitiesService.isFirefox && capabilitiesService.isAndroid) {
-    const KEYBOARD_DETECT_THRESHOLD = 150;
-    if (
-      Math.abs(
-        initialWindowHeight -
-          Math.min(window.innerHeight, window.visualViewport.height)
-      ) > KEYBOARD_DETECT_THRESHOLD
-    ) {
-      // eslint-disable-next-line no-console
-      console.warn("Expected virtual keyboard to be closed but it wasn't.");
-      return;
+
+    if (capabilitiesService.isFirefox && capabilitiesService.isAndroid) {
+      return (
+        Math.abs(
+          initialWindowHeight -
+            Math.min(window.innerHeight, window.visualViewport.height)
+        ) <= KEYBOARD_DETECT_THRESHOLD
+      );
     }
-  } else {
-    let viewportWindowDiff = initialWindowHeight - window.visualViewport.height;
-    if (viewportWindowDiff > 0) {
-      // eslint-disable-next-line no-console
-      console.warn("Expected virtual keyboard to be closed but it wasn't.");
-      return;
-    }
+
+    // same definition of "no keyboard" the detection logic uses; a persistent
+    // sub-threshold offset (e.g. a browser toolbar) is not the keyboard
+    return (
+      window.innerHeight - window.visualViewport.height <=
+      KEYBOARD_DETECT_THRESHOLD
+    );
+  };
+
+  if (keyboardClosed()) {
+    return;
   }
+
+  await new Promise((resolve) => {
+    const onResize = () => {
+      if (keyboardClosed()) {
+        settle();
+      }
+    };
+
+    const timeout = setTimeout(() => {
+      // eslint-disable-next-line no-console
+      console.warn("Keyboard visibility didn't change after 1s.");
+      settle();
+    }, 1000);
+
+    function settle() {
+      clearTimeout(timeout);
+      window.visualViewport.removeEventListener("resize", onResize);
+      resolve();
+    }
+
+    window.visualViewport.addEventListener("resize", onResize);
+  });
 }

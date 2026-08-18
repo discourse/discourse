@@ -23,6 +23,7 @@ import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import {
   dampenedOverdrag,
   shouldDeferSwipeToContent,
@@ -122,9 +123,19 @@ export default class ComposerContainer extends Component {
       ".d-editor-textarea-wrapper.in-focus, .d-editor-textarea-wrapper:focus-within"
     );
 
+    // dragging a selection handle emits the same touch moves as a swipe;
+    // selections elsewhere on the page have no handles near the composer
+    const active = document.activeElement;
+    const selection = window.getSelection();
+    const hasTextSelection =
+      (!selection.isCollapsed &&
+        state.element.contains(selection.anchorNode)) ||
+      (active?.selectionStart ?? 0) !== (active?.selectionEnd ?? 0);
+
     if (
       !editor ||
       !state.goingDown() ||
+      hasTextSelection ||
       shouldDeferSwipeToContent(state, state.element)
     ) {
       event.preventDefault();
@@ -157,17 +168,51 @@ export default class ComposerContainer extends Component {
       return;
     }
     this.#swipeEditor = null;
-    editor.style.transition = "";
 
     const dismissed =
       state.deltaY > SWIPE_DISTANCE_THRESHOLD ||
       state.velocityY > SWIPE_VELOCITY_THRESHOLD;
 
     if (dismissed && editor.contains(document.activeElement)) {
-      document.activeElement.blur();
+      this.#settleDismissedEditor(editor);
+      return;
     }
 
+    editor.style.transition = "";
     editor.style.marginTop = "";
+  }
+
+  // glide the released editor into the post-reflow layout; the stylesheet
+  // margin transition would target its pre-reflow spot
+  #settleDismissedEditor(editor) {
+    const draggedTop = editor.getBoundingClientRect().top;
+
+    editor.style.marginTop = "";
+    document.activeElement.blur();
+
+    // in-focus is template state that only leaves on the next render;
+    // pre-apply it so the measurement below sees the final layout
+    editor.classList.remove("in-focus");
+    this.appEvents.trigger("keyboard:will-hide");
+
+    const delta = draggedTop - editor.getBoundingClientRect().top;
+
+    if (
+      !delta ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      editor.style.transition = "";
+      return;
+    }
+
+    editor.style.transform = `translateY(${delta}px)`;
+    // flush so the transition below starts from the dragged offset
+    editor.getBoundingClientRect();
+    editor.style.transition =
+      "transform 250ms var(--composer-slide-easing, ease)";
+    editor.style.transform = "";
+
+    discourseLater(() => (editor.style.transition = ""), 300);
   }
 
   @action
