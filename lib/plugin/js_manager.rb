@@ -183,7 +183,7 @@ module Plugin
             entrypoints: entrypoints_config,
             filename_prefix:,
             filename_suffix:,
-            frontend: frontend_config,
+            frontend_config:,
           )
         result = compiler.compile!
 

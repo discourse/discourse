@@ -134,8 +134,8 @@ function routeNameFor(compatModuleName) {
 // `splitAtRoutes` values are route-name patterns with at most one trailing star. A star means
 // "this route and everything beneath it" — but splitting a route always claims its descendants
 // anyway, so `chat.*` and `chat` are the same thing. Reduce both to the base route name.
-function splitBasesFor(frontend) {
-  return Object.values(frontend?.splitAtRoutes ?? {}).map((pattern) =>
+function splitBasesFor(frontendConfig) {
+  return Object.values(frontendConfig?.splitAtRoutes ?? {}).map((pattern) =>
     pattern.replace(/\.?\*$/, "")
   );
 }
@@ -159,8 +159,8 @@ function splitBaseFor(routeName, splitBases) {
 
 // Groups the route files which `splitAtRoutes` claims into one lazy bundle per base route.
 // Anything unclaimed is left for the eager set.
-export function routeBundlesFor(records, frontend) {
-  const splitBases = splitBasesFor(frontend);
+export function routeBundlesFor(records, frontendConfig) {
+  const splitBases = splitBasesFor(frontendConfig);
   const bundles = new Map();
 
   if (splitBases.length === 0) {
@@ -209,7 +209,7 @@ function renderMap(name, records, identifiers) {
 
 export default {
   "virtual:entrypoint": (moduleFilenames, opts, extra) => {
-    const { themeId, pluginName, frontend } = opts;
+    const { themeId, pluginName, frontendConfig } = opts;
     const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
 
     const { records, warnings } = normalizeModules(moduleFilenames, label);
@@ -222,7 +222,7 @@ export default {
     // `compatModules` is what core registers with `define()`; the default export is the
     // cross-bundle lookup table that `babel-resolve-plugin-imports` indexes into. Without
     // `staticModules` they are the same object, and every module is eagerly imported.
-    if (isTestEntrypoint || !frontend?.staticModules) {
+    if (isTestEntrypoint || !frontendConfig?.staticModules) {
       const identifiers = new Map(
         records.map((record, i) => [record, `Mod${i + 1}`])
       );
@@ -242,13 +242,13 @@ export default {
 
     // Declared with or without the `/index` suffix, matching how cross-plugin imports resolve.
     const sharedPaths = new Set(
-      (frontend.sharedModules ?? []).flatMap((shared) => {
+      (frontendConfig.sharedModules ?? []).flatMap((shared) => {
         const path = stripExtension(shared);
         return [path, `${path}/index`];
       })
     );
 
-    const bundles = routeBundlesFor(records, frontend);
+    const bundles = routeBundlesFor(records, frontendConfig);
     const split = new Set(bundles.flatMap((bundle) => bundle.records));
 
     // Route files claimed by a `splitAtRoutes` bundle are loaded lazily, so they must not also
@@ -294,7 +294,7 @@ export default {
       : `THEME ${opts.themeId}`;
 
     const { records } = normalizeModules(moduleFilenames, label);
-    const bundle = routeBundlesFor(records, opts.frontend).find(
+    const bundle = routeBundlesFor(records, opts.frontendConfig).find(
       (candidate) => candidate.base === routeName
     );
 

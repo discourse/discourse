@@ -64,7 +64,7 @@ describe("virtual:entrypoint", () => {
 
   describe("with staticModules", () => {
     const output = entrypoint(MODULES, {
-      frontend: {
+      frontendConfig: {
         staticModules: true,
         sharedModules: [
           "discourse/components/chat-channel.gjs",
@@ -155,7 +155,7 @@ describe("virtual:entrypoint", () => {
     it("eagerly imports every module despite staticModules", () => {
       const output = entrypoint(
         TEST_MODULES,
-        { frontend: { staticModules: true, sharedModules: [] } },
+        { frontendConfig: { staticModules: true, sharedModules: [] } },
         { entrypointName: "test" }
       );
 
@@ -171,7 +171,7 @@ describe("virtual:entrypoint", () => {
     it("still tree-shakes the same modules for a non-test entrypoint", () => {
       const output = entrypoint(
         TEST_MODULES,
-        { frontend: { staticModules: true, sharedModules: [] } },
+        { frontendConfig: { staticModules: true, sharedModules: [] } },
         { entrypointName: "main" }
       );
 
@@ -197,7 +197,7 @@ describe("virtual:entrypoint", () => {
       "discourse/components/chat/routes/channel.gjs",
     ];
 
-    const frontend = {
+    const frontendConfig = {
       staticModules: true,
       splitAtRoutes: {
         "chat/visualizer": "chat.visualizer",
@@ -205,7 +205,7 @@ describe("virtual:entrypoint", () => {
       },
     };
 
-    const output = entrypoint(ROUTE_MODULES, { frontend });
+    const output = entrypoint(ROUTE_MODULES, { frontendConfig });
 
     it("groups routes into a bundle per split base, nearest ancestor winning", () => {
       // `chat.visualizer` is split separately, so it must not be swept into the `chat` bundle.
@@ -267,7 +267,7 @@ describe("virtual:entrypoint", () => {
     it("renders a route bundle as a plain module map", () => {
       const bundle = rollupVirtualImports["virtual:route"](
         ROUTE_MODULES,
-        { pluginName: "chat", frontend },
+        { pluginName: "chat", frontendConfig },
         "chat"
       );
 
