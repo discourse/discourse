@@ -128,6 +128,41 @@ RSpec.describe IncomingLinksReport do
          ]
     end
 
+    it "uses an anonymous guardian when no current user is provided" do
+      admin = Fabricate(:admin)
+      restricted_category = Fabricate(:private_category, group: Group[:admins], user: admin)
+      restricted_post = create_post(user: admin, category: restricted_category)
+      public_post = create_post
+
+      2.times do |n|
+        IncomingLink.add(
+          referer: "http://test.com",
+          host: "http://discourse.example.com",
+          topic_id: restricted_post.topic_id,
+          ip_address: "10.0.0.#{n}",
+          username: restricted_post.user.username,
+        )
+      end
+
+      IncomingLink.add(
+        referer: "http://test.com",
+        host: "http://discourse.example.com",
+        topic_id: public_post.topic_id,
+        ip_address: "10.0.0.2",
+        username: public_post.user.username,
+      )
+
+      r = IncomingLinksReport.find("top_referred_topics", limit: 1).as_json
+      expect(r[:data]).to eq [
+           {
+             topic_id: public_post.topic_id,
+             topic_title: public_post.topic.title,
+             topic_url: public_post.topic.relative_url,
+             num_clicks: 1,
+           },
+         ]
+    end
+
     it "respects date ranges" do
       p1 = create_post
       p1.topic.save
@@ -293,14 +328,10 @@ RSpec.describe IncomingLinksReport do
     end
 
     it "with some IncomingLink records, it returns correct data" do
-      topic1 = Fabricate.build(:topic, id: 123)
-      topic2 = Fabricate.build(:topic, id: 234)
-      # TODO: OMG OMG THE STUBBING
+      topic1 = Fabricate(:topic)
+      topic2 = Fabricate(:topic)
       IncomingLinksReport.stubs(:link_count_per_topic).returns(topic1.id => 8, topic2.id => 3)
-      # bypass some activerecord methods
-      Topic.stubs(:select).returns(Topic)
-      Topic.stubs(:where).returns(Topic)
-      Topic.stubs(:all).returns([topic1, topic2])
+
       expect(top_referred_topics[:data][0]).to eq(
         topic_id: topic1.id,
         topic_title: topic1.title,
