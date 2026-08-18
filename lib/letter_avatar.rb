@@ -77,7 +77,7 @@ class LetterAvatar
         glyph_path = File.join(directory, "glyph.png")
         canvas_path = File.join(directory, "canvas.png")
         Vips.run(
-          ["text", glyph_path, ERB::Util.html_escape(identity.letter), *font_arguments, "--rgba"],
+          ["text", glyph_path, text_markup(identity.letter), *font_arguments, "--rgba"],
           [
             "gravity",
             glyph_path,
@@ -160,6 +160,10 @@ class LetterAvatar
     def font_path
       return if macos?
       @font_path ||= File.join(DiscourseFonts.path_for_fonts, FONT_FILENAME)
+    end
+
+    def text_markup(letter)
+      %(<span foreground="#ffffff" alpha="80%">#{ERB::Util.html_escape(letter)}</span>)
     end
 
     def font_arguments
