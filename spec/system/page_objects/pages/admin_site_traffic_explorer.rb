@@ -242,16 +242,6 @@ module PageObjects
         has_css?("#{selector} a[href='#{label}']", exact_text: label)
       end
 
-      def filter_expanded_row(label:)
-        within(".site-traffic-breakdown-modal[role='dialog']") do
-          within("tr", text: label) do
-            find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
-          end
-          find_button("Apply filters", exact: true).click
-        end
-        self
-      end
-
       def select_expanded_filter_row(label:)
         within(".site-traffic-breakdown-modal[role='dialog']") do
           within("tr", text: label) do

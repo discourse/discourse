@@ -59,6 +59,12 @@
       border-style: dashed;
     }
 
+    .site-traffic-explorer__filter-pill-remaining,
+    .d-icon-angle-down,
+    .site-traffic-explorer__filter-remove {
+      color: var(--primary-medium);
+    }
+
     .fk-d-menu__trigger {
       min-width: 0;
       gap: var(--space-1);

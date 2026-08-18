@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
-import { modifier } from "ember-modifier";
+import fitSiteTrafficFilterPill from "discourse/admin/modifiers/fit-site-traffic-filter-pill";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { escapeExpression } from "discourse/lib/utilities";
 import { gt, or } from "discourse/truth-helpers";
@@ -14,57 +14,6 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MAX_VISIBLE_FILTER_VALUES = 3;
-
-const fitFilterPill = modifier(
-  (element, [key, maximumVisibleCount, , setVisibleCount]) => {
-    const filters = element.closest(".site-traffic-explorer__filters");
-    let filtersWidth;
-    let destroyed = false;
-
-    const fit = (visibleCount = maximumVisibleCount) => {
-      if (destroyed) {
-        return;
-      }
-
-      setVisibleCount(key, visibleCount);
-
-      schedule("afterRender", () => {
-        if (destroyed) {
-          return;
-        }
-
-        const values = element.querySelector(
-          ".site-traffic-explorer__filter-pill-values"
-        );
-        if (
-          values &&
-          values.scrollWidth > values.clientWidth + 1 &&
-          visibleCount > 1
-        ) {
-          fit(visibleCount - 1);
-        }
-      });
-    };
-
-    const observer = new ResizeObserver(([entry]) => {
-      const width = entry.contentRect.width;
-      if (width !== filtersWidth) {
-        filtersWidth = width;
-        fit();
-      }
-    });
-
-    if (filters) {
-      observer.observe(filters);
-    }
-    schedule("afterRender", fit);
-
-    return () => {
-      destroyed = true;
-      observer.disconnect();
-    };
-  }
-);
 
 export default class SiteTrafficExplorerFilterPills extends Component {
   @tracked visibleValueCounts = {};
@@ -193,7 +142,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                   {{if filter.pending 'is-pending'}}"
                 id={{this.filterId filter}}
                 data-test-site-traffic-filter-pill={{filter.key}}
-                {{fitFilterPill
+                {{fitSiteTrafficFilterPill
                   filter.key
                   (this.maximumVisibleCount filter)
                   (this.filterSignature filter)
