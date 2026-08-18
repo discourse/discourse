@@ -197,7 +197,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     )
     expect(traffic).to have_grouped_filter_pill(
       dimension: "traffic_type",
-      label: "Traffic type: Logged in or Anonymous",
+      label: "Traffic type: Logged in, Anonymous",
     )
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
@@ -215,7 +215,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.go_forward
     expect(traffic).to have_grouped_filter_pill(
       dimension: "traffic_type",
-      label: "Traffic type: Logged in or Anonymous",
+      label: "Traffic type: Logged in, Anonymous",
     )
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
 
@@ -405,7 +405,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "top_url",
-      label: "Top URL: #{additional_paths.first} or #{additional_paths.second}",
+      label: "Top URL: #{additional_paths.first}, #{additional_paths.second}",
     )
     expect(traffic).to have_filter_pill(dimension: "browser", label: "Unknown browser")
     expect(traffic).to have_no_expanded_table
@@ -457,7 +457,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "referrer",
-      label: "Referrer: one.example or two.example or three.example +1",
+      label: "Referrer: one.example, two.example, three.example +1",
     )
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
     expect(traffic).to have_apply_filters(count: 5)
@@ -475,7 +475,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_no_filter_dropdown
     expect(traffic).to have_grouped_filter_pill(
       dimension: "referrer",
-      label: "Referrer: one.example or two.example or Direct / unknown",
+      label: "Referrer: one.example, two.example, Direct / unknown",
     )
 
     traffic.select_tab(card: "acquisition", tab: "Referrers")
@@ -489,7 +489,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "referrer",
-      label: "Referrer: one.example or two.example or three.example",
+      label: "Referrer: one.example, two.example, three.example",
     )
     expect(traffic).to have_no_apply_filters
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
@@ -501,7 +501,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_grouped_filter_pill(
       dimension: "referrer",
-      label: "Referrer: one.example or two.example or three.example",
+      label: "Referrer: one.example, two.example, three.example",
     )
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
     expect(traffic).to have_metric(label: "Pageviews", value: "3")

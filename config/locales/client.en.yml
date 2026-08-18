@@ -7271,7 +7271,7 @@ en:
         active_filters: "Active traffic filters"
         filter_description: "%{filter}: %{value}"
         grouped_filter_description: "%{filter}: %{values} %{remaining}"
-        filter_value_separator: " or "
+        filter_value_separator: ", "
         additional_filter_values: "+%{count}"
         filtering_to: "Filtering to %{count} %{filter}"
         filter_plurals:

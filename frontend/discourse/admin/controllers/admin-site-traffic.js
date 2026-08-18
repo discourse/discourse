@@ -219,6 +219,7 @@ export default class AdminSiteTrafficController extends Controller {
 
       if (fetchId === this.#fetchId) {
         this.traffic = this.#decorateTraffic(traffic);
+        this.#reconcileFilters(this.traffic.active_filters ?? []);
       }
     } catch (error) {
       if (fetchId === this.#fetchId) {
@@ -380,6 +381,21 @@ export default class AdminSiteTrafficController extends Controller {
     this.draftFilters = Object.fromEntries(
       FILTER_KEYS.map((key) => [key, [...this.#appliedValues(key)]])
     );
+  }
+
+  #reconcileFilters(activeFilters) {
+    const filters = Object.fromEntries(FILTER_KEYS.map((key) => [key, []]));
+
+    for (const filter of activeFilters) {
+      filters[filter.key].push(filter.value);
+    }
+    for (const key of FILTER_KEYS) {
+      if (!this.#sameValues(filters[key], this.#appliedValues(key))) {
+        this[key] = this.#serializeValues(filters[key]);
+      }
+    }
+
+    this.draftFilters = filters;
   }
 
   #setDraftValues(key, values) {

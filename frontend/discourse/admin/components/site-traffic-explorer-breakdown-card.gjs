@@ -193,7 +193,7 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                     <button
                       type="button"
                       class="site-traffic-explorer__row-filter-target"
-                      aria-label={{this.filterLabel row}}
+                      aria-hidden="true"
                       tabindex="-1"
                       {{on "click" (fn this.toggleFilter row)}}
                     ></button>
