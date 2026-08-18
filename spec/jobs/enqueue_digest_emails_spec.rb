@@ -87,9 +87,23 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       expect(job.target_user_ids).not_to include(user.id)
     end
 
-    it "never returns users who have a bounce score above the threshold" do
-      user.user_stat.update!(bounce_score: SiteSetting.bounce_score_threshold + 1)
+    it "never returns users whose primary email is above the bounce score threshold" do
+      EmailBounceScore.record_bounce!(user.email, SiteSetting.bounce_score_threshold + 1)
       expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    # bounce scores are only stored for addresses in bad standing, so joining
+    # that table in rather than testing it with an anti-join would drop every
+    # user who has never bounced and stop digests site-wide
+    it "returns users who have never bounced while other addresses are in bad standing" do
+      EmailBounceScore.record_bounce!("someone-else@example.com", 10)
+      expect(job.target_user_ids).to include(user.id)
+    end
+
+    it "returns users whose secondary email is above the bounce score threshold" do
+      secondary = Fabricate(:secondary_email, user: user)
+      EmailBounceScore.record_bounce!(secondary.email, SiteSetting.bounce_score_threshold + 1)
+      expect(job.target_user_ids).to include(user.id)
     end
 
     it "never returns users who doesn't have a primary email" do

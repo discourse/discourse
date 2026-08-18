@@ -107,10 +107,6 @@ RSpec.describe UsersController do
       context "with a bounce score accrued before activation" do
         it "resets the bounce score, since the address is proven deliverable" do
           user_deferred.update(active: false)
-          user_deferred.user_stat.update!(
-            bounce_score: 3.0,
-            reset_bounce_score_after: 1.week.from_now,
-          )
           EmailBounceScore.record_bounce!(user_deferred.email, 3.0)
 
           put "/u/activate-account/#{email_token.token}"
@@ -4983,14 +4979,17 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
       end
 
-      it "keeps the bounce score until the new email is confirmed" do
+      it "leaves the bounce score with the address that earned it" do
         user = post_user
-        user.user_stat.update!(bounce_score: 3.0)
+        typo = user.email
+        EmailBounceScore.record_bounce!(typo, 3.0)
 
         put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
 
         expect(response.status).to eq(200)
-        expect(user.user_stat.reload.bounce_score).to eq(3.0)
+        expect(EmailBounceScore.score_for(typo)).to eq(3.0)
+        expect(EmailBounceScore.score_for("updatedemail@example.com")).to eq(0)
+        expect(user.user_stat.reload.bounce_score).to eq(0)
       end
 
       it "can be updated" do

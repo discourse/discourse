@@ -83,10 +83,7 @@ RSpec.describe EmailToken do
     end
 
     context "with a bounce score" do
-      before do
-        user.user_stat.update!(bounce_score: 3.0, reset_bounce_score_after: 1.week.from_now)
-        EmailBounceScore.record_bounce!(email_token.email, 3.0)
-      end
+      before { EmailBounceScore.record_bounce!(email_token.email, 3.0) }
 
       it "resets the bounce score, since the address is proven deliverable" do
         EmailToken.confirm(email_token.token)

@@ -3365,7 +3365,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#reset_bounce_score" do
-    before { user.user_stat.update!(bounce_score: 10) }
+    before { EmailBounceScore.record_bounce!(user.email, 10) }
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
