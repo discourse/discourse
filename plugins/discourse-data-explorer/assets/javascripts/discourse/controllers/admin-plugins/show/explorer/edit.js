@@ -7,6 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
+import { measuredMin } from "discourse/lib/resize-measurements";
 import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
@@ -47,13 +48,13 @@ export default class PluginsExplorerController extends Controller {
   form = null;
   shouldAutoRun = false;
 
-  #originalPaneHeight = null;
-
   /**
-   * The panes the live separator resolved, so the reader and the writer cannot
-   * disagree with the observer about which editor they belong to. A global
-   * first-match query would pick whichever editor happens to be first in the
-   * document.
+   * A weak handle on the panes the live separator resolved, rather than a global
+   * query that would find whichever editor comes first in the document.
+   *
+   * Weak because this controller is an app-lifetime singleton and the separator
+   * can go without telling it, so a strong reference would hold a detached
+   * subtree until something else replaced it.
    */
   #resolvedPanes = null;
   _pristine = null;
@@ -177,8 +178,9 @@ export default class PluginsExplorerController extends Controller {
     return items;
   }
 
+  /** The one place the weak handle is dereferenced. */
   get #panes() {
-    return this.#resolvedPanes;
+    return this.#resolvedPanes?.deref() ?? null;
   }
 
   initView() {
@@ -196,71 +198,31 @@ export default class PluginsExplorerController extends Controller {
   }
 
   /**
-   * The panes the separator resizes, found from the separator's own position so the
-   * two cannot disagree about which editor they belong to.
+   * The panes the separator resizes, found from the separator's own position.
    *
    * @param {HTMLElement} separator - The separator element.
    * @returns {HTMLElement|null} The panes, or null before they render.
    */
   @bind
   panesFor(separator) {
-    this.#resolvedPanes =
+    const panes =
       separator.closest(".query-editor")?.querySelector(".panels-flex") ?? null;
-    // A fresh separator means a fresh minimum. This runs once per separator
-    // install (the modifier's args never change), so a same-route transition
-    // that reuses the element keeps the previous bound — the ordinary path
-    // through the index tears the template down and re-lands here.
-    this.#originalPaneHeight = null;
-    return this.#resolvedPanes;
-  }
-
-  /**
-   * The panes' current height.
-   *
-   * A function rather than a number because it is a live measurement: an arg whose
-   * compute reads no tracked state is cached for the modifier's lifetime, so every
-   * drag after the first would start from the first one's height.
-   *
-   * @returns {number} The height in pixels.
-   */
-  @bind
-  paneHeight() {
-    return this.#panes?.clientHeight ?? 0;
-  }
-
-  /**
-   * The smallest the panes may be dragged to, which is the height they were first
-   * seen at. Captured once, so shrinking is bounded by the layout's own idea of a
-   * reasonable editor rather than by an arbitrary constant.
-   *
-   * @returns {number} The minimum height in pixels.
-   */
-  @bind
-  minPaneHeight() {
-    const measured = this.paneHeight();
-    // Zero means the panes have not been laid out yet — the narrow layout makes
-    // their height content-driven and the editor loads asynchronously. Capturing
-    // that would pin the minimum at zero and let the editor be dragged shut.
-    if (measured > 0) {
-      this.#originalPaneHeight ??= measured;
-    }
-    return this.#originalPaneHeight ?? measured;
+    this.#resolvedPanes = panes ? new WeakRef(panes) : null;
+    // The element, not the handle. It goes straight to a ResizeObserver.
+    return panes;
   }
 
   /**
    * The largest the panes may be dragged to.
    *
-   * A screenful, not the space below the header: these panes sit in a page that
-   * scrolls, so growing them lengthens the page rather than pushing anything out of
-   * view, and subtracting a header offset here would cap them below their own
-   * resting height on a short window. Past one screen the results are off-screen
-   * anyway, which is what makes a screenful the useful limit.
+   * A screenful, not the space below the header. This page scrolls, so growing
+   * the panes lengthens it rather than pushing anything out of view.
    *
    * @returns {number} The maximum height in pixels.
    */
   @bind
   maxPaneHeight() {
-    return Math.max(window.innerHeight, this.minPaneHeight());
+    return Math.max(window.innerHeight, measuredMin(this.#panes, "vertical"));
   }
 
   @bind
@@ -274,15 +236,9 @@ export default class PluginsExplorerController extends Controller {
     this.appEvents.trigger("ace:resize");
   }
 
-  /**
-   * Lets go of the resolved panes and the height bound derived from them.
-   * Called from the route on exit: this controller is an app-lifetime
-   * singleton, so a reference kept here would hold the detached editor subtree
-   * alive until the next visit resolved a fresh one.
-   */
+  /** Lets go of the panes. Called by the route on exit. */
   releasePanes() {
     this.#resolvedPanes = null;
-    this.#originalPaneHeight = null;
   }
 
   @action

@@ -23,13 +23,12 @@ import dResizeEdge, {
 type Measurement = number | null | (() => number | null);
 
 /**
- * A bound, which unlike a size is never unmeasured: there is nothing to clamp
- * against until it is known, so an unmeasured bound would silently become `0`
- * in the gesture's arithmetic rather than mean "no limit".
+ * A bound, which unlike a size is expected to be known. There is nothing to clamp
+ * against until it is, so a consumer with no limit should leave the arg off.
  *
- * Documentation rather than enforcement. `strictNullChecks` is off repo-wide, so
- * `number | null` collapses to `number` and a nullable measurement still
- * type-checks here. What actually refuses one is the gesture's own guard.
+ * `strictNullChecks` is off repo-wide, so a nullable measurement still type-checks
+ * here. The gesture holds the line instead. It skips a bound that does not
+ * resolve, rather than reading it as zero.
  */
 type Bound = number | (() => number);
 
@@ -210,6 +209,10 @@ interface DResizeSeparatorSignature {
  * only when the number is NOT that measurement — an offset from a resting size,
  * or a count in the consumer's own units — and each one given overrides what
  * would have been measured.
+ *
+ * Supply `@max` for a second reason too, about layout rather than units. The
+ * measured maximum leaves the header its space, which suits a box pinned in the
+ * viewport. A box in a scrolling page should pass its own.
  *
  * @example
  * The ordinary case, where the separator resizes a box on the page:
