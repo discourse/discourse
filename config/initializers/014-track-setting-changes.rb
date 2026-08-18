@@ -60,9 +60,12 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
 
   Theme.expire_site_cache! if name == :default_theme_id
 
-  if name == :splash_screen_image && new_value.present?
+  if SiteSetting::SplashScreenImageChanged::SETTINGS.include?(name.to_s) && new_value.present?
     SiteSetting::SplashScreenImageChanged.call(
-      upload_id: new_value,
+      params: {
+        upload_id: new_value.is_a?(Upload) ? new_value.id : new_value,
+        setting_name: name.to_s,
+      },
       guardian: Discourse.system_user.guardian,
     ) do |result|
       on_model_not_found(:upload) { Rails.logger.error("Upload not found for #{name} change") }
