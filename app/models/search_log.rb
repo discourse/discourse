@@ -85,7 +85,7 @@ class SearchLog < ActiveRecord::Base
           user_agent: user_agent,
           user_id: user_id,
           session_id: session_id&.slice(0, MAXIMUM_SESSION_ID_LENGTH),
-          crawler: user_id.nil? && user_agent.present? && CrawlerDetection.crawler?(user_agent),
+          crawler: user_agent.present? && CrawlerDetection.crawler?(user_agent),
         )
 
       result = [:created, log.id]
@@ -102,8 +102,7 @@ class SearchLog < ActiveRecord::Base
     agents = DB.query_single(<<~SQL)
       SELECT DISTINCT user_agent
       FROM search_logs
-      WHERE user_id IS NULL
-        AND NOT crawler
+      WHERE NOT crawler
         AND user_agent IS NOT NULL
     SQL
 
@@ -115,8 +114,7 @@ class SearchLog < ActiveRecord::Base
       .sum { |batch| DB.exec(<<~SQL, agents: batch) }
         UPDATE search_logs
         SET crawler = TRUE
-        WHERE user_id IS NULL
-          AND NOT crawler
+        WHERE NOT crawler
           AND user_agent IN (:agents)
       SQL
   end

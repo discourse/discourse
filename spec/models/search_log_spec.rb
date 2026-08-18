@@ -200,7 +200,7 @@ RSpec.describe SearchLog, type: :model do
       expect(SearchLog.find(id).crawler).to eq(true)
     end
 
-    it "does not flag a logged-in search even from a crawler user agent" do
+    it "flags a logged-in search from a crawler user agent" do
       user = Fabricate(:user)
       _status, id =
         SearchLog.log(
@@ -211,7 +211,19 @@ RSpec.describe SearchLog, type: :model do
           user_id: user.id,
         )
 
-      expect(SearchLog.find(id).crawler).to eq(false)
+      expect(SearchLog.find(id).crawler).to eq(true)
+    end
+
+    it "flags a search from a scripted client that is not a browser" do
+      _status, id =
+        SearchLog.log(
+          term: "ruby",
+          search_type: :header,
+          ip_address: "127.0.0.1",
+          user_agent: "python-requests/2.31.0",
+        )
+
+      expect(SearchLog.find(id).crawler).to eq(true)
     end
 
     it "records the pageview session the search was made from" do
@@ -321,7 +333,7 @@ RSpec.describe SearchLog, type: :model do
   end
 
   describe ".backfill_crawler!" do
-    it "flags existing anonymous searches from known crawler user agents" do
+    it "flags existing searches from known crawler user agents" do
       crawler =
         Fabricate(
           :search_log,
@@ -332,12 +344,12 @@ RSpec.describe SearchLog, type: :model do
       no_agent = Fabricate(:search_log, user: nil, user_agent: nil)
       member = Fabricate(:search_log, user: Fabricate(:user), user_agent: "Googlebot/2.1")
 
-      expect(described_class.backfill_crawler!).to eq(1)
+      expect(described_class.backfill_crawler!).to eq(2)
 
       expect(crawler.reload.crawler).to eq(true)
       expect(human.reload.crawler).to eq(false)
       expect(no_agent.reload.crawler).to eq(false)
-      expect(member.reload.crawler).to eq(false)
+      expect(member.reload.crawler).to eq(true)
     end
 
     it "is idempotent" do
