@@ -731,7 +731,7 @@ RSpec.describe AdminDashboardSiteTraffic do
       it "invalidates the cached payload when crawler detection is toggled" do
         SiteSetting.improved_crawler_detection = false
         3.times { Fabricate(:browser_pageview_event, country_code: "US", score: 90) }
-        1.times { Fabricate(:browser_pageview_event, country_code: "US", score: 10) }
+        Fabricate(:browser_pageview_event, country_code: "US", score: 10)
         aggregate_rollups
 
         first = build_traffic(start_date: nil, end_date: nil)
@@ -859,14 +859,12 @@ RSpec.describe AdminDashboardSiteTraffic do
             created_at: "2026-05-01",
           )
         end
-        1.times do
-          Fabricate(
-            :browser_pageview_event,
-            normalized_referrer: "google.com",
-            score: 10,
-            created_at: "2026-05-01",
-          )
-        end
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: "google.com",
+          score: 10,
+          created_at: "2026-05-01",
+        )
         aggregate_referrer_rollups
 
         expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to include(

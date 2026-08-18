@@ -118,17 +118,25 @@ RSpec.describe AdminDashboardSearch do
       )
     end
 
-    it "stays members-only while crawler detection is disabled" do
+    it "counts anonymous searches minus known crawlers while crawler detection is disabled" do
       SiteSetting.improved_crawler_detection = false
       Fabricate.times(3, :search_log, term: "ruby", user: user, created_at: "2026-05-02 10:00")
-      Fabricate.times(9, :search_log, term: "crawler-bait", created_at: "2026-05-02 11:00")
+      Fabricate.times(
+        9,
+        :search_log,
+        term: "crawler-bait",
+        crawler: true,
+        created_at: "2026-05-02 11:00",
+      )
       Fabricate.times(4, :search_log, term: "onboarding", created_at: "2026-05-02 12:00")
 
       result = described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")
 
-      expect(result[:kpis][:total_searches][:value]).to eq(3)
-      expect(result[:trending]).to eq([{ term: "ruby", searches: 3 }])
-      expect(result[:search_type]).to eq("non_staff_only")
+      expect(result[:kpis][:total_searches][:value]).to eq(7)
+      expect(result[:trending]).to eq(
+        [{ term: "onboarding", searches: 4 }, { term: "ruby", searches: 3 }],
+      )
+      expect(result[:search_type]).to eq("human_only")
     end
 
     it "buckets terms by exact CTR boundaries" do

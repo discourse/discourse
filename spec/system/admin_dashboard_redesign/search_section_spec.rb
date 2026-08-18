@@ -199,7 +199,7 @@ describe "Admin Dashboard Redesign | Search section" do
     expect(search).to have_alert_no_result_rate_kpi("58%")
   end
 
-  it "stays members-only and drills into member searches while crawler detection is disabled",
+  it "excludes known crawlers and drills into human searches while crawler detection is disabled",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     SiteSetting.improved_crawler_detection = false
     Fabricate.times(
@@ -209,7 +209,13 @@ describe "Admin Dashboard Redesign | Search section" do
       user: user,
       created_at: "2026-05-10 10:00",
     )
-    Fabricate.times(20, :search_log, term: "crawlerbait", created_at: "2026-05-10 11:00")
+    Fabricate.times(
+      2,
+      :search_log,
+      term: "crawlerbait",
+      crawler: true,
+      created_at: "2026-05-10 11:00",
+    )
 
     dashboard.visit
     search = dashboard.search
@@ -221,7 +227,7 @@ describe "Admin Dashboard Redesign | Search section" do
     search.click_trending_term("ruby")
 
     expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
-      "searchType" => "non_staff_only",
+      "searchType" => "human_only",
       "period" => "monthly",
       "term" => "ruby",
     )
