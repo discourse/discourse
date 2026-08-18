@@ -114,7 +114,7 @@ interface DDragAndDropTargetSignature {
 
       /**
        * Drives the indicator class selection and the smart-row position math.
-       * Defaults to `"y"`.
+       * Defaults to `"vertical"`.
        */
       axis?: DropAxis;
 

@@ -270,7 +270,7 @@ module(
               style="height: 100px"
               {{dDragAndDropExternalTarget
                 accepts="text"
-                axis="y"
+                axis="vertical"
                 onDrop=onDrop
               }}
             >ext</div>
@@ -301,7 +301,7 @@ module(
             <div
               id="ext"
               style="height: 100px"
-              {{dDragAndDropExternalTarget accepts="text" axis="y"}}
+              {{dDragAndDropExternalTarget accepts="text" axis="vertical"}}
             >ext</div>
           </template>
         );
@@ -336,7 +336,7 @@ module(
           );
       });
 
-      test("external drop position honours the x axis", async function (assert) {
+      test("external drop position honours the horizontal axis", async function (assert) {
         const drops = [];
         const onDrop = (payload) => drops.push(payload.position);
 
@@ -347,7 +347,7 @@ module(
               style="width: 200px"
               {{dDragAndDropExternalTarget
                 accepts="text"
-                axis="x"
+                axis="horizontal"
                 onDrop=onDrop
               }}
             >ext</div>
@@ -370,7 +370,7 @@ module(
           .dom("#ext")
           .doesNotHaveClass(
             "--drag-above",
-            "and the class comes from the x vocabulary, not the y one"
+            "and the class comes from the horizontal vocabulary, not the vertical one"
           );
       });
 
@@ -428,7 +428,7 @@ module(
               style="height: 100px"
               {{dDragAndDropExternalTarget
                 accepts="text"
-                axis="y"
+                axis="vertical"
                 onDragEnter=onDragEnter
                 onDragLeave=onDragLeave
               }}

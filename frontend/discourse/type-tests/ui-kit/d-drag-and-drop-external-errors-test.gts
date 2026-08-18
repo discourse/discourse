@@ -16,7 +16,10 @@ const Negatives = <template>
   <div {{dDragAndDropExternalTarget accepts="images"}}></div>
 
   {{! @glint-expect-error - both targets resolve position the same way, so the external one rejects the same axes }}
-  <div {{dDragAndDropExternalTarget accepts="urls" axis="z"}}></div>
+  <div {{dDragAndDropExternalTarget accepts="urls" axis="x"}}></div>
+
+  {{! @glint-expect-error - auto-scroll adds only "all" to the shared axis vocabulary }}
+  <div {{dDragAndDropAutoScroll types="card" axis="both"}}></div>
 
   {{! @glint-expect-error - auto-scroll moves the host element or the window }}
   <div {{dDragAndDropAutoScroll target="document"}}></div>

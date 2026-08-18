@@ -1,6 +1,8 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import type { Side } from "discourse/lib/geometry";
+import type { ResizeAxis } from "discourse/lib/resize-measurements";
 import {
   type DPointerDragArgs,
   registerPointerDrag,
@@ -55,7 +57,7 @@ interface DResizeEdgeSignature {
        * should carry: that describes the separator itself, which lies across
        * the axis it moves along.
        */
-      axis?: "horizontal" | "vertical";
+      axis?: ResizeAxis;
 
       /**
        * Which edge the resized element is docked against, in logical terms.
@@ -67,7 +69,7 @@ interface DResizeEdgeSignature {
        * Changing this or `axis` mid-gesture measures the new orientation against
        * an origin captured in the old one, so the result is undefined.
        */
-      side?: "start" | "end";
+      side?: Side;
 
       /**
        * A class held on `document.body` for the length of a gesture, for a cursor

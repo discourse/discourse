@@ -14,9 +14,10 @@ import {
   matchesExternalKind,
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
 import { matchesDragType } from "discourse/lib/-internals/drag-and-drop/vocabulary";
+import type { Axis } from "discourse/lib/geometry";
 
 /** Which direction the container is allowed to scroll while a drag is in flight. */
-export type AutoScrollAxis = "vertical" | "horizontal" | "all";
+export type AutoScrollAxis = Axis | "all";
 
 /** What gets scrolled: the element the modifier sits on, or the window. */
 export type AutoScrollTarget = "element" | "window";

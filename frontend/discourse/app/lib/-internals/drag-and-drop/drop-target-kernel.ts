@@ -4,12 +4,13 @@ import type {
   Input,
 } from "@atlaskit/pragmatic-drag-and-drop/types";
 import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
+import type { Axis } from "discourse/lib/geometry";
 
 /** Where a drop would land relative to its target. */
 export type DropPosition = "before" | "after" | "inside";
 
 /** The axis used for position math and indicator classes. */
-export type DropAxis = "x" | "y";
+export type DropAxis = Axis;
 
 /** The cursor feedback the browser shows for a drop. */
 export type DropEffect = "copy" | "link" | "move";
@@ -19,7 +20,7 @@ export interface DropPositionOptions {
   /** A fixed position, which wins over midpoint math. */
   position?: DropPosition;
 
-  /** The axis whose midpoint is measured. Defaults to `"y"`. */
+  /** The axis whose midpoint is measured. Defaults to `"vertical"`. */
   axis?: DropAxis;
 }
 
@@ -141,9 +142,9 @@ export interface DropTargetKernelConfig<
 }
 
 const POSITION_CLASSES = Object.freeze({
-  before: { y: "--drag-above", x: "--drag-left" },
-  after: { y: "--drag-below", x: "--drag-right" },
-  inside: { y: "--drag-inside", x: "--drag-inside" },
+  before: { vertical: "--drag-above", horizontal: "--drag-left" },
+  after: { vertical: "--drag-below", horizontal: "--drag-right" },
+  inside: { vertical: "--drag-inside", horizontal: "--drag-inside" },
 });
 
 /**
@@ -157,13 +158,13 @@ const POSITION_CLASSES = Object.freeze({
 export function resolveDropPosition(
   element: Element,
   input: Input,
-  { position, axis = "y" }: DropPositionOptions
+  { position, axis = "vertical" }: DropPositionOptions
 ): DropPosition {
   if (position) {
     return position;
   }
   const rect = element.getBoundingClientRect();
-  if (axis === "x") {
+  if (axis === "horizontal") {
     return input.clientX < rect.left + rect.width / 2 ? "before" : "after";
   }
   return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
@@ -296,7 +297,7 @@ export function registerDropTargetKernel<
     const args = getArgs();
     const position = resolvePosition(location.current.input);
     if (args.indicator !== false) {
-      indicator.show(position, args.axis ?? "y");
+      indicator.show(position, args.axis ?? "vertical");
     }
     // A target can become deepest on a drag update without receiving a fresh
     // enter, so taking the role and observing it stay active share this path.

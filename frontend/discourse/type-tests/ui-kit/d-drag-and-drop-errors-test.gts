@@ -18,8 +18,8 @@ const Negatives = <template>
   {{! @glint-expect-error - a drag permits a fixed set of operations, and move-copy is not one of their spellings }}
   <li {{dDragAndDropSource type="link" effectAllowed="moveCopy"}}></li>
 
-  {{! @glint-expect-error - the axis vocabulary is x and y }}
-  <li {{dDragAndDropTarget accepts="link" axis="z"}}></li>
+  {{! @glint-expect-error - the axis vocabulary is vertical and horizontal, shared with the resize and auto-scroll primitives }}
+  <li {{dDragAndDropTarget accepts="link" axis="y"}}></li>
 
   {{! @glint-expect-error - a drop lands before, after or inside, nowhere else }}
   <li {{dDragAndDropTarget accepts="link" position="middle"}}></li>

@@ -787,6 +787,48 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     assert.strictEqual(drops.at(-1).position, "after");
   });
 
+  test("a horizontal target measures the midpoint along x and lights the side class", async function (assert) {
+    const drops = [];
+    const onDrop = (payload) => drops.push(payload.position);
+
+    await render(
+      <template>
+        <div
+          id="src"
+          {{dDragAndDropSource type="col" data=(hash id=1)}}
+        >src</div>
+        <div
+          id="tgt"
+          style="width: 200px; height: 20px"
+          {{dDragAndDropTarget accepts="col" axis="horizontal" onDrop=onDrop}}
+        >tgt</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    const rect = find("#tgt").getBoundingClientRect();
+    // Deep in the vertical lower half, so a target still measuring y reads
+    // "after" and lights `--drag-below` instead.
+    const nearLeftEdge = {
+      clientX: rect.left + 5,
+      clientY: rect.top + rect.height - 2,
+    };
+
+    await dragEvent("#src", "dragstart", { dataTransfer, ...centerOf("#src") });
+    await dragEvent("#tgt", "dragenter", { dataTransfer, ...nearLeftEdge });
+    await dragEvent("#tgt", "dragover", { dataTransfer, ...nearLeftEdge });
+
+    assert
+      .dom("#tgt")
+      .hasClass("--drag-left", "the indicator names the horizontal side");
+    assert.dom("#tgt").doesNotHaveClass("--drag-below");
+
+    await dragEvent("#tgt", "drop", { dataTransfer, ...nearLeftEdge });
+    await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+    assert.deepEqual(drops, ["before"], "the midpoint is measured along x");
+  });
+
   test("nested targets — innermost accepting target wins drop", async function (assert) {
     const events = [];
     const onOuterDrop = () => events.push("outer");

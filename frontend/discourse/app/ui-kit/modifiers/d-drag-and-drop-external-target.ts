@@ -257,7 +257,7 @@ export function registerDragAndDropExternalTarget(
  * ```hbs
  * <li {{dDragAndDropExternalTarget
  *   accepts="urls"
- *   axis="y"
+ *   axis="vertical"
  *   onDrop=this.insertBeside
  * }}>...</li>
  * ```
