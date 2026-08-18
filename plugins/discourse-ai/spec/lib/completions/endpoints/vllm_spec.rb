@@ -647,6 +647,35 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
 
       expect(text_partials.join).to eq("The answer is 4.")
     end
+
+    it "finalizes Thinking before content when a delta carries both" do
+      chunks = []
+
+      chunks << "data: #{({ choices: [{ delta: { role: "assistant", reasoning: "Let me " } }] }).to_json}\n\n"
+      chunks << "data: #{({ choices: [{ delta: { content: "The answer", reasoning: "think." } }] }).to_json}\n\n"
+      chunks << "data: #{({ choices: [{ delta: { content: " is 4." } }] }).to_json}\n\n"
+      chunks << "data: [DONE]\n\n"
+
+      stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+        status: 200,
+        body: chunks.join,
+      )
+
+      partials = []
+      llm.generate("what is 2+2?", user: Discourse.system_user, output_thinking: true) do |partial|
+        partials << partial
+      end
+
+      first_content_index = partials.index { |partial| partial.is_a?(String) }
+      final_thinking_index =
+        partials.index do |partial|
+          partial.is_a?(DiscourseAi::Completions::Thinking) && !partial.partial?
+        end
+
+      expect(final_thinking_index).to be < first_content_index
+      expect(partials[final_thinking_index].message).to eq("Let me think.")
+      expect(partials.select { |partial| partial.is_a?(String) }.join).to eq("The answer is 4.")
+    end
   end
 
   describe "reasoning_content" do
