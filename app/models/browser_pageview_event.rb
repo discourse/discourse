@@ -252,6 +252,15 @@ class BrowserPageviewEvent < ActiveRecord::Base
     )
   end
 
+  def self.rollup_count_sql
+    logged_in_only = SiteSetting.login_required
+    count_column = logged_in_only ? "logged_in_count" : "count"
+    return count_column if !CrawlerScorer.enabled?
+
+    crawler_column = logged_in_only ? "likely_crawler_logged_in_count" : "likely_crawler_count"
+    "GREATEST(#{count_column} - #{crawler_column}, 0)"
+  end
+
   before_save :truncate_fields
 
   private

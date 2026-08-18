@@ -3,10 +3,13 @@
 RSpec.describe AdminDashboardSearch do
   fab!(:user)
 
-  before { freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0)) }
+  before do
+    freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+    SiteSetting.improved_crawler_detection = true
+  end
 
   describe ".build" do
-    it "returns KPIs, trending terms, and content gaps for the selected dates, counting only non-staff users" do
+    it "returns KPIs, trending terms, and content gaps for the selected dates, counting non-staff and anonymous searches" do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)
 
@@ -55,13 +58,26 @@ RSpec.describe AdminDashboardSearch do
       )
       Fabricate.times(5, :search_log, term: "ghost", user: user, created_at: "2026-04-26 11:00")
 
-      # Anonymous searches (likely crawlers) must be excluded from every metric and from the
+      Fabricate.times(8, :clicked_search_log, term: "onboarding", created_at: "2026-05-05 10:00")
+      Fabricate.times(2, :search_log, term: "onboarding", created_at: "2026-05-05 11:00")
+
+      # Searches flagged as crawler traffic must stay out of every metric and out of the
       # prior-window deltas. If counted, "crawler-bait" would top trending, inflate the
-      # no-result rate, and surface as a content gap; the anonymous "ruby" rows would change
-      # its count and the percent change.
-      Fabricate.times(30, :search_log, term: "crawler-bait", created_at: "2026-05-05 10:00")
-      Fabricate.times(10, :search_log, term: "ruby", created_at: "2026-05-02 09:00")
-      Fabricate.times(20, :search_log, term: "crawler-bait", created_at: "2026-04-26 09:00")
+      # no-result rate, and surface as a content gap.
+      Fabricate.times(
+        30,
+        :search_log,
+        term: "crawler-bait",
+        crawler: true,
+        created_at: "2026-05-05 12:00",
+      )
+      Fabricate.times(
+        20,
+        :search_log,
+        term: "crawler-bait",
+        crawler: true,
+        created_at: "2026-04-26 09:00",
+      )
 
       Fabricate(:search_log, term: "admin-search", user: admin, created_at: "2026-05-05 12:00")
       Fabricate(:clicked_search_log, term: "ruby", user: moderator, created_at: "2026-05-05 13:00")
@@ -73,20 +89,22 @@ RSpec.describe AdminDashboardSearch do
       )
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
+        search_type: "human_only",
         kpis: {
           total_searches: {
-            value: 19,
+            value: 29,
             previous_value: 10,
-            percent_change: 90,
+            percent_change: 190,
           },
           no_result_rate: {
-            value: 21,
+            value: 14,
             previous_value: 50,
-            point_change: -29,
+            point_change: -36,
             exceeds_threshold: true,
           },
         },
         trending: [
+          { term: "onboarding", searches: 10 },
           { term: "ruby", searches: 6 },
           { term: "markdown tables", searches: 5 },
           { term: "zeta", searches: 4 },
@@ -98,6 +116,19 @@ RSpec.describe AdminDashboardSearch do
           { term: "discobot", searches: 4, status: "no_match" },
         ],
       )
+    end
+
+    it "stays members-only while crawler detection is disabled" do
+      SiteSetting.improved_crawler_detection = false
+      Fabricate.times(3, :search_log, term: "ruby", user: user, created_at: "2026-05-02 10:00")
+      Fabricate.times(9, :search_log, term: "crawler-bait", created_at: "2026-05-02 11:00")
+      Fabricate.times(4, :search_log, term: "onboarding", created_at: "2026-05-02 12:00")
+
+      result = described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")
+
+      expect(result[:kpis][:total_searches][:value]).to eq(3)
+      expect(result[:trending]).to eq([{ term: "ruby", searches: 3 }])
+      expect(result[:search_type]).to eq("non_staff_only")
     end
 
     it "buckets terms by exact CTR boundaries" do
@@ -156,6 +187,7 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
+        search_type: "human_only",
         kpis: {
           total_searches: {
             value: 136,
@@ -196,6 +228,7 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
+        search_type: "human_only",
         kpis: {
           total_searches: {
             value: 11,
@@ -243,6 +276,7 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
+        search_type: "human_only",
         kpis: {
           total_searches: {
             value: 0,

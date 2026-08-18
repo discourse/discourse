@@ -155,7 +155,7 @@ class AdminDashboardSiteTrafficExplorer
       include_logged_in: filters[:traffic_type]&.include?("logged_in"),
       include_anonymous: filters[:traffic_type]&.include?("anonymous"),
       include_likely_crawler: filters[:traffic_type]&.include?("likely_crawler"),
-      crawler_detection_enabled: UpcomingChanges.enabled?(:improved_crawler_detection),
+      crawler_detection_enabled: CrawlerScorer.enabled?,
       crawler_threshold: CrawlerScorer::BOT_SCORE_THRESHOLD,
       bounce_threshold:
         BrowserPageviewSessionEngagementDailyRollup.bounce_engaged_seconds_threshold,

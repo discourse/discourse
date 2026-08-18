@@ -9,6 +9,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
   before do
     SiteSetting.dashboard_improvements = true
+    SiteSetting.improved_crawler_detection = true
     AdminDashboardSectionConfiguration.update(
       [
         { id: "search", visible: true },
@@ -22,51 +23,42 @@ describe "Admin Dashboard Redesign | Search section" do
     sign_in(current_user)
   end
 
-  it "lets staff review non-staff search health, inspect tooltips, and drill into terms",
+  it "lets staff review search health, inspect tooltips, and drill into terms",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     Fabricate.times(
-      15,
+      2,
       :clicked_search_log,
       term: "ruby",
       user: user,
       created_at: "2026-05-10 10:00",
     )
-    Fabricate.times(10, :search_log, term: "ruby", user: user, created_at: "2026-05-10 11:00")
-    Fabricate.times(5, :search_log, term: "ruby", user: user, created_at: "2026-04-20 10:00")
+    Fabricate.times(3, :search_log, term: "ruby", user: user, created_at: "2026-05-10 11:00")
+    Fabricate(:search_log, term: "ruby", user: user, created_at: "2026-04-20 10:00")
 
-    Fabricate.times(
-      2,
+    Fabricate(
       :clicked_search_log,
       term: "markdown tables",
       user: user,
       created_at: "2026-04-20 11:00",
-    )
-
-    Fabricate.times(
-      13,
-      :search_log,
-      term: "markdown tables",
-      user: user,
-      created_at: "2026-04-20 12:00",
     )
     Fabricate.times(
       3,
       :search_log,
       term: "markdown tables",
       user: user,
-      created_at: "2026-05-03 10:00",
+      created_at: "2026-04-20 12:00",
     )
+    Fabricate(:search_log, term: "markdown tables", user: user, created_at: "2026-05-03 10:00")
 
-    Fabricate.times(2, :search_log, term: "discobot", user: user, created_at: "2026-05-10 12:00")
+    Fabricate(:search_log, term: "discobot", user: user, created_at: "2026-04-20 13:00")
 
     Fabricate.times(
-      20,
+      6,
       :clicked_search_log,
       term: "ruby",
       user: user,
       created_at: "2026-03-20 10:00",
     )
-    Fabricate.times(20, :search_log, term: "ruby", user: user, created_at: "2026-03-20 11:00")
 
     Fabricate(:search_log, term: "admin-search", user: current_user, created_at: "2026-05-10 08:00")
     Fabricate(:clicked_search_log, term: "ruby", user: moderator, created_at: "2026-05-10 08:30")
@@ -77,10 +69,22 @@ describe "Admin Dashboard Redesign | Search section" do
       created_at: "2026-03-20 08:00",
     )
 
-    # Anonymous searches (likely crawlers) must be excluded from every metric. If they
+    # Searches flagged as crawler traffic must be excluded from every metric. If they
     # were counted, "crawlerbot" would top trending and the no-result rate would spike.
-    Fabricate.times(100, :search_log, term: "crawlerbot", created_at: "2026-05-10 09:00")
-    Fabricate.times(50, :clicked_search_log, term: "ruby", created_at: "2026-05-10 09:30")
+    Fabricate.times(
+      10,
+      :search_log,
+      term: "crawlerbot",
+      crawler: true,
+      created_at: "2026-05-10 09:00",
+    )
+    Fabricate.times(
+      2,
+      :clicked_search_log,
+      term: "ruby",
+      crawler: true,
+      created_at: "2026-05-10 09:30",
+    )
 
     dashboard.visit
     expect(dashboard).to have_section("search")
@@ -93,12 +97,12 @@ describe "Admin Dashboard Redesign | Search section" do
         "increased. Review the content gaps to see what's missing.",
     )
 
-    expect(search).to have_total_searches_kpi("50", improving_delta: "+25%")
-    expect(search).to have_no_result_rate_kpi("4%", worsening_delta: "+4%")
+    expect(search).to have_total_searches_kpi("12", improving_delta: "+100%")
+    expect(search).to have_no_result_rate_kpi("8%", worsening_delta: "+8%")
 
     search.hover_total_searches_tooltip
     expect(search).to have_total_searches_tooltip(
-      "The number of searches performed by members in your community.",
+      "The number of searches performed in your community.",
     )
 
     search.hover_no_result_rate_tooltip
@@ -108,13 +112,13 @@ describe "Admin Dashboard Redesign | Search section" do
     )
 
     search.hover_trending_tooltip
-    expect(search).to have_trending_tooltip("The most popular search terms among members.")
+    expect(search).to have_trending_tooltip("The most popular search terms in your community.")
 
     expect(search).to have_trending_rows(
       [
-        { term: "ruby", searches: 30 },
-        { term: "markdown tables", searches: 18 },
-        { term: "discobot", searches: 2 },
+        { term: "ruby", searches: 6 },
+        { term: "markdown tables", searches: 5 },
+        { term: "discobot", searches: 1 },
       ],
     )
     expect(search).to have_no_trending_term("admin-search")
@@ -122,8 +126,8 @@ describe "Admin Dashboard Redesign | Search section" do
 
     expect(search).to have_content_gap_rows(
       [
-        { term: "markdown tables", searches: 18, badge: "Poor match" },
-        { term: "discobot", searches: 2, badge: "No match" },
+        { term: "markdown tables", searches: 5, badge: "Poor match" },
+        { term: "discobot", searches: 1, badge: "No match" },
       ],
     )
 
@@ -145,14 +149,14 @@ describe "Admin Dashboard Redesign | Search section" do
         "looking for more often.",
     )
 
-    expect(search).to have_total_searches_kpi("27", improving_delta: "+800%")
-    expect(search).to have_no_result_rate_kpi("7%", improving_delta: "-93%")
+    expect(search).to have_total_searches_kpi("5", improving_delta: "+400%")
+    expect(search).to have_no_result_rate_kpi("0%", improving_delta: "-100%")
 
     search.click_trending_term("ruby")
 
     expect(page).to have_current_path("/admin/logs/search_logs/term", ignore_query: true)
     expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
-      "searchType" => "non_staff_only",
+      "searchType" => "human_only",
       "period" => "weekly",
       "term" => "ruby",
     )
@@ -181,6 +185,7 @@ describe "Admin Dashboard Redesign | Search section" do
       user: user,
       created_at: "2026-05-10 11:00",
     )
+    Fabricate.times(2, :search_log, term: "ghost", created_at: "2026-05-10 12:00")
 
     dashboard.visit
     search = dashboard.search
@@ -190,8 +195,36 @@ describe "Admin Dashboard Redesign | Search section" do
       "Members are conducting more searches in your community, but the no-result rate has " \
         "increased. Review the content gaps to see what's missing.",
     )
-    expect(search).to have_total_searches_kpi("10")
-    expect(search).to have_alert_no_result_rate_kpi("50%")
+    expect(search).to have_total_searches_kpi("12")
+    expect(search).to have_alert_no_result_rate_kpi("58%")
+  end
+
+  it "stays members-only and drills into member searches while crawler detection is disabled",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+    SiteSetting.improved_crawler_detection = false
+    Fabricate.times(
+      4,
+      :clicked_search_log,
+      term: "ruby",
+      user: user,
+      created_at: "2026-05-10 10:00",
+    )
+    Fabricate.times(2, :search_log, term: "crawlerbait", created_at: "2026-05-10 11:00")
+
+    dashboard.visit
+    search = dashboard.search
+
+    expect(search).to have_total_searches_kpi("4")
+    expect(search).to have_trending_rows([{ term: "ruby", searches: 4 }])
+    expect(search).to have_no_trending_term("crawlerbait")
+
+    search.click_trending_term("ruby")
+
+    expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
+      "searchType" => "non_staff_only",
+      "period" => "monthly",
+      "term" => "ruby",
+    )
   end
 
   it "shows staff a graceful empty state when no searches were logged" do
@@ -257,7 +290,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     expect(page).to have_current_path("/admin/logs/search_logs/term", ignore_query: true)
     expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
-      "searchType" => "non_staff_only",
+      "searchType" => "human_only",
       "period" => "all",
       "term" => "ruby",
     )

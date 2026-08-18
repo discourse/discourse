@@ -41,7 +41,8 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
             bpe.session_id,
             MIN(bpe.created_at)::date AS date,
             COUNT(*) AS pageview_count,
-            bool_or(bpe.user_id IS NOT NULL) AS logged_in
+            bool_or(bpe.user_id IS NOT NULL) AS logged_in,
+            bool_or(#{CrawlerScorer.likely_crawler_condition(table: "bpe")}) AS likely_crawler
           FROM browser_pageview_events bpe
           JOIN active_sessions ON active_sessions.session_id = bpe.session_id
           WHERE #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
@@ -49,7 +50,10 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
           HAVING MIN(bpe.created_at) >= :start_date
         )
         INSERT INTO browser_pageview_session_engagement_daily_rollups
-          (date, logged_in, sessions, bounced, engaged_seconds_total)
+          (
+            date, logged_in, sessions, bounced, engaged_seconds_total,
+            likely_crawler_sessions, likely_crawler_bounced, likely_crawler_engaged_seconds_total
+          )
         SELECT
           session_pageviews.date,
           session_pageviews.logged_in,
@@ -58,7 +62,17 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
             WHERE session_pageviews.pageview_count = 1
               AND COALESCE(engagement.engaged_seconds, 0) < :bounce_threshold
           ) AS bounced,
-          COALESCE(SUM(engagement.engaged_seconds), 0) AS engaged_seconds_total
+          COALESCE(SUM(engagement.engaged_seconds), 0) AS engaged_seconds_total,
+          COUNT(*) FILTER (WHERE session_pageviews.likely_crawler) AS likely_crawler_sessions,
+          COUNT(*) FILTER (
+            WHERE session_pageviews.likely_crawler
+              AND session_pageviews.pageview_count = 1
+              AND COALESCE(engagement.engaged_seconds, 0) < :bounce_threshold
+          ) AS likely_crawler_bounced,
+          COALESCE(
+            SUM(engagement.engaged_seconds) FILTER (WHERE session_pageviews.likely_crawler),
+            0
+          ) AS likely_crawler_engaged_seconds_total
         FROM session_pageviews
         LEFT JOIN browser_pageview_session_engagements engagement
           ON engagement.session_id = session_pageviews.session_id
@@ -77,12 +91,15 @@ end
 #
 # Table name: browser_pageview_session_engagement_daily_rollups
 #
-#  id                    :bigint           not null, primary key
-#  bounced               :bigint           not null
-#  date                  :date             not null
-#  engaged_seconds_total :bigint           not null
-#  logged_in             :boolean          not null
-#  sessions              :bigint           not null
+#  id                                   :bigint           not null, primary key
+#  bounced                              :bigint           not null
+#  date                                 :date             not null
+#  engaged_seconds_total                :bigint           not null
+#  likely_crawler_bounced               :bigint           default(0), not null
+#  likely_crawler_engaged_seconds_total :bigint           default(0), not null
+#  likely_crawler_sessions              :bigint           default(0), not null
+#  logged_in                            :boolean          not null
+#  sessions                             :bigint           not null
 #
 # Indexes
 #

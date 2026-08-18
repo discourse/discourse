@@ -479,7 +479,16 @@ export default class FullPageSearchController extends Controller {
         if (this.currentUser) {
           updateRecentSearches(this.currentUser, searchTerm);
         }
-        ajax("/search", { data: args })
+        const sessionId = document.querySelector(
+          "meta[name=discourse-track-view-session-id]"
+        )?.content;
+
+        ajax("/search", {
+          data: args,
+          headers: sessionId
+            ? { "Discourse-Pageview-Session-Id": sessionId }
+            : {},
+        })
           .then(async (results) => {
             const model = (await translateResults(results)) || {};
 
