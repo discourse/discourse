@@ -78,7 +78,6 @@ en:
     livestream_zoom_enabled: "Enable Zoom video embedding for livestream topics."
     livestream_zoom_sdk_key: "Zoom Meeting SDK client ID."
     livestream_zoom_sdk_secret: "Zoom Meeting SDK client secret."
-    livestream_embeddable_chat_allowed_paths: "Allowed paths for the embeddable livestream chat."
     livestream_enable_modal_chat_on_mobile: "Show livestream chat in a modal on mobile."
 
   discourse_calendar:

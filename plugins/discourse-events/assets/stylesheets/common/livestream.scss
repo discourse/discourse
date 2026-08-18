@@ -112,6 +112,10 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
 body.discourse-calendar-livestream-zoom-full {
   #main-outlet {
     padding: 0 !important; // override horizon styles
+    height: calc(
+      var(--composer-vh, 1vh) * 100 - var(--main-outlet-offset, 0px) -
+        1px - var(--chat-header-offset, 0) - var(--composer-height, 0px)
+    );
   }
 
   #main-container,

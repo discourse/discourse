@@ -9,6 +9,10 @@ export default class TopicZoomRoute extends DiscourseRoute {
     this.embeddableChat.closeChatVisibility();
   }
 
+  deactivate() {
+    this.controllerFor("topic").set("model", null);
+  }
+
   async model(params) {
     const topic = this.store.createRecord("topic", { id: params.topic_id });
 

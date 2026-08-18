@@ -26,6 +26,13 @@ export default class EmbeddableChat extends Service {
     );
   }
 
+  get isLivestreamRoute() {
+    return (
+      this.router.currentRouteName === "topic-zoom" ||
+      this.router.currentRouteName?.startsWith("topic.")
+    );
+  }
+
   canRenderChatChannel(mobileViewAllowed = false) {
     if (
       this.isMobileViewport === mobileViewAllowed &&
@@ -33,15 +40,7 @@ export default class EmbeddableChat extends Service {
       this.currentUser &&
       this.userCanChat
     ) {
-      const allowedPaths =
-        this.siteSettings.livestream_embeddable_chat_allowed_paths.split("|");
-      const withinPathsAllowed = allowedPaths.some(
-        (path) =>
-          this.router.currentURL.includes(path) ||
-          this.router.currentURL.startsWith(path)
-      );
-
-      if (withinPathsAllowed && this.chatChannelId) {
+      if (this.isLivestreamRoute && this.chatChannelId) {
         return !this.isChannelOpenInDrawer;
       }
     }
