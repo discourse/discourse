@@ -429,11 +429,14 @@ module Migrations
         "[quote=\"#{parts.join(", ")}\"]"
       end
 
-      # An external link (no `target_type`) passes through as-is. An internal link is
-      # rebuilt through the resolved `target_id` and the destination maps, honoring any
-      # rename or renumber; whatever trailed the matched route (`target_suffix`) is
-      # reattached verbatim. A bare URL stays bare so oneboxes keep working; a link
-      # with text keeps its `[text](url)` shape.
+      # An external link (no `target_type`) passes through as-is. A `SITE` link points
+      # at a route-less page on the source (its `/faq`, a search URL, or junk); only
+      # its origin is rewritten to the destination, so it's always resolvable and never
+      # reported (see #render_site_link). Any other internal link is rebuilt through the
+      # resolved `target_id` and the destination maps, honoring any rename or renumber;
+      # whatever trailed the matched route (`target_suffix`) is reattached verbatim. A
+      # bare URL stays bare so oneboxes keep working; a link with text keeps its
+      # `[text](url)` shape.
       #
       # An internal link that can't be resolved (nil `target_id` after normalization,
       # or a maps miss here) falls back to the source URL AND reports it. This diverges
@@ -442,12 +445,20 @@ module Migrations
       # WRONG topic, so operators need the audit trail.
       def render_link(row)
         return render_link_markup(row, row[:url]) unless row[:target_type]
+        return render_site_link(row) if row[:target_type] == Enums::LinkTarget::SITE
 
         url = row[:target_id] && rebuild_internal_link(row)
         return render_link_markup(row, url) if url
 
         report_unresolved_link(row)
         render_link_markup(row, row[:url])
+      end
+
+      # A `SITE` link keeps everything but its origin: the destination base URL plus the
+      # source path/query/fragment carried in `target_suffix`. `base_url` is always
+      # known, so this resolves for every row and needs no unresolved report.
+      def render_site_link(row)
+        render_link_markup(row, "#{@maps.base_url}#{row[:target_suffix]}")
       end
 
       # `presence`: a converter may have recorded an empty text; treat it as a
