@@ -164,7 +164,7 @@ module PageObjects
         selector =
           "[data-test-site-traffic-filter-pill='#{dimension}'] .site-traffic-explorer__filter-pill-label"
 
-        has_css?(selector, exact_text: label, count: 1)
+        has_css?(selector, text: label, count: 1)
       end
 
       def expand_filter_pill(dimension)

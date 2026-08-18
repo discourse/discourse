@@ -58,6 +58,7 @@
     &.is-pending {
       border-color: var(--tertiary);
       border-style: dashed;
+      background: transparent;
     }
 
     .site-traffic-explorer__filter-pill-remaining,
