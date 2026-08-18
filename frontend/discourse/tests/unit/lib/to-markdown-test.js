@@ -50,6 +50,41 @@ module("Unit | Utility | to-markdown", function (hooks) {
     assert.true(result.includes("**bold**"), "bold formatting preserved");
   });
 
+  test("only treats bold font weights as strong", async function (assert) {
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: 500;">medium</span> text`
+      ),
+      "some medium text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(`some <span style="font-weight: 700;">bold</span> text`),
+      "some **bold** text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: 1000;">black</span> text`
+      ),
+      "some **black** text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: 650.5;">variable</span> text`
+      ),
+      "some **variable** text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: bold;">bold</span> text`
+      ),
+      "some **bold** text"
+    );
+  });
+
   test("converts a link", async function (assert) {
     let html = `<a href="https://discourse.org">Discourse</a>`;
     let markdown = `[Discourse](https://discourse.org)`;
