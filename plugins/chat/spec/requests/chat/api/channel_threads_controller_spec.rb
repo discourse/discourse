@@ -138,6 +138,37 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         end
       end
 
+      context "when user can only see a readonly category channel" do
+        fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+        fab!(:readonly_channel) do
+          category =
+            Fabricate(
+              :private_category,
+              group: readonly_group,
+              permission_type: CategoryGroup.permission_types[:readonly],
+            )
+          Fabricate(:category_channel, chatable: category, threading_enabled: true)
+        end
+        fab!(:restricted_message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: readonly_channel,
+            message: "Confidential restricted thread lookup",
+          )
+        end
+        fab!(:thread) do
+          Fabricate(:chat_thread, channel: readonly_channel, original_message: restricted_message)
+        end
+
+        it "does not expose the thread" do
+          get "/chat/api/channels/#{readonly_channel.id}/threads/#{thread.id}"
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["error_type"]).to eq("invalid_access")
+          expect(response.body).not_to include(restricted_message.message)
+        end
+      end
+
       context "when user cannot chat" do
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
@@ -225,6 +256,43 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       it "returns 404" do
         get "/chat/api/channels/#{public_channel.id}/threads"
         expect(response.status).to eq(403)
+      end
+    end
+
+    context "when user can only see a readonly category channel" do
+      fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+      fab!(:readonly_channel) do
+        category =
+          Fabricate(
+            :private_category,
+            group: readonly_group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        Fabricate(:category_channel, chatable: category, threading_enabled: true)
+      end
+      fab!(:restricted_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: readonly_channel,
+          message: "Confidential restricted thread list",
+        )
+      end
+
+      before do
+        Fabricate(
+          :chat_thread,
+          channel: readonly_channel,
+          original_message: restricted_message,
+          with_replies: 1,
+        )
+      end
+
+      it "does not expose thread list messages" do
+        get "/chat/api/channels/#{readonly_channel.id}/threads"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(response.body).not_to include(restricted_message.message)
       end
     end
 
