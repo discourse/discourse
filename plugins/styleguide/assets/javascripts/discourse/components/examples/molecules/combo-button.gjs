@@ -17,7 +17,6 @@ export default <template>
               @translatedLabel="Resume draft"
               @icon="reply"
               @action={{noop}}
-              class="btn-secondary"
             />
           </dropdown.item>
         </DDropdownMenu>
@@ -33,7 +32,6 @@ export default <template>
               @translatedLabel="Resume draft"
               @icon="reply"
               @action={{noop}}
-              class="btn-secondary"
             />
           </dropdown.item>
         </DDropdownMenu>
