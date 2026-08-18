@@ -343,6 +343,21 @@ en:
     group_timezones:
       search: "Search..."
       group_availability: "%{group} availability"
+    discourse_workflows:
+      node_unavailable:
+        requires_post_event: "Requires events to be enabled"
+      nodes:
+        "trigger:event_ended": "Event ended"
+        "trigger:event_participation_changed": "Event participation changed"
+      node_descriptions:
+        "trigger:event_ended": "Fires when an event occurrence reaches its end time"
+        "trigger:event_participation_changed": "Fires when a user adds, changes, or withdraws their RSVP"
+      event_ended:
+        topic_id: "Topic"
+        topic_id_description: "Only trigger for events in this topic. Leave empty to match all events."
+      event_participation_changed:
+        topic_id: "Topic"
+        topic_id_description: "Only trigger for events in this topic. Leave empty to match all events."
     discourse_post_event:
       new_event: "New Event"
       notifications:

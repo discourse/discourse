@@ -45,6 +45,7 @@ module DiscoursePostEvent
 
     def destroy(invitee:)
       invitee.destroy!
+      invitee.publish_attendance_removed!
     end
 
     def publish(event:)
