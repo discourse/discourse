@@ -37,6 +37,8 @@ class Vips
       }
       # libvips permits operations marked untrusted by default. Block them unless explicitly allowed.
       # See https://github.com/libvips/libvips/blob/v8.18.2/doc/developer-checklist.md#L101-L104
+      # Future enhancement: define explicit operation block and allow lists through the CLI.
+      # See https://github.com/libvips/libvips/issues/5174
       environment["VIPS_BLOCK_UNTRUSTED"] = "1" if !allow_untrusted
 
       Discourse::SafeExec.capture(
