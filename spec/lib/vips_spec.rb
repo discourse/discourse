@@ -7,6 +7,7 @@ RSpec.describe Vips do
         .expects(:capture)
         .with do |*command, **options|
           command == %w[vips --version] && options[:timeout] == 5 &&
+            options[:read].include?("/etc/fonts") &&
             options[:rlimits] ==
               {
                 cpu_seconds: 5,

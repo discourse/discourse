@@ -9,6 +9,9 @@ class Vips
   LIBVIPS_DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
   private_constant :LIBVIPS_DYNAMIC_LINKER_CACHE_PATH
 
+  FONTCONFIG_CONFIGURATION_PATH = "/etc/fonts"
+  private_constant :FONTCONFIG_CONFIGURATION_PATH
+
   RLIMITS = {
     cpu_seconds: 5,
     memory_bytes: 4 * 1024 * 1024 * 1024,
@@ -45,7 +48,12 @@ class Vips
         *command,
         env: environment,
         unsetenv_others: true,
-        read: [*Discourse::SafeExec.default_read_paths, LIBVIPS_DYNAMIC_LINKER_CACHE_PATH, *read],
+        read: [
+          *Discourse::SafeExec.default_read_paths,
+          LIBVIPS_DYNAMIC_LINKER_CACHE_PATH,
+          FONTCONFIG_CONFIGURATION_PATH,
+          *read,
+        ],
         write: [scratch, *write],
         execute: Discourse::SafeExec.default_execute_paths,
         timeout: timeout || DEFAULT_TIMEOUT,
