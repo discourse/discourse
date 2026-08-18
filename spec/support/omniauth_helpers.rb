@@ -18,8 +18,8 @@ module OmniauthHelpers
     Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:facebook]
   end
 
-  def mock_google_auth(email: EMAIL, name: FULL_NAME, verified: true)
-    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+  def mock_google_auth(email: EMAIL, name: FULL_NAME, verified: true, groups: [])
+    auth_hash = {
       provider: "google_oauth2",
       uid: UID,
       info: OmniAuth::AuthHash::InfoHash.new(email: email, name: name),
@@ -28,7 +28,11 @@ module OmniauthHelpers
           email_verified: verified,
         },
       },
-    )
+    }
+
+    auth_hash[:extra][:raw_groups] = groups if groups.present?
+
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(auth_hash)
 
     Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
   end
