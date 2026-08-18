@@ -93,9 +93,9 @@ class LetterAvatar
     def vips_version
       return @vips_version if @vips_version
 
-       fonts =
-        Discourse::Utils
-          .execute_command("fc-list", "--format", "%{file}\t%{family}\t%{style}\t%{fontversion}\n")
+      fonts =
+        Vips
+          .run("fc-list", "--format", "%{file}\t%{family}\t%{style}\t%{fontversion}\n")
           .lines
           .sort
           .join
