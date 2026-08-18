@@ -132,6 +132,10 @@ export default class AdminSiteTrafficController extends Controller {
     );
   }
 
+  get hasAppliedFilters() {
+    return FILTER_KEYS.some((key) => this.#appliedValues(key).length);
+  }
+
   #customDate(value, edge) {
     if (this.safePeriod !== PERIOD_CUSTOM || !value) {
       return null;
@@ -286,6 +290,15 @@ export default class AdminSiteTrafficController extends Controller {
   @action
   clearFilter(key) {
     this.#setDraftValues(key, []);
+  }
+
+  @action
+  clearAllFilters() {
+    this.draftFilters = Object.fromEntries(FILTER_KEYS.map((key) => [key, []]));
+
+    for (const key of FILTER_KEYS) {
+      this[key] = null;
+    }
   }
 
   @action

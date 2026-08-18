@@ -11,6 +11,7 @@ export default <template>
     @endDate={{@controller.endDate}}
     @activeFilters={{@controller.activeFilters}}
     @hasPendingFilters={{@controller.hasPendingFilters}}
+    @hasAppliedFilters={{@controller.hasAppliedFilters}}
     @pendingFilterCount={{@controller.pendingFilterCount}}
     @trafficTypes={{@controller.selectedTrafficTypes}}
     @setPeriod={{@controller.setPeriod}}
@@ -20,6 +21,7 @@ export default <template>
     @toggleTrafficType={{@controller.toggleTrafficType}}
     @removeFilterValue={{@controller.removeFilterValue}}
     @clearFilter={{@controller.clearFilter}}
+    @clearAllFilters={{@controller.clearAllFilters}}
     @applyFilters={{@controller.applyFilters}}
     @applyModalFilters={{@controller.applyModalFilters}}
   />
