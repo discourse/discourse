@@ -29,6 +29,11 @@ class Vips
     allow_untrusted: false,
     failure_message: ""
   )
+    if !Rails.env.local? && !Discourse::SafeExec.landlock_supported?
+      raise Discourse::Utils::CommandError,
+            "Cannot run libvips because Landlock sandboxing is unavailable"
+    end
+
     command = ["nice", "-n", nice.to_s, *command] if nice
     Dir.mktmpdir("discourse-vips-") do |scratch|
       environment = {
