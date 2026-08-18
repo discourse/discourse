@@ -122,6 +122,10 @@ body.discourse-calendar-livestream-zoom-full {
   .powered-by-discourse {
     display: none;
   }
+
+  .chat-message-container {
+    overflow: hidden;
+  }
 }
 
 .discourse-calendar-livestream-zoom-page {
