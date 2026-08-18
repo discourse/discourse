@@ -7,7 +7,11 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
     described_class.aggregate(start_date: start_date.to_date, end_date: end_date.to_date)
   end
 
-  it "attributes each session to its earliest safe entry and records covered dates" do
+  def rollups
+    described_class.all
+  end
+
+  it "attributes each session to its earliest safe entry" do
     Fabricate(
       :browser_pageview_event,
       session_id: "topic-session",
@@ -35,9 +39,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
 
     aggregate
 
-    expect(described_class.pluck(:entry_url, :count)).to eq([["/t/topic/1", 1]])
-    expect(BrowserPageviewEntryUrlSession.find_by(session_id: "search-session").entry_url).to be_nil
-    expect(BrowserPageviewEntryUrlDailyRollupDate.pluck(:date)).to eq(["2026-05-12".to_date])
+    expect(rollups.pluck(:entry_url, :count)).to eq([["/t/topic/1", 1]])
   end
 
   it "allows only reviewed public route families" do
@@ -78,7 +80,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
 
     aggregate
 
-    expect(described_class.pluck(:entry_url)).to contain_exactly(*safe_paths)
+    expect(rollups.pluck(:entry_url)).to contain_exactly(*safe_paths)
   end
 
   it "allows reviewed routes beneath the configured subfolder" do
@@ -94,7 +96,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
 
     aggregate
 
-    expect(described_class.order(:entry_url).pluck(:entry_url)).to eq(
+    expect(rollups.order(:entry_url).pluck(:entry_url)).to eq(
       %w[/forum /forum/latest /forum/t/topic/1],
     )
   end
@@ -112,7 +114,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
     aggregate
 
     expect(
-      described_class.pick(
+      rollups.pick(
         :count,
         :logged_in_count,
         :likely_crawler_count,
@@ -138,12 +140,10 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
     )
     aggregate(start_date: "2026-05-11", end_date: "2026-05-12")
 
-    expect(described_class.pluck(:date, :entry_url, :count)).to eq(
-      [["2026-05-11".to_date, "/top", 1]],
-    )
+    expect(rollups.pluck(:date, :entry_url, :count)).to eq([["2026-05-11".to_date, "/top", 1]])
   end
 
-  it "preserves a cross-midnight attribution while source events and the ledger expire" do
+  it "preserves a cross-midnight attribution while only its later event remains" do
     SiteSetting.clean_up_browser_pageview_events = true
     freeze_time(Time.zone.local(2026, 2, 15, 12, 0, 0))
     Fabricate(
@@ -162,15 +162,9 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
 
     freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
     Jobs::CleanUpBrowserPageviewEvents.new.execute({})
-    aggregate(start_date: "2026-02-14")
+    aggregate(start_date: "2026-02-13", end_date: "2026-02-14")
 
-    expect(BrowserPageviewEntryUrlSession.pluck(:entry_url)).to eq(["/top"])
-    expect(described_class.pluck(:date, :entry_url)).to eq([["2026-02-13".to_date, "/top"]])
-
-    freeze_time(Time.zone.local(2026, 5, 15, 12, 0, 0))
-    Jobs::CleanUpBrowserPageviewEvents.new.execute({})
-
-    expect(BrowserPageviewEntryUrlSession.all).to be_empty
-    expect(described_class.pluck(:date, :entry_url)).to eq([["2026-02-13".to_date, "/top"]])
+    expect(BrowserPageviewEvent.pluck(:created_at).map(&:to_date)).to eq(["2026-02-14".to_date])
+    expect(rollups.pluck(:date, :entry_url)).to eq([["2026-02-13".to_date, "/top"]])
   end
 end

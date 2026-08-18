@@ -48,9 +48,7 @@ class AdminDashboardSiteTraffic
       response[:top_referrers] = top_referrers if top_referrers
 
       top_entry_urls = fetch_card("top_entry_urls")
-      if top_entry_urls
-        response[:top_entry_urls] = top_entry_urls.merge(availability: entry_url_availability)
-      end
+      response[:top_entry_urls] = top_entry_urls if top_entry_urls
     end
 
     response
@@ -87,14 +85,6 @@ class AdminDashboardSiteTraffic
     return { rows: [], error: report.error.to_s } if report.error.present?
 
     { rows: report.data.first(TOP_CARD_LIMIT), error: nil }
-  end
-
-  def entry_url_availability
-    available_from = BrowserPageviewEntryUrlDailyRollupDate.minimum(:date)
-    return { state: "pending", available_from: nil } if available_from.nil?
-
-    state = start_date.to_date < available_from ? "unavailable" : "available"
-    { state:, available_from: available_from.iso8601 }
   end
 
   def cached_to_payload(cached)

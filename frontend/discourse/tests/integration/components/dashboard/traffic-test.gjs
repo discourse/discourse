@@ -43,7 +43,6 @@ module("Integration | Component | Dashboard | Traffic", function (hooks) {
     const traffic = trafficWithEntryUrls({
       rows: [],
       error: "exception",
-      availability: { state: "available" },
     });
 
     await render(
@@ -64,11 +63,10 @@ module("Integration | Component | Dashboard | Traffic", function (hooks) {
       );
   });
 
-  test("renders the entry URL empty state for a covered period", async function (assert) {
+  test("renders the entry URL empty state", async function (assert) {
     const traffic = trafficWithEntryUrls({
       rows: [],
       error: null,
-      availability: { state: "available" },
     });
 
     await render(
@@ -85,7 +83,10 @@ module("Integration | Component | Dashboard | Traffic", function (hooks) {
       .dom(`${entryUrlCard} .db-traffic__list-empty`)
       .hasText(
         "No entry URL data for this period.",
-        "distinguishes a covered period with no eligible entries"
+        "shows when no eligible entries exist"
       );
+    assert
+      .dom("[data-identifier='site-traffic-top-entry-urls-tooltip']")
+      .doesNotExist("omits the entry URL tooltip");
   });
 });

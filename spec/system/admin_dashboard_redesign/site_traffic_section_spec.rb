@@ -381,11 +381,6 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       sensitive_entry_paths.each { |path| expect(traffic).to have_no_top_entry_url(path) }
       expect(traffic).to have_no_top_entry_url("/t/should-not-count")
 
-      traffic.hover_top_entry_urls_tooltip
-      expect(traffic).to have_top_entry_urls_tooltip(
-        "The first page recorded for each Discourse browser session in the available analytics period.",
-      )
-
       traffic.click_top_entry_urls_drilldown
       expect(page).to have_current_path(
         "/admin/reports/top_entry_urls?end_date=2026-05-12&start_date=2026-05-12",
@@ -406,35 +401,6 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       dashboard.visit
 
       expect(dashboard.site_traffic).to have_no_top_entry_urls_card
-    end
-
-    it "shows admins when the selected period predates the available entry URL analytics",
-       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      Fabricate(
-        :browser_pageview_event,
-        url: "https://test.localhost/latest",
-        created_at: "2026-05-12",
-        source: browser_pageview_source,
-      )
-      Jobs::MaintainBrowserPageviewRollups.new.execute({})
-
-      dashboard.visit_with_query(range: "custom", start_date: "2025-05-14", end_date: "2026-05-14")
-
-      expect(dashboard.site_traffic).to have_top_entry_urls_unavailable_state(
-        "Entry URL data is available from May 12, 2026. Choose a date range within the available period.",
-      )
-      expect(dashboard.site_traffic).to have_no_top_entry_url_rows
-      expect(dashboard.site_traffic).to have_top_referrers_empty_state
-      expect(dashboard.site_traffic).to have_top_countries_empty_state
-    end
-
-    it "shows admins that entry URL analytics start with new traffic",
-       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      dashboard.visit
-
-      expect(dashboard.site_traffic).to have_top_entry_urls_pending_state(
-        "Entry URL analytics will appear after new traffic is recorded.",
-      )
     end
 
     it "shows empty states but keeps the report headers as drill-down links when no events qualify",

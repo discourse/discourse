@@ -686,17 +686,10 @@ RSpec.describe AdminDashboardSiteTraffic do
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: nil)
         expect(result[:top_referrers]).to eq(rows: [], error: nil)
-        expect(result[:top_entry_urls]).to eq(
-          rows: [],
-          error: nil,
-          availability: {
-            state: "pending",
-            available_from: nil,
-          },
-        )
+        expect(result[:top_entry_urls]).to eq(rows: [], error: nil)
       end
 
-      it "returns entry URL rows with available coverage" do
+      it "returns entry URL rows" do
         Fabricate(
           :browser_pageview_event,
           session_id: "entry-session",
@@ -713,21 +706,6 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result[:top_entry_urls]).to eq(
           rows: [{ entry_url: "/t/topic/1", count: 1, percent: 100 }],
           error: nil,
-          availability: {
-            state: "available",
-            available_from: "2026-05-12",
-          },
-        )
-      end
-
-      it "marks ranges before entry URL coverage as unavailable" do
-        BrowserPageviewEntryUrlDailyRollupDate.create!(date: "2026-05-12")
-
-        result = build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")
-
-        expect(result[:top_entry_urls][:availability]).to eq(
-          state: "unavailable",
-          available_from: "2026-05-12",
         )
       end
 
@@ -737,14 +715,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: "exception")
         expect(result[:top_referrers]).to eq(rows: [], error: "exception")
-        expect(result[:top_entry_urls]).to eq(
-          rows: [],
-          error: "exception",
-          availability: {
-            state: "pending",
-            available_from: nil,
-          },
-        )
+        expect(result[:top_entry_urls]).to eq(rows: [], error: "exception")
       end
 
       it "serves the cached payload on subsequent calls within the cache window" do

@@ -134,31 +134,6 @@ module PageObjects
         within_top_card("Top entry URLs") { has_no_css?(".db-traffic__link", text: path) }
       end
 
-      def hover_top_entry_urls_tooltip
-        find("[data-trigger][data-identifier='site-traffic-top-entry-urls-tooltip']").hover
-        self
-      end
-
-      def has_top_entry_urls_tooltip?(text)
-        Tooltips.new("site-traffic-top-entry-urls-tooltip").present?(text: text)
-      end
-
-      def has_top_entry_urls_unavailable_state?(text)
-        within_top_card("Top entry URLs") do
-          has_css?(".db-traffic__list-empty[role='status']", exact_text: text)
-        end
-      end
-
-      def has_top_entry_urls_pending_state?(text)
-        within_top_card("Top entry URLs") do
-          has_css?(".db-traffic__list-empty[role='status']", exact_text: text)
-        end
-      end
-
-      def has_no_top_entry_url_rows?
-        within_top_card("Top entry URLs") { has_no_css?(".db-traffic__list-row") }
-      end
-
       def has_top_countries_empty_state?
         has_empty_state_in?("Top countries", "No country data for this period.")
       end

@@ -135,9 +135,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
       if rows.present?
         BrowserPageviewEvent.transaction(requires_new: true) do
           BrowserPageviewEvent.insert_all(rows, returning: false)
-          BrowserPageviewEntryUrlDirtyDate.mark!(
-            rows.map { |row| [row[:created_at], row[:session_id]] },
-          )
         end
       end
       Discourse.redis.ltrim(REDIS_QUEUE_KEY, queued_attributes.length, -1)
@@ -153,9 +150,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
         if attributes
           BrowserPageviewEvent.transaction(requires_new: true) do
             BrowserPageviewEvent.insert_all([attributes], returning: false)
-            BrowserPageviewEntryUrlDirtyDate.mark!(
-              [[attributes[:created_at], attributes[:session_id]]],
-            )
           end
         end
         Discourse.redis.ltrim(REDIS_QUEUE_KEY, 1, -1)
@@ -237,9 +231,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
 
   has_one :browser_pageview_event_score, foreign_key: :event_id, dependent: :delete
 
-  before_save :truncate_fields
-  after_create :mark_entry_url_date_dirty
-
   def self.retention_cutoff
     RETENTION_PERIOD.ago.beginning_of_day
   end
@@ -270,11 +261,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
     "GREATEST(#{count_column} - #{crawler_column}, 0)"
   end
 
-  private
+  before_save :truncate_fields
 
-  def mark_entry_url_date_dirty
-    BrowserPageviewEntryUrlDirtyDate.mark!([[created_at, session_id]])
-  end
+  private
 
   def truncate_fields
     self.url = url.slice(0, MAX_URL_LENGTH) if url.present?
@@ -298,6 +287,7 @@ end
 #  asn                         :integer
 #  browser                     :integer
 #  country_code                :string(2)
+#  entry_url_rollup_version    :integer
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
@@ -319,6 +309,7 @@ end
 #  idx_bpe_browser_backfill                     (source,created_at DESC,id DESC) WHERE (browser IS NULL)
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
+#  idx_bpe_entry_url_rollup_version             (entry_url_rollup_version,created_at)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
 #  idx_bpe_normalized_url_version               (normalized_url_version)

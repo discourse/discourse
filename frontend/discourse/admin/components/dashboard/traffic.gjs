@@ -8,7 +8,7 @@ import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
-import { eq, or } from "discourse/truth-helpers";
+import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -172,18 +172,6 @@ export default class DashboardTraffic extends Component {
     return (
       this.currentUser.admin && this.siteSettings.enable_site_traffic_explorer
     );
-  }
-
-  get topEntryUrlsUnavailableText() {
-    const availableFrom =
-      this.args.traffic?.top_entry_urls?.availability?.available_from;
-    if (!availableFrom) {
-      return null;
-    }
-
-    return i18n("admin.dashboard.site_traffic.top_entry_urls.unavailable", {
-      date: moment(availableFrom).format(i18n("dates.long_with_year_no_time")),
-    });
   }
 
   formatHeadlineCount(value) {
@@ -586,17 +574,6 @@ export default class DashboardTraffic extends Component {
                           {{dIcon "arrow-right"}}
                         </span>
                       </LinkTo>
-                      <DTooltip
-                        class="db-section__info"
-                        @identifier="site-traffic-top-entry-urls-tooltip"
-                        @icon="far-circle-question"
-                      >
-                        <:content>
-                          {{i18n
-                            "admin.dashboard.site_traffic.top_entry_urls.tooltip"
-                          }}
-                        </:content>
-                      </DTooltip>
                     </h3>
 
                     {{#if @traffic.top_entry_urls.error}}
@@ -604,22 +581,6 @@ export default class DashboardTraffic extends Component {
                         {{i18n
                           "admin.dashboard.site_traffic.top_entry_urls.error"
                         }}
-                      </p>
-                    {{else if
-                      (eq @traffic.top_entry_urls.availability.state "pending")
-                    }}
-                      <p class="db-traffic__list-empty" role="status">
-                        {{i18n
-                          "admin.dashboard.site_traffic.top_entry_urls.pending"
-                        }}
-                      </p>
-                    {{else if
-                      (eq
-                        @traffic.top_entry_urls.availability.state "unavailable"
-                      )
-                    }}
-                      <p class="db-traffic__list-empty" role="status">
-                        {{this.topEntryUrlsUnavailableText}}
                       </p>
                     {{else if @traffic.top_entry_urls.rows.length}}
                       <ul class="db-traffic__list">

@@ -2014,35 +2014,6 @@ ALTER SEQUENCE public.browser_pageview_crawler_daily_rollups_id_seq OWNED BY pub
 
 
 --
--- Name: browser_pageview_entry_url_daily_rollup_dates; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.browser_pageview_entry_url_daily_rollup_dates (
-    id bigint NOT NULL,
-    date date NOT NULL
-);
-
-
---
--- Name: browser_pageview_entry_url_daily_rollup_dates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.browser_pageview_entry_url_daily_rollup_dates_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: browser_pageview_entry_url_daily_rollup_dates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.browser_pageview_entry_url_daily_rollup_dates_id_seq OWNED BY public.browser_pageview_entry_url_daily_rollup_dates.id;
-
-
---
 -- Name: browser_pageview_entry_url_daily_rollups; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2074,74 +2045,6 @@ CREATE SEQUENCE public.browser_pageview_entry_url_daily_rollups_id_seq
 --
 
 ALTER SEQUENCE public.browser_pageview_entry_url_daily_rollups_id_seq OWNED BY public.browser_pageview_entry_url_daily_rollups.id;
-
-
---
--- Name: browser_pageview_entry_url_dirty_dates; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.browser_pageview_entry_url_dirty_dates (
-    id bigint NOT NULL,
-    date date NOT NULL,
-    bucket integer NOT NULL,
-    generation bigint DEFAULT 1 NOT NULL
-);
-
-
---
--- Name: browser_pageview_entry_url_dirty_dates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.browser_pageview_entry_url_dirty_dates_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: browser_pageview_entry_url_dirty_dates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.browser_pageview_entry_url_dirty_dates_id_seq OWNED BY public.browser_pageview_entry_url_dirty_dates.id;
-
-
---
--- Name: browser_pageview_entry_url_sessions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.browser_pageview_entry_url_sessions (
-    id bigint NOT NULL,
-    session_id character varying(32) NOT NULL,
-    first_event_id bigint NOT NULL,
-    first_seen_at timestamp(6) without time zone NOT NULL,
-    last_seen_at timestamp(6) without time zone NOT NULL,
-    entry_url character varying(2000),
-    logged_in boolean NOT NULL,
-    likely_crawler boolean DEFAULT false NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: browser_pageview_entry_url_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.browser_pageview_entry_url_sessions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: browser_pageview_entry_url_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.browser_pageview_entry_url_sessions_id_seq OWNED BY public.browser_pageview_entry_url_sessions.id;
 
 
 --
@@ -2206,7 +2109,8 @@ CREATE TABLE public.browser_pageview_events (
     source smallint DEFAULT 1 NOT NULL,
     normalized_url character varying(2000),
     normalized_url_version integer,
-    browser smallint
+    browser smallint,
+    entry_url_rollup_version integer
 );
 
 
@@ -12950,31 +12854,10 @@ ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups ALTER COLUMN id S
 
 
 --
--- Name: browser_pageview_entry_url_daily_rollup_dates id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollup_dates ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_entry_url_daily_rollup_dates_id_seq'::regclass);
-
-
---
 -- Name: browser_pageview_entry_url_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_entry_url_daily_rollups_id_seq'::regclass);
-
-
---
--- Name: browser_pageview_entry_url_dirty_dates id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_entry_url_dirty_dates ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_entry_url_dirty_dates_id_seq'::regclass);
-
-
---
--- Name: browser_pageview_entry_url_sessions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_entry_url_sessions ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_entry_url_sessions_id_seq'::regclass);
 
 
 --
@@ -15279,35 +15162,11 @@ ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups
 
 
 --
--- Name: browser_pageview_entry_url_daily_rollup_dates browser_pageview_entry_url_daily_rollup_dates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollup_dates
-    ADD CONSTRAINT browser_pageview_entry_url_daily_rollup_dates_pkey PRIMARY KEY (id);
-
-
---
 -- Name: browser_pageview_entry_url_daily_rollups browser_pageview_entry_url_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups
     ADD CONSTRAINT browser_pageview_entry_url_daily_rollups_pkey PRIMARY KEY (id);
-
-
---
--- Name: browser_pageview_entry_url_dirty_dates browser_pageview_entry_url_dirty_dates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_entry_url_dirty_dates
-    ADD CONSTRAINT browser_pageview_entry_url_dirty_dates_pkey PRIMARY KEY (id);
-
-
---
--- Name: browser_pageview_entry_url_sessions browser_pageview_entry_url_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_entry_url_sessions
-    ADD CONSTRAINT browser_pageview_entry_url_sessions_pkey PRIMARY KEY (id);
 
 
 --
@@ -17857,6 +17716,13 @@ CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_e
 
 
 --
+-- Name: idx_bpe_entry_url_rollup_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_entry_url_rollup_version ON public.browser_pageview_events USING btree (entry_url_rollup_version, created_at);
+
+
+--
 -- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17885,45 +17751,10 @@ CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING 
 
 
 --
--- Name: idx_bpeu_daily_rollup_dates_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_bpeu_daily_rollup_dates_unique ON public.browser_pageview_entry_url_daily_rollup_dates USING btree (date);
-
-
---
 -- Name: idx_bpeu_daily_rollups_date_url_unique; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX idx_bpeu_daily_rollups_date_url_unique ON public.browser_pageview_entry_url_daily_rollups USING btree (date, entry_url);
-
-
---
--- Name: idx_bpeu_dirty_dates_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_bpeu_dirty_dates_unique ON public.browser_pageview_entry_url_dirty_dates USING btree (date, bucket);
-
-
---
--- Name: idx_bpeu_sessions_first_seen; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpeu_sessions_first_seen ON public.browser_pageview_entry_url_sessions USING brin (first_seen_at);
-
-
---
--- Name: idx_bpeu_sessions_last_seen; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpeu_sessions_last_seen ON public.browser_pageview_entry_url_sessions USING brin (last_seen_at);
-
-
---
--- Name: idx_bpeu_sessions_session_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_bpeu_sessions_session_unique ON public.browser_pageview_entry_url_sessions USING btree (session_id);
 
 
 --
@@ -23458,6 +23289,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260818081538'),
 ('20260818081537'),
 ('20260818045317'),
 ('20260818045314'),

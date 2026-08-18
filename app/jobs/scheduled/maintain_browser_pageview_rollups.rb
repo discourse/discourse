@@ -13,15 +13,7 @@ module Jobs
       aggregate_engagement
       aggregate_crawlers
       backfill_referrers
-      backfilled_url_dates = backfill_urls
-      dirty_entry_url_dates = BrowserPageviewEntryUrlDirtyDate.snapshot
-      url_backfill_complete = url_backfill_complete?
-      BrowserPageviewEntryUrlDailyRollupDate.delete_all if !url_backfill_complete
-      aggregate_entry_urls(
-        backfilled_url_dates | dirty_entry_url_dates.map(&:first).uniq,
-        url_backfill_complete:,
-      )
-      BrowserPageviewEntryUrlDirtyDate.clear!(dirty_entry_url_dates)
+      backfill_and_aggregate_entry_urls
       backfill_browsers
     end
 
@@ -64,43 +56,39 @@ module Jobs
       )
     end
 
-    def aggregate_entry_urls(affected_dates, url_backfill_complete:)
-      if !url_backfill_complete
-        affected_dates.each do |date|
-          BrowserPageviewEntryUrlDailyRollup.aggregate(
-            start_date: date,
-            end_date: date,
-            record_coverage: false,
-          )
-        end
-        return
-      end
-
+    def aggregate_entry_urls
       start_date, end_date = entry_url_aggregation_window
-      return if start_date.nil?
 
       BrowserPageviewEntryUrlDailyRollup.aggregate(start_date:, end_date:)
-      affected_dates.each do |date|
-        next if date >= start_date && date <= end_date
-
-        BrowserPageviewEntryUrlDailyRollup.aggregate(
-          start_date: date,
-          end_date: date,
-          record_coverage: false,
-        )
-      end
     end
 
     def entry_url_aggregation_window
       end_date = Time.zone.today
-      start_date =
-        if BrowserPageviewEntryUrlDailyRollupDate.none?
-          earliest_event_date
-        else
-          1.day.ago.to_date
-        end
+      start_date = [1.day.ago.to_date, earliest_unprocessed_entry_url_event_date].compact.min
 
       [start_date, end_date]
+    end
+
+    def earliest_unprocessed_entry_url_event_date
+      BrowserPageviewEvent
+        .where("created_at >= ?", BrowserPageviewEvent.retention_cutoff)
+        .where(BrowserPageviewEvent.rollup_source_condition)
+        .where(
+          "entry_url_rollup_version IS NULL OR entry_url_rollup_version < ?",
+          BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
+        )
+        .minimum(:created_at)
+        &.to_date
+    end
+
+    def backfill_and_aggregate_entry_urls
+      transaction_options =
+        BrowserPageviewEvent.connection.transaction_open? ? {} : { isolation: :repeatable_read }
+
+      BrowserPageviewEvent.transaction(**transaction_options) do
+        backfill_urls
+        aggregate_entry_urls if url_backfill_complete?
+      end
     end
 
     def engagement_aggregation_window
@@ -235,33 +223,30 @@ module Jobs
 
     def backfill_urls
       rows = url_batch
-      return [] if rows.empty?
+      return false if rows.empty?
 
       ids = rows.map(&:id)
       normalized = rows.map { |row| BrowserPageviewEventUrlNormalizer.normalize_site_path(row.url) }
-      dirty_events = rows.map { |row| [row.created_at, row.session_id] }
 
-      BrowserPageviewEvent.transaction do
-        DB.exec(
-          <<~SQL,
-            UPDATE browser_pageview_events AS e
-            SET
-              normalized_url = data.normalized_url,
-              normalized_url_version = :version
-            FROM unnest(
-              ARRAY[:ids]::bigint[],
-              ARRAY[:normalized]::text[]
-            ) AS data(id, normalized_url)
-            WHERE e.id = data.id
-          SQL
-          ids: ids,
-          normalized: normalized,
-          version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
-        )
-        BrowserPageviewEntryUrlDirtyDate.mark!(dirty_events)
-      end
+      DB.exec(
+        <<~SQL,
+          UPDATE browser_pageview_events AS e
+          SET
+            normalized_url = data.normalized_url,
+            normalized_url_version = :version,
+            entry_url_rollup_version = NULL
+          FROM unnest(
+            ARRAY[:ids]::bigint[],
+            ARRAY[:normalized]::text[]
+          ) AS data(id, normalized_url)
+          WHERE e.id = data.id
+        SQL
+        ids: ids,
+        normalized: normalized,
+        version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
+      )
 
-      dirty_events.map { |created_at, _session_id| created_at.to_date }.uniq
+      true
     end
 
     def url_backfill_complete?
@@ -307,7 +292,7 @@ module Jobs
     def url_batch(limit: batch_size)
       DB.query(
         <<~SQL,
-          SELECT id, url, created_at, session_id
+          SELECT id, url
           FROM browser_pageview_events
           WHERE created_at >= :retention_cutoff
             AND #{BrowserPageviewEvent.rollup_source_condition}
