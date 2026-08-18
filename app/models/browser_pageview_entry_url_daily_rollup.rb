@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
-  def self.aggregate(start_date:, end_date:)
+  def self.aggregate(start_date:, end_date:, record_coverage: true)
     start_date = start_date.to_date
     end_date = end_date.to_date
 
@@ -9,7 +9,7 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
       affected_dates =
         BrowserPageviewEntryUrlSession.refresh(start_date: start_date, end_date: end_date)
       rebuild_dates((start_date..end_date).to_a | affected_dates)
-      record_coverage(start_date:, end_date:)
+      record_coverage(start_date:, end_date:) if record_coverage
     end
   end
 
@@ -32,16 +32,20 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
         likely_crawler_logged_in_count
       )
       SELECT
-        first_seen_at::date AS date,
-        entry_url,
+        dates.date,
+        sessions.entry_url,
         COUNT(*) AS count,
-        COUNT(*) FILTER (WHERE logged_in) AS logged_in_count,
-        COUNT(*) FILTER (WHERE likely_crawler) AS likely_crawler_count,
-        COUNT(*) FILTER (WHERE logged_in AND likely_crawler) AS likely_crawler_logged_in_count
-      FROM browser_pageview_entry_url_sessions
-      WHERE first_seen_at::date IN (:dates)
-        AND entry_url IS NOT NULL
-      GROUP BY first_seen_at::date, entry_url
+        COUNT(*) FILTER (WHERE sessions.logged_in) AS logged_in_count,
+        COUNT(*) FILTER (WHERE sessions.likely_crawler) AS likely_crawler_count,
+        COUNT(*) FILTER (
+          WHERE sessions.logged_in AND sessions.likely_crawler
+        ) AS likely_crawler_logged_in_count
+      FROM browser_pageview_entry_url_sessions sessions
+      JOIN unnest(ARRAY[:dates]::date[]) AS dates(date)
+        ON sessions.first_seen_at >= dates.date
+       AND sessions.first_seen_at < dates.date + INTERVAL '1 day'
+      WHERE sessions.entry_url IS NOT NULL
+      GROUP BY dates.date, sessions.entry_url
     SQL
   end
 

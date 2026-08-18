@@ -2077,6 +2077,37 @@ ALTER SEQUENCE public.browser_pageview_entry_url_daily_rollups_id_seq OWNED BY p
 
 
 --
+-- Name: browser_pageview_entry_url_dirty_dates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_entry_url_dirty_dates (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    bucket integer NOT NULL,
+    generation bigint DEFAULT 1 NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_entry_url_dirty_dates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_entry_url_dirty_dates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_entry_url_dirty_dates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_entry_url_dirty_dates_id_seq OWNED BY public.browser_pageview_entry_url_dirty_dates.id;
+
+
+--
 -- Name: browser_pageview_entry_url_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12933,6 +12964,13 @@ ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups ALTER COLUMN id
 
 
 --
+-- Name: browser_pageview_entry_url_dirty_dates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_entry_url_dirty_dates ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_entry_url_dirty_dates_id_seq'::regclass);
+
+
+--
 -- Name: browser_pageview_entry_url_sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15254,6 +15292,14 @@ ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollup_dates
 
 ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups
     ADD CONSTRAINT browser_pageview_entry_url_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_entry_url_dirty_dates browser_pageview_entry_url_dirty_dates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_entry_url_dirty_dates
+    ADD CONSTRAINT browser_pageview_entry_url_dirty_dates_pkey PRIMARY KEY (id);
 
 
 --
@@ -17815,6 +17861,13 @@ CREATE UNIQUE INDEX idx_bpeu_daily_rollup_dates_unique ON public.browser_pagevie
 --
 
 CREATE UNIQUE INDEX idx_bpeu_daily_rollups_date_url_unique ON public.browser_pageview_entry_url_daily_rollups USING btree (date, entry_url);
+
+
+--
+-- Name: idx_bpeu_dirty_dates_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_bpeu_dirty_dates_unique ON public.browser_pageview_entry_url_dirty_dates USING btree (date, bucket);
 
 
 --

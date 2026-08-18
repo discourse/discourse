@@ -246,6 +246,9 @@ RSpec.describe BrowserPageviewEvent do
       expect(event.source).to eq("beacon")
       expect(event.browser).to eq("edge")
       expect(described_class.queued_count).to eq(0)
+      expect(BrowserPageviewEntryUrlDirtyDate.pluck(:date, :generation)).to include(
+        [occurred_at.to_date, 1],
+      )
     end
 
     it "keeps queued payloads while PostgreSQL is readonly" do

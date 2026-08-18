@@ -25,7 +25,6 @@ class CreateBrowserPageviewEntryUrlRollups < ActiveRecord::Migration[8.0]
               :last_seen_at,
               using: :brin,
               name: "idx_bpeu_sessions_last_seen"
-
     create_table :browser_pageview_entry_url_daily_rollups do |t|
       t.date :date, null: false
       t.string :entry_url, limit: 2000, null: false
@@ -48,5 +47,16 @@ class CreateBrowserPageviewEntryUrlRollups < ActiveRecord::Migration[8.0]
               :date,
               unique: true,
               name: "idx_bpeu_daily_rollup_dates_unique"
+
+    create_table :browser_pageview_entry_url_dirty_dates do |t|
+      t.date :date, null: false
+      t.integer :bucket, null: false
+      t.bigint :generation, default: 1, null: false
+    end
+
+    add_index :browser_pageview_entry_url_dirty_dates,
+              %i[date bucket],
+              unique: true,
+              name: "idx_bpeu_dirty_dates_unique"
   end
 end

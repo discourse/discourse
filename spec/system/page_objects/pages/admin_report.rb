@@ -51,6 +51,10 @@ module PageObjects
         page.has_css?(".admin-report.#{type.tr("_", "-")}")
       end
 
+      def has_report_link?(text:, href:)
+        page.has_link?(text, href:)
+      end
+
       def has_category_filter?
         page.has_css?(CATEGORY_FILTER)
       end

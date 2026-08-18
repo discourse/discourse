@@ -25,6 +25,10 @@ RSpec.describe Reports::TopEntryUrls do
     )
   end
 
+  it "describes entry URLs as report links" do
+    expect(report.labels.first).to include(type: :link, properties: %i[entry_url entry_url])
+  end
+
   it "ranks entry URLs and calculates percentages from all qualifying sessions" do
     create_rollup("/t/topic/1", count: 5)
     create_rollup("/categories", count: 3)

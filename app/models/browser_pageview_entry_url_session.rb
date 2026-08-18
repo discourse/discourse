@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class BrowserPageviewEntryUrlSession < ActiveRecord::Base
-  SAFE_ENTRY_URL_PATTERN =
-    %r{^(?:/|/(?:t|c|tag|tags|g)(?:/.*)?|/(?:latest|top|new|categories|faq|guidelines|about|groups|badges))$}
-  private_constant :SAFE_ENTRY_URL_PATTERN
+  SAFE_ENTRY_ROUTE_PATTERN =
+    %r{/(?:t|c|tag|tags|g)(?:/.*)?|/(?:latest|top|new|categories|faq|guidelines|about|groups|badges)}
+  private_constant :SAFE_ENTRY_ROUTE_PATTERN
 
   def self.refresh(start_date:, end_date:)
     start_date = start_date.to_date
@@ -101,7 +101,7 @@ class BrowserPageviewEntryUrlSession < ActiveRecord::Base
       SQL
       start_date:,
       end_date:,
-      safe_entry_url_pattern: SAFE_ENTRY_URL_PATTERN.source,
+      safe_entry_url_pattern: safe_entry_url_pattern,
       now: Time.zone.now,
     )
 
@@ -135,6 +135,13 @@ class BrowserPageviewEntryUrlSession < ActiveRecord::Base
       SQL
   end
   private_class_method :affected_dates
+
+  def self.safe_entry_url_pattern
+    base_path = Discourse.base_path
+    root_path = base_path.presence || "/"
+    "^(?:#{Regexp.escape(root_path)}|#{Regexp.escape(base_path)}(?:#{SAFE_ENTRY_ROUTE_PATTERN.source}))$"
+  end
+  private_class_method :safe_entry_url_pattern
 end
 
 # == Schema Information

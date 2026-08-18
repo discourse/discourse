@@ -10,7 +10,7 @@ module Reports::TopEntryUrls
       report.modes = [Report::MODES[:table]]
       report.labels = [
         {
-          property: :entry_url,
+          properties: %i[entry_url entry_url],
           type: :link,
           title: I18n.t("reports.top_entry_urls.labels.entry_url"),
         },

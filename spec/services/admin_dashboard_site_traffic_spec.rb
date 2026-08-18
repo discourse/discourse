@@ -737,6 +737,14 @@ RSpec.describe AdminDashboardSiteTraffic do
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: "exception")
         expect(result[:top_referrers]).to eq(rows: [], error: "exception")
+        expect(result[:top_entry_urls]).to eq(
+          rows: [],
+          error: "exception",
+          availability: {
+            state: "pending",
+            available_from: nil,
+          },
+        )
       end
 
       it "serves the cached payload on subsequent calls within the cache window" do

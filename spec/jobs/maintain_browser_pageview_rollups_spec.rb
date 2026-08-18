@@ -521,7 +521,75 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
       end
     end
 
+    context "when aggregating entry URL rollups" do
+      it "repairs a historical entry when an earlier event commits after the initial rollup" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        Fabricate(
+          :browser_pageview_event,
+          session_id: "late-entry-session",
+          url: "/latest",
+          created_at: "2026-05-12 00:01:00",
+        )
+        job.execute({})
+
+        Fabricate(
+          :browser_pageview_event,
+          session_id: "late-entry-session",
+          url: "/top",
+          created_at: "2026-05-11 23:59:00",
+        )
+        job.execute({})
+
+        expect(
+          BrowserPageviewEntryUrlDailyRollup.pluck(:date, :entry_url, :count),
+        ).to contain_exactly([Date.new(2026, 5, 11), "/top", 1])
+      end
+    end
+
     context "when backfilling URLs" do
+      it "records coverage when every session entry is excluded" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        Fabricate(
+          :browser_pageview_event,
+          session_id: "excluded-entry-session",
+          url: "/search?q=private",
+          created_at: "2026-05-12",
+        )
+
+        job.execute({})
+
+        expect(BrowserPageviewEntryUrlDailyRollupDate.pluck(:date)).to include(
+          Date.new(2026, 5, 12),
+        )
+        expect(BrowserPageviewEntryUrlDailyRollup.all).to be_empty
+      end
+
+      it "keeps historical entry URL coverage pending until every retained URL is current" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        2.times do |index|
+          event =
+            Fabricate(
+              :browser_pageview_event,
+              session_id: "stale-url-session-#{index}",
+              url: "/latest",
+              created_at: "2026-05-12",
+            )
+          event.update_columns(normalized_url: nil, normalized_url_version: nil)
+        end
+
+        job.execute({})
+
+        expect(BrowserPageviewEntryUrlDailyRollupDate.all).to be_empty
+
+        job.execute({})
+
+        expect(BrowserPageviewEntryUrlDailyRollupDate.pluck(:date)).to include(
+          Date.new(2026, 5, 12),
+        )
+        expect(BrowserPageviewEntryUrlDailyRollup.sum(:count)).to eq(2)
+      end
+
       it "normalizes retained stale rows and stamps the current version" do
         event =
           Fabricate(
@@ -537,6 +605,42 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(event.normalized_url_version).to eq(
           BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
         )
+      end
+
+      it "rolls back URL normalization when the dirty-date marker fails" do
+        event = Fabricate(:browser_pageview_event, url: "/latest")
+        event.update_columns(normalized_url: nil, normalized_url_version: nil)
+        allow(BrowserPageviewEntryUrlDirtyDate).to receive(:mark!).and_raise("marker failed")
+
+        expect { job.execute({}) }.to raise_error("marker failed")
+
+        event.reload
+        expect(event.normalized_url).to be_nil
+        expect(event.normalized_url_version).to be_nil
+      end
+
+      it "recovers historical rollups when maintenance stops after URL normalization" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        event =
+          Fabricate(
+            :browser_pageview_event,
+            session_id: "interrupted-backfill-session",
+            url: "/latest",
+            created_at: "2026-05-10",
+          )
+        job.execute({})
+        event.update_columns(url: "/top", normalized_url_version: nil)
+
+        allow(BrowserPageviewEntryUrlDailyRollup).to receive(:aggregate).and_raise("interrupted")
+        expect { job.execute({}) }.to raise_error("interrupted")
+        expect(BrowserPageviewEntryUrlDirtyDate).to exist(date: Date.new(2026, 5, 10))
+
+        allow(BrowserPageviewEntryUrlDailyRollup).to receive(:aggregate).and_call_original
+        job.execute({})
+
+        expect(
+          BrowserPageviewEntryUrlDailyRollup.pluck(:date, :entry_url, :count),
+        ).to contain_exactly([Date.new(2026, 5, 10), "/top", 1])
       end
 
       it "resumes bounded batches without revisiting current rows" do

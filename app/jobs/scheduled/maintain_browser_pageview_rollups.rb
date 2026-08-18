@@ -14,7 +14,14 @@ module Jobs
       aggregate_crawlers
       backfill_referrers
       backfilled_url_dates = backfill_urls
-      aggregate_entry_urls(backfilled_url_dates)
+      dirty_entry_url_dates = BrowserPageviewEntryUrlDirtyDate.snapshot
+      url_backfill_complete = url_backfill_complete?
+      BrowserPageviewEntryUrlDailyRollupDate.delete_all if !url_backfill_complete
+      aggregate_entry_urls(
+        backfilled_url_dates | dirty_entry_url_dates.map(&:first).uniq,
+        url_backfill_complete:,
+      )
+      BrowserPageviewEntryUrlDirtyDate.clear!(dirty_entry_url_dates)
       backfill_browsers
     end
 
@@ -57,15 +64,30 @@ module Jobs
       )
     end
 
-    def aggregate_entry_urls(backfilled_url_dates)
+    def aggregate_entry_urls(affected_dates, url_backfill_complete:)
+      if !url_backfill_complete
+        affected_dates.each do |date|
+          BrowserPageviewEntryUrlDailyRollup.aggregate(
+            start_date: date,
+            end_date: date,
+            record_coverage: false,
+          )
+        end
+        return
+      end
+
       start_date, end_date = entry_url_aggregation_window
       return if start_date.nil?
 
       BrowserPageviewEntryUrlDailyRollup.aggregate(start_date:, end_date:)
-      Array(backfilled_url_dates).each do |date|
+      affected_dates.each do |date|
         next if date >= start_date && date <= end_date
 
-        BrowserPageviewEntryUrlDailyRollup.aggregate(start_date: date, end_date: date)
+        BrowserPageviewEntryUrlDailyRollup.aggregate(
+          start_date: date,
+          end_date: date,
+          record_coverage: false,
+        )
       end
     end
 
@@ -217,25 +239,33 @@ module Jobs
 
       ids = rows.map(&:id)
       normalized = rows.map { |row| BrowserPageviewEventUrlNormalizer.normalize_site_path(row.url) }
+      dirty_events = rows.map { |row| [row.created_at, row.session_id] }
 
-      DB.exec(
-        <<~SQL,
-          UPDATE browser_pageview_events AS e
-          SET
-            normalized_url = data.normalized_url,
-            normalized_url_version = :version
-          FROM unnest(
-            ARRAY[:ids]::bigint[],
-            ARRAY[:normalized]::text[]
-          ) AS data(id, normalized_url)
-          WHERE e.id = data.id
-        SQL
-        ids: ids,
-        normalized: normalized,
-        version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
-      )
+      BrowserPageviewEvent.transaction do
+        DB.exec(
+          <<~SQL,
+            UPDATE browser_pageview_events AS e
+            SET
+              normalized_url = data.normalized_url,
+              normalized_url_version = :version
+            FROM unnest(
+              ARRAY[:ids]::bigint[],
+              ARRAY[:normalized]::text[]
+            ) AS data(id, normalized_url)
+            WHERE e.id = data.id
+          SQL
+          ids: ids,
+          normalized: normalized,
+          version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
+        )
+        BrowserPageviewEntryUrlDirtyDate.mark!(dirty_events)
+      end
 
-      BrowserPageviewEvent.where(id: ids).distinct.pluck(Arel.sql("created_at::date"))
+      dirty_events.map { |created_at, _session_id| created_at.to_date }.uniq
+    end
+
+    def url_backfill_complete?
+      url_batch(limit: 1).empty?
     end
 
     def backfill_browsers
@@ -274,10 +304,10 @@ module Jobs
         SQL
     end
 
-    def url_batch
+    def url_batch(limit: batch_size)
       DB.query(
         <<~SQL,
-          SELECT id, url
+          SELECT id, url, created_at, session_id
           FROM browser_pageview_events
           WHERE created_at >= :retention_cutoff
             AND #{BrowserPageviewEvent.rollup_source_condition}
@@ -290,7 +320,7 @@ module Jobs
         SQL
         retention_cutoff: BrowserPageviewEvent.retention_cutoff,
         version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
-        limit: batch_size,
+        limit:,
       )
     end
 

@@ -135,6 +135,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
       if rows.present?
         BrowserPageviewEvent.transaction(requires_new: true) do
           BrowserPageviewEvent.insert_all(rows, returning: false)
+          BrowserPageviewEntryUrlDirtyDate.mark!(
+            rows.map { |row| [row[:created_at], row[:session_id]] },
+          )
         end
       end
       Discourse.redis.ltrim(REDIS_QUEUE_KEY, queued_attributes.length, -1)
@@ -150,6 +153,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
         if attributes
           BrowserPageviewEvent.transaction(requires_new: true) do
             BrowserPageviewEvent.insert_all([attributes], returning: false)
+            BrowserPageviewEntryUrlDirtyDate.mark!(
+              [[attributes[:created_at], attributes[:session_id]]],
+            )
           end
         end
         Discourse.redis.ltrim(REDIS_QUEUE_KEY, 1, -1)
@@ -231,6 +237,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
 
   has_one :browser_pageview_event_score, foreign_key: :event_id, dependent: :delete
 
+  before_save :truncate_fields
+  after_create :mark_entry_url_date_dirty
+
   def self.retention_cutoff
     RETENTION_PERIOD.ago.beginning_of_day
   end
@@ -261,9 +270,11 @@ class BrowserPageviewEvent < ActiveRecord::Base
     "GREATEST(#{count_column} - #{crawler_column}, 0)"
   end
 
-  before_save :truncate_fields
-
   private
+
+  def mark_entry_url_date_dirty
+    BrowserPageviewEntryUrlDirtyDate.mark!([[created_at, session_id]])
+  end
 
   def truncate_fields
     self.url = url.slice(0, MAX_URL_LENGTH) if url.present?

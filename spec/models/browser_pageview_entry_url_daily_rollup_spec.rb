@@ -81,6 +81,46 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
     expect(described_class.order(:entry_url).pluck(:entry_url)).to eq(safe_paths.sort)
   end
 
+  it "allows reviewed routes beneath the configured subfolder" do
+    Discourse.stubs(:base_path).returns("/forum")
+    %w[/forum /forum/t/topic/1 /forum/latest /latest].each_with_index do |path, index|
+      Fabricate(
+        :browser_pageview_event,
+        session_id: "subfolder-session-#{index}",
+        url: path,
+        created_at: "2026-05-12",
+      )
+    end
+
+    aggregate
+
+    expect(described_class.order(:entry_url).pluck(:entry_url)).to eq(
+      %w[/forum /forum/latest /forum/t/topic/1],
+    )
+  end
+
+  it "preserves login and crawler classification in the daily rollup" do
+    SiteSetting.improved_crawler_detection = true
+    Fabricate(
+      :browser_pageview_event,
+      user_id: Fabricate(:user).id,
+      score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1,
+      url: "/latest",
+      created_at: "2026-05-12",
+    )
+
+    aggregate
+
+    expect(
+      described_class.pick(
+        :count,
+        :logged_in_count,
+        :likely_crawler_count,
+        :likely_crawler_logged_in_count,
+      ),
+    ).to eq([1, 1, 1, 1])
+  end
+
   it "moves attribution to an earlier event that commits after the initial rollup" do
     Fabricate(
       :browser_pageview_event,
