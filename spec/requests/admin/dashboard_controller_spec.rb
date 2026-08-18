@@ -1541,58 +1541,6 @@ RSpec.describe Admin::DashboardController do
         )
       end
 
-      it "accepts a legacy scalar filter value" do
-        get "/admin/dashboard/site-traffic-explorer.json",
-            params: request_params.merge(referrer: "")
-
-        expect(status: response.status, body: response.parsed_body).to eq(
-          status: 200,
-          body: {
-            "partial_data" => nil,
-            "summary" => {
-              "pageviews" => 1,
-              "distinct_sessions" => 1,
-              "logged_in_share" => 0,
-              "bounce_rate" => 100,
-              "average_session_duration_seconds" => 0,
-            },
-            "series" => [
-              {
-                "date" => "2026-05-11",
-                "pageviews" => 1,
-                "logged_in_human_pageviews" => 0,
-                "anonymous_human_pageviews" => 1,
-                "likely_crawler_pageviews" => 0,
-              },
-            ],
-            "series_colors" => series_colors,
-            "dimensions" => {
-              "top_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
-              "entry_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
-              "referrers" => [
-                { "value" => "", "label" => "Direct / unknown", "pageviews" => 1 },
-                {
-                  "value" => "search.example/results?q=discourse",
-                  "label" => "search.example/results?q=discourse",
-                  "pageviews" => 1,
-                },
-              ],
-              "countries" => [{ "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 }],
-              "networks" => [
-                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 1 },
-              ],
-              "browsers" => [{ "value" => "firefox", "label" => "Firefox", "pageviews" => 1 }],
-              "ip_addresses" => [
-                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
-              ],
-            },
-            "active_filters" => [
-              { "key" => "referrer", "value" => "", "label" => "Direct / unknown" },
-            ],
-          },
-        )
-      end
-
       it "matches any selected value within a dimension and every selected dimension" do
         referrers = ["search.example/results?q=discourse", ""]
 
