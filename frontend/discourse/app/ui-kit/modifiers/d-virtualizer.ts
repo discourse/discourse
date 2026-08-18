@@ -418,7 +418,7 @@ export default class DVirtualizer<T> extends Modifier<
 
   /**
    * After an `@items` change the engine can hold a scroll offset the element no
-   * longer has: shrinking the list makes the browser clamp `scrollTop`, but that
+   * longer has: shrinking the sizer makes the browser clamp `scrollTop`, but that
    * clamp does not reach the engine's offset observer, so it keeps computing the
    * window from a stale, now out-of-range offset. On its own that only mis-scrolls
    * the window; combined with pinned indices it surfaces as a visible gap — the
@@ -454,12 +454,10 @@ export default class DVirtualizer<T> extends Modifier<
     // whose target it has not observed yet — and adopting the element's position
     // there would overwrite that intent and settle the window somewhere stale.
     //
-    // Measured against the ENGINE's new total rather than the element's current
-    // height. On a shrink the element is still as tall as the outgoing list,
-    // because the component applies the smaller height on a later render and this
-    // method does not run again; asking the DOM would answer for the list being
-    // left rather than the one being entered, and the stale offset would survive
-    // exactly the case this exists for.
+    // Measured against the ENGINE's new total rather than the element's height,
+    // which may still describe the outgoing list during the update-time call.
+    // The flush calls again after settling the height so a shrink's forced layout
+    // exposes the browser-clamped position before the window is read.
     const maxOffset = Math.max(
       this.#virtualizer.getTotalSize() - element.clientHeight,
       0
@@ -579,6 +577,12 @@ export default class DVirtualizer<T> extends Modifier<
     named: DVirtualizerSignature<T>["Args"]["Named"]
   ): VirtualizerOptions {
     const { items, estimateSize, overscan, key, pinnedIndices } = named;
+    // Fractional and non-finite ranges can permanently poison engine memoization;
+    // negative ranges leave viewport gaps.
+    const normalizedOverscan =
+      overscan === undefined || !Number.isFinite(overscan)
+        ? 5
+        : Math.max(0, Math.floor(overscan));
 
     const options: VirtualizerOptions = {
       // Despite the name, this does NOT set where the list rests — the component
@@ -592,7 +596,7 @@ export default class DVirtualizer<T> extends Modifier<
       getScrollElement: () => this.#element,
       estimateSize: (index) => estimateSize(items[index]!, index),
       getItemKey: (index) => keyFor(items[index], key),
-      overscan: overscan ?? 5,
+      overscan: normalizedOverscan,
       onChange: () => this.#scheduleFlush(),
       // Only a bottom-anchored list tracks the live edge. The engine gates this
       // on the reader having been within `scrollEndThreshold` of the end BEFORE
@@ -630,13 +634,16 @@ export default class DVirtualizer<T> extends Modifier<
     // The sweep contract is pinned in the virtualizer unit suite.
     this.#virtualizer.measureElement(null);
 
+    // Settle a shrink before reading the window. Reading `scrollTop` during the
+    // resync forces the browser to apply the height clamp, and pushes that
+    // position into the engine before anything can be published.
+    this.#applySizerHeight();
+    this.#resyncScrollOffset();
+
     const virtualItems = this.#virtualizer.getVirtualItems();
     const totalSize = this.#virtualizer.getTotalSize();
     const range = this.#virtualizer.range;
     const count = this.#named?.items.length ?? 0;
-
-    // The settled height, including any shrink the pre-scroll raise skipped.
-    this.#applySizerHeight();
 
     const signature = this.#stateSignature(virtualItems, totalSize, range);
 
