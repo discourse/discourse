@@ -12,10 +12,23 @@ const CORE_MAPS = ["__core__/app-route-map.js", "__core__/admin-route-map.js"];
 const ROUTE_MAP_REGEX = /route-map\.js$/;
 
 // Fills `tables` before any module loads, because the entrypoint's own source depends on it.
-export default function discourseRouteMaps({ modules, label, tables }) {
+export default function discourseRouteMaps({
+  modules,
+  label,
+  tables,
+  staticModules,
+}) {
   return {
     name: "discourse-route-maps",
     buildStart() {
+      // Route maps are only read for plugins that opt into `staticModules`. Everything else
+      // imports its routes eagerly and needs no bundles, so a map this cannot read is none of
+      // its business — `discourse-docs` builds its path from a site setting, and would
+      // otherwise fail to compile over a table nothing would read.
+      if (!staticModules) {
+        return;
+      }
+
       // Only `Plugin::JsManager` supplies core's maps, and without them a `resource` mount
       // cannot be resolved. Themes therefore derive no bundles, which is what they do today.
       if (!CORE_MAPS.some((filename) => modules[filename])) {

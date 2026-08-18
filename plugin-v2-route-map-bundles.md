@@ -24,6 +24,12 @@ sync by hand. The route map already holds both.
 Route maps are parsed, never run. Plugin and theme code is not trusted enough to evaluate in the
 asset processor.
 
+Only plugins that opt into `staticModules` get parsed. Everything else imports its routes eagerly
+and needs no bundles, so a map the parser cannot read is none of its business. This matters:
+`discourse-docs` builds its path from a site setting, and `discourse-doc-categories` reads a
+service and returns early. Both are perfectly good route maps, neither is readable, and neither
+wants a bundle.
+
 `discourse-route-maps` parses every map in a `buildStart` hook, with the `this.parse` rollup gives
 every plugin. It cannot wait for `moduleParsed`: the entrypoint's own source is generated from the
 derived tables, and the maps only enter the module graph because that entrypoint imports them.
@@ -47,8 +53,12 @@ Anything else is unreadable. A computed name, a spread in the options, a `this.r
 or a conditional, or a `map` that points at a function defined elsewhere. Raise an error naming the
 plugin and the source location, and fail that plugin's compile.
 
-There is no fallback. A map we cannot read means bundles we cannot derive, and the plugin would
-ship its routes eagerly with nothing to say so.
+There is no fallback. Under `staticModules` a map we cannot read means bundles we cannot derive,
+and nothing would load those routes at all.
+
+`Plugin::JsCompiler` turns a compile error into a module that throws when the bundle is evaluated
+(`js_compiler.rb:37`), so this fails the plugin in the browser rather than the Ruby process. That
+is what CI reports.
 
 Core's two maps are the exception. Their `Site.currentProp` loops are known, and the parser skips
 them by name.

@@ -67,6 +67,7 @@ async function performRollup(modules, opts) {
           ? `PLUGIN ${opts.pluginName}`
           : `THEME ${opts.themeId}`,
         tables: routeTables,
+        staticModules: !!opts.frontendConfig?.staticModules,
       }),
       discourseSourceImports({ fs }),
       discourseFileSearch(),
