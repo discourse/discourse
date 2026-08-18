@@ -25,8 +25,8 @@ module DiscourseDataExplorer
 
     def self.list_all(search: nil, after: nil, limit: nil)
       persisted =
-        persisted_after(search: search, after: after, limit: limit).filter_map do |query|
-          build_resolved(query) if mountable?(query)
+        persisted_after(search: search, after: after, limit: limit).map do |query|
+          build_resolved(query)
         end
       unpersisted =
         seek(
@@ -124,6 +124,33 @@ module DiscourseDataExplorer
     private_class_method :prewarmable?
 
     def self.persisted_after(search:, after:, limit:)
+      if limit.nil?
+        return(
+          persisted_batch(search: search, after: after, limit: nil).select do |query|
+            mountable?(query)
+          end
+        )
+      end
+
+      mountable_queries = []
+      cursor = after
+
+      loop do
+        batch = persisted_batch(search: search, after: cursor, limit: limit)
+        break if batch.empty?
+
+        mountable_queries.concat(batch.select { |query| mountable?(query) })
+        break if mountable_queries.size >= limit || batch.size < limit
+
+        last = batch.last
+        cursor = { title: last.name, key: "#{SOURCE_NAME}:#{last.id}" }
+      end
+
+      mountable_queries.first(limit)
+    end
+    private_class_method :persisted_after
+
+    def self.persisted_batch(search:, after:, limit:)
       scope = Query.where(hidden: false)
       if search.present?
         scope =
@@ -151,6 +178,6 @@ module DiscourseDataExplorer
       scope = scope.limit(limit) if limit
       scope.to_a
     end
-    private_class_method :persisted_after
+    private_class_method :persisted_batch
   end
 end

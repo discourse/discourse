@@ -214,6 +214,21 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
       expect(reports.map(&:identifier)).to include(query.id.to_s)
     end
 
+    it "keeps paginating past unmountable queries to fill the page instead of coming back short" do
+      Fabricate(
+        :query,
+        name: "zzq_aaa unmountable",
+        sql: "-- [params]\n-- int :topic_id\n\nSELECT :topic_id AS value",
+        user: admin,
+      )
+      mountable =
+        Fabricate(:query, name: "zzq_bbb mountable", sql: "SELECT 1 AS value", user: admin)
+
+      reports = described_class.list_all(search: "zzq_", limit: 1)
+
+      expect(reports.map(&:identifier)).to eq([mountable.id.to_s])
+    end
+
     it "returns a title-sorted page and resumes after the cursor across persisted + defaults" do
       all = described_class.list_all
       titles = all.map { |report| report.title.to_s.downcase }
