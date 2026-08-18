@@ -44,7 +44,6 @@ class ImportScripts::FMGP < ImportScripts::Base
     # handle the same video extension as the rest of Discourse
     SiteSetting.authorized_extensions =
       (SiteSetting.authorized_extensions.split("|") + %w[mp4 mov webm ogv]).uniq.join("|")
-    @invalid_bounce_score = 5.0
     @min_title_words = 3
     @max_title_words = 14
     @min_title_characters = 12
@@ -334,12 +333,6 @@ class ImportScripts::FMGP < ImportScripts::Base
                 user_id: newuser.id,
                 provider_uid: id,
               )
-              # Do not send email to the invalid email addresses
-              # this can be removed after merging with #7162
-              s = UserStat.where(user_id: newuser.id).first
-              s.bounce_score = @invalid_bounce_score
-              s.reset_bounce_score_after = 1000.years.from_now
-              s.save
             end,
         }
       else

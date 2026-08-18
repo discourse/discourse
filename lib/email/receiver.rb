@@ -379,8 +379,8 @@ module Email
 
     # Records a bounce for an email we sent: claims the email log so that
     # duplicate reports of the same bounce score only once, then charges the
-    # address it was sent to — and the user as well, but only while that address
-    # is still theirs, so late reports can't penalize an unrelated account.
+    # address it was sent to. Whoever owns that address is told only when it is
+    # their primary, which is exactly when the suppression reaches them.
     def self.record_bounce(email_log, permanent:, bounce_error_code: nil)
       return false if email_log.nil?
 
@@ -389,13 +389,12 @@ module Email
       # the claim can only be made once, so it shares a transaction with the
       # score it authorizes: failing in between would leave the provider's
       # retry with nothing to do
+      recorded = nil
       claimed =
         EmailLog.transaction do
-          if !email_log.claim_bounce(permanent: permanent, bounce_error_code: bounce_error_code)
-            next false
-          end
+          next false if !email_log.claim_bounce(permanent:, bounce_error_code:)
 
-          EmailBounceScore.record_bounce!(email_log.to_address, score)
+          recorded = EmailBounceScore.record_bounce!(email_log.to_address, score)
           true
         end
 
@@ -403,10 +402,7 @@ module Email
 
       # deliberately outside the transaction above: crossing the threshold
       # creates a topic, which has no business holding the claim's row lock
-      if email_log.user_id.present?
-        user = User.find_by_email(email_log.to_address)
-        update_bounce_score_for(user, score) if user && user.id == email_log.user_id
-      end
+      revoke_email(email_log.to_address, recorded, score)
 
       true
     end
@@ -414,36 +410,28 @@ module Email
     def self.update_bounce_score(email, score)
       # unlike a bounce we can tie back to an email log, this address is taken
       # from the report itself, so only trust it when it names a known account
-      return if !(user = User.find_by_email(email))
+      return if !User.find_by_email(email)
 
-      EmailBounceScore.record_bounce!(email, score)
-      update_bounce_score_for(user, score)
+      revoke_email(email, EmailBounceScore.record_bounce!(email, score), score)
     end
 
-    def self.update_bounce_score_for(user, score)
-      user_stat = user.user_stat
-      crossed_threshold = false
+    # Only the user this address is the *primary* of actually stops receiving
+    # mail, and only the bounce that pushes it over is worth telling them about.
+    def self.revoke_email(email, recorded, score)
+      return if recorded.nil?
 
-      user_stat.with_lock do
-        threshold = SiteSetting.bounce_score_threshold
-        old_bounce_score = user_stat.bounce_score
-        new_bounce_score = old_bounce_score + score
-        crossed_threshold = old_bounce_score < threshold && new_bounce_score >= threshold
+      threshold = SiteSetting.bounce_score_threshold
+      return if recorded.bounce_score < threshold
+      return if recorded.bounce_score - score >= threshold
+      return if !(user = User.find_by_email(email, primary: true))
 
-        user_stat.bounce_score = new_bounce_score
-        user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
-        user_stat.save!
-      end
-
-      if crossed_threshold
-        # NOTE: we check bounce_score before sending emails
-        # So log we revoked the email...
-        reason =
-          I18n.t("user.email.revoked", email: user.email, date: user_stat.reset_bounce_score_after)
-        StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
-        # ... and PM the user
-        SystemMessage.create_from_system_user(user, :email_revoked)
-      end
+      # NOTE: we check bounce_score before sending emails
+      # So log we revoked the email...
+      reason =
+        I18n.t("user.email.revoked", email:, date: recorded.reset_bounce_score_after.in_time_zone)
+      StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
+      # ... and PM the user
+      SystemMessage.create_from_system_user(user, :email_revoked)
     end
 
     def is_auto_generated?

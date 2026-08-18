@@ -82,12 +82,17 @@ module Jobs
         # erode bounce score each time we send an email
         # this means that we are punished a lot less for bounces
         # and we can recover more quickly
-        erode = SiteSetting.bounce_score_erode_on_send
-        UserStat.erode_bounce_score!(user.id, erode)
-        EmailBounceScore.erode!(to_address, erode)
+        EmailBounceScore.erode!(to_address, SiteSetting.bounce_score_erode_on_send)
       else
         skip_reason_type
       end
+    end
+
+    # a digest consults this at both gates below, and the job only ever sends to
+    # the one address, so ask the ledger once
+    def deliverable?(address)
+      @deliverable = EmailBounceScore.deliverable?(address) if @deliverable.nil?
+      @deliverable
     end
 
     def set_skip_context(type, user_id, to_address, post_id)
@@ -103,8 +108,9 @@ module Jobs
       notification_data_hash = args[:notification_data_hash]
       email_token = args[:email_token]
       to_address = args[:to_address]
+      recipient = to_address.presence || user.email
 
-      set_skip_context(type, user.id, to_address || user.email, post.try(:id))
+      set_skip_context(type, user.id, recipient, post.try(:id))
 
       if user.anonymous?
         return skip_message(SkippedEmailLog.reason_types[:user_email_anonymous_user])
@@ -126,7 +132,7 @@ module Jobs
         return if user.bot? || user.anonymous? || !user.active || user.suspended? || user.staged
 
         return if !user.user_stat
-        return if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+        return if !deliverable?(recipient)
 
         return if !user.user_option
         return if !user.user_option.email_digests
@@ -224,8 +230,7 @@ module Jobs
         return skip_message(SkippedEmailLog.reason_types[:exceeded_emails_limit])
       end
 
-      if !EmailLog::CRITICAL_EMAIL_TYPES.include?(type) &&
-           user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+      if !EmailLog::CRITICAL_EMAIL_TYPES.include?(type) && !deliverable?(recipient)
         return skip_message(SkippedEmailLog.reason_types[:exceeded_bounces_limit])
       end
 

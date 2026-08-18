@@ -253,10 +253,13 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
 
       context "when bounce score was reached" do
         it "doesn't send any emails" do
-          mailing_list_user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold + 1)
+          EmailBounceScore.record_bounce!(
+            mailing_list_user.email,
+            SiteSetting.bounce_score_threshold + 1,
+          )
 
-          Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
           UserNotifications.expects(:mailing_list_notify).with(mailing_list_user, post).never
+          Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
 
           expect(
             SkippedEmailLog.exists?(
@@ -267,6 +270,15 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
               reason_type: SkippedEmailLog.reason_types[:exceeded_bounces_limit],
             ),
           ).to eq(true)
+        end
+
+        it "still sends when it is a secondary email that bounced" do
+          secondary = Fabricate(:secondary_email, user: mailing_list_user)
+          EmailBounceScore.record_bounce!(secondary.email, SiteSetting.bounce_score_threshold + 1)
+
+          UserNotifications.expects(:mailing_list_notify).with(mailing_list_user, post).once
+
+          Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
         end
       end
     end
