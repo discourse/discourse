@@ -1,31 +1,40 @@
 import {
   dropTargetForElements,
   type ElementDragPayload,
-  type ElementDropTargetEventBasePayload,
-  type ElementDropTargetGetFeedbackArgs,
 } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import type {
+  DragLocationHistory,
+  Input,
+} from "@atlaskit/pragmatic-drag-and-drop/types";
 import { modifier } from "ember-modifier";
 import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
 import {
+  createPositionIndicator,
+  type DropAxis,
+  type DropEffect,
+  type DropPosition,
+  registerDropTargetKernel,
+  resolveDropPosition,
+} from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
+import {
   DRAG_BODY,
+  matchesDragType,
   normalizeDragSource,
-  toAcceptList,
 } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 
 /** The pointer position as the underlying library reports it. */
-type DragInput = ElementDropTargetGetFeedbackArgs["input"];
+type DragInput = Input;
 
 /** The drag's initial, previous and current locations. */
-type DragLocation = ElementDropTargetEventBasePayload["location"];
+type DragLocation = DragLocationHistory;
 
-/** Where a drop would land relative to this target. */
-export type DropPosition = "before" | "after" | "inside";
-
-/** The axis the target's position math and indicator classes work along. */
-export type DropAxis = "x" | "y";
-
-/** The cursor feedback the browser shows for a drop. */
-export type DropEffect = "copy" | "link" | "move";
+export {
+  type DropAxis,
+  type DropEffect,
+  type DropPosition,
+  type DropPositionOptions,
+  resolveDropPosition,
+} from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
 
 /** The dragged source, normalised to the shape `dDragAndDropSource` publishes. */
 export interface DropTargetSource {
@@ -64,141 +73,6 @@ export interface DropTargetEvent {
 
   /** This target's element. */
   element: Element;
-}
-
-/**
- * Per-axis state modifier classes toggled while the cursor is hovering with a
- * compatible drag in flight. Paired with the `data-drop-target` attribute the
- * registrar stamps, and styled by
- * `app/assets/stylesheets/common/ui-kit/d-drag-and-drop.scss`, which draws a 2px
- * accent line above/below the row by default; consumers can override with their
- * own treatment when a different look is needed.
- */
-const POSITION_CLASSES = Object.freeze({
-  before: { y: "--drag-above", x: "--drag-left" },
-  after: { y: "--drag-below", x: "--drag-right" },
-  inside: { y: "--drag-inside", x: "--drag-inside" },
-});
-
-/** How a target decides where a drop would land. */
-export interface DropPositionOptions {
-  /** A fixed position, which wins over the midpoint math entirely. */
-  position?: DropPosition;
-
-  /** The axis the midpoint is measured along. Defaults to `"y"`. */
-  axis?: DropAxis;
-}
-
-/**
- * Where a drop would land relative to an element: the `position` arg when one is
- * fixed, otherwise which side of the element's midpoint the pointer is on.
- *
- * Centralized so every consumer uses the same midpoint comparison.
- *
- * @param element - The target element to measure against.
- * @param input - The pointer position, as the underlying library reports it.
- * @param options - The consumer's `position` / `axis` args.
- */
-export function resolveDropPosition(
-  element: Element,
-  input: DragInput,
-  { position, axis = "y" }: DropPositionOptions
-): DropPosition {
-  if (position) {
-    return position;
-  }
-  const rect = element.getBoundingClientRect();
-  if (axis === "x") {
-    return input.clientX < rect.left + rect.width / 2 ? "before" : "after";
-  }
-  return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
-}
-
-/**
- * Keeps at most one positional indicator class on an element, so moving from one
- * position to another swaps rather than accumulates.
- *
- * Centralized with {@link resolveDropPosition} so the position vocabulary and
- * its class lifecycle cannot drift apart.
- *
- * @param element - The element to carry the class.
- * @returns `apply`, which swaps in the class for a position/axis pair, and
- *   `clear`, which removes whichever one is currently on.
- */
-export function createPositionIndicator(element: Element) {
-  let activeClass: string | null = null;
-
-  return {
-    apply(position: DropPosition, axis: DropAxis) {
-      const className = POSITION_CLASSES[position]?.[axis];
-      if (!className || activeClass === className) {
-        return;
-      }
-      if (activeClass) {
-        element.classList.remove(activeClass);
-      }
-      element.classList.add(className);
-      activeClass = className;
-    },
-    clear() {
-      if (activeClass) {
-        element.classList.remove(activeClass);
-        activeClass = null;
-      }
-    },
-  };
-}
-
-/**
- * Whether this element is the innermost accepted target under the pointer.
- *
- * The underlying library fires every lifecycle event on every target in the
- * hierarchy; the contract here is that only the deepest one acts on it.
- *
- * @param location - The drag's location history.
- * @param element - The element being asked about.
- */
-export function isDeepestTarget(location: DragLocation, element: Element) {
-  return location.current.dropTargets[0]?.element === element;
-}
-
-/**
- * Keeps one registration's `onDragEnter` and `onDragLeave` in step.
- *
- * The underlying library fires both on every target in the hierarchy, while the
- * contract here is that only the deepest one tells its consumer. That makes the
- * two halves easy to get out of step in either direction: an ancestor whose
- * enter was swallowed would otherwise still be sent a leave, and one that takes
- * over as deepest without a fresh enter would be sent a leave it was never
- * given an enter for. Shared because both target modifiers need exactly this and
- * the pair drifted between them once already.
- *
- * @returns `enter` and `leave`, which each run the callback only when doing so
- *   keeps the pair balanced, and `reset` for a drop, which ends the drag without
- *   a leave.
- */
-export function createEnterLeavePairing() {
-  let entered = false;
-
-  return {
-    enter(fire: () => void) {
-      if (entered) {
-        return;
-      }
-      entered = true;
-      fire();
-    },
-    leave(fire: () => void) {
-      if (!entered) {
-        return;
-      }
-      entered = false;
-      fire();
-    },
-    reset() {
-      entered = false;
-    },
-  };
 }
 
 function normalizeSource(
@@ -338,215 +212,54 @@ export function registerDragAndDropTarget(
   element: Element,
   getArgsRef: () => DragAndDropTargetArgs
 ) {
-  const indicator = createPositionIndicator(element);
-  // Whether this wrapper has forwarded an enter the consumer is still owed a
-  // leave for. The underlying library sends both to every target in the
-  // hierarchy, but only the deepest one is forwarded, so an ancestor would
-  // otherwise be handed a leave it never had an enter for.
-  const pairing = createEnterLeavePairing();
+  const positionIndicator = createPositionIndicator(element);
 
-  const acceptsType = (type: unknown) => {
-    const list = toAcceptList(getArgsRef().accepts);
-    return list.length === 0 || list.includes(type as string);
-  };
-
-  /**
-   * Whether this target will take the drag, by whichever branch applies.
-   *
-   * Shared between the synchronous gate and the drop, because the library
-   * decides the target list on the last `dragover` and reuses it when the
-   * pointer is released — so a target that stopped qualifying in between would
-   * otherwise still be handed the drop. Consumers put authorization here, which
-   * makes re-asking the difference between refusing and acting on stale
-   * permission.
-   */
-  const passesGate = (source: ElementDragPayload, input: DragInput) => {
-    const args = getArgsRef();
-
-    if (!acceptsType(source.data?.type)) {
-      return false;
-    }
-
-    // The body a handled source stands for, or the raw source element when
-    // there is none. Deliberately not the normalised payload, whose `element`
-    // falls back to this one and would therefore read as self whenever the
-    // source element is absent — and deliberately not the registered element
-    // alone, which for a handled source is a grip nested inside the row and so
-    // never equal to the target that is the row.
-    const moving = (source.data?.[DRAG_BODY] as Element) ?? source.element;
-    if (args.acceptsSelf === false && moving === element) {
-      return false;
-    }
-
-    if (!args.canDrop) {
-      return true;
-    }
-
-    return consumerMayThrow(
-      () =>
-        args.canDrop!({
-          source: normalizeSource(source, element),
-          input,
-          element,
-        }) !== false,
-      false
-    );
-  };
-
-  const resolvePosition = (input: DragInput): DropPosition => {
-    const { position, axis } = getArgsRef();
-    return resolveDropPosition(element, input, { position, axis });
-  };
-
-  const isDeepest = (location: DragLocation) =>
-    isDeepestTarget(location, element);
-
-  /**
-   * Closes an open enter, if there is one.
-   *
-   * Called both when the library reports a leave and when this element merely
-   * stops being the deepest target, which the library reports as nothing at all
-   * because the element never left the hierarchy. Without the second case an
-   * ancestor superseded by one of its own children would keep an enter open for
-   * the rest of the drag.
-   */
-  const reportLeave = (source: ElementDragPayload, location: DragLocation) =>
-    pairing.leave(() =>
-      consumerMayThrow(() =>
-        getArgsRef().onDragLeave?.({
-          source: normalizeSource(source, element),
-          position: null,
-          location,
-          element,
-        })
-      )
-    );
-
-  // See the note in `registerDragAndDropSource`: the stylesheet gates the state
-  // modifiers on this attribute, and an attribute survives a consumer rebinding
-  // `class`.
-  element.setAttribute("data-drop-target", "");
-
-  const cleanup = dropTargetForElements({
+  return registerDropTargetKernel({
     element,
-    canDrop: ({ source, input }) => passesGate(source, input),
-    // The consumer's metadata is deliberately typed as a plain object, which the
-    // underlying library's index-signature shape does not accept as-is.
-    getData: () =>
-      consumerMayThrow(() => getArgsRef().getData?.() ?? {}, {}) as Record<
-        string | symbol,
-        unknown
-      >,
-    getDropEffect: ({ source, input }) =>
-      consumerMayThrow(() =>
-        getArgsRef().getDropEffect?.({
-          source: normalizeSource(source, element),
-          input,
-          element,
-        })
-      ),
-    getIsSticky: () =>
-      consumerMayThrow(
-        () => getArgsRef().getIsSticky?.() === true,
-        false
-      ) as boolean,
-    onDragEnter: ({ source, location }) => {
-      // Ceasing to be the deepest target makes any indicator this element is
-      // showing stale, and the library keeps an ancestor in the hierarchy rather
-      // than sending it a leave, so clearing here is the only chance to drop it.
-      if (!isDeepest(location)) {
-        indicator.clear();
-        reportLeave(source, location);
-        return;
-      }
+    attribute: "data-drop-target",
+    register: dropTargetForElements,
+    decorateSource: (source: ElementDragPayload) =>
+      normalizeSource(source, element),
+    accepts: (source: ElementDragPayload) => {
       const args = getArgsRef();
-      const pos = resolvePosition(location.current.input);
-      if (args.indicator !== false) {
-        indicator.apply(pos, args.axis ?? "y");
+      if (!matchesDragType(args.accepts, source)) {
+        return false;
       }
-      pairing.enter(() =>
-        consumerMayThrow(() =>
-          args.onDragEnter?.({
-            source: normalizeSource(source, element),
-            position: pos,
-            location,
-            element,
-          })
-        )
-      );
-    },
-    onDrag: ({ source, location }) => {
-      if (!isDeepest(location)) {
-        indicator.clear();
-        reportLeave(source, location);
-        return;
-      }
-      const args = getArgsRef();
-      const pos = resolvePosition(location.current.input);
-      if (args.indicator !== false) {
-        indicator.apply(pos, args.axis ?? "y");
-      }
-      // Taking over as the deepest target without a fresh enter, because an
-      // ancestor never left the hierarchy for the child to be entered. The
-      // consumer is told it entered here instead: this is the target a drop
-      // would land on now, and without it the leave would be unmatched.
-      pairing.enter(() =>
-        consumerMayThrow(() =>
-          args.onDragEnter?.({
-            source: normalizeSource(source, element),
-            position: pos,
-            location,
-            element,
-          })
-        )
-      );
-      consumerMayThrow(() =>
-        args.onDrag?.({
-          source: normalizeSource(source, element),
-          position: pos,
-          location,
-          element,
-        })
-      );
-    },
-    onDragLeave: ({ source, location }) => {
-      indicator.clear();
-      reportLeave(source, location);
-    },
-    onDrop: ({ source, location }) => {
-      // Unconditionally, and before the deepest check: an ancestor that stopped
-      // being deepest still needs its indicator dropped.
-      indicator.clear();
-      // A drop ends the drag, so the enter it closes is not also reported as a
-      // leave.
-      pairing.reset();
-      if (!isDeepest(location)) {
-        return;
-      }
-      // Asked again rather than trusted: the target list was settled on the last
-      // `dragover`, so anything that changed since — a panel switched, a
-      // permission withdrawn, the arg turned off — would otherwise land a drop
-      // this target would now refuse.
-      if (!passesGate(source, location.current.input)) {
-        return;
-      }
-      const pos = resolvePosition(location.current.input);
-      consumerMayThrow(() =>
-        getArgsRef().onDrop?.({
-          source: normalizeSource(source, element),
-          position: pos,
-          location,
-          element,
-        })
-      );
-    },
-  });
 
-  return () => {
-    cleanup();
-    indicator.clear();
-    element.removeAttribute("data-drop-target");
-  };
+      // A handled source registers its grip but moves the body it represents.
+      const moving = (source.data?.[DRAG_BODY] as Element) ?? source.element;
+      return args.acceptsSelf !== false || moving !== element;
+    },
+    resolvePosition: (input: DragInput) => {
+      const { position, axis } = getArgsRef();
+      return resolveDropPosition(element, input, { position, axis });
+    },
+    indicator: {
+      show: (position, axis) => {
+        if (position) {
+          positionIndicator.apply(position, axis);
+        }
+      },
+      clear: positionIndicator.clear,
+    },
+    libraryExtras: {
+      // Consumer metadata is a plain object; the adapter stores a keyed record.
+      getData: () =>
+        consumerMayThrow(() => getArgsRef().getData?.() ?? {}, {}) as Record<
+          string | symbol,
+          unknown
+        >,
+      getIsSticky: () =>
+        consumerMayThrow(
+          () => getArgsRef().getIsSticky?.() === true,
+          false
+        ) as boolean,
+    } satisfies Pick<
+      Parameters<typeof dropTargetForElements>[0],
+      "getData" | "getIsSticky"
+    >,
+    getArgs: getArgsRef,
+  });
 }
 
 /**

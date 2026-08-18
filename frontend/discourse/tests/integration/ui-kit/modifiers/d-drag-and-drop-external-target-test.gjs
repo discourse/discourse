@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { find, render, settled } from "@ember/test-helpers";
+import { find, render, settled, setupOnerror } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -130,6 +130,36 @@ module(
           drops,
           ["text"],
           "the same drag reaches the target whose kind it matches"
+        );
+      });
+
+      test("an external target dropped on reports a fresh enter on the next drag", async function (assert) {
+        const enters = [];
+        const recordEnter = () => enters.push("enter");
+        const drops = [];
+        const recordDrop = () => drops.push("drop");
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              {{dDragAndDropExternalTarget
+                accepts="text"
+                onDragEnter=recordEnter
+                onDrop=recordDrop
+              }}
+            >ext</div>
+          </template>
+        );
+
+        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
+        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
+
+        assert.deepEqual(drops, ["drop", "drop"], "both drops land");
+        assert.deepEqual(
+          enters,
+          ["enter", "enter"],
+          "and the second drag is entered again: a drop closes the pairing so the target does not stay entered"
         );
       });
 
@@ -753,6 +783,294 @@ module(
           events,
           ["outer:enter", "outer:leave", "inner:drop"],
           "the ancestor is left as soon as the child takes over, so a drop never lands with its enter still open"
+        );
+      });
+    });
+
+    module("an external consumer that throws", function () {
+      const blowUp = () => {
+        throw new Error("external consumer blew up");
+      };
+
+      function textTransfer() {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.setData("text/plain", "dropped text");
+        return dataTransfer;
+      }
+
+      test("a throwing external onDrop is reported and the next external drop still lands", async function (assert) {
+        const reported = [];
+        setupOnerror((error) => reported.push(error));
+
+        const notices = [];
+        const collect = (event) => notices.push(event.detail.messageKey);
+        document.addEventListener("discourse-error", collect);
+
+        const laterDrops = [];
+        const recordLaterDrop = () => laterDrops.push("drop");
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              {{dDragAndDropExternalTarget accepts="text" onDrop=blowUp}}
+            >ext</div>
+            <div
+              id="later"
+              {{dDragAndDropExternalTarget
+                accepts="text"
+                onDrop=recordLaterDrop
+              }}
+            >later</div>
+          </template>
+        );
+
+        try {
+          await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
+
+          assert.strictEqual(
+            reported.length,
+            1,
+            "the error reaches the application instead of escaping the library's dispatch"
+          );
+          assert.deepEqual(
+            notices,
+            ["broken_drag_and_drop_alert"],
+            "and is reported through the channel that reaches admins in production"
+          );
+          assert.false(
+            this.owner.lookup("service:drag-and-drop").isDragging,
+            "the service stops reporting a drag in flight"
+          );
+          assert
+            .dom("#ext")
+            .doesNotHaveClass(
+              "--drag-over-external",
+              "and the target's indicator was cleared on the way out"
+            );
+
+          await simulateExternalDrag("#later", {
+            dataTransfer: textTransfer(),
+          });
+
+          assert.deepEqual(
+            laterDrops,
+            ["drop"],
+            "so a later external drag still reaches its own target"
+          );
+        } finally {
+          document.removeEventListener("discourse-error", collect);
+        }
+      });
+
+      test("a throwing external canDrop refuses the drop, lights nothing, and is reported", async function (assert) {
+        const reported = [];
+        setupOnerror((error) => reported.push(error));
+
+        const notices = [];
+        const collect = (event) => notices.push(event.detail.messageKey);
+        document.addEventListener("discourse-error", collect);
+
+        const drops = [];
+        const recordDrop = () => drops.push("drop");
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              {{dDragAndDropExternalTarget
+                accepts="text"
+                canDrop=blowUp
+                onDrop=recordDrop
+              }}
+            >ext</div>
+          </template>
+        );
+
+        try {
+          await externalDragOver("#ext", { dataTransfer: textTransfer() });
+
+          assert
+            .dom("#ext")
+            .doesNotHaveClass(
+              "--drag-over-external",
+              "a gate that threw has decided nothing, so the target does not light"
+            );
+
+          await dragEvent("#ext", "drop", {
+            dataTransfer: textTransfer(),
+            ...centerOf("#ext"),
+          });
+
+          assert.deepEqual(drops, [], "and the drop is refused");
+          assert.true(
+            reported.length >= 1,
+            `each throw is raised for the test (${reported.length} seen)`
+          );
+          assert.strictEqual(
+            new Set(notices).size,
+            1,
+            "and every report goes through the drag-and-drop notice"
+          );
+          assert.strictEqual(
+            notices[0],
+            "broken_drag_and_drop_alert",
+            "under its own message key"
+          );
+        } finally {
+          document.removeEventListener("discourse-error", collect);
+        }
+      });
+
+      test("a throwing external getDropEffect is reported and the drop still lands", async function (assert) {
+        const reported = [];
+        setupOnerror((error) => reported.push(error));
+
+        const drops = [];
+        const recordDrop = () => drops.push("drop");
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              {{dDragAndDropExternalTarget
+                accepts="text"
+                getDropEffect=blowUp
+                onDrop=recordDrop
+              }}
+            >ext</div>
+          </template>
+        );
+
+        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
+
+        assert.deepEqual(
+          drops,
+          ["drop"],
+          "the drop lands without an effect from the consumer"
+        );
+        assert.true(
+          reported.length >= 1,
+          `and the throwing effect gate was raised (${reported.length} seen)`
+        );
+      });
+
+      test("a throwing external onDrag is reported and the drop still lands", async function (assert) {
+        const reported = [];
+        setupOnerror((error) => reported.push(error));
+
+        const drops = [];
+        const recordDrop = ({ position }) => drops.push(position);
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              {{dDragAndDropExternalTarget
+                accepts="text"
+                onDrag=blowUp
+                onDrop=recordDrop
+              }}
+            >ext</div>
+          </template>
+        );
+
+        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
+
+        assert.deepEqual(drops, [null], "the drop lands");
+        assert.true(
+          reported.length >= 1,
+          `and the throwing drag callback was raised (${reported.length} seen)`
+        );
+      });
+
+      test("a throwing external onDragLeave still clears the indicator and leaves the target usable", async function (assert) {
+        const reported = [];
+        setupOnerror((error) => reported.push(error));
+
+        const drops = [];
+        const recordDrop = () => drops.push("drop");
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              {{dDragAndDropExternalTarget
+                accepts="text"
+                onDragLeave=blowUp
+                onDrop=recordDrop
+              }}
+            >ext</div>
+          </template>
+        );
+
+        const dataTransfer = textTransfer();
+        await externalDragOver("#ext", { dataTransfer });
+        assert
+          .dom("#ext")
+          .hasClass("--drag-over-external", "lit while hovered");
+
+        await dragEvent("#ext", "dragleave", {
+          dataTransfer,
+          ...centerOf("#ext"),
+        });
+
+        assert
+          .dom("#ext")
+          .doesNotHaveClass(
+            "--drag-over-external",
+            "the indicator is cleared even though the leave callback threw"
+          );
+        assert.strictEqual(reported.length, 1, "and the throw was raised once");
+
+        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
+
+        assert.deepEqual(
+          drops,
+          ["drop"],
+          "and the target still takes a drop afterwards"
+        );
+      });
+
+      test("a throwing external onDragEnter does not cost the target its drop", async function (assert) {
+        const reported = [];
+        setupOnerror((error) => reported.push(error));
+
+        const drops = [];
+        const recordDrop = ({ position }) => drops.push(position);
+        const leaves = [];
+        const recordLeave = () => leaves.push("leave");
+
+        await render(
+          <template>
+            <div
+              id="ext"
+              {{dDragAndDropExternalTarget
+                accepts="text"
+                onDragEnter=blowUp
+                onDragLeave=recordLeave
+                onDrop=recordDrop
+              }}
+            >ext</div>
+          </template>
+        );
+
+        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
+
+        assert.deepEqual(
+          drops,
+          [null],
+          "the drop still lands (with no position, since the target asked for none)"
+        );
+        assert.deepEqual(
+          leaves,
+          [],
+          "a drop ends the drag without a leave, exactly as when the enter did not throw"
+        );
+        assert.strictEqual(
+          reported.length,
+          1,
+          "and the throwing enter was raised once"
         );
       });
     });

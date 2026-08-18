@@ -1,31 +1,32 @@
 import {
   dropTargetForExternal,
   type ExternalDragPayload as NativeExternalDragPayload,
-  type ExternalDropTargetEventBasePayload,
-  type ExternalDropTargetGetFeedbackArgs,
 } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
+import type {
+  DragLocationHistory,
+  Input,
+} from "@atlaskit/pragmatic-drag-and-drop/types";
 import { modifier } from "ember-modifier";
+import {
+  createPositionIndicator,
+  type DropAxis,
+  type DropEffect,
+  type DropPosition,
+  registerDropTargetKernel,
+  resolveDropPosition,
+} from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
 import {
   decorateExternalSource,
   type ExternalDragKind,
   type ExternalDragPayload,
   matchesExternalKind,
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
-import {
-  createEnterLeavePairing,
-  createPositionIndicator,
-  type DropAxis,
-  type DropEffect,
-  type DropPosition,
-  isDeepestTarget,
-  resolveDropPosition,
-} from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
 /** The pointer position as the underlying library reports it. */
-type DragInput = ExternalDropTargetGetFeedbackArgs["input"];
+type DragInput = Input;
 
 /** The drag's initial, previous and current locations. */
-type DragLocation = ExternalDropTargetEventBasePayload["location"];
+type DragLocation = DragLocationHistory;
 
 /** What a synchronous gate (`canDrop`, `getDropEffect`) is asked about. */
 export interface ExternalDropTargetFeedback {
@@ -86,8 +87,7 @@ interface DDragAndDropExternalTargetSignature {
       position?: DropPosition;
 
       /**
-       * Drives the indicator class selection and the midpoint position math,
-       * exactly as on the element target.
+       * Drives the indicator class selection and midpoint position math.
        *
        * Supplying either this or `position` is what opts a target into
        * resolving a position: without one, callbacks are told `position: null`
@@ -182,177 +182,41 @@ export function registerDragAndDropExternalTarget(
   let isIndicating = false;
   const positionIndicator = createPositionIndicator(element);
 
-  const resolvePosition = (input: DragInput): DropPosition | null => {
-    const { position, axis } = getArgsRef();
-    if (!position && !axis) {
-      return null;
-    }
-    return resolveDropPosition(element, input, { position, axis });
-  };
-
-  const showIndicator = (position: DropPosition | null) => {
-    if (position) {
-      positionIndicator.apply(position, getArgsRef().axis ?? "y");
-      return;
-    }
-    if (isIndicating) {
-      return;
-    }
-    element.classList.add(INDICATOR_CLASS);
-    isIndicating = true;
-  };
-
-  const clearIndicator = () => {
-    positionIndicator.clear();
-    if (!isIndicating) {
-      return;
-    }
-    element.classList.remove(INDICATOR_CLASS);
-    isIndicating = false;
-  };
-
-  const acceptsSource = (sourcePayload: NativeExternalDragPayload) =>
-    matchesExternalKind(getArgsRef().accepts, sourcePayload);
-
-  const isDeepest = (location: DragLocation) =>
-    isDeepestTarget(location, element);
-
-  const pairing = createEnterLeavePairing();
-
-  /**
-   * Closes an open enter, if there is one. Mirrors the element target: an
-   * ancestor superseded by one of its own children is never sent a leave by the
-   * adapter, so it has to synthesise one or the enter stays open for the rest of
-   * the drag.
-   */
-  const reportLeave = (
-    source: NativeExternalDragPayload,
-    location: DragLocation
-  ) =>
-    pairing.leave(() =>
-      getArgsRef().onDragLeave?.({
-        source: decorateExternalSource(source),
-        position: null,
-        location,
-        element,
-      })
-    );
-
-  // See the note in `registerDragAndDropSource`.
-  element.setAttribute("data-drop-target-external", "");
-
-  // One gate for feedback time and drop time, as on the element target:
-  // consumers put authorization in `canDrop`, so re-asking at drop is the
-  // difference between refusing and acting on stale permission.
-  const passesGate = (source: NativeExternalDragPayload, input: DragInput) => {
-    if (!acceptsSource(source)) {
-      return false;
-    }
-    const args = getArgsRef();
-    if (!args.canDrop) {
-      return true;
-    }
-    return (
-      args.canDrop({
-        source: decorateExternalSource(source),
-        input,
-        element,
-      }) !== false
-    );
-  };
-
-  const cleanup = dropTargetForExternal({
+  return registerDropTargetKernel({
     element,
-    canDrop: ({ source, input }) => passesGate(source, input),
-    getDropEffect: ({ source, input }) => {
-      const args = getArgsRef();
-      return args.getDropEffect?.({
-        source: decorateExternalSource(source),
-        input,
-        element,
-      });
+    attribute: "data-drop-target-external",
+    register: dropTargetForExternal,
+    decorateSource: decorateExternalSource,
+    accepts: (source: NativeExternalDragPayload) =>
+      matchesExternalKind(getArgsRef().accepts, source),
+    resolvePosition: (input: DragInput) => {
+      const { position, axis } = getArgsRef();
+      if (!position && !axis) {
+        return null;
+      }
+      return resolveDropPosition(element, input, { position, axis });
     },
-    onDragEnter: ({ source, location }) => {
-      // Ceasing to be the deepest target makes any indicator this element is
-      // showing stale, and an ancestor is kept in the hierarchy rather than
-      // sent a leave, so clearing here is the only chance to drop it.
-      if (!isDeepest(location)) {
-        clearIndicator();
-        reportLeave(source, location);
-        return;
-      }
-      const args = getArgsRef();
-      const position = resolvePosition(location.current.input);
-      if (args.indicator !== false) {
-        showIndicator(position);
-      }
-      pairing.enter(() =>
-        args.onDragEnter?.({
-          source: decorateExternalSource(source),
-          position,
-          location,
-          element,
-        })
-      );
+    indicator: {
+      show: (position, axis) => {
+        if (position) {
+          positionIndicator.apply(position, axis);
+          return;
+        }
+        if (!isIndicating) {
+          element.classList.add(INDICATOR_CLASS);
+          isIndicating = true;
+        }
+      },
+      clear: () => {
+        positionIndicator.clear();
+        if (isIndicating) {
+          element.classList.remove(INDICATOR_CLASS);
+          isIndicating = false;
+        }
+      },
     },
-    onDrag: ({ source, location }) => {
-      if (!isDeepest(location)) {
-        clearIndicator();
-        reportLeave(source, location);
-        return;
-      }
-      const args = getArgsRef();
-      const position = resolvePosition(location.current.input);
-      if (args.indicator !== false) {
-        showIndicator(position);
-      }
-      // Taking over as the deepest target without a fresh enter; see the element
-      // target, which pairs the same way.
-      pairing.enter(() =>
-        args.onDragEnter?.({
-          source: decorateExternalSource(source),
-          position,
-          location,
-          element,
-        })
-      );
-      args.onDrag?.({
-        source: decorateExternalSource(source),
-        position,
-        location,
-        element,
-      });
-    },
-    onDragLeave: ({ source, location }) => {
-      clearIndicator();
-      reportLeave(source, location);
-    },
-    onDrop: ({ source, location }) => {
-      clearIndicator();
-      pairing.reset();
-      if (!isDeepest(location)) {
-        return;
-      }
-      // The adapter reuses the target stack from the last `dragover` and never
-      // re-asks `canDrop` at drop time, so a gate that flipped false in the
-      // final moments before release would otherwise still act.
-      if (!passesGate(source, location.current.input)) {
-        return;
-      }
-      getArgsRef().onDrop?.({
-        source: decorateExternalSource(source),
-        position: resolvePosition(location.current.input),
-        location,
-        element,
-      });
-    },
+    getArgs: getArgsRef,
   });
-
-  return () => {
-    cleanup();
-    clearIndicator();
-    element.removeAttribute("data-drop-target-external");
-  };
 }
 
 /**
