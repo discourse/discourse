@@ -7320,9 +7320,9 @@ en:
           anonymous_human: "Anonymous"
           likely_crawler: "Likely crawlers"
         partial:
-          retention: "Detailed pageview activity before %{date} is no longer available, so these results cover only part of the selected date range."
+          retention: "Pageview data before %{date} is no longer available, so these results cover only part of the selected date range."
           pageview_limit: "Results include the most recent %{limit} pageviews, beginning %{date} at %{time}. Earlier pageviews in the selected date range are not included."
-          combined: "Results include the most recent %{limit} pageviews, beginning %{pageviewLimitDate} at %{pageviewLimitTime}. Earlier pageviews in the selected date range are not included; detailed activity before %{date} is no longer available."
+          combined: "Results include the most recent %{limit} pageviews, beginning %{pageviewLimitDate} at %{pageviewLimitTime}. Earlier pageviews in the selected date range are not included; pageview data before %{date} is no longer available."
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
