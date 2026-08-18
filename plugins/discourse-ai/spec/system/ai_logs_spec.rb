@@ -51,6 +51,20 @@ RSpec.describe "AI logs admin page" do
     expect(ai_logs_page).to have_log(log)
   end
 
+  it "keeps focus in the feature input while typing" do
+    ai_logs_page.visit
+
+    feature_input =
+      find("input[placeholder='#{I18n.t("js.discourse_ai.logs.feature_placeholder")}']")
+    feature_input.click
+    "abc".each_char { |char| feature_input.send_keys(char) }
+
+    expect(feature_input.value).to eq("abc")
+    expect(page.evaluate_script("document.activeElement.placeholder")).to eq(
+      I18n.t("js.discourse_ai.logs.feature_placeholder"),
+    )
+  end
+
   it "restores model and period filters from the URL" do
     other_model = Fabricate(:llm_model)
     other_log =

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
@@ -63,6 +63,7 @@ export default class AiLogs extends Component {
     this.models = this.args.model.models || [];
     this.features = this.mergedFeatures(this.args.model.features, this.logs);
     this.initializeFilters(this.args.queryParams);
+    this.filterFormData = this.buildFilterFormData();
 
     if (this.args.queryParams.details) {
       next(() =>
@@ -119,8 +120,9 @@ export default class AiLogs extends Component {
       : new Date();
   }
 
-  @cached
-  get filterFormData() {
+  // must stay referentially stable: a new object passed as Form @data
+  // recreates the form and drops input focus
+  buildFilterFormData() {
     return {
       period: this.selectedPeriod,
       date_range: { from: this.startDate, to: this.endDate },
