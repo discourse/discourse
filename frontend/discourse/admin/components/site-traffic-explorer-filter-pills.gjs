@@ -125,7 +125,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
   filterDescription(filter) {
     return i18n("admin.site_traffic_explorer.filter_description", {
       filter: escapeExpression(this.filterLabel(filter.key)),
-      value: escapeExpression(filter.values[0].label),
+      value: `<strong class="site-traffic-explorer__filter-pill-values">${escapeExpression(filter.values[0].label)}</strong>`,
     });
   }
 
@@ -136,14 +136,14 @@ export default class SiteTrafficExplorerFilterPills extends Component {
       .map((value) => `<strong>${escapeExpression(value.label)}</strong>`)
       .join(i18n("admin.site_traffic_explorer.filter_value_separator"));
     const remainingCount = filter.values.length - visibleCount;
-    const values = `<span class="site-traffic-explorer__filter-pill-values">&nbsp;${visibleValues}</span>`;
+    const values = `<span class="site-traffic-explorer__filter-pill-values">${visibleValues}</span>`;
 
     return i18n("admin.site_traffic_explorer.grouped_filter_description", {
       filter: escapeExpression(this.filterLabel(filter.key)),
       values,
       remaining:
         remainingCount > 0
-          ? `<span class="site-traffic-explorer__filter-pill-remaining">&nbsp;${i18n(
+          ? `<span class="site-traffic-explorer__filter-pill-remaining">${i18n(
               "admin.site_traffic_explorer.additional_filter_values",
               { count: remainingCount }
             )}</span>`

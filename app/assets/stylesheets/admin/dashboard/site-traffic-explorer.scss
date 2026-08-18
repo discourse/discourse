@@ -46,7 +46,7 @@
   &__filter-pill {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-1);
+    gap: 0;
     min-width: 0;
     max-width: 100%;
     padding-inline-start: var(--space-3);
@@ -91,17 +91,20 @@
 
   &__filter-pill-values {
     min-width: 0;
+    margin-inline-start: var(--space-1);
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   &__filter-pill-remaining {
     flex: 0 0 auto;
+    margin-inline-start: var(--space-1);
   }
 
   &__filter-remove {
     flex: 0 0 auto;
-    padding: var(--space-1) var(--space-2);
+    padding-block: var(--space-1);
+    padding-inline: var(--space-1) var(--space-2);
   }
 
   &__apply-filters {
