@@ -998,16 +998,15 @@ fr:
     title: "Connexion par e-mail"
   email_login_code:
     invalid_code: "Ce code est incorrect ou a expiré. Veuillez demander un nouveau code et réessayer."
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navigateur inconnu"
     device:
       android: "Appareil Android"
       chromebook: "Chrome OS"
@@ -1031,10 +1030,6 @@ fr:
     traffic_types:
       logged_in: "Utilisateurs connectés"
       anonymous: "Anonymes"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Une erreur s'est produite lors de la modification de votre adresse e-mail. L'adresse est peut-être déjà utilisée ?"
     doesnt_exist: "Cette adresse e-mail n'est pas associée à votre compte."
@@ -2648,7 +2643,6 @@ fr:
     enable_new_checkbox_style: "Active le nouveau style des cases à cocher FormKit."
     enable_new_post_reactions_menu: "Active le menu repensé des mentions J'aime et des réactions aux publications, avec défilement infini et expérience mobile native."
     enable_composer_redesign: "Active le panneau d'édition repensé."
-    enable_new_composer_actions: "Active le menu repensé des actions du panneau d'édition et le bouton combiné d'enregistrement, avec les options de murmure, de non-remontée et de retrait des listes affichées à côté de l'action d'enregistrement."
     prioritize_recently_used_tags: "Lors de l'ajout d'étiquettes pendant la création ou la modification d'un sujet, affiche en haut de la liste les étiquettes récemment utilisées par le membre sur ses propres sujets, avant les étiquettes les plus populaires du forum."
     experimental_impersonation_time_limit_minutes: "Durée avant la fin automatique d'une session pendant laquelle un administrateur se fait passer pour un autre utilisateur."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."

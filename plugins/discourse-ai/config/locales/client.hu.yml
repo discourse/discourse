@@ -131,6 +131,41 @@ hu:
         periods:
           last_day: "Elmúlt 24 óra"
           custom: "Egyéni…"
+      logs:
+        short_title: "Naplók"
+        retry: "Próbáld újra"
+        apply: "Alkalmaz"
+        successful: "Sikeres"
+        failed: "Sikertelen"
+        unknown: "Ismeretlen"
+        topic_id: "Témaazonosító"
+        post_id: "Hozzászólás-azonosító"
+        time: "Idő"
+        when: "Mikor"
+        outcome: "Eredmény"
+        feature: "Funkció"
+        request: "Kérés"
+        provider: "Szolgáltató"
+        user: "Felhasználó"
+        context: "Kontextus"
+        topic: "Téma"
+        post: "Bejegyzés"
+        post_short: "%{id}. Bejegyzés"
+        duration: "Időtartam"
+        actions: "Műveletek"
+        periods:
+          day: "Elmúlt 24 óra"
+          week: "Elmúlt 7 nap"
+          custom: "Egyéni"
+        detail:
+          request: "Kérés"
+          response: "Válasz"
+          context: "Kontextus"
+          network_error: "Hálózati hiba"
+        retention:
+          summary_stage: "Összefoglaló"
+          deleted_stage: "Törölve"
+          save: "Mentés"
       ai_agent:
         name: "Név"
         edit: "Szerkesztés"
@@ -267,6 +302,7 @@ hu:
           fake: "Egyéni"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Időtartam:"
           request: "Kérés"
           response: "Válasz"
           next_log: "Következő"

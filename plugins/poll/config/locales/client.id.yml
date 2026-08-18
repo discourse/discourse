@@ -33,6 +33,8 @@ id:
       cast-votes:
         title: "Gunakan suaramu"
         label: "Pilih sekarang!"
+      keep-vote:
+        label: "Kembali"
       show-results:
         title: "Lihat hasil polling"
         label: "Hasil"

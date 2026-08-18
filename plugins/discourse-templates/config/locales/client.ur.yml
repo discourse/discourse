@@ -11,7 +11,7 @@ ur:
     admin:
       site_settings:
         categories:
-          discourse_templates: "ڈسکورس سانچے"
+          discourse_templates: "Discourse Templates"
   js:
     keyboard_shortcuts_help:
       templates:

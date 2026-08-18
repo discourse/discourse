@@ -28,6 +28,8 @@ zh_TW:
       cast-votes:
         title: "投你的票"
         label: "現在投票！"
+      keep-vote:
+        label: "上一步"
       show-results:
         title: "顯示投票結果"
         label: "結果"

@@ -51,6 +51,8 @@ fi:
       cast-votes:
         title: "Antakaa äänenne"
         label: "Äänestä nyt!"
+      keep-vote:
+        label: "Takaisin"
       show-results:
         title: "Näytä kyselyn tulos"
         label: "Tulokset"

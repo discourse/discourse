@@ -6707,7 +6707,6 @@ zh_CN:
             kpi:
               total_searches:
                 label: "总搜索次数"
-                tooltip: "社区成员进行的搜索次数。"
               no_result_rate:
                 label: "无结果率"
                 tooltip: "成员未点击任何结果的搜索百分比 (0% CTR)。这表示成员可能正在搜索您的社区中没有的内容。"
@@ -6717,7 +6716,6 @@ zh_CN:
               status: "状态"
             trending:
               title: "热门搜索"
-              tooltip: "成员中最热门的搜索词。"
               empty: "此期间没有任何搜索。"
             content_gaps:
               title: "内容差距"

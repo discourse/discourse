@@ -33,9 +33,6 @@ ru:
             topic_id:
               label: ID темы
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "Чат"
       invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
       preferences:
         all_events_description: "Все события форума"

@@ -454,15 +454,14 @@ sl:
     success_unapproved: "Uspešno ste zamenjali geslo."
   email_login:
     title: "Prijava z e-naslovom"
+  browsers:
+    chrome: "Google Chrome"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "neznan brskalnik"
     device:
       android: "Android naprava"
       ipad: "iPad"
@@ -483,10 +482,6 @@ sl:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonimni"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Prišlo je do napake med spremembo vašega e-naslova. Mogoče je e-naslov že uporabljen?"
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."

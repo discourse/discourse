@@ -337,6 +337,8 @@ pl_PL:
       remove_upload: "Usuń plik"
       react: "Zareaguj z emoji"
       reply: "Odpowiedz"
+      message_actions: "Czynności wiadomości"
+      more_message_actions: "Więcej czynności związanych z wiadomościami"
       edit: "Edytuj"
       copy_link: "Skopiuj link"
       copy_text: "Skopiuj tekst"
@@ -571,6 +573,13 @@ pl_PL:
         type: "Wiadomość na czacie"
         message_in_channel: "Kanał"
       reactions:
+        add: "Zareaguj za pomocą %{emoji}"
+        remove: "Usuń swoją reakcję %{emoji}"
+        counted:
+          one: "%{emoji} reakcja, %{count} osoba"
+          few: "%{emoji} reakcja, %{count} osoby"
+          many: "%{emoji} reakcja, %{count} osób"
+          other: "%{emoji} reakcja, %{count} osób"
         only_you: "<span>Zareagowałeś za pomocą </span>:%{emoji}:"
         you_and_single_user: "<span>Ty i %{username} zareagowaliście za pomocą </span>:%{emoji}:"
         you_and_multiple_users: "<span>Ty, %{commaSeparatedUsernames} i %{username} zareagowaliście za pomocą </span>:%{emoji}:"

@@ -1092,16 +1092,15 @@ sk:
   email_login:
     invalid_token: 'Ups! Odkaz, ktorý ste použili, už nefunguje. Teraz <a href="%{base_url}/login">sa</a> môžete prihlásiť. Ak ste zabudli svoje heslo, môžete <a href="%{base_url}/password-reset">si vyžiadať odkaz na</a> jeho obnovenie.'
     title: "Prihlásenie e-mailom"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Aplikácia DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Aplikácia DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "neznámy prehliadač"
     device:
       android: "Zariadenie Android"
       chromebook: "Chrome OS"
@@ -1124,10 +1123,6 @@ sk:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonymný"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Nastala chyba pri aktualizácii emailu. Nieje už náhodou použitý?"
     doesnt_exist: "Táto e-mailová adresa nie je priradená k vášmu účtu."

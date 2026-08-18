@@ -164,7 +164,6 @@ fr:
     ai_translation_backfill_hourly_rate: "Nombre de publications et de sujets à traduire par heure pendant les opérations de traitement rétroactif. Définissez cette valeur sur 0 pour désactiver le traitement rétroactif automatique des traductions du contenu existant."
     ai_translation_backfill_parallel_jobs: "Nombre de tâches parallèles de localisation des publications à exécuter à chaque cycle de traitement rétroactif. Des valeurs plus élevées augmentent le débit, mais consomment davantage de ressources."
     ai_usage_rollup_after_days: "Nombre de jours pendant lesquels conserver les statistiques d'utilisation de l'IA par requête avant de les regrouper dans des agrégats quotidiens. Définissez cette valeur sur 0 pour désactiver le regroupement."
-    ai_audit_logs_purge_after_days: "Supprimer les journaux d'audit de l'API d'IA antérieurs à ce nombre de jours. La valeur par défaut est d'environ 6 mois. Définissez cette valeur sur 0 pour les conserver indéfiniment."
   reviewables:
     reasons:
       flagged_by_toxicity: L'extension IA l'a signalé après l'avoir classé comme toxique.

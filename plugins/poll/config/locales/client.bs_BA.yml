@@ -30,6 +30,8 @@ bs_BA:
       cast-votes:
         title: "ukupno glasova"
         label: "Glasaj"
+      keep-vote:
+        label: "Prethodno"
       show-results:
         title: "Prikaži rezultate ankete"
         label: "Rezultati"

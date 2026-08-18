@@ -124,6 +124,38 @@ hr:
         periods:
           last_day: "Posljednja 24 sata"
           custom: "Prilagođeno..."
+      logs:
+        short_title: "Zapisi"
+        apply: "Primijeni"
+        successful: "Uspješno"
+        failed: "Neuspješno"
+        unknown: "Nepoznato"
+        topic_id: "ID teme"
+        post_id: "ID objave"
+        time: "Vrijeme"
+        when: "Kada"
+        request: "Zahtjev"
+        provider: "Pružatelj usluga"
+        user: "Korisnik"
+        context: "Kontekst"
+        topic: "Tema"
+        post: "Objava"
+        post_short: "Objava %{id}"
+        duration: "Trajanje"
+        actions: "Akcije"
+        periods:
+          hour: "Posljednji sat"
+          day: "Posljednja 24 sata"
+          week: "Zadnjih 7 dana"
+          custom: "Posebna"
+        detail:
+          request: "Zahtjev"
+          response: "Odgovor"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Sažetak"
+          deleted_stage: "Izbrisao"
+          save: "Spremi"
       ai_agent:
         name: "Ime"
         edit: "Uredi"
@@ -243,6 +275,7 @@ hr:
           fake: "Posebna"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Trajanje:"
           request: "Zahtjev"
           response: "Odgovor"
           next_log: "Sljedeći"

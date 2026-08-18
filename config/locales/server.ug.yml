@@ -936,16 +936,15 @@ ug:
   email_login:
     invalid_token: 'ئاپلا! سىز ئىشلەتكەن ئۇلانما ئەمدى ئىشلىمەيدۇ. سىز ھازىر <a href="%{base_url}/login">تىزىمغا كىر</a>ىڭ. ئەگەر ئىم ئۇنۇتقان بولسىڭىز، <a href="%{base_url}/password-reset">ئۇلانما ئىلتىماس</a> قىلىپ ئىم ئەسلىگە قايتۇرۇڭ.'
     title: "ئېلخەتتە تىزىمغا كىرىش"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub ئەپى"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub ئەپى"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "نامەلۇم توركۆرگۈ"
     device:
       android: "Android ئۈسكۈنىسى"
       chromebook: "Chrome OS"
@@ -968,10 +967,6 @@ ug:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "نامسىز"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "ئېلخەت ئادرېسىڭىزنى ئۆزگەرتىۋاتقاندا خاتالىق كۆرۈلگەن. بەلكىم ئۇ ئادرېس ئاللىبۇرۇن ئىشلىتىلگەن بولۇشى مۇمكىن؟"
     doesnt_exist: "ئۇ ئېلخەت ئادرېسى ھېساباتىڭىز بىلەن باغلانمىغان."

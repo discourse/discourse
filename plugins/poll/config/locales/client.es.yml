@@ -54,6 +54,8 @@ es:
       cast-votes:
         title: "Emite tus votos"
         label: "Votar"
+      keep-vote:
+        label: "Atrás"
       show-results:
         title: "Mostrar los resultados de la encuesta"
         label: "Resultados"

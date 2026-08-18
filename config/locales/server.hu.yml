@@ -954,16 +954,15 @@ hu:
   email_login:
     invalid_token: 'Hoppá! A használt link már nem működik. <a href="%{base_url}/login">Bejelentkezés</a> most. Ha elfelejtette jelszavát, <a href="%{base_url}/password-reset">kérhet hivatkozást</a> a visszaállításhoz.'
     title: "Bejelentkezés e-maillel"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub alkalmazás"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub alkalmazás"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "ismeretlen böngésző"
     device:
       android: "Android eszköz"
       chromebook: "Chrome OS"
@@ -986,10 +985,6 @@ hu:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Névtelen"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Hiba történt az e-mail-cím módosításakor. Lehet, hogy már használatban van?"
     doesnt_exist: "Ez az e-mail-cím nincs a fiókjához társítva."

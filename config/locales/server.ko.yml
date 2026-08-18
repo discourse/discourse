@@ -641,16 +641,15 @@ ko:
     success_unapproved: "비밀번호를 변경했습니다."
   email_login:
     title: "이메일 로그인"
+  browsers:
+    chrome: "구글 크롬"
+    discoursehub: "DiscourseHub 앱"
+    edge: "마이크로소프트 엣지"
+    firefox: "파이어폭스"
+    ie: "인터넷 익스플로러"
+    opera: "오페라"
+    safari: "사파리"
   user_auth_tokens:
-    browser:
-      chrome: "구글 크롬"
-      discoursehub: "DiscourseHub 앱"
-      edge: "마이크로소프트 엣지"
-      firefox: "파이어폭스"
-      ie: "인터넷 익스플로러"
-      opera: "오페라"
-      safari: "사파리"
-      unknown: "알수없는 브라우저"
     device:
       android: "Android 디바이스"
       chromebook: "크롬 OS"
@@ -673,10 +672,6 @@ ko:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "익명"
-    browsers:
-      edge: "마이크로소프트 엣지"
-      firefox: "파이어폭스"
-      safari: "사파리"
   change_email:
     error: "이메일 주소 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일일 수 있습니다."
     doesnt_exist: "해당 이메일 주소는 계정과 연결되어 있지 않습니다."

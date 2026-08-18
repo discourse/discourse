@@ -129,6 +129,39 @@ da:
         periods:
           last_day: "Seneste 24 timer"
           custom: "Tilpasset..."
+      logs:
+        short_title: "Logs"
+        apply: "Anvend"
+        successful: "Gennemført"
+        failed: "Fejlet"
+        unknown: "Ukendt"
+        topic_id: "Emne ID"
+        post_id: "Indlæg ID"
+        time: "Tidspunkt"
+        when: "Hvorår"
+        model: "Model"
+        request: "Anmod om medlemskab"
+        provider: "Udbyder"
+        user: "Bruger"
+        context: "Kontekst"
+        topic: "Emne"
+        post: "Indlæg"
+        post_short: "Indlæg %{id}"
+        duration: "Varighed"
+        actions: "Handlinger"
+        periods:
+          day: "Seneste 24 timer"
+          week: "Seneste 7 dage"
+          custom: "Tilpasset"
+        detail:
+          request: "Anmod om medlemskab"
+          response: "Svar"
+          context: "Kontekst"
+          network_error: "Netværksfejl"
+        retention:
+          summary_stage: "Statistik"
+          deleted_stage: "Slettet"
+          save: "Gem"
       ai_agent:
         name: "Navn"
         edit: "Rediger"
@@ -253,6 +286,7 @@ da:
       ai_bot:
         llm: "Model:"
         debug_ai_modal:
+          duration_label: "Varighed:"
           request: "Anmod om medlemskab"
           response: "Svar"
           next_log: "Næste"

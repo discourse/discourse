@@ -123,6 +123,35 @@ sl:
         periods:
           last_day: "Zadnjih 24 ur"
           custom: "Po meri..."
+      logs:
+        short_title: "Dnevniki"
+        apply: "Uporabi"
+        successful: "Uspešno"
+        failed: "Spodletelo"
+        unknown: "Neznano"
+        topic_id: "ID teme"
+        post_id: "ID prispevka"
+        time: "Čas"
+        when: "Kdaj"
+        request: "Zahteva"
+        user: "Uporabnik"
+        context: "Kontekst"
+        topic: "Tema"
+        post: "Prispevek"
+        post_short: "Prispevek %{id}"
+        duration: "Trajanje"
+        actions: "Akcije"
+        periods:
+          day: "Zadnjih 24 ur"
+          week: "Zadnjih 7 dni"
+          custom: "Po meri"
+        detail:
+          request: "Zahteva"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Povzetek"
+          deleted_stage: "Izbrisano"
+          save: "Shrani"
       ai_agent:
         name: "Ime"
         edit: "Uredi"
@@ -231,6 +260,7 @@ sl:
           fake: "Po meri"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Trajanje:"
           request: "Zahteva"
           next_log: "Naprej"
           previous_log: "Prejšnja"

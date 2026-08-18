@@ -493,16 +493,15 @@ te:
     success_unapproved: "మీరు విజయవంతంగా సంకేతపదం మార్చారు."
   email_login:
     title: "ఇమెయిల్ లాగిన్"
+  browsers:
+    chrome: "గూగుల్ క్రోమ్"
+    discoursehub: "DiscourseHub యాప్"
+    edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
+    firefox: "ఫైర్‌ఫాక్స్"
+    ie: "ఇంటర్నెట్ ఎక్స్ ప్లోరర్"
+    opera: "ఒపేరా"
+    safari: "సఫారి"
   user_auth_tokens:
-    browser:
-      chrome: "గూగుల్ క్రోమ్"
-      discoursehub: "DiscourseHub యాప్"
-      edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
-      firefox: "ఫైర్‌ఫాక్స్"
-      ie: "ఇంటర్నెట్ ఎక్స్ ప్లోరర్"
-      opera: "ఒపేరా"
-      safari: "సఫారి"
-      unknown: "తెలియని బ్రౌజర్"
     device:
       android: "ఆండ్రాయిడ్ పరికరం"
       chromebook: "క్రోమ్ OS"
@@ -525,10 +524,6 @@ te:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "అనామక"
-    browsers:
-      edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
-      firefox: "ఫైర్‌ఫాక్స్"
-      safari: "సఫారి"
   change_email:
     error: "మీ ఈమెయిల్ చిరునామా మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఈసరికే వాడుకలో ఉందా?"
     confirm: "నిర్ధారించండి"
