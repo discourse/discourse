@@ -119,6 +119,16 @@ module PageObjects
         self
       end
 
+      def filter_by_clicking_row(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          within("[data-test-site-traffic-row]", text: label) do
+            find(".site-traffic-explorer__row-filter-target").click
+          end
+        end
+        find("[data-test-site-traffic-apply-filters]").click
+        self
+      end
+
       def select_filter_row(card:, label:)
         within("[data-test-site-traffic-card='#{card}']") do
           find("input[type='checkbox'][aria-label^='Filter by #{label},']").click

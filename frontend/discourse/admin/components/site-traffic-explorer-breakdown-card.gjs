@@ -184,6 +184,13 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                       checked={{this.isSelected row}}
                       {{on "change" (fn this.toggleFilter row)}}
                     />
+                    <button
+                      type="button"
+                      class="site-traffic-explorer__row-filter-target"
+                      aria-label={{this.filterLabel row}}
+                      tabindex="-1"
+                      {{on "click" (fn this.toggleFilter row)}}
+                    ></button>
                     <a
                       href={{rowLink.href}}
                       rel={{rowLink.rel}}
