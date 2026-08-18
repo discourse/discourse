@@ -405,6 +405,7 @@ en:
           topic_title_translator: "Topic title translator"
           short_text_translator: "Short text translator"
           schedule_untranslated: "Schedule translations"
+          schedule_topic_only_success: "Scheduled translation for the topic."
           schedule_topic_success:
             one: "Scheduled translation for %{count} untranslated post."
             other: "Scheduled translation for %{count} untranslated posts."
