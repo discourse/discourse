@@ -152,6 +152,11 @@ class EmailUpdater
     end
     @user.reload
 
+    # the user acted on an email sent to the new address, so it is proven
+    # deliverable — but adding a secondary says nothing about the primary
+    EmailBounceScore.reset!(new_email)
+    @user.user_stat&.reset_bounce_score! if old_email.present?
+
     DiscourseEvent.trigger(:user_updated, @user)
     @user.set_automatic_groups
   end

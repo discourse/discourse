@@ -111,6 +111,7 @@ RSpec.describe UsersController do
             bounce_score: 3.0,
             reset_bounce_score_after: 1.week.from_now,
           )
+          EmailBounceScore.record_bounce!(user_deferred.email, 3.0)
 
           put "/u/activate-account/#{email_token.token}"
           expect(response.status).to eq(200)
@@ -118,6 +119,7 @@ RSpec.describe UsersController do
           user_deferred.user_stat.reload
           expect(user_deferred.user_stat.bounce_score).to eq(0)
           expect(user_deferred.user_stat.reset_bounce_score_after).to eq(nil)
+          expect(EmailBounceScore.score_for(user_deferred.email)).to eq(0)
         end
       end
 
