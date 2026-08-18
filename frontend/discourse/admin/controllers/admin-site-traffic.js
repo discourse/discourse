@@ -7,6 +7,8 @@ import {
   PERIOD_CUSTOM,
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
+import { countryName } from "discourse/admin/lib/format-country";
+import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
@@ -21,6 +23,7 @@ const FILTER_KEYS = [
 ];
 
 const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
+const DIMENSION_LIMIT = 50;
 const TRAFFIC_TYPE_LABEL_KEYS = {
   logged_in: "logged_in_human",
   anonymous: "anonymous_human",
@@ -49,8 +52,16 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked network = null;
   @tracked browser = null;
   @tracked ip = null;
+  @tracked traffic = null;
+  @tracked loading = false;
+  @tracked fetchError = null;
+  @tracked draftFilters = Object.fromEntries(
+    FILTER_KEYS.map((key) => [key, []])
+  );
 
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
+
+  #fetchId = 0;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -83,59 +94,42 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   get activeFilters() {
-    return FILTER_KEYS.flatMap((key) => {
-      const values =
-        key === "traffic_type"
-          ? this.traffic_type === null
-            ? []
-            : this.selectedTrafficTypes
-          : [this[key]];
-
-      return values
-        .filter((value) => value !== null)
-        .map((value) => {
-          const rows = this.traffic?.dimensions?.[DIMENSION_KEYS[key]] ?? [];
-          const activeFilter = this.traffic?.active_filters?.find(
-            (filter) => filter.key === key && filter.value === value
-          );
-          const label =
-            activeFilter?.label ??
-            rows.find((row) => row.value === value)?.label;
-
-          return {
-            key,
-            value,
-            label:
-              label ??
-              (key === "traffic_type"
-                ? i18n(
-                    `admin.site_traffic_explorer.series.${TRAFFIC_TYPE_LABEL_KEYS[value]}`
-                  )
-                : key === "referrer" && value === ""
-                  ? i18n("admin.site_traffic_explorer.direct_or_unknown")
-                  : value),
-          };
-        });
-    });
-  }
-
-  get selectedTrafficTypes() {
-    if (this.traffic_type === null) {
-      return TRAFFIC_TYPES;
-    }
-
-    const selected = this.traffic_type.split(",");
-    return TRAFFIC_TYPES.filter((trafficType) =>
-      selected.includes(trafficType)
+    return FILTER_KEYS.filter((key) => this.draftFilters[key].length).map(
+      (key) => ({
+        key,
+        pending: !this.#sameValues(
+          this.draftFilters[key],
+          this.#appliedValues(key)
+        ),
+        values: this.draftFilters[key].map((value) => ({
+          value,
+          label: this.#filterLabel(key, value),
+        })),
+      })
     );
   }
 
-  get traffic() {
-    return this.model?.traffic ?? null;
+  get selectedTrafficTypes() {
+    const values = this.draftFilters.traffic_type;
+    if (values.length === 0) {
+      return TRAFFIC_TYPES;
+    }
+
+    return TRAFFIC_TYPES.filter((trafficType) => values.includes(trafficType));
   }
 
-  get fetchError() {
-    return this.model?.fetchError ?? null;
+  get hasPendingFilters() {
+    return FILTER_KEYS.some(
+      (key) =>
+        !this.#sameValues(this.draftFilters[key], this.#appliedValues(key))
+    );
+  }
+
+  get pendingFilterCount() {
+    return FILTER_KEYS.reduce(
+      (count, key) => count + this.draftFilters[key].length,
+      0
+    );
   }
 
   #customDate(value, edge) {
@@ -147,8 +141,103 @@ export default class AdminSiteTrafficController extends Controller {
     return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
+  #requestParams() {
+    const params = {
+      start_date: moment(this.startDate).format("YYYY-MM-DD"),
+      end_date: moment(this.endDate).format("YYYY-MM-DD"),
+    };
+
+    for (const key of FILTER_KEYS) {
+      const values = this.#appliedValues(key);
+      if (values.length) {
+        params[key] = values;
+      }
+    }
+
+    return params;
+  }
+
+  #decorateTraffic(traffic) {
+    const countries = traffic.dimensions?.countries ?? [];
+    const activeFilters = (traffic.active_filters ?? []).map((filter) =>
+      filter.key === "country"
+        ? { ...filter, label: countryName(filter.value) }
+        : filter
+    );
+    const dimensions = {
+      ...traffic.dimensions,
+      countries: countries.map((row) => ({
+        ...row,
+        label: countryName(row.value),
+      })),
+    };
+
+    for (const [filterKey, dimensionKey] of Object.entries(DIMENSION_KEYS)) {
+      const rows = dimensions[dimensionKey] ?? [];
+      const activeRows = activeFilters.filter(
+        (filter) => filter.key === filterKey
+      );
+      if (activeRows.length === 0) {
+        continue;
+      }
+
+      const activeValues = new Set(activeRows.map((filter) => filter.value));
+      const rowsByValue = new Map(rows.map((row) => [row.value, row]));
+      dimensions[dimensionKey] = [
+        ...activeRows.map(
+          (filter) =>
+            rowsByValue.get(filter.value) ?? {
+              value: filter.value,
+              label: filter.label,
+              pageviews: 0,
+            }
+        ),
+        ...rows.filter((row) => !activeValues.has(row.value)),
+      ].slice(0, DIMENSION_LIMIT);
+    }
+
+    return {
+      ...traffic,
+      dimensions,
+      active_filters: activeFilters,
+    };
+  }
+
+  @action
+  async fetchTraffic() {
+    this.#resetDraftFilters();
+    const fetchId = ++this.#fetchId;
+    this.loading = true;
+    this.fetchError = null;
+
+    try {
+      const traffic = await ajax(
+        "/admin/dashboard/site-traffic-explorer.json",
+        {
+          data: this.#requestParams(),
+        }
+      );
+
+      if (fetchId === this.#fetchId) {
+        this.traffic = this.#decorateTraffic(traffic);
+      }
+    } catch (error) {
+      if (fetchId === this.#fetchId) {
+        this.fetchError =
+          error.jqXHR?.responseJSON?.error_type === "traffic_query_timeout"
+            ? "timeout"
+            : "unexpected";
+      }
+    } finally {
+      if (fetchId === this.#fetchId) {
+        this.loading = false;
+      }
+    }
+  }
+
   @action
   setPeriod(period) {
+    this.#resetDraftFilters();
     this.range = period;
     this.start_date = null;
     this.end_date = null;
@@ -156,14 +245,21 @@ export default class AdminSiteTrafficController extends Controller {
 
   @action
   setCustomDateRange(startDate, endDate) {
+    this.#resetDraftFilters();
     this.range = PERIOD_CUSTOM;
     this.start_date = moment(startDate).format("YYYY-MM-DD");
     this.end_date = moment(endDate).format("YYYY-MM-DD");
   }
 
   @action
-  setFilter(key, row) {
-    this[key] = row.value;
+  toggleFilter(key, row) {
+    const values = this.draftFilters[key];
+    this.#setDraftValues(
+      key,
+      values.includes(row.value)
+        ? values.filter((value) => value !== row.value)
+        : [...values, row.value]
+    );
   }
 
   @action
@@ -173,42 +269,127 @@ export default class AdminSiteTrafficController extends Controller {
       ? selectedTrafficTypes.filter((selected) => selected !== trafficType)
       : [...selectedTrafficTypes, trafficType];
 
-    this.#setTrafficTypes(nextTrafficTypes);
+    this.#setDraftValues(
+      "traffic_type",
+      nextTrafficTypes.length === TRAFFIC_TYPES.length ? [] : nextTrafficTypes
+    );
   }
 
   @action
-  removeFilter(key, value) {
-    if (key === "traffic_type") {
-      const remainingTrafficTypes = this.selectedTrafficTypes.filter(
-        (trafficType) => trafficType !== value
-      );
-      this.#setTrafficTypes(remainingTrafficTypes);
-      return;
-    }
+  removeFilterValue(key, value) {
+    this.#setDraftValues(
+      key,
+      this.draftFilters[key].filter((item) => item !== value)
+    );
+  }
 
-    this[key] = null;
+  @action
+  clearFilter(key) {
+    this.#setDraftValues(key, []);
+  }
+
+  @action
+  applyFilters() {
+    for (const key of FILTER_KEYS) {
+      this[key] = this.#serializeValues(this.draftFilters[key]);
+    }
+  }
+
+  @action
+  applyModalFilters(key, rows) {
+    this.#setDraftValues(
+      key,
+      rows.map((row) => row.value)
+    );
+    this.applyFilters();
+  }
+
+  @action
+  isFilterSelected(key, value) {
+    return this.draftFilters[key].includes(value);
   }
 
   @action
   resetState() {
-    this.model = null;
+    this.#fetchId++;
     this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
     for (const key of FILTER_KEYS) {
       this[key] = null;
     }
+    this.#resetDraftFilters();
+    this.traffic = null;
+    this.loading = false;
+    this.fetchError = null;
   }
 
-  #setTrafficTypes(trafficTypes) {
-    const orderedTrafficTypes = TRAFFIC_TYPES.filter((trafficType) =>
-      trafficTypes.includes(trafficType)
-    );
+  #appliedValues(key) {
+    const value = this[key];
+    if (value === null) {
+      return [];
+    }
 
-    this.traffic_type =
-      orderedTrafficTypes.length === 0 ||
-      orderedTrafficTypes.length === TRAFFIC_TYPES.length
-        ? null
-        : orderedTrafficTypes.join(",");
+    if (value.startsWith("[")) {
+      try {
+        const values = JSON.parse(value);
+        if (
+          Array.isArray(values) &&
+          values.every((item) => typeof item === "string")
+        ) {
+          return values;
+        }
+      } catch {
+        // The server will validate malformed values when the request runs.
+      }
+    }
+
+    return key === "traffic_type" ? value.split(",") : [value];
+  }
+
+  #filterLabel(key, value) {
+    const rows = this.traffic?.dimensions?.[DIMENSION_KEYS[key]] ?? [];
+    const activeFilter = this.traffic?.active_filters?.find(
+      (filter) => filter.key === key && filter.value === value
+    );
+    const label =
+      activeFilter?.label ?? rows.find((row) => row.value === value)?.label;
+
+    if (label) {
+      return label;
+    }
+    if (key === "traffic_type") {
+      return i18n(
+        `admin.site_traffic_explorer.series.${TRAFFIC_TYPE_LABEL_KEYS[value]}`
+      );
+    }
+    if (key === "referrer" && value === "") {
+      return i18n("admin.site_traffic_explorer.direct_or_unknown");
+    }
+    return value;
+  }
+
+  #resetDraftFilters() {
+    this.draftFilters = Object.fromEntries(
+      FILTER_KEYS.map((key) => [key, [...this.#appliedValues(key)]])
+    );
+  }
+
+  #setDraftValues(key, values) {
+    this.draftFilters = { ...this.draftFilters, [key]: values };
+  }
+
+  #sameValues(first, second) {
+    return (
+      first.length === second.length &&
+      first.every((value, index) => value === second[index])
+    );
+  }
+
+  #serializeValues(values) {
+    if (values.length === 0) {
+      return null;
+    }
+    return values.length === 1 ? values[0] : JSON.stringify(values);
   }
 }

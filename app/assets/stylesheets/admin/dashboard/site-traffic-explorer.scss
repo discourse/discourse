@@ -14,9 +14,21 @@
 
   &__filters {
     display: flex;
+    flex: 1 1 auto;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
+  }
+
+  &__filter-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+
+    @include viewport.until(sm) {
+      flex-wrap: wrap;
+    }
   }
 
   &__filter-pill {
@@ -24,12 +36,31 @@
     align-items: center;
     gap: var(--space-1);
     padding-inline-start: var(--space-3);
+    border: 1px solid transparent;
     border-radius: 2rem;
     background: var(--primary-low);
+
+    &.is-pending {
+      border-color: var(--tertiary);
+      border-style: dashed;
+      background: transparent;
+    }
+
+    .fk-d-menu__trigger {
+      gap: var(--space-1);
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+    }
   }
 
   &__filter-remove {
     padding: var(--space-1) var(--space-2);
+  }
+
+  &__apply-filters {
+    margin-inline-start: auto;
   }
 
   &__partial-warning {
@@ -290,25 +321,7 @@
     text-decoration: underline;
   }
 
-  &__row-filter-area {
-    display: flex;
-    align-items: center;
-    align-self: stretch;
-    justify-content: flex-end;
-    flex: 1 0 auto;
-    min-width: 0;
-    margin-block: calc(-1 * var(--space-1));
-    margin-inline-end: calc(-1 * var(--space-2));
-    border: 0;
-    padding-block: var(--space-1);
-    padding-inline: 0 var(--space-2);
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
-  }
-
-  button.site-traffic-explorer__row {
+  label.site-traffic-explorer__row {
     cursor: pointer;
 
     &:focus-visible {
@@ -391,6 +404,13 @@
     }
   }
 
+  &__dimension-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
   &__pageviews {
     width: 1%;
     white-space: nowrap;
@@ -403,5 +423,28 @@
     .d-table__mobile-label {
       text-align: start;
     }
+  }
+}
+
+.site-traffic-explorer__filter-dropdown {
+  min-width: min(18rem, calc(100vw - 2 * var(--space-4)));
+  padding: var(--space-3);
+
+  > strong {
+    display: block;
+    margin-block-end: var(--space-2);
+  }
+
+  ul {
+    @include unstyled-list;
+    margin-inline: calc(-1 * var(--space-2));
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding-inline-start: var(--space-2);
   }
 }
