@@ -22,10 +22,16 @@ module PageObjects
         "ip" => "IP address",
       }.freeze
 
-      def visit(start_date:, end_date:, traffic_type: nil)
+      def visit(start_date:, end_date:, traffic_type: nil, grouping: nil)
         path = "#{PATH}?end_date=#{end_date}&range=custom&start_date=#{start_date}"
         path += "&traffic_type=#{traffic_type}" if traffic_type
+        path += "&grouping=#{grouping}" if grouping
         page.visit(path)
+        self
+      end
+
+      def visit_default
+        page.visit(PATH)
         self
       end
 
@@ -58,6 +64,78 @@ module PageObjects
         picker.pick_day(end_date)
         picker.apply
         self
+      end
+
+      def select_custom_datetime_range(start_date:, start_time:, end_date:, end_time:)
+        picker = open_date_picker
+        picker.set_datetime_range(start_date:, start_time:, end_date:, end_time:)
+        picker.apply
+        self
+      end
+
+      def open_date_picker
+        find(".db-date-range__trigger").click
+        PageObjects::Components::AdminDashboardDateRangePicker.new.tap(&:open?)
+      end
+
+      def has_grouping?(label)
+        has_select?("Group by", selected: label)
+      end
+
+      def select_grouping(label)
+        select(label, from: "Group by")
+        self
+      end
+
+      def has_groupings?(*labels)
+        has_select?("Group by", with_options: labels)
+      end
+
+      def hover_chart(fraction: 0.5)
+        point_at_chart(fraction:) { |playwright_page, x, y| playwright_page.mouse.move(x, y) }
+        self
+      end
+
+      def drag_chart(from:, to:)
+        point_at_chart(fraction: from) do |playwright_page, start_x, start_y|
+          surface = playwright_page.locator("[data-test-site-traffic-brush-surface]")
+          box = surface.bounding_box
+          end_x = box["x"] + box["width"] * to
+
+          playwright_page.mouse.move(start_x, start_y)
+          playwright_page.mouse.down
+          playwright_page.mouse.move(end_x, start_y, steps: 10)
+        end
+
+        begin
+          yield if block_given?
+        ensure
+          page.driver.with_playwright_page { |playwright_page| playwright_page.mouse.up }
+        end
+
+        self
+      end
+
+      def has_hover_marker?(fraction:, label:)
+        return false if !has_css?("[data-test-site-traffic-hover-marker][aria-label='#{label}']")
+
+        page.document.synchronize do
+          surface = find("[data-test-site-traffic-brush-surface]").native.bounding_box
+          marker = find("[data-test-site-traffic-hover-marker]").native.bounding_box
+          expected_x = surface["x"] + surface["width"] * fraction
+          actual_x = marker["x"] + marker["width"] / 2
+          raise Capybara::ExpectationNotMet if (actual_x - expected_x).abs > 1
+
+          true
+        end
+      end
+
+      def has_brush_selection?
+        has_css?("[data-test-site-traffic-brush-selection]")
+      end
+
+      def has_live_brush_range?(label)
+        has_css?("[data-test-site-traffic-brush-live-range]", exact_text: label)
       end
 
       def has_metric?(label:, value:)
@@ -180,9 +258,21 @@ module PageObjects
 
       private
 
+      def point_at_chart(fraction:)
+        page.driver.with_playwright_page do |playwright_page|
+          surface = playwright_page.locator("[data-test-site-traffic-brush-surface]")
+          surface.scroll_into_view_if_needed
+          box = surface.bounding_box
+          yield(
+            playwright_page,
+            box["x"] + box["width"] * fraction,
+            box["y"] + box["height"] / 2,
+          )
+        end
+      end
+
       def open_date_range
-        find(".db-date-range__trigger").click
-        PageObjects::Components::AdminDashboardDateRangePicker.new.tap(&:open?)
+        open_date_picker
       end
     end
   end
