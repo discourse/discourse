@@ -82,8 +82,8 @@ export default class SiteTrafficExplorerFilterPills extends Component {
   }
 
   <template>
-    <div class="site-traffic-explorer__filter-slot">
-      {{#if (or (gt @filters.length 0) @hasPendingFilters)}}
+    {{#if (or (gt @filters.length 0) @hasPendingFilters)}}
+      <div class="site-traffic-explorer__filter-slot">
         <div
           class="site-traffic-explorer__filter-controls"
           role="group"
@@ -186,7 +186,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
             {{/if}}
           </div>
         </div>
-      {{/if}}
-    </div>
+      </div>
+    {{/if}}
   </template>
 }
