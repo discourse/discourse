@@ -67,6 +67,8 @@ en:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
       next: "Next slide"
+    thinking:
+      label: "Discombobulating..."
     number:
       format:
         # symbol used to separate the integer part from the fractional part of a number
@@ -2792,6 +2794,8 @@ en:
         content: "Here are some topics we think you might like to read next."
 
     loading: "Loading…"
+    thinking:
+      label: "Thinking…"
     errors:
       prev_page: "while trying to load"
       reasons:

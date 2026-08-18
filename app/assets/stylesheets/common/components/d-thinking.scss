@@ -1,0 +1,29 @@
+// All motion is driven by the component's render loop; this file only handles
+// sizing and the palette the loop reads back out of the custom properties.
+.d-thinking {
+  --d-thinking-color-1: #e2212e;
+  --d-thinking-color-2: #f15d22;
+  --d-thinking-color-3: #fff8ac;
+  --d-thinking-color-4: #00ae58;
+  --d-thinking-color-5: #04a9e2;
+
+  &--large {
+    display: block;
+    width: min(100%, 420px);
+    aspect-ratio: 1;
+  }
+
+  &--small {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    overflow: visible;
+    vertical-align: text-bottom;
+  }
+
+  &--label-small {
+    padding-left: var(--space-1);
+    color: var(--primary);
+  }
+}
