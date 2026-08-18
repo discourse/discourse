@@ -17540,6 +17540,41 @@ CREATE INDEX idx_access_control_lists_allowed_user_ids ON public.access_control_
 
 
 --
+-- Name: idx_ai_api_audit_logs_failed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_failed_id ON public.ai_api_audit_logs USING btree (id) WHERE (((response_status IS NOT NULL) AND ((response_status < 200) OR (response_status > 299))) OR ((response_status IS NULL) AND (COALESCE(response_tokens, 0) <= 0)));
+
+
+--
+-- Name: idx_ai_api_audit_logs_feature_name_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_feature_name_id ON public.ai_api_audit_logs USING btree (feature_name, id) WHERE (feature_name IS NOT NULL);
+
+
+--
+-- Name: idx_ai_api_audit_logs_payload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_payload_id ON public.ai_api_audit_logs USING btree (id) WHERE ((raw_request_payload IS NOT NULL) OR (raw_response_payload IS NOT NULL));
+
+
+--
+-- Name: idx_ai_api_audit_logs_retried_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_retried_id ON public.ai_api_audit_logs USING btree (id) WHERE (request_attempts IS NOT NULL);
+
+
+--
+-- Name: idx_ai_api_audit_logs_user_id_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_user_id_id ON public.ai_api_audit_logs USING btree (user_id, id);
+
+
+--
 -- Name: idx_ai_bot_conversation_stars_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23190,6 +23225,11 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260818045317'),
+('20260818045314'),
+('20260818045311'),
+('20260818045308'),
+('20260818045305'),
 ('20260817054353'),
 ('20260817054044'),
 ('20260814083721'),

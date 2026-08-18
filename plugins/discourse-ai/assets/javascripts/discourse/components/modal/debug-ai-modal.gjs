@@ -3,15 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
-import { clipboardCopy, escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { jsonToHtml } from "../../lib/utilities";
+import AiPayloadViewer from "discourse/plugins/discourse-ai/discourse/components/ai-payload-viewer";
 
 export default class DebugAiModal extends Component {
   @tracked info = null;
@@ -25,42 +23,29 @@ export default class DebugAiModal extends Component {
     });
   }
 
-  get htmlContext() {
+  get activePayload() {
     if (!this.info) {
-      return "";
+      return null;
     }
 
-    let parsed;
-
-    try {
-      if (this.activeTab === "request") {
-        parsed = JSON.parse(this.info.raw_request_payload);
-      } else {
-        return this.formattedResponse(this.info.raw_response_payload);
-      }
-    } catch {
-      return this.info.raw_request_payload;
-    }
-
-    return jsonToHtml(parsed);
+    return this.activeTab === "request"
+      ? this.info.raw_request_payload
+      : this.info.raw_response_payload;
   }
 
-  formattedResponse(response) {
-    // we need to replace the new lines with <br> to make it look good
-    const split = response.split("\n");
-    const safe = split.map((line) => escapeExpression(line)).join("<br>");
-
-    return trustHTML(safe);
+  get activeCopyLabel() {
+    return this.activeTab === "request"
+      ? i18n("discourse_ai.ai_bot.debug_ai_modal.copy_request")
+      : i18n("discourse_ai.ai_bot.debug_ai_modal.copy_response");
   }
 
   @action
-  copyRequest() {
-    this.copy(this.info.raw_request_payload);
-  }
+  copied() {
+    this.justCopiedText = i18n("discourse_ai.ai_bot.conversation_shared");
 
-  @action
-  copyResponse() {
-    this.copy(this.info.raw_response_payload);
+    discourseLater(() => {
+      this.justCopiedText = "";
+    }, 2000);
   }
 
   async loadLog(logId) {
@@ -83,15 +68,6 @@ export default class DebugAiModal extends Component {
   @action
   nextLog() {
     this.loadLog(this.info.next_log_id);
-  }
-
-  copy(text) {
-    clipboardCopy(text);
-    this.justCopiedText = i18n("discourse_ai.ai_bot.conversation_shared");
-
-    discourseLater(() => {
-      this.justCopiedText = "";
-    }, 2000);
   }
 
   loadApiRequestInfo() {
@@ -288,46 +264,36 @@ export default class DebugAiModal extends Component {
               </p>
             {{/if}}
           </div>
-          <div class="ai-debug-modal__preview">
-            {{this.htmlContext}}
-          </div>
+          <AiPayloadViewer
+            class="ai-debug-modal__preview"
+            @payload={{this.activePayload}}
+            @copyLabel={{this.activeCopyLabel}}
+            @onCopy={{this.copied}}
+            @emptyMessage={{i18n
+              "discourse_ai.ai_bot.debug_ai_modal.payload_unavailable"
+            }}
+          />
         {{/if}}
       </:body>
 
       <:footer>
-        {{#if this.info}}
+        {{#if this.info.prev_log_id}}
           <DButton
-            class="btn confirm"
-            @icon="copy"
-            @action={{this.copyRequest}}
-            @label="discourse_ai.ai_bot.debug_ai_modal.copy_request"
+            class="btn"
+            @icon="angles-left"
+            @action={{this.prevLog}}
+            @label="discourse_ai.ai_bot.debug_ai_modal.previous_log"
           />
-          <DButton
-            class="btn confirm"
-            @icon="copy"
-            @action={{this.copyResponse}}
-            @label="discourse_ai.ai_bot.debug_ai_modal.copy_response"
-          />
-          {{#if this.info.prev_log_id}}
-            <DButton
-              class="btn"
-              @icon="angles-left"
-              @action={{this.prevLog}}
-              @label="discourse_ai.ai_bot.debug_ai_modal.previous_log"
-            />
-          {{/if}}
-          {{#if this.info.next_log_id}}
-            <DButton
-              class="btn"
-              @icon="angles-right"
-              @action={{this.nextLog}}
-              @label="discourse_ai.ai_bot.debug_ai_modal.next_log"
-            />
-          {{/if}}
-          <span
-            class="ai-debug-modal__just-copied"
-          >{{this.justCopiedText}}</span>
         {{/if}}
+        {{#if this.info.next_log_id}}
+          <DButton
+            class="btn"
+            @icon="angles-right"
+            @action={{this.nextLog}}
+            @label="discourse_ai.ai_bot.debug_ai_modal.next_log"
+          />
+        {{/if}}
+        <span class="ai-debug-modal__just-copied">{{this.justCopiedText}}</span>
       </:footer>
     </DModal>
   </template>
