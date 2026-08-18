@@ -512,7 +512,7 @@ _Last Reviewed by @SaraDev on [date=2022-06-15 time=19:00:00 timezone="America/L
 [pg_link]: http://www.postgresql.org/
 [sqlite_link]: https://sqlite.org/
 [redis_link]: http://redis.io/
-[libvips_link]: https://www.libvips.org/install.html
+[libvips_link]: https://github.com/libvips/libvips/wiki#building-and-installing
 [imagemagick_link]: http://www.imagemagick.org/
 [pnpm_link]: https://pnpm.io/
 [mh_link]: https://github.com/mailhog/MailHog

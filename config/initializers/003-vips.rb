@@ -10,7 +10,7 @@ if Rails.env.local?
             Discourse requires the `vips` command for image processing, but it could not be run.
 
             Install libvips, then restart Discourse:
-            https://www.libvips.org/install.html
+            https://github.com/libvips/libvips/wiki#building-and-installing
           TEXT
   end
 end
