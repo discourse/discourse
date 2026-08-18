@@ -140,7 +140,7 @@ Happy hacking! And to get started with that, see [Beginner’s Guide to Creating
 [pg_link]: http://www.postgresql.org/
 [sqlite_link]: https://sqlite.org/
 [redis_link]: http://redis.io/
-[libvips_link]: https://www.libvips.org/install.html
+[libvips_link]: https://github.com/libvips/libvips/wiki#building-and-installing
 [imagemagick_link]: http://www.imagemagick.org/
 [pnpm_link]: https://pnpm.io/
 [mh_link]: https://github.com/mailhog/MailHog
