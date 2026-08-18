@@ -43,15 +43,11 @@ module("Unit | Service | embeddable-chat", function (hooks) {
   });
 
   test("does not render on unrelated URLs even with a leftover channel", function (assert) {
-    // Regression: chat lingered on e.g. /admin/config/customize/themes after
-    // leaving a livestream topic, because a bare "/t" substring also matched the
-    // "/t" inside "themes".
     this.router.currentURL = "/admin/config/customize/themes";
     assert.false(this.subject.canRenderChatChannel(false));
   });
 
   test("only matches at a path boundary", function (assert) {
-    // "/tarkov" contains "/t" but is not under "/t/...", so it must not match.
     this.router.currentURL = "/tarkov";
     assert.false(this.subject.canRenderChatChannel(false));
   });
@@ -65,6 +61,20 @@ module("Unit | Service | embeddable-chat", function (hooks) {
     assert.true(this.subject.canRenderChatChannel(false));
 
     this.router.currentURL = "/t/a-topic/1";
+    assert.true(this.subject.canRenderChatChannel(false));
+  });
+
+  test("ignores surrounding whitespace in the allowed paths list", function (assert) {
+    getOwner(this).lookup(
+      "service:site-settings"
+    ).livestream_embeddable_chat_allowed_paths = "/t | /video ";
+
+    this.router.currentURL = "/video/a-livestream/2";
+    assert.true(this.subject.canRenderChatChannel(false));
+  });
+
+  test("matches a bare allowed path even with a query string", function (assert) {
+    this.router.currentURL = "/t?topic_timer=123";
     assert.true(this.subject.canRenderChatChannel(false));
   });
 

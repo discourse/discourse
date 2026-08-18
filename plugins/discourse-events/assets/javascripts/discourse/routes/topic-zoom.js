@@ -10,6 +10,7 @@ export default class TopicZoomRoute extends DiscourseRoute {
   }
 
   deactivate() {
+    super.deactivate(...arguments);
     this.controllerFor("topic").set("model", null);
   }
 

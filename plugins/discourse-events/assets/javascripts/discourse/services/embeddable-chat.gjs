@@ -26,12 +26,14 @@ export default class EmbeddableChat extends Service {
     );
   }
 
-  isPathAllowed() {
+  get isPathAllowed() {
     const allowedPaths =
       this.siteSettings.livestream_embeddable_chat_allowed_paths
         .split("|")
+        .map((path) => path.trim())
         .filter(Boolean);
-    const currentURL = this.router.currentURL;
+
+    const currentURL = this.router.currentURL.split("?")[0];
 
     return allowedPaths.some((path) => {
       const normalized = path.endsWith("/") ? path.slice(0, -1) : path;
@@ -48,7 +50,7 @@ export default class EmbeddableChat extends Service {
       this.currentUser &&
       this.userCanChat
     ) {
-      if (this.isPathAllowed() && this.chatChannelId) {
+      if (this.isPathAllowed && this.chatChannelId) {
         return !this.isChannelOpenInDrawer;
       }
     }
