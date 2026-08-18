@@ -103,10 +103,9 @@
   }
 
   &__filter-pill-values {
+    @include ellipsis;
     min-width: 0;
     margin-inline-start: var(--space-1);
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   &__filter-pill-remaining {
@@ -117,10 +116,6 @@
   &__filter-remove {
     flex: 0 0 auto;
     padding: var(--space-1) var(--space-2);
-  }
-
-  &__apply-filters {
-    gap: var(--space-1);
   }
 
   &__partial-warning {
@@ -342,7 +337,7 @@
 
   &__row-link {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     display: inline-block;
     flex: 0 1 auto;
     min-width: 0;
@@ -382,18 +377,14 @@
 
     > input {
       position: relative;
-      z-index: 2;
+      z-index: 1;
     }
   }
 
   &__row-filter-target {
     position: absolute;
-    z-index: 1;
     inset: 0;
     display: block;
-    border: 0;
-    padding: 0;
-    background: transparent;
     cursor: pointer;
   }
 
@@ -525,11 +516,9 @@
   }
 
   &-value {
+    @include ellipsis;
     flex: 1 1 auto;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   &-clear {

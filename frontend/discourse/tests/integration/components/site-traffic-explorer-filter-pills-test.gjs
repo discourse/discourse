@@ -22,9 +22,7 @@ module(
         }
 
         observe(element) {
-          if (
-            element.classList.contains("site-traffic-explorer__filter-controls")
-          ) {
+          if (element.classList.contains("site-traffic-explorer__filters")) {
             resize = (width) => this.callback([{ contentRect: { width } }]);
           }
         }
@@ -59,6 +57,7 @@ module(
           ],
         },
       ];
+      this.hasPendingFilters = true;
       this.noop = () => {};
     });
 
@@ -73,7 +72,7 @@ module(
         <template>
           <SiteTrafficExplorerFilterPills
             @filters={{this.filters}}
-            @hasPendingFilters={{true}}
+            @hasPendingFilters={{this.hasPendingFilters}}
             @pendingFilterCount={{3}}
             @removeFilterValue={{this.noop}}
             @clearFilter={{this.noop}}
@@ -92,6 +91,8 @@ module(
         .includesText("+2", "the narrow pill hides overflowing values");
 
       valuesOverflow = false;
+      this.set("hasPendingFilters", false);
+      await settled();
       run(() => resize(800));
       await settled();
 

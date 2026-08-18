@@ -42,9 +42,7 @@ export default class FitSiteTrafficFilterPill extends Modifier {
       return;
     }
 
-    const filterControls = this.#element.closest(
-      ".site-traffic-explorer__filter-controls"
-    );
+    const filters = this.#element.closest(".site-traffic-explorer__filters");
     this.#observer = new ResizeObserver(([entry]) => {
       const width = entry.contentRect.width;
       if (width !== this.#filtersWidth) {
@@ -52,8 +50,8 @@ export default class FitSiteTrafficFilterPill extends Modifier {
         this.#fit();
       }
     });
-    if (filterControls) {
-      this.#observer.observe(filterControls);
+    if (filters) {
+      this.#observer.observe(filters);
     }
   }
 

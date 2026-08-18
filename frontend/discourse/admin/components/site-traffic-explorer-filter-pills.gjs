@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
@@ -17,6 +16,14 @@ const MAX_VISIBLE_FILTER_VALUES = 3;
 
 export default class SiteTrafficExplorerFilterPills extends Component {
   @tracked visibleValueCounts = {};
+
+  get applyLabel() {
+    const label = i18n("admin.site_traffic_explorer.apply");
+
+    return this.args.pendingFilterCount > 0
+      ? `${label} (${this.args.pendingFilterCount})`
+      : label;
+  }
 
   @action
   filterLabel(key) {
@@ -124,121 +131,108 @@ export default class SiteTrafficExplorerFilterPills extends Component {
 
   <template>
     {{#if (or (gt @filters.length 0) @hasPendingFilters)}}
-      <div class="site-traffic-explorer__filter-slot">
-        <div
-          class="site-traffic-explorer__filter-controls"
-          role="group"
-          aria-label={{i18n "admin.site_traffic_explorer.active_filters"}}
-        >
-          <div class="site-traffic-explorer__filters">
-            {{#each @filters key="key" as |filter|}}
-              <span
-                class="site-traffic-explorer__filter-pill
-                  {{if filter.pending 'is-pending'}}"
-                id={{this.filterId filter}}
-                data-test-site-traffic-filter-pill={{filter.key}}
-                {{fitSiteTrafficFilterPill
-                  filter.key
-                  (this.maximumVisibleCount filter)
-                  (this.filterSignature filter)
-                  this.setVisibleValueCount
-                }}
-              >
-                {{#if (gt filter.values.length 1)}}
-                  <DMenu
-                    @identifier={{this.filterId filter}}
-                    @inline={{true}}
-                    @title={{this.filterLabel filter.key}}
-                  >
-                    <:trigger>
-                      <span
-                        class="site-traffic-explorer__filter-pill-label"
-                      >{{trustHTML
-                          (this.groupedFilterDescription
-                            filter (this.visibleValueCount filter)
-                          )
-                        }}</span>
-                      {{dIcon "angle-down"}}
-                    </:trigger>
-                    <:content>
+      <div
+        class="site-traffic-explorer__filter-controls"
+        role="group"
+        aria-label={{i18n "admin.site_traffic_explorer.active_filters"}}
+      >
+        <div class="site-traffic-explorer__filters">
+          {{#each @filters key="key" as |filter|}}
+            <span
+              class="site-traffic-explorer__filter-pill
+                {{if filter.pending 'is-pending'}}"
+              id={{this.filterId filter}}
+              data-test-site-traffic-filter-pill={{filter.key}}
+              {{fitSiteTrafficFilterPill
+                filter.key
+                (this.maximumVisibleCount filter)
+                (this.filterSignature filter)
+                this.setVisibleValueCount
+              }}
+            >
+              {{#if (gt filter.values.length 1)}}
+                <DMenu
+                  @identifier={{this.filterId filter}}
+                  @inline={{true}}
+                  @title={{this.filterLabel filter.key}}
+                >
+                  <:trigger>
+                    <span
+                      class="site-traffic-explorer__filter-pill-label"
+                    >{{trustHTML
+                        (this.groupedFilterDescription
+                          filter (this.visibleValueCount filter)
+                        )
+                      }}</span>
+                    {{dIcon "angle-down"}}
+                  </:trigger>
+                  <:content>
+                    <div
+                      class="site-traffic-explorer__filter-dropdown"
+                      data-test-site-traffic-filter-dropdown
+                    >
                       <div
-                        class="site-traffic-explorer__filter-dropdown"
-                        data-test-site-traffic-filter-dropdown
-                      >
-                        <div
-                          class="site-traffic-explorer__filter-dropdown-title"
-                        >{{this.filteringToLabel filter}}</div>
-                        <ul>
-                          {{#each filter.values as |value|}}
-                            <li data-test-site-traffic-filter-dropdown-value>
-                              <span
-                                class="site-traffic-explorer__filter-dropdown-value"
-                                title={{value.label}}
-                              >{{value.label}}</span>
-                              <DButton
-                                class="btn-flat"
-                                @icon="xmark"
-                                @translatedAriaLabel={{this.removeValueLabel
-                                  value
-                                }}
-                                @translatedTitle={{this.removeValueLabel value}}
-                                @action={{fn
-                                  this.removeFilterValue
-                                  filter
-                                  value
-                                }}
-                              />
-                            </li>
-                          {{/each}}
-                        </ul>
-                        <DButton
-                          class="btn-flat site-traffic-explorer__filter-dropdown-clear"
-                          @label="admin.site_traffic_explorer.clear_all"
-                          @action={{fn @clearFilter filter.key}}
-                        />
-                      </div>
-                    </:content>
-                  </DMenu>
-                {{else}}
-                  <span
-                    class="site-traffic-explorer__filter-pill-label"
-                  >{{trustHTML (this.filterDescription filter)}}</span>
-                {{/if}}
-                <DButton
-                  class="btn-flat site-traffic-explorer__filter-remove"
-                  @icon="xmark"
-                  @translatedAriaLabel={{this.removeLabel filter}}
-                  @action={{fn @clearFilter filter.key}}
-                />
-              </span>
-            {{/each}}
-          </div>
-
-          <div class="site-traffic-explorer__filter-actions">
-            {{#if (gt @filters.length 0)}}
+                        class="site-traffic-explorer__filter-dropdown-title"
+                      >{{this.filteringToLabel filter}}</div>
+                      <ul>
+                        {{#each filter.values as |value|}}
+                          <li data-test-site-traffic-filter-dropdown-value>
+                            <span
+                              class="site-traffic-explorer__filter-dropdown-value"
+                              title={{value.label}}
+                            >{{value.label}}</span>
+                            <DButton
+                              class="btn-flat"
+                              @icon="xmark"
+                              @translatedAriaLabel={{this.removeValueLabel
+                                value
+                              }}
+                              @translatedTitle={{this.removeValueLabel value}}
+                              @action={{fn this.removeFilterValue filter value}}
+                            />
+                          </li>
+                        {{/each}}
+                      </ul>
+                      <DButton
+                        class="btn-flat site-traffic-explorer__filter-dropdown-clear"
+                        @label="admin.site_traffic_explorer.clear_all"
+                        @action={{fn @clearFilter filter.key}}
+                      />
+                    </div>
+                  </:content>
+                </DMenu>
+              {{else}}
+                <span
+                  class="site-traffic-explorer__filter-pill-label"
+                >{{trustHTML (this.filterDescription filter)}}</span>
+              {{/if}}
               <DButton
-                class="btn-flat"
-                @label="admin.site_traffic_explorer.clear_all_filters"
-                @action={{@clearAllFilters}}
+                class="btn-flat site-traffic-explorer__filter-remove"
+                @icon="xmark"
+                @translatedAriaLabel={{this.removeLabel filter}}
+                @action={{fn @clearFilter filter.key}}
               />
-            {{/if}}
+            </span>
+          {{/each}}
+        </div>
 
-            {{#if @hasPendingFilters}}
-              <button
-                type="button"
-                class="btn btn-primary site-traffic-explorer__apply-filters"
-                data-test-site-traffic-apply-filters
-                {{on "click" @applyFilters}}
-              >
-                <span>{{i18n "admin.site_traffic_explorer.apply"}}</span>
-                {{#if (gt @pendingFilterCount 0)}}
-                  <span
-                    data-test-site-traffic-apply-count
-                  >({{@pendingFilterCount}})</span>
-                {{/if}}
-              </button>
-            {{/if}}
-          </div>
+        <div class="site-traffic-explorer__filter-actions">
+          {{#if (gt @filters.length 0)}}
+            <DButton
+              class="btn-flat"
+              @label="admin.site_traffic_explorer.clear_all_filters"
+              @action={{@clearAllFilters}}
+            />
+          {{/if}}
+
+          {{#if @hasPendingFilters}}
+            <DButton
+              class="btn-primary"
+              @translatedLabel={{this.applyLabel}}
+              @action={{@applyFilters}}
+              data-test-site-traffic-apply-filters
+            />
+          {{/if}}
         </div>
       </div>
     {{/if}}
