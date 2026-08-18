@@ -169,7 +169,7 @@ class AdminDashboardSearch
   end
 
   def search_type
-    CrawlerScorer.enabled? ? "human_only" : "non_staff_only"
+    "human_only"
   end
 
   def parse_date(value)

@@ -342,6 +342,7 @@ RSpec.describe SearchLog, type: :model do
         )
       human = Fabricate(:search_log, user: nil, user_agent: "Mozilla/5.0 (Macintosh) Chrome/120.0")
       no_agent = Fabricate(:search_log, user: nil, user_agent: nil)
+      blank_agent = Fabricate(:search_log, user: nil, user_agent: "")
       member = Fabricate(:search_log, user: Fabricate(:user), user_agent: "Googlebot/2.1")
 
       expect(described_class.backfill_crawler!).to eq(2)
@@ -349,6 +350,7 @@ RSpec.describe SearchLog, type: :model do
       expect(crawler.reload.crawler).to eq(true)
       expect(human.reload.crawler).to eq(false)
       expect(no_agent.reload.crawler).to eq(false)
+      expect(blank_agent.reload.crawler).to eq(false)
       expect(member.reload.crawler).to eq(true)
     end
 
