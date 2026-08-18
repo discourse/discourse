@@ -1,34 +1,18 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
-import { next } from "@ember/runloop";
 import Service from "@ember/service";
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
 import {
-  type ElementDragPayload,
-  monitorForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+  decorateExternalSource,
+  EXTERNAL_KIND_PREDICATES,
+  type ExternalDragKind,
+  type ExternalDragPayload,
+} from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
 import {
-  type ExternalDragPayload as NativeExternalDragPayload,
-  monitorForExternal,
-  type NativeMediaType,
-} from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
-import {
-  containsFiles,
-  getFiles,
-} from "@atlaskit/pragmatic-drag-and-drop/external/file";
-import {
-  containsHTML,
-  getHTML,
-} from "@atlaskit/pragmatic-drag-and-drop/external/html";
-import {
-  containsText,
-  getText,
-} from "@atlaskit/pragmatic-drag-and-drop/external/text";
-import {
-  containsURLs,
-  getURLs,
-} from "@atlaskit/pragmatic-drag-and-drop/external/url";
-import { isTesting } from "discourse/lib/environment";
-import { reportClientError } from "discourse/lib/report-client-error";
+  dragTypeOf,
+  normalizeDragSource,
+} from "discourse/lib/-internals/drag-and-drop/vocabulary";
 
 /** The in-flight element drag, as the source described it. */
 export interface DragPayload {
@@ -44,219 +28,6 @@ export interface DragPayload {
    * driving the service by hand may not.
    */
   element: HTMLElement | null;
-}
-
-/**
- * Where the dragged body travels when a source registered a drag handle.
- *
- * The handle is what the underlying library registers, so that the row keeps
- * neither `draggable="true"` nor the unselectable text that attribute brings.
- * The body is the row the handle stands for, and it is what a target reports as
- * `source.element` and compares for `acceptsSelf`.
- *
- * Lives here with the rest of the shared vocabulary because both the source and
- * the target need it, and importing one modifier from the other would close a
- * cycle.
- */
-export const DRAG_BODY = "discourse:dragBody";
-
-/**
- * The type a drag answers to in an `accepts` / `types` filter.
- *
- * @param data - A drag payload's `data`, as the underlying library carries it.
- */
-export function dragTypeOf(data?: Record<string, unknown>) {
-  return data?.type as string | undefined;
-}
-
-/**
- * Calls a consumer callback that is allowed to throw, so nothing it throws reaches the
- * caller.
- *
- * The library calls us from inside its own event dispatch and reaches its end-of-drag
- * cleanup on the next statement, unguarded. An escaping exception skips that cleanup and
- * is reported as uncaught, where nothing in the application can handle it.
- *
- * The source's deferred end-of-drag pair needs the same guard: its second callback and its
- * waiting teardown both still have to run.
- *
- * Reported through `discourse-error`, which attributes it to whichever theme or plugin it
- * came from. Under test it is raised as well, so a consumer's mistake fails the test it
- * happened in rather than passing quietly.
- *
- * @param run - The consumer callback.
- * @param fallback - Returned when it throws. Omit for a callback returning nothing. Give a
- *   gate the conservative answer, since a gate that threw has decided nothing.
- */
-export function consumerMayThrow<T>(run: () => T, fallback?: T): T | undefined {
-  try {
-    return run();
-  } catch (error) {
-    reportClientError(error, "broken_drag_and_drop_alert");
-    if (isTesting()) {
-      // Thrown here, the library would skip the cleanup that ends the drag, and
-      // it starts no new drag while it still thinks one is running.
-      next(() => {
-        throw error;
-      });
-    }
-    return fallback;
-  }
-}
-
-/**
- * The in-flight external drag, with the read helpers bound to it so consumers
- * never reach for the underlying library themselves.
- */
-export interface ExternalDragPayload {
-  /**
-   * Native MIME types declared by the incoming drag (e.g. `"Files"`,
-   * `"text/plain"`, `"text/uri-list"`).
-   */
-  types: NativeMediaType[];
-
-  /**
-   * The `DataTransferItem` list snapshotted at drag start. Browsers expose `kind`
-   * and `type` here even when `dataTransfer.getData(…)` is blocked during
-   * `dragover` for security.
-   */
-  items: DataTransferItem[];
-
-  /**
-   * Reads the string payload for a given MIME type. Returns `null` when the type
-   * is absent or the browser withholds string data during the current drag
-   * phase; completed drop callbacks normally receive the readable payload.
-   */
-  getStringData: (mediaType: string) => string | null;
-
-  containsFiles: () => boolean;
-  getFiles: () => File[];
-  containsHTML: () => boolean;
-  getHTML: () => string | null;
-  containsText: () => boolean;
-  getText: () => string | null;
-  containsURLs: () => boolean;
-  getURLs: () => string[];
-}
-
-/**
- * Vocabulary `acceptsExternal()` understands. Each key delegates to the
- * matching native-payload predicate so the service and external-target surfaces
- * share one vocabulary.
- */
-const EXTERNAL_KIND_PREDICATES = Object.freeze({
-  files: containsFiles,
-  html: containsHTML,
-  text: containsText,
-  urls: containsURLs,
-});
-
-/** A kind of external payload, as named by `accepts` / `acceptsExternal()`. */
-export type ExternalDragKind = keyof typeof EXTERNAL_KIND_PREDICATES;
-
-/**
- * Wraps the underlying library's raw external payload
- * (`{types, items, getStringData}`) with the `contains*` / `get*` helpers bound
- * to it, so a consumer calls `source.getFiles()` rather than importing the
- * library's helpers itself.
- *
- * Lives here rather than beside either drop target because both targets and this
- * service need it, and the external target already imports from the element one
- * — a copy in either would close an import cycle the moment a third reader
- * appeared.
- *
- * @param source - The raw payload the library reports.
- */
-export function decorateExternalSource(
-  source: NativeExternalDragPayload
-): ExternalDragPayload {
-  return {
-    types: source.types,
-    items: source.items,
-    getStringData: (mediaType) => source.getStringData(mediaType),
-    containsFiles: () => containsFiles({ source }),
-    getFiles: () => getFiles({ source }),
-    containsHTML: () => containsHTML({ source }),
-    getHTML: () => getHTML({ source }),
-    containsText: () => containsText({ source }),
-    getText: () => getText({ source }),
-    containsURLs: () => containsURLs({ source }),
-    getURLs: () => getURLs({ source }),
-  };
-}
-
-/**
- * Whether an incoming external drag is one of the named kinds.
- *
- * An empty or missing filter matches every external drag, mirroring how the
- * element target treats an absent `accepts`. Shared so everything filtering on
- * this vocabulary agrees on what a kind name means; the element-side
- * counterpart is `matchesDragType`.
- *
- * @param accepts - The kind filter as the consumer supplied it.
- * @param source - The raw payload the underlying library reports.
- */
-export function matchesExternalKind(
-  accepts: ExternalDragKind | ExternalDragKind[] | undefined,
-  source: NativeExternalDragPayload
-) {
-  const kinds = accepts ? (Array.isArray(accepts) ? accepts : [accepts]) : [];
-  if (kinds.length === 0) {
-    return true;
-  }
-  return kinds.some((kind) => {
-    const predicate = EXTERNAL_KIND_PREDICATES[kind];
-    // Unknown kind names fail closed — better than silently matching.
-    return predicate ? predicate({ source }) : false;
-  });
-}
-
-/**
- * A drag source as consumers read it: routing keys lifted out and the dragged
- * body in place of the grip that carried it.
- */
-export interface NormalizedDragSource {
-  /** The source's discriminator, or `null` when the drag carries none. */
-  type: string | null;
-
-  /** The payload the source attached to the drag. */
-  data: Record<string, unknown>;
-
-  /** The dragged element, or `null` when the drag has none. */
-  element: Element | null;
-}
-
-/**
- * Resolves a raw payload into the shape every reader reports.
- *
- * This is the single place the routing vocabulary above is interpreted. The
- * drop target, the monitor modifier, and this service all consume it, so a
- * payload reads identically wherever a consumer meets it — a shape one of them
- * derived by hand drifted once already.
- *
- * @param source - The payload as the underlying library carries it.
- * @param fallbackElement - Reported as `element` when the drag itself has none;
- *   a drop target passes itself here.
- */
-export function normalizeDragSource(
-  source: ElementDragPayload,
-  fallbackElement?: Element
-): NormalizedDragSource {
-  // Lifted out first: the body is routing, not payload, so no consumer should
-  // ever iterate onto it.
-  const { [DRAG_BODY]: body, ...data } = source.data ?? {};
-
-  return {
-    // The underlying library types every payload value as `unknown`, because
-    // anything registering a draggable with it can put anything there.
-    // `dDragAndDropSource` always stamps its discriminator as a string.
-    type: (data.type ?? null) as string | null,
-    data,
-    // A source that registered a handle publishes the body it stands for, so a
-    // consumer receives the element the user is moving rather than the grip
-    // they happened to press.
-    element: (body as Element) ?? source.element ?? fallbackElement ?? null,
-  };
 }
 
 /**
@@ -415,41 +186,5 @@ export default class DragAndDropService extends Service {
         getStringData: this.currentExternalDrag.getStringData,
       },
     });
-  }
-}
-
-/**
- * Test-only: end any drag the underlying library still considers in flight.
- *
- * If a test starts a drag (`dragstart`) but the matching `dragend` / `drop`
- * never reaches the library — e.g. the source element is torn down first, or an
- * assertion throws mid-drag — its global drag state stays active and the next
- * test's `dragstart` is silently ignored. Dispatching a `dragend` lets the
- * lifecycle listener tear the drag down. A no-op when nothing is in flight.
- * Call from the global test teardown.
- */
-export function resetDragAndDropForTesting() {
-  // The library binds its drag-phase listeners on `window` (capture) only
-  // while a drag is active, and both dispatches are no-ops when nothing is in
-  // flight.
-  //
-  // The order is load-bearing. `dragend` clears the target stack before
-  // dispatching its cancellation, so no target `onDrop` runs; a bare `drop`
-  // takes the cancel path only when no drop target is under the cursor, and with
-  // one it dispatches a real drop, running target callbacks during teardown.
-  // Sending `dragend` first leaves the following `drop` a no-op, because the
-  // listeners are unbound by then.
-  //
-  // This does not silence everything: the library still dispatches its own
-  // `onDrop` to the source and to monitors. A source wrapper deferring its
-  // consumer callbacks is what would then schedule them during teardown, and
-  // guarding that is its job rather than this function's —
-  // `registerDragAndDropSource` cancels the pending task from its own cleanup.
-  const make = (type: string) =>
-    typeof DragEvent === "function"
-      ? new DragEvent(type, { bubbles: true })
-      : new Event(type, { bubbles: true });
-  for (const type of ["dragend", "drop"]) {
-    window.dispatchEvent(make(type));
   }
 }

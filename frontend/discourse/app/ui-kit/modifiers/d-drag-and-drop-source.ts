@@ -10,7 +10,8 @@ import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/utils
 import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/utils/prevent-unhandled";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/utils/set-custom-native-drag-preview";
 import Modifier, { type ArgsFor } from "ember-modifier";
-import { consumerMayThrow, DRAG_BODY } from "discourse/services/drag-and-drop";
+import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
+import { DRAG_BODY } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 
 /** The pointer position as the underlying library reports it. */
 type DragInput = ElementGetFeedbackArgs["input"];

@@ -1,34 +1,14 @@
 import {
-  type ElementDragPayload,
   type ElementEventBasePayload,
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { modifier } from "ember-modifier";
+import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
 import {
-  consumerMayThrow,
-  dragTypeOf,
+  matchesDragType,
   type NormalizedDragSource,
   normalizeDragSource,
-} from "discourse/services/drag-and-drop";
-
-/**
- * Whether a drag's type is one the consumer asked for.
- *
- * Centralized so every monitor applies the same filter semantics.
- *
- * @param types - One type, several, or nothing at all to match every drag.
- * @param source - The dragged source, compared through {@link dragTypeOf}.
- */
-export function matchesDragType(
-  types: string | string[] | undefined,
-  source: ElementDragPayload
-) {
-  const list = Array.isArray(types) ? types : types ? [types] : [];
-  if (list.length === 0) {
-    return true;
-  }
-  return list.includes(dragTypeOf(source.data) as string);
-}
+} from "discourse/lib/-internals/drag-and-drop/vocabulary";
 
 /**
  * What a monitor callback is told: the dragged source and where it has been.

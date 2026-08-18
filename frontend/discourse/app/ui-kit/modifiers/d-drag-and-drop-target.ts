@@ -5,11 +5,12 @@ import {
   type ElementDropTargetGetFeedbackArgs,
 } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { modifier } from "ember-modifier";
+import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
 import {
-  consumerMayThrow,
   DRAG_BODY,
   normalizeDragSource,
-} from "discourse/services/drag-and-drop";
+  toAcceptList,
+} from "discourse/lib/-internals/drag-and-drop/vocabulary";
 
 /** The pointer position as the underlying library reports it. */
 type DragInput = ElementDropTargetGetFeedbackArgs["input"];
@@ -146,21 +147,6 @@ export function createPositionIndicator(element: Element) {
       }
     },
   };
-}
-
-/**
- * One value, several, or nothing, as a list.
- *
- * @param value - The `accepts` filter as the consumer supplied it.
- */
-export function toAcceptList<T>(value?: T | T[]): T[] {
-  if (!value) {
-    return [];
-  }
-  if (Array.isArray(value)) {
-    return value;
-  }
-  return [value];
 }
 
 /**

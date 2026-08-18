@@ -1,11 +1,10 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { matchesDragType } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { simulateDrag } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
-import dDragAndDropMonitor, {
-  matchesDragType,
-} from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
+import dDragAndDropMonitor from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 

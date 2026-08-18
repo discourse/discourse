@@ -10,7 +10,7 @@ import {
   type ExternalDragKind,
   type ExternalDragPayload,
   matchesExternalKind,
-} from "discourse/services/drag-and-drop";
+} from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
 import {
   createEnterLeavePairing,
   createPositionIndicator,

@@ -12,8 +12,8 @@ import { modifier } from "ember-modifier";
 import {
   type ExternalDragKind,
   matchesExternalKind,
-} from "discourse/services/drag-and-drop";
-import { matchesDragType } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
+} from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
+import { matchesDragType } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 
 /** Which direction the container is allowed to scroll while a drag is in flight. */
 export type AutoScrollAxis = "vertical" | "horizontal" | "all";
