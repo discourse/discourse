@@ -165,7 +165,9 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                         class="site-traffic-explorer__filter-dropdown"
                         data-test-site-traffic-filter-dropdown
                       >
-                        <strong>{{this.filteringToLabel filter}}</strong>
+                        <div
+                          class="site-traffic-explorer__filter-dropdown-title"
+                        >{{this.filteringToLabel filter}}</div>
                         <ul>
                           {{#each filter.values as |value|}}
                             <li data-test-site-traffic-filter-dropdown-value>
