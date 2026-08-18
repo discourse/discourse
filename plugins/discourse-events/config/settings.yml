@@ -156,6 +156,11 @@ discourse_calendar:
   livestream_zoom_sdk_secret:
     default: ""
     secret: true
+  livestream_embeddable_chat_allowed_paths:
+    type: list
+    default: "/t"
+    client: true
+    hidden: true
   livestream_enable_modal_chat_on_mobile:
     default: true
     client: true
