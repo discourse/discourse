@@ -553,8 +553,33 @@ export default class DVirtualizer<T> extends Modifier<
           remeasureViewport(this.#virtualizer);
         }
       },
-      measureElement: (element) => this.#virtualizer?.measureElement(element),
-      visibleRange: () => this.#virtualizer?.range ?? undefined,
+      measureElement: (element) => {
+        // The engine resolves the row from the `data-index` that `place` stamps. Given
+        // anything it cannot resolve it warns, then observes the element under a key no
+        // row has, for the life of the list. Refuse it here rather than poison the cache.
+        // Checked against the item count rather than just parsed, because an index past
+        // the end resolves to no row just as surely as a missing one.
+        if (!(element instanceof HTMLElement)) {
+          return;
+        }
+        // Read the raw attribute first: `Number("")` is 0, so an empty `data-index`
+        // would otherwise pass as a valid index into the first row.
+        const raw = element.dataset.index;
+        if (raw === undefined || raw.trim() === "") {
+          return;
+        }
+        const index = Number(raw);
+        if (
+          !Number.isInteger(index) ||
+          index < 0 ||
+          index >= (this.#named?.items.length ?? 0)
+        ) {
+          return;
+        }
+        this.#virtualizer?.measureElement(element);
+      },
+      visibleRange: () =>
+        this.#freezeRange(this.#virtualizer?.range ?? null) ?? undefined,
       get isScrolling() {
         return isScrolling();
       },
@@ -678,12 +703,7 @@ export default class DVirtualizer<T> extends Modifier<
     // the engine's change memo compares against, and `getVirtualItems()` returns a
     // memoized array the engine keeps handing back — so a consumer that wrote
     // through either could silently stop the window from updating.
-    const publishedRange = range
-      ? Object.freeze({
-          startIndex: range.startIndex,
-          endIndex: range.endIndex,
-        })
-      : null;
+    const publishedRange = this.#freezeRange(range);
     const publishedItems = Object.freeze([...virtualItems]);
 
     // Publish BEFORE any edge callback runs. The window is what the component
@@ -909,6 +929,20 @@ export default class DVirtualizer<T> extends Modifier<
     } else if (range.endIndex < endBand - EDGE_HYSTERESIS) {
       this.#endLatched = false;
     }
+  }
+
+  /**
+   * A frozen copy of a range. Hand these out, never the engine's own object: `range`
+   * stays attached to the engine between computations, and its committed value is what
+   * the engine's change memo compares against.
+   */
+  #freezeRange(range: VisibleRange | null): Readonly<VisibleRange> | null {
+    return range
+      ? Object.freeze({
+          startIndex: range.startIndex,
+          endIndex: range.endIndex,
+        })
+      : null;
   }
 
   #scheduleFlush() {
