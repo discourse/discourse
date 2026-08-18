@@ -108,6 +108,10 @@ module("Unit | Service | drag-and-drop", function (hooks) {
       this.dragAndDrop.accepts(undefined),
       "an omitted filter accepts nothing either"
     );
+    assert.false(
+      this.dragAndDrop.accepts([]),
+      "and so does an empty list: the caller has not decided"
+    );
   });
 
   test("tracks and filters an external drag", async function (assert) {
@@ -132,6 +136,22 @@ module("Unit | Service | drag-and-drop", function (hooks) {
     assert.false(
       this.dragAndDrop.acceptsExternal("files"),
       "a different external kind is rejected"
+    );
+    assert.true(
+      this.dragAndDrop.acceptsExternal(["files", "text"]),
+      "a list is accepted when any kind in it matches"
+    );
+    assert.false(
+      this.dragAndDrop.acceptsExternal([]),
+      "an empty list matches nothing, unlike a target's empty filter"
+    );
+    assert.false(
+      this.dragAndDrop.acceptsExternal(null),
+      "a null filter matches nothing"
+    );
+    assert.false(
+      this.dragAndDrop.acceptsExternal(undefined),
+      "an omitted filter matches nothing"
     );
 
     await externalDragEvent("drop", dataTransfer);

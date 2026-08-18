@@ -330,9 +330,6 @@ export function resetDragSourcesForTesting() {
  * importing the underlying library — parallel to
  * `registerDragAndDropTarget` / `registerDragAndDropMonitor`.
  *
- * Consumers remain library-agnostic: they use this helper instead of importing
- * the underlying library themselves.
- *
  * The consumer's end-of-drag callbacks are deferred to the next task so they
  * fire after the drop event has finished propagating: `onDragEnd` for every
  * drag, then `onDrop` only for one that ended on a drop target.
@@ -662,11 +659,8 @@ export function registerDragAndDropSource(
  * styled by `app/assets/stylesheets/common/ui-kit/d-drag-and-drop.scss`, whose
  * selectors are gated on the attribute.
  *
- * Testing: in JS integration tests use `simulateDrag` from
- * `discourse/tests/helpers/ui-kit/drag-and-drop-helper`; in Ruby system
- * tests use `SystemHelpers#drag_and_drop` (a real native drag via
- * Playwright) rather than Capybara's `drag_to`, whose synthetic mouse
- * events can silently stall mid-drag.
+ * Testing: see the note on `dDragAndDropTarget`; the same helpers drive both
+ * ends of a drag.
  *
  * Pointer-only. A native drag has no keyboard equivalent, so a surface built on this
  * needs a keyboard route to the same operation beside it.

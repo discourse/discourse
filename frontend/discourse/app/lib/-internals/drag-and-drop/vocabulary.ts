@@ -33,7 +33,7 @@ export function dragTypeOf(data?: Record<string, unknown>) {
  *
  * @param value - The `accepts` filter as the consumer supplied it.
  */
-export function toAcceptList<T>(value?: T | T[]): T[] {
+export function toAcceptList<T>(value?: T | T[] | null): T[] {
   if (!value) {
     return [];
   }
@@ -46,7 +46,7 @@ export function toAcceptList<T>(value?: T | T[]): T[] {
 /**
  * Whether a drag's type is one the consumer asked for.
  *
- * Centralized so every monitor applies the same filter semantics.
+ * Centralized so every reader of the type applies the same filter semantics.
  *
  * @param types - One type, several, or nothing at all to match every drag.
  * @param source - The dragged source, compared through {@link dragTypeOf}.
@@ -104,8 +104,7 @@ export function normalizeOwnedDragSource(source: ElementDragPayload): {
  *
  * This is the single place the routing vocabulary above is interpreted. The
  * drop target, the monitor modifier, and the service all consume it, so a
- * payload reads identically wherever a consumer meets it — a shape one of them
- * derived by hand drifted once already.
+ * payload reads identically wherever a consumer meets it.
  *
  * @param source - The payload as the underlying library carries it.
  * @param fallbackElement - Reported as `element` when the drag itself has none;

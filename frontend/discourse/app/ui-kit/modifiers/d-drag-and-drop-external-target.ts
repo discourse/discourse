@@ -105,14 +105,9 @@ export type DragAndDropExternalTargetArgs =
  * the deepest-target filter, the `--drag-over-external` indicator class, and the
  * decorated-source payload the modifier exposes.
  *
- * Use this directly when you've captured an element ref outside your
- * own template (e.g. via `didInsert` on a sibling marker, or after
- * walking the DOM) and can't attach the `{{dDragAndDropExternalTarget}}`
- * modifier. The modifier itself is a thin wrapper around this
- * function for the template-based common case.
- *
- * Consumers remain library-agnostic: they use this helper instead of importing
- * the underlying library themselves.
+ * The imperative counterpart of the modifier below, for the same reasons
+ * `registerDragAndDropTarget` exists beside `dDragAndDropTarget`; consumers use
+ * it instead of importing the underlying library themselves.
  *
  * @param element - The element to register as a drop target.
  * @param getArgsRef - Closure returning the latest args. Adapter callbacks read

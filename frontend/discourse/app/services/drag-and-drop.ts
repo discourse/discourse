@@ -5,13 +5,14 @@ import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/adapter/el
 import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/adapter/monitor-for-external";
 import {
   decorateExternalSource,
-  EXTERNAL_KIND_PREDICATES,
   type ExternalDragKind,
   type ExternalDragPayload,
+  matchesExternalKind,
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
 import {
   dragTypeOf,
   normalizeDragSource,
+  toAcceptList,
 } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 
 /** The in-flight element drag, as the source described it. */
@@ -64,11 +65,9 @@ export default class DragAndDropService extends Service {
     // none of its own stays invisible here.
     const cleanupElements = monitorForElements({
       canMonitor: ({ source }) =>
-        !this.isDestroying &&
-        !this.isDestroyed &&
-        dragTypeOf(source.data) != null,
+        this.#alive && dragTypeOf(source.data) != null,
       onDragStart: ({ source }) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (!this.#alive) {
           return;
         }
         const normalized = normalizeDragSource(source);
@@ -81,7 +80,7 @@ export default class DragAndDropService extends Service {
         });
       },
       onDrop: () => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (!this.#alive) {
           return;
         }
         this.clearCurrentDrag();
@@ -91,15 +90,15 @@ export default class DragAndDropService extends Service {
     // when the service is torn down would otherwise write tracked state on a
     // destroyed object.
     const cleanupExternal = monitorForExternal({
-      canMonitor: () => !this.isDestroying && !this.isDestroyed,
+      canMonitor: () => this.#alive,
       onDragStart: ({ source }) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (!this.#alive) {
           return;
         }
         this.currentExternalDrag = decorateExternalSource(source);
       },
       onDrop: () => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (!this.#alive) {
           return;
         }
         this.currentExternalDrag = null;
@@ -114,6 +113,10 @@ export default class DragAndDropService extends Service {
   /** Whether an element or external drag is in flight. */
   get isDragging() {
     return !!(this.currentDrag || this.currentExternalDrag);
+  }
+
+  get #alive() {
+    return !this.isDestroying && !this.isDestroyed;
   }
 
   /**
@@ -137,21 +140,19 @@ export default class DragAndDropService extends Service {
    * Does the in-flight drag's `type` match the supplied `accepts` filter?
    *
    * The opposite default from the drop target and the monitor, on purpose. There an
-   * omitted filter accepts every drag, because a target that filters nothing is a real
-   * configuration.
+   * omitted or empty filter accepts every drag, because a target that filters
+   * nothing is a real configuration.
    *
-   * Here a nullish filter means the caller has not decided, so it matches nothing.
+   * Here a nullish or empty filter means the caller has not decided, so it
+   * matches nothing.
    *
-   * @param accepts - Single type string or array. Nullish matches nothing.
+   * @param accepts - Single type string or array. Nullish or empty matches nothing.
    */
   accepts(accepts?: string | string[] | null) {
-    if (!this.currentDrag || !accepts) {
+    if (!this.currentDrag) {
       return false;
     }
-    if (Array.isArray(accepts)) {
-      return accepts.includes(this.currentDrag.type);
-    }
-    return this.currentDrag.type === accepts;
+    return toAcceptList(accepts).includes(this.currentDrag.type);
   }
 
   /**
@@ -159,32 +160,14 @@ export default class DragAndDropService extends Service {
    *
    * The vocabulary mirrors the `accepts` argument on
    * `dDragAndDropExternalTarget`: `"files"`, `"html"`, `"text"`, `"urls"`, or
-   * an array of those. A nullish filter matches nothing.
+   * an array of those. As with {@link accepts}, a nullish or empty filter
+   * matches nothing.
    */
   acceptsExternal(kinds?: ExternalDragKind | ExternalDragKind[] | null) {
-    if (!this.currentExternalDrag || !kinds) {
+    const list = toAcceptList(kinds);
+    if (!this.currentExternalDrag || list.length === 0) {
       return false;
     }
-    const list = Array.isArray(kinds) ? kinds : [kinds];
-    return list.some((kind) => {
-      const predicate = EXTERNAL_KIND_PREDICATES[kind];
-      return predicate ? this.#callExternalPredicate(predicate) : false;
-    });
-  }
-
-  /**
-   * Re-runs a native-payload predicate against the live external drag. Done
-   * lazily rather than cached so it receives the original source shape.
-   */
-  #callExternalPredicate(
-    predicate: (typeof EXTERNAL_KIND_PREDICATES)[ExternalDragKind]
-  ) {
-    return predicate({
-      source: {
-        types: this.currentExternalDrag.types,
-        items: this.currentExternalDrag.items,
-        getStringData: this.currentExternalDrag.getStringData,
-      },
-    });
+    return matchesExternalKind(list, this.currentExternalDrag);
   }
 }

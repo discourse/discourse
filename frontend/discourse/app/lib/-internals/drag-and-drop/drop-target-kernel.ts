@@ -318,13 +318,10 @@ export function registerDropTargetKernel<Payload, Source>({
     if (!callback) {
       return true;
     }
-    return (
-      consumerMayThrow(
-        () =>
-          callback({ source: decorateSource(source), input, element }) !==
-          false,
-        false
-      ) ?? false
+    return consumerMayThrow(
+      () =>
+        callback({ source: decorateSource(source), input, element }) !== false,
+      false
     );
   };
 
@@ -407,8 +404,7 @@ export function registerDropTargetKernel<Payload, Source>({
         })
       ),
     getIsSticky: () =>
-      consumerMayThrow(() => getArgs().getIsSticky?.() === true, false) ??
-      false,
+      consumerMayThrow(() => getArgs().getIsSticky?.() === true, false),
     onDragEnter: ({ source, location }) =>
       reportActive(source, location, false),
     onDropTargetChange: ({ source, location }) =>

@@ -1,7 +1,7 @@
 /* Default treatment for the drag-and-drop vocabulary. The source and target
-   registrars stamp `data-drag-source` / `data-drop-target` on their host for
-   the lifetime of the registration, and toggle the state modifiers below
-   during a drag. Selectors are gated on the attribute rather than the class
+   registrars stamp `data-drag-source` / `data-drop-target` /
+   `data-drop-target-external` on their host for the lifetime of the
+   registration, and toggle the state modifiers below during a drag. Selectors are gated on the attribute rather than the class
    alone so they cannot reach an unrelated element that happens to use the same
    state name. Override by raising specificity, by setting `content: none` on
    the pseudo-element to drop just the line, or by passing `indicator=false` to
@@ -18,24 +18,26 @@
   --d-drag-indicator-color: var(--tertiary);
 }
 
-@mixin d-drag-line-horizontal {
+@mixin d-drag-line($axis) {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
   background: var(--d-drag-indicator-color);
   pointer-events: none;
+
+  @if $axis == horizontal {
+    left: 0;
+    right: 0;
+    height: 2px;
+  } @else {
+    top: 0;
+    bottom: 0;
+    width: 2px;
+  }
 }
 
-@mixin d-drag-line-vertical {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--d-drag-indicator-color);
-  pointer-events: none;
+@mixin d-drag-outline {
+  outline: 2px solid var(--d-drag-indicator-color);
+  outline-offset: -2px;
 }
 
 [data-drag-source] {
@@ -70,14 +72,14 @@
 [data-drop-target-external] {
   &.--drag-above {
     &::before {
-      @include d-drag-line-horizontal;
+      @include d-drag-line(horizontal);
       top: -1px;
     }
   }
 
   &.--drag-below {
     &::after {
-      @include d-drag-line-horizontal;
+      @include d-drag-line(horizontal);
       bottom: -1px;
     }
   }
@@ -88,7 +90,7 @@
 
   &.--drag-left {
     &::before {
-      @include d-drag-line-vertical;
+      @include d-drag-line(vertical);
 
       /*! rtl:ignore */
       left: -1px;
@@ -97,7 +99,7 @@
 
   &.--drag-right {
     &::after {
-      @include d-drag-line-vertical;
+      @include d-drag-line(vertical);
 
       /*! rtl:ignore */
       right: -1px;
@@ -109,14 +111,13 @@
      sibling positions. */
 
   &.--drag-inside {
-    outline: 2px solid var(--d-drag-indicator-color);
-    outline-offset: -2px;
+    @include d-drag-outline;
   }
 }
 
+/* A destination rather than a slot: one class, the same outline. */
 [data-drop-target-external] {
   &.--drag-over-external {
-    outline: 2px solid var(--d-drag-indicator-color);
-    outline-offset: -2px;
+    @include d-drag-outline;
   }
 }

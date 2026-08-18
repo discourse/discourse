@@ -78,11 +78,12 @@ export type DragAndDropAutoScrollArgs =
  *
  * Library-agnostic by design: the auto-scroll dependency is imported only here.
  *
- * @param getArgsRef - Closure returning the latest args. `types` and `axis` are
- *   re-read on every callback, so a caller driving this imperatively can change
- *   what its closure returns and have the change take without re-registering.
- *   `target` and `element` are read once, here, to decide which registration to
- *   make, so changing either needs a fresh one.
+ * @param getArgsRef - Closure returning the latest args. `types`, `axis` and the
+ *   value of `accepts` are re-read on every callback, so a caller driving this
+ *   imperatively can change what its closure returns and have the change take
+ *   without re-registering. `target` and `element` are read once, here, to
+ *   decide which registration to make, and so is whether `accepts` is present at
+ *   all, so changing any of those needs a fresh one.
  *
  *   Through the modifier below that distinction does not arise: the closure is
  *   invoked in the modifier body, which consumes every arg it reads, so changing
@@ -179,8 +180,8 @@ export default modifier<DDragAndDropAutoScrollSignature>(
     registerDragAndDropAutoScroll(() => ({
       types: args.types,
       accepts: args.accepts,
-      axis: args.axis ?? "vertical",
-      target: args.target ?? "element",
+      axis: args.axis,
+      target: args.target,
       element,
     }))
 );
