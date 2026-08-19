@@ -1,8 +1,5 @@
-// Positive template invocations of the element drag-and-drop primitives,
-// asserting each Signature resolves in template position. Keep this file free
-// of Glint directives: a single `@glint-expect-error` anywhere makes Glint stop
-// reporting every other error in the file, so a broken declaration would pass
-// unnoticed. Negatives live in d-drag-and-drop-errors-test.gts.
+// Keep this file free of @glint-expect-error directives so broken positive
+// invocations cannot be masked by a negative assertion.
 import { hash } from "@ember/helper";
 import dDragAndDropMonitor from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";

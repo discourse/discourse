@@ -15,9 +15,9 @@ module(
 
     module("external auto-scroll", function () {
       /**
-       * Holds a drag near the container's bottom edge across several frames.
-       * Auto-scroll runs off its own animation-frame loop and eases in over time,
-       * so a single event moves nothing measurable.
+       * Holds a drag near the container's bottom edge across several frames:
+       * auto-scroll runs off its own animation-frame loop and eases in over
+       * time, so a single event moves nothing measurable.
        */
       async function hoverNearBottomEdge(selector, dataTransfer) {
         const { left, bottom, width } = find(selector).getBoundingClientRect();

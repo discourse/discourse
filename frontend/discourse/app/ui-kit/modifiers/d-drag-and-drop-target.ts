@@ -25,7 +25,7 @@ export {
   type DropPositionOptions,
 } from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
 
-/** The dragged source, normalised to the shape `dDragAndDropSource` publishes. */
+/** The dragged source, normalized to the shape `dDragAndDropSource` publishes. */
 export type DropTargetSource = NormalizedDragSource;
 
 /** What a synchronous gate (`canDrop`, `getDropEffect`) is asked about. */
@@ -48,11 +48,9 @@ interface DDragAndDropTargetSignature {
       accepts?: string | string[];
 
       /**
-       * `false` to refuse a drop whose dragged element is this element. Where
-       * `accepts` filters by type, this filters by identity. Defaults to `true`,
-       * because an element carrying both this modifier and `dDragAndDropSource`
-       * is a supported arrangement with a meaningful drop, so excluding it is
-       * opt-in rather than automatic.
+       * `false` refuses a drop whose dragged element is this element. Defaults
+       * to `true`: an element that is both source and target has a meaningful
+       * drop onto itself, so excluding it is opt-in.
        */
       acceptsSelf?: boolean;
 
@@ -102,25 +100,13 @@ export type DragAndDropTargetArgs =
   DDragAndDropTargetSignature["Args"]["Named"];
 
 /**
- * Imperative drop-target registration. Adds deepest-target filtering,
- * `--drag-above` / `--drag-below` / `--drag-left` / `--drag-right` /
- * `--drag-inside` indicator classes, and the source-payload normalisation the
- * modifier exposes.
- *
- * Use this directly when you've captured an element ref outside your
- * own template (e.g. via `didInsert` on a sibling marker, or after
- * walking the DOM) and can't attach the `{{dDragAndDropTarget}}`
- * modifier. The modifier itself is a thin wrapper around this
- * function for the template-based common case.
- *
- * Consumers remain library-agnostic: they use this helper instead of importing
- * the underlying library themselves.
+ * Imperative drop-target registration; the `dDragAndDropTarget` modifier
+ * below wraps it.
  *
  * @param element - The element to register as a drop target.
  * @param getArgsRef - Closure returning the latest args. Library callbacks read
- *   this on every invocation, so arg changes take effect without re-registering.
- * @returns Cleanup function. Caller invokes it once on teardown (modifier
- *   destroy, component willDestroy, etc.).
+ *   it on every invocation, so arg changes apply without re-registering.
+ * @returns Cleanup; call it once on teardown.
  */
 export function registerDragAndDropTarget(
   element: Element,
@@ -144,23 +130,17 @@ export function registerDragAndDropTarget(
 }
 
 /**
- * Marks an element as a drop target compatible with the
- * `dDragAndDropSource` vocabulary. Thin Ember-modifier wrapper around
- * {@link registerDragAndDropTarget}. Every arg is documented on
- * {@link DragAndDropTargetArgs}.
+ * Marks an element as a drop target for `dDragAndDropSource` drags. Every arg
+ * is documented on {@link DragAndDropTargetArgs}. The indicator classes are
+ * styled in `app/assets/stylesheets/common/ui-kit/d-drag-and-drop.scss`.
  *
- * Smart row mode — position is computed from the cursor against the
- * element's midpoint:
+ * Position from the pointer against the element's midpoint:
  *
  * ```hbs
- * <li {{dDragAndDropTarget
- *   accepts="sidebar-link"
- *   onDrop=this.reorder
- * }}>...</li>
+ * <li {{dDragAndDropTarget accepts="sidebar-link" onDrop=this.reorder}}>...</li>
  * ```
  *
- * Fixed-position mode — for explicit `"before"` / `"after"` / `"inside"`
- * zones where the slot is decided by geometry, not the cursor:
+ * A fixed position:
  *
  * ```hbs
  * <div {{dDragAndDropTarget
@@ -170,24 +150,16 @@ export function registerDragAndDropTarget(
  * }}></div>
  * ```
  *
- * Nested targets: only the deepest accepted target receives the
- * lifecycle callbacks, so an ancestor decorated with this modifier
- * doesn't double-handle a drop the child already claimed.
+ * Testing: use `simulateDrag` from
+ * `discourse/tests/helpers/ui-kit/drag-and-drop-helper` in JS, and
+ * `SystemHelpers#drag_and_drop` in system specs; synthetic mouse drags stall.
  *
- * Testing: in JS integration tests use `simulateDrag` from
- * `discourse/tests/helpers/ui-kit/drag-and-drop-helper`; in Ruby system
- * tests use `SystemHelpers#drag_and_drop` (a real native drag via
- * Playwright) rather than Capybara's `drag_to`, whose synthetic mouse
- * events can silently stall mid-drag.
- *
- * This modifier only receives registered element sources. File uploads continue
- * to use the existing upload target.
+ * Element drags only; see `dDragAndDropExternalTarget` for payloads dragged in
+ * from outside the window.
  */
 export default modifier<DDragAndDropTargetSignature>(
   (element, _positional, args) =>
-    // Pass `args` through to the closure WITHOUT reading any property of
-    // it here. Reading args.X inside the body would mark its tag consumed
-    // and force the modifier to re-run (re-registering the target) on every
-    // change. The closure reads fresh values inside the library's callbacks.
+    // Pass `args` unread: reading a property here would track it and re-run
+    // the modifier, re-registering the target on every change.
     registerDragAndDropTarget(element, () => args)
 );

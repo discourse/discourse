@@ -1,8 +1,5 @@
-// Positive template invocations for external targets and auto-scroll, asserting
-// each Signature resolves in template position. Keep this file free of Glint
-// directives: a single `@glint-expect-error` anywhere makes Glint stop reporting
-// every other error in the file, so a broken declaration would pass unnoticed.
-// Negatives live in d-drag-and-drop-external-errors-test.gts.
+// Keep this file free of @glint-expect-error directives so broken positive
+// invocations cannot be masked by a negative assertion.
 import { array } from "@ember/helper";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import dDragAndDropExternalTarget, {
@@ -38,8 +35,7 @@ const Positives = <template>
     }}
   ></div>
 
-  {{! An external target is a slot rather than a destination once it takes a
-      position, and speaks the same vocabulary the element target does }}
+  {{! A positioned external target shares the element target's vocabulary }}
   <li
     {{dDragAndDropExternalTarget accepts="urls" axis="vertical" onDrop=noop}}
   ></li>
@@ -51,8 +47,7 @@ const Positives = <template>
   <div {{dDragAndDropAutoScroll types="card" axis="vertical"}}></div>
   <span {{dDragAndDropAutoScroll target="window" types=acceptedTypes}}></span>
 
-  {{! Scrolling for a drag from outside the window is a separate opt-in, and
-      speaks the kind vocabulary rather than the drag types beside it }}
+  {{! External auto-scroll is a separate opt-in keyed by kind, not drag type }}
   <div
     {{dDragAndDropAutoScroll types="card" accepts=(array "urls" "files")}}
   ></div>

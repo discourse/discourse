@@ -169,9 +169,8 @@ module("Unit | Service | drag-and-drop", function (hooks) {
       "the service records the external drag before destruction"
     );
 
-    // Stubbed rather than really destroyed, as the sibling test does: a real
-    // destroy also tears the monitor down, so the drop would be ignored even if
-    // the guard under test were missing.
+    // Stubbed, not destroyed: a real destroy also tears the monitor down, so the
+    // drop would be ignored even without the guard under test.
     Object.defineProperty(this.dragAndDrop, "isDestroying", {
       configurable: true,
       value: true,

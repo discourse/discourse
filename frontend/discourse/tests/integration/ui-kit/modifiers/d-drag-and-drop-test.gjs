@@ -162,11 +162,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     state.showHandle = true;
     await settled();
 
-    // The handle takes over the registration, which is what the browser reads
-    // to decide a press can begin a drag at all. Asserting the attribute rather
-    // than a coordinate is the honest form: a press on the row body cannot
-    // produce a `dragstart` once the row is no longer draggable, so a synthetic
-    // one dispatched there would be testing a state the browser never reaches.
     assert.dom("#src").doesNotHaveAttribute("draggable");
     assert.dom("#handle").hasAttribute("draggable", "true");
 
@@ -223,10 +218,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     state.showSecondHandle = true;
     await settled();
 
-    // The registration moves with the handle, so the replaced one stops being
-    // draggable and the replacement starts. Without the first assertion a stale
-    // registration would leave two draggable elements and the row would drag
-    // from a handle it no longer recognises.
     assert.dom("#first-handle").doesNotHaveAttribute("draggable");
     assert.dom("#second-handle").hasAttribute("draggable", "true");
 
@@ -268,9 +259,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       </template>
     );
 
-    // While a handle is configured the row itself is not draggable, so a press
-    // on its body is an ordinary press — which is what leaves the text there
-    // selectable.
     assert.dom("#src").doesNotHaveAttribute("draggable");
     assert.dom("#handle").hasAttribute("draggable", "true");
 
@@ -663,9 +651,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       clientY: rect.top + rect.height / 2,
     };
 
-    // The drag starts inside the target, so the target is in the hierarchy from
-    // the first moment and is only entered on the first throttled drag update.
-    // A drop landing before that frame skips the enter altogether.
+    // The drag starts inside the target, so the target is entered only on the
+    // first drag frame; a drop that lands before that frame skips the enter.
     await dragEvent("#src", "dragstart", { dataTransfer, ...centerOf("#src") });
     dragEventNow("#tgt", "dragover", { dataTransfer, ...nearLeftEdge });
     dragEventNow("#tgt", "drop", { dataTransfer, ...nearLeftEdge });
@@ -685,8 +672,12 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
   test("nested targets: the innermost accepting target wins the drop", async function (assert) {
     const events = [];
+    const hierarchies = [];
     const onOuterDrop = () => events.push("outer");
-    const onInnerDrop = () => events.push("inner");
+    const onInnerDrop = ({ location }) => {
+      events.push("inner");
+      hierarchies.push(location.current.dropTargets.length);
+    };
 
     await render(
       <template>
@@ -723,12 +714,14 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       ["inner"],
       "only the deepest accepted target receives the drop"
     );
+    assert.deepEqual(
+      hierarchies,
+      [2],
+      "while the ancestor stays in the settled hierarchy the drop reports"
+    );
   });
 
   test("target arg changes reach the registered closure", async function (assert) {
-    // The modifier registers once and hands the library a closure over its
-    // args, so a changed arg has to be read through that closure rather than
-    // through a re-registration.
     const state = new (class {
       @tracked accepted = "row";
       @tracked dropped = null;
@@ -782,9 +775,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   });
 
   test("the service tracks the element drag first-hand", async function (assert) {
-    // The service derives drag state from its own element monitor rather than
-    // being told by the source. Looking it up registers that monitor before the
-    // drag begins.
+    // Looked up before the drag: the service registers its own monitor when it
+    // is first instantiated, so a later lookup would miss this drag.
     const dnd = this.owner.lookup("service:drag-and-drop");
 
     await render(
@@ -822,8 +814,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   });
 
   test("currentDrag identity is stable within a drag (one object per drag)", async function (assert) {
-    // Consumers key per-drag caches on the `currentDrag` reference, so the
-    // service must set it once per drag, not rebuild it per move.
     const dnd = this.owner.lookup("service:drag-and-drop");
 
     await render(
@@ -852,8 +842,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       test("a `type` key on the payload does not change what a target accepts", async function (assert) {
         const drops = [];
         const onDrop = ({ source }) => drops.push(source.type);
-        // A domain object carrying its own `type` is the ordinary case: models
-        // routinely have one, and the modifier's own docs pass `data=this.link`.
         const payload = { id: 1, type: "something-else" };
 
         await render(
@@ -910,9 +898,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await startDrag("#src", { dataTransfer });
       await dragOver("#tgt", { dataTransfer });
 
-      // The source defers its consumer callbacks to the next task, so tearing
-      // it down in between is what a route transition or a re-render dropping
-      // the row does.
+      // Torn down in the same task as the drop, before the deferred callbacks flush.
       dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
       state.rendered = false;
       await settled();
@@ -952,9 +938,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await dragOver("#tgt", { dataTransfer });
 
       dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
-      // The consumer is still here — only the registration is being replaced,
-      // which is what an arg bound to drag state does the moment the drag ends.
-      // It still expects to be told how its own drag finished.
       state.disabled = true;
       await settled();
 
@@ -998,9 +981,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#tgt"),
       });
 
-      // Disabled while the drag is still in flight, which a consumer binding
-      // the arg to anything that changes mid-drag will do. The drag itself
-      // carries on — the browser is holding it, not the page.
       state.disabled = true;
       await settled();
 
@@ -1044,9 +1024,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#src"),
       });
 
-      // Disabled while the drag is live, which keeps the registration alive to
-      // report the drop, then enabled again before that drop arrives. The one
-      // being kept is taken back rather than joined by a replacement.
       state.disabled = true;
       await settled();
       state.disabled = false;
@@ -1094,8 +1071,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "a dispatch is still scheduled, so a holder has to keep it"
       );
 
-      // The drag has already finished, so there is no registration left to take
-      // back; the consumer is still there and is still owed the end of it.
       assert.strictEqual(
         work.reclaim(),
         null,
@@ -1137,8 +1112,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
       dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
 
-      // Detaching without cancelling hands the outstanding work back, because
-      // this closure was the only thing that could still reach it.
       const work = release({ cancelPending: false });
       assert.strictEqual(
         typeof work?.abandon,
@@ -1146,8 +1119,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "keeping the dispatch hands back a way to reach it"
       );
 
-      // The consumer itself is going away, which is the one reason to take the
-      // dispatch back.
       work.abandon();
       await settled();
 
@@ -1191,9 +1162,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#tgt"),
       });
 
-      // Detached mid-drag, then replaced before the drop. Whichever registration
-      // ends up holding the element has to be the one that reports, because the
-      // consumer is promised the end of every drag it started.
       state.disabled = true;
       await settled();
       state.disabled = false;
@@ -1216,6 +1184,58 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         calls,
         ["dragEnd", "drop"],
         "replacing the registration mid-drag does not cost the consumer the end of it"
+      );
+    });
+
+    test("a source re-enabled between the drop and its deferred dispatch keeps its registration for the next drag", async function (assert) {
+      const calls = [];
+      const state = new (class {
+        @tracked disabled = false;
+      })();
+      const onDragEnd = () => calls.push("dragEnd");
+      const onDrop = () => calls.push("drop");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              disabled=state.disabled
+              onDragEnd=onDragEnd
+              onDrop=onDrop
+            }}
+          >src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
+      state.disabled = true;
+      await settled();
+
+      dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      state.disabled = false;
+      await settled();
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(
+        calls,
+        ["dragEnd", "drop"],
+        "the first drag reports once"
+      );
+      assert
+        .dom("#src")
+        .hasAttribute("data-drag-source", "", "and the row stays registered");
+
+      await simulateDrag("#src", "#tgt", { dataTransfer: new DataTransfer() });
+
+      assert.deepEqual(
+        calls,
+        ["dragEnd", "drop", "dragEnd", "drop"],
+        "so the next drag from the reclaimed registration reports too"
       );
     });
 
@@ -1259,7 +1279,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      // The drag begins on the handle the live registration sits on.
       await dragEvent("#first-handle", "dragstart", {
         dataTransfer,
         ...centerOf("#src"),
@@ -1273,10 +1292,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#tgt"),
       });
 
-      // The handle is re-rendered mid-drag, replacing the registration while
-      // the drag it started is still in flight. The library dispatches the
-      // drag's end by looking the ORIGINAL handle up, so the replaced
-      // registration must stay reachable until then.
       state.useSecondHandle = true;
       await settled();
 
@@ -1324,13 +1339,10 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await startDrag("#src", { dataTransfer });
       await dragOver("#tgt", { dataTransfer });
 
-      // Detached, but kept alive to report the drag it is in the middle of.
       state.disabled = true;
       await settled();
 
-      // The drop schedules the consumer callbacks, and the row goes away before
-      // the runloop flushes them. Whatever is still holding that dispatch has to
-      // be reachable from here, or nothing can call it off.
+      // Destroyed in the same task as the drop, before its deferred callbacks flush.
       dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
       state.rendered = false;
       await settled();
@@ -1345,14 +1357,11 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
   module("a drag held over nothing", function () {
     /**
-     * Dispatches a drag event and hands the event back, which `triggerEvent`
-     * cannot: what is being asserted is whether something claimed the event.
+     * Dispatches a `dragover` and hands the event back so a test can read
+     * `defaultPrevented`, which is what tells the browser the drag was claimed.
      *
-     * `dataTransfer.dropEffect` would be the more direct reading, and it is not
-     * available — a synthetic drag leaves it at `"none"` however it is set, even
-     * over a target that asked for `"copy"`. `defaultPrevented` is the half that
-     * carries the meaning anyway: it is what tells the browser the drag was
-     * handled here, and the cursor follows from it.
+     * `dataTransfer.dropEffect` is not readable here: a synthetic drag leaves
+     * it at `"none"` however a target sets it.
      */
     async function dragOverAndReturnEvent(selector, dataTransfer) {
       const event = new DragEvent("dragover", {
@@ -1393,11 +1402,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     /**
      * A real `DataTransfer` whose `effectAllowed` keeps what is written to it.
      *
-     * The native property is a no-op here — its setter requires a drag data
-     * store in a mode only a browser-driven drag puts it in, so a synthetic
-     * event silently discards every write, the test's own included. An own
-     * property shadows the accessor and leaves the rest of the object real,
-     * which makes what the source declares readable at all.
+     * The native setter is a no-op on a constructed `DataTransfer`, so a
+     * synthetic event silently discards every write. An own property shadows
+     * the accessor and leaves the rest of the object real.
      */
     function recordingTransfer(effectAllowed = "none") {
       const dataTransfer = new DataTransfer();
@@ -1510,7 +1517,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
     test("the last source to go takes the shared listener with it", async function (assert) {
       // White-box, because the only thing a leak costs is an idle listener and
-      // a map entry per registration — nothing a drag can observe.
+      // a map entry per registration, nothing a drag can observe.
       const state = new (class {
         @tracked disabled = false;
       })();
@@ -1754,9 +1761,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           ...centerOf("#tgt"),
         });
 
-        // The library dispatches the drag's end to whatever is registered on
-        // handle a at drop time, so a has to stay registered through every swap,
-        // including the one that brings it back.
+        // The drag's end is dispatched to whatever is registered on handle a at
+        // drop time, so a must stay registered through the swap that brings it back.
         state.dragHandle = state.handles["handle-b"];
         await settled();
         state.dragHandle = state.handles["handle-a"];
@@ -1819,9 +1825,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           </template>
         );
 
-        // The library defers the drag-start callback by a frame. A swap landing
-        // in that window must still see a drag in flight, or the registration
-        // that has to receive the deferred callbacks is torn down at once.
+        // The drag-start callback is deferred by a frame; a swap in that window
+        // must still see a drag in flight.
         const dataTransfer = new DataTransfer();
         dragEventNow("#handle-a", "dragstart", {
           dataTransfer,
@@ -1862,8 +1867,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           </template>
         );
 
-        // The anchor is draggable on its own, so the browser targets it and the
-        // library never claims the drag; the source must not speak for it either.
         const dataTransfer = recordingTransfer();
         await dragEvent("#link", "dragstart", {
           dataTransfer,
@@ -1991,9 +1994,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       const events = [];
       const onOuterEnter = () => events.push("outer:enter");
       const onOuterLeave = () => events.push("outer:leave");
-      // The deepest target is instrumented too, as this test's positive control:
-      // without it, an implementation that dispatched no lifecycle callback at
-      // all would satisfy the assertion below just as well as a correct one.
+      // The inner target is the positive control: without it a build that fires
+      // no lifecycle callback at all would pass just as well.
       const onInnerEnter = () => events.push("inner:enter");
       const onInnerLeave = () => events.push("inner:leave");
 
@@ -2027,8 +2029,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
       const dataTransfer = new DataTransfer();
       await startDrag("#src", { dataTransfer });
-      // Straight onto the child, so the ancestor is in the stack but never the
-      // deepest and so never forwards an enter.
       await dragOver("#inner", { dataTransfer });
       await dragOver("#away", { dataTransfer });
       await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
@@ -2080,8 +2080,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#src"),
       });
 
-      // Onto the child first, so the ancestor joins the hierarchy while the
-      // child is deepest and its own enter is swallowed.
       await dragEvent("#inner", "dragenter", {
         dataTransfer,
         ...centerOf("#inner"),
@@ -2091,8 +2089,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#inner"),
       });
 
-      // Back onto the ancestor's own area. It becomes deepest without a fresh
-      // enter, because it never left the hierarchy.
       await dragEvent("#outer", "dragover", {
         dataTransfer,
         clientX: outerRect.left + 5,
@@ -2124,9 +2120,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       const events = [];
       const onOuterEnter = () => events.push("outer:enter");
       const onOuterLeave = () => events.push("outer:leave");
-      // Recording the drop pins the ordering as well as the pairing: the
-      // ancestor has to be left when the child takes over, not once the drag is
-      // already over.
       const onInnerDrop = () => events.push("inner:drop");
 
       await render(
@@ -2163,7 +2156,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#src"),
       });
 
-      // The ancestor's own area first, so it is genuinely entered.
       await dragEvent("#outer", "dragenter", {
         dataTransfer,
         clientX: outerRect.left + 5,
@@ -2175,8 +2167,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         clientY: outerRect.top + 5,
       });
 
-      // Then onto the child. The ancestor stays in the hierarchy, so no leave
-      // arrives from the library and the target has to synthesise one.
       await dragEvent("#inner", "dragenter", {
         dataTransfer,
         ...centerOf("#inner"),
@@ -2225,8 +2215,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       const firstTransfer = new DataTransfer();
       await startDrag("#src", { dataTransfer: firstTransfer });
       await dragOver("#target", { dataTransfer: firstTransfer });
-      // A drop closes the enter without reporting a leave, so the target has to
-      // forget it was entered or the next drag's enter is swallowed.
       await dragEvent("#target", "drop", {
         dataTransfer: firstTransfer,
         ...centerOf("#target"),
@@ -2254,9 +2242,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   });
 
   /**
-   * The library tells a target about a hierarchy change synchronously, but only
-   * throttles the drag update that follows to a frame. A drop cancels that frame,
-   * so anything a target learns only from the drag update is lost to a fast release.
+   * The library reports a hierarchy change synchronously but throttles the drag
+   * update that follows to a frame, and a drop cancels that frame. Anything a
+   * target learns only from the drag update is lost to a fast release.
    */
   module("a hierarchy change is observed in the same frame", function () {
     test("an ancestor superseded by a child is left in the same frame, before the drop", async function (assert) {
@@ -2313,8 +2301,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         .dom("#outer")
         .hasClass("--drag-inside", "the ancestor is entered and lit");
 
-      // The child takes over and the drop lands in the same task: no frame in
-      // between for a throttled drag update to tell the ancestor anything.
       dragEventNow("#inner", "dragenter", {
         dataTransfer,
         ...centerOf("#inner"),
@@ -2416,8 +2402,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   });
 
   /**
-   * The library reaches its end-of-drag cleanup on the statement after it calls a
-   * consumer, unguarded, so an escaping exception skips it and is reported as uncaught.
+   * The library runs its end-of-drag cleanup on the statement after it calls a
+   * consumer, unguarded, so an escaping exception skips it and surfaces as an
+   * uncaught error.
    */
   module("a consumer that throws cannot break the dispatch", function () {
     const blowUp = () => {
@@ -2906,7 +2893,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await startDrag("#src", { dataTransfer });
       await dragOver("#tgt", { dataTransfer });
 
-      // Disabled mid-drag: the registration waits for the drag to end.
       state.disabled = true;
       await settled();
       assert.dom("#src").hasAttribute("data-drag-source", "", "waiting");
@@ -2957,8 +2943,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#tgt"),
       });
 
-      // Both in one flush. The disable detaches the registration while the drag
-      // it is waiting on is still running, and the callback has been replaced.
+      // One flush for both: the registration detaches with the callback replaced.
       state.disabled = true;
       state.onDragEnd = () => calls.push("after");
       await settled();
@@ -2977,10 +2962,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
   });
 
-  /**
-   * The line needs a containing block, but a target that positions itself already
-   * has one. Declared at zero specificity so the consumer's own rule wins.
-   */
   module(
     "the indicator leaves a consumer's positioning alone",
     function (indicatorHooks) {

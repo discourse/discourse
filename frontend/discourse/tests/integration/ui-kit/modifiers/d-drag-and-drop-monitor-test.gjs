@@ -21,7 +21,6 @@ module(
 
       await render(
         <template>
-          {{! The monitor is global; attach it to any sentinel for lifecycle. }}
           <div
             {{dDragAndDropMonitor
               types="row"

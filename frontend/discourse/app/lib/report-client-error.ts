@@ -1,9 +1,7 @@
 /**
  * Reports an error the application caught and chose to survive.
- *
- * `ClientErrorHandlerService` picks these up, logs them with the theme or plugin they came
- * from, and shows admins a notice. Callers keep their own control flow: what to return,
- * whether to carry on, and whether to also surface the error in tests.
+ * `ClientErrorHandlerService` logs it with the theme or plugin it came from
+ * and shows admins a notice.
  *
  * @param error - The error that was caught.
  * @param messageKey - i18n key for the notice, by convention `broken_*_alert`.

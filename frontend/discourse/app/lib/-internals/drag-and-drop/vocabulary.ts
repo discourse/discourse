@@ -1,12 +1,9 @@
 import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 
 /**
- * Where the dragged body travels when a source registered a drag handle.
- *
- * The handle is what the underlying library registers, so that the row keeps
- * neither `draggable="true"` nor the unselectable text that attribute brings.
- * The body is the row the handle stands for, and it is what a target reports as
- * `source.element` and compares for `acceptsSelf`.
+ * Payload key under which a source registered through a drag handle publishes
+ * the element the handle stands for. Targets report that body as
+ * `source.element` and compare it for `acceptsSelf`.
  */
 export const DRAG_BODY = "discourse:dragBody";
 
@@ -15,8 +12,10 @@ export const DRAG_BODY = "discourse:dragBody";
  *
  * @param source - The payload as the underlying library carries it.
  */
-export function dragBodyOf(source: ElementDragPayload): Element {
-  return (source.data?.[DRAG_BODY] as Element | undefined) ?? source.element;
+export function dragBodyOf(source: ElementDragPayload): HTMLElement {
+  return (
+    (source.data?.[DRAG_BODY] as HTMLElement | undefined) ?? source.element
+  );
 }
 
 /**
@@ -46,8 +45,6 @@ export function toAcceptList<T>(value?: T | T[] | null): T[] {
 /**
  * Whether a drag's type is one the consumer asked for.
  *
- * Centralized so every reader of the type applies the same filter semantics.
- *
  * @param types - One type, several, or nothing at all to match every drag.
  * @param source - The dragged source, compared through {@link dragTypeOf}.
  */
@@ -63,8 +60,8 @@ export function matchesDragType(
 }
 
 /**
- * A drag source as consumers read it: routing keys lifted out and the dragged
- * body in place of the grip that carried it.
+ * A drag source as consumers read it: routing keys removed and the dragged
+ * body in place of the handle that carried it.
  */
 export interface NormalizedDragSource {
   /** The source's discriminator, or `null` when the drag carries none. */
@@ -74,7 +71,7 @@ export interface NormalizedDragSource {
   data: Record<string, unknown>;
 
   /** The dragged element: the published body, else the registered element. */
-  element: Element;
+  element: HTMLElement;
 }
 
 /**
@@ -96,35 +93,25 @@ export function normalizeOwnedDragSource(source: ElementDragPayload): {
   element: HTMLElement;
 } {
   const { type, data, element } = normalizeDragSource(source);
-  return { type: type as string, data, element: element as HTMLElement };
+  return { type: type as string, data, element };
 }
 
 /**
  * Resolves a raw payload into the shape every reader reports.
- *
- * This is the single place the routing vocabulary above is interpreted. The
- * drop target, the monitor modifier, and the service all consume it, so a
- * payload reads identically wherever a consumer meets it.
  *
  * @param source - The payload as the underlying library carries it.
  */
 export function normalizeDragSource(
   source: ElementDragPayload
 ): NormalizedDragSource {
-  // Lifted out first: the body is routing, not payload, so no consumer should
-  // ever iterate onto it.
   const data = { ...(source.data ?? {}) };
   delete data[DRAG_BODY];
 
   return {
-    // The underlying library types every payload value as `unknown`, because
-    // anything registering a draggable with it can put anything there.
-    // `dDragAndDropSource` always stamps its discriminator as a string.
+    // The library types payload values as `unknown`; owned sources always stamp
+    // a string `type`.
     type: (data.type ?? null) as string | null,
     data,
-    // A source that registered a handle publishes the body it stands for, so a
-    // consumer receives the element the user is moving rather than the grip
-    // they happened to press.
     element: dragBodyOf(source),
   };
 }

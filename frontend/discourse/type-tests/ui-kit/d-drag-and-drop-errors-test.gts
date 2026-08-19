@@ -1,8 +1,5 @@
-// Negative type assertions for the element drag-and-drop primitives: every
-// invocation below MUST fail to compile. They are quarantined here because a
-// `@glint-expect-error` suppresses reporting elsewhere in its file, which
-// would let a positive assertion pass against a broken declaration. Positives
-// live in d-drag-and-drop-test.gts.
+// Every invocation below MUST fail to compile. Negatives are quarantined here
+// so a `@glint-expect-error` cannot mask a broken positive declaration.
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
@@ -12,13 +9,13 @@ const Negatives = <template>
   {{! @glint-expect-error - a selector is not an element; the handle ref must be }}
   <li {{dDragAndDropSource type="link" dragHandle="#handle"}}></li>
 
-  {{! @glint-expect-error - the discriminator is required, since targets filter on it and the service identifies its own drags by it }}
+  {{! @glint-expect-error - the discriminator is required }}
   <li {{dDragAndDropSource data=payload}}></li>
 
-  {{! @glint-expect-error - a drag permits a fixed set of operations, and move-copy is not one of their spellings }}
+  {{! @glint-expect-error - "moveCopy" is not a permitted effect }}
   <li {{dDragAndDropSource type="link" effectAllowed="moveCopy"}}></li>
 
-  {{! @glint-expect-error - the axis vocabulary is vertical and horizontal, shared with the resize and auto-scroll primitives }}
+  {{! @glint-expect-error - the axis vocabulary is vertical and horizontal }}
   <li {{dDragAndDropTarget accepts="link" axis="y"}}></li>
 
   {{! @glint-expect-error - a drop lands before, after or inside, nowhere else }}

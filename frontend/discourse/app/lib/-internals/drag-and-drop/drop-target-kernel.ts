@@ -56,10 +56,7 @@ export interface DropTargetKernelEvent<Source> {
 
 /** Consumer callbacks and display options shared by every drop target. */
 export interface DropTargetKernelArgs<Source> extends DropPositionOptions {
-  /**
-   * Synchronous gate. Returning `false` refuses the drop. The feedback carries
-   * the consumer-facing source, current pointer input, and target element.
-   */
+  /** Synchronous gate. Returning `false` refuses the drop. */
   canDrop?: (feedback: DropTargetKernelFeedback<Source>) => boolean | void;
 
   /** Determines the cursor feedback browsers show during the drag. */
@@ -69,8 +66,9 @@ export interface DropTargetKernelArgs<Source> extends DropPositionOptions {
   getData?: () => object;
 
   /**
-   * Whether the target stays current after the pointer leaves it, until another
-   * target at its level takes over or the gate turns it away.
+   * Whether the target stays current after the pointer leaves it. It lets go
+   * when its parent changes, another target takes its depth, or the gate
+   * refuses it.
    */
   getIsSticky?: () => boolean;
 
@@ -78,28 +76,25 @@ export interface DropTargetKernelArgs<Source> extends DropPositionOptions {
   indicator?: boolean;
 
   /**
-   * Called when this target becomes the deepest accepted target. This usually
-   * means the pointer entered it, but can also mean a nested target that was
-   * covering it went away, so it can fire without the pointer moving.
+   * Called when this target becomes the deepest accepted target. Usually the
+   * pointer entered it, but it also fires when a nested target covering it
+   * goes away, without the pointer moving.
    */
   onDragEnter?: (event: DropTargetKernelEvent<Source>) => void;
 
   /**
-   * Called while this target is the deepest accepted target. It is throttled
-   * and fires when the input or drop-target hierarchy updates.
+   * Called repeatedly while this target is the deepest accepted target,
+   * throttled by the underlying library.
    */
   onDrag?: (event: DropTargetKernelEvent<Source>) => void;
 
   /**
-   * Called when this target stops being the deepest accepted target. This can
-   * mean the pointer left or a nested target took over; `position` is `null`.
+   * Called when this target stops being the deepest accepted target: the
+   * pointer left, a nested target took over, or the gate refused it.
+   * `position` is `null`.
    *
-   * This tracks the role rather than callback presence: it fires only after the
-   * target took the role, and once each time it gives it up, whether or not an
-   * `onDragEnter` callback observed it taking the role.
-   *
-   * A drop and teardown end the drag without a leave callback, so consumers
-   * must also release their own drag-time state when they are destroyed.
+   * A drop or teardown ends the drag without a leave, so consumers must also
+   * release their drag-time state when they are destroyed.
    */
   onDragLeave?: (event: DropTargetKernelEvent<Source>) => void;
 
@@ -119,8 +114,8 @@ type LibraryEventArgs<Payload> = {
 };
 
 /**
- * What the kernel hands an adapter's `register` function: the shape both
- * library registrars accept as-is, so no adapter needs a cast.
+ * What the kernel hands an adapter's `register` function, shaped so the
+ * library's registrars accept it without a cast.
  */
 export type DropTargetRegistrationArgs<Payload> = {
   element: Element;
@@ -174,13 +169,8 @@ const POSITION_CLASSES = Object.freeze({
 });
 
 /**
- * Resolves a fixed position or the side of the element's midpoint containing
- * the pointer.
- *
- * @param element - The target element to measure against.
- * @param input - The current pointer position.
- * @param options - The consumer's position and axis options.
- * @param rtl - Whether the target's sampled writing direction is right-to-left.
+ * Resolves a fixed position, or the side of the element's midpoint the pointer
+ * is on, mapped through the target's writing direction.
  */
 function resolveDropPosition(
   element: Element,
@@ -199,13 +189,7 @@ function resolveDropPosition(
   return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
 }
 
-/**
- * Creates positional feedback that keeps at most one indicator class active.
- *
- * @param element - The element carrying the indicator class.
- * @param positionlessClass - Shown in place of a position class while the
- *   target is hovered but resolves no position.
- */
+/** Positional feedback that keeps at most one indicator class active. */
 function createPositionIndicator(element: Element, positionlessClass?: string) {
   let activeClass: string | null = null;
 
@@ -253,14 +237,13 @@ function createPositionIndicator(element: Element, positionlessClass?: string) {
   };
 }
 
-/** Whether the element is the innermost target the drag is currently over. */
 function isDeepestTarget(location: DragLocationHistory, element: Element) {
   return location.current.dropTargets[0]?.element === element;
 }
 
 /**
- * Pairs consumer-facing enter and leave state. Direction is sampled when first
- * needed during a hover and dropped when that hover ends.
+ * Pairs consumer-facing enter and leave state. The writing direction is
+ * sampled once per hover and dropped when the hover ends.
  */
 function createEnterLeavePairing(element: Element) {
   let entered = false;
@@ -355,8 +338,8 @@ export function registerDropTargetKernel<Payload, Source>({
   ) => {
     if (!isDeepestTarget(location, element)) {
       indicator.clear();
-      // An ancestor remains in the target hierarchy when a child takes over,
-      // so no native leave arrives to close its consumer-facing enter.
+      // The library sends no leave to an ancestor a child took over from, since
+      // the ancestor stays in the hierarchy.
       reportLeave(source, location);
       return;
     }
@@ -370,8 +353,8 @@ export function registerDropTargetKernel<Payload, Source>({
     } else {
       indicator.show(position, args.axis ?? "vertical", rtl);
     }
-    // A target can become deepest on a drag update without receiving a fresh
-    // enter, so taking the role and observing it stay active share this path.
+    // A target can become deepest on a drag update without a library enter, so
+    // the consumer's enter fires from here rather than from the enter hook.
     if (entered) {
       consumerMayThrow(() =>
         args.onDragEnter?.({
@@ -394,8 +377,8 @@ export function registerDropTargetKernel<Payload, Source>({
     }
   };
 
-  // The stylesheet gates the indicator classes on this attribute, which survives
-  // a consumer rebinding `class` where a marker class would not.
+  // The stylesheet gates the indicator classes on this attribute; a marker
+  // class would not survive a consumer rebinding `class`.
   element.setAttribute(attribute, "");
 
   const cleanup = register({
@@ -426,21 +409,17 @@ export function registerDropTargetKernel<Payload, Source>({
       reportLeave(source, location);
     },
     onDrop: ({ source, location }) => {
-      // Every target in the settled hierarchy receives the drop; the deepest
-      // one still shows its indicator.
       indicator.clear();
-      // A non-deepest target was already left by the synchronous hierarchy
-      // update; the drop only closes any pairing that remains.
       if (!isDeepestTarget(location, element)) {
         pairing.reset();
         return;
       }
-      // Read before the pairing is reset, so the drop's position agrees with
-      // the direction the hover was measured against.
+      // Sampled before the reset clears it, so the drop uses the direction the
+      // hover was measured against.
       const rtl = pairing.isRtl();
       pairing.reset();
-      // The settled hierarchy is reused at drop, so a gate that changed since
-      // the last drag update must be asked again before acting.
+      // The library reuses the hovered hierarchy at drop and does not re-run
+      // the gate, so a gate that changed since must be asked again.
       if (!passesGate(source, location.current.input)) {
         return;
       }

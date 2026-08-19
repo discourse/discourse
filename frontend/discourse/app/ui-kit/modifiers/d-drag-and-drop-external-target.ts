@@ -39,25 +39,15 @@ interface DDragAndDropExternalTargetSignature {
       accepts?: ExternalDragKind | ExternalDragKind[];
 
       /**
-       * See {@link DropTargetKernelArgs}.
-       *
-       * A fixed drop position. When set, `axis` and the midpoint logic are
-       * ignored. Supplying it opts the target into resolving a position at all —
-       * see `axis`.
+       * See {@link DropTargetKernelArgs}. Setting this or `axis` opts the target
+       * into resolving a position at all; see `axis`.
        */
       position?: DropPosition;
 
       /**
-       * See {@link DropTargetKernelArgs}.
-       *
-       * Drives the indicator class selection and midpoint position math.
-       *
-       * Supplying either this or `position` is what opts a target into
-       * resolving a position: without one, callbacks are told `position: null`
-       * and the indicator is the single `--drag-over-external` class. Most
-       * external targets want that — a drop zone is one destination, not a slot
-       * in a list. Reach for an axis when the target IS a slot, such as a row a
-       * dragged-in link should land above or below.
+       * See {@link DropTargetKernelArgs}. Without this or `position` the target
+       * is one destination, not a slot: callbacks get `position: null` and the
+       * indicator is the single `--drag-over-external` class.
        */
       axis?: Axis;
 
@@ -101,19 +91,14 @@ export type DragAndDropExternalTargetArgs =
   DDragAndDropExternalTargetSignature["Args"]["Named"];
 
 /**
- * Imperative external drop-target registration. Wraps the native adapter with
- * the deepest-target filter, the `--drag-over-external` indicator class, and the
- * decorated-source payload the modifier exposes.
- *
- * The imperative counterpart of the modifier below, for the same reasons
- * `registerDragAndDropTarget` exists beside `dDragAndDropTarget`; consumers use
- * it instead of importing the underlying library themselves.
+ * Imperative external drop-target registration, wrapped by the
+ * `dDragAndDropExternalTarget` modifier below; the counterpart of
+ * `registerDragAndDropTarget` for drags from outside the window.
  *
  * @param element - The element to register as a drop target.
  * @param getArgsRef - Closure returning the latest args. Adapter callbacks read
- *   this on every invocation, so arg changes take effect without re-registering.
- * @returns Cleanup function. Caller invokes it once on teardown (modifier
- *   destroy, component willDestroy, etc.).
+ *   it on every invocation, so arg changes apply without re-registering.
+ * @returns Cleanup; call it once on teardown.
  */
 export function registerDragAndDropExternalTarget(
   element: Element,
@@ -133,19 +118,14 @@ export function registerDragAndDropExternalTarget(
 }
 
 /**
- * Marks an element as a drop target for **external** drags — files,
- * URLs, HTML, text dragged into the window from outside (OS file
- * manager, another browser tab, etc.). Thin Ember-modifier wrapper
- * around {@link registerDragAndDropExternalTarget}. Every arg is documented on
- * {@link DragAndDropExternalTargetArgs}, and the payload every callback
+ * Marks an element as a drop target for drags from outside the window: files,
+ * URLs, HTML or text from another application or tab. Every arg is documented
+ * on {@link DragAndDropExternalTargetArgs}, and the payload every callback
  * receives on {@link ExternalDragPayload}.
  *
- * Pair with the existing `dDragAndDropTarget` modifier for
- * element-to-element drags; the two adapters are independent and can coexist on
- * the same element. Another consumer of the same native `dragover` / `drop`
- * events still receives them, since accepting a drop cancels the event's default
- * without stopping its propagation; a consumer that checks `defaultPrevented`
- * will see an accepted drag as already handled.
+ * An accepted drop cancels the native event's default without stopping its
+ * propagation, so another `dragover` / `drop` handler still runs and sees
+ * `defaultPrevented`.
  *
  * Files:
  *
@@ -156,19 +136,8 @@ export function registerDragAndDropExternalTarget(
  * }}>...</div>
  * ```
  *
- * Multiple kinds:
- *
- * ```hbs
- * <div {{dDragAndDropExternalTarget
- *   accepts=(array "files" "urls")
- *   onDragEnter=this.highlight
- *   onDragLeave=this.unhighlight
- *   onDrop=this.handleDrop
- * }}>...</div>
- * ```
- *
- * A slot rather than a destination — `axis` opts into the element target's
- * before/after position, for a row an incoming payload should land beside:
+ * A slot rather than a destination, with `axis` opting into a before/after
+ * position:
  *
  * ```hbs
  * <li {{dDragAndDropExternalTarget
@@ -178,20 +147,12 @@ export function registerDragAndDropExternalTarget(
  * }}>...</li>
  * ```
  *
- * Nested targets: only the deepest accepted target receives the
- * lifecycle callbacks, so an ancestor decorated with this modifier
- * doesn't double-handle a drop the child already claimed. An ancestor that
- * should stay lit throughout should therefore read `@service dragAndDrop`
- * rather than register a target of its own.
- *
- * This modifier hands the consumer the raw payload and stops; it does not upload
- * anything.
+ * An ancestor that should stay lit while a nested target is hovered reads
+ * `@service dragAndDrop` instead of registering a target of its own.
  */
 export default modifier<DDragAndDropExternalTargetSignature>(
   (element, _positional, args) =>
-    // Pass `args` through to the closure WITHOUT reading any property of
-    // it here. Reading args.X inside the body would mark its tag consumed
-    // and force the modifier to re-run (re-registering the adapter) on every
-    // change. The closure reads fresh values inside the adapter callbacks.
+    // Pass `args` unread: reading a property here would track it and re-run
+    // the modifier, re-registering the target on every change.
     registerDragAndDropExternalTarget(element, () => args)
 );

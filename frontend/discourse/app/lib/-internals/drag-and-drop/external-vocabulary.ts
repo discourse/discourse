@@ -24,16 +24,14 @@ export interface ExternalDragPayload {
   types: NativeMediaType[];
 
   /**
-   * The `DataTransferItem` list. Empty while the drag hovers: the browser only
-   * hands items over at the drop, so `getFiles()` and this list are populated in
-   * `onDrop` alone. Use `types` or `containsFiles()` to decide during a hover.
+   * The `DataTransferItem` list. Empty until the drop, so `getFiles()` returns
+   * files in `onDrop` alone. Use `types` or `containsFiles()` while hovering.
    */
   items: DataTransferItem[];
 
   /**
-   * Reads the string payload for a given MIME type. Returns `null` when the type
-   * is absent or the browser withholds string data during the current drag
-   * phase; completed drop callbacks normally receive the readable payload.
+   * Reads the string payload for a MIME type. Returns `null` while hovering,
+   * and at the drop when the type is absent.
    */
   getStringData: (mediaType: string) => string | null;
 
@@ -48,9 +46,8 @@ export interface ExternalDragPayload {
 }
 
 /**
- * Vocabulary `accepts` / `acceptsExternal()` understand. Each key delegates to
- * the matching native-payload predicate so the service and external-target
- * surfaces share one vocabulary.
+ * The kinds `accepts` / `acceptsExternal()` understand, each mapped to its
+ * payload predicate.
  */
 const EXTERNAL_KIND_PREDICATES = Object.freeze({
   files: containsFiles,
@@ -63,10 +60,7 @@ const EXTERNAL_KIND_PREDICATES = Object.freeze({
 export type ExternalDragKind = keyof typeof EXTERNAL_KIND_PREDICATES;
 
 /**
- * Wraps the underlying library's raw external payload
- * (`{types, items, getStringData}`) with the `contains*` / `get*` helpers bound
- * to it, so a consumer calls `source.getFiles()` rather than importing the
- * library's helpers itself.
+ * Binds the read helpers to the library's raw external payload.
  *
  * @param source - The raw payload the library reports.
  */
@@ -89,12 +83,8 @@ export function decorateExternalSource(
 }
 
 /**
- * Whether an incoming external drag is one of the named kinds.
- *
- * An empty or missing filter matches every external drag, mirroring how the
- * element target treats an absent `accepts`. Shared so everything filtering on
- * this vocabulary agrees on what a kind name means; the element-side
- * counterpart is `matchesDragType`.
+ * Whether an incoming external drag is one of the named kinds. An empty or
+ * missing filter matches every external drag.
  *
  * @param accepts - The kind filter as the consumer supplied it.
  * @param source - The raw payload the underlying library reports.
@@ -109,7 +99,7 @@ export function matchesExternalKind(
   }
   return kinds.some((kind) => {
     const predicate = EXTERNAL_KIND_PREDICATES[kind];
-    // Unknown kind names fail closed — better than silently matching.
+    // Untyped callers can pass an unknown kind; it matches nothing.
     return predicate ? predicate({ source }) : false;
   });
 }
