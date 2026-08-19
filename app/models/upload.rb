@@ -415,7 +415,6 @@ class Upload < ActiveRecord::Base
               "force",
               read: [local_path],
               write: [directory],
-              nice: 10,
             )
 
             components = File.binread(pixel).bytes

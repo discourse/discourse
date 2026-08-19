@@ -10,7 +10,7 @@ RSpec.describe Vips do
       Discourse::SafeExec
         .expects(:capture)
         .with do |*command, **options|
-          command == %w[vips --version] && options[:timeout] == 5 &&
+          command == %w[nice -n 10 vips --version] && options[:timeout] == 5 &&
             options[:read].include?("/etc/fonts") &&
             options[:rlimits] ==
               {
@@ -31,6 +31,9 @@ RSpec.describe Vips do
         .with do |*command, **|
           command ==
             [
+              "nice",
+              "-n",
+              "10",
               "sh",
               "-c",
               "vips text /tmp/glyph.png A\\;\\ touch\\ /tmp/exploit && vips gravity /tmp/glyph.png /tmp/avatar.png centre 360 360",

@@ -140,7 +140,6 @@ class LetterAvatar
           profile,
           read: [from, profile],
           write: [resized.path],
-          nice: 10,
         )
         Vips.run(
           "sharpen",
@@ -152,7 +151,6 @@ class LetterAvatar
           "0.7",
           read: [resized.path],
           write: [File.dirname(to)],
-          nice: 10,
         )
       end
     end

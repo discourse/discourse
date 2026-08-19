@@ -378,7 +378,6 @@ class TopicOgImageGenerator
         "#{png_path}[compression=9]",
         read: [dir],
         write: [dir],
-        nice: 10,
         allow_untrusted: true,
       )
 

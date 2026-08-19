@@ -26,7 +26,7 @@ class Vips
     read: [],
     write: [],
     timeout: nil,
-    nice: nil,
+    nice: 10,
     allow_untrusted: false,
     failure_message: ""
   )
