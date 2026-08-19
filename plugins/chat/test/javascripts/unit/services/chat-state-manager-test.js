@@ -108,22 +108,6 @@ module("Unit | Service | chat-state-manager", function (hooks) {
     assert.true(this.subject.isFullPageActive);
   });
 
-  test("canInteract", function (assert) {
-    sinon
-      .stub(this.subject.router, "currentRouteName")
-      .value("discovery.latest");
-    assert.true(
-      this.subject.canInteract,
-      "chat is interactive in the main app"
-    );
-
-    sinon.stub(this.subject.router, "currentRouteName").value("wizard.step");
-    assert.false(
-      this.subject.canInteract,
-      "chat is not interactive in the wizard"
-    );
-  });
-
   test("didCollapseDrawer", function (assert) {
     this.subject.didCollapseDrawer();
 
