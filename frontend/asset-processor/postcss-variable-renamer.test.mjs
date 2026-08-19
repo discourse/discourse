@@ -1,8 +1,8 @@
 /* eslint-disable qunit/require-expect */
 import postcss from "postcss";
 import { expect, test } from "vitest";
-import postcssVariableRenamer from "./postcss-variable-renamer.js";
 import renames from "../../app/assets/stylesheets/variable-renames.json";
+import postcssVariableRenamer from "./postcss-variable-renamer.js";
 
 const testMap = { "--old-name": "--new-name" };
 
