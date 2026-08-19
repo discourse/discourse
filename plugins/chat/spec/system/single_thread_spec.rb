@@ -107,12 +107,12 @@ describe "Single thread in side panel" do
     end
 
     context "when in drawer" do
-      it "opens the channel and highlights the message when clicking original message link" do
+      it "opens the channel and highlights the message from the original message link" do
         visit("/latest")
         chat_page.open_from_header
         chat_drawer_page.open_channel(channel)
         channel_page.message_thread_indicator(thread.original_message).click
-        find(".chat-message-info__original-message").click
+        thread_page.open_original_message
 
         expect(chat_drawer_page).to have_open_channel(channel)
         expect(channel_page.messages).to have_message(
@@ -122,10 +122,10 @@ describe "Single thread in side panel" do
       end
     end
 
-    it "highlights the message in the channel when clicking original message link" do
+    it "highlights the message in the channel from the original message link" do
       chat_page.visit_thread(thread)
 
-      find(".chat-message-info__original-message").click
+      thread_page.open_original_message
 
       expect(channel_page.messages).to have_message(
         id: thread.original_message.id,
@@ -246,10 +246,10 @@ describe "Single thread in side panel" do
         expect(side_panel).to have_open_thread(thread)
       end
 
-      it "navigates back to channel when clicking original message link", mobile: true do
+      it "navigates back to channel from the original message link", mobile: true do
         chat_page.visit_thread(thread)
 
-        find(".chat-message-info__original-message").click
+        thread_page.open_original_message
 
         expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}")
       end
