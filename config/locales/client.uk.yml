@@ -7686,7 +7686,7 @@ uk:
               other: "%{formatted_count} переглядів сторінок за обраний період"
           trend:
             up: "вгору %{percent}"
-            down: "вниз %{percent}"
+            down: "спад %{percent}"
           comparison_tooltip:
             previous_7_days: "Порівняно з попередніми 7 днями (%{start} – %{end})"
             previous_30_days: "Порівняно з попередніми 30 днями (%{start} – %{end})"
