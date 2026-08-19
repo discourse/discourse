@@ -1,18 +1,20 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { bind } from "discourse/lib/decorators";
 import {
   getCollapsedSidebarSectionKey,
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
-import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -131,10 +133,15 @@ export default class SidebarSection extends Component {
   }
 
   @action
-  handleMultipleHeaderActions(id) {
-    this.args.headerActions
-      .find((headerAction) => headerAction.id === id)
-      .action();
+  onRegisterApi(api) {
+    this.dMenu = api;
+  }
+
+  @action
+  handleHeaderActionClick(headerAction) {
+    headerAction();
+    this.dMenu.close();
+
     if (this.args.toggleNavigationMenu) {
       next(this.args.toggleNavigationMenu);
     }
@@ -224,16 +231,31 @@ export default class SidebarSection extends Component {
             {{/if}}
 
             {{#if this.isMultipleHeaderActions}}
-              <DropdownSelectBox
-                @options={{hash
-                  icon=@headerActionsIcon
-                  placementStrategy="absolute"
-                  btnCustomClasses="sidebar-section-header-dropdown-btn"
-                }}
-                @content={{@headerActions}}
-                @onChange={{this.handleMultipleHeaderActions}}
-                class="sidebar-section-header-dropdown"
-              />
+              <DMenu
+                @identifier="sidebar-section-header-dropdown-menu"
+                @title={{i18n "sidebar.sections.more_options.title"}}
+                @icon="ellipsis-vertical"
+                @onRegisterApi={{this.onRegisterApi}}
+                class="sidebar-section-header-dropdown btn-flat"
+              >
+                <:content>
+                  <DDropdownMenu as |dropdown|>
+                    {{#each @headerActions as |headerAction|}}
+                      <dropdown.item>
+                        <DButton
+                          @action={{fn
+                            this.handleHeaderActionClick
+                            headerAction.action
+                          }}
+                          @translatedLabel={{headerAction.title}}
+                          class="btn-transparent sidebar-section-header-dropdown__item"
+                          data-menu-option-id={{headerAction.id}}
+                        />
+                      </dropdown.item>
+                    {{/each}}
+                  </DDropdownMenu>
+                </:content>
+              </DMenu>
             {{/if}}
           </div>
         {{/unless}}
