@@ -9,6 +9,11 @@ RSpec.describe DiscourseWorkflows::Registry do
       expect(result).to eq(DiscourseWorkflows::CredentialTypes::BasicAuth)
     end
 
+    it "finds OAuth client credentials" do
+      result = described_class.find_credential_type("oauth2_client_credentials")
+      expect(result).to eq(DiscourseWorkflows::CredentialTypes::Oauth2ClientCredentials)
+    end
+
     it "returns nil for unknown identifier" do
       expect(described_class.find_credential_type("unknown")).to be_nil
     end

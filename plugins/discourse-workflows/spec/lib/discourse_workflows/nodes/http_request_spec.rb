@@ -530,6 +530,139 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
       end
     end
 
+    context "with OAuth 2.0 client credentials authentication" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "oauth2_client_credentials",
+          data: {
+            "token_url" => "https://login.salesforce.example/services/oauth2/token",
+            "client_id" => "salesforce-client",
+            "client_secret" => "salesforce-secret",
+            "scope" => "api",
+          },
+        )
+      end
+
+      it "uses a cached access token obtained with request-body client authentication" do
+        token_request =
+          stub_request(:post, "https://login.salesforce.example/services/oauth2/token").with(
+            body: {
+              "client_id" => "salesforce-client",
+              "client_secret" => "salesforce-secret",
+              "grant_type" => "client_credentials",
+              "scope" => "api",
+            },
+            headers: {
+              "Content-Type" => "application/x-www-form-urlencoded",
+            },
+          ).to_return(
+            status: 200,
+            body: { access_token: "salesforce-access-token", expires_in: 3600 }.to_json,
+            headers: {
+              "content-type" => "application/json",
+            },
+          )
+        stub_request(:get, "https://api.salesforce.example/data").with(
+          headers: {
+            "Authorization" => "Bearer salesforce-access-token",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.salesforce.example/data",
+          "authentication" => "oauth2_client_credentials",
+          "credentials" => {
+            "auth" => {
+              "id" => credential.id,
+              "credential_type" => "oauth2_client_credentials",
+            },
+          },
+        }
+
+        expect(execute_node(configuration: config, item: item)).to eq("ok" => true)
+        expect(execute_node(configuration: config, item: item)).to eq("ok" => true)
+        expect(token_request).to have_been_requested.once
+      end
+
+      it "uses HTTP Basic authentication at the token endpoint when configured" do
+        credential.update!(data: credential.data.merge("client_authentication" => "basic_auth"))
+
+        stub_request(:post, "https://login.salesforce.example/services/oauth2/token").with(
+          body: "grant_type=client_credentials&scope=api",
+          headers: {
+            "Authorization" =>
+              "Basic #{Base64.strict_encode64("salesforce-client:salesforce-secret")}",
+          },
+        ).to_return(
+          status: 200,
+          body: { access_token: "salesforce-basic-token" }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+        stub_request(:get, "https://api.salesforce.example/data").with(
+          headers: {
+            "Authorization" => "Bearer salesforce-basic-token",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.salesforce.example/data",
+          "authentication" => "oauth2_client_credentials",
+          "credentials" => {
+            "auth" => {
+              "id" => credential.id,
+              "credential_type" => "oauth2_client_credentials",
+            },
+          },
+        }
+
+        expect(execute_node(configuration: config, item: item)).to eq("ok" => true)
+      end
+
+      it "raises a clear error when the token response has no access token" do
+        stub_request(:post, "https://login.salesforce.example/services/oauth2/token").to_return(
+          status: 200,
+          body: { token_type: "Bearer" }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.salesforce.example/data",
+          "authentication" => "oauth2_client_credentials",
+          "credentials" => {
+            "auth" => {
+              "id" => credential.id,
+              "credential_type" => "oauth2_client_credentials",
+            },
+          },
+        }
+
+        expect { execute_node(configuration: config, item: item) }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          "OAuth token response does not include an access token.",
+        )
+      end
+    end
+
     context "with header_auth authentication" do
       fab!(:credential) do
         Fabricate(
