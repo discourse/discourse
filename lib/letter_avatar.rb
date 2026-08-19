@@ -161,7 +161,7 @@ class LetterAvatar
     end
 
     def text_markup(letter)
-      %(<span foreground="#ffffff" alpha="80%">#{ERB::Util.html_escape(letter)}</span>)
+      %(<span foreground="#ffffff">#{ERB::Util.html_escape(letter)}</span>)
     end
 
     def font_arguments
