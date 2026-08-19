@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class AdminDashboardSectionConfiguration
-  KNOWN_SECTIONS = %w[highlights reports traffic engagement search].freeze
+  KNOWN_SECTIONS = %w[highlights reports traffic engagement search system].freeze
+  DEFAULT_HIDDEN_SECTIONS = %w[system].freeze
 
   ACTIVITY_BY_CATEGORY_MAX = 10
   WHOS_POSTING_MAX = 10
@@ -51,6 +52,10 @@ class AdminDashboardSectionConfiguration
     },
   }.freeze
 
+  def self.default_visible?(section_id)
+    DEFAULT_HIDDEN_SECTIONS.exclude?(section_id.to_s)
+  end
+
   def self.available_plugin_section_ids
     DiscoursePluginRegistry
       .admin_dashboard_sections
@@ -71,7 +76,8 @@ class AdminDashboardSectionConfiguration
         .order(:position)
         .pluck(:section_id, :visible)
         .map { |id, visible| { id:, visible: } }
-    not_persisted = (known - persisted.map { |s| s[:id] }).map { |id| { id:, visible: true } }
+    not_persisted =
+      (known - persisted.map { |s| s[:id] }).map { |id| { id:, visible: default_visible?(id) } }
 
     persisted + not_persisted
   end
@@ -114,7 +120,7 @@ class AdminDashboardSectionConfiguration
     record =
       AdminDashboardSection.find_or_create_by!(section_id:) do |r|
         r.position = (AdminDashboardSection.maximum(:position) || -1) + 1
-        r.visible = true
+        r.visible = default_visible?(section_id)
       end
 
     record.with_lock { record.update!(settings: record.settings.to_h.deep_merge(key => value)) }

@@ -7,7 +7,11 @@ module SeedData
         next if AdminDashboardSection.exists?(section_id:)
 
         next_position = (AdminDashboardSection.maximum(:position) || -1) + 1
-        AdminDashboardSection.create!(section_id:, position: next_position, visible: true)
+        AdminDashboardSection.create!(
+          section_id:,
+          position: next_position,
+          visible: AdminDashboardSectionConfiguration.default_visible?(section_id),
+        )
       end
     end
   end

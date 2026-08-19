@@ -137,6 +137,19 @@ $db-bar-height: var(--space-2);
   }
 }
 
+.db-bar-track {
+  height: $db-bar-height;
+  border-radius: 1em;
+  background: var(--primary-low);
+}
+
+.db-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--tertiary);
+}
+
 .db-configure {
   padding: var(--space-4);
 
@@ -485,5 +498,15 @@ $db-bar-height: var(--space-2);
         padding-bottom: 0;
       }
     }
+  }
+}
+
+.db-system {
+  &__breakdown {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
   }
 }
