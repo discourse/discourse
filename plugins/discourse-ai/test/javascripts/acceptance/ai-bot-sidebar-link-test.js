@@ -27,8 +27,8 @@ acceptance("AI Bot - Sidebar community link", function (needs) {
       .exists("AI bot link is displayed in the sidebar");
 
     assert
-      .dom(".sidebar-section-link[data-link-name='ai-bot'] .d-icon-robot")
-      .exists("AI bot link has robot icon");
+      .dom(".sidebar-section-link[data-link-name='ai-bot'] .d-icon-discobot")
+      .exists("AI bot link has discobot icon");
 
     assert
       .dom(".sidebar-section-link[data-link-name='ai-bot']")
