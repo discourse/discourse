@@ -1,7 +1,10 @@
 import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { dragEvent } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
+import {
+  dragEvent,
+  textTransfer,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 
@@ -11,12 +14,6 @@ module(
     setupRenderingTest(hooks);
 
     module("external auto-scroll", function () {
-      function textTransfer() {
-        const dataTransfer = new DataTransfer();
-        dataTransfer.setData("text/plain", "dropped text");
-        return dataTransfer;
-      }
-
       /**
        * Holds a drag near the container's bottom edge across several frames.
        * Auto-scroll runs off its own animation-frame loop and eases in over time,

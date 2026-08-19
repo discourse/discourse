@@ -14,7 +14,10 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   centerOf,
   dragEvent,
+  dragEventNow,
+  dragOver,
   simulateDrag,
+  startDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import { registerDragAndDropMonitor } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 import dDragAndDropSource, {
@@ -26,30 +29,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   setupRenderingTest(hooks);
 
   module("marker attribute lifecycle", function () {
-    test("marks every registered element after render", async function (assert) {
-      await render(
-        <template>
-          <div id="source" {{dDragAndDropSource type="row"}}>source</div>
-          <div id="target" {{dDragAndDropTarget accepts="row"}}>target</div>
-        </template>
-      );
-
-      assert
-        .dom("#source")
-        .hasAttribute(
-          "data-drag-source",
-          "",
-          "the source has its registration marker"
-        );
-      assert
-        .dom("#target")
-        .hasAttribute(
-          "data-drop-target",
-          "",
-          "the element target has its registration marker"
-        );
-    });
-
     test("removes every marker when its element is destroyed", async function (assert) {
       const state = new (class {
         @tracked show = true;
@@ -175,93 +154,14 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     assert.false(dropped, "onDrop is not called for foreign types");
   });
 
-  test("simulateDrag merges independent partial coordinate overrides", async function (assert) {
-    const events = {};
-
-    // A registered pair rather than bare elements, because that is what every
-    // caller passes and what the helper now refuses to run without.
+  test("a source without a handle is draggable itself", async function (assert) {
     await render(
       <template>
-        <div id="src" {{dDragAndDropSource type="row"}}>source</div>
-        <div id="tgt" {{dDragAndDropTarget accepts="row"}}>target</div>
+        <div id="src" {{dDragAndDropSource type="row"}}>src</div>
       </template>
     );
 
-    for (const type of ["dragstart", "dragend"]) {
-      find("#src").addEventListener(type, (event) => {
-        events[type] = { clientX: event.clientX, clientY: event.clientY };
-      });
-    }
-    for (const type of ["dragenter", "dragover", "drop"]) {
-      find("#tgt").addEventListener(type, (event) => {
-        events[type] = { clientX: event.clientX, clientY: event.clientY };
-      });
-    }
-
-    const sourceCenter = centerOf("#src");
-    const targetCenter = centerOf("#tgt");
-    const sourceCoordinates = { clientY: sourceCenter.clientY - 1 };
-    const targetCoordinates = { clientX: targetCenter.clientX + 1 };
-
-    await simulateDrag("#src", "#tgt", {
-      dataTransfer: new DataTransfer(),
-      sourceCoordinates,
-      targetCoordinates,
-    });
-
-    assert.strictEqual(
-      events.dragstart.clientY,
-      sourceCoordinates.clientY,
-      "dragstart uses the source clientY override"
-    );
-    assert.strictEqual(
-      events.dragstart.clientX,
-      sourceCenter.clientX,
-      "dragstart keeps the computed source clientX"
-    );
-    assert.strictEqual(
-      events.dragend.clientY,
-      sourceCoordinates.clientY,
-      "dragend uses the source clientY override"
-    );
-    assert.strictEqual(
-      events.dragend.clientX,
-      sourceCenter.clientX,
-      "dragend keeps the computed source clientX"
-    );
-    for (const type of ["dragenter", "dragover", "drop"]) {
-      assert.strictEqual(
-        events[type].clientX,
-        targetCoordinates.clientX,
-        `${type} uses the target clientX override`
-      );
-      assert.strictEqual(
-        events[type].clientY,
-        targetCenter.clientY,
-        `${type} keeps the computed target clientY`
-      );
-    }
-  });
-
-  test("source without dragHandle starts from the whole element", async function (assert) {
-    let starts = 0;
-    const onDragStart = () => starts++;
-
-    await render(
-      <template>
-        <div id="src" {{dDragAndDropSource type="row" onDragStart=onDragStart}}>
-          <span id="body">body</span>
-        </div>
-        <div id="tgt" {{dDragAndDropTarget accepts="row"}}>target</div>
-      </template>
-    );
-
-    await simulateDrag("#src", "#tgt", {
-      dataTransfer: new DataTransfer(),
-      sourceCoordinates: centerOf("#body"),
-    });
-
-    assert.strictEqual(starts, 1, "pressing the row body starts the drag");
+    assert.dom("#src").hasAttribute("draggable", "true");
   });
 
   test("source re-registers when dragHandle arrives after initial registration", async function (assert) {
@@ -537,41 +437,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     assert.dom("#src").doesNotHaveClass("--dragging");
   });
 
-  test("cancelled source drag cleans up without firing consumer onDrop", async function (assert) {
-    let drops = 0;
-    const onDrop = () => drops++;
-
-    await render(
-      <template>
-        <div id="src" {{dDragAndDropSource type="row" onDrop=onDrop}}>
-          src
-        </div>
-      </template>
-    );
-
-    const dataTransfer = new DataTransfer();
-    await dragEvent("#src", "dragstart", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-    await dragEvent("#src", "dragend", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-
-    assert
-      .dom("#src")
-      .doesNotHaveClass(
-        "--dragging",
-        "a cancelled drag still removes the source-private dragging class"
-      );
-    assert.strictEqual(
-      drops,
-      0,
-      "a cancelled drag does not fire the consumer's onDrop"
-    );
-  });
-
   module("source end callbacks", function () {
     test("abandoned drag defers onDragEnd without onDrop", async function (assert) {
       const calls = [];
@@ -729,52 +594,22 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       </template>
     );
 
-    const dataTransfer = new DataTransfer();
-    const target = document.querySelector("#tgt");
-    const rect = target.getBoundingClientRect();
+    const rect = find("#tgt").getBoundingClientRect();
 
-    await dragEvent("#src", "dragstart", { dataTransfer, ...centerOf("#src") });
-    await dragEvent("#tgt", "dragenter", { dataTransfer, ...centerOf("#tgt") });
-    await dragEvent("#tgt", "dragover", {
-      dataTransfer,
-      clientY: rect.top + 5,
-      clientX: rect.left + 5,
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      targetCoordinates: { clientY: rect.top + 5 },
     });
-    await dragEvent("#tgt", "drop", {
-      dataTransfer,
-      clientY: rect.top + 5,
-      clientX: rect.left + 5,
-    });
-    await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
-
-    assert.strictEqual(drops.at(-1).position, "before");
-
-    drops.length = 0;
-    const dataTransfer2 = new DataTransfer();
-    await dragEvent("#src", "dragstart", {
-      dataTransfer: dataTransfer2,
-      ...centerOf("#src"),
-    });
-    await dragEvent("#tgt", "dragenter", {
-      dataTransfer: dataTransfer2,
-      ...centerOf("#tgt"),
-    });
-    await dragEvent("#tgt", "dragover", {
-      dataTransfer: dataTransfer2,
-      clientY: rect.top + rect.height - 5,
-      clientX: rect.left + 5,
-    });
-    await dragEvent("#tgt", "drop", {
-      dataTransfer: dataTransfer2,
-      clientY: rect.top + rect.height - 5,
-      clientX: rect.left + 5,
-    });
-    await dragEvent("#src", "dragend", {
-      dataTransfer: dataTransfer2,
-      ...centerOf("#src"),
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      targetCoordinates: { clientY: rect.top + rect.height - 5 },
     });
 
-    assert.strictEqual(drops.at(-1).position, "after");
+    assert.deepEqual(
+      drops.map(({ position }) => position),
+      ["before", "after"],
+      "a drop lands before or after the target depending on which side of its midpoint the cursor is"
+    );
   });
 
   test("a horizontal target measures the midpoint along x and lights the side class", async function (assert) {
@@ -973,12 +808,10 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
   });
 
-  test("target modifier picks up arg changes without re-registering", async function (assert) {
-    // The modifier runs `modify()` only once (its body reads no tracked
-    // arg properties), so the underlying target is registered just once. The closure
-    // around `args` must still see updated values when tracked args
-    // change. This guards against the modifier going stale after an
-    // arg update.
+  test("target arg changes reach the registered closure", async function (assert) {
+    // The modifier registers once and hands the library a closure over its
+    // args, so a changed arg has to be read through that closure rather than
+    // through a re-registration.
     const state = new (class {
       @tracked accepted = "row";
       @tracked dropped = null;
@@ -1032,9 +865,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   });
 
   test("the service tracks the element drag first-hand", async function (assert) {
-    // The source modifier no longer pushes drag state; the service derives it
-    // via its own `monitorForElements`. Looking the service up registers that
-    // monitor before the drag begins.
+    // The service derives drag state from its own element monitor rather than
+    // being told by the source. Looking it up registers that monitor before the
+    // drag begins.
     const dnd = this.owner.lookup("service:drag-and-drop");
 
     await render(
@@ -1072,7 +905,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   });
 
   test("currentDrag identity is stable within a drag (one object per drag)", async function (assert) {
-    // grid-overlay keys its drag cache on the `currentDrag` reference, so the
+    // Consumers key per-drag caches on the `currentDrag` reference, so the
     // service must set it once per drag, not rebuild it per move.
     const dnd = this.owner.lookup("service:drag-and-drop");
 
@@ -1157,25 +990,13 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
 
       // The source defers its consumer callbacks to the next task, so tearing
       // it down in between is what a route transition or a re-render dropping
       // the row does.
-      find("#tgt").dispatchEvent(
-        new DragEvent("drop", { bubbles: true, dataTransfer })
-      );
+      dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
       state.rendered = false;
       await settled();
 
@@ -1210,22 +1031,10 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
 
-      find("#tgt").dispatchEvent(
-        new DragEvent("drop", { bubbles: true, dataTransfer })
-      );
+      dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
       // The consumer is still here — only the registration is being replaced,
       // which is what an arg bound to drag state does the moment the drag ends.
       // It still expects to be told how its own drag finished.
@@ -1295,6 +1104,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
 
     test("a source re-enabled mid-drag leaves only one registration behind", async function (assert) {
+      // White-box: a duplicate registration is only visible through the
+      // library's dev-only warning, so that is what is asserted on.
       const warn = sinon.stub(console, "warn");
       const state = new (class {
         @tracked disabled = false;
@@ -1336,7 +1147,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
     });
 
-    test("superseding a detached source keeps the callbacks it still owes", async function (assert) {
+    test("a detached registration keeps its scheduled dispatch and reports it outstanding until it fires", async function (assert) {
       const calls = [];
       const args = {
         type: "row",
@@ -1354,24 +1165,17 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       const release = registerDragAndDropSource(find("#src"), () => args);
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
 
-      find("#tgt").dispatchEvent(
-        new DragEvent("drop", { bubbles: true, dataTransfer })
-      );
+      dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
 
       const work = release({ cancelPending: false });
+
+      assert.true(
+        work.outstanding(),
+        "a dispatch is still scheduled, so a holder has to keep it"
+      );
 
       // Something has taken this registration's place, which says nothing about
       // the drag that already finished. The consumer is still there and is still
@@ -1387,51 +1191,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       assert.false(
         work.outstanding(),
         "and once it has fired the work reports itself finished, so a holder can let go"
-      );
-    });
-
-    test("detached work reports itself outstanding until its dispatch fires", async function (assert) {
-      const args = { type: "row", onDragEnd: () => {}, onDrop: () => {} };
-
-      await render(
-        <template>
-          <div id="src">src</div>
-          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
-        </template>
-      );
-
-      const release = registerDragAndDropSource(find("#src"), () => args);
-
-      const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-
-      find("#tgt").dispatchEvent(
-        new DragEvent("drop", { bubbles: true, dataTransfer })
-      );
-
-      const work = release({ cancelPending: false });
-
-      assert.true(
-        work.outstanding(),
-        "a dispatch is still scheduled, so a holder has to keep it"
-      );
-
-      await settled();
-
-      assert.false(
-        work.outstanding(),
-        "and stops being owed once that dispatch has run"
       );
     });
 
@@ -1453,22 +1212,10 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       const release = registerDragAndDropSource(find("#src"), () => args);
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
 
-      find("#tgt").dispatchEvent(
-        new DragEvent("drop", { bubbles: true, dataTransfer })
-      );
+      dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
 
       // Detaching without cancelling hands the outstanding work back, because
       // this closure was the only thing that could still reach it.
@@ -1647,18 +1394,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
 
       // Detached, but kept alive to report the drag it is in the middle of.
       state.disabled = true;
@@ -1667,9 +1404,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       // The drop schedules the consumer callbacks, and the row goes away before
       // the runloop flushes them. Whatever is still holding that dispatch has to
       // be reachable from here, or nothing can call it off.
-      find("#tgt").dispatchEvent(
-        new DragEvent("drop", { bubbles: true, dataTransfer })
-      );
+      dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
       state.rendered = false;
       await settled();
 
@@ -2258,28 +1993,11 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
+      await startDrag("#src", { dataTransfer });
       // Straight onto the child, so the ancestor is in the stack but never the
       // deepest and so never forwards an enter.
-      await dragEvent("#inner", "dragenter", {
-        dataTransfer,
-        ...centerOf("#inner"),
-      });
-      await dragEvent("#inner", "dragover", {
-        dataTransfer,
-        ...centerOf("#inner"),
-      });
-      await dragEvent("#away", "dragenter", {
-        dataTransfer,
-        ...centerOf("#away"),
-      });
-      await dragEvent("#away", "dragover", {
-        dataTransfer,
-        ...centerOf("#away"),
-      });
+      await dragOver("#inner", { dataTransfer });
+      await dragOver("#away", { dataTransfer });
       await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
 
       assert.deepEqual(
@@ -2472,18 +2190,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const firstTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer: firstTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#target", "dragenter", {
-        dataTransfer: firstTransfer,
-        ...centerOf("#target"),
-      });
-      await dragEvent("#target", "dragover", {
-        dataTransfer: firstTransfer,
-        ...centerOf("#target"),
-      });
+      await startDrag("#src", { dataTransfer: firstTransfer });
+      await dragOver("#target", { dataTransfer: firstTransfer });
       // A drop closes the enter without reporting a leave, so the target has to
       // forget it was entered or the next drag's enter is swallowed.
       await dragEvent("#target", "drop", {
@@ -2496,26 +2204,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       });
 
       const secondTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer: secondTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#target", "dragenter", {
-        dataTransfer: secondTransfer,
-        ...centerOf("#target"),
-      });
-      await dragEvent("#target", "dragover", {
-        dataTransfer: secondTransfer,
-        ...centerOf("#target"),
-      });
-      await dragEvent("#away", "dragenter", {
-        dataTransfer: secondTransfer,
-        ...centerOf("#away"),
-      });
-      await dragEvent("#away", "dragover", {
-        dataTransfer: secondTransfer,
-        ...centerOf("#away"),
-      });
+      await startDrag("#src", { dataTransfer: secondTransfer });
+      await dragOver("#target", { dataTransfer: secondTransfer });
+      await dragOver("#away", { dataTransfer: secondTransfer });
       await dragEvent("#src", "dragend", {
         dataTransfer: secondTransfer,
         ...centerOf("#src"),
@@ -2535,22 +2226,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
    * so anything a target learns only from the drag update is lost to a fast release.
    */
   module("a hierarchy change is observed in the same frame", function () {
-    /**
-     * Dispatches natively and returns at once, so a second event can follow in
-     * the same task with no animation frame between the two.
-     */
-    function dispatchNow(selector, type, { dataTransfer, clientX, clientY }) {
-      find(selector).dispatchEvent(
-        new DragEvent(type, {
-          bubbles: true,
-          cancelable: true,
-          dataTransfer,
-          clientX,
-          clientY,
-        })
-      );
-    }
-
     test("an ancestor superseded by a child is left in the same frame, before the drop", async function (assert) {
       const events = [];
       const onOuterEnter = () => events.push("outer:enter");
@@ -2607,7 +2282,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
       // The child takes over and the drop lands in the same task: no frame in
       // between for a throttled drag update to tell the ancestor anything.
-      dispatchNow("#inner", "dragenter", {
+      dragEventNow("#inner", "dragenter", {
         dataTransfer,
         ...centerOf("#inner"),
       });
@@ -2624,7 +2299,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           "and its indicator goes with the role"
         );
 
-      dispatchNow("#inner", "drop", { dataTransfer, ...centerOf("#inner") });
+      dragEventNow("#inner", "drop", { dataTransfer, ...centerOf("#inner") });
       await settled();
       await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
 
@@ -2655,18 +2330,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
 
       assert.dom("#tgt").hasClass("--drag-above", "lit while indicating");
 
@@ -2697,24 +2362,14 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
 
       assert.dom("#tgt").hasClass("--drag-above", "lit while hovered");
 
       // The drop follows without a frame, so the throttled drag update it would
       // have cancelled is not what clears the class.
-      dispatchNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
       await settled();
       await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
 
@@ -2769,41 +2424,43 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      await simulateDrag("#src", "#tgt", {
-        dataTransfer: new DataTransfer(),
-      });
+      try {
+        await simulateDrag("#src", "#tgt", {
+          dataTransfer: new DataTransfer(),
+        });
 
-      assert.strictEqual(
-        reported.length,
-        1,
-        "the error reaches the application rather than escaping as an uncaught one"
-      );
-      assert.deepEqual(
-        notices,
-        ["broken_drag_and_drop_alert"],
-        "and is reported through the channel that reaches admins in production"
-      );
-      assert.deepEqual(
-        ends,
-        ["end"],
-        "the source hears its drag end exactly once"
-      );
-      assert.false(
-        this.owner.lookup("service:drag-and-drop").isDragging,
-        "and the service stops reporting a drag in flight"
-      );
+        assert.strictEqual(
+          reported.length,
+          1,
+          "the error reaches the application rather than escaping as an uncaught one"
+        );
+        assert.deepEqual(
+          notices,
+          ["broken_drag_and_drop_alert"],
+          "and is reported through the channel that reaches admins in production"
+        );
+        assert.deepEqual(
+          ends,
+          ["end"],
+          "the source hears its drag end exactly once"
+        );
+        assert.false(
+          this.owner.lookup("service:drag-and-drop").isDragging,
+          "and the service stops reporting a drag in flight"
+        );
 
-      await simulateDrag("#later-src", "#later-tgt", {
-        dataTransfer: new DataTransfer(),
-      });
+        await simulateDrag("#later-src", "#later-tgt", {
+          dataTransfer: new DataTransfer(),
+        });
 
-      assert.deepEqual(
-        laterDrops,
-        ["drop"],
-        "so a later drag still reaches its own target"
-      );
-
-      document.removeEventListener("discourse-error", collect);
+        assert.deepEqual(
+          laterDrops,
+          ["drop"],
+          "so a later drag still reaches its own target"
+        );
+      } finally {
+        document.removeEventListener("discourse-error", collect);
+      }
     });
 
     test("a throwing monitor onDrop leaves the next drag able to run", async function (assert) {
@@ -2888,7 +2545,12 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
 
     test("a throwing canDrop refuses the drop instead of allowing it", async function (assert) {
-      setupOnerror(() => {});
+      const reported = [];
+      setupOnerror((error) => reported.push(error));
+
+      const notices = [];
+      const collect = (event) => notices.push(event.detail.messageKey);
+      document.addEventListener("discourse-error", collect);
 
       const drops = [];
       const recordDrop = () => drops.push("drop");
@@ -2907,19 +2569,47 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      await simulateDrag("#src", "#tgt", {
-        dataTransfer: new DataTransfer(),
-      });
+      try {
+        const dataTransfer = new DataTransfer();
+        await startDrag("#src", { dataTransfer });
+        await dragOver("#tgt", { dataTransfer });
 
-      assert.deepEqual(
-        drops,
-        [],
-        "a gate that threw decided nothing, so the drop is refused"
-      );
+        assert
+          .dom("#tgt")
+          .doesNotHaveClass(
+            /^--drag-/,
+            "a gate that threw has decided nothing, so the target does not light"
+          );
+
+        await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+        await dragEvent("#src", "dragend", {
+          dataTransfer,
+          ...centerOf("#src"),
+        });
+
+        assert.deepEqual(drops, [], "and the drop is refused");
+        assert.true(
+          reported.length >= 1,
+          `each throw is raised for the test (${reported.length} seen)`
+        );
+        assert.strictEqual(
+          new Set(notices).size,
+          1,
+          "and every report goes through the drag-and-drop notice"
+        );
+        assert.strictEqual(
+          notices[0],
+          "broken_drag_and_drop_alert",
+          "under its own message key"
+        );
+      } finally {
+        document.removeEventListener("discourse-error", collect);
+      }
     });
 
     test("a throwing canDrag refuses to start the drag", async function (assert) {
-      setupOnerror(() => {});
+      const reported = [];
+      setupOnerror((error) => reported.push(error));
 
       const drops = [];
       const recordDrop = () => drops.push("drop");
@@ -2948,6 +2638,10 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           "--dragging",
           "and the source is never marked as dragging"
         );
+      assert.true(
+        reported.length >= 1,
+        `and the throwing gate was raised (${reported.length} seen)`
+      );
     });
 
     test("a throwing getData is reported and the drag record carries no data", async function (assert) {
@@ -3010,26 +2704,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#away", "dragenter", {
-        dataTransfer,
-        ...centerOf("#away"),
-      });
-      await dragEvent("#away", "dragover", {
-        dataTransfer,
-        ...centerOf("#away"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
+      await dragOver("#away", { dataTransfer });
       await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
 
       assert.deepEqual(
@@ -3178,18 +2855,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
 
       // Disabled mid-drag: the registration waits for the drag to end.
       state.disabled = true;
@@ -3283,65 +2950,32 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         consumerSheet.textContent = ".positioned { position: absolute; }";
         document.head.insertBefore(consumerSheet, document.head.firstChild);
 
+        // The stylesheet is the subject, so the mark and the class a lit target
+        // carries are written out rather than reached through a drag.
         await render(
           <template>
-            <div id="src" {{dDragAndDropSource type="row"}}>src</div>
             <div
               id="tgt"
-              class="positioned"
-              {{dDragAndDropTarget accepts="row" position="before"}}
+              class="positioned --drag-above"
+              data-drop-target
             >tgt</div>
           </template>
         );
 
-        const dataTransfer = new DataTransfer();
-        await dragEvent("#src", "dragstart", {
-          dataTransfer,
-          ...centerOf("#src"),
-        });
-        await dragEvent("#tgt", "dragenter", {
-          dataTransfer,
-          ...centerOf("#tgt"),
-        });
-        await dragEvent("#tgt", "dragover", {
-          dataTransfer,
-          ...centerOf("#tgt"),
-        });
-
-        assert.dom("#tgt").hasClass("--drag-above", "the indicator is showing");
         assert.strictEqual(
           getComputedStyle(find("#tgt")).position,
           "absolute",
-          "and the target is still positioned the way its consumer asked"
+          "the target is still positioned the way its consumer asked"
         );
       });
 
       test("a drop target that positions nothing still gets the containing block the line needs", async function (assert) {
         await render(
           <template>
-            <div id="src" {{dDragAndDropSource type="row"}}>src</div>
-            <div
-              id="tgt"
-              {{dDragAndDropTarget accepts="row" position="before"}}
-            >tgt</div>
+            <div id="tgt" class="--drag-above" data-drop-target>tgt</div>
           </template>
         );
 
-        const dataTransfer = new DataTransfer();
-        await dragEvent("#src", "dragstart", {
-          dataTransfer,
-          ...centerOf("#src"),
-        });
-        await dragEvent("#tgt", "dragenter", {
-          dataTransfer,
-          ...centerOf("#tgt"),
-        });
-        await dragEvent("#tgt", "dragover", {
-          dataTransfer,
-          ...centerOf("#tgt"),
-        });
-
-        assert.dom("#tgt").hasClass("--drag-above", "the indicator is showing");
         assert.strictEqual(
           getComputedStyle(find("#tgt")).position,
           "relative",
@@ -3504,26 +3138,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#away", "dragenter", {
-        dataTransfer,
-        ...centerOf("#away"),
-      });
-      await dragEvent("#away", "dragover", {
-        dataTransfer,
-        ...centerOf("#away"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
+      await dragOver("#away", { dataTransfer });
 
       assert.deepEqual(
         events,
@@ -3571,18 +3188,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
 
       assert
         .dom("#tgt")

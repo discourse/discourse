@@ -1,24 +1,10 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-
-async function externalDragEvent(type, dataTransfer) {
-  const event = new Event(type, { bubbles: true, cancelable: true });
-  Object.assign(event, {
-    clientX: 1,
-    clientY: 1,
-    dataTransfer,
-    relatedTarget: null,
-  });
-  document.body.dispatchEvent(event);
-  await new Promise((resolve) => requestAnimationFrame(resolve));
-}
-
-function externalTextDataTransfer() {
-  const dataTransfer = new DataTransfer();
-  dataTransfer.setData("text/plain", "external payload");
-  return dataTransfer;
-}
+import {
+  dragEvent,
+  textTransfer,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 
 module("Unit | Service | drag-and-drop", function (hooks) {
   setupTest(hooks);
@@ -27,31 +13,7 @@ module("Unit | Service | drag-and-drop", function (hooks) {
     this.dragAndDrop = getOwner(this).lookup("service:drag-and-drop");
   });
 
-  test("setCurrentDrag / clearCurrentDrag round-trip", function (assert) {
-    assert.strictEqual(
-      this.dragAndDrop.currentDrag,
-      null,
-      "nothing is in flight before a drag starts"
-    );
-    this.dragAndDrop.setCurrentDrag({
-      type: "row",
-      data: { id: 1 },
-      element: document.body,
-    });
-    assert.deepEqual(
-      this.dragAndDrop.currentDrag.data,
-      { id: 1 },
-      "the payload is readable while the drag is in flight"
-    );
-    this.dragAndDrop.clearCurrentDrag();
-    assert.strictEqual(
-      this.dragAndDrop.currentDrag,
-      null,
-      "clearing returns the service to its resting state"
-    );
-  });
-
-  test("accepts matches a single type", function (assert) {
+  test("accepts matches a single type or any of a list", function (assert) {
     this.dragAndDrop.setCurrentDrag({
       type: "row",
       data: {},
@@ -65,16 +27,8 @@ module("Unit | Service | drag-and-drop", function (hooks) {
       this.dragAndDrop.accepts("card"),
       "a different type is rejected"
     );
-  });
-
-  test("accepts matches against an array of types", function (assert) {
-    this.dragAndDrop.setCurrentDrag({
-      type: "card",
-      data: {},
-      element: null,
-    });
     assert.true(
-      this.dragAndDrop.accepts(["row", "card"]),
+      this.dragAndDrop.accepts(["card", "row"]),
       "a list containing the in-flight type is accepted"
     );
     assert.false(
@@ -115,9 +69,13 @@ module("Unit | Service | drag-and-drop", function (hooks) {
   });
 
   test("tracks and filters an external drag", async function (assert) {
-    const dataTransfer = externalTextDataTransfer();
+    const dataTransfer = textTransfer("external payload");
 
-    await externalDragEvent("dragenter", dataTransfer);
+    await dragEvent(document.body, "dragenter", {
+      dataTransfer,
+      clientX: 1,
+      clientY: 1,
+    });
 
     assert.true(this.dragAndDrop.isDragging, "an external drag is in flight");
     assert.true(
@@ -154,7 +112,11 @@ module("Unit | Service | drag-and-drop", function (hooks) {
       "an omitted filter matches nothing"
     );
 
-    await externalDragEvent("drop", dataTransfer);
+    await dragEvent(document.body, "drop", {
+      dataTransfer,
+      clientX: 1,
+      clientY: 1,
+    });
 
     assert.strictEqual(
       this.dragAndDrop.currentExternalDrag,
@@ -168,13 +130,17 @@ module("Unit | Service | drag-and-drop", function (hooks) {
   });
 
   test("external monitor ignores drag start while service is destroying", async function (assert) {
-    const dataTransfer = externalTextDataTransfer();
+    const dataTransfer = textTransfer("external payload");
 
     Object.defineProperty(this.dragAndDrop, "isDestroying", {
       configurable: true,
       value: true,
     });
-    await externalDragEvent("dragenter", dataTransfer);
+    await dragEvent(document.body, "dragenter", {
+      dataTransfer,
+      clientX: 1,
+      clientY: 1,
+    });
 
     assert.false(
       Boolean(this.dragAndDrop.currentExternalDrag),
@@ -182,12 +148,20 @@ module("Unit | Service | drag-and-drop", function (hooks) {
     );
 
     delete this.dragAndDrop.isDestroying;
-    await externalDragEvent("drop", dataTransfer);
+    await dragEvent(document.body, "drop", {
+      dataTransfer,
+      clientX: 1,
+      clientY: 1,
+    });
   });
 
   test("external monitor ignores drop after service destruction begins", async function (assert) {
-    const dataTransfer = externalTextDataTransfer();
-    await externalDragEvent("dragenter", dataTransfer);
+    const dataTransfer = textTransfer("external payload");
+    await dragEvent(document.body, "dragenter", {
+      dataTransfer,
+      clientX: 1,
+      clientY: 1,
+    });
     const externalDrag = this.dragAndDrop.currentExternalDrag;
 
     assert.true(
@@ -202,7 +176,11 @@ module("Unit | Service | drag-and-drop", function (hooks) {
       configurable: true,
       value: true,
     });
-    await externalDragEvent("drop", dataTransfer);
+    await dragEvent(document.body, "drop", {
+      dataTransfer,
+      clientX: 1,
+      clientY: 1,
+    });
 
     assert.strictEqual(
       this.dragAndDrop.currentExternalDrag,

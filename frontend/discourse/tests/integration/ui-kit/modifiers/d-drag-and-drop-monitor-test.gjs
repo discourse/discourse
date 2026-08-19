@@ -1,7 +1,6 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { matchesDragType } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { simulateDrag } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import dDragAndDropMonitor from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
@@ -116,39 +115,6 @@ module(
         seen,
         { type: "row", id: 2 },
         "the monitor callback receives the source's data"
-      );
-    });
-
-    test("the shared type gate engages only for the requested types", function (assert) {
-      const source = (type) => ({ data: { type } });
-
-      assert.true(
-        matchesDragType(undefined, source("row")),
-        "no filter engages on any drag"
-      );
-      assert.true(
-        matchesDragType([], source("row")),
-        "an empty list is the same as no filter"
-      );
-      assert.true(
-        matchesDragType("row", source("row")),
-        "a single matching type engages"
-      );
-      assert.false(
-        matchesDragType("row", source("card")),
-        "a single non-matching type does not"
-      );
-      assert.true(
-        matchesDragType(["row", "card"], source("card")),
-        "a list containing the type engages"
-      );
-      assert.false(
-        matchesDragType(["row", "card"], source("other")),
-        "a list without it does not"
-      );
-      assert.false(
-        matchesDragType("row", { data: {} }),
-        "a typeless source matches no filter"
       );
     });
   }

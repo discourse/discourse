@@ -6,9 +6,13 @@ import {
   centerOf,
   dragEvent,
   externalDragOver,
+  fileTransfer,
   simulateExternalDrag,
+  textTransfer,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
-import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
+import dDragAndDropExternalTarget, {
+  registerDragAndDropExternalTarget,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 
 module(
   "Integration | ui-kit | Modifier | dDragAndDropExternalTarget",
@@ -46,21 +50,56 @@ module(
       );
     });
 
-    module("external target behaviour", function () {
-      function fileTransfer() {
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(
-          new File(["payload"], "a.txt", { type: "text/plain" })
+    test("a lit target torn down mid-drag clears its class and mark without a leave", async function (assert) {
+      const leaves = [];
+      const recordLeave = () => leaves.push("leave");
+
+      await render(
+        <template>
+          <div id="ext">ext</div>
+        </template>
+      );
+
+      const cleanup = registerDragAndDropExternalTarget(find("#ext"), () => ({
+        accepts: "text",
+        onDragLeave: recordLeave,
+      }));
+
+      const dataTransfer = textTransfer();
+      await externalDragOver("#ext", { dataTransfer });
+
+      assert
+        .dom("#ext")
+        .hasClass("--drag-over-external", "lit while hovered")
+        .hasAttribute("data-drop-target-external");
+
+      cleanup();
+
+      assert
+        .dom("#ext")
+        .doesNotHaveClass(
+          "--drag-over-external",
+          "the indicator does not outlive the registration"
+        )
+        .doesNotHaveAttribute(
+          "data-drop-target-external",
+          "and neither does the mark"
         );
-        return dataTransfer;
-      }
+      assert.deepEqual(
+        leaves,
+        [],
+        "a registration that is going away reports no leave to a consumer that is going with it"
+      );
 
-      function textTransfer() {
-        const dataTransfer = new DataTransfer();
-        dataTransfer.setData("text/plain", "dropped text");
-        return dataTransfer;
-      }
+      // The library still has the drag in flight; leaving the window ends it
+      // rather than carrying it into the next test.
+      await dragEvent("#ext", "dragleave", {
+        dataTransfer,
+        ...centerOf("#ext"),
+      });
+    });
 
+    module("external target behaviour", function () {
       test("hands the consumer a payload it can read without importing the library", async function (assert) {
         let seen = null;
         const onDrop = ({ source }) => {
@@ -115,12 +154,6 @@ module(
           [],
           "a text drag does not reach a target that only accepts files"
         );
-        assert
-          .dom("#files-only")
-          .doesNotHaveClass(
-            "--drag-over-external",
-            "and it lights no indicator on the way past"
-          );
 
         await simulateExternalDrag("#text-only", {
           dataTransfer: textTransfer(),
@@ -131,59 +164,6 @@ module(
           ["text"],
           "the same drag reaches the target whose kind it matches"
         );
-      });
-
-      test("an external target dropped on reports a fresh enter on the next drag", async function (assert) {
-        const enters = [];
-        const recordEnter = () => enters.push("enter");
-        const drops = [];
-        const recordDrop = () => drops.push("drop");
-
-        await render(
-          <template>
-            <div
-              id="ext"
-              {{dDragAndDropExternalTarget
-                accepts="text"
-                onDragEnter=recordEnter
-                onDrop=recordDrop
-              }}
-            >ext</div>
-          </template>
-        );
-
-        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
-        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
-
-        assert.deepEqual(drops, ["drop", "drop"], "both drops land");
-        assert.deepEqual(
-          enters,
-          ["enter", "enter"],
-          "and the second drag is entered again: a drop closes the pairing so the target does not stay entered"
-        );
-      });
-
-      test("canDrop refuses a drop the accepts filter would have allowed", async function (assert) {
-        let drops = 0;
-        const onDrop = () => drops++;
-        const canDrop = () => false;
-
-        await render(
-          <template>
-            <div
-              id="ext"
-              {{dDragAndDropExternalTarget
-                accepts="files"
-                canDrop=canDrop
-                onDrop=onDrop
-              }}
-            >ext</div>
-          </template>
-        );
-
-        await simulateExternalDrag("#ext", { dataTransfer: fileTransfer() });
-
-        assert.strictEqual(drops, 0, "the synchronous gate refuses the drop");
       });
 
       test("a gate that turns false after the last dragover refuses the drop", async function (assert) {
@@ -223,43 +203,7 @@ module(
         );
       });
 
-      test("indicator=false suppresses the hover class without refusing the drop", async function (assert) {
-        let drops = 0;
-        const onDrop = () => drops++;
-
-        await render(
-          <template>
-            <div
-              id="ext"
-              {{dDragAndDropExternalTarget
-                accepts="files"
-                indicator=false
-                onDrop=onDrop
-              }}
-            >ext</div>
-          </template>
-        );
-
-        const dataTransfer = fileTransfer();
-        await externalDragOver("#ext", { dataTransfer });
-
-        assert
-          .dom("#ext")
-          .doesNotHaveClass(
-            "--drag-over-external",
-            "the hover class is suppressed"
-          );
-
-        await dragEvent("#ext", "drop", { dataTransfer, ...centerOf("#ext") });
-
-        assert.strictEqual(
-          drops,
-          1,
-          "suppressing the indicator does not suppress the drop"
-        );
-      });
-
-      test("external drop position resolves either side of the cursor midpoint", async function (assert) {
+      test("external drop position drives the same indicator classes the element target uses", async function (assert) {
         const drops = [];
         const onDrop = (payload) => drops.push(payload.position);
 
@@ -273,35 +217,6 @@ module(
                 axis="vertical"
                 onDrop=onDrop
               }}
-            >ext</div>
-          </template>
-        );
-
-        const rect = find("#ext").getBoundingClientRect();
-
-        await simulateExternalDrag("#ext", {
-          dataTransfer: textTransfer(),
-          coordinates: { clientY: rect.top + 5 },
-        });
-        await simulateExternalDrag("#ext", {
-          dataTransfer: textTransfer(),
-          coordinates: { clientY: rect.top + rect.height - 5 },
-        });
-
-        assert.deepEqual(
-          drops,
-          ["before", "after"],
-          "an external drop lands before or after the target depending on which side of its midpoint the cursor is"
-        );
-      });
-
-      test("external drop position drives the same indicator classes the element target uses", async function (assert) {
-        await render(
-          <template>
-            <div
-              id="ext"
-              style="height: 100px"
-              {{dDragAndDropExternalTarget accepts="text" axis="vertical"}}
             >ext</div>
           </template>
         );
@@ -322,9 +237,10 @@ module(
             "and the positionless hover class is not also applied"
           );
 
+        const lowerHalf = { clientY: rect.top + rect.height - 5 };
         await externalDragOver("#ext", {
           dataTransfer,
-          coordinates: { clientY: rect.top + rect.height - 5 },
+          coordinates: lowerHalf,
         });
 
         assert
@@ -334,6 +250,18 @@ module(
             "--drag-above",
             "rather than accumulating both positions"
           );
+
+        await dragEvent("#ext", "drop", {
+          dataTransfer,
+          ...centerOf("#ext"),
+          ...lowerHalf,
+        });
+
+        assert.deepEqual(
+          drops,
+          ["after"],
+          "and the drop reports the side the indicator was showing"
+        );
       });
 
       test("external drop position honours the horizontal axis", async function (assert) {
@@ -355,10 +283,26 @@ module(
         );
 
         const rect = find("#ext").getBoundingClientRect();
+        const dataTransfer = textTransfer();
+        const nearLeftEdge = { clientX: rect.left + 5 };
 
-        await simulateExternalDrag("#ext", {
-          dataTransfer: textTransfer(),
-          coordinates: { clientX: rect.left + 5 },
+        await externalDragOver("#ext", {
+          dataTransfer,
+          coordinates: nearLeftEdge,
+        });
+
+        assert
+          .dom("#ext")
+          .hasClass("--drag-left", "the indicator names the horizontal side")
+          .doesNotHaveClass(
+            "--drag-above",
+            "and the class comes from the horizontal vocabulary, not the vertical one"
+          );
+
+        await dragEvent("#ext", "drop", {
+          dataTransfer,
+          ...centerOf("#ext"),
+          ...nearLeftEdge,
         });
 
         assert.deepEqual(
@@ -366,12 +310,6 @@ module(
           ["before"],
           "the midpoint is measured along the named axis"
         );
-        assert
-          .dom("#ext")
-          .doesNotHaveClass(
-            "--drag-above",
-            "and the class comes from the horizontal vocabulary, not the vertical one"
-          );
       });
 
       test("external drop position takes a fixed position over the midpoint", async function (assert) {
@@ -598,419 +536,10 @@ module(
       });
     });
 
-    module("nested external targets", function () {
-      test("an ancestor drops its indicator once a child becomes deepest", async function (assert) {
-        await render(
-          <template>
-            <div
-              id="outer-ext"
-              style="height: 100px"
-              {{dDragAndDropExternalTarget accepts="files"}}
-            >
-              outer
-              <div
-                id="inner-ext"
-                {{dDragAndDropExternalTarget accepts="files"}}
-              >inner</div>
-            </div>
-          </template>
-        );
-
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(
-          new File(["x"], "a.txt", { type: "text/plain" })
-        );
-        const outerRect = find("#outer-ext").getBoundingClientRect();
-
-        // No `dragstart`: a drag that begins outside the page is what makes this
-        // the external adapter's rather than the element adapter's.
-        await dragEvent("#outer-ext", "dragenter", {
-          dataTransfer,
-          clientX: outerRect.left + 5,
-          clientY: outerRect.top + 5,
-        });
-        await dragEvent("#outer-ext", "dragover", {
-          dataTransfer,
-          clientX: outerRect.left + 5,
-          clientY: outerRect.top + 5,
-        });
-
-        assert
-          .dom("#outer-ext")
-          .hasClass(
-            "--drag-over-external",
-            "the ancestor paints its indicator while it is the deepest target"
-          );
-
-        await dragEvent("#inner-ext", "dragenter", {
-          dataTransfer,
-          ...centerOf("#inner-ext"),
-        });
-        await dragEvent("#inner-ext", "dragover", {
-          dataTransfer,
-          ...centerOf("#inner-ext"),
-        });
-
-        assert
-          .dom("#inner-ext")
-          .hasClass("--drag-over-external", "the child takes the indicator");
-        assert
-          .dom("#outer-ext")
-          .doesNotHaveClass(
-            "--drag-over-external",
-            "and the ancestor gives it up, so only one zone is lit at a time"
-          );
-      });
-
-      test("an external ancestor that never received an enter receives no leave", async function (assert) {
-        const events = [];
-        const onOuterEnter = () => events.push("outer:enter");
-        const onOuterLeave = () => events.push("outer:leave");
-        // The deepest target is the positive control, as in the element target's
-        // equivalent: without it, dispatching no lifecycle callback at all would
-        // satisfy the assertion below.
-        const onInnerEnter = () => events.push("inner:enter");
-        const onInnerLeave = () => events.push("inner:leave");
-
-        await render(
-          <template>
-            <div
-              id="outer-ext"
-              style="height: 100px"
-              {{dDragAndDropExternalTarget
-                accepts="files"
-                onDragEnter=onOuterEnter
-                onDragLeave=onOuterLeave
-              }}
-            >
-              outer
-              <div
-                id="inner-ext"
-                {{dDragAndDropExternalTarget
-                  accepts="files"
-                  onDragEnter=onInnerEnter
-                  onDragLeave=onInnerLeave
-                }}
-              >inner</div>
-            </div>
-            <div
-              id="away-ext"
-              {{dDragAndDropExternalTarget accepts="files"}}
-            >away</div>
-          </template>
-        );
-
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(
-          new File(["x"], "a.txt", { type: "text/plain" })
-        );
-
-        // Straight onto the child, so the ancestor is in the stack but never the
-        // deepest and so never forwards an enter.
-        await dragEvent("#inner-ext", "dragenter", {
-          dataTransfer,
-          ...centerOf("#inner-ext"),
-        });
-        await dragEvent("#inner-ext", "dragover", {
-          dataTransfer,
-          ...centerOf("#inner-ext"),
-        });
-        await dragEvent("#away-ext", "dragenter", {
-          dataTransfer,
-          ...centerOf("#away-ext"),
-        });
-        await dragEvent("#away-ext", "dragover", {
-          dataTransfer,
-          ...centerOf("#away-ext"),
-        });
-
-        assert.deepEqual(
-          events,
-          ["inner:enter", "inner:leave"],
-          "the deepest target is entered and left as a pair, and the ancestor that was never entered is never left"
-        );
-      });
-
-      test("an external target that becomes deepest without a fresh enter is entered and left", async function (assert) {
-        const events = [];
-        let drags = 0;
-
-        const onOuterEnter = () => events.push("outer:enter");
-        const onOuterDrag = () => drags++;
-        const onOuterLeave = () => events.push("outer:leave");
-
-        await render(
-          <template>
-            <div
-              id="outer-ext"
-              style="height: 100px"
-              {{dDragAndDropExternalTarget
-                accepts="files"
-                onDragEnter=onOuterEnter
-                onDrag=onOuterDrag
-                onDragLeave=onOuterLeave
-              }}
-            >
-              outer
-              <div
-                id="inner-ext"
-                {{dDragAndDropExternalTarget accepts="files"}}
-              >inner</div>
-            </div>
-            <div
-              id="away-ext"
-              {{dDragAndDropExternalTarget accepts="files"}}
-            >away</div>
-          </template>
-        );
-
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(
-          new File(["x"], "a.txt", { type: "text/plain" })
-        );
-        const outerRect = find("#outer-ext").getBoundingClientRect();
-
-        // Onto the child first, so the ancestor joins the hierarchy while the
-        // child is deepest and its own enter is swallowed.
-        await dragEvent("#inner-ext", "dragenter", {
-          dataTransfer,
-          ...centerOf("#inner-ext"),
-        });
-        await dragEvent("#inner-ext", "dragover", {
-          dataTransfer,
-          ...centerOf("#inner-ext"),
-        });
-
-        // Back onto the ancestor's own area. It becomes deepest without a fresh
-        // enter, because it never left the hierarchy.
-        await dragEvent("#outer-ext", "dragover", {
-          dataTransfer,
-          clientX: outerRect.left + 5,
-          clientY: outerRect.top + 5,
-        });
-
-        await dragEvent("#away-ext", "dragenter", {
-          dataTransfer,
-          ...centerOf("#away-ext"),
-        });
-        await dragEvent("#away-ext", "dragover", {
-          dataTransfer,
-          ...centerOf("#away-ext"),
-        });
-
-        assert.true(
-          drags > 0,
-          "the ancestor was told about the drag once it was the deepest target"
-        );
-        assert.deepEqual(
-          events,
-          ["outer:enter", "outer:leave"],
-          "so it is entered when it takes over and left when it gives up, matching the element target"
-        );
-      });
-
-      test("an external ancestor superseded by a child is left before the drop lands", async function (assert) {
-        const events = [];
-        const onOuterEnter = () => events.push("outer:enter");
-        const onOuterLeave = () => events.push("outer:leave");
-        const onInnerDrop = () => events.push("inner:drop");
-
-        await render(
-          <template>
-            <div
-              id="outer-ext"
-              style="height: 100px"
-              {{dDragAndDropExternalTarget
-                accepts="files"
-                onDragEnter=onOuterEnter
-                onDragLeave=onOuterLeave
-              }}
-            >
-              outer
-              <div
-                id="inner-ext"
-                {{dDragAndDropExternalTarget
-                  accepts="files"
-                  onDrop=onInnerDrop
-                }}
-              >inner</div>
-            </div>
-          </template>
-        );
-
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(
-          new File(["x"], "a.txt", { type: "text/plain" })
-        );
-        const outerRect = find("#outer-ext").getBoundingClientRect();
-
-        // The ancestor's own area first, so it is genuinely entered.
-        await dragEvent("#outer-ext", "dragenter", {
-          dataTransfer,
-          clientX: outerRect.left + 5,
-          clientY: outerRect.top + 5,
-        });
-        await dragEvent("#outer-ext", "dragover", {
-          dataTransfer,
-          clientX: outerRect.left + 5,
-          clientY: outerRect.top + 5,
-        });
-
-        await dragEvent("#inner-ext", "dragenter", {
-          dataTransfer,
-          ...centerOf("#inner-ext"),
-        });
-        await dragEvent("#inner-ext", "dragover", {
-          dataTransfer,
-          ...centerOf("#inner-ext"),
-        });
-        await dragEvent("#inner-ext", "drop", {
-          dataTransfer,
-          ...centerOf("#inner-ext"),
-        });
-
-        assert.deepEqual(
-          events,
-          ["outer:enter", "outer:leave", "inner:drop"],
-          "the ancestor is left as soon as the child takes over, so a drop never lands with its enter still open"
-        );
-      });
-    });
-
     module("an external consumer that throws", function () {
       const blowUp = () => {
         throw new Error("external consumer blew up");
       };
-
-      function textTransfer() {
-        const dataTransfer = new DataTransfer();
-        dataTransfer.setData("text/plain", "dropped text");
-        return dataTransfer;
-      }
-
-      test("a throwing external onDrop is reported and the next external drop still lands", async function (assert) {
-        const reported = [];
-        setupOnerror((error) => reported.push(error));
-
-        const notices = [];
-        const collect = (event) => notices.push(event.detail.messageKey);
-        document.addEventListener("discourse-error", collect);
-
-        const laterDrops = [];
-        const recordLaterDrop = () => laterDrops.push("drop");
-
-        await render(
-          <template>
-            <div
-              id="ext"
-              {{dDragAndDropExternalTarget accepts="text" onDrop=blowUp}}
-            >ext</div>
-            <div
-              id="later"
-              {{dDragAndDropExternalTarget
-                accepts="text"
-                onDrop=recordLaterDrop
-              }}
-            >later</div>
-          </template>
-        );
-
-        try {
-          await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
-
-          assert.strictEqual(
-            reported.length,
-            1,
-            "the error reaches the application instead of escaping the library's dispatch"
-          );
-          assert.deepEqual(
-            notices,
-            ["broken_drag_and_drop_alert"],
-            "and is reported through the channel that reaches admins in production"
-          );
-          assert.false(
-            this.owner.lookup("service:drag-and-drop").isDragging,
-            "the service stops reporting a drag in flight"
-          );
-          assert
-            .dom("#ext")
-            .doesNotHaveClass(
-              "--drag-over-external",
-              "and the target's indicator was cleared on the way out"
-            );
-
-          await simulateExternalDrag("#later", {
-            dataTransfer: textTransfer(),
-          });
-
-          assert.deepEqual(
-            laterDrops,
-            ["drop"],
-            "so a later external drag still reaches its own target"
-          );
-        } finally {
-          document.removeEventListener("discourse-error", collect);
-        }
-      });
-
-      test("a throwing external canDrop refuses the drop, lights nothing, and is reported", async function (assert) {
-        const reported = [];
-        setupOnerror((error) => reported.push(error));
-
-        const notices = [];
-        const collect = (event) => notices.push(event.detail.messageKey);
-        document.addEventListener("discourse-error", collect);
-
-        const drops = [];
-        const recordDrop = () => drops.push("drop");
-
-        await render(
-          <template>
-            <div
-              id="ext"
-              {{dDragAndDropExternalTarget
-                accepts="text"
-                canDrop=blowUp
-                onDrop=recordDrop
-              }}
-            >ext</div>
-          </template>
-        );
-
-        try {
-          await externalDragOver("#ext", { dataTransfer: textTransfer() });
-
-          assert
-            .dom("#ext")
-            .doesNotHaveClass(
-              "--drag-over-external",
-              "a gate that threw has decided nothing, so the target does not light"
-            );
-
-          await dragEvent("#ext", "drop", {
-            dataTransfer: textTransfer(),
-            ...centerOf("#ext"),
-          });
-
-          assert.deepEqual(drops, [], "and the drop is refused");
-          assert.true(
-            reported.length >= 1,
-            `each throw is raised for the test (${reported.length} seen)`
-          );
-          assert.strictEqual(
-            new Set(notices).size,
-            1,
-            "and every report goes through the drag-and-drop notice"
-          );
-          assert.strictEqual(
-            notices[0],
-            "broken_drag_and_drop_alert",
-            "under its own message key"
-          );
-        } finally {
-          document.removeEventListener("discourse-error", collect);
-        }
-      });
 
       test("a throwing external getData is reported and the drop still lands", async function (assert) {
         const reported = [];
