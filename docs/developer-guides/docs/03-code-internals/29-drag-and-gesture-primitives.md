@@ -1,200 +1,506 @@
 ---
-title: Choosing between Discourse's drag and gesture primitives
-short_title: Drag and gesture primitives
+title: Drag, resize, and gesture primitives
+short_title: Gesture primitives
 id: drag-and-gesture-primitives
 ---
 
 <div data-theme-toc="true"> </div>
 
-# What this covers
+`ui-kit` ships the input-driven gesture primitives: dragging a payload onto a
+target, resizing a region, and reading a swipe or a pointer drag. This page is
+the usage reference. Each primitive's own TSDoc carries the fine print for every
+argument; what follows is how to put them together.
 
-`ui-kit` ships several input-driven gesture primitives, and their filenames can
-make them appear interchangeable. This guide identifies which primitive to use
-and draws the boundaries that are easy to cross accidentally.
+# Basic usage
 
-The membership rule is **input-driven gestures**: something a user performs with
-a pointer, touch, or key. That includes `dSwipe` but excludes `dOnResize`, because
-the latter responds to DOM state through `ResizeObserver`. `dOnResize` appears
-below only to disambiguate it from the resize gestures.
+A drag needs a source that carries a payload and a target that accepts its type.
 
-# Pick by intent
+```gjs
+import { hash } from "@ember/helper";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
-| I want to…                                                                           | Use                                                      |
-| ------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| Move something onto a target and transfer a payload                                  | `dDragAndDropSource` + `dDragAndDropTarget`              |
-| React to a drag without becoming a drop target                                       | `dDragAndDropMonitor`                                    |
-| Scroll a container while a drag is in flight                                         | `dDragAndDropAutoScroll`                                 |
-| Receive files, HTML, or text dragged in from outside the window and handle it myself | `dDragAndDropExternalTarget`                             |
-| Receive page content from a browser-started drag that no source registered           | `dDragAndDropTarget` with `adopts`                       |
-| Receive dropped files for upload                                                     | the existing upload pipeline, not the modifier above     |
-| Read the current drag reactively                                                     | `@service dragAndDrop`                                   |
-| Press, drag, and change a value continuously                                         | `dPointerDrag`                                           |
-| Put an accessible resize handle between two regions                                  | `DResizeSeparator`                                       |
-| Resize along one axis while supplying my own element and semantics                   | `dResizeEdge`                                            |
-| Resize a box in two dimensions from its edges and corners                            | `DResizeHandles`                                         |
-| Detect a directional touch swipe                                                     | `dSwipe`, for a discrete gesture rather than a transform |
-| Implement anything with `dDraggable`                                                 | Don't: it is deprecated and names its replacement        |
+<template>
+  <div {{dDragAndDropSource type="card" data=(hash id=@card.id)}}>
+    {{@card.title}}
+  </div>
 
-That last row is enforced rather than advisory. Instantiating `dDraggable`
-raises the `discourse.ui-kit.d-draggable` deprecation. Its own API documentation
-describes the replacement and the behavior differences that matter during a
-migration.
+  <div {{dDragAndDropTarget accepts="card" onDrop=@onDrop}}>
+    Drop a card here
+  </div>
+</template>
+```
 
-# Important boundaries
+```js
+@action
+onDrop({ source, position }) {
+  // source.data is what the source attached; position is "before" or "after"
+  this.file(source.data.id, position);
+}
+```
 
-## `dOnResize` observes; the resize primitives perform
+The `type` string is the whole matching vocabulary. A target engages only for
+sources whose `type` is in its `accepts`, and everything else drags straight
+over it.
 
-Three similarly named APIs do different jobs:
+# Picking a primitive
 
-- **`dOnResize`** wraps `ResizeObserver`. It reports that layout changed, whether
-  because of a font load, a growing sibling, or a gesture elsewhere.
-- **`dResizeEdge`** and **`DResizeHandles`** let a user perform a resize.
+| I want to…                                                     | Use                                         |
+| -------------------------------------------------------------- | ------------------------------------------- |
+| Move something onto a target and transfer a payload            | `dDragAndDropSource` + `dDragAndDropTarget` |
+| Take page content the browser started dragging, with no source | `dDragAndDropTarget` with `adopts`          |
+| Take files, HTML, URLs, or text from outside the window        | `dDragAndDropExternalTarget`                |
+| Upload the files somebody dropped                              | the upload pipeline, not the modifier above |
+| React to a drag without becoming a drop target                 | `dDragAndDropMonitor`                       |
+| Scroll a container while a drag hovers near its edge           | `dDragAndDropAutoScroll`                    |
+| Render from the in-flight drag                                 | the `dragAndDrop` service                   |
+| Press, move, and track a value continuously                    | `dPointerDrag`                              |
+| Put an accessible handle between two regions                   | `DResizeSeparator`                          |
+| Resize on one axis with your own element and semantics         | `dResizeEdge`                               |
+| Resize a box from its edges and corners                        | `DResizeHandles`                            |
+| Detect a directional flick                                     | `dSwipe`                                    |
+| Know that an element changed size                              | `dOnResize`, which is not a gesture         |
 
-If you need to know an element's size, observe it. If you need to let someone
-change that size, use a gesture primitive.
+# dDragAndDropSource
 
-## An external target is not the upload path
+Marks an element draggable and attaches the payload.
 
-This is a consequential overlap because both options can receive a file, but
-only one uploads it.
+## Arguments
 
-- **`dDragAndDropExternalTarget`** hands the consumer an incoming native payload:
-  text, HTML, URLs, or files it intends to process itself.
-- **The upload pipeline's drop target** owns upload validation, progress,
-  retries, and the upload record.
+| Argument            | Type                            | Purpose                                                                    |
+| ------------------- | ------------------------------- | -------------------------------------------------------------------------- |
+| `type`              | `string`, required              | The discriminator targets filter on. Overwrites any `type` in the payload. |
+| `data`              | `object`                        | Static payload, read back as `source.data`.                                |
+| `getInitialData`    | `() => object`                  | Dynamic payload, called once just before `dragstart`.                      |
+| `dragPreview`       | `Element` or render function    | What the drag image shows. Defaults to the source element.                 |
+| `dragPreviewOffset` | `{x: string, y: string}`        | CSS lengths pushing a rendered preview clear of the pointer.               |
+| `effectAllowed`     | `DataTransfer["effectAllowed"]` | What the drag permits. Defaults to `"move"`.                               |
+| `dragHandle`        | `Element`                       | An element inside this one that a drag must start from.                    |
+| `disabled`          | `boolean`                       | Detaches the registration. A drag in flight still finishes.                |
+| `canDrag`           | `(feedback) => boolean`         | Returning `false` blocks the drag from starting.                           |
+| `onDragStart`       | `(event) => void`               | Fires once the drag is confirmed.                                          |
+| `onDragEnd`         | `(event) => void`               | Fires at the end of every drag, landed or abandoned.                       |
+| `onDrop`            | `(event) => void`               | Fires only for a drag that ended on a target.                              |
 
-A file dropped on the modifier does not enter the upload pipeline. Use the
-modifier only when the consumer genuinely wants the raw payload.
+The element carries `data-drag-source` while registered and `--dragging` for the
+duration of the drag. Style and assert against those, never against
+`draggable`: that attribute sits on whichever element was registered, which is
+the handle when there is one.
 
-The element and external targets do share position behavior. Give the external
-target an `axis` and it resolves `before` or `after` from the pointer midpoint,
-using the same `--drag-above` and `--drag-below` indicators as an element target.
-Without an `axis`, it remains a single destination: callbacks receive
-`position: null`, and the target receives `--drag-over-external`.
+## Dragging by a handle
 
-Auto-scroll splits the same way. `dDragAndDropAutoScroll` watches element drags
-by default; its `accepts` argument adds a separate registration for incoming
-external payloads. A scrolling external drop surface normally needs both the
-target and the matching auto-scroll registration.
+Without a handle the whole element starts a drag, so text inside it cannot be
+selected and a touch press meant to scroll starts a drag instead. Pass the
+handle element itself, captured with a modifier, not a selector.
 
-## Page-content adoption is opt-in
+```gjs
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { modifier } from "ember-modifier";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 
-A browser can start a drag from page content that no `dDragAndDropSource`
-registered, such as a link or image. An element target receives such content
-only when its `adopts` predicate claims it.
+export default class Row extends Component {
+  @tracked gripElement;
 
-The adoption snapshots the readable native payload during `dragstart`, then
-routes the drag through the ordinary element target, monitor, service, and
-auto-scroll lifecycle. Consumers filter on the type they declared and find the
-native reader API on `source.native`.
+  captureGrip = modifier((element) => {
+    this.gripElement = element;
+    return () => (this.gripElement = undefined);
+  });
 
-Adoption deliberately leaves several drags alone:
+  <template>
+    <li {{dDragAndDropSource type="row" dragHandle=this.gripElement}}>
+      <span {{this.captureGrip}} aria-hidden="true"></span>
+      {{@item.label}}
+    </li>
+  </template>
+}
+```
 
-- a registered source keeps its own type and lifecycle;
-- an explicitly draggable element stays owned by its existing implementation;
-- selected or editable text remains a browser text drag; and
-- files remain available to the upload path.
+The row stays the drag body: it keeps `data-drag-source`, it is what a target
+reports as `source.element`, and it is what the default preview photographs.
 
-It also preserves browser behavior over dead space and does not narrow the
-browser's allowed effects.
+## Custom previews
 
-## An ancestor that must stay active reads the service
+An `Element` preview is photographed in place. A render function mounts a fresh
+preview into an isolated offscreen container, so nothing around the source
+bleeds into the drag image, and may return a cleanup function.
 
-Only the deepest accepted target receives lifecycle callbacks. That prevents
-nested targets from handling one drop twice, but it also means an ancestor
-target stops indicating as soon as a descendant claims the drag.
+```js
+dragPreview = ({ container, element }) => {
+  const node = element.cloneNode(true);
+  container.append(node);
+  return () => node.remove();
+};
+```
 
-If a container must stay highlighted while its descendant targets activate in
-turn, read `@service dragAndDrop` instead. Its tracked `currentDrag`,
-`currentExternalDrag`, and `isDragging` state describe the in-flight operation;
-`accepts(type)` and `acceptsExternal(kind)` provide the matching vocabulary.
-Leave drop handling to the descendant targets.
+# dDragAndDropTarget
 
-## The monitor reacts; the service holds state
+Accepts element drags and reports where the drop would land.
 
-- **`dDragAndDropMonitor`** invokes `onDragStart`, `onDrag`, and `onDrop` for
-  imperative reactions to an element drag happening elsewhere.
-- **`@service dragAndDrop`** exposes tracked state for rendering.
+## Arguments
+
+| Argument        | Type                                         | Purpose                                                       |
+| --------------- | -------------------------------------------- | ------------------------------------------------------------- |
+| `accepts`       | `string \| string[]`                         | Which source types engage the target. Omit to accept any.     |
+| `adopts`        | `NativeDragAdoption \| NativeDragAdoption[]` | Also take browser-started page content. See below.            |
+| `acceptsSelf`   | `boolean`                                    | `false` refuses a drop whose dragged element is this element. |
+| `position`      | `"before" \| "after" \| "inside"`            | A fixed position, which wins over midpoint math.              |
+| `axis`          | `"vertical" \| "horizontal"`                 | Which midpoint is measured. Defaults to `"vertical"`.         |
+| `indicator`     | `boolean`                                    | `false` suppresses the indicator class.                       |
+| `canDrop`       | `(feedback) => boolean`                      | Synchronous gate. `false` refuses the drop.                   |
+| `getDropEffect` | `(feedback) => DropEffect`                   | The cursor feedback the browser shows.                        |
+| `getData`       | `() => object`                               | Metadata attached to the drag's record of this target.        |
+| `getIsSticky`   | `() => boolean`                              | Whether the target stays current after the pointer leaves.    |
+| `onDragEnter`   | `(event) => void`                            | This target became the deepest accepted target.               |
+| `onDrag`        | `(event) => void`                            | Throttled, while it stays the deepest accepted target.        |
+| `onDragLeave`   | `(event) => void`                            | It stopped being the deepest accepted target.                 |
+| `onDrop`        | `(event) => void`                            | The drag was released here.                                   |
+
+A registered target carries `data-drop-target`.
+
+## Positions and indicator classes
+
+A target resolves `before`, `after` or `inside` and paints one class while a
+compatible drag is over it:
+
+| Position | Vertical axis   | Horizontal axis |
+| -------- | --------------- | --------------- |
+| `before` | `--drag-above`  | `--drag-left`   |
+| `after`  | `--drag-below`  | `--drag-right`  |
+| `inside` | `--drag-inside` | `--drag-inside` |
+
+Positions are logical, not physical. In a right-to-left row, `before` still
+means the reading-order start, and the class flips to `--drag-right` so the
+indicator stays under the pointer. Consumers need no special case.
+
+## Nesting
+
+Only the deepest accepted target receives lifecycle callbacks, so nested targets
+never handle one drop twice. The cost is that an ancestor stops indicating the
+moment a descendant claims the drag. When a container has to stay highlighted
+while its descendants activate in turn, render from the service instead and
+leave drop handling to the descendants.
+
+## Adopting browser-started drags
+
+The browser starts drags on ordinary page content, such as a link or an image,
+which registers no source and could not. An adoption lets a target take those
+too. It names the kind of drag and supplies a predicate:
+
+```js
+export const WEB_LINK = {
+  type: "web-link",
+  match: ({ element }) => Boolean(element.closest("a[href]")),
+};
+```
+
+```gjs
+<div {{dDragAndDropTarget adopts=WEB_LINK onDrop=this.addLink}}></div>
+```
+
+From there it is an ordinary drag: the same callbacks, the same positions, the
+same indicator. The adoption's `type` becomes `source.type`, so a monitor or
+auto-scroll filters on it like any other type, and the native payload arrives on
+`source.native` with the same reader API an external target hands you. Its
+`items` list is always empty, because the handles go inert when `dragstart` ends.
+
+Three rules are not guessable from the signature:
+
+- **Adoption is resolved once for the page, not per target.** At `dragstart` the
+  first live adoption whose predicate matches names the drag, and every target
+  listing that name accepts it. Two adoptions sharing a name must therefore share
+  a predicate. Declare one as a module constant and offer it from each target.
+- **`adopts` without `accepts` refuses every registered source.** A target that
+  named what it wants through `adopts` is not also asking for everything else on
+  the page.
+- **It covers only what the browser started on this page.** To take the same
+  content dragged in from outside the window, pair the target with
+  `dDragAndDropExternalTarget` on the same element.
+
+Adoption deliberately leaves several drags alone: a registered source keeps its
+own lifecycle, an element somebody else made draggable keeps its own drag, files
+go to an external target, and a text selection is never adopted, including one
+held inside an `input` or `textarea`. A predicate that throws is reported and
+refuses, rather than deciding for the adoptions after it.
+
+# dDragAndDropExternalTarget
+
+Accepts payloads dragged in from another window or another application. It never
+sees a drag that began on this page.
+
+## Arguments
+
+| Argument   | Type                                             | Purpose                                            |
+| ---------- | ------------------------------------------------ | -------------------------------------------------- |
+| `accepts`  | `"files" \| "html" \| "text" \| "urls"` or array | Which kinds engage the target. Omit to accept any. |
+| `position` | `"before" \| "after" \| "inside"`                | Opts into resolving a position at all.             |
+| `axis`     | `"vertical" \| "horizontal"`                     | Same, from the pointer against the midpoint.       |
+
+It shares every kernel argument with the element target: `canDrop`,
+`getDropEffect`, `getData`, `getIsSticky`, `indicator`, and the four lifecycle
+callbacks.
+
+Without `position` or `axis` the target is one destination rather than a slot:
+callbacks receive `position: null` and the indicator is the single
+`--drag-over-external` class. A registered external target carries
+`data-drop-target-external`.
+
+```gjs
+<div
+  {{dDragAndDropExternalTarget
+    accepts=(array "urls" "text")
+    onDrop=this.acceptLink
+  }}
+></div>
+```
+
+The payload exposes `types`, `containsFiles()`, `getFiles()`, `containsHTML()`,
+`getHTML()`, `containsText()`, `getText()`, `containsURLs()` and `getURLs()`.
+`items` and `getFiles()` are only populated at the drop.
+
+**This is not the upload path.** A file dropped here does not enter upload
+validation, progress, retries, or the upload record. Reach for it only when the
+consumer genuinely wants the raw payload.
+
+# dDragAndDropMonitor
+
+Reacts to an element drag happening anywhere, without becoming a drop target.
+
+| Argument      | Type                 | Purpose                                       |
+| ------------- | -------------------- | --------------------------------------------- |
+| `types`       | `string \| string[]` | Which drag types to watch. Omit to watch all. |
+| `onDragStart` | `(event) => void`    | A watched drag began.                         |
+| `onDrag`      | `(event) => void`    | Throttled, while it is in flight.             |
+| `onDrop`      | `(event) => void`    | It was released.                              |
+
+The element only anchors the modifier's lifecycle; a monitor is global.
+
+# dDragAndDropAutoScroll
+
+Scrolls a container while a drag hovers near its edge.
+
+| Argument  | Type                                             | Purpose                            |
+| --------- | ------------------------------------------------ | ---------------------------------- |
+| `types`   | `string \| string[]`                             | Element drag types that engage it. |
+| `accepts` | `"files" \| "html" \| "text" \| "urls"` or array | External kinds that engage it.     |
+| `axis`    | `"vertical" \| "horizontal" \| "all"`            | Which direction to scroll.         |
+| `target`  | `"element" \| "window"`                          | Scroll this element or the window. |
+
+Element drags and external drags arrive through different adapters, so a surface
+that takes both names both: `types` for the element side, `accepts` for the
+external side.
+
+# The dragAndDrop service
+
+The service holds the in-flight drag as tracked state, so a surface can render
+from it without wiring a callback.
+
+| Member                   | Purpose                                           |
+| ------------------------ | ------------------------------------------------- |
+| `currentDrag`            | The in-flight element drag, or `null`.            |
+| `currentExternalDrag`    | The in-flight external drag, or `null`.           |
+| `isDragging`             | Whether either is in flight.                      |
+| `accepts(types)`         | Whether the element drag's type is in `types`.    |
+| `acceptsExternal(kinds)` | Whether the external drag carries one of `kinds`. |
+
+`currentDrag` carries `type`, `data`, `element`, and `native` for an adopted
+drag.
+
+```gjs
+<div class={{if (this.dragAndDrop.accepts "row") "is-drop-zone"}}></div>
+```
 
 Use the service to read and the monitor to respond. Rendering from monitor
-callbacks means maintaining state that the service already owns.
+callbacks means keeping state the service already owns.
 
-## The source and target jointly determine cursor feedback
+Note that `accepts()` and `acceptsExternal()` treat an empty or missing filter
+as matching nothing, because a caller that has not decided should not light up
+for every drag. A target's `accepts` reads the other way: omitting it accepts
+everything.
 
-`effectAllowed` says what a registered source permits. It is written once at
-`dragstart`; `dDragAndDropSource` defaults it to `"move"`, which suits moving an
-item between positions on the same page. A source that truly supports both
-copying and moving can pass `effectAllowed="copyMove"`.
+# dPointerDrag
 
-`getDropEffect` says which permitted operation a target would perform. A target
-requesting `"copy"` from a move-only source is refused by the browser because a
-target cannot broaden the source's permission.
+Press, move, and release on one element, for a value that tracks the pointer.
+It transfers nothing and has no targets.
 
-A registered source also claims otherwise-unhandled space for the duration of
-its drag, so releasing over dead space finishes without the browser's snap-back
-animation. An adopted drag is excluded from both behaviors: the browser started
-it with a real native payload, so other page surfaces must remain able to handle
-it according to the browser's original rules.
+| Argument          | Type                               | Purpose                                          |
+| ----------------- | ---------------------------------- | ------------------------------------------------ |
+| `onDragStart`     | `(event, info) => boolean \| void` | The gesture began. Returning `false` refuses it. |
+| `onDrag`          | `(event, info) => void`            | The pointer moved.                               |
+| `onDragEnd`       | `(event, info) => void`            | The gesture finished.                            |
+| `onDragCancel`    | `(event, info) => void`            | It was interrupted rather than finished.         |
+| `threshold`       | `number`                           | Pixels of movement before the gesture starts.    |
+| `draggingClass`   | `string`                           | Class applied to the element while dragging.     |
+| `bodyClass`       | `string`                           | Class applied to `document.body` while dragging. |
+| `cancelCommits`   | `boolean`                          | Whether a cancel commits the last value.         |
+| `stopPropagation` | `boolean`                          | Whether to stop the pointer events propagating.  |
+| `touchAction`     | `TouchActionToken`                 | The `touch-action` to apply for the gesture.     |
 
-# Choosing a resize primitive
+Always handle `onDragCancel`. A gesture interrupted by the browser otherwise
+leaves whatever `onDragStart` opened still open.
 
-`DResizeSeparator` and `dResizeEdge` expose the same one-dimensional gesture at
-different levels, while `DResizeHandles` serves a different shape.
+# DResizeSeparator
 
-- **`DResizeSeparator`** is the default for resizing between two regions. It
-  wraps `dResizeEdge` and provides `role="separator"`, one tab stop, keyboard
-  operation, the correct orientation, bounds, and live ARIA value updates.
-- **`dResizeEdge`** is the modifier underneath. Use it directly only when the
-  element and separator semantics are already yours to provide.
-- **`DResizeHandles`** renders the edges and corners of a two-dimensional box
-  resize and reports pointer geometry for the consumer to interpret.
+The default for resizing between two regions. `dResizeEdge` underneath keeps the
+value math, the bounds and the keyboard operation; the separator adds the
+accessibility contract on top: `role="separator"`, one tab stop, an
+`aria-orientation`, and live `aria-valuenow` updates.
+
+| Argument        | Type                                  | Purpose                                                                   |
+| --------------- | ------------------------------------- | ------------------------------------------------------------------------- |
+| `label`         | `string`, required                    | What the separator is called, already translated.                         |
+| `axis`          | `"vertical" \| "horizontal"`          | `"vertical"` resizes height. Defaults to `"vertical"`.                    |
+| `side`          | `"start" \| "end"`                    | The edge the handle sits on, naming the edge opposite the one that moves. |
+| `measure`       | `Element` or `(separator) => Element` | The box being resized. Given this, it measures itself.                    |
+| `value`         | `number` or `() => number`            | The current size, when it is not the measured extent.                     |
+| `min` / `max`   | `number` or `() => number`            | Bounds. Override the measurement.                                         |
+| `onResizeStart` | `() => void`                          | The gesture began.                                                        |
+| `onResize`      | `(size) => void`                      | Throughout the gesture. Preview here.                                     |
+| `onResizeEnd`   | `(size) => void`                      | Once at the end. Commit here.                                             |
+
+`label` is required because a focusable `role="separator"` with no accessible
+name is announced as a bare "splitter", which says nothing about what it
+resizes.
+
+```gjs
+<DResizeSeparator
+  @label={{i18n "sidebar.resize"}}
+  @measure={{this.panelElement}}
+  @onResizeEnd={{this.persistWidth}}
+  @axis="horizontal"
+/>
+```
+
+`onResizeEnd` also fires if the separator is destroyed mid-gesture, so anything
+opened at the start still gets closed.
+
+# dResizeEdge
+
+The modifier underneath `DResizeSeparator`. Use it directly only when the
+element and its separator semantics are already yours to provide.
+
+| Argument        | Type                                     | Purpose                                          |
+| --------------- | ---------------------------------------- | ------------------------------------------------ |
+| `value`         | `number \| null` or a function, required | The current size.                                |
+| `min` / `max`   | `number` or a function, required         | Bounds.                                          |
+| `axis`          | `"vertical" \| "horizontal"`             | Which dimension is resized.                      |
+| `side`          | `"start" \| "end"`                       | Which edge the handle sits on.                   |
+| `bodyClass`     | `string`                                 | Class applied to `document.body` while resizing. |
+| `onResizeStart` | `() => void`                             | The gesture began.                               |
+| `onResize`      | `(size, meta) => void`                   | Throughout the gesture.                          |
+| `onResizeEnd`   | `(size, meta) => void`                   | Once at the end.                                 |
+
+# DResizeHandles
+
+Renders the edges and corners of a two-dimensional box resize and reports
+pointer geometry for the consumer to interpret.
+
+| Argument                                                        | Type                          | Purpose                                                        |
+| --------------------------------------------------------------- | ----------------------------- | -------------------------------------------------------------- |
+| `directions`                                                    | `BoxDirection[]`              | Which of `n`, `ne`, `e`, `se`, `s`, `sw`, `w`, `nw` to render. |
+| `handles`                                                       | `DResizeHandleDescriptor[]`   | Explicit handle descriptors with their payloads.               |
+| `handleClass` / `draggingClass`                                 | `string`                      | Classes for the handles and the active gesture.                |
+| `measure`                                                       | `MeasureTarget`               | The box the geometry is measured against.                      |
+| `threshold`                                                     | `number`                      | Pixels of movement before a gesture starts.                    |
+| `cancelCommits`                                                 | `boolean`                     | Whether a cancel commits the last value.                       |
+| `stopPropagation`                                               | `boolean`                     | Whether to stop the pointer events propagating.                |
+| `onResizeStart` / `onResize` / `onResizeEnd` / `onResizeCancel` | `(payload, dragInfo) => void` | The gesture lifecycle.                                         |
+
+```js
+@action
+onResize(direction, { delta }) {
+  if (direction.includes("e")) {
+    this.width = Math.max(MIN, this.startWidth + delta.x);
+  }
+  if (direction.includes("s")) {
+    this.height = Math.max(MIN, this.startHeight + delta.y);
+  }
+}
+```
 
 Do not give a two-dimensional box resize `role="separator"`. It has no single
-`aria-valuenow` to report, so that role would describe a control that does not
+`aria-valuenow` to report, so the role would describe a control that does not
 exist.
 
-# Deliberately separate implementations
+# dSwipe
 
-Not every drag belongs in this shared suite. Specialized content manipulation,
-spatial gestures, and upload drop paths can have domain-specific lifecycles that
-do not map to these primitives. Adoption steps around existing draggable
-elements, registered sources, text selections, and files so those owners retain
-control.
+Reports a discrete directional flick with velocity, for touch surfaces that open
+or dismiss something.
 
-Observer modifiers such as `dOnResize`, `dObserveIntersection`, and
-`dScrollIntoView` are also outside the gesture suite because they react to DOM
-state rather than input.
+| Argument           | Type                     | Purpose                                   |
+| ------------------ | ------------------------ | ----------------------------------------- |
+| `onDidStartSwipe`  | `(state, event) => void` | The gesture began.                        |
+| `onDidSwipe`       | `(state) => void`        | It progressed.                            |
+| `onDidEndSwipe`    | `(state) => void`        | It completed.                             |
+| `onDidCancelSwipe` | `(detail) => void`       | It was interrupted.                       |
+| `enabled`          | `boolean`                | Whether the gesture is active.            |
+| `lockBody`         | `boolean`                | Whether to lock body scrolling during it. |
 
-`dSwipe` remains in this guide because it is input-driven. It reports a discrete
-directional flick with velocity. Use `dPointerDrag` when a value must track the
-pointer continuously.
+Use `dPointerDrag` instead when a value must track the pointer continuously.
+`dSwipe` answers "which way did they flick", not "where is the pointer now".
+
+# dOnResize is not a gesture
+
+`dOnResize` wraps `ResizeObserver`. It reports that an element's size changed,
+whether from a font load, a growing sibling, or a gesture somewhere else. Nobody
+resizes anything with it. The similar name is the trap.
+
+```gjs
+<div {{dOnResize this.onLayoutChange (hash delay=100)}}></div>
+```
+
+Its callback and options are positional. If you need to know a size, observe it;
+if you need to let someone change one, use a resize primitive.
+
+The other observer modifiers, `dObserveIntersection` and `dScrollIntoView`, sit
+outside this suite for the same reason: they react to DOM state, not to input.
 
 # Accessibility
 
-A drag is not a keyboard interaction. Any reorder surface must pair it with a
-keyboard path, such as `DReorderButtons`; a resize between regions should use
-the keyboard support in `DResizeSeparator` or `dResizeEdge`.
+**A drag is not a keyboard interaction.** Every reorder surface has to pair the
+drag with a keyboard path, and every resize between regions should use the
+keyboard support already in `DResizeSeparator` or `dResizeEdge`.
 
-Use `DDragHandle` with `dragHandle` for reorder rows. The grip confines the drag
-start so a touch press intended to scroll still scrolls, and it moves
-`draggable="true"` off the row so the row's text and controls remain usable. The
-row remains the drag body: it receives state classes, appears as
-`source.element`, and supplies the drag preview. Style and assert against
-`data-drag-source`, which is always on that body, rather than `draggable`.
+**Announce the outcome, not the movement.** A completed reorder reports the
+item's new visible position once through `a11y.announce()`. A no-op announces
+nothing, and moving the pointer across drop indicators announces nothing.
 
-`DDragHandle` is decorative and outside the tab order because a keyboard cannot
-operate it. `DReorderButtons` provides the operable controls and keeps focus on
-the pressed direction after the row moves. Both belong on every viewport.
+**Do not add `aria-dropeffect` or `aria-grabbed`.** Both are deprecated and
+neither makes a drag operable.
 
-Drag and arrow paths can have different scopes when the visible structure calls
-for it. For example, arrows may move within one labeled list while a drag can
-cross between lists. The keyboard path should follow the list the user is
-stepping through rather than silently crossing a semantic boundary.
+**A drag handle is decorative and stays outside the tab order,** because a
+keyboard cannot operate it. The operable controls are the keyboard path beside
+it.
 
-Do not add `aria-dropeffect` or `aria-grabbed`; both are deprecated and do not
-provide an operable drag experience.
+**Keep the two paths' scopes honest.** They may legitimately differ: arrows may
+move within one labeled list while a drag crosses between lists. The keyboard
+path should follow the list the user is stepping through rather than silently
+crossing a semantic boundary.
 
-Announce the outcome, not pointer movement. A successful reorder should report
-the item's new visible position once through `a11y.announce()`. A no-op should
-announce nothing, and moving the pointer across drop indicators should not
-produce announcements.
+# Testing
+
+Synthetic mouse events do not drive a native drag; they stall. Use the helpers.
+
+In JavaScript tests, from
+`discourse/tests/helpers/ui-kit/drag-and-drop-helper`:
+
+| Helper                                        | Drives                                       |
+| --------------------------------------------- | -------------------------------------------- |
+| `simulateDrag(source, target, opts)`          | A registered source onto a target.           |
+| `simulateUnsourcedDrag(source, target, opts)` | Browser-started page content onto a target.  |
+| `simulateExternalDrag(target, opts)`          | A payload from outside the window.           |
+| `externalDragOver` / `dragOver` / `startDrag` | A drag left hovering, without dropping.      |
+| `dragEvent` / `dragEventNow`                  | One event, with or without a frame after it. |
+| `centerOf` / `textTransfer` / `fileTransfer`  | Coordinates and payloads.                    |
+
+Every synthetic drag event must carry finite `clientX` and `clientY`, which is
+what `centerOf` is for.
+
+In system specs, use `SystemHelpers#drag_and_drop`.
+
+# dDraggable is deprecated
+
+`dDraggable` raises `discourse.ui-kit.d-draggable` when instantiated. Use
+`dPointerDrag`. It is not a drop-in: rename `didStartDrag`, `dragMove` and
+`didEndDrag` to `onDragStart`, `onDrag` and `onDragEnd`, and add `onDragCancel`
+so an interrupted gesture still finishes.

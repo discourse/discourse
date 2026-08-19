@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { warn } from "@ember/debug";
 import { action } from "@ember/object";
 import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -10,6 +11,9 @@ import inlineCode from "discourse/plugins/styleguide/discourse/lib/inline-code";
 // A plain counter rather than `guidFor`: `@ember/object/internals` is not resolvable from a
 // plugin bundle, and importing it fails the whole bundle at load rather than at use.
 let exampleId = 0;
+
+/** What an example demonstrates, when the page is documenting named APIs. */
+const KINDS = ["component", "modifier", "service"];
 
 /**
  * One demonstrated capability: a heading, the prose that says what it proves, the live
@@ -34,6 +38,10 @@ let exampleId = 0;
  *   Also accepts a block, for a short list; give a list in that block the class
  *   `styleguide-example__note-list` so it picks up the card's list spacing.
  * @param {string} [code] - the imported source of the example module, revealed by a toggle.
+ * @param {string} [kind] - what the example demonstrates: `component`, `modifier` or `service`.
+ *   Shown as a label beside the title. For a page documenting named APIs, where a card's title
+ *   alone leaves the reader guessing which kind of thing they are looking at. Omit it on a page
+ *   that demonstrates appearance rather than an API.
  *
  * Two opt-in classes an example may apply to its own yielded markup:
  * `styleguide-example__result`, for an element the demo writes its output into, inside the
@@ -55,6 +63,23 @@ export default class StyleguideExample extends Component {
     return this.args.headingLevel ?? 2;
   }
 
+  get kindLabel() {
+    const kind = this.args.kind;
+    if (!kind) {
+      return;
+    }
+
+    warn(
+      `<StyleguideExample> was given @kind="${kind}", which is not one of ${KINDS.join(", ")}.`,
+      KINDS.includes(kind),
+      { id: "styleguide.example-unknown-kind" }
+    );
+
+    return KINDS.includes(kind)
+      ? i18n(`styleguide.example.kind.${kind}`)
+      : null;
+  }
+
   @action
   toggleCode() {
     this.showCode = !this.showCode;
@@ -73,6 +98,10 @@ export default class StyleguideExample extends Component {
           <h2 class="styleguide-example__title" data-test-example-title>
             {{@title}}
           </h2>
+        {{/if}}
+
+        {{#if this.kindLabel}}
+          <span class="styleguide-example__kind">{{this.kindLabel}}</span>
         {{/if}}
 
         {{#if @code}}

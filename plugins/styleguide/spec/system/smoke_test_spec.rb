@@ -130,8 +130,37 @@ RSpec.describe "Styleguide Smoke Test" do
     visit "/styleguide/molecules/drag-and-drop"
 
     expect(styleguide).to have_heading("Drag and drop")
-    expect(page).to have_css(".styleguide-drag-and-drop__resizable")
+    # The first group renders by default; the rest are behind the group subnav.
+    expect(page).to have_css("[data-test-styleguide-group='basics']")
+    expect(page).to have_css(".styleguide-drag-and-drop__zone")
     screenshot_marker(label: "styleguide-drag-and-drop")
+  end
+
+  # Asserting on each group's own markup, not just its wrapper: the wrapper
+  # renders before a broken example inside it throws, so a wrapper-only check
+  # passes for a group whose examples never mounted.
+  it "renders each drag and drop group's examples" do
+    {
+      "basics" => ".styleguide-drag-and-drop__swatches",
+      "sources" => ".styleguide-drag-and-drop__grip",
+      "targets" => ".styleguide-drag-and-drop__zone.--inner",
+      "outside" => ".styleguide-drag-and-drop__zone",
+      "reacting" => ".styleguide-drag-and-drop__panel",
+      "resize" => ".styleguide-drag-and-drop__resizable",
+      "gestures" => ".styleguide-drag-and-drop__knob",
+    }.each do |group, selector|
+      visit "/styleguide/molecules/drag-and-drop?group=#{group}"
+
+      expect(page).to have_css("[data-test-styleguide-group='#{group}']")
+      expect(page).to have_css(selector)
+    end
+  end
+
+  it "labels each drag and drop example with what it demonstrates" do
+    visit "/styleguide/molecules/drag-and-drop?group=resize"
+
+    # The separator and the handles are components; the raw edge is a modifier.
+    expect(page).to have_css(".styleguide-example__kind", count: 3)
   end
 
   it "renders the index page correctly on a site with no default color schemes" do
