@@ -375,7 +375,7 @@ class UsersController < ApplicationController
     User.transaction do
       old_primary.update!(primary: false)
       new_primary.update!(primary: true)
-      DiscourseEvent.trigger(:user_updated, user)
+      DiscourseEvent.trigger(:user_updated, user, %w[email])
 
       if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_update_email(user)
@@ -399,7 +399,7 @@ class UsersController < ApplicationController
       if change_requests = user.email_change_requests.where(new_email: params[:email]).presence
         change_requests.destroy_all
       elsif user.user_emails.where(email: params[:email], primary: false).destroy_all.present?
-        DiscourseEvent.trigger(:user_updated, user)
+        DiscourseEvent.trigger(:user_updated, user, %w[email])
       else
         return render json: failed_json, status: :precondition_required
       end
