@@ -46,7 +46,7 @@ intent and already handle light/dark via `light-dark()`:
 ## General-purpose `--d-*` design vars
 
 A family of app-wide design constants — `--d-border-radius` (and `--d-border-radius-large`,
-`--d-input-border-radius`), `--d-content-background`, `--d-link-color`, `--d-hover`,
+`--d-input-border-radius`), `--d-content-background`, `--fancy-new-link-color`, `--d-hover`,
 `--d-selected` — for conventions like the standard corner radius and link color. Prefer these
 over inventing your own constant so a component matches the rest of the UI (and a theme can
 retune them globally).
