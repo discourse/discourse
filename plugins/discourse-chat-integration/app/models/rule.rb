@@ -2,7 +2,9 @@
 
 class DiscourseChatIntegration::Rule < DiscourseChatIntegration::PluginModel
   # Setup ActiveRecord::Store to use the JSON field to read/write these values
-  store :value, accessors: %i[channel_id type group_id category_id tags filter], coder: JSON
+  store :value,
+        accessors: %i[channel_id type group_id category_id exclude_category_ids tags filter],
+        coder: JSON
 
   scope :with_type, ->(type) { where("value::json->>'type'=?", type.to_s) }
   scope :with_channel, ->(channel) { with_channel_id(channel.id) }
@@ -58,7 +60,11 @@ class DiscourseChatIntegration::Rule < DiscourseChatIntegration::PluginModel
               message: "%{value} is not a valid filter",
             }
 
-  validate :channel_valid?, :category_valid?, :group_valid?, :tags_valid?
+  validate :channel_valid?,
+           :category_valid?,
+           :exclude_categories_valid?,
+           :group_valid?,
+           :tags_valid?
 
   def self.key_prefix
     "rule:"
@@ -70,6 +76,14 @@ class DiscourseChatIntegration::Rule < DiscourseChatIntegration::PluginModel
       super(nil)
     else
       super(array)
+    end
+  end
+
+  def exclude_category_ids=(array)
+    if array.nil? || array.empty?
+      super(nil)
+    else
+      super(array.map(&:to_i))
     end
   end
 
@@ -111,6 +125,29 @@ class DiscourseChatIntegration::Rule < DiscourseChatIntegration::PluginModel
 
     if !(category_id.nil? || Category.where(id: category_id).exists?)
       errors.add(:category_id, "#{category_id} is not a valid category id")
+    end
+  end
+
+  def exclude_categories_valid?
+    return if exclude_category_ids.nil?
+
+    if type != "normal"
+      errors.add(:exclude_category_ids, "cannot be specified for that type of rule")
+      return
+    end
+
+    if !category_id.nil?
+      errors.add(
+        :exclude_category_ids,
+        "can only be specified when the rule applies to all categories",
+      )
+      return
+    end
+
+    exclude_category_ids.each do |id|
+      if !Category.where(id: id).exists?
+        errors.add(:exclude_category_ids, "#{id} is not a valid category id")
+      end
     end
   end
 
