@@ -689,7 +689,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result[:top_entry_urls]).to eq(rows: [], error: nil)
       end
 
-      it "returns entry URL rows" do
+      it "includes top entry URLs for the selected range" do
         topic = Fabricate(:topic)
         Fabricate(
           :browser_pageview_event,

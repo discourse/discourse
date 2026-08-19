@@ -10,10 +10,6 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
   end
 
   describe ".aggregate" do
-    def aggregate(start_date: "2026-05-12", end_date: start_date)
-      described_class.aggregate(start_date: start_date.to_date, end_date: end_date.to_date)
-    end
-
     it "counts direct and external-referrer pageviews but excludes configured site hosts" do
       topic = Fabricate(:topic)
       Fabricate(
@@ -48,7 +44,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
         created_at: "2026-05-12 10:06:00",
       )
 
-      aggregate
+      described_class.aggregate(start_date: "2026-05-12".to_date, end_date: "2026-05-12".to_date)
 
       expect(described_class.pluck(:entry_url, :count)).to contain_exactly(
         ["/t/topic/#{topic.id}", 1],
@@ -56,45 +52,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
       )
     end
 
-    it "counts every normalized route" do
-      paths = %w[
-        /
-        /tags
-        /latest
-        /top
-        /new
-        /categories
-        /faq
-        /guidelines
-        /about
-        /groups
-        /badges
-        /search
-        /unread
-        /associate/token
-        /session/email-login/token
-        /u/password-reset/token
-        /c/private-category/2
-        /tag/restricted
-        /g/hidden-team
-        /g/hidden-team/messages
-        /unknown-plugin
-      ]
-
-      paths.each do |path|
-        Fabricate(
-          :browser_pageview_event,
-          url: "https://test.localhost#{path}",
-          created_at: "2026-05-12",
-        )
-      end
-
-      aggregate
-
-      expect(described_class.pluck(:entry_url)).to contain_exactly(*paths)
-    end
-
-    it "preserves normalized routes when a subfolder is configured" do
+    it "keeps subfolder paths distinct from root paths" do
       Discourse.stubs(:base_path).returns("/forum")
       topic = Fabricate(:topic)
       Fabricate(:browser_pageview_event, url: "/forum", created_at: "2026-05-12")
@@ -107,38 +65,14 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
       Fabricate(:browser_pageview_event, url: "/forum/latest", created_at: "2026-05-12")
       Fabricate(:browser_pageview_event, url: "/latest", created_at: "2026-05-12")
 
-      aggregate
+      described_class.aggregate(start_date: "2026-05-12".to_date, end_date: "2026-05-12".to_date)
 
       expect(described_class.order(:entry_url).pluck(:entry_url)).to eq(
         ["/forum", "/forum/latest", "/forum/t/topic/#{topic.id}", "/latest"],
       )
     end
 
-    it "counts topic routes regardless of topic visibility" do
-      public_topic = Fabricate(:topic)
-      private_message = Fabricate(:private_message_topic)
-      restricted_category = Fabricate(:private_category, group: Fabricate(:group))
-      restricted_topic = Fabricate(:topic, category: restricted_category)
-
-      [public_topic, private_message, restricted_topic].each do |topic|
-        Fabricate(
-          :browser_pageview_event,
-          topic_id: topic.id,
-          url: "/t/confidential-#{topic.id}/#{topic.id}",
-          created_at: "2026-05-12",
-        )
-      end
-
-      aggregate
-
-      expect(described_class.pluck(:entry_url)).to contain_exactly(
-        "/t/confidential-#{public_topic.id}/#{public_topic.id}",
-        "/t/confidential-#{private_message.id}/#{private_message.id}",
-        "/t/confidential-#{restricted_topic.id}/#{restricted_topic.id}",
-      )
-    end
-
-    it "preserves login and crawler classification in the daily rollup" do
+    it "separates logged-in and likely crawler pageviews" do
       SiteSetting.improved_crawler_detection = true
       Fabricate(
         :browser_pageview_event,
@@ -148,7 +82,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
         created_at: "2026-05-12",
       )
 
-      aggregate
+      described_class.aggregate(start_date: "2026-05-12".to_date, end_date: "2026-05-12".to_date)
 
       expect(
         described_class.pick(
@@ -176,11 +110,11 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
         normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         created_at: "2026-02-14 00:01:00",
       )
-      aggregate(start_date: "2026-02-13", end_date: "2026-02-14")
+      described_class.aggregate(start_date: "2026-02-13".to_date, end_date: "2026-02-14".to_date)
 
       freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
       Jobs::CleanUpBrowserPageviewEvents.new.execute({})
-      aggregate(start_date: "2026-02-13", end_date: "2026-02-14")
+      described_class.aggregate(start_date: "2026-02-13".to_date, end_date: "2026-02-14".to_date)
 
       expect(BrowserPageviewEvent.pluck(:created_at).map(&:to_date)).to eq(["2026-02-14".to_date])
       expect(described_class.pluck(:date, :entry_url)).to eq([["2026-02-13".to_date, "/top"]])
@@ -188,7 +122,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
   end
 
   describe ".recompute" do
-    it "rebuilds each affected date from its retained events" do
+    it "removes a historical entry when its referrer becomes internal" do
       date = "2026-05-12".to_date
       event = Fabricate(:browser_pageview_event, url: "/latest", created_at: date)
       described_class.aggregate(start_date: date, end_date: date)

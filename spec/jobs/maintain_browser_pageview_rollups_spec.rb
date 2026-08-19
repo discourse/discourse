@@ -522,7 +522,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
     end
 
     context "when aggregating entry URLs" do
-      it "aggregates every normalized entry URL" do
+      it "keeps entry URL counts stable across repeated runs" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         Fabricate(:browser_pageview_event, url: "/search?q=private", created_at: "2026-05-12")
 
@@ -535,7 +535,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(BrowserPageviewEntryUrlDailyRollup.pluck(:entry_url, :count)).to eq([["/search", 1]])
       end
 
-      it "waits for every retained URL to be current before aggregating" do
+      it "does not publish partial counts while retained URLs are being normalized" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
         2.times do |index|
@@ -558,7 +558,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(BrowserPageviewEntryUrlDailyRollup.sum(:count)).to eq(2)
       end
 
-      it "includes untouched historical dates during the initial rebuild" do
+      it "includes every retained date in the first report" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         Fabricate(:browser_pageview_event, url: "/latest", created_at: "2026-05-10")
         stale = Fabricate(:browser_pageview_event, url: "/top", created_at: "2026-05-12")
@@ -574,7 +574,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         )
       end
 
-      it "only refreshes yesterday and today once rollups are populated" do
+      it "updates recent counts without changing older counts" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         Fabricate(:browser_pageview_event, url: "/latest", created_at: "2026-05-10")
         job.execute({})
@@ -593,7 +593,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         )
       end
 
-      it "waits for every retained referrer to be current before aggregating" do
+      it "does not publish partial counts while retained referrers are being normalized" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
         2.times do
@@ -614,7 +614,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(BrowserPageviewEntryUrlDailyRollup.sum(:count)).to eq(2)
       end
 
-      it "normalizes retained stale rows and stamps the current version" do
+      it "normalizes retained URLs before reporting them" do
         event =
           Fabricate(
             :browser_pageview_event,
@@ -631,7 +631,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         )
       end
 
-      it "resumes bounded batches without revisiting current rows" do
+      it "finishes URL normalization across bounded maintenance runs" do
         SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
         first = Fabricate(:browser_pageview_event, url: "/first")
         second = Fabricate(:browser_pageview_event, url: "/second")
@@ -650,7 +650,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(BrowserPageviewEvent.where(normalized_url_version: nil)).to be_empty
       end
 
-      it "re-normalizes older rows and recomputes their entry URL date" do
+      it "updates historical counts when URL normalization changes" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         raw = "https://forum.example/latest/?sort=recent#section"
         changed_raw = "https://forum.example/top/"
@@ -678,7 +678,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         end
       end
 
-      it "retries an entry URL recompute before stamping a referrer version" do
+      it "removes a historical entry after interrupted referrer normalization resumes" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         event =
           Fabricate(
@@ -707,7 +707,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(BrowserPageviewEntryUrlDailyRollup.where(date: "2026-05-10")).to be_empty
       end
 
-      it "retries an entry URL recompute before stamping a URL version" do
+      it "replaces a historical entry after interrupted URL normalization resumes" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         event = Fabricate(:browser_pageview_event, url: "/latest", created_at: "2026-05-10")
         job.execute({})
@@ -726,7 +726,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(BrowserPageviewEntryUrlDailyRollup.pluck(:entry_url, :count)).to eq([["/top", 1]])
       end
 
-      it "does not backfill rows outside the retained window" do
+      it "leaves expired URLs unchanged" do
         event = Fabricate(:browser_pageview_event, url: "/expired", created_at: 4.months.ago)
         event.update_columns(normalized_url: nil, normalized_url_version: nil)
 
