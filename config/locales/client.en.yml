@@ -7615,6 +7615,26 @@ en:
                 no_match_tooltip: "Search terms with a 0% click-through rate (CTR)."
                 poor_match: "Poor match"
                 poor_match_tooltip: "Search terms with a click-through rate (CTR) between 1-20%."
+          system:
+            title: "System"
+            storage: "Storage"
+            status: "Status"
+            fetch_error: "Couldn't load system information. Try refreshing the page."
+            commits:
+              one: "+%{count} commit"
+              other: "+%{count} commits"
+            view_on_github: "View on GitHub"
+            update_check_failed: "Update check failed — ensure Sidekiq is running."
+            update_available: "Update available: %{version}"
+            space_free: "%{size} free"
+            backups_size:
+              one: "%{size} backup (%{count})"
+              other: "%{size} backups (%{count})"
+            uploads_size: "%{size} uploads"
+            latest_backup: "Latest backup %{date}"
+            manage_backups: "Manage backups"
+            discourse_updated: "Discourse updated"
+            dashboard_updated: "Dashboard updated"
         reports_section:
           header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
