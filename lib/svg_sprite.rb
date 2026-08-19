@@ -473,7 +473,12 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.icon_picker_search(keyword, only_available, page:, per_page:, theme_id: nil)
     ids = picker_icon_ids(theme_id, only_available)
-    ids = ids.lazy.select { |id| id.include?(keyword) } if keyword.present?
+
+    if keyword.present?
+      downcased_keyword = keyword.downcase
+      ids = ids.lazy.select { |id| id.downcase.include?(downcased_keyword) }
+    end
+
     ids = ids.drop(page * per_page).first(per_page + 1)
 
     has_more = ids.size > per_page
