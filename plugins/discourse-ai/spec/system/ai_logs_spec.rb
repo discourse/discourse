@@ -10,7 +10,14 @@ RSpec.describe "AI logs admin page" do
       language_model: llm_model.name,
       feature_name: "system-test",
       raw_request_payload: '{"prompt":"Inspect this request"}',
-      raw_response_payload: '{"answer":"Inspectable response"}',
+      raw_response_payload: <<~SSE,
+        data: {"choices":[{"delta":{"reasoning":"Inspect before answering"}}]}
+
+        data: {"choices":[{"delta":{"content":"Inspectable decoded response"}}]}
+
+        data: [DONE]
+
+      SSE
       request_tokens: 20,
       response_tokens: 10,
       response_status: 200,
@@ -92,6 +99,31 @@ RSpec.describe "AI logs admin page" do
     expect(page).to have_css(".ai-log-detail-modal__metadata-first-token", text: "0.3 s")
     expect(page).to have_no_css(".ai-log-detail-modal__metadata-cost")
     expect(page).to have_current_path(/details=#{log.id}/, url: true)
+
+    find(
+      ".ai-log-detail-modal__tabs .btn",
+      text: I18n.t("js.discourse_ai.logs.detail.response"),
+    ).click
+    expect(ai_logs_page).to have_payload("Inspect before answering")
+    expect(ai_logs_page).to have_payload("Inspectable decoded response")
+    expect(page).to have_css(
+      ".ai-log-detail-modal__response-toggle",
+      text: I18n.t("js.discourse_ai.logs.detail.view_raw_response"),
+    )
+    expect(page).to have_css(
+      ".ai-payload-viewer__copy",
+      text: I18n.t("js.discourse_ai.logs.detail.copy_decoded_response"),
+    )
+
+    find(".ai-log-detail-modal__response-toggle").click
+    expect(ai_logs_page).to have_payload("data:")
+    expect(page).to have_css(
+      ".ai-payload-viewer__copy",
+      text: I18n.t("js.discourse_ai.logs.detail.copy_raw_response"),
+    )
+
+    find(".ai-log-detail-modal__response-toggle").click
+    expect(ai_logs_page).to have_payload("Inspectable decoded response")
 
     page.go_back
     expect(page).to have_no_css(".ai-log-detail-modal")

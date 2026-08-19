@@ -38,6 +38,47 @@ RSpec.describe AiApiAuditLogSerializer do
     expect(serialized[:time_to_first_token_msecs]).to eq(125)
   end
 
+  it "decodes supported streaming responses" do
+    raw_response = <<~SSE
+      data: {"choices":[{"delta":{"reasoning":"No"}}]}
+
+      data: {"choices":[{"delta":{"reasoning":" funny stories"}}]}
+
+      data: [DONE]
+
+    SSE
+    log = AiApiAuditLog.new(raw_response_payload: raw_response)
+
+    serialized = described_class.new(log).as_json[:ai_api_audit_log]
+
+    expect(serialized).to include(
+      raw_response_payload: raw_response,
+      decoded_response: '{"thinking":"No funny stories"}',
+      has_decoded_response: true,
+    )
+  end
+
+  it "returns the exact fallback for a non-streaming response" do
+    raw_response = '{"choices":[{"message":{"content":"hello"}}]}'
+    log = AiApiAuditLog.new(raw_response_payload: raw_response)
+
+    serialized = described_class.new(log).as_json[:ai_api_audit_log]
+
+    expect(serialized).to include(
+      raw_response_payload: raw_response,
+      decoded_response: raw_response,
+      has_decoded_response: false,
+    )
+  end
+
+  it "safely serializes missing logs and response payloads" do
+    expect(described_class.new(nil, root: false).as_json).to be_nil
+
+    serialized =
+      described_class.new(AiApiAuditLog.new(raw_response_payload: nil)).as_json[:ai_api_audit_log]
+    expect(serialized).to include(decoded_response: nil, has_decoded_response: false)
+  end
+
   it "includes a null time to first token for historical logs" do
     log = AiApiAuditLog.new(provider_id: AiApiAuditLog::Provider::OpenAI)
 

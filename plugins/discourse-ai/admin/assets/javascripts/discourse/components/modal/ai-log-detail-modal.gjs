@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
-import { eq, or } from "discourse/truth-helpers";
+import { and, eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
@@ -18,6 +18,7 @@ export default class AiLogDetailModal extends Component {
   @tracked failed = false;
   @tracked notFound = false;
   @tracked activeTab = "request";
+  @tracked showRawResponse = false;
 
   constructor() {
     super(...arguments);
@@ -29,6 +30,7 @@ export default class AiLogDetailModal extends Component {
     this.loading = true;
     this.failed = false;
     this.notFound = false;
+    this.showRawResponse = false;
 
     try {
       const log = await ajax(
@@ -71,8 +73,12 @@ export default class AiLogDetailModal extends Component {
   }
 
   get activePayload() {
-    return this.activeTab === "request"
-      ? this.log?.raw_request_payload
+    if (this.activeTab === "request") {
+      return this.log?.raw_request_payload;
+    }
+
+    return this.log?.has_decoded_response && !this.showRawResponse
+      ? this.log.decoded_response
       : this.log?.raw_response_payload;
   }
 
@@ -83,9 +89,27 @@ export default class AiLogDetailModal extends Component {
   }
 
   get activeCopyLabel() {
-    return this.activeTab === "request"
-      ? i18n("discourse_ai.logs.detail.copy_request")
-      : i18n("discourse_ai.logs.detail.copy_response");
+    if (this.activeTab === "request") {
+      return i18n("discourse_ai.logs.detail.copy_request");
+    }
+
+    if (!this.log?.has_decoded_response) {
+      return i18n("discourse_ai.logs.detail.copy_response");
+    }
+
+    return i18n(
+      `discourse_ai.logs.detail.${
+        this.showRawResponse ? "copy_raw_response" : "copy_decoded_response"
+      }`
+    );
+  }
+
+  get responseToggleLabel() {
+    return i18n(
+      `discourse_ai.logs.detail.${
+        this.showRawResponse ? "view_decoded_response" : "view_raw_response"
+      }`
+    );
   }
 
   get contextPayload() {
@@ -167,6 +191,12 @@ export default class AiLogDetailModal extends Component {
   @action
   selectTab(tab) {
     this.activeTab = tab;
+    this.showRawResponse = false;
+  }
+
+  @action
+  toggleResponseView() {
+    this.showRawResponse = !this.showRawResponse;
   }
 
   @action
@@ -276,6 +306,17 @@ export default class AiLogDetailModal extends Component {
           {{#if
             (or (eq this.activeTab "request") (eq this.activeTab "response"))
           }}
+            {{#if
+              (and (eq this.activeTab "response") this.log.has_decoded_response)
+            }}
+              <div class="ai-log-detail-modal__response-controls">
+                <DButton
+                  class="btn-default ai-log-detail-modal__response-toggle"
+                  @action={{this.toggleResponseView}}
+                  @translatedLabel={{this.responseToggleLabel}}
+                />
+              </div>
+            {{/if}}
             <AiPayloadViewer
               @payload={{this.activePayload}}
               @truncated={{this.activePayloadTruncated}}

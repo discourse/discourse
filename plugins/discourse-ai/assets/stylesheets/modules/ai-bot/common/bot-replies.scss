@@ -175,6 +175,12 @@ span.onebox-ai-llm-title {
   }
 }
 
+.ai-debug-modal__response-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--space-2);
+}
+
 .ai-debug-modal__just-copied {
   font-size: var(--font-down-1);
   color: var(--success);

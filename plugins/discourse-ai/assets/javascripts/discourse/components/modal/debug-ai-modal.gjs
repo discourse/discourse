@@ -15,6 +15,7 @@ export default class DebugAiModal extends Component {
   @tracked info = null;
   @tracked justCopiedText = "";
   @tracked activeTab = "request";
+  @tracked showRawResponse = false;
 
   constructor() {
     super(...arguments);
@@ -28,15 +29,37 @@ export default class DebugAiModal extends Component {
       return null;
     }
 
-    return this.activeTab === "request"
-      ? this.info.raw_request_payload
+    if (this.activeTab === "request") {
+      return this.info.raw_request_payload;
+    }
+
+    return this.info.has_decoded_response && !this.showRawResponse
+      ? this.info.decoded_response
       : this.info.raw_response_payload;
   }
 
   get activeCopyLabel() {
-    return this.activeTab === "request"
-      ? i18n("discourse_ai.ai_bot.debug_ai_modal.copy_request")
-      : i18n("discourse_ai.ai_bot.debug_ai_modal.copy_response");
+    if (this.activeTab === "request") {
+      return i18n("discourse_ai.ai_bot.debug_ai_modal.copy_request");
+    }
+
+    if (!this.info?.has_decoded_response) {
+      return i18n("discourse_ai.ai_bot.debug_ai_modal.copy_response");
+    }
+
+    return i18n(
+      `discourse_ai.ai_bot.debug_ai_modal.${
+        this.showRawResponse ? "copy_raw_response" : "copy_decoded_response"
+      }`
+    );
+  }
+
+  get responseToggleLabel() {
+    return i18n(
+      `discourse_ai.ai_bot.debug_ai_modal.${
+        this.showRawResponse ? "view_decoded_response" : "view_raw_response"
+      }`
+    );
   }
 
   @action
@@ -49,6 +72,8 @@ export default class DebugAiModal extends Component {
   }
 
   async loadLog(logId) {
+    this.showRawResponse = false;
+
     try {
       await ajax(`/discourse-ai/ai-bot/show-debug-info/${logId}.json`).then(
         (result) => {
@@ -71,6 +96,7 @@ export default class DebugAiModal extends Component {
   }
 
   loadApiRequestInfo() {
+    this.showRawResponse = false;
     ajax(`/discourse-ai/ai-bot/post/${this.args.model.id}/show-debug-info.json`)
       .then((result) => {
         this.info = result;
@@ -97,7 +123,13 @@ export default class DebugAiModal extends Component {
   @action
   responseClicked(e) {
     this.activeTab = "response";
+    this.showRawResponse = false;
     e.preventDefault();
+  }
+
+  @action
+  toggleResponseView() {
+    this.showRawResponse = !this.showRawResponse;
   }
 
   get formattedDurationSummary() {
@@ -264,6 +296,17 @@ export default class DebugAiModal extends Component {
               </p>
             {{/if}}
           </div>
+          {{#if this.responseActive}}
+            {{#if this.info.has_decoded_response}}
+              <div class="ai-debug-modal__response-controls">
+                <DButton
+                  class="btn-default ai-debug-modal__response-toggle"
+                  @action={{this.toggleResponseView}}
+                  @translatedLabel={{this.responseToggleLabel}}
+                />
+              </div>
+            {{/if}}
+          {{/if}}
           <AiPayloadViewer
             class="ai-debug-modal__preview"
             @payload={{this.activePayload}}

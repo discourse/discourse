@@ -356,6 +356,12 @@
     margin-bottom: var(--space-3);
   }
 
+  &__response-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--space-2);
+  }
+
   &__attempts {
     margin: 0;
     padding-inline-start: var(--space-6);
