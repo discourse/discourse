@@ -107,7 +107,7 @@ describe "Single thread in side panel" do
     end
 
     context "when in drawer" do
-      it "opens the channel and highlights the message from the original message link" do
+      it "takes the user to the highlighted message after they click the original message link" do
         visit("/latest")
         chat_page.open_from_header
         chat_drawer_page.open_channel(channel)
@@ -122,7 +122,7 @@ describe "Single thread in side panel" do
       end
     end
 
-    it "highlights the message in the channel from the original message link" do
+    it "takes the user to the highlighted message after they click the original message link" do
       chat_page.visit_thread(thread)
 
       thread_page.open_original_message
@@ -246,7 +246,8 @@ describe "Single thread in side panel" do
         expect(side_panel).to have_open_thread(thread)
       end
 
-      it "navigates back to channel from the original message link", mobile: true do
+      it "takes the user back to the channel after they click the original message link",
+         mobile: true do
         chat_page.visit_thread(thread)
 
         thread_page.open_original_message
