@@ -85,6 +85,15 @@ RSpec.describe Admin::Config::SiteSettingsController do
           ],
         )
       end
+
+      it "returns the site traffic explorer setting in the experimental area" do
+        get "/admin/config/site_settings.json", params: { filter_area: "experimental" }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["site_settings"].map { |setting| setting["setting"] },
+        ).to include("enable_site_traffic_explorer")
+      end
     end
   end
 end
