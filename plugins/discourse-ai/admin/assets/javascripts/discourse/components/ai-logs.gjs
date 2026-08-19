@@ -53,6 +53,7 @@ export default class AiLogs extends Component {
 
   filterFormApi;
   _requestId = 0;
+  _openRequestId = 0;
   _openLogId;
 
   constructor() {
@@ -496,18 +497,39 @@ export default class AiLogs extends Component {
 
   @action
   openDetails(logId, { updateUrl = true } = {}) {
-    this._openLogId = String(logId);
+    const openLogId = String(logId);
+    const openRequestId = ++this._openRequestId;
+    this._openLogId = openLogId;
     if (updateUrl) {
-      this.updateUrl({ details: this._openLogId });
+      this.updateUrl({ details: openLogId });
     }
-    this.modal.show(AiLogDetailModal, {
-      model: {
-        logId,
-        onClose: () => {
-          this._openLogId = undefined;
-          this.updateUrl({ details: null });
+
+    // iOS runs button actions before the originating click has finished propagating.
+    // Defer mounting so that click cannot immediately close the modal via its backdrop.
+    next(() => {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        this._openRequestId !== openRequestId ||
+        this._openLogId !== openLogId
+      ) {
+        return;
+      }
+
+      this.modal.show(AiLogDetailModal, {
+        model: {
+          logId,
+          onClose: () => {
+            if (
+              this._openRequestId === openRequestId &&
+              this._openLogId === openLogId
+            ) {
+              this._openLogId = undefined;
+              this.updateUrl({ details: null });
+            }
+          },
         },
-      },
+      });
     });
   }
 
