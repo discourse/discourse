@@ -22,6 +22,13 @@ export default {
     const chatChannelsManager = container.lookup(
       "service:chat-channels-manager"
     );
+    const whenChatCanInteract = (callback) => {
+      return (...args) => {
+        if (chatStateManager.canInteract) {
+          return callback(...args);
+        }
+      };
+    };
 
     const openQuickChannelSelector = (e) => {
       if (isInputSelection(e.target) && !isChatComposer(e.target)) {
@@ -155,7 +162,7 @@ export default {
     withPluginApi((api) => {
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+k`,
-        openQuickChannelSelector,
+        whenChatCanInteract(openQuickChannelSelector),
         {
           global: true,
           help: {
@@ -168,45 +175,61 @@ export default {
           },
         }
       );
-      api.addKeyboardShortcut("alt+up", handleMoveUpShortcut, {
-        global: true,
-        help: {
-          category: "chat",
-          name: "chat.keyboard_shortcuts.switch_channel_arrows",
-          definition: {
-            keys1: ["alt", "&uarr;"],
-            keys2: ["alt", "&darr;"],
-            keysDelimiter: "plus",
-            shortcutsDelimiter: "slash",
+      api.addKeyboardShortcut(
+        "alt+up",
+        whenChatCanInteract(handleMoveUpShortcut),
+        {
+          global: true,
+          help: {
+            category: "chat",
+            name: "chat.keyboard_shortcuts.switch_channel_arrows",
+            definition: {
+              keys1: ["alt", "&uarr;"],
+              keys2: ["alt", "&darr;"],
+              keysDelimiter: "plus",
+              shortcutsDelimiter: "slash",
+            },
           },
-        },
-      });
+        }
+      );
 
-      api.addKeyboardShortcut("alt+down", handleMoveDownShortcut, {
-        global: true,
-      });
+      api.addKeyboardShortcut(
+        "alt+down",
+        whenChatCanInteract(handleMoveDownShortcut),
+        {
+          global: true,
+        }
+      );
 
-      api.addKeyboardShortcut("alt+shift+up", handleMoveUpUnreadShortcut, {
-        global: true,
-        help: {
-          category: "chat",
-          name: "chat.keyboard_shortcuts.switch__unread_channel_arrows",
-          definition: {
-            keys1: ["alt", "shift", "&uarr;"],
-            keys2: ["alt", "shift", "&darr;"],
-            keysDelimiter: "plus",
-            shortcutsDelimiter: "newline",
+      api.addKeyboardShortcut(
+        "alt+shift+up",
+        whenChatCanInteract(handleMoveUpUnreadShortcut),
+        {
+          global: true,
+          help: {
+            category: "chat",
+            name: "chat.keyboard_shortcuts.switch__unread_channel_arrows",
+            definition: {
+              keys1: ["alt", "shift", "&uarr;"],
+              keys2: ["alt", "shift", "&darr;"],
+              keysDelimiter: "plus",
+              shortcutsDelimiter: "newline",
+            },
           },
-        },
-      });
+        }
+      );
 
-      api.addKeyboardShortcut("alt+shift+down", handleMoveDownUnreadShortcut, {
-        global: true,
-      });
+      api.addKeyboardShortcut(
+        "alt+shift+down",
+        whenChatCanInteract(handleMoveDownUnreadShortcut),
+        {
+          global: true,
+        }
+      );
 
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+b`,
-        (event) => modifyComposerSelection(event, "bold"),
+        whenChatCanInteract((event) => modifyComposerSelection(event, "bold")),
         {
           global: true,
           help: {
@@ -221,7 +244,9 @@ export default {
       );
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+i`,
-        (event) => modifyComposerSelection(event, "italic"),
+        whenChatCanInteract((event) =>
+          modifyComposerSelection(event, "italic")
+        ),
         {
           global: true,
           help: {
@@ -236,7 +261,7 @@ export default {
       );
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+e`,
-        (event) => modifyComposerSelection(event, "code"),
+        whenChatCanInteract((event) => modifyComposerSelection(event, "code")),
         {
           global: true,
           help: {
@@ -251,7 +276,7 @@ export default {
       );
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+l`,
-        (event) => openInsertLinkModal(event),
+        whenChatCanInteract((event) => openInsertLinkModal(event)),
         {
           global: true,
           help: {
@@ -264,7 +289,7 @@ export default {
           },
         }
       );
-      api.addKeyboardShortcut(`-`, (event) => toggleChatDrawer(event), {
+      api.addKeyboardShortcut(`-`, whenChatCanInteract(toggleChatDrawer), {
         global: true,
         help: {
           category: "chat",
@@ -274,7 +299,7 @@ export default {
           },
         },
       });
-      api.addKeyboardShortcut("esc", (event) => closeChat(event), {
+      api.addKeyboardShortcut("esc", whenChatCanInteract(closeChat), {
         global: true,
         help: {
           category: "chat",
@@ -286,7 +311,7 @@ export default {
       });
       api.addKeyboardShortcut(
         `shift+esc`,
-        (event) => markAllChannelsRead(event),
+        whenChatCanInteract(markAllChannelsRead),
         {
           global: true,
           help: {
