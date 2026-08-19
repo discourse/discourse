@@ -2115,6 +2115,12 @@ export default class TopicController extends Controller {
         break;
       }
       case "created": {
+        // The topic view filters out ignored users server-side, do the same
+        // for live updates so the stream stays consistent with a reload
+        if (this.currentUser?.ignored_users?.includes(data.username)) {
+          break;
+        }
+
         this._newPostsInStream.push(data.id);
 
         this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
