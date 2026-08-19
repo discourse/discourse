@@ -15,8 +15,8 @@ export const DRAG_BODY = "discourse:dragBody";
  *
  * @param source - The payload as the underlying library carries it.
  */
-export function dragBodyOf(source: ElementDragPayload): Element | null {
-  return (source.data?.[DRAG_BODY] as Element) ?? source.element ?? null;
+export function dragBodyOf(source: ElementDragPayload): Element {
+  return (source.data?.[DRAG_BODY] as Element | undefined) ?? source.element;
 }
 
 /**
@@ -73,8 +73,8 @@ export interface NormalizedDragSource {
   /** The payload the source attached to the drag. */
   data: Record<string, unknown>;
 
-  /** The dragged element, or `null` when the drag has none. */
-  element: Element | null;
+  /** The dragged element: the published body, else the registered element. */
+  element: Element;
 }
 
 /**
@@ -107,12 +107,9 @@ export function normalizeOwnedDragSource(source: ElementDragPayload): {
  * payload reads identically wherever a consumer meets it.
  *
  * @param source - The payload as the underlying library carries it.
- * @param fallbackElement - Reported as `element` when the drag itself has none;
- *   a drop target passes itself here.
  */
 export function normalizeDragSource(
-  source: ElementDragPayload,
-  fallbackElement?: Element
+  source: ElementDragPayload
 ): NormalizedDragSource {
   // Lifted out first: the body is routing, not payload, so no consumer should
   // ever iterate onto it.
@@ -128,6 +125,6 @@ export function normalizeDragSource(
     // A source that registered a handle publishes the body it stands for, so a
     // consumer receives the element the user is moving rather than the grip
     // they happened to press.
-    element: dragBodyOf(source) ?? fallbackElement ?? null,
+    element: dragBodyOf(source),
   };
 }

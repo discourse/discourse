@@ -437,11 +437,11 @@ module SystemHelpers
   # drag handle is satisfied, since the press must land inside the handle while
   # the drag itself originates from the registered element.
   #
-  # `target_position:` (`{ x:, y: }`,
-  # relative to the target's top-left) picks where inside the target the drop
-  # lands, which is what a before/after drop zone needs: the target's centre is
-  # the ambiguous midpoint and resolves the same way every time. `steps:` smooths
-  # the pointer movement when a drag needs more intermediate moves to register.
+  # `target_position:` (`{ x:, y: }`, relative to the target's top-left) picks
+  # where inside the target the drop lands, which is what a before/after drop
+  # zone needs: the target's centre is the ambiguous midpoint and resolves the
+  # same way every time. `steps:` smooths the pointer movement when a drag needs
+  # more intermediate moves to register.
   #
   # Note this does NOT wait for the client to settle. Capybara's patched node
   # methods, `drag_to` among them, get that wait for free; driving Playwright

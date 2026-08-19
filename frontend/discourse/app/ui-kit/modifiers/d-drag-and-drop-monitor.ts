@@ -60,7 +60,8 @@ export type DragAndDropMonitorArgs =
  * the underlying library.
  *
  * @param getArgsRef - Closure returning the latest args. Library callbacks read
- *   this on every invocation.
+ *   this on every invocation; `types` is consulted once per drag as it starts,
+ *   so a change applies from the next drag.
  * @returns Cleanup function. Caller invokes it once on teardown.
  */
 export function registerDragAndDropMonitor(

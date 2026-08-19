@@ -8,11 +8,11 @@ import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-sourc
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
 module(
-  "Integration | ui-kit | Modifier | dragAndDropMonitor",
+  "Integration | ui-kit | Modifier | dDragAndDropMonitor",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("observes a matching drag — start, drag, drop", async function (assert) {
+    test("observes a matching drag from start to drop", async function (assert) {
       const events = [];
 
       const onDragStart = () => events.push("start");
@@ -44,7 +44,7 @@ module(
       assert.true(events.includes("drop"), "onDrop fired when the drag ended");
     });
 
-    test("is type-gated — ignores a non-matching drag", async function (assert) {
+    test("is type-gated and ignores a non-matching drag", async function (assert) {
       let fired = false;
 
       const onDragStart = () => {

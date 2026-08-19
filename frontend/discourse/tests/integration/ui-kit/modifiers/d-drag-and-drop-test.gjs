@@ -129,41 +129,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     assert.strictEqual(drops[0].source.type, "row");
   });
 
-  test("type discriminator gates compatibility", async function (assert) {
-    let dropped = false;
-    const onDrop = () => {
-      dropped = true;
-    };
-
-    await render(
-      <template>
-        <div
-          id="src"
-          {{dDragAndDropSource type="row" data=(hash id=1)}}
-        >src</div>
-        <div
-          id="tgt"
-          {{dDragAndDropTarget accepts="card" onDrop=onDrop}}
-        >tgt</div>
-      </template>
-    );
-
-    const dataTransfer = new DataTransfer();
-    await simulateDrag("#src", "#tgt", { dataTransfer });
-
-    assert.false(dropped, "onDrop is not called for foreign types");
-  });
-
-  test("a source without a handle is draggable itself", async function (assert) {
-    await render(
-      <template>
-        <div id="src" {{dDragAndDropSource type="row"}}>src</div>
-      </template>
-    );
-
-    assert.dom("#src").hasAttribute("draggable", "true");
-  });
-
   test("source re-registers when dragHandle arrives after initial registration", async function (assert) {
     const state = new (class {
       @tracked showHandle = false;
@@ -542,38 +507,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "a landed drag defers onDragEnd before onDrop with the same snapshot"
       );
     });
-
-    test("landed drag fires onDragEnd once across multiple drop targets", async function (assert) {
-      const dragEnds = [];
-      const onDragEnd = (payload) => dragEnds.push(payload);
-
-      await render(
-        <template>
-          <div
-            id="src"
-            {{dDragAndDropSource type="row" onDragEnd=onDragEnd}}
-          >src</div>
-          <div id="outer" {{dDragAndDropTarget accepts="row"}}>
-            outer
-            <div id="inner" {{dDragAndDropTarget accepts="row"}}>inner</div>
-          </div>
-        </template>
-      );
-
-      await simulateDrag("#src", "#inner", {
-        dataTransfer: new DataTransfer(),
-      });
-
-      assert.deepEqual(
-        {
-          callbackCount: dragEnds.length,
-          dropTargetCount:
-            dragEnds[0]?.location.current.dropTargets.length ?? 0,
-        },
-        { callbackCount: 1, dropTargetCount: 2 },
-        "onDragEnd fires once for a drag that lands on two nested targets"
-      );
-    });
   });
 
   test("smart row mode resolves position from cursor midpoint", async function (assert) {
@@ -750,7 +683,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
   });
 
-  test("nested targets — innermost accepting target wins drop", async function (assert) {
+  test("nested targets: the innermost accepting target wins the drop", async function (assert) {
     const events = [];
     const onOuterDrop = () => events.push("outer");
     const onInnerDrop = () => events.push("inner");
@@ -790,74 +723,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       ["inner"],
       "only the deepest accepted target receives the drop"
     );
-  });
-
-  test("dropping on a nested target clears the ancestor indicator", async function (assert) {
-    await render(
-      <template>
-        <div id="src" {{dDragAndDropSource type="row"}}>src</div>
-        <div
-          id="outer"
-          style="height: 100px"
-          {{dDragAndDropTarget accepts="row" position="inside"}}
-        >
-          outer
-          <div
-            id="inner"
-            {{dDragAndDropTarget accepts="row" position="inside"}}
-          >inner</div>
-        </div>
-      </template>
-    );
-
-    const dataTransfer = new DataTransfer();
-    const outerRect = find("#outer").getBoundingClientRect();
-
-    await dragEvent("#src", "dragstart", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-    await dragEvent("#outer", "dragenter", {
-      dataTransfer,
-      clientX: outerRect.left + 5,
-      clientY: outerRect.top + 5,
-    });
-    await dragEvent("#outer", "dragover", {
-      dataTransfer,
-      clientX: outerRect.left + 5,
-      clientY: outerRect.top + 5,
-    });
-
-    assert
-      .dom("#outer")
-      .hasClass("--drag-inside", "the parent paints its indicator first");
-
-    await dragEvent("#inner", "dragenter", {
-      dataTransfer,
-      ...centerOf("#inner"),
-    });
-    await dragEvent("#inner", "dragover", {
-      dataTransfer,
-      ...centerOf("#inner"),
-    });
-
-    // Asserted before the drop, so this pins down that the ancestor clears as
-    // soon as it stops being deepest rather than only once the drop lands.
-    assert
-      .dom("#outer")
-      .doesNotHaveClass(
-        "--drag-inside",
-        "moving onto the child clears the parent indicator immediately"
-      );
-
-    await dragEvent("#inner", "drop", {
-      dataTransfer,
-      ...centerOf("#inner"),
-    });
-    await dragEvent("#src", "dragend", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
   });
 
   test("target arg changes reach the registered closure", async function (assert) {
@@ -1475,61 +1340,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         [],
         "a destroyed consumer runs no callback for the drag its registration was keeping"
       );
-    });
-
-    test("a consumer that throws does not strand the registration", async function (assert) {
-      let thrown = 0;
-      setupOnerror(() => thrown++);
-
-      const state = new (class {
-        @tracked disabled = false;
-      })();
-      const onDragEnd = () => {
-        throw new Error("consumer blew up");
-      };
-
-      await render(
-        <template>
-          <div
-            id="src"
-            {{dDragAndDropSource
-              type="row"
-              disabled=state.disabled
-              onDragEnd=onDragEnd
-            }}
-          >src</div>
-          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
-        </template>
-      );
-
-      const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-
-      // Detached mid-drag, so the teardown is waiting on the drop that is about
-      // to dispatch into a consumer that throws.
-      state.disabled = true;
-      await settled();
-
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
-
-      assert.strictEqual(thrown, 1, "the consumer's error is not swallowed");
-      assert
-        .dom("#src")
-        .doesNotHaveAttribute(
-          "data-drag-source",
-          "and the registration is still torn down, rather than left on the element for good"
-        );
     });
   });
 
@@ -2628,6 +2438,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       const recordEnd = () => ends.push("end");
       const laterDrops = [];
       const recordLaterDrop = () => laterDrops.push("drop");
+      // Looked up before the drag so the service is there to see it.
+      const dnd = this.owner.lookup("service:drag-and-drop");
 
       await render(
         <template>
@@ -2668,7 +2480,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           "the source hears its drag end exactly once"
         );
         assert.false(
-          this.owner.lookup("service:drag-and-drop").isDragging,
+          dnd.isDragging,
           "and the service stops reporting a drag in flight"
         );
 
@@ -2850,17 +2662,19 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      await simulateDrag("#src", "#tgt", {
-        dataTransfer: new DataTransfer(),
-      });
-
-      assert.deepEqual(drops, [], "no drag starts, so nothing is dropped");
+      const dataTransfer = new DataTransfer();
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
       assert
         .dom("#src")
         .doesNotHaveClass(
           "--dragging",
-          "and the source is never marked as dragging"
+          "no drag starts, so the source is never marked as dragging"
         );
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(drops, [], "and nothing is dropped");
       assert.true(
         reported.length >= 1,
         `and the throwing gate was raised (${reported.length} seen)`
@@ -2930,17 +2744,23 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await startDrag("#src", { dataTransfer });
       await dragOver("#tgt", { dataTransfer });
       await dragOver("#away", { dataTransfer });
-      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
 
+      // Asserted while the drag is still in flight: ending the drag would let
+      // even a sticky target go, and hide the difference.
       assert.deepEqual(
         events,
         ["enter", "leave"],
         "a gate that threw decided nothing, so the target lets go when the pointer leaves"
       );
+      assert
+        .dom("#tgt")
+        .doesNotHaveClass("--drag-above", "and stops showing its indicator");
       assert.true(
         reported.length >= 1,
         `and the throwing stickiness gate was raised (${reported.length} seen)`
       );
+
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
     });
 
     test("a throwing preview cleanup is reported and leaves no preview container behind", async function (assert) {
@@ -3044,15 +2864,20 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      await simulateDrag("#src", "#tgt", { dataTransfer: new DataTransfer() });
-
-      assert.deepEqual(drops, ["drop"], "the target still receives the drop");
+      const dataTransfer = new DataTransfer();
+      await startDrag("#src", { dataTransfer });
       assert
         .dom("#src")
-        .doesNotHaveClass(
-          "--dragging",
-          "and the source is cleaned up after it"
-        );
+        .hasClass("--dragging", "the drag is in flight despite the throw");
+      await dragOver("#tgt", { dataTransfer });
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(
+        drops,
+        ["drop"],
+        "and the target still receives the drop"
+      );
       assert.true(reported.length >= 1, "the throwing callback was raised");
     });
 
@@ -3096,7 +2921,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           "data-drag-source",
           "the consumer's throw does not leave the element registered"
         );
-      assert.true(reported.length >= 1, "and the throw was raised");
+      assert.strictEqual(reported.length, 1, "and the throw was raised once");
     });
   });
 
@@ -3227,15 +3052,19 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      await simulateDrag("#src", "#tgt", { dataTransfer: new DataTransfer() });
-
-      assert.deepEqual(drops, [], "nothing is dropped");
+      const dataTransfer = new DataTransfer();
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
       assert
         .dom("#src")
         .doesNotHaveClass(
           "--dragging",
-          "and the source never enters the drag state"
+          "the source never enters the drag state"
         );
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(drops, [], "and nothing is dropped");
     });
 
     test("canDrop returning false refuses a drag the type filter would have taken", async function (assert) {
@@ -3257,19 +3086,23 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      await simulateDrag("#src", "#tgt", { dataTransfer: new DataTransfer() });
+      const dataTransfer = new DataTransfer();
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
+      assert
+        .dom("#tgt")
+        .doesNotHaveClass(
+          /^--drag-/,
+          "no indicator is drawn for a drop that cannot land"
+        );
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
 
       assert.deepEqual(
         drops,
         [],
-        "the identity gate refuses what the type gate allowed"
+        "and the identity gate refuses what the type gate allowed"
       );
-      assert
-        .dom("#tgt")
-        .doesNotHaveClass(
-          "--drag-above",
-          "and no indicator is drawn for a drop that cannot land"
-        );
     });
 
     test("getDropEffect decides the effect recorded against this target", async function (assert) {

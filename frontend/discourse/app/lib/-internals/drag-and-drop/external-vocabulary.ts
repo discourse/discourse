@@ -24,9 +24,9 @@ export interface ExternalDragPayload {
   types: NativeMediaType[];
 
   /**
-   * The `DataTransferItem` list snapshotted at drag start. Browsers expose `kind`
-   * and `type` here even when `dataTransfer.getData(…)` is blocked during
-   * `dragover` for security.
+   * The `DataTransferItem` list. Empty while the drag hovers: the browser only
+   * hands items over at the drop, so `getFiles()` and this list are populated in
+   * `onDrop` alone. Use `types` or `containsFiles()` to decide during a hover.
    */
   items: DataTransferItem[];
 
@@ -52,7 +52,7 @@ export interface ExternalDragPayload {
  * the matching native-payload predicate so the service and external-target
  * surfaces share one vocabulary.
  */
-export const EXTERNAL_KIND_PREDICATES = Object.freeze({
+const EXTERNAL_KIND_PREDICATES = Object.freeze({
   files: containsFiles,
   html: containsHTML,
   text: containsText,

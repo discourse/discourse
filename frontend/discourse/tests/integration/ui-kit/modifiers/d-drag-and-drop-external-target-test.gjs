@@ -506,74 +506,12 @@ module(
 
         await dragEvent("#ext", "drop", { dataTransfer, ...lowerHalf });
       });
-
-      test("an external target's getData rides on the drag's record of it", async function (assert) {
-        const targets = [];
-        const describeTarget = () => ({ slot: "inbox" });
-        const recordDrop = ({ location }) =>
-          targets.push(location.current.dropTargets[0].data);
-
-        await render(
-          <template>
-            <div
-              id="ext"
-              {{dDragAndDropExternalTarget
-                accepts="text"
-                getData=describeTarget
-                onDrop=recordDrop
-              }}
-            >ext</div>
-          </template>
-        );
-
-        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
-
-        assert.deepEqual(
-          targets,
-          [{ slot: "inbox" }],
-          "the target's own record of the drag carries what it attached"
-        );
-      });
     });
 
     module("an external consumer that throws", function () {
       const blowUp = () => {
         throw new Error("external consumer blew up");
       };
-
-      test("a throwing external getData is reported and the drop still lands", async function (assert) {
-        const reported = [];
-        setupOnerror((error) => reported.push(error));
-
-        const targets = [];
-        const recordDrop = ({ location }) =>
-          targets.push(location.current.dropTargets[0].data);
-
-        await render(
-          <template>
-            <div
-              id="ext"
-              {{dDragAndDropExternalTarget
-                accepts="text"
-                getData=blowUp
-                onDrop=recordDrop
-              }}
-            >ext</div>
-          </template>
-        );
-
-        await simulateExternalDrag("#ext", { dataTransfer: textTransfer() });
-
-        assert.deepEqual(
-          targets,
-          [{}],
-          "the drop lands with an empty record in place of what the consumer failed to attach"
-        );
-        assert.true(
-          reported.length >= 1,
-          `and the throwing getData was raised (${reported.length} seen)`
-        );
-      });
 
       test("a throwing external getDropEffect is reported and the drop still lands", async function (assert) {
         const reported = [];

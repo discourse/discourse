@@ -142,9 +142,10 @@ export function registerDragAndDropExternalTarget(
  *
  * Pair with the existing `dDragAndDropTarget` modifier for
  * element-to-element drags; the two adapters are independent and can coexist on
- * the same element. The external adapter does not call `preventDefault`, so it
- * also coexists with another consumer of the same native `dragover` / `drop`
- * events.
+ * the same element. Another consumer of the same native `dragover` / `drop`
+ * events still receives them, since accepting a drop cancels the event's default
+ * without stopping its propagation; a consumer that checks `defaultPrevented`
+ * will see an accepted drag as already handled.
  *
  * Files:
  *

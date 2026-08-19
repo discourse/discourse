@@ -130,8 +130,7 @@ export function registerDragAndDropTarget(
     element,
     attribute: "data-drop-target",
     register: dropTargetForElements,
-    decorateSource: (source: ElementDragPayload) =>
-      normalizeDragSource(source, element),
+    decorateSource: (source: ElementDragPayload) => normalizeDragSource(source),
     accepts: (source) => {
       const args = getArgsRef();
       if (!matchesDragType(args.accepts, source)) {

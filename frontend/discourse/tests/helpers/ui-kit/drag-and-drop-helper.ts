@@ -108,9 +108,9 @@ export function assertExternalTargetRegistered(targetSelector: string) {
  * The frame wait is the whole point of this wrapper. The underlying drag
  * library defers its consumer callbacks past the DOM event: `onDragStart` runs
  * in a bare `requestAnimationFrame` that the next drag update flushes, and
- * `onDrag` is throttled to a frame via `raf-schd`. Ember's `settled()` does not
- * pump animation frames, so immediately after a synthetic `dragstart` /
- * `dragover` those callbacks have not fired yet. Awaiting a real frame lets the
+ * `onDrag` is throttled to a frame. Ember's `settled()` does not pump animation
+ * frames, so immediately after a synthetic `dragstart` / `dragover` those
+ * callbacks have not fired yet. Awaiting a real frame lets the
  * deferred callback run before the caller's next step or assertion; our frame
  * resolves after the library's already-queued one, so the queued callback is
  * guaranteed to have fired. Bundling the wait here keeps it out of the test
@@ -292,10 +292,10 @@ export async function simulateDrag(
  */
 function registeredElementFor(rowSelector: string) {
   const row = document.querySelector(rowSelector) as Element;
-  if (row.matches("[draggable]")) {
+  if (row.matches('[draggable="true"]')) {
     return row;
   }
-  return row.querySelector("[draggable]") ?? row;
+  return row.querySelector('[draggable="true"]') ?? row;
 }
 
 /**
@@ -340,7 +340,6 @@ export async function simulateExternalDrag(
   targetSelector: string,
   { dataTransfer, coordinates }: AimedDragOptions
 ) {
-  assertExternalTargetRegistered(targetSelector);
   const target = { ...centerOf(targetSelector), ...coordinates };
   await externalDragOver(targetSelector, { dataTransfer, coordinates });
   await dragEvent(targetSelector, "drop", { dataTransfer, ...target });

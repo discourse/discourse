@@ -1,11 +1,11 @@
 /* Default treatment for the drag-and-drop vocabulary. The source and target
    registrars stamp `data-drag-source` / `data-drop-target` /
    `data-drop-target-external` on their host for the lifetime of the
-   registration, and toggle the state modifiers below during a drag. Selectors are gated on the attribute rather than the class
-   alone so they cannot reach an unrelated element that happens to use the same
-   state name. Override by raising specificity, by setting `content: none` on
-   the pseudo-element to drop just the line, or by passing `indicator=false` to
-   opt out entirely.
+   registration, and toggle the state modifiers below during a drag. Selectors
+   are gated on the attribute rather than the class alone so they cannot reach
+   an unrelated element that happens to use the same state name. Override by
+   raising specificity, by setting `content: none` on the pseudo-element to drop
+   just the line, or by passing `indicator=false` to opt out entirely.
 
    The colour is its own custom property rather than a generic accent token, so
    a theme or a single surface can retune drag feedback without moving every
@@ -85,7 +85,7 @@
   }
 
   /* The class names the physical side under the pointer while the reported
-     position is logical, so an rtlcss flip would move the line away from the
+     position is logical, so an RTL flip would move the line away from the
      pointer. */
 
   &.--drag-left {
