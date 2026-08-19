@@ -56,7 +56,7 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^25.3.3",
+    "@types/node": "^26.2.0",
     "compare-versions": "^6.1.1"
   },
   "engines": {
