@@ -53,6 +53,8 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
     end
 
     it "snapshots the same payload fields core's suspect user job does" do
+      avatar = Fabricate(:upload)
+      target.update!(uploaded_avatar_id: avatar.id)
       target.user_profile.update!(bio_raw: "Buy my links", website: "https://spam.example")
 
       flag
@@ -65,6 +67,7 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
         "email" => target.email,
         "bio" => "Buy my links",
         "website" => "https://spam.example",
+        "avatar_url" => Discourse.store.cdn_url(avatar.url),
       )
     end
 
