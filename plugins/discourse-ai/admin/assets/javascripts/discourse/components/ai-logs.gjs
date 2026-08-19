@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DiscourseURL from "discourse/lib/url";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -53,6 +54,7 @@ export default class AiLogs extends Component {
 
   filterFormApi;
   _requestId = 0;
+  _openRequestId = 0;
   _openLogId;
 
   constructor() {
@@ -260,6 +262,18 @@ export default class AiLogs extends Component {
     this.router.transitionTo(this.router.currentRouteName, {
       queryParams: { ...this.queryParams, ...extra },
     });
+  }
+
+  updateDetailsUrl(logId, { replace = false } = {}) {
+    const url = new URL(window.location.href);
+    if (logId) {
+      url.searchParams.set("details", logId);
+    } else {
+      url.searchParams.delete("details");
+    }
+
+    const path = `${url.pathname}${url.search}${url.hash}`;
+    DiscourseURL[replace ? "replaceState" : "pushState"](path);
   }
 
   @action
@@ -496,16 +510,24 @@ export default class AiLogs extends Component {
 
   @action
   openDetails(logId, { updateUrl = true } = {}) {
-    this._openLogId = String(logId);
+    const openLogId = String(logId);
+    const openRequestId = ++this._openRequestId;
+    this._openLogId = openLogId;
     if (updateUrl) {
-      this.updateUrl({ details: this._openLogId });
+      this.updateDetailsUrl(openLogId);
     }
+
     this.modal.show(AiLogDetailModal, {
       model: {
         logId,
         onClose: () => {
-          this._openLogId = undefined;
-          this.updateUrl({ details: null });
+          if (
+            this._openRequestId === openRequestId &&
+            this._openLogId === openLogId
+          ) {
+            this._openLogId = undefined;
+            this.updateDetailsUrl(null, { replace: true });
+          }
         },
       },
     });

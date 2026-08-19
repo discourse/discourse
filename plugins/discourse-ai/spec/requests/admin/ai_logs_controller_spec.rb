@@ -133,6 +133,7 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
       expect(response.parsed_body["logs"].last.keys).not_to include(
         "raw_request_payload",
         "raw_response_payload",
+        "decoded_response",
         "feature_context",
         "request_attempts",
       )
@@ -318,11 +319,17 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
 
   describe "GET /admin/plugins/discourse-ai/ai-logs/:id.json" do
     it "returns raw details and truncates oversized payloads" do
+      raw_response = <<~SSE
+        data: {"choices":[{"delta":{"content":"decoded answer"}}]}
+
+        data: [DONE]
+
+      SSE
       log =
         Fabricate(
           :ai_api_audit_log,
           raw_request_payload: "a" * (1.megabyte + 10),
-          raw_response_payload: '{"answer":"ok"}',
+          raw_response_payload: raw_response,
           feature_context: {
             source: "spec",
           },
@@ -340,11 +347,17 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
         "payload_available" => true,
         "raw_request_payload_bytes" => 1.megabyte + 10,
         "raw_request_payload_truncated" => true,
-        "raw_response_payload" => log.raw_response_payload,
+        "raw_response_payload" => raw_response,
+        "raw_response_payload_bytes" => raw_response.bytesize,
+        "raw_response_payload_truncated" => false,
+        "decoded_response" => {
+          "response" => "decoded answer",
+        },
         "duration_msecs" => 1_400,
         "time_to_first_token_msecs" => 320,
         "spending" => 0.0,
       )
+      expect(response.parsed_body).not_to have_key("has_decoded_response")
       expect(response.parsed_body["raw_request_payload"].bytesize).to eq(1.megabyte)
     end
 
@@ -362,6 +375,23 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
       expect(response.parsed_body["raw_request_payload_truncated"]).to eq(true)
     end
 
+    it "falls back to an oversized response projection without partially decoding it" do
+      complete_event = "data: {\"choices\":[{\"delta\":{\"content\":\"partial\"}}]}\n\n"
+      raw_response = complete_event + (" " * 1.megabyte)
+      log = Fabricate(:ai_api_audit_log, raw_response_payload: raw_response)
+
+      get "/admin/plugins/discourse-ai/ai-logs/#{log.id}.json"
+
+      returned_payload = response.parsed_body["raw_response_payload"]
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include(
+        "raw_response_payload_bytes" => raw_response.bytesize,
+        "raw_response_payload_truncated" => true,
+        "decoded_response" => nil,
+      )
+      expect(returned_payload.bytesize).to eq(1.megabyte)
+    end
+
     it "returns a payload-unavailable record and 404 for a missing record" do
       log = Fabricate(:ai_api_audit_log, raw_request_payload: nil, raw_response_payload: nil)
 
@@ -370,6 +400,7 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
         "payload_available" => false,
         "raw_request_payload" => nil,
         "raw_response_payload" => nil,
+        "decoded_response" => nil,
       )
 
       get "/admin/plugins/discourse-ai/ai-logs/#{log.id + 100_000}.json"

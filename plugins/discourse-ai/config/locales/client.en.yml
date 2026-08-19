@@ -232,6 +232,20 @@ en:
 
     discourse_ai:
       title: "AI"
+      copied: "Copied"
+      view_raw: "View raw"
+      view_decoded: "View decoded"
+      ai_decoded_transcript:
+        thinking: "Thinking"
+        tool_calls: "Tool calls"
+        tool_results: "Tool results"
+        tool: "Tool"
+        arguments: "Arguments"
+        tool_result: "Tool result"
+        call_id: "Call ID"
+        type: "Type"
+        error: "Error"
+        response: "Response"
       post_image_captions:
         edit: "Edit AI image caption"
         title: "Edit AI image caption"
@@ -724,6 +738,7 @@ en:
           tabs_label: "AI log payload sections"
           copy_request: "Copy request"
           copy_response: "Copy response"
+          copy_raw_response: "Copy raw response"
           copy_context: "Copy context"
           payload_unavailable: "Payload not available"
           payload_truncated: "This payload is too large to display completely and has been truncated."
