@@ -176,6 +176,7 @@ RSpec.describe "AI logs admin page" do
     page.go_forward
     expect(ai_logs_page).to have_payload("Inspect this request")
     find(".ai-log-detail-modal .modal-close").click
+    expect(page).to have_current_path(%r{/ai-logs$}, url: true)
     ai_logs_page.open_retention
     expect(ai_logs_page).to have_retention_modal
     expect(page).to have_field(

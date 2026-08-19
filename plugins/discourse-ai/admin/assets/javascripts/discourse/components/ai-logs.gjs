@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DiscourseURL from "discourse/lib/url";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -263,6 +264,18 @@ export default class AiLogs extends Component {
     });
   }
 
+  updateDetailsUrl(logId, { replace = false } = {}) {
+    const url = new URL(window.location.href);
+    if (logId) {
+      url.searchParams.set("details", logId);
+    } else {
+      url.searchParams.delete("details");
+    }
+
+    const path = `${url.pathname}${url.search}${url.hash}`;
+    DiscourseURL[replace ? "replaceState" : "pushState"](path);
+  }
+
   @action
   async refresh() {
     const requestId = ++this._requestId;
@@ -501,35 +514,22 @@ export default class AiLogs extends Component {
     const openRequestId = ++this._openRequestId;
     this._openLogId = openLogId;
     if (updateUrl) {
-      this.updateUrl({ details: openLogId });
+      this.updateDetailsUrl(openLogId);
     }
 
-    // iOS runs button actions before the originating click has finished propagating.
-    // Defer mounting so that click cannot immediately close the modal via its backdrop.
-    next(() => {
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        this._openRequestId !== openRequestId ||
-        this._openLogId !== openLogId
-      ) {
-        return;
-      }
-
-      this.modal.show(AiLogDetailModal, {
-        model: {
-          logId,
-          onClose: () => {
-            if (
-              this._openRequestId === openRequestId &&
-              this._openLogId === openLogId
-            ) {
-              this._openLogId = undefined;
-              this.updateUrl({ details: null });
-            }
-          },
+    this.modal.show(AiLogDetailModal, {
+      model: {
+        logId,
+        onClose: () => {
+          if (
+            this._openRequestId === openRequestId &&
+            this._openLogId === openLogId
+          ) {
+            this._openLogId = undefined;
+            this.updateDetailsUrl(null, { replace: true });
+          }
         },
-      });
+      },
     });
   }
 
