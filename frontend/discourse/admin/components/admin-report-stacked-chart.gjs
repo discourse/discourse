@@ -71,6 +71,34 @@ const gradientPlugin = {
   },
 };
 
+export function formatTimeScaleTick({
+  value,
+  timeUnit,
+  startDate,
+  endDate,
+  isFirstTick = false,
+}) {
+  const date = moment.utc(value);
+  const start = moment.utc(startDate);
+  const end = moment.utc(endDate);
+  const spansYears =
+    start.isValid() && end.isValid() && start.year() !== end.year();
+  const dateFormat = spansYears ? "D MMM YYYY" : "D MMM";
+
+  if (timeUnit === "month") {
+    return date.format("MMM YYYY");
+  }
+  if (timeUnit === "hour") {
+    if (end.diff(start, "days", true) > 2) {
+      return isFirstTick || date.hours() === 0 ? date.format(dateFormat) : null;
+    }
+    return isFirstTick || date.hours() === 0
+      ? [date.format(dateFormat), date.format("LT")]
+      : date.format("LT");
+  }
+  return date.format(dateFormat);
+}
+
 export default class AdminReportStackedChart extends Component {
   get chartConfig() {
     const { model, options } = this.args;
@@ -106,7 +134,8 @@ export default class AdminReportStackedChart extends Component {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    const timeUnit = Report.unitForGrouping(chartGrouping);
+    const timeUnit =
+      chartOptions.timeUnit || Report.unitForGrouping(chartGrouping);
 
     return {
       type: "bar",
@@ -193,7 +222,7 @@ export default class AdminReportStackedChart extends Component {
                   count: I18n.toNumber(total, { precision: 0 }),
                 });
               },
-              title: (tooltipItem) => this.#tooltipTitle(tooltipItem),
+              title: (tooltipItem) => this.#tooltipTitle(tooltipItem, timeUnit),
             },
           },
         },
@@ -229,13 +258,24 @@ export default class AdminReportStackedChart extends Component {
             display: true,
 
             grid: { display: false },
-            type: "category",
+            type: chartOptions.timeScale ? "time" : "category",
+            min: chartOptions.timeScale ? model.start_date : undefined,
+            max: chartOptions.timeScale ? model.end_date : undefined,
+            time: chartOptions.timeScale ? { unit: timeUnit } : undefined,
             ticks: {
-              callback: (value) =>
-                this.#categoryTickLabel(value, data.labels, timeUnit),
+              callback: (value, index) =>
+                this.#tickLabel(
+                  value,
+                  data.labels,
+                  timeUnit,
+                  chartOptions.timeScale,
+                  index
+                ),
               sampleSize: 5,
               maxRotation: 50,
               minRotation: 0,
+              maxTicksLimit: chartOptions.timeScale ? 8 : undefined,
+              major: { enabled: chartOptions.timeScale },
             },
           },
         },
@@ -251,7 +291,7 @@ export default class AdminReportStackedChart extends Component {
     />
   </template>
 
-  #tooltipTitle(tooltipItem) {
+  #tooltipTitle(tooltipItem, timeUnit) {
     const point = tooltipItem[0].raw;
     const startDate = point?.x ?? tooltipItem[0].parsed.x;
 
@@ -259,7 +299,9 @@ export default class AdminReportStackedChart extends Component {
       return this.#tooltipDateRange(startDate, point.end_date);
     }
 
-    return this.#dateLabelMoment(startDate).format("LL");
+    return this.#dateLabelMoment(startDate).format(
+      timeUnit === "hour" ? "LLL" : "LL"
+    );
   }
 
   #tooltipDateRange(startValue, endValue) {
@@ -273,25 +315,37 @@ export default class AdminReportStackedChart extends Component {
     return `${startDate.format("ll")} - ${endDate.format("ll")}`;
   }
 
-  #categoryTickLabel(value, labels, timeUnit) {
-    const label = labels[value] ?? value;
+  #tickLabel(value, labels, timeUnit, timeScale, index) {
+    const label = timeScale ? value : (labels[value] ?? value);
 
-    return this.#formatDateLabel(label, timeUnit);
+    return this.#formatDateLabel(label, timeUnit, timeScale, index);
   }
 
-  #formatDateLabel(label, timeUnit) {
+  #formatDateLabel(label, timeUnit, timeScale, index) {
+    if (timeScale) {
+      return formatTimeScaleTick({
+        value: label,
+        timeUnit,
+        startDate: this.args.model.start_date,
+        endDate: this.args.model.end_date,
+        isFirstTick: index === 0,
+      });
+    }
+
     const date = this.#dateLabelMoment(label);
 
     if (timeUnit === "month") {
       return date.format("MMM YYYY");
     }
 
+    if (timeUnit === "hour") {
+      return date.format("D MMM, LT");
+    }
+
     return date.format("D MMM");
   }
 
   #dateLabelMoment(value) {
-    return typeof value === "string"
-      ? moment.utc(value, "YYYY-MM-DD")
-      : moment(value);
+    return typeof value === "string" ? moment.utc(value) : moment(value);
   }
 }

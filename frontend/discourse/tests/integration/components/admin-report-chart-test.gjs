@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import { hasIncompleteData } from "discourse/admin/components/admin-report-chart";
+import { formatTimeScaleTick } from "discourse/admin/components/admin-report-stacked-chart";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | AdminReportChart", function (hooks) {
@@ -84,5 +85,76 @@ module("Integration | Component | AdminReportChart", function (hooks) {
         );
       });
     });
+  });
+});
+
+module("Unit | Component | AdminReportStackedChart", function () {
+  test("short hourly ranges label times and midnight boundaries", function (assert) {
+    const options = {
+      timeUnit: "hour",
+      startDate: "2026-05-10T00:00:00Z",
+      endDate: "2026-05-11T12:00:00Z",
+    };
+
+    assert.deepEqual(
+      formatTimeScaleTick({ value: "2026-05-10T00:00:00Z", ...options }),
+      ["10 May", "12:00 AM"]
+    );
+    assert.strictEqual(
+      formatTimeScaleTick({ value: "2026-05-10T01:00:00Z", ...options }),
+      "1:00 AM"
+    );
+  });
+
+  test("the first hourly tick includes its date even when it is not midnight", function (assert) {
+    assert.deepEqual(
+      formatTimeScaleTick({
+        value: "2026-05-10T02:00:00Z",
+        timeUnit: "hour",
+        startDate: "2026-05-10T01:33:00Z",
+        endDate: "2026-05-11T01:33:00Z",
+        isFirstTick: true,
+      }),
+      ["10 May", "2:00 AM"]
+    );
+  });
+
+  test("long hourly ranges keep only day boundaries", function (assert) {
+    const options = {
+      timeUnit: "hour",
+      startDate: "2026-04-12T00:00:00Z",
+      endDate: "2026-05-12T00:00:00Z",
+    };
+
+    assert.strictEqual(
+      formatTimeScaleTick({ value: "2026-05-10T00:00:00Z", ...options }),
+      "10 May"
+    );
+    assert.strictEqual(
+      formatTimeScaleTick({ value: "2026-05-10T01:00:00Z", ...options }),
+      null
+    );
+  });
+
+  test("daily ranges use localized month and day labels", function (assert) {
+    assert.strictEqual(
+      formatTimeScaleTick({
+        value: "2026-05-10T00:00:00Z",
+        timeUnit: "day",
+      }),
+      "10 May"
+    );
+  });
+
+  test("daily ranges include years when they cross a year boundary", function (assert) {
+    assert.strictEqual(
+      formatTimeScaleTick({
+        value: "2026-01-01T00:00:00Z",
+        timeUnit: "day",
+        startDate: "2025-12-20T00:00:00Z",
+        endDate: "2026-01-10T00:00:00Z",
+      }),
+      "1 Jan 2026"
+    );
   });
 });

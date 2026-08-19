@@ -7263,6 +7263,11 @@ en:
         empty: "No matching pageviews"
         summary: "Traffic summary"
         traffic_over_time: "Traffic over time"
+        interval:
+          label: "Graph interval"
+          options:
+            day: "Day"
+            hour: "Hour"
         pageviews: "Pageviews"
         metric_information: "About this metric"
         active_filters: "Active traffic filters"

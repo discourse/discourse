@@ -32,6 +32,7 @@ class AdminDashboardSiteTrafficExplorer
   params do
     attribute :start_date, :date
     attribute :end_date, :date
+    attribute :grouping, :string
     attribute :traffic_type, :string
     attribute :top_url, :string
     attribute :entry_url, :string
@@ -42,10 +43,15 @@ class AdminDashboardSiteTrafficExplorer
     attribute :ip, :string
 
     validates :start_date, :end_date, presence: true
+    validates :grouping, inclusion: { in: %w[hour day] }, allow_nil: true
     validate :start_date_precedes_end_date
 
     def filters
       FILTER_KEYS.to_h { |key| [key, normalize_filter(key, public_send(key))] }
+    end
+
+    def bucket
+      grouping&.to_sym || :day
     end
 
     private
@@ -100,7 +106,8 @@ class AdminDashboardSiteTrafficExplorer
 
   def load_traffic(params:)
     filters = params.filters
-    row = execute_query(start_date: params.start_date, end_date: params.end_date, filters:)
+    bucket = params.bucket
+    row = execute_query(start_date: params.start_date, end_date: params.end_date, bucket:, filters:)
 
     traffic = {
       partial_data:
@@ -114,6 +121,7 @@ class AdminDashboardSiteTrafficExplorer
       series_colors: series_colors,
       dimensions: decorate_dimensions(row.fetch("dimensions")),
     }
+    traffic[:bucket] = bucket.to_s if params.grouping.present?
     active_filters =
       decorate_active_filters(row.fetch("active_filter_representative_ips"), filters:)
     traffic[:active_filters] = active_filters if active_filters.any?
@@ -122,13 +130,13 @@ class AdminDashboardSiteTrafficExplorer
     fail!("traffic_query_timeout")
   end
 
-  def execute_query(start_date:, end_date:, filters:)
+  def execute_query(start_date:, end_date:, bucket:, filters:)
     parameters = query_params(start_date:, end_date:, filters:)
 
     ActiveRecord::Base.transaction(requires_new: true) do
       DB.exec("SET LOCAL statement_timeout = #{STATEMENT_TIMEOUT_MS}")
       DB.query_hash(
-        query(start_date: parameters[:start_date], end_date: parameters[:end_date]),
+        query(start_date: parameters[:start_date], end_date: parameters[:end_date], bucket:),
         parameters,
       ).first
     end
@@ -163,9 +171,10 @@ class AdminDashboardSiteTrafficExplorer
     }
   end
 
-  def query(start_date:, end_date:)
+  def query(start_date:, end_date:, bucket:)
     source_condition =
       BrowserPageviewEvent.rollup_source_condition(table: "bpe", start_date:, end_date:)
+    series_bucket = bucket == :day ? "created_at::date" : "date_trunc('hour', created_at)"
 
     <<~SQL
       WITH population AS MATERIALIZED (
@@ -304,7 +313,7 @@ class AdminDashboardSiteTrafficExplorer
       ),
       series_rows AS (
         SELECT
-          created_at::date AS date,
+          #{series_bucket} AS date,
           COUNT(*)::integer AS pageviews,
           COUNT(*) FILTER (
             WHERE NOT likely_crawler AND user_id IS NOT NULL
@@ -314,7 +323,7 @@ class AdminDashboardSiteTrafficExplorer
           )::integer AS anonymous_human_pageviews,
           COUNT(*) FILTER (WHERE likely_crawler)::integer AS likely_crawler_pageviews
         FROM filtered
-        GROUP BY created_at::date
+        GROUP BY #{series_bucket}
       ),
       traffic_summary AS (
         SELECT

@@ -11,6 +11,18 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
 
       expect(contract).not_to be_valid
     end
+
+    it "accepts supported groupings" do
+      base = { start_date: Date.new(2026, 5, 10), end_date: Date.new(2026, 5, 12) }
+
+      expect(
+        [
+          described_class.new(**base, grouping: "hour").valid?,
+          described_class.new(**base, grouping: "day").valid?,
+          described_class.new(**base, grouping: "week").valid?,
+        ],
+      ).to eq([true, true, false])
+    end
   end
 
   describe ".call" do
@@ -90,6 +102,13 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
 
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
+
+      it "groups the selected dates by the requested interval" do
+        hourly_traffic = described_class.call(params: params.merge(grouping: "hour")).traffic
+        daily_traffic = described_class.call(params: params.merge(grouping: "day")).traffic
+
+        expect([hourly_traffic[:bucket], daily_traffic[:bucket]]).to eq(%w[hour day])
+      end
 
       it "groups stored browser values and displays rows awaiting backfill as unknown" do
         browser_dimensions = result.traffic.dig(:dimensions, "browsers")

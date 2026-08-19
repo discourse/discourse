@@ -1552,6 +1552,34 @@ RSpec.describe Admin::DashboardController do
         )
       end
 
+      it "groups a selected range by the requested interval" do
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params:
+              request_params.merge(
+                start_date: "2026-04-12",
+                end_date: "2026-05-11",
+                grouping: "hour",
+              )
+
+        body = response.parsed_body
+
+        expect(
+          [
+            response.status,
+            body["bucket"],
+            body.dig("summary", "pageviews"),
+            body["series"].pluck("date"),
+          ],
+        ).to eq([200, "hour", 3, %w[2026-05-10T10:00:00 2026-05-11T10:00:00]])
+      end
+
+      it "rejects an unknown grouping" do
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(grouping: "week")
+
+        expect(response.status).to eq(400)
+      end
+
       it "applies the direct referrer filter" do
         get "/admin/dashboard/site-traffic-explorer.json",
             params: request_params.merge(referrer: "")

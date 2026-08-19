@@ -29,6 +29,11 @@ module PageObjects
         self
       end
 
+      def visit_default
+        page.visit(PATH)
+        self
+      end
+
       def go_back
         page.go_back
         self
@@ -58,6 +63,20 @@ module PageObjects
         picker.pick_day(end_date)
         picker.apply
         self
+      end
+
+      def has_grouping?(label)
+        has_css?(grouping_selector(label, checked: true), visible: :all)
+      end
+
+      def select_grouping(label)
+        find(grouping_selector(label), visible: :all).ancestor("label").click
+        self
+      end
+
+      def has_groupings?(*labels)
+        has_css?("[data-test-site-traffic-interval] input", count: labels.length, visible: :all) &&
+          labels.all? { |label| has_css?(grouping_selector(label), visible: :all) }
       end
 
       def has_metric?(label:, value:)
@@ -179,6 +198,11 @@ module PageObjects
       end
 
       private
+
+      def grouping_selector(label, checked: false)
+        checked_selector = checked ? ":checked" : ""
+        "[data-test-site-traffic-interval] input[value='#{label.downcase}']#{checked_selector}"
+      end
 
       def open_date_range
         find(".db-date-range__trigger").click

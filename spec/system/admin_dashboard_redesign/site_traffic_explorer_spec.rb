@@ -402,6 +402,63 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_no_expanded_table
   end
 
+  it "lets an admin change the graph interval independently of the date range",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+    sign_in(admin)
+
+    9.times do |index|
+      Fabricate(
+        :browser_pageview_event,
+        url: "/hourly-traffic",
+        session_id: "hourly-session-#{index}",
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: Time.zone.local(2026, 5, 10, 10) + index * 15.minutes,
+      )
+    end
+
+    traffic.visit_default
+
+    expect(traffic).to have_date_range("Last 30 days")
+    expect(traffic).to have_grouping("Day")
+    expect(traffic).to have_groupings("Hour", "Day")
+
+    traffic.select_grouping("Hour")
+
+    expect(traffic).to have_grouping("Hour")
+    expect(page).to have_current_path("/admin/dashboard/site-traffic-explorer?grouping=hour")
+
+    traffic.select_grouping("Day")
+
+    expect(traffic).to have_grouping("Day")
+    expect(page).to have_current_path("/admin/dashboard/site-traffic-explorer?grouping=day")
+
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
+
+    expect(traffic).to have_grouping("Day")
+
+    traffic.select_grouping("Day")
+
+    expect(traffic).to have_grouping("Day")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&grouping=day&range=custom&start_date=2026-05-01",
+    )
+
+    traffic.select_grouping("Hour")
+
+    expect(traffic).to have_grouping("Hour")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&grouping=hour&range=custom&start_date=2026-05-01",
+    )
+
+    page.refresh
+
+    expect(traffic).to have_date_range("May 1, 2026 – May 12, 2026")
+    expect(traffic).to have_grouping("Hour")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&grouping=hour&range=custom&start_date=2026-05-01",
+    )
+  end
+
   it "warns an admin when the selected range has incomplete traffic data",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0),
      timezone: "UTC" do

@@ -371,6 +371,27 @@
   }
 }
 
+.site-traffic-chart {
+  position: relative;
+  display: flex;
+  height: 100%;
+
+  &__interval {
+    position: absolute;
+    z-index: z("base") + 1;
+    inset-block-start: var(--space-2);
+    inset-inline-end: var(--space-2);
+  }
+
+  &__canvas {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
 .site-traffic-breakdown-modal {
   @include viewport.until(md) {
     .d-table {

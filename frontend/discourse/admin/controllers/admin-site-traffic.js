@@ -43,6 +43,7 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
+  @tracked grouping = null;
   @tracked traffic_type = null;
   @tracked top_url = null;
   @tracked entry_url = null;
@@ -55,7 +56,7 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked loading = false;
   @tracked fetchError = null;
 
-  queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
+  queryParams = ["range", "start_date", "end_date", "grouping", ...FILTER_KEYS];
 
   #fetchId = 0;
 
@@ -152,6 +153,10 @@ export default class AdminSiteTrafficController extends Controller {
       end_date: moment(this.endDate).format("YYYY-MM-DD"),
     };
 
+    if (this.grouping) {
+      params.grouping = this.grouping;
+    }
+
     for (const key of FILTER_KEYS) {
       if (this[key] !== null) {
         params[key] = this[key];
@@ -228,6 +233,11 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   @action
+  setGrouping(grouping) {
+    this.grouping = grouping;
+  }
+
+  @action
   setFilter(key, row) {
     this[key] = row.value;
   }
@@ -261,6 +271,7 @@ export default class AdminSiteTrafficController extends Controller {
     this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
+    this.grouping = null;
     for (const key of FILTER_KEYS) {
       this[key] = null;
     }
