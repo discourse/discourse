@@ -6300,6 +6300,10 @@ en:
       reject_post:
         title: "Reject Post"
         complete: "Post rejected."
+      remove_avatar:
+        title: "Remove avatar"
+        description: "Reset this user's profile picture to the system default"
+        complete: "Avatar removed."
       approve_user:
         title: "Yes"
         complete: "User approved."

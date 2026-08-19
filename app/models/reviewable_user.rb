@@ -31,6 +31,10 @@ class ReviewableUser < Reviewable
       delete_user_actions(actions, bundle, require_reject_reason: false)
     end
 
+    if status == "pending" && target&.uploaded_avatar_id.present?
+      build_action(actions, :remove_avatar, icon: "user-xmark")
+    end
+
     if guardian.can_approve?(target)
       actions.add(:approve_user, bundle: nil) do |a|
         a.icon = "user-plus"
@@ -52,6 +56,12 @@ class ReviewableUser < Reviewable
   def build_actions(actions, guardian, args)
     return if approved?
     super
+  end
+
+  def perform_remove_avatar(performed_by, args)
+    target.remove_avatar!(performed_by)
+
+    create_result(:success)
   end
 
   def perform_approve_user(performed_by, args)
