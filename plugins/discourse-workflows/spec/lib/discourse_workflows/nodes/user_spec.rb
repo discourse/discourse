@@ -259,6 +259,77 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
       end.to raise_error(DiscourseWorkflows::NodeError, "Unknown user extensions: nope.")
     end
 
+    it "removes the avatar and logs a staff action", :aggregate_failures do
+      avatar = Fabricate(:upload)
+      user.update!(uploaded_avatar_id: avatar.id)
+      user.user_avatar.update!(custom_upload_id: avatar.id)
+
+      result =
+        execute_node(
+          configuration: {
+            "operation" => "edit",
+            "username" => user.username,
+            "updates" => {
+              "remove_avatar" => true,
+            },
+            "actor_username" => admin.username,
+          },
+        )
+
+      expect(result.dig("user", "uploaded_avatar_id")).to be_nil
+      expect(user.reload.user_avatar.custom_upload_id).to be_nil
+      expect(
+        UserHistory.where(
+          action: UserHistory.actions[:removed_avatar],
+          target_user_id: user.id,
+        ).count,
+      ).to eq(1)
+    end
+
+    it "leaves the avatar alone when the flag is not set", :aggregate_failures do
+      avatar = Fabricate(:upload)
+      user.update!(uploaded_avatar_id: avatar.id)
+
+      execute_node(
+        configuration: {
+          "operation" => "edit",
+          "username" => user.username,
+          "updates" => {
+            "remove_avatar" => false,
+            "title" => "Kept",
+          },
+          "actor_username" => admin.username,
+        },
+      )
+
+      expect(user.reload.uploaded_avatar_id).to eq(avatar.id)
+    end
+
+    it "clears the profile and card backgrounds", :aggregate_failures do
+      profile_background = Fabricate(:upload)
+      card_background = Fabricate(:upload)
+      user.user_profile.update!(
+        profile_background_upload_id: profile_background.id,
+        card_background_upload_id: card_background.id,
+      )
+
+      result =
+        execute_node(
+          configuration: {
+            "operation" => "edit",
+            "username" => user.username,
+            "updates" => {
+              "remove_profile_background" => true,
+              "remove_card_background" => true,
+            },
+            "actor_username" => admin.username,
+          },
+        )
+
+      expect(result.dig("user", "profile_background_upload_id")).to be_nil
+      expect(result.dig("user", "card_background_upload_id")).to be_nil
+    end
+
     it "returns external ids from the edit operation", :aggregate_failures do
       Fabricate(:single_sign_on_record, user: user, external_id: "ext-42")
 
@@ -316,7 +387,7 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
       expect(result.dig("user", "external_id")).to eq("ext-42")
     end
 
-    it "updates the bio and title", :aggregate_failures do
+    it "updates the bio, title, website and location", :aggregate_failures do
       result =
         execute_node(
           configuration: {
@@ -325,6 +396,8 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
             "updates" => {
               "bio_raw" => "Updated bio",
               "title" => "Updated title",
+              "website" => "https://example.com",
+              "location" => "Paris",
             },
             "actor_username" => admin.username,
           },
@@ -332,8 +405,10 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
 
       expect(user.reload.user_profile.bio_raw).to eq("Updated bio")
       expect(user.title).to eq("Updated title")
+      expect(user.user_profile.location).to eq("Paris")
       expect(result.dig("user", "bio_raw")).to eq("Updated bio")
       expect(result.dig("user", "title")).to eq("Updated title")
+      expect(result.dig("user", "website")).to eq("https://example.com")
     end
 
     it "only changes fields included in updates", :aggregate_failures do

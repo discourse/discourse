@@ -7,11 +7,21 @@ module DiscourseWorkflows
         OPERATIONS = %w[get edit].freeze
         UPDATE_OPTIONS = [
           { name: "bio_raw", type: :string, required: false, ui: { control: :textarea } },
+          { name: "website", type: :string, required: false },
+          { name: "location", type: :string, required: false },
           { name: "title", type: :string, required: false },
+          { name: "remove_avatar", type: :boolean, required: false },
+          { name: "remove_profile_background", type: :boolean, required: false },
+          { name: "remove_card_background", type: :boolean, required: false },
           { name: "trust_level", type: :options, required: true, options: trust_level_options },
           { name: "trust_level_locked", type: :boolean, required: false },
         ].freeze
         MISSING = DiscourseWorkflows::Executor::NodeExecutionContext::MISSING
+        TEXT_UPDATES = %w[title website location].freeze
+        BACKGROUND_REMOVALS = {
+          "remove_profile_background" => :profile_background_upload_url,
+          "remove_card_background" => :card_background_upload_url,
+        }.freeze
 
         EXTENSIONS = {
           "stats" => :stats_extension,
@@ -160,6 +170,7 @@ module DiscourseWorkflows
           trust_level_locked = updates.fetch("trust_level_locked", MISSING)
 
           update_profile_fields(user, actor, guardian, attributes) if attributes.present?
+          remove_avatar(user, actor, guardian) if updates["remove_avatar"]
           change_trust_level(user, actor, guardian, trust_level) unless trust_level.equal?(MISSING)
           unless trust_level_locked.equal?(MISSING)
             update_trust_level_lock(user, actor, guardian, trust_level_locked)
@@ -180,15 +191,28 @@ module DiscourseWorkflows
           UPDATE_OPTIONS.each_with_object({}) do |field, updates|
             name = field[:name]
             value = exec_ctx.get_node_parameter(name, item_index, default: MISSING)
-            updates[name] = value unless value.equal?(MISSING)
+            next if value.equal?(MISSING)
+
+            value = ActiveModel::Type::Boolean.new.cast(value) == true if field[:type] == :boolean
+            updates[name] = value
           end
         end
 
         def editable_attributes(updates)
           {}.tap do |attributes|
             attributes[:bio_raw] = updates["bio_raw"] if updates.key?("bio_raw")
-            attributes[:title] = updates["title"].to_s if updates.key?("title")
+            TEXT_UPDATES.each do |name|
+              attributes[name.to_sym] = updates[name].to_s if updates.key?(name)
+            end
+            BACKGROUND_REMOVALS.each do |flag, attribute|
+              attributes[attribute] = "" if updates[flag]
+            end
           end
+        end
+
+        def remove_avatar(user, actor, guardian)
+          guardian.ensure_can_edit!(user)
+          user.remove_avatar!(actor)
         end
 
         def update_profile_fields(user, actor, guardian, attributes)
