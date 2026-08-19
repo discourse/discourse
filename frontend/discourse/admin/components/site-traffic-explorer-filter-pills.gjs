@@ -32,9 +32,8 @@ export default class SiteTrafficExplorerFilterPills extends Component {
 
   @action
   filteringToLabel(filter) {
-    return i18n("admin.site_traffic_explorer.filtering_to", {
+    return i18n(`admin.site_traffic_explorer.filtering_to.${filter.key}`, {
       count: filter.values.length,
-      filter: i18n(`admin.site_traffic_explorer.filter_plurals.${filter.key}`),
     });
   }
 
@@ -73,33 +72,29 @@ export default class SiteTrafficExplorerFilterPills extends Component {
   }
 
   @action
-  filterDescription(filter) {
-    return i18n("admin.site_traffic_explorer.filter_description", {
-      filter: escapeExpression(this.filterLabel(filter.key)),
-      value: `<strong class="site-traffic-explorer__filter-pill-values">${escapeExpression(filter.values[0].label)}</strong>`,
-    });
-  }
-
-  @action
-  groupedFilterDescription(filter, visibleCount) {
+  filterDescription(filter, visibleCount) {
     const visibleValues = filter.values
       .slice(0, visibleCount)
       .map((value) => `<strong>${escapeExpression(value.label)}</strong>`)
-      .join(i18n("admin.site_traffic_explorer.filter_value_separator"));
+      .join(
+        i18n("admin.site_traffic_explorer.filter_description.value_separator")
+      );
     const remainingCount = filter.values.length - visibleCount;
     const values = `<span class="site-traffic-explorer__filter-pill-values">${visibleValues}</span>`;
 
-    return i18n("admin.site_traffic_explorer.grouped_filter_description", {
-      filter: escapeExpression(this.filterLabel(filter.key)),
-      values,
-      remaining:
-        remainingCount > 0
-          ? `<span class="site-traffic-explorer__filter-pill-remaining">${i18n(
-              "admin.site_traffic_explorer.additional_filter_values",
-              { count: remainingCount }
-            )}</span>`
-          : "",
-    });
+    return i18n(
+      `admin.site_traffic_explorer.filter_description.${filter.key}`,
+      {
+        values,
+        remaining:
+          remainingCount > 0
+            ? `<span class="site-traffic-explorer__filter-pill-remaining">${i18n(
+                "admin.site_traffic_explorer.filter_description.additional_values",
+                { count: remainingCount }
+              )}</span>`
+            : "",
+      }
+    );
   }
 
   @action
@@ -160,7 +155,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                     <span
                       class="site-traffic-explorer__filter-pill-label"
                     >{{trustHTML
-                        (this.groupedFilterDescription
+                        (this.filterDescription
                           filter (this.visibleValueCount filter)
                         )
                       }}</span>
@@ -204,7 +199,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
               {{else}}
                 <span
                   class="site-traffic-explorer__filter-pill-label"
-                >{{trustHTML (this.filterDescription filter)}}</span>
+                >{{trustHTML (this.filterDescription filter 1)}}</span>
               {{/if}}
               <DButton
                 class="btn-flat site-traffic-explorer__filter-remove"

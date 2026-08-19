@@ -7269,20 +7269,42 @@ en:
         pageviews: "Pageviews"
         metric_information: "About this metric"
         active_filters: "Active traffic filters"
-        filter_description: "%{filter}: %{value}"
-        grouped_filter_description: "%{filter}: %{values} %{remaining}"
-        filter_value_separator: ", "
-        additional_filter_values: "+%{count}"
-        filtering_to: "Filtering to %{count} %{filter}"
-        filter_plurals:
-          traffic_type: "traffic types"
-          top_url: "top URLs"
-          entry_url: "entry URLs"
-          referrer: "referrers"
-          country: "countries"
-          network: "networks"
-          browser: "browsers"
-          ip: "IP addresses"
+        filter_description:
+          value_separator: ", "
+          additional_values: "+%{count}"
+          traffic_type: "Traffic type: %{values}%{remaining}"
+          top_url: "Top URL: %{values}%{remaining}"
+          entry_url: "Entry URL: %{values}%{remaining}"
+          referrer: "Referrer: %{values}%{remaining}"
+          country: "Country: %{values}%{remaining}"
+          network: "Network: %{values}%{remaining}"
+          browser: "Browser: %{values}%{remaining}"
+          ip: "IP address: %{values}%{remaining}"
+        filtering_to:
+          traffic_type:
+            one: "Filtering to %{count} traffic type"
+            other: "Filtering to %{count} traffic types"
+          top_url:
+            one: "Filtering to %{count} top URL"
+            other: "Filtering to %{count} top URLs"
+          entry_url:
+            one: "Filtering to %{count} entry URL"
+            other: "Filtering to %{count} entry URLs"
+          referrer:
+            one: "Filtering to %{count} referrer"
+            other: "Filtering to %{count} referrers"
+          country:
+            one: "Filtering to %{count} country"
+            other: "Filtering to %{count} countries"
+          network:
+            one: "Filtering to %{count} network"
+            other: "Filtering to %{count} networks"
+          browser:
+            one: "Filtering to %{count} browser"
+            other: "Filtering to %{count} browsers"
+          ip:
+            one: "Filtering to %{count} IP address"
+            other: "Filtering to %{count} IP addresses"
         remove_filter_value: "Remove %{value}"
         clear_all: "Clear all"
         clear_all_filters: "Clear all filters"
