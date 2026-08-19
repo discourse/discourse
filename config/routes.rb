@@ -1406,7 +1406,7 @@ Discourse::Application.routes.draw do
 
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", :format => :rss
     scope path: "c/*category_slug_path_with_id" do
-      get "/none" => "list#category_none_latest"
+      get "/none" => "list#category_none_default", :as => "category_none_default"
 
       TopTopic.periods.each do |period|
         get "/none/l/top/#{period}", to: redirect("/none/l/top?period=#{period}", status: 301)

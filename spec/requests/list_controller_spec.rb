@@ -1193,6 +1193,29 @@ RSpec.describe ListController do
           json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
         end
+
+        def filter_for(default_view, path = "")
+          category.update!(default_view: default_view)
+          get "/c/#{category.slug}/#{category.id}#{path}.json"
+          expect(response.status).to eq(200)
+          response.parsed_body["topic_list"]["filter"]
+        end
+
+        it "falls back to latest when the default view is not a filter this request can reach" do
+          expect(filter_for("destroy")).to eq("latest")
+          expect(filter_for("categories")).to eq("latest")
+          expect(filter_for("unread")).to eq("latest")
+        end
+
+        it "honours a logged in only default view for logged in users" do
+          sign_in(user)
+
+          expect(filter_for("unread")).to eq("unread")
+        end
+
+        it "honours the default view when excluding subcategories" do
+          expect(filter_for("hot", "/none")).to eq("hot")
+        end
       end
 
       describe "renders canonical tag" do
