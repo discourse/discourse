@@ -46,6 +46,11 @@ const siteFixtures = {
         "hot",
         "unseen"
       ],
+      anonymous_filters: [
+        "latest",
+        "top",
+        "hot"
+      ],
       homepage_choices: [
         "latest",
         "new",

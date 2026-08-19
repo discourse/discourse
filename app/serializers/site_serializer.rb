@@ -11,6 +11,7 @@ class SiteSerializer < ApplicationSerializer
     :trust_levels,
     :groups,
     :filters,
+    :anonymous_filters,
     :homepage_choices,
     :periods,
     :top_menu_items,
@@ -222,6 +223,10 @@ class SiteSerializer < ApplicationSerializer
 
   def filters
     Discourse.filters.map(&:to_s)
+  end
+
+  def anonymous_filters
+    (Discourse.filters & Discourse.anonymous_filters).map(&:to_s)
   end
 
   def homepage_choices
