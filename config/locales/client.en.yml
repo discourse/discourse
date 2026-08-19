@@ -7266,7 +7266,36 @@ en:
         pageviews: "Pageviews"
         metric_information: "About this metric"
         active_filters: "Active traffic filters"
-        filter_description: "%{filter} is <strong>%{value}</strong>"
+        filtering_to:
+          traffic_type:
+            one: "Filtering to %{count} traffic type"
+            other: "Filtering to %{count} traffic types"
+          top_url:
+            one: "Filtering to %{count} top URL"
+            other: "Filtering to %{count} top URLs"
+          entry_url:
+            one: "Filtering to %{count} entry URL"
+            other: "Filtering to %{count} entry URLs"
+          referrer:
+            one: "Filtering to %{count} referrer"
+            other: "Filtering to %{count} referrers"
+          country:
+            one: "Filtering to %{count} country"
+            other: "Filtering to %{count} countries"
+          network:
+            one: "Filtering to %{count} network"
+            other: "Filtering to %{count} networks"
+          browser:
+            one: "Filtering to %{count} browser"
+            other: "Filtering to %{count} browsers"
+          ip:
+            one: "Filtering to %{count} IP address"
+            other: "Filtering to %{count} IP addresses"
+        remove_filter_value: "Remove %{value}"
+        clear_all: "Clear all"
+        clear_all_filters: "Clear all filters"
+        apply: "Apply"
+        apply_filters: "Apply filters"
         filter_by:
           one: "Filter by %{label}, %{count} pageview"
           other: "Filter by %{label}, %{count} pageviews"

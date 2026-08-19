@@ -113,21 +113,48 @@ module PageObjects
 
       def filter_row(card:, label:)
         within("[data-test-site-traffic-card='#{card}']") do
-          find("button[aria-label^='Filter by #{label},']").click
+          find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
+        end
+        find("[data-test-site-traffic-apply-filters]").click
+        self
+      end
+
+      def filter_by_clicking_row(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          within("[data-test-site-traffic-row]", text: label) do
+            find(".site-traffic-explorer__row-filter-target").click
+          end
+        end
+        find("[data-test-site-traffic-apply-filters]").click
+        self
+      end
+
+      def select_filter_row(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
         end
         self
       end
 
+      def has_filter_row_selected?(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_css?("input[type='checkbox'][aria-label^='Filter by #{label},']:checked")
+        end
+      end
+
+      def has_filter_row_unselected?(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_css?("input[type='checkbox'][aria-label^='Filter by #{label},']:not(:checked)")
+        end
+      end
+
       def has_filter_pill?(dimension:, label:)
         selector = "[data-test-site-traffic-filter-pill='#{dimension}']"
-        remove_label =
-          if dimension == "traffic_type"
-            "Remove #{label} traffic filter"
-          else
-            "Remove #{FILTER_LABELS.fetch(dimension)} filter"
-          end
+        remove_label = "Remove #{FILTER_LABELS.fetch(dimension)} filter"
+        expected_text = "#{FILTER_LABELS.fetch(dimension)}: #{label}".gsub(/\s+/, "")
 
-        has_css?(selector, text: "#{FILTER_LABELS.fetch(dimension)} is #{label}", count: 1) &&
+        has_css?(selector, count: 1) &&
+          find(selector).text.gsub(/\s+/, "").include?(expected_text) &&
           has_css?("#{selector} button[aria-label='#{remove_label}']")
       end
 
@@ -135,14 +162,72 @@ module PageObjects
         has_no_css?("[data-test-site-traffic-filter-pill]")
       end
 
+      def has_grouped_filter_pill?(dimension:, label:)
+        selector =
+          "[data-test-site-traffic-filter-pill='#{dimension}'] .site-traffic-explorer__filter-pill-label"
+
+        has_css?(selector, count: 1) &&
+          find(selector).text.gsub(/\s+/, "").include?(label.gsub(/\s+/, ""))
+      end
+
+      def expand_filter_pill(dimension)
+        within("[data-test-site-traffic-filter-pill='#{dimension}']") do
+          find(".fk-d-menu__trigger").click
+        end
+        self
+      end
+
+      def has_filter_dropdown?(values:)
+        row_selector = "[data-test-site-traffic-filter-dropdown-value]"
+        value_selector = "#{row_selector} .site-traffic-explorer__filter-dropdown-value"
+
+        has_css?(row_selector, count: values.length) &&
+          values.all? { |value| has_css?(value_selector, exact_text: value, count: 1) }
+      end
+
+      def has_no_filter_dropdown?
+        has_no_css?("[data-test-site-traffic-filter-dropdown]")
+      end
+
+      def remove_filter_value(value)
+        within("[data-test-site-traffic-filter-dropdown]") { find_button("Remove #{value}").click }
+        self
+      end
+
+      def has_apply_filters?(count:)
+        selector = "[data-test-site-traffic-apply-filters]"
+
+        has_css?(selector, exact_text: "Apply (#{count})", count: 1)
+      end
+
+      def has_no_apply_filters?
+        has_no_button?("Apply", exact: false)
+      end
+
+      def apply_filters
+        find("[data-test-site-traffic-apply-filters]").click
+        self
+      end
+
+      def clear_all_filters
+        find_button("Clear all filters", exact: true).click
+        self
+      end
+
       def remove_filter(name, label: nil)
-        remove_label =
-          if name == "traffic_type"
-            "Remove #{label} traffic filter"
-          else
-            "Remove #{FILTER_LABELS.fetch(name)} filter"
+        remove_label = "Remove #{FILTER_LABELS.fetch(name)} filter"
+        selector = "[data-test-site-traffic-filter-pill='#{name}']"
+        if label && has_css?("#{selector} .fk-d-menu__trigger", wait: 0)
+          within(selector) { find(".fk-d-menu__trigger").click }
+          within("[data-test-site-traffic-filter-dropdown]") do
+            find_button("Remove #{label}").click
           end
-        find("button[aria-label='#{remove_label}']").click
+        else
+          find("button[aria-label='#{remove_label}']").click
+        end
+        if has_css?("[data-test-site-traffic-apply-filters]", wait: 0)
+          find("[data-test-site-traffic-apply-filters]").click
+        end
         self
       end
 
@@ -163,9 +248,18 @@ module PageObjects
         has_css?("#{selector} a[href='#{label}']", exact_text: label)
       end
 
-      def filter_expanded_row(label:)
+      def select_expanded_filter_row(label:)
         within(".site-traffic-breakdown-modal[role='dialog']") do
-          within("tr", text: label) { find("button[aria-label^='Filter by #{label},']").click }
+          within("tr", text: label) do
+            find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
+          end
+        end
+        self
+      end
+
+      def apply_expanded_filters
+        within(".site-traffic-breakdown-modal[role='dialog']") do
+          find_button("Apply filters", exact: true).click
         end
         self
       end

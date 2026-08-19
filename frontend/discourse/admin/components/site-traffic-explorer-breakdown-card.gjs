@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { next, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import SiteTrafficExplorerBreakdownModal from "discourse/admin/components/site-traffic-explorer-breakdown-modal";
 import SiteTrafficExplorerDimensionLabel from "discourse/admin/components/site-traffic-explorer-dimension-label";
@@ -85,11 +85,14 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
         dimension: this.activeTab.dimension,
         rows: this.rows,
         rowLink: this.rowLink,
+        selectedValues: this.rows
+          .filter((row) => this.isSelected(row))
+          .map((row) => row.value),
       },
     });
 
-    if (result?.filterRow) {
-      this.filter(result.filterRow);
+    if (result?.filterRows) {
+      this.args.applyModalFilters(this.activeTab.filter, result.filterRows);
     }
   }
 
@@ -119,15 +122,13 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
   }
 
   @action
-  filter(row) {
-    const filterKey = this.activeTab.filter;
-    this.args.setFilter(filterKey, row);
+  toggleFilter(row) {
+    this.args.toggleFilter(this.activeTab.filter, row);
+  }
 
-    next(() => {
-      document
-        .querySelector(`#site-traffic-filter-pill-${filterKey} button`)
-        ?.focus();
-    });
+  @action
+  isSelected(row) {
+    return this.args.isFilterSelected(this.activeTab.filter, row.value);
   }
 
   <template>
@@ -169,7 +170,7 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
         }}
       >
         <ul class="site-traffic-explorer__breakdown-list">
-          {{#each this.visibleRows as |row|}}
+          {{#each this.visibleRows as |row index|}}
             <li>
               {{#let (this.rowLink row) as |rowLink|}}
                 {{#if rowLink}}
@@ -177,6 +178,19 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                     class="site-traffic-explorer__row"
                     data-test-site-traffic-row
                   >
+                    <input
+                      id={{concat "site-traffic-" @name "-filter-" index}}
+                      type="checkbox"
+                      aria-label={{this.filterLabel row}}
+                      checked={{this.isSelected row}}
+                      {{on "change" (fn this.toggleFilter row)}}
+                    />
+                    <label
+                      for={{concat "site-traffic-" @name "-filter-" index}}
+                      class="site-traffic-explorer__row-filter-target"
+                    >
+                      <span class="sr-only">{{this.filterLabel row}}</span>
+                    </label>
                     <a
                       href={{rowLink.href}}
                       rel={{rowLink.rel}}
@@ -188,12 +202,7 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                         @row={{row}}
                       />
                     </a>
-                    <button
-                      type="button"
-                      class="site-traffic-explorer__row-filter-area"
-                      aria-label={{this.filterLabel row}}
-                      {{on "click" (fn this.filter row)}}
-                    >
+                    <span class="site-traffic-explorer__row-count-wrapper">
                       <SiteTrafficExplorerPageviewCount
                         @value={{row.pageviews}}
                         as |formattedValue|
@@ -202,31 +211,36 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                           {{formattedValue}}
                         </span>
                       </SiteTrafficExplorerPageviewCount>
-                    </button>
+                    </span>
                   </span>
                 {{else}}
-                  <button
-                    type="button"
+                  <label
                     class="site-traffic-explorer__row"
-                    aria-label={{this.filterLabel row}}
                     data-test-site-traffic-row
-                    {{on "click" (fn this.filter row)}}
                   >
+                    <input
+                      type="checkbox"
+                      aria-label={{this.filterLabel row}}
+                      checked={{this.isSelected row}}
+                      {{on "change" (fn this.toggleFilter row)}}
+                    />
                     <span class="site-traffic-explorer__row-label">
                       <SiteTrafficExplorerDimensionLabel
                         @dimension={{this.activeTab.dimension}}
                         @row={{row}}
                       />
                     </span>
-                    <SiteTrafficExplorerPageviewCount
-                      @value={{row.pageviews}}
-                      as |formattedValue|
-                    >
-                      <span class="site-traffic-explorer__row-count">
-                        {{formattedValue}}
-                      </span>
-                    </SiteTrafficExplorerPageviewCount>
-                  </button>
+                    <span class="site-traffic-explorer__row-count-wrapper">
+                      <SiteTrafficExplorerPageviewCount
+                        @value={{row.pageviews}}
+                        as |formattedValue|
+                      >
+                        <span class="site-traffic-explorer__row-count">
+                          {{formattedValue}}
+                        </span>
+                      </SiteTrafficExplorerPageviewCount>
+                    </span>
+                  </label>
                 {{/if}}
               {{/let}}
             </li>

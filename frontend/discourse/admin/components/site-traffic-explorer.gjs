@@ -267,7 +267,12 @@ export default class SiteTrafficExplorer extends Component {
       <div class="admin-container site-traffic-explorer__content">
         <SiteTrafficExplorerFilterPills
           @filters={{@activeFilters}}
-          @removeFilter={{@removeFilter}}
+          @hasPendingFilters={{@hasPendingFilters}}
+          @pendingFilterCount={{@pendingFilterCount}}
+          @removeFilterValue={{@removeFilterValue}}
+          @clearFilter={{@clearFilter}}
+          @clearAllFilters={{@clearAllFilters}}
+          @applyFilters={{@applyFilters}}
         />
 
         {{#if @fetchError}}
@@ -394,14 +399,18 @@ export default class SiteTrafficExplorer extends Component {
                       }}
                       @tabs={{this.acquisitionTabs}}
                       @dimensions={{@traffic.dimensions}}
-                      @setFilter={{@setFilter}}
+                      @isFilterSelected={{@isFilterSelected}}
+                      @toggleFilter={{@toggleFilter}}
+                      @applyModalFilters={{@applyModalFilters}}
                     />
                     <SiteTrafficExplorerBreakdownCard
                       @name="pages"
                       @title={{i18n "admin.site_traffic_explorer.cards.pages"}}
                       @tabs={{this.pagesTabs}}
                       @dimensions={{@traffic.dimensions}}
-                      @setFilter={{@setFilter}}
+                      @isFilterSelected={{@isFilterSelected}}
+                      @toggleFilter={{@toggleFilter}}
+                      @applyModalFilters={{@applyModalFilters}}
                     />
                     <SiteTrafficExplorerBreakdownCard
                       @name="visitors"
@@ -410,7 +419,9 @@ export default class SiteTrafficExplorer extends Component {
                       }}
                       @tabs={{this.visitorsTabs}}
                       @dimensions={{@traffic.dimensions}}
-                      @setFilter={{@setFilter}}
+                      @isFilterSelected={{@isFilterSelected}}
+                      @toggleFilter={{@toggleFilter}}
+                      @applyModalFilters={{@applyModalFilters}}
                     />
                   </div>
                 </div>

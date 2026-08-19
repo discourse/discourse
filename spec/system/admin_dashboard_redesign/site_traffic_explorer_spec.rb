@@ -195,8 +195,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       end_date: "2026-05-12",
       traffic_type: "logged_in,anonymous",
     )
-    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Logged in")
-    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Anonymous")
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "traffic_type",
+      label: "Traffic type: Logged in, Anonymous",
+    )
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
     expect(traffic).to have_series_total(label: "logged-in-human", value: "2")
@@ -211,15 +213,13 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_metric(label: "Pageviews", value: "4")
 
     traffic.go_forward
-    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Logged in")
-    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Anonymous")
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "traffic_type",
+      label: "Traffic type: Logged in, Anonymous",
+    )
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
 
-    traffic.remove_filter("traffic_type", label: "Logged in")
-    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Anonymous")
-    expect(traffic).to have_metric(label: "Pageviews", value: "1")
-
-    traffic.remove_filter("traffic_type", label: "Anonymous")
+    traffic.remove_filter("traffic_type")
     expect(traffic).to have_no_filter_pills
     expect(traffic).to have_metric(label: "Pageviews", value: "4")
 
@@ -251,7 +251,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.select_tab(card: "pages", tab: "Entry URLs")
     expect(traffic).to have_row(card: "pages", label: "/latest", count: "1")
     expect(traffic).to have_url_link(card: "pages", label: "/latest", href: "/latest")
-    traffic.filter_row(card: "pages", label: "/latest")
+    traffic.filter_by_clicking_row(card: "pages", label: "/latest")
     expect(traffic).to have_filter_pill(dimension: "entry_url", label: "/latest")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
@@ -372,11 +372,11 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     sign_in(admin)
 
-    additional_path = nil
+    additional_paths = []
     9.times do |index|
       topic = Fabricate(:topic, title: "Traffic topic #{index}")
       path = "/t/#{topic.slug}/#{topic.id}"
-      additional_path = path if index == 8
+      additional_paths << path if index >= 7
       event_count = 9 - index
       event_count.times do |event_index|
         Fabricate(
@@ -390,16 +390,134 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     end
 
     traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
+    traffic.select_filter_row(card: "visitors", label: "Unknown browser")
 
     traffic.expand("pages")
 
     expect(traffic).to have_expanded_table(title: "Top URLs", column: "URL")
-    expect(traffic).to have_expanded_url_link(label: additional_path)
+    additional_paths.each { |path| expect(traffic).to have_expanded_url_link(label: path) }
 
-    traffic.filter_expanded_row(label: additional_path)
+    additional_paths.each { |path| traffic.select_expanded_filter_row(label: path) }
 
-    expect(traffic).to have_filter_pill(dimension: "top_url", label: additional_path)
+    expect(traffic).to have_expanded_table(title: "Top URLs", column: "URL")
+    expect(traffic).to have_metric(label: "Pageviews", value: "45")
+    traffic.apply_expanded_filters
+
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "top_url",
+      label: "Top URL: #{additional_paths.first}, #{additional_paths.second}",
+    )
+    expect(traffic).to have_filter_pill(dimension: "browser", label: "Unknown browser")
     expect(traffic).to have_no_expanded_table
+    expect(traffic).to have_apply_filters(count: 3)
+    expect(traffic).to have_metric(label: "Pageviews", value: "45")
+    traffic.apply_filters
+
+    expect(traffic).to have_no_apply_filters
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expected_path =
+      "/admin/dashboard/site-traffic-explorer?browser=unknown&end_date=2026-05-12&" \
+        "range=custom&start_date=2026-05-01&" \
+        "top_url=#{ERB::Util.url_encode(additional_paths.to_json)}"
+    expect(page).to have_current_path(expected_path)
+  end
+
+  it "lets an admin review and apply several filter values together",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+    sign_in(admin)
+
+    [
+      %w[/first one.example US first-session],
+      %w[/second two.example US second-session],
+      %w[/third one.example GB third-session],
+      ["/fourth", nil, "US", "fourth-session"],
+      %w[/fifth three.example US fifth-session],
+    ].each do |url, normalized_referrer, country_code, session_id|
+      Fabricate(
+        :browser_pageview_event,
+        url: url,
+        country_code: country_code,
+        ip_address: country_code == "US" ? "192.0.2.1" : "198.51.100.2",
+        normalized_referrer: normalized_referrer,
+        normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        session_id: session_id,
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: "2026-05-10 10:00:00",
+      )
+    end
+
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
+
+    traffic.select_filter_row(card: "acquisition", label: "one.example")
+    traffic.select_filter_row(card: "acquisition", label: "two.example")
+    traffic.select_filter_row(card: "acquisition", label: "three.example")
+    traffic.select_filter_row(card: "acquisition", label: "Direct / unknown")
+    traffic.select_tab(card: "acquisition", tab: "Countries")
+    traffic.select_filter_row(card: "acquisition", label: "United States")
+
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "referrer",
+      label: "Referrer: one.example, two.example, three.example +1",
+    )
+    expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
+    expect(traffic).to have_apply_filters(count: 5)
+    expect(traffic).to have_metric(label: "Pageviews", value: "5")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+    )
+
+    traffic.expand_filter_pill("referrer")
+
+    expect(traffic).to have_filter_dropdown(
+      values: ["one.example", "two.example", "three.example", "Direct / unknown"],
+    )
+    traffic.remove_filter_value("three.example")
+
+    expect(traffic).to have_filter_dropdown(
+      values: ["one.example", "two.example", "Direct / unknown"],
+    )
+    traffic.expand_filter_pill("referrer")
+
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "referrer",
+      label: "Referrer: one.example, two.example, Direct / unknown",
+    )
+
+    traffic.select_tab(card: "acquisition", tab: "Referrers")
+
+    expect(traffic).to have_filter_row_selected(card: "acquisition", label: "one.example")
+    expect(traffic).to have_filter_row_unselected(card: "acquisition", label: "three.example")
+
+    traffic.select_filter_row(card: "acquisition", label: "Direct / unknown")
+    traffic.select_filter_row(card: "acquisition", label: "three.example")
+    traffic.apply_filters
+
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "referrer",
+      label: "Referrer: one.example, two.example, three.example",
+    )
+    expect(traffic).to have_no_apply_filters
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?country=US&end_date=2026-05-12&range=custom&referrer=%5B%22one.example%22%2C%22two.example%22%2C%22three.example%22%5D&start_date=2026-05-01",
+    )
+
+    page.refresh
+
+    expect(traffic).to have_grouped_filter_pill(
+      dimension: "referrer",
+      label: "Referrer: one.example, two.example, three.example",
+    )
+    expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+
+    traffic.clear_all_filters
+
+    expect(traffic).to have_no_filter_pills
+    expect(traffic).to have_metric(label: "Pageviews", value: "5")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+    )
   end
 
   it "warns an admin when the selected range has incomplete traffic data",
