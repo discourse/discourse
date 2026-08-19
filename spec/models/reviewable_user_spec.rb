@@ -168,6 +168,56 @@ RSpec.describe ReviewableUser, type: :model do
     end
   end
 
+  describe ".payload_for" do
+    fab!(:avatar, :upload)
+
+    it "leaves the avatar blank when there is none" do
+      payload = ReviewableUser.payload_for(user)
+
+      expect(payload[:avatar_upload_id]).to be_nil
+      expect(payload[:avatar_url]).to be_nil
+    end
+
+    it "points at the upload rather than the avatar template" do
+      user.update!(uploaded_avatar_id: avatar.id)
+      user.user_profile.update!(bio_raw: "a bio", website: "https://example.com")
+
+      payload = ReviewableUser.payload_for(user)
+
+      expect(payload).to include(
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        bio: "a bio",
+        website: "https://example.com",
+        avatar_upload_id: avatar.id,
+        avatar_url: Discourse.store.cdn_url(avatar.url),
+      )
+      expect(payload[:avatar_url]).not_to include("user_avatar")
+    end
+  end
+
+  describe "the avatar snapshot" do
+    fab!(:avatar, :upload)
+    fab!(:target) { Fabricate(:user, uploaded_avatar_id: avatar.id) }
+
+    it "is referenced on create, so upload cleanup spares it" do
+      reviewable =
+        ReviewableUser.needs_review!(
+          target: target,
+          created_by: Discourse.system_user,
+          payload: ReviewableUser.payload_for(target),
+        )
+
+      expect(UploadReference.exists?(upload_id: avatar.id, target: reviewable)).to eq(true)
+
+      target.remove_avatar!(admin)
+
+      expect(Jobs::CleanUpUploads.new.execute({})).to be_truthy
+      expect(Upload.exists?(id: avatar.id)).to eq(true)
+    end
+  end
+
   describe "#update_fields" do
     fab!(:moderator)
     fab!(:reviewable)
@@ -217,6 +267,15 @@ RSpec.describe ReviewableUser, type: :model do
             target_user_id: reviewable.target_id,
           ).count
         }.by(1)
+      end
+
+      it "leaves the snapshotted image in the payload" do
+        reviewable.update!(payload: ReviewableUser.payload_for(reviewable.target))
+
+        reviewable.perform(moderator, :remove_avatar)
+
+        expect(reviewable.reload.payload["avatar_url"]).to be_present
+        expect(Upload.exists?(id: avatar.id)).to eq(true)
       end
 
       it "is offered only while the user still has an avatar" do
