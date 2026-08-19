@@ -1,5 +1,6 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { loadSiteTraffic } from "discourse/admin/lib/site-traffic-model";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -24,13 +25,18 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     return i18n("admin.site_traffic_explorer.title");
   }
 
-  model(params) {
-    return this.controllerFor("admin-site-traffic").loadTraffic(params);
-  }
-
-  setupController(controller, model) {
-    super.setupController(...arguments);
-    controller.applyTrafficModel(model);
+  async model(params) {
+    try {
+      return { traffic: await loadSiteTraffic(params), fetchError: null };
+    } catch (error) {
+      return {
+        traffic: null,
+        fetchError:
+          error.jqXHR?.responseJSON?.error_type === "traffic_query_timeout"
+            ? "timeout"
+            : "unexpected",
+      };
+    }
   }
 
   @action
