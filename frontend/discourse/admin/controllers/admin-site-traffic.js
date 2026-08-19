@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import {
   calculatePresetStartDate,
   DEFAULT_PERIOD,
@@ -24,6 +23,7 @@ const FILTER_KEYS = [
 ];
 
 const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
+
 const TRAFFIC_TYPE_LABEL_KEYS = {
   logged_in: "logged_in_human",
   anonymous: "anonymous_human",
@@ -41,8 +41,6 @@ const DIMENSION_KEYS = {
 };
 
 export default class AdminSiteTrafficController extends Controller {
-  @service loadingSlider;
-
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
@@ -60,30 +58,28 @@ export default class AdminSiteTrafficController extends Controller {
 
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
 
-  #fetchId = 0;
-  #loadingSliderActive = false;
-
   get safePeriod() {
-    if (!VALID_PERIODS.includes(this.range)) {
-      return DEFAULT_PERIOD;
-    }
-    if (this.range === PERIOD_CUSTOM && (!this.start_date || !this.end_date)) {
-      return DEFAULT_PERIOD;
-    }
-    return this.range;
+    return this.#safePeriod({
+      range: this.range,
+      start_date: this.start_date,
+      end_date: this.end_date,
+    });
   }
 
   get startDate() {
-    return (
-      this.#customDate(this.start_date, "startOf") ??
-      calculatePresetStartDate(this.safePeriod)
-    );
+    return this.#startDate({
+      range: this.range,
+      start_date: this.start_date,
+      end_date: this.end_date,
+    });
   }
 
   get endDate() {
-    return (
-      this.#customDate(this.end_date, "endOf") ?? moment().endOf("day").toDate()
-    );
+    return this.#endDate({
+      range: this.range,
+      start_date: this.start_date,
+      end_date: this.end_date,
+    });
   }
 
   get hasPageviews() {
@@ -131,18 +127,35 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   get selectedTrafficTypes() {
-    if (this.traffic_type === null) {
-      return TRAFFIC_TYPES;
-    }
+    return this.#selectedTrafficTypes(this.traffic_type);
+  }
 
-    const selected = this.traffic_type.split(",");
-    return TRAFFIC_TYPES.filter((trafficType) =>
-      selected.includes(trafficType)
+  #safePeriod({ range, start_date, end_date }) {
+    if (!VALID_PERIODS.includes(range)) {
+      return DEFAULT_PERIOD;
+    }
+    if (range === PERIOD_CUSTOM && (!start_date || !end_date)) {
+      return DEFAULT_PERIOD;
+    }
+    return range;
+  }
+
+  #startDate(params) {
+    return (
+      this.#customDate(params.start_date, "startOf", params) ??
+      calculatePresetStartDate(this.#safePeriod(params))
     );
   }
 
-  #customDate(value, edge) {
-    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
+  #endDate(params) {
+    return (
+      this.#customDate(params.end_date, "endOf", params) ??
+      moment().endOf("day").toDate()
+    );
+  }
+
+  #customDate(value, edge, params) {
+    if (this.#safePeriod(params) !== PERIOD_CUSTOM || !value) {
       return null;
     }
 
@@ -150,19 +163,30 @@ export default class AdminSiteTrafficController extends Controller {
     return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
-  #requestParams() {
-    const params = {
-      start_date: moment(this.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.endDate).format("YYYY-MM-DD"),
+  #requestParams(params) {
+    const requestParams = {
+      start_date: moment(this.#startDate(params)).format("YYYY-MM-DD"),
+      end_date: moment(this.#endDate(params)).format("YYYY-MM-DD"),
     };
 
     for (const key of FILTER_KEYS) {
-      if (this[key] !== null) {
-        params[key] = this[key];
+      if (params[key] !== null && params[key] !== undefined) {
+        requestParams[key] = params[key];
       }
     }
 
-    return params;
+    return requestParams;
+  }
+
+  #selectedTrafficTypes(value) {
+    if (!value) {
+      return TRAFFIC_TYPES;
+    }
+
+    const selected = value.split(",");
+    return TRAFFIC_TYPES.filter((trafficType) =>
+      selected.includes(trafficType)
+    );
   }
 
   #localizeCountryLabels(traffic) {
@@ -186,50 +210,41 @@ export default class AdminSiteTrafficController extends Controller {
     };
   }
 
-  @action
-  async fetchTraffic() {
-    const fetchId = ++this.#fetchId;
-    const requestParams = this.#requestParams();
-    const chartStartDate = moment(this.startDate).format("YYYY-MM-DD");
-    const chartEndDate = moment(this.endDate).format("YYYY-MM-DD");
-    const chartTrafficTypes = [...this.selectedTrafficTypes];
-    const showLoadingSlider = this.traffic !== null;
-    this.loading = true;
-    this.fetchError = null;
-    if (showLoadingSlider) {
-      this.loadingSlider.transitionStarted({ showFallbackSpinner: false });
-      this.#loadingSliderActive = true;
-    }
+  async loadTraffic(params) {
+    const selectedStartDate = this.#startDate(params);
+    const selectedEndDate = this.#endDate(params);
 
     try {
       const traffic = await ajax(
         "/admin/dashboard/site-traffic-explorer.json",
-        {
-          data: requestParams,
-        }
+        { data: this.#requestParams(params) }
       );
 
-      if (fetchId === this.#fetchId) {
-        this.traffic = {
+      return {
+        traffic: {
           ...this.#localizeCountryLabels(traffic),
-          chart_start_date: chartStartDate,
-          chart_end_date: chartEndDate,
-          chart_traffic_types: chartTrafficTypes,
-        };
-      }
+          chart_start_date: moment(selectedStartDate).format("YYYY-MM-DD"),
+          chart_end_date: moment(selectedEndDate).format("YYYY-MM-DD"),
+          chart_traffic_types: this.#selectedTrafficTypes(params.traffic_type),
+        },
+        fetchError: null,
+      };
     } catch (error) {
-      if (fetchId === this.#fetchId) {
-        this.fetchError =
+      return {
+        traffic: null,
+        fetchError:
           error.jqXHR?.responseJSON?.error_type === "traffic_query_timeout"
             ? "timeout"
-            : "unexpected";
-      }
-    } finally {
-      if (fetchId === this.#fetchId) {
-        this.loading = false;
-        this.#stopLoadingSlider();
-      }
+            : "unexpected",
+      };
     }
+  }
+
+  applyTrafficModel({ traffic, fetchError }) {
+    if (traffic) {
+      this.traffic = traffic;
+    }
+    this.fetchError = fetchError;
   }
 
   @action
@@ -276,8 +291,6 @@ export default class AdminSiteTrafficController extends Controller {
 
   @action
   resetState() {
-    this.#fetchId++;
-    this.#stopLoadingSlider();
     this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
@@ -299,14 +312,5 @@ export default class AdminSiteTrafficController extends Controller {
       orderedTrafficTypes.length === TRAFFIC_TYPES.length
         ? null
         : orderedTrafficTypes.join(",");
-  }
-
-  #stopLoadingSlider() {
-    if (!this.#loadingSliderActive) {
-      return;
-    }
-
-    this.loadingSlider.transitionEnded();
-    this.#loadingSliderActive = false;
   }
 }

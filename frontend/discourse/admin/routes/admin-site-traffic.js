@@ -1,21 +1,23 @@
 import { action } from "@ember/object";
-import { scheduleOnce } from "@ember/runloop";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
+  @service loadingSlider;
+
   queryParams = {
-    range: { refreshModel: false },
-    start_date: { refreshModel: false },
-    end_date: { refreshModel: false },
-    traffic_type: { refreshModel: false },
-    top_url: { refreshModel: false },
-    entry_url: { refreshModel: false },
-    referrer: { refreshModel: false },
-    country: { refreshModel: false },
-    network: { refreshModel: false },
-    browser: { refreshModel: false },
-    ip: { refreshModel: false },
+    range: { refreshModel: true },
+    start_date: { refreshModel: true },
+    end_date: { refreshModel: true },
+    traffic_type: { refreshModel: true },
+    top_url: { refreshModel: true },
+    entry_url: { refreshModel: true },
+    referrer: { refreshModel: true },
+    country: { refreshModel: true },
+    network: { refreshModel: true },
+    browser: { refreshModel: true },
+    ip: { refreshModel: true },
   };
 
   titleToken() {
@@ -23,26 +25,26 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
   }
 
   model(params) {
-    return params;
+    return this.controllerFor("admin-site-traffic").loadTraffic(params);
   }
 
-  setupController(controller) {
+  setupController(controller, model) {
     super.setupController(...arguments);
-    this.#scheduleFetch(controller);
+    controller.applyTrafficModel(model);
   }
 
   @action
-  queryParamsDidChange() {
-    this.#scheduleFetch(this.controllerFor("admin-site-traffic"));
+  loading(transition) {
+    const showFallbackSpinner =
+      this.controllerFor("admin-site-traffic").traffic === null;
+    this.loadingSlider.transitionStarted({ showFallbackSpinner });
+    transition.finally(this.loadingSlider.transitionEnded);
+    return false;
   }
 
   resetController(controller, isExiting) {
     if (isExiting) {
       controller.resetState();
     }
-  }
-
-  #scheduleFetch(controller) {
-    scheduleOnce("actions", controller, controller.fetchTraffic);
   }
 }

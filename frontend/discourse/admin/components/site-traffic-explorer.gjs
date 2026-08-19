@@ -290,49 +290,45 @@ export default class SiteTrafficExplorer extends Component {
           </div>
         {{else}}
           {{#if @loading}}
-            {{#unless @traffic}}
-              <div
-                class="db-skeleton --animation site-traffic-explorer__skeleton"
-                role="status"
-                aria-label={{i18n "admin.site_traffic_explorer.loading"}}
-                data-test-site-traffic-skeleton
-              >
-                <div class="db-skeleton__section-wrapper">
-                  <div class="db-skeleton__subheader">
-                    <div class="db-skeleton__subintro">
-                      <div class="db-skeleton__heading-line"></div>
-                    </div>
-                    <div class="db-skeleton__metric-row">
-                      {{#each SKELETON_METRICS}}
-                        <div class="db-skeleton__metric">
-                          <div class="db-skeleton__metric-number"></div>
-                          <div class="db-skeleton__metric-label"></div>
-                        </div>
-                      {{/each}}
-                    </div>
+            <div
+              class="db-skeleton --animation site-traffic-explorer__skeleton"
+              role="status"
+              aria-label={{i18n "admin.site_traffic_explorer.loading"}}
+              data-test-site-traffic-skeleton
+            >
+              <div class="db-skeleton__section-wrapper">
+                <div class="db-skeleton__subheader">
+                  <div class="db-skeleton__subintro">
+                    <div class="db-skeleton__heading-line"></div>
                   </div>
-                  <div class="db-skeleton__chart"></div>
-                  <div class="db-skeleton__row">
-                    {{#each SKELETON_BREAKDOWNS}}
-                      <div class="db-skeleton__row-block">
-                        <div class="db-skeleton__row-block-title"></div>
-                        <ul class="db-skeleton__list">
-                          {{#each SKELETON_ROWS}}
-                            <li class="db-skeleton__list-row">
-                              <span class="db-skeleton__list-name"></span>
-                              <span class="db-skeleton__list-value"></span>
-                            </li>
-                          {{/each}}
-                        </ul>
+                  <div class="db-skeleton__metric-row">
+                    {{#each SKELETON_METRICS}}
+                      <div class="db-skeleton__metric">
+                        <div class="db-skeleton__metric-number"></div>
+                        <div class="db-skeleton__metric-label"></div>
                       </div>
                     {{/each}}
                   </div>
                 </div>
+                <div class="db-skeleton__chart"></div>
+                <div class="db-skeleton__row">
+                  {{#each SKELETON_BREAKDOWNS}}
+                    <div class="db-skeleton__row-block">
+                      <div class="db-skeleton__row-block-title"></div>
+                      <ul class="db-skeleton__list">
+                        {{#each SKELETON_ROWS}}
+                          <li class="db-skeleton__list-row">
+                            <span class="db-skeleton__list-name"></span>
+                            <span class="db-skeleton__list-value"></span>
+                          </li>
+                        {{/each}}
+                      </ul>
+                    </div>
+                  {{/each}}
+                </div>
               </div>
-            {{/unless}}
-          {{/if}}
-
-          {{#if this.partialWarning}}
+            </div>
+          {{else if this.partialWarning}}
             <p
               class="alert alert-warning site-traffic-explorer__partial-warning"
               data-test-site-traffic-partial-warning
@@ -343,7 +339,7 @@ export default class SiteTrafficExplorer extends Component {
           {{/if}}
 
           {{#if @traffic}}
-            <div class="site-traffic-explorer__results">
+            <div class="site-traffic-explorer__results" hidden={{@loading}}>
               {{#if @hasPageviews}}
                 <div
                   class="db-section__wrapper --column site-traffic-explorer__report"
