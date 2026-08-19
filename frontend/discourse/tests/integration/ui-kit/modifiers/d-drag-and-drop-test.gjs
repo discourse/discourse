@@ -1511,13 +1511,13 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       assert.strictEqual(
         dataTransfer.effectAllowed,
         "move",
-        "one source going away takes only its own share of the shared listener"
+        "one source going away does not silence its siblings"
       );
     });
 
-    test("the last source to go takes the shared listener with it", async function (assert) {
-      // White-box, because the only thing a leak costs is an idle listener and
-      // a map entry per registration, nothing a drag can observe.
+    test("a detached source takes its dragstart listener with it", async function (assert) {
+      // White-box, because the only thing a leak costs is an idle listener,
+      // nothing a drag can observe.
       const state = new (class {
         @tracked disabled = false;
       })();
@@ -1531,13 +1531,13 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      const released = sinon.spy(window, "removeEventListener");
+      const released = sinon.spy(find("#row"), "removeEventListener");
       state.disabled = true;
       await settled();
 
       assert.true(
-        released.calledWith("dragstart", sinon.match.func, { capture: true }),
-        "nothing stays bound to a page with no drag sources left on it"
+        released.calledWith("dragstart", sinon.match.func),
+        "nothing stays bound to an element that is no longer a drag source"
       );
     });
 
@@ -1616,11 +1616,14 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           ...centerOf("#src"),
         });
 
-        const released = sinon.spy(window, "removeEventListener");
+        const released = sinon.spy(
+          find("#second-handle"),
+          "removeEventListener"
+        );
         await clearRender();
         assert.true(
-          released.calledWith("dragstart", sinon.match.func, { capture: true }),
-          "destroying the source unbinds the shared listener: the swap left no phantom registration counted"
+          released.calledWith("dragstart", sinon.match.func),
+          "destroying the source unbinds its dragstart listener: the swap left no phantom registration"
         );
       });
 

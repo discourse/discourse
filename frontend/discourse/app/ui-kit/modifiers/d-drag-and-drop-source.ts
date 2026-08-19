@@ -223,93 +223,8 @@ export type DragAndDropSourceArgs =
 
 type RegistrationToken = symbol;
 
-/**
- * Registered element to its current args. Weak so a removed subtree whose
- * registration never ends is not kept alive for the life of the tab.
- */
-let effectDeclarers = new WeakMap<
-  Element,
-  { token: RegistrationToken; getArgsRef: () => DragAndDropSourceArgs }
->();
-
 /** Which live registrations own each body's source mark. */
-let dragSourceMarks = new WeakMap<Element, Set<RegistrationToken>>();
-
-/**
- * Registered source count; the shared listener is bound while it is above
- * zero.
- */
-let liveSourceCount = 0;
-
-/** Unbinds the shared listener below. Null while no source is registered. */
-let stopDeclaringEffects: (() => void) | null = null;
-
-/**
- * Writes the starting drag's `effectAllowed`. Left unwritten it means
- * "anything", which the browser renders as its standing offer to copy.
- *
- * A native listener because the library never hands the callbacks the event,
- * and the browser reads the value once the `dragstart` dispatch has finished.
- */
-function declareEffectAllowed(event: DragEvent) {
-  const declarer =
-    event.target instanceof Element
-      ? effectDeclarers.get(event.target)
-      : undefined;
-  if (declarer && event.dataTransfer) {
-    event.dataTransfer.effectAllowed =
-      declarer.getArgsRef().effectAllowed ?? "move";
-  }
-}
-
-/**
- * Registers a source with the shared `dragstart` listener; one listener serves
- * every source because a long list registers one per row.
- *
- * @returns Cleanup, which unbinds the listener once the last source has gone.
- */
-function declareEffectFor(
-  element: Element,
-  getArgsRef: () => DragAndDropSourceArgs,
-  token: RegistrationToken
-) {
-  if (!effectDeclarers.has(element)) {
-    liveSourceCount += 1;
-  }
-  effectDeclarers.set(element, { token, getArgsRef });
-  if (!stopDeclaringEffects) {
-    window.addEventListener("dragstart", declareEffectAllowed, {
-      capture: true,
-    });
-    stopDeclaringEffects = () =>
-      window.removeEventListener("dragstart", declareEffectAllowed, {
-        capture: true,
-      });
-  }
-
-  return () => {
-    // A repeated or superseded release must not decrement again and unbind the
-    // listener under a source that is still registered.
-    if (effectDeclarers.get(element)?.token !== token) {
-      return;
-    }
-    effectDeclarers.delete(element);
-    liveSourceCount -= 1;
-    if (liveSourceCount === 0) {
-      stopDeclaringEffects?.();
-      stopDeclaringEffects = null;
-    }
-  };
-}
-
-/** Test-only: forget every source and unbind the listener between tests. */
-export function resetDragSourcesForTesting() {
-  effectDeclarers = new WeakMap();
-  dragSourceMarks = new WeakMap();
-  liveSourceCount = 0;
-  stopDeclaringEffects?.();
-  stopDeclaringEffects = null;
-}
+const dragSourceMarks = new WeakMap<Element, Set<RegistrationToken>>();
 
 /**
  * Wraps the underlying draggable registration with payload normalisation, the
@@ -355,7 +270,18 @@ export function registerDragAndDropSource(
   /** A teardown waiting for the drag in flight to finish, if there is one. */
   let teardownWhenIdle: (() => void) | null = null;
 
-  const stopDeclaringEffect = declareEffectFor(registered, getArgsRef, token);
+  // Writes the starting drag's `effectAllowed`; left unwritten it means
+  // "anything", which the browser renders as its standing offer to copy.
+  // A native listener because the library never hands the callbacks the event.
+  const declareEffect = (event: DragEvent) => {
+    // A dragstart bubbling out of a nested source or a natively draggable
+    // child belongs to that element, not to this registration.
+    if (event.target !== registered || !event.dataTransfer) {
+      return;
+    }
+    event.dataTransfer.effectAllowed = getArgsRef().effectAllowed ?? "move";
+  };
+  registered.addEventListener("dragstart", declareEffect);
 
   const cleanup = draggable({
     element: registered,
@@ -483,7 +409,7 @@ export function registerDragAndDropSource(
 
   const teardown = () => {
     cleanup();
-    stopDeclaringEffect();
+    registered.removeEventListener("dragstart", declareEffect);
     if (dragging) {
       element.classList.remove("--dragging");
     }

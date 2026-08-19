@@ -115,7 +115,6 @@ import {
 } from "discourse/tests/helpers/site-settings";
 import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
-import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
@@ -293,7 +292,6 @@ export function testCleanup(container, app) {
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
   resetDragAndDropForTesting();
-  resetDragSourcesForTesting();
   resetPointerDragForTesting();
   resetElementClassLeasesForTesting();
   clearBacklog();
