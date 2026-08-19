@@ -7264,17 +7264,6 @@ en:
         pageviews: "Pageviews"
         metric_information: "About this metric"
         active_filters: "Active traffic filters"
-        filter_description:
-          value_separator: ", "
-          additional_values: "+%{count}"
-          traffic_type: "Traffic type: %{values}%{remaining}"
-          top_url: "Top URL: %{values}%{remaining}"
-          entry_url: "Entry URL: %{values}%{remaining}"
-          referrer: "Referrer: %{values}%{remaining}"
-          country: "Country: %{values}%{remaining}"
-          network: "Network: %{values}%{remaining}"
-          browser: "Browser: %{values}%{remaining}"
-          ip: "IP address: %{values}%{remaining}"
         filtering_to:
           traffic_type:
             one: "Filtering to %{count} traffic type"
