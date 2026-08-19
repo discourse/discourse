@@ -4852,8 +4852,9 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "conceptual"
+      status: "experimental"
       impact: "other,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/409316"
       allow_enabled_for:
         - everyone
   admin_dashboard_reports_seeded:
