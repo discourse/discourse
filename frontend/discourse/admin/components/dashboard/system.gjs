@@ -146,55 +146,63 @@ export default class DashboardSystem extends Component {
               </h3>
             </div>
 
-            <div class="db-kpi__value">
-              {{dashIfEmpty this.versionCheck.installed_version}}
+            <div class="db-system__headline">
+
+              <div class="db-group">
+                <div class="db-system__value">
+                  {{dashIfEmpty this.versionCheck.installed_version}}
+                </div>
+
+                {{#if this.versionCheck.installedCommitsAhead}}
+                  <span
+                    class="db-pill"
+                    title={{i18n
+                      "admin.dashboard.commits_ahead"
+                      count=this.versionCheck.installedCommitsAhead
+                    }}
+                  >
+                    {{i18n
+                      "admin.dashboard.sections.system.commits"
+                      count=this.versionCheck.installedCommitsAhead
+                    }}
+                  </span>
+                {{/if}}
+              </div>
+
+              {{#if this.versionCheck.gitLink}}
+                <a
+                  class="db-system__link"
+                  href={{this.versionCheck.gitLink}}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  title={{i18n
+                    "admin.dashboard.commit_on_github"
+                    sha=this.versionCheck.shortSha
+                  }}
+                >
+                  {{i18n "admin.dashboard.sections.system.view_on_github"}}
+                  {{dIcon "up-right-from-square"}}
+                </a>
+              {{/if}}
+
             </div>
-
-            {{#if this.versionCheck.installedCommitsAhead}}
-              <span
-                class="db-pill"
-                title={{i18n
-                  "admin.dashboard.commits_ahead"
-                  count=this.versionCheck.installedCommitsAhead
-                }}
-              >
-                {{i18n
-                  "admin.dashboard.sections.system.commits"
-                  count=this.versionCheck.installedCommitsAhead
-                }}
-              </span>
-            {{/if}}
-
-            {{#if this.versionCheck.gitLink}}
-              <a
-                class="db-kpi__label"
-                href={{this.versionCheck.gitLink}}
-                rel="noopener noreferrer"
-                target="_blank"
-                title={{i18n
-                  "admin.dashboard.commit_on_github"
-                  sha=this.versionCheck.shortSha
-                }}
-              >
-                {{i18n "admin.dashboard.sections.system.view_on_github"}}
-                {{dIcon "up-right-from-square"}}
-              </a>
-            {{/if}}
 
             <div
               class={{dConcatClass
-                "db-system__status"
+                "db-system__footer"
                 this.versionStatus.className
               }}
             >
-              {{dIcon this.versionStatus.icon class="db-system__status-icon"}}
-              {{this.versionStatus.message}}
+              <span class="db-system__label">
+                {{dIcon this.versionStatus.icon class="db-system__status-icon"}}
+                {{this.versionStatus.message}}
+              </span>
             </div>
           </div>
         {{/if}}
 
         {{#if @data.storage}}
-          <div class="db-section__row-block db-system__block">
+          <div class="db-section__row-block db-system__block --storage">
             <div class="db-section__row-block-header">
               <h3 class="db-section__header">
                 {{dIcon "database" class="db-system__block-icon"}}
@@ -202,12 +210,12 @@ export default class DashboardSystem extends Component {
               </h3>
             </div>
 
-            <div class="db-system__storage-headline">
-              <div class="db-kpi__value">
+            <div class="db-system__headline">
+              <div class="db-system__value">
                 {{i18n "admin.dashboard.space_used" usedSize=this.usedSpace}}
               </div>
               {{#if this.freeSpace}}
-                <div class="db-kpi__label">
+                <div class="db-system__label">
                   {{i18n
                     "admin.dashboard.sections.system.space_free"
                     size=this.freeSpace
@@ -216,36 +224,43 @@ export default class DashboardSystem extends Component {
               {{/if}}
             </div>
 
-            {{#if this.barStyle}}
-              <div class="db-bar-track" role="img" aria-label={{this.barLabel}}>
-                <span class="db-bar-fill" style={{this.barStyle}}></span>
-              </div>
-            {{/if}}
-
-            <div class="db-system__breakdown">
-              {{#if this.backups}}
-                <span class="db-system__breakdown-item">
-                  {{this.backupsSummary}}
-                </span>
-                <span class="dot-separator"></span>
+            <div>
+              {{#if this.barStyle}}
+                <div
+                  class="db-bar-track"
+                  role="img"
+                  aria-label={{this.barLabel}}
+                >
+                  <span class="db-bar-fill" style={{this.barStyle}}></span>
+                </div>
               {{/if}}
-              <span class="db-system__breakdown-item">
-                {{this.uploadsSummary}}
-              </span>
+
+              <div class="db-system__breakdown">
+                {{#if this.backups}}
+                  <span class="db-system__breakdown-item">
+                    {{this.backupsSummary}}
+                  </span>
+                  <span class="dot-separator"></span>
+                {{/if}}
+                <span class="db-system__breakdown-item">
+                  {{this.uploadsSummary}}
+                </span>
+              </div>
             </div>
 
             {{#if this.backups}}
-              <div class="db-system__block-footer">
+              <div class="db-system__footer">
                 {{#if this.backups.last_backup_taken_at}}
-                  {{trustHTML
-                    (i18n
-                      "admin.dashboard.sections.system.latest_backup"
-                      date=(dFormatDate
-                        this.backups.last_backup_taken_at leaveAgo="true"
-                      )
-                    )
-                  }}
-                  <span class="dot-separator"></span>
+                  <div class="db-system__label">
+                    <span>{{trustHTML
+                        (i18n
+                          "admin.dashboard.sections.system.latest_backup"
+                          date=(dFormatDate
+                            this.backups.last_backup_taken_at leaveAgo="true"
+                          )
+                        )
+                      }}</span>
+                  </div>
                 {{/if}}
                 <a class="db-system__link" href={{getUrl "/admin/backups"}}>
                   {{i18n "admin.dashboard.sections.system.manage_backups"}}
@@ -256,7 +271,7 @@ export default class DashboardSystem extends Component {
         {{/if}}
 
         {{#if this.hasStatus}}
-          <div class="db-section__row-block db-system__block">
+          <div class="db-section__row-block db-system__block --status">
             <div class="db-section__row-block-header">
               <h3 class="db-section__header">
                 {{dIcon "clock" class="db-system__block-icon"}}
@@ -265,28 +280,28 @@ export default class DashboardSystem extends Component {
             </div>
 
             {{#if @data.discourse_updated_at}}
-              <div class="db-section__status-type">
-                <div class="db-kpi__value">
+              <div class="db-system__headline">
+                <div class="db-system__value">
                   {{dFormatDate @data.discourse_updated_at leaveAgo="true"}}
                 </div>
-                <div class="db-kpi__label">
+                <div class="db-system__label">
                   {{i18n "admin.dashboard.sections.system.discourse_updated"}}
                 </div>
               </div>
             {{/if}}
 
             {{#if @data.dashboard_updated_at}}
-              <div class="db-section__status-type">
-                <div class="db-kpi__value">
+              <div class="db-system__headline">
+                <div class="db-system__value">
                   {{dFormatDate @data.dashboard_updated_at leaveAgo="true"}}
                 </div>
-                <div class="db-kpi__label">
+                <div class="db-system__label">
                   {{i18n "admin.dashboard.sections.system.dashboard_updated"}}
                 </div>
               </div>
             {{/if}}
 
-            <div class="db-system__block-footer">
+            <div class="db-system__footer">
               <LinkTo @route="admin.whatsNew" class="db-system__link">
                 {{i18n "admin.dashboard.whats_new_in_discourse"}}
               </LinkTo>
