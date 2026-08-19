@@ -81,7 +81,12 @@ class ReviewableScoreSerializer < ApplicationSerializer
         return @reason = PrettyText.sanitize("<p>#{watched_word_reason(link)}</p>")
       end
 
-      text = I18n.t("reviewables.reasons.#{object.reason}", link:, default: object.reason)
+      text =
+        if object.reason == "fast_typer"
+          fast_typer_reason(link)
+        else
+          I18n.t("reviewables.reasons.#{object.reason}", link:, default: object.reason)
+        end
     else
       text = I18n.t("reviewables.reasons.#{object.reason}", default: object.reason)
     end
@@ -115,6 +120,24 @@ class ReviewableScoreSerializer < ApplicationSerializer
   end
 
   private
+
+  def fast_typer_reason(link)
+    typing_time = fast_typer_typing_time
+    if typing_time.blank?
+      return I18n.t("reviewables.reasons.fast_typer", link:, default: object.reason)
+    end
+
+    I18n.t("reviewables.reasons.fast_typer_with_time", link:, typing_time:, default: object.reason)
+  end
+
+  def fast_typer_typing_time
+    msecs = object.reviewable.payload&.dig("typing_duration_msecs")
+    return if msecs.blank?
+
+    count = msecs.to_i.fdiv(1000).round(1)
+    count = count.to_i if count == count.to_i
+    I18n.t("reviewables.reasons.fast_typer_time", count:)
+  end
 
   def watched_word_reason(link)
     words = watched_words_found

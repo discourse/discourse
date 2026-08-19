@@ -6175,6 +6175,10 @@ en:
       group: "Users not in the specified groups must have replies approved by staff. See %{link}."
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
+      fast_typer_with_time: "New user typed their first post suspiciously fast (%{typing_time}), suspected bot or spammer behavior. See %{link}."
+      fast_typer_time:
+        one: "%{count} second"
+        other: "%{count} seconds"
       auto_silence_regex: "New user whose first post matches the %{link} setting."
       watched_word:
         one: "This post included a Watched Word, the flagged word is: %{words}. Check the %{link} for more."
