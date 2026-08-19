@@ -686,6 +686,9 @@ sl:
     top_countries_by_browser_pageviews:
       labels:
         count: "Obiskov"
+    top_entry_urls:
+      labels:
+        count: "Obiskov"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Obiskov"

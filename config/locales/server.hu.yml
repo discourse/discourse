@@ -1451,6 +1451,9 @@ hu:
     top_countries_by_browser_pageviews:
       labels:
         count: "Látogatás"
+    top_entry_urls:
+      labels:
+        count: "Látogatás"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Látogatás"

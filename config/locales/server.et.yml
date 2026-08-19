@@ -703,6 +703,9 @@ et:
     top_countries_by_browser_pageviews:
       labels:
         count: "Külastusi"
+    top_entry_urls:
+      labels:
+        count: "Külastusi"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Külastusi"

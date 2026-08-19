@@ -1316,6 +1316,9 @@ fa_IR:
     top_countries_by_browser_pageviews:
       labels:
         count: "بازدیدها"
+    top_entry_urls:
+      labels:
+        count: "بازدیدها"
     top_referrers_by_browser_pageviews:
       labels:
         count: "بازدیدها"

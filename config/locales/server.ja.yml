@@ -1366,6 +1366,9 @@ ja:
     top_countries_by_browser_pageviews:
       labels:
         count: "アクセス"
+    top_entry_urls:
+      labels:
+        count: "アクセス"
     top_referrers_by_browser_pageviews:
       labels:
         count: "アクセス"

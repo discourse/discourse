@@ -931,6 +931,9 @@ hy:
     top_countries_by_browser_pageviews:
       labels:
         count: "Այցելություններ"
+    top_entry_urls:
+      labels:
+        count: "Այցելություններ"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Այցելություններ"

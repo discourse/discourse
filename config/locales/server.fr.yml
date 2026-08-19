@@ -1537,6 +1537,9 @@ fr:
       labels:
         country_code: "Code du pays"
         count: "Visites"
+    top_entry_urls:
+      labels:
+        count: "Visites"
     top_referrers_by_browser_pageviews:
       title: "Principales sources de trafic"
       description: "Sites externes ayant généré le plus de pages vues depuis des navigateurs vers votre forum au cours de la période sélectionnée."

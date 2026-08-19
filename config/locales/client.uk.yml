@@ -6,6 +6,8 @@
 
 uk:
   js:
+    ace_editor:
+      resize: "Змінити розмір редактора коду"
     user_api_key:
       title: 'Авторизувати "%{application_name}"'
       authorize: "Авторизувати"
@@ -63,6 +65,7 @@ uk:
         mandatory_acl_tooltip: "Цей дозвіл обов'язковий для %{name} і його не можна видалити"
         mandatory: "Обов’язкове"
         disallowed: "Заборонено"
+        required_permission_not_added: "Принаймні один грантоотримувач повинен мати дозвіл %{permission} для цього %{typeName}"
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -584,17 +587,29 @@ uk:
       pill: "Запропоновано"
       pm_title: "Схожі повідомлення"
     admin_onboarding_banner:
+      launch_in_easy_steps: "Створіть свою спільноту"
+      launch_in_easy_steps_subtitle: "%{completed_steps} з %{step_count} кроків виконано"
       congrats_onboarding_complete: "Вітаємо із завершенням процесу адаптації!"
+      expand: "Розгорнути кроки налаштування"
+      collapse: "Згорнути кроки налаштування"
+      dismiss: "Закрити налаштування"
       select_theme:
         title: "Налаштуйте свій сайт"
+        description: "Виберіть кольори, шрифти та головну сторінку."
+        action: "Див. опції"
+        completed: "Змінити параметри"
         show_light_screenshot: "Показувати світлий скріншот"
         show_dark_screenshot: "Показати темний скріншот"
       invite_collaborators:
         title: "Запросити співавторів"
+        description: "Ранні учасники втілюють це в життя."
         action: "Створити запрошення"
+        completed: "Запросіть ще більше людей"
       start_posting:
         title: "Розпочати публікацію"
+        description: "Дайте людям тему для обговорення."
         action: "Переглянути ідеї"
+        completed: "Переглянути інші ідеї"
         choose_option: "З чого б ви хотіли почати?"
         predefined_topics: "Шаблони криголамів"
         predefined_topics_subtitle: "Дайте новим учасникам тему для обговорення, виберіть шаблон для редагування та створіть свій власний."
@@ -616,25 +631,42 @@ uk:
             body: "Поділіться своєю улюбленою їжею зі спільнотою! Я почну: Я люблю піцу, особливо з додатковим сиром і пепероні."
     design_wizard:
       title: "Налаштуйте свій сайт"
+      subtitle: "Виберіть кольори, шрифти та головну сторінку."
+      step_label: "Перейдіть до кроку %{index}"
+      save: "Зберегти та завершити"
       back: "Назад"
       next: "Далі"
       sections:
         theme: "Кольорова схема"
+        colors: "Колір за замовчуванням"
         fonts: "Шрифти"
         homepage: "Головна сторінка"
       theme:
         selected: "Вибрано"
+        custom_theme_notice: "Ваш сайт наразі використовує тему за замовчуванням %{name} . Виберіть тему нижче, щоб переглянути її. Збереження замінить вашу поточну тему."
       colors:
         light: "Світла"
         dark: "Темна"
+        dark_only: "%{name} має лише темний режим"
+        both_modes: "Кожна палітра містить відповідний світлий та темний режими"
+        user_selectable: "Дозволити учасникам перемикатися між палітрами"
+        user_selectable_description: "Показати ці палітри в меню, з якого учасники можуть вибирати"
       fonts:
         base_font: "Базовий шрифт"
         heading_font: "Шрифт заголовка"
       homepage:
         topics: "Теми"
         categories: "Розділи"
+        topic_page_type: "Тип сторінки теми"
+        topic_pages:
+          latest: "Теми відсортовані за їхньою останньою активністю, спочатку найновіші."
+          new: "Теми, створені за останні кілька днів, спочатку найновіші."
+          hot: "Теми, що зараз у тренді, поєднують загальну популярність із нещодавньою активністю."
+        category_page_style: "Стиль сторінки категорії"
         styles:
           boxes: "Блоки"
+          with_topics: "Категорії з темами"
+          only: "Тільки категорії"
     about:
       edit: "Редагувати цю сторінку"
       simple_title: "Інформація"
@@ -951,6 +983,7 @@ uk:
       date_filter: "Опубліковано між"
       in_reply_to: "у відповідь на"
       filtered_flagged_by: "Позначено"
+      no_component_found: "Не знайдено компонентів для %{type}"
       unknown:
         title:
           one: "У вас є елементи в черзі на рецензування від вимкненого плагіна:"
@@ -3375,6 +3408,11 @@ uk:
         few: "%{count} іконки знайдено"
         many: "%{count} іконок знайдено"
         other: "%{count} іконок знайдено"
+      results_loaded:
+        one: "%{count} іконка завантажена, є й інші"
+        few: "%{count} іконки завантажено, є й інші"
+        many: "%{count} іконок завантажено, є й інші"
+        other: "%{count} іконок завантажено, є й інші"
       favorites: "Вибране"
       selected_icon: "Обрана іконка: %{iconName}"
       clear: "Очистити піктограму"
@@ -5978,6 +6016,7 @@ uk:
     cannot_render_video: Це відео неможливо відтворити, оскільки ваш браузер не підтримує цей кодек.
     invalid_video_url: Це відео неможливо відтворити, оскільки URL-адреса недійсна або недоступна.
     keyboard_shortcuts_help:
+      search_label: "Пошук комбінацій клавіш"
       search_placeholder: "Пошук ярлика за описом або комбінацією клавіш"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -7439,33 +7478,76 @@ uk:
         title: "Що нового?"
         check_for_updates: "Перевірте наявність оновлень"
       site_traffic_explorer:
+        title: "Аналізатор відвідуваності сайту"
+        loading: "Завантаження трафіку…"
+        errors:
+          timeout: "Цей запит щодо трафіку оброблявся занадто довго. Виберіть коротший діапазон дат і повторіть спробу."
+          unexpected: "Не вдалося завантажити трафік сайту. Спробуйте ще раз."
+        empty: "Немає відповідних переглядів сторінок"
+        summary: "Зведення про трафік"
+        traffic_over_time: "Трафік з плином часу"
         pageviews: "Переглядів"
+        metric_information: "Про цей показник"
+        active_filters: "Активні фільтри трафіку"
+        filter_description: "%{filter} це <strong>%{value}</strong>"
+        filter_by:
+          one: "Фільтрувати за %{label}, %{count} переглядом сторінки"
+          few: "Фільтрувати за %{label}, %{count} перегляди сторінки"
+          many: "Фільтрувати за %{label}, %{count} переглядів сторінки"
+          other: "Фільтрувати за %{label}, %{count} переглядів сторінок"
+        remove_filter: "Видалити фільтр %{filter}"
+        remove_traffic_type_filter: "Видалити фільтр трафіку %{value}"
         view_more: "Переглянути більше"
+        no_dimension_data: "Немає даних для цього розподілу."
+        direct_or_unknown: "Прямий / невідомий"
         cards:
+          acquisition: "Придбання"
           pages: "Сторінки"
           visitors: "Відвідувачі"
+        dimensions:
+          referrers: "Реферери"
+          countries: "Країни"
+          networks: "Мережі"
+          top_urls: "Найпопулярніші URL-адреси"
+          entry_urls: "URL-адреси записів"
+          browsers: "Браузери"
+          ip_addresses: "IP-адреси"
         columns:
           referrers: "Реферер"
           countries: "Країна"
+          networks: "Мережа"
           top_urls: "Посилання"
+          entry_urls: "URL-адреса запису"
           browsers: "Оглядач"
           ip_addresses: "IP-адреса"
         filters:
+          traffic_type: "Тип трафіку"
+          top_url: "Найпопулярніша URL-адреса"
+          entry_url: "URL-адреса запису"
           referrer: "Реферер"
           country: "Країна"
+          network: "Мережа"
           browser: "Оглядач"
           ip: "IP-адреса"
         metrics:
           pageviews:
             label: "Переглядів"
+          distinct_sessions:
+            label: "Окремі сесії"
           logged_in_share:
             label: "Зареєстровано спільний доступ"
           bounce_rate:
             label: "Показник відмов"
+          average_session_duration:
+            label: "Середня тривалість сеансу"
         series:
           logged_in_human: "Ви увійшли"
           anonymous_human: "Анонімний"
           likely_crawler: "Ймовірні сканери"
+        partial:
+          retention: "Дані про перегляди сторінок до %{date} більше недоступні, тому ці результати охоплюють лише частину вибраного діапазону дат."
+          pageview_limit: "Результати включають найновіші %{limit} перегляди сторінок, починаючи з %{date} о %{time}. Попередні перегляди сторінок у вибраному діапазоні дат не враховуються."
+          combined: "Результати включають найновіші %{limit} перегляди сторінок, починаючи з %{pageviewLimitDate} о %{pageviewLimitTime}. Попередні перегляди сторінок у вибраному діапазоні дат не враховуються; дані про перегляди сторінок до %{date} більше недоступні."
       dashboard:
         title: "Майстерня"
         last_updated: "Інформаційна панель оновлена:"
@@ -7618,9 +7700,59 @@ uk:
               stable_aria: "без руху"
             headline:
               titles:
+                engagement_up: "Залученість зросла у вибраний період"
+                stickiness_and_daily_engagement_increased: "Залученість та щоденна активність зросли за вибраний період"
+                stickiness_and_new_signups_increased: "Кількість постійних клієнтів та нових реєстрацій зросла за вибраний період"
+                stickiness_increased: "Липкість збільшилася за вибраний період"
+                daily_engagement_and_new_signups_increased: "Щоденна активність та кількість нових реєстрацій зросли за вибраний період"
+                daily_engagement_increased: "Щоденна активність зросла за вибраний період"
+                new_signups_increased: "Кількість нових реєстрацій зросла за вибраний період"
+                engagement_declined: "Залученість знизилася за вибраний період"
+                some_engagement_declines: "Деяке зниження залученості за вибраний період"
+                engagement_steady: "Залученість стабільна у вибраний період"
                 insufficient_activity: "Поки що недостатньо активності, щоб підсумувати залученість."
               summaries:
+                all_metrics_improved: "Покращилися показники лояльності, щоденної залученості та нових реєстрацій, що свідчить про те, що більше учасників приєднуються до вашої спільноти та беруть участь у її житті."
+                stickiness_and_daily_engagement_up_new_signups_down: "Залученість та щоденна активність зростають, але кількість нових реєстрацій зменшується."
+                stickiness_down_daily_engagement_and_new_signups_steady: "Залученість знизилася, але щоденна залученість та кількість нових реєстрацій залишаються стабільними."
+                stickiness_down_daily_engagement_steady: "Залежність від аудиторії зменшилася, але щоденна залученість залишається стабільною."
+                stickiness_and_new_signups_down: "Знизилися показники утримання користувачів та кількість нових реєстрацій."
+                stickiness_down_new_signups_steady: "Кількість реєстрацій знизилася, але кількість нових реєстрацій залишається стабільною."
+                stickiness_down: "Липкість знижена."
+                daily_engagement_and_new_signups_up_stickiness_flat: "Щоденна залученість та кількість нових реєстрацій зростають, але кількість користувачів залишається незмінною."
+                daily_engagement_up_new_signups_down: "Щоденна залученість зростає, але кількість нових реєстрацій зменшується."
+                daily_engagement_up_stickiness_and_new_signups_flat: "Щоденна залученість зросла, але кількість постійних відвідувачів та нових реєстрацій залишилася незмінною."
+                daily_engagement_up_stickiness_flat: "Щоденна залученість зросла, але лояльність залишилася незмінною."
+                new_signups_up_daily_engagement_down: "Нові реєстрації збільшуються, але щоденна взаємодія знижується."
+                daily_engagement_and_new_signups_down_stickiness_steady: "Щоденна залученість та кількість нових реєстрацій знизилися, але кількість користувачів залишається стабільною."
+                daily_engagement_down_stickiness_and_new_signups_steady: "Щоденна залученість знизилася, але кількість підписників та нових реєстрацій залишаються стабільними."
+                daily_engagement_down_stickiness_steady: "Щоденна залученість знизилася, але лояльність залишається стабільною."
+                new_signups_up_stickiness_and_daily_engagement_flat: "Кількість нових реєстрацій зросла, але лояльність та щоденна активність залишаються незмінними."
+                new_signups_down_stickiness_and_daily_engagement_steady: "Кількість нових реєстрацій знизилася, але лояльність та щоденна залученість залишаються стабільними."
+                all_metrics_steady: "Жодних суттєвих змін у лояльності, щоденній залученості чи нових реєстраціях."
+                stickiness_and_daily_engagement_steady: "Жодних суттєвих змін у липкості та щоденній залученості."
+                new_signups_up_stickiness_flat: "Кількість нових реєстрацій зросла, але кількість учасників залишається незмінною."
+                new_signups_down_stickiness_steady: "Кількість нових реєстрацій знизилася, але кількість учасників залишається стабільною."
+                stickiness_and_new_signups_steady: "Жодних суттєвих змін у лояльності та нових реєстраціях."
+                stickiness_steady: "Жодних суттєвих змін липкості."
+                daily_engagement_and_new_signups_up: "Щоденна залученість та кількість нових реєстрацій зростають."
+                daily_engagement_up_new_signups_flat: "Щоденна активність зросла, але кількість нових реєстрацій не зросла."
+                daily_engagement_up: "Щоденна залученість зросла."
+                daily_engagement_and_new_signups_down: "Щоденна залученість та кількість нових реєстрацій знизилися."
+                daily_engagement_down_new_signups_steady: "Щоденна активність знизилася, але кількість нових реєстрацій залишається стабільною."
+                daily_engagement_down: "Щоденна залученість знижується."
+                new_signups_up_daily_engagement_flat: "Кількість нових реєстрацій зросла, але щоденна активність залишається на одному рівні."
+                new_signups_down_daily_engagement_steady: "Кількість нових реєстрацій знизилася, але щоденна активність залишається стабільною."
+                daily_engagement_and_new_signups_steady: "Жодних суттєвих змін у щоденній залученості та нових реєстраціях."
+                daily_engagement_steady: "Жодних суттєвих змін у щоденній активності."
+                new_signups_up: "Нові реєстрації розпочато."
+                new_signups_down: "Кількість нових реєстрацій знизилася."
+                new_signups_steady: "Жодних суттєвих змін у кількості нових реєстрацій."
                 insufficient_activity: "Виберіть довший діапазон дат або поверніться, коли у вашій спільноті буде більше активності."
+              cta:
+                dau_mau: "Перегляньте діяльність за категоріями, щоб побачити, які сфери вашої громади можуть потребувати вашої уваги."
+                daily_engaged_users: "Дослідіть спад, щоб побачити, які учасники відмовилися від участі."
+                new_signups: "Перегляньте дані про трафік вашого сайту, щоб зрозуміти, як моделі трафіку можуть впливати на ваші реєстрації в цей період."
               metrics:
                 new_signups: "Нові реєстрації"
                 dau_mau: "Закріпленість DAU / MAU"
@@ -7633,8 +7765,21 @@ uk:
             headline:
               titles:
                 insufficient_activity: "Поки що недостатньо пошукових запитів для формування підсумків."
+                searches_increased_no_result_rate_declined: "Кількість пошукових запитів зросла, а відсоток безрезультатних запитів знизився за вибраний період"
+                searches_increased: "Загальна кількість пошукових запитів збільшилася за вибраний період"
+                no_result_rate_decreased: "Рівень безрезультатних запитів знизився за вибраний період"
+                searches_decreased_no_result_rate_increased: "Кількість пошукових запитів зменшилася, а відсоток безрезультатних запитів зріс у вибраний період"
+                searches_decreased: "Загальна кількість пошукових запитів зменшилася за вибраний період"
+                no_result_rate_increased: "Рівень безрезультатних запитів збільшився за вибраний період"
+                search_steady: "Пошук стабільний у вибраний період"
               summaries:
                 insufficient_activity: "Виберіть довший діапазон дат або поверніться, коли учасники пошукають більше."
+                searches_up_results_improved: "Учасники здійснюють більше пошуків у вашій спільноті та частіше знаходять те, що шукають."
+                searches_up_no_result_rate_up: "Учасники здійснюють більше пошуків у вашій спільноті, але відсоток безрезультатних пошуків зріс."
+                searches_up_no_result_rate_flat: "Учасники здійснюють більше пошуків у вашій спільноті, але відсоток безрезультатних пошуків залишається незмінним."
+                results_improved_searches_down: "Учасники знаходять те, що шукають, а загальний обсяг пошуку зменшився."
+                results_improved_searches_steady: "Учасники знаходять те, що шукають, а загальний обсяг пошуку залишається незмінним."
+                searches_down_results_worsened: "Учасники здійснюють менше пошуків у вашій спільноті та не так часто знаходять те, що їм потрібно."
             kpi:
               total_searches:
                 label: "Загальна кількість пошуків"
@@ -7731,7 +7876,7 @@ uk:
               other: "%{formatted_count} переглядів сторінок за обраний період"
           trend:
             up: "вгору %{percent}"
-            down: "вниз %{percent}"
+            down: "спад %{percent}"
           comparison_tooltip:
             previous_7_days: "Порівняно з попередніми 7 днями (%{start} – %{end})"
             previous_30_days: "Порівняно з попередніми 30 днями (%{start} – %{end})"

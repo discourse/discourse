@@ -1537,6 +1537,9 @@ de:
       labels:
         country_code: "Ländercode"
         count: "Aufrufe"
+    top_entry_urls:
+      labels:
+        count: "Aufrufe"
     top_referrers_by_browser_pageviews:
       title: "Top-Referrer"
       description: "Externe Websites, aus denen im ausgewählten Zeitraum die meisten Browser-Seitenaufrufe in deinem Forum kamen."

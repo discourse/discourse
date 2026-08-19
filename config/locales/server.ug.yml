@@ -1425,6 +1425,9 @@ ug:
     top_countries_by_browser_pageviews:
       labels:
         count: "زىيارەت"
+    top_entry_urls:
+      labels:
+        count: "زىيارەت"
     top_referrers_by_browser_pageviews:
       labels:
         count: "زىيارەت"

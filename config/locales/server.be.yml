@@ -793,6 +793,9 @@ be:
     top_countries_by_browser_pageviews:
       labels:
         count: "наведванне"
+    top_entry_urls:
+      labels:
+        count: "наведванне"
     top_referrers_by_browser_pageviews:
       labels:
         count: "наведванне"

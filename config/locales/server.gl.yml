@@ -1075,6 +1075,9 @@ gl:
     top_countries_by_browser_pageviews:
       labels:
         count: "Visitas"
+    top_entry_urls:
+      labels:
+        count: "Visitas"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Visitas"

@@ -658,6 +658,9 @@ bg:
     top_countries_by_browser_pageviews:
       labels:
         count: "Посещения "
+    top_entry_urls:
+      labels:
+        count: "Посещения "
     top_referrers_by_browser_pageviews:
       labels:
         count: "Посещения "

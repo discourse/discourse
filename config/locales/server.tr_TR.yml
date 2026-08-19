@@ -1469,6 +1469,9 @@ tr_TR:
     top_countries_by_browser_pageviews:
       labels:
         count: "Ziyaretler"
+    top_entry_urls:
+      labels:
+        count: "Ziyaretler"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Ziyaretler"

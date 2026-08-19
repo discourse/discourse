@@ -1599,6 +1599,9 @@ he:
       labels:
         country_code: "קוד המדינה"
         count: "ביקורים"
+    top_entry_urls:
+      labels:
+        count: "ביקורים"
     top_referrers_by_browser_pageviews:
       title: "מפנים מובילים"
       description: "אתרים חיצוניים שמפנים את מספר צפיות הדפדפן הרב ביותר לפורום שלך בתקופה שנבחרה."

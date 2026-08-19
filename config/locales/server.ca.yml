@@ -982,6 +982,9 @@ ca:
     top_countries_by_browser_pageviews:
       labels:
         count: "Visites"
+    top_entry_urls:
+      labels:
+        count: "Visites"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Visites"

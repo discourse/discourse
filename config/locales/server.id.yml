@@ -1086,6 +1086,9 @@ id:
     top_countries_by_browser_pageviews:
       labels:
         count: "mengunjungi"
+    top_entry_urls:
+      labels:
+        count: "mengunjungi"
     top_referrers_by_browser_pageviews:
       labels:
         count: "mengunjungi"
