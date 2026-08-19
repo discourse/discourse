@@ -3086,6 +3086,53 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
     });
 
+    test("a gate that refuses at release silences both ends of the drop", async function (assert) {
+      let allow = true;
+      const calls = [];
+      const canDrop = () => allow;
+      const recordTargetDrop = () => calls.push("target onDrop");
+      const recordSourceDrop = () => calls.push("source onDrop");
+      const recordSourceDragEnd = () => calls.push("source onDragEnd");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              onDrop=recordSourceDrop
+              onDragEnd=recordSourceDragEnd
+            }}
+          >src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget
+              accepts="row"
+              canDrop=canDrop
+              onDrop=recordTargetDrop
+            }}
+          >tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
+
+      // After the last dragover, so the hovered hierarchy still lists the
+      // target when the release re-asks the gate.
+      allow = false;
+
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(
+        calls,
+        ["source onDragEnd"],
+        "a refused drop performs no operation on either end"
+      );
+    });
+
     test("getDropEffect decides the effect recorded against this target", async function (assert) {
       const effects = [];
       const copyEffect = () => "copy";
