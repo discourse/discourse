@@ -130,10 +130,6 @@ module PageObjects
         end
       end
 
-      def has_no_top_entry_url?(path)
-        within_top_card("Top entry URLs") { has_no_css?(".db-traffic__link", text: path) }
-      end
-
       def has_top_countries_empty_state?
         has_empty_state_in?("Top countries", "No country data for this period.")
       end

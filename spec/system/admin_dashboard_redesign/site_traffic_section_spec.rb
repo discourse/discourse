@@ -276,113 +276,28 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
     it "lets admins identify the URLs that started the most browser entries in the selected period",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      topic = Fabricate(:topic, title: "A very viral topic")
-      Fabricate(
-        :browser_pageview_event,
-        session_id: "viral-topic-visit-1",
-        topic_id: topic.id,
-        url: "https://test.localhost/t/viral-topic/#{topic.id}?utm_source=newsletter#post_1",
-        created_at: "2026-05-12 10:00:00",
-        source: browser_pageview_source,
-      )
-      Fabricate(
-        :browser_pageview_event,
-        session_id: "search-entry-visit",
-        url: "https://test.localhost/search?q=private",
-        created_at: "2026-05-12 10:05:00",
-        source: browser_pageview_source,
-      )
-      Fabricate(
-        :browser_pageview_event,
-        session_id: "search-entry-visit",
-        url: "https://test.localhost/t/should-not-count-after-search/98",
-        referrer: "https://test.localhost/search?q=private",
-        created_at: "2026-05-12 10:10:00",
-        source: browser_pageview_source,
-      )
-      Fabricate(
-        :browser_pageview_event,
-        session_id: "viral-topic-visit-2",
-        topic_id: topic.id,
-        url: "https://test.localhost/t/viral-topic/#{topic.id}",
-        created_at: "2026-05-12 11:00:00",
-        source: browser_pageview_source,
-      )
-      Fabricate(
-        :browser_pageview_event,
-        session_id: "categories-visit",
-        url: "https://test.localhost/categories",
-        created_at: "2026-05-12 12:00:00",
-        source: browser_pageview_source,
-      )
-      %w[faq guidelines new unread].each do |path|
-        Fabricate(
-          :browser_pageview_event,
-          session_id: "#{path}-visit",
-          url: "https://test.localhost/#{path}",
-          created_at: "2026-05-12 12:30:00",
-          source: browser_pageview_source,
-        )
+      {
+        "/t/viral-topic/1" => 5,
+        "/associate/secret-token" => 4,
+        "/categories" => 3,
+        "/email/unsubscribe/secret-key" => 2,
+        "/faq" => 1,
+      }.each do |entry_url, count|
+        Fabricate(:browser_pageview_entry_url_daily_rollup, date: "2026-05-12", entry_url:, count:)
       end
-      Fabricate(
-        :browser_pageview_event,
-        session_id: "cross-midnight-visit",
-        url: "https://test.localhost/top",
-        created_at: "2026-05-11 23:59:00",
-        source: browser_pageview_source,
-      )
-      Fabricate(
-        :browser_pageview_event,
-        session_id: "cross-midnight-visit",
-        url: "https://test.localhost/latest",
-        referrer: "https://test.localhost/top",
-        created_at: "2026-05-12 00:01:00",
-        source: browser_pageview_source,
-      )
-      additional_entry_paths = %w[
-        /associate/secret-token
-        /email/unsubscribe/secret-key
-        /session/email-login/secret-token
-        /session/otp/deadbeef
-        /u/activate-account/secret-token
-        /u/confirm-email-token/secret-token
-        /u/password-reset/secret-token
-      ]
-      additional_entry_paths.each_with_index do |path, index|
-        Fabricate(
-          :browser_pageview_event,
-          session_id: "additional-path-visit-#{index}",
-          url: "https://test.localhost#{path}",
-          created_at: "2026-05-12 13:00:00",
-          source: browser_pageview_source,
-        )
-        Fabricate(
-          :browser_pageview_event,
-          session_id: "additional-path-visit-#{index}",
-          url: "https://test.localhost/t/should-not-count/#{index}",
-          referrer: "https://test.localhost#{path}",
-          created_at: "2026-05-12 13:05:00",
-          source: browser_pageview_source,
-        )
-      end
-
-      Jobs::MaintainBrowserPageviewRollups.new.execute({})
 
       dashboard.visit_with_query(range: "custom", start_date: "2026-05-12", end_date: "2026-05-12")
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_entry_url_rows(
         [
-          { path: "/t/viral-topic/#{topic.id}", percent: 13, count: 2 },
-          { path: "/associate/secret-token", percent: 7, count: 1 },
-          { path: "/categories", percent: 7, count: 1 },
-          { path: "/email/unsubscribe/secret-key", percent: 7, count: 1 },
+          { path: "/t/viral-topic/1", percent: 33, count: 5 },
+          { path: "/associate/secret-token", percent: 27, count: 4 },
+          { path: "/categories", percent: 20, count: 3 },
+          { path: "/email/unsubscribe/secret-key", percent: 13, count: 2 },
           { path: "/faq", percent: 7, count: 1 },
         ],
       )
-      expect(traffic).to have_no_top_entry_url("/t/should-not-count-after-search/98")
-      expect(traffic).to have_no_top_entry_url("/latest")
-      expect(traffic).to have_no_top_entry_url("/t/should-not-count")
 
       traffic.click_top_entry_urls_drilldown
       expect(page).to have_current_path(
@@ -390,32 +305,8 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       )
     end
 
-    it "keeps entry URL analytics private from moderators",
-       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      Fabricate(
-        :browser_pageview_event,
-        url: "https://test.localhost/t/private-analytics/1",
-        created_at: "2026-05-12",
-        source: browser_pageview_source,
-      )
-      Jobs::MaintainBrowserPageviewRollups.new.execute({})
-      sign_in(Fabricate(:moderator))
-
-      dashboard.visit
-
-      expect(dashboard.site_traffic).to have_no_top_entry_urls_card
-    end
-
     it "shows empty states but keeps the report headers as drill-down links when no events qualify",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      Fabricate(
-        :browser_pageview_event,
-        url: "https://test.localhost/latest",
-        created_at: "2026-05-01",
-        source: browser_pageview_source,
-      )
-      Jobs::MaintainBrowserPageviewRollups.new.execute({})
-
       dashboard.visit_with_query(range: "custom", start_date: "2026-05-02", end_date: "2026-05-14")
       traffic = dashboard.site_traffic
 

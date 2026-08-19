@@ -630,6 +630,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         range = { start_date: 1.year.ago.to_date, end_date: Date.current }
         BrowserPageviewCountryDailyRollup.aggregate(**range)
         BrowserPageviewReferrerDailyRollup.aggregate(**range)
+        BrowserPageviewEntryUrlDailyRollup.aggregate(**range)
       end
 
       it "omits browser pageview cards when persist_browser_pageview_events is disabled" do
@@ -648,38 +649,53 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result.keys).to contain_exactly(:kpis, :pageview_series)
       end
 
-      it "returns top_countries and top_referrers with rows and no error when matching events exist" do
-        6.times do
-          Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
-        end
-        aggregate_rollups
-
-        result = build_traffic(start_date: nil, end_date: nil)
-
-        expect(result[:top_countries][:rows].first[:country_code]).to eq("US")
-        expect(result[:top_countries][:error]).to be_nil
-
-        expect(result[:top_referrers][:rows].first[:normalized_referrer]).to eq("google.com")
-        expect(result[:top_referrers][:error]).to be_nil
-      end
-
-      it "caps each card at the top 5 rows on both the fresh and cached paths" do
+      it "returns the same top five card rows from fresh and cached results" do
         %w[US GB DE FR JP CA].each do |code|
           Fabricate(
             :browser_pageview_event,
+            url: "/#{code.downcase}",
             country_code: code,
             normalized_referrer: "#{code.downcase}.example.com",
           )
         end
+        Fabricate(
+          :browser_pageview_event,
+          url: "/outside-range",
+          country_code: "AU",
+          normalized_referrer: "outside-range.example.com",
+          created_at: "2026-03-01",
+        )
         aggregate_rollups
 
+        expected_cards = {
+          top_countries: {
+            rows: %w[CA DE FR GB JP].map { |code| { country_code: code, count: 1, percent: 17 } },
+            error: nil,
+          },
+          top_referrers: {
+            rows:
+              %w[ca de fr gb jp].map do |code|
+                { normalized_referrer: "#{code}.example.com", count: 1, percent: 17 }
+              end,
+            error: nil,
+          },
+          top_entry_urls: {
+            rows:
+              %w[ca de fr gb jp].map { |code| { entry_url: "/#{code}", count: 1, percent: 17 } },
+            error: nil,
+          },
+        }
+
         fresh = build_traffic(start_date: nil, end_date: nil)
-        expect(fresh[:top_countries][:rows].size).to eq(5)
-        expect(fresh[:top_referrers][:rows].size).to eq(5)
+        expect(fresh.slice(*expected_cards.keys)).to eq(expected_cards)
+
+        BrowserPageviewCountryDailyRollup.delete_all
+        BrowserPageviewReferrerDailyRollup.delete_all
+        BrowserPageviewEntryUrlDailyRollup.delete_all
+        BrowserPageviewEvent.delete_all
 
         cached = build_traffic(start_date: nil, end_date: nil)
-        expect(cached[:top_countries][:rows].size).to eq(5)
-        expect(cached[:top_referrers][:rows].size).to eq(5)
+        expect(cached.slice(*expected_cards.keys)).to eq(expected_cards)
       end
 
       it "returns empty rows when no events match the date range" do
@@ -689,28 +705,6 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result[:top_entry_urls]).to eq(rows: [], error: nil)
       end
 
-      it "includes top entry URLs for the selected range" do
-        topic = Fabricate(:topic)
-        Fabricate(
-          :browser_pageview_event,
-          session_id: "entry-session",
-          topic_id: topic.id,
-          url: "https://test.localhost/t/topic/#{topic.id}",
-          created_at: "2026-05-12",
-        )
-        BrowserPageviewEntryUrlDailyRollup.aggregate(
-          start_date: "2026-05-12".to_date,
-          end_date: "2026-05-14".to_date,
-        )
-
-        result = build_traffic(start_date: "2026-05-12", end_date: "2026-05-14")
-
-        expect(result[:top_entry_urls]).to eq(
-          rows: [{ entry_url: "/t/topic/#{topic.id}", count: 1, percent: 100 }],
-          error: nil,
-        )
-      end
-
       it "returns an exception error payload when the underlying report cannot be built" do
         allow(Report).to receive(:find).and_return(nil)
 
@@ -718,24 +712,6 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result[:top_countries]).to eq(rows: [], error: "exception")
         expect(result[:top_referrers]).to eq(rows: [], error: "exception")
         expect(result[:top_entry_urls]).to eq(rows: [], error: "exception")
-      end
-
-      it "serves the cached payload on subsequent calls within the cache window" do
-        4.times do
-          Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
-        end
-        aggregate_rollups
-
-        first = build_traffic(start_date: nil, end_date: nil)
-        expect(first[:top_countries][:rows].first[:country_code]).to eq("US")
-
-        BrowserPageviewCountryDailyRollup.delete_all
-        BrowserPageviewReferrerDailyRollup.delete_all
-        BrowserPageviewEvent.delete_all
-
-        second = build_traffic(start_date: nil, end_date: nil)
-        expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
-        expect(second[:top_countries][:rows].first.keys).to all(be_a(Symbol))
       end
 
       it "invalidates the cached payload when login_required is toggled" do
