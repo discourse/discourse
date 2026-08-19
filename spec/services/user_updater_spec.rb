@@ -278,6 +278,39 @@ RSpec.describe UserUpdater do
       expect(user.card_background_upload).to eq(nil)
     end
 
+    context "with profile and card backgrounds" do
+      fab!(:profile_background, :upload)
+      fab!(:card_background, :upload)
+      fab!(:target, :user)
+      fab!(:other, :user)
+
+      before do
+        target.user_profile.update!(
+          profile_background_upload_id: profile_background.id,
+          card_background_upload_id: card_background.id,
+        )
+      end
+
+      it "keeps them when the update does not mention them" do
+        UserUpdater.new(other, target).update(bio_raw: "edited by someone else")
+
+        target.user_profile.reload
+        expect(target.user_profile.profile_background_upload_id).to eq(profile_background.id)
+        expect(target.user_profile.card_background_upload_id).to eq(card_background.id)
+      end
+
+      it "still clears them when the update asks and the actor may not upload" do
+        UserUpdater.new(other, target).update(
+          profile_background_upload_url: profile_background.url,
+          card_background_upload_url: card_background.url,
+        )
+
+        target.user_profile.reload
+        expect(target.user_profile.profile_background_upload_id).to be_nil
+        expect(target.user_profile.card_background_upload_id).to be_nil
+      end
+    end
+
     it "disables email_digests when enabling mailing_list_mode" do
       updater = UserUpdater.new(acting_user, user)
       SiteSetting.disable_mailing_list_mode = false
