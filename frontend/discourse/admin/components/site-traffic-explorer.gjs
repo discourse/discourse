@@ -14,7 +14,7 @@ import I18n, { i18n } from "discourse-i18n";
 
 const SKELETON_METRICS = Array.from({ length: 4 });
 const SKELETON_BREAKDOWNS = Array.from({ length: 3 });
-const SKELETON_ROWS = Array.from({ length: 5 });
+const SKELETON_ROWS = Array.from({ length: 8 });
 const TRAFFIC_TYPE_BY_SERIES = {
   page_view_logged_in_browser: "logged_in",
   page_view_anon_browser: "anonymous",
