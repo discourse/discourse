@@ -69,12 +69,31 @@ export default class DashboardSystem extends Component {
     return this.args.data?.storage?.uploads;
   }
 
+  get #storeEntries() {
+    return [
+      { key: "backups", stats: this.backups, className: "" },
+      { key: "uploads", stats: this.uploads, className: "--alt" },
+    ].filter((entry) => entry.stats);
+  }
+
+  // Only a local store is bounded, so only local stores can be charted against
+  // free space. An external store has no ceiling to report at all.
+  get #localEntries() {
+    return this.#storeEntries.filter((entry) => !entry.stats.remote);
+  }
+
   get #usedBytes() {
-    return (this.backups?.used_bytes ?? 0) + (this.uploads?.used_bytes ?? 0);
+    return this.#storeEntries.reduce(
+      (sum, entry) => sum + (entry.stats.used_bytes ?? 0),
+      0
+    );
   }
 
   get #freeBytes() {
-    return this.uploads?.free_bytes ?? this.backups?.free_bytes ?? null;
+    return (
+      this.#localEntries.find((entry) => entry.stats.free_bytes)?.stats
+        .free_bytes ?? null
+    );
   }
 
   get usedSpace() {
@@ -86,17 +105,26 @@ export default class DashboardSystem extends Component {
     return free == null ? null : I18n.toHumanSize(free);
   }
 
-  get barStyle() {
+  // Segments plus the remaining free space add up to the whole track, so the
+  // denominator is the local disk rather than the total across every store.
+  get barSegments() {
     const free = this.#freeBytes;
 
     if (free == null) {
-      return null;
+      return [];
     }
 
-    const total = this.#usedBytes + free;
-    const percent = total === 0 ? 0 : (this.#usedBytes / total) * 100;
+    const local = this.#localEntries.filter((entry) => entry.stats.used_bytes);
+    const total = local.reduce((sum, e) => sum + e.stats.used_bytes, 0) + free;
 
-    return trustHTML(`width: ${Math.min(100, percent).toFixed(1)}%`);
+    return local.map((entry) => ({
+      key: entry.key,
+      className: entry.className,
+      title: i18n(`admin.dashboard.${entry.key}`),
+      style: trustHTML(
+        `width: ${Math.min(100, (entry.stats.used_bytes / total) * 100).toFixed(1)}%`
+      ),
+    }));
   }
 
   get barLabel() {
@@ -225,13 +253,19 @@ export default class DashboardSystem extends Component {
             </div>
 
             <div>
-              {{#if this.barStyle}}
+              {{#if this.barSegments}}
                 <div
                   class="db-bar-track"
                   role="img"
                   aria-label={{this.barLabel}}
                 >
-                  <span class="db-bar-fill" style={{this.barStyle}}></span>
+                  {{#each this.barSegments key="key" as |segment|}}
+                    <span
+                      class={{dConcatClass "db-bar-fill" segment.className}}
+                      style={{segment.style}}
+                      title={{segment.title}}
+                    ></span>
+                  {{/each}}
                 </div>
               {{/if}}
 

@@ -138,9 +138,11 @@ $db-bar-height: var(--space-2);
 }
 
 .db-bar-track {
+  display: flex;
   height: $db-bar-height;
   border-radius: 1em;
   background: var(--primary-low);
+  overflow: hidden;
 }
 
 .db-bar-fill {
@@ -148,6 +150,14 @@ $db-bar-height: var(--space-2);
   height: 100%;
   border-radius: 4px;
   background: var(--tertiary);
+  flex: 0 0 auto;
+
+  // a real but tiny segment would otherwise round away to nothing
+  min-width: 2px;
+
+  &.--alt {
+    background: var(--tertiary-medium);
+  }
 }
 
 .db-configure {
@@ -598,5 +608,21 @@ $db-bar-height: var(--space-2);
 .db-bar-track {
   .--system & {
     margin-block: var(--space-2);
+  }
+}
+
+.db-bar-fill {
+  &:first-child {
+    .--system & {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  &:nth-child(2) {
+    .--system & {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
   }
 }
