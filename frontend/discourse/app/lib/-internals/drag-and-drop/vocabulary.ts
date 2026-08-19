@@ -1,4 +1,5 @@
 import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import { makeArray } from "discourse/lib/helpers";
 
 /**
  * Payload key under which a source registered through a drag handle publishes
@@ -28,21 +29,6 @@ export function dragTypeOf(data?: Record<string, unknown>) {
 }
 
 /**
- * One value, several, or nothing, as a list.
- *
- * @param value - The `accepts` filter as the consumer supplied it.
- */
-export function toAcceptList<T>(value?: T | T[] | null): T[] {
-  if (!value) {
-    return [];
-  }
-  if (Array.isArray(value)) {
-    return value;
-  }
-  return [value];
-}
-
-/**
  * Whether a drag's type is one the consumer asked for.
  *
  * @param types - One type, several, or nothing at all to match every drag.
@@ -52,7 +38,7 @@ export function matchesDragType(
   types: string | string[] | undefined,
   source: ElementDragPayload
 ) {
-  const list = toAcceptList(types);
+  const list = makeArray(types);
   if (list.length === 0) {
     return true;
   }

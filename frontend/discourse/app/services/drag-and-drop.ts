@@ -12,8 +12,8 @@ import {
 import {
   dragTypeOf,
   normalizeDragSource,
-  toAcceptList,
 } from "discourse/lib/-internals/drag-and-drop/vocabulary";
+import { makeArray } from "discourse/lib/helpers";
 
 /** The in-flight element drag, as the source described it. */
 export interface DragPayload {
@@ -123,7 +123,7 @@ export default class DragAndDropService extends Service {
     if (!this.currentDrag) {
       return false;
     }
-    return toAcceptList(accepts).includes(this.currentDrag.type);
+    return makeArray(accepts).includes(this.currentDrag.type);
   }
 
   /**
@@ -133,7 +133,7 @@ export default class DragAndDropService extends Service {
    * @param kinds - One kind or several. Nullish or empty matches nothing.
    */
   acceptsExternal(kinds?: ExternalDragKind | ExternalDragKind[] | null) {
-    const list = toAcceptList(kinds);
+    const list = makeArray(kinds);
     if (!this.currentExternalDrag || list.length === 0) {
       return false;
     }

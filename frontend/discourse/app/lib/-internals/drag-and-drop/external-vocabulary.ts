@@ -10,7 +10,7 @@ import { getFiles } from "@atlaskit/pragmatic-drag-and-drop/utils/get-files";
 import { getHTML } from "@atlaskit/pragmatic-drag-and-drop/utils/get-html";
 import { getText } from "@atlaskit/pragmatic-drag-and-drop/utils/get-text";
 import { getURLs } from "@atlaskit/pragmatic-drag-and-drop/utils/get-ur-ls";
-import { toAcceptList } from "discourse/lib/-internals/drag-and-drop/vocabulary";
+import { makeArray } from "discourse/lib/helpers";
 
 /**
  * The in-flight external drag, with the read helpers bound to it so consumers
@@ -93,7 +93,7 @@ export function matchesExternalKind(
   accepts: ExternalDragKind | ExternalDragKind[] | undefined,
   source: NativeExternalDragPayload
 ) {
-  const kinds = toAcceptList(accepts);
+  const kinds = makeArray(accepts);
   if (kinds.length === 0) {
     return true;
   }
