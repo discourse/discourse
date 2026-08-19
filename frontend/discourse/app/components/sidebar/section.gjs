@@ -133,16 +133,6 @@ export default class SidebarSection extends Component {
   }
 
   @action
-  handleMultipleHeaderActions(id) {
-    this.args.headerActions
-      .find((headerAction) => headerAction.id === id)
-      .action();
-    if (this.args.toggleNavigationMenu) {
-      next(this.args.toggleNavigationMenu);
-    }
-  }
-
-  @action
   onRegisterApi(api) {
     this.dMenu = api;
   }
@@ -151,6 +141,10 @@ export default class SidebarSection extends Component {
   handleHeaderActionClick(headerAction) {
     headerAction();
     this.dMenu.close();
+
+    if (this.args.toggleNavigationMenu) {
+      next(this.args.toggleNavigationMenu);
+    }
   }
 
   get headerCaretIcon() {
@@ -255,6 +249,7 @@ export default class SidebarSection extends Component {
                           }}
                           @translatedLabel={{headerAction.title}}
                           class="btn-transparent sidebar-section-header-dropdown__item"
+                          data-menu-option-id={{headerAction.id}}
                         />
                       </dropdown.item>
                     {{/each}}
