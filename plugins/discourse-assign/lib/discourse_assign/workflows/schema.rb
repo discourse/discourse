@@ -89,6 +89,13 @@ module DiscourseAssign
           DiscourseWorkflows::Schema::TOPIC_LIST_ITEM_SCHEMA,
           ASSIGNMENT_SCHEMA,
         ).freeze
+
+      UNASSIGNED_OUTPUT_SCHEMA =
+        DiscourseWorkflows::Schema.merge(
+          DiscourseWorkflows::Schema::POST_SCHEMA,
+          DiscourseWorkflows::Schema::TOPIC_LIST_ITEM_SCHEMA,
+          ASSIGNMENT_SCHEMA,
+        ).freeze
     end
   end
 end
