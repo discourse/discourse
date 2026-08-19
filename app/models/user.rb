@@ -1304,6 +1304,17 @@ class User < ActiveRecord::Base
     end
   end
 
+  def remove_avatar!(actor)
+    return if uploaded_avatar_id.blank?
+
+    self.class.transaction do
+      update!(uploaded_avatar_id: nil)
+      user_avatar&.update!(custom_upload_id: nil, gravatar_upload_id: nil)
+    end
+
+    StaffActionLogger.new(actor).log_removed_avatar(self)
+  end
+
   # The following count methods are somewhat slow - definitely don't use them in a loop.
   # They might need to be denormalized
   def like_count
