@@ -20,6 +20,16 @@ class EmailBounceScore < ActiveRecord::Base
     where(email: user.user_emails.select("lower(user_emails.email)"))
   end
 
+  # Keyed by the canonical address, and only holds the addresses in bad standing
+  # — the caller is expected to treat a missing key as a clean address.
+  def self.for_user_by_email(user)
+    for_user(user)
+      .pluck(:email, :bounce_score, :reset_bounce_score_after)
+      .to_h do |email, score, reset_after|
+        [email, { bounce_score: score, reset_bounce_score_after: reset_after }]
+      end
+  end
+
   def self.deliverable?(email)
     score_for(email) < SiteSetting.bounce_score_threshold
   end

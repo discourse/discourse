@@ -290,6 +290,18 @@ export function applyDefaultHandlers() {
           "regular2alt1@example.com",
           "regular2alt2@example.com",
         ],
+        // only the addresses in bad standing are listed
+        bounce_scores: {
+          "regular2@example.com": {
+            bounce_score: 6,
+            reset_bounce_score_after: "2100-01-01T00:00:00.000Z",
+          },
+          "regular2alt2@example.com": {
+            // erosion leaves float residue in the stored score
+            bounce_score: 2.0000000000000004,
+            reset_bounce_score_after: "2100-01-01T00:00:00.000Z",
+          },
+        },
       });
     }
     return response({ email: "eviltrout@example.com" });
@@ -1146,12 +1158,16 @@ export function applyDefaultHandlers() {
     return response(200, {
       id: 1235,
       username: "regular2",
+      // the mirror of the primary address, which is all the admin payload knows
+      bounce_score: 6,
+      reset_bounce_score_after: "2100-01-01T00:00:00.000Z",
     });
   });
 
   pretender.delete("/admin/users/:user_id.json", () =>
     response(200, { deleted: true })
   );
+  pretender.post("/admin/users/:user_id/reset-bounce-score", success);
   pretender.post("/admin/badges", success);
   pretender.delete("/admin/badges/:id", success);
 

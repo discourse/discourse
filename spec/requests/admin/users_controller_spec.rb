@@ -3389,6 +3389,41 @@ RSpec.describe Admin::UsersController do
         expect(EmailBounceScore.score_for(user.email)).to eq(0)
         expect(EmailBounceScore.score_for(secondary)).to eq(0)
       end
+
+      it "will reset only the address it was given" do
+        SiteSetting.moderators_view_emails = true
+        secondary = Fabricate(:secondary_email, user: user, email: "Spare@Email.com").email
+        EmailBounceScore.record_bounce!(secondary, 4)
+
+        # addresses are stored downcased, so the param has to be canonicalized
+        post "/admin/users/#{user.id}/reset-bounce-score.json", params: { email: secondary.upcase }
+
+        expect(response.status).to eq(200)
+        expect(EmailBounceScore.score_for(secondary)).to eq(0)
+        expect(EmailBounceScore.score_for(user.email)).to eq(10)
+      end
+
+      it "will not name an address to a moderator who cannot see them" do
+        SiteSetting.moderators_view_emails = false
+        secondary = Fabricate(:secondary_email, user: user).email
+        EmailBounceScore.record_bounce!(secondary, 4)
+
+        post "/admin/users/#{user.id}/reset-bounce-score.json", params: { email: secondary }
+
+        expect(response.status).to eq(403)
+        expect(EmailBounceScore.score_for(secondary)).to eq(4)
+      end
+
+      it "will not reset an address the user does not own" do
+        SiteSetting.moderators_view_emails = true
+        stranger = Fabricate(:user)
+        EmailBounceScore.record_bounce!(stranger.email, 4)
+
+        post "/admin/users/#{user.id}/reset-bounce-score.json", params: { email: stranger.email }
+
+        expect(response.status).to eq(404)
+        expect(EmailBounceScore.score_for(stranger.email)).to eq(4)
+      end
     end
 
     context "when logged in as a non-staff user" do

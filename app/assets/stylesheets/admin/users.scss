@@ -41,6 +41,25 @@
     list-style: none;
   }
 
+  .email-bounce {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin: 0.25em 0 0.5em;
+
+    &__link {
+      color: var(--danger);
+      white-space: nowrap;
+    }
+
+    &__explanation {
+      flex-basis: 100%;
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+    }
+  }
+
   .field {
     font-weight: bold;
     width: 17.65765%;

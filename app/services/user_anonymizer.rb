@@ -25,6 +25,10 @@ class UserAnonymizer
           UserAssociatedAccount.where(user_id: @user.id).pluck(Arel.sql("info->>'email'")).compact
       @prev_username = @user.username
 
+      # the ledger is keyed by address, so it has to be cleared while the user
+      # still owns the addresses they are about to lose
+      EmailBounceScore.for_user(@user).delete_all
+
       unless UsernameChanger.new(@user, make_anon_username).change(run_update_job: false)
         raise "Failed to change username"
       end
