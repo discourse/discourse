@@ -2360,7 +2360,7 @@ class User < ActiveRecord::Base
   end
 
   def trigger_user_updated_event
-    DiscourseEvent.trigger(:user_updated, self)
+    DiscourseEvent.trigger(:user_updated, self, %w[uploaded_avatar_id])
     true
   end
 

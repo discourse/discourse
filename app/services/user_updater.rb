@@ -2,6 +2,7 @@
 
 class UserUpdater
   LEGACY_SHOW_ORIGINAL_CONTENT_ATTR = :show_original_content
+  TIMESTAMP_COLUMNS = %w[created_at updated_at].freeze
 
   CATEGORY_IDS = {
     watched_first_post_category_ids: :watching_first_post,
@@ -278,7 +279,7 @@ class UserUpdater
           user_notification_schedule.destroy_scheduled_timings
         end
       end
-      DiscourseEvent.trigger(:user_updated, user)
+      DiscourseEvent.trigger(:user_updated, user, changed_columns(user, user_profile))
 
       if attributes[:custom_fields].present? && user.needs_required_fields_check?
         UserHistory.create!(
@@ -289,6 +290,10 @@ class UserUpdater
     end
 
     saved
+  end
+
+  def changed_columns(user, user_profile)
+    (user.saved_changes.keys | user_profile.saved_changes.keys) - TIMESTAMP_COLUMNS
   end
 
   def update_muted_users(usernames)

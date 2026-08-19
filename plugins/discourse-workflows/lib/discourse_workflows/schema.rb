@@ -325,6 +325,20 @@ module DiscourseWorkflows
         "User account event payload",
       )
 
+    USER_UPDATED_EVENT_SCHEMA =
+      document(
+        USER_EVENT_SCHEMA.fetch("properties").merge(
+          "changed" => {
+            "type" => %w[array null],
+            "description" =>
+              "Which parts of the profile changed, or null when the update did not report it",
+            "items" => {
+              "type" => "string",
+            },
+          },
+        ),
+      )
+
     USER_SEEN_SCHEMA =
       document(
         BASIC_USER_SCHEMA.fetch("properties").merge(
