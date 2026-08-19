@@ -39,7 +39,7 @@ export default class AiBotHeaderIcon extends Component {
     if (this.clickShouldRouteOutOfConversations) {
       return "shuffle";
     }
-    return "robot";
+    return "discobot";
   }
 
   get clickShouldRouteOutOfConversations() {
