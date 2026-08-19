@@ -73,28 +73,19 @@ export default class SiteTrafficExplorerFilterPills extends Component {
 
   @action
   filterDescription(filter, visibleCount) {
+    const label = escapeExpression(this.filterLabel(filter.key));
     const visibleValues = filter.values
       .slice(0, visibleCount)
       .map((value) => `<strong>${escapeExpression(value.label)}</strong>`)
-      .join(
-        i18n("admin.site_traffic_explorer.filter_description.value_separator")
-      );
+      .join(", ");
     const remainingCount = filter.values.length - visibleCount;
     const values = `<span class="site-traffic-explorer__filter-pill-values">${visibleValues}</span>`;
+    const remaining =
+      remainingCount > 0
+        ? `<span class="site-traffic-explorer__filter-pill-remaining">+${remainingCount}</span>`
+        : "";
 
-    return i18n(
-      `admin.site_traffic_explorer.filter_description.${filter.key}`,
-      {
-        values,
-        remaining:
-          remainingCount > 0
-            ? `<span class="site-traffic-explorer__filter-pill-remaining">${i18n(
-                "admin.site_traffic_explorer.filter_description.additional_values",
-                { count: remainingCount }
-              )}</span>`
-            : "",
-      }
-    );
+    return `${label}: ${values}${remaining}`;
   }
 
   @action
