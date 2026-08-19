@@ -225,8 +225,8 @@ export default class AdminUserIndexController extends Controller {
   }
 
   @action
-  resetBounceScore() {
-    return this.model.resetBounceScore();
+  resetBounceScore(email) {
+    return this.model.resetBounceScore(email);
   }
 
   @action

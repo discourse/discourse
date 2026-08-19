@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -30,6 +31,8 @@ export default class AdminUser extends User {
     }).then((users) => users.map((u) => AdminUser.create(u)));
   }
 
+  // arrives from `checkEmail`, not from the admin payload
+  @tracked bounce_scores;
   adminUserView = true;
 
   @autoTrackedArray groups;
@@ -37,11 +40,6 @@ export default class AdminUser extends User {
   @computed("active", "staged")
   get canViewProfile() {
     return this.active || this.staged;
-  }
-
-  @computed("bounce_score")
-  get canResetBounceScore() {
-    return this.bounce_score > 0;
   }
 
   @computed("originalTrustLevel", "trust_level")
@@ -72,42 +70,51 @@ export default class AdminUser extends User {
     return this.groups?.filter((g) => g.automatic) ?? [];
   }
 
-  @computed("bounce_score", "reset_bounce_score_after")
-  get bounceScore() {
-    if (this.bounce_score > 0) {
-      return `${this.bounce_score} - ${moment(
-        this.reset_bounce_score_after
-      ).format("LL")}`;
-    } else {
-      return this.bounce_score;
-    }
-  }
-
-  @computed("bounce_score")
-  get bounceScoreExplanation() {
-    if (this.bounce_score === 0) {
-      return i18n("admin.user.bounce_score_explanation.none");
-    } else if (this.bounce_score < this.siteSettings.bounce_score_threshold) {
-      return i18n("admin.user.bounce_score_explanation.some");
-    } else {
-      return i18n("admin.user.bounce_score_explanation.threshold_reached");
-    }
-  }
-
   @computed
   get bounceLink() {
     return getURL("/admin/email-logs/bounced");
   }
 
-  resetBounceScore() {
-    return ajax(`/admin/users/${this.id}/reset-bounce-score`, {
-      type: "POST",
-    }).then(() =>
-      this.setProperties({
-        bounce_score: 0,
-        reset_bounce_score_after: null,
-      })
-    );
+  /**
+   * The bounce state of one address, or null while it is in good standing.
+   * `bounce_scores` is keyed by the canonical (lowercased) address and only
+   * holds the addresses that have bounced recently, so a miss means clean.
+   *
+   * @param {string} email
+   * @returns {{score: number, resetTitle: string, explanation: string}|null}
+   */
+  bounceStateFor(email) {
+    const state = this.bounce_scores?.[email?.toLowerCase()];
+    if (!state || state.bounce_score <= 0) {
+      return null;
+    }
+
+    const date = moment(state.reset_bounce_score_after).format("ll");
+
+    return {
+      // erosion subtracts floats, so the stored score carries residue
+      score: Math.round(state.bounce_score * 10) / 10,
+      resetTitle: i18n("admin.user.reset_bounce_score.title", { email }),
+      explanation:
+        state.bounce_score < this.siteSettings.bounce_score_threshold
+          ? i18n("admin.user.bounce_score_state.some", { date })
+          : i18n("admin.user.bounce_score_state.threshold_reached", { date }),
+    };
+  }
+
+  async resetBounceScore(email) {
+    try {
+      await ajax(`/admin/users/${this.id}/reset-bounce-score`, {
+        type: "POST",
+        data: { email },
+      });
+    } catch (error) {
+      return popupAjaxError(error);
+    }
+
+    const remaining = { ...this.bounce_scores };
+    delete remaining[email.toLowerCase()];
+    this.bounce_scores = remaining;
   }
 
   async groupAdded(added) {

@@ -311,12 +311,19 @@ class UsersController < ApplicationController
     email, *secondary_emails = user.emails
     unconfirmed_emails = user.unconfirmed_emails
 
-    render json: {
-             email: email,
-             secondary_emails: secondary_emails,
-             unconfirmed_emails: unconfirmed_emails,
-             associated_accounts: user.associated_accounts,
-           }
+    payload = {
+      email: email,
+      secondary_emails: secondary_emails,
+      unconfirmed_emails: unconfirmed_emails,
+      associated_accounts: user.associated_accounts,
+    }
+    # deliverability is staff-facing, and this endpoint also serves users looking
+    # at their own addresses
+    payload[:bounce_scores] = EmailBounceScore.for_user_by_email(
+      user,
+    ) if guardian.can_check_emails?(user)
+
+    render json: payload
   rescue Discourse::InvalidAccess
     render json: failed_json, status: :forbidden
   end

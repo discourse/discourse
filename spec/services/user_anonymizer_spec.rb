@@ -44,6 +44,7 @@ RSpec.describe UserAnonymizer do
 
       make_anonymous
 
+      expect(EmailBounceScore.score_for(original_email)).to eq(0)
       expect(user.reload.user_stat.bounce_score).to eq(0)
     end
 

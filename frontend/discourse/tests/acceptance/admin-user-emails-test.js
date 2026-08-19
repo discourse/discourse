@@ -66,4 +66,79 @@ acceptance("Admin - User Emails", function (needs) {
       "regular2alt2@example.com"
     );
   });
+
+  test("a bouncing address is flagged before the addresses are revealed", async function (assert) {
+    await visit("/admin/users/1235/regular1");
+
+    assert
+      .dom(".display-row.email .email-bounce--unrevealed")
+      .exists(
+        "warns without spending a check_email audit entry on the address"
+      );
+
+    await click(`.display-row.secondary-emails button`);
+
+    assert
+      .dom(".display-row.email .email-bounce--unrevealed")
+      .doesNotExist(
+        "gives way to the per-address badge once they are revealed"
+      );
+  });
+
+  test("bounce state is shown against the address that bounced", async function (assert) {
+    await visit("/admin/users/1235/regular1");
+    await click(`.display-row.secondary-emails button`);
+
+    assert
+      .dom(".display-row.email .email-bounce__link")
+      .includesText("6", "shows the primary address's bounce score");
+
+    assert
+      .dom(".display-row.secondary-emails li:first-of-type .email-bounce")
+      .doesNotExist("leaves a secondary address in good standing alone");
+
+    assert
+      .dom(".display-row.secondary-emails li:last-of-type .email-bounce__link")
+      .hasText("Bounce score 2", "rounds off the float residue in the score");
+
+    assert.dom(".display-row.email .email-bounce__explanation").hasText(
+      i18n("admin.user.bounce_score_state.threshold_reached", {
+        date: moment("2100-01-01T00:00:00.000Z").format("ll"),
+      }),
+      "explains a score at or above the threshold"
+    );
+
+    assert
+      .dom(
+        ".display-row.secondary-emails li:last-of-type .email-bounce__explanation"
+      )
+      .includesText(
+        i18n("admin.user.bounce_score_state.some", {
+          date: moment("2100-01-01T00:00:00.000Z").format("ll"),
+        }),
+        "explains a score below the threshold"
+      );
+
+    assert.dom(".display-row.email .email-bounce__reset").hasAttribute(
+      "aria-label",
+      i18n("admin.user.reset_bounce_score.title", {
+        email: "regular2@example.com",
+      }),
+      "names the address each Reset button acts on"
+    );
+  });
+
+  test("resetting one address leaves the others alone", async function (assert) {
+    await visit("/admin/users/1235/regular1");
+    await click(`.display-row.secondary-emails button`);
+    await click(".display-row.email .email-bounce__reset");
+
+    assert
+      .dom(".display-row.email .email-bounce")
+      .doesNotExist("clears the address that was reset");
+
+    assert
+      .dom(".display-row.secondary-emails li:last-of-type .email-bounce__link")
+      .includesText("2", "keeps the other address's score");
+  });
 });
