@@ -1,4 +1,5 @@
 $max_image_height: 150px;
+$max_video_height: 250px;
 
 .chat-message {
   // append selectors to set images to a
@@ -105,8 +106,9 @@ $max_image_height: 150px;
     + div
     .chat-message-collapser-lazy-video {
     object-fit: contain;
-    max-height: $max_image_height;
-    max-width: calc(#{$max_image_height} / 9 * 16);
+    max-height: $max_video_height;
+    max-width: calc(#{$max_video_height} / 9 * 16);
+    margin-top: var(--space-2);
 
     &:has(div[data-provider-name="tiktok"]) {
       max-height: unset;
