@@ -349,6 +349,8 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
         "raw_request_payload_bytes" => 1.megabyte + 10,
         "raw_request_payload_truncated" => true,
         "raw_response_payload" => raw_response,
+        "raw_response_payload_bytes" => raw_response.bytesize,
+        "raw_response_payload_truncated" => false,
         "decoded_response" => "decoded answer",
         "has_decoded_response" => true,
         "duration_msecs" => 1_400,

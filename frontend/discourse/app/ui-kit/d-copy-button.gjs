@@ -54,14 +54,27 @@ export default class DCopyButton extends Component {
 
   @action
   async copy() {
-    const target = document.querySelector(this.args.selector);
+    let value = this.args.value;
 
-    if (!target) {
+    if (value === undefined) {
+      if (!this.args.selector) {
+        return;
+      }
+
+      const target = document.querySelector(this.args.selector);
+      if (!target) {
+        return;
+      }
+
+      value = target.value ?? target.textContent;
+    }
+
+    if (value == null) {
       return;
     }
 
     try {
-      await clipboardCopy(target.value ?? target.textContent);
+      await clipboardCopy(value);
       this.args.copied?.();
       this._showCopied();
     } catch {}

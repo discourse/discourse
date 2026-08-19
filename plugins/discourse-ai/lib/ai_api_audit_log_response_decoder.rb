@@ -3,6 +3,7 @@
 module DiscourseAi
   class AiApiAuditLogResponseDecoder
     MAX_INPUT_BYTES = 1.megabyte
+    MAX_EVENTS = 10_000
 
     Result =
       Struct.new(:response, :decoded, keyword_init: true) do
@@ -18,6 +19,7 @@ module DiscourseAi
     def initialize(raw_response_payload, truncated:)
       @raw_response_payload = raw_response_payload
       @truncated = truncated
+      @stream_terminated = false
       @reasoning_fragments = []
       @answer_fragments = []
     end
@@ -93,33 +95,34 @@ module DiscourseAi
       done = false
       valid = true
 
-      @raw_response_payload
-        .split(/\r?\n/, -1)
-        .each do |line|
-          if line.empty?
-            parsed_record = parse_sse_record(record_lines)
-            if parsed_record == :invalid
+      @raw_response_payload.each_line do |line|
+        line = line.chomp
+
+        if line.empty?
+          parsed_record = parse_sse_record(record_lines)
+          if parsed_record == :invalid
+            valid = false
+            break
+          end
+
+          if parsed_record == :done
+            done = true
+          elsif parsed_record
+            if done || events.length >= MAX_EVENTS
               valid = false
               break
             end
 
-            if parsed_record == :done
-              done = true
-            elsif parsed_record
-              if done
-                valid = false
-                break
-              end
-
-              events << parsed_record
-            end
-            record_lines = []
-          else
-            record_lines << line
+            events << parsed_record
           end
+          record_lines = []
+        else
+          record_lines << line
         end
+      end
 
       return if !valid || record_lines.present?
+
       @stream_terminated = done
       return if events.empty?
 
@@ -150,11 +153,28 @@ module DiscourseAi
     end
 
     def parse_newline_delimited_json
-      lines = @raw_response_payload.lines(chomp: true).reject(&:blank?)
-      return if lines.length < 2
+      events = []
+      valid = true
 
-      events = lines.map { |line| JSON.parse(line) }
-      return if !events.all? { |event| event.is_a?(Hash) }
+      @raw_response_payload.each_line do |line|
+        line = line.chomp
+        next if line.blank?
+
+        if events.length >= MAX_EVENTS
+          valid = false
+          break
+        end
+
+        event = JSON.parse(line)
+        if !event.is_a?(Hash)
+          valid = false
+          break
+        end
+
+        events << event
+      end
+
+      return if !valid || events.length < 2
 
       events
     end

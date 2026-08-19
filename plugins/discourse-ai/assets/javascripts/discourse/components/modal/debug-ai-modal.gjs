@@ -5,15 +5,15 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseLater from "discourse/lib/later";
 import DButton from "discourse/ui-kit/d-button";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import AiDecodedTranscript from "discourse/plugins/discourse-ai/discourse/components/ai-decoded-transcript";
 import AiPayloadViewer from "discourse/plugins/discourse-ai/discourse/components/ai-payload-viewer";
 
 export default class DebugAiModal extends Component {
   @tracked info = null;
-  @tracked justCopiedText = "";
   @tracked activeTab = "request";
   @tracked showRawResponse = false;
 
@@ -38,37 +38,31 @@ export default class DebugAiModal extends Component {
       : this.info.raw_response_payload;
   }
 
+  get showDecodedTranscript() {
+    return (
+      this.activeTab === "response" &&
+      this.info?.has_decoded_response &&
+      !this.showRawResponse &&
+      Boolean(this.activePayload)
+    );
+  }
+
+  get showResponseToggle() {
+    return this.activeTab === "response" && this.info?.has_decoded_response;
+  }
+
   get activeCopyLabel() {
     if (this.activeTab === "request") {
       return i18n("discourse_ai.ai_bot.debug_ai_modal.copy_request");
     }
 
-    if (!this.info?.has_decoded_response) {
-      return i18n("discourse_ai.ai_bot.debug_ai_modal.copy_response");
-    }
-
-    return i18n(
-      `discourse_ai.ai_bot.debug_ai_modal.${
-        this.showRawResponse ? "copy_raw_response" : "copy_decoded_response"
-      }`
-    );
+    return i18n("discourse_ai.ai_bot.debug_ai_modal.copy_response");
   }
 
   get responseToggleLabel() {
     return i18n(
-      `discourse_ai.ai_bot.debug_ai_modal.${
-        this.showRawResponse ? "view_decoded_response" : "view_raw_response"
-      }`
+      `discourse_ai.${this.showRawResponse ? "view_decoded" : "view_raw"}`
     );
-  }
-
-  @action
-  copied() {
-    this.justCopiedText = i18n("discourse_ai.ai_bot.conversation_shared");
-
-    discourseLater(() => {
-      this.justCopiedText = "";
-    }, 2000);
   }
 
   async loadLog(logId) {
@@ -117,6 +111,7 @@ export default class DebugAiModal extends Component {
   @action
   requestClicked(e) {
     this.activeTab = "request";
+    this.showRawResponse = false;
     e.preventDefault();
   }
 
@@ -296,33 +291,28 @@ export default class DebugAiModal extends Component {
               </p>
             {{/if}}
           </div>
-          {{#if this.responseActive}}
-            {{#if this.info.has_decoded_response}}
-              <div class="ai-debug-modal__response-controls">
-                <DButton
-                  class="btn-default ai-debug-modal__response-toggle"
-                  @action={{this.toggleResponseView}}
-                  @translatedLabel={{this.responseToggleLabel}}
-                />
-              </div>
-            {{/if}}
+          {{#if this.showDecodedTranscript}}
+            <AiDecodedTranscript
+              class="ai-debug-modal__preview"
+              @payload={{this.activePayload}}
+            />
+          {{else}}
+            <AiPayloadViewer
+              class="ai-debug-modal__preview"
+              @payload={{this.activePayload}}
+              @unbounded={{true}}
+              @emptyMessage={{i18n
+                "discourse_ai.ai_bot.debug_ai_modal.payload_unavailable"
+              }}
+            />
           {{/if}}
-          <AiPayloadViewer
-            class="ai-debug-modal__preview"
-            @payload={{this.activePayload}}
-            @copyLabel={{this.activeCopyLabel}}
-            @onCopy={{this.copied}}
-            @emptyMessage={{i18n
-              "discourse_ai.ai_bot.debug_ai_modal.payload_unavailable"
-            }}
-          />
         {{/if}}
       </:body>
 
       <:footer>
         {{#if this.info.prev_log_id}}
           <DButton
-            class="btn"
+            class="btn ai-debug-modal__previous"
             @icon="angles-left"
             @action={{this.prevLog}}
             @label="discourse_ai.ai_bot.debug_ai_modal.previous_log"
@@ -330,13 +320,36 @@ export default class DebugAiModal extends Component {
         {{/if}}
         {{#if this.info.next_log_id}}
           <DButton
-            class="btn"
+            class="btn ai-debug-modal__next"
             @icon="angles-right"
             @action={{this.nextLog}}
             @label="discourse_ai.ai_bot.debug_ai_modal.next_log"
           />
         {{/if}}
-        <span class="ai-debug-modal__just-copied">{{this.justCopiedText}}</span>
+        <div class="ai-debug-modal__copy-actions">
+          {{#if this.showResponseToggle}}
+            <DButton
+              class="btn-default ai-debug-modal__response-toggle"
+              @action={{this.toggleResponseView}}
+              @translatedLabel={{this.responseToggleLabel}}
+            />
+          {{/if}}
+          {{#if this.activePayload}}
+            <DCopyButton
+              @value={{this.activePayload}}
+              @copyClass="btn-default ai-debug-modal__copy"
+              @translatedLabel={{this.activeCopyLabel}}
+              @translatedLabelAfterCopy={{i18n "discourse_ai.copied"}}
+            />
+          {{else}}
+            <DButton
+              class="btn-default ai-debug-modal__copy"
+              @icon="copy"
+              @translatedLabel={{this.activeCopyLabel}}
+              @disabled={{true}}
+            />
+          {{/if}}
+        </div>
       </:footer>
     </DModal>
   </template>

@@ -217,7 +217,7 @@ module DiscourseAi
         end
       when "content_block_stop"
         block = @anthropic_blocks[index]
-        block ? block[:complete] = true : nil
+        block[:complete] = true if block
       end
     end
 
@@ -271,7 +271,7 @@ module DiscourseAi
         end
       when "step.stop"
         state = @interaction_steps[index]
-        state ? state[:complete] = true : nil
+        state[:complete] = true if state
       end
     end
 

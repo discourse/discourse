@@ -322,6 +322,7 @@
 
 .d-modal.ai-log-detail-modal {
   --modal-max-width: min(96vw, 75rem);
+  overflow: hidden;
 }
 
 .ai-log-detail-modal {
@@ -349,17 +350,29 @@
     }
   }
 
-  &__tabs {
+  &__tabs,
+  &__tab-list,
+  &__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-1);
+    align-items: center;
+  }
+
+  &__tabs {
     margin-bottom: var(--space-3);
   }
 
-  &__response-controls {
-    display: flex;
+  &__actions {
     justify-content: flex-end;
-    margin-bottom: var(--space-2);
+    max-width: 100%;
+    margin-inline-start: auto;
+
+    .btn {
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
   }
 
   &__attempts {

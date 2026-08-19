@@ -8,8 +8,10 @@ import getURL from "discourse/lib/get-url";
 import { and, eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import AiDecodedTranscript from "discourse/plugins/discourse-ai/discourse/components/ai-decoded-transcript";
 import AiPayloadViewer from "discourse/plugins/discourse-ai/discourse/components/ai-payload-viewer";
 
 export default class AiLogDetailModal extends Component {
@@ -88,7 +90,32 @@ export default class AiLogDetailModal extends Component {
       : this.log?.raw_response_payload_truncated;
   }
 
+  get showDecodedTranscript() {
+    return (
+      this.activeTab === "response" &&
+      this.log?.has_decoded_response &&
+      !this.showRawResponse &&
+      Boolean(this.activePayload)
+    );
+  }
+
+  get copyPayload() {
+    if (this.activeTab === "context") {
+      return this.contextPayload;
+    }
+
+    if (this.activeTab === "request" || this.activeTab === "response") {
+      return this.activePayload;
+    }
+
+    return null;
+  }
+
   get activeCopyLabel() {
+    if (this.activeTab === "context") {
+      return i18n("discourse_ai.logs.detail.copy_context");
+    }
+
     if (this.activeTab === "request") {
       return i18n("discourse_ai.logs.detail.copy_request");
     }
@@ -99,16 +126,14 @@ export default class AiLogDetailModal extends Component {
 
     return i18n(
       `discourse_ai.logs.detail.${
-        this.showRawResponse ? "copy_raw_response" : "copy_decoded_response"
+        this.showRawResponse ? "copy_raw_response" : "copy_response"
       }`
     );
   }
 
   get responseToggleLabel() {
     return i18n(
-      `discourse_ai.logs.detail.${
-        this.showRawResponse ? "view_decoded_response" : "view_raw_response"
-      }`
+      `discourse_ai.${this.showRawResponse ? "view_decoded" : "view_raw"}`
     );
   }
 
@@ -285,42 +310,59 @@ export default class AiLogDetailModal extends Component {
             {{/if}}
           </dl>
 
-          <nav
-            class="ai-log-detail-modal__tabs"
-            aria-label={{i18n "discourse_ai.logs.detail.tabs_label"}}
-          >
-            {{#each this.tabs as |tab|}}
-              <DButton
-                class={{if
-                  (eq this.activeTab tab.id)
-                  "btn-primary"
-                  "btn-default"
-                }}
-                @action={{fn this.selectTab tab.id}}
-                @ariaPressed={{eq this.activeTab tab.id}}
-                @translatedLabel={{tab.label}}
-              />
-            {{/each}}
-          </nav>
-
-          {{#if
-            (or (eq this.activeTab "request") (eq this.activeTab "response"))
-          }}
-            {{#if
-              (and (eq this.activeTab "response") this.log.has_decoded_response)
-            }}
-              <div class="ai-log-detail-modal__response-controls">
+          <div class="ai-log-detail-modal__tabs">
+            <nav
+              class="ai-log-detail-modal__tab-list"
+              aria-label={{i18n "discourse_ai.logs.detail.tabs_label"}}
+            >
+              {{#each this.tabs as |tab|}}
                 <DButton
-                  class="btn-default ai-log-detail-modal__response-toggle"
-                  @action={{this.toggleResponseView}}
-                  @translatedLabel={{this.responseToggleLabel}}
+                  class={{if
+                    (eq this.activeTab tab.id)
+                    "btn-primary"
+                    "btn-default"
+                  }}
+                  @action={{fn this.selectTab tab.id}}
+                  @ariaPressed={{eq this.activeTab tab.id}}
+                  @translatedLabel={{tab.label}}
+                />
+              {{/each}}
+            </nav>
+            {{#if this.copyPayload}}
+              <div class="ai-log-detail-modal__actions">
+                {{#if
+                  (and
+                    (eq this.activeTab "response") this.log.has_decoded_response
+                  )
+                }}
+                  <DButton
+                    class="btn-default ai-log-detail-modal__response-toggle"
+                    @action={{this.toggleResponseView}}
+                    @translatedLabel={{this.responseToggleLabel}}
+                  />
+                {{/if}}
+                <DCopyButton
+                  @value={{this.copyPayload}}
+                  @copyClass="btn-default ai-log-detail-modal__copy"
+                  @translatedLabel={{this.activeCopyLabel}}
+                  @translatedLabelAfterCopy={{i18n "discourse_ai.copied"}}
                 />
               </div>
             {{/if}}
+          </div>
+
+          {{#if this.showDecodedTranscript}}
+            <AiDecodedTranscript
+              class="ai-log-detail-modal__preview"
+              @payload={{this.activePayload}}
+            />
+          {{else if
+            (or (eq this.activeTab "request") (eq this.activeTab "response"))
+          }}
             <AiPayloadViewer
               @payload={{this.activePayload}}
+              @unbounded={{true}}
               @truncated={{this.activePayloadTruncated}}
-              @copyLabel={{this.activeCopyLabel}}
               @emptyMessage={{i18n
                 "discourse_ai.logs.detail.payload_unavailable"
               }}
@@ -331,7 +373,7 @@ export default class AiLogDetailModal extends Component {
           {{else if (eq this.activeTab "context")}}
             <AiPayloadViewer
               @payload={{this.contextPayload}}
-              @copyLabel={{i18n "discourse_ai.logs.detail.copy_context"}}
+              @unbounded={{true}}
               @emptyMessage={{i18n
                 "discourse_ai.logs.detail.payload_unavailable"
               }}

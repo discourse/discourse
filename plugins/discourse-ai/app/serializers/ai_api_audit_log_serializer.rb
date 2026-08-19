@@ -77,7 +77,7 @@ class AiApiAuditLogSerializer < ApplicationSerializer
 
   def decoded_response_result
     @decoded_response_result ||=
-      DiscourseAi::AiApiAuditLogResponseDecoder.decode(object&.raw_response_payload)
+      DiscourseAi::AiApiAuditLogResponseDecoder.decode(object.raw_response_payload)
   end
 
   def conversation_stats

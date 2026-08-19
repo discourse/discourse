@@ -554,6 +554,25 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
       expect(described_class.decode(over_limit)).not_to be_decoded
     end
 
+    it "accepts the event-count limit and atomically falls back above it" do
+      readable_event = { choices: [{ delta: { content: "answer" } }] }
+      formats = {
+        "SSE" => ->(events) { sse(*events, "[DONE]") },
+        "NDJSON" => ->(events) { events.map(&:to_json).join("\n") },
+      }
+
+      formats.each do |transport, encode|
+        at_limit_events = [readable_event] + Array.new(described_class::MAX_EVENTS - 1) { {} }
+        over_limit_events = [readable_event] + Array.new(described_class::MAX_EVENTS) { {} }
+        at_limit = encode.call(at_limit_events)
+        over_limit = encode.call(over_limit_events)
+
+        expect(described_class.decode(at_limit)).to be_decoded, transport
+        expect(described_class.decode(over_limit).response).to equal(over_limit), transport
+        expect(described_class.decode(over_limit)).not_to be_decoded, transport
+      end
+    end
+
     it "does not mutate the input" do
       expected_raw_response = sse({ choices: [{ delta: { content: "answer" } }] })
       raw_response = expected_raw_response.freeze

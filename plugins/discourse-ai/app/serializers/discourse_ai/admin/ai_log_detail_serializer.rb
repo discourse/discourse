@@ -91,7 +91,7 @@ module DiscourseAi
       def decoded_response_result
         @decoded_response_result ||=
           DiscourseAi::AiApiAuditLogResponseDecoder.decode(
-            object&.raw_response_payload,
+            object.raw_response_payload,
             truncated: raw_response_payload_truncated,
           )
       end
