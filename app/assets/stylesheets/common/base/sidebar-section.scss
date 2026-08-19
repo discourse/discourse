@@ -38,8 +38,7 @@
     .btn.sidebar-section-header-dropdown,
     .sidebar-section-header-button {
       background: transparent;
-      padding-inline: var(--space-1);
-      padding-block: 0;
+      padding: var(--space-1);
 
       .discourse-no-touch & {
         transition:
@@ -65,7 +64,7 @@
       }
 
       &:focus {
-        outline: 2px solid var(--token-color-background-accent-bolder);
+        background-color: var(--token-color-surface-focused);
       }
     }
   }
