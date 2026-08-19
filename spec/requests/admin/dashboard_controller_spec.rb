@@ -273,6 +273,7 @@ RSpec.describe Admin::DashboardController do
 
           country_code = "US"
           normalized_referrer = "sensitive-referrer.example"
+          entry_url = "/sensitive-entry"
           event_date = Time.zone.local(2026, 5, 2, 12)
           UpcomingChangeEvent.create!(
             upcoming_change_name: "dashboard_improvements",
@@ -296,6 +297,12 @@ RSpec.describe Admin::DashboardController do
           }
           BrowserPageviewCountryDailyRollup.aggregate(**rollup_range)
           BrowserPageviewReferrerDailyRollup.aggregate(**rollup_range)
+          Fabricate(
+            :browser_pageview_entry_url_daily_rollup,
+            date: event_date.to_date,
+            entry_url:,
+            count: 2,
+          )
 
           get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
 
@@ -308,6 +315,7 @@ RSpec.describe Admin::DashboardController do
           expect(admin_traffic_data.dig("top_referrers", "rows", 0, "normalized_referrer")).to eq(
             normalized_referrer,
           )
+          expect(admin_traffic_data.dig("top_entry_urls", "rows", 0, "entry_url")).to eq(entry_url)
 
           sign_in(moderator)
 
@@ -318,7 +326,9 @@ RSpec.describe Admin::DashboardController do
             response.parsed_body["sections"].find { |section| section["id"] == "traffic" }["data"]
           expect(moderator_traffic_data).not_to have_key("top_countries")
           expect(moderator_traffic_data).not_to have_key("top_referrers")
+          expect(moderator_traffic_data).not_to have_key("top_entry_urls")
           expect(response.body).not_to include(normalized_referrer)
+          expect(response.body).not_to include(entry_url)
         end
       end
 

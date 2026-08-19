@@ -1663,6 +1663,12 @@ en:
       labels:
         country_code: "Country code"
         count: "Visits"
+    top_entry_urls:
+      title: "Top entry URLs"
+      description: "Pages that received the most direct or externally referred browser visits in the selected period."
+      labels:
+        entry_url: "Entry URL"
+        count: "Visits"
     top_referrers_by_browser_pageviews:
       title: "Top referrers"
       description: "External sites referring the most browser pageviews to your forum in the selected period."

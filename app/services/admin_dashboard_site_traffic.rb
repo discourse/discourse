@@ -46,6 +46,9 @@ class AdminDashboardSiteTraffic
 
       top_referrers = fetch_card("top_referrers_by_browser_pageviews")
       response[:top_referrers] = top_referrers if top_referrers
+
+      top_entry_urls = fetch_card("top_entry_urls")
+      response[:top_entry_urls] = top_entry_urls if top_entry_urls
     end
 
     response

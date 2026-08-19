@@ -87,6 +87,10 @@ module PageObjects
         has_no_top_card?("Top referrers")
       end
 
+      def has_no_top_entry_urls_card?
+        has_no_top_card?("Top entry URLs")
+      end
+
       def has_top_country_rows?(rows)
         within_top_card("Top countries") do
           next false unless has_css?(".db-traffic__list-row", count: rows.size)
@@ -113,12 +117,29 @@ module PageObjects
         end
       end
 
+      def has_top_entry_url_rows?(rows)
+        within_top_card("Top entry URLs") do
+          next false unless has_css?(".db-traffic__list-row", count: rows.size)
+
+          rows.each_with_index.all? do |row, index|
+            nth = ".db-traffic__list-row:nth-child(#{index + 1})"
+            has_css?("#{nth} a.db-traffic__link[href='#{row[:path]}']", text: row[:path]) &&
+              has_css?("#{nth} .db-traffic__percent", exact_text: "#{row[:percent]}%") &&
+              has_css?("#{nth} .db-traffic__count", exact_text: "(#{row[:count]})")
+          end
+        end
+      end
+
       def has_top_countries_empty_state?
         has_empty_state_in?("Top countries", "No country data for this period.")
       end
 
       def has_top_referrers_empty_state?
         has_empty_state_in?("Top referrers", "No referrer data for this period.")
+      end
+
+      def has_top_entry_urls_empty_state?
+        has_empty_state_in?("Top entry URLs", "No entry URL data for this period.")
       end
 
       def click_top_referrers_drilldown
@@ -129,12 +150,20 @@ module PageObjects
         within_top_card("Top countries") { find("h3.db-section__row-block-title a").click }
       end
 
+      def click_top_entry_urls_drilldown
+        within_top_card("Top entry URLs") { find("h3.db-section__row-block-title a").click }
+      end
+
       def has_top_referrers_drilldown?
         within_top_card("Top referrers") { has_css?("h3.db-section__row-block-title a") }
       end
 
       def has_top_countries_drilldown?
         within_top_card("Top countries") { has_css?("h3.db-section__row-block-title a") }
+      end
+
+      def has_top_entry_urls_drilldown?
+        within_top_card("Top entry URLs") { has_css?("h3.db-section__row-block-title a") }
       end
 
       def has_bounce_rate?(value)
