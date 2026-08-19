@@ -2,89 +2,33 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-
-const TRANSCRIPT_KEYS = ["thinking", "tool_calls", "tool_results", "response"];
+import {
+  isDecodedResponse,
+  isValidDecodedToolCall,
+  isValidDecodedToolResult,
+} from "discourse/plugins/discourse-ai/discourse/lib/decoded-response";
 
 export default class AiDecodedTranscript extends Component {
   @cached
   get transcript() {
-    const payload = this.args.payload;
-    if (!payload) {
+    const response = this.args.response;
+    if (!isDecodedResponse(response)) {
       return null;
     }
 
-    let parsed;
-    try {
-      parsed = JSON.parse(payload);
-    } catch {
-      return this.#fallback(payload);
-    }
-
-    if (!this.#isTranscript(parsed)) {
-      return this.#fallback(payload);
-    }
-
-    return {
-      thinking: this.#format(parsed.thinking),
-      toolCalls: this.#toolCalls(parsed.tool_calls),
-      toolResults: this.#toolResults(parsed.tool_results),
-      response: this.#format(parsed.response),
+    const transcript = {
+      thinking: this.#format(response.thinking),
+      toolCalls: this.#toolCalls(response.tool_calls),
+      toolResults: this.#toolResults(response.tool_results),
+      response: this.#format(response.response),
     };
-  }
 
-  #fallback(response) {
-    return {
-      thinking: "",
-      toolCalls: [],
-      toolResults: [],
-      response,
-    };
-  }
-
-  #isTranscript(parsed) {
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      return false;
-    }
-
-    const keys = Object.keys(parsed);
-    if (
-      keys.length === 0 ||
-      !keys.every((key) => TRANSCRIPT_KEYS.includes(key))
-    ) {
-      return false;
-    }
-
-    const hasThinking =
-      typeof parsed.thinking === "string" && parsed.thinking.length > 0;
-    const hasToolCalls =
-      Array.isArray(parsed.tool_calls) &&
-      parsed.tool_calls.some((toolCall) => this.#validToolCall(toolCall));
-    const hasToolResults =
-      Array.isArray(parsed.tool_results) &&
-      parsed.tool_results.some((toolResult) =>
-        this.#validToolResult(toolResult)
-      );
-
-    return hasThinking || hasToolCalls || hasToolResults;
-  }
-
-  #validToolCall(toolCall) {
-    return (
-      toolCall &&
-      typeof toolCall === "object" &&
-      !Array.isArray(toolCall) &&
-      typeof toolCall.name === "string" &&
-      Object.hasOwn(toolCall, "arguments")
-    );
-  }
-
-  #validToolResult(toolResult) {
-    return (
-      toolResult &&
-      typeof toolResult === "object" &&
-      !Array.isArray(toolResult) &&
-      Object.hasOwn(toolResult, "result")
-    );
+    return transcript.thinking ||
+      transcript.response ||
+      transcript.toolCalls.length ||
+      transcript.toolResults.length
+      ? transcript
+      : null;
   }
 
   #toolCalls(toolCalls) {
@@ -92,17 +36,15 @@ export default class AiDecodedTranscript extends Component {
       return [];
     }
 
-    return toolCalls
-      .filter((toolCall) => this.#validToolCall(toolCall))
-      .map((call) => {
-        return {
-          name:
-            this.#format(call.name) ||
-            i18n("discourse_ai.ai_decoded_transcript.tool"),
-          id: this.#format(call.id),
-          arguments: this.#format(call.arguments),
-        };
-      });
+    return toolCalls.filter(isValidDecodedToolCall).map((call) => {
+      return {
+        name:
+          this.#format(call.name) ||
+          i18n("discourse_ai.ai_decoded_transcript.tool"),
+        id: this.#format(call.id),
+        arguments: this.#format(call.arguments),
+      };
+    });
   }
 
   #toolResults(toolResults) {
@@ -110,16 +52,14 @@ export default class AiDecodedTranscript extends Component {
       return [];
     }
 
-    return toolResults
-      .filter((toolResult) => this.#validToolResult(toolResult))
-      .map((result) => {
-        return {
-          callId: this.#format(result.call_id),
-          type: this.#format(result.type),
-          content: this.#format(result.result),
-          isError: result.is_error === true,
-        };
-      });
+    return toolResults.filter(isValidDecodedToolResult).map((result) => {
+      return {
+        callId: this.#format(result.call_id),
+        type: this.#format(result.type),
+        content: this.#format(result.result),
+        isError: result.is_error === true,
+      };
+    });
   }
 
   #format(value) {

@@ -5,13 +5,6 @@ module DiscourseAi
     MAX_INPUT_BYTES = 1.megabyte
     MAX_EVENTS = 10_000
 
-    Result =
-      Struct.new(:response, :decoded, keyword_init: true) do
-        def decoded?
-          decoded
-        end
-      end
-
     def self.decode(raw_response_payload, truncated: false)
       new(raw_response_payload, truncated:).decode
     end
@@ -25,50 +18,31 @@ module DiscourseAi
     end
 
     def decode
-      return fallback if invalid_input?
+      return if invalid_input?
 
       events = parse_events
-      return fallback if events.nil?
+      return if events.nil?
 
       details =
         DiscourseAi::AiApiAuditLogStreamDetailsExtractor.extract(
           events,
           stream_terminated: @stream_terminated,
         )
-      return fallback if details.invalid?
+      return if details.invalid?
 
       events.each { |event| extract_fragments(event) }
 
-      reasoning = @reasoning_fragments.join
-      answer = @answer_fragments.join
-      if reasoning.blank? && answer.blank? && details.tool_calls.empty? &&
-           details.tool_results.empty?
-        return fallback
-      end
-
-      response = decoded_response(reasoning, answer, details)
-
-      Result.new(response:, decoded: true)
+      {
+        "thinking" => @reasoning_fragments.join.presence,
+        "tool_calls" => details.tool_calls.presence,
+        "tool_results" => details.tool_results.presence,
+        "response" => @answer_fragments.join.presence,
+      }.compact.presence
     rescue JSON::ParserError, TypeError, ArgumentError
-      fallback
+      nil
     end
 
     private
-
-    def decoded_response(reasoning, answer, details)
-      return answer if reasoning.blank? && details.tool_calls.empty? && details.tool_results.empty?
-
-      {
-        "thinking" => reasoning.presence,
-        "tool_calls" => details.tool_calls.presence,
-        "tool_results" => details.tool_results.presence,
-        "response" => answer.presence,
-      }.compact.to_json
-    end
-
-    def fallback
-      Result.new(response: @raw_response_payload, decoded: false)
-    end
 
     def invalid_input?
       @truncated || !@raw_response_payload.is_a?(String) || @raw_response_payload.blank? ||

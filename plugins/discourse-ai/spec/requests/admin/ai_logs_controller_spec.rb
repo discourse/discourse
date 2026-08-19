@@ -134,7 +134,6 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
         "raw_request_payload",
         "raw_response_payload",
         "decoded_response",
-        "has_decoded_response",
         "feature_context",
         "request_attempts",
       )
@@ -351,12 +350,14 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
         "raw_response_payload" => raw_response,
         "raw_response_payload_bytes" => raw_response.bytesize,
         "raw_response_payload_truncated" => false,
-        "decoded_response" => "decoded answer",
-        "has_decoded_response" => true,
+        "decoded_response" => {
+          "response" => "decoded answer",
+        },
         "duration_msecs" => 1_400,
         "time_to_first_token_msecs" => 320,
         "spending" => 0.0,
       )
+      expect(response.parsed_body).not_to have_key("has_decoded_response")
       expect(response.parsed_body["raw_request_payload"].bytesize).to eq(1.megabyte)
     end
 
@@ -386,8 +387,7 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
       expect(response.parsed_body).to include(
         "raw_response_payload_bytes" => raw_response.bytesize,
         "raw_response_payload_truncated" => true,
-        "decoded_response" => returned_payload,
-        "has_decoded_response" => false,
+        "decoded_response" => nil,
       )
       expect(returned_payload.bytesize).to eq(1.megabyte)
     end
@@ -401,7 +401,6 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
         "raw_request_payload" => nil,
         "raw_response_payload" => nil,
         "decoded_response" => nil,
-        "has_decoded_response" => false,
       )
 
       get "/admin/plugins/discourse-ai/ai-logs/#{log.id + 100_000}.json"

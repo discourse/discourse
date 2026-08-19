@@ -173,8 +173,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.parsed_body["response_tokens"]).to eq(2)
       expect(response.parsed_body["raw_request_payload"]).to eq("request")
       expect(response.parsed_body["raw_response_payload"]).to eq(decoded_stream)
-      expect(response.parsed_body["decoded_response"]).to eq("decoded response")
-      expect(response.parsed_body["has_decoded_response"]).to eq(true)
+      expect(response.parsed_body["decoded_response"]).to eq("response" => "decoded response")
 
       get "/discourse-ai/ai-bot/post/#{pm_post3.id}/show-debug-info"
       expect(response.status).to eq(200)
@@ -186,8 +185,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.parsed_body["id"]).to eq(log1.id)
       expect(response.parsed_body).to include(
         "raw_response_payload" => "response",
-        "decoded_response" => "response",
-        "has_decoded_response" => false,
+        "decoded_response" => nil,
       )
     end
 

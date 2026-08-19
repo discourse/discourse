@@ -11,7 +11,6 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :raw_request_payload,
              :raw_response_payload,
              :decoded_response,
-             :has_decoded_response,
              :topic_id,
              :post_id,
              :feature_name,
@@ -31,12 +30,8 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :conversation_cache_write_tokens,
              :conversation_spending
 
-  def has_decoded_response
-    decoded_response_result.decoded?
-  end
-
   def decoded_response
-    decoded_response_result.response
+    DiscourseAi::AiApiAuditLogResponseDecoder.decode(object.raw_response_payload)
   end
 
   def request_attempts
@@ -74,11 +69,6 @@ class AiApiAuditLogSerializer < ApplicationSerializer
   end
 
   private
-
-  def decoded_response_result
-    @decoded_response_result ||=
-      DiscourseAi::AiApiAuditLogResponseDecoder.decode(object.raw_response_payload)
-  end
 
   def conversation_stats
     return @conversation_stats if defined?(@conversation_stats)

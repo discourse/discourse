@@ -21,8 +21,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
       end
 
       it "assembles the retained VLLM reasoning fragments in order" do
-        expect(JSON.parse(decode.response)).to eq("thinking" => "No funny stories")
-        expect(decode).to be_decoded
+        expect(decode).to eq("thinking" => "No funny stories")
       end
     end
 
@@ -41,13 +40,22 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = described_class.decode(raw_response)
 
-      expect(result.response).to eq("Hello")
-      expect(result).to be_decoded
+      expect(result).to eq("response" => "Hello")
+    end
+
+    it "distinguishes structured model output from a decoded transcript" do
+      raw_response = sse({ choices: [{ delta: { content: '{"thinking":"about this"}' } }] })
+
+      result = described_class.decode(raw_response)
+
+      expect(result).to eq("response" => '{"thinking":"about this"}')
     end
 
     it "keeps reasoning and answer channels separate" do
       cases = {
-        sse({ choices: [{ delta: { content: "answer" } }] }) => "answer",
+        sse({ choices: [{ delta: { content: "answer" } }] }) => {
+          "response" => "answer",
+        },
         sse({ choices: [{ delta: { reasoning_content: "reasoning" } }] }) => {
           "thinking" => "reasoning",
         },
@@ -62,8 +70,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       cases.each do |payload, expected|
         result = described_class.decode(payload)
-        decoded = expected.is_a?(Hash) ? JSON.parse(result.response) : result.response
-        expect([decoded, result.decoded?]).to eq([expected, true])
+        expect(result).to eq(expected)
       end
     end
 
@@ -105,8 +112,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       cases.each do |provider, (first_event, second_event, expected)|
         result = described_class.decode(sse(first_event, second_event, "[DONE]"))
-        decoded = JSON.parse(result.response)
-        expect([decoded, result.decoded?]).to eq([expected, true]), provider
+        expect(result).to eq(expected), provider
       end
     end
 
@@ -188,8 +194,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
       cases.each do |provider, entries|
         expected = entries.pop
         result = described_class.decode(sse(*entries))
-        expect(result).to be_decoded, provider
-        expect(JSON.parse(result.response)).to eq("tool_calls" => [expected]), provider
+        expect(result).to eq("tool_calls" => [expected]), provider
       end
     end
 
@@ -217,12 +222,11 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = described_class.decode(raw_response)
 
-      expect(JSON.parse(result.response)).to eq(
+      expect(result).to eq(
         "tool_calls" => [
           { "id" => "call-1", "name" => "search", "arguments" => { "q" => "docs" } },
         ],
       )
-      expect(result).to be_decoded
     end
 
     it "extracts complete Gemini, Cohere, and Ollama tool calls" do
@@ -270,8 +274,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       payloads.each do |payload, expected|
         result = described_class.decode(payload)
-        expect(JSON.parse(result.response)).to eq("tool_calls" => [expected])
-        expect(result).to be_decoded
+        expect(result).to eq("tool_calls" => [expected])
       end
     end
 
@@ -330,7 +333,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = described_class.decode(raw_response)
 
-      expect(JSON.parse(result.response)).to eq(
+      expect(result).to eq(
         "thinking" => "Check it",
         "tool_calls" => [
           {
@@ -352,7 +355,6 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
         ],
         "response" => "42",
       )
-      expect(result).to be_decoded
     end
 
     it "falls back atomically for incomplete or conflicting tool calls" do
@@ -405,7 +407,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       [incomplete, conflicting].each do |payload|
         result = described_class.decode(payload)
-        expect([result.response, result.decoded?]).to eq([payload, false])
+        expect(result).to be_nil
       end
     end
 
@@ -418,8 +420,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = described_class.decode(raw_response)
 
-      expect(JSON.parse(result.response)).to eq("thinking" => "why", "response" => "yes")
-      expect(result).to be_decoded
+      expect(result).to eq("thinking" => "why", "response" => "yes")
     end
 
     it "decodes newline-delimited Ollama content" do
@@ -431,8 +432,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = described_class.decode(raw_response)
 
-      expect(result.response).to eq("Hello world")
-      expect(result).to be_decoded
+      expect(result).to eq("response" => "Hello world")
     end
 
     it "decodes Ollama thinking separately from content" do
@@ -444,8 +444,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = described_class.decode(raw_response)
 
-      expect(JSON.parse(result.response)).to eq("thinking" => "Check first", "response" => "Answer")
-      expect(result).to be_decoded
+      expect(result).to eq("thinking" => "Check first", "response" => "Answer")
     end
 
     it "separates Cohere tool rationale from generated response text" do
@@ -458,11 +457,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = described_class.decode(raw_response)
 
-      expect(JSON.parse(result.response)).to eq(
-        "thinking" => "I will search",
-        "response" => "Hello",
-      )
-      expect(result).to be_decoded
+      expect(result).to eq("thinking" => "I will search", "response" => "Hello")
     end
 
     it "preserves JSON escapes, Unicode, and fragment whitespace" do
@@ -474,8 +469,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = described_class.decode(raw_response)
 
-      expect(result.response).to eq("A quoted \"word\" and café ☕")
-      expect(result).to be_decoded
+      expect(result).to eq("response" => "A quoted \"word\" and café ☕")
     end
 
     it "falls back for non-streaming JSON, plain text, nil, and blank input" do
@@ -483,7 +477,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       payloads.each do |payload|
         result = described_class.decode(payload)
-        expect([result.response, result.decoded?]).to eq([payload, false])
+        expect(result).to be_nil
       end
     end
 
@@ -496,7 +490,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       payloads.each do |payload|
         result = described_class.decode(payload)
-        expect([result.response, result.decoded?]).to eq([payload, false])
+        expect(result).to be_nil
       end
     end
 
@@ -510,7 +504,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       payloads.each do |payload|
         result = described_class.decode(payload)
-        expect([result.response, result.decoded?]).to eq([payload, false])
+        expect(result).to be_nil
       end
     end
 
@@ -519,25 +513,22 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = described_class.decode(raw_response)
 
-      expect(result.response).to equal(raw_response)
-      expect(result).not_to be_decoded
+      expect(result).to be_nil
     end
 
-    it "falls back for invalidly encoded binary input" do
+    it "returns nil for invalidly encoded binary input" do
       raw_response = "\x00\xFF\x01".dup.force_encoding(Encoding::UTF_8)
 
       result = nil
       expect { result = described_class.decode(raw_response) }.not_to raise_error
-      expect(result.response).to equal(raw_response)
-      expect(result).not_to be_decoded
+      expect(result).to be_nil
     end
 
-    it "falls back when the caller marks the payload as truncated" do
+    it "returns nil when the caller marks the payload as truncated" do
       raw_response = sse({ choices: [{ delta: { content: "partial" } }] })
       result = described_class.decode(raw_response, truncated: true)
 
-      expect(result.response).to equal(raw_response)
-      expect(result).not_to be_decoded
+      expect(result).to be_nil
     end
 
     it "accepts exactly the input-size limit and rejects larger payloads" do
@@ -548,10 +539,8 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
       over_limit = at_limit.sub(fragment, "#{fragment}a")
 
       expect(at_limit.bytesize).to eq(described_class::MAX_INPUT_BYTES)
-      expect(described_class.decode(at_limit)).to be_decoded
-      expect(described_class.decode(at_limit).response).to eq(fragment)
-      expect(described_class.decode(over_limit).response).to equal(over_limit)
-      expect(described_class.decode(over_limit)).not_to be_decoded
+      expect(described_class.decode(at_limit)).to eq("response" => fragment)
+      expect(described_class.decode(over_limit)).to be_nil
     end
 
     it "accepts the event-count limit and atomically falls back above it" do
@@ -567,9 +556,8 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
         at_limit = encode.call(at_limit_events)
         over_limit = encode.call(over_limit_events)
 
-        expect(described_class.decode(at_limit)).to be_decoded, transport
-        expect(described_class.decode(over_limit).response).to equal(over_limit), transport
-        expect(described_class.decode(over_limit)).not_to be_decoded, transport
+        expect(described_class.decode(at_limit)).to eq("response" => "answer"), transport
+        expect(described_class.decode(over_limit)).to be_nil, transport
       end
     end
 
@@ -579,7 +567,7 @@ RSpec.describe DiscourseAi::AiApiAuditLogResponseDecoder do
 
       result = nil
       expect { result = described_class.decode(raw_response) }.not_to raise_error
-      expect(result).to be_decoded
+      expect(result).to eq("response" => "answer")
       expect(raw_response).to eq(expected_raw_response)
     end
   end

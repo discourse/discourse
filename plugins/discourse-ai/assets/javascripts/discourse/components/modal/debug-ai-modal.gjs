@@ -11,6 +11,10 @@ import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import AiDecodedTranscript from "discourse/plugins/discourse-ai/discourse/components/ai-decoded-transcript";
 import AiPayloadViewer from "discourse/plugins/discourse-ai/discourse/components/ai-payload-viewer";
+import {
+  decodedResponseText,
+  isDecodedResponse,
+} from "discourse/plugins/discourse-ai/discourse/lib/decoded-response";
 
 export default class DebugAiModal extends Component {
   @tracked info = null;
@@ -29,26 +33,31 @@ export default class DebugAiModal extends Component {
       return null;
     }
 
-    if (this.activeTab === "request") {
-      return this.info.raw_request_payload;
-    }
-
-    return this.info.has_decoded_response && !this.showRawResponse
-      ? this.info.decoded_response
+    return this.activeTab === "request"
+      ? this.info.raw_request_payload
       : this.info.raw_response_payload;
   }
 
-  get showDecodedTranscript() {
+  get hasDecodedResponse() {
+    return isDecodedResponse(this.info?.decoded_response);
+  }
+
+  get showDecodedResponse() {
     return (
       this.activeTab === "response" &&
-      this.info?.has_decoded_response &&
       !this.showRawResponse &&
-      Boolean(this.activePayload)
+      this.hasDecodedResponse
     );
   }
 
   get showResponseToggle() {
-    return this.activeTab === "response" && this.info?.has_decoded_response;
+    return this.activeTab === "response" && this.hasDecodedResponse;
+  }
+
+  get copyValue() {
+    return this.showDecodedResponse
+      ? decodedResponseText(this.info.decoded_response)
+      : this.activePayload;
   }
 
   get activeCopyLabel() {
@@ -291,10 +300,10 @@ export default class DebugAiModal extends Component {
               </p>
             {{/if}}
           </div>
-          {{#if this.showDecodedTranscript}}
+          {{#if this.showDecodedResponse}}
             <AiDecodedTranscript
               class="ai-debug-modal__preview"
-              @payload={{this.activePayload}}
+              @response={{this.info.decoded_response}}
             />
           {{else}}
             <AiPayloadViewer
@@ -334,9 +343,9 @@ export default class DebugAiModal extends Component {
               @translatedLabel={{this.responseToggleLabel}}
             />
           {{/if}}
-          {{#if this.activePayload}}
+          {{#if this.copyValue}}
             <DCopyButton
-              @value={{this.activePayload}}
+              @value={{this.copyValue}}
               @copyClass="btn-default ai-debug-modal__copy"
               @translatedLabel={{this.activeCopyLabel}}
               @translatedLabelAfterCopy={{i18n "discourse_ai.copied"}}

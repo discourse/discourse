@@ -7,7 +7,7 @@ module("Integration | Component | AiDecodedTranscript", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders thinking, tool activity, and the response", async function (assert) {
-    const payload = JSON.stringify({
+    const transcript = {
       thinking: "Check <img src=x onerror=alert(1)>",
       tool_calls: [
         {
@@ -25,10 +25,10 @@ module("Integration | Component | AiDecodedTranscript", function (hooks) {
         },
       ],
       response: "Done",
-    });
+    };
 
     await render(
-      <template><AiDecodedTranscript @payload={{payload}} /></template>
+      <template><AiDecodedTranscript @response={{transcript}} /></template>
     );
 
     assert
@@ -69,65 +69,50 @@ module("Integration | Component | AiDecodedTranscript", function (hooks) {
       .includesText("Done", "the final response is visible");
   });
 
-  test("renders plain and unrecognized JSON responses as text", async function (assert) {
-    const ambiguousPayload = JSON.stringify({
-      response: "Done",
-      metadata: { source: "api" },
-    });
-    const emptyPayload = JSON.stringify({ response: null });
+  test("renders answer-only decoded responses without inferring transcript fields", async function (assert) {
+    const response = { response: '{"thinking":"about this"}' };
 
     await render(
-      <template><AiDecodedTranscript @payload="Plain response" /></template>
+      <template><AiDecodedTranscript @response={{response}} /></template>
     );
 
-    assert
-      .dom(".ai-decoded-transcript__text")
-      .hasText("Plain response", "plain decoded responses are rendered");
     assert
       .dom(".ai-decoded-transcript__thinking")
-      .doesNotExist("plain responses have no thinking section");
-
-    await render(
-      <template>
-        <AiDecodedTranscript @payload='{"answer":"JSON response"}' />
-      </template>
-    );
-
+      .doesNotExist("model-authored JSON is not presented as thinking");
     assert
-      .dom(".ai-decoded-transcript__text")
-      .hasText(
-        '{"answer":"JSON response"}',
-        "unrecognized JSON remains intact"
+      .dom(".ai-decoded-transcript__section.--response")
+      .includesText(
+        '{"thinking":"about this"}',
+        "the model response remains intact"
       );
-    await render(
-      <template><AiDecodedTranscript @payload={{ambiguousPayload}} /></template>
-    );
+  });
 
-    assert
-      .dom(".ai-decoded-transcript__text")
-      .hasText(
-        ambiguousPayload,
-        "ambiguous JSON is preserved without losing fields"
+  test("ignores invalid and empty decoded responses", async function (assert) {
+    for (const response of [
+      null,
+      "response",
+      [],
+      {},
+      { tool_calls: [null, {}], tool_results: [null, {}] },
+    ]) {
+      await render(
+        <template><AiDecodedTranscript @response={{response}} /></template>
       );
-
-    await render(
-      <template><AiDecodedTranscript @payload={{emptyPayload}} /></template>
-    );
-
-    assert
-      .dom(".ai-decoded-transcript__text")
-      .hasText(emptyPayload, "empty transcript-shaped JSON remains visible");
+      assert
+        .dom(".ai-decoded-transcript")
+        .doesNotExist("invalid decoded responses render nothing");
+    }
   });
 
   test("tolerates missing and unexpected tool data", async function (assert) {
-    const payload = JSON.stringify({
+    const transcript = {
       thinking: "Still checking",
       tool_calls: [null, { name: "calculator", arguments: false }],
       tool_results: "not an array",
-    });
+    };
 
     await render(
-      <template><AiDecodedTranscript @payload={{payload}} /></template>
+      <template><AiDecodedTranscript @response={{transcript}} /></template>
     );
 
     assert

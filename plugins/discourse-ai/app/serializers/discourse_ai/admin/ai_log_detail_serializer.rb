@@ -29,7 +29,6 @@ module DiscourseAi
                  :raw_request_payload,
                  :raw_response_payload,
                  :decoded_response,
-                 :has_decoded_response,
                  :raw_request_payload_bytes,
                  :raw_response_payload_bytes,
                  :raw_request_payload_truncated,
@@ -37,11 +36,10 @@ module DiscourseAi
                  :payload_available
 
       def decoded_response
-        decoded_response_result.response
-      end
-
-      def has_decoded_response
-        decoded_response_result.decoded?
+        DiscourseAi::AiApiAuditLogResponseDecoder.decode(
+          object.raw_response_payload,
+          truncated: raw_response_payload_truncated,
+        )
       end
 
       def provider_name
@@ -84,16 +82,6 @@ module DiscourseAi
 
       def payload_available
         !raw_request_payload_bytes.nil? || !raw_response_payload_bytes.nil?
-      end
-
-      private
-
-      def decoded_response_result
-        @decoded_response_result ||=
-          DiscourseAi::AiApiAuditLogResponseDecoder.decode(
-            object.raw_response_payload,
-            truncated: raw_response_payload_truncated,
-          )
       end
     end
   end

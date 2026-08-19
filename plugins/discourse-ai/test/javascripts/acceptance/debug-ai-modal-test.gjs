@@ -18,8 +18,7 @@ function auditLog(timeToFirstToken, duration = 22_300, overrides = {}) {
     response_tokens: 5,
     raw_request_payload: "{}",
     raw_response_payload: RAW_RESPONSE,
-    decoded_response: "Decoded response",
-    has_decoded_response: true,
+    decoded_response: { response: "Decoded response" },
     duration_msecs: duration,
     time_to_first_token_msecs: timeToFirstToken,
     ...overrides,
@@ -43,7 +42,7 @@ acceptance("AI debug modal", function (needs) {
       helper.response(
         auditLog(timeToFirstToken, 22_300, {
           id: 2,
-          decoded_response: "Next decoded response",
+          decoded_response: { response: "Next decoded response" },
         })
       )
     );
@@ -133,7 +132,7 @@ acceptance("AI debug modal", function (needs) {
 
   test("it presents thinking and tool activity as structured details", async function (assert) {
     initialOverrides = {
-      decoded_response: JSON.stringify({
+      decoded_response: {
         thinking: "Check the documentation",
         tool_calls: [
           { id: "call-1", name: "search", arguments: { query: "decoder" } },
@@ -142,7 +141,7 @@ acceptance("AI debug modal", function (needs) {
           { call_id: "call-1", type: "search_result", result: "Found it" },
         ],
         response: "Done",
-      }),
+      },
     };
     await visit("/");
     getOwner(this).lookup("service:modal").show(DebugAiModal, { model: MODEL });
@@ -170,11 +169,33 @@ acceptance("AI debug modal", function (needs) {
       .includesText("Done", "the final response is clearly identified");
   });
 
+  test("it keeps structured model output in the response", async function (assert) {
+    initialOverrides = {
+      decoded_response: {
+        response: JSON.stringify({ thinking: "about this" }),
+      },
+    };
+    await visit("/");
+    getOwner(this).lookup("service:modal").show(DebugAiModal, { model: MODEL });
+    await settled();
+
+    await click(".ai-debug-modal__nav li:nth-child(2) a");
+
+    assert
+      .dom(".ai-decoded-transcript__thinking")
+      .doesNotExist("the model output is not presented as transcript thinking");
+    assert
+      .dom(".ai-decoded-transcript__text")
+      .hasText(
+        '{"thinking":"about this"}',
+        "the structured model response remains intact"
+      );
+  });
+
   test("it omits the switch for raw fallback responses", async function (assert) {
     initialOverrides = {
       raw_response_payload: "upstream error",
-      decoded_response: "upstream error",
-      has_decoded_response: false,
+      decoded_response: null,
     };
     await visit("/");
     getOwner(this).lookup("service:modal").show(DebugAiModal, { model: MODEL });

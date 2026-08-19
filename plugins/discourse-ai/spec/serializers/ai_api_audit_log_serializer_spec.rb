@@ -53,22 +53,20 @@ RSpec.describe AiApiAuditLogSerializer do
 
     expect(serialized).to include(
       raw_response_payload: raw_response,
-      decoded_response: '{"thinking":"No funny stories"}',
-      has_decoded_response: true,
+      decoded_response: {
+        "thinking" => "No funny stories",
+      },
     )
+    expect(serialized).not_to have_key(:has_decoded_response)
   end
 
-  it "returns the exact fallback for a non-streaming response" do
+  it "returns nil when a response cannot be decoded" do
     raw_response = '{"choices":[{"message":{"content":"hello"}}]}'
     log = AiApiAuditLog.new(raw_response_payload: raw_response)
 
     serialized = described_class.new(log).as_json[:ai_api_audit_log]
 
-    expect(serialized).to include(
-      raw_response_payload: raw_response,
-      decoded_response: raw_response,
-      has_decoded_response: false,
-    )
+    expect(serialized).to include(raw_response_payload: raw_response, decoded_response: nil)
   end
 
   it "safely serializes missing logs and response payloads" do
@@ -76,7 +74,7 @@ RSpec.describe AiApiAuditLogSerializer do
 
     serialized =
       described_class.new(AiApiAuditLog.new(raw_response_payload: nil)).as_json[:ai_api_audit_log]
-    expect(serialized).to include(decoded_response: nil, has_decoded_response: false)
+    expect(serialized).to include(decoded_response: nil)
   end
 
   it "includes a null time to first token for historical logs" do

@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
-import { and, eq, or } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCopyButton from "discourse/ui-kit/d-copy-button";
@@ -13,6 +13,10 @@ import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import AiDecodedTranscript from "discourse/plugins/discourse-ai/discourse/components/ai-decoded-transcript";
 import AiPayloadViewer from "discourse/plugins/discourse-ai/discourse/components/ai-payload-viewer";
+import {
+  decodedResponseText,
+  isDecodedResponse,
+} from "discourse/plugins/discourse-ai/discourse/lib/decoded-response";
 
 export default class AiLogDetailModal extends Component {
   @tracked log;
@@ -75,12 +79,8 @@ export default class AiLogDetailModal extends Component {
   }
 
   get activePayload() {
-    if (this.activeTab === "request") {
-      return this.log?.raw_request_payload;
-    }
-
-    return this.log?.has_decoded_response && !this.showRawResponse
-      ? this.log.decoded_response
+    return this.activeTab === "request"
+      ? this.log?.raw_request_payload
       : this.log?.raw_response_payload;
   }
 
@@ -90,18 +90,29 @@ export default class AiLogDetailModal extends Component {
       : this.log?.raw_response_payload_truncated;
   }
 
-  get showDecodedTranscript() {
+  get hasDecodedResponse() {
+    return isDecodedResponse(this.log?.decoded_response);
+  }
+
+  get showDecodedResponse() {
     return (
       this.activeTab === "response" &&
-      this.log?.has_decoded_response &&
       !this.showRawResponse &&
-      Boolean(this.activePayload)
+      this.hasDecodedResponse
     );
+  }
+
+  get showResponseToggle() {
+    return this.activeTab === "response" && this.hasDecodedResponse;
   }
 
   get copyPayload() {
     if (this.activeTab === "context") {
       return this.contextPayload;
+    }
+
+    if (this.showDecodedResponse) {
+      return decodedResponseText(this.log.decoded_response);
     }
 
     if (this.activeTab === "request" || this.activeTab === "response") {
@@ -120,7 +131,7 @@ export default class AiLogDetailModal extends Component {
       return i18n("discourse_ai.logs.detail.copy_request");
     }
 
-    if (!this.log?.has_decoded_response) {
+    if (!this.hasDecodedResponse) {
       return i18n("discourse_ai.logs.detail.copy_response");
     }
 
@@ -330,11 +341,7 @@ export default class AiLogDetailModal extends Component {
             </nav>
             {{#if this.copyPayload}}
               <div class="ai-log-detail-modal__actions">
-                {{#if
-                  (and
-                    (eq this.activeTab "response") this.log.has_decoded_response
-                  )
-                }}
+                {{#if this.showResponseToggle}}
                   <DButton
                     class="btn-default ai-log-detail-modal__response-toggle"
                     @action={{this.toggleResponseView}}
@@ -351,10 +358,10 @@ export default class AiLogDetailModal extends Component {
             {{/if}}
           </div>
 
-          {{#if this.showDecodedTranscript}}
+          {{#if this.showDecodedResponse}}
             <AiDecodedTranscript
               class="ai-log-detail-modal__preview"
-              @payload={{this.activePayload}}
+              @response={{this.log.decoded_response}}
             />
           {{else if
             (or (eq this.activeTab "request") (eq this.activeTab "response"))
