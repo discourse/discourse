@@ -3057,6 +3057,59 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_see_group_and_members?" do
+    it "requires both group visibility and member visibility" do
+      visible_group_hidden_members =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:public],
+          members_visibility_level: Group.visibility_levels[:owners],
+        )
+      expect(
+        Guardian.new(another_user).can_see_group_and_members?(visible_group_hidden_members),
+      ).to eq(false)
+
+      hidden_group_public_members =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:logged_on_users],
+          members_visibility_level: Group.visibility_levels[:public],
+        )
+      expect(Guardian.new.can_see_group_and_members?(hidden_group_public_members)).to eq(false)
+      expect(
+        Guardian.new(another_user).can_see_group_and_members?(hidden_group_public_members),
+      ).to eq(true)
+
+      public_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:public],
+          members_visibility_level: Group.visibility_levels[:public],
+        )
+      expect(Guardian.new.can_see_group_and_members?(public_group)).to eq(true)
+    end
+
+    it "raises via the ensure_ variant unless both are visible" do
+      hidden_group_public_members =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:logged_on_users],
+          members_visibility_level: Group.visibility_levels[:public],
+        )
+      expect {
+        Guardian.new.ensure_can_see_group_and_members!(hidden_group_public_members)
+      }.to raise_error(Discourse::InvalidAccess)
+
+      public_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:public],
+          members_visibility_level: Group.visibility_levels[:public],
+        )
+      expect { Guardian.new.ensure_can_see_group_and_members!(public_group) }.not_to raise_error
+    end
+  end
+
   describe "#can_see_groups?" do
     it "correctly handles owner visible groups" do
       group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
