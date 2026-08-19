@@ -4668,10 +4668,6 @@ dashboard:
     min: 1
     max: 1000000
     area: "reports"
-  enable_site_traffic_explorer:
-    default: false
-    client: true
-    hidden: true
   verbose_user_stat_count_logging:
     hidden: true
     default: false
@@ -4687,6 +4683,10 @@ dashboard:
     client: true
 
 experimental:
+  enable_site_traffic_explorer:
+    default: false
+    client: true
+    area: "experimental"
   reporting_improvements:
     default: false
     client: true
