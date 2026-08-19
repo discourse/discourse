@@ -46,6 +46,9 @@ module DiscourseAssign
           "assignment" => {
             "type" => "object",
             "properties" => {
+              "action" => {
+                "type" => "string",
+              },
               "id" => {
                 "type" => "integer",
               },

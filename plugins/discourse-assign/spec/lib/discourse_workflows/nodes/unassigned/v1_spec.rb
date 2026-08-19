@@ -46,6 +46,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Unassigned::V1 do
       output = described_class.new(assignment).output
 
       expect(output[:assignment]).to include(
+        action: "unassigned",
         id: assignment.id,
         target_type: "Post",
         target_id: post.id,
@@ -71,6 +72,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Unassigned::V1 do
       output = described_class.new(assignment).output
 
       expect(output[:assignment]).to include(
+        action: "unassigned",
         target_type: "Topic",
         target_id: topic.id,
         topic_assignment: true,

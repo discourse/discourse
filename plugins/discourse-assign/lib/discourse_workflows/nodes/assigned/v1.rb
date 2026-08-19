@@ -56,6 +56,7 @@ if defined?(DiscourseWorkflows)
 
           def assignment_data
             {
+              action: "assigned",
               id: @assignment.id,
               target_type: @assignment.target_type,
               target_id: @assignment.target_id,
