@@ -32,6 +32,7 @@
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "postcss": "^8.5.15",
     "postcss-nesting": "^14.0.0",
+    "postcss-value-parser": "^4.2.0",
     "rolldown": "1.1.2",
     "source-map-js": "^1.2.1",
     "strip-test-selectors": "^0.1.0",

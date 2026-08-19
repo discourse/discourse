@@ -90,6 +90,9 @@ importers:
       postcss-selector-parser:
         specifier: ^7.1.4
         version: 7.1.4
+      postcss-value-parser:
+        specifier: ^4.2.0
+        version: 4.2.0
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -177,6 +180,9 @@ importers:
       postcss-nesting:
         specifier: ^14.0.0
         version: 14.0.0(postcss@8.5.15)
+      postcss-value-parser:
+        specifier: ^4.2.0
+        version: 4.2.0
       rolldown:
         specifier: 1.1.2
         version: 1.1.2
