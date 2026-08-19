@@ -39,6 +39,14 @@ RSpec.describe UserAnonymizer do
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
     end
 
+    it "clears the bounce score, since it belonged to the original address" do
+      EmailBounceScore.record_bounce!(original_email, 3.0)
+
+      make_anonymous
+
+      expect(user.reload.user_stat.bounce_score).to eq(0)
+    end
+
     it "changes the primary email normalized email address" do
       make_anonymous
 

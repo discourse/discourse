@@ -28,8 +28,8 @@ module Jobs
             "COALESCE(user_options.digest_after_minutes, ?) > 0",
             SiteSetting.default_email_digest_frequency,
           )
-          .where("user_stats.bounce_score < ?", SiteSetting.bounce_score_threshold)
           .where("user_emails.primary")
+          .where(EmailBounceScore.deliverable_sql)
           .where(
             "COALESCE(user_stats.digest_attempted_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * COALESCE(user_options.digest_after_minutes, ?))",
             SiteSetting.default_email_digest_frequency,

@@ -147,8 +147,7 @@ RSpec.describe Email::Receiver do
     it "sends a system message once they reach the 'bounce_score_threshold'" do
       expect(user.active).to eq(true)
 
-      user.user_stat.bounce_score = SiteSetting.bounce_score_threshold - 1
-      user.user_stat.save!
+      EmailBounceScore.record_bounce!(user.email, SiteSetting.bounce_score_threshold - 1)
 
       SystemMessage.expects(:create_from_system_user).with(user, :email_revoked)
 
@@ -158,11 +157,59 @@ RSpec.describe Email::Receiver do
     it "sends a system message when a score eroded by sending crosses the threshold" do
       # every send erodes the score, so it is rarely a whole number by the time
       # it crosses
-      user.user_stat.update!(bounce_score: SiteSetting.bounce_score_threshold - 0.1)
+      EmailBounceScore.record_bounce!(user.email, SiteSetting.bounce_score_threshold - 0.1)
 
       SystemMessage.expects(:create_from_system_user).with(user, :email_revoked)
 
       expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+    end
+
+    it "does not send a system message before the threshold is reached" do
+      SystemMessage.expects(:create_from_system_user).never
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+    end
+
+    it "does not send a second system message once the address is already over it" do
+      EmailBounceScore.record_bounce!(user.email, SiteSetting.bounce_score_threshold)
+
+      SystemMessage.expects(:create_from_system_user).never
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+    end
+
+    it "still tells the address owner when the bounced mail had no user of its own" do
+      email_log.update!(user_id: nil)
+      EmailBounceScore.record_bounce!(user.email, SiteSetting.bounce_score_threshold - 1)
+
+      SystemMessage.expects(:create_from_system_user).with(user, :email_revoked)
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+    end
+
+    it "keeps the bounce even when the user_stats mirror cannot be refreshed" do
+      UserStat.stubs(:refresh_bounce_score!).raises(StandardError.new("boom"))
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      expect(email_log.reload.bounced).to eq(true)
+      expect(EmailBounceScore.score_for(user.email)).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "does not claim the email was revoked when a secondary address crossed" do
+      user.user_emails.first.update!(email: "someone-else@example.com")
+      Fabricate(:secondary_email, user: user, email: "linux-admin@b-s-c.co.jp")
+      EmailBounceScore.record_bounce!(
+        "linux-admin@b-s-c.co.jp",
+        SiteSetting.bounce_score_threshold - 1,
+      )
+
+      SystemMessage.expects(:create_from_system_user).never
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+      expect(EmailBounceScore.score_for("linux-admin@b-s-c.co.jp")).to eq(
+        SiteSetting.bounce_score_threshold - 1 + SiteSetting.hard_bounce_score,
+      )
     end
   end
 

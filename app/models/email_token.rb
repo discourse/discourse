@@ -65,10 +65,7 @@ class EmailToken < ActiveRecord::Base
       # the user acted on an email sent to this address, so it is proven
       # deliverable and previous bounces (e.g. from a typo fixed on the
       # activation screen) no longer apply
-      if !skip_reset_bounce_score
-        user.user_stat&.reset_bounce_score!
-        EmailBounceScore.reset!(email_token.email)
-      end
+      EmailBounceScore.reset!(email_token.email) if !skip_reset_bounce_score
       user.set_automatic_groups
       DiscourseEvent.trigger(:user_confirmed_email, user, scope)
       Invite.redeem_for_existing_user(user) if scope == EmailToken.scopes[:signup]

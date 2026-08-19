@@ -51,6 +51,8 @@ RSpec.describe UsersEmailController do
       end
 
       it "confirms with a correct token" do
+        # the new address is not the primary yet, so the mirror is deliberately
+        # seeded out of step with it: confirming has to bring it back in line
         user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
         EmailBounceScore.record_bounce!("bubblegum@adventuretime.ooo", 42)
 

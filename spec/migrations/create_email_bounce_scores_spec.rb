@@ -3,12 +3,16 @@
 require Rails.root.join("db/migrate/20260817214148_create_email_bounce_scores.rb")
 
 RSpec.describe CreateEmailBounceScores do
-  subject(:migrate) { described_class.new.migrate(:up) }
+  # dropped here rather than in a `before` so that the users each example sets
+  # up are still fabricated against a schema that has the table
+  subject(:migrate) do
+    ActiveRecord::Base.connection.drop_table(:email_bounce_scores)
+    described_class.new.migrate(:up)
+  end
 
   before do
     @verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
-    ActiveRecord::Base.connection.drop_table(:email_bounce_scores)
   end
 
   after { ActiveRecord::Migration.verbose = @verbose }

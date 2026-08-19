@@ -22,6 +22,13 @@ class UserEmail < ActiveRecord::Base
   before_save -> { destroy_email_tokens(email_was) }, if: :will_save_change_to_email?
 
   after_destroy { destroy_email_tokens(email) }
+
+  # Which address is primary, and what it says, both decide the user's mirrored
+  # bounce score. Deliberately unconditional: Rails collapses several saves of
+  # one row in a transaction into a single callback carrying only the last
+  # save's changes, so a `saved_change_to_email?` guard would miss real changes.
+  after_commit(on: %i[create update destroy]) { UserStat.refresh_bounce_score(user_id) }
+
   def self.ensure_consistency!
     user_ids_without_primary_email = DB.query_single <<~SQL
       SELECT u.id
