@@ -711,4 +711,79 @@ module("Unit | Controller | topic", function (hooks) {
       "transformer allowed finishedEditingTopic"
     );
   });
+
+  test("onMessage skips new posts from ignored users", async function (assert) {
+    const topic = topicWithStream.call(this, {
+      posts: [{ id: 1, post_number: 1 }],
+      stream: [1],
+    });
+    const controller = getOwner(this).lookup("controller:topic");
+    controller.setProperties({ model: topic });
+
+    const user = this.store.createRecord("user", {
+      username: "eviltrout",
+      id: 321,
+      ignored_users: ["ignored-user"],
+    });
+    getOwner(this).unregister("service:current-user");
+    getOwner(this).register("service:current-user", user, {
+      instantiate: false,
+    });
+
+    const stub = sinon
+      .stub(topic.postStream, "triggerNewPostsInStream")
+      .resolves();
+
+    controller.onMessage({
+      type: "created",
+      id: 101,
+      username: "ignored-user",
+      user_id: 321,
+    });
+    await settled();
+
+    assert.false(
+      topic.postStream.stream.includes(101),
+      "ignored user's post is not added to the stream"
+    );
+    assert.false(
+      stub.called,
+      "ignored user's post is not fetched into the stream"
+    );
+  });
+
+  test("onMessage live-inserts new posts from regular users", async function (assert) {
+    const topic = topicWithStream.call(this, {
+      posts: [{ id: 1, post_number: 1 }],
+      stream: [1],
+    });
+    const controller = getOwner(this).lookup("controller:topic");
+    controller.setProperties({ model: topic });
+
+    const user = this.store.createRecord("user", {
+      username: "eviltrout",
+      id: 321,
+    });
+    getOwner(this).unregister("service:current-user");
+    getOwner(this).register("service:current-user", user, {
+      instantiate: false,
+    });
+
+    const stub = sinon
+      .stub(topic.postStream, "triggerNewPostsInStream")
+      .resolves();
+
+    controller.onMessage({
+      type: "created",
+      id: 101,
+      username: "regular-user",
+      user_id: 321,
+    });
+    await settled();
+
+    assert.true(
+      stub.calledOnce,
+      "regular user's post is fetched into the stream"
+    );
+  });
 });
