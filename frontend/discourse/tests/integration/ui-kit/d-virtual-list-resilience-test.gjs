@@ -62,7 +62,7 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
     enableVirtualization();
     // These tests drive consumer callbacks that throw on purpose; the primitive
     // reports them rather than rethrowing, so silence the report itself.
-    sinon.stub(console, "error");
+    this.consoleError = sinon.stub(console, "error");
   });
 
   hooks.afterEach(function () {
@@ -106,6 +106,13 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
       find(".d-virtual-list__sizer").offsetHeight > 0,
       "the sizer still took the list's height"
     );
+
+    // The stub is not just noise suppression: this path exists to REPORT, and
+    // without asserting it the reporting could be deleted with the suite still green.
+    assert.true(
+      this.consoleError.calledWithMatch(/\[d-virtual-list\] onReachEnd/),
+      "the swallowed onReachEnd error is reported"
+    );
   });
 
   test("a throwing pinnedIndices degrades to the unextended window", async function (assert) {
@@ -146,6 +153,13 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
     assert.false(
       indices.includes(0),
       "no pin is applied, rather than the render crashing on a poisoned window"
+    );
+
+    // The stub is not just noise suppression: this path exists to REPORT, and
+    // without asserting it the reporting could be deleted with the suite still green.
+    assert.true(
+      this.consoleError.calledWithMatch(/\[d-virtual-list\] pinnedIndices/),
+      "the swallowed pinnedIndices error is reported"
     );
   });
 

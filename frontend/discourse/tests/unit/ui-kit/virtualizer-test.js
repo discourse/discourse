@@ -87,6 +87,13 @@ module("Unit | ui-kit | virtualizer", function () {
 
       await new Promise((resolve) => setTimeout(resolve, 250));
 
+      // Without this the assertion below can pass by arriving BEFORE the settle it
+      // exists to outlast: a longer debounce in a future engine version would make
+      // it vacuous rather than failing, which is the opposite of what it guards.
+      assert.false(
+        virtualizer.isScrolling,
+        "precondition: the scroll settle actually ran inside the wait"
+      );
       assert.strictEqual(
         virtualizer.scrollOffset,
         1000,

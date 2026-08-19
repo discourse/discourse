@@ -7,7 +7,8 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/lib/virtualizer";
 
-const estimate = () => 40;
+const ROW_PX = 40;
+const estimate = () => ROW_PX;
 const items = Array.from({ length: 100 }, (_, index) => ({
   id: index,
   text: `Row ${index}`,
@@ -81,10 +82,12 @@ module("Integration | ui-kit | DVirtualList | rendering", function (hooks) {
         "absolute",
         `row ${row.dataset.index} is absolutely positioned`
       );
-      assert.notStrictEqual(
-        getComputedStyle(row).transform,
-        "none",
-        `row ${row.dataset.index} is translated to its virtual position`
+      // Asserted against the row's OWN index rather than merely being non-"none",
+      // which every row sharing translateY(0) would also satisfy.
+      assert.strictEqual(
+        row.style.transform,
+        `translateY(${Number(row.dataset.index) * ROW_PX}px)`,
+        `row ${row.dataset.index} is translated to its own virtual offset`
       );
       assert.strictEqual(
         row.textContent.trim(),

@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -9,6 +10,10 @@ import dVirtualizer from "discourse/ui-kit/modifiers/d-virtualizer";
 
 const ROW_PX = 40;
 const estimate = () => ROW_PX;
+
+class ReSyncState {
+  @tracked estimate = estimate;
+}
 
 function buildRows(count) {
   return Array.from({ length: count }, (_, index) => ({
@@ -33,6 +38,48 @@ module(
 
     hooks.afterEach(function () {
       disableVirtualization();
+    });
+
+    // The existing "re-syncing options does not republish" test counts
+    // onVisibleRangeChange, which a SECOND gate suppresses whenever the indices are
+    // unchanged, so deleting the signature gate leaves it green. Counting onState
+    // publishes on ONE mounted instance observes the signature gate and nothing else.
+    test("an identity-only options re-sync does not republish the window", async function (assert) {
+      const publishes = [];
+      const onState = (state) => publishes.push(state);
+      const items = buildRows(100);
+      const state = new ReSyncState();
+
+      await render(
+        <template>
+          <div
+            class="resync-viewport"
+            style="height: 400px; overflow-y: auto"
+            {{dVirtualizer
+              items=items
+              estimateSize=state.estimate
+              key="id"
+              onState=onState
+            }}
+          >
+            <div class="d-virtual-list__sizer"></div>
+          </div>
+        </template>
+      );
+
+      const publishesAfterMount = publishes.length;
+      assert.true(publishesAfterMount > 0, "precondition: the mount published");
+
+      // A different closure with identical behaviour, on the SAME instance: the
+      // options object changes identity while the rendered window does not.
+      state.estimate = () => ROW_PX;
+      await settled();
+
+      assert.strictEqual(
+        publishes.length,
+        publishesAfterMount,
+        "an options change that moves nothing republishes nothing"
+      );
     });
 
     test("the published range is an exact frozen snapshot or null", async function (assert) {
