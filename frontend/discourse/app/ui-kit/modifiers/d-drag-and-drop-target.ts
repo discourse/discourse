@@ -63,6 +63,17 @@ export interface DragAndDropTargetArgs extends DropTargetKernelArgs<DropTargetSo
    * `dDragAndDropSource` registered, such as native links or images.
    * Independent of `accepts`, since such content carries no source type;
    * adopted payloads arrive on `source.native`.
+   *
+   * Adoption is resolved once for the page, not per target. At `dragstart` the
+   * first live adoption whose predicate matches names the drag, and every
+   * target listing that name accepts it.
+   *
+   * So two adoptions sharing a name must share a predicate. Declare one as a
+   * module constant and offer it from each target.
+   *
+   * Covers only what the browser started on this page. Pair it with
+   * `dDragAndDropExternalTarget` on the same element to take the same content
+   * dragged in from outside the window.
    */
   adopts?: NativeDragAdoption | NativeDragAdoption[];
 
@@ -105,8 +116,13 @@ export function registerDragAndDropTarget(
     decorateSource: (source: ElementDragPayload) => normalizeDragSource(source),
     accepts: (source) => {
       const args = getArgsRef();
+      // Computed above every branch, so a filter added later cannot return
+      // without applying it.
+      const acceptsSelf =
+        args.acceptsSelf !== false || dragBodyOf(source) !== element;
+
       if (isAdoptedDrag(source.data)) {
-        return offersAdoptionFor(source.data, args.adopts);
+        return offersAdoptionFor(source.data, args.adopts) && acceptsSelf;
       }
       // A target offering adoption named exactly what it wants through
       // `adopts`; treating an omitted source filter as "everything" would also
@@ -114,11 +130,8 @@ export function registerDragAndDropTarget(
       if (!args.accepts && args.adopts) {
         return false;
       }
-      if (!matchesDragType(args.accepts, source)) {
-        return false;
-      }
 
-      return args.acceptsSelf !== false || dragBodyOf(source) !== element;
+      return matchesDragType(args.accepts, source) && acceptsSelf;
     },
     onCleanup: stopWatchingForAdoption,
     getArgs: getArgsRef,

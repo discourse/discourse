@@ -1,5 +1,6 @@
 import { cancel, next } from "@ember/runloop";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
 import {
   decorateExternalSource,
   type ExternalDragPayload,
@@ -7,6 +8,7 @@ import {
 import {
   ADOPTED_AS,
   ADOPTED_DRAG_TYPE,
+  DRAG_BODY,
 } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 import { makeArray } from "discourse/lib/helpers";
 
@@ -45,9 +47,9 @@ export interface NativeDragAdoptionFeedback {
   element: HTMLElement;
 
   /**
-   * The incoming payload, already snapshotted. Not the live `DataTransfer`: its
-   * handles go inert when the `dragstart` dispatch ends, so anything read later
-   * would come back empty.
+   * The incoming payload, already snapshotted. It is not the live
+   * `DataTransfer`. Those handles go inert when the `dragstart` dispatch ends,
+   * so a later read comes back empty.
    */
   source: ExternalDragPayload;
 }
@@ -55,33 +57,33 @@ export interface NativeDragAdoptionFeedback {
 /**
  * Opt-in description of a browser-started drag a target is willing to adopt.
  *
- * The gate is a predicate rather than a list of payload kinds because the kinds
- * are too coarse to be safe: a web link needs `"text"` accepted when a source
- * publishes its URL only as text, and that also describes a text selection.
+ * The gate is a predicate rather than a list of payload kinds, because the
+ * kinds are too coarse. Accepting `"text"` catches a URL published only as
+ * text, but it catches a dragged text selection too.
  */
 export interface NativeDragAdoption {
   /**
-   * Names this kind of adopted drag: what `adopts` is matched against, what a
-   * target reports as `source.type`, and what a monitor or auto-scroll filters
-   * on. It travels beside the internal routing type, but downstream consumers
-   * do not need to know that.
+   * Names this kind of adopted drag. `adopts` is matched against it, a target
+   * reports it as `source.type`, and a monitor or auto-scroll filters on it.
    */
   type: string;
 
-  /** Whether this drag should be adopted. Throwing is treated as `false`. */
+  /** Whether this drag should be adopted. Throwing is reported as a refusal. */
   match: (feedback: NativeDragAdoptionFeedback) => boolean;
 
-  /** Payload for `source.data`; reserved routing keys are stamped over it. */
+  /**
+   * Payload for `source.data`. Reserved routing keys are stamped over it.
+   * Throwing is reported and yields no payload.
+   */
   getData?: (feedback: NativeDragAdoptionFeedback) => object;
 }
 
 /**
  * Live targets that might adopt, held so the listener below can ask them.
  *
- * Every target joins, not only those with `adopts`: deciding during registration
- * would read an argument inside the modifier's tracking frame and re-register
- * the drop target on unrelated argument changes. Reading `adopts` from a DOM
- * listener consumes nothing because no autotracking frame is open there.
+ * Every target joins, not only those with `adopts`. Reading the arg during
+ * registration would track it and re-register the target on unrelated changes.
+ * A DOM listener has no tracking frame open, so reading it there is free.
  */
 const adoptionCandidates = new Set<() => AdoptionCandidateArgs>();
 
@@ -93,12 +95,23 @@ let liveAdoption: { release: () => void } | null = null;
 /**
  * Whether this drag started from a text selection, which must never be adopted.
  *
- * A selection drag can target a text node, which the `HTMLElement` check already
- * excludes, but some browsers report the nearest element instead. The selection
- * itself must therefore be checked as well as editable ancestry.
+ * A selection drag can target a text node, which the `HTMLElement` check
+ * already excludes, but some browsers report the nearest element instead. So
+ * editable ancestry, text controls and the document selection are all asked.
  */
 function isTextSelectionDrag(target: HTMLElement) {
   if (target.closest("[contenteditable]:not([contenteditable='false'])")) {
+    return true;
+  }
+  // A text control keeps its selection out of the document's, so the check
+  // below cannot see it. Ask the control itself, and refuse when it will not
+  // answer: some control types report null offsets rather than a range.
+  if (
+    (target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement) &&
+    (target.selectionStart === null ||
+      target.selectionStart !== target.selectionEnd)
+  ) {
     return true;
   }
   const selection = window.getSelection();
@@ -113,10 +126,9 @@ function isTextSelectionDrag(target: HTMLElement) {
 /**
  * Reads and copies the payload while it is still available.
  *
- * String data is readable during `dragstart`; by `dragover` the store is in
- * protected mode, and item handles cannot be retained safely. The snapshot
- * therefore preserves strings and types while deliberately exposing an empty
- * `items` list instead of handing consumers dead objects.
+ * String data is readable during `dragstart`. By `dragover` the store is
+ * protected and item handles cannot be held safely. So the snapshot keeps
+ * strings and types, and exposes an empty `items` rather than dead handles.
  */
 function snapshotPayload(dataTransfer: DataTransfer): ExternalDragPayload {
   const types = Array.from(dataTransfer.types);
@@ -147,10 +159,9 @@ function offeredAdoptions() {
  * Hands a browser-started drag to the element-drag adapter so ordinary targets
  * receive it.
  *
- * The adapter only dispatches for registered elements and looks one up while
- * `dragstart` bubbles. Registering from a capture-phase listener on `window`
- * lands in time for that same drag, giving registered sources and adopted page
- * content one dispatch path and one target lifecycle.
+ * The adapter dispatches only for registered elements, and looks one up while
+ * `dragstart` bubbles. A capture-phase listener on `window` registers in time
+ * for that drag, so adopted content shares the registered sources' dispatch.
  */
 function adoptNativeDrag(event: DragEvent) {
   const target = event.target;
@@ -180,15 +191,10 @@ function adoptNativeDrag(event: DragEvent) {
   }
 
   const feedback = { element: target, source };
-  const adoption = offeredAdoptions().find((candidate) => {
-    try {
-      return candidate.match(feedback);
-    } catch {
-      // A consumer predicate must not decide the fate of later candidates or
-      // surface as an unrelated failure from this app-wide listener.
-      return false;
-    }
-  });
+  const adoption = offeredAdoptions().find((candidate) =>
+    // A throw must not stop the candidates after it from being asked.
+    consumerMayThrow(() => candidate.match(feedback), false)
+  );
 
   if (!adoption) {
     return;
@@ -202,16 +208,19 @@ function adoptNativeDrag(event: DragEvent) {
   const cleanup = draggable({
     element: target,
     getInitialData: () => ({
-      ...adoption.getData?.(feedback),
+      // Copied inside the guard, so a payload that throws while it is read is
+      // caught like one that throws while it is built.
+      ...consumerMayThrow(() => ({ ...adoption.getData?.(feedback) }), {}),
       // Last, so consumer data cannot overwrite the routing values and disguise
-      // an adopted drag as a registered source.
+      // an adopted drag as a registered source, or name a different element as
+      // the one being dragged.
       type: ADOPTED_DRAG_TYPE,
       [ADOPTED_AS]: adoption.type,
+      [DRAG_BODY]: target,
       native: source,
     }),
-    // This fires synchronously during the originating dispatch. The drag-start
-    // callback runs later and cannot distinguish a live drag from one that never
-    // began.
+    // Fires synchronously during the originating dispatch. The drag-start
+    // callback runs later, too late to tell a live drag from one that never was.
     onGenerateDragPreview: () => {
       started = true;
     },
@@ -234,9 +243,8 @@ function adoptNativeDrag(event: DragEvent) {
     }
   };
 
-  // A drag can be cancelled before it starts, followed by no event that could
-  // release this registration. A run-loop task waits until every listener had a
-  // chance to start it; a microtask would run between listener invocations.
+  // A drag cancelled before it starts fires no event that would release this
+  // registration. A run-loop task waits for every listener, a microtask would not.
   const neverStarted = next(() => {
     if (!started) {
       release();
@@ -255,6 +263,12 @@ export function resetDragAdoptionForTesting() {
   stopListeningForAdoption = null;
 }
 
+/**
+ * Adds a target to the adoption candidates, starting the shared listener.
+ *
+ * @param getArgsRef - Closure returning the target's latest args.
+ * @returns Cleanup; call it once on teardown.
+ */
 export function watchForAdoptableDrags(
   getArgsRef: () => AdoptionCandidateArgs
 ) {

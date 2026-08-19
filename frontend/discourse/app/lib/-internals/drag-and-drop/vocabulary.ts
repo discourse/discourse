@@ -35,9 +35,8 @@ export const ADOPTED_AS = "adoptedAs";
 /**
  * The type a drag answers to in an `accepts` / `types` filter.
  *
- * For an adopted drag, this is the adoption's declared type rather than its
- * internal routing type. Consumers therefore filter on their own vocabulary
- * without needing to distinguish adopted and registered sources.
+ * For an adopted drag this is the adoption's declared type, not the internal
+ * routing type, so consumers filter on their own vocabulary either way.
  *
  * @param data - A drag payload's `data`, as the underlying library carries it.
  */
@@ -119,7 +118,7 @@ export function normalizeDragSource(
 ): NormalizedDragSource {
   const { [DRAG_BODY]: body, ...data } = source.data ?? {};
   const adopted = data.type === ADOPTED_DRAG_TYPE;
-  // The reserved keys route an adopted drag; a consumer iterating `data` must
+  // The reserved keys route an adopted drag. A consumer iterating `data` must
   // not meet them.
   const { [ADOPTED_AS]: adoptedAs, native, ...consumerData } = data;
   delete consumerData.type;

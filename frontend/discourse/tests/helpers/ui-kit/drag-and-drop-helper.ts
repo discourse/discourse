@@ -269,9 +269,9 @@ function registeredElementFor(rowSelector: string) {
 /**
  * Drives a browser-started drag from page content no source registered.
  *
- * The event sequence matches an element drag; the guards prove the source is
- * unsourced and the destination is an element target, so this cannot silently
- * exercise a registered-source or external-target path instead.
+ * The event sequence matches an element drag. The guards prove the source is
+ * unsourced and the destination is an element target, so this cannot quietly
+ * exercise the registered-source or external path instead.
  *
  * @param sourceSelector - CSS selector for the unregistered element to drag.
  * @param targetSelector - CSS selector for the target element.

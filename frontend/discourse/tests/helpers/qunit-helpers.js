@@ -40,6 +40,7 @@ import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/us
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
+import { resetDragAdoptionForTesting } from "discourse/lib/-internals/drag-and-drop/native-drag-adoption";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
@@ -116,7 +117,6 @@ import { resetDragAndDropForTesting } from "discourse/tests/helpers/ui-kit/drag-
 import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import { resetDragAdoptionForTesting } from "discourse/lib/-internals/drag-and-drop/native-drag-adoption";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
