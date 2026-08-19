@@ -35,7 +35,7 @@
       }
     }
 
-    .btn.dropdown-select-box-header,
+    .btn.sidebar-section-header-dropdown,
     .sidebar-section-header-button {
       background: transparent;
       padding-inline: var(--space-1);
@@ -72,7 +72,7 @@
 
   &:hover {
     .sidebar-section-header-wrapper {
-      .btn.dropdown-select-box-header,
+      .btn.sidebar-section-header-dropdown,
       .sidebar-section-header-button {
         opacity: 1;
       }
