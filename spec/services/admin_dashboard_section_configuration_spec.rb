@@ -6,7 +6,7 @@ describe AdminDashboardSectionConfiguration do
   fab!(:category_2, :category)
 
   describe ".sections" do
-    it "returns every seeded section, all visible, in canonical order by default" do
+    it "returns every seeded section in canonical order, respecting default visibility" do
       expect(described_class.sections).to eq(
         [
           { id: "highlights", visible: true },
@@ -14,6 +14,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
           { id: "search", visible: true },
+          { id: "system", visible: false },
         ],
       )
     end
@@ -36,6 +37,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
           { id: "search", visible: true },
+          { id: "system", visible: false },
         ],
       )
     end
@@ -77,6 +79,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
           { id: "search", visible: true },
+          { id: "system", visible: false },
         ],
       )
     end
@@ -95,6 +98,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
           { id: "search", visible: true },
+          { id: "system", visible: false },
         ],
       )
     end

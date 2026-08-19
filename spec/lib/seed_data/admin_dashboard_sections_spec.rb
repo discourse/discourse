@@ -5,7 +5,7 @@ require "seed_data/admin_dashboard_sections"
 describe SeedData::AdminDashboardSections do
   before { AdminDashboardSection.delete_all }
 
-  it "seeds every known section, visible, in canonical order" do
+  it "seeds every known section in canonical order, respecting default visibility" do
     described_class.create
 
     rows = AdminDashboardSection.order(:position).pluck(:section_id, :position, :visible)
@@ -16,6 +16,7 @@ describe SeedData::AdminDashboardSections do
         ["traffic", 2, true],
         ["engagement", 3, true],
         ["search", 4, true],
+        ["system", 5, false],
       ],
     )
   end
