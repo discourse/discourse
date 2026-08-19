@@ -446,6 +446,7 @@ module ApplicationHelper
     if !SiteSetting.trigger_browser_pageview_events && !SiteSetting.persist_browser_pageview_events
       return ""
     end
+    return "" if Rails.env.development? && ENV["TRACK_REQUESTS"].blank?
 
     tags = +""
     tags << tag.meta(
