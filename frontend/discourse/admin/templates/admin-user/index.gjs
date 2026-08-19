@@ -21,6 +21,27 @@ import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const bounceStateFor = (user, email) => user.bounceStateFor(email);
+
+const EmailBounceState = <template>
+  {{#if @state}}
+    <div class="email-bounce">
+      <a class="email-bounce__link" href={{@bounceLink}}>
+        {{dIcon "triangle-exclamation"}}
+        {{i18n "admin.user.bounce_score_for_email" score=@state.score}}
+      </a>
+      <DButton
+        @action={{fn @reset @email}}
+        @label="admin.user.reset_bounce_score.label"
+        @translatedTitle={{@state.resetTitle}}
+        @translatedAriaLabel={{@state.resetTitle}}
+        class="btn-default email-bounce__reset"
+      />
+      <div class="email-bounce__explanation">{{@state.explanation}}</div>
+    </div>
+  {{/if}}
+</template>;
+
 export default <template>
   <section class="details {{unless @controller.model.active 'not-activated'}}">
     <div class="user-controls">
@@ -93,6 +114,15 @@ export default <template>
             <a
               href="mailto:{{@controller.model.email}}"
             >{{@controller.model.email}}</a>
+            <EmailBounceState
+              @state={{bounceStateFor
+                @controller.model
+                @controller.model.email
+              }}
+              @email={{@controller.model.email}}
+              @bounceLink={{@controller.model.bounceLink}}
+              @reset={{@controller.resetBounceScore}}
+            />
           {{else}}
             <DButton
               @action={{fn (routeAction "checkEmail") @controller.model}}
@@ -101,6 +131,16 @@ export default <template>
               @title="admin.users.check_email.title"
               class="btn-default"
             />
+            {{! `bounce_score` mirrors the primary address, which is the only one
+                delivery is gated on; naming it costs a `check_email` audit entry }}
+            {{#if (gt @controller.model.bounce_score 0)}}
+              <div class="email-bounce email-bounce--unrevealed">
+                <span class="email-bounce__link">
+                  {{dIcon "triangle-exclamation"}}
+                  {{i18n "admin.user.bounce_score_hidden"}}
+                </span>
+              </div>
+            {{/if}}
           {{/if}}
         </div>
         <div class="controls">
@@ -122,7 +162,15 @@ export default <template>
             {{#if @controller.model.secondary_emails}}
               <ul>
                 {{#each @controller.model.secondary_emails as |email|}}
-                  <li><a href="mailto:{{email}}">{{email}}</a></li>
+                  <li>
+                    <a href="mailto:{{email}}">{{email}}</a>
+                    <EmailBounceState
+                      @state={{bounceStateFor @controller.model email}}
+                      @email={{email}}
+                      @bounceLink={{@controller.model.bounceLink}}
+                      @reset={{@controller.resetBounceScore}}
+                    />
+                  </li>
                 {{/each}}
               </ul>
             {{else}}
@@ -153,24 +201,6 @@ export default <template>
               {{/if}}
             {{/if}}
           {{/if}}
-        </div>
-      </div>
-
-      <div class="display-row bounce-score">
-        <div class="field"><a href={{@controller.model.bounceLink}}>{{i18n
-              "admin.user.bounce_score"
-            }}</a></div>
-        <div class="value">{{@controller.model.bounceScore}}</div>
-        <div class="controls">
-          {{#if @controller.model.canResetBounceScore}}
-            <DButton
-              @action={{@controller.resetBounceScore}}
-              @label="admin.user.reset_bounce_score.label"
-              @title="admin.user.reset_bounce_score.title"
-              class="btn-default"
-            />
-          {{/if}}
-          {{@controller.model.bounceScoreExplanation}}
         </div>
       </div>
 

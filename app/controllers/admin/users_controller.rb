@@ -577,7 +577,23 @@ class Admin::UsersController < Admin::StaffController
 
   def reset_bounce_score
     guardian.ensure_can_reset_bounce_score!(@user)
-    EmailBounceScore.reset_for_user!(@user)
+
+    if (email = params[:email].presence)
+      # naming one address only makes sense to someone allowed to see them, and
+      # the 404 below would otherwise answer "does this user own this address?"
+      guardian.ensure_can_check_emails!(@user)
+      email = EmailBounceScore.canonicalize(email)
+      # only the user's own addresses, so this can't clear a stranger's embargo.
+      # An address that has already eroded away is a no-op rather than a 404,
+      # since the admin asked for a state the row's absence already satisfies
+      raise Discourse::NotFound if !@user.user_emails.exists?(email:)
+      EmailBounceScore.reset!(email)
+    else
+      EmailBounceScore.reset_for_user!(@user)
+    end
+
+    # deliberately not logging which address: `:reset_bounce_score` stays visible
+    # to moderators when `moderators_view_emails` is off
     StaffActionLogger.new(current_user).log_reset_bounce_score(@user)
     render json: success_json
   end

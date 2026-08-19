@@ -455,6 +455,17 @@ RSpec.describe UserDestroyer do
 
         include_examples "successfully destroy a user"
         include_examples "email block list"
+
+        it "clears the bounce score of every address the user owned" do
+          secondary = Fabricate(:secondary_email, user: user).email
+          EmailBounceScore.record_bounce!(user.email, 3.0)
+          EmailBounceScore.record_bounce!(secondary, 3.0)
+
+          destroy
+
+          expect(EmailBounceScore.score_for(user.email)).to eq(0)
+          expect(EmailBounceScore.score_for(secondary)).to eq(0)
+        end
       end
 
       context "when destroy fails" do

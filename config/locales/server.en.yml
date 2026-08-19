@@ -2561,9 +2561,9 @@ en:
     postmark_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/sparkpost?t=supersecret"
 
-    soft_bounce_score: "Bounce score added to the user when a temporary bounce happens."
-    hard_bounce_score: "Bounce score added to the user when a permanent bounce happens."
-    bounce_score_threshold: "Max bounce score before we will stop emailing a user."
+    soft_bounce_score: "Bounce score added to the email address when a temporary bounce happens."
+    hard_bounce_score: "Bounce score added to the email address when a permanent bounce happens."
+    bounce_score_threshold: "Max bounce score before we will stop emailing an address."
     reset_bounce_score_after_days: "Automatically reset bounce score after X days."
 
     blocked_attachment_content_types: "List of keywords used to blocklist attachments based on the content type."
