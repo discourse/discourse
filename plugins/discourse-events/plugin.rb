@@ -282,6 +282,7 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
+  require_relative "lib/discourse_events/events/chat_channel_sync"
   require_relative "lib/discourse_events/events/email_renderer"
   require_relative "lib/discourse_events/events/excerpt"
   require_relative "lib/discourse_events/events/finder"
@@ -557,6 +558,7 @@ after_initialize do
   require_relative "lib/discourse_events/calendar/validator"
   require_relative "lib/discourse_events/calendar/event_validator"
   require_relative "lib/discourse_events/group_timezones/extractor"
+  require_relative "lib/discourse_events/holidays/finder"
   require_relative "lib/discourse_events/holidays/status"
   require_relative "lib/discourse_events/holidays/users_on_holiday"
 
