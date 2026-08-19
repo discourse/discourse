@@ -225,6 +225,31 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    describe "#can_preview_anonymous_public_chat_channel?" do
+      before do
+        SiteSetting.enable_public_channels = true
+        SiteSetting.chat_allowed_groups =
+          "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+      end
+
+      it "returns true for channels backed by categories anonymous users can see" do
+        expect(guardian.can_preview_anonymous_public_chat_channel?(channel)).to eq(true)
+      end
+
+      it "returns false for private category channels visible only to the user" do
+        category =
+          Fabricate(
+            :private_category,
+            group: Fabricate(:group, users: [user]),
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        channel.update!(chatable: category)
+
+        expect(guardian.can_preview_chat_channel?(channel)).to eq(true)
+        expect(guardian.can_preview_anonymous_public_chat_channel?(channel)).to eq(false)
+      end
+    end
+
     describe "#can_post_in_chatable?" do
       alias_matcher :be_able_to_post_in_chatable, :be_can_post_in_chatable
 

@@ -153,6 +153,13 @@ module Chat
       can_see_chatable?(chat_channel.chatable)
     end
 
+    def can_preview_anonymous_public_chat_channel?(chat_channel)
+      return false if !Chat.anonymous_public_channel_access_allowed?
+      return false if !chat_channel&.category_channel?
+
+      Guardian.new(nil).can_preview_chat_channel?(chat_channel)
+    end
+
     def can_see_chat_message?(message)
       return false if !can_preview_chat_channel?(message.chat_channel)
       return true if !message.trashed?
