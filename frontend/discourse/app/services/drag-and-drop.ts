@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { registerDestructor } from "@ember/destroyable";
+import { isDestroying, registerDestructor } from "@ember/destroyable";
 import Service from "@ember/service";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/adapter/monitor-for-external";
@@ -47,9 +47,9 @@ export default class DragAndDropService extends Service {
     // bound when a draggable registers, so this costs nothing without one.
     const cleanupElements = monitorForElements({
       canMonitor: ({ source }) =>
-        this.#alive && dragTypeOf(source.data) != null,
+        !isDestroying(this) && dragTypeOf(source.data) != null,
       onDragStart: ({ source }) => {
-        if (!this.#alive) {
+        if (isDestroying(this)) {
           return;
         }
         const normalized = normalizeDragSource(source);
@@ -62,27 +62,29 @@ export default class DragAndDropService extends Service {
         });
       },
       onDrop: () => {
-        if (!this.#alive) {
+        if (isDestroying(this)) {
           return;
         }
         this.clearCurrentDrag();
       },
     });
     const cleanupExternal = monitorForExternal({
-      canMonitor: () => this.#alive,
+      canMonitor: () => !isDestroying(this),
       onDragStart: ({ source }) => {
-        if (!this.#alive) {
+        if (isDestroying(this)) {
           return;
         }
         this.currentExternalDrag = decorateExternalSource(source);
       },
       onDrop: () => {
-        if (!this.#alive) {
+        if (isDestroying(this)) {
           return;
         }
         this.currentExternalDrag = null;
       },
     });
+    // This runs deferred, so a monitor callback can still fire after
+    // destruction begins. The `isDestroying` guards above cover that gap.
     registerDestructor(this, () => {
       cleanupElements();
       cleanupExternal();
@@ -92,14 +94,6 @@ export default class DragAndDropService extends Service {
   /** Whether an element or external drag is in flight. */
   get isDragging() {
     return !!(this.currentDrag || this.currentExternalDrag);
-  }
-
-  /**
-   * Destructors run deferred, so a callback can fire after destroy starts and
-   * before the monitors are unsubscribed.
-   */
-  get #alive() {
-    return !this.isDestroying && !this.isDestroyed;
   }
 
   /** Stores the in-flight drag's payload. */

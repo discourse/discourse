@@ -1,8 +1,10 @@
+import { destroy } from "@ember/destroyable";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
   dragEvent,
+  dragEventNow,
   textTransfer,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 
@@ -129,14 +131,11 @@ module("Unit | Service | drag-and-drop", function (hooks) {
     );
   });
 
-  test("external monitor ignores drag start while service is destroying", async function (assert) {
+  test("external monitor ignores drag start while service is destroying", function (assert) {
     const dataTransfer = textTransfer("external payload");
 
-    Object.defineProperty(this.dragAndDrop, "isDestroying", {
-      configurable: true,
-      value: true,
-    });
-    await dragEvent(document.body, "dragenter", {
+    destroy(this.dragAndDrop);
+    dragEventNow(document.body, "dragenter", {
       dataTransfer,
       clientX: 1,
       clientY: 1,
@@ -146,13 +145,6 @@ module("Unit | Service | drag-and-drop", function (hooks) {
       Boolean(this.dragAndDrop.currentExternalDrag),
       "a destroying service does not record a newly-started external drag"
     );
-
-    delete this.dragAndDrop.isDestroying;
-    await dragEvent(document.body, "drop", {
-      dataTransfer,
-      clientX: 1,
-      clientY: 1,
-    });
   });
 
   test("external monitor ignores drop after service destruction begins", async function (assert) {
@@ -169,13 +161,8 @@ module("Unit | Service | drag-and-drop", function (hooks) {
       "the service records the external drag before destruction"
     );
 
-    // Stubbed, not destroyed: a real destroy also tears the monitor down, so the
-    // drop would be ignored even without the guard under test.
-    Object.defineProperty(this.dragAndDrop, "isDestroying", {
-      configurable: true,
-      value: true,
-    });
-    await dragEvent(document.body, "drop", {
+    destroy(this.dragAndDrop);
+    dragEventNow(document.body, "drop", {
       dataTransfer,
       clientX: 1,
       clientY: 1,
@@ -186,7 +173,5 @@ module("Unit | Service | drag-and-drop", function (hooks) {
       externalDrag,
       "a destroying service ignores the in-flight external drag's drop callback"
     );
-
-    delete this.dragAndDrop.isDestroying;
   });
 });
