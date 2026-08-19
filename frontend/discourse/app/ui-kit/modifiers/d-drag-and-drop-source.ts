@@ -179,29 +179,27 @@ interface DDragAndDropSourceSignature {
 
 /**
  * What a registration still owes after being detached without cancelling, and
- * the two different reasons for letting go of it.
+ * the ways its owner can resume or let go of it.
  *
- * They are not interchangeable, and picking the wrong one is silent: a dispatch
- * belongs to a drag that already finished, so cancelling it robs a consumer that
- * is still there of the `onDragEnd` it was promised, while leaving a waiting
- * teardown in place lets a second registration land on the same element.
+ * A registration waiting for its drag can be reclaimed when the modifier needs
+ * that same element again. Work holding only a scheduled dispatch cannot: its
+ * drag has ended and its registration has already been torn down.
  */
 export interface DetachedSourceWork {
   /**
-   * The element the registration was created on — the drag handle when one was
-   * given, the source element otherwise. A replacement registering on the SAME
-   * element must supersede this work first (two registrations on one element is
-   * not a state the library supports); one registering elsewhere must leave it
-   * waiting, because the library dispatches an in-flight drag's end by looking
-   * this element up.
+   * The element the registration was created on: the drag handle when one was
+   * given, the source element otherwise. A replacement registering on the same
+   * element can reclaim this work; one registering elsewhere must leave it
+   * waiting, because the underlying library dispatches an in-flight drag's end
+   * by looking this element up.
    */
   registeredElement: HTMLElement;
 
   /**
-   * Something has taken this registration's place. Runs a teardown that was
-   * waiting on a drag, and leaves a scheduled dispatch to fire.
+   * Re-adopts a registration still waiting for its drag, or returns `null` when
+   * only a scheduled dispatch remains.
    */
-  supersede: () => void;
+  reclaim: () => DragAndDropSourceCleanup | null;
 
   /** The consumer is going away. Drops everything, dispatch included. */
   abandon: () => void;
@@ -209,10 +207,15 @@ export interface DetachedSourceWork {
   /**
    * Whether anything is still owed. Goes false once the dispatch has fired and
    * no teardown is waiting, which a caller holding these has no other way to
-   * find out — so without it they accumulate for as long as it lives.
+   * find out, so without it they accumulate for as long as it lives.
    */
   outstanding: () => boolean;
 }
+
+/** Cleanup for a drag source registration. */
+export type DragAndDropSourceCleanup = (options?: {
+  cancelPending?: boolean;
+}) => DetachedSourceWork | null;
 
 /**
  * The drag source's named args, for a consumer driving
@@ -301,9 +304,7 @@ function declareEffectFor(
       return;
     }
     effectDeclarers.delete(element);
-    // Clamped because a reset zeroes the count while live registrations are
-    // still holding a release, and a negative count would never reach zero.
-    liveSourceCount = Math.max(0, liveSourceCount - 1);
+    liveSourceCount -= 1;
     if (liveSourceCount === 0) {
       stopDeclaringEffects?.();
       stopDeclaringEffects = null;
@@ -344,7 +345,7 @@ export function resetDragSourcesForTesting() {
 export function registerDragAndDropSource(
   element: HTMLElement,
   getArgsRef: () => DragAndDropSourceArgs
-) {
+): DragAndDropSourceCleanup {
   const token = Symbol("drag-source-registration");
 
   // A handle takes the registration, and this element stays the body. The
@@ -403,6 +404,9 @@ export function registerDragAndDropSource(
     },
     onGenerateDragPreview: ({ nativeSetDragImage, location }) => {
       const args = getArgsRef();
+      // Latched here rather than in `onDragStart`, which the library defers by
+      // a frame: a detach landing in that frame must still see the drag.
+      dragging = true;
 
       // Answers for the drag everywhere no target accepts it, so releasing over
       // dead space ends the drag where the pointer is instead of playing the
@@ -488,7 +492,6 @@ export function registerDragAndDropSource(
     },
     onDragStart: (event) => {
       const args = getArgsRef();
-      dragging = true;
       element.classList.add("--dragging");
       const sourcePayload = normalizeOwnedDragSource(event.source);
       consumerMayThrow(() =>
@@ -558,7 +561,9 @@ export function registerDragAndDropSource(
   const teardown = () => {
     cleanup();
     stopDeclaringEffect();
-    element.classList.remove("--dragging");
+    if (dragging) {
+      element.classList.remove("--dragging");
+    }
     const currentMarks = dragSourceMarks.get(element);
     if (!currentMarks?.delete(token)) {
       return;
@@ -566,20 +571,6 @@ export function registerDragAndDropSource(
     if (currentMarks.size === 0) {
       dragSourceMarks.delete(element);
       element.removeAttribute("data-drag-source");
-    }
-  };
-
-  /**
-   * Runs a teardown that was waiting on a drag, because something has taken this
-   * registration's place and the drag it was waiting for will never report.
-   *
-   * Deliberately leaves a scheduled dispatch alone: that belongs to a drag which
-   * already finished, and the consumer it belongs to is still there.
-   */
-  const supersede = () => {
-    if (teardownWhenIdle) {
-      teardownWhenIdle = null;
-      teardown();
     }
   };
 
@@ -592,10 +583,22 @@ export function registerDragAndDropSource(
       cancel(pendingConsumers);
       pendingConsumers = null;
     }
-    supersede();
+    if (teardownWhenIdle) {
+      teardownWhenIdle = null;
+      teardown();
+    }
   };
 
   const outstanding = () => Boolean(pendingConsumers || teardownWhenIdle);
+
+  /** Re-adopts this registration while its drag still requires it. */
+  const reclaim = () => {
+    if (!teardownWhenIdle) {
+      return null;
+    }
+    teardownWhenIdle = null;
+    return cleanupRegistration;
+  };
 
   /**
    * Tears the registration down.
@@ -604,16 +607,16 @@ export function registerDragAndDropSource(
    *   drop a drop dispatch already scheduled for the next task. True when the
    *   consumer itself is going away, because running its callbacks against a
    *   destroyed component is the hazard this defers around. False when the
-   *   registration is merely being replaced — a `disabled` arg flipping, or a
-   *   new handle — because the consumer is still there and still expects to
+   *   registration is merely being replaced, such as a `disabled` arg flipping
+   *   or a new handle, because the consumer is still there and still expects to
    *   hear how its own drag ended.
    * @returns `null` once nothing is outstanding, or the work still owed. A
    *   caller that kept it has to hold onto this: it is the only remaining way to
-   *   reach it, and the two ways of letting go are not interchangeable.
+   *   reach it, and reclaiming it is not interchangeable with abandoning it.
    */
-  return ({
+  const cleanupRegistration: DragAndDropSourceCleanup = ({
     cancelPending = true,
-  }: { cancelPending?: boolean } = {}): DetachedSourceWork | null => {
+  } = {}) => {
     if (cancelPending) {
       abandon();
       teardown();
@@ -622,18 +625,20 @@ export function registerDragAndDropSource(
 
     if (dragging) {
       // Unregistering now would take the element out of the library's dispatch
-      // mid-drag, so the drop it is about to report — and with it the
-      // `onDragEnd` every drag is promised — would never arrive. The consumer
+      // mid-drag, so the drop it is about to report, including the `onDragEnd`
+      // every drag is promised, would never arrive. The consumer
       // is still here to receive it, so the teardown waits for the drag.
       teardownWhenIdle = teardown;
-      return { registeredElement: registered, supersede, abandon, outstanding };
+      return { registeredElement: registered, reclaim, abandon, outstanding };
     }
 
     teardown();
     return pendingConsumers
-      ? { registeredElement: registered, supersede, abandon, outstanding }
+      ? { registeredElement: registered, reclaim, abandon, outstanding }
       : null;
   };
+
+  return cleanupRegistration;
 }
 
 /**
@@ -725,22 +730,23 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
     this.#dragHandle = args.dragHandle;
 
     if (!this.#cleanup) {
-      // Anything still holding the element about to be registered is let go of
-      // first: two registrations on one element is not a state the library
-      // supports. Only that element's work though — a registration waiting on a
-      // DIFFERENT element (the ordinary shape of a handle change) is how an
-      // in-flight drag's end still reaches the consumer, since the library
-      // dispatches it by looking the original element up. And only the
-      // teardowns — a dispatch already scheduled belongs to a drag that
-      // finished, and this consumer is still here to be told how.
+      // A detached registration waiting for a drag on this element must remain
+      // the registered source, so re-adopt it instead of replacing it. Work on
+      // another element still has to receive its drag's end, while work holding
+      // only a scheduled dispatch is already unregistered and cannot be reused.
       const registering = (args.dragHandle ?? element) as HTMLElement;
-      this.#detached.forEach((work) => {
+      for (const work of this.#detached) {
         if (work.registeredElement === registering) {
-          work.supersede();
+          const reclaimed = work.reclaim();
+          if (reclaimed) {
+            this.#detached.delete(work);
+            this.#cleanup = reclaimed;
+            break;
+          }
         }
-      });
+      }
       this.#pruneDetached();
-      this.#cleanup = registerDragAndDropSource(element, () => this.#args);
+      this.#cleanup ??= registerDragAndDropSource(element, () => this.#args);
     }
   }
 

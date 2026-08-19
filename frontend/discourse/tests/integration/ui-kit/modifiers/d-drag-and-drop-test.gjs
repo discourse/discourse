@@ -258,7 +258,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     state.showSecondHandle = true;
     await settled();
 
-    // The registration moves with the handle, so the superseded one stops being
+    // The registration moves with the handle, so the replaced one stops being
     // draggable and the replacement starts. Without the first assertion a stale
     // registration would leave two draggable elements and the row would drag
     // from a handle it no longer recognises.
@@ -1129,7 +1129,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
       // Disabled while the drag is live, which keeps the registration alive to
       // report the drop, then enabled again before that drop arrives. The one
-      // being kept has to be let go of before a replacement is made.
+      // being kept is taken back rather than joined by a replacement.
       state.disabled = true;
       await settled();
       state.disabled = false;
@@ -1177,10 +1177,13 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "a dispatch is still scheduled, so a holder has to keep it"
       );
 
-      // Something has taken this registration's place, which says nothing about
-      // the drag that already finished. The consumer is still there and is still
-      // owed the end of it.
-      work.supersede();
+      // The drag has already finished, so there is no registration left to take
+      // back; the consumer is still there and is still owed the end of it.
+      assert.strictEqual(
+        work.reclaim(),
+        null,
+        "a finished drag leaves nothing to reclaim"
+      );
       await settled();
 
       assert.deepEqual(
@@ -1278,6 +1281,13 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await settled();
       state.disabled = false;
       await settled();
+
+      assert
+        .dom("#src")
+        .hasClass(
+          "--dragging",
+          "the drag in flight keeps its mark across the disable and re-enable"
+        );
 
       await dragEvent("#tgt", "dragover", {
         dataTransfer,
@@ -1803,6 +1813,12 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             "",
             "the first handle's drag is still in flight, so the row stays a registered source"
           );
+        assert
+          .dom("#src")
+          .hasClass(
+            "--dragging",
+            "and disabling the replacement does not strip the mark of the drag it never owned"
+          );
 
         await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
         await dragEvent("#src", "dragend", {
@@ -1817,6 +1833,161 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             "data-drag-source",
             "once that drag ends nothing is registered any more"
           );
+      });
+
+      test("a handle cycled away, back and away again mid-drag still reports how that drag ended", async function (assert) {
+        const calls = [];
+        const state = new (class {
+          @tracked dragHandle;
+          handles = {};
+          captureHandle = (element) => {
+            this.handles[element.id] = element;
+            this.dragHandle ??= element;
+          };
+          onDragEnd = () => calls.push("dragEnd");
+          onDrop = () => calls.push("drop");
+        })();
+
+        await render(
+          <template>
+            <div
+              id="src"
+              {{dDragAndDropSource
+                type="row"
+                dragHandle=state.dragHandle
+                onDragEnd=state.onDragEnd
+                onDrop=state.onDrop
+              }}
+            >
+              <button
+                id="handle-a"
+                type="button"
+                {{didInsert state.captureHandle}}
+              >a</button>
+              <button
+                id="handle-b"
+                type="button"
+                {{didInsert state.captureHandle}}
+              >b</button>
+            </div>
+            <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+          </template>
+        );
+
+        assert
+          .dom("#handle-a")
+          .hasAttribute("draggable", "true", "the drag starts on handle a");
+
+        const dataTransfer = new DataTransfer();
+        await dragEvent("#handle-a", "dragstart", {
+          dataTransfer,
+          ...centerOf("#src"),
+        });
+        await dragEvent("#tgt", "dragenter", {
+          dataTransfer,
+          ...centerOf("#tgt"),
+        });
+        await dragEvent("#tgt", "dragover", {
+          dataTransfer,
+          ...centerOf("#tgt"),
+        });
+
+        // The library dispatches the drag's end to whatever is registered on
+        // handle a at drop time, so a has to stay registered through every swap,
+        // including the one that brings it back.
+        state.dragHandle = state.handles["handle-b"];
+        await settled();
+        state.dragHandle = state.handles["handle-a"];
+        await settled();
+        state.dragHandle = state.handles["handle-b"];
+        await settled();
+
+        assert
+          .dom("#src")
+          .hasClass("--dragging", "the drag in flight keeps its mark");
+
+        await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+        await settled();
+
+        assert.deepEqual(
+          calls,
+          ["dragEnd", "drop"],
+          "cycling the handle does not cost the consumer the end of its drag"
+        );
+      });
+
+      test("a handle swapped in the same task as dragstart still reports the drag", async function (assert) {
+        const calls = [];
+        const state = new (class {
+          @tracked dragHandle;
+          handles = {};
+          captureHandle = (element) => {
+            this.handles[element.id] = element;
+            this.dragHandle ??= element;
+          };
+          onDragStart = () => calls.push("start");
+          onDragEnd = () => calls.push("dragEnd");
+          onDrop = () => calls.push("drop");
+        })();
+
+        await render(
+          <template>
+            <div
+              id="src"
+              {{dDragAndDropSource
+                type="row"
+                dragHandle=state.dragHandle
+                onDragStart=state.onDragStart
+                onDragEnd=state.onDragEnd
+                onDrop=state.onDrop
+              }}
+            >
+              <button
+                id="handle-a"
+                type="button"
+                {{didInsert state.captureHandle}}
+              >a</button>
+              <button
+                id="handle-b"
+                type="button"
+                {{didInsert state.captureHandle}}
+              >b</button>
+            </div>
+            <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+          </template>
+        );
+
+        // The library defers the drag-start callback by a frame. A swap landing
+        // in that window must still see a drag in flight, or the registration
+        // that has to receive the deferred callbacks is torn down at once.
+        const dataTransfer = new DataTransfer();
+        dragEventNow("#handle-a", "dragstart", {
+          dataTransfer,
+          ...centerOf("#src"),
+        });
+        state.dragHandle = state.handles["handle-b"];
+        await settled();
+
+        await dragEvent("#tgt", "dragenter", {
+          dataTransfer,
+          ...centerOf("#tgt"),
+        });
+        await dragEvent("#tgt", "dragover", {
+          dataTransfer,
+          ...centerOf("#tgt"),
+        });
+        assert
+          .dom("#src")
+          .hasClass("--dragging", "the drag in flight is marked");
+
+        await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+        await settled();
+
+        assert.deepEqual(
+          calls,
+          ["start", "dragEnd", "drop"],
+          "the swap does not orphan the drag"
+        );
       });
 
       test("a natively draggable child of a source row is not answered", async function (assert) {
