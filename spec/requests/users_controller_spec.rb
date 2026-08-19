@@ -6109,10 +6109,33 @@ RSpec.describe UsersController do
     end
 
     context "with `include_staged_users`" do
-      it "includes staged users when the param is true" do
+      it "does not include staged users for public callers" do
         get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: true }
-        json = response.parsed_body
-        expect(json["users"].map { |u| u["name"] }).to include(staged_user.name)
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["users"].map { |found_user| found_user["name"] },
+        ).not_to include(staged_user.name)
+      end
+
+      it "includes staged users for staff callers" do
+        sign_in(Fabricate(:admin))
+
+        get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |found_user| found_user["name"] }).to include(
+          staged_user.name,
+        )
+      end
+
+      it "does not allow last-seen suggestions when staged users are included" do
+        sign_in(Fabricate(:admin))
+
+        get "/u/search/users.json", params: { include_staged_users: true, last_seen_users: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"]).to be_empty
       end
 
       it "doesn't include staged users when the param is not passed" do
