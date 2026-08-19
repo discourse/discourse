@@ -10,7 +10,7 @@ describe "discourse_post_event_allowed_custom_fields" do
     SiteSetting.discourse_post_event_allowed_custom_fields = "foo|bar|foo-bar|foo_baz"
     post_event_1.update!(custom_fields: {})
 
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     Jobs.run_immediately!
   end

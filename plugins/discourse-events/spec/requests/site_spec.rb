@@ -5,7 +5,7 @@ describe "calendar site additions" do
   let(:admin) { Fabricate(:admin) }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     DiscourseCalendar.users_on_holiday = [user.username]
   end
 

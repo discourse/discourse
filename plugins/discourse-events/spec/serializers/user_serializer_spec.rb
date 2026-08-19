@@ -6,7 +6,7 @@ describe UserSerializer do
   subject(:json) { described_class.new(user, scope: guardian).as_json }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     user.upsert_custom_fields(DiscourseCalendar::REGION_CUSTOM_FIELD => "uk")
   end
 

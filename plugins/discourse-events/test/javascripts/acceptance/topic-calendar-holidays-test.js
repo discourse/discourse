@@ -14,7 +14,7 @@ acceptance("Topic Calendar Holidays", function (needs) {
   });
 
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
   });
 
   needs.pretender((server, helper) => {

@@ -4,7 +4,7 @@ module DiscoursePostEvent
   describe EventsController do
     before do
       Jobs.run_immediately!
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       SiteSetting.displayed_invitees_limit = 3
     end
@@ -898,7 +898,7 @@ module DiscoursePostEvent
 
   describe "bulk invite respects capacity" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 
@@ -940,7 +940,7 @@ module DiscoursePostEvent
 
   describe "#show" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 
@@ -1013,7 +1013,7 @@ module DiscoursePostEvent
 
   describe "anonymous access to EventsController" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 

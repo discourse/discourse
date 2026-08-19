@@ -21,7 +21,7 @@ RSpec.describe ListController do
 
   before do
     admin
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.sort_categories_by_event_start_date_enabled = true
   end
 

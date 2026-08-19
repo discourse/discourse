@@ -3,7 +3,7 @@
 describe PostSerializer do
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
   end
 
   it "includes calendar events" do

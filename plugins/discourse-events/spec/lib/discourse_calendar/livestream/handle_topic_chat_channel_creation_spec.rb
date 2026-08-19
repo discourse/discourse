@@ -19,7 +19,7 @@ RSpec.describe DiscourseCalendar::Livestream do
 
       context "when the first post is not a livestream event" do
         before do
-          SiteSetting.calendar_enabled = true
+          SiteSetting.discourse_events_enabled = true
           post = Fabricate(:post, topic: topic)
           Fabricate(:event, post: post, livestream: false)
         end
@@ -33,7 +33,7 @@ RSpec.describe DiscourseCalendar::Livestream do
 
       context "when the first post is a livestream event" do
         before do
-          SiteSetting.calendar_enabled = true
+          SiteSetting.discourse_events_enabled = true
           SiteSetting.chat_pinned_messages = true
           post = Fabricate(:post, topic: topic)
           Fabricate(
@@ -157,7 +157,7 @@ RSpec.describe DiscourseCalendar::Livestream do
 
       context "when the first post is a livestream event and pinned messages are disabled" do
         before do
-          SiteSetting.calendar_enabled = true
+          SiteSetting.discourse_events_enabled = true
           SiteSetting.chat_pinned_messages = false
           post = Fabricate(:post, topic: topic)
           Fabricate(

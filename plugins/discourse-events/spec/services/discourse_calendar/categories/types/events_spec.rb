@@ -6,12 +6,12 @@ RSpec.describe DiscourseCalendar::Categories::Types::Events do
 
   describe ".enable_plugin" do
     it "enables calendar and post-event site settings" do
-      SiteSetting.calendar_enabled = false
+      SiteSetting.discourse_events_enabled = false
       SiteSetting.discourse_post_event_enabled = false
 
       described_class.enable_plugin
 
-      expect(SiteSetting.calendar_enabled).to eq(true)
+      expect(SiteSetting.discourse_events_enabled).to eq(true)
       expect(SiteSetting.discourse_post_event_enabled).to eq(true)
     end
   end
@@ -190,7 +190,7 @@ RSpec.describe DiscourseCalendar::Categories::Types::Events do
         )
 
       expect(result).to be_a_success
-      expect(SiteSetting.calendar_enabled).to eq(true)
+      expect(SiteSetting.discourse_events_enabled).to eq(true)
       expect(SiteSetting.discourse_post_event_enabled).to eq(true)
       expect(SiteSetting.events_calendar_categories).to include(category.id.to_s)
       expect(SiteSetting.discourse_post_event_allowed_on_groups).to eq("1|2")

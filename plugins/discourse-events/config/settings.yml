@@ -1,5 +1,5 @@
 discourse_calendar:
-  calendar_enabled:
+  discourse_events_enabled:
     default: false
     client: true
   holiday_calendar_topic_id:
