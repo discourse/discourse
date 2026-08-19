@@ -35,7 +35,24 @@ class AdminDashboardSystem
     stats = storage_stats
     return nil if stats.blank?
 
-    guardian.is_admin? ? stats : stats.except(:backups)
+    stats = stats.except(:backups) if !guardian.is_admin?
+
+    # Only a local store has a bounded amount of space, so the client needs to
+    # know which of these live on this machine before it can chart them.
+    stats.each_with_object({}) do |(store, values), result|
+      result[store] = values.nil? ? nil : values.merge(remote: remote?(store))
+    end
+  end
+
+  def remote?(store)
+    case store.to_s
+    when "backups"
+      SiteSetting.backup_location == BackupLocationSiteSetting::S3
+    when "uploads"
+      Discourse.store.external?
+    else
+      false
+    end
   end
 
   def storage_stats
