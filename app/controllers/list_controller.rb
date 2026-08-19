@@ -439,8 +439,7 @@ class ListController < ApplicationController
   # `default_view` is free-form, so only ever dispatch to a filter this request
   # could have reached directly at /c/<slug>/<id>/l/<filter>.
   def category_default_view
-    filters = Discourse.filters
-    filters &= Discourse.anonymous_filters if current_user.nil?
+    filters = current_user ? Discourse.filters : Discourse.anonymous_list_filters
 
     view = @category.default_view
     filters.include?(view&.to_sym) ? view : "latest"
