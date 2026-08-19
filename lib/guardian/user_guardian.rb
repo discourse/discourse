@@ -140,6 +140,10 @@ module UserGuardian
     true
   end
 
+  def can_search_staged_users?(user_directory_search: false)
+    is_staff? || (user_directory_search == true && SiteSetting.enable_user_directory?)
+  end
+
   def public_can_see_profiles?
     !SiteSetting.hide_user_profiles_from_public || !anonymous?
   end

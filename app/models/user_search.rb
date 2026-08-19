@@ -12,8 +12,11 @@ class UserSearch
     @prioritized_user_id = opts[:prioritized_user_id]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
-    @include_staged_users = opts[:include_staged_users] || false
-    @last_seen_users = opts[:last_seen_users] || false
+    @guardian = Guardian.new(@searching_user)
+    @include_staged_users =
+      !!opts[:include_staged_users] &&
+        @guardian.can_search_staged_users?(user_directory_search: opts[:user_directory_search])
+    @last_seen_users = !!opts[:last_seen_users] && !@include_staged_users
     @limit = opts[:limit] || 20
     @groups = opts[:groups]
     @can_review = opts[:can_review] || false
@@ -22,7 +25,7 @@ class UserSearch
     @category = Category.find(@category_id) if @category_id
 
     @guardian = Guardian.new(@searching_user)
-    @guardian.ensure_can_see_groups_members!(@groups) if @groups
+    @groups&.each { |group| @guardian.ensure_can_see_group_and_members!(group) }
     @guardian.ensure_can_see_category!(@category) if @category
     @guardian.ensure_can_see_topic!(@topic) if @topic
   end
@@ -31,7 +34,7 @@ class UserSearch
     users = User.where(active: true)
     users = users.where(approved: true) if SiteSetting.must_approve_users?
     users = users.where(staged: false) unless @include_staged_users
-    users = users.not_suspended unless @searching_user&.staff?
+    users = users.not_suspended unless @guardian.is_staff?
 
     if @groups
       users = users.joins(:group_users).where("group_users.group_id IN (?)", @groups.map(&:id))

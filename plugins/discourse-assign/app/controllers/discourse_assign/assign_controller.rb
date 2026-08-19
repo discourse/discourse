@@ -130,8 +130,7 @@ module DiscourseAssign
 
       group = Group.find_by(name: params[:group_name])
 
-      guardian.ensure_can_see_group!(group)
-      guardian.ensure_can_see_group_members!(group)
+      guardian.ensure_can_see_group_and_members!(group)
 
       users_with_assignments_count =
         User
