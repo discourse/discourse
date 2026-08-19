@@ -247,21 +247,17 @@ module DiscourseWorkflows
         end
 
         def user_data(user, guardian, extensions:)
-          include_profile_details = include_profile_details?(user, guardian)
+          profile = user.user_profile if include_profile_details?(user, guardian)
 
           serialize_user(user, guardian: guardian).merge(
             title: user.title,
-            bio_raw: include_profile_details ? user.user_profile.bio_raw : nil,
+            bio_raw: profile&.bio_raw,
+            website: profile&.website,
+            profile_background_upload_id: profile&.profile_background_upload_id,
+            card_background_upload_id: profile&.card_background_upload_id,
             manual_locked_trust_level: user.manual_locked_trust_level,
             trust_level_locked: !user.manual_locked_trust_level.nil?,
-            user_fields:
-              (
-                if include_profile_details
-                  user.user_fields(guardian.allowed_user_field_ids(user))
-                else
-                  {}
-                end
-              ),
+            user_fields: profile ? user.user_fields(guardian.allowed_user_field_ids(user)) : {},
             groups: groups_data(user, guardian),
           ).merge(extensions_data(user, guardian, extensions))
         end

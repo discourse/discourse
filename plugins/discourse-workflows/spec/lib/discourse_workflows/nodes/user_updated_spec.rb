@@ -64,6 +64,16 @@ RSpec.describe DiscourseWorkflows::Nodes::UserUpdated::V1 do
       )
       expect(output).to match_node_output_schema(described_class)
     end
+
+    it "exposes the avatar so vision triage can reach it", :aggregate_failures do
+      avatar = Fabricate(:upload)
+      user.update!(uploaded_avatar_id: avatar.id)
+
+      output = described_class.new(user).output
+
+      expect(output.dig(:user, :uploaded_avatar_id)).to eq(avatar.id)
+      expect(output.dig(:user, :avatar_template)).to include(avatar.id.to_s)
+    end
   end
 
   describe "#matches?" do
