@@ -12,8 +12,7 @@ module Jobs
       aggregate_pageviews
       aggregate_engagement
       aggregate_crawlers
-      entry_url_rollups_initialized =
-        BrowserPageviewEntryUrlDailyRollup.last_full_rebuild_date.present?
+      entry_url_rollups_initialized = BrowserPageviewEntryUrlDailyRollup.exists?
       backfill_referrers(recompute_entry_urls: entry_url_rollups_initialized)
       backfill_urls(recompute_entry_urls: entry_url_rollups_initialized)
       aggregate_entry_urls if referrer_backfill_complete? && url_backfill_complete?
@@ -60,19 +59,21 @@ module Jobs
     end
 
     def aggregate_entry_urls
-      start_date, end_date, full_rebuild = entry_url_aggregation_window
+      start_date, end_date = entry_url_aggregation_window
 
       BrowserPageviewEntryUrlDailyRollup.aggregate(start_date:, end_date:) if start_date
-      BrowserPageviewEntryUrlDailyRollup.mark_full_rebuild(date: end_date) if full_rebuild
     end
 
     def entry_url_aggregation_window
       end_date = Time.zone.today
-      last_full_rebuild_date = BrowserPageviewEntryUrlDailyRollup.last_full_rebuild_date
-      full_rebuild = last_full_rebuild_date.nil? || last_full_rebuild_date < end_date
-      start_date = full_rebuild ? earliest_event_date : 1.day.ago.to_date
+      start_date =
+        if BrowserPageviewEntryUrlDailyRollup.none?
+          earliest_event_date
+        else
+          1.day.ago.to_date
+        end
 
-      [start_date, end_date, full_rebuild]
+      [start_date, end_date]
     end
 
     def engagement_aggregation_window

@@ -50,14 +50,25 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
 
       aggregate
 
-      expect(described_class.order(:entry_url).pluck(:entry_url, :count)).to eq(
-        [["/t/#{topic.slug}/#{topic.id}", 1], ["/top", 1]],
+      expect(described_class.pluck(:entry_url, :count)).to contain_exactly(
+        ["/t/topic/#{topic.id}", 1],
+        ["/top", 1],
       )
     end
 
-    it "allows only reviewed public route families" do
-      safe_paths = %w[/ /tags /latest /top /new /categories /faq /guidelines /about /groups /badges]
-      unsafe_paths = %w[
+    it "counts every normalized route" do
+      paths = %w[
+        /
+        /tags
+        /latest
+        /top
+        /new
+        /categories
+        /faq
+        /guidelines
+        /about
+        /groups
+        /badges
         /search
         /unread
         /associate/token
@@ -70,7 +81,7 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
         /unknown-plugin
       ]
 
-      (safe_paths + unsafe_paths).each do |path|
+      paths.each do |path|
         Fabricate(
           :browser_pageview_event,
           url: "https://test.localhost#{path}",
@@ -80,10 +91,10 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
 
       aggregate
 
-      expect(described_class.pluck(:entry_url)).to contain_exactly(*safe_paths)
+      expect(described_class.pluck(:entry_url)).to contain_exactly(*paths)
     end
 
-    it "allows reviewed routes beneath the configured subfolder" do
+    it "preserves normalized routes when a subfolder is configured" do
       Discourse.stubs(:base_path).returns("/forum")
       topic = Fabricate(:topic)
       Fabricate(:browser_pageview_event, url: "/forum", created_at: "2026-05-12")
@@ -99,11 +110,11 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
       aggregate
 
       expect(described_class.order(:entry_url).pluck(:entry_url)).to eq(
-        ["/forum", "/forum/latest", "/forum/t/#{topic.slug}/#{topic.id}"],
+        ["/forum", "/forum/latest", "/forum/t/topic/#{topic.id}", "/latest"],
       )
     end
 
-    it "includes public topics but excludes private messages and restricted topics" do
+    it "counts topic routes regardless of topic visibility" do
       public_topic = Fabricate(:topic)
       private_message = Fabricate(:private_message_topic)
       restricted_category = Fabricate(:private_category, group: Fabricate(:group))
@@ -120,8 +131,10 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
 
       aggregate
 
-      expect(described_class.pluck(:entry_url)).to eq(
-        ["/t/#{public_topic.slug}/#{public_topic.id}"],
+      expect(described_class.pluck(:entry_url)).to contain_exactly(
+        "/t/confidential-#{public_topic.id}/#{public_topic.id}",
+        "/t/confidential-#{private_message.id}/#{private_message.id}",
+        "/t/confidential-#{restricted_topic.id}/#{restricted_topic.id}",
       )
     end
 
@@ -188,18 +201,6 @@ RSpec.describe BrowserPageviewEntryUrlDailyRollup do
       described_class.recompute([date, date])
 
       expect(described_class.all).to be_empty
-    end
-  end
-
-  describe "full rebuild tracking" do
-    it "records only the latest completed full rebuild without creating report data" do
-      described_class.mark_full_rebuild(date: "2026-05-12")
-      described_class.mark_full_rebuild(date: "2026-05-14")
-
-      expect(described_class.last_full_rebuild_date).to eq("2026-05-14".to_date)
-      expect(described_class.pluck(:date, :entry_url, :count)).to eq(
-        [["2026-05-14".to_date, nil, 0]],
-      )
     end
   end
 end

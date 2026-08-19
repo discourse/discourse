@@ -2020,7 +2020,7 @@ ALTER SEQUENCE public.browser_pageview_crawler_daily_rollups_id_seq OWNED BY pub
 CREATE TABLE public.browser_pageview_entry_url_daily_rollups (
     id bigint NOT NULL,
     date date NOT NULL,
-    entry_url character varying(2000),
+    entry_url character varying(2000) NOT NULL,
     count bigint NOT NULL,
     logged_in_count bigint NOT NULL,
     likely_crawler_count bigint DEFAULT 0 NOT NULL,
@@ -17746,7 +17746,7 @@ CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING 
 -- Name: idx_bpeu_daily_rollups_date_url_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_bpeu_daily_rollups_date_url_unique ON public.browser_pageview_entry_url_daily_rollups USING btree (date, entry_url) NULLS NOT DISTINCT;
+CREATE UNIQUE INDEX idx_bpeu_daily_rollups_date_url_unique ON public.browser_pageview_entry_url_daily_rollups USING btree (date, entry_url);
 
 
 --

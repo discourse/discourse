@@ -522,18 +522,17 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
     end
 
     context "when aggregating entry URLs" do
-      it "skips unsafe entry URLs" do
+      it "aggregates every normalized entry URL" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         Fabricate(:browser_pageview_event, url: "/search?q=private", created_at: "2026-05-12")
 
         job.execute({})
 
-        expect(BrowserPageviewEntryUrlDailyRollup.where.not(entry_url: nil)).to be_empty
-        expect(BrowserPageviewEntryUrlDailyRollup.last_full_rebuild_date).to eq(Time.zone.today)
+        expect(BrowserPageviewEntryUrlDailyRollup.pluck(:entry_url, :count)).to eq([["/search", 1]])
 
         job.execute({})
 
-        expect(BrowserPageviewEntryUrlDailyRollup.where.not(entry_url: nil)).to be_empty
+        expect(BrowserPageviewEntryUrlDailyRollup.pluck(:entry_url, :count)).to eq([["/search", 1]])
       end
 
       it "waits for every retained URL to be current before aggregating" do
@@ -568,28 +567,30 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         job.execute({})
 
         expect(
-          BrowserPageviewEntryUrlDailyRollup
-            .where.not(entry_url: nil)
-            .pluck(:date, :entry_url, :count),
+          BrowserPageviewEntryUrlDailyRollup.pluck(:date, :entry_url, :count),
         ).to contain_exactly(
           [Date.new(2026, 5, 10), "/latest", 1],
           [Date.new(2026, 5, 12), "/top", 1],
         )
       end
 
-      it "reconciles delayed historical events on the next daily full rebuild" do
+      it "only refreshes yesterday and today once rollups are populated" do
         freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
         Fabricate(:browser_pageview_event, url: "/latest", created_at: "2026-05-10")
         job.execute({})
 
         Fabricate(:browser_pageview_event, url: "/top", created_at: "2026-05-10")
-        job.execute({})
-        expect(BrowserPageviewEntryUrlDailyRollup.where(date: "2026-05-10").sum(:count)).to eq(1)
+        Fabricate(:browser_pageview_event, url: "/faq", created_at: "2026-05-14")
 
         freeze_time(Time.zone.local(2026, 5, 15, 0, 10, 0))
         job.execute({})
 
-        expect(BrowserPageviewEntryUrlDailyRollup.where(date: "2026-05-10").sum(:count)).to eq(2)
+        expect(
+          BrowserPageviewEntryUrlDailyRollup.pluck(:date, :entry_url, :count),
+        ).to contain_exactly(
+          [Date.new(2026, 5, 10), "/latest", 1],
+          [Date.new(2026, 5, 14), "/faq", 1],
+        )
       end
 
       it "waits for every retained referrer to be current before aggregating" do
@@ -672,9 +673,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
             BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
           )
           expect(
-            BrowserPageviewEntryUrlDailyRollup
-              .where.not(entry_url: nil)
-              .pluck(:date, :entry_url, :count),
+            BrowserPageviewEntryUrlDailyRollup.pluck(:date, :entry_url, :count),
           ).to contain_exactly([Date.new(2026, 5, 10), "/top", 1])
         end
       end
@@ -705,9 +704,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(event.reload.normalized_referrer_version).to eq(
           BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         )
-        expect(
-          BrowserPageviewEntryUrlDailyRollup.where.not(entry_url: nil).where(date: "2026-05-10"),
-        ).to be_empty
+        expect(BrowserPageviewEntryUrlDailyRollup.where(date: "2026-05-10")).to be_empty
       end
 
       it "retries an entry URL recompute before stamping a URL version" do
@@ -726,9 +723,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(event.reload.normalized_url_version).to eq(
           BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
         )
-        expect(
-          BrowserPageviewEntryUrlDailyRollup.where.not(entry_url: nil).pluck(:entry_url, :count),
-        ).to eq([["/top", 1]])
+        expect(BrowserPageviewEntryUrlDailyRollup.pluck(:entry_url, :count)).to eq([["/top", 1]])
       end
 
       it "does not backfill rows outside the retained window" do

@@ -706,7 +706,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         result = build_traffic(start_date: "2026-05-12", end_date: "2026-05-14")
 
         expect(result[:top_entry_urls]).to eq(
-          rows: [{ entry_url: "/t/#{topic.slug}/#{topic.id}", count: 1, percent: 100 }],
+          rows: [{ entry_url: "/t/topic/#{topic.id}", count: 1, percent: 100 }],
           error: nil,
         )
       end

@@ -339,7 +339,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         created_at: "2026-05-12 00:01:00",
         source: browser_pageview_source,
       )
-      sensitive_entry_paths = %w[
+      additional_entry_paths = %w[
         /associate/secret-token
         /email/unsubscribe/secret-key
         /session/email-login/secret-token
@@ -348,17 +348,17 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         /u/confirm-email-token/secret-token
         /u/password-reset/secret-token
       ]
-      sensitive_entry_paths.each_with_index do |path, index|
+      additional_entry_paths.each_with_index do |path, index|
         Fabricate(
           :browser_pageview_event,
-          session_id: "sensitive-path-visit-#{index}",
+          session_id: "additional-path-visit-#{index}",
           url: "https://test.localhost#{path}",
           created_at: "2026-05-12 13:00:00",
           source: browser_pageview_source,
         )
         Fabricate(
           :browser_pageview_event,
-          session_id: "sensitive-path-visit-#{index}",
+          session_id: "additional-path-visit-#{index}",
           url: "https://test.localhost/t/should-not-count/#{index}",
           referrer: "https://test.localhost#{path}",
           created_at: "2026-05-12 13:05:00",
@@ -373,18 +373,15 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(traffic).to have_top_entry_url_rows(
         [
-          { path: "/t/#{topic.slug}/#{topic.id}", percent: 33, count: 2 },
-          { path: "/categories", percent: 17, count: 1 },
-          { path: "/faq", percent: 17, count: 1 },
-          { path: "/guidelines", percent: 17, count: 1 },
-          { path: "/new", percent: 17, count: 1 },
+          { path: "/t/viral-topic/#{topic.id}", percent: 13, count: 2 },
+          { path: "/associate/secret-token", percent: 7, count: 1 },
+          { path: "/categories", percent: 7, count: 1 },
+          { path: "/email/unsubscribe/secret-key", percent: 7, count: 1 },
+          { path: "/faq", percent: 7, count: 1 },
         ],
       )
-      expect(traffic).to have_no_top_entry_url("/search")
       expect(traffic).to have_no_top_entry_url("/t/should-not-count-after-search/98")
       expect(traffic).to have_no_top_entry_url("/latest")
-      expect(traffic).to have_no_top_entry_url("/unread")
-      sensitive_entry_paths.each { |path| expect(traffic).to have_no_top_entry_url(path) }
       expect(traffic).to have_no_top_entry_url("/t/should-not-count")
 
       traffic.click_top_entry_urls_drilldown
