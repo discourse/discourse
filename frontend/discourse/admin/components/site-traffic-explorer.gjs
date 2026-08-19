@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -83,21 +84,28 @@ export default class SiteTrafficExplorer extends Component {
     return this.metrics.slice(1);
   }
 
+  @cached
   get chartModel() {
     return {
-      start_date: moment(this.args.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.args.endDate).format("YYYY-MM-DD"),
+      start_date:
+        this.args.traffic?.chart_start_date ??
+        moment(this.args.startDate).format("YYYY-MM-DD"),
+      end_date:
+        this.args.traffic?.chart_end_date ??
+        moment(this.args.endDate).format("YYYY-MM-DD"),
       data: this.series,
     };
   }
 
+  @cached
   get chartOptions() {
+    const trafficTypes =
+      this.args.traffic?.chart_traffic_types ?? this.args.trafficTypes;
+
     return {
       hideYAxisGridLines: true,
       hiddenLabels: Object.entries(TRAFFIC_TYPE_BY_SERIES)
-        .filter(
-          ([, trafficType]) => !this.args.trafficTypes.includes(trafficType)
-        )
+        .filter(([, trafficType]) => !trafficTypes.includes(trafficType))
         .map(([series]) => series),
       onLegendClick: this.toggleTrafficType,
     };
@@ -282,45 +290,49 @@ export default class SiteTrafficExplorer extends Component {
           </div>
         {{else}}
           {{#if @loading}}
-            <div
-              class="db-skeleton --animation site-traffic-explorer__skeleton"
-              role="status"
-              aria-label={{i18n "admin.site_traffic_explorer.loading"}}
-              data-test-site-traffic-skeleton
-            >
-              <div class="db-skeleton__section-wrapper">
-                <div class="db-skeleton__subheader">
-                  <div class="db-skeleton__subintro">
-                    <div class="db-skeleton__heading-line"></div>
+            {{#unless @traffic}}
+              <div
+                class="db-skeleton --animation site-traffic-explorer__skeleton"
+                role="status"
+                aria-label={{i18n "admin.site_traffic_explorer.loading"}}
+                data-test-site-traffic-skeleton
+              >
+                <div class="db-skeleton__section-wrapper">
+                  <div class="db-skeleton__subheader">
+                    <div class="db-skeleton__subintro">
+                      <div class="db-skeleton__heading-line"></div>
+                    </div>
+                    <div class="db-skeleton__metric-row">
+                      {{#each SKELETON_METRICS}}
+                        <div class="db-skeleton__metric">
+                          <div class="db-skeleton__metric-number"></div>
+                          <div class="db-skeleton__metric-label"></div>
+                        </div>
+                      {{/each}}
+                    </div>
                   </div>
-                  <div class="db-skeleton__metric-row">
-                    {{#each SKELETON_METRICS}}
-                      <div class="db-skeleton__metric">
-                        <div class="db-skeleton__metric-number"></div>
-                        <div class="db-skeleton__metric-label"></div>
+                  <div class="db-skeleton__chart"></div>
+                  <div class="db-skeleton__row">
+                    {{#each SKELETON_BREAKDOWNS}}
+                      <div class="db-skeleton__row-block">
+                        <div class="db-skeleton__row-block-title"></div>
+                        <ul class="db-skeleton__list">
+                          {{#each SKELETON_ROWS}}
+                            <li class="db-skeleton__list-row">
+                              <span class="db-skeleton__list-name"></span>
+                              <span class="db-skeleton__list-value"></span>
+                            </li>
+                          {{/each}}
+                        </ul>
                       </div>
                     {{/each}}
                   </div>
                 </div>
-                <div class="db-skeleton__chart"></div>
-                <div class="db-skeleton__row">
-                  {{#each SKELETON_BREAKDOWNS}}
-                    <div class="db-skeleton__row-block">
-                      <div class="db-skeleton__row-block-title"></div>
-                      <ul class="db-skeleton__list">
-                        {{#each SKELETON_ROWS}}
-                          <li class="db-skeleton__list-row">
-                            <span class="db-skeleton__list-name"></span>
-                            <span class="db-skeleton__list-value"></span>
-                          </li>
-                        {{/each}}
-                      </ul>
-                    </div>
-                  {{/each}}
-                </div>
               </div>
-            </div>
-          {{else if this.partialWarning}}
+            {{/unless}}
+          {{/if}}
+
+          {{#if this.partialWarning}}
             <p
               class="alert alert-warning site-traffic-explorer__partial-warning"
               data-test-site-traffic-partial-warning
@@ -331,7 +343,7 @@ export default class SiteTrafficExplorer extends Component {
           {{/if}}
 
           {{#if @traffic}}
-            <div class="site-traffic-explorer__results" hidden={{@loading}}>
+            <div class="site-traffic-explorer__results">
               {{#if @hasPageviews}}
                 <div
                   class="db-section__wrapper --column site-traffic-explorer__report"

@@ -83,9 +83,11 @@ export default class LoadingSlider extends Service.extend(Evented) {
     return this.rollingAverage.average;
   }
 
-  transitionStarted() {
+  transitionStarted({ showFallbackSpinner = true } = {}) {
     if (this.loading) {
-      // Nested transition
+      if (!showFallbackSpinner) {
+        this.#suppressFallbackSpinner();
+      }
       return;
     }
 
@@ -95,10 +97,12 @@ export default class LoadingSlider extends Service.extend(Evented) {
 
     this.scheduleManager.cancelAll();
 
-    this.scheduleManager.later(
-      this.setStillLoading,
-      STILL_LOADING_DURATION * 1000
-    );
+    if (showFallbackSpinner) {
+      this.scheduleManager.later(
+        this.setStillLoading,
+        STILL_LOADING_DURATION * 1000
+      );
+    }
   }
 
   @bind
@@ -135,5 +139,11 @@ export default class LoadingSlider extends Service.extend(Evented) {
   @bind
   removeClasses() {
     document.body.classList.remove("loading", "still-loading");
+  }
+
+  #suppressFallbackSpinner() {
+    this.scheduleManager.cancelAll();
+    this.stillLoading = false;
+    document.body.classList.remove("still-loading");
   }
 }

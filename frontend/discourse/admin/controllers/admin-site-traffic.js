@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import {
   calculatePresetStartDate,
   DEFAULT_PERIOD,
@@ -40,6 +41,8 @@ const DIMENSION_KEYS = {
 };
 
 export default class AdminSiteTrafficController extends Controller {
+  @service loadingSlider;
+
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
@@ -58,6 +61,7 @@ export default class AdminSiteTrafficController extends Controller {
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
 
   #fetchId = 0;
+  #loadingSliderActive = false;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -185,19 +189,33 @@ export default class AdminSiteTrafficController extends Controller {
   @action
   async fetchTraffic() {
     const fetchId = ++this.#fetchId;
+    const requestParams = this.#requestParams();
+    const chartStartDate = moment(this.startDate).format("YYYY-MM-DD");
+    const chartEndDate = moment(this.endDate).format("YYYY-MM-DD");
+    const chartTrafficTypes = [...this.selectedTrafficTypes];
+    const showLoadingSlider = this.traffic !== null;
     this.loading = true;
     this.fetchError = null;
+    if (showLoadingSlider) {
+      this.loadingSlider.transitionStarted({ showFallbackSpinner: false });
+      this.#loadingSliderActive = true;
+    }
 
     try {
       const traffic = await ajax(
         "/admin/dashboard/site-traffic-explorer.json",
         {
-          data: this.#requestParams(),
+          data: requestParams,
         }
       );
 
       if (fetchId === this.#fetchId) {
-        this.traffic = this.#localizeCountryLabels(traffic);
+        this.traffic = {
+          ...this.#localizeCountryLabels(traffic),
+          chart_start_date: chartStartDate,
+          chart_end_date: chartEndDate,
+          chart_traffic_types: chartTrafficTypes,
+        };
       }
     } catch (error) {
       if (fetchId === this.#fetchId) {
@@ -209,6 +227,7 @@ export default class AdminSiteTrafficController extends Controller {
     } finally {
       if (fetchId === this.#fetchId) {
         this.loading = false;
+        this.#stopLoadingSlider();
       }
     }
   }
@@ -258,6 +277,7 @@ export default class AdminSiteTrafficController extends Controller {
   @action
   resetState() {
     this.#fetchId++;
+    this.#stopLoadingSlider();
     this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
@@ -279,5 +299,14 @@ export default class AdminSiteTrafficController extends Controller {
       orderedTrafficTypes.length === TRAFFIC_TYPES.length
         ? null
         : orderedTrafficTypes.join(",");
+  }
+
+  #stopLoadingSlider() {
+    if (!this.#loadingSliderActive) {
+      return;
+    }
+
+    this.loadingSlider.transitionEnded();
+    this.#loadingSliderActive = false;
   }
 }
