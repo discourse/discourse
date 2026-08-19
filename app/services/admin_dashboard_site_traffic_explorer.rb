@@ -9,12 +9,6 @@ class AdminDashboardSiteTrafficExplorer
   STATEMENT_TIMEOUT_MS = 10_000
   private_constant :STATEMENT_TIMEOUT_MS
 
-  MINUTE_BUCKET_MAX_DURATION = 2.hours
-  private_constant :MINUTE_BUCKET_MAX_DURATION
-
-  HOUR_BUCKET_MAX_DURATION = 7.days
-  private_constant :HOUR_BUCKET_MAX_DURATION
-
   FILTER_KEYS = %i[traffic_type top_url entry_url referrer country network browser ip].freeze
   private_constant :FILTER_KEYS
 
@@ -38,10 +32,7 @@ class AdminDashboardSiteTrafficExplorer
   params do
     attribute :start_date, :date
     attribute :end_date, :date
-    attribute :start_at, :datetime
-    attribute :end_at, :datetime
     attribute :grouping, :string
-    attribute :timezone, :string
     attribute :traffic_type, :string
     attribute :top_url, :string
     attribute :entry_url, :string
@@ -54,41 +45,13 @@ class AdminDashboardSiteTrafficExplorer
     validates :start_date, :end_date, presence: true
     validates :grouping, inclusion: { in: %w[hour day] }, allow_nil: true
     validate :start_date_precedes_end_date
-    validate :precise_range_is_complete
-    validate :precise_range_is_ordered
-    validate :precise_range_is_within_dates
-    validate :timezone_is_valid
 
     def filters
       FILTER_KEYS.to_h { |key| [key, normalize_filter(key, public_send(key))] }
     end
 
-    def query_range
-      if start_at.present? && end_at.present?
-        [start_at, end_at]
-      else
-        timezone = TZInfo::Timezone.get(resolved_timezone)
-        [local_midnight(timezone, start_date), local_midnight(timezone, end_date + 1.day)]
-      end
-    end
-
-    def precise_range?
-      start_at.present? && end_at.present?
-    end
-
     def bucket
-      return grouping.to_sym if grouping.present?
-      return :day if !precise_range?
-
-      duration = end_at - start_at
-      return :minute if duration <= MINUTE_BUCKET_MAX_DURATION
-      return :hour if duration <= HOUR_BUCKET_MAX_DURATION
-
-      :day
-    end
-
-    def resolved_timezone
-      timezone.presence || "UTC"
+      grouping&.to_sym || :day
     end
 
     private
@@ -97,68 +60,6 @@ class AdminDashboardSiteTrafficExplorer
       return if start_date.blank? || end_date.blank? || start_date <= end_date
 
       errors.add(:start_date, :invalid)
-    end
-
-    def local_midnight(timezone, date)
-      local_time = Time.utc(date.year, date.month, date.day)
-
-      # Some zones repeat or skip midnight during an offset transition. Use the
-      # earliest repeated instant, or advance to the first valid local minute.
-      0.upto(1.day.in_minutes.to_i) do
-        return timezone.local_to_utc(local_time) { |periods| periods.max_by(&:utc_total_offset) }
-      rescue TZInfo::PeriodNotFound
-        local_time += 1.minute
-      end
-
-      raise TZInfo::PeriodNotFound, "no local time exists on #{date} in #{timezone.identifier}"
-    end
-
-    def precise_range_is_complete
-      return if !precise_range_requested?
-
-      errors.add(:start_at, :invalid) if start_at.blank?
-      errors.add(:end_at, :invalid) if end_at.blank?
-    end
-
-    def precise_range_is_ordered
-      return if start_at.blank? || end_at.blank? || start_at < end_at
-
-      errors.add(:start_at, :invalid)
-    end
-
-    def precise_range_is_within_dates
-      return if start_at.blank? || end_at.blank? || start_date.blank? || end_date.blank?
-      start_input_date = precise_range_input_date(:start_at)
-      end_input_date = precise_range_input_date(:end_at)
-      return if start_input_date.blank? || end_input_date.blank?
-      return if start_input_date >= start_date && end_input_date <= end_date
-
-      errors.add(:start_at, :invalid)
-    end
-
-    def precise_range_requested?
-      !precise_range_input(:start_at).nil? || !precise_range_input(:end_at).nil?
-    end
-
-    def timezone_is_valid
-      return if timezone.nil?
-
-      TZInfo::Timezone.get(timezone)
-    rescue TZInfo::InvalidTimezoneIdentifier
-      errors.add(:timezone, :invalid)
-    end
-
-    def precise_range_input_date(attribute)
-      input = precise_range_input(attribute)
-      return input.to_date if input.respond_to?(:to_date)
-
-      DateTime.iso8601(input.to_s).to_date
-    rescue Date::Error
-      nil
-    end
-
-    def precise_range_input(attribute)
-      @attributes[attribute.to_s].value_before_type_cast
     end
 
     def normalize_filter(key, value)
@@ -205,23 +106,22 @@ class AdminDashboardSiteTrafficExplorer
 
   def load_traffic(params:)
     filters = params.filters
-    start_at, end_at = params.query_range
     bucket = params.bucket
-    row = execute_query(start_at:, end_at:, bucket:, timezone: params.resolved_timezone, filters:)
+    row = execute_query(start_date: params.start_date, end_date: params.end_date, bucket:, filters:)
 
     traffic = {
       partial_data:
         partial_data(
           row.fetch("pageview_limited"),
           pageview_limit_start_at: row["oldest_pageview_at"],
-          start_at:,
+          start_date: params.start_date,
         ),
       summary: row.fetch("summary"),
       series: row.fetch("series"),
       series_colors: series_colors,
       dimensions: decorate_dimensions(row.fetch("dimensions")),
     }
-    traffic[:bucket] = bucket.to_s if params.precise_range? || params.grouping.present?
+    traffic[:bucket] = bucket.to_s if params.grouping.present?
     active_filters =
       decorate_active_filters(row.fetch("active_filter_representative_ips"), filters:)
     traffic[:active_filters] = active_filters if active_filters.any?
@@ -230,27 +130,26 @@ class AdminDashboardSiteTrafficExplorer
     fail!("traffic_query_timeout")
   end
 
-  def execute_query(start_at:, end_at:, bucket:, timezone:, filters:)
-    parameters = query_params(start_at:, end_at:, timezone:, filters:)
+  def execute_query(start_date:, end_date:, bucket:, filters:)
+    parameters = query_params(start_date:, end_date:, filters:)
 
     ActiveRecord::Base.transaction(requires_new: true) do
       DB.exec("SET LOCAL statement_timeout = #{STATEMENT_TIMEOUT_MS}")
       DB.query_hash(
-        query(start_at: parameters[:start_at], end_at: parameters[:end_at], bucket:),
+        query(start_date: parameters[:start_date], end_date: parameters[:end_date], bucket:),
         parameters,
       ).first
     end
   end
 
-  def query_params(start_at:, end_at:, timezone:, filters:)
-    retention_cutoff = BrowserPageviewEvent.retention_cutoff
-    effective_start_at = [start_at, retention_cutoff].max
+  def query_params(start_date:, end_date:, filters:)
+    retention_cutoff = BrowserPageviewEvent.retention_cutoff.to_date
+    effective_start_date = [start_date, retention_cutoff].max
     cap = SiteSetting.site_traffic_explorer_event_limit
 
     {
-      start_at: effective_start_at,
-      end_at:,
-      timezone:,
+      start_date: effective_start_date,
+      end_date: end_date + 1.day,
       cap: cap,
       site_host: BrowserPageviewEventUrlNormalizer.normalize_host(Discourse.current_hostname),
       top_url: filters[:top_url],
@@ -272,20 +171,10 @@ class AdminDashboardSiteTrafficExplorer
     }
   end
 
-  def query(start_at:, end_at:, bucket:)
+  def query(start_date:, end_date:, bucket:)
     source_condition =
-      BrowserPageviewEvent.rollup_source_condition(
-        table: "bpe",
-        start_date: start_at,
-        end_date: end_at.to_date + 1.day,
-      )
-    local_created_at = "((created_at AT TIME ZONE 'UTC') AT TIME ZONE :timezone)"
-    series_bucket =
-      if bucket == :day
-        "#{local_created_at}::date"
-      else
-        "date_trunc('#{bucket}', #{local_created_at}) - (#{local_created_at} - created_at)"
-      end
+      BrowserPageviewEvent.rollup_source_condition(table: "bpe", start_date:, end_date:)
+    series_bucket = bucket == :day ? "created_at::date" : "date_trunc('hour', created_at)"
 
     <<~SQL
       WITH population AS MATERIALIZED (
@@ -302,8 +191,8 @@ class AdminDashboardSiteTrafficExplorer
           COALESCE(bpe.browser, #{BrowserPageviewEvent::BROWSER_UNKNOWN}) AS browser,
           bpe.score
         FROM browser_pageview_events bpe
-        WHERE bpe.created_at >= :start_at
-          AND bpe.created_at < :end_at
+        WHERE bpe.created_at >= :start_date
+          AND bpe.created_at < :end_date
           AND #{source_condition}
         ORDER BY bpe.created_at DESC, bpe.id DESC
         LIMIT :cap
@@ -462,8 +351,8 @@ class AdminDashboardSiteTrafficExplorer
             AND EXISTS (
               SELECT 1
               FROM browser_pageview_events bpe
-              WHERE bpe.created_at >= :start_at
-                AND bpe.created_at < :end_at
+              WHERE bpe.created_at >= :start_date
+                AND bpe.created_at < :end_date
                 AND #{source_condition}
                 AND (bpe.created_at, bpe.id) < (
                   population_boundary.oldest_created_at,
@@ -670,8 +559,8 @@ class AdminDashboardSiteTrafficExplorer
     SQL
   end
 
-  def partial_data(pageview_limited, pageview_limit_start_at:, start_at:)
-    retention_limited = start_at < BrowserPageviewEvent.retention_cutoff
+  def partial_data(pageview_limited, pageview_limit_start_at:, start_date:)
+    retention_limited = start_date < BrowserPageviewEvent.retention_cutoff.to_date
     return nil if !retention_limited && !pageview_limited
 
     if retention_limited && pageview_limited

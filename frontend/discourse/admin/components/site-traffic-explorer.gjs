@@ -3,10 +3,10 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
+import SiteTrafficChart from "discourse/admin/components/site-traffic-chart";
 import SiteTrafficExplorerBreakdownCard from "discourse/admin/components/site-traffic-explorer-breakdown-card";
 import SiteTrafficExplorerFilterPills from "discourse/admin/components/site-traffic-explorer-filter-pills";
 import SiteTrafficExplorerMetric from "discourse/admin/components/site-traffic-explorer-metric";
-import SiteTrafficTimeBrush from "discourse/admin/components/site-traffic-time-brush";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -85,8 +85,14 @@ export default class SiteTrafficExplorer extends Component {
 
   get chartModel() {
     return {
-      start_date: this.args.startDate.toISOString(),
-      end_date: this.args.endDate.toISOString(),
+      start_date: moment
+        .utc(moment(this.args.startDate).format("YYYY-MM-DD"))
+        .startOf("day")
+        .toISOString(),
+      end_date: moment
+        .utc(moment(this.args.endDate).format("YYYY-MM-DD"))
+        .endOf("day")
+        .toISOString(),
       data: this.series,
     };
   }
@@ -143,10 +149,7 @@ export default class SiteTrafficExplorer extends Component {
       ...item,
       total: rows.reduce((sum, row) => sum + (row[item.column] ?? 0), 0),
       data: rows.map((row) => ({
-        x:
-          this.effectiveBucket === "day"
-            ? moment.tz(row.date, this.args.browserTimezone).toISOString()
-            : moment.utc(row.date).toISOString(),
+        x: moment.utc(row.date).toISOString(),
         y: row[item.column] ?? 0,
       })),
     }));
@@ -271,9 +274,6 @@ export default class SiteTrafficExplorer extends Component {
             @period={{@period}}
             @startDate={{@startDate}}
             @endDate={{@endDate}}
-            @hasPreciseRange={{@hasPreciseRange}}
-            @showTime={{true}}
-            @timezone={{@browserTimezone}}
             @setPeriod={{@setPeriod}}
             @setCustomDateRange={{@setCustomDateRange}}
           />
@@ -388,18 +388,12 @@ export default class SiteTrafficExplorer extends Component {
                       "admin.site_traffic_explorer.traffic_over_time"
                     }}
                   >
-                    <SiteTrafficTimeBrush
+                    <SiteTrafficChart
                       @model={{this.chartModel}}
                       @options={{this.chartOptions}}
-                      @startDate={{@startDate}}
-                      @endDate={{@endDate}}
                       @effectiveBucket={{this.effectiveBucket}}
-                      @timezone={{@browserTimezone}}
                       @grouping={{@grouping}}
-                      @hasPreciseRange={{@hasPreciseRange}}
-                      @onSelect={{@setPreciseRange}}
-                      @onClear={{@clearPreciseRange}}
-                      @onGroupingChange={{@setGrouping}}
+                      @onIntervalChange={{@setGrouping}}
                     />
                     <div class="sr-only">
                       {{#each this.series as |series|}}

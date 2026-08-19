@@ -41,19 +41,12 @@ export function calculatePresetStartDate(period) {
   return startFor(moment().startOf("day")).toDate();
 }
 
-export function formatRange(from, to, { showTime = false, timezone } = {}) {
+export function formatRange(from, to) {
   if (!from || !to) {
     return "";
   }
-  const fromM = showTime ? moment(from).tz(timezone) : moment(from);
-  const toM = showTime ? moment(to).tz(timezone) : moment(to);
-  if (showTime) {
-    const startLabel = `${fromM.format("LL")}, ${fromM.format("LT")}`;
-    const range = fromM.isSame(toM, "day")
-      ? `${startLabel} – ${toM.format("LT")}`
-      : `${startLabel} – ${toM.format("LL")}, ${toM.format("LT")}`;
-    return `${range} ${fromM.format("z")}`;
-  }
+  const fromM = moment(from);
+  const toM = moment(to);
   if (fromM.isSame(toM, "day")) {
     return fromM.format("ll");
   }

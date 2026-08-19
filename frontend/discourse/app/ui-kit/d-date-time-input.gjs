@@ -95,7 +95,6 @@ export default class DDateTimeInput extends Component {
           @date={{this.date}}
           @relativeDate={{this.relativeDate}}
           @onChange={{this.onChangeTime}}
-          @includeEndOfDay={{this.includeEndOfDay}}
         />
       {{/if}}
 

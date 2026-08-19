@@ -6,8 +6,6 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     range: { refreshModel: true },
     start_date: { refreshModel: true },
     end_date: { refreshModel: true },
-    start_at: { refreshModel: true },
-    end_at: { refreshModel: true },
     grouping: { refreshModel: true },
     traffic_type: { refreshModel: true },
     top_url: { refreshModel: true },

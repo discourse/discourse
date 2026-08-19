@@ -226,40 +226,6 @@
     grid-template-columns: 1fr 1fr;
     gap: var(--space-2);
     margin-top: var(--space-3);
-
-    &.--date-time {
-      .d-date-time-input {
-        min-width: 0;
-      }
-
-      .date-picker {
-        min-width: 0;
-        width: 100%;
-      }
-
-      @include viewport.until(sm) {
-        grid-template-columns: 1fr;
-      }
-    }
-  }
-
-  &__timezone {
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
-    margin: var(--space-2) 0 0;
-  }
-
-  &__date-time-field {
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    border: 0;
-
-    legend {
-      margin-bottom: var(--space-1);
-      color: var(--primary-medium);
-      font-size: var(--font-down-1);
-    }
   }
 
   &__input {

@@ -39,16 +39,10 @@ const DIMENSION_KEYS = {
   ip: "ip_addresses",
 };
 
-function formatDateTime(value) {
-  return value.format().replace(/\+00:00$/, "Z");
-}
-
 export default class AdminSiteTrafficController extends Controller {
-  @tracked range = null;
+  @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
-  @tracked start_at = null;
-  @tracked end_at = null;
   @tracked grouping = null;
   @tracked traffic_type = null;
   @tracked top_url = null;
@@ -62,15 +56,7 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked loading = false;
   @tracked fetchError = null;
 
-  queryParams = [
-    "range",
-    "start_date",
-    "end_date",
-    "start_at",
-    "end_at",
-    "grouping",
-    ...FILTER_KEYS,
-  ];
+  queryParams = ["range", "start_date", "end_date", "grouping", ...FILTER_KEYS];
 
   #fetchId = 0;
 
@@ -84,45 +70,16 @@ export default class AdminSiteTrafficController extends Controller {
     return this.range;
   }
 
-  get parentStartDate() {
+  get startDate() {
     return (
       this.#customDate(this.start_date, "startOf") ??
       calculatePresetStartDate(this.safePeriod)
     );
   }
 
-  get parentEndDate() {
+  get endDate() {
     return (
       this.#customDate(this.end_date, "endOf") ?? moment().endOf("day").toDate()
-    );
-  }
-
-  get startDate() {
-    return this.preciseRange?.startDate ?? this.parentStartDate;
-  }
-
-  get endDate() {
-    return this.preciseRange?.endDate ?? this.parentEndDate;
-  }
-
-  get preciseRange() {
-    const startDate = this.#preciseDate(this.start_at);
-    const endDate = this.#preciseDate(this.end_at);
-
-    if (!startDate || !endDate || startDate >= endDate) {
-      return null;
-    }
-
-    return { startDate, endDate };
-  }
-
-  get hasPreciseRange() {
-    return this.preciseRange !== null;
-  }
-
-  get browserTimezone() {
-    return (
-      Intl.DateTimeFormat().resolvedOptions().timeZone || moment.tz.guess()
     );
   }
 
@@ -190,30 +147,14 @@ export default class AdminSiteTrafficController extends Controller {
     return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
-  #preciseDate(value) {
-    if (!value) {
-      return null;
-    }
-
-    const parsed = moment.parseZone(value, moment.ISO_8601, true);
-    return parsed.isValid() ? parsed.toDate() : null;
-  }
-
   #requestParams() {
-    const preciseRange = this.preciseRange;
     const params = {
-      start_date: moment(this.parentStartDate).format("YYYY-MM-DD"),
-      end_date: moment(this.parentEndDate).format("YYYY-MM-DD"),
-      timezone: this.browserTimezone,
+      start_date: moment(this.startDate).format("YYYY-MM-DD"),
+      end_date: moment(this.endDate).format("YYYY-MM-DD"),
     };
 
     if (this.grouping) {
       params.grouping = this.grouping;
-    }
-
-    if (preciseRange) {
-      params.start_at = this.start_at;
-      params.end_at = this.end_at;
     }
 
     for (const key of FILTER_KEYS) {
@@ -282,51 +223,18 @@ export default class AdminSiteTrafficController extends Controller {
     this.range = period;
     this.start_date = null;
     this.end_date = null;
-    this.clearPreciseRange();
   }
 
   @action
   setCustomDateRange(startDate, endDate) {
-    const start = moment(startDate);
-    const end = moment(endDate);
     this.range = PERIOD_CUSTOM;
-    this.start_date = start.format("YYYY-MM-DD");
-    this.end_date = end.format("YYYY-MM-DD");
-
-    if (
-      start.hours() === 0 &&
-      start.minutes() === 0 &&
-      end.hours() === 23 &&
-      end.minutes() === 59
-    ) {
-      this.clearPreciseRange();
-    } else {
-      this.start_at = formatDateTime(start);
-      this.end_at = formatDateTime(end);
-    }
-  }
-
-  @action
-  setPreciseRange(startDate, endDate) {
-    const start = moment(startDate);
-    const end = moment(endDate);
-    this.range = PERIOD_CUSTOM;
-    this.start_date = start.format("YYYY-MM-DD");
-    this.end_date = end.format("YYYY-MM-DD");
-    this.start_at = formatDateTime(start);
-    this.end_at = formatDateTime(end);
+    this.start_date = moment(startDate).format("YYYY-MM-DD");
+    this.end_date = moment(endDate).format("YYYY-MM-DD");
   }
 
   @action
   setGrouping(grouping) {
-    this.range = this.safePeriod;
-    this.grouping = grouping || null;
-  }
-
-  @action
-  clearPreciseRange() {
-    this.start_at = null;
-    this.end_at = null;
+    this.grouping = grouping;
   }
 
   @action
@@ -360,11 +268,9 @@ export default class AdminSiteTrafficController extends Controller {
   @action
   resetState() {
     this.#fetchId++;
-    this.range = null;
+    this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
-    this.start_at = null;
-    this.end_at = null;
     this.grouping = null;
     for (const key of FILTER_KEYS) {
       this[key] = null;

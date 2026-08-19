@@ -68,28 +68,6 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
       .hasText("Last 30 days");
   });
 
-  test("trigger label includes exact local times when enabled", async function (assert) {
-    const start = new Date("2026-05-10T10:00:00Z");
-    const end = new Date("2026-05-10T12:00:00Z");
-
-    await render(
-      <template>
-        <DashboardDateRange
-          @period="custom"
-          @startDate={{start}}
-          @endDate={{end}}
-          @showTime={{true}}
-          @hasPreciseRange={{true}}
-          @timezone="UTC"
-        />
-      </template>
-    );
-
-    assert
-      .dom(".db-date-range__trigger .d-button-label")
-      .hasText("May 10, 2026, 10:00 AM – 12:00 PM UTC");
-  });
-
   test("trigger label reacts to @period changes", async function (assert) {
     class State {
       @tracked period = "last_30_days";

@@ -74,22 +74,13 @@ const gradientPlugin = {
 export function formatTimeScaleTick({
   value,
   timeUnit,
-  timezone,
   startDate,
   endDate,
   isFirstTick = false,
 }) {
   const date = moment.utc(value);
-  if (timezone) {
-    date.tz(timezone);
-  }
-
-  const start = moment(startDate);
-  const end = moment(endDate);
-  if (timezone) {
-    start.tz(timezone);
-    end.tz(timezone);
-  }
+  const start = moment.utc(startDate);
+  const end = moment.utc(endDate);
   const spansYears =
     start.isValid() && end.isValid() && start.year() !== end.year();
   const dateFormat = spansYears ? "D MMM YYYY" : "D MMM";
@@ -97,11 +88,8 @@ export function formatTimeScaleTick({
   if (timeUnit === "month") {
     return date.format("MMM YYYY");
   }
-  if (timeUnit === "minute") {
-    return date.format("LT");
-  }
   if (timeUnit === "hour") {
-    if (moment(endDate).diff(moment(startDate), "days", true) > 2) {
+    if (end.diff(start, "days", true) > 2) {
       return isFirstTick || date.hours() === 0 ? date.format(dateFormat) : null;
     }
     return isFirstTick || date.hours() === 0
@@ -152,11 +140,7 @@ export default class AdminReportStackedChart extends Component {
     return {
       type: "bar",
       data,
-      plugins: [
-        gradientPlugin,
-        emptyTooltipPlugin,
-        ...(chartOptions.chartPlugins ?? []),
-      ],
+      plugins: [gradientPlugin, emptyTooltipPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -303,7 +287,6 @@ export default class AdminReportStackedChart extends Component {
     <Chart
       ...attributes
       @chartConfig={{this.chartConfig}}
-      @onChartReady={{@onChartReady}}
       class="admin-report-chart admin-report-stacked-chart"
     />
   </template>
@@ -317,7 +300,7 @@ export default class AdminReportStackedChart extends Component {
     }
 
     return this.#dateLabelMoment(startDate).format(
-      ["minute", "hour"].includes(timeUnit) ? "LLL" : "LL"
+      timeUnit === "hour" ? "LLL" : "LL"
     );
   }
 
@@ -343,7 +326,6 @@ export default class AdminReportStackedChart extends Component {
       return formatTimeScaleTick({
         value: label,
         timeUnit,
-        timezone: this.args.options?.timezone,
         startDate: this.args.model.start_date,
         endDate: this.args.model.end_date,
         isFirstTick: index === 0,
@@ -356,10 +338,6 @@ export default class AdminReportStackedChart extends Component {
       return date.format("MMM YYYY");
     }
 
-    if (timeUnit === "minute") {
-      return date.format("LT");
-    }
-
     if (timeUnit === "hour") {
       return date.format("D MMM, LT");
     }
@@ -368,9 +346,6 @@ export default class AdminReportStackedChart extends Component {
   }
 
   #dateLabelMoment(value) {
-    const date = typeof value === "string" ? moment.utc(value) : moment(value);
-    return this.args.options?.timezone
-      ? date.tz(this.args.options.timezone)
-      : date;
+    return typeof value === "string" ? moment.utc(value) : moment(value);
   }
 }

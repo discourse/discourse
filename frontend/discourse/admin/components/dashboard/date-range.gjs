@@ -19,10 +19,7 @@ export default class DashboardDateRange extends Component {
       return i18n(PRESET_LABEL_KEYS[period]);
     }
     if (period === PERIOD_CUSTOM && startDate && endDate) {
-      return formatRange(startDate, endDate, {
-        showTime: this.args.showTime && this.args.hasPreciseRange,
-        timezone: this.args.timezone,
-      });
+      return formatRange(startDate, endDate);
     }
     return i18n(PRESET_LABEL_KEYS[DEFAULT_PERIOD]);
   }
@@ -65,8 +62,6 @@ export default class DashboardDateRange extends Component {
           @to={{@endDate}}
           @presets={{this.presets}}
           @activePreset={{this.activePreset}}
-          @showTime={{@showTime}}
-          @timezone={{@timezone}}
           @onApply={{fn this.handleApply args.close}}
           @onCancel={{args.close}}
         />

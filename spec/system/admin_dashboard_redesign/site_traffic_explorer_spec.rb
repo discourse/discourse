@@ -402,9 +402,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_no_expanded_table
   end
 
-  it "lets an admin group and brush traffic into a precise local range",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0),
-     timezone: "UTC" do
+  it "lets an admin change the graph interval independently of the date range",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     sign_in(admin)
 
     9.times do |index|
@@ -420,120 +419,43 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.visit_default
 
     expect(traffic).to have_date_range("Last 30 days")
-    expect(traffic).to have_grouping("Automatic (day)")
-    expect(traffic).to have_groupings("Automatic", "Hour", "Day")
+    expect(traffic).to have_grouping("Day")
+    expect(traffic).to have_groupings("Hour", "Day")
 
     traffic.select_grouping("Hour")
 
     expect(traffic).to have_grouping("Hour")
-    expect(page).to have_current_path(
-      "/admin/dashboard/site-traffic-explorer?grouping=hour&range=last_30_days",
-    )
+    expect(page).to have_current_path("/admin/dashboard/site-traffic-explorer?grouping=hour")
 
-    traffic.select_grouping("Automatic")
+    traffic.select_grouping("Day")
 
-    expect(traffic).to have_grouping("Automatic (day)")
-    expect(page).to have_current_path("/admin/dashboard/site-traffic-explorer?range=last_30_days")
+    expect(traffic).to have_grouping("Day")
+    expect(page).to have_current_path("/admin/dashboard/site-traffic-explorer?grouping=day")
 
-    traffic.visit(start_date: "2026-05-10", end_date: "2026-05-11")
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
 
-    expect(traffic).to have_grouping("Automatic (day)")
+    expect(traffic).to have_grouping("Day")
 
     traffic.select_grouping("Day")
 
     expect(traffic).to have_grouping("Day")
     expect(page).to have_current_path(
-      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-11&grouping=day&range=custom&start_date=2026-05-10",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&grouping=day&range=custom&start_date=2026-05-01",
     )
 
     traffic.select_grouping("Hour")
 
     expect(traffic).to have_grouping("Hour")
     expect(page).to have_current_path(
-      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-11&grouping=hour&range=custom&start_date=2026-05-10",
-    )
-
-    picker = traffic.open_date_picker
-    expect(picker).to have_no_precision_mode
-    expect(picker).to have_timezone("Times shown in UTC")
-    expect(picker).to have_datetime_range(
-      start_date: "2026-05-10",
-      start_time: "00:00",
-      end_date: "2026-05-11",
-      end_time: "23:59",
-    )
-    picker.set_datetime_range(
-      start_date: "2026-05-10",
-      start_time: "10:00",
-      end_date: "2026-05-10",
-      end_time: "12:00",
-    )
-    picker.cancel
-
-    expect(traffic).to have_date_range("May 10, 2026 – May 11, 2026")
-
-    traffic.select_custom_datetime_range(
-      start_date: "2026-05-10",
-      start_time: "10:00",
-      end_date: "2026-05-10",
-      end_time: "12:00",
-    )
-
-    expect(traffic).to have_date_range("May 10, 2026, 10:00 AM – 12:00 PM UTC")
-    expect(page).to have_current_path(
-      "/admin/dashboard/site-traffic-explorer?end_at=2026-05-10T12%3A00%3A00Z&end_date=2026-05-10&grouping=hour&range=custom&start_at=2026-05-10T10%3A00%3A00Z&start_date=2026-05-10",
-    )
-
-    traffic.hover_chart(fraction: 0.5)
-    expect(traffic).to have_hover_marker(
-      fraction: 0.5,
-      label: "May 10, 2026, 11:00 AM: tooltip point",
-    )
-
-    traffic.cancel_chart_drag(from: 0.25, to: 0.75)
-
-    expect(traffic).to have_no_brush_selection
-    expect(traffic).to have_date_range("May 10, 2026, 10:00 AM – 12:00 PM UTC")
-    expect(page).to have_current_path(
-      "/admin/dashboard/site-traffic-explorer?end_at=2026-05-10T12%3A00%3A00Z&end_date=2026-05-10&grouping=hour&range=custom&start_at=2026-05-10T10%3A00%3A00Z&start_date=2026-05-10",
-    )
-
-    traffic.drag_chart(from: 0.25, to: 0.75) do
-      expect(traffic).to have_brush_selection
-      expect(traffic).to have_live_brush_range("May 10, 2026, 10:30 AM – 11:30 AM UTC")
-    end
-
-    expect(traffic).to have_date_range("May 10, 2026, 10:30 AM – 11:30 AM UTC")
-    expect(traffic).to have_grouping("Hour")
-    expect(page).to have_current_path(
-      "/admin/dashboard/site-traffic-explorer?end_at=2026-05-10T11%3A30%3A00Z&end_date=2026-05-10&grouping=hour&range=custom&start_at=2026-05-10T10%3A30%3A00Z&start_date=2026-05-10",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&grouping=hour&range=custom&start_date=2026-05-01",
     )
 
     page.refresh
 
-    expect(traffic).to have_date_range("May 10, 2026, 10:30 AM – 11:30 AM UTC")
-    expect(traffic).to have_grouping("Hour")
-
-    picker = traffic.open_date_picker
-    expect(picker).to have_datetime_range(
-      start_date: "2026-05-10",
-      start_time: "10:30",
-      end_date: "2026-05-10",
-      end_time: "11:30",
-    )
-
-    picker.set_datetime_range(
-      start_date: "2026-05-10",
-      start_time: "00:00",
-      end_date: "2026-05-10",
-      end_time: "23:59",
-    )
-    picker.apply
-
-    expect(traffic).to have_date_range("May 10, 2026")
+    expect(traffic).to have_date_range("May 1, 2026 – May 12, 2026")
     expect(traffic).to have_grouping("Hour")
     expect(page).to have_current_path(
-      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-10&grouping=hour&range=custom&start_date=2026-05-10",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&grouping=hour&range=custom&start_date=2026-05-01",
     )
   end
 

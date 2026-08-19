@@ -12,83 +12,16 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       expect(contract).not_to be_valid
     end
 
-    it "requires a complete, ordered precise range within the date range" do
-      valid_contract =
-        described_class.new(
-          start_date: Date.new(2026, 5, 10),
-          end_date: Date.new(2026, 5, 12),
-          start_at: Time.zone.local(2026, 5, 10, 10),
-          end_at: Time.zone.local(2026, 5, 10, 11),
-        )
-      incomplete_contract =
-        described_class.new(
-          start_date: Date.new(2026, 5, 10),
-          end_date: Date.new(2026, 5, 12),
-          start_at: Time.zone.local(2026, 5, 10, 10),
-        )
-      reversed_contract =
-        described_class.new(
-          start_date: Date.new(2026, 5, 10),
-          end_date: Date.new(2026, 5, 12),
-          start_at: Time.zone.local(2026, 5, 10, 11),
-          end_at: Time.zone.local(2026, 5, 10, 10),
-        )
-      outside_contract =
-        described_class.new(
-          start_date: Date.new(2026, 5, 10),
-          end_date: Date.new(2026, 5, 12),
-          start_at: Time.zone.local(2026, 5, 9, 23, 59),
-          end_at: Time.zone.local(2026, 5, 10, 10),
-        )
-      malformed_contract =
-        described_class.new(
-          start_date: Date.new(2026, 5, 10),
-          end_date: Date.new(2026, 5, 12),
-          start_at: "not-a-time",
-          end_at: "also-not-a-time",
-        )
-
-      expect(
-        [
-          valid_contract.valid?,
-          incomplete_contract.valid?,
-          reversed_contract.valid?,
-          outside_contract.valid?,
-          malformed_contract.valid?,
-        ],
-      ).to eq([true, false, false, false, false])
-    end
-
-    it "accepts supported groupings and IANA timezones" do
+    it "accepts supported groupings" do
       base = { start_date: Date.new(2026, 5, 10), end_date: Date.new(2026, 5, 12) }
 
       expect(
         [
-          described_class.new(**base, grouping: "hour", timezone: "Asia/Kolkata").valid?,
-          described_class.new(**base, grouping: "day", timezone: "America/New_York").valid?,
-          described_class.new(**base, grouping: "week", timezone: "UTC").valid?,
-          described_class.new(**base, grouping: "hour", timezone: "Mars/Olympus_Mons").valid?,
+          described_class.new(**base, grouping: "hour").valid?,
+          described_class.new(**base, grouping: "day").valid?,
+          described_class.new(**base, grouping: "week").valid?,
         ],
-      ).to eq([true, true, false, false])
-    end
-
-    it "resolves skipped and repeated local midnights" do
-      skipped_midnight =
-        described_class.new(
-          start_date: Date.new(2020, 3, 8),
-          end_date: Date.new(2020, 3, 8),
-          timezone: "America/Havana",
-        )
-      repeated_midnight =
-        described_class.new(
-          start_date: Date.new(2020, 11, 1),
-          end_date: Date.new(2020, 11, 1),
-          timezone: "America/Havana",
-        )
-
-      expect([skipped_midnight.query_range.first, repeated_midnight.query_range.first]).to eq(
-        [Time.utc(2020, 3, 8, 5), Time.utc(2020, 11, 1, 4)],
-      )
+      ).to eq([true, true, false])
     end
   end
 
@@ -170,53 +103,9 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
 
-      it "uses precise datetime boundaries and minute buckets" do
-        traffic =
-          described_class.call(
-            params: params.merge(start_at: "2026-05-10T10:03:00Z", end_at: "2026-05-10T10:06:00Z"),
-          ).traffic
-
-        expect(
-          [
-            traffic[:bucket],
-            traffic.dig(:summary, "pageviews"),
-            traffic[:series].map { |row| Time.zone.parse(row["date"]).strftime("%H:%M") },
-          ],
-        ).to eq(["minute", 3, %w[10:03 10:04 10:05]])
-      end
-
-      it "selects readable buckets at the two-hour and seven-day thresholds" do
-        minute_traffic =
-          described_class.call(
-            params: params.merge(start_at: "2026-05-10T09:00:00Z", end_at: "2026-05-10T11:00:00Z"),
-          ).traffic
-        hourly_traffic =
-          described_class.call(
-            params: params.merge(start_at: "2026-05-10T09:00:00Z", end_at: "2026-05-10T11:00:01Z"),
-          ).traffic
-        daily_traffic =
-          described_class.call(
-            params: params.merge(start_at: "2026-05-01T00:00:00Z", end_at: "2026-05-08T00:00:01Z"),
-          ).traffic
-
-        expect([minute_traffic[:bucket], hourly_traffic[:bucket], daily_traffic[:bucket]]).to eq(
-          %w[minute hour day],
-        )
-      end
-
-      it "honors explicit grouping outside the automatic thresholds" do
-        hourly_traffic =
-          described_class.call(params: params.merge(grouping: "hour", timezone: "UTC")).traffic
-        daily_traffic =
-          described_class.call(
-            params:
-              params.merge(
-                start_at: "2026-05-10T09:00:00Z",
-                end_at: "2026-05-10T09:30:00Z",
-                grouping: "day",
-                timezone: "UTC",
-              ),
-          ).traffic
+      it "groups the selected dates by the requested interval" do
+        hourly_traffic = described_class.call(params: params.merge(grouping: "hour")).traffic
+        daily_traffic = described_class.call(params: params.merge(grouping: "day")).traffic
 
         expect([hourly_traffic[:bucket], daily_traffic[:bucket]]).to eq(%w[hour day])
       end

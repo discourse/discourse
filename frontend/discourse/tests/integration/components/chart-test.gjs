@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { find, render, settled } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Chart from "discourse/admin/components/chart";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -70,29 +70,6 @@ module("Integration | Component | Chart", function (hooks) {
       emptyCanvasDataURL,
       dataURL,
       "The canvas was rendered successfully"
-    );
-  });
-
-  test("exposes the rendered chart", async function (assert) {
-    const chartConfig = generateChartConfig({
-      title: "Test Chart",
-      data: generateData(),
-    });
-    let renderedChart;
-    const onChartReady = (chart) => {
-      renderedChart = chart;
-    };
-
-    await render(
-      <template>
-        <Chart @chartConfig={{chartConfig}} @onChartReady={{onChartReady}} />
-      </template>
-    );
-
-    assert.strictEqual(
-      renderedChart.canvas,
-      find("canvas.chart-canvas"),
-      "the callback receives the active chart"
     );
   });
 

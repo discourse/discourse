@@ -8,38 +8,11 @@ import loadChartJS, {
 // chartConfig - object
 export default class ChartComponent extends Component {
   renderChart = modifier((element) => {
-    const renderVersion = ++this.#renderVersion;
-    let cancelled = false;
-    let chart;
-    this.loadAndInit(element, () => this.#renderVersion === renderVersion).then(
-      (initializedChart) => {
-        if (!initializedChart) {
-          return;
-        }
-        if (cancelled) {
-          initializedChart.destroy();
-          return;
-        }
-
-        chart = initializedChart;
-        this.chart = initializedChart;
-        this.args.onChartReady?.(initializedChart);
-      }
-    );
-    return () => {
-      cancelled = true;
-      if (this.#renderVersion === renderVersion) {
-        this.#renderVersion++;
-      }
-      chart?.destroy();
-      if (this.chart === chart) {
-        this.chart = null;
-      }
-    };
+    this.loadAndInit(element);
+    return () => this.chart?.destroy();
   });
-  #renderVersion = 0;
 
-  async loadAndInit(element, isCurrent) {
+  async loadAndInit(element) {
     const chartConfig = { ...this.args.chartConfig };
 
     const Chart = await loadChartJS();
@@ -52,11 +25,7 @@ export default class ChartComponent extends Component {
       ];
     }
 
-    if (!isCurrent()) {
-      return;
-    }
-
-    return new Chart(element.getContext("2d"), chartConfig);
+    this.chart = new Chart(element.getContext("2d"), chartConfig);
   }
 
   <template>
