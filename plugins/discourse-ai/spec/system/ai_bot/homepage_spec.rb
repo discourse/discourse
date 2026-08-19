@@ -346,7 +346,7 @@ RSpec.describe "AI Bot - Homepage" do
 
     it "displays the shuffle icon when on homepage or bot PM" do
       visit "/"
-      expect(header).to have_icon_in_bot_button(icon: "discobot")
+      expect(header).to have_icon_in_bot_button(icon: "far-discobot")
       header.click_bot_button
 
       expect(header).to have_icon_in_bot_button(icon: "shuffle")
@@ -357,7 +357,7 @@ RSpec.describe "AI Bot - Homepage" do
 
       # Go back home and assert that the icon is now discobot again
       header.click_bot_button
-      expect(header).to have_icon_in_bot_button(icon: "discobot")
+      expect(header).to have_icon_in_bot_button(icon: "far-discobot")
     end
 
     it "displays 'new question' button on homepage and topic page" do
@@ -436,7 +436,7 @@ RSpec.describe "AI Bot - Homepage" do
 
       it "shows shuffle icon in the header and doesn't display sidebar back link" do
         visit "/"
-        expect(header).to have_icon_in_bot_button(icon: "discobot")
+        expect(header).to have_icon_in_bot_button(icon: "far-discobot")
         header.click_bot_button
         expect(ai_pm_homepage).to have_homepage
         expect(header).to have_icon_in_bot_button(icon: "shuffle")
