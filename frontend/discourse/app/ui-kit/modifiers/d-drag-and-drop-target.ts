@@ -4,8 +4,6 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { modifier } from "ember-modifier";
 import {
-  type DropEffect,
-  type DropPosition,
   type DropTargetKernelArgs,
   type DropTargetKernelEvent,
   type DropTargetKernelFeedback,
@@ -17,7 +15,6 @@ import {
   type NormalizedDragSource,
   normalizeDragSource,
 } from "discourse/lib/-internals/drag-and-drop/vocabulary";
-import type { Axis } from "discourse/lib/geometry";
 
 export {
   type DropEffect,
@@ -34,70 +31,33 @@ export type DropTargetFeedback = DropTargetKernelFeedback<DropTargetSource>;
 /** What a lifecycle callback is told. */
 export type DropTargetEvent = DropTargetKernelEvent<DropTargetSource>;
 
-type SharedDropTargetArgs = DropTargetKernelArgs<DropTargetSource>;
+/**
+ * The drop target's named args, shared by the `dDragAndDropTarget` modifier
+ * and {@link registerDragAndDropTarget}.
+ */
+export interface DragAndDropTargetArgs extends DropTargetKernelArgs<DropTargetSource> {
+  /**
+   * The dragged source's `type` must be in this list for the target to engage.
+   * Omit to accept any source.
+   */
+  accepts?: string | string[];
+
+  /**
+   * `false` refuses a drop whose dragged element is this element. Defaults to
+   * `true`: an element that is both source and target has a meaningful drop
+   * onto itself, so excluding it is opt-in.
+   */
+  acceptsSelf?: boolean;
+}
 
 interface DDragAndDropTargetSignature {
   /** The element to register as a drop target. */
   Element: HTMLElement;
   Args: {
-    Named: {
-      /**
-       * The dragged source's `type` must be in this list for the target to
-       * engage. Omit to accept any source.
-       */
-      accepts?: string | string[];
-
-      /**
-       * `false` refuses a drop whose dragged element is this element. Defaults
-       * to `true`: an element that is both source and target has a meaningful
-       * drop onto itself, so excluding it is opt-in.
-       */
-      acceptsSelf?: boolean;
-
-      /** See {@link DropTargetKernelArgs}. */
-      position?: DropPosition;
-
-      /** See {@link DropTargetKernelArgs}. */
-      axis?: Axis;
-
-      /** See {@link DropTargetKernelArgs}. */
-      canDrop?: SharedDropTargetArgs["canDrop"];
-
-      /** See {@link DropTargetKernelArgs}. */
-      getData?: () => object;
-
-      /** See {@link DropTargetKernelArgs}. */
-      getDropEffect?: (feedback: DropTargetFeedback) => DropEffect;
-
-      /** See {@link DropTargetKernelArgs}. */
-      getIsSticky?: () => boolean;
-
-      /** See {@link DropTargetKernelArgs}. */
-      indicator?: boolean;
-
-      /** See {@link DropTargetKernelArgs}. */
-      onDragEnter?: (event: DropTargetEvent) => void;
-
-      /** See {@link DropTargetKernelArgs}. */
-      onDrag?: (event: DropTargetEvent) => void;
-
-      /** See {@link DropTargetKernelArgs}. */
-      onDragLeave?: (event: DropTargetEvent) => void;
-
-      /** See {@link DropTargetKernelArgs}. */
-      onDrop?: (event: DropTargetEvent) => void;
-    };
+    Named: DragAndDropTargetArgs;
     Positional: [];
   };
 }
-
-/**
- * The drop target's named args, for a consumer driving
- * {@link registerDragAndDropTarget} imperatively rather than through the
- * modifier.
- */
-export type DragAndDropTargetArgs =
-  DDragAndDropTargetSignature["Args"]["Named"];
 
 /**
  * Imperative drop-target registration; the `dDragAndDropTarget` modifier

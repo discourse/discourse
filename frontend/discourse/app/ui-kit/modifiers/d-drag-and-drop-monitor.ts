@@ -20,8 +20,7 @@ export type DragMonitorEvent = Omit<ElementEventBasePayload, "source"> & {
 
 interface DDragAndDropMonitorSignature {
   /**
-   * Irrelevant: a monitor is global. Attach to any always-present sentinel for
-   * the lifecycle.
+   * A monitor is global. The element only anchors the modifier's lifecycle.
    */
   Element: HTMLElement;
   Args: {

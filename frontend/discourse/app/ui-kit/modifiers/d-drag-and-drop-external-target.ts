@@ -2,7 +2,6 @@ import { dropTargetForExternal } from "@atlaskit/pragmatic-drag-and-drop/adapter
 import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
 import { modifier } from "ember-modifier";
 import {
-  type DropEffect,
   type DropPosition,
   type DropTargetKernelArgs,
   type DropTargetKernelEvent,
@@ -25,70 +24,37 @@ export type ExternalDropTargetFeedback =
 export type ExternalDropTargetEvent =
   DropTargetKernelEvent<ExternalDragPayload>;
 
-type SharedDropTargetArgs = DropTargetKernelArgs<ExternalDragPayload>;
+/**
+ * The external drop target's named args, shared by the
+ * `dDragAndDropExternalTarget` modifier and
+ * {@link registerDragAndDropExternalTarget}.
+ */
+export interface DragAndDropExternalTargetArgs extends DropTargetKernelArgs<ExternalDragPayload> {
+  /**
+   * Filters which external drag kinds engage the target. Omit to accept any
+   * external drag.
+   */
+  accepts?: ExternalDragKind | ExternalDragKind[];
+
+  /** Setting this or `axis` opts the target into resolving a position at all. */
+  position?: DropPosition;
+
+  /**
+   * Without this or `position` the target is one destination, not a slot:
+   * callbacks get `position: null` and the indicator is the single
+   * `--drag-over-external` class.
+   */
+  axis?: Axis;
+}
 
 interface DDragAndDropExternalTargetSignature {
   /** The element to register as a drop target. */
   Element: HTMLElement;
   Args: {
-    Named: {
-      /**
-       * Filters which external drag kinds engage the target. Omit to accept any
-       * external drag.
-       */
-      accepts?: ExternalDragKind | ExternalDragKind[];
-
-      /**
-       * See {@link DropTargetKernelArgs}. Setting this or `axis` opts the target
-       * into resolving a position at all; see `axis`.
-       */
-      position?: DropPosition;
-
-      /**
-       * See {@link DropTargetKernelArgs}. Without this or `position` the target
-       * is one destination, not a slot: callbacks get `position: null` and the
-       * indicator is the single `--drag-over-external` class.
-       */
-      axis?: Axis;
-
-      /** See {@link DropTargetKernelArgs}. */
-      canDrop?: SharedDropTargetArgs["canDrop"];
-
-      /** See {@link DropTargetKernelArgs}. */
-      getData?: () => object;
-
-      /** See {@link DropTargetKernelArgs}. */
-      getDropEffect?: (feedback: ExternalDropTargetFeedback) => DropEffect;
-
-      /** See {@link DropTargetKernelArgs}. */
-      getIsSticky?: () => boolean;
-
-      /** See {@link DropTargetKernelArgs}. */
-      indicator?: boolean;
-
-      /** See {@link DropTargetKernelArgs}. */
-      onDragEnter?: (event: ExternalDropTargetEvent) => void;
-
-      /** See {@link DropTargetKernelArgs}. */
-      onDrag?: (event: ExternalDropTargetEvent) => void;
-
-      /** See {@link DropTargetKernelArgs}. */
-      onDragLeave?: (event: ExternalDropTargetEvent) => void;
-
-      /** See {@link DropTargetKernelArgs}. */
-      onDrop?: (event: ExternalDropTargetEvent) => void;
-    };
+    Named: DragAndDropExternalTargetArgs;
     Positional: [];
   };
 }
-
-/**
- * The external drop target's named args, for a consumer driving
- * {@link registerDragAndDropExternalTarget} imperatively rather than through the
- * modifier.
- */
-export type DragAndDropExternalTargetArgs =
-  DDragAndDropExternalTargetSignature["Args"]["Named"];
 
 /**
  * Imperative external drop-target registration, wrapped by the
