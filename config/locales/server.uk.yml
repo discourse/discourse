@@ -1706,6 +1706,9 @@ uk:
       labels:
         country_code: "Код країни"
         count: "Відвідини"
+    top_entry_urls:
+      labels:
+        count: "Відвідини"
     top_referrers_by_browser_pageviews:
       title: "Найкращі реферали"
       description: "Зовнішні сайти, на які припадає найбільше переглядів сторінок вашого форуму за обраний період."

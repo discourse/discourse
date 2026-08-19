@@ -1130,6 +1130,9 @@ da:
     top_countries_by_browser_pageviews:
       labels:
         count: "Besøg"
+    top_entry_urls:
+      labels:
+        count: "Besøg"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Besøg"

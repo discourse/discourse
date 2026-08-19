@@ -1719,6 +1719,10 @@ pl_PL:
       labels:
         country_code: "Kod kraju"
         count: "Odwiedziny"
+    top_entry_urls:
+      labels:
+        entry_url: "Wpisowy adres URL"
+        count: "Odwiedziny"
     top_referrers_by_browser_pageviews:
       title: "Najpopularniejsi polecający"
       description: "Zewnętrzne witryny, które w wybranym okresie odnotowały największą liczbę odsłon Twojego forum."

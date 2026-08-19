@@ -874,6 +874,9 @@ te:
     top_countries_by_browser_pageviews:
       labels:
         count: "సందర్శనాలు"
+    top_entry_urls:
+      labels:
+        count: "సందర్శనాలు"
     top_referrers_by_browser_pageviews:
       labels:
         count: "సందర్శనాలు"

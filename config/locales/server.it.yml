@@ -1428,6 +1428,9 @@ it:
     top_countries_by_browser_pageviews:
       labels:
         count: "Visite"
+    top_entry_urls:
+      labels:
+        count: "Visite"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Visite"

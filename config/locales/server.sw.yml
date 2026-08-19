@@ -681,6 +681,9 @@ sw:
     top_countries_by_browser_pageviews:
       labels:
         count: "Waliotembelea"
+    top_entry_urls:
+      labels:
+        count: "Waliotembelea"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Waliotembelea"

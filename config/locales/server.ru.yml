@@ -1630,6 +1630,9 @@ ru:
     top_countries_by_browser_pageviews:
       labels:
         count: "Посещений"
+    top_entry_urls:
+      labels:
+        count: "Посещений"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Посещений"

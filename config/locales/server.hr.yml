@@ -1070,6 +1070,9 @@ hr:
     top_countries_by_browser_pageviews:
       labels:
         count: "Posjeta"
+    top_entry_urls:
+      labels:
+        count: "Posjeta"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Posjeta"

@@ -1592,6 +1592,9 @@ cs:
     top_countries_by_browser_pageviews:
       labels:
         count: "Návštěv"
+    top_entry_urls:
+      labels:
+        count: "Návštěv"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Návštěv"

@@ -955,6 +955,9 @@ vi:
     top_countries_by_browser_pageviews:
       labels:
         count: "Ngày ghé thăm"
+    top_entry_urls:
+      labels:
+        count: "Ngày ghé thăm"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Ngày ghé thăm"

@@ -1581,6 +1581,9 @@ sk:
     top_countries_by_browser_pageviews:
       labels:
         count: "Návštev"
+    top_entry_urls:
+      labels:
+        count: "Návštev"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Návštev"

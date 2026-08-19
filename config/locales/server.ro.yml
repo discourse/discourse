@@ -851,6 +851,9 @@ ro:
     top_countries_by_browser_pageviews:
       labels:
         count: "Vizite"
+    top_entry_urls:
+      labels:
+        count: "Vizite"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Vizite"

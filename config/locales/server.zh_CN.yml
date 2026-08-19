@@ -1467,6 +1467,9 @@ zh_CN:
       labels:
         country_code: "国家/地区代码"
         count: "访问量"
+    top_entry_urls:
+      labels:
+        count: "访问量"
     top_referrers_by_browser_pageviews:
       title: "热门推荐人"
       description: "在所选期间内，为您的论坛带来最多浏览器页面浏览量的外部网站。"

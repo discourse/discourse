@@ -1221,6 +1221,9 @@ ur:
       labels:
         country_code: "ملکی کوڈ"
         count: "زائرین کی تعداد"
+    top_entry_urls:
+      labels:
+        count: "دورے"
     top_referrers_by_browser_pageviews:
       title: "سرفہرست حوالہ دہندگان"
       labels:

@@ -1091,6 +1091,9 @@ ko:
     top_countries_by_browser_pageviews:
       labels:
         count: "방문"
+    top_entry_urls:
+      labels:
+        count: "방문"
     top_referrers_by_browser_pageviews:
       labels:
         count: "방문"

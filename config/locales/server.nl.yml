@@ -1469,6 +1469,9 @@ nl:
     top_countries_by_browser_pageviews:
       labels:
         count: "Bezoeken"
+    top_entry_urls:
+      labels:
+        count: "Bezoeken"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Bezoeken"

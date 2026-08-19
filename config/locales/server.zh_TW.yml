@@ -920,6 +920,9 @@ zh_TW:
     top_countries_by_browser_pageviews:
       labels:
         count: "造訪"
+    top_entry_urls:
+      labels:
+        count: "造訪"
     top_referrers_by_browser_pageviews:
       labels:
         count: "造訪"

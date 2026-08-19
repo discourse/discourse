@@ -1451,6 +1451,9 @@ pt_BR:
     top_countries_by_browser_pageviews:
       labels:
         count: "Acessos"
+    top_entry_urls:
+      labels:
+        count: "Acessos"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Acessos"
