@@ -29,4 +29,18 @@ acceptance("composer-minimum-post-length transformer", function (needs) {
       .dom(".d-editor-input")
       .doesNotExist("closes the composer on successful creation");
   });
+
+  test("returning 0 stops the editor asking for a body", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("composer-minimum-post-length", () => 0);
+    });
+
+    await visit("/new-topic");
+    await click(".submit-panel .create");
+
+    assert.dom(".title-input .popup-tip.bad").exists("the title is required");
+    assert
+      .dom(".d-editor-textarea-wrapper .popup-tip.bad")
+      .doesNotExist("the body is not");
+  });
 });
