@@ -68,7 +68,10 @@ export interface DropTargetKernelArgs<Source> extends DropPositionOptions {
   /** Metadata attached to the drag's record of this target under `.data`. */
   getData?: () => object;
 
-  /** Whether the target remains current briefly after the pointer leaves. */
+  /**
+   * Whether the target stays current after the pointer leaves it, until another
+   * target at its level takes over or the gate turns it away.
+   */
   getIsSticky?: () => boolean;
 
   /** `false` suppresses the target's indicator. Defaults to `true`. */
@@ -115,6 +118,10 @@ type LibraryEventArgs<Payload> = {
   location: DragLocationHistory;
 };
 
+/**
+ * What the kernel hands an adapter's `register` function: the shape both
+ * library registrars accept as-is, so no adapter needs a cast.
+ */
 export type DropTargetRegistrationArgs<Payload> = {
   element: Element;
   canDrop: (args: LibraryFeedbackArgs<Payload>) => boolean;
@@ -196,6 +203,8 @@ function resolveDropPosition(
  * Creates positional feedback that keeps at most one indicator class active.
  *
  * @param element - The element carrying the indicator class.
+ * @param positionlessClass - Shown in place of a position class while the
+ *   target is hovered but resolves no position.
  */
 function createPositionIndicator(element: Element, positionlessClass?: string) {
   let activeClass: string | null = null;
@@ -244,10 +253,15 @@ function createPositionIndicator(element: Element, positionlessClass?: string) {
   };
 }
 
+/** Whether the element is the innermost target the drag is currently over. */
 function isDeepestTarget(location: DragLocationHistory, element: Element) {
   return location.current.dropTargets[0]?.element === element;
 }
 
+/**
+ * Pairs consumer-facing enter and leave state. Direction is sampled when first
+ * needed during a hover and dropped when that hover ends.
+ */
 function createEnterLeavePairing(element: Element) {
   let entered = false;
   let rtl: boolean | null = null;
@@ -261,9 +275,6 @@ function createEnterLeavePairing(element: Element) {
       return true;
     },
     isRtl() {
-      if (!entered) {
-        return false;
-      }
       return (rtl ??= getComputedStyle(element).direction === "rtl");
     },
     leave(fire: () => void) {
@@ -415,18 +426,19 @@ export function registerDropTargetKernel<Payload, Source>({
       reportLeave(source, location);
     },
     onDrop: ({ source, location }) => {
-      // Read before the pairing is reset, so the drop's position agrees with
-      // the direction the hover was measured against.
-      const rtl = pairing.isRtl();
       // Every target in the settled hierarchy receives the drop; the deepest
       // one still shows its indicator.
       indicator.clear();
       // A non-deepest target was already left by the synchronous hierarchy
       // update; the drop only closes any pairing that remains.
-      pairing.reset();
       if (!isDeepestTarget(location, element)) {
+        pairing.reset();
         return;
       }
+      // Read before the pairing is reset, so the drop's position agrees with
+      // the direction the hover was measured against.
+      const rtl = pairing.isRtl();
+      pairing.reset();
       // The settled hierarchy is reused at drop, so a gate that changed since
       // the last drag update must be asked again before acting.
       if (!passesGate(source, location.current.input)) {

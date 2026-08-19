@@ -698,6 +698,58 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
   });
 
+  test("a drop before the first drag frame still resolves the position against the row's direction", async function (assert) {
+    const drops = [];
+    const enters = [];
+    const onDrop = (payload) => drops.push(payload.position);
+    const onDragEnter = () => enters.push("enter");
+
+    await render(
+      <template>
+        <div
+          id="tgt"
+          style="width: 200px; height: 40px; direction: rtl"
+          {{dDragAndDropTarget
+            accepts="col"
+            axis="horizontal"
+            onDrop=onDrop
+            onDragEnter=onDragEnter
+          }}
+        >
+          <div id="src" {{dDragAndDropSource type="col" data=(hash id=1)}}>
+            src
+          </div>
+        </div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    const rect = find("#tgt").getBoundingClientRect();
+    const nearLeftEdge = {
+      clientX: rect.left + 5,
+      clientY: rect.top + rect.height / 2,
+    };
+
+    // The drag starts inside the target, so the target is in the hierarchy from
+    // the first moment and is only entered on the first throttled drag update.
+    // A drop landing before that frame skips the enter altogether.
+    await dragEvent("#src", "dragstart", { dataTransfer, ...centerOf("#src") });
+    dragEventNow("#tgt", "dragover", { dataTransfer, ...nearLeftEdge });
+    dragEventNow("#tgt", "drop", { dataTransfer, ...nearLeftEdge });
+    await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+    assert.deepEqual(
+      enters,
+      [],
+      "control: the target was never entered before the drop"
+    );
+    assert.deepEqual(
+      drops,
+      ["after"],
+      "the position is read against the row's direction even before the first drag frame"
+    );
+  });
+
   test("nested targets — innermost accepting target wins drop", async function (assert) {
     const events = [];
     const onOuterDrop = () => events.push("outer");
