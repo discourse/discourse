@@ -286,6 +286,31 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
       ).to eq(1)
     end
 
+    it "stops on a second pass, so a workflow does not act on its own edit" do
+      avatar = Fabricate(:upload)
+      user.update!(uploaded_avatar_id: avatar.id)
+
+      configuration = {
+        "operation" => "edit",
+        "username" => user.username,
+        "updates" => {
+          "remove_avatar" => true,
+        },
+        "actor_username" => admin.username,
+      }
+
+      execute_node(configuration: configuration)
+      events = DiscourseEvent.track_events(:user_updated) { execute_node(configuration:) }
+
+      expect(events).to be_empty
+      expect(
+        UserHistory.where(
+          action: UserHistory.actions[:removed_avatar],
+          target_user_id: user.id,
+        ).count,
+      ).to eq(1)
+    end
+
     it "leaves the avatar alone when the flag is not set", :aggregate_failures do
       avatar = Fabricate(:upload)
       user.update!(uploaded_avatar_id: avatar.id)
