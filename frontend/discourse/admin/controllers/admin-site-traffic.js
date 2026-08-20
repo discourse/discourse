@@ -1,12 +1,14 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import {
   calculatePresetStartDate,
   DEFAULT_PERIOD,
   PERIOD_CUSTOM,
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
+import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
@@ -21,7 +23,6 @@ const FILTER_KEYS = [
 ];
 
 const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
-
 const TRAFFIC_TYPE_LABEL_KEYS = {
   logged_in: "logged_in_human",
   anonymous: "anonymous_human",
@@ -39,6 +40,8 @@ const DIMENSION_KEYS = {
 };
 
 export default class AdminSiteTrafficController extends Controller {
+  @service loadingSlider;
+
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
@@ -50,8 +53,13 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked network = null;
   @tracked browser = null;
   @tracked ip = null;
+  @tracked traffic = null;
+  @tracked fetchError = null;
+  @tracked loadingTraffic = false;
 
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
+  #trafficLoadId = 0;
+  #ownsLoadingSlider = false;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -131,12 +139,8 @@ export default class AdminSiteTrafficController extends Controller {
     );
   }
 
-  get traffic() {
-    return this.model?.traffic ?? null;
-  }
-
-  get fetchError() {
-    return this.model?.fetchError ?? null;
+  get initialLoading() {
+    return this.loadingTraffic && this.traffic === null;
   }
 
   #customDate(value, edge) {
@@ -153,6 +157,66 @@ export default class AdminSiteTrafficController extends Controller {
     this.range = period;
     this.start_date = null;
     this.end_date = null;
+  }
+
+  @action
+  async fetchTraffic() {
+    const id = ++this.#trafficLoadId;
+    const requestParams = {
+      start_date: moment(this.startDate).format("YYYY-MM-DD"),
+      end_date: moment(this.endDate).format("YYYY-MM-DD"),
+    };
+
+    for (const key of FILTER_KEYS) {
+      if (this[key] !== null) {
+        requestParams[key] = this[key];
+      }
+    }
+
+    const isInitialLoad = this.traffic === null;
+    this.loadingTraffic = true;
+    this.fetchError = null;
+
+    if (!isInitialLoad && !this.#ownsLoadingSlider) {
+      this.#ownsLoadingSlider = this.loadingSlider.transitionStarted({
+        fallbackSpinnerDelayMs: null,
+      });
+    }
+
+    try {
+      const traffic = await ajax(
+        "/admin/dashboard/site-traffic-explorer.json",
+        { data: requestParams }
+      );
+
+      if (id !== this.#trafficLoadId) {
+        return;
+      }
+
+      this.traffic = {
+        ...traffic,
+        chart_start_date: requestParams.start_date,
+        chart_end_date: requestParams.end_date,
+        chart_traffic_types: this.selectedTrafficTypes,
+      };
+    } catch (error) {
+      if (id !== this.#trafficLoadId) {
+        return;
+      }
+
+      this.fetchError =
+        error.jqXHR?.responseJSON?.error_type === "traffic_query_timeout"
+          ? "timeout"
+          : "unexpected";
+    } finally {
+      if (id === this.#trafficLoadId) {
+        if (this.#ownsLoadingSlider) {
+          this.loadingSlider.transitionEnded();
+          this.#ownsLoadingSlider = false;
+        }
+        this.loadingTraffic = false;
+      }
+    }
   }
 
   @action
@@ -192,7 +256,14 @@ export default class AdminSiteTrafficController extends Controller {
 
   @action
   resetState() {
-    this.model = null;
+    this.#trafficLoadId += 1;
+    if (this.#ownsLoadingSlider) {
+      this.loadingSlider.transitionEnded();
+      this.#ownsLoadingSlider = false;
+    }
+    this.traffic = null;
+    this.fetchError = null;
+    this.loadingTraffic = false;
     this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
