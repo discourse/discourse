@@ -40,6 +40,7 @@ import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/us
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
+import { resetDragAdoptionForTesting } from "discourse/lib/-internals/drag-and-drop/native-drag-adoption";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
@@ -293,6 +294,9 @@ export function testCleanup(container, app) {
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
   resetDragAndDropForTesting();
+  // Run after the drag reset so any active drag releases its own adoption. This
+  // only has to force-release a registration for a drag that never started.
+  resetDragAdoptionForTesting();
   resetDragSourcesForTesting();
   resetPointerDragForTesting();
   resetElementClassLeasesForTesting();

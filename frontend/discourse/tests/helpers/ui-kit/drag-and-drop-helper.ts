@@ -267,6 +267,52 @@ function registeredElementFor(rowSelector: string) {
 }
 
 /**
+ * Drives a browser-started drag from page content no source registered.
+ *
+ * The event sequence matches an element drag. The guards prove the source is
+ * unsourced and the destination is an element target, so this cannot quietly
+ * exercise the registered-source or external path instead.
+ *
+ * @param sourceSelector - CSS selector for the unregistered element to drag.
+ * @param targetSelector - CSS selector for the target element.
+ */
+export async function simulateUnsourcedDrag(
+  sourceSelector: string,
+  targetSelector: string,
+  {
+    dataTransfer,
+    sourceCoordinates,
+    targetCoordinates,
+  }: {
+    dataTransfer: DataTransfer;
+    sourceCoordinates?: Partial<ClientPoint>;
+    targetCoordinates?: Partial<ClientPoint>;
+  }
+) {
+  const sourceElement = document.querySelector(sourceSelector);
+  if (sourceElement?.closest("[data-drag-source]")) {
+    throw new Error(
+      `${sourceSelector} is inside a registered drag source, so this would exercise the sourced path instead of adoption`
+    );
+  }
+
+  const targetElement = document.querySelector(targetSelector);
+  if (!targetElement?.hasAttribute("data-drop-target")) {
+    throw new Error(
+      `${targetSelector} is not a registered element drop target, so this drag would do nothing`
+    );
+  }
+
+  const source = { ...centerOf(sourceSelector), ...sourceCoordinates };
+  const target = { ...centerOf(targetSelector), ...targetCoordinates };
+  await dragEvent(sourceSelector, "dragstart", { dataTransfer, ...source });
+  await dragEvent(targetSelector, "dragenter", { dataTransfer, ...target });
+  await dragEvent(targetSelector, "dragover", { dataTransfer, ...target });
+  await dragEvent(targetSelector, "drop", { dataTransfer, ...target });
+  await dragEvent(sourceSelector, "dragend", { dataTransfer, ...source });
+}
+
+/**
  * Brings an external drag over a target and leaves it hovering there, without
  * dropping.
  *
