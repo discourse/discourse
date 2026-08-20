@@ -81,10 +81,18 @@ RSpec.describe "AI logs admin page" do
     ai_logs_page.select_feature("other-feature")
     expect(ai_logs_page).to have_no_log(log)
 
+    day_period = I18n.t("js.discourse_ai.logs.periods.day")
+    click_button day_period
+    expect(page).to have_css('button[aria-pressed="true"]', text: day_period)
+
     find("input[placeholder='#{I18n.t("js.discourse_ai.logs.id_placeholder")}']").fill_in(
       with: log.id,
     )
     find(".ai-logs__id-filter .btn", text: I18n.t("js.discourse_ai.logs.find")).click
+    expect(ai_logs_page).to have_no_log(log)
+    expect(page).to have_css('button[aria-pressed="true"]', text: day_period)
+
+    ai_logs_page.select_feature(log.feature_name)
     expect(ai_logs_page).to have_log(log)
   end
 

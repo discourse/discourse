@@ -256,7 +256,6 @@ export default class AiLogs extends Component {
 
     if (this.idValue) {
       params[this.idType] = this.idValue;
-      return params;
     }
 
     if (this.selectedPeriod === "custom") {

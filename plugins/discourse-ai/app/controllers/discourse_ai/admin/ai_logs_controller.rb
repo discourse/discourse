@@ -183,7 +183,7 @@ module DiscourseAi
 
         if id_filters.one?
           name = id_filters.first
-          return scope.where(name => positive_integer!(name))
+          scope = scope.where(name => positive_integer!(name))
         end
 
         scope = apply_date_filters(scope)
