@@ -882,6 +882,18 @@ after_initialize do
     MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, opts)
   end
 
+  add_api_key_scope(
+    :assign,
+    {
+      assign: {
+        actions: %w[
+          discourse_assign/assign#assign
+          discourse_assign/assign#unassign
+        ],
+      },
+    },
+  )
+
   # Event listeners
   on(:post_created) { |post| ::Assigner.auto_assign(post, force: true) }
 

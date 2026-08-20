@@ -1,6 +1,11 @@
 en:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            assign:
+              assign: "Assign/Unassign topics or posts."
       site_settings:
         categories:
           discourse_assign: "Discourse Assign"
