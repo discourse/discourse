@@ -2,18 +2,25 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import {
+  calculatePresetStartDate,
   DEFAULT_PERIOD,
   PERIOD_CUSTOM,
+  VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
-import {
-  endDate as resolveEndDate,
-  FILTER_KEYS,
-  safePeriod,
-  selectedTrafficTypes as resolveSelectedTrafficTypes,
-  startDate as resolveStartDate,
-  TRAFFIC_TYPES,
-} from "discourse/admin/lib/site-traffic-model";
 import { i18n } from "discourse-i18n";
+
+const FILTER_KEYS = [
+  "traffic_type",
+  "top_url",
+  "entry_url",
+  "referrer",
+  "country",
+  "network",
+  "browser",
+  "ip",
+];
+
+const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
 
 const TRAFFIC_TYPE_LABEL_KEYS = {
   logged_in: "logged_in_human",
@@ -47,27 +54,26 @@ export default class AdminSiteTrafficController extends Controller {
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
 
   get safePeriod() {
-    return safePeriod({
-      range: this.range,
-      start_date: this.start_date,
-      end_date: this.end_date,
-    });
+    if (!VALID_PERIODS.includes(this.range)) {
+      return DEFAULT_PERIOD;
+    }
+    if (this.range === PERIOD_CUSTOM && (!this.start_date || !this.end_date)) {
+      return DEFAULT_PERIOD;
+    }
+    return this.range;
   }
 
   get startDate() {
-    return resolveStartDate({
-      range: this.range,
-      start_date: this.start_date,
-      end_date: this.end_date,
-    });
+    return (
+      this.#customDate(this.start_date, "startOf") ??
+      calculatePresetStartDate(this.safePeriod)
+    );
   }
 
   get endDate() {
-    return resolveEndDate({
-      range: this.range,
-      start_date: this.start_date,
-      end_date: this.end_date,
-    });
+    return (
+      this.#customDate(this.end_date, "endOf") ?? moment().endOf("day").toDate()
+    );
   }
 
   get hasPageviews() {
@@ -115,7 +121,14 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   get selectedTrafficTypes() {
-    return resolveSelectedTrafficTypes(this.traffic_type);
+    if (this.traffic_type === null) {
+      return TRAFFIC_TYPES;
+    }
+
+    const selected = this.traffic_type.split(",");
+    return TRAFFIC_TYPES.filter((trafficType) =>
+      selected.includes(trafficType)
+    );
   }
 
   get traffic() {
@@ -124,6 +137,15 @@ export default class AdminSiteTrafficController extends Controller {
 
   get fetchError() {
     return this.model?.fetchError ?? null;
+  }
+
+  #customDate(value, edge) {
+    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
+      return null;
+    }
+
+    const parsed = moment(value, "YYYY-MM-DD", true);
+    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
   @action

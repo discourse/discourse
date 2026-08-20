@@ -1,8 +1,28 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { loadSiteTraffic } from "discourse/admin/lib/site-traffic-model";
+import {
+  calculatePresetStartDate,
+  DEFAULT_PERIOD,
+  PERIOD_CUSTOM,
+  VALID_PERIODS,
+} from "discourse/admin/lib/dashboard-date-range";
+import { countryName } from "discourse/admin/lib/format-country";
+import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+
+const FILTER_KEYS = [
+  "traffic_type",
+  "top_url",
+  "entry_url",
+  "referrer",
+  "country",
+  "network",
+  "browser",
+  "ip",
+];
+
+const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
 
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
   @service loadingSlider;
@@ -27,7 +47,21 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
 
   async model(params) {
     try {
-      return { traffic: await loadSiteTraffic(params), fetchError: null };
+      const requestParams = this.#requestParams(params);
+      const traffic = await ajax(
+        "/admin/dashboard/site-traffic-explorer.json",
+        { data: requestParams }
+      );
+
+      return {
+        traffic: {
+          ...this.#localizeCountryLabels(traffic),
+          chart_start_date: requestParams.start_date,
+          chart_end_date: requestParams.end_date,
+          chart_traffic_types: this.#selectedTrafficTypes(params.traffic_type),
+        },
+        fetchError: null,
+      };
     } catch (error) {
       return {
         traffic: null,
@@ -41,10 +75,13 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
 
   @action
   loading(transition) {
-    const showFallbackSpinner =
-      this.controllerFor("admin-site-traffic").traffic === null;
-    this.loadingSlider.transitionStarted({ showFallbackSpinner });
-    transition.finally(this.loadingSlider.transitionEnded);
+    if (this.controllerFor("admin-site-traffic").traffic === null) {
+      this.intermediateTransitionTo("adminSiteTraffic_loading");
+      return false;
+    }
+
+    this.loadingSlider.transitionStarted({ showFallbackSpinner: false });
+    transition.finally(() => this.loadingSlider.transitionEnded());
     return false;
   }
 
@@ -52,5 +89,82 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     if (isExiting) {
       controller.resetState();
     }
+  }
+
+  #safePeriod(params) {
+    if (!VALID_PERIODS.includes(params.range)) {
+      return DEFAULT_PERIOD;
+    }
+    if (
+      params.range === PERIOD_CUSTOM &&
+      (!params.start_date || !params.end_date)
+    ) {
+      return DEFAULT_PERIOD;
+    }
+    return params.range;
+  }
+
+  #customDate(value, edge, period) {
+    if (period !== PERIOD_CUSTOM || !value) {
+      return null;
+    }
+
+    const parsed = moment(value, "YYYY-MM-DD", true);
+    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
+  }
+
+  #requestParams(params) {
+    const period = this.#safePeriod(params);
+    const startDate =
+      this.#customDate(params.start_date, "startOf", period) ??
+      calculatePresetStartDate(period);
+    const endDate =
+      this.#customDate(params.end_date, "endOf", period) ??
+      moment().endOf("day").toDate();
+
+    const requestParams = {
+      start_date: moment(startDate).format("YYYY-MM-DD"),
+      end_date: moment(endDate).format("YYYY-MM-DD"),
+    };
+
+    for (const key of FILTER_KEYS) {
+      if (params[key] !== null && params[key] !== undefined) {
+        requestParams[key] = params[key];
+      }
+    }
+
+    return requestParams;
+  }
+
+  #selectedTrafficTypes(value) {
+    if (!value) {
+      return TRAFFIC_TYPES;
+    }
+
+    const selected = value.split(",");
+    return TRAFFIC_TYPES.filter((trafficType) =>
+      selected.includes(trafficType)
+    );
+  }
+
+  #localizeCountryLabels(traffic) {
+    const countries = traffic.dimensions?.countries ?? [];
+    const activeFilters = traffic.active_filters ?? [];
+
+    return {
+      ...traffic,
+      dimensions: {
+        ...traffic.dimensions,
+        countries: countries.map((row) => ({
+          ...row,
+          label: countryName(row.value),
+        })),
+      },
+      active_filters: activeFilters.map((filter) =>
+        filter.key === "country"
+          ? { ...filter, label: countryName(filter.value) }
+          : filter
+      ),
+    };
   }
 }

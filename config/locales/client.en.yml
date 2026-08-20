@@ -7256,6 +7256,7 @@ en:
         check_for_updates: "Check for updates"
       site_traffic_explorer:
         title: "Site Traffic Explorer"
+        loading: "Loading traffic…"
         errors:
           timeout: "This traffic query took too long. Choose a shorter date range and try again."
           unexpected: "Couldn't load site traffic. Try again."
