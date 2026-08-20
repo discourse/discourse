@@ -124,3 +124,32 @@ class RagDocumentSource < ActiveRecord::Base
     UploadReference.where(target:, upload_id: id).destroy_all
   end
 end
+
+# == Schema Information
+#
+# Table name: rag_document_sources
+#
+#  id                     :bigint           not null, primary key
+#  etag                   :string
+#  last_error             :text
+#  last_error_at          :datetime
+#  last_fetched_at        :datetime
+#  last_modified          :string
+#  managed                :boolean          default(FALSE), not null
+#  next_refresh_at        :datetime
+#  refresh_interval_hours :integer          default(24), not null
+#  target_type            :string(800)      not null
+#  url                    :string(2000)     not null
+#  url_digest             :string(64)       not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  pending_upload_id      :integer
+#  target_id              :bigint           not null
+#  upload_id              :integer
+#
+# Indexes
+#
+#  idx_rag_document_sources_target_url                      (target_type,target_id,url_digest) UNIQUE
+#  index_rag_document_sources_on_next_refresh_at            (next_refresh_at)
+#  index_rag_document_sources_on_target_type_and_target_id  (target_type,target_id)
+#
