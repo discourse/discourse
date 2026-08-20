@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Discourse JSON:API documentation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      /* The pickers float over Redoc's dark samples panel — they need their
+         own background to stay readable. */
+      #pickers {
+        position: fixed;
+        top: 12px;
+        right: 16px;
+        z-index: 100;
+        font: 14px sans-serif;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        background: #fff;
+        color: #333;
+        padding: 8px 12px;
+        border: 1px solid #d5d5d5;
+        border-radius: 6px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Same rendering setup as docs.discourse.org (Redoc standalone), plus the
+         global docs structure (docs/api-docs-generation.md §8): one document per
+         owner (core + each plugin), each with a Stripe-style version picker over
+         its OWN timeline's dates. Serve this directory statically to view, e.g.
+         `ruby -run -e httpd plugins/discourse-data-explorer -p 8080` -->
+    <div id="pickers">
+      <label id="document-picker">
+        Document
+        <select></select>
+      </label>
+      <label id="version-picker">
+        API version
+        <select></select>
+      </label>
+    </div>
+    <div id="redoc"></div>
+    <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"></script>
+    <script>
+      const documentSelect = document.querySelector("#document-picker select");
+      const versionSelect = document.querySelector("#version-picker select");
+      const render = (file) => Redoc.init(file, {}, document.getElementById("redoc"));
+      let manifest;
+
+      const selectedVersions = () =>
+        documentSelect.value === "core"
+          ? manifest.versions
+          : manifest.plugins.find(({ namespace }) => namespace === documentSelect.value)
+              .versions;
+
+      const populateVersions = () => {
+        versionSelect.replaceChildren();
+        selectedVersions().forEach((version, index) => {
+          const option = document.createElement("option");
+          option.value = version;
+          option.textContent = index === 0 ? `${version} (latest)` : version;
+          versionSelect.append(option);
+        });
+      };
+
+      const renderSelection = () =>
+        render(
+          documentSelect.value === "core"
+            ? `openapi-jsonapi-${versionSelect.value}.json`
+            : `openapi-jsonapi-plugin-${documentSelect.value}-${versionSelect.value}.json`,
+        );
+
+      fetch("openapi-versions.json")
+        .then((response) => response.json())
+        .then((data) => {
+          manifest = data;
+          const coreOption = document.createElement("option");
+          coreOption.value = "core";
+          coreOption.textContent = "Core API";
+          documentSelect.append(coreOption);
+          manifest.plugins.forEach(({ namespace }) => {
+            const option = document.createElement("option");
+            option.value = namespace;
+            option.textContent = `${namespace} plugin`;
+            documentSelect.append(option);
+          });
+
+          documentSelect.addEventListener("change", () => {
+            populateVersions();
+            renderSelection();
+          });
+          versionSelect.addEventListener("change", renderSelection);
+          populateVersions();
+          renderSelection();
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,222 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Discourse JSON:API — run-stats plugin",
+    "version": "2026-05-01",
+    "description": "What the `run-stats` plugin adds to the Discourse JSON:API. This document\ncovers only the plugin's contributions — the core document describes the full\nendpoints.\n\nThe plugin rides its own timeline: it stays frozen at your base pin unless an\noverride names it — `Api-Version: 2026-07-08; run-stats=2026-06-20`.\n\n\n# Changelog\n\n## 2026-06-20\n\n- Renames the run-stats `outdated` attribute to `stale`."
+  },
+  "x-changelog": [
+    {
+      "version": "2026-06-20",
+      "changes": [
+        {
+          "description": "Renames the run-stats `outdated` attribute to `stale`."
+        }
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Queries"
+    }
+  ],
+  "paths": {
+    "/data-explorer/api/queries": {
+      "get": {
+        "tags": [
+          "Queries"
+        ],
+        "summary": "List queries — run-stats contributions",
+        "operationId": "listQueriesRunStats",
+        "description": "Query-surface parameters the `run-stats` plugin adds to this endpoint. Each query gains an include-gated `run-stats` relationship — Run statistics the run-stats plugin attaches to the query.",
+        "parameters": [
+          {
+            "name": "Api-Version",
+            "in": "header",
+            "required": true,
+            "description": "The pinned API version (snap-down date). The resolved version is echoed back.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "filter[run-stats.outdated]",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Whether the query has never been run."
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "run-stats"
+                ]
+              }
+            }
+          },
+          {
+            "name": "fields[run-stats]",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "outdated"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "With `include=run-stats`, the plugin's resources appear in the collection document's `included`.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "included": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/run-stats"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "1",
+                      "type": "queries",
+                      "attributes": {
+                        "name": "Top referred topics",
+                        "description": "Topics most often linked from other topics.",
+                        "created_at": "2026-06-20T09:00:00.000Z",
+                        "updated_at": "2026-06-20T09:00:00.000Z",
+                        "query": "SELECT id, title FROM topics ORDER BY like_count DESC LIMIT 10",
+                        "ran_at": "2026-07-01T10:00:00.000Z",
+                        "hidden": false
+                      },
+                      "relationships": {
+                        "run-stats": {
+                          "data": {
+                            "id": "1",
+                            "type": "run-stats"
+                          }
+                        }
+                      },
+                      "meta": {
+                        "page": {
+                          "cursor": "opaque-cursor-1"
+                        }
+                      }
+                    },
+                    {
+                      "id": "2",
+                      "type": "queries",
+                      "attributes": {
+                        "name": "Inactive staff",
+                        "description": "description 0",
+                        "created_at": "2026-06-21T09:00:00.000Z",
+                        "updated_at": "2026-06-21T09:00:00.000Z",
+                        "query": "SELECT id, username FROM users WHERE admin",
+                        "ran_at": null,
+                        "hidden": false
+                      },
+                      "relationships": {
+                        "run-stats": {
+                          "data": {
+                            "id": "2",
+                            "type": "run-stats"
+                          }
+                        }
+                      },
+                      "meta": {
+                        "page": {
+                          "cursor": "opaque-cursor-2"
+                        }
+                      }
+                    }
+                  ],
+                  "included": [
+                    {
+                      "id": "1",
+                      "type": "run-stats",
+                      "attributes": {
+                        "outdated": false
+                      }
+                    },
+                    {
+                      "id": "2",
+                      "type": "run-stats",
+                      "attributes": {
+                        "outdated": true
+                      }
+                    }
+                  ],
+                  "links": {
+                    "prev": null,
+                    "next": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "run-stats": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "run-stats"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "outdated": {
+                "type": [
+                  "boolean",
+                  "null"
+                ],
+                "description": "Whether the query has never been run.",
+                "examples": [
+                  false
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "additionalProperties": false,
+        "description": "Run statistics the run-stats plugin attaches to queries."
+      }
+    }
+  }
+}
