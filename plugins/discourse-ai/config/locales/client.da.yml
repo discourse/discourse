@@ -42,6 +42,11 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      copied: "Kopieret"
+      ai_decoded_transcript:
+        type: "Type"
+        error: "Fejl"
+        response: "Svar"
       discourse_workflows:
         ai_agent:
           mode: "Tilstand"

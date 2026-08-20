@@ -5049,6 +5049,9 @@ nl:
       group: "Gebruikers die niet tot de opgegeven groepen behoren, moeten antwoorden laten goedkeuren door een medewerker. Zie %{link}."
       new_topics_unless_trust_level: "Gebruikers met een laag vertrouwensniveau moeten topics laten goedkeuren door een medewerker. Zie %{link}."
       fast_typer: "Nieuwe gebruiker typte zijn eerste bericht verdacht snel, vermoed bot- of spammergedrag. Zie %{link}."
+      fast_typer_time:
+        one: "%{count} seconde"
+        other: "%{count} seconden"
       auto_silence_regex: "Nieuwe gebruiker wiens eerste bericht overeenkomt met de instelling %{link}."
       watched_word:
         one: "Dit bericht bevatte een geobserveerd woord. Het gemarkeerde woord is: %{words}. Zie de %{link} voor meer informatie."

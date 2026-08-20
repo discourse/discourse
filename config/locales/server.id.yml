@@ -1551,6 +1551,9 @@ id:
       low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
+    reasons:
+      fast_typer_time:
+        other: "%{count} detik"
     actions:
       agree:
         title: "Ya"

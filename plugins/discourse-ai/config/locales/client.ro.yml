@@ -51,6 +51,11 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      copied: "Copiat"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "Eroare"
+        response: "Răspuns"
       discourse_workflows:
         ai_agent:
           mode: "Mod"
@@ -177,6 +182,8 @@ ro:
         post_short: "Postarea %{id}"
         duration: "Durată"
         actions: "Acțiuni"
+        filters:
+          title: "Filtre"
         periods:
           day: "Ultimele 24 de ore"
           week: "Ultimele 7 zile"

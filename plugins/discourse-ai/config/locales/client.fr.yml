@@ -233,6 +233,14 @@ fr:
               description: "Autoriser l'étiquetage des publications créées par l'utilisateur système"
     discourse_ai:
       title: "IA"
+      copied: "Copié "
+      ai_decoded_transcript:
+        thinking: "Raisonnement"
+        tool: "Outil"
+        arguments: "Arguments"
+        type: "Type"
+        error: "Erreur"
+        response: "Réponse"
       post_image_captions:
         edit: "Modifier la légende d'image générée par l'IA"
         title: "Modifier la légende d'image générée par l'IA"
@@ -632,6 +640,7 @@ fr:
         retry: "Réessayer"
         apply: "Appliquer"
         all_models: "Tous les modèles"
+        all_features: "Toutes les fonctionnalités"
         successful: "Succès"
         failed: "Échec"
         unknown: "Inconnu"
@@ -653,6 +662,7 @@ fr:
         cost: "Coût"
         actions: "Actions"
         filters:
+          title: "Filtres"
           period: "Période"
         periods:
           hour: "Dernière heure"

@@ -4564,6 +4564,9 @@ fi:
       group: "Vastaukset käyttäjiltä, jotka eivät ole määritetyissä ryhmissä, tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
       new_topics_unless_trust_level: "Matalan luottamustason käyttäjien ketjut tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
       fast_typer: "Uusi käyttäjä kirjoitti ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Katso %{link}."
+      fast_typer_time:
+        one: "%{count} sekunti"
+        other: "%{count} sekuntia"
       auto_silence_regex: "Uusi käyttäjä, jonka ensimmäinen viesti vastaa %{link}-asetusta."
       watched_word:
         one: "Tässä viestissä oli tarkkailtu sana, liputettu sana on: %{words}. Katso lisätietoja kohdasta %{link}."

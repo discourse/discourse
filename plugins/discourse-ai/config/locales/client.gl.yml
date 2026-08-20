@@ -36,6 +36,11 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      copied: "Copiado"
+      ai_decoded_transcript:
+        type: "Tipo"
+        error: "Erro"
+        response: "Resposta"
       ai_tool_approval:
         loading: "Cargando..."
         tool: "Acción"
@@ -130,6 +135,8 @@ gl:
         post_short: "Publicación %{id}"
         duration: "Duración"
         actions: "Accións"
+        filters:
+          title: "Filtros"
         periods:
           custom: "Personalizado"
         detail:

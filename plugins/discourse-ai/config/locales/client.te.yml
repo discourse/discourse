@@ -36,6 +36,10 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "రకం"
+        error: "లోపం"
+        response: "ప్రతిస్పందన"
       ai_tool_approval:
         loading: "లోడవుతోంది..."
         tool: "చర్య"

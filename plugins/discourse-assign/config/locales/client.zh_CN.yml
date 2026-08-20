@@ -203,6 +203,7 @@ zh_CN:
         requires_assign: "需要启用 Assign 插件"
       nodes:
         "trigger:assigned": "已指定"
+        "trigger:unassigned": "已取消指定"
       node_descriptions:
         "trigger:assigned": "指定话题或帖子时触发"
       assign_topic:
@@ -226,5 +227,8 @@ zh_CN:
         post_id: "帖子 ID"
         assignee: "受理人"
       assigned:
+        topic_assignments_only: "仅在指定目标为话题而非个别帖子时触发"
+        topic_assignments_only_description: "仅限话题指定"
+      unassigned:
         topic_assignments_only: "仅在指定目标为话题而非个别帖子时触发"
         topic_assignments_only_description: "仅限话题指定"

@@ -38,6 +38,11 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      copied: "복사되었습니다"
+      ai_decoded_transcript:
+        type: "형식"
+        error: "에러"
+        response: "응답"
       ai_tool_approval:
         loading: "로드 중..."
         tool: "처리"
@@ -150,6 +155,8 @@ ko:
         post_short: "%{id}번째 글"
         duration: "기간"
         actions: "작업"
+        filters:
+          title: "필터"
         periods:
           day: "지난 24시간"
           week: "지난 7일"

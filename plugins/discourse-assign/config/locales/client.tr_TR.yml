@@ -203,6 +203,7 @@ tr_TR:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Atandı"
+        "trigger:unassigned": "Atanmamış"
       assign_topic:
         resource: "Kaynak"
         resources:

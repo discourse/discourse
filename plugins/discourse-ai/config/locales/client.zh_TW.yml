@@ -36,6 +36,11 @@ zh_TW:
             canned_reply:
               label: "回覆"
     discourse_ai:
+      copied: "已複製"
+      ai_decoded_transcript:
+        type: "類型"
+        error: "錯誤"
+        response: "回應"
       ai_tool_approval:
         loading: "載入中..."
         tool: "動作"
@@ -128,6 +133,8 @@ zh_TW:
         post_short: "貼文 %{id}"
         duration: "持續時間"
         actions: "動作"
+        filters:
+          title: "過濾器"
         periods:
           day: "過去 24 小時"
           week: "過去 7 天"
