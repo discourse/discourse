@@ -31,82 +31,30 @@ RSpec.describe ImageMagick do
       payload = events.first[:params].first
       expect(payload.except(:duration_seconds)).to eq(
         operation: "custom_image_operation",
-        result: "success",
+        success: true,
       )
       expect(payload[:duration_seconds]).to eq(1.25)
       expect(monotonic_times).to be_empty
     end
 
-    it "emits one measurement with a bounded result for every command failure" do
-      failure_cases = {
-        "wall_timeout" => [
-          Discourse::Utils::CommandError.new(
-            "timed out",
-            status: instance_double(Process::Status, signaled?: false, exited?: true),
-          ),
-          0,
-        ],
-        "cpu_limit" => [
-          Discourse::Utils::CommandError.new(
-            "CPU limit",
-            status:
-              instance_double(Process::Status, signaled?: true, termsig: Signal.list.fetch("XCPU")),
-          ),
-          10,
-        ],
-        "file_size_limit" => [
-          Discourse::Utils::CommandError.new(
-            "file size limit",
-            status:
-              instance_double(Process::Status, signaled?: true, termsig: Signal.list.fetch("XFSZ")),
-          ),
-          10,
-        ],
-        "signal" => [
-          Discourse::Utils::CommandError.new(
-            "killed",
-            status:
-              instance_double(Process::Status, signaled?: true, termsig: Signal.list.fetch("KILL")),
-          ),
-          10,
-        ],
-        "nonzero_exit" => [
-          Discourse::Utils::CommandError.new(
-            "failed",
-            status: instance_double(Process::Status, signaled?: false, exited?: true),
-          ),
-          10,
-        ],
-        "exception" => [Errno::ENOENT.new("magick"), 10],
-      }
+    it "emits one unsuccessful measurement and preserves a command failure" do
+      error = RuntimeError.new("command failed")
+      allow(Discourse::SafeExec).to receive(:capture).and_raise(error)
 
-      observed_results =
-        failure_cases.map do |expected_result, (error, timeout_seconds)|
-          allow(Discourse::SafeExec).to receive(:capture).and_raise(error)
-
-          events =
-            DiscourseEvent.track_events(:image_processing_finished) do
-              expect {
-                described_class.magick(
-                  "input.png",
-                  "output.png",
-                  operation: :optimized_image_resize,
-                  timeout: timeout_seconds,
-                )
-              }.to raise_error(error.class)
-            end
-
-          expect(events.size).to eq(1)
-          payload = events.first[:params].first
-          expect(payload.except(:duration_seconds)).to eq(
-            operation: "optimized_image_resize",
-            result: expected_result,
-          )
-          expect(payload[:duration_seconds]).to be >= 0
-          payload[:result]
+      events =
+        DiscourseEvent.track_events(:image_processing_finished) do
+          expect {
+            described_class.magick("input.png", "output.png", operation: :optimized_image_resize)
+          }.to raise_error { |raised_error| expect(raised_error).to equal(error) }
         end
 
-      expect(observed_results).to eq(failure_cases.keys)
+      expect(events.size).to eq(1)
+      payload = events.first[:params].first
+      expect(payload.except(:duration_seconds)).to eq(
+        operation: "optimized_image_resize",
+        success: false,
+      )
+      expect(payload[:duration_seconds]).to be_a(Numeric)
     end
 
     it "rejects non-Symbol operations" do

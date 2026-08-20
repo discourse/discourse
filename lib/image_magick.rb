@@ -51,8 +51,7 @@ module ImageMagick
     # A private scratch dir keeps ImageMagick's disk-backed pixel cache inside
     # the write allowlist, so large images that spill to disk still succeed.
     Dir.mktmpdir("discourse-imagemagick-") do |scratch|
-      timeout_seconds = timeout || DEFAULT_TIMEOUT
-      ImageProcessing::Instrumentation.instrument(operation:, timeout_seconds:) do
+      ImageProcessing::Instrumentation.instrument(operation:) do
         Discourse::SafeExec.capture(
           *command,
           env: {
@@ -67,7 +66,7 @@ module ImageMagick
           read: [*Discourse::SafeExec.default_read_paths, *asset_read_paths, *read],
           write: [scratch, *write],
           execute: Discourse::SafeExec.default_execute_paths,
-          timeout: timeout_seconds,
+          timeout: timeout || DEFAULT_TIMEOUT,
           rlimits: RLIMITS,
           failure_message:,
           seccomp_deny_network: true,
