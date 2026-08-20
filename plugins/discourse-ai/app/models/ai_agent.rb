@@ -60,6 +60,7 @@ class AiAgent < ActiveRecord::Base
   validate :subagents_can_not_use_spawn_agent
 
   has_many :rag_document_fragments, dependent: :destroy, as: :target
+  has_many :rag_document_sources, dependent: :destroy, as: :target
   has_many :ai_agent_mcp_servers, dependent: :destroy
   has_many :ai_mcp_servers, through: :ai_agent_mcp_servers
 
@@ -71,6 +72,8 @@ class AiAgent < ActiveRecord::Base
 
   has_many :upload_references, as: :target, dependent: :destroy
   has_many :uploads, through: :upload_references
+
+  accepts_nested_attributes_for :rag_document_sources, allow_destroy: true
 
   before_validation :set_default_compression_threshold
   before_validation :normalize_subagent_ids

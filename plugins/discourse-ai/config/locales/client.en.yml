@@ -938,6 +938,14 @@ en:
 
       rag:
         title: "RAG"
+        sources:
+          title: "URL sources"
+          description: "Web pages that are periodically fetched and indexed as agent knowledge. The first fetch starts after the agent is saved."
+          url: "URL"
+          refresh_interval_hours: "Refresh every (hours)"
+          add: "Add URL source"
+          remove: "Remove URL source"
+          last_error: "Last refresh failed: %{error}"
         options:
           rag_chunk_tokens: "Upload chunk tokens"
           rag_chunk_tokens_help: "The number of tokens to use for each chunk in the RAG model. Increase to increase the amount of context the AI can use. (changing will re-index all uploads)"

@@ -8370,6 +8370,48 @@ ALTER SEQUENCE public.rag_document_fragments_id_seq OWNED BY public.rag_document
 
 
 --
+-- Name: rag_document_sources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rag_document_sources (
+    id bigint NOT NULL,
+    target_type character varying(800) NOT NULL,
+    target_id bigint NOT NULL,
+    url character varying(2000) NOT NULL,
+    url_digest character varying(64) NOT NULL,
+    refresh_interval_hours integer DEFAULT 24 NOT NULL,
+    upload_id integer,
+    etag character varying,
+    last_modified character varying,
+    last_fetched_at timestamp(6) without time zone,
+    next_refresh_at timestamp(6) without time zone,
+    last_error_at timestamp(6) without time zone,
+    last_error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: rag_document_sources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rag_document_sources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rag_document_sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rag_document_sources_id_seq OWNED BY public.rag_document_sources.id;
+
+
+--
 -- Name: redelivering_webhook_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14071,6 +14113,13 @@ ALTER TABLE ONLY public.rag_document_fragments ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: rag_document_sources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rag_document_sources ALTER COLUMN id SET DEFAULT nextval('public.rag_document_sources_id_seq'::regclass);
+
+
+--
 -- Name: redelivering_webhook_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16585,6 +16634,14 @@ ALTER TABLE ONLY public.rag_document_fragments
 
 
 --
+-- Name: rag_document_sources rag_document_sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rag_document_sources
+    ADD CONSTRAINT rag_document_sources_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: redelivering_webhook_events redelivering_webhook_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -18237,6 +18294,13 @@ CREATE INDEX idx_posts_deleted_posts ON public.posts USING btree (topic_id, post
 --
 
 CREATE INDEX idx_posts_user_id_deleted_at ON public.posts USING btree (user_id) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: idx_rag_document_sources_target_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_rag_document_sources_target_url ON public.rag_document_sources USING btree (target_type, target_id, url_digest);
 
 
 --
@@ -21194,6 +21258,20 @@ CREATE INDEX index_rag_document_fragments_on_target_type_and_target_id ON public
 
 
 --
+-- Name: index_rag_document_sources_on_next_refresh_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rag_document_sources_on_next_refresh_at ON public.rag_document_sources USING btree (next_refresh_at);
+
+
+--
+-- Name: index_rag_document_sources_on_target_type_and_target_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rag_document_sources_on_target_type_and_target_id ON public.rag_document_sources USING btree (target_type, target_id);
+
+
+--
 -- Name: index_redelivering_webhook_events_on_web_hook_event_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23281,6 +23359,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260820143851'),
 ('20260818143417'),
 ('20260818081537'),
 ('20260818045317'),
