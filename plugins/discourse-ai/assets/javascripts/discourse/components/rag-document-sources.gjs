@@ -1,6 +1,9 @@
 import { fn, hash } from "@ember/helper";
 import { i18n } from "discourse-i18n";
 
+const statusLabel = (status) =>
+  i18n(`discourse_ai.rag.sources.status.${status || "pending"}`);
+
 const RagDocumentSources = <template>
   <div class="rag-document-sources" ...attributes>
     <@form.Collection
@@ -51,6 +54,10 @@ const RagDocumentSources = <template>
             "discourse_ai.rag.sources.last_error"
             error=sourceData.last_error
           }}
+        </@form.Alert>
+      {{else}}
+        <@form.Alert @icon="circle-info" @type="info">
+          {{statusLabel sourceData.indexing_status}}
         </@form.Alert>
       {{/if}}
     </@form.Collection>

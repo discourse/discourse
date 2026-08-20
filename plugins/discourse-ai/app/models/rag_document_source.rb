@@ -6,6 +6,7 @@ class RagDocumentSource < ActiveRecord::Base
 
   belongs_to :target, polymorphic: true
   belongs_to :upload, optional: true
+  belongs_to :pending_upload, class_name: "Upload", optional: true
 
   validates :target_type, inclusion: { in: %w[AiAgent] }
   validates :url, presence: true, length: { maximum: 2000 }
@@ -27,8 +28,50 @@ class RagDocumentSource < ActiveRecord::Base
 
   scope :due, -> { where(next_refresh_at: nil).or(where("next_refresh_at <= ?", Time.zone.now)) }
 
+  def self.promote_pending_upload(target:, upload:)
+    find_by(target:, pending_upload_id: upload.id)&.promote_pending_upload!(upload)
+  end
+
+  def self.mark_indexing_failed(target:, upload:, error:)
+    find_by(target:, pending_upload_id: upload.id)&.mark_indexing_failed!(error)
+  end
+
   def due?
     next_refresh_at.nil? || next_refresh_at <= Time.zone.now
+  end
+
+  def indexing_status
+    return "failed" if last_error.present?
+    return "indexing" if pending_upload_id.present?
+    return "indexed" if upload_id.present?
+
+    "pending"
+  end
+
+  def promote_pending_upload!(upload)
+    with_lock do
+      return if pending_upload_id != upload.id
+
+      old_upload_id = upload_id
+      UploadReference.ensure_exist!(upload_ids: [upload.id], target:)
+      update_columns(
+        upload_id: upload.id,
+        pending_upload_id: nil,
+        last_error_at: nil,
+        last_error: nil,
+        updated_at: Time.zone.now,
+      )
+      remove_rag_content_for(old_upload_id) if old_upload_id.present? && old_upload_id != upload.id
+    end
+  end
+
+  def mark_indexing_failed!(error)
+    update_columns(
+      next_refresh_at: 1.hour.from_now,
+      last_error_at: Time.zone.now,
+      last_error: error.message.to_s.truncate(4000),
+      updated_at: Time.zone.now,
+    )
   end
 
   private
@@ -73,9 +116,11 @@ class RagDocumentSource < ActiveRecord::Base
   end
 
   def remove_rag_content
-    return if upload_id.blank?
+    [upload_id, pending_upload_id].compact.uniq.each { |id| remove_rag_content_for(id) }
+  end
 
-    RagDocumentFragment.where(target:, upload_id: upload_id).destroy_all
-    UploadReference.where(target:, upload_id: upload_id).destroy_all
+  def remove_rag_content_for(id)
+    RagDocumentFragment.where(target:, upload_id: id).destroy_all
+    UploadReference.where(target:, upload_id: id).destroy_all
   end
 end

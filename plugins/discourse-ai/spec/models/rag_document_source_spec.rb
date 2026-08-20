@@ -33,15 +33,26 @@ RSpec.describe RagDocumentSource do
     expect(credentialed_source).not_to be_valid
   end
 
-  it "removes indexed content when the source is deleted" do
+  it "removes active and pending indexed content when the source is deleted" do
     upload = Fabricate(:upload)
-    source = described_class.create!(target: agent, url: "https://example.com/docs", upload: upload)
+    pending_upload = Fabricate(:upload)
+    source =
+      described_class.create!(
+        target: agent,
+        url: "https://example.com/docs",
+        upload: upload,
+        pending_upload: pending_upload,
+      )
     fragment = Fabricate(:rag_document_fragment, target: agent, upload: upload)
-    UploadReference.ensure_exist!(target: agent, upload_ids: [upload.id])
+    pending_fragment = Fabricate(:rag_document_fragment, target: agent, upload: pending_upload)
+    UploadReference.ensure_exist!(target: agent, upload_ids: [upload.id, pending_upload.id])
 
     source.destroy!
 
     expect(RagDocumentFragment.exists?(fragment.id)).to eq(false)
-    expect(UploadReference.exists?(target: agent, upload_id: upload.id)).to eq(false)
+    expect(RagDocumentFragment.exists?(pending_fragment.id)).to eq(false)
+    expect(UploadReference.exists?(target: agent, upload_id: [upload.id, pending_upload.id])).to eq(
+      false,
+    )
   end
 end

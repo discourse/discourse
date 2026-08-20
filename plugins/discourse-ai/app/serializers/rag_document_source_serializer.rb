@@ -7,5 +7,6 @@ class RagDocumentSourceSerializer < ApplicationSerializer
              :last_fetched_at,
              :next_refresh_at,
              :last_error_at,
-             :last_error
+             :last_error,
+             :indexing_status
 end

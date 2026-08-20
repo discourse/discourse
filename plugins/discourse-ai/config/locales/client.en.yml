@@ -946,6 +946,11 @@ en:
           add: "Add URL source"
           remove: "Remove URL source"
           last_error: "Last refresh failed: %{error}"
+          status:
+            pending: "Waiting to fetch and index this source."
+            indexing: "The latest content is being indexed. Existing indexed content remains available."
+            indexed: "The latest content is indexed and available to the agent."
+            failed: "The latest refresh or indexing attempt failed."
         options:
           rag_chunk_tokens: "Upload chunk tokens"
           rag_chunk_tokens_help: "The number of tokens to use for each chunk in the RAG model. Increase to increase the amount of context the AI can use. (changing will re-index all uploads)"

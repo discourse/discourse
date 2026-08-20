@@ -6,6 +6,7 @@ RSpec.describe Jobs::RefreshRagDocumentSources do
   before { enable_current_plugin }
 
   it "queues only sources whose refresh time is due" do
+    RagDocumentSource.update_all(next_refresh_at: 2.hours.from_now)
     due_source =
       RagDocumentSource.create!(target: agent, url: "https://example.com/due", next_refresh_at: nil)
     future_source = RagDocumentSource.create!(target: agent, url: "https://example.com/future")

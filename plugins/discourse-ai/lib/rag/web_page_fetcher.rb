@@ -4,6 +4,7 @@ module DiscourseAi
   module Rag
     class WebPageFetcher
       MAX_RESPONSE_BODY_LENGTH = 5.megabytes
+      MAX_REDIRECTS = 5
       SUPPORTED_CONTENT_TYPES = %w[text/html application/xhtml+xml text/plain].freeze
 
       FetchError = Class.new(StandardError)
@@ -19,16 +20,24 @@ module DiscourseAi
       end
 
       def fetch
-        result = nil
+        uri = parse_uri(@url)
 
-        DiscourseAi::Agents::Tools::Tool.send_http_request(
-          @url,
-          headers: request_headers,
-          follow_redirects: true,
-        ) { |response, resolved_uri| result = build_result(response, resolved_uri) }
+        (MAX_REDIRECTS + 1).times do |redirect_count|
+          response = request(uri)
+          return build_result(response, uri) if response[:location].blank?
+          raise FetchError, "The page redirected too many times" if redirect_count == MAX_REDIRECTS
 
-        result || raise(FetchError, "The page could not be fetched")
-      rescue FinalDestination::SSRFError, SocketError, URI::InvalidURIError => error
+          uri = parse_uri(URI.join(uri.to_s, response[:location]).to_s)
+        end
+      rescue FetchError
+        raise
+      rescue FinalDestination::SSRFError,
+             SocketError,
+             Timeout::Error,
+             OpenSSL::SSL::SSLError,
+             EOFError,
+             SystemCallError,
+             URI::Error => error
         raise FetchError, error.message
       end
 
@@ -41,30 +50,80 @@ module DiscourseAi
         end
       end
 
+      def parse_uri(url)
+        uri = URI.parse(UrlHelper.normalized_encode(url))
+        if !uri.scheme.in?(%w[http https]) || uri.host.blank? || uri.userinfo.present?
+          raise FetchError, "The page URL is invalid"
+        end
+
+        uri
+      end
+
+      def request(uri)
+        result = nil
+        request = FinalDestination::HTTP::Get.new(uri.request_uri, request_headers)
+        request["User-Agent"] = DiscourseAi::AiBot::USER_AGENT
+
+        FinalDestination::HTTP.start(
+          uri.hostname,
+          uri.port,
+          use_ssl: uri.scheme == "https",
+          open_timeout: FinalDestination.connection_timeout,
+        ) do |http|
+          http.read_timeout = FinalDestination.connection_timeout
+          http.request(request) do |response|
+            if response.code == "304"
+              result = { code: response.code }
+            elsif Net::HTTPRedirection === response
+              result = { code: response.code, location: response["Location"] }
+            elsif response.code != "200"
+              result = { code: response.code }
+            else
+              result = {
+                code: response.code,
+                content_type: response["Content-Type"],
+                etag: response["ETag"],
+                last_modified: response["Last-Modified"],
+                body: read_body(response),
+              }
+            end
+          end
+        end
+
+        result || raise(FetchError, "The page could not be fetched")
+      end
+
+      def read_body(response)
+        body = +""
+        response.read_body do |chunk|
+          body << chunk
+          if body.bytesize > MAX_RESPONSE_BODY_LENGTH
+            raise FetchError, "The page is larger than 5 MB"
+          end
+        end
+        body.scrub
+      end
+
       def build_result(response, resolved_uri)
-        return { not_modified: true } if response.code == "304"
+        return { not_modified: true } if response[:code] == "304"
 
-        raise FetchError, "The page returned HTTP #{response.code}" if response.code != "200"
+        raise FetchError, "The page returned HTTP #{response[:code]}" if response[:code] != "200"
 
-        content_type = response["Content-Type"].to_s.split(";", 2).first
+        content_type = response[:content_type].to_s.split(";", 2).first.downcase
         if content_type.present? && SUPPORTED_CONTENT_TYPES.exclude?(content_type)
           raise FetchError, "Unsupported content type: #{content_type}"
         end
 
-        body =
-          DiscourseAi::Agents::Tools::Tool.read_response_body(
-            response,
-            max_length: MAX_RESPONSE_BODY_LENGTH,
-          )
+        body = response[:body]
         text = content_type == "text/plain" ? body : extract_html(body)
         raise FetchError, "The page did not contain readable text" if text.blank?
 
         {
           not_modified: false,
-          url: resolved_uri&.to_s || @url,
+          url: resolved_uri.to_s,
           text: text,
-          etag: response["ETag"],
-          last_modified: response["Last-Modified"],
+          etag: response[:etag],
+          last_modified: response[:last_modified],
         }
       end
 
