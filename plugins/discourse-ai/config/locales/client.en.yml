@@ -350,6 +350,8 @@ en:
           discoveries: "Discoveries"
           setting_groups:
             settings: "Basic Settings"
+            agents: "Agents"
+            access_control: "Access Control"
         embeddings:
           name: "Embeddings"
           description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
@@ -1630,21 +1632,40 @@ en:
             expanded_description: "with AI summaries"
 
       discobot_discoveries:
-        main_title: "Discobot discoveries"
-        regular_results: "Topics"
-        tell_me_more: "Tell me more..."
-        continue_convo: "Continue conversation..."
+        main_title: "Discoveries"
         loading_convo: "Loading conversation"
-        collapse: "Collapse"
-        timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+        follow_up:
+          label: "Ask a follow-up"
+          placeholder: "Ask a follow-up"
+          submit: "Ask"
+        timed_out: "Discoveries took too long to complete this search. Try again or use Search."
+        request_failed: "Discoveries could not start this search. Try again or use Search."
+        no_answer: "Discoveries couldn’t find enough useful discussion to answer this."
+        answer_ready: "Discoveries answer ready."
         user_setting: "Enable AI search discoveries"
-        tooltip:
-          header: "AI powered search"
-          content: "Natural language search powered by %{model}"
-          actions:
-            info: "How does it work?"
-            disable: "Disable"
-
+        mode:
+          label: "Search mode"
+          search: "Search"
+          ask: "Ask"
+          ask_placeholder: "Ask a question"
+          search_submit: "Search"
+          ask_submit: "Ask with Discoveries"
+        sources:
+          related_discussions: "Related discussions"
+          show_all_matching: "Show all matching posts"
+        preferences:
+          label: "Discoveries preferences"
+          related_discussions: "Related discussions"
+          show_fewer_discussions: "Show fewer related discussions"
+          show_more_discussions: "Show more related discussions"
+          show_summary: "Show useful summary"
+          summary_detail: "Summary detail"
+          quiet: "Quiet"
+          balanced: "Balanced"
+          detailed: "Detailed"
+          detail_hint_0: "One concise takeaway."
+          detail_hint_1: "A short answer with key context."
+          detail_hint_2: "A fuller answer with more detail."
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:

@@ -1,23 +1,32 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
+import DSegmentedControl from "discourse/components/d-segmented-control";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
-import Topic from "discourse/models/topic";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiBlinkingAnimation from "./ai-blinking-animation";
 import AiIndicatorWave from "./ai-indicator-wave";
+
+const SUMMARY_DETAIL_VALUES = ["quiet", "balanced", "detailed"];
 
 export default class AiSearchDiscoveries extends Component {
   @service search;
@@ -26,10 +35,9 @@ export default class AiSearchDiscoveries extends Component {
   @service appEvents;
   @service currentUser;
   @service siteSettings;
-  @service composer;
 
   @tracked loadingConversationTopic = false;
-  @tracked fullDiscoveryToggled = false;
+  @tracked followUpQuestion = "";
 
   constructor() {
     super(...arguments);
@@ -72,44 +80,77 @@ export default class AiSearchDiscoveries extends Component {
     );
   }
 
-  get discoveryPreviewLength() {
-    return this.args.discoveryPreviewLength || 150;
-  }
-
   get query() {
-    return this.args?.searchTerm || this.search.activeGlobalSearchTerm;
-  }
-
-  get toggleLabel() {
-    if (this.fullDiscoveryToggled) {
-      return "discourse_ai.discobot_discoveries.collapse";
-    } else {
-      return "discourse_ai.discobot_discoveries.tell_me_more";
-    }
-  }
-
-  get toggleIcon() {
-    if (this.fullDiscoveryToggled) {
-      return "chevron-up";
-    } else {
-      return "";
-    }
-  }
-
-  get canShowExpandtoggle() {
     return (
-      !this.discobotDiscoveries.loadingDiscoveries &&
-      this.discobotDiscoveries.streamedText.length > this.discoveryPreviewLength
+      this.args?.searchTerm ||
+      this.search.activeGlobalSearchTerm ||
+      ""
+    ).trim();
+  }
+
+  get sources() {
+    return this.discobotDiscoveries.sources || [];
+  }
+
+  get hasSources() {
+    return this.sources.length > 0;
+  }
+
+  get noAnswer() {
+    return this.discobotDiscoveries.answerable === false;
+  }
+
+  get showSummary() {
+    return this.discobotDiscoveries.showSummary !== false;
+  }
+
+  get showAnswerTitle() {
+    return this.showSummary && this.discobotDiscoveries.summaryDetail !== 0;
+  }
+
+  get relatedCount() {
+    const count = this.discobotDiscoveries.relatedCount;
+    return count >= 2 && count <= 6 ? count : 2;
+  }
+
+  get visibleSources() {
+    return this.sources.slice(0, this.relatedCount);
+  }
+
+  get summaryDetails() {
+    return [
+      {
+        value: "quiet",
+        label: i18n("discourse_ai.discobot_discoveries.preferences.quiet"),
+        disabled: !this.showSummary,
+      },
+      {
+        value: "balanced",
+        label: i18n("discourse_ai.discobot_discoveries.preferences.balanced"),
+        disabled: !this.showSummary,
+      },
+      {
+        value: "detailed",
+        label: i18n("discourse_ai.discobot_discoveries.preferences.detailed"),
+        disabled: !this.showSummary,
+      },
+    ];
+  }
+
+  get summaryDetailValue() {
+    return (
+      SUMMARY_DETAIL_VALUES[this.discobotDiscoveries.summaryDetail] ??
+      "balanced"
     );
   }
 
-  get renderPreviewOnly() {
-    return !this.fullDiscoveryToggled && this.canShowExpandtoggle;
+  get fullSearchUrl() {
+    return getURL(`/search?q=${encodeURIComponent(this.query)}`);
   }
 
   get canContinueConversation() {
     const agents = this.currentUser?.ai_enabled_agents;
-    if (!agents) {
+    if (!this.siteSettings.ai_bot_enabled || !agents) {
       return false;
     }
 
@@ -117,16 +158,29 @@ export default class AiSearchDiscoveries extends Component {
       return false;
     }
 
-    const discoverAgent = agents.find(
-      (agent) => agent.id === parseInt(this.siteSettings?.ai_discover_agent, 10)
+    const followUpAgent = agents.find(
+      (agent) =>
+        agent.id ===
+        parseInt(this.siteSettings?.ai_discover_follow_up_agent, 10)
     );
-    const discoverAgentHasBot = discoverAgent?.username;
+    const hasEnabledLlmBot = this.currentUser.ai_enabled_chat_bots?.some(
+      (bot) => !bot.is_agent && bot.username
+    );
+    const hasConversationRecipient = followUpAgent?.force_default_llm
+      ? followUpAgent.username
+      : hasEnabledLlmBot || followUpAgent?.username;
+    const followUpAgentCanReceiveMessages =
+      followUpAgent?.allow_personal_messages && hasConversationRecipient;
 
     return (
-      this.discobotDiscoveries.discovery?.length > 0 &&
+      (this.discobotDiscoveries.discovery?.length > 0 || this.hasSources) &&
       !this.discobotDiscoveries.isStreaming &&
-      discoverAgentHasBot
+      followUpAgentCanReceiveMessages
     );
+  }
+
+  get canSubmitFollowUp() {
+    return this.followUpQuestion.trim().length > 0;
   }
 
   get continueConvoBtnLabel() {
@@ -134,7 +188,7 @@ export default class AiSearchDiscoveries extends Component {
       return "discourse_ai.discobot_discoveries.loading_convo";
     }
 
-    return "discourse_ai.discobot_discoveries.continue_convo";
+    return "discourse_ai.discobot_discoveries.follow_up.submit";
   }
 
   @action
@@ -143,8 +197,37 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   @action
-  toggleDiscovery() {
-    this.fullDiscoveryToggled = !this.fullDiscoveryToggled;
+  triggerDiscoveryOnInsert() {
+    if (this.args.triggerOnInsert !== false) {
+      this.triggerDiscovery();
+    }
+  }
+
+  @action
+  decreaseRelatedCount() {
+    this.discobotDiscoveries.setRelatedCount(
+      this.discobotDiscoveries.relatedCount - 1
+    );
+  }
+
+  @action
+  increaseRelatedCount() {
+    this.discobotDiscoveries.setRelatedCount(
+      this.discobotDiscoveries.relatedCount + 1
+    );
+  }
+
+  @action
+  toggleSummary() {
+    this.discobotDiscoveries.setShowSummary(!this.showSummary);
+  }
+
+  @action
+  selectSummaryDetail(detail) {
+    const value = SUMMARY_DETAIL_VALUES.indexOf(detail);
+    if (value !== -1) {
+      this.discobotDiscoveries.setSummaryDetail(value);
+    }
   }
 
   @action
@@ -169,10 +252,21 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   @action
-  async continueConversation() {
+  updateFollowUpQuestion(event) {
+    this.followUpQuestion = event.target.value;
+  }
+
+  @action
+  async continueConversation(event) {
+    event?.preventDefault();
+    const question = this.followUpQuestion.trim();
+    if (!question || this.loadingConversationTopic) {
+      return;
+    }
+
     const data = {
-      query: this.query,
-      context: this.discobotDiscoveries.discovery,
+      request_id: this.discobotDiscoveries.activeRequestId,
+      question,
     };
     try {
       this.loadingConversationTopic = true;
@@ -183,18 +277,12 @@ export default class AiSearchDiscoveries extends Component {
           data,
         }
       );
-      const topicJSON = await Topic.find(continueRequest.topic_id, {});
-      const topic = Topic.create(topicJSON);
 
       DiscourseURL.routeTo(`/t/${continueRequest.topic_id}`, {
         afterRouteComplete: () => {
           if (this.args.closeSearchMenu) {
             this.args.closeSearchMenu();
           }
-
-          this.composer.focusComposer({
-            topic,
-          });
         },
       });
     } catch (e) {
@@ -206,23 +294,148 @@ export default class AiSearchDiscoveries extends Component {
 
   <template>
     <div
-      class="ai-search-discoveries"
+      class={{dConcatClass
+        "ai-search-discoveries"
+        (if @fullPage "--full-page")
+      }}
       {{didInsert this.subscribe this.query}}
       {{didUpdate this.subscribe this.query}}
-      {{didInsert this.triggerDiscovery this.query}}
+      {{didInsert this.triggerDiscoveryOnInsert this.query}}
       {{willDestroy this.unsubscribe}}
     >
+      {{#if @showHeading}}
+        {{#if this.discobotDiscoveries.showDiscoveryTitle}}
+          <header class="ai-search-discoveries__header">
+            <h3 class="ai-search-discoveries__title">
+              {{dIcon "far-circle"}}
+              {{i18n "discourse_ai.discobot_discoveries.main_title"}}
+            </h3>
+            <div class="ai-discovery-preferences-menu">
+              <DMenu
+                @identifier="ai-discovery-preferences"
+                @icon="ellipsis"
+                @ariaLabel={{i18n
+                  "discourse_ai.discobot_discoveries.preferences.label"
+                }}
+                @placement="bottom-end"
+                @triggerClass="btn-flat ai-discovery-preferences-menu__trigger"
+              >
+                <:content>
+                  <div class="ai-discovery-preferences">
+                    <div class="ai-discovery-preferences__row">
+                      <span class="ai-discovery-preferences__label">
+                        {{i18n
+                          "discourse_ai.discobot_discoveries.preferences.related_discussions"
+                        }}
+                      </span>
+                      <div class="ai-discovery-preferences__stepper">
+                        <DButton
+                          class="btn-flat ai-discovery-preferences__decrement"
+                          @icon="minus"
+                          @translatedTitle={{i18n
+                            "discourse_ai.discobot_discoveries.preferences.show_fewer_discussions"
+                          }}
+                          @disabled={{or
+                            this.discobotDiscoveries.savingPreferences
+                            (eq this.discobotDiscoveries.relatedCount 2)
+                          }}
+                          @action={{this.decreaseRelatedCount}}
+                        />
+                        <span class="ai-discovery-preferences__count">
+                          {{this.discobotDiscoveries.relatedCount}}
+                        </span>
+                        <DButton
+                          class="btn-flat ai-discovery-preferences__increment"
+                          @icon="plus"
+                          @translatedTitle={{i18n
+                            "discourse_ai.discobot_discoveries.preferences.show_more_discussions"
+                          }}
+                          @disabled={{or
+                            this.discobotDiscoveries.savingPreferences
+                            (eq this.discobotDiscoveries.relatedCount 6)
+                          }}
+                          @action={{this.increaseRelatedCount}}
+                        />
+                      </div>
+                    </div>
+
+                    <div class="ai-discovery-preferences__summary-row">
+                      <span class="ai-discovery-preferences__label">
+                        {{i18n
+                          "discourse_ai.discobot_discoveries.preferences.show_summary"
+                        }}
+                      </span>
+                      <DToggleSwitch
+                        class="ai-discovery-preferences__summary-toggle"
+                        @state={{this.showSummary}}
+                        aria-label={{i18n
+                          "discourse_ai.discobot_discoveries.preferences.show_summary"
+                        }}
+                        disabled={{this.discobotDiscoveries.savingPreferences}}
+                        {{on "click" this.toggleSummary}}
+                      />
+                    </div>
+
+                    <div class="ai-discovery-preferences__detail-group">
+                      <span
+                        class="ai-discovery-preferences__label"
+                        aria-hidden="true"
+                      >
+                        {{i18n
+                          "discourse_ai.discobot_discoveries.preferences.summary_detail"
+                        }}
+                      </span>
+                      <DSegmentedControl
+                        class="ai-discovery-preferences__detail"
+                        @name="ai-discovery-summary-detail"
+                        @items={{this.summaryDetails}}
+                        @value={{this.summaryDetailValue}}
+                        @onSelect={{this.selectSummaryDetail}}
+                        @translatedLabel={{i18n
+                          "discourse_ai.discobot_discoveries.preferences.summary_detail"
+                        }}
+                      />
+                      <p class="ai-discovery-preferences__hint">
+                        {{i18n
+                          (concat
+                            "discourse_ai.discobot_discoveries.preferences.detail_hint_"
+                            this.discobotDiscoveries.summaryDetail
+                          )
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                </:content>
+              </DMenu>
+            </div>
+          </header>
+        {{/if}}
+      {{/if}}
+
+      {{#if (and this.showAnswerTitle this.discobotDiscoveries.discoveryTitle)}}
+        <h4 class="ai-search-discoveries__answer-title">
+          {{this.discobotDiscoveries.discoveryTitle}}
+        </h4>
+      {{/if}}
+
       <div class="ai-search-discoveries__completion">
         {{#if this.discobotDiscoveries.loadingDiscoveries}}
           <AiBlinkingAnimation />
+        {{else if this.discobotDiscoveries.errorMessage}}
+          <p class="ai-search-discoveries__error">
+            {{this.discobotDiscoveries.errorMessage}}
+          </p>
         {{else if this.discobotDiscoveries.discoveryTimedOut}}
           {{i18n "discourse_ai.discobot_discoveries.timed_out"}}
-        {{else}}
+        {{else if this.noAnswer}}
+          <p class="ai-search-discoveries__no-answer">
+            {{i18n "discourse_ai.discobot_discoveries.no_answer"}}
+          </p>
+        {{else if this.showSummary}}
           {{! eslint-disable ember/template-no-invalid-interactive }}
           <article
             class={{dConcatClass
               "ai-search-discoveries__discovery"
-              (if this.renderPreviewOnly "preview")
               (if this.discobotDiscoveries.isStreaming "streaming")
               "streamable-content"
             }}
@@ -234,27 +447,110 @@ export default class AiSearchDiscoveries extends Component {
             />
           </article>
 
-          {{#if this.canShowExpandtoggle}}
-            <DButton
-              class="btn-flat btn-text ai-search-discoveries__toggle"
-              @label={{this.toggleLabel}}
-              @icon={{this.toggleIcon}}
-              @action={{this.toggleDiscovery}}
-            />
-          {{/if}}
         {{/if}}
       </div>
 
+      {{#if @showSources}}
+        {{#if this.hasSources}}
+          <section
+            class="ai-discovery-sources"
+            aria-labelledby="ai-discovery-sources-title"
+          >
+            <header class="ai-discovery-sources__header">
+              <h4
+                id="ai-discovery-sources-title"
+                class="ai-discovery-sources__title"
+              >
+                {{i18n
+                  "discourse_ai.discobot_discoveries.sources.related_discussions"
+                }}
+              </h4>
+              <a
+                class="ai-discovery-sources__all-results"
+                href={{this.fullSearchUrl}}
+                {{on "click" this.handleDiscoveryClick}}
+              >
+                {{i18n
+                  "discourse_ai.discobot_discoveries.sources.show_all_matching"
+                }}
+                {{dIcon "arrow-right"}}
+              </a>
+            </header>
+
+            <ul
+              class="ai-discovery-sources__list"
+              {{on "click" this.handleDiscoveryClick}}
+            >
+              {{#each this.visibleSources as |source|}}
+                <li class="ai-discovery-sources__item">
+                  <a class="ai-discovery-source" href={{source.url}}>
+                    {{#if source.avatar_template}}
+                      <span class="ai-discovery-source__avatar">
+                        {{dAvatar source imageSize="medium"}}
+                      </span>
+                    {{/if}}
+                    <span class="ai-discovery-source__content">
+                      <h5
+                        class="ai-discovery-source__title"
+                      >{{source.title}}</h5>
+                      {{#if source.excerpt}}
+                        <span class="ai-discovery-source__excerpt">
+                          {{source.excerpt}}
+                        </span>
+                      {{/if}}
+                      <span class="ai-discovery-source__metadata">
+                        {{#if source.category}}
+                          <span>{{source.category}}</span>
+                          <span aria-hidden="true">·</span>
+                        {{/if}}
+                        <span>
+                          {{source.topic_replies}}
+                          {{i18n
+                            "replies_lowercase"
+                            count=source.topic_replies
+                          }}
+                        </span>
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              {{/each}}
+            </ul>
+          </section>
+        {{/if}}
+      {{/if}}
+
       {{#if this.canContinueConversation}}
-        <div class="ai-search-discoveries__continue-conversation">
+        <form
+          class="ai-search-discoveries__continue-conversation"
+          {{on "submit" this.continueConversation}}
+        >
+          <input
+            class="ai-search-discoveries__follow-up-input"
+            type="text"
+            value={{this.followUpQuestion}}
+            maxlength="1000"
+            placeholder={{i18n
+              "discourse_ai.discobot_discoveries.follow_up.placeholder"
+            }}
+            aria-label={{i18n
+              "discourse_ai.discobot_discoveries.follow_up.label"
+            }}
+            disabled={{this.loadingConversationTopic}}
+            {{on "input" this.updateFollowUpQuestion}}
+          />
           <DButton
-            @action={{this.continueConversation}}
+            @type="submit"
             @label={{this.continueConvoBtnLabel}}
-            class="btn-default btn-small"
+            @disabled={{or
+              this.loadingConversationTopic
+              (not this.canSubmitFollowUp)
+            }}
+            class="btn-primary btn-small ai-search-discoveries__follow-up-submit"
           >
             <AiIndicatorWave @loading={{this.loadingConversationTopic}} />
           </DButton>
-        </div>
+        </form>
       {{/if}}
     </div>
   </template>

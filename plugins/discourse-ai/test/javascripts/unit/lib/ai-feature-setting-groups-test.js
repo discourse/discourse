@@ -71,7 +71,15 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
   test("returns correct groups for search", function (assert) {
     const groups = getSettingGroupsForFeature("search");
 
-    assert.strictEqual(groups.length, 1, "search should have 1 group");
+    assert.deepEqual(
+      groups.map((group) => group.key),
+      ["settings", "agents", "access_control"]
+    );
+    assert.deepEqual(groups[1].settings, [
+      "ai_discover_agent",
+      "ai_discover_follow_up_agent",
+    ]);
+    assert.deepEqual(groups[2].settings, ["ai_discover_allowed_groups"]);
   });
 
   test("returns correct groups for translation", function (assert) {

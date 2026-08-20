@@ -141,6 +141,13 @@ export default class WelcomeBanner extends Component {
     );
   }
 
+  get searchInputPlaceholder() {
+    return applyValueTransformer(
+      "welcome-banner-search-placeholder",
+      "welcome_banner.search_placeholder"
+    );
+  }
+
   #shouldDisplayForRoute(
     welcome_banner_page_visibility,
     top_menu,
@@ -283,7 +290,7 @@ export default class WelcomeBanner extends Component {
             <SearchMenu
               @location="welcome-banner"
               @searchInputId="welcome-banner-search-input"
-              @searchInputPlaceholder="welcome_banner.search_placeholder"
+              @searchInputPlaceholder={{this.searchInputPlaceholder}}
               @hideResults={{not this.search.welcomeBannerSearchInViewport}}
             />
           </div>
