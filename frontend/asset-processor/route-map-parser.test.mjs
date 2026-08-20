@@ -199,6 +199,28 @@ describe("deriving", () => {
     ]);
   });
 
+  it("keeps a splat distinct from a dynamic segment", () => {
+    // A `:dynamic` is one segment, a `*splat` is the rest of the route path.
+    const { urls } = tablesFor([
+      {
+        core: true,
+        source: `export default function () {
+          this.route("discovery", { path: "/" }, function () {
+            this.route("category", { path: "/c/*category_slug_path_with_id" });
+          });
+        }`,
+      },
+      `export default {
+        resource: "discovery.category",
+        map() {
+          this.route("extras", { path: "/:id/extras", bundleName: "extras" });
+        },
+      };`,
+    ]);
+
+    expect(urls).toEqual([{ bundleName: "extras", url: "c/**/*/extras/*" }]);
+  });
+
   it("orders urls most specific first", () => {
     const { urls } = tablesFor([
       `export default function () {

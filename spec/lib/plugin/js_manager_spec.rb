@@ -47,6 +47,27 @@ RSpec.describe Plugin::JsManager do
       expect(bundle_for("u/bob/preferences")).to eq(nil)
     end
 
+    context "with a splat segment" do
+      let(:manifest) do
+        {
+          "main" => {
+            "routeBundles" => [{ "url" => "c/**/edit", "fileName" => "edit.js" }],
+          },
+        }
+      end
+
+      it "matches one segment or many, because a splat eats the rest of the route path" do
+        expect(bundle_for("c/announcements/edit")).to eq("js/plugins/edit")
+        expect(bundle_for("c/parent/child/5/edit")).to eq("js/plugins/edit")
+      end
+
+      it "still requires the segments around it to match" do
+        expect(bundle_for("c/announcements/5")).to eq(nil)
+        expect(bundle_for("c/edit")).to eq(nil)
+        expect(bundle_for("x/announcements/5/edit")).to eq(nil)
+      end
+    end
+
     it "returns nothing for an unrelated path" do
       expect(bundle_for("latest")).to eq(nil)
     end

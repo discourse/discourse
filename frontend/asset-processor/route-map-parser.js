@@ -240,12 +240,18 @@ function joinUrl(parent, path) {
   return [...parent.split("/"), ...path.split("/")].filter(Boolean).join("/");
 }
 
-// `:dynamic` and `*splat` segments become a single `*`, which `url_glob_matches?` reads as one
-// segment, or as the rest of the path when it is last.
+// A `:dynamic` segment becomes `*`, which `url_glob_matches?` reads as exactly one segment. A
+// `*splat` eats the rest of the route's path, so it becomes `**`, which reads as one or more.
 function globFor(url) {
   return url
     .split("/")
-    .map((segment) => (/^[:*]/.test(segment) ? "*" : segment))
+    .map((segment) => {
+      if (segment.startsWith("*")) {
+        return "**";
+      }
+
+      return segment.startsWith(":") ? "*" : segment;
+    })
     .join("/");
 }
 
@@ -287,7 +293,7 @@ export function deriveRoutes(root) {
 }
 
 function literalSegments(glob) {
-  return glob.split("/").filter((segment) => segment !== "*").length;
+  return glob.split("/").filter((segment) => !/^\*\*?$/.test(segment)).length;
 }
 
 // One url per bundle entry point. A glob already covered by a shallower one in the same bundle

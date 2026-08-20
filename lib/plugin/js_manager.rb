@@ -79,18 +79,34 @@ module Plugin
     # A `*` matches exactly one path segment, except as the final segment, where it matches the
     # rest of the path — or nothing, so `chat/*` also covers `/chat` itself. Dynamic segments make
     # the first form necessary: chat's preferences route lives at `u/*/preferences/chat`.
+    #
+    # A `**` matches one or more segments anywhere in the glob. It stands for a splat route
+    # segment, which eats the rest of the route's path: `/c/*category_slug_path_with_id/edit`
+    # gives `c/**/edit`, and `c/announcements/5/edit` has to match it.
     def self.url_glob_matches?(glob, path)
-      glob_segments = glob.split("/")
-      path_segments = path.split("/")
+      segments = glob.split("/")
+      trailing_star = segments.last == "*"
+      segments = segments[0...-1] if trailing_star
 
-      glob_segments.each_with_index do |segment, i|
-        return true if segment == "*" && i == glob_segments.size - 1
-        return false if path_segments[i].nil?
-        next if segment == "*"
-        return false if segment != path_segments[i]
+      pattern =
+        segments
+          .map do |segment|
+            case segment
+            when "**"
+              "[^/]+(?:/[^/]+)*"
+            when "*"
+              "[^/]+"
+            else
+              Regexp.escape(segment)
+            end
+          end
+          .join("/")
+
+      if trailing_star
+        pattern = segments.empty? ? ".*" : "#{pattern}(?:/.*)?"
       end
 
-      glob_segments.size == path_segments.size
+      path.match?(/\A#{pattern}\z/)
     end
     private_class_method :url_glob_matches?
 
