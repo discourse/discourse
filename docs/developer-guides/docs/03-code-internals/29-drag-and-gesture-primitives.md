@@ -147,7 +147,7 @@ Accepts element drags and reports where the drop would land.
 | `position`      | `"before" \| "after" \| "inside"`            | A fixed position, which wins over midpoint math.              |
 | `axis`          | `"vertical" \| "horizontal"`                 | Which midpoint is measured. Defaults to `"vertical"`.         |
 | `indicator`     | `boolean`                                    | `false` suppresses the indicator class.                       |
-| `canDrop`       | `(feedback) => boolean`                      | Synchronous gate. `false` refuses the drop.                   |
+| `canDrop`       | `(feedback) => boolean`                      | Gate asked while hovering. `false` defers to an ancestor.     |
 | `getDropEffect` | `(feedback) => DropEffect`                   | The cursor feedback the browser shows.                        |
 | `getData`       | `() => object`                               | Metadata attached to the drag's record of this target.        |
 | `getIsSticky`   | `() => boolean`                              | Whether the target stays current after the pointer leaves.    |
@@ -180,6 +180,13 @@ never handle one drop twice. The cost is that an ancestor stops indicating the
 moment a descendant claims the drag. When a container has to stay highlighted
 while its descendants activate in turn, render from the service instead and
 leave drop handling to the descendants.
+
+A descendant that answers `false` from `canDrop` is not accepted, so the drop
+falls through to the nearest ancestor that does accept it. That is how a target
+hands back a region it does not own, such as an edge band that belongs to the
+enclosing container. Eligibility is sampled while the drag hovers and is not
+asked again at the release, so the answer a target last gave is the one that
+counts.
 
 ## Adopting browser-started drags
 
