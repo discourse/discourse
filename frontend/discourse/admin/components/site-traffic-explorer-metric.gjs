@@ -4,25 +4,16 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <div
-    class="site-traffic-explorer__metric {{if @primary '--primary'}}"
-    data-test-site-traffic-metric={{@name}}
-  >
+  <div class="db-section__metric" data-test-site-traffic-metric={{@name}}>
     {{#if @compact}}
       <SiteTrafficExplorerPageviewCount @value={{@value}} as |formattedValue|>
-        <span
-          class="db-section__metric-number site-traffic-explorer__metric-value"
-        >{{formattedValue}}</span>
+        <div class="db-section__metric-number">{{formattedValue}}</div>
       </SiteTrafficExplorerPageviewCount>
     {{else}}
-      <span
-        class="db-section__metric-number site-traffic-explorer__metric-value"
-      >{{@value}}</span>
+      <div class="db-section__metric-number">{{@value}}</div>
     {{/if}}
-    <span class="site-traffic-explorer__metric-label-row">
-      <span
-        class="db-section__metric-label site-traffic-explorer__metric-label"
-      >{{@label}}</span>
+
+    <div class="db-section__metric-label">{{@label}}
       {{#if @tooltip}}
         <DTooltip
           class="db-section__info"
@@ -32,7 +23,7 @@ export default <template>
         >
           <:content>{{@tooltip}}</:content>
         </DTooltip>
-      {{/if}}
-    </span>
+      {{/if}}</div>
+
   </div>
 </template>

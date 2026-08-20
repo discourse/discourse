@@ -1,15 +1,13 @@
 @use "lib/viewport";
 
 .site-traffic-explorer {
-  .d-page-header {
-    margin-bottom: var(--space-4);
-  }
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-bottom: var(--space-8);
 
-  &__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    padding-bottom: var(--space-8);
+  .db-section__subheader {
+    justify-content: flex-end;
   }
 
   &__filters {
@@ -199,11 +197,6 @@
     min-width: 0;
   }
 
-  &__report {
-    overflow: hidden;
-    background: var(--secondary);
-  }
-
   &__metrics {
     .db-section__subintro {
       flex: 1 1 15rem;
@@ -229,25 +222,17 @@
     }
   }
 
-  &__metric {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    min-width: 0;
+  // &__metric {
+  //   display: flex;
+  //   flex-direction: column;
+  //   gap: var(--space-1);
+  //   min-width: 0;
 
-    &.--primary {
-      flex-flow: row wrap;
-      align-items: baseline;
-
-      .site-traffic-explorer__metric-value,
-      .site-traffic-explorer__metric-label {
-        color: var(--primary);
-        font-size: var(--font-up-1);
-        font-weight: 700;
-      }
-    }
-  }
-
+  //   &.--primary {
+  //     flex-flow: row wrap;
+  //     align-items: baseline;
+  //   }
+  // }
   &__metric-value {
     overflow-wrap: anywhere;
     font-variant-numeric: tabular-nums;
@@ -275,11 +260,10 @@
     gap: 0;
   }
 
-  &__card {
+  .db-section__row-block {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    min-width: 0;
   }
 
   &__tabs {
@@ -304,59 +288,34 @@
 
       &.is-active {
         border-bottom-color: var(--tertiary);
-        color: var(--primary);
-        font-weight: 600;
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--tertiary);
-        outline-offset: -2px;
+        color: var(--tertiary);
       }
     }
   }
 
   &__breakdown-list {
     @include unstyled-list;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
     font-size: var(--font-down-1-rem);
   }
 
   &__row {
     position: relative;
-    box-sizing: border-box;
     display: flex;
     align-items: center;
-    width: calc(100% + 2 * var(--space-2));
-    min-width: 0;
     gap: var(--space-1);
     margin-inline: calc(-1 * var(--space-2));
-    border: 0;
     border-radius: var(--d-border-radius);
     padding-block: var(--space-1);
     padding-inline: var(--space-2);
     background: transparent;
-    color: var(--primary);
-    font: inherit;
-    text-align: start;
-  }
-
-  &__row-label {
-    @include ellipsis;
-    flex: 1 1 auto;
-    min-width: 0;
+    cursor: pointer;
   }
 
   &__row-count {
-    color: var(--primary-medium);
-    font-variant-numeric: tabular-nums;
-    pointer-events: none;
-  }
-
-  &__row-count-wrapper {
     flex-shrink: 0;
     margin-inline-start: auto;
+    color: var(--primary-medium);
+    font-variant-numeric: tabular-nums;
   }
 
   &__row-link {
@@ -386,20 +345,9 @@
     text-decoration: underline;
   }
 
-  label.site-traffic-explorer__row {
-    cursor: pointer;
-    font-weight: inherit;
-
-    &:focus-visible {
-      background: var(--token-color-surface-hovered);
-      color: var(--tertiary);
-    }
-  }
-
-  span.site-traffic-explorer__row {
-    cursor: pointer;
-
-    > input {
+  &__row-checkbox {
+    // Raised above __row-filter-target so the checkbox stays directly clickable.
+    .--linked & {
       position: relative;
       z-index: 1;
     }
@@ -427,6 +375,7 @@
 
   &__dimension-label {
     display: flex;
+    flex: 1 1 auto;
     align-items: center;
     min-width: 0;
     width: 100%;
@@ -521,12 +470,12 @@
     text-transform: uppercase;
   }
 
-  ul {
+  &-list {
     @include unstyled-list;
     margin-inline: calc(-1 * var(--space-2));
   }
 
-  li {
+  &-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
