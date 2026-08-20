@@ -82,18 +82,86 @@ RSpec.describe Discourse::SafeExec do
       )
     end
 
+    it "yields a completed result once before returning" do
+      status = instance_double(Process::Status, exited?: true, exitstatus: 0)
+      result =
+        instance_double(
+          Landlock::CaptureResult,
+          stdout: "hello\n",
+          stderr: "",
+          status: status,
+          output_truncated?: false,
+        )
+      yielded_results = []
+
+      allow(Landlock).to receive(:supported?).and_return(true)
+      allow(Landlock).to receive(:capture).and_return(result)
+
+      output =
+        described_class.capture("echo", "hello") do |capture_result|
+          yielded_results << capture_result
+        end
+
+      expect(output).to eq("hello\n")
+      expect(yielded_results).to eq([result])
+    end
+
+    it "yields a completed result once before raising a command error" do
+      status = instance_double(Process::Status, exited?: true, exitstatus: 1)
+      result =
+        instance_double(
+          Landlock::CaptureResult,
+          stdout: "",
+          stderr: "nope",
+          status: status,
+          output_truncated?: false,
+        )
+      yielded_results = []
+
+      allow(Landlock).to receive(:supported?).and_return(true)
+      allow(Landlock).to receive(:capture).and_return(result)
+
+      expect {
+        described_class.capture("false") { |capture_result| yielded_results << capture_result }
+      }.to raise_error(Discourse::Utils::CommandError)
+      expect(yielded_results).to eq([result])
+    end
+
+    it "yields the result attached to a Landlock command error" do
+      status = instance_double(Process::Status)
+      result = instance_double(Landlock::CaptureResult)
+      yielded_results = []
+
+      allow(Landlock).to receive(:supported?).and_return(true)
+      allow(Landlock).to receive(:capture).and_raise(
+        Landlock::CommandError.new(
+          "output limit",
+          stdout: "out",
+          stderr: "err",
+          status: status,
+          result:,
+        ),
+      )
+
+      expect {
+        described_class.capture("tool") { |capture_result| yielded_results << capture_result }
+      }.to raise_error(Discourse::Utils::CommandError, /output limit/)
+      expect(yielded_results).to eq([result])
+    end
+
     it "converts Landlock::CommandError into a Discourse command error" do
       status = instance_double(Process::Status)
+      yielded_results = []
 
       allow(Landlock).to receive(:supported?).and_return(true)
       allow(Landlock).to receive(:capture).and_raise(
         Landlock::CommandError.new("boom", stdout: "out", stderr: "err", status: status),
       )
 
-      expect { described_class.capture("tool") }.to raise_error(
-        Discourse::Utils::CommandError,
-        /boom/,
-      )
+      expect {
+        described_class.capture("tool") { |result| yielded_results << result }
+      }.to raise_error(Discourse::Utils::CommandError, /boom/)
+      expect(yielded_results).to be_empty
     end
 
     it "returns truncated stdout without checking the terminated status" do
@@ -128,6 +196,17 @@ RSpec.describe Discourse::SafeExec do
         chdir: "/tmp",
         unsetenv_others: false,
       )
+    end
+
+    it "does not yield when Landlock is unavailable on the system" do
+      allow(Landlock).to receive(:supported?).and_return(false)
+      allow(Discourse::Utils).to receive(:execute_command).and_return("hello\n")
+      yielded_results = []
+
+      output = described_class.capture("echo", "hello") { |result| yielded_results << result }
+
+      expect(output).to eq("hello\n")
+      expect(yielded_results).to be_empty
     end
 
     it "still strips the child environment in the unsandboxed fallback" do

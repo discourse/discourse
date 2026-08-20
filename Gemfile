@@ -228,7 +228,10 @@ gem "rqrcode"
 
 gem "rubyzip", require: false
 
-gem "landlock", require: false
+gem "landlock",
+    git: "https://github.com/discourse/ruby-landlock.git",
+    ref: "b1c99e7863732123a9972c5c14597ba006c9eb54",
+    require: false
 
 gem "sshkey", require: false
 
