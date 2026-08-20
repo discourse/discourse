@@ -47,6 +47,42 @@ describe "Admin Dashboard Redesign | Reports section" do
     expect(modal).to have_disabled_move_down("core_report:topics")
   end
 
+  it "lets the admin select a report's text" do
+    # A row is a drag source, and a `draggable` element turns a press-drag into a
+    # drag rather than a selection. The grip is what should be draggable, so the
+    # title and description stay selectable like any other text.
+    #
+    # `drag_with_pointer`, not `drag_and_drop`: the latter goes through CDP drag
+    # interception, which suppresses the ordinary mouse moves a selection is made
+    # of. And a real pointer is the only thing that can select at all — a
+    # synthetic drag never touches the browser's selection.
+    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+    AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
+
+    page.visit("/admin")
+    dashboard.open_manage_reports_via_cog
+    expect(modal).to have_open
+
+    drag_with_pointer(from: ".manage-reports__row.--enabled .manage-reports__title", by: { x: 60 })
+
+    expect(page.evaluate_script("window.getSelection().toString()")).to be_present
+  end
+
+  it "lets an admin reorder reports with a real browser drag" do
+    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+    AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
+
+    page.visit("/admin")
+    dashboard.open_manage_reports_via_cog
+    expect(modal).to have_open
+
+    modal.drag_report("core_report:topics", "core_report:signups")
+
+    try_until_success do
+      expect(modal.enabled_identifiers).to eq(%w[core_report:topics core_report:signups])
+    end
+  end
+
   it "lets admins customize the reports section via the manage-reports modal" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
