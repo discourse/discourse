@@ -2693,6 +2693,15 @@ RSpec.describe User do
     end
   end
 
+  describe ".admin_ids" do
+    it "returns only human admin IDs" do
+      admin = Fabricate(:admin)
+      Fabricate(:user)
+
+      expect(User.admin_ids).to contain_exactly(admin.id)
+    end
+  end
+
   describe ".not_staged" do
     let!(:user0) { Fabricate(:user, staged: true) }
     let!(:user1) { Fabricate(:user) }

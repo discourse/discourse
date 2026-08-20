@@ -21,7 +21,7 @@ class UpcomingChanges::NotifyPromotions
   end
 
   def fetch_admin_user_ids
-    User.human_users.admins.pluck(:id)
+    User.admin_ids
   end
 
   def fetch_change_notification_statuses(

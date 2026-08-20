@@ -291,6 +291,8 @@ class User < ActiveRecord::Base
           end
         end
 
+  scope :admin_ids, -> { human_users.admins.pluck(:id) }
+
   # excluding fake users like the system user or anonymous users
   scope :real,
         ->(allowed_bot_user_ids: nil) do
