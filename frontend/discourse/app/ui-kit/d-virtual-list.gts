@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import type { ModifierLike } from "@glint/template";
 import { modifier } from "ember-modifier";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import {
   isVirtualizationEnabled,
@@ -231,6 +232,12 @@ interface DVirtualListSignature<T> {
      * indent they need.
      */
     as?: string;
+    /** Gives consumers a stable hook for sizing and styling the scroll viewport. */
+    viewportClass?: string;
+    /** Names a scroll region whose non-interactive role offers no other naming path. */
+    viewportLabel?: string;
+    /** Names the scroll viewport from existing descriptive content. */
+    viewportLabelledBy?: string;
     /**
      * Whether the scroll viewport may take sequential focus. Defaults to `true`, which leaves
      * the decision to the browser.
@@ -313,10 +320,10 @@ interface DVirtualListSignature<T> {
      * the primitive does not implement on the consumer's behalf, so the consumer
      * opts in.
      *
-     * With a non-interactive role, nothing inside the list is focusable, and the
-     * scroll viewport is not keyboard-operable on its own. Such a consumer should
-     * make the viewport focusable and name it, so the region can be scrolled
-     * without a pointer.
+     * With a non-interactive role, nothing inside the list is focusable. Use
+     * `@viewportClass` as the hook for making the viewport focusable, and name
+     * it with `@viewportLabel` or `@viewportLabelledBy`, so the region can be
+     * scrolled without a pointer.
      */
     role?: string;
     /**
@@ -607,7 +614,9 @@ export default class DVirtualList<T> extends Component<
         drives it. The role and splattributes go on the inner container, so the
         semantic element owns them. Size this viewport from CSS. }}
     <div
-      class="d-virtual-list"
+      class={{dConcatClass "d-virtual-list" @viewportClass}}
+      aria-label={{if @viewportLabel @viewportLabel}}
+      aria-labelledby={{if @viewportLabelledBy @viewportLabelledBy}}
       tabindex={{this.viewportTabIndex}}
       {{dVirtualizer
         items=@items
