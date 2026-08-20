@@ -25,7 +25,9 @@ export function isWithinEventTimeframe(allDay, startsAt, endsAt) {
 
   if (allDay) {
     const opensAt = moment(startsAt).startOf("day");
-    const closesAt = moment(startsAt).endOf("day");
+    const closesAt = moment(
+      moment(endsAt).isSame(moment(startsAt), "day") ? startsAt : endsAt
+    ).endOf("day");
 
     return now.isBetween(opensAt, closesAt);
   }
@@ -191,9 +193,17 @@ export default class DiscoursePostEventEvent {
     return isWithinEventTimeframe(this.allDay, this.startsAt, this.endsAt);
   }
 
-  // An event without an end time never falls past its timeframe, since
-  // `moment(undefined)` is "now" rather than an invalid date.
   get pastEventTimeframe() {
+    if (this.allDay) {
+      return moment().isAfter(
+        moment(
+          moment(this.endsAt).isSame(moment(this.startsAt), "day")
+            ? this.startsAt
+            : this.endsAt
+        ).endOf("day")
+      );
+    }
+
     if (!this.endsAt) {
       return false;
     }

@@ -3,11 +3,13 @@ import { clearRender, click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import LivestreamZoomEntry from "../../discourse/components/livestream/zoom-entry";
 import ZoomMeetingSession, {
   MAX_RETRY_ATTEMPTS,
   RETRY_DELAY_SECONDS,
 } from "../../discourse/lib/zoom-meeting-session";
+import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
 
 const MEETING_NOT_STARTED = {
   errorCode: 3008,
@@ -179,6 +181,60 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     assert
       .dom(WAITING_SELECTOR)
       .hasText("You can join the webinar closer to the event start time");
+  });
+
+  test("allows joining a multi-day all-day event through its end date", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    const clock = fakeTime("2026-08-20T12:00:00Z", "UTC");
+    this.event = DiscoursePostEventEvent.create({
+      ...this.event,
+      starts_at: "2026-08-19T00:00:00Z",
+      ends_at: "2026-08-21T00:00:00Z",
+      all_day: true,
+      can_update_attendance: true,
+      livestream_chat_channel_id: 9,
+      livestream_url: this.event.livestreamUrl,
+    });
+
+    try {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      assert
+        .dom(JOIN_BUTTON_SELECTOR)
+        .isNotDisabled(
+          "the event remains joinable between its start and end dates"
+        );
+    } finally {
+      clock.restore();
+    }
+  });
+
+  test("renders nothing after a multi-day all-day event's end date", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    const clock = fakeTime("2026-08-22T12:00:00Z", "UTC");
+    this.event = DiscoursePostEventEvent.create({
+      ...this.event,
+      starts_at: "2026-08-19T00:00:00Z",
+      ends_at: "2026-08-21T00:00:00Z",
+      all_day: true,
+      can_update_attendance: true,
+      livestream_chat_channel_id: 9,
+      livestream_url: this.event.livestreamUrl,
+    });
+
+    try {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      assert
+        .dom(".discourse-calendar-livestream-zoom-entry")
+        .doesNotExist("the event is past after its final day");
+    } finally {
+      clock.restore();
+    }
   });
 
   test("renders nothing once the event is past its grace period", async function (assert) {
