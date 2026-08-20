@@ -1,5 +1,7 @@
+import { getOwner } from "@ember/owner";
 import { click, render, triggerKeyEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   clearExtraSpriteSymbols,
   hasSpriteSymbol,
@@ -577,6 +579,47 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     assert
       .dom(".d-icon-grid-picker__favorites")
       .doesNotExist("favorites hidden while filtering");
+  });
+
+  // The live region is built so that a repeated message is heard rather than swallowed, which
+  // makes an undeduped announcer narrate the same count on every keystroke that narrows nothing.
+  // Two different searches landing on the same number of icons is the ordinary way to reach that.
+  test("does not re-announce a result count that has not changed", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+
+    const input = document.querySelector(
+      ".d-icon-grid-picker__filter .filter-input"
+    );
+    await fillInFilterInput(input, "gear");
+    const afterFirst = announce.withArgs(
+      sinon.match(/icons? found/),
+      "polite"
+    ).callCount;
+
+    await fillInFilterInput(input, "hear");
+
+    assert.strictEqual(
+      afterFirst,
+      2,
+      "opening reports the whole set, and narrowing reports the smaller one"
+    );
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/icons? found/), "polite").callCount,
+      afterFirst,
+      "and a different search landing on the same count says nothing further"
+    );
   });
 });
 

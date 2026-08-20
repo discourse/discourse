@@ -1,0 +1,259 @@
+import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import booleanString from "discourse/helpers/boolean-string";
+import type SelectEngine from "discourse/ui-kit/select/select-engine";
+
+interface ComboboxQueryInputSignature {
+  Element: HTMLInputElement;
+  Args: {
+    /** The headless engine; the input reads/writes only its `filter` (the query). */
+    engine: SelectEngine;
+    /** The listbox id, wired as `aria-controls`/`aria-owns` while open. */
+    listboxId: string;
+    /** Whether the overlay is open (drives `aria-expanded` and the open guards). */
+    expanded: boolean;
+    /** The input's accessible name (`aria-label`). */
+    label?: string;
+    /** The input placeholder. */
+    placeholder?: string;
+    /** Selected label displayed in the input before query editing begins. */
+    displayValue?: string;
+    /**
+     * Whether a `@displayValue` that appears (transitions from empty to a label) should be
+     * selected for overtype. True only for a resting-suppressed selection label, which appears
+     * when the field is focused; a stable label that merely resolves late keeps its caret.
+     */
+    selectLabelOnAppear?: boolean;
+    /** Whether the input is displaying the active query. */
+    editing?: boolean;
+    /**
+     * Locks the input: no typing, no open. `disabled` also drops it from the tab order (native
+     * `disabled`); `readonly` keeps it focusable (native `readonly`). Both block the open/edit
+     * paths this component owns (type-to-open, ArrowDown-to-open), which native attrs alone
+     * don't fully cover on a `readonly` input.
+     */
+    disabled?: boolean;
+    readonly?: boolean;
+    /**
+     * Emit `aria-owns` (in addition to `aria-controls`) while open. Needed on desktop,
+     * where the listbox is portaled out of the input's subtree; omitted on mobile, where
+     * both live inside the same modal.
+     */
+    ariaOwns?: boolean;
+    /** Opens the overlay (wired to the menu's `show`). */
+    onOpen: () => void;
+    /** Closes the overlay (Escape) — the parent resets the query on close. */
+    onRequestClose: () => void;
+    /** Focus left the input; the parent decides whether that should close the overlay. */
+    onBlur?: (event: FocusEvent) => void;
+    /** Marks the first edit so the query replaces the selected label. */
+    onEdit?: () => void;
+    /**
+     * Whether a focus should select the displayed label for overtype. Returns false for the
+     * programmatic focus fired while opening (so a pointer click keeps its caret position),
+     * true for a genuine keyboard focus. Defaults to selecting when not provided.
+     */
+    shouldSelectOnFocus?: () => boolean;
+    /** Captures the input element (fed to `dRovingFocus` as the combobox controller). */
+    registerInput: (element: HTMLElement) => void;
+  };
+}
+
+/**
+ * The `role="combobox"` text input at the heart of the typeahead trigger. It is
+ * deliberately **arity-agnostic**: it carries the engine's `filter` and can display a
+ * selected-label fallback until query editing begins. Custom selection markup and chips
+ * remain siblings in the composite trigger box. It owns the combobox keyboard model that
+ * DMenu's default button trigger does not:
+ *
+ * - **Tab** is stopped from bubbling to DMenu's trigger-root `forwardTabToContent`, which
+ *   would pull focus into the panel whenever one is open — onto the body wrapper itself when
+ *   the panel holds nothing but a list. Stopped here, Tab exits the widget instead, and the
+ *   resulting blur closes the overlay. A panel that renders a control of its own (a `:footer`,
+ *   the error state's retry) is reached before this, by the overlay's `inlineTabOrder`
+ *   handler, which listens in the capture phase and declines a panel with no stop to offer.
+ * - **ArrowDown/ArrowUp** open the overlay when closed; once open they reach `dRovingFocus`
+ *   (bound to this same input) to move the virtual highlight.
+ * - **Escape** closes; **Enter** is handled by `dRovingFocus` (activates the highlighted
+ *   option) — except mid-composition, where both are suppressed so an IME candidate commit
+ *   doesn't select an option.
+ *
+ * Arrow/Enter navigation keeps DOM focus on this input (the `active-descendant` focus
+ * strategy), so the user can keep typing while navigating results.
+ */
+export default class ComboboxQueryInput extends Component<ComboboxQueryInputSignature> {
+  // Set on `pointerdown` (which fires just before the native focus) so the focus handler
+  // knows this focus came from a pointer press and must leave the caret where the click
+  // put it, rather than selecting the whole label.
+  #pointerFocus = false;
+
+  get value(): string {
+    return this.args.editing
+      ? this.args.engine.filter
+      : (this.args.displayValue ?? this.args.engine.filter);
+  }
+
+  /** `aria-controls` only resolves to a live element while the listbox is rendered. */
+  get controlsId(): string | undefined {
+    return this.args.expanded ? this.args.listboxId : undefined;
+  }
+
+  /** `aria-owns` (desktop, cross-portal) only while the listbox is rendered. */
+  get ownsId(): string | undefined {
+    return this.args.ariaOwns && this.args.expanded
+      ? this.args.listboxId
+      : undefined;
+  }
+
+  @action
+  handleInput(event: Event): void {
+    // Wait for `compositionend` before searching so a half-composed CJK string
+    // doesn't filter or open the list mid-composition.
+    if ((event as InputEvent).isComposing) {
+      return;
+    }
+    this.#commitQuery((event.target as HTMLInputElement).value);
+  }
+
+  @action
+  handleCompositionEnd(event: CompositionEvent): void {
+    this.#commitQuery((event.target as HTMLInputElement).value);
+  }
+
+  @action
+  handlePointerDown(): void {
+    this.#pointerFocus = true;
+  }
+
+  @action
+  handleFocus(event: FocusEvent): void {
+    // A pointer press positions the caret at the click; the browser owns that, so don't
+    // select the label over it. Keyboard focus (no preceding pointerdown) still selects.
+    const pointerFocus = this.#pointerFocus;
+    this.#pointerFocus = false;
+    if (pointerFocus) {
+      return;
+    }
+
+    if (this.args.shouldSelectOnFocus?.() ?? true) {
+      this.#selectDisplayValue(event.target as HTMLInputElement);
+    }
+  }
+
+  @action
+  handleKeydown(event: KeyboardEvent): void {
+    // Neutralize DMenu's trigger-root `forwardTabToContent` (a bubble-phase listener):
+    // stop the bubble but don't preventDefault, so focus leaves the widget naturally. A panel
+    // with a control of its own has already claimed this press in the capture phase, so this
+    // is only reached when leaving really is the right outcome.
+    if (event.key === "Tab") {
+      event.stopPropagation();
+      return;
+    }
+
+    // Mid-composition every key belongs to the IME, so composing a candidate never opens or
+    // selects. `dRovingFocus` declines composing keys itself, so this only has to stop the
+    // open/select handling below.
+    if (event.isComposing) {
+      return;
+    }
+
+    if (
+      !this.args.expanded &&
+      (event.key === "ArrowDown" || event.key === "ArrowUp")
+    ) {
+      event.preventDefault();
+      if (!this.#locked) {
+        this.args.onOpen();
+      }
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      this.args.onRequestClose();
+      return;
+    }
+    // Enter and the arrows (while open) fall through to `dRovingFocus`.
+  }
+
+  @action
+  handleFocusout(event: FocusEvent): void {
+    // Clear a pointerdown that never produced a focus (e.g. clicking an already-focused
+    // input) so the next keyboard focus is not mistaken for a pointer focus.
+    this.#pointerFocus = false;
+    this.args.onBlur?.(event);
+  }
+
+  @action
+  selectOnDisplayValue(element: HTMLInputElement): void {
+    // Fires when `@displayValue` transitions "" -> label — for a custom-selection field this
+    // happens the moment it gains focus, in the same render that patches `value`, so the freshly
+    // shown label is left selected and ready to overtype. Gated on `selectLabelOnAppear` so a
+    // stable label that merely resolves late under an already-focused input keeps its caret. The
+    // remaining focus/editing/empty guards live in the callee.
+    if (this.args.selectLabelOnAppear) {
+      this.#selectDisplayValue(element);
+    }
+  }
+
+  /** No typing, no open when disabled or readonly. */
+  get #locked(): boolean {
+    return !!(this.args.disabled || this.args.readonly);
+  }
+
+  #selectDisplayValue(element: HTMLInputElement): void {
+    if (
+      !this.args.editing &&
+      this.args.displayValue &&
+      document.activeElement === element
+    ) {
+      element.select();
+    }
+  }
+
+  #commitQuery(value: string): void {
+    if (this.#locked) {
+      return;
+    }
+    this.args.onEdit?.();
+    this.args.engine.setFilter(value);
+    if (!this.args.expanded) {
+      this.args.onOpen();
+    }
+  }
+
+  <template>
+    <input
+      type="text"
+      class="d-combobox__input"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-haspopup="listbox"
+      autocomplete="off"
+      aria-label={{@label}}
+      aria-expanded={{booleanString @expanded omitFalse=false}}
+      aria-controls={{this.controlsId}}
+      aria-owns={{this.ownsId}}
+      placeholder={{@placeholder}}
+      value={{this.value}}
+      disabled={{@disabled}}
+      readonly={{@readonly}}
+      {{on "input" this.handleInput}}
+      {{on "compositionend" this.handleCompositionEnd}}
+      {{on "keydown" this.handleKeydown}}
+      {{! pointerdown is required: it must flag the pointer press before the native focus
+        fires between pointerdown and pointerup, so the focus handler can skip the select. }}
+      {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
+      {{on "pointerdown" this.handlePointerDown}}
+      {{on "focus" this.handleFocus}}
+      {{on "focusout" this.handleFocusout}}
+      {{didInsert @registerInput}}
+      {{didUpdate this.selectOnDisplayValue @displayValue}}
+      ...attributes
+    />
+  </template>
+}
