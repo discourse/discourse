@@ -64,6 +64,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-editor-reply-placeholder",
   "composer-force-editor-mode",
   "composer-message-components",
+  "composer-minimum-post-length",
   "composer-reply-options-user-avatar-template",
   "composer-reply-options-user-link-name",
   "composer-save-button-label",
