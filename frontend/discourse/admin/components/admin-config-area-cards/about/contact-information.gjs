@@ -15,9 +15,9 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
   @service toasts;
 
   @tracked
-  contactGroupId = this.site.groups.find(
-    (group) => group.name === this.data.contactGroupName
-  )?.id;
+  contactGroupId = this.data.contactGroupName
+    ? Number(this.data.contactGroupName)
+    : null;
 
   @cached
   get data() {
@@ -41,8 +41,8 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
 
   @action
   setContactGroup(groupIds, { set }) {
-    this.contactGroupId = groupIds[0];
-    set("contactGroupName", this.site.groupsById[groupIds[0]]?.name);
+    this.contactGroupId = groupIds[0] ?? null;
+    set("contactGroupName", groupIds[0]?.toString() ?? "");
   }
 
   @action

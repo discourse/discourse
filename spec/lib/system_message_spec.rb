@@ -62,14 +62,36 @@ RSpec.describe SystemMessage do
       expect(post.raw).to eq("override body")
     end
 
-    it "should allow site_contact_group_name" do
+    it "invites the site contact group" do
+      group = Fabricate(:group)
+      SiteSetting.site_contact_group_name = group.id.to_s
+
+      post = SystemMessage.create(user, :welcome_invite)
+      expect(post.topic.allowed_groups).to contain_exactly(group)
+    end
+
+    it "keeps inviting the site contact group after it is renamed" do
+      group = Fabricate(:group)
+      SiteSetting.site_contact_group_name = group.id.to_s
+      group.update!(name: "anewname")
+
+      post = SystemMessage.create(user, :welcome_invite)
+      expect(post.topic.allowed_groups).to contain_exactly(group)
+    end
+
+    it "still invites a group that was configured by name" do
       group = Fabricate(:group)
       SiteSetting.site_contact_group_name = group.name
 
       post = SystemMessage.create(user, :welcome_invite)
       expect(post.topic.allowed_groups).to contain_exactly(group)
+    end
 
-      group.update!(name: "anewname")
+    it "sends the message without a group when the configured group is gone" do
+      group = Fabricate(:group)
+      SiteSetting.site_contact_group_name = group.id.to_s
+      group.destroy!
+
       post = SystemMessage.create(user, :welcome_invite)
       expect(post.topic.allowed_groups).to eq([])
     end

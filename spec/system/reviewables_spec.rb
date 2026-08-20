@@ -171,7 +171,7 @@ describe "Reviewables" do
     fab!(:contact_user, :user)
 
     before do
-      SiteSetting.site_contact_group_name = contact_group.name
+      SiteSetting.site_contact_group_name = contact_group.id.to_s
       SiteSetting.site_contact_username = contact_user.username
     end
 

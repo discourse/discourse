@@ -1521,6 +1521,18 @@ RSpec.describe SiteSettingExtension do
       settings.test_group_setting = ""
       expect(settings.test_group_setting).to eq("")
     end
+
+    it "converts a group name to its id" do
+      settings.setting(:test_group_setting, "", type: :group)
+      settings.test_group_setting = group.name
+      expect(settings.test_group_setting).to eq(group.id.to_s)
+    end
+
+    it "stores an integer id as a string" do
+      settings.setting(:test_group_setting, "", type: :group)
+      settings.test_group_setting = group.id
+      expect(settings.test_group_setting).to eq(group.id.to_s)
+    end
   end
 
   describe "requires_confirmation settings" do

@@ -7,9 +7,9 @@ class GroupSettingValidator
 
   def valid_value?(val)
     return true if val.blank?
+    return false if !val.to_s.match?(/\A\d+\z/)
 
-    group_id = Integer(val, exception: false)
-    (group_id.present? && Group.exists?(id: group_id)) || Group.exists?(name: val)
+    Group.exists?(id: val.to_i)
   end
 
   def error_message
