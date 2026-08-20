@@ -1,8 +1,4 @@
-/* Gated on the registrar's data attribute so a state class on an unrelated
-   element cannot match.
-
-   The colour is its own property so a theme can retune drag feedback alone.
-   Full-strength `--tertiary`, not `--token-color-border-accent`: that tint
+/* Full-strength `--tertiary`, not `--token-color-border-accent`: that tint
    misses the 3:1 contrast a non-text UI component needs on a light surface. */
 
 :root {
