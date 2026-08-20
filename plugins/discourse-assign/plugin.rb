@@ -884,14 +884,7 @@ after_initialize do
 
   add_api_key_scope(
     :assign,
-    {
-      assign: {
-        actions: %w[
-          discourse_assign/assign#assign
-          discourse_assign/assign#unassign
-        ],
-      },
-    },
+    { assign: { actions: %w[discourse_assign/assign#assign discourse_assign/assign#unassign] } },
   )
 
   # Event listeners
