@@ -41,6 +41,24 @@ RSpec.describe Jobs::GenerateRagEmbeddings do
       expect(embeddings_count).to eq(expected_embeddings)
     end
 
+    it "records a retryable failure for a staged URL source" do
+      source =
+        RagDocumentSource.create!(
+          target: ai_agent,
+          url: "https://example.com/knowledge",
+          pending_upload: rag_document_fragment_1.upload,
+        )
+      SiteSetting.ai_embeddings_selected_model = -1
+
+      expect { job.execute(fragment_ids: [rag_document_fragment_1.id]) }.to raise_error(
+        "Invalid embeddings selected model",
+      )
+
+      source.reload
+      expect(source.last_error).to eq("Invalid embeddings selected model")
+      expect(source.next_refresh_at).to be_within(1.minute).of(1.hour.from_now)
+    end
+
     describe "Publishing progress updates" do
       it "sends an update through mb after a batch finishes" do
         updates =

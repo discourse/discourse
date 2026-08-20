@@ -953,6 +953,25 @@ en:
 
       rag:
         title: "RAG"
+        sources:
+          title: "URL sources"
+          description: "Web pages that are periodically fetched and indexed as agent knowledge."
+          urls: "URLs"
+          urls_description: "Enter one URL per line."
+          refresh_interval_hours: "Refresh every (hours)"
+          add: "Add URL sources"
+          edit: "Edit URL sources"
+          save: "Save URL sources"
+          modal_title: "Configure URL sources"
+          empty: "No URL sources configured."
+          summary:
+            one: "%{count} URL source"
+            other: "%{count} URL sources"
+          more:
+            one: "And %{count} more URL"
+            other: "And %{count} more URLs"
+          too_many: "Enter no more than %{count} URLs."
+          invalid_url: "Invalid URL: %{url}"
         options:
           rag_chunk_tokens: "Upload chunk tokens"
           rag_chunk_tokens_help: "The number of tokens to use for each chunk in the RAG model. Increase to increase the amount of context the AI can use. (changing will re-index all uploads)"
