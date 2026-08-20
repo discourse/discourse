@@ -202,12 +202,7 @@ RSpec.describe DiscourseAssign::AssignController do
       topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
       api_key = Fabricate(:api_key, user: admin)
       Fabricate(:api_key_scope, resource: "assign", action: "assign", api_key_id: api_key.id)
-      Fabricate(
-        :topic_assignment,
-        target: topic,
-        assigned_to: admin,
-        assigned_by_user: admin,
-      )
+      Fabricate(:topic_assignment, target: topic, assigned_to: admin, assigned_by_user: admin)
 
       put "/assign/unassign.json",
           headers: {
