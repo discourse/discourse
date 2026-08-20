@@ -50,7 +50,6 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
 
     return ajax("/admin/dashboard/site-traffic-explorer.json", {
       data: requestParams,
-      ignoreUnsent: false,
     })
       .then((traffic) => ({
         traffic: {
@@ -72,13 +71,13 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
 
   @action
   loading(transition) {
-    if (this.controllerFor("admin-site-traffic").traffic === null) {
+    if (!this.controllerFor("admin-site-traffic").model) {
       this.intermediateTransitionTo("adminSiteTraffic_loading");
       return false;
     }
 
     this.#refreshTransition = transition;
-    this.loadingSlider.transitionStarted({ fallbackSpinnerDelayMs: null });
+    this.loadingSlider.transitionStarted({ showFallbackSpinner: false });
     transition.finally(() => {
       if (this.#refreshTransition !== transition) {
         return;

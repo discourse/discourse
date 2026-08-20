@@ -9,7 +9,7 @@ const STORE_LOADING_TIMES = 5;
 const DEFAULT_LOADING_TIME = 0.3;
 const MIN_LOADING_TIME = 0.2;
 
-const DEFAULT_FALLBACK_SPINNER_DELAY_MS = 2_000;
+const STILL_LOADING_DURATION = 2;
 
 class RollingAverage {
   @tracked average;
@@ -83,9 +83,7 @@ export default class LoadingSlider extends Service.extend(Evented) {
     return this.rollingAverage.average;
   }
 
-  transitionStarted({
-    fallbackSpinnerDelayMs = DEFAULT_FALLBACK_SPINNER_DELAY_MS,
-  } = {}) {
+  transitionStarted({ showFallbackSpinner = true } = {}) {
     if (this.loading) {
       // Nested transition
       return;
@@ -96,8 +94,11 @@ export default class LoadingSlider extends Service.extend(Evented) {
     this.trigger("stateChanged", true);
 
     this.scheduleManager.cancelAll();
-    if (fallbackSpinnerDelayMs !== null) {
-      this.scheduleManager.later(this.setStillLoading, fallbackSpinnerDelayMs);
+    if (showFallbackSpinner) {
+      this.scheduleManager.later(
+        this.setStillLoading,
+        STILL_LOADING_DURATION * 1000
+      );
     }
   }
 
