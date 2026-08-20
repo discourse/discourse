@@ -437,6 +437,7 @@ en:
     broken_transformer_alert: "There was an error. Your site may not work properly."
     broken_block_alert: "A block configuration error was detected. Check browser console for details."
     broken_block_factory_alert: "A block failed to load. Some UI elements may not display correctly."
+    broken_drag_and_drop_alert: "A drag and drop handler failed. The action may not have completed."
     on_before_category_types_change_error: "An error occurred while changing the category types. Check the browser console for more information."
 
     critical_deprecation:

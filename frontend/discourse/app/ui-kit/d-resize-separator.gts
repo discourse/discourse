@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { modifier } from "ember-modifier";
+import type { Side } from "discourse/lib/geometry";
 import {
   measuredMax,
   measuredMin,
@@ -120,7 +121,7 @@ interface DResizeSeparatorSignature {
      * the one that moves: a handle at the top of a bottom-docked box is `"end"`.
      * Defaults to `"start"`.
      */
-    side?: "start" | "end";
+    side?: Side;
 
     /**
      * The box being resized. Given this, the separator measures its own size and
