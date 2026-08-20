@@ -1,0 +1,100 @@
+/* The reorderable-list shell. The interaction pieces carry their own styles
+   (d-drag-handle, d-reorder-buttons, d-drag-and-drop); what lives here is only
+   what the list itself owns. */
+
+.d-reorderable-list {
+  /* Base layout for the default list shell. The :where() tag guards carry zero
+     specificity, so they only reach the default ul/li rendering — a table or
+     ARIA-table shell keeps its own display model, and a consumer's row class
+     overrides these at equal specificity. */
+
+  &:where(ul) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__row:where(li) {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+
+    /* The stacked arrow pair is taller than a line of text, so without block
+       padding it visually bleeds into the neighboring rows. */
+    padding-block: 0.25em;
+
+    /* Split placement ends the row with its arrow pair; in a flex row,
+       sitting at the row's inline end is what that placement means. */
+
+    > .d-reorderable-list__arrows:last-child {
+      margin-inline-start: auto;
+    }
+  }
+
+  /* The grab-mode handle is a real button, but it must occupy exactly the box
+     the decorative handle does, so a surface can switch keyboard modes without
+     its rows shifting. */
+
+  &__handle.--grab {
+    display: inline-flex;
+    padding: 0;
+    border: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: var(--primary-low-mid);
+    cursor: grab;
+
+    .d-icon {
+      margin: 0;
+      color: var(--primary-low-mid);
+    }
+  }
+
+  /* The roving cursor is drawn on the whole row rather than on the grab
+     button it technically rests on; the flat-button focus background alone is
+     indistinguishable at that size. */
+
+  &__row.--focused {
+    outline: 2px solid var(--d-input-focused-color);
+    outline-offset: -2px;
+  }
+
+  /* A held row must read differently from one the cursor is merely resting
+     on, so the sighted picture matches what aria-pressed already says. */
+
+  &__row.--grabbed {
+    background: var(--tertiary-low);
+  }
+
+  &__create {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+  }
+
+  /* Reveal mode hides only the arrow pair, and with opacity rather than
+     display: the handle stays visible as the persistent reorder affordance,
+     and the arrows must keep their layout and any tab stops, revealing
+     themselves the moment one is focused. A touch screen has no hover to
+     reveal with, so the arrows stay visible there. */
+
+  &.--reveal-controls {
+    .d-reorderable-list__arrows {
+      opacity: 0;
+      transition: opacity 0.15s ease-in-out;
+    }
+
+    .d-reorderable-list__row:hover,
+    .d-reorderable-list__row:focus-within {
+      .d-reorderable-list__arrows {
+        opacity: 1;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .d-reorderable-list__arrows {
+        opacity: 1;
+      }
+    }
+  }
+}

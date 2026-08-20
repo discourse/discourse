@@ -60,8 +60,11 @@ export function fileTransfer(name = "a.txt") {
  * @param sourceSelector - CSS selector for the element the drag starts on.
  * @param targetSelector - CSS selector for the element it is dropped on.
  */
-function assertDragRegistered(sourceSelector: string, targetSelector: string) {
-  const source = document.querySelector(sourceSelector);
+export function assertDragRegistered(
+  sourceSelector: string,
+  targetSelector: string
+) {
+  const source = registeredElementFor(sourceSelector);
   const target = document.querySelector(targetSelector);
 
   if (!source?.hasAttribute("data-drag-source")) {
@@ -225,10 +228,14 @@ export async function simulateDrag(
   sourceSelector: string,
   targetSelector: string,
   {
+    assertRegistered = true,
     dataTransfer,
     sourceCoordinates,
     targetCoordinates,
   }: {
+    /** Whether both drag endpoints must be registered before dispatch. */
+    assertRegistered?: boolean;
+
     /** Shared payload every event of one drag must carry. */
     dataTransfer: DataTransfer;
 
@@ -239,7 +246,9 @@ export async function simulateDrag(
     targetCoordinates?: Partial<ClientPoint>;
   }
 ) {
-  assertDragRegistered(sourceSelector, targetSelector);
+  if (assertRegistered) {
+    assertDragRegistered(sourceSelector, targetSelector);
+  }
   const source = { ...centerOf(sourceSelector), ...sourceCoordinates };
   const target = { ...centerOf(targetSelector), ...targetCoordinates };
   await startDrag(sourceSelector, { dataTransfer, coordinates: source });
