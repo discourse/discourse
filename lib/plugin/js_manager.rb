@@ -3,6 +3,7 @@
 module Plugin
   class JsManager
     @cache = {}
+    @url_glob_patterns = {}
 
     # Core's own route maps. A plugin's route map can mount on a core route with `resource`, so
     # the build needs these to derive the urls that reach the plugin's own routes.
@@ -84,31 +85,39 @@ module Plugin
     # segment, which eats the rest of the route's path: `/c/*category_slug_path_with_id/edit`
     # gives `c/**/edit`, and `c/announcements/5/edit` has to match it.
     def self.url_glob_matches?(glob, path)
-      segments = glob.split("/")
-      trailing_star = segments.last == "*"
-      segments = segments[0...-1] if trailing_star
-
-      pattern =
-        segments
-          .map do |segment|
-            case segment
-            when "**"
-              "[^/]+(?:/[^/]+)*"
-            when "*"
-              "[^/]+"
-            else
-              Regexp.escape(segment)
-            end
-          end
-          .join("/")
-
-      if trailing_star
-        pattern = segments.empty? ? ".*" : "#{pattern}(?:/.*)?"
-      end
-
-      path.match?(/\A#{pattern}\z/)
+      path.match?(url_glob_pattern(glob))
     end
-    private_class_method :url_glob_matches?
+
+    # Every asset on the page asks about the same handful of globs on every request, and a glob
+    # always compiles to the same pattern, so this never needs invalidating.
+    def self.url_glob_pattern(glob)
+      @url_glob_patterns[glob] ||= begin
+        segments = glob.split("/")
+        trailing_star = segments.last == "*"
+        segments = segments[0...-1] if trailing_star
+
+        pattern =
+          segments
+            .map do |segment|
+              case segment
+              when "**"
+                "[^/]+(?:/[^/]+)*"
+              when "*"
+                "[^/]+"
+              else
+                Regexp.escape(segment)
+              end
+            end
+            .join("/")
+
+        if trailing_star
+          pattern = segments.empty? ? ".*" : "#{pattern}(?:/.*)?"
+        end
+
+        /\A#{pattern}\z/
+      end
+    end
+    private_class_method :url_glob_matches?, :url_glob_pattern
 
     def compile!
       log "Compiling #{Discourse.plugins.count} plugins..."
