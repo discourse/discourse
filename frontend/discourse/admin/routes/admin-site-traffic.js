@@ -6,7 +6,6 @@ import {
   PERIOD_CUSTOM,
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
-import { countryName } from "discourse/admin/lib/format-country";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
@@ -55,7 +54,7 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
 
       return {
         traffic: {
-          ...this.#localizeCountryLabels(traffic),
+          ...traffic,
           chart_start_date: requestParams.start_date,
           chart_end_date: requestParams.end_date,
           chart_traffic_types: this.#selectedTrafficTypes(params.traffic_type),
@@ -145,26 +144,5 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     return TRAFFIC_TYPES.filter((trafficType) =>
       selected.includes(trafficType)
     );
-  }
-
-  #localizeCountryLabels(traffic) {
-    const countries = traffic.dimensions?.countries ?? [];
-    const activeFilters = traffic.active_filters ?? [];
-
-    return {
-      ...traffic,
-      dimensions: {
-        ...traffic.dimensions,
-        countries: countries.map((row) => ({
-          ...row,
-          label: countryName(row.value),
-        })),
-      },
-      active_filters: activeFilters.map((filter) =>
-        filter.key === "country"
-          ? { ...filter, label: countryName(filter.value) }
-          : filter
-      ),
-    };
   }
 }

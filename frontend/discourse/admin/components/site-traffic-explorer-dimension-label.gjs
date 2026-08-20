@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { countryFlag } from "discourse/admin/lib/format-country";
+import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
@@ -17,6 +17,12 @@ const BROWSER_ICONS = {
 };
 
 export default class SiteTrafficExplorerDimensionLabel extends Component {
+  get label() {
+    return this.args.dimension === "countries"
+      ? countryName(this.args.row.value)
+      : this.args.row.label;
+  }
+
   @action
   countryFlag(value) {
     return countryFlag(value);
@@ -40,8 +46,8 @@ export default class SiteTrafficExplorerDimensionLabel extends Component {
           class="site-traffic-explorer__dimension-prefix"
         }}
       {{/if}}
-      <span class="site-traffic-explorer__dimension-text" title={{@row.label}}>
-        {{@row.label}}
+      <span class="site-traffic-explorer__dimension-text" title={{this.label}}>
+        {{this.label}}
       </span>
     </span>
   </template>
