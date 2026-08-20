@@ -3,9 +3,9 @@
 /* eslint-disable ember/template-require-context-role */
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import DVirtualList from "discourse/ui-kit/d-virtual-list";
 
 const ROW_COUNT = 5000;
@@ -42,14 +42,24 @@ export default class VirtualListExample extends Component {
    * Whether the selected row falls inside the VISIBLE range. Outside it the row
    * may still be mounted because of overscan; only beyond that does keeping it
    * mounted demonstrate `@pinnedIndices`.
+   *
+   * Undefined until the first window is published. Collapsing that into "outside"
+   * would state a positive fact about pinning from an absence of measurement.
    */
   get selectionInVisibleRange() {
     const range = this.visibleRange;
+    if (range == null) {
+      return undefined;
+    }
     return (
-      range != null &&
       this.selectedIndex >= range.startIndex &&
       this.selectedIndex <= range.endIndex
     );
+  }
+
+  /** The selected row's 1-based label, so the readout and the rows agree. */
+  get selectedLabel() {
+    return this.rows[this.selectedIndex]?.label ?? "none";
   }
 
   @action
@@ -74,19 +84,29 @@ export default class VirtualListExample extends Component {
 
   <template>
     <div class="styleguide-virtual-list__controls">
-      <button type="button" {{on "click" this.reselect}}>
-        Re-select a random row
-      </button>
-      <button type="button" {{on "click" this.scrollToSelection}}>
-        Scroll to selection
-      </button>
+      <DButton
+        @action={{this.reselect}}
+        @translatedLabel="Re-select a random row"
+      />
+      <DButton
+        @action={{this.scrollToSelection}}
+        @translatedLabel="Scroll to selection"
+      />
       <span class="styleguide-virtual-list__status">
-        Selected row #{{this.selectedIndex}}
+        {{this.selectedLabel}}
         —
-        {{#if this.selectionInVisibleRange}}
-          inside the visible range
+        {{#if this.visibleRange}}
+          {{#if this.selectionInVisibleRange}}
+            inside the visible range
+          {{else}}
+            outside the visible range, still mounted
+          {{/if}}
+          (rendering rows
+          {{this.visibleRange.startIndex}}–{{this.visibleRange.endIndex}}
+          of
+          {{this.rows.length}})
         {{else}}
-          outside the visible range, still mounted
+          measuring
         {{/if}}
       </span>
     </div>
