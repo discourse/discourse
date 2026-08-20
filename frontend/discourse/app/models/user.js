@@ -201,9 +201,11 @@ export default class User extends RestModel.extend(Evented) {
     const userJson = PreloadStore.get("currentUser");
     if (userJson) {
       userJson.isCurrent = true;
+      userJson.visibleGroups = userJson.groups;
+      delete userJson.groups;
 
       if (userJson.primary_group_id) {
-        const primaryGroup = userJson.groups.find(
+        const primaryGroup = userJson.visibleGroups.find(
           (group) => group.id === userJson.primary_group_id
         );
         if (primaryGroup) {
@@ -344,9 +346,11 @@ export default class User extends RestModel.extend(Evented) {
     return this.sidebarTags?.map?.((item) => item.name) ?? [];
   }
 
-  @computed("groups.@each.has_messages")
+  @computed("visibleGroups.@each.has_messages")
   get groupsWithMessages() {
-    return this.groups?.filter?.((item) => item.has_messages === true) ?? [];
+    return (
+      this.visibleGroups?.filter?.((item) => item.has_messages === true) ?? []
+    );
   }
 
   @computed("can_pick_theme_with_custom_homepage")
@@ -416,6 +420,17 @@ export default class User extends RestModel.extend(Evented) {
 
   // prevents staff property to be overridden
   set staff(value) {}
+
+  get groups() {
+    deprecated(
+      "Calling user.groups is deprecated, use user.visibleGroups instead, it more accurately reflects what this array of groups represents, not all of the user's group memberships may be serialized to the client. For permission checks, check the user's groups server-side and add an attribute to the User/CurrentUserSerializer, or use `resolve_group_memberships: true` for theme settings.",
+      {
+        id: "discourse.user.groups",
+        since: "2026.8.0-latest.1",
+      }
+    );
+    return this.visibleGroups;
+  }
 
   @computed("has_unseen_features")
   get hasUnseenFeatures() {
@@ -525,7 +540,7 @@ export default class User extends RestModel.extend(Evented) {
       return userPath(`${username}/messages`);
     } else if (groups) {
       const firstAllowedGroup = groups.find((allowedGroup) =>
-        this.groups.some((userGroup) => userGroup.id === allowedGroup.id)
+        this.visibleGroups.some((userGroup) => userGroup.id === allowedGroup.id)
       );
 
       if (firstAllowedGroup) {
@@ -904,9 +919,9 @@ export default class User extends RestModel.extend(Evented) {
     );
   }
 
-  @computed("groups.[]")
+  @computed("visibleGroups.[]")
   get filteredGroups() {
-    const groups = this.groups || [];
+    const groups = this.visibleGroups || [];
 
     return groups.filter((group) => {
       return !group.automatic || group.id === AUTO_GROUPS.moderators.id;
@@ -1302,11 +1317,11 @@ export default class User extends RestModel.extend(Evented) {
     return group.get("can_admin_group") || group.get("is_group_owner");
   }
 
-  @computed("groups.@each.title", "badges.[]")
+  @computed("visibleGroups.@each.title", "badges.[]")
   get availableTitles() {
     const titles = [];
 
-    (this.groups || []).forEach((group) => {
+    (this.visibleGroups || []).forEach((group) => {
       if (get(group, "title")) {
         titles.push(get(group, "title"));
       }
@@ -1328,12 +1343,12 @@ export default class User extends RestModel.extend(Evented) {
       });
   }
 
-  @computed("groups.[]")
+  @computed("visibleGroups.[]")
   get availableFlairs() {
     const flairs = [];
 
-    if (this.groups) {
-      this.groups.forEach((group) => {
+    if (this.visibleGroups) {
+      this.visibleGroups.forEach((group) => {
         if (group.flair_url) {
           flairs.push({
             id: group.id,
