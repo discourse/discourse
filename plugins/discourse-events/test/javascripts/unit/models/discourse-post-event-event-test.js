@@ -144,6 +144,47 @@ module("Unit | Model | DiscoursePostEventEvent", function () {
     );
   });
 
+  test("isWithinEventTimeframe returns true for an all-day event on a later day", function (assert) {
+    // Multi-day events run through the day of their end, not just their start.
+    const startsAt = moment().subtract(2, "days").startOf("day").toISOString();
+    const endsAt = moment().add(1, "day").startOf("day").toISOString();
+    const allDayEvent = DiscoursePostEventEvent.create({
+      id: 4,
+      starts_at: startsAt,
+      ends_at: endsAt,
+      all_day: true,
+    });
+
+    assert.true(
+      isWithinEventTimeframe(
+        allDayEvent.allDay,
+        allDayEvent.startsAt,
+        allDayEvent.endsAt
+      ),
+      "allows joining while the event is ongoing"
+    );
+  });
+
+  test("isWithinEventTimeframe returns false for an all-day event after its final day", function (assert) {
+    const startsAt = moment().subtract(5, "days").startOf("day").toISOString();
+    const endsAt = moment().subtract(2, "days").startOf("day").toISOString();
+    const allDayEvent = DiscoursePostEventEvent.create({
+      id: 5,
+      starts_at: startsAt,
+      ends_at: endsAt,
+      all_day: true,
+    });
+
+    assert.false(
+      isWithinEventTimeframe(
+        allDayEvent.allDay,
+        allDayEvent.startsAt,
+        allDayEvent.endsAt
+      ),
+      "rejects joining once the final day has passed"
+    );
+  });
+
   test("isWithinEventTimeframe returns false for all-day events on a different day", function (assert) {
     const startsAt = moment().add(1, "day").toISOString();
     const allDayEvent = DiscoursePostEventEvent.create({
@@ -180,6 +221,42 @@ module("Unit | Model | DiscoursePostEventEvent", function () {
         nonAllDayEvent.endsAt
       ),
       "returns true for non-all-day events within the timeframe"
+    );
+  });
+
+  test("isWithinEventTimeframe stays open for an event without an end time", function (assert) {
+    const started = DiscoursePostEventEvent.create({
+      id: 6,
+      starts_at: moment().subtract(3, "hours").toISOString(),
+      ends_at: null,
+      all_day: false,
+    });
+    const notYetOpen = DiscoursePostEventEvent.create({
+      id: 7,
+      starts_at: moment().add(45, "minutes").toISOString(),
+      ends_at: null,
+      all_day: false,
+    });
+
+    assert.true(
+      isWithinEventTimeframe(started.allDay, started.startsAt, started.endsAt),
+      "an event without an end time never closes"
+    );
+    assert.false(
+      isWithinEventTimeframe(
+        notYetOpen.allDay,
+        notYetOpen.startsAt,
+        notYetOpen.endsAt
+      ),
+      "early access still applies"
+    );
+  });
+
+  test("isWithinEventTimeframe returns false without a start time", function (assert) {
+    assert.false(isWithinEventTimeframe(false, null, null), "no start time");
+    assert.false(
+      isWithinEventTimeframe(false, undefined, undefined),
+      "undefined start time"
     );
   });
 });
