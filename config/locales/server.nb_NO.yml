@@ -827,6 +827,9 @@ nb_NO:
     top_countries_by_browser_pageviews:
       labels:
         count: "Besøk"
+    top_entry_urls:
+      labels:
+        count: "Besøk"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Besøk"

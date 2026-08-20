@@ -51,6 +51,8 @@ it:
       cast-votes:
         title: "Vota"
         label: "Vota ora!"
+      keep-vote:
+        label: "Indietro"
       show-results:
         title: "Visualizza i risultati del sondaggio"
         label: "Risultati"

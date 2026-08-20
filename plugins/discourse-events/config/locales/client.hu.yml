@@ -27,9 +27,6 @@ hu:
             topic_id:
               label: Témaazonosító
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "Csevegés"
       invite_user_notification: "%{username} meghívta erre: %{description}"
       on_holiday: "Szabadságon"
       disable_holiday: "Letiltás"
@@ -434,7 +431,8 @@ hu:
               description: "Privát eseményhez csak a meghívott felhasználók csatlakozhatnak."
       composer:
         name_placeholder: "Esemény neve"
-        location_placeholder: "Helyszín vagy URL hozzáadása"
+        location_or_url_placeholder: "Helyszín vagy URL hozzáadása"
+        url_placeholder: "Webcím hozzáadása"
         description_placeholder: "Esemény leírásának hozzáadása"
         event_title_placeholder: "Esemény neve"
         create_event_button: "Esemény létrehozása"
@@ -502,7 +500,12 @@ hu:
           label: "Csevegés integráció"
           checkbox_label: "Eseményspecifikus csevegőcsatorna létrehozása és kezelése"
         location:
+          label: "Hely"
           placeholder: "Adj hozzá egy helyszínt, linket vagy valami hasonlót."
+        url:
+          label: "Webcím"
+          placeholder: "Nem kötelező"
+          add: "Webcím hozzáadása"
         description:
           label: "Leírás"
           placeholder: "Mesélj egy kicsit többet az eseményedről. Új sorok és linkek is támogatottak."

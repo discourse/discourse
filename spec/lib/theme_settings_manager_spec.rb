@@ -205,6 +205,25 @@ RSpec.describe ThemeSettingsManager do
     end
   end
 
+  describe "Icon" do
+    it "stores the icon name" do
+      icon_setting = theme_settings[:icon_setting]
+      expect(icon_setting.value).to eq("heart")
+
+      icon_setting.value = "gamepad"
+      theme.reload
+
+      expect(icon_setting.value).to eq("gamepad")
+      expect(
+        ThemeSetting.exists?(
+          theme_id: theme.id,
+          name: "icon_setting",
+          data_type: ThemeSetting.types[:icon],
+        ),
+      ).to eq(true)
+    end
+  end
+
   describe "Upload" do
     let!(:upload) { Fabricate(:upload) }
 

@@ -50,6 +50,7 @@ te:
             private:
               title: "అంతరంగికం"
       composer:
+        url_placeholder: "URLని జోడించండి"
         reminder:
           units:
             minutes:
@@ -78,6 +79,12 @@ te:
             after: "తర్వాత"
         attendance:
           none: "ఏదీ లేదు"
+        location:
+          label: "ప్రాంతం"
+        url:
+          label: "URL"
+          placeholder: "ఐచ్ఛికం"
+          add: "URLని జోడించండి"
         description:
           label: "వివరణ"
         event_type:

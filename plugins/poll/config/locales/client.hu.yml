@@ -53,6 +53,8 @@ hu:
       cast-votes:
         title: "Szavazat leadása"
         label: "Szavazzon most!"
+      keep-vote:
+        label: "Vissza"
       show-results:
         title: "Eredmények megjelenítése"
         label: "Eredmények"

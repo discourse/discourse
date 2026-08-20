@@ -139,6 +139,8 @@ $db-bar-height: var(--space-2);
 
 .db-configure {
   padding: var(--space-4);
+  max-width: 100%;
+  box-sizing: border-box;
 
   &__list {
     @include unstyled-list;
@@ -149,6 +151,10 @@ $db-bar-height: var(--space-2);
     @include viewport.until(sm) {
       gap: var(--space-5);
     }
+  }
+
+  &__section-name {
+    @include ellipsis;
   }
 
   &__row {

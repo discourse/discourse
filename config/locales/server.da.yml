@@ -679,16 +679,15 @@ da:
     success_unapproved: "Din adgangskode er nu ændret."
   email_login:
     title: "E-mail login"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "ukendt browser"
     device:
       android: "Android-enhed"
       chromebook: "Chrome OS"
@@ -711,10 +710,6 @@ da:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonym"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Der opstod en fejl under ændringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     doesnt_exist: "Denne e-mailadresse er ikke knyttet til din konto."
@@ -1133,6 +1128,9 @@ da:
         num_topics: "Emner"
       description: "Brugere opført efter antal klik på links, de har delt."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Besøg"
+    top_entry_urls:
       labels:
         count: "Besøg"
     top_referrers_by_browser_pageviews:

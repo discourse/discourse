@@ -59,6 +59,7 @@ import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
+import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import {
@@ -100,6 +101,7 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
+import { reportClientError } from "discourse/lib/report-client-error";
 import {
   addLogSearchLinkClickedCallbacks,
   addSearchResultsCallback,
@@ -142,7 +144,6 @@ import {
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
-import { registerComposerAction } from "discourse/select-kit/components/composer-actions";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -195,11 +196,7 @@ function wrapWithErrorHandler(func, messageKey) {
     try {
       return func.call(this, ...arguments);
     } catch (error) {
-      document.dispatchEvent(
-        new CustomEvent("discourse-error", {
-          detail: { messageKey, error },
-        })
-      );
+      reportClientError(error, messageKey);
       if (isTesting()) {
         throw error;
       }

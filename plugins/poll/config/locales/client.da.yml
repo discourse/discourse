@@ -33,6 +33,8 @@ da:
       cast-votes:
         title: "Afgiv dine stemmer"
         label: "Stem nu!"
+      keep-vote:
+        label: "Tilbage"
       show-results:
         title: "Vis afstemningsresultat"
         label: "Resultater"

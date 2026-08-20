@@ -658,16 +658,15 @@ lt:
     success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
   email_login:
     title: "Prisijungimas e-paštu"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "“DiscourseHub” programa"
+    edge: "„Microsoft Edge“"
+    firefox: "„Firefox“"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "“DiscourseHub” programa"
-      edge: "„Microsoft Edge“"
-      firefox: "„Firefox“"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "nežinoma naršyklė"
     device:
       android: "“Android” įrenginys"
       chromebook: "„Chrome“ OS"
@@ -690,10 +689,6 @@ lt:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonimas"
-    browsers:
-      edge: "„Microsoft Edge“"
-      firefox: "„Firefox“"
-      safari: "Safari"
   change_email:
     error: "Keičiant el. pašto adresą įvyko klaida. Galbūt adresas jau naudojamas?"
     doesnt_exist: "Šis el. pašto adresas nėra susietas su jūsų paskyra."
@@ -1082,6 +1077,9 @@ lt:
         num_topics: "Temos"
       description: "Vartotojai išvardyti pagal paspaudimų skaičių nuorodose, kurias jie bendrino."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Apsilankymai"
+    top_entry_urls:
       labels:
         count: "Apsilankymai"
     top_referrers_by_browser_pageviews:

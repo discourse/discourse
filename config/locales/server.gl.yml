@@ -636,16 +636,15 @@ gl:
     success_unapproved: "Cambiou correctamente o seu contrasinal."
   email_login:
     title: "Iniciar sesión vía correo electrónico"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "App DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "App DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador descoñecido"
     device:
       android: "Dispositivo Android"
       chromebook: "SO Chrome"
@@ -668,10 +667,6 @@ gl:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anónimo"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Produciuse un erro ao cambiar o enderezo electrónico. Estarase usando xa ese enderezo?"
     doesnt_exist: "Este enderezo electrónico non está asociado coa súa conta."
@@ -1078,6 +1073,9 @@ gl:
         num_topics: "Temas"
       description: "Usuarios listados polo número de clics nas ligazóns que compartiron."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_entry_urls:
       labels:
         count: "Visitas"
     top_referrers_by_browser_pageviews:

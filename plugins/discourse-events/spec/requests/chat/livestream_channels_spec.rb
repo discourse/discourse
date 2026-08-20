@@ -6,7 +6,7 @@ RSpec.describe "Livestream channel list serialization" do
   fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]

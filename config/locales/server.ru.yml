@@ -1115,16 +1115,15 @@ ru:
   email_login:
     invalid_token: 'Использованная вами ссылка больше не работает. Вы можете <a href="%{base_url}/login">войти</a> на сайт. Если вы забыли пароль, <a href="%{base_url}/password-reset">запросите ссылку</a> для его сброса.'
     title: "Вход по эл. почте"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Приложение DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Приложение DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "Неизвестный браузер"
     device:
       android: "Устройство Android"
       chromebook: "Chrome OS"
@@ -1147,10 +1146,6 @@ ru:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Анонимные просмотры"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "При смене адреса электронной почты произошла ошибка. Возможно, этот адрес уже используется?"
     doesnt_exist: "Этот адрес электронной почты не связан с вашим аккаунтом."
@@ -1633,6 +1628,9 @@ ru:
         num_topics: "Тем"
       description: "Пользователи, отсортированные по количеству кликов по ссылкам, которыми они поделились."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Посещений"
+    top_entry_urls:
       labels:
         count: "Посещений"
     top_referrers_by_browser_pageviews:

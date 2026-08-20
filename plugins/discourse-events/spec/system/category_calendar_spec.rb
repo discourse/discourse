@@ -9,7 +9,7 @@ describe "Category calendar" do
 
   context "with events_calendar_categories" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       SiteSetting.events_calendar_categories = category.id.to_s
 
@@ -59,7 +59,7 @@ describe "Category calendar" do
 
   context "with calendar_categories" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       # postId should be irrelevant now, it's a legacy property
       SiteSetting.calendar_categories = "categoryId=#{category.id};postId=2313"
@@ -99,7 +99,7 @@ describe "Category calendar" do
 
   context "with color mapping", time: Time.utc(2026, 6, 2, 19, 00) do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       sign_in(user)
     end

@@ -939,16 +939,15 @@ it:
   email_login:
     invalid_token: 'Ops! Il link che hai utilizzato non funziona più. Puoi <a href="%{base_url}/login">Accedere</a> adesso. Se hai dimenticato la password, puoi <a href="%{base_url}/password-reset">richiedere un link</a> per reimpostarla.'
     title: "Accesso via Email"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "App DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "App DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "browser sconosciuto"
     device:
       android: "Dispositivo Android"
       chromebook: "Chrome OS"
@@ -971,10 +970,6 @@ it:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonimo"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Si è verificato un errore durante la modifica del tuo indirizzo email. Forse l'indirizzo è già in uso?"
     doesnt_exist: "Questo indirizzo email non è associato al tuo account."
@@ -1431,6 +1426,9 @@ it:
         num_topics: "Argomenti"
       description: "Utenti elencati per numero di clic sui collegamenti che hanno condiviso."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visite"
+    top_entry_urls:
       labels:
         count: "Visite"
     top_referrers_by_browser_pageviews:

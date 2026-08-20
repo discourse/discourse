@@ -14,9 +14,6 @@ lt:
             topic_id:
               label: Temos ID
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "Pokalbis"
       disable_holiday: "Išjungti"
       enable_holiday: "Įgalinti"
       date: "Data"
@@ -58,7 +55,8 @@ lt:
             private:
               title: "Privatu"
       composer:
-        location_placeholder: "Pridėti vietą arba URL"
+        location_or_url_placeholder: "Pridėti vietą arba URL"
+        url_placeholder: "Pridėti URL"
         description_placeholder: "Pridėti įvykio aprašymą"
         reminder:
           units:
@@ -98,6 +96,12 @@ lt:
           every_day: "Kiekvieną dieną"
         attendance:
           none: "Nieko"
+        location:
+          label: "Vieta"
+        url:
+          label: "Nuoroda"
+          placeholder: "Pasirinktinai"
+          add: "Pridėti URL"
         description:
           label: "Aprašymas"
         event_type:

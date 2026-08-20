@@ -27,9 +27,6 @@ it:
             topic_id:
               label: ID dell'argomento
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "Chat"
       invite_user_notification: "%{username} ti ha invitato a: %{description}"
       on_holiday: "In vacanza"
       disable_holiday: "Disabilita"
@@ -430,6 +427,7 @@ it:
               description: "Solo gli utenti invitati possono partecipare a un evento privato."
       composer:
         name_placeholder: "Nome dell'evento"
+        url_placeholder: "Aggiungi URL"
         event_title_placeholder: "Nome dell'evento"
         create_event_button: "Crea evento"
         reminder:
@@ -494,7 +492,12 @@ it:
           label: "Integrazione della chat"
           checkbox_label: "Crea e gestisci un canale di chat specifico per l'evento"
         location:
+          label: "Località"
           placeholder: "Aggiungi una posizione, un collegamento o qualcosa del genere."
+        url:
+          label: "URL"
+          placeholder: "Facoltativo"
+          add: "Aggiungi URL"
         description:
           label: "Descrizione"
           placeholder: "Racconta qualcosa in più sul tuo evento. Sono supportate nuove righe e link."

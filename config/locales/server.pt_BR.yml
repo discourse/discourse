@@ -950,16 +950,15 @@ pt_BR:
   email_login:
     invalid_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">fazer login</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">pedir um link</a> para redefini-la.'
     title: "E-mail para entrar"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Aplicativo DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Aplicativo DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador desconhecido"
     device:
       android: "Dispositivo Android"
       chromebook: "Chrome OS"
@@ -982,10 +981,6 @@ pt_BR:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anônimo(a)"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja em uso?"
     doesnt_exist: "Esse endereço de e-mail não está associado à sua conta."
@@ -1454,6 +1449,9 @@ pt_BR:
         num_topics: "Tópicos"
       description: "Usuários(as) listados(as) pela quantidade de cliques nos links que eles compartilharam."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Acessos"
+    top_entry_urls:
       labels:
         count: "Acessos"
     top_referrers_by_browser_pageviews:

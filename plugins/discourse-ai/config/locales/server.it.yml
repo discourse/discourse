@@ -60,7 +60,6 @@ it:
     ai_helper_allowed_in_pm: "Abilita l'assistente IA nei MP."
     ai_helper_automatic_chat_thread_title_delay: "Ritardo in minuti prima che l'assistente IA imposti automaticamente il titolo del thread della chat."
     ai_helper_automatic_chat_thread_title: "Imposta automaticamente i titoli dei thread della chat in base ai contenuti del thread."
-    ai_helper_enabled_features: "Seleziona le funzionalità da abilitare nell'assistente IA."
     post_ai_helper_allowed_groups: "Gruppi di utenti autorizzati ad accedere alle funzionalità dell'assistente IA nei post"
     ai_embeddings_selected_model: "Usa il modello selezionato per generare le integrazioni."
     ai_embeddings_generate_for_pms: "Genera integrazioni per messaggi personali."
@@ -218,7 +217,6 @@ it:
         completion_request_failed: "Qualcosa è andato storto durante il tentativo di fornire suggerimenti. Riprova."
       prompts:
         translate: Traduci in %{language}
-        generate_titles: Suggerisci i titoli degli argomenti
         proofread: Testo corretto
         markdown_table: Genera tabella di markdown
         custom_prompt: "Comando personalizzato"

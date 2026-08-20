@@ -273,6 +273,7 @@ RSpec.describe Admin::DashboardController do
 
           country_code = "US"
           normalized_referrer = "sensitive-referrer.example"
+          entry_url = "/sensitive-entry"
           event_date = Time.zone.local(2026, 5, 2, 12)
           UpcomingChangeEvent.create!(
             upcoming_change_name: "dashboard_improvements",
@@ -296,6 +297,12 @@ RSpec.describe Admin::DashboardController do
           }
           BrowserPageviewCountryDailyRollup.aggregate(**rollup_range)
           BrowserPageviewReferrerDailyRollup.aggregate(**rollup_range)
+          Fabricate(
+            :browser_pageview_entry_url_daily_rollup,
+            date: event_date.to_date,
+            entry_url:,
+            count: 2,
+          )
 
           get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
 
@@ -308,6 +315,7 @@ RSpec.describe Admin::DashboardController do
           expect(admin_traffic_data.dig("top_referrers", "rows", 0, "normalized_referrer")).to eq(
             normalized_referrer,
           )
+          expect(admin_traffic_data.dig("top_entry_urls", "rows", 0, "entry_url")).to eq(entry_url)
 
           sign_in(moderator)
 
@@ -318,7 +326,9 @@ RSpec.describe Admin::DashboardController do
             response.parsed_body["sections"].find { |section| section["id"] == "traffic" }["data"]
           expect(moderator_traffic_data).not_to have_key("top_countries")
           expect(moderator_traffic_data).not_to have_key("top_referrers")
+          expect(moderator_traffic_data).not_to have_key("top_entry_urls")
           expect(response.body).not_to include(normalized_referrer)
+          expect(response.body).not_to include(entry_url)
         end
       end
 
@@ -336,13 +346,15 @@ RSpec.describe Admin::DashboardController do
           expect(response.status).to eq(200)
           expect(search_data).to eq(
             "logging_enabled" => true,
-            "headline_state" => "healthy",
+            "search_type" => "non_staff_only",
             "kpis" => {
               "total_searches" => {
                 "value" => 2,
+                "previous_value" => 0,
               },
               "no_result_rate" => {
                 "value" => 0,
+                "previous_value" => nil,
                 "exceeds_threshold" => false,
               },
             },
@@ -457,7 +469,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/dashboard.json"
 
         engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
-        expect(engagement["data"]).to include("kpis", "headline")
+        expect(engagement["data"]).to include("kpis")
       end
 
       describe "reports section data" do
@@ -1528,7 +1540,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 3 },
               ],
               "browsers" => [
-                { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
+                { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
               "ip_addresses" => [
@@ -1699,7 +1711,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
               ],
               "browsers" => [
-                { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+                { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
               "ip_addresses" => [
@@ -1752,7 +1764,7 @@ RSpec.describe Admin::DashboardController do
 
       before do
         sign_in(admin)
-        SiteSetting.admin_site_traffic_event_cap = 2
+        SiteSetting.site_traffic_explorer_event_limit = 2
       end
 
       it "returns no more than the configured pageview cap" do
@@ -1764,6 +1776,7 @@ RSpec.describe Admin::DashboardController do
             "partial_data" => {
               "reason" => "pageview_limit",
               "pageview_limit" => 2,
+              "pageview_limit_start_at" => "2026-05-10T10:00:00Z",
             },
             "summary" => {
               "pageviews" => 2,
@@ -1796,7 +1809,7 @@ RSpec.describe Admin::DashboardController do
               "networks" => [
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
               ],
-              "browsers" => [{ "value" => "chrome", "label" => "Chrome", "pageviews" => 2 }],
+              "browsers" => [{ "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
               ],
@@ -1847,7 +1860,7 @@ RSpec.describe Admin::DashboardController do
 
       it "returns both partial-data reasons" do
         sign_in(admin)
-        SiteSetting.admin_site_traffic_event_cap = 2
+        SiteSetting.site_traffic_explorer_event_limit = 2
 
         get "/admin/dashboard/site-traffic-explorer.json",
             params: request_params.merge(start_date: "2026-01-01")
@@ -1859,6 +1872,7 @@ RSpec.describe Admin::DashboardController do
               "reason" => "retention_and_pageview_limit",
               "available_start_date" => "2026-02-14",
               "pageview_limit" => 2,
+              "pageview_limit_start_at" => "2026-05-10T10:00:00Z",
             },
             "summary" => {
               "pageviews" => 2,
@@ -1918,7 +1932,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
               ],
               "browsers" => [
-                { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+                { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
               "ip_addresses" => [

@@ -194,10 +194,12 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_allowed_tag_groups?
-    can_edit_tags?
+    SiteSetting.tagging_enabled
   end
 
   def allowed_tag_groups
-    object.tag_groups.map(&:name)
+    return object.tag_groups.map(&:name) if can_edit_tags?
+
+    TagGroup.visible(scope || Guardian.new).where(id: object.tag_groups.map(&:id)).pluck(:name)
   end
 end

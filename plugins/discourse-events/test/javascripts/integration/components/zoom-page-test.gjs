@@ -7,29 +7,60 @@ import LivestreamZoomPage from "../../discourse/components/livestream/zoom-page"
 
 const FALLBACK_SELECTOR = ".discourse-calendar-livestream-zoom-page__fallback";
 const FRAME_SELECTOR = ".discourse-calendar-livestream-zoom-page__frame";
-const CHAT_BUTTON_SELECTOR =
-  ".discourse-calendar-livestream-zoom-page__chat-button";
-const WAITING_SELECTOR = ".discourse-calendar-livestream-zoom-page__waiting";
-const ERROR_TEXT =
-  "You left the webinar or we are unable to load Zoom in this page.";
+const CHAT_SELECTOR = ".discourse-calendar-livestream-zoom-page__chat";
 
-// `returnedFromZoom` reads `window.location.search`, which a rendering test
-// cannot set. Stubbing the getter is the only way to reach the branch.
-function stubReturnedFromZoom(value) {
-  sinon.stub(LivestreamZoomPage.prototype, "returnedFromZoom").get(() => value);
+// The frame's URL is served by Discourse, and left to itself the frame would
+// load it here — where anything unrecognised answers with the app, leaving a
+// second copy of it running inside the test. `zoom-frame-url-test` covers what
+// the URL should be.
+function stubFrameUrl(context) {
+  sinon.stub(LivestreamZoomPage.prototype, "frameUrl").get(() => "about:blank");
+  return context;
 }
 
-// `loadZoom` is an `@action`, so the prototype holds an accessor rather than a
-// plain method and a bare `sinon.stub` would leave the real one in place — it
-// would reach for the network and the Zoom SDK.
-function stubLoadZoom(implementation) {
-  const fake = sinon.fake(implementation ?? (() => Promise.resolve()));
+// What the frame reports back — the meeting failing, and the user leaving it —
+// arrives as a window message, which is the same channel the test runner uses
+// to talk to its own harness. Faking one here unsettles it, so those states are
+// left to a system test driving the real frame.
 
-  sinon.stub(LivestreamZoomPage.prototype, "loadZoom").get(function () {
-    return fake.bind(this);
-  });
+// The channel itself is chat's to render and needs a live channel record, so
+// only the decision to embed it is exercised here. Registering is repeatable,
+// which a test flipping `userCanChat` for itself depends on.
+function stubChat(context, userCanChat = true) {
+  const owner = getOwner(context);
 
-  return fake;
+  owner.unregister("service:embeddable-chat");
+  owner.register(
+    "service:embeddable-chat",
+    { userCanChat },
+    { instantiate: false }
+  );
+
+  // Never resolving, rather than resolving to nothing: the channel it is asked
+  // for is assigned to tracked state that the same modifier reads, so anything
+  // it hands back that is not the channel being looked for invalidates the
+  // modifier and sets it looking again. A real one matches and settles; a blank
+  // one spins.
+  owner.unregister("service:chat-channels-manager");
+  owner.register(
+    "service:chat-channels-manager",
+    { find: () => new Promise(() => {}) },
+    { instantiate: false }
+  );
+}
+
+// The embedded channel subscribes for its own membership updates, and a live
+// subscription is a request that never finishes, which is a test that never
+// settles. Only the subscribing is taken out: the service itself is left in
+// place for everything else that expects to find it.
+//
+// Once per test, unlike the services above: a second wrapping of the same
+// method is an error in sinon, not a no-op.
+function stubMessageBus(context) {
+  const messageBus = getOwner(context).lookup("service:message-bus");
+
+  sinon.stub(messageBus, "subscribe");
+  sinon.stub(messageBus, "unsubscribe");
 }
 
 module("Integration | Component | LivestreamZoomPage", function (hooks) {
@@ -37,6 +68,9 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
 
   hooks.beforeEach(function () {
     getOwner(this).lookup("service:site-settings").chat_enabled = true;
+    stubChat(this);
+    stubMessageBus(this);
+    stubFrameUrl(this);
 
     this.topic = {
       id: 1,
@@ -58,126 +92,62 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
     };
   });
 
-  test("loads Zoom once into the frame", async function (assert) {
-    const loadZoom = stubLoadZoom();
-    stubReturnedFromZoom(false);
-
+  test("hands the meeting a frame of its own to run in", async function (assert) {
     await render(
       <template><LivestreamZoomPage @topic={{this.topic}} /></template>
     );
 
-    assert.dom(FRAME_SELECTOR).exists();
+    assert
+      .dom(FRAME_SELECTOR)
+      .hasAttribute(
+        "allow",
+        /microphone/,
+        "the meeting cannot ask for audio without it"
+      );
     assert.dom(FALLBACK_SELECTOR).doesNotExist("no error before a failure");
-    assert.strictEqual(loadZoom.callCount, 1, "sets the SDK up exactly once");
   });
 
-  // Simulates navigating straight to /t/:slug/:id/zoom before the join window
-  // opens, bypassing the disabled button on the topic page.
-  test("does not load Zoom before the event timeframe", async function (assert) {
-    const loadZoom = stubLoadZoom();
-    stubReturnedFromZoom(false);
-    this.topic.postStream.posts[0].event.starts_at = moment()
-      .add(2, "hours")
-      .toISOString();
+  // The states before and after the event's own timeframe render the event
+  // card, which does not settle in a rendering test. What it is gating is the
+  // signature the meeting cannot start without, and `livestream_controller_spec`
+  // covers the server refusing that outside the timeframe.
 
+  test("embeds the chat below the meeting when the topic has a channel", async function (assert) {
     await render(
       <template><LivestreamZoomPage @topic={{this.topic}} /></template>
     );
 
-    assert.dom(FRAME_SELECTOR).doesNotExist();
-    assert
-      .dom(WAITING_SELECTOR)
-      .includesText("You can join the webinar closer to the event start time");
-    assert
-      .dom(`${WAITING_SELECTOR} a`)
-      .hasText("View topic for the event")
-      .hasAttribute("href", "/t/test-topic/1")
-      .hasClass("raw-link");
-    assert.strictEqual(loadZoom.callCount, 0, "never sets the SDK up");
+    assert.dom(CHAT_SELECTOR).exists();
+    assert.dom(`${CHAT_SELECTOR} #custom-chat-container`).hasClass("inline");
   });
 
-  test("does not load Zoom after the event timeframe", async function (assert) {
-    const loadZoom = stubLoadZoom();
-    stubReturnedFromZoom(false);
-    this.topic.postStream.posts[0].event.starts_at = moment()
-      .subtract(3, "hours")
-      .toISOString();
-    this.topic.postStream.posts[0].event.ends_at = moment()
-      .subtract(1, "hour")
-      .toISOString();
-
-    await render(
-      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
-    );
-
-    assert.dom(FRAME_SELECTOR).doesNotExist();
-    assert.dom(WAITING_SELECTOR).exists();
-    assert.strictEqual(loadZoom.callCount, 0, "never sets the SDK up");
-  });
-
-  test("shows the fallback link when Zoom fails to load", async function (assert) {
-    stubLoadZoom(function () {
-      this.errorMessage = ERROR_TEXT;
-      return Promise.resolve();
-    });
-    stubReturnedFromZoom(false);
-
-    await render(
-      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
-    );
-
-    assert.dom(FALLBACK_SELECTOR).exists();
-    assert.dom(`${FALLBACK_SELECTOR} p`).hasText(ERROR_TEXT);
-    assert
-      .dom(`${FALLBACK_SELECTOR} .btn-primary`)
-      .doesNotExist("no retry button unless the user came back from Zoom");
-  });
-
-  test("offers a retry when the user has returned from Zoom", async function (assert) {
-    stubReturnedFromZoom(true);
-
-    await render(
-      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
-    );
-
-    assert
-      .dom(`${FALLBACK_SELECTOR} p`)
-      .hasText(ERROR_TEXT, "does not try to rejoin automatically");
-    assert.dom(`${FALLBACK_SELECTOR} .btn-primary`).hasText("Join Zoom");
-  });
-
-  test("offers to open the chat when the topic has a channel", async function (assert) {
-    stubLoadZoom();
-    stubReturnedFromZoom(false);
-
-    await render(
-      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
-    );
-
-    assert.dom(CHAT_BUTTON_SELECTOR).exists();
-  });
-
-  test("hides the chat button when chat is disabled", async function (assert) {
-    stubLoadZoom();
-    stubReturnedFromZoom(false);
+  test("omits the chat when chat is disabled", async function (assert) {
     getOwner(this).lookup("service:site-settings").chat_enabled = false;
 
     await render(
       <template><LivestreamZoomPage @topic={{this.topic}} /></template>
     );
 
-    assert.dom(CHAT_BUTTON_SELECTOR).doesNotExist();
+    assert.dom(CHAT_SELECTOR).doesNotExist();
   });
 
-  test("hides the chat button when the topic has no channel", async function (assert) {
-    stubLoadZoom();
-    stubReturnedFromZoom(false);
+  test("omits the chat when the topic has no channel", async function (assert) {
     this.topic.chat_channel_id = null;
 
     await render(
       <template><LivestreamZoomPage @topic={{this.topic}} /></template>
     );
 
-    assert.dom(CHAT_BUTTON_SELECTOR).doesNotExist();
+    assert.dom(CHAT_SELECTOR).doesNotExist();
+  });
+
+  test("omits the chat when the user cannot chat", async function (assert) {
+    stubChat(this, false);
+
+    await render(
+      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
+    );
+
+    assert.dom(CHAT_SELECTOR).doesNotExist();
   });
 });

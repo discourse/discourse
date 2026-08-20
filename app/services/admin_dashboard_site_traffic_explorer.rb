@@ -23,7 +23,7 @@ class AdminDashboardSiteTrafficExplorer
   }.freeze
   private_constant :FILTER_DIMENSIONS
 
-  BROWSER_VALUES = %w[edge firefox chrome safari unknown].freeze
+  BROWSER_VALUES = BrowserPageviewEvent.browsers.keys.freeze
   private_constant :BROWSER_VALUES
 
   TRAFFIC_TYPE_VALUES = %w[logged_in anonymous likely_crawler].freeze
@@ -103,7 +103,12 @@ class AdminDashboardSiteTrafficExplorer
     row = execute_query(start_date: params.start_date, end_date: params.end_date, filters:)
 
     traffic = {
-      partial_data: partial_data(row.fetch("pageview_limited"), start_date: params.start_date),
+      partial_data:
+        partial_data(
+          row.fetch("pageview_limited"),
+          pageview_limit_start_at: row["oldest_pageview_at"],
+          start_date: params.start_date,
+        ),
       summary: row.fetch("summary"),
       series: row.fetch("series"),
       series_colors: series_colors,
@@ -132,7 +137,7 @@ class AdminDashboardSiteTrafficExplorer
   def query_params(start_date:, end_date:, filters:)
     retention_cutoff = BrowserPageviewEvent.retention_cutoff.to_date
     effective_start_date = [start_date, retention_cutoff].max
-    cap = SiteSetting.admin_site_traffic_event_cap
+    cap = SiteSetting.site_traffic_explorer_event_limit
 
     {
       start_date: effective_start_date,
@@ -144,13 +149,13 @@ class AdminDashboardSiteTrafficExplorer
       referrer: filters[:referrer],
       country: filters[:country],
       network_asn: filters[:network],
-      browser: filters[:browser],
+      browser: filters[:browser] && BrowserPageviewEvent.browsers.fetch(filters[:browser]),
       ip_address: filters[:ip],
       traffic_type_filtered: filters[:traffic_type].present?,
       include_logged_in: filters[:traffic_type]&.include?("logged_in"),
       include_anonymous: filters[:traffic_type]&.include?("anonymous"),
       include_likely_crawler: filters[:traffic_type]&.include?("likely_crawler"),
-      crawler_detection_enabled: UpcomingChanges.enabled?(:improved_crawler_detection),
+      crawler_detection_enabled: CrawlerScorer.enabled?,
       crawler_threshold: CrawlerScorer::BOT_SCORE_THRESHOLD,
       bounce_threshold:
         BrowserPageviewSessionEngagementDailyRollup.bounce_engaged_seconds_threshold,
@@ -174,7 +179,7 @@ class AdminDashboardSiteTrafficExplorer
           bpe.country_code,
           bpe.asn,
           bpe.ip_address,
-          bpe.user_agent,
+          COALESCE(bpe.browser, #{BrowserPageviewEvent::BROWSER_UNKNOWN}) AS browser,
           bpe.score
         FROM browser_pageview_events bpe
         WHERE bpe.created_at >= :start_date
@@ -201,20 +206,6 @@ class AdminDashboardSiteTrafficExplorer
           population_stats.row_count,
           population_stats.oldest_created_at
       ),
-      browser_values AS MATERIALIZED (
-        SELECT
-          user_agent,
-          CASE
-            WHEN user_agent ~* 'Edg' THEN 'edge'
-            WHEN user_agent ~* '(Opera|OPR)' THEN 'unknown'
-            WHEN user_agent ~* 'Firefox' THEN 'firefox'
-            WHEN user_agent ~* '(Chrome|CriOS)' THEN 'chrome'
-            WHEN user_agent ~* 'Safari' THEN 'safari'
-            ELSE 'unknown'
-          END AS browser
-        FROM population
-        GROUP BY user_agent
-      ),
       classified AS (
         SELECT
           population.created_at,
@@ -225,7 +216,7 @@ class AdminDashboardSiteTrafficExplorer
           population.country_code,
           population.asn,
           population.ip_address,
-          browser_values.browser,
+          population.browser,
           (
             population.normalized_referrer IS NULL
             OR split_part(
@@ -239,8 +230,6 @@ class AdminDashboardSiteTrafficExplorer
             AND COALESCE(population.score, 0) > :crawler_threshold
           ) AS likely_crawler
         FROM population
-        JOIN browser_values
-          ON browser_values.user_agent = population.user_agent
       ),
       dimensioned AS (
         SELECT
@@ -364,6 +353,10 @@ class AdminDashboardSiteTrafficExplorer
             )
           FROM population_boundary
         ) AS pageview_limited,
+        (
+          SELECT population_boundary.oldest_created_at
+          FROM population_boundary
+        ) AS oldest_pageview_at,
         jsonb_build_object(
           'country', (
             SELECT host(MIN(ip_address))
@@ -557,7 +550,7 @@ class AdminDashboardSiteTrafficExplorer
     SQL
   end
 
-  def partial_data(pageview_limited, start_date:)
+  def partial_data(pageview_limited, pageview_limit_start_at:, start_date:)
     retention_limited = start_date < BrowserPageviewEvent.retention_cutoff.to_date
     return nil if !retention_limited && !pageview_limited
 
@@ -565,7 +558,8 @@ class AdminDashboardSiteTrafficExplorer
       {
         reason: "retention_and_pageview_limit",
         available_start_date: BrowserPageviewEvent.retention_cutoff.to_date.iso8601,
-        pageview_limit: SiteSetting.admin_site_traffic_event_cap,
+        pageview_limit: SiteSetting.site_traffic_explorer_event_limit,
+        pageview_limit_start_at: pageview_limit_start_at.iso8601,
       }
     elsif retention_limited
       {
@@ -573,7 +567,11 @@ class AdminDashboardSiteTrafficExplorer
         available_start_date: BrowserPageviewEvent.retention_cutoff.to_date.iso8601,
       }
     else
-      { reason: "pageview_limit", pageview_limit: SiteSetting.admin_site_traffic_event_cap }
+      {
+        reason: "pageview_limit",
+        pageview_limit: SiteSetting.site_traffic_explorer_event_limit,
+        pageview_limit_start_at: pageview_limit_start_at.iso8601,
+      }
     end
   end
 
@@ -624,6 +622,7 @@ class AdminDashboardSiteTrafficExplorer
 
   def decorate_dimension_row(dimension, row)
     value = row.fetch("value")
+    value = BrowserPageviewEvent.browsers.key(value.to_i) || "unknown" if dimension == "browsers"
     {
       value: value,
       label: dimension_label(dimension, value, row["representative_ip"]),
@@ -640,7 +639,7 @@ class AdminDashboardSiteTrafficExplorer
     when "networks"
       network_label(value, representative_ip)
     when "browsers"
-      I18n.t("admin_site_traffic_explorer.browsers.#{value}", default: value)
+      I18n.t("browsers.#{value}", default: value)
     else
       value
     end

@@ -20,7 +20,7 @@ RSpec.describe DiscoursePostEvent::Event::SyncFromPost do
     end
 
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       Jobs.run_immediately!
 

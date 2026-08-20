@@ -6,7 +6,7 @@ module Jobs
       every 10.minutes
 
       def execute(args)
-        return if !SiteSetting.calendar_enabled
+        return if !SiteSetting.discourse_events_enabled
         return if !SiteSetting.calendar_automatic_holidays_enabled
 
         return unless topic_id = SiteSetting.holiday_calendar_topic_id.presence

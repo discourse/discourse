@@ -13,9 +13,6 @@ hr:
             topic_id:
               label: ID teme
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "Čavrljanje"
       disable_holiday: "Onemogući"
       enable_holiday: "Omogućiti"
       date: "Datum"
@@ -57,6 +54,7 @@ hr:
             private:
               title: "Privatno"
       composer:
+        url_placeholder: "Dodaj URL"
         reminder:
           units:
             minutes:
@@ -94,6 +92,12 @@ hr:
             last: "zadnji"
         attendance:
           none: "Ništa"
+        location:
+          label: "Lokacija"
+        url:
+          label: "URL"
+          placeholder: "Neobvezno"
+          add: "Dodaj URL"
         description:
           label: "Opis"
         event_type:

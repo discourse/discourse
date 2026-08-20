@@ -275,6 +275,22 @@ RSpec.describe SearchController do
       expect(log.term).to eq("wookie")
     end
 
+    it "logs the pageview session the search was made from" do
+      SiteSetting.log_search_queries = true
+      session_id = SecureRandom.alphanumeric(32)
+
+      get "/search/query.json",
+          params: {
+            term: "wookie",
+          },
+          headers: {
+            "Discourse-Pageview-Session-Id" => session_id,
+          }
+
+      expect(response.status).to eq(200)
+      expect(SearchLog.find_by(term: "wookie").session_id).to eq(session_id)
+    end
+
     it "doesn't log when disabled" do
       SiteSetting.log_search_queries = false
       get "/search/query.json", params: { term: "wookie" }

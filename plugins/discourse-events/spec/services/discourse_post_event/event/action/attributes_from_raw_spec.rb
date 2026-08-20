@@ -7,7 +7,7 @@ RSpec.describe DiscoursePostEvent::Event::Action::AttributesFromRaw do
   let(:raw_event) { { name: "My event", start: "2030-04-24 14:15", timezone: "Europe/Paris" } }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 

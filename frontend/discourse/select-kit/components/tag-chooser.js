@@ -1,5 +1,6 @@
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { attributeBindings, classNames } from "@ember-decorators/component";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
@@ -21,6 +22,7 @@ import TagChooserRow from "./tag-chooser-row";
   allowAny: "canCreateTag",
   maximum: "maximumTagCount",
   valueProperty: "id",
+  prioritizeRecentTags: false,
 })
 @pluginApiIdentifiers("tag-chooser")
 export default class TagChooser extends MultiSelectComponent {
@@ -175,15 +177,22 @@ export default class TagChooser extends MultiSelectComponent {
       data.excludeHasSynonyms = true;
     }
 
-    return this.tagUtils.searchTags(
-      "/tags/filter/search",
-      data,
-      this._transformJson
+    const prioritizeRecentTags =
+      this.selectKit.options.prioritizeRecentTags &&
+      this.siteSettings.prioritize_recently_used_tags &&
+      isEmpty(query);
+
+    if (prioritizeRecentTags) {
+      data.prioritizeRecentTags = true;
+    }
+
+    return this.tagUtils.searchTags("/tags/filter/search", data, (json) =>
+      this._transformJson(json, { skipSort: prioritizeRecentTags })
     );
   }
 
   @bind
-  _transformJson(json) {
+  _transformJson(json, { skipSort = false } = {}) {
     if (this.isDestroyed || this.isDestroying) {
       return [];
     }
@@ -205,7 +214,7 @@ export default class TagChooser extends MultiSelectComponent {
       });
     }
 
-    results = this.tagUtils.sortSearchResults(results);
+    results = skipSort ? results : this.tagUtils.sortSearchResults(results);
 
     return uniqueItemsFromArray(results, "name");
   }

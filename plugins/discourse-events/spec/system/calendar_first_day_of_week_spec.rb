@@ -6,7 +6,7 @@ describe "Calendar first day of week" do
   let(:upcoming_events) { PageObjects::Pages::DiscourseCalendar::UpcomingEvents.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     sign_in(admin)
   end

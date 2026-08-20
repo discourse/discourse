@@ -19,6 +19,43 @@ describe Chat::MessageSerializer do
     end
   end
 
+  describe "#blocks" do
+    it "serializes button presentation without its private value" do
+      message_1.update!(
+        blocks: [
+          {
+            type: "actions",
+            elements: [
+              {
+                type: "button",
+                text: {
+                  type: "plain_text",
+                  text: "Continue",
+                },
+                style: "success",
+                icon: "check",
+                value: "private-value",
+              },
+            ],
+          },
+        ],
+      )
+
+      serialized_button = serializer.as_json.dig(:blocks, 0, :elements, 0)
+
+      expect(serialized_button).to eq(
+        action_id: message_1.blocks.dig(0, "elements", 0, "action_id"),
+        type: "button",
+        text: {
+          text: "Continue",
+          type: "plain_text",
+        },
+        style: "success",
+        icon: "check",
+      )
+    end
+  end
+
   describe "#reactions" do
     fab!(:custom_emoji) { CustomEmoji.create!(name: "trout", upload: Fabricate(:upload)) }
     fab!(:reaction_1) do

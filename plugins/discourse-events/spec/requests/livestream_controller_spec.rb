@@ -18,7 +18,7 @@ module DiscourseCalendar
     end
 
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       SiteSetting.livestream_zoom_enabled = true
       SiteSetting.livestream_zoom_sdk_key = "sdk-key"
@@ -160,6 +160,80 @@ module DiscourseCalendar
           get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
 
           expect(response.status).to eq(404)
+        end
+      end
+    end
+
+    describe "#zoom_frame" do
+      it "rejects anonymous users" do
+        get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(404)
+      end
+
+      context "when signed in" do
+        before { sign_in(current_user) }
+
+        it "serves the page the meeting runs in" do
+          get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include("zoomFrameConfig")
+        end
+
+        it "points the page at the signature for its own topic" do
+          get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+          expect(response.body).to include(
+            "/discourse-calendar/livestream/zoom/signature.json?topic_id=#{topic.id}",
+          )
+        end
+
+        # Zoom leaves the meeting by navigating this page to its own URL with
+        # the flag set, which is the only notice the app around it gets.
+        it "tells the app the user has left when Zoom returns them" do
+          get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id, left: 1 }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include("\"hasLeft\":true")
+        end
+
+        it "returns not found when the topic does not exist" do
+          get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: -1 }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "returns not found when the topic cannot be seen" do
+          group = Fabricate(:group)
+          private_category = Fabricate(:private_category, group: group)
+          private_topic = Fabricate(:topic, category: private_category, tags: [tag])
+
+          get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: private_topic.id }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "returns not found when Zoom embedding is unavailable" do
+          SiteSetting.livestream_zoom_enabled = false
+
+          get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(404)
+        end
+
+        context "when the site is in a subfolder" do
+          before { set_subfolder "/forum" }
+
+          it "returns them to a path the site actually serves" do
+            get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+            expect(response.status).to eq(200)
+            expect(response.body).to include(
+              "#{Discourse.base_url_no_prefix}/forum/discourse-calendar/livestream/zoom/frame?topic_id=#{topic.id}",
+            )
+            expect(response.body).not_to include("/forum/forum")
+          end
         end
       end
     end

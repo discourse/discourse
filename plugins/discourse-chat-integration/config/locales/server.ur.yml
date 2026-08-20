@@ -6,7 +6,7 @@
 
 ur:
   site_settings:
-    chat_integration_enabled: 'ڈسکورس-چَیٹ-اِنٹیگرَیشَن پلگ اِن کو فعال کریں'
+    chat_integration_enabled: 'Discourse کے انضامِ گفتگو کی اضافی سہولت فعال کریں'
     chat_integration_discourse_username: 'صارف کا اسمِ صارف جس کی بنیاد پر مواد لایا جائے۔'
     chat_integration_delay_seconds: 'پوسٹ کی تخلیق کے بعد چَیٹ اطلاعات بھیجنے سے پہلے کتنے سیکنڈ کا انتظار کیا جائے'
     chat_integration_slack_username: "سلَیک پر پوسٹ کرنے کیلئے بَوٹ کا اسمِ صارف"
@@ -137,7 +137,7 @@ ur:
           transcript_ready: "متن تیار ہے"
           continue_on_discourse: "فورم پر جاری رکھیں"
           error: "ٹرانسکرِپٹ بناتے وقت کچھ غلط ہو گیا، معذرت!"
-          post_to_discourse: "ٹرانسکرِپٹ کے ساتھ ڈسکورس پر ایک لڑی کا مسودہ تیار کرنے کے لیے یہاں کلک کریں"
+          post_to_discourse: "متن کا استعمال کرتے ہوئے Discourse دھاگہ بنانے کے لیے یہاں کلک کریں"
           api_required: "معذرت، یہ انضمام ٹرانسکرپٹس پوسٹ کرنے کی حمایت کے لیے ترتیب نہیں دیا گیا۔"
           view_on_slack: "%{name}میں سلَّیک پر دیکھیں"
           first_message_pretext: "شروع %{n} پیغامات قبل:"

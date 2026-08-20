@@ -111,6 +111,10 @@ pl_PL:
     livestream:
       chat:
         topic_reference_message: "Ten kanał jest przeznaczony na wydarzenie [%{title}](%{url}) — odwiedź temat, aby uzyskać więcej szczegółów i potwierdzić obecność."
+      zoom:
+        frame_title: "Webinarium Zoom"
+        frame_join: "Dołącz do webinarium"
+        frame_joining: "Łączenie…"
     calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."
     more_than_one_calendar: "W poście nie można umieścić więcej niż jednego kalendarza."
     more_than_two_dates: "Post w temacie kalendarza nie może zawierać więcej niż dwóch dat."
@@ -147,6 +151,7 @@ pl_PL:
           end_must_be_a_valid_date: "Data zakończenia musi być prawidłową datą."
           invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Strefa czasowa nie została rozpoznana."
+          invalid_url: "Adres URL musi być prawidłowym adresem internetowym."
           acting_user_not_allowed_to_create_event: "Bieżący użytkownik nie ma uprawnień do tworzenia wydarzeń."
           acting_user_not_allowed_to_act_on_this_event: "Obecny użytkownik nie może działać w związku z tym wydarzeniem."
           invalid_allowed_groups: "Nieprawidłowe dozwolone grupy."

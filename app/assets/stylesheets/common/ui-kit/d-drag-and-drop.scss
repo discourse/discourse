@@ -1,41 +1,30 @@
-/* Default treatment for the drag-and-drop vocabulary. The source and target
-   registrars stamp `data-drag-source` / `data-drop-target` on their host for
-   the lifetime of the registration, and toggle the state modifiers below
-   during a drag. Selectors are gated on the attribute rather than the class
-   alone so they cannot reach an unrelated element that happens to use the same
-   state name. Override by raising specificity, by setting `content: none` on
-   the pseudo-element to drop just the line, or by passing `indicator=false` to
-   opt out entirely.
-
-   The colour is its own custom property rather than a generic accent token, so
-   a theme or a single surface can retune drag feedback without moving every
-   other accent border in the app. It defaults to full-strength `--tertiary`:
-   the generic accent resolves to a tint blended toward the surface, which reads
-   acceptably on a dark panel but washes out against a lighter one and does not
-   reach the 3:1 WCAG 1.4.11 asks of a non-text UI component. */
+/* Full-strength `--tertiary`, not `--token-color-border-accent`: that tint
+   misses the 3:1 contrast a non-text UI component needs on a light surface. */
 
 :root {
   --d-drag-indicator-color: var(--tertiary);
 }
 
-@mixin d-drag-line-horizontal {
+@mixin d-drag-line($axis) {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
   background: var(--d-drag-indicator-color);
   pointer-events: none;
+
+  @if $axis == horizontal {
+    left: 0;
+    right: 0;
+    height: 2px;
+  } @else {
+    top: 0;
+    bottom: 0;
+    width: 2px;
+  }
 }
 
-@mixin d-drag-line-vertical {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--d-drag-indicator-color);
-  pointer-events: none;
+@mixin d-drag-outline {
+  outline: 2px solid var(--d-drag-indicator-color);
+  outline-offset: -2px;
 }
 
 [data-drag-source] {
@@ -44,37 +33,44 @@
   }
 }
 
-/* Every target draws from one position vocabulary, so "a drop would land above
-   this row" has one visual meaning across consumers. */
+/* `:where()` so a target that positions itself keeps its own value; the line's
+   pseudo-element only needs some containing block. */
 
-[data-drop-target] {
+:where(
+  [data-drop-target].--drag-above,
+  [data-drop-target].--drag-below,
+  [data-drop-target].--drag-left,
+  [data-drop-target].--drag-right,
+  [data-drop-target-external].--drag-above,
+  [data-drop-target-external].--drag-below,
+  [data-drop-target-external].--drag-left,
+  [data-drop-target-external].--drag-right
+) {
+  position: relative;
+}
+
+[data-drop-target],
+[data-drop-target-external] {
   &.--drag-above {
-    position: relative;
-
     &::before {
-      @include d-drag-line-horizontal;
+      @include d-drag-line(horizontal);
       top: -1px;
     }
   }
 
   &.--drag-below {
-    position: relative;
-
     &::after {
-      @include d-drag-line-horizontal;
+      @include d-drag-line(horizontal);
       bottom: -1px;
     }
   }
 
-  /* Kept physical: the class is assigned from the pointer's physical clientX
-     (before = left of the midpoint), so an rtlcss flip would draw the line on
-     the opposite side from where the drop resolves. */
+  /* `--drag-left` / `--drag-right` name the physical side under the pointer, so
+     the RTL flip must leave them alone. */
 
   &.--drag-left {
-    position: relative;
-
     &::before {
-      @include d-drag-line-vertical;
+      @include d-drag-line(vertical);
 
       /*! rtl:ignore */
       left: -1px;
@@ -82,22 +78,21 @@
   }
 
   &.--drag-right {
-    position: relative;
-
     &::after {
-      @include d-drag-line-vertical;
+      @include d-drag-line(vertical);
 
       /*! rtl:ignore */
       right: -1px;
     }
   }
 
-  /* The cursor is over a container that accepts the dragged item as a child
-     rather than a sibling, so an outline distinguishes it from the four
-     sibling positions. */
-
   &.--drag-inside {
-    outline: 2px solid var(--d-drag-indicator-color);
-    outline-offset: -2px;
+    @include d-drag-outline;
+  }
+}
+
+[data-drop-target-external] {
+  &.--drag-over-external {
+    @include d-drag-outline;
   }
 }

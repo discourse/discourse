@@ -566,6 +566,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       );
     assertDragRegistered(`${source} .d-reorderable-list__handle`, source);
     await simulateDrag(source, frozenRow, {
+      assertRegistered: false,
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(frozenRow, "before"),
     });

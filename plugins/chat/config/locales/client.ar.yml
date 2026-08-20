@@ -1000,6 +1000,13 @@ ar:
         message: "الرسالة"
       chat_approval:
         message: "الرسالة"
+        buttons: "الأزرار"
+        value: "القيمة"
+        style: "النمط"
+        style_default: "افتراضي"
+        style_primary: "أساسي"
+        style_success: "تم بنجاح"
+        icon: "الأيقونة"
         approve_label: "تسمية زر الموافقة"
         approve_label_description: "يتم تعيين الاسم الافتراضي إلى \"موافقة\" إذا تم تركه فارغًا."
         deny_label: "تسمية زر الرفض"

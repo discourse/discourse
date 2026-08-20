@@ -187,6 +187,182 @@ RSpec.describe SearchLog, type: :model do
     end
   end
 
+  describe ".log" do
+    it "flags an anonymous search from a known crawler user agent" do
+      _status, id =
+        SearchLog.log(
+          term: "ruby",
+          search_type: :header,
+          ip_address: "127.0.0.1",
+          user_agent: "Googlebot/2.1 (+http://www.google.com/bot.html)",
+        )
+
+      expect(SearchLog.find(id).crawler).to eq(true)
+    end
+
+    it "flags a logged-in search from a crawler user agent" do
+      user = Fabricate(:user)
+      _status, id =
+        SearchLog.log(
+          term: "ruby",
+          search_type: :header,
+          ip_address: "127.0.0.1",
+          user_agent: "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          user_id: user.id,
+        )
+
+      expect(SearchLog.find(id).crawler).to eq(true)
+    end
+
+    it "flags a search from a scripted client that is not a browser" do
+      _status, id =
+        SearchLog.log(
+          term: "ruby",
+          search_type: :header,
+          ip_address: "127.0.0.1",
+          user_agent: "python-requests/2.31.0",
+        )
+
+      expect(SearchLog.find(id).crawler).to eq(true)
+    end
+
+    it "records the pageview session the search was made from" do
+      _status, id =
+        SearchLog.log(
+          term: "ruby",
+          search_type: :header,
+          ip_address: "127.0.0.1",
+          session_id: "a" * (SearchLog::MAXIMUM_SESSION_ID_LENGTH + 10),
+        )
+
+      expect(SearchLog.find(id).session_id).to eq("a" * SearchLog::MAXIMUM_SESSION_ID_LENGTH)
+    end
+
+    it "does not flag an anonymous search that arrived without a user agent" do
+      _status, id = SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1")
+
+      expect(SearchLog.find(id).crawler).to eq(false)
+    end
+
+    it "does not flag an anonymous search from a browser user agent" do
+      _status, id =
+        SearchLog.log(
+          term: "ruby",
+          search_type: :header,
+          ip_address: "127.0.0.1",
+          user_agent:
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        )
+
+      expect(SearchLog.find(id).crawler).to eq(false)
+    end
+  end
+
+  describe ".flag_likely_crawlers!" do
+    let(:session_id) { SecureRandom.hex(16) }
+    let(:crawler_score) { CrawlerScorer::BOT_SCORE_THRESHOLD + 1 }
+
+    def flag!
+      described_class.flag_likely_crawlers!(window_start: 1.hour.ago, window_end: Time.now)
+    end
+
+    it "flags a search made from a session scored as a likely crawler" do
+      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 30.minutes.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(true)
+    end
+
+    it "leaves a search whose session was scored below the crawler threshold" do
+      Fabricate(
+        :browser_pageview_event,
+        session_id: session_id,
+        score: CrawlerScorer::BOT_SCORE_THRESHOLD,
+      )
+      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 30.minutes.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(false)
+    end
+
+    it "leaves a search that carries no session" do
+      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      log = Fabricate(:search_log, user: nil, session_id: nil, created_at: 30.minutes.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(false)
+    end
+
+    it "leaves a search whose session has no scored pageviews at all" do
+      Fabricate(:browser_pageview_event, session_id: SecureRandom.hex(16), score: crawler_score)
+      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 30.minutes.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(false)
+    end
+
+    it "flags a logged-in search whose session is scored as a likely crawler" do
+      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      log =
+        Fabricate(
+          :search_log,
+          user: Fabricate(:user),
+          ip_address: nil,
+          session_id: session_id,
+          created_at: 30.minutes.ago,
+        )
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(true)
+    end
+
+    it "leaves searches outside the window alone" do
+      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 5.hours.ago)
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(false)
+    end
+  end
+
+  describe ".backfill_crawler!" do
+    it "flags existing searches from known crawler user agents" do
+      crawler =
+        Fabricate(
+          :search_log,
+          user: nil,
+          user_agent: "Googlebot/2.1 (+http://www.google.com/bot.html)",
+        )
+      human = Fabricate(:search_log, user: nil, user_agent: "Mozilla/5.0 (Macintosh) Chrome/120.0")
+      no_agent = Fabricate(:search_log, user: nil, user_agent: nil)
+      blank_agent = Fabricate(:search_log, user: nil, user_agent: "")
+      member = Fabricate(:search_log, user: Fabricate(:user), user_agent: "Googlebot/2.1")
+
+      expect(described_class.backfill_crawler!).to eq(2)
+
+      expect(crawler.reload.crawler).to eq(true)
+      expect(human.reload.crawler).to eq(false)
+      expect(no_agent.reload.crawler).to eq(false)
+      expect(blank_agent.reload.crawler).to eq(false)
+      expect(member.reload.crawler).to eq(true)
+    end
+
+    it "is idempotent" do
+      Fabricate(:search_log, user: nil, user_agent: "Googlebot/2.1")
+
+      described_class.backfill_crawler!
+
+      expect(described_class.backfill_crawler!).to eq(0)
+    end
+  end
+
   describe ".term_details" do
     it "should only use the date for the period" do
       time = Time.utc(2019, 5, 23, 18, 15, 30)
@@ -241,17 +417,42 @@ RSpec.describe SearchLog, type: :model do
         SearchLog.term_details("ruby", :weekly, :non_staff_only)[:data].sum { |point| point[:y] },
       ).to eq(1)
     end
+
+    it "returns non-staff and anonymous searches minus crawlers with the human_only search type" do
+      SiteSetting.improved_crawler_detection = true
+      member = Fabricate(:user)
+      Fabricate(:search_log, term: "ruby", user: member)
+      Fabricate(:search_log, term: "ruby", user: Fabricate(:admin))
+      Fabricate(:search_log, term: "ruby", user: Fabricate(:moderator))
+      Fabricate(:search_log, term: "ruby", user: nil)
+      Fabricate(:search_log, term: "ruby", user: nil, crawler: true)
+
+      expect(
+        SearchLog.term_details("ruby", :weekly, :human_only)[:data].sum { |point| point[:y] },
+      ).to eq(2)
+    end
   end
 
   describe "trending" do
     fab!(:user)
+    def log_search(term, **opts)
+      SearchLog.log(
+        term: term,
+        search_type: :header,
+        ip_address: "127.0.0.1",
+        user_agent:
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        **opts,
+      )
+    end
+
     before do
-      SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1")
-      SearchLog.log(term: "php", search_type: :header, ip_address: "127.0.0.1")
-      SearchLog.log(term: "java", search_type: :header, ip_address: "127.0.0.1")
-      SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1", user_id: user.id)
-      SearchLog.log(term: "swift", search_type: :header, ip_address: "127.0.0.1")
-      SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.2")
+      log_search("ruby")
+      log_search("php")
+      log_search("java")
+      log_search("ruby", user_id: user.id)
+      log_search("swift")
+      log_search("ruby", ip_address: "127.0.0.2")
     end
 
     it "considers time period" do
@@ -282,6 +483,28 @@ RSpec.describe SearchLog, type: :model do
       Fabricate(:search_log, term: "anonymous-search", user: nil)
 
       results = SearchLog.trending(:all, :non_staff_only).to_a
+
+      expect(results.map { |trend| [trend.term, trend.searches] }).to eq([["ruby", 1]])
+    end
+
+    it "returns non-staff and anonymous searches minus crawlers with the human_only search type" do
+      SiteSetting.improved_crawler_detection = true
+      Fabricate(:search_log, term: "admin-search", user: Fabricate(:admin))
+      Fabricate(:search_log, term: "crawler-search", user: nil, crawler: true)
+
+      results = SearchLog.trending(:all, :human_only).to_a
+
+      expect(results.map { |trend| [trend.term, trend.searches] }).to eq(
+        [["ruby", 3], ["java", 1], ["php", 1], ["swift", 1]],
+      )
+    end
+
+    it "falls back to members-only for human_only while crawler detection is disabled" do
+      SiteSetting.improved_crawler_detection = false
+      Fabricate(:search_log, term: "admin-search", user: Fabricate(:admin))
+      Fabricate(:search_log, term: "anonymous-search", user: nil)
+
+      results = SearchLog.trending(:all, :human_only).to_a
 
       expect(results.map { |trend| [trend.term, trend.searches] }).to eq([["ruby", 1]])
     end

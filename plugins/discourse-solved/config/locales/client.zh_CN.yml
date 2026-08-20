@@ -22,28 +22,10 @@ zh_CN:
             fetch_error: "无法加载支持数据。"
             save_error: "无法保存您的选择以供下次使用。"
             headline:
-              healthy:
-                title: "社区正在自行解决问题。"
-              struggling:
-                title: "大多数问题都没有得到解答。"
-              mixed:
-                title: "支持情况好坏参半。"
-              no_data:
-                title: "尚无足够的支持活动"
-                summary: "此期间尚无支持活动。一旦有话题出现，您将看到您的社区是如何处理这些话题的。"
-              resolution:
-                up: "问题解决率提升至 %{rate} %。"
-                down: "问题解决率降低至 %{rate} %。"
-                flat: "问题解决率保持在 %{rate} %。"
-              answerers:
-                members: "成员处理了 %{share} %的回复。"
-                staff: "管理人员回复了 %{share} %的回复。"
-              reply:
-                faster: "首次回复时间缩短至 %{time} ，比上一周期快了 %{delta} 。"
-                slower: "首次回复时间延长至 %{time} ，比上一周期慢了 %{delta} 。"
-                flat: "首次回复时间保持在 %{time} 。"
-              unanswered:
-                other: "此期间的%{count} 个话题仍无回复。"
+              titles:
+                insufficient_activity: "尚无足够的支持活动"
+              summaries:
+                insufficient_activity: "此期间尚无支持活动。一旦有话题出现，您将看到您的社区是如何处理这些话题的。"
             kpi:
               resolution_rate:
                 label: "解决率"

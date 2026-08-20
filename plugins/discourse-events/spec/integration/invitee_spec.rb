@@ -4,7 +4,7 @@ describe DiscoursePostEvent::Invitee do
   before do
     freeze_time
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 

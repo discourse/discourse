@@ -288,8 +288,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.remove_filter("network")
 
     traffic.select_tab(card: "visitors", tab: "Browsers")
-    traffic.filter_row(card: "visitors", label: "Chrome")
-    expect(traffic).to have_filter_pill(dimension: "browser", label: "Chrome")
+    traffic.filter_row(card: "visitors", label: "Google Chrome")
+    expect(traffic).to have_filter_pill(dimension: "browser", label: "Google Chrome")
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",
@@ -403,9 +403,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   end
 
   it "warns an admin when the selected range has incomplete traffic data",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0),
+     timezone: "UTC" do
     sign_in(admin)
-    SiteSetting.admin_site_traffic_event_cap = 2
+    SiteSetting.site_traffic_explorer_event_limit = 2
 
     [
       ["/first-retained", "2026-02-15 09:00:00"],
@@ -425,7 +426,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_partial_data_warning(
       reason:
-        "Detailed pageview activity before Feb 14, 2026 is no longer available, so these results cover only part of the selected date range. They are also limited to the most recent 2 pageviews. Choose a shorter date range within the available dates to include all available pageview activity.",
+        "Results include the most recent 2 pageviews, beginning May 10, 2026 at 10:00 AM. Earlier pageviews in the selected date range are not included; pageview data before Feb 14, 2026 is no longer available.",
     )
   end
 

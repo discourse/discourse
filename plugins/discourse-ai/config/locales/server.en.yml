@@ -48,7 +48,7 @@ en:
           %{response}
         flagged_post_response: "Response from the model: %{llm_response}"
         flagged_post_score_reason: |
-          <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
+          <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/automation/%{automation_id}">%{automation_name}</a> rule.</b>
         notify_author_pm:
           subject: "Your post was temporarily removed for review"
           body: |
@@ -181,7 +181,8 @@ en:
     ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
     ai_translation_backfill_parallel_jobs: "The number of parallel post localization jobs to run per backfill cycle. Higher values increase throughput but consume more resources."
     ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
-    ai_audit_logs_purge_after_days: "Delete AI API audit logs older than this many days. Defaults to about 6 months. Set to 0 to keep indefinitely."
+    ai_audit_logs_detailed_retention_days: "Keep raw AI request and response payloads for this many days. Set to 0 to keep payloads until the summary log is deleted. Raw payloads can contain private or sensitive content. Cleanup continues while the AI plugin is disabled."
+    ai_audit_logs_purge_after_days: "Keep AI API audit log summaries for this many days before deleting the entire log. Set to 0 to keep summaries forever. Cleanup continues while the AI plugin is disabled."
 
   reviewables:
     reasons:

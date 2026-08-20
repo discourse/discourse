@@ -1,38 +1,18 @@
 import {
-  type ElementDragPayload,
   type ElementEventBasePayload,
   monitorForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+} from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { modifier } from "ember-modifier";
+import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
 import {
-  dragTypeOf,
+  matchesDragType,
   type NormalizedDragSource,
   normalizeDragSource,
-} from "discourse/services/drag-and-drop";
+} from "discourse/lib/-internals/drag-and-drop/vocabulary";
 
 /**
- * Whether a drag's type is one the consumer asked for.
- *
- * Centralized so every monitor applies the same filter semantics.
- *
- * @param types - One type, several, or nothing at all to match every drag.
- * @param source - The dragged source, compared through {@link dragTypeOf}.
- */
-export function matchesDragType(
-  types: string | string[] | undefined,
-  source: ElementDragPayload
-) {
-  const list = Array.isArray(types) ? types : types ? [types] : [];
-  if (list.length === 0) {
-    return true;
-  }
-  return list.includes(dragTypeOf(source.data) as string);
-}
-
-/**
- * What a monitor callback is told: the dragged source and where it has been.
- * The source arrives normalized ({@link normalizeDragSource}), so a monitor
- * reads the same shape a drop target reports and never meets a routing key.
+ * What a monitor callback is told: the normalized source and the drag's
+ * location history.
  */
 export type DragMonitorEvent = Omit<ElementEventBasePayload, "source"> & {
   source: NormalizedDragSource;
@@ -40,8 +20,7 @@ export type DragMonitorEvent = Omit<ElementEventBasePayload, "source"> & {
 
 interface DDragAndDropMonitorSignature {
   /**
-   * Irrelevant — a monitor is global. Attach to any always-present sentinel for
-   * the lifecycle.
+   * A monitor is global. The element only anchors the modifier's lifecycle.
    */
   Element: HTMLElement;
   Args: {
@@ -51,10 +30,10 @@ interface DDragAndDropMonitorSignature {
        */
       types?: string | string[];
 
-      /** The drag was confirmed. */
+      /** A drag started. */
       onDragStart?: (event: DragMonitorEvent) => void;
 
-      /** The drag progressed. */
+      /** The drag moved. */
       onDrag?: (event: DragMonitorEvent) => void;
 
       /** The drag ended, whether or not it landed on a target. */
@@ -73,16 +52,13 @@ export type DragAndDropMonitorArgs =
   DDragAndDropMonitorSignature["Args"]["Named"];
 
 /**
- * Wraps the element-drag monitor behind one shape. Used by the
- * default-exported modifier below, and exported so consumers can register a
- * monitor imperatively (when a template modifier doesn't fit) without importing
- * the underlying library.
+ * Imperative monitor registration; the `dDragAndDropMonitor` modifier below
+ * wraps it.
  *
- * Library-agnostic by design: the dependency is imported only here.
- *
- * @param getArgsRef - Closure returning the latest args. Library callbacks read
- *   this on every invocation.
- * @returns Cleanup function. Caller invokes it once on teardown.
+ * @param getArgsRef - Closure returning the latest args. Callbacks read it on
+ *   every invocation; `types` is consulted once as a drag starts, so a change
+ *   applies from the next drag.
+ * @returns Cleanup; call it once on teardown.
  */
 export function registerDragAndDropMonitor(
   getArgsRef: () => DragAndDropMonitorArgs
@@ -93,37 +69,31 @@ export function registerDragAndDropMonitor(
   });
   return monitorForElements({
     canMonitor: ({ source }) => matchesDragType(getArgsRef().types, source),
-    onDragStart: (event) => getArgsRef().onDragStart?.(normalized(event)),
-    onDrag: (event) => getArgsRef().onDrag?.(normalized(event)),
-    onDrop: (event) => getArgsRef().onDrop?.(normalized(event)),
+    onDragStart: (event) =>
+      consumerMayThrow(() => getArgsRef().onDragStart?.(normalized(event))),
+    onDrag: (event) =>
+      consumerMayThrow(() => getArgsRef().onDrag?.(normalized(event))),
+    onDrop: (event) =>
+      consumerMayThrow(() => getArgsRef().onDrop?.(normalized(event))),
   });
 }
 
 /**
- * Observes the in-flight element drag, regardless of drop targets. Use it to
- * react to a drag's progress without making
- * an element droppable (e.g. paging a scroll container when the cursor hovers
- * a navigation control mid-drag). Every arg is documented on
+ * Observes the in-flight element drag regardless of drop targets, to react to
+ * its progress without making an element droppable. Every arg is documented on
  * {@link DragAndDropMonitorArgs}.
- *
- * A monitor is global, so the host element is irrelevant — attach it to any
- * always-present sentinel for the lifecycle:
  *
  * ```hbs
  * <div {{dDragAndDropMonitor types=this.dragTypes onDrag=this.onDrag}}></div>
  * ```
  *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
- *
- * @see The `dragAndDrop` service to *read* drag state reactively. This modifier is
- *   for *responding* imperatively; rendering from it duplicates what the service keeps.
+ * @see The `dragAndDrop` service to read drag state reactively; rendering from
+ *   these callbacks duplicates what it keeps.
  */
 export default modifier<DDragAndDropMonitorSignature>(
   (_element, _positional, args) =>
-    // Read args INSIDE the closure, not via destructure in the body — a
-    // destructure here would mark the args' tags consumed and force the
-    // modifier to re-run (re-registering the monitor) on every change.
+    // Read args inside the closure: reading them here would track them and
+    // re-run the modifier, re-registering the monitor on every change.
     registerDragAndDropMonitor(() => ({
       types: args.types,
       onDragStart: args.onDragStart,

@@ -428,14 +428,13 @@ be:
         other: " %{Count} дзён таму"
   password_reset:
     title: "скінуць пароль"
+  browsers:
+    discoursehub: "DiscourseHub прыкладанне"
+    edge: "Microsoft Эдж"
+    firefox: "Firefox"
+    ie: "Інтэрнэт эксплорер"
+    opera: "Браузер Опера"
   user_auth_tokens:
-    browser:
-      discoursehub: "DiscourseHub прыкладанне"
-      edge: "Microsoft Эдж"
-      firefox: "Firefox"
-      ie: "Інтэрнэт эксплорер"
-      opera: "Браузер Опера"
-      unknown: "невядомы браўзэр"
     device:
       android: "Android прылада"
       ipad: "IPad"
@@ -456,9 +455,6 @@ be:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "ананімны"
-    browsers:
-      edge: "Microsoft Эдж"
-      firefox: "Firefox"
   change_email:
     error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
     error_staged: "Падчас змянення адраса электроннай пошты адбылася памылка. Гэты адрас ужо выкарыстоўваецца зарэгістраваным карыстальнікам."
@@ -795,6 +791,9 @@ be:
         num_topics: "тэмы"
       description: "Карыстальнікі, пералічаныя па колькасці клікаў па спасылках, яны падзяліліся."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "наведванне"
+    top_entry_urls:
       labels:
         count: "наведванне"
     top_referrers_by_browser_pageviews:

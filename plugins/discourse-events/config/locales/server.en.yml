@@ -42,8 +42,8 @@ en:
   site_settings:
     map_events_to_color: "Assign a color to each tag or category."
     map_events_title: "Overwrites 'Events' in the 'Upcoming Events' sidebar title per category."
-    calendar_enabled: "Enable the Discourse Events plugin. This will add support for a [calendar][/calendar] tag in the first post of a topic."
-    discourse_post_event_enabled: "Enables the Event features. Note: also needs {{setting:calendar_enabled}} to be enabled."
+    discourse_events_enabled: "Enable the Discourse Events plugin. This will add support for a [calendar][/calendar] tag in the first post of a topic."
+    discourse_post_event_enabled: "Enables the Event features. Note: also needs {{setting:discourse_events_enabled}} to be enabled."
     displayed_invitees_limit: "Limits the numbers of invitees displayed on an event."
     display_post_event_date_on_topic_title: "Displays the date of the event after the topic title."
     use_local_event_date: "Use local date after topic title instead of relative time."
@@ -110,6 +110,10 @@ en:
     livestream:
       chat:
         topic_reference_message: "This channel is for the event [%{title}](%{url}) — visit the topic for details and to RSVP."
+      zoom:
+        frame_title: "Zoom webinar"
+        frame_join: "Join webinar"
+        frame_joining: "Connecting…"
     calendar_must_be_in_first_post: "Calendar tag can only be used in first post of a topic."
     more_than_one_calendar: "You can’t have more than one calendar in a post."
     more_than_two_dates: "A post of a calendar topic can’t contain more than two dates."

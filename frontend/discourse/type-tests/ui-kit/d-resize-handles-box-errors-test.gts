@@ -1,4 +1,7 @@
-/** Verifies that built-in handles always report compass directions. */
+/** Verifies that built-in handles always report compass directions. Keep ONE error source inside each guarded element: a
+ * directive suppresses every error in the element it guards, so a second
+ * mistake added alongside this one would be absorbed silently.
+ */
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 
 declare function onColumnResize(column: number): void;

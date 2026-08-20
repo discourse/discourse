@@ -210,7 +210,7 @@ RSpec.describe BrowserPageviewEvent do
         country_code: "AU",
         asn: 12_345,
         referrer: "https://www.example.com/path?utm_source=x",
-        user_agent: "Mozilla/5.0",
+        user_agent: "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
         session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
         topic_id: 123,
         source: described_class::SOURCE_BEACON,
@@ -244,6 +244,7 @@ RSpec.describe BrowserPageviewEvent do
       expect(event.normalized_referrer).to eq("example.com/path")
       expect(event.created_at).to eq_time(occurred_at)
       expect(event.source).to eq("beacon")
+      expect(event.browser).to eq("edge")
       expect(described_class.queued_count).to eq(0)
     end
 

@@ -55,6 +55,7 @@ pl_PL:
   access_control_list:
     errors:
       user_will_not_have_permission: "Jeśli usuniesz ten wpis listy ACL, utracisz dostęp do tego obiektu."
+      user_will_not_have_permission_on_create: "Jeśli utworzysz ten podmiot z tymi uprawnieniami, nie będziesz mieć do niego dostępu. Kontynuować?"
   topic_category_changed: "Od %{from} do %{to}"
   topic_tag_changed:
     added_and_removed: "Dodano %{added} i usunięto %{removed}"
@@ -1168,16 +1169,22 @@ pl_PL:
     title: "Logowanie e-mailem"
   email_login_code:
     invalid_code: "Ten kod jest niepoprawny lub wygasł. Poproś o nowy kod i spróbuj ponownie."
+  browsers:
+    android_browser: "Przeglądarka Android"
+    baidu_browser: "Przeglądarka Baidu"
+    chrome: "Google Chrome"
+    discoursehub: "Aplikacja DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    kaios_browser: "Przeglądarka KaiOS"
+    opera: "Opera"
+    qq_browser: "Przeglądarka QQ"
+    safari: "Safari"
+    samsung_browser: "Przeglądarka Samsung"
+    uc_browser: "Przeglądarka UC"
+    unknown: "Nieznana przeglądarka"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "aplikacja DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "nieznana przeglądarka"
     device:
       android: "Urządzenie z Androidem"
       chromebook: "Chrome OS"
@@ -1203,12 +1210,6 @@ pl_PL:
       logged_in: "Zalogowani"
       anonymous: "Anonimowi"
       likely_crawler: "Prawdopodobne roboty indeksujące"
-    browsers:
-      chrome: "Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
-      unknown: "Nieznana przeglądarka"
   change_email:
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
@@ -1718,6 +1719,10 @@ pl_PL:
       labels:
         country_code: "Kod kraju"
         count: "Odwiedziny"
+    top_entry_urls:
+      labels:
+        entry_url: "Wpisowy adres URL"
+        count: "Odwiedziny"
     top_referrers_by_browser_pageviews:
       title: "Najpopularniejsi polecający"
       description: "Zewnętrzne witryny, które w wybranym okresie odnotowały największą liczbę odsłon Twojego forum."
@@ -2225,6 +2230,7 @@ pl_PL:
     discourse_connect_url: "Adres URL punktu końcowego DiscourseConnect (musi zawierać http:// lub https:// i nie może zawierać końcowego ukośnika)"
     discourse_connect_secret: "Sekretny ciąg znaków używany do uwierzytelniania kryptograficznego informacji DiscourseConnect, upewnij się, że ma 10 lub więcej znaków"
     discourse_connect_provider_secrets: "Lista tajnych domen korzystających z DiscourseConnect. Upewnij się, że ma co najmniej 10 znaków. Symbol gwiazdki może być użyty do dopasowania dowolnej domeny lub części domeny (przykład: * .example.com)"
+    discourse_connect_provider_claims: "Po włączeniu opcji {{setting:enable_discourse_connect_provider}} wybierz, które opcjonalne oświadczenia użytkownika mają być uwzględniane w odpowiedziach dostawcy. Ładunki danych są podpisywane, ale nieszyfrowane. Stabilny identyfikator zewnętrzny i nazwa użytkownika są zawsze uwzględniane. Wszystkie oświadczenia są domyślnie zaznaczone ze względu na zgodność; usunięcie oświadczeń może spowodować przerwanie działania witryn zależnych, które używają ich do łączenia kont, autoryzacji lub synchronizacji profili."
     discourse_connect_overrides_bio: "Zastępuje biografię użytkownika w profilu użytkownika i uniemożliwia jej zmianę"
     discourse_connect_overrides_groups: "Synchronizuj wszystkie ręczne członkostwo w grupie z grupami określonymi w atrybucie grup (OSTRZEŻENIE: jeśli nie określisz grup, wszystkie ręczne członkostwo w grupie zostanie wyczyszczone dla użytkownika)"
     auth_overrides_email: "Nadpisuje lokalny e-mail przez adres e-mail zewnętrznej witryny przy każdym logowaniu i zapobiega lokalnym zmianom. Stosuje się do wszystkich dostawców uwierzytelniania. (WARNING: mogą wystąpić rozbieżności w wyniku normalizacji lokalnych adresów e-mail)"
@@ -2804,6 +2810,7 @@ pl_PL:
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
     dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
     enable_site_traffic_explorer: "Połącz działanie panelu administracyjnego ze szczegółami ruchu w witrynie przeglądarki ruchu."
+    site_traffic_explorer_event_limit: "Kontroluje maksymalną liczbę ostatnich odsłon stron przetwarzanych przez Site Traffic Explorer. Wyższe limity obejmują większy ruch, ale mogą wymagać dłuższego ładowania lub przekroczenia limitu czasu na serwerach baz danych o niższych zasobach."
     gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Wyłączenie tej opcji uniemożliwi użytkownikom przełączanie się na Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
     gravatar_base_url: "Podaj adres URL umożliwiający dostęp do API serwisu Gravatar. To ustawienie jest niezbędne do konwersji adresów e-mail na adresy URL Gravatar, gdzie przechowywane są obrazy awatarów."
@@ -2835,7 +2842,6 @@ pl_PL:
     enable_new_checkbox_style: "Włącz nowy styl pól wyboru dla pól wyboru FormKit."
     enable_new_post_reactions_menu: "Włącz przeprojektowane menu polubień wpisów i reakcji, z nieskończonym przewijaniem i natywną obsługą mobilną."
     enable_composer_redesign: "Włącz przeprojektowany kompozytor."
-    enable_new_composer_actions: "Włącz przeprojektowane menu akcji kompozytora i przycisk zapisu kombinowanego z przełącznikami szeptu, braku wstrząsów i usunięcia z listy widocznymi obok akcji zapisu."
     prioritize_recently_used_tags: "Podczas dodawania tagów podczas tworzenia lub edytowania tematu, na górze listy, przed najpopularniejszymi tagami na forum, wyświetlane są tagi, których dany członek ostatnio użył we własnych tematach."
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
@@ -6067,10 +6073,12 @@ pl_PL:
         delete:
           title: "Usuń użytkownika"
           description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
+          confirm: "Czy na pewno chcesz usunąć @%{username}?"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
           description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
+          confirm: "Czy na pewno chcesz usunąć i zablokować @%{username}?"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:
         title: "Tak"

@@ -408,6 +408,9 @@ sr:
       labels:
         country_code: "Kod zemlje"
         count: "Poseta"
+    top_entry_urls:
+      labels:
+        count: "Poseta"
     top_referrers_by_browser_pageviews:
       title: "Najveći upućivači"
       description: "Spoljni sajtovi koji upućuju najviše pregleda stranica na vaš forum u izabranom periodu."

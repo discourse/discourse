@@ -6927,24 +6927,10 @@ de:
                 other: "%{count} Mitglieder wurden auf diese Vertrauensstufe herabgestuft"
               stable_aria: "keine Bewegung"
             headline:
-              healthy_growth:
-                title: "Die Mitglieder bilden die Gewohnheit, wiederzukommen."
-                summary: "Die Bindung, die tägliche Aktivität und die Anzahl neuer Mitglieder sind in diesem Zeitraum allesamt gestiegen."
-              declining:
-                title: "Die Mitglieder kommen seltener wieder."
-                summary: "Die Bindung, die tägliche Aktivität und die Anzahl neuer Mitglieder sind in diesem Zeitraum allesamt gefallen."
-              engaged_but_shrinking:
-                title: "Die Mitglieder sind engagiert, aber die Community schrumpft."
-                summary: "Die Bindung hält an, aber die tägliche Aktivität oder die Anzahl neuer Mitglieder sind gesunken."
-              growing_but_distracted:
-                title: "Neue Mitglieder registrieren sich zwar, bleiben aber nicht lange."
-                summary: "Die Anzahl der neuen Mitglieder ist gestiegen, aber die Bindung ist in diesem Zeitraum gesunken."
-              mixed:
-                title: "Die Aktivitätstrends sind in diesem Zeitraum gemischt."
-                summary: "Einige Metriken sind gestiegen, während andere gesunken sind. Weitere Informationen findest du in den Kacheln unten."
-              no_signal:
-                title: "Noch nicht genügend Aktivitäten für eine Engagement-Übersicht."
-                summary: "Wähle einen längeren Zeitraum aus oder schau später wieder vorbei, wenn in deiner Community mehr los ist."
+              titles:
+                insufficient_activity: "Noch nicht genügend Aktivitäten für eine Engagement-Übersicht."
+              summaries:
+                insufficient_activity: "Wähle einen längeren Zeitraum aus oder schau später wieder vorbei, wenn in deiner Community mehr los ist."
               metrics:
                 new_signups: "Neue Mitglieder"
                 dau_mau: "DAU/MAU-Bindung"
@@ -6954,30 +6940,14 @@ de:
             fetch_error: "Suchdaten konnten nicht geladen werden. Versuche, die Seite zu aktualisieren."
             logging_disabled: 'Die Suchprotokollierung ist deaktiviert, daher werden keine Suchdaten erfasst. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um mit der Erfassung zu beginnen.'
             logging_disabled_moderator: "Die Suchprotokollierung ist deaktiviert, daher werden keine Suchdaten erfasst. Bitte einen Administrator darum, das Protokollieren von Suchanfragen zu aktivieren, um mit der Erfassung zu beginnen."
-            count_headline:
-              last_7_days:
-                one: "Die Mitglieder haben in den letzten 7 Tagen %{formatted_count} Suchanfrage auf der Website durchgeführt."
-                other: "Die Mitglieder haben in den letzten 7 Tagen %{formatted_count} Suchanfragen auf der Website durchgeführt."
-              last_30_days:
-                one: "Die Mitglieder haben in den letzten 30 Tagen %{formatted_count} Suchanfrage auf der Website durchgeführt."
-                other: "Die Mitglieder haben in den letzten 30 Tagen %{formatted_count} Suchanfragen auf der Website durchgeführt."
-              last_3_months:
-                one: "Die Mitglieder haben in den letzten 3 Monaten %{formatted_count} Suchanfrage auf der Website durchgeführt."
-                other: "Die Mitglieder haben in den letzten 3 Monaten %{formatted_count} Suchanfragen auf der Website durchgeführt."
-              selected_period:
-                one: "Die Mitglieder haben im ausgewählten Zeitraum %{formatted_count} Suchanfrage auf der Website durchgeführt."
-                other: "Die Mitglieder haben im ausgewählten Zeitraum %{formatted_count} Suchanfragen auf der Website durchgeführt."
             headline:
-              no_signal_title: "Noch nicht genügend Suchaktivität für eine Übersicht."
-              no_signal: "Wähle einen längeren Zeitraum aus oder schau später wieder vorbei, wenn die Mitglieder mehr gesucht haben."
-              content_gaps: "Mehr als 10 % der Suchanfragen von Mitgliedern endeten in diesem Zeitraum ohne Klick. Schau dir die unten aufgeführten Inhaltslücken an, um zu sehen, was fehlt."
-              rate_climbing: "Die Quote der Suchergebnisse ohne Treffer steigt im Vergleich zum vorherigen Zeitraum. Behalte die unten aufgeführten Inhaltslücken im Auge."
-              shrinking: "Das Suchvolumen ist im Vergleich zum Vorzeitraum zurückgegangen, doch die meisten Suchanfragen führen nach wie vor zu Inhalten."
-              healthy: "Die Mitglieder finden immer wieder, wonach sie suchen, und das Suchvolumen bleibt stabil oder steigt."
+              titles:
+                insufficient_activity: "Noch nicht genügend Suchaktivität für eine Übersicht."
+              summaries:
+                insufficient_activity: "Wähle einen längeren Zeitraum aus oder schau später wieder vorbei, wenn die Mitglieder mehr gesucht haben."
             kpi:
               total_searches:
                 label: "Gesamtzahl der Suchanfragen"
-                tooltip: "Die Anzahl der Suchanfragen, die von Mitgliedern in deiner Community durchgeführt wurden."
               no_result_rate:
                 label: "Anteil ohne Ergebnis"
                 tooltip: "Der Prozentsatz der Suchanfragen, bei denen Mitglieder kein Ergebnis angeklickt haben (0 % CTR). Das deutet darauf hin, dass Mitglieder möglicherweise nach Inhalten suchen, die deine Community nicht bietet."
@@ -6987,7 +6957,6 @@ de:
               status: "Status"
             trending:
               title: "Angesagte Suchbegriffe"
-              tooltip: "Die beliebtesten Suchbegriffe unter den Mitgliedern."
               empty: "Keine Suchanfragen in diesem Zeitraum."
             content_gaps:
               title: "Inhaltslücken"

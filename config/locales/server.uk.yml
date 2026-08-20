@@ -1164,16 +1164,15 @@ uk:
     title: "Вхід по E-mail"
   email_login_code:
     invalid_code: "Цей код неправильний або термін його дії минув. Запросіть новий код і спробуйте ще раз."
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Програма DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Програма DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "невідомий оглядач"
     device:
       android: "Android Пристрій"
       chromebook: "Chrome OS"
@@ -1198,10 +1197,6 @@ uk:
       logged_in: "Ви увійшли"
       anonymous: "Анонімний"
       likely_crawler: "Ймовірні сканери"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Під час зміни адреси електронної пошти сталася помилка. Можливо, адреса вже використовується?"
     doesnt_exist: "Ця адреса е-пошти не пов’язана з вашим обліковим записом."
@@ -1710,6 +1705,9 @@ uk:
       description: "Країни, з яких найбільше переглядів сторінок вашого форуму відбувається у браузерах за вибраний період."
       labels:
         country_code: "Код країни"
+        count: "Відвідини"
+    top_entry_urls:
+      labels:
         count: "Відвідини"
     top_referrers_by_browser_pageviews:
       title: "Найкращі реферали"
@@ -2825,7 +2823,6 @@ uk:
     enable_new_checkbox_style: "Увімкнути перероблений стиль прапорців для прапорців FormKit."
     enable_new_post_reactions_menu: "Увімкніть оновлене меню вподобайок та реакцій публікацій із нескінченною прокруткою та звичним мобільним досвідом."
     enable_composer_redesign: "Увімкнути перероблений редактор текстів."
-    enable_new_composer_actions: "Увімкнути оновлене меню дій редактора та кнопку комбінованого збереження з перемикачами \"шепіт\", \"без підняття\" та \"не в списку\" поруч із дією збереження."
     prioritize_recently_used_tags: "Під час додавання тегів під час створення або редагування теми, відображайте теги, які учасник нещодавно використовував у своїх темах, у верхній частині списку, перед найпопулярнішими тегами форуму."
     experimental_impersonation_time_limit_minutes: "Через який час сеанс імітації автоматично завершується."
     page_loading_indicator: "Вибір індикатора завантаження, який з’являється під час навігації сторінкою в Discourse. «Спіннер» – це індикатор на всю сторінку. «Слайдер» — вузька смужка у верхній частині екрана."

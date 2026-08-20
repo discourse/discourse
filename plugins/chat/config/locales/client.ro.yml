@@ -280,4 +280,10 @@ ro:
         message: "Mesaj"
       chat_approval:
         message: "Mesaj"
+        buttons: "Butoane"
+        value: "Valoare"
+        style: "Stil"
+        style_default: "Implicit"
+        style_success: "Succes"
+        icon: "Icon"
         channel_id: "Canal"

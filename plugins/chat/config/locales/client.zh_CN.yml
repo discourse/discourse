@@ -814,6 +814,13 @@ zh_CN:
         message: "消息"
       chat_approval:
         message: "消息"
+        buttons: "按钮"
+        value: "值"
+        style: "样式"
+        style_default: "默认"
+        style_primary: "主要"
+        style_success: "成功"
+        icon: "图标"
         approve_label: "“批准”按钮标签"
         approve_label_description: "如果留空，则默认为“批准”。"
         deny_label: "“拒绝”按钮标签"

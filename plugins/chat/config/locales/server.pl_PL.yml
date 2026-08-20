@@ -283,6 +283,15 @@ pl_PL:
         invalid_params: "Nie udało się wysłać wiadomości na czacie: %{errors}"
         failed: "Nie udało się wysłać wiadomości na czacie: %{steps}"
         timeout_must_be_positive: "Liczba minut limitu czasu musi być większa niż 0."
+        invalid_timeout_action: "Nieprawidłowa czynność limitu czasu: %{action}."
+        buttons_required: "Wymagany jest co najmniej jeden przycisk zatwierdzający czat."
+        too_many_buttons: "Zatwierdzenie czatu obsługuje maksymalnie przyciski %{max}."
+        button_label_required: "Przycisk zatwierdzania czatu %{position} wymaga etykiety."
+        button_label_too_long: "Etykieta przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
+        button_value_required: "Przycisk zatwierdzania czatu %{position} wymaga podania wartości."
+        button_value_too_long: "Wartość przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
+        button_style_invalid: "Przycisk zatwierdzania czatu %{position} musi mieć jeden z następujących stylów: %{styles}."
+        button_icon_too_long: "Ikona przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
   reviewable_score_types:
     needs_review:
       title: "Wymaga przeglądu"

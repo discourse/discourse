@@ -28,6 +28,8 @@ pt:
       cast-votes:
         title: "Vote"
         label: "Vote agora!"
+      keep-vote:
+        label: "Anterior"
       show-results:
         title: "Exibir os resultados da sondagem"
         label: "Resultados"

@@ -958,16 +958,15 @@ es:
   email_login:
     invalid_token: '¡Uy! El enlace que has utilizado ya no funciona. Ahora puedes <a href="%{base_url}/login">Iniciar sesión</a>. Si has olvidado tu contraseña, puedes <a href="%{base_url}/password-reset">solicitar un enlace</a> para restablecerla.'
     title: "Iniciar sesión con correo electrónico"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador desconocido"
     device:
       android: "Dispositivo Android"
       chromebook: "Chrome OS"
@@ -990,10 +989,6 @@ es:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anónimas"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Hubo un problema al cambiar tu dirección de correo electrónico. ¿Quizás la dirección ya está en uso?"
     doesnt_exist: "Ese correo electrónico no está asociado a tu cuenta."
@@ -1467,6 +1462,9 @@ es:
         num_topics: "Temas"
       description: "Usuarios listados por número de clics en enlaces que han compartido."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_entry_urls:
       labels:
         count: "Visitas"
     top_referrers_by_browser_pageviews:

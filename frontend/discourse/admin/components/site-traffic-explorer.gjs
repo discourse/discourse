@@ -14,7 +14,7 @@ import I18n, { i18n } from "discourse-i18n";
 
 const SKELETON_METRICS = Array.from({ length: 4 });
 const SKELETON_BREAKDOWNS = Array.from({ length: 3 });
-const SKELETON_ROWS = Array.from({ length: 5 });
+const SKELETON_ROWS = Array.from({ length: 8 });
 const TRAFFIC_TYPE_BY_SERIES = {
   page_view_logged_in_browser: "logged_in",
   page_view_anon_browser: "anonymous",
@@ -170,20 +170,28 @@ export default class SiteTrafficExplorer extends Component {
     const availableDate = partial.available_start_date
       ? moment(partial.available_start_date).format("ll")
       : null;
-
-    if (partial.reason === "retention_and_pageview_limit") {
-      return i18n("admin.site_traffic_explorer.partial.combined", {
-        date: availableDate,
-        limit: this.#number(partial.pageview_limit),
-      });
-    }
     if (partial.reason === "retention") {
       return i18n("admin.site_traffic_explorer.partial.retention", {
         date: availableDate,
       });
     }
+
+    const pageviewLimitStart = moment(partial.pageview_limit_start_at);
+    const pageviewLimitDate = pageviewLimitStart.format("ll");
+    const pageviewLimitTime = pageviewLimitStart.format("LT");
+
+    if (partial.reason === "retention_and_pageview_limit") {
+      return i18n("admin.site_traffic_explorer.partial.combined", {
+        date: availableDate,
+        limit: this.#number(partial.pageview_limit),
+        pageviewLimitDate,
+        pageviewLimitTime,
+      });
+    }
     return i18n("admin.site_traffic_explorer.partial.pageview_limit", {
       limit: this.#number(partial.pageview_limit),
+      date: pageviewLimitDate,
+      time: pageviewLimitTime,
     });
   }
 

@@ -25,7 +25,7 @@ class DiscourseCalendar::Livestream::PrepareZoomJoin
   private
 
   def livestream_available
-    SiteSetting.chat_enabled && SiteSetting.calendar_enabled &&
+    SiteSetting.chat_enabled && SiteSetting.discourse_events_enabled &&
       SiteSetting.discourse_post_event_enabled
   end
 

@@ -9,7 +9,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
   before do
     freeze_time DateTime.parse("2018-11-10 12:00")
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 

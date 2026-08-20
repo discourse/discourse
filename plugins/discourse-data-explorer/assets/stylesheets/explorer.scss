@@ -115,6 +115,25 @@ table.group-reports {
     }
   }
 
+  /* The floor a resize may not cross, read from here by the separator. Declared
+     rather than measured once, so it follows the layout rather than whichever
+     state the editor opened in. Carried by a class, so panes without a separator
+     keep their own sizing. */
+
+  .query-editor__panes {
+    min-height: 400px;
+
+    @include viewport.until(sm) {
+      min-height: 548px;
+    }
+  }
+
+  &.no-schema .query-editor__panes {
+    @include viewport.until(sm) {
+      min-height: 300px;
+    }
+  }
+
   .editor-panel {
     flex: 1 0 50%;
 
@@ -317,8 +336,6 @@ table.group-reports {
   .grippie {
     padding-bottom: var(--space-2);
     user-select: none;
-    color: var(--primary);
-    text-align: right;
   }
 }
 

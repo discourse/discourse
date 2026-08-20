@@ -261,4 +261,10 @@ pt:
         message: "Mensagem"
       chat_approval:
         message: "Mensagem"
+        buttons: "Botões"
+        value: "Valor"
+        style: "Estilo"
+        style_default: "Predefinição"
+        style_primary: "Principal"
+        icon: "Ícone"
         channel_id: "Canal"

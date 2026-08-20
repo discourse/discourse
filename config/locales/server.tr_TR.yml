@@ -963,16 +963,15 @@ tr_TR:
   email_login:
     invalid_token: 'Hay aksi! Kullandığınız bağlantı artık çalışmıyor. Şimdi <a href="%{base_url}/login">Giriş</a> yapabilirsiniz. Şifrenizi unuttuysanız sıfırlamak için <a href="%{base_url}/password-reset">bağlantı talep edebilirsiniz</a>.'
     title: "E-posta girişi"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub uygulaması"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub uygulaması"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "bilinmeyen tarayıcı"
     device:
       android: "Android Cihaz"
       chromebook: "Chrome OS"
@@ -995,10 +994,6 @@ tr_TR:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonim"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "E-posta adresinizi değiştirirken bir hata oluştu. Belki de adres zaten kullanılıyordur?"
     doesnt_exist: "Bu e-posta adresi hesabınızla ilişkili değil."
@@ -1472,6 +1467,9 @@ tr_TR:
         num_topics: "Konular"
       description: "Kullanıcılar, paylaştıkları bağlantıların tıklanma sayısına göre listelenir."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Ziyaretler"
+    top_entry_urls:
       labels:
         count: "Ziyaretler"
     top_referrers_by_browser_pageviews:

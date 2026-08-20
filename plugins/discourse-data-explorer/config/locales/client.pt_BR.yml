@@ -102,7 +102,6 @@ pt_BR:
       nodes:
         "action:sql": "Explorador de Dados"
       sql:
-        queries: "Consultas"
         query_id: "Consulta"
         add_param: "Adicionar parâmetro"
         param_value: "Valor"

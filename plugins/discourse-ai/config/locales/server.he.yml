@@ -77,7 +77,6 @@ he:
     ai_helper_allowed_in_pm: "הפעלת מסייע הבינה המלאכותית בכותב ההודעות בהודעות הפרטיות."
     ai_helper_automatic_chat_thread_title_delay: "השהייה בשניות לפני שמסייע הבינה המלאכותית מגדיר את כותרת שרשור הצ׳אט אוטומטית."
     ai_helper_automatic_chat_thread_title: "הגדרת כותרות שרשור הצ׳אט אוטומטית לפי תוכן השרשור."
-    ai_helper_enabled_features: "נא לבחור יכולות להפעלה במסייע הבינה המלאכותית."
     post_ai_helper_allowed_groups: "קבוצות משתמשים שמורשות לגשת ליכולות מסייע בינה מלאכותית בפוסטים"
     ai_embeddings_selected_model: "להשתמש במודל הנבחר ליצירת הטמעות."
     ai_embeddings_generate_for_pms: "יצירת הטמעות להודעות פרטיות."
@@ -109,7 +108,6 @@ he:
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
     ai_translation_backfill_hourly_rate: "מספר הפוסטים והנושאים לתרגום לשעה במהלך פעולות מילוי לאחור. יש להגדיר ל־0 כדי להשבית מילוי לאחור של תרגומים אוטומטית לתוכן קיים."
     ai_usage_rollup_after_days: "מספר הימים לשמירת סטטיסטיקות שימוש בבינה מלאכותית לפי בקשה לפני גלגולן לצבירה יומית. הגדרה ל־0 תשבית איסופים."
-    ai_audit_logs_purge_after_days: "מחיקת יומני ביקורת של API של בינה מלאכותית שגילם עולה על מספר הימים הזה. ברירת המחדל היא כ־6 חודשים. הגדרה ל־0 תשמור ללא הגבלת זמן."
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -248,7 +246,6 @@ he:
         unknown_error: "אירעה שגיאה מפתיעה בעת יצירת תמונות ממוזערות. נא לנסות שוב."
       prompts:
         translate: תרגום ל%{language}
-        generate_titles: הצעת כותרות לנושא
         proofread: הגהת הטקסט
         markdown_table: יצירת טבלה ב־Markdown
         custom_prompt: "בקשה מותאמת אישית"

@@ -106,6 +106,33 @@ et:
         username: "Kasutajanimi"
         total_requests: "Kokku päringuid"
         total: "Kokku"
+      logs:
+        short_title: "Logid"
+        apply: "Rakenda"
+        successful: "Edukas"
+        failed: "Ebaõnnestunud"
+        unknown: "Teadmata"
+        topic_id: "Teema ID"
+        post_id: "Postituse ID"
+        time: "Aeg"
+        when: "Millal"
+        request: "Taotle"
+        provider: "Teenusepakkuja"
+        user: "Kasutaja"
+        context: "Kontekst"
+        topic: "Teema"
+        post: "Postitus"
+        post_short: "Postitus %{id}"
+        actions: "Tegevused"
+        periods:
+          custom: "Individuaalne"
+        detail:
+          request: "Taotle"
+          response: "Vastus"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Kokkuvõte"
+          save: "Salvesta"
       ai_agent:
         name: "Nimi"
         edit: "Muuda"

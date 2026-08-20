@@ -8,12 +8,12 @@ module DiscourseCalendar
 
         class << self
           def enable_plugin
-            SiteSetting.calendar_enabled = true
+            SiteSetting.discourse_events_enabled = true
             SiteSetting.discourse_post_event_enabled = true
           end
 
           def plugin_enabled?
-            SiteSetting.calendar_enabled && SiteSetting.discourse_post_event_enabled
+            SiteSetting.discourse_events_enabled && SiteSetting.discourse_post_event_enabled
           end
 
           def category_matches?(category)

@@ -19,24 +19,24 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     let(:params) { { start_date: "2026-05-01", end_date: "2026-05-12" } }
     let(:dependencies) { {} }
 
-    let(:user_agents) do
+    let(:browsers) do
       [
-        "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
-        "Mozilla/5.0 Chrome/124.0 Safari/537.36 OPR/109.0",
-        "Mozilla/5.0 Firefox/126.0",
-        "Mozilla/5.0 FxiOS/126.0 Mobile/15E148 Safari/605.1.15",
-        "Mozilla/5.0 CriOS/124.0 Mobile/15E148 Safari/604.1",
-        "Mozilla/5.0 Version/17.0 Mobile/15E148 Safari/604.1",
-        "Mozilla/5.0 SamsungBrowser/24.0 Chrome/120.0 Mobile Safari/537.36",
-        "Mozilla/5.0 Vivaldi/6.7 Chrome/124.0 Safari/537.36",
-        "Mozilla/5.0 Trident/7.0; rv:11.0",
-        "Discourse/163 CFNetwork/978.0.7 Darwin/18.6.0",
-        "ExampleBrowser/1.0",
+        nil,
+        :unknown,
+        :unknown,
+        :unknown,
+        :chrome,
+        :chrome,
+        :chrome,
+        :safari,
+        :safari,
+        :edge,
+        :firefox,
       ]
     end
 
     let!(:pageviews) do
-      user_agents.each_with_index do |user_agent, index|
+      browsers.each_with_index do |browser, index|
         Fabricate(
           :browser_pageview_event,
           url: "/browser-#{index}",
@@ -45,7 +45,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           ip_address: "192.0.2.#{index + 1}",
           session_id: "browser-#{index}",
           source: BrowserPageviewEvent::SOURCE_BEACON,
-          user_agent:,
+          browser:,
           created_at: Time.zone.local(2026, 5, 10, 10, index),
         )
       end
@@ -91,13 +91,13 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
 
-      it "classifies supported major browsers and groups other user agents as unknown" do
-        browsers = result.traffic.dig(:dimensions, "browsers")
+      it "groups stored browser values and displays rows awaiting backfill as unknown" do
+        browser_dimensions = result.traffic.dig(:dimensions, "browsers")
 
-        expect(browsers).to eq(
+        expect(browser_dimensions).to eq(
           [
             { value: "unknown", label: "Unknown browser", pageviews: 4 },
-            { value: "chrome", label: "Chrome", pageviews: 3 },
+            { value: "chrome", label: "Google Chrome", pageviews: 3 },
             { value: "safari", label: "Safari", pageviews: 2 },
             { value: "edge", label: "Microsoft Edge", pageviews: 1 },
             { value: "firefox", label: "Firefox", pageviews: 1 },
@@ -262,7 +262,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       end
 
       it "does not report partial data when the population exactly matches the cap" do
-        SiteSetting.admin_site_traffic_event_cap = 11
+        SiteSetting.site_traffic_explorer_event_limit = 11
 
         expect(result.traffic.slice(:partial_data, :summary)).to eq(
           partial_data: nil,
@@ -277,7 +277,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       end
 
       it "does not promote a capped session continuation to an entry" do
-        SiteSetting.admin_site_traffic_event_cap = 1
+        SiteSetting.site_traffic_explorer_event_limit = 1
         Fabricate(
           :browser_pageview_event,
           url: "/capped-session-entry",

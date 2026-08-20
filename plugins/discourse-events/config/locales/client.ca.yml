@@ -46,6 +46,7 @@ ca:
             private:
               title: "Privat"
       composer:
+        url_placeholder: "Afegeix URL"
         reminder:
           units:
             days:
@@ -74,6 +75,12 @@ ca:
             last: "darrer"
         attendance:
           none: "Cap"
+        location:
+          label: "Ubicació"
+        url:
+          label: "URL"
+          placeholder: "Opcional"
+          add: "Afegeix URL"
         description:
           label: "Descripció"
         event_type:

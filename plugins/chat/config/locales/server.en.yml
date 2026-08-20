@@ -269,6 +269,8 @@ en:
         button_label_too_long: "Chat approval button %{position} label must be %{max} characters or fewer."
         button_value_required: "Chat approval button %{position} requires a value."
         button_value_too_long: "Chat approval button %{position} value must be %{max} characters or fewer."
+        button_style_invalid: "Chat approval button %{position} style must be one of: %{styles}."
+        button_icon_too_long: "Chat approval button %{position} icon must be %{max} characters or fewer."
 
   reviewable_score_types:
     needs_review:

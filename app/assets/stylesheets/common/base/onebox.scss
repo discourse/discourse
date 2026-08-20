@@ -470,7 +470,9 @@ pre.onebox code ol.lines li::before {
   text-align: right;
   padding-right: 0.5em;
   font-size: var(--font-down-1);
-  line-height: calc((13 + 9.4) / 13); // matches the `code` line-height
+
+  // lines the gutter number up with the `min-height` of the line it labels
+  line-height: calc((13 + 9.4) / 13);
   content: counter(li-counter);
   counter-increment: li-counter;
 }
@@ -503,7 +505,7 @@ pre.onebox code ol {
 }
 
 pre.onebox code {
-  background-color: var(--primary-very-low);
+  // the template indents the line list; each line re-asserts `pre` for itself
   white-space: normal;
 }
 

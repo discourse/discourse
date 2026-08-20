@@ -41,6 +41,7 @@ lv:
             private:
               title: "Privāts"
       composer:
+        url_placeholder: "Pievienot URL"
         reminder:
           units:
             days:
@@ -68,6 +69,12 @@ lv:
           every_day: "Katru dienu"
         attendance:
           none: "Nav"
+        location:
+          label: "Atrašanās vieta"
+        url:
+          label: "URL"
+          placeholder: "Pēc izvēles"
+          add: "Pievienot URL"
         description:
           label: "Apraksts"
         event_type:

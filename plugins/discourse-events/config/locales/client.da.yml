@@ -20,9 +20,6 @@ da:
             topic_id:
               label: Emne ID
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "Chat"
       invite_user_notification: "%{username} inviterede dig til: %{description}"
       on_holiday: "På Ferie"
       disable_holiday: "Deaktiver"
@@ -367,6 +364,7 @@ da:
               description: "En privat begivenhed kan kun tilmeldes af inviterede brugere."
       composer:
         name_placeholder: "Navn på begivenhed"
+        url_placeholder: "Tilføj URL"
         event_title_placeholder: "Navn på begivenhed"
         create_event_button: "Opret begivenhed"
         reminder:
@@ -416,6 +414,12 @@ da:
             last: "sidste"
         attendance:
           none: "Ingen"
+        location:
+          label: "Sted"
+        url:
+          label: "URL"
+          placeholder: "Valgfri"
+          add: "Tilføj URL"
         description:
           label: "Beskrivelse"
         name:

@@ -1161,6 +1161,97 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       );
     });
 
+    test("an absent maximum leaves a pointer drag unclamped", async function (assert) {
+      const state = new Harness();
+      const noMax = () => null;
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=noMax
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      stubPointerCapture(edge);
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 300,
+        pointerId: 1,
+      });
+      await triggerEvent(edge, "pointerup", {
+        button: 0,
+        clientX: 420,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(
+        state.resizeEnds,
+        [420],
+        "the size the pointer reached is reported, not a coerced bound"
+      );
+    });
+
+    test("End is left alone when no maximum resolves", async function (assert) {
+      const state = new Harness();
+      const noMax = () => null;
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=noMax
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      await triggerKeyEvent(EDGE, "keydown", "End");
+      await triggerKeyEvent(EDGE, "keyup", "End");
+
+      assert.deepEqual(state.resizes, [], "no size is reported");
+      assert.deepEqual(state.resizeEnds, [], "no gesture is opened or closed");
+    });
+
+    test("Home is left alone when no minimum resolves", async function (assert) {
+      const state = new Harness();
+      const noMin = () => null;
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=noMin
+              max=360
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      await triggerKeyEvent(EDGE, "keydown", "Home");
+      await triggerKeyEvent(EDGE, "keyup", "Home");
+
+      assert.deepEqual(state.resizes, [], "no size is reported");
+      assert.deepEqual(state.resizeEnds, [], "no gesture is opened or closed");
+    });
+
     test("an interrupted resize keeps the size it was dragged to", async function (assert) {
       const state = new Harness();
 

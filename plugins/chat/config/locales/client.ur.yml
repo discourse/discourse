@@ -530,4 +530,11 @@ ur:
         message: "پیغام"
       chat_approval:
         message: "پیغام"
+        buttons: "بٹن"
+        value: "وَیلِیو"
+        style: "ظرز"
+        style_default: "ڈِیفالٹ"
+        style_primary: "بنیادی"
+        style_success: "کامیابی"
+        icon: "آئیکن"
         channel_id: "چَینل"
