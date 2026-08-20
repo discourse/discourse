@@ -60,7 +60,11 @@ module Jobs
         localize(post, locale)
       end
 
-      MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)
+      MessageBus.publish(
+        "/topic/#{post.topic_id}",
+        { type: :localized, id: post.id },
+        post.topic.secure_audience_publish_messages,
+      )
     end
 
     private
