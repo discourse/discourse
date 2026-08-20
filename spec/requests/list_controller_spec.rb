@@ -207,6 +207,28 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
+    it "serializes topic excerpts only when they are explicitly requested" do
+      post = create_post
+      post.topic.update!(excerpt: "A hand-picked excerpt")
+
+      get "/latest.json", params: { topic_ids: post.topic_id.to_s }
+      expect(response.parsed_body["topic_list"]["topics"].first["excerpt"]).to eq(nil)
+
+      get "/latest.json", params: { topic_ids: post.topic_id.to_s, include_excerpts: "false" }
+      expect(response.parsed_body["topic_list"]["topics"].first["excerpt"]).to eq(nil)
+
+      get "/latest.json", params: { topic_ids: post.topic_id.to_s, include_excerpts: "true" }
+      expect(response.parsed_body["topic_list"]["topics"].first["excerpt"]).to eq(
+        "A hand-picked excerpt",
+      )
+    end
+
+    it "should return a 400 response when `include_excerpts` is not a boolean" do
+      get "/latest.json?include_excerpts=yes"
+
+      expect(response.status).to eq(400)
+    end
+
     it "shows correct title if topic list is set for homepage" do
       get "/latest"
 

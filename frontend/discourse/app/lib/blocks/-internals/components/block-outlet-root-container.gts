@@ -7,7 +7,11 @@ import {
   outletContainerClassName,
   outletLayoutClassName,
 } from "discourse/lib/blocks/-internals/css";
-import { withDebugGroup } from "discourse/lib/blocks/-internals/debug-hooks";
+import {
+  DEBUG_CALLBACK,
+  debugHooks,
+  withDebugGroup,
+} from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
   type CreateChildBlockFn,
@@ -205,6 +209,17 @@ export default class BlockOutletRootContainer extends Component<BlockOutletRootC
       // The withDebugGroup wrapper ensures START_GROUP/END_GROUP are always paired.
       // This is the key reactive line - blocksService.evaluate() reads from router/discovery
       // services, and since we're in a tracked getter, Ember tracks these reads.
+      //
+      // Extra context fields can be injected via the EVAL_CONTEXT debug
+      // callback — external code uses it to thread a user / viewport
+      // simulation through condition evaluation without coupling the
+      // blocks service to that consumer. The callback is read inside the
+      // tracked getter, so any tracked state it returns triggers a
+      // re-render when it changes.
+      const extraContext = debugHooks.getCallback(
+        DEBUG_CALLBACK.EVAL_CONTEXT
+      )?.() as Record<string, unknown> | undefined;
+
       const conditionsPassed = entryClone.conditions
         ? withDebugGroup(
             blockName,
@@ -215,6 +230,7 @@ export default class BlockOutletRootContainer extends Component<BlockOutletRootC
               blocksService.evaluate(entryClone.conditions, {
                 debug: isLoggingEnabled,
                 outletArgs,
+                ...(extraContext ?? {}),
               })
           )
         : true;

@@ -5,6 +5,7 @@ import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { BlockError } from "discourse/lib/blocks/-internals/error";
 import {
   validateArgName,
+  validateArgsAgainstSchema,
   validateArgValue,
   validateArrayItemType,
 } from "discourse/lib/blocks/-internals/validation/args";
@@ -17,6 +18,7 @@ import {
   validateConstraints,
   validateConstraintsSchema,
 } from "discourse/lib/blocks/-internals/validation/constraints";
+import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
 
 module("Unit | Lib | blocks/validation/args", function () {
   module("validateArgsSchema", function () {
@@ -89,12 +91,72 @@ module("Unit | Lib | blocks/validation/args", function () {
 
     test("throws for invalid itemType", function (assert) {
       const schema = {
-        tags: { type: "array", itemType: "object" },
+        tags: { type: "array", itemType: "date" },
       };
 
       assert.throws(
         () => validateArgsSchema(schema, "test-block"),
-        /invalid itemType "object"/
+        /invalid itemType "date"/
+      );
+    });
+
+    test("throws for itemType object without itemSchema", function (assert) {
+      const schema = {
+        items: { type: "array", itemType: "object" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /itemType "object" but no "itemSchema"/
+      );
+    });
+
+    test("throws for itemSchema without itemType object", function (assert) {
+      const schema = {
+        items: {
+          type: "array",
+          itemType: "string",
+          itemSchema: { label: { type: "string" } },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /"itemSchema" is only valid when type is "array" and itemType is "object"/
+      );
+    });
+
+    test("throws for an invalid sub-field inside itemSchema", function (assert) {
+      const schema = {
+        items: {
+          type: "array",
+          itemType: "object",
+          itemSchema: { label: { type: "nope" } },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid type/
+      );
+    });
+
+    test("accepts a valid array-of-object schema with itemSchema", function (assert) {
+      const schema = {
+        items: {
+          type: "array",
+          itemType: "object",
+          itemSchema: {
+            label: { type: "string", required: true },
+            url: { type: "string" },
+          },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
       );
     });
 
@@ -989,6 +1051,273 @@ module("Unit | Lib | blocks/validation/args", function () {
         /has "instanceOfName" with a "model:\*" instanceOf.*only valid for class references/
       );
     });
+
+    test("ui hints: accepts schema with no ui field", function (assert) {
+      const schema = { title: { type: "string" } };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: accepts a complete ui hint object", function (assert) {
+      const schema = {
+        title: {
+          type: "string",
+          ui: {
+            control: "text",
+            label: "Title",
+            placeholder: "Welcome",
+            helpText: "Shown at the top of the banner.",
+            group: "Content",
+            hidden: false,
+          },
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: throws for non-object ui value", function (assert) {
+      const schema = { title: { type: "string", ui: "text" } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui" value\. Must be an object/
+      );
+    });
+
+    test("ui hints: throws for unknown ui property", function (assert) {
+      const schema = {
+        title: { type: "string", ui: { control: "text", typo: 1 } },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /unknown ui properties: typo/
+      );
+    });
+
+    test("ui hints: throws for unsupported control name", function (assert) {
+      const schema = { title: { type: "string", ui: { control: "wysiwyg" } } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.control" value "wysiwyg"/
+      );
+    });
+
+    test("ui hints: throws for non-string label", function (assert) {
+      const schema = { title: { type: "string", ui: { label: 42 } } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.label" value\. Must be a string/
+      );
+    });
+
+    test("ui hints: throws for non-boolean hidden", function (assert) {
+      const schema = { title: { type: "string", ui: { hidden: "yes" } } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.hidden" value\. Must be a boolean/
+      );
+    });
+
+    test("ui hints: accepts dimension / stepper / segmented controls", function (assert) {
+      for (const control of ["dimension", "stepper", "segmented"]) {
+        const schema = { size: { type: "number", ui: { control } } };
+        assert.strictEqual(
+          validateArgsSchema(schema, "test-block"),
+          undefined,
+          `accepts the "${control}" control`
+        );
+      }
+    });
+
+    test("ui hints: accepts the numeric-control configuration props", function (assert) {
+      const schema = {
+        size: {
+          type: "string",
+          ui: {
+            control: "dimension",
+            units: ["px", "rem", "%", "em"],
+            unit: "rem",
+            step: 0.25,
+            slider: true,
+          },
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: throws for non-array units", function (assert) {
+      const schema = {
+        size: { type: "string", ui: { control: "dimension", units: "px" } },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.units" value\. Must be an array of strings/
+      );
+    });
+
+    test("ui hints: throws for non-number step", function (assert) {
+      const schema = {
+        size: { type: "number", ui: { control: "stepper", step: "1" } },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.step" value\. Must be a number/
+      );
+    });
+
+    test("ui hints: throws for non-boolean slider", function (assert) {
+      const schema = {
+        size: { type: "number", ui: { control: "dimension", slider: "yes" } },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.slider" value\. Must be a boolean/
+      );
+    });
+
+    test("ui hints: accepts a conditional with equals", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { arg: "ctaLabel", equals: "Buy now" } },
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: accepts a conditional with notEmpty", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { arg: "ctaLabel", notEmpty: true } },
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: throws when conditional has neither equals nor notEmpty", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { arg: "ctaLabel" } },
+        },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /Must specify at least one of "equals" or "notEmpty"/
+      );
+    });
+
+    test("ui hints: throws when conditional.arg is missing", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { equals: "x" } },
+        },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.conditional\.arg" value\. Must be a non-empty string/
+      );
+    });
+
+    test("ui hints: throws for unknown conditional property", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { arg: "ctaLabel", equals: "x", typo: true } },
+        },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /unknown "ui\.conditional" properties: typo/
+      );
+    });
+
+    test("image: accepts a minimal image schema", function (assert) {
+      const schema = { logo: { type: "image" } };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("image: accepts the full set of image-only properties", function (assert) {
+      const schema = {
+        cover: {
+          type: "image",
+          allowDark: true,
+          allowResize: true,
+          aspectRatio: "auto",
+          defaultFit: "cover",
+        },
+        avatar: {
+          type: "image",
+          allowDark: false,
+          allowResize: false,
+          aspectRatio: 1,
+          defaultFit: "contain",
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("image: throws when allowDark is on a non-image type", function (assert) {
+      const schema = { logo: { type: "string", allowDark: true } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "allowDark" but type is "string".*only valid for image type/
+      );
+    });
+
+    test("image: throws for non-boolean allowDark/allowResize", function (assert) {
+      assert.throws(
+        () =>
+          validateArgsSchema(
+            { logo: { type: "image", allowDark: "yes" } },
+            "test-block"
+          ),
+        /invalid "allowDark" value\. Must be a boolean/
+      );
+      assert.throws(
+        () =>
+          validateArgsSchema(
+            { logo: { type: "image", allowResize: 1 } },
+            "test-block"
+          ),
+        /invalid "allowResize" value\. Must be a boolean/
+      );
+    });
+
+    test("image: throws for invalid aspectRatio", function (assert) {
+      assert.throws(
+        () =>
+          validateArgsSchema(
+            { logo: { type: "image", aspectRatio: 0 } },
+            "test-block"
+          ),
+        /invalid "aspectRatio" value/
+      );
+      assert.throws(
+        () =>
+          validateArgsSchema(
+            { logo: { type: "image", aspectRatio: -1.5 } },
+            "test-block"
+          ),
+        /invalid "aspectRatio" value/
+      );
+      assert.throws(
+        () =>
+          validateArgsSchema(
+            { logo: { type: "image", aspectRatio: "square" } },
+            "test-block"
+          ),
+        /invalid "aspectRatio" value/
+      );
+    });
+
+    test("image: throws for invalid defaultFit", function (assert) {
+      const schema = { logo: { type: "image", defaultFit: "stretch" } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "defaultFit" value/
+      );
+    });
   });
 
   module("validateArgName", function () {
@@ -1072,6 +1401,52 @@ module("Unit | Lib | blocks/validation/args", function () {
           "test-block"
         ),
         null
+      );
+    });
+
+    test("validates array-of-object items against itemSchema", function (assert) {
+      const schema = {
+        type: "array",
+        itemType: "object",
+        itemSchema: {
+          label: { type: "string", required: true },
+          url: { type: "string" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue(
+          [{ label: "Docs", url: "/docs" }],
+          schema,
+          "items",
+          "test-block"
+        ),
+        null,
+        "valid items pass"
+      );
+
+      const missing = validateArgValue(
+        [{ url: "/docs" }],
+        schema,
+        "items",
+        "test-block"
+      );
+      assert.strictEqual(
+        missing?.path,
+        "items[0].label",
+        "a missing required sub-field reports an indexed path"
+      );
+
+      const wrongType = validateArgValue(
+        [{ label: "Docs", url: "/docs" }, { label: 7 }],
+        schema,
+        "items",
+        "test-block"
+      );
+      assert.strictEqual(
+        wrongType?.path,
+        "items[1].label",
+        "a wrong sub-field type reports the offending item's indexed path"
       );
     });
 
@@ -1845,6 +2220,238 @@ module("Unit | Lib | blocks/validation/args", function () {
         "plain object fails even with matching __type"
       );
     });
+
+    test("validates image type - accepts a minimal value", function (assert) {
+      assert.strictEqual(
+        validateArgValue(
+          { url: "/uploads/short-url/abc.png" },
+          { type: "image" },
+          "logo",
+          "test-block"
+        ),
+        null
+      );
+    });
+
+    test("validates image type - accepts full upload value with dimensions and source", function (assert) {
+      const value = {
+        source: "upload",
+        url: "/uploads/short-url/abc.png",
+        width: 320,
+        height: 200,
+      };
+      assert.strictEqual(
+        validateArgValue(value, { type: "image" }, "logo", "test-block"),
+        null
+      );
+    });
+
+    test("validates image type - accepts a dark variant", function (assert) {
+      const value = {
+        url: "/light.png",
+        width: 320,
+        height: 200,
+        dark: { url: "/dark.png", width: 320, height: 200, source: "url" },
+      };
+      assert.strictEqual(
+        validateArgValue(value, { type: "image" }, "logo", "test-block"),
+        null
+      );
+    });
+
+    test("validates image type - rejects null", function (assert) {
+      const result = validateArgValue(
+        null,
+        { type: "image" },
+        "logo",
+        "test-block"
+      );
+      assert.true(
+        result?.message.includes("must be an image object, got null")
+      );
+    });
+
+    test("validates image type - rejects arrays", function (assert) {
+      const result = validateArgValue(
+        [],
+        { type: "image" },
+        "logo",
+        "test-block"
+      );
+      assert.true(
+        result?.message.includes("must be an image object, got array")
+      );
+    });
+
+    test("validates image type - requires a non-empty url string", function (assert) {
+      assert.true(
+        validateArgValue(
+          {},
+          { type: "image" },
+          "logo",
+          "test-block"
+        )?.message.includes('must include a non-empty string "url"')
+      );
+
+      assert.true(
+        validateArgValue(
+          { url: 42 },
+          { type: "image" },
+          "logo",
+          "test-block"
+        )?.message.includes('must include a non-empty string "url"')
+      );
+
+      assert.true(
+        validateArgValue(
+          { url: "" },
+          { type: "image" },
+          "logo",
+          "test-block"
+        )?.message.includes('must include a non-empty string "url"')
+      );
+    });
+
+    test("validates image type - rejects invalid source values", function (assert) {
+      const result = validateArgValue(
+        { url: "/a.png", source: "external" },
+        { type: "image" },
+        "logo",
+        "test-block"
+      );
+      assert.true(result?.message.includes('invalid "source" "external"'));
+    });
+
+    test("validates image type - rejects non-positive width/height", function (assert) {
+      assert.true(
+        validateArgValue(
+          { url: "/a.png", width: 0 },
+          { type: "image" },
+          "logo",
+          "test-block"
+        )?.message.includes('has invalid "width"')
+      );
+
+      assert.true(
+        validateArgValue(
+          { url: "/a.png", height: -5 },
+          { type: "image" },
+          "logo",
+          "test-block"
+        )?.message.includes('has invalid "height"')
+      );
+
+      assert.true(
+        validateArgValue(
+          { url: "/a.png", width: "300" },
+          { type: "image" },
+          "logo",
+          "test-block"
+        )?.message.includes('has invalid "width"')
+      );
+    });
+
+    test("validates image type - recursively validates the dark variant", function (assert) {
+      const result = validateArgValue(
+        { url: "/light.png", dark: { url: "" } },
+        { type: "image" },
+        "logo",
+        "test-block"
+      );
+      assert.true(
+        result?.message.includes("logo.dark"),
+        "error path drills into the dark variant"
+      );
+    });
+
+    test("validates image type - accepts an optional positive integer upload_id", function (assert) {
+      assert.strictEqual(
+        validateArgValue(
+          { url: "/uploads/a.png", source: "upload", upload_id: 1 },
+          { type: "image" },
+          "logo",
+          "test-block"
+        ),
+        null
+      );
+
+      assert.strictEqual(
+        validateArgValue(
+          { url: "/uploads/a.png", source: "upload", upload_id: 12_345 },
+          { type: "image" },
+          "logo",
+          "test-block"
+        ),
+        null,
+        "large positive integer upload_id"
+      );
+    });
+
+    test("validates image type - rejects non-integer upload_id values", function (assert) {
+      const cases = ["42", 1.5, true, [], {}];
+      for (const upload_id of cases) {
+        const result = validateArgValue(
+          { url: "/uploads/a.png", source: "upload", upload_id },
+          { type: "image" },
+          "logo",
+          "test-block"
+        );
+        assert.true(
+          result?.message.includes('has invalid "upload_id"'),
+          `rejects upload_id ${JSON.stringify(upload_id)}`
+        );
+      }
+    });
+
+    test("validates image type - rejects non-positive upload_id values", function (assert) {
+      for (const upload_id of [0, -1, -100]) {
+        const result = validateArgValue(
+          { url: "/uploads/a.png", source: "upload", upload_id },
+          { type: "image" },
+          "logo",
+          "test-block"
+        );
+        assert.true(
+          result?.message.includes('has invalid "upload_id"'),
+          `rejects upload_id ${upload_id}`
+        );
+      }
+    });
+
+    test("validates image type - validates upload_id inside the dark variant too", function (assert) {
+      const result = validateArgValue(
+        {
+          url: "/light.png",
+          dark: { url: "/dark.png", source: "upload", upload_id: "bad" },
+        },
+        { type: "image" },
+        "logo",
+        "test-block"
+      );
+      assert.true(
+        result?.message.includes("logo.dark"),
+        "error path drills into the dark variant"
+      );
+      assert.true(
+        result?.message.includes('"upload_id"'),
+        "the error surfaces upload_id specifically"
+      );
+    });
+
+    test("validates image type - rejects nesting another dark variant", function (assert) {
+      const result = validateArgValue(
+        {
+          url: "/light.png",
+          dark: { url: "/dark.png", dark: { url: "/extra.png" } },
+        },
+        { type: "image" },
+        "logo",
+        "test-block"
+      );
+      assert.true(
+        result?.message.includes("must not nest another dark variant")
+      );
+    });
   });
 
   module("validateArrayItemType", function () {
@@ -2533,8 +3140,8 @@ module("Unit | Lib | blocks/validation/args", function () {
         const args = {};
 
         const error = validateConstraints(constraints, args, "test-block");
-        assert.true(error.includes('at least one of "id", "tag"'));
-        assert.true(error.includes("must be provided"));
+        assert.true(error.message.includes('at least one of "id", "tag"'));
+        assert.true(error.message.includes("must be provided"));
       });
     });
 
@@ -2554,8 +3161,8 @@ module("Unit | Lib | blocks/validation/args", function () {
         const args = {};
 
         const error = validateConstraints(constraints, args, "test-block");
-        assert.true(error.includes('exactly one of "id", "tag"'));
-        assert.true(error.includes("but got none"));
+        assert.true(error.message.includes('exactly one of "id", "tag"'));
+        assert.true(error.message.includes("but got none"));
       });
 
       test("fails when multiple args are provided", function (assert) {
@@ -2563,8 +3170,8 @@ module("Unit | Lib | blocks/validation/args", function () {
         const args = { id: 123, tag: "foo" };
 
         const error = validateConstraints(constraints, args, "test-block");
-        assert.true(error.includes('exactly one of "id", "tag"'));
-        assert.true(error.includes("but got 2"));
+        assert.true(error.message.includes('exactly one of "id", "tag"'));
+        assert.true(error.message.includes("but got 2"));
       });
     });
 
@@ -2594,9 +3201,11 @@ module("Unit | Lib | blocks/validation/args", function () {
         const args = { width: 100 };
 
         const error = validateConstraints(constraints, args, "test-block");
-        assert.true(error.includes('"width", "height"'));
-        assert.true(error.includes("must be provided together or not at all"));
-        assert.true(error.includes('missing "height"'));
+        assert.true(error.message.includes('"width", "height"'));
+        assert.true(
+          error.message.includes("must be provided together or not at all")
+        );
+        assert.true(error.message.includes('missing "height"'));
       });
     });
 
@@ -2636,8 +3245,8 @@ module("Unit | Lib | blocks/validation/args", function () {
         const args = { params: { categoryId: 5 } };
 
         const error = validateConstraints(constraints, args, "test-block");
-        assert.true(error.includes('"params" requires "pages"'));
-        assert.true(error.includes("to be specified"));
+        assert.true(error.message.includes('"params" requires "pages"'));
+        assert.true(error.message.includes("to be specified"));
       });
 
       test("validates multiple requires dependencies", function (assert) {
@@ -2661,7 +3270,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           "test-block"
         );
         assert.true(
-          error.includes('"config" requires "enabled"'),
+          error.message.includes('"config" requires "enabled"'),
           "fails when one dependency unsatisfied"
         );
       });
@@ -2683,7 +3292,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       const args = { a: 1, x: 10 };
 
       const error = validateConstraints(constraints, args, "test-block");
-      assert.true(error.includes('missing "y"'));
+      assert.true(error.message.includes('missing "y"'));
     });
   });
 
@@ -2817,6 +3426,136 @@ module("Unit | Lib | blocks/validation/args", function () {
         class InvalidConstraintBlock extends Component {}
         return InvalidConstraintBlock;
       }, /unknown constraint type/);
+    });
+  });
+
+  module("structured error details", function () {
+    test("string type mismatch attaches TYPE_MISMATCH details", function (assert) {
+      const result = validateArgValue(
+        123,
+        { type: "string" },
+        "title",
+        "test-block"
+      );
+      assert.deepEqual(result.details, {
+        code: ERROR_CODES.TYPE_MISMATCH,
+        field: "title",
+        value: 123,
+        expected: { type: "string" },
+      });
+    });
+
+    test("pattern mismatch attaches PATTERN_MISMATCH details with pattern source", function (assert) {
+      const result = validateArgValue(
+        "#",
+        { type: "string", pattern: /^https:\/\// },
+        "ctaHref",
+        "test-block"
+      );
+      assert.deepEqual(result.details, {
+        code: ERROR_CODES.PATTERN_MISMATCH,
+        field: "ctaHref",
+        value: "#",
+        expected: { pattern: "^https:\\/\\/" },
+      });
+    });
+
+    test("enum mismatch attaches ENUM_MISMATCH details with allowed values", function (assert) {
+      const result = validateArgValue(
+        "huge",
+        { type: "string", enum: ["small", "large"] },
+        "size",
+        "test-block"
+      );
+      assert.deepEqual(result.details, {
+        code: ERROR_CODES.ENUM_MISMATCH,
+        field: "size",
+        value: "huge",
+        expected: { enum: ["small", "large"] },
+      });
+    });
+
+    test("minLength attaches MIN_LENGTH details", function (assert) {
+      const result = validateArgValue(
+        "hi",
+        { type: "string", minLength: 5 },
+        "title"
+      );
+      assert.deepEqual(result.details, {
+        code: ERROR_CODES.MIN_LENGTH,
+        field: "title",
+        value: "hi",
+        expected: { minLength: 5 },
+      });
+    });
+
+    test("numeric min attaches MIN details", function (assert) {
+      const result = validateArgValue(2, { type: "number", min: 10 }, "count");
+      assert.deepEqual(result.details, {
+        code: ERROR_CODES.MIN,
+        field: "count",
+        value: 2,
+        expected: { min: 10 },
+      });
+    });
+
+    test("validateArrayItemType attaches indexed-field details", function (assert) {
+      const result = validateArrayItemType(42, "string", "tags", 3);
+      assert.deepEqual(result.details, {
+        code: ERROR_CODES.TYPE_MISMATCH,
+        field: "tags[3]",
+        value: 42,
+        expected: { type: "string" },
+      });
+    });
+
+    test("validateArgsAgainstSchema (strict) throws BlockError with details", function (assert) {
+      try {
+        validateArgsAgainstSchema(
+          {},
+          { title: { type: "string", required: true } },
+          "args"
+        );
+        assert.true(false, "expected throw");
+      } catch (err) {
+        assert.strictEqual(err.name, "BlockError");
+        assert.deepEqual(err.details, {
+          code: ERROR_CODES.REQUIRED_MISSING,
+          field: "title",
+        });
+      }
+    });
+
+    test("validateArgsAgainstSchema (collect) accumulates every failing arg", function (assert) {
+      const collect = [];
+      validateArgsAgainstSchema(
+        { ctaHref: "#", extra: "boom" },
+        {
+          title: { type: "string", required: true },
+          ctaHref: { type: "string", pattern: /^https:\/\// },
+        },
+        "args",
+        { collect }
+      );
+      assert.strictEqual(collect.length, 3, "all three failures captured");
+      const codes = collect.map((e) => e.details?.code).sort();
+      assert.deepEqual(codes, [
+        ERROR_CODES.PATTERN_MISMATCH,
+        ERROR_CODES.REQUIRED_MISSING,
+        ERROR_CODES.UNKNOWN_ARG,
+      ]);
+    });
+
+    test("validateConstraints returns structured CONSTRAINT_VIOLATION on atLeastOne", function (assert) {
+      const result = validateConstraints(
+        { atLeastOne: ["a", "b"] },
+        {},
+        "test-block"
+      );
+      assert.deepEqual(result.details, {
+        code: ERROR_CODES.CONSTRAINT_VIOLATION,
+        expected: { constraint: "atLeastOne", fields: ["a", "b"] },
+      });
     });
   });
 });

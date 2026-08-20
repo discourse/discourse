@@ -243,7 +243,7 @@ describe "Custom sidebar sections" do
     expect(sidebar).to have_no_section_link("Sidebar Categories")
   end
 
-  it "allows the user to reorder links in custom section" do
+  it "Sidebar link DnD oracle lets the user reorder links in a custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
     sidebar_url_1 =
@@ -271,15 +271,86 @@ describe "Custom sidebar sections" do
 
     sidebar.edit_custom_section("My section")
 
-    tags_link = find(".draggable[data-link-name='Sidebar Tags']")
-    latest_link = find(".draggable[data-link-name='Sidebar Latest']")
-    tags_link.drag_to(latest_link, delay: 0.4)
+    drag_and_drop(
+      source: ".sidebar-section-form-link:has(.draggable[data-link-name='Sidebar Tags'])",
+      # Press the grip, not the row centre: the centre is a text input, and a
+      # text-selection drag stalls after dragstart.
+      source_position: {
+        x: 16,
+        y: 20,
+      },
+      target: ".sidebar-section-form-link:has(.draggable[data-link-name='Sidebar Categories'])",
+      target_position: {
+        x: 100,
+        y: 55,
+      },
+    )
+    try_until_success do
+      expect(
+        all(".sidebar-section-form__links-wrapper .draggable").map do |link|
+          link["data-link-name"]
+        end,
+      ).to eq(["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"])
+    end
     section_modal.save
     expect(section_modal).to be_closed
 
-    expect(sidebar.primary_section_links("my-section")).to eq(
-      ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
-    )
+    try_until_success do
+      expect(sidebar.primary_section_links("my-section")).to eq(
+        ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+      )
+    end
+  end
+
+  it "Sidebar link DnD oracle lets the user reorder links with the keyboard" do
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+    ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"].each do |name|
+      Fabricate(:sidebar_url, name: name, value: "/#{name.parameterize}").tap do |sidebar_url|
+        Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+      end
+    end
+
+    sign_in user
+
+    visit("/latest")
+
+    sidebar.edit_custom_section("My section")
+
+    # Asserted before the move: without it, a run where the order already matched
+    # would pass whether or not the arrow did anything.
+    expect(section_modal.link_names).to eq(["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"])
+
+    section_modal.move_link_down("Sidebar Tags")
+
+    try_until_success do
+      expect(section_modal.link_names).to eq(
+        ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+      )
+    end
+
+    # Focus is where the arrows live or die: the row moves in the DOM under the
+    # pressed button, and a lost focus makes a second press impossible.
+    expect(section_modal.focused_label).to eq("Move Sidebar Tags down")
+
+    # So the second press goes through whatever holds focus, not through another
+    # lookup by name, which would pass even if focus had been dropped.
+    section_modal.press_focused_link_arrow
+
+    try_until_success do
+      expect(section_modal.link_names).to eq(
+        ["Sidebar Categories", "Sidebar Latest", "Sidebar Tags"],
+      )
+    end
+
+    section_modal.save
+    expect(section_modal).to be_closed
+
+    try_until_success do
+      expect(sidebar.primary_section_links("my-section")).to eq(
+        ["Sidebar Categories", "Sidebar Latest", "Sidebar Tags"],
+      )
+    end
   end
 
   it "does not allow to drag on mobile", mobile: true do
@@ -301,6 +372,14 @@ describe "Custom sidebar sections" do
     sidebar.edit_custom_section("My section")
 
     expect(page).not_to have_css(".sidebar-section-form-link .draggable")
+
+    # The arrows are the only reorder path left once the handle is gone, so a
+    # touch screen having none at all is the regression to catch here.
+    section_modal.move_link_down("Sidebar Tags")
+
+    try_until_success do
+      expect(section_modal.link_names).to eq(["Sidebar Categories", "Sidebar Tags"])
+    end
   end
 
   it "does not allow the user to edit public section" do

@@ -1,0 +1,67 @@
+/* Tabs block — a strip of labels over a stack of panels, one panel shown at a
+   time. The strip switches the active panel both live and while editing; an
+   edit-driven context adds an append affordance at the end of the strip. */
+
+.d-block-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.d-block-tabs__strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--primary-low);
+}
+
+/* The tabs live in this inner tablist so the editor-only "add" affordance can
+   sit in the strip without being inside the tablist. */
+
+.d-block-tabs__tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.d-block-tabs--align-center .d-block-tabs__strip {
+  justify-content: center;
+}
+
+.d-block-tabs--align-end .d-block-tabs__strip {
+  justify-content: flex-end;
+}
+
+.d-block-tabs__tab {
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--primary-medium);
+  cursor: pointer;
+
+  &.is-active {
+    color: var(--primary);
+    border-bottom-color: var(--tertiary);
+  }
+}
+
+/* Append-tab affordance at the end of the strip, shown only while editing.
+   Sized to read as a quiet "add" control rather than another tab. */
+
+.d-block-tabs__add-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.6rem;
+  border: none;
+  background: none;
+  color: var(--primary-medium);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.d-block-tabs__panels {
+  padding-top: 1rem;
+}
