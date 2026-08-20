@@ -9,18 +9,9 @@ const SUPPORTED_FILE_EXTENSIONS = [
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
-// Directories whose contents Discourse still looks up by name at runtime — by the plugin outlet
-// system, or via the resolver's suffix trie — and which therefore have to be registered with
-// `define()` even when the rest of the bundle is reached through static imports.
-//
-// `routes`, `controllers` and `templates` are absent on purpose. A route is reached through the
-// bundle its route map put it in, so registering it by name as well would defeat the split. That
-// also drops `templates/connectors` and `templates/components`, the pre-`.gjs` spellings of a
-// connector and a component template — a plugin opting into `staticModules` writes neither.
-//
-// Anchored to the top-level segment, the way Embroider anchors them at the app root:
-// `discourse/services/chat` is a service, but `discourse/components/chat/services/chat` is a
-// component which happens to sit in a directory called `services`.
+// Looked up by name at runtime, so they have to be registered with `define()`. Routes are not
+// here: a route is reached through the bundle its route map put it in. Matched against the
+// top-level segment only — `discourse/components/chat/services/chat` is a component.
 const EAGER_DIRECTORIES = [
   "connectors",
   "services",
@@ -292,10 +283,9 @@ export default {
       opts.routeTables?.bundleByRoute
     ).find((candidate) => candidate.bundleName === bundleName);
 
+    // Null rather than throwing: the caller tries each entrypoint in turn.
     if (!bundle) {
-      throw new Error(
-        `[${label}] No route bundle for "${bundleName}" — no route files matched it.`
-      );
+      return null;
     }
 
     const identifiers = new Map(

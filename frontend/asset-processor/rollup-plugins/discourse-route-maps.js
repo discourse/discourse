@@ -21,10 +21,7 @@ export default function discourseRouteMaps({
   return {
     name: "discourse-route-maps",
     buildStart() {
-      // Route maps are only read for plugins that opt into `staticModules`. Everything else
-      // imports its routes eagerly and needs no bundles, so a map this cannot read is none of
-      // its business — `discourse-docs` builds its path from a site setting, and would
-      // otherwise fail to compile over a table nothing would read.
+      // Everything else imports its routes eagerly, so an unreadable map is none of our business.
       if (!staticModules) {
         return;
       }

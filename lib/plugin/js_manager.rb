@@ -77,19 +77,15 @@ module Plugin
       "js/plugins/#{bundle["fileName"].delete_suffix(".js")}" if bundle
     end
 
-    # A `*` matches exactly one path segment, except as the final segment, where it matches the
-    # rest of the path — or nothing, so `chat/*` also covers `/chat` itself. Dynamic segments make
-    # the first form necessary: chat's preferences route lives at `u/*/preferences/chat`.
-    #
-    # A `**` matches one or more segments anywhere in the glob. It stands for a splat route
-    # segment, which eats the rest of the route's path: `/c/*category_slug_path_with_id/edit`
-    # gives `c/**/edit`, and `c/announcements/5/edit` has to match it.
+    # A `*` matches one path segment, or the rest of the path when it is last, so `chat/*` also
+    # covers `chat` itself. A `**` matches one or more segments anywhere, and stands for a splat
+    # route segment: `/c/*category_slug_path_with_id/edit` has to match `c/announcements/5/edit`.
     def self.url_glob_matches?(glob, path)
       path.match?(url_glob_pattern(glob))
     end
 
-    # Every asset on the page asks about the same handful of globs on every request, and a glob
-    # always compiles to the same pattern, so this never needs invalidating.
+    # The pattern is a pure function of the glob, so entries never go stale. Every asset on the
+    # page asks about the same handful of them on every request.
     def self.url_glob_pattern(glob)
       @url_glob_patterns[glob] ||= begin
         segments = glob.split("/")

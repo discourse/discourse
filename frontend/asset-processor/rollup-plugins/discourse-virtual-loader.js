@@ -79,23 +79,24 @@ export default function discourseVirtualLoader({
           }
         );
       } else if (fromBase.startsWith("virtual:route:")) {
-        const routeName = fromBase.replace("virtual:route:", "");
+        const bundleName = fromBase.replace("virtual:route:", "");
 
-        // Entrypoints share a compat-module namespace, so a route name belongs to exactly one
-        // of them. Whichever entrypoint produced this bundle can render it.
+        // Entrypoints share a compat-module namespace, so a bundle belongs to exactly one.
         for (const { modules } of Object.values(entrypoints)) {
-          try {
-            return availableVirtualImports["virtual:route"](
-              modules,
-              opts,
-              routeName
-            );
-          } catch {
-            continue;
+          const source = availableVirtualImports["virtual:route"](
+            modules,
+            opts,
+            bundleName
+          );
+
+          if (source) {
+            return source;
           }
         }
 
-        throw new Error(`No route bundle for "${routeName}"`);
+        throw new Error(
+          `No route bundle for "${bundleName}" — no route files matched it.`
+        );
       } else if (availableVirtualImports[fromBase]) {
         return availableVirtualImports[fromBase](opts);
       }

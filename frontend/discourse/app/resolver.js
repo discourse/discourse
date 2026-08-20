@@ -372,11 +372,7 @@ export function buildResolver(baseName) {
         define(key, () => value);
       }
 
-      // Both of these are built once and memoized, so modules arriving after boot — from a
-      // lazily-loaded route bundle — are invisible to them until they are rebuilt. Core's own
-      // split routes get away with it because their modules sit at canonical paths that
-      // ember-resolver finds directly, but plugin and theme modules are only reachable via
-      // these two lookups.
+      // Both are memoized, so a lazily-loaded route bundle is invisible to them until rebuilt.
       expireModuleTrieCache();
       DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
     }

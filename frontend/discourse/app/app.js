@@ -60,18 +60,14 @@ window.moduleBroker = {
   },
 };
 
-// Themes and plugins expose the modules core should `define()` as a `compatModules` named
-// export. Under `staticModules` that is the set Discourse still resolves by name, and the
-// default export is the bundle's declared cross-bundle API — reached by ESM import through the
-// importmap, not through the loader registry, so it is deliberately not registered here.
+// The default export is the bundle's cross-bundle API, reached by ESM import, and must not be
+// registered. Older bundles have no `compatModules`, where the two are the same object.
 function compatModulesOf(bundle) {
   return bundle.compatModules ?? bundle.default;
 }
 
-// A `staticModules` bundle can split routes out into lazy chunks. `@embroider/router` picks
-// these up by route name, awaits `load()`, and hands the default export to
-// `Resolver#addModules`. Route bundles are namespaced the same way the eager modules are, so
-// prefix their keys on the way through.
+// `@embroider/router` finds these by route name and hands the default export to
+// `Resolver#addModules`, which expects the same namespacing as the eager modules.
 function registerRouteBundles(bundle, prefix) {
   window._embroiderRouteBundles_ ??= [];
 

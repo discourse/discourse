@@ -41,8 +41,7 @@ async function performRollup(modules, opts) {
 
   const fs = createVirtualFs(modules, basePath);
 
-  // Filled by `discourse-route-maps` in `buildStart`, before the entrypoint module is generated
-  // from it. Threaded through `opts` because that is what reaches the virtual import functions.
+  // Filled by `discourse-route-maps` in `buildStart`, before the entrypoint is generated from it.
   const routeTables = { bundleByRoute: {}, urls: [] };
   opts.routeTables = routeTables;
 
@@ -169,11 +168,8 @@ async function performRollup(modules, opts) {
     }
   }
 
-  // Ties each lazy route chunk back to the urls that reach it, so Ruby can preload it on a
-  // direct navigation. The `import()` calls live in the entrypoint's own module, which rollup is
-  // free to hoist into a shared chunk — so find the chunk that module actually landed in rather
-  // than assuming it is the entry chunk. Doing this per entrypoint keeps an admin route chunk
-  // from being attributed to `main`.
+  // Ties each lazy route chunk back to the urls that reach it, so Ruby can preload it. Rollup is
+  // free to hoist the entrypoint module into a shared chunk, so find where it actually landed.
   function routeBundlesForEntry(entryName) {
     const entrypointModuleId = `${basePath}virtual:entrypoint:${entryName}`;
 

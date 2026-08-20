@@ -3,9 +3,9 @@ import Service, { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-// Loaded on demand: the drawer outlet renders on every page, so importing the drawer route
-// components here would pull most of chat's UI into the bundle for every request.
-const loadDrawerRoutes = () => import("../lib/chat-drawer-routes");
+// The drawer outlet renders on every page, so importing these eagerly would pull most of chat's
+// UI into the bundle for every request.
+let routeComponents;
 
 const ROUTES = {
   chat: {
@@ -319,24 +319,36 @@ export default class ChatDrawerRouter extends Service {
   async stateFor(route) {
     this.drawerRoute?.deactivate?.call(this, this.chatHistory.currentRoute);
     this.chatHistory.visit(route);
-    this.drawerRoute = ROUTES[this.#forceParentRouteForIndex(route).name];
-    this.params =
-      this.drawerRoute?.extractParams?.call(this, route) || route.params;
+
+    const drawerRoute = ROUTES[this.#forceParentRouteForIndex(route).name];
+    this.drawerRoute = drawerRoute;
+    this.params = drawerRoute?.extractParams?.call(this, route) || route.params;
 
     try {
-      this.model = await this.drawerRoute?.model?.call(this, this.params);
-      this.drawerRoute?.afterModel?.call(this, this.model);
+      this.model = await drawerRoute?.model?.call(this, this.params);
+      drawerRoute?.afterModel?.call(this, this.model);
     } catch (e) {
       popupAjaxError(e);
     }
 
-    this.component = null;
-    const drawerRoutes = await waitForPromise(loadDrawerRoutes());
-    this.component = drawerRoutes[this.drawerRoute?.component || "Channels"];
-    this.currentRouteName = route.name;
-    this.drawerRoute.activate?.(route);
+    if (!routeComponents) {
+      this.component = null;
+      routeComponents = await waitForPromise(
+        import("../lib/chat-drawer-routes")
+      );
+    }
 
-    const redirectedRoute = this.drawerRoute.redirect?.(this);
+    // A later navigation can land while the model or the components are loading, and it has
+    // already set everything below.
+    if (this.drawerRoute !== drawerRoute) {
+      return;
+    }
+
+    this.component = routeComponents[drawerRoute?.component || "Channels"];
+    this.currentRouteName = route.name;
+    drawerRoute?.activate?.(route);
+
+    const redirectedRoute = drawerRoute?.redirect?.(this);
     if (redirectedRoute) {
       await this.stateFor(this.#routeFromURL(redirectedRoute));
     }
