@@ -34,6 +34,10 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "Greška"
       ai_tool_approval:
         loading: "Učitavanje..."
         tool: "Akcije"

@@ -2818,6 +2818,10 @@ ca:
     user_claimed: "Aquest element ha estat reclamat per un altre usuari."
     missing_version: "Heu de proporcionar un paràmetre de versió"
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
+    reasons:
+      fast_typer_time:
+        one: "%{count} segon"
+        other: "%{count} segons"
     actions:
       agree:
         title: "Sí"

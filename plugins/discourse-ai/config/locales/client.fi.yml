@@ -153,6 +153,12 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      copied: "Kopioitiin"
+      ai_decoded_transcript:
+        tool: "Työkalu"
+        type: "Tyyppi"
+        error: "Virhe"
+        response: "Vastaus"
       discourse_workflows:
         ai_agent:
           mode: "Tila"
@@ -375,6 +381,7 @@ fi:
         retry: "Yritä uudelleen"
         apply: "Käytä"
         all_models: "Kaikki mallit"
+        all_features: "Kaikki ominaisuudet"
         successful: "Onnistui"
         failed: "Epäonnistui"
         unknown: "Tuntematon"
@@ -394,6 +401,8 @@ fi:
         post_short: "Viesti %{id}"
         duration: "Kesto"
         actions: "Toiminnot"
+        filters:
+          title: "Suodattimet"
         periods:
           hour: "Viimeinen tunti"
           day: "Viimeiset 24 tuntia"

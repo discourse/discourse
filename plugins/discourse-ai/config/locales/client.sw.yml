@@ -34,6 +34,10 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "Aina"
+        error: "Hitilafu"
+        response: "Mwitikio"
       ai_tool_approval:
         loading: "Inaandaa...."
         tool: "Kitendo"
@@ -117,6 +121,8 @@ sw:
         topic: "Mada"
         post: "Ujumbe"
         actions: "Vitendo"
+        filters:
+          title: "Inachujwa"
         periods:
           custom: "Binafsi"
         detail:

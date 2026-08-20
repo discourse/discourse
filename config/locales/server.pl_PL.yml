@@ -1720,8 +1720,10 @@ pl_PL:
         country_code: "Kod kraju"
         count: "Odwiedziny"
     top_entry_urls:
+      title: "Najpopularniejsze wejściowe adresy URL"
+      description: "Strony, które w wybranym okresie odnotowały najwięcej bezpośrednich i zewnętrznych odwiedzin przeglądarki."
       labels:
-        entry_url: "Wpisowy adres URL"
+        entry_url: "Wejściowy adres URL"
         count: "Odwiedziny"
     top_referrers_by_browser_pageviews:
       title: "Najpopularniejsi polecający"
@@ -5946,6 +5948,12 @@ pl_PL:
       group: "Użytkownicy spoza określonych grup muszą mieć odpowiedzi zatwierdzone przez personel. Zobacz %{link}."
       new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz %{link}."
       fast_typer: "Nowy użytkownik napisał swój pierwszy post podejrzanie szybko, a to zachowanie jest podobne do bota lub spamera. Zobacz %{link}."
+      fast_typer_with_time: "Nowy użytkownik napisał swój pierwszy wpis podejrzanie szybko (%{typing_time}), podejrzewane zachowanie bota lub spamera. Zobacz %{link}."
+      fast_typer_time:
+        one: "%{count} sekunda"
+        few: "%{count} sekundy"
+        many: "%{count} sekund"
+        other: "%{count} sekund"
       auto_silence_regex: "Nowy użytkownik, którego pierwszy post odpowiada ustawieniu %{link}"
       watched_word:
         one: "Ten post zawiera obserwowane słowo, oflagowane słowo to: %{words}. Sprawdź %{link} po więcej."

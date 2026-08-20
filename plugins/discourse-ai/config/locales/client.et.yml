@@ -34,6 +34,11 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      copied: "Kopeeritud"
+      ai_decoded_transcript:
+        type: "Tüüp"
+        error: "Viga"
+        response: "Vastus"
       ai_tool_approval:
         loading: "Laadimine..."
         tool: "Tegevus"
@@ -124,6 +129,8 @@ et:
         post: "Postitus"
         post_short: "Postitus %{id}"
         actions: "Tegevused"
+        filters:
+          title: "Filtrid"
         periods:
           custom: "Individuaalne"
         detail:

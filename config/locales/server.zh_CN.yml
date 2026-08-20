@@ -5271,6 +5271,8 @@ zh_CN:
       group: "不在指定群组中的用户的回复必须经过管理人员批准。请参阅%{link}。"
       new_topics_unless_trust_level: "低信任级别的用户的话题必须由管理人员批准。请参阅%{link}。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾信息发布者所为。请参阅%{link}。"
+      fast_typer_time:
+        other: "%{count} 秒"
       auto_silence_regex: "第一个帖子与%{link}设置匹配的新用户。"
       watched_word:
         other: "此帖子包括关注词，举报词为：%{words}。请查看%{link}了解更多信息。"

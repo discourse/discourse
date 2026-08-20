@@ -228,6 +228,13 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      ai_decoded_transcript:
+        thinking: "Pensando"
+        tool: "Herramienta"
+        arguments: "Argumentos"
+        type: "Tipo"
+        error: "Error"
+        response: "Respuesta"
       discourse_workflows:
         ai_agent:
           agent_id: "Agente"
@@ -532,6 +539,7 @@ es:
         retry: "Intentar de nuevo"
         apply: "Aplicar"
         all_models: "Todos los modelos"
+        all_features: "Todas las características"
         successful: "Exitoso"
         failed: "Falló"
         unknown: "Desconocido"
@@ -552,6 +560,8 @@ es:
         duration: "Duración"
         cost: "Coste"
         actions: "Acciones"
+        filters:
+          title: "Filtros"
         periods:
           hour: "Última hora"
           day: "Últimas 24 horas"

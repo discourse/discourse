@@ -199,6 +199,12 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      ai_decoded_transcript:
+        thinking: "思考中"
+        tool: "ツール"
+        type: "タイプ"
+        error: "エラー"
+        response: "応答"
       discourse_workflows:
         ai_agent:
           mode: "モード"
@@ -478,6 +484,7 @@ ja:
         retry: "やり直す"
         apply: "適用"
         all_models: "すべてのモデル"
+        all_features: "すべての機能"
         successful: "成功"
         failed: "失敗しました"
         unknown: "不明"
@@ -498,6 +505,8 @@ ja:
         duration: "期間"
         cost: "料金"
         actions: "アクション"
+        filters:
+          title: "フィルター"
         periods:
           day: "過去 24 時間"
           week: "過去 7 日間"

@@ -2817,6 +2817,10 @@ hy:
       low: "Բարձր"
       medium: "Միջին"
       high: "Ցածր"
+    reasons:
+      fast_typer_time:
+        one: "%{count} վայրկյան"
+        other: "%{count} վայրկյան"
     actions:
       agree:
         title: "Այո"

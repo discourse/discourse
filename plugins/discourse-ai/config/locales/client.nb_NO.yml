@@ -34,6 +34,11 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      copied: "Kopiert"
+      ai_decoded_transcript:
+        type: "Type"
+        error: "Feil"
+        response: "Svar"
       ai_tool_approval:
         loading: "Laster…"
         tool: "Handling"
@@ -131,6 +136,8 @@ nb_NO:
         post_short: "Innlegg %{id}"
         duration: "Varighet"
         actions: "Handlinger"
+        filters:
+          title: "Filter"
         periods:
           day: "Siste 24 timer"
           week: "Siste 7 dager"

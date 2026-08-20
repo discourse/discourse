@@ -233,6 +233,14 @@ ar:
               description: "السماح بوضع الوسوم على المنشورات التي ينشئها مستخدم النظام."
     discourse_ai:
       title: "الذكاء الاصطناعي"
+      copied: "تم النسخ"
+      ai_decoded_transcript:
+        thinking: "التفكير"
+        tool: "أداة"
+        arguments: "الوسيطات"
+        type: "النوع"
+        error: "خطأ"
+        response: "الرد"
       post_image_captions:
         edit: "تعديل تعليق الذكاء الاصطناعي على الصورة"
         title: "تعديل تعليق الذكاء الاصطناعي على الصورة"
@@ -728,6 +736,7 @@ ar:
         retry: "إعادة المحاولة"
         apply: "تطبيق"
         all_models: "كل النماذج"
+        all_features: "كل الميزات"
         successful: "نجح"
         failed: "فشل"
         unknown: "غير معروف"
@@ -749,6 +758,7 @@ ar:
         cost: "التكلفة"
         actions: "الإجراءات"
         filters:
+          title: "المرشحات"
           period: "الفترة الزمنية"
         periods:
           hour: "آخر ساعة"
