@@ -47,6 +47,7 @@ module DiscourseAi
         duration_msecs
       ].freeze
       BOOLEAN_VALUES = %w[true false].freeze
+      BIGINT_RANGE = (-(2**63)...(2**63))
 
       def index
         limit = page_limit
@@ -189,7 +190,7 @@ module DiscourseAi
         scope = apply_date_filters(scope)
         scope = apply_outcome_filter(scope)
         scope = scope.where.not(request_attempts: nil) if boolean_param(:has_retries)
-        scope = scope.where(llm_id: positive_integer!(:llm_id)) if params[:llm_id].present?
+        scope = scope.where(llm_id: signed_non_zero_integer!(:llm_id)) if params[:llm_id].present?
         scope = scope.where(feature_name: params[:feature].to_s) if params[:feature].present?
 
         if params[:user_id].present? || params[:username].present?
@@ -280,6 +281,16 @@ module DiscourseAi
       def positive_integer!(name)
         value = Integer(params[name], exception: false)
         raise Discourse::InvalidParameters.new(name) if !value || value <= 0
+
+        value
+      end
+
+      def signed_non_zero_integer!(name)
+        raw_value = params[name].to_s
+        raise Discourse::InvalidParameters.new(name) if !raw_value.match?(/\A-?[1-9]\d*\z/)
+
+        value = raw_value.to_i
+        raise Discourse::InvalidParameters.new(name) if !BIGINT_RANGE.cover?(value)
 
         value
       end

@@ -232,6 +232,50 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
       expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([matching_log.id])
     end
 
+    it "filters by seeded models and exposes them in filter metadata" do
+      seeded_model = Fabricate(:seeded_model, id: -1)
+      matching_log = Fabricate(:ai_api_audit_log, llm_model: seeded_model)
+      Fabricate(:ai_api_audit_log, llm_model: llm_model)
+
+      get index_path, params: { llm_id: seeded_model.id, include_meta: true }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["logs"].map { |returned_log| returned_log["id"] }).to eq(
+        [matching_log.id],
+      )
+      expect(response.parsed_body["models"]).to include(
+        "id" => seeded_model.id,
+        "name" => seeded_model.display_name,
+      )
+
+      get index_path, params: { llm_id: -999_999 }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["logs"]).to be_empty
+    end
+
+    it "rejects malformed signed model IDs while exact IDs remain positive-only" do
+      [
+        "0",
+        "-0",
+        "+1",
+        " 1",
+        "1 ",
+        "0x10",
+        "1_000",
+        "1.5",
+        "--1",
+        (2**63).to_s,
+        (-(2**63) - 1).to_s,
+      ].each do |value|
+        get index_path, params: { llm_id: value }
+        expect(response.status).to eq(400), "expected #{value.inspect} to be rejected"
+      end
+
+      get index_path, params: { id: -1 }
+      expect(response.status).to eq(400)
+    end
+
     it "uses the health-check outcome semantics" do
       success_with_no_tokens =
         Fabricate(:ai_api_audit_log, response_status: 200, response_tokens: 0)
