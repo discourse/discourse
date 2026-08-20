@@ -8,6 +8,7 @@ module DiscourseAi
       # 10 minutes is enough for vast majority of cases
       # there is a small chance that some reasoning models may take longer
       MAX_STREAM_DELAY_SECONDS = 600
+      FALLBACK_TITLE_LENGTH = 80
 
       attr_reader :bot
 
@@ -147,14 +148,29 @@ module DiscourseAi
           topic_agent_id = post.topic.custom_fields["ai_agent_id"]
           topic_agent_id = topic_agent_id.to_i if topic_agent_id.present?
 
-          agent_id = mentioned&.dig(:id) || topic_agent_id
+          authorization_user = post.user
+          if mentioned
+            agent_id = mentioned[:id]
+          else
+            agent_id = topic_agent_id
+            authorization_user = post.topic.user if topic_agent_id
+          end
 
           agent = nil
 
-          agent = DiscourseAi::Agents::Agent.find_by(user: post.user, id: agent_id.to_i) if agent_id
+          agent =
+            DiscourseAi::Agents::Agent.find_by(
+              user: authorization_user,
+              id: agent_id.to_i,
+            ) if agent_id && authorization_user
 
           if !agent && (agent_name = post.topic.custom_fields["ai_agent"])
-            agent = DiscourseAi::Agents::Agent.find_by(user: post.user, name: agent_name)
+            authorization_user = post.topic.user
+            agent =
+              DiscourseAi::Agents::Agent.find_by(
+                user: authorization_user,
+                name: agent_name,
+              ) if authorization_user
           end
 
           # edge case, llm was mentioned in an ai agent conversation
@@ -170,12 +186,15 @@ module DiscourseAi
             end
           end
 
-          agent ||= DiscourseAi::Agents::General
+          if !agent
+            agent = DiscourseAi::Agents::General
+            authorization_user = post.user
+          end
 
           bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
 
           bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new)
-          new(bot).update_playground_with(post)
+          new(bot).update_playground_with(post, authorization_user: authorization_user)
         end
       end
 
@@ -222,8 +241,8 @@ module DiscourseAi
         @bot = bot
       end
 
-      def update_playground_with(post)
-        schedule_bot_reply(post) if can_attach?(post)
+      def update_playground_with(post, authorization_user: post.user)
+        schedule_bot_reply(post, authorization_user: authorization_user) if can_attach?(post)
       end
 
       def title_playground(post, user)
@@ -274,17 +293,36 @@ module DiscourseAi
           )
 
         new_title =
-          bot
-            .llm
-            .generate(title_prompt, user: user, feature_name: "bot_title")
-            .strip
-            .split("\n")
-            .last
+          DiscourseAi::Completions::Llm.text_from_response(
+            bot.llm.generate(title_prompt, user: user, feature_name: "bot_title"),
+          )
+        new_title = new_title.to_s.strip.split("\n").last.to_s
+        new_title = new_title.delete_prefix('"').delete_suffix('"')
 
-        PostRevisor.new(post.topic.first_post, post.topic).revise!(
-          bot.bot_user,
-          title: new_title.sub(/\A"/, "").sub(/"\Z/, ""),
-        )
+        first_post = post.topic.first_post
+
+        if new_title.blank?
+          new_title =
+            PrettyText.excerpt(
+              first_post.cooked,
+              FALLBACK_TITLE_LENGTH,
+              strip_links: true,
+              text_entities: true,
+            )
+        end
+
+        return if new_title.blank?
+
+        new_title = new_title.truncate(SiteSetting.max_topic_title_length, separator: /\s/)
+
+        revised =
+          PostRevisor.new(first_post, post.topic).revise!(
+            bot.bot_user,
+            { title: new_title },
+            bypass_rate_limiter: true,
+          )
+
+        return if !revised
 
         allowed_users = post.topic.topic_allowed_users.pluck(:user_id)
         MessageBus.publish(
@@ -297,6 +335,8 @@ module DiscourseAi
           { title: post.topic.title, topic_id: post.topic.id },
           user_ids: allowed_users,
         )
+      rescue StandardError => e
+        Discourse.warn_exception(e, message: "Discourse AI: Unable to generate title")
       end
 
       def reply_to_chat_message(message, channel, context_post_ids)
@@ -462,6 +502,7 @@ module DiscourseAi
         cancel_manager: nil,
         attributed_user: nil,
         feature_context: nil,
+        authorization_user_id: nil,
         &blk
       )
         # this is a multithreading issue
@@ -560,15 +601,11 @@ module DiscourseAi
                 skip_jobs: true,
                 post_type: post_type,
                 skip_guardian: true,
-                custom_fields: {
-                  DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
-                  DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
-                  DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
-                },
+                custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
               )
           end
 
-          save_ai_custom_fields(reply_post)
+          save_ai_custom_fields(reply_post, authorization_user_id: authorization_user_id)
 
           stream_user_ids = reply_post.topic.allowed_users.pluck(:id)
           stream_group_ids = reply_post.topic.allowed_groups.pluck(:id)
@@ -614,6 +651,7 @@ module DiscourseAi
               reply << "<details class='ai-thinking'><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
               started_thinking = true
             elsif should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+              reply << "\n" if !reply.end_with?("\n")
               reply << "</details>\n\n"
               started_thinking = false
             end
@@ -675,8 +713,9 @@ module DiscourseAi
             { raw: reply },
             skip_validations: true,
             force_new_version: true,
+            bypass_rate_limiter: true,
           )
-          save_ai_custom_fields(reply_post)
+          save_ai_custom_fields(reply_post, authorization_user_id: authorization_user_id)
         else
           reply_post =
             PostCreator.create!(
@@ -686,11 +725,7 @@ module DiscourseAi
               skip_validations: true,
               post_type: post_type,
               skip_guardian: true,
-              custom_fields: {
-                DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
-                DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
-                DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
-              },
+              custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
             )
         end
 
@@ -728,6 +763,7 @@ module DiscourseAi
             raw: error_message,
             skip_validations: true,
             skip_guardian: true,
+            custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
           )
         end
 
@@ -786,16 +822,22 @@ module DiscourseAi
 
       private
 
-      def save_ai_custom_fields(reply_post)
-        reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD] = bot
-          .llm
-          .llm_model
-          .display_name
-        reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD] = bot
-          .llm
-          .llm_model
-          .id
-        reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD] = bot.agent.id
+      def ai_custom_fields(authorization_user_id: nil)
+        fields = {
+          DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
+          DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
+          DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
+        }
+        if authorization_user_id
+          fields[
+            DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD
+          ] = authorization_user_id
+        end
+        fields
+      end
+
+      def save_ai_custom_fields(reply_post, authorization_user_id: nil)
+        reply_post.custom_fields.merge!(ai_custom_fields(authorization_user_id:))
         reply_post.save_custom_fields
       end
 
@@ -859,13 +901,14 @@ module DiscourseAi
         true
       end
 
-      def schedule_bot_reply(post)
+      def schedule_bot_reply(post, authorization_user: post.user)
         agent_id = DiscourseAi::Agents::Agent.system_agents[bot.agent.class] || bot.agent.class.id
         ::Jobs.enqueue(
           :create_ai_reply,
           post_id: post.id,
           bot_user_id: bot.bot_user.id,
           agent_id: agent_id,
+          authorization_user_id: authorization_user&.id,
         )
       end
 

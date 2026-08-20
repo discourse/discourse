@@ -22,6 +22,17 @@ RSpec.describe ApplicationHelper do
       expect(tags).not_to include('name="discourse-beacon-pageview-enabled"')
     end
 
+    it "omits tracking meta tags in development when request tracking is not enabled" do
+      original_track_requests = ENV.delete("TRACK_REQUESTS")
+      Rails.env.stubs(:development?).returns(true)
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to be_blank
+    ensure
+      ENV["TRACK_REQUESTS"] = original_track_requests if original_track_requests
+    end
+
     it "includes beacon tracking meta tags for browser pageview event triggers" do
       SiteSetting.dashboard_improvements = true
       SiteSetting.persist_browser_pageview_events = false

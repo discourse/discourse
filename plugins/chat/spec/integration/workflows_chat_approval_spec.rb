@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe "Wait for Approval end-to-end" do
-  fab!(:user)
+RSpec.describe "Chat approval workflows end-to-end" do
+  fab!(:workflow_owner, :user)
   fab!(:approver, :user)
   fab!(:channel, :chat_channel)
 
@@ -10,119 +10,212 @@ RSpec.describe "Wait for Approval end-to-end" do
     SiteSetting.enable_discourse_workflows = true
   end
 
-  def run_pending_approval_job
-    job_args = Jobs::Chat::ResumeWorkflowApproval.jobs.last&.dig("args", 0)
-    Jobs::Chat::ResumeWorkflowApproval.new.execute(job_args.symbolize_keys) if job_args
+  def create_approval_workflow(version:, configuration:)
+    graph =
+      build_workflow_graph do |builder|
+        builder.node "trigger-1", "trigger:manual"
+        builder.node(
+          "wait-1",
+          "action:chat_approval",
+          name: "Approval",
+          configuration: configuration,
+        )
+        builder.node(
+          "final-1",
+          "action:set_fields",
+          name: "Final",
+          configuration: {
+            "mode" => "raw",
+            "include_other_fields" => true,
+            "json_output" => '{"completed": true}',
+          },
+        )
+        builder.chain "trigger-1", "wait-1", "final-1"
+      end
+    graph[:nodes].find { |node| node["id"] == "wait-1" }["typeVersion"] = version
+
+    Fabricate(:discourse_workflows_workflow, created_by: workflow_owner, **graph).tap do |workflow|
+      publish_workflow!(workflow)
+    end
   end
 
-  def trigger_approval_interaction(user:, message:, action_id:, value: "approve")
+  def click_approval_button(user:, message:, button:)
     interaction =
-      Chat::MessageInteraction.new(
-        user: user,
-        message: message,
-        action: {
-          "action_id" => action_id,
-          "value" => value,
+      Fabricate(:chat_message_interaction, user: user, message: message, action: button.deep_dup)
+    DiscourseEvent.trigger(:chat_message_interaction, interaction)
+
+    action = DiscourseWorkflows::InteractiveResume.action_payload(button["action_id"])["action"]
+    job_class =
+      if %w[approve deny].include?(action)
+        Jobs::Chat::ResumeWorkflowApproval
+      else
+        Jobs::Chat::ResumeWorkflowApprovalInteraction
+      end
+    job_args = job_class.jobs.last.fetch("args").first
+    job_class.new.execute(job_args.symbolize_keys)
+    interaction
+  end
+
+  it "uses the default V2 buttons and returns the clicked default value" do
+    workflow =
+      create_approval_workflow(
+        version: "2.0",
+        configuration: {
+          "message" => "Please review",
+          "channel_id" => channel.id.to_s,
         },
       )
-    DiscourseEvent.trigger(:chat_message_interaction, interaction)
-  end
 
-  it "pauses, receives approval via chat interaction, and completes the workflow" do
-    graph =
-      build_workflow_graph do |g|
-        g.node "trigger-1", "trigger:manual"
-        g.node "wait-1",
-               "action:chat_approval",
-               name: "Approval",
-               configuration: {
-                 "message" => "Please review",
-                 "approve_label" => "LGTM",
-                 "deny_label" => "Reject",
-                 "channel_id" => channel.id.to_s,
-                 "timeout_minutes" => "30",
-               }
-        g.node "final-1",
-               "action:set_fields",
-               name: "Final",
-               configuration: {
-                 "mode" => "raw",
-                 "include_other_fields" => true,
-                 "json_output" => '{"completed": "true"}',
-               }
-        g.chain "trigger-1", "wait-1", "final-1"
-      end
+    execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+    message = Chat::Message.where(chat_channel_id: channel.id).last
+    buttons = message.blocks.first["elements"]
 
-    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
-    publish_workflow!(workflow)
+    expect(buttons.map { |button| button.dig("text", "text") }).to eq(%w[Approve Deny])
 
-    execution = nil
-    freeze_time do
-      execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", { "topic_id" => 1 }).run
-      expect(execution.status).to eq("waiting")
-      expect(execution.waiting_until).to eq_time(30.minutes.from_now)
-    end
-
-    chat_message = Chat::Message.where(chat_channel_id: channel.id).last
-    buttons = chat_message.blocks.first["elements"]
-    expect(chat_message.message).to eq("Please review")
-    expect(buttons.first["text"]["text"]).to eq("LGTM")
-    expect(buttons.last["text"]["text"]).to eq("Reject")
-
-    trigger_approval_interaction(
-      user: approver,
-      message: chat_message,
-      action_id: buttons.first["action_id"],
-    )
-    run_pending_approval_job
+    click_approval_button(user: approver, message: message, button: buttons.first)
 
     execution.reload
     expect(execution.status).to eq("success")
-    expect(execution.execution_data.context_data["Final"].first["json"]).to include(
-      "completed" => "true",
-      "approved" => true,
+    expect(execution.execution_data.context_data.dig("Final", 0, "json")).to include(
+      "value" => "approve",
+      "user" => hash_including("id" => approver.id, "username" => approver.username),
+      "completed" => true,
     )
   end
 
-  it "rejects a stale approval button when the execution revisits the same approval node" do
-    graph =
-      build_workflow_graph do |g|
-        g.node "trigger-1", "trigger:manual"
-        g.node "wait-1",
-               "action:chat_approval",
-               name: "Approval",
-               configuration: {
-                 "message" => "Please review",
-                 "channel_id" => channel.id.to_s,
-               }
-        g.chain "trigger-1", "wait-1"
-      end
-
-    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
-    publish_workflow!(workflow)
+  it "returns the selected custom V2 value" do
+    workflow =
+      create_approval_workflow(
+        version: "2.0",
+        configuration: {
+          "message" => "Choose an outcome",
+          "buttons" => {
+            "values" => [
+              { "label" => "Ship it", "value" => "release:now" },
+              { "label" => "Revise", "value" => "needs:changes" },
+            ],
+          },
+          "channel_id" => channel.id.to_s,
+        },
+      )
 
     execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
-    expect(execution.status).to eq("waiting")
+    message = Chat::Message.where(chat_channel_id: channel.id).last
+    selected_button = message.blocks.first["elements"].last
 
-    first_message = Chat::Message.where(chat_channel_id: channel.id).last
-    original_action_id = first_message.blocks.first["elements"].first["action_id"]
+    click_approval_button(user: approver, message: message, button: selected_button)
 
-    trigger_approval_interaction(
-      user: approver,
-      message: first_message,
-      action_id: original_action_id,
+    expect(execution.reload.execution_data.context_data.dig("Final", 0, "json")).to include(
+      "value" => "needs:changes",
+      "channel" => hash_including("id" => channel.id),
     )
-    run_pending_approval_job
-    expect(execution.reload.status).to eq("success")
+  end
 
-    execution.update!(status: :waiting, waiting_node_id: "wait-1", resume_token: SecureRandom.uuid)
+  it "supports a V2 workflow with one button" do
+    workflow =
+      create_approval_workflow(
+        version: "2.0",
+        configuration: {
+          "message" => "Acknowledge",
+          "buttons" => {
+            "values" => [{ "label" => "Got it", "value" => "acknowledged" }],
+          },
+          "channel_id" => channel.id.to_s,
+        },
+      )
 
-    trigger_approval_interaction(
-      user: approver,
-      message: first_message,
-      action_id: original_action_id,
+    execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+    message = Chat::Message.where(chat_channel_id: channel.id).last
+    buttons = message.blocks.first["elements"]
+
+    expect(buttons.one?).to eq(true)
+    click_approval_button(user: approver, message: message, button: buttons.first)
+
+    expect(execution.reload.execution_data.context_data.dig("Final", 0, "json")).to include(
+      "value" => "acknowledged",
     )
-    run_pending_approval_job
-    expect(execution.reload.status).to eq("waiting")
+  end
+
+  it "continues a timed-out V2 workflow with its original input and no click fields" do
+    workflow =
+      create_approval_workflow(
+        version: "2.0",
+        configuration: {
+          "message" => "Please review",
+          "channel_id" => channel.id.to_s,
+          "timeout_minutes" => "1",
+          "timeout_action" => "continue",
+        },
+      )
+
+    freeze_time
+    execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", { "request_id" => 42 }).run
+    expect(execution).to have_attributes(
+      status: "waiting",
+      waiting_until: be_within(1.second).of(1.minute.from_now),
+      timeout_action: "continue",
+    )
+
+    freeze_time(2.minutes.from_now)
+    DiscourseWorkflows::Execution::ExpireWaiting.call
+
+    final_output = execution.reload.execution_data.context_data.dig("Final", 0, "json")
+    expect(execution.status).to eq("success")
+    expect(final_output).to include("request_id" => 42, "completed" => true)
+    expect(final_output.keys).not_to include("value", "channel", "user")
+  end
+
+  it "fails a timed-out V2 workflow with the approval timeout error" do
+    workflow =
+      create_approval_workflow(
+        version: "2.0",
+        configuration: {
+          "message" => "Please review",
+          "channel_id" => channel.id.to_s,
+          "timeout_minutes" => "1",
+          "timeout_action" => "fail",
+        },
+      )
+
+    freeze_time
+    execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+    expect(execution.timeout_action).to eq("fail")
+
+    freeze_time(2.minutes.from_now)
+    DiscourseWorkflows::Execution::ExpireWaiting.call
+
+    expect(execution.reload).to have_attributes(
+      status: "error",
+      error: I18n.t("discourse_workflows.errors.approval_timed_out"),
+      timeout_action: nil,
+    )
+  end
+
+  it "keeps explicit V1 workflows on the legacy output contract" do
+    workflow =
+      create_approval_workflow(
+        version: "1.0",
+        configuration: {
+          "message" => "Please review",
+          "approve_label" => "LGTM",
+          "deny_label" => "Reject",
+          "channel_id" => channel.id.to_s,
+        },
+      )
+
+    execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+    message = Chat::Message.where(chat_channel_id: channel.id).last
+    approve_button = message.blocks.first["elements"].first
+
+    click_approval_button(user: approver, message: message, button: approve_button)
+
+    expect(execution.reload.execution_data.context_data["Approval"]).to eq(
+      [{ "json" => { "approved" => true, "channel_id" => channel.id } }],
+    )
+    expect(execution.execution_data.context_data.dig("Final", 0, "json")).to eq(
+      "approved" => true,
+      "channel_id" => channel.id,
+      "completed" => true,
+    )
   end
 end

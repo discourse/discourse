@@ -11,6 +11,7 @@ module DiscourseAi
         @completer = JsonCompleter.new
         @broken = false
         @last_notified = {}
+        @control_character_escaper = DiscourseAi::Utils::JsonControlCharacterEscaper.new
       end
 
       def broken?
@@ -25,9 +26,7 @@ module DiscourseAi
           return
         end
 
-        @escaped_buffer << DiscourseAi::Utils::BestEffortJsonParser.escape_control_characters(
-          raw_json,
-        )
+        @escaped_buffer << @control_character_escaper.escape(raw_json)
 
         parsed =
           begin

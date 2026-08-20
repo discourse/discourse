@@ -1,79 +1,93 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Limit::V1 do
-  def execute(input_items, configuration = {})
-    config = { "max_items" => 10, "keep" => "first" }.merge(configuration)
-    execute_node_output(configuration: config, input_items: input_items).first
+  subject(:result) do
+    execute_node_output(configuration: configuration, input_items: input_items).first
   end
 
-  def make_indexed_items(count)
-    Array.new(count) { |i| { "json" => { "index" => i } } }
-  end
+  let(:item_count) { 5 }
+  let(:input_items) { Array.new(item_count) { |index| { "json" => { "index" => index } } } }
+  let(:max_items) { 10 }
+  let(:keep) { "first" }
+  let(:configuration) { { "max_items" => max_items, "keep" => keep } }
 
   describe "#execute" do
-    it "keeps the first N items by default" do
-      result = execute(make_indexed_items(5), "max_items" => 3)
+    context "when keeping the first three items" do
+      let(:max_items) { 3 }
 
-      expect(result.length).to eq(3)
-      expect(result[0]["json"]["index"]).to eq(0)
-      expect(result[1]["json"]["index"]).to eq(1)
-      expect(result[2]["json"]["index"]).to eq(2)
+      it "returns the first three items" do
+        expect(result.map { |item| item["json"]["index"] }).to eq([0, 1, 2])
+      end
     end
 
-    it "keeps the last N items when keep is last" do
-      result = execute(make_indexed_items(5), "max_items" => 2, "keep" => "last")
+    context "when keeping the last two items" do
+      let(:max_items) { 2 }
+      let(:keep) { "last" }
 
-      expect(result.length).to eq(2)
-      expect(result[0]["json"]["index"]).to eq(3)
-      expect(result[1]["json"]["index"]).to eq(4)
+      it "returns the last two items" do
+        expect(result.map { |item| item["json"]["index"] }).to eq([3, 4])
+      end
     end
 
-    it "returns all items when max_items exceeds input size" do
-      result = execute(make_indexed_items(3), "max_items" => 10)
+    context "when the limit exceeds the input size" do
+      let(:item_count) { 3 }
 
-      expect(result.length).to eq(3)
+      it "returns all items" do
+        expect(result.length).to eq(3)
+      end
     end
 
-    it "returns empty array when input is empty" do
-      result = execute([], "max_items" => 5)
+    context "without input items" do
+      let(:input_items) { [] }
+      let(:max_items) { 5 }
 
-      expect(result).to eq([])
+      it { is_expected.to eq([]) }
     end
 
-    it "defaults to 10 items" do
-      result = execute(make_indexed_items(15))
+    context "without an explicit limit" do
+      let(:item_count) { 15 }
+      let(:configuration) { {} }
 
-      expect(result.length).to eq(10)
+      it "defaults to ten items" do
+        expect(result.length).to eq(10)
+      end
     end
 
-    it "handles max_items of 1" do
-      result = execute(make_indexed_items(5), "max_items" => 1)
+    context "with a limit of one" do
+      let(:max_items) { 1 }
 
-      expect(result.length).to eq(1)
-      expect(result[0]["json"]["index"]).to eq(0)
+      it "returns the first item" do
+        expect(result.map { |item| item["json"]["index"] }).to eq([0])
+      end
     end
 
-    it "clamps max_items below 1 to 1" do
-      result = execute(make_indexed_items(5), "max_items" => 0)
+    context "with a limit below one" do
+      let(:max_items) { 0 }
 
-      expect(result.length).to eq(1)
-      expect(result[0]["json"]["index"]).to eq(0)
+      it "clamps the limit to one" do
+        expect(result.map { |item| item["json"]["index"] }).to eq([0])
+      end
     end
 
-    it "handles max_items of 1 with keep last" do
-      result = execute(make_indexed_items(5), "max_items" => 1, "keep" => "last")
+    context "when keeping the last item" do
+      let(:max_items) { 1 }
+      let(:keep) { "last" }
 
-      expect(result.length).to eq(1)
-      expect(result[0]["json"]["index"]).to eq(4)
+      it "returns the last item" do
+        expect(result.map { |item| item["json"]["index"] }).to eq([4])
+      end
     end
 
-    it "resolves max_items expressions through the execution context" do
-      items = make_indexed_items(5)
-      items.first["json"]["limit"] = 2
+    context "with an expression limit" do
+      let(:max_items) { "={{ $json.limit }}" }
+      let(:input_items) do
+        [{ "json" => { "index" => 0, "limit" => 2 } }] +
+          (1...item_count).map { |index| { "json" => { "index" => index } } }
+      end
 
-      result = execute(items, "max_items" => "={{ $json.limit }}")
-
-      expect(result.map { |item| item["json"]["index"] }).to eq([0, 1])
+      it "resolves the expression through the execution context" do
+        expect(result.map { |item| item["json"]["index"] }).to eq([0, 1])
+      end
     end
   end
 end

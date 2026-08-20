@@ -869,16 +869,15 @@ ja:
   email_login:
     invalid_token: 'おっとっと！使用したリンクは機能しなくなっています。今すぐ<a href="%{base_url}/login">ログイン</a>しましょう。パスワードを忘れた場合は、リセットするための<a href="%{base_url}/password-reset">リンクをリクエスト</a>できます。'
     title: "メールログイン"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub アプリ"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub アプリ"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "不明なブラウザ"
     device:
       android: "Android デバイス"
       chromebook: "Chrome OS"
@@ -898,6 +897,9 @@ ja:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "不明なオペレーティングシステム"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "匿名ユーザー"
   change_email:
     error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
     doesnt_exist: "そのメールアドレスは、あなたのアカウントに関連付けられていません。"
@@ -1362,6 +1364,9 @@ ja:
         num_topics: "トピック"
       description: "共有したリンクのクリック数で表示されたユーザー。"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "アクセス"
+    top_entry_urls:
       labels:
         count: "アクセス"
     top_referrers_by_browser_pageviews:
@@ -2235,7 +2240,6 @@ ja:
     default_other_external_links_in_new_tab: "デフォルトで、外部リンクを新しいタブで開く。"
     default_other_enable_quoting: "デフォルトで、選択したテキストを引用して返信する。"
     default_other_enable_smart_lists: "コンポーザーに入力する際にスマートリストをデフォルトで有効にする。"
-    default_other_enable_defer: "デフォルトで、トピックの延期機能を有効にする。"
     default_other_enable_markdown_monospace_font: "作成ツールの Markdown モードでは、デフォルトで等幅フォントを使用する。"
     default_other_dynamic_favicon: "デフォルトで、ブラウザアイコンに新規/更新されたトピック数を表示する。"
     default_other_skip_new_user_tips: "新規ユーザーオンボーディングのヒントとバッジをスキップします。"
@@ -2271,7 +2275,6 @@ ja:
     revoke_user_api_keys_unused_days: "ユーザー API キーが最後に使用されてから自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     revoke_user_api_keys_maxlife_days: "ユーザー API キーが自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     tagging_enabled: "トピックでタグを有効にしますか？詳細については、「<a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta のタグに関する管理者ガイド</a>」をご覧ください。"
-    create_tag_allowed_groups: "タグを作成できるグループ。管理者とモデレーターはタグをいつでも作成できます。"
     edit_tags_allowed_groups: "タグ、タグの説明、およびタグの同義語を編集できるグループ。"
     max_tags_per_topic: "トピックに適用できる最大タグ数。"
     max_tags_per_email_subject: "メールの件名に使用できる最大タグ数"
@@ -2340,7 +2343,6 @@ ja:
     default_composition_mode: "コミュニティーの作成ツールのデフォルトモードを設定する。リッチテキストモードでは、よりモダンでほとんどのユーザーが使い慣れた書き心地を得られます。Markdown モードはより技術的な知識を持つユーザーに適しています。メンバーは作成ツールのツールバーにあるトグルでモードを切り替えられます。"
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
     content_localization_use_default_locale_when_unsupported: "優先言語が 'content localization supported locales' に含まれていないユーザーに、サイトのデフォルトのロケールでローカライズされたコンテンツを配信する。"
-    content_localization_allow_author_localization: "作成者が投稿メニューから自分のトピックと投稿を更新することを許可する。"
     floating_dismiss_topics_on_mobile: "モバイル版では、アクセスの簡易性とトピックリストの上部のスペースを空けるために「閉じる...」フローティングボタンを表示する"
     enable_simplified_category_creation: "より少ないオプションとクリーンなインターフェースによって、シンプルなカテゴリ作成フローを実現します。"
     errors:
@@ -3763,9 +3765,6 @@ ja:
     user_posted_pm_staged:
       title: "ユーザーがステージングに PM を投稿しました"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "アカウントが凍結されました"
       subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"
@@ -4552,6 +4551,10 @@ ja:
   dev_mode:
     title: "開発者モード"
     enable_rack_mini_profiler: "セッションを変更しても Rack Mini Profiler が 1 時間持続できるようにする"
+  design_wizard:
+    palette_pairs:
+      default: "デフォルト"
+      dracula: "Dracula"
   wizard:
     title: "Discourse のセットアップ"
     step:
@@ -4808,11 +4811,9 @@ ja:
         title: "いいえ"
         delete:
           title: "ユーザーの削除"
-          description: "ブロックせずにユーザーを削除します"
           complete: "ユーザーは削除されました。"
         block:
           title: "ユーザーの削除とブロック"
-          description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
           complete: "ユーザーを削除してブロックしました。"
       confirm_spam:
         title: "はい"
@@ -4872,12 +4873,10 @@ ja:
         bundle_title: "ユーザーをどうしますか？"
       silence_user:
         title: "ユーザーを投稿禁止にする"
-        description: "ユーザーが投稿できないようにします"
         complete: "ユーザーを投稿禁止にしました"
         reason: "ユーザーはレビューキューを通じて投稿禁止にされました"
       suspend_user:
         title: "ユーザーを凍結する"
-        description: "ユーザーアカウントを凍結します"
         complete: "ユーザーを凍結しました"
         reason: "ユーザーはレビューキューを通じて凍結されました"
       delete_user:

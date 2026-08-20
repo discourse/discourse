@@ -7,7 +7,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
   fab!(:group_2) { Fabricate(:group, name: "another_group") }
 
   describe ".load_options_context" do
-    def load_options(parameters: {}, filter: nil)
+    subject(:options) do
       context =
         DiscourseWorkflows::LoadOptionsContext.new(
           method_name: "groups",
@@ -19,9 +19,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
       described_class.load_options_context(context)
     end
 
-    it "returns groups for the chooser", :aggregate_failures do
-      options = load_options
+    let(:parameters) { {} }
+    let(:filter) { nil }
 
+    it "returns groups for the chooser", :aggregate_failures do
       expect(options).to include(
         { id: group.id, name: group.name },
         { id: group_2.id, name: group_2.name },
@@ -31,10 +32,12 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
       expect(option_ids).to include(*Group::AUTO_GROUPS.values)
     end
 
-    it "filters groups by the filter term" do
-      expect(load_options(filter: "another")).to contain_exactly(
-        { id: group_2.id, name: group_2.name },
-      )
+    context "with a filter term" do
+      let(:filter) { "another" }
+
+      it "filters groups" do
+        expect(options).to contain_exactly({ id: group_2.id, name: group_2.name })
+      end
     end
   end
 

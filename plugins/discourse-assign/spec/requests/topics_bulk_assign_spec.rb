@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 RSpec.describe TopicsController do
   include_context "with group that is allowed to assign"
 
@@ -13,12 +11,12 @@ RSpec.describe TopicsController do
   before do
     SiteSetting.assign_enabled = true
     SiteSetting.enable_assign_status = true
-    add_to_assign_allowed_group(actor)
+    assign_allowed_group.add(actor)
     sign_in(actor)
   end
 
   def bulk_assign(operation, ids: [topic1.id, topic2.id])
-    put "/topics/bulk.json", params: { topic_ids: ids, operation: operation }
+    put "/topics/bulk.json", params: { topic_ids: ids, operation: }
   end
 
   describe "#bulk with the assign operation" do
@@ -88,7 +86,7 @@ RSpec.describe TopicsController do
     end
 
     it "returns the per-topic failures alongside the topics that succeeded" do
-      add_to_assign_allowed_group(allowed_user)
+      assign_allowed_group.add(allowed_user)
       private_group = Fabricate(:group, users: [actor])
       hidden_topic = Fabricate(:topic, category: Fabricate(:private_category, group: private_group))
 

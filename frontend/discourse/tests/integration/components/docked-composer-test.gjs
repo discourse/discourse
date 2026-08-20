@@ -272,4 +272,70 @@ module("Integration | Component | DockedComposer", function (hooks) {
       "End key defaults to 400 when no @maxResizeOffset"
     );
   });
+
+  test("the arrow keys grow the composer upward and shrink it back", async function (assert) {
+    await render(
+      <template>
+        <DockedComposer
+          @resizable={{true}}
+          @composerEvents={{false}}
+          @draftKey="test-resize-arrows"
+        />
+      </template>
+    );
+
+    const handle = document.querySelector(".docked-composer__resize-handle");
+    const offset = () =>
+      document
+        .querySelector(".docked-composer")
+        .style.getPropertyValue("--docked-composer-drag-offset");
+
+    await triggerKeyEvent(handle, "keydown", "ArrowUp");
+    assert.dom(handle).hasAttribute("aria-valuenow", "16");
+    assert.strictEqual(
+      offset(),
+      "16px",
+      "dragging the handle up with the keyboard grows the composer"
+    );
+
+    await triggerKeyEvent(handle, "keydown", "ArrowDown");
+    assert.dom(handle).hasAttribute("aria-valuenow", "0");
+    assert.strictEqual(offset(), "0px", "ArrowDown shrinks it back");
+
+    await triggerKeyEvent(handle, "keydown", "ArrowDown");
+    assert
+      .dom(handle)
+      .hasAttribute(
+        "aria-valuenow",
+        "0",
+        "it cannot shrink past its resting size"
+      );
+  });
+
+  test("Home returns the composer to its resting size", async function (assert) {
+    await render(
+      <template>
+        <DockedComposer
+          @resizable={{true}}
+          @composerEvents={{false}}
+          @draftKey="test-resize-home"
+        />
+      </template>
+    );
+
+    const handle = document.querySelector(".docked-composer__resize-handle");
+
+    await triggerKeyEvent(handle, "keydown", "End");
+    assert.dom(handle).hasAttribute("aria-valuenow", "400");
+
+    await triggerKeyEvent(handle, "keydown", "Home");
+    assert.dom(handle).hasAttribute("aria-valuenow", "0");
+    assert.strictEqual(
+      document
+        .querySelector(".docked-composer")
+        .style.getPropertyValue("--docked-composer-drag-offset"),
+      "0px",
+      "the rendered offset follows"
+    );
+  });
 });

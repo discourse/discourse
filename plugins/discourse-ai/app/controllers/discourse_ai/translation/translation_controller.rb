@@ -49,7 +49,7 @@ module DiscourseAi
 
         untranslated_posts = find_untranslated_posts(topic, guardian)
 
-        if !untranslated_posts.exists?
+        if !topic_needs_translation?(topic) && !untranslated_posts.exists?
           return(
             render_json_error(
               I18n.t("discourse_ai.translation.errors.all_posts_translated"),
@@ -79,24 +79,32 @@ module DiscourseAi
         render_json_error(I18n.t("rate_limiter.slow_down"))
       end
 
+      def topic_needs_translation?(topic)
+        locales = DiscourseAi::Translation.locales
+
+        return false if locales.blank?
+        return true if topic.locale.blank?
+
+        locales.any? do |locale|
+          next false if LocaleNormalizer.is_same?(locale, topic.locale)
+
+          topic.get_localization(locale, fallback: false).nil?
+        end
+      end
+
       def find_untranslated_posts(topic, guardian)
         supported_locales = DiscourseAi::Translation.locales
         base_locales = supported_locales.map { |locale| locale.split("_").first }
 
-        # Find posts that:
-        # 1. Have a detected locale
-        # 2. Need translation to other supported locales (excluding their own locale)
-        # 3. Don't have PostLocalization records for those target locales yet
-        # 4. Are not deleted and have content
+        # Find posts that need locale detection or translation to another supported locale.
         posts = topic.posts.secured(guardian)
         posts =
           posts.where("posts.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
         posts
           .where.not(raw: "")
           .where(deleted_at: nil)
-          .where.not(locale: nil)
           .where(
-            "EXISTS (
+            "posts.locale IS NULL OR EXISTS (
               SELECT 1 FROM unnest(ARRAY[?]) AS target_locale
               WHERE split_part(posts.locale, '_', 1) != target_locale
               AND NOT EXISTS (

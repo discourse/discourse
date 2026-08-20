@@ -205,9 +205,9 @@ RSpec.describe PostCreator do
         Jobs.run_immediately!
         UserActionManager.enable
 
-        admin = Fabricate(:user)
+        admin = Fabricate(:user, refresh_auto_groups: true)
         admin.grant_admin!
-        other_admin = Fabricate(:user)
+        other_admin = Fabricate(:user, refresh_auto_groups: true)
         other_admin.grant_admin!
 
         cat = Fabricate(:category)

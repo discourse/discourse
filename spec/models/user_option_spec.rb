@@ -32,6 +32,11 @@ RSpec.describe UserOption do
       expect(user.user_option.hide_presence).to eq(false)
     end
 
+    it "enables automatic translation without assuming understood languages" do
+      expect(user.user_option.automatically_translate).to eq(true)
+      expect(user.user_option.understood_languages).to eq([])
+    end
+
     it "should correctly set digest frequency" do
       SiteSetting.default_email_digest_frequency = 1440
       user = Fabricate(:user)
@@ -77,12 +82,32 @@ RSpec.describe UserOption do
     end
   end
 
+  describe "understood languages" do
+    fab!(:user)
+
+    it "accepts supported locales" do
+      expect(user.user_option.update(understood_languages: %w[en ja])).to eq(true)
+    end
+
+    it "rejects unsupported locales" do
+      expect(user.user_option.update(understood_languages: ["not-a-locale"])).to eq(false)
+      expect(user.user_option.errors[:understood_languages]).to be_present
+    end
+
+    it "allows unrelated preferences to be saved after a language provider is removed" do
+      user.user_option.update!(understood_languages: ["en"])
+      LocaleSiteSetting.stubs(:supported_locales).returns(["ja"])
+
+      expect(user.user_option.update(automatically_translate: false)).to eq(true)
+      expect(user.user_option.reload.automatically_translate).to eq(false)
+    end
+  end
+
   describe "site settings" do
     it "should apply defaults from site settings" do
       SiteSetting.default_other_enable_quoting = false
       SiteSetting.default_other_enable_smart_lists = false
       SiteSetting.default_other_enable_markdown_monospace_font = false
-      SiteSetting.default_other_enable_defer = true
       SiteSetting.default_other_external_links_in_new_tab = true
       SiteSetting.default_other_dynamic_favicon = true
       SiteSetting.default_other_skip_new_user_tips = true
@@ -93,7 +118,6 @@ RSpec.describe UserOption do
       expect(user.user_option.enable_quoting).to eq(false)
       expect(user.user_option.enable_smart_lists).to eq(false)
       expect(user.user_option.enable_markdown_monospace_font).to eq(false)
-      expect(user.user_option.enable_defer).to eq(true)
       expect(user.user_option.external_links_in_new_tab).to eq(true)
       expect(user.user_option.dynamic_favicon).to eq(true)
       expect(user.user_option.skip_new_user_tips).to eq(true)

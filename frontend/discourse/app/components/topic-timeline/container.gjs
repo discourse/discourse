@@ -9,6 +9,7 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
+import TopicContentLanguagePreferences from "discourse/components/topic-content-language-preferences";
 import UserTip from "discourse/components/user-tip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
@@ -20,6 +21,7 @@ import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -167,7 +169,10 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get showTimelineControls() {
-    return !this.args.fullscreen && this.currentUser;
+    return (
+      !this.args.fullscreen &&
+      (this.currentUser || this.args.model.has_localized_content)
+    );
   }
 
   get topicTitle() {
@@ -366,7 +371,9 @@ export default class TopicTimelineScrollArea extends Component {
   updatePercentage(e) {
     e.preventDefault();
 
-    const currentCursorY = e.pageY || e.touches[0].pageY;
+    // Both a pointer drag and a click on the timeline track land here, and both
+    // carry `pageY` directly.
+    const currentCursorY = e.pageY;
 
     const desiredScrollerCentre = currentCursorY - this.dragOffset;
 
@@ -386,7 +393,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   @bind
   didStartDrag(event) {
-    const y = event.pageY || event.touches[0].pageY;
+    const y = event.pageY;
 
     const scrollerCentre =
       domUtils.offset(this.scrollerElement).top +
@@ -566,6 +573,10 @@ export default class TopicTimelineScrollArea extends Component {
           @convertToPublicTopic={{@convertToPublicTopic}}
           @convertToPrivateMessage={{@convertToPrivateMessage}}
         />
+
+        {{#if @model.has_localized_content}}
+          <TopicContentLanguagePreferences />
+        {{/if}}
       </div>
     {{/if}}
 
@@ -595,7 +606,10 @@ export default class TopicTimelineScrollArea extends Component {
         </div>
 
         <div
-          class="timeline-scrollarea"
+          class={{dConcatClass
+            "timeline-scrollarea"
+            (if this.dragging "--dragging")
+          }}
           style={{this.timelineScrollareaStyle}}
           {{didInsert this.registerScrollarea}}
         >

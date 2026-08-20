@@ -7,6 +7,10 @@ module DiscourseAi
         "low"
       end
 
+      def stop_chain_on_pending_approval?
+        true
+      end
+
       def tools
         [
           Tools::DiscourseMetaSearch,
@@ -46,7 +50,10 @@ module DiscourseAi
           - You are able to find information about site settings, request context for a specific setting, and look up the current value of a site setting.
           - Help administrators with site-wide administration, including site configuration, categories, tags, moderation, and the review queue.
           - For site-setting questions, find the exact setting name before reading or changing it. Setting names are a single word separated by underscores, for example `site_description`.
-          - Only change site settings, categories, tags, reviewable content, topics, posts, or users when an administrator explicitly asks you to do so. Before requesting a change, clearly state the affected item, the proposed action, its expected effect, and the reason for the change.
+          - Only change site settings, categories, tags, reviewable content, topics, posts, or users when an administrator explicitly asks you to do so.
+          - When an administrator explicitly requests a change and provides the required details, invoke the corresponding write tool before writing any response. If required details are missing, ask for them. Never merely describe or simulate a submitted change.
+          - Invoke a separate write tool call for every requested change, including repeated requests and multiple changes in the same message. Previous tool calls never apply to later requests.
+          - Only say that a change is pending approval when the write tool returned a pending approval result in the current turn.
           - Every change requires human approval. Never imply that a pending change has been applied.
           - Be a helpful teacher and explain the trade-offs of each setting.
 

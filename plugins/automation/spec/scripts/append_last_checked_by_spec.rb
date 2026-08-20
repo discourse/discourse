@@ -8,25 +8,15 @@ describe "AppendLastCheckedBy" do
     Fabricate(:automation, script: DiscourseAutomation::Scripts::APPEND_LAST_CHECKED_BY)
   end
 
-  def trigger_automation(post)
-    cooked = automation.trigger!("post" => post, "cooked" => post.cooked)
-    checked_at = post.updated_at + 1.hour
-    date_time = checked_at.strftime("%Y-%m-%dT%H:%M:%SZ")
-    [cooked, checked_at, date_time]
-  end
-
-  def text(key)
-    I18n.t("discourse_automation.scriptables.append_last_checked_by.#{key}")
-  end
-
   describe "#trigger!" do
     it "works for newly created post" do
-      cooked, checked_at, date_time = trigger_automation(post)
+      cooked = automation.trigger!("post" => post, "cooked" => post.cooked)
+      translation_key = "discourse_automation.scriptables.append_last_checked_by"
 
       expect(cooked.include?("<blockquote class=\"discourse-automation\">")).to be_truthy
       expect(
         cooked.include?(
-          "<details><summary>#{text("summary")}</summary>#{text("details")}<input type=\"button\" value=\"#{text("button_text")}\" class=\"btn btn-checked\"></details>",
+          "<details><summary>#{I18n.t("#{translation_key}.summary")}</summary>#{I18n.t("#{translation_key}.details")}<input type=\"button\" value=\"#{I18n.t("#{translation_key}.button_text")}\" class=\"btn btn-checked\"></details>",
         ),
       ).to be_truthy
     end
@@ -37,7 +27,8 @@ describe "AppendLastCheckedBy" do
       topic.custom_fields[DiscourseAutomation::TOPIC_LAST_CHECKED_AT] = post.updated_at + 1.hour
       topic.save_custom_fields
 
-      cooked, checked_at = trigger_automation(post)
+      cooked = automation.trigger!("post" => post, "cooked" => post.cooked)
+      checked_at = post.updated_at + 1.hour
 
       expect(
         cooked.include?(

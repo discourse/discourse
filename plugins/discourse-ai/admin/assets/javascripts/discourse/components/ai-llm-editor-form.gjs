@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn, get } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
@@ -19,9 +19,11 @@ import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-templa
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
+import AiLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-llm-selector";
 import {
   isProviderParamHidden,
   normalizeProviderParams,
+  providerParamLabel,
 } from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
 import DurationSelector from "./ai-quota-duration-selector";
 import AiSecretSelector from "./ai-secret-selector";
@@ -69,6 +71,8 @@ export default class AiLlmEditorForm extends Component {
         output_cost: modelInfo.output_cost,
         cached_input_cost: modelInfo.cached_input_cost,
         vision_enabled: modelInfo.vision_enabled || false,
+        vision_mode: modelInfo.vision_enabled ? "native" : "disabled",
+        vision_llm_model_id: null,
         cache_write_cost: modelInfo.cache_write_cost,
         allowed_attachment_types: [],
       };
@@ -86,6 +90,9 @@ export default class AiLlmEditorForm extends Component {
       name: model.name,
       provider: model.provider,
       vision_enabled: model.vision_enabled,
+      vision_mode:
+        model.vision_mode ?? (model.vision_enabled ? "native" : "disabled"),
+      vision_llm_model_id: model.vision_llm_model_id,
       input_cost: model.input_cost,
       output_cost: model.output_cost,
       cached_input_cost: model.cached_input_cost,
@@ -101,6 +108,23 @@ export default class AiLlmEditorForm extends Component {
 
   get availableSecrets() {
     return this.args.llms.resultSetMeta?.ai_secrets || [];
+  }
+
+  get nativeVisionModels() {
+    return this.args.llms.content
+      .filter(
+        (llm) =>
+          llm.id !== this.args.model.id &&
+          llm.vision_enabled &&
+          (llm.vision_mode ?? "native") === "native"
+      )
+      .map((llm) => ({
+        id: llm.id,
+        name: `${llm.display_name} — ${i18n(
+          `discourse_ai.llms.providers.${llm.provider}`
+        )}`,
+      }))
+      .sort((first, second) => first.name.localeCompare(second.name));
   }
 
   get selectedProviders() {
@@ -279,6 +303,14 @@ export default class AiLlmEditorForm extends Component {
   }
 
   @action
+  setVisionMode(mode, { set }) {
+    set("vision_mode", mode);
+    if (mode !== "delegated") {
+      set("vision_llm_model_id", null);
+    }
+  }
+
+  @action
   setProvider(provider, { set }) {
     set("provider_params", this.computeProviderParams(provider));
     set("provider", provider);
@@ -410,9 +442,7 @@ export default class AiLlmEditorForm extends Component {
               }}
                 <object.Field
                   @name={{name}}
-                  @title={{i18n
-                    (concat "discourse_ai.llms.provider_fields." name)
-                  }}
+                  @title={{i18n (providerParamLabel name params)}}
                   @tooltip={{if params.tooltip (i18n params.tooltip)}}
                   @helpText={{if params.helpText (i18n params.helpText)}}
                   @showTitle={{not (eq params.type "checkbox")}}
@@ -536,16 +566,53 @@ export default class AiLlmEditorForm extends Component {
         </form.Field>
 
         <form.Field
-          @name="vision_enabled"
-          @title={{i18n "discourse_ai.llms.vision_enabled"}}
-          @tooltip={{i18n "discourse_ai.llms.hints.vision_enabled"}}
-          @showTitle={{false}}
+          @name="vision_mode"
+          @title={{i18n "discourse_ai.llms.vision_mode"}}
+          @tooltip={{i18n "discourse_ai.llms.vision_mode_help"}}
+          @validation="required"
+          @onSet={{this.setVisionMode}}
           @format="large"
-          @type="checkbox"
+          @type="select"
           as |field|
         >
-          <field.Control />
+          <field.Control as |select|>
+            <select.Option @value="disabled">
+              {{i18n "discourse_ai.llms.vision_modes.disabled.title"}}
+            </select.Option>
+            <select.Option @value="delegated">
+              {{i18n "discourse_ai.llms.vision_modes.delegated.title"}}
+            </select.Option>
+            <select.Option @value="native">
+              {{i18n "discourse_ai.llms.vision_modes.native.title"}}
+            </select.Option>
+          </field.Control>
         </form.Field>
+
+        {{#if (eq data.vision_mode "delegated")}}
+          <form.Field
+            @name="vision_llm_model_id"
+            @title={{i18n "discourse_ai.llms.vision_model"}}
+            @tooltip={{i18n "discourse_ai.llms.vision_model_help"}}
+            @validation="required"
+            @format="large"
+            @type="custom"
+            as |field|
+          >
+            <field.Control>
+              <AiLlmSelector
+                @value={{field.value}}
+                @llms={{this.nativeVisionModels}}
+                @onChange={{field.set}}
+                class="ai-llm-editor__vision-model-selector"
+              />
+            </field.Control>
+          </form.Field>
+          {{#unless this.nativeVisionModels.length}}
+            <form.Alert @icon="triangle-exclamation">
+              {{i18n "discourse_ai.llms.no_native_vision_models"}}
+            </form.Alert>
+          {{/unless}}
+        {{/if}}
 
         <form.Field
           @name="allowed_attachment_types"

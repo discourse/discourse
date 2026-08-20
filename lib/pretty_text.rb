@@ -20,6 +20,10 @@ module PrettyText
   BLOCKED_HOTLINKED_SRC_ATTR = "data-blocked-hotlinked-src"
   BLOCKED_HOTLINKED_SRCSET_ATTR = "data-blocked-hotlinked-srcset"
 
+  VIMEO_PLAYER_HOST = "player.vimeo.com"
+  VIMEO_PLAYER_PATH = %r{\A/video/(?<id>\d+)/?\z}
+  VIMEO_UNLISTED_HASH = /\A[a-zA-Z0-9]+\z/
+
   @mutex = Mutex.new
   @ctx_init = Mutex.new
 
@@ -34,11 +38,53 @@ module PrettyText
     ctx.eval(transpiled, filename: module_name)
   end
 
-  def self.ctx_load_directory(ctx:, base_path:, module_prefix:)
-    Dir["**/*.js", base: base_path].sort.each do |f|
-      module_name = "#{module_prefix}#{f.delete_suffix(".js")}"
-      apply_es6_file(ctx: ctx, path: File.join(base_path, f), module_name: module_name)
+  # The only modules from the `discourse` package which may be bundled into the
+  # server-side renderer. Additions must not transitively depend on
+  # browser-only APIs.
+  BUNDLED_DISCOURSE_MODULES = %w[
+    deprecation-workflow
+    lib/avatar-utils
+    lib/case-converter
+    lib/escape
+    lib/get-url
+    lib/object
+    loader
+    static/markdown-it/features
+  ]
+
+  CORE_BUNDLE =
+    PrecompiledBundle.new(
+      dir: "tmp/pretty-text-processor",
+      filename_prefix: "pretty-text",
+      dependency_globs:
+        %w[
+          node_modules/.pnpm/lock.yaml
+          frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
+          frontend/pretty-text/addon/**/*.js
+          frontend/discourse-markdown-it/src/**/*.js
+        ] + BUNDLED_DISCOURSE_MODULES.map { "frontend/discourse/app/#{it}.js" },
+    ) do
+      Discourse::Utils.execute_command(
+        "pnpm",
+        "-C=frontend/pretty-text-processor",
+        "node",
+        "build.mjs",
+        "--discourse-modules=#{BUNDLED_DISCOURSE_MODULES.join(",")}",
+        chdir: Rails.root.to_s,
+      )
     end
+
+  def self.load_or_build_core_bundle
+    CORE_BUNDLE.load_or_build
+  end
+
+  def self.core_bundle_source
+    raise <<~MSG.squish if Rails.env.production? && !CORE_BUNDLE.precompiled?
+        PrettyText core bundle has not been precompiled (#{CORE_BUNDLE.path}).
+        Run `bin/rake assets:precompile` before booting.
+      MSG
+
+    CORE_BUNDLE.load_or_build
   end
 
   def self.create_es6_context
@@ -78,49 +124,13 @@ module PrettyText
 
     ctx.eval("__PRETTY_TEXT = true")
 
+    # `__Ruby` must exist before the bundle runs — it captures it at init.
     PrettyText::Helpers.instance_methods.each do |method|
-      ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
+      ctx.attach("__Ruby.#{method}", PrettyText::Helpers.method(method))
     end
 
-    root_path = "#{Rails.root.join("frontend")}"
-    d_node_modules = "#{Rails.root.join("frontend/discourse/node_modules")}"
-    md_node_modules = "#{Rails.root.join("frontend/discourse-markdown-it/node_modules")}"
-    ctx.load("#{d_node_modules}/loader.js/dist/loader/loader.js")
-    ctx.load("#{md_node_modules}/markdown-it/dist/markdown-it.js")
-    ctx.load("#{md_node_modules}/xss/dist/xss.js")
-    ctx.load("#{Rails.root.join("lib/pretty_text/vendor-shims.js")}")
-
-    ctx_load_directory(
-      ctx: ctx,
-      base_path: "#{root_path}/pretty-text/addon",
-      module_prefix: "pretty-text/",
-    )
-    ctx_load_directory(
-      ctx: ctx,
-      base_path: "#{root_path}/discourse-markdown-it/src",
-      module_prefix: "discourse-markdown-it/",
-    )
-
-    %w[
-      discourse/app/deprecation-workflow
-      discourse/app/lib/get-url
-      discourse/app/lib/object
-      discourse/app/lib/deprecated
-      discourse/app/lib/escape
-      discourse/app/lib/avatar-utils
-      discourse/app/lib/case-converter
-      discourse/app/lib/to-markdown
-      discourse/app/static/markdown-it/features
-    ].each do |f|
-      apply_es6_file(
-        ctx: ctx,
-        path: "#{root_path}/#{f}.js",
-        module_name: f.sub("/addon/", "/").sub("/app/", "/"),
-      )
-    end
-
-    ctx.load("#{Rails.root.join("lib/pretty_text/shims.js")}")
-    ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
+    ctx.eval(core_bundle_source, filename: "pretty-text.js")
+    ctx.call("__PrettyText.setUnicode", JSON.parse(Emoji.unicode_replacements_json))
 
     Discourse.plugins.each do |plugin|
       Dir
@@ -159,7 +169,7 @@ module PrettyText
 
   def self.reset_translations
     @mutex.synchronize do
-      v8.eval("__resetTranslationTree()")
+      v8.call("__PrettyText.resetTranslations")
       v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
     end
   end
@@ -191,86 +201,55 @@ module PrettyText
   def self.markdown(text, opts = {})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
-    baked = nil
     text = text || ""
 
+    custom_emoji = {}
+    Emoji.custom.map { |e| custom_emoji[e.name] = e.cdn_url }
+
+    allowed_iframes =
+      DiscoursePluginRegistry.apply_modifier(
+        :pretty_text_allowed_iframes,
+        SiteSetting.allowed_iframes.split("|"),
+      )
+
+    opts[:hashtag_context] ||= "topic-composer"
+
+    # Any addition here must also be added to buildOptions in discourse-markdown-it.
+    opt_input = {
+      siteSettings: SiteSetting.client_settings_hash,
+      allowedIframes: allowed_iframes,
+      paths: paths,
+      customEmoji: custom_emoji,
+      customEmojiTranslation: Plugin::CustomEmoji.translations,
+      emojiDenyList: Emoji.denied,
+      censoredRegexp: WordWatcher.serialized_regexps_for_action(:censor),
+      watchedWordsReplace: WordWatcher.regexps_for_action(:replace),
+      watchedWordsLink: WordWatcher.regexps_for_action(:link),
+      additionalOptions: Site.markdown_additional_options,
+      avatar_sizes: SiteSetting.avatar_sizes,
+      hashtagTypesInPriorityOrder:
+        HashtagAutocompleteService.ordered_types_for_context(opts[:hashtag_context]),
+      hashtagIcons: HashtagAutocompleteService.data_source_icon_map,
+    }
+
+    opt_input[:disableEmojis] = true if opts[:disable_emojis]
+    opt_input[:features] = opts[:features] if opts[:features]
+    opt_input[:featuresOverride] = opts[:features_override] if opts[:features_override]
+    opt_input[:markdownItRules] = opts[:markdown_it_rules] if opts[:markdown_it_rules]
+    opt_input[:topicId] = opts[:topic_id].to_i if opts[:topic_id]
+    opt_input[:postId] = opts[:post_id].to_i if opts[:post_id]
+    opt_input[:forceQuoteLink] = opts[:force_quote_link] if opts[:force_quote_link]
+    opt_input[:userId] = opts[:user_id].to_i if opts[:user_id]
+    # Be careful disabling sanitization. We allow for custom emails
+    opt_input[:disableSanitizer] = true if opts[:sanitize] == false
+
     protect do
-      context = v8
-
-      custom_emoji = {}
-      Emoji.custom.map { |e| custom_emoji[e.name] = e.cdn_url }
-
-      allowed_iframes =
-        DiscoursePluginRegistry.apply_modifier(
-          :pretty_text_allowed_iframes,
-          SiteSetting.allowed_iframes.split("|"),
-        )
-
-      # note, any additional options added to __optInput here must be
-      # also be added to the buildOptions function in pretty-text.js,
-      # otherwise they will be discarded
-      buffer = +<<~JS
-        __optInput = {};
-        __optInput.siteSettings = #{SiteSetting.client_settings_json};
-        __optInput.allowedIframes = #{allowed_iframes.to_json};
-        #{"__optInput.disableEmojis = true" if opts[:disable_emojis]}
-        __paths = #{paths_json};
-        __optInput.getURL = __getURL;
-        #{"__optInput.features = #{opts[:features].to_json};" if opts[:features]}
-        #{"__optInput.featuresOverride = #{opts[:features_override].to_json};" if opts[:features_override]}
-        #{"__optInput.markdownItRules = #{opts[:markdown_it_rules].to_json};" if opts[:markdown_it_rules]}
-        __optInput.getCurrentUser = __getCurrentUser;
-        __optInput.lookupAvatar = __lookupAvatar;
-        __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;
-        __optInput.formatUsername = __formatUsername;
-        __optInput.getTopicInfo = __getTopicInfo;
-        __optInput.hashtagLookup = __hashtagLookup;
-        __optInput.customEmoji = #{custom_emoji.to_json};
-        __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
-        __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
-        __optInput.emojiDenyList = #{Emoji.denied.to_json};
-        __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.serialized_regexps_for_action(:censor).to_json};
-        __optInput.watchedWordsReplace = #{WordWatcher.regexps_for_action(:replace).to_json};
-        __optInput.watchedWordsLink = #{WordWatcher.regexps_for_action(:link).to_json};
-        __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
-        __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
-      JS
-
-      buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n" if opts[:topic_id]
-      buffer << "__optInput.postId = #{opts[:post_id].to_i};\n" if opts[:post_id]
-
-      if opts[:force_quote_link]
-        buffer << "__optInput.forceQuoteLink = #{opts[:force_quote_link]};\n"
-      end
-
-      buffer << "__optInput.userId = #{opts[:user_id].to_i};\n" if opts[:user_id]
-
-      opts[:hashtag_context] = opts[:hashtag_context] || "topic-composer"
-      hashtag_types_as_js =
-        HashtagAutocompleteService
-          .ordered_types_for_context(opts[:hashtag_context])
-          .map { |t| "'#{t}'" }
-          .join(",")
-      buffer << "__optInput.hashtagTypesInPriorityOrder = [#{hashtag_types_as_js}];\n"
-      buffer << "__optInput.hashtagIcons = #{HashtagAutocompleteService.data_source_icon_map.to_json};\n"
-
-      buffer << "__pluginFeatures = __loadPluginFeatures();"
-      buffer << "__pt = __DiscourseMarkdownIt.withCustomFeatures(__pluginFeatures).withOptions(__optInput);"
-
-      # Be careful disabling sanitization. We allow for custom emails
-      buffer << "__pt.disableSanitizer();" if opts[:sanitize] == false
-
-      opts = context.eval(buffer)
-
-      DiscourseEvent.trigger(:markdown_context, context)
-      baked = context.eval("__pt.cook(#{text.inspect})")
+      DiscourseEvent.trigger(:markdown_context, v8)
+      v8.call("__PrettyText.cook", text, opt_input)
     end
-
-    baked
   end
 
-  def self.paths_json
+  def self.paths
     paths = { baseUri: Discourse.base_path, CDN: Rails.configuration.action_controller.asset_host }
 
     if SiteSetting.Upload.enable_s3_uploads
@@ -278,59 +257,48 @@ module PrettyText
       paths[:S3BaseUrl] = Discourse.store.absolute_base_url
     end
 
+    paths
+  end
+
+  def self.paths_json
     paths.to_json
   end
 
   # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(avatar_template, size)
-    protect { v8.eval(<<~JS) }
-        __optInput = {};
-        __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
-        __paths = #{paths_json};
-        require("discourse/lib/avatar-utils").avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
-      JS
+    protect do
+      v8.call("__PrettyText.avatarImg", avatar_template, size, paths, SiteSetting.avatar_sizes)
+    end
   end
 
   def self.sanitize(html, opts = {})
-    protect { v8.eval(<<~JS) }
-        (() => {
-          const AllowLister = require("pretty-text/allow-lister").default;
-          const sanitize = require("pretty-text/sanitizer").sanitize;
-          return sanitize(#{html.to_s.inspect}, new AllowLister(#{opts.to_json}));
-        })()
-      JS
+    protect { v8.call("__PrettyText.sanitize", html.to_s, opts) }
   end
 
   def self.unescape_emoji(title)
     return title unless SiteSetting.enable_emoji? && title
 
-    set = SiteSetting.emoji_set.inspect
-    custom = Emoji.custom.map { |e| [e.name, e.cdn_url] }.to_h.to_json
+    options = {
+      paths: paths,
+      emojiSet: SiteSetting.emoji_set,
+      emojiCDNUrl: SiteSetting.external_emoji_url.presence || "",
+      customEmoji: Emoji.custom.map { |e| [e.name, e.cdn_url] }.to_h,
+      enableEmojiShortcuts: SiteSetting.enable_emoji_shortcuts,
+      inlineEmoji: SiteSetting.enable_inline_emoji_translation,
+    }
 
-    protect { v8.eval(<<~JS) }
-        __paths = #{paths_json};
-        __performEmojiUnescape(#{title.inspect}, {
-          getURL: __getURL,
-          emojiSet: #{set},
-          emojiCDNUrl: "#{SiteSetting.external_emoji_url.presence || ""}",
-          customEmoji: #{custom},
-          enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts},
-          inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
-        });
-      JS
+    protect { v8.call("__PrettyText.performEmojiUnescape", title, options) }
   end
 
   def self.escape_emoji(title)
     return unless title
 
-    replace_emoji_shortcuts = SiteSetting.enable_emoji && SiteSetting.enable_emoji_shortcuts
+    options = {
+      emojiShortcuts: SiteSetting.enable_emoji && SiteSetting.enable_emoji_shortcuts,
+      inlineEmoji: SiteSetting.enable_inline_emoji_translation,
+    }
 
-    protect { v8.eval(<<~JS) }
-        __performEmojiEscape(#{title.inspect}, {
-          emojiShortcuts: #{replace_emoji_shortcuts},
-          inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
-        });
-      JS
+    protect { v8.call("__PrettyText.performEmojiEscape", title, options) }
   end
 
   def self.cook(raw, opts = {})
@@ -533,7 +501,7 @@ module PrettyText
   def self.convert_hashtag_links_to_plaintext(doc)
     doc
       .css("a.hashtag-cooked")
-      .each { |hashtag| hashtag.replace("##{hashtag.attributes["data-slug"]}") }
+      .each { |hashtag| hashtag.replace(doc.document.create_text_node("##{hashtag["data-slug"]}")) }
   end
 
   def self.strip_links(string)
@@ -580,14 +548,46 @@ module PrettyText
     doc
       .css("iframe[src*='player.vimeo.com']")
       .each do |iframe|
-        if iframe["data-original-href"].present?
-          vimeo_url = UrlHelper.normalized_encode(iframe["data-original-href"])
-        else
-          vimeo_id = iframe["src"].split("/").last.sub("?h=", "/")
-          vimeo_url = "https://vimeo.com/#{vimeo_id}"
-        end
-        iframe.replace Nokogiri::HTML5.fragment("<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>")
+        vimeo_url = vimeo_url_from_iframe(iframe)
+        next if vimeo_url.blank?
+
+        paragraph = doc.document.create_element("p")
+        link = doc.document.create_element("a")
+        link["href"] = vimeo_url
+        link.content = vimeo_url
+        paragraph.add_child(link)
+        iframe.replace(paragraph)
       end
+  end
+
+  def self.vimeo_url_from_iframe(iframe)
+    if iframe["data-original-href"].present?
+      url = UrlHelper.normalized_encode(iframe["data-original-href"])
+      scheme = UrlHelper.relaxed_parse(url)&.scheme
+      return %w[http https].include?(scheme) ? url : nil
+    end
+
+    uri = UrlHelper.relaxed_parse(iframe["src"].to_s)
+    return nil if uri.nil? || uri.host&.downcase != VIMEO_PLAYER_HOST
+
+    video_id = VIMEO_PLAYER_PATH.match(uri.path.to_s)&.[](:id)
+    return nil if video_id.nil?
+
+    unlisted_hash = vimeo_unlisted_hash(uri.query)
+    if unlisted_hash
+      "https://vimeo.com/#{video_id}/#{unlisted_hash}"
+    else
+      "https://vimeo.com/#{video_id}"
+    end
+  end
+
+  def self.vimeo_unlisted_hash(query)
+    return nil if query.blank?
+
+    hash = URI.decode_www_form(query).to_h["h"]
+    hash if hash&.match?(VIMEO_UNLISTED_HASH)
+  rescue ArgumentError
+    nil
   end
 
   def self.strip_secure_uploads(doc)
@@ -684,14 +684,31 @@ module PrettyText
   end
 
   def self.secure_uploads_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
-    data_width = width ? "data-width=#{width}" : ""
-    data_height = height ? "data-height=#{height}" : ""
-    data_onebox_type = onebox_type ? "data-onebox-type='#{onebox_type}'" : ""
-    <<~HTML
-    <div class="secure-upload-notice" data-stripped-secure-upload="#{url}" #{data_onebox_type} #{data_width} #{data_height}>
-      #{I18n.t("emails.secure_uploads_placeholder")} <a class='stripped-secure-view-upload' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
-    </div>
-    HTML
+    notice = doc.document.create_element("div")
+    notice["class"] = "secure-upload-notice"
+    notice["data-stripped-secure-upload"] = url.to_s
+    notice["data-onebox-type"] = onebox_type.to_s if onebox_type
+
+    width = numeric_dimension(width)
+    height = numeric_dimension(height)
+    notice["data-width"] = width if width
+    notice["data-height"] = height if height
+
+    link = doc.document.create_element("a")
+    link["class"] = "stripped-secure-view-upload"
+    link["href"] = url.to_s
+    link.content = I18n.t("emails.view_redacted_media")
+
+    notice.add_child(
+      doc.document.create_text_node("#{I18n.t("emails.secure_uploads_placeholder")} "),
+    )
+    notice.add_child(link)
+    notice.add_child(doc.document.create_text_node("."))
+    notice
+  end
+
+  def self.numeric_dimension(value)
+    value.to_s[/\A\d+\z/]
   end
 
   def self.format_for_email(html, post = nil)

@@ -191,6 +191,42 @@ class TopicView
     @personal_message = @topic.private_message?
   end
 
+  def has_localized_content?
+    return @has_localized_content if defined?(@has_localized_content)
+
+    @has_localized_content =
+      if !SiteSetting.content_localization_enabled
+        false
+      elsif !topic.in_user_locale? && topic.has_localization?
+        true
+      elsif skip_post_loading
+        false
+      else
+        source_language = I18n.locale.to_s.tr("-", "_").split("_").first.downcase
+        localization_languages = [source_language]
+        if SiteSetting.content_localization_use_default_locale_when_unsupported
+          localization_languages << SiteSetting.default_locale.to_s
+        end
+        localization_locale = PostLocalization.arel_table[:locale]
+        localization_condition =
+          localization_languages
+            .map { |locale| locale.tr("-", "_").split("_").first.downcase }
+            .uniq
+            .map { |language| localization_locale.matches("#{language}%") }
+            .reduce(&:or)
+
+        filtered_posts
+          .joins(:localizations)
+          .where(localization_condition)
+          .where(
+            "posts.raw <> '' AND posts.locale IS NOT NULL AND posts.locale <> '' AND " \
+              "SPLIT_PART(REPLACE(LOWER(posts.locale), '-', '_'), '_', 1) <> ?",
+            source_language,
+          )
+          .exists?
+      end
+  end
+
   def user_badges(badge_names)
     return if !badge_names.present?
 
@@ -261,7 +297,10 @@ class TopicView
   def show_read_indicator?
     return false if !@user || !topic.private_message?
 
-    topic.allowed_groups.any? { |group| group.publish_read_state? && group.users.include?(@user) }
+    allowed_groups = topic.allowed_groups
+
+    allowed_groups.all? { |group| @guardian.can_see_group_members?(group) } &&
+      allowed_groups.any? { |group| group.publish_read_state? && group.users.include?(@user) }
   end
 
   def canonical_path
@@ -708,6 +747,7 @@ class TopicView
         WHERE
           r.target_id IN (:post_ids) AND
           r.target_type = 'Post' AND
+          r.type IN (:known_types) AND
           COALESCE(s.reason, '') != 'category'
         GROUP BY
           target_id
@@ -716,7 +756,12 @@ class TopicView
         counts = {}
 
         DB
-          .query(sql, pending: ReviewableScore.statuses[:pending], post_ids: @posts.map(&:id))
+          .query(
+            sql,
+            pending: ReviewableScore.statuses[:pending],
+            post_ids: @posts.map(&:id),
+            known_types: Reviewable.sti_names,
+          )
           .each do |row|
             counts[row.target_id] = {
               total: row.total,
@@ -780,7 +825,7 @@ class TopicView
 
   # Per-post localized title/preview for internal topic oneboxes the reader sees
   # in their own language. See ContentLocalization::OneboxLocalizer for the full
-  # contract (including why "show original" is gated in the serializer, not here).
+  # contract (including the request-aware preference gate in the serializer).
   def localized_oneboxes
     return @localized_oneboxes if defined?(@localized_oneboxes)
 
@@ -1021,7 +1066,18 @@ class TopicView
   end
 
   def find_topic(topic_or_topic_id)
-    return topic_or_topic_id if topic_or_topic_id.is_a?(Topic)
+    if topic_or_topic_id.is_a?(Topic)
+      if SiteSetting.content_localization_enabled &&
+           !topic_or_topic_id.association(:localizations).loaded?
+        ActiveRecord::Associations::Preloader.new(
+          records: [topic_or_topic_id],
+          associations: :localizations,
+        ).call
+      end
+
+      return topic_or_topic_id
+    end
+
     # with_deleted covered in #check_and_raise_exceptions
     tags_include =
       if SiteSetting.tagging_enabled && SiteSetting.content_localization_enabled
@@ -1030,9 +1086,10 @@ class TopicView
         :tags
       end
     nested_topic_include = :nested_topic if SiteSetting.nested_replies_enabled
+    localizations_include = :localizations if SiteSetting.content_localization_enabled
     Topic
       .with_deleted
-      .includes(:category, nested_topic_include, tags_include)
+      .includes(:category, nested_topic_include, tags_include, localizations_include)
       .find_by(id: topic_or_topic_id)
   end
 

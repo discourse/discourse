@@ -1511,6 +1511,7 @@ class Plugin::Instance
   # rate limiters:
   #
   #   `RequestTracker::RateLimiters::User` - Rate limits authenticated requests based on the user's id
+  #   `RequestTracker::RateLimiters::HealthCheck` - Rate limits health check requests per IP and backend hostname
   #   `RequestTracker::RateLimiters::IP` - Rate limits requests based on the IP address
   #
   # @param identifier [Symbol] A unique identifier for the rate limiter.

@@ -22,6 +22,8 @@ sw:
         yesterday: "Jana"
       create: "Tengeneza"
       cancel: "Ghairi"
+      pinned_bar:
+        title: "Imebandikwa"
       pinned: "Imebandikwa"
       channel_settings:
         edit: "Hariri"
@@ -170,4 +172,8 @@ sw:
         message: "Ujumbe"
       chat_approval:
         message: "Ujumbe"
+        value: "Thamani"
+        style_default: "Halisi"
+        style_success: "Mafanikio"
+        icon: "ikoni"
         channel_id: "Chaneli"

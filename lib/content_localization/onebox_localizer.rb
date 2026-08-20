@@ -13,11 +13,10 @@ class ContentLocalization
   # title and excerpt are each present only when that part has a translation, so
   # a translated title can sit above an untranslated preview.
   #
-  # NOTE: this deliberately does not honour the "show original" preference — the
-  # guardian passed in (from TopicView) has no request, so it cannot read the
-  # anonymous show-original cookie. PostSerializer#include_localized_oneboxes? is
-  # the authoritative gate for that (it has the request-aware scope). Any new
-  # caller must apply the same gate.
+  # NOTE: the guardian passed in (from TopicView) has no request, so it cannot
+  # read the anonymous automatic-translation cookie.
+  # PostSerializer#include_localized_oneboxes? is the request-aware gate. Any
+  # new caller must apply the same gate.
   class OneboxLocalizer
     def self.build(...)
       new(...).build

@@ -772,16 +772,15 @@ sv:
   email_login:
     invalid_token: 'Hoppsan! Länken du använde fungerar inte längre. Du kan <a href="%{base_url}/login">logga in</a> nu. Om du har glömt ditt lösenord kan du <a href="%{base_url}/password-reset">begära en länk</a> för att återställa det.'
     title: "E-postinloggning"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub-appen"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub-appen"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "okänd webbläsare"
     device:
       android: "Android-enhet"
       chromebook: "Chrome OS"
@@ -801,6 +800,9 @@ sv:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "okänt operativsystem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonym"
   change_email:
     error: "Det uppstod ett fel vid ändringen av din e-postadress. Kanske används adressen redan?"
     doesnt_exist: "Den e-postadressen är inte kopplad till ditt konto."
@@ -1238,6 +1240,9 @@ sv:
         num_topics: "Ämnen"
       description: "Användare listade efter antal klickningar på länkar de har delat."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Besök"
+    top_entry_urls:
       labels:
         count: "Besök"
     top_referrers_by_browser_pageviews:
@@ -1966,7 +1971,6 @@ sv:
     default_other_notification_level_when_replying: "Generell standardiserad bevakningssnivå när en användare svarar i ett ämne."
     default_other_external_links_in_new_tab: "Öppna externa länkar i en ny flik som standard."
     default_other_enable_quoting: "Aktivera svar med citat för markerad text som standard."
-    default_other_enable_defer: "Aktivera uppskjutande ämnesfunktioner som standard."
     default_other_dynamic_favicon: "Visa räknaren för nya/uppdaterade ämnen i webbläsaren som standard."
     default_other_skip_new_user_tips: "Hoppa över nybörjartips och utmärkelser för ny användare."
     default_topics_automatic_unpin: "Ta automatiskt ned ämnen när användaren når botten som standard."
@@ -3146,9 +3150,6 @@ sv:
     user_posted_pm_staged:
       title: "Användare publicerade PM som arrangerad"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Konto avstängt"
       subject_template: "[%{email_prefix}] Ditt konto har stängts av"
@@ -3749,6 +3750,10 @@ sv:
     deprecation_error_label: Se till att Javascript-utfasningar ger upphov till ett fel
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
+  design_wizard:
+    palette_pairs:
+      default: "Standard"
+      dracula: "Dracula"
   wizard:
     title: "Discourse-inställningar"
     step:
@@ -3938,7 +3943,6 @@ sv:
           complete: "Användare raderad."
         block:
           title: "Radera och blockera användare"
-          description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
       confirm_spam:
         title: "Ja"
       not_spam:

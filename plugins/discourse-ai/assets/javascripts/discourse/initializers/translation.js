@@ -1,5 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
-import cookie from "discourse/lib/cookie";
+import { automaticallyTranslate } from "discourse/lib/content-localization";
 
 export default apiInitializer((api) => {
   const settings = api.container.lookup("service:site-settings");
@@ -15,11 +15,8 @@ export default apiInitializer((api) => {
     "localized",
     (topicController, data) => {
       const currentUser = api.getCurrentUser();
-      const showOriginal = currentUser
-        ? currentUser.user_option?.show_original_content
-        : cookie("content-localization-show-original");
 
-      if (!showOriginal) {
+      if (automaticallyTranslate(currentUser)) {
         const postStream = topicController.get("model.postStream");
         postStream.triggerChangedPost(data.id, data.updated_at);
       }

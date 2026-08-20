@@ -14,7 +14,7 @@ ur:
               search: "اے آئی تلاش کی اجازت دیتا ہے"
       site_settings:
         categories:
-          discourse_ai: "ڈسکورس اے آئی"
+          discourse_ai: "Discourse AI"
       dashboard:
         emotion:
           title: "جذبات"
@@ -59,6 +59,9 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "موڈ"
       ai_tool_approval:
         loading: "لوڈ ہو رہا ہے..."
         tool: "عمل"
@@ -154,6 +157,40 @@ ur:
           last_week: "گزشتہ ہفتے"
           last_month: "گزشتہ ماہ"
           custom: "ترمیم..."
+      logs:
+        short_title: "لاگز"
+        apply: "لاگو کریں"
+        successful: "کامیابی"
+        failed: "ناکامی"
+        unknown: "نامعلوم"
+        topic_id: "ٹاپک ID"
+        post_id: "پوسٹ ID"
+        time: "وقت"
+        when: "کب"
+        outcome: "نتیجہ"
+        request: "ریکویسٹ"
+        provider: "پرووَائیڈر"
+        user: "رکن"
+        context: "سیاق و سباق"
+        topic: "ٹاپک"
+        post: "دھاگہ"
+        post_short: "پوسٹ %{id}"
+        duration: "دورانیہ"
+        actions: "عمل"
+        filters:
+          period: "دورانیہ"
+        periods:
+          day: "پچھلے 24 گھنٹے"
+          week: "پچھلے 7 دن"
+          custom: "اپنی مرضی کا"
+        detail:
+          request: "ریکویسٹ"
+          response: "جواب"
+          context: "سیاق و سباق"
+        retention:
+          summary_stage: "Summary"
+          deleted_stage: "مٹائیں"
+          save: "محفوظ"
       ai_agent:
         name: "نام"
         edit: "ترمیم کریں"
@@ -166,6 +203,7 @@ ur:
         mcp_tools_modal:
           select_all: "سبھی منتخب کریں"
           clear_all: "سبھی ہٹا دیں"
+        duplicate: "نقل"
         delete: "حذف کریں"
         thinking_effort_options:
           none: "کوئی نہیں"
@@ -224,6 +262,9 @@ ur:
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"
+        vision_modes:
+          disabled:
+            title: "غیر فعال"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
         delete: مٹائیں
@@ -246,7 +287,6 @@ ur:
         tests:
           success: "کامیابی!"
         providers:
-          google: "گُوگَل"
           fake: "اپنی مرضی کا"
       related_topics:
         title: "متعلقہ موضوعات"
@@ -261,6 +301,8 @@ ur:
           copy: "کاپی"
           copied: "کاپی کر لیا!"
           cancel: "منسوخ"
+          insert_footnote: "حوالہ درج کریں"
+          footnote_disabled: "خودکار اندراج غیر فعال، کاپی بٹن پر کلک کریں اور اسے اپنے طور پر ترمیم کریں۔"
         thumbnail_suggestions:
           try_again: "دوبارہ کوشش کریں"
       embeddings:
@@ -277,6 +319,7 @@ ur:
       ai_bot:
         pm_warning: "AI چیٹ بوٹ پیغامات کو نگرانوں کے ذریعے باقاعدگی سے مانیٹر کیا جاتا ہے۔"
         debug_ai_modal:
+          duration_label: "دورانیہ:"
           request: "ریکویسٹ"
           response: "جواب"
           next_log: "اگلا"

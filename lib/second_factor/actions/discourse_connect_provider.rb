@@ -72,24 +72,28 @@ module SecondFactor::Actions
     end
 
     def populate_user_data(sso)
-      sso.name = current_user.name
-      sso.username = current_user.username
-      sso.email = current_user.email
-      sso.external_id = current_user.id.to_s
-      sso.admin = current_user.admin?
-      sso.moderator = current_user.moderator?
-      sso.groups = current_user.groups.pluck(:name).join(",")
-      sso.avatar_url =
-        GlobalPath.full_cdn_url(
-          current_user.uploaded_avatar.url,
-        ) if current_user.uploaded_avatar.present?
+      claims = SiteSetting.discourse_connect_provider_claims_map
 
-      if current_user.user_profile.profile_background_upload.present?
+      sso.name = current_user.name if claims.include?("name")
+      sso.username = current_user.username
+      sso.email = current_user.email if claims.include?("email")
+      sso.external_id = current_user.id.to_s
+      sso.admin = current_user.admin? if claims.include?("admin")
+      sso.moderator = current_user.moderator? if claims.include?("moderator")
+      sso.groups = current_user.groups.pluck(:name).join(",") if claims.include?("groups")
+
+      if claims.include?("avatar_url") && current_user.uploaded_avatar.present?
+        sso.avatar_url = GlobalPath.full_cdn_url(current_user.uploaded_avatar.url)
+      end
+
+      if claims.include?("profile_background_url") &&
+           current_user.user_profile.profile_background_upload.present?
         sso.profile_background_url =
           GlobalPath.full_cdn_url(current_user.user_profile.profile_background_upload.url)
       end
 
-      if current_user.user_profile.card_background_upload.present?
+      if claims.include?("card_background_url") &&
+           current_user.user_profile.card_background_upload.present?
         sso.card_background_url =
           GlobalPath.full_cdn_url(current_user.user_profile.card_background_upload.url)
       end

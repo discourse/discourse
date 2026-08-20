@@ -166,7 +166,7 @@ html:not(.keyboard-visible).mobile-device {
       display: none;
     }
 
-    input {
+    input:where(:not(.form-kit__control-input)) {
       width: auto;
 
       &[type="text"],
@@ -202,11 +202,6 @@ html:not(.keyboard-visible).mobile-device {
         display: inline-block;
         margin-right: 10px;
       }
-    }
-
-    pre code {
-      white-space: pre-wrap;
-      max-width: 100%;
     }
   }
 

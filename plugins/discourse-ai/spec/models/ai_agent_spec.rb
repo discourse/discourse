@@ -16,6 +16,97 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
+  it "defaults subagent_ids to an empty array and exposes them on class instances" do
+    agent = Fabricate(:ai_agent)
+
+    expect(agent.subagent_ids).to eq([])
+    expect(agent.class_instance.subagent_ids).to eq([])
+  end
+
+  it "normalizes subagent IDs while preserving order and removing duplicates" do
+    first_child = Fabricate(:ai_agent)
+    second_child = Fabricate(:ai_agent)
+    agent =
+      Fabricate.build(
+        :ai_agent,
+        subagent_ids: [first_child.id.to_s, second_child.id, first_child.id],
+      )
+
+    expect(agent.save).to eq(true)
+    expect(agent.subagent_ids).to eq([first_child.id, second_child.id])
+  end
+
+  it "rejects invalid, missing, self-referencing, and over-limit subagent IDs" do
+    child = Fabricate(:ai_agent)
+    agent = Fabricate.build(:ai_agent, subagent_ids: ["not-an-id"])
+    expect(agent).not_to be_valid
+
+    agent.subagent_ids = [child.id.to_f]
+    expect(agent).not_to be_valid
+    expect(agent.errors[:subagent_ids]).to include(
+      I18n.t("discourse_ai.ai_bot.agents.invalid_subagent_ids"),
+    )
+
+    agent.subagent_ids = [child.id, 999_999]
+    expect(agent).not_to be_valid
+
+    agent.save!(validate: false)
+    agent.subagent_ids = [agent.id]
+    expect(agent).not_to be_valid
+
+    agent.subagent_ids = (1..(AiAgent::MAX_SUBAGENTS + 1)).to_a
+    expect(agent).not_to be_valid
+  end
+
+  it "does not allow system agents to change subagent IDs" do
+    child = Fabricate(:ai_agent)
+    system_agent = Fabricate(:ai_agent, system: true)
+
+    system_agent.subagent_ids = [child.id]
+
+    expect(system_agent).not_to be_valid
+    expect(system_agent.errors[:base]).to include(
+      I18n.t("discourse_ai.ai_bot.agents.cannot_edit_system_agent"),
+    )
+  end
+
+  it "flushes the agent cache when subagent IDs change" do
+    child = Fabricate(:ai_agent)
+    parent = Fabricate(:ai_agent)
+    AiAgent.all_agents(enabled_only: false)
+
+    parent.update!(subagent_ids: [child.id])
+
+    expect(AiAgent.agent_cache[:value]).to be_nil
+  end
+
+  it "removes a destroyed agent from parent allowlists and flushes the cache" do
+    child = Fabricate(:ai_agent)
+    parent = Fabricate(:ai_agent, subagent_ids: [child.id])
+    AiAgent.all_agents(enabled_only: false)
+
+    child.destroy!
+
+    expect(parent.reload.subagent_ids).to eq([])
+    expect(AiAgent.agent_cache[:value]).to be_nil
+  end
+
+  it "rejects a spawn_agent tool when subagents are configured" do
+    custom_tool = Fabricate(:ai_tool, tool_name: "spawn_agent")
+    child = Fabricate(:ai_agent)
+    agent =
+      Fabricate.build(
+        :ai_agent,
+        tools: [["custom-#{custom_tool.id}", nil, false]],
+        subagent_ids: [child.id],
+      )
+
+    expect(agent).not_to be_valid
+    expect(agent.errors[:tools]).to include(
+      I18n.t("discourse_ai.ai_bot.agents.subagent_tool_collision"),
+    )
+  end
+
   it "exposes system agent thinking effort on class instances" do
     agent_record =
       AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::Creative])
@@ -238,6 +329,21 @@ RSpec.describe AiAgent do
     expect(klass.allow_personal_messages).to eq(true)
     expect(klass.allow_chat_channel_mentions).to eq(true)
     expect(klass.allow_chat_direct_messages).to eq(true)
+  end
+
+  it "resolves the users tool shorthand" do
+    agent =
+      AiAgent.create!(
+        name: "users_tool_agent",
+        description: "test",
+        system_prompt: "test",
+        tools: ["Users"],
+        allowed_group_ids: [],
+        default_llm_id: llm_model.id,
+        user_id: 1,
+      )
+
+    expect(agent.class_instance.new.tools).to contain_exactly(DiscourseAi::Agents::Tools::ListUsers)
   end
 
   it "attaches mcp tool classes for assigned servers" do

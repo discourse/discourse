@@ -9,6 +9,7 @@ class ListController < ApplicationController
   before_action :set_category,
                 only: [
                   :category_default,
+                  :category_none_default,
                   # filtered topics lists
                   Discourse.filters.map { |f| :"category_#{f}" },
                   Discourse.filters.map { |f| :"category_none_#{f}" },
@@ -30,6 +31,7 @@ class ListController < ApplicationController
                   Discourse.anonymous_filters.map { |f| "#{f}_feed" },
                   # anonymous categorized filters
                   :category_default,
+                  :category_none_default,
                   Discourse.anonymous_filters.map { |f| :"category_#{f}" },
                   Discourse.anonymous_filters.map { |f| :"category_none_#{f}" },
                   # category feeds
@@ -148,10 +150,11 @@ class ListController < ApplicationController
 
   def category_default
     canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
-    view_method = @category.default_view
-    view_method = "latest" if %w[hot latest top].exclude?(view_method)
+    public_send(category_default_view, category: @category.id)
+  end
 
-    public_send(view_method, category: @category.id)
+  def category_none_default
+    public_send(category_default_view, category: @category.id, no_subcategories: true)
   end
 
   def topics_by
@@ -431,6 +434,16 @@ class ListController < ApplicationController
     end
 
     route_params
+  end
+
+  # `default_view` is free-form, so only ever dispatch to a filter this request
+  # could have reached directly at /c/<slug>/<id>/l/<filter>.
+  def category_default_view
+    filters = Discourse.filters
+    filters &= Discourse.anonymous_filters if current_user.nil?
+
+    view = @category.default_view
+    filters.include?(view&.to_sym) ? view : "latest"
   end
 
   def set_category

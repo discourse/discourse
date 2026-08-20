@@ -52,14 +52,6 @@ describe "Composer redesign" do
       expect(composer).to have_pm_recipients_in_category_row
       expect(composer).to have_title_below_category_row
     end
-
-    it "keeps the toolbar visible in the footer on mobile", mobile: true do
-      visit("/new-topic")
-
-      expect(composer).to be_opened
-      expect(composer).to have_footer_toolbar
-      expect(composer).to have_toggle_toolbar_button
-    end
   end
 
   context "when enable_composer_redesign is disabled" do

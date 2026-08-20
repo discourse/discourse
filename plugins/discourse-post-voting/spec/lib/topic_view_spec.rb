@@ -140,17 +140,13 @@ describe TopicView do
       end
     end
 
-    def topic_view_near(post)
-      TopicView.new(topic.id, user, post_number: post.post_number)
-    end
-
     before do
       Topic.reset_highest(topic.id)
       TopicView.stubs(:chunk_size).returns(3)
     end
 
     it "snaps to the lower boundary" do
-      near_view = topic_view_near(post)
+      near_view = TopicView.new(topic.id, user, post_number: post.post_number)
       expect(near_view.desired_post.id).to eq(post.id)
       expect(near_view.posts.map(&:id)).to eq(
         [post.id, answer_plus_2_votes.id, answer_plus_1_vote.id],
@@ -158,7 +154,7 @@ describe TopicView do
     end
 
     it "snaps to the upper boundary" do
-      near_view = topic_view_near(answer_minus_2_votes)
+      near_view = TopicView.new(topic.id, user, post_number: answer_minus_2_votes.post_number)
 
       expect(near_view.desired_post.id).to eq(answer_minus_2_votes.id)
       expect(near_view.posts.map(&:id)).to eq(
@@ -167,7 +163,7 @@ describe TopicView do
     end
 
     it "returns the posts in the middle" do
-      near_view = topic_view_near(answer_0_votes)
+      near_view = TopicView.new(topic.id, user, post_number: answer_0_votes.post_number)
       expect(near_view.desired_post.id).to eq(answer_0_votes.id)
       expect(near_view.posts.map(&:id)).to eq(
         [answer_plus_1_vote.id, answer_0_votes.id, answer_minus_1_vote.id],

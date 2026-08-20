@@ -124,6 +124,7 @@ class ::Assigner
       group: name,
       limit: ASSIGNMENTS_PER_TOPIC_LIMIT,
       max: SiteSetting.max_assigned_topics,
+      note_max: SiteSetting.max_post_length,
     )
   end
 
@@ -222,6 +223,8 @@ class ::Assigner
       end
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
+    when note.present? && note.length > SiteSetting.max_post_length
+      :assignment_note_too_long
     when !allow_self_reassign && already_assigned?(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
     when Assignment.where(topic: topic, active: true).count >= ASSIGNMENTS_PER_TOPIC_LIMIT &&
@@ -473,6 +476,8 @@ class ::Assigner
         end
         WebHook.enqueue_assign_hooks(type, payload.to_json)
       end
+
+      DiscourseEvent.trigger(:unassigned, assignment)
 
       if allowed_user_ids.present?
         MessageBus.publish(

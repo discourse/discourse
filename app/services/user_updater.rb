@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserUpdater
+  LEGACY_SHOW_ORIGINAL_CONTENT_ATTR = :show_original_content
+
   CATEGORY_IDS = {
     watched_first_post_category_ids: :watching_first_post,
     watched_category_ids: :watching,
@@ -25,7 +27,6 @@ class UserUpdater
     external_links_in_new_tab
     enable_quoting
     enable_smart_lists
-    enable_defer
     enable_markdown_monospace_font
     color_scheme_id
     dark_scheme_id
@@ -61,8 +62,9 @@ class UserUpdater
     watched_precedence_over_muted
     topics_unread_when_closed
     composition_mode
-    show_original_content
     send_shortcut
+    automatically_translate
+    understood_languages
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
@@ -82,6 +84,12 @@ class UserUpdater
   end
 
   def update(attributes = {})
+    if attributes.key?(LEGACY_SHOW_ORIGINAL_CONTENT_ATTR)
+      attributes[:automatically_translate] = attributes[LEGACY_SHOW_ORIGINAL_CONTENT_ATTR].to_s !=
+        "true" unless attributes.key?(:automatically_translate)
+      attributes.delete(LEGACY_SHOW_ORIGINAL_CONTENT_ATTR)
+    end
+
     user_profile = user.user_profile
     user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[
       :dismissed_banner_key
@@ -237,10 +245,7 @@ class UserUpdater
         SidebarSectionLinksUpdater.update_tag_section_links(
           user,
           tag_ids:
-            DiscourseTagging
-              .filter_visible(Tag, @user_guardian)
-              .where(name: attributes[:sidebar_tag_names])
-              .pluck(:id),
+            Tag.browsable(@user_guardian).where(name: attributes[:sidebar_tag_names]).pluck(:id),
         )
       end
 

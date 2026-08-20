@@ -57,6 +57,8 @@ sq:
       bot: "bot"
       create: "Krijo"
       cancel: "Anulo"
+      pinned_bar:
+        title: "E përzgjedhur"
       pinned: "E përzgjedhur"
       channel_settings:
         edit: "Redakto"
@@ -195,3 +197,7 @@ sq:
         message: "Mesazh"
       chat_approval:
         message: "Mesazh"
+        value: "Vlera"
+        style_default: "Paracaktuar"
+        style_primary: "Kryesor"
+        icon: "Ikonë"

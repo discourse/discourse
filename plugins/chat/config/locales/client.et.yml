@@ -37,6 +37,8 @@ et:
       cancel: "Tühista"
       cancel_reply: "Tühista vastus"
       chat_channels: "Kanalid"
+      pinned_bar:
+        title: "Esiletõstetud"
       pinned: "Esiletõstetud"
       browse_all_channels: "Sirvi kõiki kanaleid"
       channel_settings:
@@ -217,4 +219,8 @@ et:
         message: "Sõnum"
       chat_approval:
         message: "Sõnum"
+        value: "Väärtus"
+        style_default: "Vaikimisi"
+        style_success: "Korras"
+        icon: "Ikoon"
         channel_id: "Kanal"

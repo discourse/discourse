@@ -1,6 +1,7 @@
 import { array, fn, hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
@@ -19,6 +20,68 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     );
 
     await formKit().submit();
+  });
+
+  test("@onSubmit keeps changes dirty when submission fails", async function (assert) {
+    let formApi;
+    const registerApi = (api) => (formApi = api);
+    const onSubmit = () => Promise.reject(new Error("save failed"));
+
+    await render(
+      <template>
+        <Form
+          @data={{hash foo=1}}
+          @commitOnSubmit={{false}}
+          @onSubmit={{onSubmit}}
+          @onRegisterApi={{registerApi}}
+        />
+      </template>
+    );
+
+    await formApi.set("foo", 2);
+
+    await assert.rejects(formApi.submit(), /save failed/);
+    assert.true(formApi.isDirty, "the failed change remains dirty");
+
+    await formApi.reset();
+
+    assert.strictEqual(formApi.get("foo"), 1, "the failed change can be reset");
+  });
+
+  test("@validate can prevent the current submission", async function (assert) {
+    let formApi;
+    let shouldPreventSubmit = true;
+    const onSubmit = sinon.spy();
+    const registerApi = (api) => (formApi = api);
+    const validate = (_data, { preventSubmit }) => {
+      if (shouldPreventSubmit) {
+        preventSubmit();
+      }
+    };
+
+    await render(
+      <template>
+        <Form
+          @data={{hash foo=1}}
+          @onSubmit={{onSubmit}}
+          @onRegisterApi={{registerApi}}
+          @validate={{validate}}
+        />
+      </template>
+    );
+
+    await formApi.set("foo", 2);
+    await formApi.submit();
+
+    assert.false(onSubmit.called, "the submission callback is not called");
+    assert.true(formApi.isDirty, "the draft data is not committed");
+    assert.form().hasNoErrors("no validation error is displayed");
+
+    shouldPreventSubmit = false;
+    await formApi.submit();
+
+    assert.true(onSubmit.calledOnce, "a later submission can proceed");
+    assert.false(formApi.isDirty, "the successful submission is committed");
   });
 
   test("@onSet", async function (assert) {
@@ -203,6 +266,27 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     setTimeout(() => {
       assert.form().hasErrors({ bar: "error_foo" });
     }, 0);
+  });
+
+  test("@onRegisterApi - commit", async function (assert) {
+    let formApi;
+    const registerApi = (api) => (formApi = api);
+
+    await render(
+      <template>
+        <Form @data={{hash foo=1}} @onRegisterApi={{registerApi}} />
+      </template>
+    );
+
+    await formApi.set("foo", 2);
+    formApi.commit();
+
+    assert.false(formApi.isDirty, "the committed form is pristine");
+
+    await formApi.set("foo", 3);
+    await formApi.reset();
+
+    assert.strictEqual(formApi.get("foo"), 2, "reset uses the committed value");
   });
 
   test("@onRegisterApi - commitField", async function (assert) {

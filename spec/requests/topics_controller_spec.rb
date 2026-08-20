@@ -342,6 +342,39 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
+      it "ignores unrelated post IDs without exposing their reviewables" do
+        restricted_category = Fabricate(:private_category, group: Fabricate(:group))
+        restricted_topic = Fabricate(:topic, category: restricted_category)
+        restricted_post = Fabricate(:post, topic: restricted_topic)
+        restricted_reviewable =
+          Fabricate(
+            :reviewable_flagged_post,
+            target: restricted_post,
+            target_created_by: restricted_post.user,
+            topic: restricted_topic,
+            category: restricted_category,
+          )
+
+        expect(Reviewable.list_for(user, preload: false)).not_to include(restricted_reviewable)
+
+        post "/t/#{topic.id}/move-posts.json",
+             params: {
+               title: "Logan is a good movie",
+               post_ids: [p2.id, restricted_post.id],
+               category_id: category.id,
+             }
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(restricted_reviewable.reload).to have_attributes(
+            topic_id: restricted_topic.id,
+            category_id: restricted_category.id,
+          )
+          expect(Reviewable.list_for(user, preload: false)).not_to include(restricted_reviewable)
+        end
+      end
+
       it "does not allow posts outside of the category to be moved" do
         topic.update!(category: nil)
 
@@ -374,6 +407,44 @@ RSpec.describe TopicsController do
           result = response.parsed_body
           expect(result["success"]).to eq(true)
           expect(result["url"]).to be_present
+        end
+
+        describe "moving a post to a restricted topic" do
+          fab!(:post_author) { Fabricate(:user, last_seen_at: 1.minute.ago) }
+          fab!(:source_topic) { Fabricate(:topic, user: post_author) }
+          fab!(:source_post) { Fabricate(:post, topic: source_topic, user: post_author) }
+          fab!(:restricted_destination_category) do
+            Fabricate(:private_category, group: Group[:staff])
+          end
+          fab!(:restricted_destination_topic) do
+            Fabricate(
+              :topic,
+              category: restricted_destination_category,
+              title: "Restricted destination",
+              user: admin,
+            )
+          end
+
+          it "does not publish the restricted destination title to the post author" do
+            expect(post_author.guardian.can_see?(restricted_destination_topic)).to eq(false)
+
+            messages =
+              MessageBus.track_publish("/notification/#{post_author.id}") do
+                Jobs.with_immediate_jobs do
+                  post "/t/#{source_topic.id}/move-posts.json",
+                       params: {
+                         post_ids: [source_post.id],
+                         destination_topic_id: restricted_destination_topic.id,
+                       }
+                end
+              end
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["success"]).to eq(true)
+            expect(messages.map { |message| message.data.to_json }.join).not_to include(
+              restricted_destination_topic.title,
+            )
+          end
         end
 
         describe "with freeze_original param" do
@@ -1749,6 +1820,29 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(403)
     end
 
+    it "does not delete timings for a topic the user cannot see" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      private_post = Fabricate(:post, topic: private_topic)
+      PostTiming.create!(
+        topic: private_topic,
+        user: user,
+        post_number: private_post.post_number,
+        msecs: 1000,
+      )
+      TopicUser.create!(topic: private_topic, user: user)
+
+      sign_in(user)
+      delete "/t/#{private_topic.id}/timings.json"
+
+      aggregate_failures do
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+        expect(PostTiming.where(topic: private_topic, user: user)).to exist
+        expect(TopicUser.where(topic: private_topic, user: user)).to exist
+      end
+    end
+
     def topic_user_post_timings_count(user, topic)
       [TopicUser, PostTiming].map { |klass| klass.where(user: user, topic: topic).count }
     end
@@ -2935,20 +3029,25 @@ RSpec.describe TopicsController do
             expect(topic.reload.category).to eq(category)
           end
         end
+
+        it "can not clear the category when the guardian disallows the move" do
+          topic.update!(category:)
+          Guardian.any_instance.stubs(:can_move_topic_to_category?).returns(false)
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: nil }, as: :json
+
+          expect(response.status).to eq(403)
+          expect(topic.reload.category_id).to eq(category.id)
+        end
       end
     end
 
     describe "featured links" do
-      def fabricate_topic(user, category = nil)
-        topic = Fabricate(:topic, user: user, category: category)
-        Fabricate(:post, user: post_author1, topic: topic)
-        topic
-      end
-
       it "allows to update topic featured link" do
         sign_in(trust_level_1)
 
-        tl1_topic = fabricate_topic(trust_level_1)
+        tl1_topic = Fabricate(:topic, user: trust_level_1)
+        Fabricate(:post, user: post_author1, topic: tl1_topic)
         put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json",
             params: {
               featured_link: "https://discourse.org",
@@ -2960,7 +3059,8 @@ RSpec.describe TopicsController do
       it "doesn't allow TL0 users to update topic featured link" do
         sign_in(trust_level_0)
 
-        tl0_topic = fabricate_topic(trust_level_0)
+        tl0_topic = Fabricate(:topic, user: trust_level_0)
+        Fabricate(:post, user: post_author1, topic: tl0_topic)
         put "/t/#{tl0_topic.slug}/#{tl0_topic.id}.json",
             params: {
               featured_link: "https://discourse.org",
@@ -2973,7 +3073,8 @@ RSpec.describe TopicsController do
         sign_in(trust_level_1)
 
         SiteSetting.topic_featured_link_enabled = false
-        tl1_topic = fabricate_topic(trust_level_1)
+        tl1_topic = Fabricate(:topic, user: trust_level_1)
+        Fabricate(:post, user: post_author1, topic: tl1_topic)
         put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json",
             params: {
               featured_link: "https://discourse.org",
@@ -2986,13 +3087,57 @@ RSpec.describe TopicsController do
         sign_in(trust_level_1)
 
         category = Fabricate(:category, topic_featured_link_allowed: false)
-        tl1_topic_in_category = fabricate_topic(trust_level_1, category)
+        tl1_topic_in_category = Fabricate(:topic, user: trust_level_1, category:)
+        Fabricate(:post, user: post_author1, topic: tl1_topic_in_category)
         put "/t/#{tl1_topic_in_category.slug}/#{tl1_topic_in_category.id}.json",
             params: {
               featured_link: "https://discourse.org",
             }
 
         expect(response.status).to eq(422)
+      end
+
+      it "allows to remove the featured link" do
+        sign_in(trust_level_1)
+
+        tl1_topic = Fabricate(:topic, user: trust_level_1, featured_link: "https://discourse.org")
+        Fabricate(:post, user: post_author1, topic: tl1_topic)
+        put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json", params: { featured_link: nil }
+
+        expect(response.status).to eq(200)
+        expect(tl1_topic.reload.featured_link).to be_nil
+      end
+
+      it "removes the featured link when moving to a category that forbids them" do
+        sign_in(trust_level_1)
+
+        category = Fabricate(:category, topic_featured_link_allowed: false)
+        tl1_topic = Fabricate(:topic, user: trust_level_1, featured_link: "https://discourse.org")
+        Fabricate(:post, user: post_author1, topic: tl1_topic)
+        put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json",
+            params: {
+              category_id: category.id,
+              featured_link: nil,
+            }
+
+        expect(response.status).to eq(200)
+        expect(tl1_topic.reload.category_id).to eq(category.id)
+        expect(tl1_topic.featured_link).to be_nil
+      end
+
+      it "doesn't reject an edit that sends a blank featured link it cannot set" do
+        sign_in(trust_level_0)
+
+        tl0_topic = Fabricate(:topic, user: trust_level_0)
+        Fabricate(:post, user: post_author1, topic: tl0_topic)
+        put "/t/#{tl0_topic.slug}/#{tl0_topic.id}.json",
+            params: {
+              title: "A brand new title for this topic",
+              featured_link: nil,
+            }
+
+        expect(response.status).to eq(200)
+        expect(tl0_topic.reload.title).to eq("A brand new title for this topic")
       end
     end
   end
@@ -3177,6 +3322,49 @@ RSpec.describe TopicsController do
       expect(response.parsed_body["details"]["links"]).to contain_exactly(
         a_hash_including("url" => "https://visible-link.example.com", "title" => "Visible title"),
         a_hash_including("url" => "https://hidden-link.example.com", "title" => "Hidden title"),
+      )
+    end
+
+    it "does not expose links from unlisted topics to anonymous viewers" do
+      public_post = Fabricate(:post, user: post_author1)
+      public_topic = public_post.topic
+      public_source_topic = Fabricate(:topic, user: post_author1, title: "Public source topic")
+      public_source_post =
+        Fabricate(
+          :post,
+          topic: public_source_topic,
+          user: post_author1,
+          raw:
+            "#{Discourse.base_url_no_prefix}#{public_topic.relative_url(public_post.post_number)}",
+        )
+      unlisted_source_topic = Fabricate(:topic, user: post_author1, title: "Unlisted source topic")
+      unlisted_source_post =
+        Fabricate(
+          :post,
+          topic: unlisted_source_topic,
+          user: post_author1,
+          raw:
+            "#{Discourse.base_url_no_prefix}#{public_topic.relative_url(public_post.post_number)}",
+        )
+
+      TopicLink.extract_from(public_source_post)
+      TopicLink.extract_from(unlisted_source_post)
+      unlisted_source_topic.update_column(:visible, false)
+
+      get "/t/#{public_topic.slug}/#{public_topic.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      serialized_public_post =
+        response
+          .parsed_body
+          .dig("post_stream", "posts")
+          .find { |post| post["id"] == public_post.id }
+      expect(serialized_public_post["link_counts"]).to contain_exactly(
+        a_hash_including(
+          "url" =>
+            "#{Discourse.base_url_no_prefix}#{public_source_topic.relative_url(public_source_post.post_number)}",
+          "title" => public_source_topic.title,
+        ),
       )
     end
 
@@ -3529,8 +3717,8 @@ RSpec.describe TopicsController do
           expect(entry["excerpt"]).to include("戦わずして勝つ")
         end
 
-        it "omits localized onebox data when the reader chose to see original content" do
-          reader.user_option.update!(show_original_content: true)
+        it "omits localized onebox data when the reader disables automatic translation" do
+          reader.user_option.update!(automatically_translate: false)
           sign_in(reader)
 
           expect(host_post_json.key?("localized_oneboxes")).to eq(false)
@@ -4851,8 +5039,8 @@ RSpec.describe TopicsController do
         end
       end
 
-      context "when show_original cookie is set" do
-        before { cookies[ContentLocalization::SHOW_ORIGINAL_COOKIE] = "true" }
+      context "when automatic translation is disabled by cookie" do
+        before { cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "false" }
 
         it "returns original posts" do
           get "/t/#{localized_topic.id}/posts.json"
@@ -6479,6 +6667,28 @@ RSpec.describe TopicsController do
 
       tu = TopicUser.find_by(user: admin, topic: topic)
       expect(tu.last_read_post_number).to eq(whisper.post_number)
+    end
+
+    it "does not record timings for a topic the user cannot see" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      private_post = Fabricate(:post, topic: private_topic)
+
+      sign_in(user)
+      post "/t/#{private_post.topic_id}/timings.json",
+           params: {
+             topic_time: 5,
+             timings: {
+               private_post.post_number => 2,
+             },
+           }
+
+      aggregate_failures do
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+        expect(PostTiming.where(topic: private_post.topic, user: user)).to be_empty
+        expect(user.user_stat.reload.posts_read_count).to eq(0)
+      end
     end
 
     it "should record the timing" do

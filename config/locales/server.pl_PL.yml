@@ -52,6 +52,10 @@ pl_PL:
   remove_posts_deleted_by_author: "Usunięte przez autora"
   redirect_warning: "Nie byliśmy w stanie zweryfikować, że wybrany przez Ciebie link został rzeczywiście wysłany na forum. Aby kontynować mimo tego, wybierz link poniżej."
   on_another_topic: "Na innym temacie"
+  access_control_list:
+    errors:
+      user_will_not_have_permission: "Jeśli usuniesz ten wpis listy ACL, utracisz dostęp do tego obiektu."
+      user_will_not_have_permission_on_create: "Jeśli utworzysz ten podmiot z tymi uprawnieniami, nie będziesz mieć do niego dostępu. Kontynuować?"
   topic_category_changed: "Od %{from} do %{to}"
   topic_tag_changed:
     added_and_removed: "Dodano %{added} i usunięto %{removed}"
@@ -303,6 +307,7 @@ pl_PL:
         screened_email_error: "Dzieje się tak, gdy adres e-mail nadawcy został już sprawdzony."
         unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
         email_not_allowed: "Zdarza się, gdy adres e-mail nie znajduje się na liście dozwolonych adresów lub jest na liście zablokowanych."
+        email_alias_not_allowed: "Dzieje się tak, gdy adres nadawcy jest aliasem adresu już zarejestrowanego na koncie, a znormalizowane adresy e-mail muszą być unikalne."
       unrecognized_error: "Niezidentyfikowany błąd"
     secure_uploads_placeholder: "Redacted: Ta strona ma włączone bezpieczne przesyłanie plików, odwiedź temat lub kliknij wyświetl media, aby zobaczyć załączone pliki."
     view_redacted_media: "Wyświetl załączniki"
@@ -463,11 +468,10 @@ pl_PL:
     domain_not_allowed: "Twój adres e-mail nie może zostać użyty do zrealizowania tego zaproszenia."
     domain_not_allowed_admin: "Ta domena nie może być używana do zaproszeń."
     max_redemptions_allowed_one: "dla zaproszeń e-mail powinno wynosić 1."
+    max_redemptions_allowed_one_staff: "w przypadku zaproszeń administratora lub moderatora liczba powinna wynosić 1."
     redemption_count_less_than_max: "powinien być mniejszy niż %{max_redemptions_allowed}."
     email_xor_domain: "Pola adresu e-mail i domeny nie są dozwolone jednocześnie"
-    admin_invite_requires_email: "Zaproszenia administratora muszą być wysyłane na adres e-mail"
     admin_invite_requires_admin_inviter: "Tylko administratorzy mogą tworzyć zaproszenia administratorów"
-    moderator_invite_requires_email: "Zaproszenia moderatorów muszą być wysyłane na adres e-mail"
     moderator_invite_requires_staff_inviter: "Tylko personel może tworzyć zaproszenia moderatorów"
     existing_user_success: "Zaproszenie zostało pomyślnie zrealizowane"
     email_invites_disabled: "Wysyłanie zaproszeń e-mailem jest wyłączone"
@@ -906,9 +910,14 @@ pl_PL:
           attributes:
             linkable_type:
               invalid: "nie jest prawidłowy"
+        sidebar_section:
+          attributes:
+            base:
+              too_many_sidebar_urls: "Dozwolona jest maksymalna liczba rekordów: %{limit} . Zamiast tego otrzymano %{count} rekordów."
         api_key:
           base:
             at_least_one_granular_scope: "co najmniej jeden musi być wybrany"
+            read_only_scope: "musi to być globalny zakres odczytu"
       <<: *errors
   uncategorized_category_name: "Bez kategorii"
   general_category_name: "Ogólne"
@@ -1160,16 +1169,22 @@ pl_PL:
     title: "Logowanie e-mailem"
   email_login_code:
     invalid_code: "Ten kod jest niepoprawny lub wygasł. Poproś o nowy kod i spróbuj ponownie."
+  browsers:
+    android_browser: "Przeglądarka Android"
+    baidu_browser: "Przeglądarka Baidu"
+    chrome: "Google Chrome"
+    discoursehub: "Aplikacja DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    kaios_browser: "Przeglądarka KaiOS"
+    opera: "Opera"
+    qq_browser: "Przeglądarka QQ"
+    safari: "Safari"
+    samsung_browser: "Przeglądarka Samsung"
+    uc_browser: "Przeglądarka UC"
+    unknown: "Nieznana przeglądarka"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "aplikacja DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "nieznana przeglądarka"
     device:
       android: "Urządzenie z Androidem"
       chromebook: "Chrome OS"
@@ -1189,10 +1204,17 @@ pl_PL:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "nieznany system operacyjny"
+  admin_site_traffic_explorer:
+    direct_or_unknown: "Bezpośredni / nieznany"
+    traffic_types:
+      logged_in: "Zalogowani"
+      anonymous: "Anonimowi"
+      likely_crawler: "Prawdopodobne roboty indeksujące"
   change_email:
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
     error_staged: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
+    error_alias: "Ten adres e-mail jest aliasem adresu, który jest już w użyciu."
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twój e-mail został zmieniony?"
     confirm: "Potwierdź"
     max_secondary_emails_error: "Osiągnąłeś maksymalny dozwolony limit dodatkowych e-maili."
@@ -1573,6 +1595,7 @@ pl_PL:
         page_view_anon_browser: "Anonimowi"
         page_view_logged_in_browser: "Zalogowani"
         page_view_crawler: "Boty indeksujące"
+        page_view_likely_crawler: "Prawdopodobne roboty indeksujące"
         page_view_embed: "Osadzone wyświetlenia stron"
         page_view_other: "Inny ruch"
       yaxis: "Dzień"
@@ -1695,6 +1718,10 @@ pl_PL:
       description: "Kraje, które w wybranym okresie wygenerowały najwięcej odsłon Twojego forum."
       labels:
         country_code: "Kod kraju"
+        count: "Odwiedziny"
+    top_entry_urls:
+      labels:
+        entry_url: "Wpisowy adres URL"
         count: "Odwiedziny"
     top_referrers_by_browser_pageviews:
       title: "Najpopularniejsi polecający"
@@ -2122,6 +2149,9 @@ pl_PL:
     allowed_iframes: "Lista prefiksów adresów URL iframe, które Discourse może bezpiecznie dopuszczać w postach. Znak * można użyć w celu dopasowania dowolnej liczby znaków innych niż /."
     allowed_crawler_user_agents: "Agenci użytkowników dla robotów indeksujących, które powinny mieć dostęp do strony. OSTRZEŻENIE! USTAWIENIE TEGO SPOWODUJE BLOKADE ROBOTÓW, KTÓRE NIE SĄ NA LIŚCIE!"
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
+    crawler_asns: "Sieci ASN obsługiwane przez zweryfikowane roboty indeksujące. Ruch z tych sieci jest wykluczany z raportów dotyczących wyświetleń stron w przeglądarce i otrzymuje wysoką ocenę robota indeksującego."
+    crawler_detection_datacenter_asns: "Sieci ASN świadczące usługi w chmurze, hostingu lub centrów danych. Sieci te niekoniecznie są robotami indeksującymi: ich ruch otrzymuje ocenę niskiego poziomu zaufania robota indeksującego i nadal jest liczony jako ruch przeglądarki."
+    crawler_stale_chromium_major_version_cutoff: "Główne wersje Chromium o wartości równej lub niższej w sesjach bez zaangażowania otrzymują wynik robota indeksującego. Aktualizuj go dopiero po przeanalizowaniu ruchu; nieaktualny próg staje się mniej wrażliwy, a nie bardziej agresywny."
     slow_down_crawler_user_agents: "Agenty użytkownika robotów indeksujących sieć, które powinny mieć ograniczenie przepustowości zgodnie z konfiguracją w ustawieniu {{setting:slow_down_crawler_rate}} . Każda wartość musi mieć co najmniej 3 znaki."
     slow_down_crawler_rate: "Jeżeli określono {{setting:slow_down_crawler_user_agents}} , ta szybkość będzie dotyczyć wszystkich robotów indeksujących (liczba sekund opóźnienia między żądaniami)"
     llms_txt: "Prześlij plik tekstowy, który będzie udostępniany w katalogu /llms.txt robotom LLM. Więcej informacji znajdziesz na stronie <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> ."
@@ -2158,6 +2188,7 @@ pl_PL:
     top_page_default_timeframe: "Domyślny okres górnej strony dla anonimowych użytkowników (automatycznie dostosowuje się do zalogowanych użytkowników na podstawie ich ostatniej wizyty)."
     moderators_view_emails: "Zezwalaj moderatorom na przeglądanie adresów e-mail użytkowników."
     moderators_view_ips: "Zezwól moderatorom na przeglądanie adresów IP użytkowników."
+    moderators_view_sso_details: "Zezwól moderatorom na przeglądanie rekordów SSO"
     moderators_change_trust_levels: "Zezwól moderatorom na zmianę poziomu zaufania użytkowników."
     prioritize_username_in_ux: "Pokaż nazwę użytkownika jako pierwszą na stronie użytkownika, jego karcie i w postach (gdy opcja jest wyłączona, pełna nazwa jest wyświetlana jako pierwsza)"
     enable_rich_text_paste: "Włącz automatyczną konwersję HTML na Markdown podczas wklejania tekstu do kompozytora."
@@ -2199,6 +2230,7 @@ pl_PL:
     discourse_connect_url: "Adres URL punktu końcowego DiscourseConnect (musi zawierać http:// lub https:// i nie może zawierać końcowego ukośnika)"
     discourse_connect_secret: "Sekretny ciąg znaków używany do uwierzytelniania kryptograficznego informacji DiscourseConnect, upewnij się, że ma 10 lub więcej znaków"
     discourse_connect_provider_secrets: "Lista tajnych domen korzystających z DiscourseConnect. Upewnij się, że ma co najmniej 10 znaków. Symbol gwiazdki może być użyty do dopasowania dowolnej domeny lub części domeny (przykład: * .example.com)"
+    discourse_connect_provider_claims: "Po włączeniu opcji {{setting:enable_discourse_connect_provider}} wybierz, które opcjonalne oświadczenia użytkownika mają być uwzględniane w odpowiedziach dostawcy. Ładunki danych są podpisywane, ale nieszyfrowane. Stabilny identyfikator zewnętrzny i nazwa użytkownika są zawsze uwzględniane. Wszystkie oświadczenia są domyślnie zaznaczone ze względu na zgodność; usunięcie oświadczeń może spowodować przerwanie działania witryn zależnych, które używają ich do łączenia kont, autoryzacji lub synchronizacji profili."
     discourse_connect_overrides_bio: "Zastępuje biografię użytkownika w profilu użytkownika i uniemożliwia jej zmianę"
     discourse_connect_overrides_groups: "Synchronizuj wszystkie ręczne członkostwo w grupie z grupami określonymi w atrybucie grup (OSTRZEŻENIE: jeśli nie określisz grup, wszystkie ręczne członkostwo w grupie zostanie wyczyszczone dla użytkownika)"
     auth_overrides_email: "Nadpisuje lokalny e-mail przez adres e-mail zewnętrznej witryny przy każdym logowaniu i zapobiega lokalnym zmianom. Stosuje się do wszystkich dostawców uwierzytelniania. (WARNING: mogą wystąpić rozbieżności w wyniku normalizacji lokalnych adresów e-mail)"
@@ -2486,6 +2518,7 @@ pl_PL:
     auto_generated_allowlist: "Lista adresów e-mail, które nie będą sprawdzane pod kątem zawartości generowanej automatycznie. Przykład: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Odrzucaj przychodzące e-maile zidentyfikowane jako generowane automatycznie."
     ignore_by_title: "Ignoruj przychodzące wiadomości e-mail w oparciu o ich tytuł."
+    ignore_by_title_regex: "Ignoruj przychodzące wiadomości e-mail na podstawie ich tytułu, używając wyrażenia regularnego."
     mailgun_api_key: "Klucz Mailgun Secret API używany do weryfikacji wiadomości webhook."
     sendgrid_verification_key: "Klucz weryfikacyjny Sendgrid używany do weryfikacji wiadomości webhook."
     aws_sns_topic_arn_allowlist: "Tematy SNS o numerach ARN mogą wysyłać powiadomienia webhook dotyczące odrzuconych wiadomości Amazon SES."
@@ -2699,7 +2732,6 @@ pl_PL:
     default_other_external_links_in_new_tab: "Otwórz linki zewnętrzne w nowej karcie domyślnie."
     default_other_enable_quoting: "Domyślnie zezwól na podświetlone cytowane odpowiedzi."
     default_other_enable_smart_lists: "Domyślnie włącz inteligentne listy podczas pisania w kompozytorze."
-    default_other_enable_defer: "Domyślnie włącz funkcję odroczenia tematu."
     default_other_enable_markdown_monospace_font: "Domyślnie używaj czcionki monospace w trybie Markdown kompozytora."
     default_other_dynamic_favicon: "Domyślnie pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
     default_other_skip_new_user_tips: "Pomiń wskazówki i odznaki dotyczące wprowadzania nowych użytkowników."
@@ -2738,7 +2770,7 @@ pl_PL:
     max_user_api_key_expiry_days: "Maksymalny okres ważności (w dniach), o który klienci mogą poprosić w przypadku kluczy API użytkownika"
     verbose_user_api_key_device_auth_logging: "Rejestruj szczegółową diagnostykę przepływu autoryzacji urządzenia z kluczem API użytkownika"
     tagging_enabled: "Włączyć tagi w tematach? Więcej informacji można znaleźć w <a href=\"https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041\">przewodniku administratora po tagach w Meta</a>."
-    create_tag_allowed_groups: "Grupy, które mogą tworzyć tagi. Administratorzy i moderatorzy zawsze mogą tworzyć tagi."
+    create_tag_allowed_groups: "Grupy, które mogą tworzyć tagi. Administratorzy zawsze mogą tworzyć tagi."
     edit_tags_allowed_groups: "Grupy, które mają uprawnienia do edycji tagów, opisów tagów i synonimów tagów."
     max_tags_per_topic: "Maksymalna liczba tagów, które mogą zostać połączone z tematem."
     enable_max_tags_per_email_subject: "Użyj {{setting:max_tags_per_email_subject}} podczas generowania tematu wiadomości e-mail"
@@ -2777,6 +2809,8 @@ pl_PL:
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
     dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
+    enable_site_traffic_explorer: "Połącz działanie panelu administracyjnego ze szczegółami ruchu w witrynie przeglądarki ruchu."
+    site_traffic_explorer_event_limit: "Kontroluje maksymalną liczbę ostatnich odsłon stron przetwarzanych przez Site Traffic Explorer. Wyższe limity obejmują większy ruch, ale mogą wymagać dłuższego ładowania lub przekroczenia limitu czasu na serwerach baz danych o niższych zasobach."
     gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Wyłączenie tej opcji uniemożliwi użytkownikom przełączanie się na Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
     gravatar_base_url: "Podaj adres URL umożliwiający dostęp do API serwisu Gravatar. To ustawienie jest niezbędne do konwersji adresów e-mail na adresy URL Gravatar, gdzie przechowywane są obrazy awatarów."
@@ -2808,7 +2842,6 @@ pl_PL:
     enable_new_checkbox_style: "Włącz nowy styl pól wyboru dla pól wyboru FormKit."
     enable_new_post_reactions_menu: "Włącz przeprojektowane menu polubień wpisów i reakcji, z nieskończonym przewijaniem i natywną obsługą mobilną."
     enable_composer_redesign: "Włącz przeprojektowany kompozytor."
-    enable_new_composer_actions: "Włącz przeprojektowane menu akcji kompozytora i przycisk zapisu kombinowanego z przełącznikami szeptu, braku wstrząsów i usunięcia z listy widocznymi obok akcji zapisu."
     prioritize_recently_used_tags: "Podczas dodawania tagów podczas tworzenia lub edytowania tematu, na górze listy, przed najpopularniejszymi tagami na forum, wyświetlane są tagi, których dany członek ostatnio użył we własnych tematach."
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
@@ -2828,7 +2861,7 @@ pl_PL:
     content_localization_language_switcher: "Pokaż przełącznik języka w nagłówku, umożliwiający odwiedzającym przełączanie się między przetłumaczonymi wersjami Discourse a treściami dodanymi przez użytkowników. Używa języków zdefiniowanych w {{setting:content_localization_supported_locales}}"
     content_localization_crawler_param: "Wyświetlaj lokalną zawartość robotom indeksującym sieć, gdy włączone są opcje {{setting:content_localization_enabled}} i {{setting:set_locale_from_param}} . Lista obsługiwanych ustawień regionalnych jest zdefiniowana w {{setting:content_localization_supported_locales}}."
     content_localization_use_default_locale_when_unsupported: "Wyświetlaj zlokalizowaną treść w domyślnych ustawieniach regionalnych witryny użytkownikom, których preferowany język nie znajduje się na liście „ustawień regionalnych obsługiwanych przez lokalizację treści”."
-    content_localization_allow_author_localization: "Zezwól autorom na aktualizowanie lokalizacji własnych tematów i wpisów poprzez menu wpisów."
+    content_localization_allow_author_localization: "Zezwól autorom na aktualizowanie lokalizacji własnych tematów i postów poprzez menu wpisów."
     nested_replies_enabled: "Włącz widok zagnieżdżonych odpowiedzi dla tematów."
     nested_replies_default: "Użyj zagnieżdżonych odpowiedzi jako domyślnego widoku dla wszystkich tematów."
     nested_replies_hot_sort_enabled: "Zezwól użytkownikom na sortowanie zagnieżdżonych odpowiedzi według wyniku „gorących odpowiedzi” ustalanego na żądanie. Wyniki „gorących odpowiedzi” są obliczane w tle tylko dla tematów, w których wymagane jest sortowanie „gorących odpowiedzi”."
@@ -2864,6 +2897,7 @@ pl_PL:
     enable_horizon_high_context_topic_cards: "Wyświetla bogatsze karty tematyczne w motywie Horizon, obejmujące fragmenty tematów, tagi i rozszerzone informacje o wtyczce."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
+    improved_crawler_detection: "Umożliwia ulepszone śledzenie robotów indeksujących, co pozwala na lepsze wykrywanie prawdopodobnych robotów i zapewnia dokładniejsze raportowanie ruchu sieciowego."
     enable_invite_modal_with_roles: "Umożliwia przeprojektowany proces zapraszania, który pozwala administratorom zapraszać kogoś bezpośrednio jako administratora. Zaproszona osoba staje się moderatorem po rejestracji, a administratorem po potwierdzeniu zaproszenia przez osobę zapraszającą e-mailem."
     update_pending_users_reminder_default: "Aktualizujemy domyślną wartość ustawienia {{setting:pending_users_reminder_delay_minutes}} na 30 minut, aby personel był szybko powiadamiany o oczekiwaniu na zatwierdzenie nowego członka. Jeśli to ustawienie zostało już wcześniej zmienione, ta zmiana nie będzie miała żadnego efektu."
     errors:
@@ -2958,7 +2992,7 @@ pl_PL:
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
       content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
-      content_localization_language_switcher_requirements: "Przełącznik języka wymaga włączenia opcji {{setting:set_locale_from_cookie}} i {{setting:allow_user_locale}} , a także ustawienia opcji {{setting:content_localization_supported_locales}} , co najmniej jednego języka. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
+      content_localization_language_switcher_requirements: "Przełącznik języka wymaga włączenia opcji {{setting:allow_user_locale}} i ustawienia co najmniej jednego języka dla opcji {{setting:content_localization_supported_locales}} . {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "Przed włączeniem tego ustawienia należy najpierw włączyć opcję „ustaw ustawienia regionalne z parametrów”."
       mediaconvert_role_arn_required: "Rola AWS IAM ARN jest wymagana w przypadku korzystania z AWS MediaConvert do konwersji wideo."
       mediaconvert_output_subdirectory_required: "Podkatalog wyjściowy MediaConvert jest wymagany."
@@ -3960,6 +3994,14 @@ pl_PL:
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
         Twoja odpowiedź została wysłana z zablokowanego adresu email. Spróbuj ją wysłać z innego adresu email, lub [skontaktuj się z obsługą] %{base_url}/o nas).
+    email_reject_email_alias:
+      title: "Odrzuć e-mail Alias ​​e-mail"
+      subject_template: "[%{email_prefix}] Problem z pocztą e-mail – nierozpoznany adres e-mail"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nierozpoznany adres e-mail"
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail wysłana na adres %{destination} (zatytułowana %{former_title}) nie dotarła.
+
+        Nie udało nam się dopasować adresu, z którego wysłałeś wiadomość na konto w tej witrynie. Spróbuj wysłać wiadomość z adresu e-mail użytego do rejestracji lub [skontaktuj się z pracownikiem](%{base_url}/about).
     email_reject_inactive_user:
       title: "Email odrzucony Użytkownik nieaktywny"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieaktywny użytkownik"
@@ -4614,6 +4656,8 @@ pl_PL:
       text_body_template: |2
 
         %{message}
+
+        %{respond_instructions}
     account_suspended:
       title: "Konto zawieszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"
@@ -5371,6 +5415,8 @@ pl_PL:
 
       Ten dokument jest na licencji CC-BY-SA. Ostatnia aktualizacja miała miejsce [WSTAW TUTAJ DATĘ OSTATNIEJ AKTUALIZACJI].
   badges:
+    errors:
+      cant_delete_system_badge: Odznak systemowych nie można usunąć.
     mass_award:
       errors:
         invalid_csv: Natrafiliśmy na błąd w linii %{line_number}. Upewnij się, że plik CSV zawiera jeden adres w każdej linii.
@@ -5740,6 +5786,15 @@ pl_PL:
     title: "Tryb programisty"
     enable_rack_mini_profiler: "Włącz funkcję Rack Mini Profiler, aby zmiany w sesjach były zachowywane przez 1 godzinę"
     enter: "Przejdź do trybu programisty"
+  design_wizard:
+    errors:
+      palette_unavailable: "Jedna z wybranych palet kolorów nie jest dostępna dla wybranego motywu."
+      site_settings_update_failed: "Nie udało się zaktualizować ustawień witryny."
+    palette_pairs:
+      default: "Domyślna"
+      wcag: "WCAG"
+      solarized: "Solaryzowana"
+      dracula: "Dracula"
   wizard:
     title: "Instalacja Discourse"
     step:
@@ -5871,6 +5926,7 @@ pl_PL:
     post_restored_by_author: "Wpis został przywrócony przez autora"
     post_deleted_by_author_after_penalty: >-
       Wpis został usunięty przez autora po tym, jak użytkownik został za to ukarany. Zapoznaj się z karą bez przywracania wpisu.
+    target_user_deleted: "Automatycznie zignorowano, ponieważ konto użytkownika zostało usunięte."
     priorities:
       low: "Niski"
       medium: "Średni"
@@ -6016,11 +6072,13 @@ pl_PL:
         title: "Nie"
         delete:
           title: "Usuń użytkownika"
-          description: "Usuń użytkownika bez blokowania"
+          description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
+          confirm: "Czy na pewno chcesz usunąć @%{username}?"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
-          description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
+          description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
+          confirm: "Czy na pewno chcesz usunąć i zablokować @%{username}?"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:
         title: "Tak"
@@ -6032,9 +6090,11 @@ pl_PL:
         bundle_title: "Odrzuć…"
       reject_and_suspend:
         title: "Odrzuć i zawieś użytkownika"
+        description: "Odrzuć wpis i zablokuj użytkownikowi możliwość logowania się do czasu zakończenia zawieszenia"
         complete: "Post odrzucony, a użytkownik zawieszony."
       reject_and_silence:
         title: "Odrzuć i wycisz użytkownika"
+        description: "Odrzuć wpis i zablokuj użytkownikowi możliwość publikowania wpisów lub wysyłania wiadomości"
         complete: "Post odrzucony, a użytkownik wyciszony."
       reject_and_delete:
         title: "Odrzuć i usuń post"
@@ -6080,12 +6140,12 @@ pl_PL:
         bundle_title: "Co chcesz zrobić z użytkownikiem?"
       silence_user:
         title: "Wycisz użytkownika"
-        description: "Zablokuj użytkownikowi możliwość tworzenia wpisów"
+        description: "Zablokuj użytkownikowi możliwość publikowania lub wysyłania wiadomości"
         complete: "Użytkownik wyciszony"
         reason: "Użytkownik uciszony przez kolejkę recenzji"
       suspend_user:
         title: "Zawieś użytkownika"
-        description: "Zawieś konto użytkownika"
+        description: "Zablokuj użytkownikowi możliwość logowania się do momentu zakończenia zawieszenia"
         complete: "Użytkownik zawieszony"
         reason: "Użytkownik zawieszony przez kolejkę recenzji"
       delete_user:

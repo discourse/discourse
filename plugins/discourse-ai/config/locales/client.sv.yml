@@ -118,6 +118,39 @@ sv:
         periods:
           last_day: "Senaste 24 timmarna"
           custom: "Anpassad..."
+      logs:
+        short_title: "Loggar"
+        apply: "Tillämpa"
+        successful: "Lyckad"
+        failed: "Misslyckad"
+        unknown: "Okänd"
+        topic_id: "Ämnes-ID"
+        post_id: "Inläggs-ID"
+        time: "Tid"
+        when: "När"
+        request: "Förfrågning"
+        provider: "Leverantör"
+        user: "Användare"
+        context: "Sammanhang"
+        topic: "Ämne"
+        post: "Inlägg"
+        post_short: "Inlägg %{id}"
+        duration: "Varaktighet"
+        actions: "Åtgärder"
+        periods:
+          hour: "Senaste timmen"
+          day: "Senaste 24 timmarna"
+          week: "Senaste 7 dagarna"
+          custom: "Anpassad"
+        detail:
+          request: "Förfrågning"
+          response: "Svar"
+          context: "Sammanhang"
+          network_error: "Nätverksfel"
+        retention:
+          summary_stage: "Sammanfattning"
+          deleted_stage: "Raderade"
+          save: "Spara"
       ai_agent:
         name: "Namn"
         edit: "Redigera"
@@ -128,6 +161,7 @@ sv:
         save: "Spara"
         enabled: "Aktiverad?"
         allowed_groups: "Tillåtna grupper"
+        duplicate: "Duplicera"
         delete: "Ta bort"
         thinking_effort_options:
           none: "Ingen"
@@ -184,6 +218,9 @@ sv:
       llms:
         display_name: "Namn"
         provider: "Leverantör"
+        vision_modes:
+          disabled:
+            title: "Inaktiverad"
         save: "Spara"
         edit: "Redigera"
         delete: Ta bort
@@ -206,7 +243,6 @@ sv:
         tests:
           success: "Klart!"
         providers:
-          google: "Google"
           fake: "Anpassad"
         provider_fields:
           region: "Region"
@@ -237,6 +273,7 @@ sv:
           fake: "Anpassad"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Varaktighet:"
           request: "Förfrågning"
           response: "Svar"
           next_log: "Nästa"

@@ -426,10 +426,27 @@ da:
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Valgt"
       start_posting:
         back: "Tilbage"
+    design_wizard:
+      back: "Tilbage"
+      next: "Næste"
+      sections:
+        theme: "Tema"
+        fonts: "Skrifttyper"
+        homepage: "Hjemmeside"
+      theme:
+        selected: "Valgt"
+      colors:
+        light: "Lys"
+        dark: "Mørk"
+      fonts:
+        heading_font: "Overskrifts skrifttype"
+      homepage:
+        topics: "Emner"
+        categories: "Kategorier"
+        styles:
+          boxes: "Bokse"
     about:
       edit: "Rediger denne side"
       simple_title: "Om"
@@ -653,10 +670,6 @@ da:
         optional: "valgfri"
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
-        required: "Du skal kræve punkter, før du kan gennemgå dem."
-        claimed_by_you: "Du har gjort krav på dette punkt og kan gennemgå det."
-        claimed_by_other: "Dette punkt kan kun gennemgås af <b>%{username}</b> ."
-        automatically_claimed_by: "Dette element er i øjeblikket ved at blive gennemgået af <b>%{username}</b>."
       awaiting_approval: "Afventer godkendelse"
       delete: "Slet"
       settings:
@@ -687,6 +700,7 @@ da:
         email: "Email"
         name: "Navn"
         fields: "Felter"
+        penalty_forever: "Forevigt"
         reject_reason: "Årsag"
         scrubbed_reason: "Begrundelse"
         scrubbed_reject_reason: "Årsag til brugerafvisning"
@@ -1395,7 +1409,6 @@ da:
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       enable_smart_lists: "Aktivér smarte lister, når du skriver i editoren"
-      enable_defer: "Aktivér markering af emner som ulæste"
       enable_markdown_monospace_font: "Brug monospace-skrifttype i editors Markdown-tilstand"
       experimental_sidebar:
         enable: "Aktiver sidebjælke"
@@ -1898,7 +1911,8 @@ da:
           email_placeholder: "navn@eksempel.dk"
           invite_by_email: "E-mail"
           restrict_domain: "Begræns til domæne"
-          more_options: "Flere muligheder"
+          create_and_send: "Send"
+          create_and_copy: "Kopiér link"
           update: "Opdater"
           summary:
             role_member: "Bruger"
@@ -1910,7 +1924,7 @@ da:
             expires: "Udløber"
             topic: "Emne"
             groups: "Grupper"
-            edit: "Rediger invitation"
+            edit: "Rediger"
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
           text: "Masseinvitation"
@@ -2470,7 +2484,6 @@ da:
       italic_label: "K"
       italic_title: "Kursiv"
       italic_text: "kursiv skrift"
-      heading_title: "Overskrifter"
       heading_level_n: "Overskrift %{levelNumber}"
       heading_level_n_title: "Overskrift %{levelNumber}"
       heading_level_paragraph: "Afsnit"
@@ -2613,7 +2626,6 @@ da:
         other: "%{count} åbne ansøgninger om medlemskab i '%{group_name}“"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - afsluttet"
       new_features: "Nye funktioner tilgængelige!"
       dismiss_confirmation:
         dismiss: "Ignorer Alle"
@@ -4184,9 +4196,9 @@ da:
           public: "Synlig for alle"
           more_menu: "Mere menu"
           localizations:
-            title: "Oversættelser"
             locale: "Sprog"
             title_label: "Sektionens titel"
+            remove_language: "Fjern"
           links:
             add: "Tilføj endnu et link"
             delete: "Slet link"
@@ -4627,13 +4639,30 @@ da:
       new_features:
         title: "Hvad er nyt?"
         check_for_updates: "Se efter opdateringer"
+      site_traffic_explorer:
+        pageviews: "Sidevisninger"
+        view_more: "Se mere"
+        cards:
+          pages: "Sider"
+          visitors: "Besøgende"
+        columns:
+          top_urls: "URL"
+          browsers: "Browser"
+          ip_addresses: "IP-adresse"
+        filters:
+          browser: "Browser"
+          ip: "IP-adresse"
+        metrics:
+          pageviews:
+            label: "Sidevisninger"
+        series:
+          anonymous_human: "Anonym"
       dashboard:
         title: "Dashboard"
         last_updated: "instrumentbræt opdateret:"
         discourse_last_updated: "Discourse opdateret:"
         version: "Installeret version"
         up_to_date: "Du kører den seneste version af Discourse."
-        critical_available: "En kritisk opdatering er tilgængelig."
         updates_available: "Opdatering er tilgængelige."
         please_update: "Opdatér venligst!"
         no_check_performed: "Der er ikke blevet søgt efter opdateringer. Kontrollér om sidekiq kører."

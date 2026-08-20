@@ -76,7 +76,6 @@ module DiscourseWorkflows
                 value_property: "id",
                 name_property: "name",
                 filterable: true,
-                none: "discourse_workflows.group.group_id_placeholder",
               },
             },
             actor_username: {

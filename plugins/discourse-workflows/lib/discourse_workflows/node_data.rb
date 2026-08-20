@@ -113,44 +113,7 @@ module DiscourseWorkflows
     end
 
     def credential_slot_visible?(definition, parameters)
-      display_options = definition["display_options"] || {}
-
-      visible_for_conditions?(display_options["show"], parameters) &&
-        !hidden_by_conditions?(display_options["hide"], parameters)
-    end
-
-    def visible_for_conditions?(conditions, parameters)
-      return true if conditions.blank?
-
-      conditions.all? { |key, expected| matches_display_rule?(expected, parameters[key]) }
-    end
-
-    def hidden_by_conditions?(conditions, parameters)
-      conditions.present? && visible_for_conditions?(conditions, parameters)
-    end
-
-    def matches_display_rule?(expected, value)
-      return false unless expected.is_a?(Array)
-
-      expected.any? { |condition| matches_display_condition?(condition, value) }
-    end
-
-    def matches_display_condition?(condition, value)
-      operator = condition.is_a?(Hash) ? condition["condition"] : nil
-      return condition == value if operator.blank?
-
-      return value != operator["not"] if operator.key?("not")
-      if operator.key?("exists")
-        return operator["exists"] ? !empty_display_value?(value) : empty_display_value?(value)
-      end
-
-      false
-    end
-
-    def empty_display_value?(value)
-      return true if value.nil? || value == ""
-      return value.empty? if value.is_a?(Array)
-      false
+      Schema.visible?(definition["display_options"] || {}, parameters)
     end
 
     def node_class(node_type)

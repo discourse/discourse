@@ -62,6 +62,22 @@ describe OAuth2BasicAuthenticator do
       expect(result.email_valid).to eq(false)
     end
 
+    it "only accepts explicit verified email values" do
+      SiteSetting.oauth2_email_verified = false
+
+      [true, "true", "True", "TRUE"].each do |email_verified|
+        expect(
+          authenticator.primary_email_verified?(auth.deep_merge(info: { email_verified: })),
+        ).to eq(true)
+      end
+
+      [false, nil, "false", "pending", 0, [], {}].each do |email_verified|
+        expect(
+          authenticator.primary_email_verified?(auth.deep_merge(info: { email_verified: })),
+        ).to eq(false)
+      end
+    end
+
     describe "fetch_user_details" do
       before(:each) do
         SiteSetting.oauth2_fetch_user_details = true

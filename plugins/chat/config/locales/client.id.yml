@@ -258,3 +258,7 @@ id:
         message: "pesan"
       chat_approval:
         message: "pesan"
+        buttons: "Tombol"
+        style_default: "Asal"
+        style_primary: "Utama"
+        style_success: "Sukses"

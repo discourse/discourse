@@ -32,8 +32,11 @@ module PageObjects
         end
       end
 
-      def delete_user_from_reviewable(reviewable, action)
+      # Pass confirm: false for reviewables that require a rejection reason, as
+      # those open a modal instead of the confirmation dialog.
+      def delete_user_from_reviewable(reviewable, action, confirm: true)
         select_bundled_action(reviewable, action, bundle_index: 1)
+        PageObjects::Components::Dialog.new.click_danger if confirm
       end
 
       def click_post_body_toggle
@@ -76,11 +79,11 @@ module PageObjects
       end
 
       def has_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".scrub-rejected-user button") }
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".user-scrub") }
       end
 
       def has_no_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".scrub-rejected-user button") }
+        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".user-scrub") }
       end
 
       def click_scrub_user_button

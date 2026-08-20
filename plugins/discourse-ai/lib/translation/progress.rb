@@ -3,9 +3,9 @@
 module DiscourseAi
   module Translation
     class Progress
-      CACHE_VERSION = 1
+      CACHE_VERSION = 2
       CACHE_TTL = 2.hours
-      DETAIL_CACHE_VERSION = 1
+      DETAIL_CACHE_VERSION = 2
       DETAIL_CACHE_TTL = 2.hours
       TARGET_CLASSES = {
         "post" => PostCandidates,
@@ -67,7 +67,6 @@ module DiscourseAi
           SiteSetting.content_localization_supported_locales,
           SiteSetting.ai_translation_backfill_start_date,
           SiteSetting.ai_translation_include_bot_content,
-          SiteSetting.ai_translation_max_post_length,
           SiteSetting.ai_translation_personal_messages,
           DiscourseAi::Translation.category_scope_cache_key,
         ]

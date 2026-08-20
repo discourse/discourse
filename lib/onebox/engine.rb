@@ -27,10 +27,21 @@ module Onebox
       origins.map do |origin|
         escaped_origin = Regexp.escape(origin)
         if origin.start_with?("*.", "https://*.", "http://*.")
-          escaped_origin = escaped_origin.sub("\\*", '\S*')
+          escaped_origin = escaped_origin.sub("\\*", "[^/?#]*")
         end
 
-        Regexp.new("\\A#{escaped_origin}", "i")
+        origin_boundary =
+          if origin.match?(%r{\Ahttps?://[^/?#]+\z}i)
+            if origin.match?(/:\d+\z/)
+              "(?:[/?#]|\\z)"
+            else
+              "(?::\\d+(?:[/?#]|\\z)|[/?#]|\\z)"
+            end
+          else
+            ""
+          end
+
+        Regexp.new("\\A#{escaped_origin}#{origin_boundary}", "i")
       end
     end
 
@@ -242,6 +253,7 @@ require_relative "engine/gitlab_blob_onebox"
 require_relative "engine/google_photos_onebox"
 require_relative "engine/kaltura_onebox"
 require_relative "engine/reddit_media_onebox"
+require_relative "engine/restream_onebox"
 require_relative "engine/google_drive_onebox"
 require_relative "engine/facebook_media_onebox"
 require_relative "engine/hackernews_onebox"

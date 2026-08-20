@@ -20,12 +20,14 @@ fr:
     patreon_verbose_log: 'activer la journalisation détaillée des données Patreon'
     patreon_donation_prompt_enabled: "Activer l'invite de donation ?"
     patreon_donation_prompt_show_after_topics: "Afficher l'invite de donation après n sujets"
+    patreon_api_version: "Version de l'API Patreon. La version 1 est obsolète. Créez un nouveau client OAuth sur Patreon et passez à la version 2."
     patreon_donation_prompt_campaign_url: "URL de la campagne d'incitation aux donations"
     errors:
       patreon_creator_username_not_set: "Vous devez définir le paramètre Patreon Creator Discourse Username avant d'activer la connexion Patreon."
   dashboard:
     problem:
       access_token_invalid: "Les valeurs des jetons d'accès et d'actualisation de Patreon Creator sont incorrectes. Vous devez copier-coller les nouveaux jetons du site <a href='https://www.patreon.com/platform/documentation/clients'>Patreon</a> vers les paramètres du site <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'></a>."
+      patreon_api_v1_deprecated: "Vous utilisez la version 1 de l'API Patreon, qui est obsolète. <a href='https://www.patreon.com/portal/registration/register-clients'>Créez un nouveau client OAuth v2 sur Patreon</a>, mettez à jour vos identifiants, puis passez à la version 2 de l'API dans les <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon_api_version'>paramètres du site</a>."
   patreon:
     error:
       invalid_response: "Réponse invalide de l'API Patreon"

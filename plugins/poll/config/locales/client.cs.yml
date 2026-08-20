@@ -65,6 +65,8 @@ cs:
       cast-votes:
         title: "Hlasujte"
         label: "Hlasovat nyní!"
+      keep-vote:
+        label: "Zpět"
       show-results:
         title: "Zobrazit výsledky hlasování"
         label: "Výsledky"

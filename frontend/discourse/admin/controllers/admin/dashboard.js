@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import {
@@ -17,23 +17,21 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 const PROBLEMS_CHECK_MINUTES = 1;
 
 export default class AdminDashboardController extends Controller {
-  @service router;
   @service siteSettings;
+  @service exception;
   @service loadingSlider;
-  @controller("exception") exceptionController;
 
   @tracked loadingProblems = false;
   @tracked problemsFetchedAt;
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
-  @tracked version = null;
   @tracked loadedSections = null;
   @tracked loadingSections = false;
   @tracked sectionsFetchError = false;
   @autoTrackedArray problems;
 
-  queryParams = ["range", "start_date", "end_date", "version"];
+  queryParams = ["range", "start_date", "end_date"];
 
   isLoading = false;
   dashboardFetchedAt = null;
@@ -166,11 +164,7 @@ export default class AdminDashboardController extends Controller {
     }
 
     try {
-      const model = await AdminDashboard.fetch({
-        startDate,
-        endDate,
-        version: this.version,
-      });
+      const model = await AdminDashboard.fetch({ startDate, endDate });
 
       if (id !== this._sectionsLoadId) {
         return;
@@ -202,9 +196,6 @@ export default class AdminDashboardController extends Controller {
   }
 
   get showRedesign() {
-    if (this.version === "alt") {
-      return !this.siteSettings.dashboard_improvements;
-    }
     return this.siteSettings.dashboard_improvements;
   }
 
@@ -262,7 +253,7 @@ export default class AdminDashboardController extends Controller {
     ) {
       this.set("isLoading", true);
 
-      AdminDashboard.fetch({ version: this.version })
+      AdminDashboard.fetch()
         .then((model) => {
           let properties = {
             dashboardFetchedAt: new Date(),
@@ -275,8 +266,7 @@ export default class AdminDashboardController extends Controller {
           this.setProperties(properties);
         })
         .catch((e) => {
-          this.exceptionController.set("thrown", e.jqXHR);
-          this.router.replaceWith("exception");
+          this.exception.show(e.jqXHR);
         })
         .finally(() => {
           this.set("isLoading", false);

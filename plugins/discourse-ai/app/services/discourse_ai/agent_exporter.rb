@@ -50,6 +50,7 @@ module DiscourseAi
           name: ai_agent.name,
           description: ai_agent.description,
           system_prompt: ai_agent.system_prompt,
+          allowed_group_ids: ai_agent.allowed_group_ids,
           examples: ai_agent.examples,
           temperature: ai_agent.temperature,
           top_p: ai_agent.top_p,
@@ -57,6 +58,7 @@ module DiscourseAi
           response_format: ai_agent.response_format,
           tools: transform_tools_for_export(ai_agent.tools, serialized_custom_tools),
           mcp_servers: serialize_mcp_servers(ai_agent),
+          subagents: serialize_subagents(ai_agent),
         },
         custom_tools: serialized_custom_tools,
       }
@@ -78,6 +80,11 @@ module DiscourseAi
 
         ["custom-#{tool.tool_name}", tool_config[1], tool_config[2]]
       end
+    end
+
+    def serialize_subagents(ai_agent)
+      names_by_id = AiAgent.where(id: Array(ai_agent.subagent_ids)).pluck(:id, :name).to_h
+      Array(ai_agent.subagent_ids).filter_map { |id| names_by_id[id] }
     end
 
     def serialize_mcp_servers(ai_agent)

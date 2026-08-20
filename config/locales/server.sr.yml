@@ -268,6 +268,10 @@ sr:
         other: "pre %{count} mesec dana"
   password_reset:
     title: "Resetujte Šifru"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Prijavljen"
+      anonymous: "Anonimno"
   change_email:
     max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
   activation:
@@ -403,6 +407,9 @@ sr:
       description: "Zemlje koje u odabranom periodu generišu najviše pregleda stranica vašeg foruma."
       labels:
         country_code: "Kod zemlje"
+        count: "Poseta"
+    top_entry_urls:
+      labels:
         count: "Poseta"
     top_referrers_by_browser_pageviews:
       title: "Najveći upućivači"
@@ -668,6 +675,9 @@ sr:
     groups:
       errors:
         empty_permissions: "Grupa oznaka mora imati najmanje jedno ovlašćenje."
+  design_wizard:
+    palette_pairs:
+      default: "Подразумевано"
   wizard:
     step:
       setup:
@@ -729,6 +739,9 @@ sr:
         delete:
           title: "Obriši Korisnika"
           complete: "Korisnik izbrisan."
+        block:
+          title: "Obriši i blokiraj korisnika"
+          description: "Obrišite korisnika i blokirajte njihovu email i IP adresu"
       confirm_spam:
         title: "Da"
       not_spam:

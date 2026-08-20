@@ -54,7 +54,6 @@ module DiscourseSolved
             category_options: category_options,
             category_ids: selected_category_ids,
             kpis: build_kpis,
-            headline: build_headline,
             topic_outcomes: topic_outcomes,
             whos_answering: whos_answering,
             response_time_distribution: response_time_distribution,
@@ -155,48 +154,6 @@ module DiscourseSolved
       query
     end
 
-    def build_headline
-      outcomes = topic_outcomes
-      total = outcomes.values.sum
-      rate = resolution_rate(outcomes)
-      prev_rate = resolution_rate(outcomes_for(prev_start_date, prev_end_date))
-
-      key =
-        if total.zero?
-          "no_data"
-        elsif rate >= 60
-          "healthy"
-        elsif rate < 40
-          "struggling"
-        else
-          "mixed"
-        end
-
-      reply_now = avg_first_reply_seconds(start_date, end_date)
-      reply_prev = avg_first_reply_seconds(prev_start_date, prev_end_date)
-
-      answerers = whos_answering
-      staff_share =
-        if answerers[:total].to_i.zero?
-          nil
-        else
-          (answerers[:rows].find { |r| r[:type] == "staff" }&.dig(:share) || 0).round
-        end
-      focus = staff_share.nil? ? nil : (staff_share >= 50 ? "staff" : "members")
-
-      {
-        key: key,
-        resolution_rate: rate&.round,
-        resolution_direction: direction(rate, prev_rate),
-        answerers_focus: focus,
-        answerers_share: (focus == "staff" ? staff_share : (staff_share && 100 - staff_share)),
-        first_reply_seconds: reply_now,
-        first_reply_direction: time_direction(reply_now, reply_prev),
-        first_reply_delta_seconds: (reply_now && reply_prev ? (reply_now - reply_prev).abs : nil),
-        unanswered_count: outcomes[:unanswered],
-      }
-    end
-
     # Mutually-exclusive status counts for topics created in the window:
     # resolved (has an accepted answer), else in_progress (has at least one
     # reply), else unanswered.
@@ -226,7 +183,6 @@ module DiscourseSolved
                   AND p.post_number > 1
                   AND p.post_type = :post_type
                   AND p.deleted_at IS NULL
-                  AND p.user_id <> t.user_id
               ) AS has_reply
             FROM topics t
             LEFT JOIN discourse_solved_solved_topics st ON st.topic_id = t.id
@@ -402,11 +358,6 @@ module DiscourseSolved
         from: from,
         to: to,
       }
-    end
-
-    def direction(current, previous)
-      return "flat" if current.nil? || previous.nil? || current == previous
-      current > previous ? "up" : "down"
     end
 
     # For durations, lower is better, so "faster"/"slower" rather than up/down.

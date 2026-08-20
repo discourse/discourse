@@ -19,6 +19,16 @@ describe Jobs::Chat::ProcessMessage do
     )
   end
 
+  it "preserves action formatting when processing a message" do
+    action_message = Fabricate(:chat_message, message: "/me waves")
+
+    described_class.new.execute(chat_message_id: action_message.id)
+
+    expect(action_message.reload.cooked).to match_html(
+      %(<p><em class="chat-message-action">#{action_message.user.username} waves</em></p>),
+    )
+  end
+
   context "when the cooked message changed" do
     it "publishes the update" do
       chat_message.update!(cooked: "another lovely cat")

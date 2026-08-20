@@ -45,6 +45,7 @@ class TestAgent < DiscourseAi::Agents::Agent
       {site_title}
       {site_description}
       {participants}
+      {username}
       {time}
       {date}
       {resource_url}
@@ -65,6 +66,8 @@ RSpec.describe DiscourseAi::Agents::Agent do
   let(:resource_url) { "https://path-to-resource" }
   let(:inferred_concepts) { %w[bulbassaur charmander squirtle].join(", ") }
 
+  let(:context_user) { User.new(username: "alice") }
+
   let(:context) do
     DiscourseAi::Agents::BotContext.new(
       site_url: Discourse.base_url,
@@ -72,6 +75,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
       site_description: "test site description",
       time: Time.zone.now,
       participants: topic_with_users.allowed_users.map(&:username).join(", "),
+      user: context_user,
       resource_url: resource_url,
       inferred_concepts: inferred_concepts,
     )
@@ -88,6 +92,36 @@ RSpec.describe DiscourseAi::Agents::Agent do
     AiAgent.agent_cache.flush!
   end
 
+  it "includes read_post in the configurable tool catalog" do
+    expect(described_class.all_available_tools).to include(DiscourseAi::Agents::Tools::ReadPost)
+  end
+
+  it "never resolves a custom spawn_agent through the fallback tool path" do
+    custom_tool = Fabricate(:ai_tool, tool_name: "spawn_agent")
+    child = Fabricate(:ai_agent)
+    agent_record = Fabricate(:ai_agent, subagent_ids: [child.id])
+    agent_record.update_columns(tools: [["custom-#{custom_tool.id}", nil, false]])
+    tool_call =
+      DiscourseAi::Completions::ToolCall.new(
+        id: "spawn-1",
+        name: "spawn_agent",
+        parameters: {
+          agent_id: child.id,
+          prompt: "Check this",
+        },
+      )
+
+    resolved =
+      agent_record.class_instance.new.find_tool(
+        tool_call,
+        bot_user: user,
+        llm: nil,
+        context: DiscourseAi::Agents::BotContext.new(user: user),
+      )
+
+    expect(resolved).to be_nil
+  end
+
   it "renders the system prompt" do
     freeze_time
 
@@ -98,6 +132,8 @@ RSpec.describe DiscourseAi::Agents::Agent do
     expect(system_message).to include("test site title")
     expect(system_message).to include("test site description")
     expect(system_message).to include("joe, jane")
+    expect(system_message).to include("alice")
+    expect(system_message).not_to include("{username}")
     expect(system_message).to include(Time.zone.now.to_s)
     expect(system_message).to include(resource_url)
     expect(system_message).to include(inferred_concepts)
@@ -109,6 +145,24 @@ RSpec.describe DiscourseAi::Agents::Agent do
 
     # needs to be configured so it is not available
     expect(tools.find { |t| t.name == "image" }).to be_nil
+  end
+
+  it "leaves {username} literal when no user is present" do
+    context_without_user =
+      DiscourseAi::Agents::BotContext.new(
+        site_url: Discourse.base_url,
+        site_title: "test site title",
+        site_description: "test site description",
+        time: Time.zone.now,
+        participants: topic_with_users.allowed_users.map(&:username).join(", "),
+        resource_url: resource_url,
+        inferred_concepts: inferred_concepts,
+      )
+
+    rendered = agent.craft_prompt(context_without_user)
+    system_message = rendered.messages.first[:content]
+
+    expect(system_message).to include("{username}")
   end
 
   it "can parse string that are wrapped in quotes" do

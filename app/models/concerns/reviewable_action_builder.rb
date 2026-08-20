@@ -60,6 +60,18 @@ module ReviewableActionBuilder
     end
   end
 
+  def build_penalty_actions(actions, bundle:, silence:, suspend:, user: target_user)
+    return if user.blank? || !guardian.can_suspend?(user)
+
+    if !user.silenced?
+      build_action(actions, silence, icon: "microphone-slash", bundle:, client_action: "silence")
+    end
+
+    if !user.suspended?
+      build_action(actions, suspend, icon: "ban", bundle:, client_action: "suspend")
+    end
+  end
+
   def perform_silence_user(performed_by, args)
     create_result(:success, :rejected)
   end
@@ -108,18 +120,6 @@ module ReviewableActionBuilder
   end
 
   private
-
-  # Returns the user associated with the reviewable, if applicable.
-  # For most reviewables, this will be the user who created the reviewable target.
-  #
-  # @return [User] The user associated with the reviewable.
-  def target_user
-    if target_type == "User"
-      try(:target)
-    else
-      try(:target_created_by)
-    end
-  end
 
   # Returns the post associated with the reviewable, if applicable.
   # This method assumes that the including class has a `target` that is a Post or

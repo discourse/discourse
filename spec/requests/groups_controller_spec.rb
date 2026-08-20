@@ -1707,6 +1707,50 @@ RSpec.describe GroupsController do
         expect(Jobs::AutomaticGroupMembership.jobs.first["args"].first["group_id"]).to eq(group.id)
       end
 
+      it "keeps SMTP email settings unchanged for moderators", :aggregate_failures do
+        SiteSetting.enable_smtp = true
+        group.update!(
+          allow_unknown_sender_topic_replies: false,
+          email_from_alias: "group-alias@example.com",
+          email_password: "secret_smtp_pass",
+          email_username: "group@example.com",
+          smtp_enabled: true,
+          smtp_port: 587,
+          smtp_server: "smtp.example.com",
+          smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
+        )
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                allow_unknown_sender_topic_replies: true,
+                email_from_alias: "evil-alias@example.com",
+                email_password: "attacker_controlled_pass",
+                email_username: "attacker@example.com",
+                flair_color: "BBB",
+                smtp_enabled: false,
+                smtp_port: 25,
+                smtp_server: "evil.attacker.example.com",
+                smtp_ssl_mode: Group.smtp_ssl_modes[:none],
+              },
+              update_existing_users: false,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+
+        group.reload
+        expect(group.flair_color).to eq("BBB")
+        expect(group.smtp_server).to eq("smtp.example.com")
+        expect(group.smtp_port).to eq(587)
+        expect(group.smtp_ssl_mode).to eq(Group.smtp_ssl_modes[:starttls])
+        expect(group.smtp_enabled).to eq(true)
+        expect(group.email_username).to eq("group@example.com")
+        expect(group.email_password).to eq("secret_smtp_pass")
+        expect(group.email_from_alias).to eq("group-alias@example.com")
+        expect(group.allow_unknown_sender_topic_replies).to eq(false)
+      end
+
       it "should be able to update an automatic group" do
         group = Group.find(Group::AUTO_GROUPS[:trust_level_4])
 
@@ -2286,6 +2330,7 @@ RSpec.describe GroupsController do
           expect(response_body["usernames"]).to contain_exactly(user.username, admin.username)
 
           expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(user, admin)
+          expect(group.reload.user_count).to eq(2)
         end
 
         it "returns not-found error when there is no group" do

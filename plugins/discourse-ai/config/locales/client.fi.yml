@@ -153,6 +153,9 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      discourse_workflows:
+        ai_agent:
+          mode: "Tila"
       ai_tool_approval:
         loading: "Ladataan..."
         tool: "Toiminto"
@@ -367,6 +370,46 @@ fi:
           last_week: "Viime viikko"
           last_month: "Viime kuukausi"
           custom: "Mukautettu..."
+      logs:
+        short_title: "Lokit"
+        retry: "Yritä uudelleen"
+        apply: "Käytä"
+        all_models: "Kaikki mallit"
+        successful: "Onnistui"
+        failed: "Epäonnistui"
+        unknown: "Tuntematon"
+        topic_id: "Ketjun tunnus"
+        post_id: "Viestin tunnus"
+        time: "Aika"
+        when: "Ajankohta"
+        outcome: "Tulos"
+        feature: "Ominaisuus"
+        model: "Malli"
+        request: "Pyyntö"
+        provider: "Palveluntarjoaja"
+        user: "Käyttäjä"
+        context: "Konteksti"
+        topic: "Ketju"
+        post: "Viesti"
+        post_short: "Viesti %{id}"
+        duration: "Kesto"
+        actions: "Toiminnot"
+        periods:
+          hour: "Viimeinen tunti"
+          day: "Viimeiset 24 tuntia"
+          week: "Viimeiset 7 päivää"
+          custom: "Mukautettu"
+        detail:
+          request: "Pyyntö"
+          response: "Vastaus"
+          context: "Konteksti"
+          copy_request: "Kopioi pyyntö"
+          copy_response: "Kopioi vastaus"
+          network_error: "Verkkovirhe"
+        retention:
+          summary_stage: "Yhteenveto"
+          deleted_stage: "Poistettu"
+          save: "Tallenna"
       ai_agent:
         ai_tools: "Työkalut"
         tool_strategies:
@@ -403,6 +446,8 @@ fi:
           clear_all: "Tyhjennä kaikki"
         forced_tools: "Pakotetut työkalut"
         allowed_groups: "Sallitut ryhmät"
+        duplicate: "Monista"
+        copy_name: "Paletin %{name} kopio"
         delete: "Poista"
         temperature: "Lämpötila"
         temperature_help: "LLM:lle käytettävä lämpötila. Lisää luovuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–2,0)"
@@ -541,6 +586,9 @@ fi:
         max_output_tokens: "Tuotossaneiden enimmäismäärä"
         url: "Mallia isännöivän palvelun URL-osoite"
         api_key: "Mallia isännöivän palvelun API-avain"
+        vision_modes:
+          disabled:
+            title: "Pois käytöstä"
         ai_bot_user: "Tekoälybottikäyttäjä"
         cost_input: "Syötekustannukset"
         cost_cached_input: "Välimuistissa olevan syötteen hinta"
@@ -616,7 +664,6 @@ fi:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -769,6 +816,7 @@ fi:
           title: "Näytä tekoälyvuorovaikutus"
           copy_request: "Kopioi pyyntö"
           copy_response: "Kopioi vastaus"
+          duration_label: "Kesto:"
           request: "Pyyntö"
           response: "Vastaus"
           next_log: "Seuraava"

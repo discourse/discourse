@@ -90,10 +90,6 @@ module DiscourseWorkflows
         def removed_tags
           @old_tag_names - @new_tag_names
         end
-
-        def topic_data(topic)
-          serialize_record(topic, TopicListItemSerializer)
-        end
       end
     end
   end

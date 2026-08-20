@@ -11,7 +11,6 @@ acceptance("Post", function (needs) {
     discourse_reactions_enabled_reactions: "otter|open_mouth",
     discourse_reactions_reaction_for_like: "heart",
     discourse_reactions_like_icon: "heart",
-    enable_new_post_reactions_menu: true,
   });
 
   needs.pretender((server, helper) => {
@@ -115,7 +114,6 @@ acceptance("Post - hidden reactions", function (needs) {
     discourse_reactions_enabled_reactions: "otter|open_mouth",
     discourse_reactions_reaction_for_like: "heart",
     discourse_reactions_like_icon: "heart",
-    enable_new_post_reactions_menu: true,
   });
 
   needs.pretender((server, helper) => {
@@ -156,7 +154,6 @@ acceptance("Post - hidden reactions with hidden-post access", function (needs) {
     discourse_reactions_enabled_reactions: "otter|open_mouth",
     discourse_reactions_reaction_for_like: "heart",
     discourse_reactions_like_icon: "heart",
-    enable_new_post_reactions_menu: true,
   });
 
   needs.pretender((server, helper) => {

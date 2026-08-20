@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe UpcomingChanges::Action::TrackAddedChanges do
+  let(:scoped_events) do
+    UpcomingChangeEvent.where(
+      upcoming_change_name: %i[enable_upload_debug_mode show_user_menu_avatars],
+    )
+  end
+
   before do
     mock_upcoming_change_metadata(
       {
@@ -17,12 +23,6 @@ RSpec.describe UpcomingChanges::Action::TrackAddedChanges do
           impact_role: "all_members",
         },
       },
-    )
-  end
-
-  def scoped_events
-    UpcomingChangeEvent.where(
-      upcoming_change_name: %i[enable_upload_debug_mode show_user_menu_avatars],
     )
   end
 

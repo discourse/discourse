@@ -18,7 +18,6 @@ cs:
     ai_helper:
       prompts:
         translate: Přeložit do %{language}
-        generate_titles: Navrhnout názvy témat
         proofread: Korektura textu
         markdown_table: Generovat Markdown tabulku
         custom_prompt: "Vlastní pokyn"
@@ -27,6 +26,8 @@ cs:
         replace_dates: "Chytré datumy"
     ai_bot:
       default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
+      read_post:
+        unknown_post: "příspěvek"
       agents:
         custom_prompt:
           name: "Vlastní pokyn"

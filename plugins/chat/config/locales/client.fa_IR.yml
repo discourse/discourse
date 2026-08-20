@@ -64,6 +64,8 @@ fa_IR:
       cancel: "انصراف"
       cancel_reply: "لغو پاسخ"
       chat_channels: "کانال‌ها"
+      pinned_bar:
+        title: "سنجاق شده"
       pinned: "سنجاق شده"
       browse_all_channels: "مرور همه کانال‌ها"
       see_in: "ببینید در"
@@ -442,4 +444,10 @@ fa_IR:
         message: "پیام"
       chat_approval:
         message: "پیام"
+        buttons: "دکمه‌ها"
+        value: "مقدار"
+        style_default: "پیش‌فرض"
+        style_primary: "اصلی"
+        style_success: "موفقیت"
+        icon: "آیکن"
         channel_id: "کانال"

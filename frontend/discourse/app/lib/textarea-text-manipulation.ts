@@ -296,6 +296,10 @@ export default class TextareaTextManipulation implements TextManipulation {
     exampleKey: string,
     opts?: SurroundOptions
   ): void {
+    if (opts?.wholeLine) {
+      sel = this.#expandToLines(sel);
+    }
+
     const pre = sel.pre;
     const post = sel.post;
 
@@ -309,6 +313,8 @@ export default class TextareaTextManipulation implements TextManipulation {
       const example = i18n(`composer.${exampleKey}`);
       this._insertAt(sel.start, sel.end, `${hval}${example}${tail}`);
       this.selectText(pre.length + hlen, example.length);
+    } else if (opts?.wholeLine) {
+      this.#applyWholeLineSurround(sel, head, tail, opts);
     } else if (opts && !opts.multiline) {
       let [hval, hlen] = getHead(head);
 
@@ -357,6 +363,74 @@ export default class TextareaTextManipulation implements TextManipulation {
         }
       }
     }
+  }
+
+  #applyWholeLineSurround(
+    sel: SelectedText,
+    head: string | ((previous?: string) => string),
+    tail: string,
+    opts: SurroundOptions
+  ): void {
+    const [hval, hlen] = getHead(head);
+    const lines = sel.value.split("\n");
+    const formattedLines = lines.filter(
+      (line) => opts.applyEmptyLines || line.length > 0
+    );
+    const removing =
+      formattedLines.length > 0 &&
+      formattedLines.every(
+        (line) => line.startsWith(hval) && line.endsWith(tail)
+      );
+
+    const contents = lines
+      .map((line) => {
+        if (!opts.applyEmptyLines && line.length === 0) {
+          return line;
+        }
+        if (removing) {
+          return line.slice(hlen, tail.length ? -tail.length : undefined);
+        }
+        let content = line;
+        if (hval) {
+          content = content.replaceAll(hval, "");
+        }
+        if (tail) {
+          content = content.replaceAll(tail, "");
+        }
+        return `${hval}${content}${tail}`;
+      })
+      .join("\n");
+
+    this._insertAt(sel.start, sel.end, contents);
+
+    if (lines.length === 1) {
+      this.selectText(
+        sel.start + (removing ? 0 : hlen),
+        removing ? contents.length : contents.length - hlen - tail.length
+      );
+    } else {
+      this.selectText(sel.start, contents.length);
+    }
+  }
+
+  #expandToLines(sel: SelectedText): SelectedText {
+    const value = this.value;
+    const start = value.lastIndexOf("\n", sel.start - 1) + 1;
+    const endAnchor =
+      sel.end > sel.start && value[sel.end - 1] === "\n"
+        ? sel.end - 1
+        : sel.end;
+    const nextNewline = value.indexOf("\n", endAnchor);
+    const end = nextNewline === -1 ? value.length : nextNewline;
+
+    return {
+      start,
+      end,
+      value: value.slice(start, end),
+      pre: value.slice(0, start),
+      post: value.slice(end),
+      lineVal: value.slice(start, end),
+    };
   }
 
   // perform the same operation over many lines of text

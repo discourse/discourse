@@ -13,7 +13,13 @@ RSpec.describe DiscourseAi::AgentImporter do
           secret_contracts: [{ alias: "giphy_api_key" }],
         )
       end
-      fab!(:ai_agent) { Fabricate(:ai_agent, tools: [["custom-#{ai_tool.id}", nil, false]]) }
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          allowed_group_ids: [Group::AUTO_GROUPS[:staff]],
+          tools: [["custom-#{ai_tool.id}", nil, false]],
+        )
+      end
 
       let!(:export_json) { DiscourseAi::AgentExporter.new(agent: ai_agent).export }
 
@@ -25,6 +31,7 @@ RSpec.describe DiscourseAi::AgentImporter do
         agent = importer.import!
 
         expect(agent).to be_persisted
+        expect(agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:staff]])
         expect(agent.tools.first.first).to start_with("custom-")
 
         tool_id = agent.tools.first.first.split("-", 2).last.to_i
@@ -111,6 +118,7 @@ RSpec.describe DiscourseAi::AgentImporter do
           name: "Test Agent",
           description: "New description",
           system_prompt: "New prompt",
+          allowed_group_ids: [Group::AUTO_GROUPS[:staff]],
           tools: [
             ["custom-#{existing_tool.id}", nil, false],
             ["custom-#{new_tool.id}", nil, false],
@@ -129,6 +137,7 @@ RSpec.describe DiscourseAi::AgentImporter do
         expect(agent.id).to eq(existing_agent.id)
         expect(agent.description).to eq("New description")
         expect(agent.system_prompt).to eq("New prompt")
+        expect(agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:staff]])
         expect(agent.tools.length).to eq(2)
       end
 
@@ -170,6 +179,67 @@ RSpec.describe DiscourseAi::AgentImporter do
         existing_tool.reload
         expect(existing_tool.secret_contracts).to eq([{ "alias" => "new_key" }])
         expect(existing_tool.secret_bindings.pluck(:alias)).to eq(["new_key"])
+      end
+    end
+
+    context "when importing subagents" do
+      fab!(:first_subagent) { Fabricate(:ai_agent, name: "Research") }
+      fab!(:second_subagent) { Fabricate(:ai_agent, name: "Writing") }
+      fab!(:existing_agent) do
+        Fabricate(:ai_agent, name: "Parent", subagent_ids: [first_subagent.id])
+      end
+
+      it "resolves subagent names on create" do
+        payload = {
+          "agent" => {
+            "name" => "Imported Parent",
+            "description" => "Parent",
+            "system_prompt" => "Prompt",
+            "tools" => [],
+            "subagents" => %w[Writing Research],
+          },
+          "custom_tools" => [],
+        }
+
+        imported = described_class.new(json: payload).import!
+
+        expect(imported.subagent_ids).to eq([second_subagent.id, first_subagent.id])
+      end
+
+      it "reports missing subagents before creating an agent" do
+        payload = {
+          "agent" => {
+            "name" => "Missing Parent",
+            "description" => "Parent",
+            "system_prompt" => "Prompt",
+            "tools" => [],
+            "subagents" => ["Missing"],
+          },
+          "custom_tools" => [],
+        }
+
+        expect { described_class.new(json: payload).import! }.to raise_error(
+          DiscourseAi::AgentImporter::ImportError,
+        ) { |error| expect(error.conflicts[:subagents]).to eq(["Missing"]) }
+      end
+
+      it "preserves existing subagents when an overwrite omits the key and clears them explicitly" do
+        base = {
+          "agent" => {
+            "name" => "Parent",
+            "description" => "Updated",
+            "system_prompt" => "Prompt",
+            "tools" => [],
+          },
+          "custom_tools" => [],
+        }
+
+        described_class.new(json: base).import!(overwrite: true)
+        expect(existing_agent.reload.subagent_ids).to eq([first_subagent.id])
+
+        base["agent"]["subagents"] = []
+        described_class.new(json: base).import!(overwrite: true)
+        expect(existing_agent.reload.subagent_ids).to eq([])
       end
     end
 

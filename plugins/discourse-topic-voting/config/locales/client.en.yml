@@ -11,6 +11,7 @@ en:
     topic_voting:
       notification_label:
         vote_released: "Vote returned"
+        voting_closed: "Voting closed"
       hot_nav_help: "top recent topics, including those with recent votes"
       voted: "You voted on this topic"
       vote_title: "Vote"

@@ -594,7 +594,7 @@ describe DiscourseDataExplorer::QueryController do
 
         cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
         expect(cached).to be_present
-        expect(cached["rows"]).to eq([[23]])
+        expect(cached[:rows]).to eq([[23]])
       end
 
       it "returns cached results in show response" do
@@ -881,6 +881,50 @@ describe DiscourseDataExplorer::QueryController do
         expect(topic_relations).to contain_exactly(include("id" => visible_topic.id))
         expect(response.body).to include(visible_topic.title)
         expect(response.body).not_to include(private_topic.title)
+      end
+
+      it "prevents nested params from injecting SQL" do
+        victim = Fabricate(:user, email: "victim@example.com")
+        query = make_query(<<~SQL, { name: "Parameterized Query" }, [group.id.to_s])
+            -- [params]
+            -- string :first_value
+            -- string :second
+            SELECT :first_value AS value
+          SQL
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json",
+             params: {
+               params: {
+                 first_value: ":second",
+                 second: "UNION SELECT email FROM user_emails --",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["rows"]).to eq([[":second"]])
+        expect(response.body).not_to include(victim.email)
+      end
+
+      it "prevents params from injecting SQL through parameter declaration comments" do
+        victim = Fabricate(:user, email: "victim@example.com")
+        query = make_query(<<~SQL, { name: "Parameterized Query" }, [group.id.to_s])
+            -- [params]
+            -- string :injection
+            SELECT 'safe' AS value
+          SQL
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json",
+             params: {
+               params: {
+                 injection: "ignored\nSELECT email FROM user_emails UNION ALL --",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["rows"]).to eq([["safe"]])
+        expect(response.body).not_to include(victim.email)
       end
 
       it "can accept parameters as a hash" do

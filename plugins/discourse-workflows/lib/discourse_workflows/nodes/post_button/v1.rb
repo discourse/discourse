@@ -4,6 +4,7 @@ module DiscourseWorkflows
   module Nodes
     module PostButton
       class V1 < NodeType
+        INVALID_POST_NUMBER = 0
         POSITION_OPTIONS = %w[first last more_menu relative].freeze
         POSITION_DIRECTION_OPTIONS = %w[before after].freeze
         POSITION_ANCHOR_OPTIONS = %w[
@@ -51,6 +52,12 @@ module DiscourseWorkflows
                 name_property: "name",
                 filterable: true,
               },
+            },
+            post_number: {
+              type: :integer,
+              required: false,
+              min: 1,
+              no_data_expression: true,
             },
             position: {
               type: :options,
@@ -141,6 +148,25 @@ module DiscourseWorkflows
           group_ids.present? && user.in_any_groups?(group_ids)
         end
 
+        def self.normalized_post_number(parameters)
+          value = parameters["post_number"].to_s
+          value.to_i if value.match?(/\A[1-9]\d*\z/)
+        end
+
+        def self.resolved_post_number(parameters)
+          value = parameters["post_number"]
+          return if value.to_s.strip.empty?
+
+          normalized_post_number(parameters) || INVALID_POST_NUMBER
+        end
+
+        def self.matches_post_number?(post, parameters)
+          post_number = resolved_post_number(parameters)
+          return true if post_number.nil?
+
+          post.present? && post.post_number == post_number
+        end
+
         def self.resolved_position(parameters)
           position = parameters["position"].presence || "last"
           return position if position != "relative"
@@ -170,10 +196,6 @@ module DiscourseWorkflows
 
         def post_data(post)
           serialize_post(post)
-        end
-
-        def topic_data(topic)
-          serialize_record(topic, TopicListItemSerializer)
         end
       end
     end

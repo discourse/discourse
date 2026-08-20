@@ -96,7 +96,7 @@ RSpec.describe DiscourseAi::Summarization do
       expect(described_class.gist_for(topic, scope: user.guardian)).to eq(german_gist)
     end
 
-    it "returns the source-locale gist when the user requests original content" do
+    it "returns the source-locale gist when the user disables automatic translation" do
       topic.update!(locale: "fr")
       source_gist =
         Fabricate(:topic_ai_gist, target: topic, locale: "fr", summarized_text: "Résumé français")
@@ -108,7 +108,7 @@ RSpec.describe DiscourseAi::Summarization do
       )
       SiteSetting.content_localization_enabled = true
       I18n.locale = :de
-      user.user_option.update!(show_original_content: true)
+      user.user_option.update!(automatically_translate: false)
 
       expect(described_class.gist_for(topic, scope: user.guardian)).to eq(source_gist)
     end

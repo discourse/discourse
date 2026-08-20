@@ -25,6 +25,13 @@ pl_PL:
         agent_vision_disabled: "agent nie może uwzględniać przesyłania obrazów"
         llm_missing: "agent nie rozwiązuje umowy LLM"
         llm_vision_disabled: "rozwiązany problem LLM nie obsługuje wprowadzania obrazu"
+      ai_llm_vision_delegation: "%{model_name} nie może użyć skonfigurowanego modelu wizji: %{reason}. <a href='%{url}'>Przejrzyj model AI</a>."
+      ai_llm_vision_delegation_reasons:
+        missing: "model wizji już nie istnieje"
+        native_and_delegated: "skonfigurowano zarówno natywny obraz wejściowy, jak i delegowaną wizję"
+        self_reference: "model nie może używać siebie do wizji"
+        delegated: "model wizji deleguje do innego modelu"
+        not_native: "model wizji nie obsługuje natywnego wprowadzania obrazów"
   discourse_automation:
     ai:
       flag_types:
@@ -47,10 +54,9 @@ pl_PL:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_response: |
-          <p>Odpowiedź modelu: %{llm_response}</p>
+        flagged_post_response: "Odpowiedź modelu: %{llm_response}"
         flagged_post_score_reason: |
-          <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
+          <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/automation/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Twój post został tymczasowo usunięty w celu sprawdzenia"
           body: |
@@ -111,7 +117,7 @@ pl_PL:
     ai_helper_allowed_in_pm: "Włącz asystenta AI kompozytora w PW."
     ai_helper_automatic_chat_thread_title_delay: "Opóźnienie w minutach, zanim pomocnik AI automatycznie ustawi tytuł wątku czatu."
     ai_helper_automatic_chat_thread_title: "Automatycznie ustawiaj tytuły wątków czatu na podstawie zawartości wątku."
-    ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w pomocniku AI."
+    ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w narzędziu AI Helper. Sugestie tytułów w kompozytorze są dostępne za pośrednictwem menu AI Helper i również wymagają funkcji context_menu."
     ai_image_caption_agent: "Agent do użycia w podpisach obrazów AI. Agenty niestandardowe muszą mieć włączoną funkcję przesyłania obrazów i korzystać z LLM z obsługą technologii wizyjnej."
     ai_post_image_captions_enabled: "Włącz podpisy AI dla obrazów we wpisach. Generowanie brakujących podpisów wymaga skonfigurowania {{setting:ai_image_caption_agent}}."
     ai_post_image_captions_per_post_limit: "Maksymalna liczba obrazów do podpisu na wpis."
@@ -167,12 +173,12 @@ pl_PL:
     ai_translation_categories: "Kategorie używane, gdy zakres kategorii tłumaczenia AI jest ustawiony na <strong>dołącz</strong> lub <strong>wyklucz</strong>."
     ai_translation_personal_messages: "Kontroluje, które prywatne wiadomości są tłumaczone. 'none' wyłącza tłumaczenie wiadomości prywatnych. 'group' tłumaczy tylko wiadomości prywatne grupy. 'all' tłumaczy wszystkie wiadomości prywatne."
     ai_translation_include_bot_content: "Po włączeniu tej opcji treści tworzone przez boty (identyfikatory użytkowników poniżej 0) będą również wysyłane do tłumaczenia."
-    ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
     ai_translation_backfill_start_date: "Data UTC, od której historyczne wpisy i tematy będą wysyłane do uzupełnienia tłumaczeń. Pozostaw puste, aby wyłączyć uzupełnianie. Nowe treści będą nadal tłumaczone."
     ai_translation_backfill_hourly_rate: "Liczba wpisów i tematów do przetłumaczenia na godzinę podczas operacji uzupełniania. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie tłumaczeń dla istniejących treści."
     ai_translation_backfill_parallel_jobs: "Liczba równoległych zadań postlokalizacyjnych uruchamianych w każdym cyklu uzupełniania. Wyższe wartości zwiększają przepustowość, ale zużywają więcej zasobów."
     ai_usage_rollup_after_days: "Liczba dni przechowywania statystyk użycia AI dla każdego żądania przed ich przekształceniem w dzienne agregaty. Ustaw na 0, aby wyłączyć agregacje."
-    ai_audit_logs_purge_after_days: "Usuń dzienniki audytu API AI starsze niż podana liczba dni. Domyślnie około 6 miesięcy. Ustaw na 0, aby zachować je na czas nieokreślony."
+    ai_audit_logs_detailed_retention_days: "Zachowaj surowe ładunki żądań i odpowiedzi AI przez określoną liczbę dni. Ustaw na 0, aby zachować ładunki do momentu usunięcia dziennika podsumowania. Surowe ładunki mogą zawierać treści prywatne lub poufne. Czyszczenie będzie kontynuowane, gdy wtyczka AI będzie wyłączona."
+    ai_audit_logs_purge_after_days: "Zachowaj podsumowania logów audytu API AI przez określoną liczbę dni przed usunięciem całego logu. Ustaw na 0, aby zachować podsumowania na zawsze. Czyszczenie będzie kontynuowane, gdy wtyczka AI będzie wyłączona."
   reviewables:
     reasons:
       flagged_by_toxicity: Wtyczka AI oznaczyła to po sklasyfikowaniu jako toksyczne.
@@ -288,6 +294,7 @@ pl_PL:
     discourse_workflows:
       ai_agent:
         errors:
+          invalid_mode: "„%{mode}” nie jest obsługiwanym trybem wykonywania agenta AI."
           locked_default_llm_missing: "Agent „%{agent}” jest zablokowany na swoim domyślnym LLM, ale nie skonfigurowano żadnego prawidłowego domyślnego LLM"
           llm_not_found: "Nie znaleziono modelu LLM o identyfikatorze %{llm_model_id}"
           no_llm_configured: "Nie skonfigurowano LLM dla agenta „%{agent}”. Wybierz model LLM lub skonfiguruj domyślny LLM agenta/lokacji."
@@ -373,7 +380,7 @@ pl_PL:
         unknown_error: "Wystąpił nieoczekiwany błąd podczas generowania miniatur. Spróbuj ponownie."
       prompts:
         translate: Przetłumacz na %{language}
-        generate_titles: Zaproponuj tytuły tematu
+        generate_titles: Zaproponuj tytuł tematu
         proofread: Popraw tekst
         markdown_table: Wygeneruj tabelę Markdown
         custom_prompt: "Niestandardowy monit"
@@ -416,10 +423,39 @@ pl_PL:
       configuration_missing: "Brakuje konfiguracji wykrywania spamu przez AI. Dodaj konfigurację w sekcji „Administrator > Wtyczki > Discourse AI > Spam” przed włączeniem."
       logging_subject: "Wykrywanie spamu"
     ai_bot:
+      errors:
+        invalid_agent_id: "Określony agent AI nie istnieje lub nie masz do niego dostępu"
+        cannot_send_pm_to_agent: "Nie możesz wysyłać wiadomości osobistych do tego agenta AI"
       reply_error: "Przepraszamy, wygląda na to, że nasz system napotkał nieoczekiwany problem podczas próby udzielenia odpowiedzi.\n\n[details='Szczegóły błędu']\n%{details}\n[/details]"
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie"
       tool_pending_approval: "Aby wykonać tę czynność, wymagana jest zgoda moderatora."
+      spawn_agent:
+        description: "Deleguj samodzielny monit do jednego z dozwolonych agentów i zwróć jego odpowiedź"
+        prompt_description: "Kompletny, samodzielny monit wysyłany do wybranego agenta i wyświetlany w bloku myślowym"
+        summary: "Konsultacje %{agent}"
+        failed: "Nie udało się ukończyć delegowanego zadania."
+        unknown_agent: "podagent"
+      read_post:
+        unknown_post: "post"
+      tool_errors:
+        invocation_limit_reached: "To narzędzie osiągnęło skonfigurowany limit wywołań. Wykorzystaj już zebrane dowody."
+      subagent_errors:
+        invalid_agent: "Żądany podagent jest nieprawidłowy."
+        invalid_prompt: "Wymagany jest delegowany monit."
+        prompt_too_long: "Wyznaczony monit jest za długi."
+        missing_user: "Delegacja wymaga podania użytkownika inicjującego."
+        depth_limit: "Osiągnięto maksymalną głębokość delegowania."
+        unavailable_parent: "Agent macierzysty nie jest już dostępny."
+        agent_not_allowed: "Żądany podagent nie jest dozwolony."
+        unavailable_agent: "Żądany podagent jest niedostępny lub nie można uzyskać do niego dostępu."
+        missing_model: "Żądany podagent nie ma dostępnego modelu językowego."
+        call_limit: "Osiągnięto limit połączeń delegowanych."
+        completion_limit: "Osiągnięto limit ukończenia delegacji."
+        token_limit: "Budżet tokenów delegacyjnych został osiągnięty."
+        cancelled: "Zadanie delegowane zostało anulowane."
+        execution_failed: "Zadanie delegowane nie powiodło się."
+        approval_unavailable: "Narzędzia wymagające zatwierdzenia nie są dostępne w przypadku przebiegów delegowanych."
       chat_tool_approval:
         approved: "Zatwierdzone przez @%{username}."
         rejected: "Odrzucone przez @%{username}."
@@ -432,6 +468,11 @@ pl_PL:
         cannot_have_duplicate_tools: "Nie można mieć duplikatów narzędzi"
         native_tool_requires_forced_llm: "Narzędzia natywne dostawcy wymagają domyślnego LLM z włączoną opcją „Wymuś domyślny LLM”"
         native_tool_unsupported_by_llm: "Wybrany domyślny program LLM nie obsługuje żadnego z włączonych narzędzi natywnych dostawcy"
+        invalid_subagent_ids: "Identyfikatory podagentów muszą być listą liczb całkowitych"
+        too_many_subagents: "Agent może mieć maksymalnie %{max} podagentów"
+        subagent_self: "Agent nie może wybrać siebie jako podagenta"
+        subagents_not_found: "Wybrane identyfikatory podagentów nie istnieją: %{ids}"
+        subagent_tool_collision: "Agent z podagentami nie może skonfigurować narzędzia o nazwie spawn_agent"
         admin_dashboard_highlights:
           name: "Najważniejsze informacje na temat panelu administracyjnego"
           description: "Wyświetla krótki odczyt wyświetlany na górze panelu administracyjnego, wyjaśniając, co się zmieniło i na co należy zwrócić uwagę w tym okresie"
@@ -591,6 +632,13 @@ pl_PL:
           read_private:
             name: "Czytaj prywatnie"
             description: "Zezwól na dostęp do wszystkich tematów, do których użytkownik ma dostęp (domyślnie uwzględniane są tylko tematy publiczne)"
+        read_post:
+          read_private:
+            name: "Przeczytaj prywatne"
+            description: "Zezwól na dostęp do wpisów, które może zobaczyć użytkownik wnioskujący (domyślnie uwzględniane są tylko posty publiczne)"
+          max_invocations:
+            name: "Maksymalna liczba wywołań"
+            description: "Maksymalna liczba uruchomień tego narzędzia podczas jednej tury agenta; pozostaw puste pole, aby nie było limitu"
         search:
           search_private:
             name: "Wyszukaj prywatnie"
@@ -601,6 +649,15 @@ pl_PL:
           base_query:
             name: "Podstawowe zapytanie wyszukiwania"
             description: "Podstawowe zapytanie używane podczas wyszukiwania. Przykład: '#pilne' spowoduje dodanie '#pilne' do zapytania wyszukiwania i uwzględnienie tylko tematów z kategorią lub tagiem pilne."
+          max_invocations:
+            name: "Maksymalna liczba wywołań"
+            description: "Maksymalna liczba uruchomień tego narzędzia podczas jednej tury agenta; pozostaw puste pole, aby nie było limitu"
+          ignore_user_filter:
+            name: "Ignoruj filtr użytkownika"
+            description: "Ignoruj nazwy użytkowników dostarczone przez model, aby wyszukiwanie mogło znaleźć błędnie przypisaną treść"
+          absolute_urls:
+            name: "Bezwzględne adresy URL"
+            description: "Zwracaj kompletne adresy URL źródeł zamiast ścieżek względnych do forum"
         flag_post:
           flag_type:
             name: "Typ flagi"
@@ -612,9 +669,16 @@ pl_PL:
         web_fetch:
           name: "Pobieranie z sieci (natywne)"
           help: "Umożliwia modelowi otwieranie i odczytywanie stron internetowych przy użyciu wbudowanego dostępu do sieci dostawcy, gdy agent jest wymuszony przez obsługiwany protokół LLM."
+        google_maps:
+          name: "Mapy Google (natywne)"
+          help: "Umożliwia modelowi korzystanie z bieżących danych o miejscu i lokalizacji Map Google, gdy agent jest zmuszony do korzystania z obsługiwanego modelu Gemini LLM."
+        code_execution:
+          name: "Wykonywanie kodu (natywne)"
+          help: "Umożliwia modelowi pisanie i uruchamianie kodu Python w piaskownicy dostawcy, gdy agent jest wymuszony do obsługiwanego Gemini LLM."
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
+        view_image: "Sprawdź obraz"
         update_artifact: "Zaktualizuj artefakt sieciowy"
         create_artifact: "Utwórz artefakt sieciowy"
         web_browser: "Przeglądaj sieć"
@@ -624,6 +688,7 @@ pl_PL:
         github_diff: "Różnica GitHub"
         random_picker: "Losowy selektor"
         categories: "Wymień kategorie"
+        users: "Wyświetl użytkowników"
         flag_post: "Oflaguj post"
         close_topic: "Zamknij temat"
         suspend_user: "Zawieś użytkownika"
@@ -651,6 +716,7 @@ pl_PL:
         image: "Wygeneruj obraz"
         google: "Szukaj w Google"
         read: "Przeczytaj temat"
+        read_post: "Przeczytaj wpis"
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukiwanie ustawień witryny"
@@ -666,6 +732,7 @@ pl_PL:
       tool_help:
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
         search_uploaded_documents: "Wyszukaj dokumenty przesłane do tego agenta"
+        view_image: "Sprawdź obraz dostępny podczas tego zadania"
         update_artifact: "Aktualizuj artefakt sieciowy za pomocą bota AI"
         create_artifact: "Utwórz artefakt sieciowy za pomocą bota AI"
         web_browser: "Przeglądaj stronę internetową za pomocą bota AI"
@@ -675,6 +742,7 @@ pl_PL:
         github_diff: "Pobierz pull request z GitHub lub zatwierdź różnicę"
         random_picker: "Wybierz losową liczbę lub losowy element listy"
         categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
+        users: "Wyświetl użytkowników na forum"
         flag_post: "Oflaguj bieżący wpis do sprawdzenia przez zespół"
         close_topic: "Zamknij lub otwórz temat"
         suspend_user: "Zawieś (zablokuj) użytkownika, uniemożliwiając mu logowanie się lub publikowanie"
@@ -704,6 +772,7 @@ pl_PL:
         edit_image: "Edytuj obraz za pomocą modelu obrazu GPT Open AI"
         google: "Wyszukaj zapytanie w Google"
         read: "Przeczytaj temat publiczny na forum"
+        read_post: "Przeczytaj jeden konkretny wpis na forum"
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukaj ustawienia witryny"
@@ -715,6 +784,7 @@ pl_PL:
         researcher: "Informacje o forum badawczym z wykorzystaniem bota AI"
       tool_description:
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
+        view_image: "Przeanalizowano obraz dostępny podczas tego zadania"
         search_uploaded_documents:
           one: "Znaleziono %{count} przesłany fragment dokumentu dla „%{query}”"
           few: "Znaleziono %{count} przesłane fragmenty dokumentu dla „%{query}”"
@@ -748,6 +818,7 @@ pl_PL:
         assign: "Przypisanie tematu %{topic_id} (przypisano: %{assigned})"
         mark_as_solved: "Oznaczanie wpisu %{post_id} jako rozwiązany (rozwiązany: %{solved})"
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
+        read_post: "Czytanie wpisu: <a href='%{url}'>%{title}</a>"
         time: "Czas w %{timezone} wynosi %{time}"
         summarize: "Podsumowano <a href='%{url}'>%{title}</a>"
         set_topic_summary: "Ustaw ostateczne krótkie podsumowanie tematu"
@@ -760,6 +831,11 @@ pl_PL:
           few: "Znaleziono %{count} kategorie"
           many: "Znaleziono %{count} kategorii"
           other: "Znaleziono %{count} kategorii"
+        users:
+          one: "Znaleziono %{count} użytkownika"
+          few: "Znaleziono %{count} użytkowników"
+          many: "Znaleziono %{count} użytkowników"
+          other: "Znaleziono %{count} użytkowników"
         tags:
           one: "Znaleziono %{count} tag"
           few: "Znaleziono %{count} tagi"
@@ -1056,6 +1132,12 @@ pl_PL:
       secret_not_found: "Wybrane poświadczenie nie istnieje"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."
       bedrock_missing_auth: "AWS Bedrock wymaga skonfigurowania Access Key ID lub Role ARN"
+      native_vision_cannot_delegate: "Wprowadzanie obrazu natywnego nie może korzystać z innego modelu widzenia"
+      vision_model_required: "Należy wybrać model wizji"
+      vision_model_not_found: "Wybrany model wizji nie istnieje"
+      vision_model_cannot_be_self: "Model nie może używać siebie jako modelu swojej wizji"
+      vision_model_must_be_native: "Wybrany model wizji musi obsługiwać natywne wprowadzanie obrazów"
+      vision_model_has_dependents: "Ten model zapewnia wizję dla: %{models}. Najpierw skonfiguruj ponownie te modele."
     ai_staff_action_logger:
       updated: "zaktualizowane"
       set: "ustaw"
@@ -1106,4 +1188,5 @@ pl_PL:
         many: "Niestandardowe narzędzia o nazwach %{names} już istnieją."
         other: "Niestandardowe narzędzia o nazwach %{names} już istnieją."
       mcp_server_missing: "Następujące serwery MCP nie są skonfigurowane na tej stronie: %{names}."
+      subagents_missing: "Następujące podagenty nie są skonfigurowane w tej witrynie: %{names}."
       mcp_server_tools_not_found: "Na tej stronie nie są dostępne żadne pasujące narzędzia z serwera MCP %{name}."

@@ -191,8 +191,20 @@ he:
       nodes:
         "trigger:assigned": "מוקצה"
       assign_topic:
+        resource: "משאב"
+        resources:
+          topic: "נושא"
+          post: "פוסט"
         operations:
           assign: "הקצאה"
           unassign: "ביטול הקצאה"
         topic_id: "מזהה נושא"
+        post_id: "מזהה פוסט"
+        assignee: "ממונה"
+      check_assignment:
+        target_types:
+          topic: "נושא"
+          post: "פוסט"
+        topic_id: "מזהה נושא"
+        post_id: "מזהה פוסט"
         assignee: "ממונה"

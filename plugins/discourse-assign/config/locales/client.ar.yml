@@ -31,6 +31,8 @@ ar:
       status_change: "تم تغيير حالة التعيين لـ %{who} في %{when}"
     discourse_assign:
       add_unassigned_filter: "إضافة المرشح \"غير المعيَّنة\" إلى الفئة"
+      additional_assign_allowed_groups: "المجموعات الإضافية ذات إذن التعيين"
+      additional_assign_allowed_groups_description: "يمكن لأعضاء تلك المجموعات تعيين الموضوعات في هذه الفئة. يتم عرض المجموعات المسموح بها بشكلٍ عام، ولا يمكن إزالتها من هنا. لا تنطبق إعدادات الفئة الرئيسية على الفئات الفرعية."
       cant_act: "لا يمكنك اتخاذ إجراء بشأن البلاغات التي تم تعيينها إلى مستخدمين آخرين"
       cant_act_unclaimed: "يجب عليك المطالبة بملكية هذا الموضوع قبل اتخاذ إجراء بشان البلاغات."
       topic_search_placeholder: "البحث في الموضوعات بالعنوان أو محتوى المنشور"
@@ -217,12 +219,32 @@ ar:
       topic: "الموضوع"
       post: "المنشور"
     discourse_workflows:
+      node_unavailable:
+        requires_assign: "يتطلَّب تفعيل المكوِّن الإضافي لتعيين الموضوعات"
       nodes:
-        "action:assign_topic": "تعيين موضوع"
         "trigger:assigned": "تم التعيين"
+      node_descriptions:
+        "trigger:assigned": "يتم تشغيله عند تعيين موضوع أو منشور"
       assign_topic:
+        resource: "المورد"
+        resources:
+          topic: "الموضوع"
+          post: "المنشور"
+        operation: "العملية"
         operations:
           assign: "تعيين"
           unassign: "إلغاء التعيين"
         topic_id: "معرِّف الموضوع"
+        post_id: "معرِّف المنشور"
         assignee: "المعيَّن"
+        replace_existing: "استبدال التعيين الحالي"
+      check_assignment:
+        target_types:
+          topic: "الموضوع"
+          post: "المنشور"
+        topic_id: "معرِّف الموضوع"
+        post_id: "معرِّف المنشور"
+        assignee: "المعيَّن"
+      assigned:
+        topic_assignments_only: "التشغيل فقط عندما يكون هدف التعيين هو الموضوع وليس منشورًا فرديًا"
+        topic_assignments_only_description: "تعيينات الموضوعات فقط"

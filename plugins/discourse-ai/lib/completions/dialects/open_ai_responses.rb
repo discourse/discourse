@@ -97,7 +97,9 @@ module DiscourseAi
 
           user_message = { role: }
 
-          content_array << "#{msg[:id]}: " if msg[:id]
+          if (prefix = user_id_prefix(msg))
+            content_array << prefix
+          end
 
           content_array << msg[:content]
 

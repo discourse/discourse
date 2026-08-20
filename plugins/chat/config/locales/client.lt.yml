@@ -65,6 +65,8 @@ lt:
       cancel: "Atšaukti"
       cancel_reply: "Atšaukti atsakymą"
       chat_channels: "Kanalai"
+      pinned_bar:
+        title: "Prisegta"
       pinned: "Prisegta"
       browse_all_channels: "Naršyti visus kanalus"
       see_in: "Žiūrėti"
@@ -300,3 +302,9 @@ lt:
         message: "Žinutės"
       chat_approval:
         message: "Žinutės"
+        buttons: "Mygtukai"
+        value: "Reikšmė"
+        style_default: "Numatytasis"
+        style_primary: "Pagrindinė"
+        style_success: "Sėkmingai"
+        icon: "Ikona"

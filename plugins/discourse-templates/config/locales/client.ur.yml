@@ -7,17 +7,18 @@
 ur:
   admin_js:
     discourse_templates:
-      title: "ٹَیمپلیٹ"
+      title: "سانچے"
     admin:
       site_settings:
         categories:
-          discourse_templates: "ڈسکورس سانچے"
+          discourse_templates: "Discourse Templates"
   js:
     keyboard_shortcuts_help:
       templates:
         title: "سانچے (ایک متن علاقہ کے اندر)"
         insert_template: "%{shortcut} سانچہ ڈالیں"
     templates:
+      filter_hint: "الفاظ سے فلٹر کریں"
       insert_template: "سانچہ ڈالیں"
       close_templates: "سانچے منتخب کرنے کو بند کریں۔"
       copy: "سانچہ کاپی"

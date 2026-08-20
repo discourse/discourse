@@ -39,7 +39,7 @@ class UpcomingChanges::Toggle
   end
 
   def setting_is_available(params:)
-    SiteSetting.respond_to?(params.setting_name)
+    UpcomingChanges.exists?(params.setting_name)
   end
 
   def toggle(params:, guardian:, options:)

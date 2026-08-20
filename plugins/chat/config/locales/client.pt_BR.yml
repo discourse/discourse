@@ -75,6 +75,8 @@ pt_BR:
         close: "Fechar mensagens fixadas"
         pinned_by_you: "Fixada por você"
         pinned_by_user: "Fixada por %{username}"
+      pinned_bar:
+        title: "Fixada"
       no_pinned_messages: "Não há mensagens fixadas neste canal."
       pin_message: "Fixar mensagem"
       unpin_message: "Desafixar mensagem"
@@ -814,4 +816,11 @@ pt_BR:
         message: "Mensagem"
       chat_approval:
         message: "Mensagem"
+        buttons: "Botões"
+        value: "Valor"
+        style: "Estilo"
+        style_default: "Padrão"
+        style_primary: "Primário"
+        style_success: "Sucesso"
+        icon: "Ícone"
         channel_id: "Canal"

@@ -218,10 +218,9 @@ export function defaultCategoryLinkRenderer(category, opts) {
     html += buildTopicCount(opts.topicCount);
   }
 
-  if (opts.subcategoryCount) {
+  if (opts.hasSubcategories) {
     html += `<span class="plus-subcategories">${i18n(
-      "category_row.subcategory_count",
-      { count: opts.subcategoryCount }
+      "category_row.subcategories"
     )}</span>`;
   }
 

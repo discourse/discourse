@@ -50,6 +50,9 @@ ur:
         description: "تفصیل"
         actions: "عمل"
         settings: "ترتیبات"
+        no_channels: "اس زمرے سے منسلک کوئی گفتگو کے چینلز نہیں ہیں"
+        no_channels_body: "آپ ہر زمرے کے لیے متعدد چینلز رکھ سکتے ہیں، جو زمرے کی سیکیورٹی ترتیبات کی بنیاد پر اس زمرے کے اراکین کے لیے قابلِ رسائی ہوں گے۔ <a href='%{chatBrowseUrl}'>ایک گفتگو کا چینل بنائیں۔</a>"
+        include_subcategories: "ذیلی زمروں کے چینلز شامل کریں"
       text_copied: متن کلپ بورڈ پر کاپی ہوا
       link_copied: رابطہ کلپ بورڈ پر کاپی ہوا
       back_to_forum: "فورم"
@@ -64,9 +67,24 @@ ur:
       cancel: "منسوخ"
       cancel_reply: "جواب منسوخ کریں"
       chat_channels: "چینلز"
+      starred: "مقبول"
+      starred_channels: "مقبول چینلز"
+      starred_channels_empty: "آپ نے ابھی تک کسی بھی چینل کو مقبول نہیں بنایا ہے۔ جلد رسائی کے لیے چینلز کو مقبول بنائیں جو یہاں دیکھائی دینگے۔"
+      pinned_messages:
+        title: "پن کیے گئے پیغامات"
+        close: "پن کیے گئے پیغامات بند کریں"
+        pinned_by_you: "آپ نے پن کیا"
+        pinned_by_user: "%{username} نے پن کیا"
+      pinned_bar:
+        title: "پِن شدہ"
+        jump_to_pinned: "پن کردہ پیغام پر جائیں"
+      no_pinned_messages: "اس چینل میں کوئی پن کیے گئے پیغامات نہیں ہیں۔"
+      pin_message: "پن کیا پیغام"
+      unpin_message: "پیغام کو ان پن کریں"
       pinned: "پِن ہوا"
       browse_all_channels: "تمام چینلز کو براؤز کریں"
       see_in: "میں دیکھیں"
+      open_channel_menu: "چینل مینو کھولیں"
       move_to_channel:
         title: "پیغامات کو چینل پر منتقل کریں"
         instructions:
@@ -81,13 +99,18 @@ ur:
         title: "چینل کی ترتیبات"
         edit: "ترمیم کریں"
         add: "اضافہ کریں"
+        star_channel: "مقبول چینل"
+        unstar_channel: "چینل کو غیر مقبول کریں"
         close_channel: "چینل بند"
         open_channel: "چینل کھولیں"
+        open_channel_disabled_archived: "آرکائیو کیے گئے چینلز دوبارہ نہیں کھولے جا سکتے۔"
+        open_channel_disabled_read_only: "صرف پڑھنے جانے والے چینلز دوبارہ نہیں کھولے جا سکتے۔"
         archive_channel: "آرکائیو چینل"
         delete_channel: "چینل کو حذف کریں"
         join_channel: "چینل جوائن کریں"
         leave_channel: "چینل چھوڑیں"
         leave_groupchat_info: "اس گروپ چیٹ کو چھوڑنے سے، آپ کو اس تک مزید رسائی حاصل نہیں ہوگی اور آپ کو اس سے متعلق اطلاعات موصول نہیں ہوں گی۔ دوبارہ شامل ہونے کے لیے، آپ کو گروپ چیٹ کے کسی رکن کے ذریعے دوبارہ مدعو کرنے کی ضرورت ہوگی۔"
+        notification_settings: "اطلاع کی ترتیبات"
         notification_settings_context: "اطلاعات"
         join: "شمولیت اختیار کریں"
         leave: "چھوڑ دیں"
@@ -168,14 +191,69 @@ ur:
             all: "کسی کو مطلع نہیں کیا جائے گا"
           unreachable_1: "@%{group} ذکر کی اجازت نہیں دیتا۔"
           unreachable_2: "@%{group1} اور @%{group2} تذکروں کی اجازت نہیں دیتے۔"
+          unreachable_multiple:
+            one: "@%{group} اور %{count} دیگر گروپ ذکر کی اجازت نہیں دیتے۔"
+            other: "@%{group} اور %{count} دیگر گروپس ذکر کی اجازت نہیں دیتے ہیں۔"
+        too_many_mentions:
+          one: "یہ پیغام %{count} ذکر کی اطلاع کی حد سے تجاوز کرتا ہے۔"
+          other: "یہ پیغام %{count} اذکار کی اطلاع کی حد سے تجاوز کرتا ہے۔"
+        too_many_mentions_admin:
+          one: 'یہ پیغام %{count} ذکر کی <a href="%{siteSettingUrl}" target="_blank"> اطلاع کی حد سے</a> تجاوز کر گیا ہے۔'
+          other: 'یہ پیغام %{count} اذکار کی <a href="%{siteSettingUrl}" target="_blank"> اطلاع کی حد سے</a> تجاوز کر گیا ہے۔'
+      aria_roles:
+        header: "گفتگو کے ہیڈر"
+        composer: "گفتگو کا کمپوزر"
+        channels_list: "گفتگو کے چینلز کی فہرست"
+      screen_reader:
+        new_message: "%{username}: %{message}"
+        new_messages:
+          one: "%{count} نیا پیغام"
+          other: "%{count} نئے پیغامات"
+        new_image:
+          one: "%{username} نے ایک تصویر بھیجی"
+          other: "%{username} نے %{count} تصاویر بھیجیں"
+        new_attachment:
+          one: "%{username} نے ایک منسلکہ بھیجا"
+          other: "%{username} نے %{count} منسلکات بھیجے"
+        new_message_with_image:
+          one: "%{username}: %{message} (تصویر کے ساتھ)"
+          other: "%{username}: %{message} ( %{count} تصاویر کے ساتھ)"
+        new_message_with_attachment:
+          one: "%{username}: %{message} (ایک منسلکہ کے ساتھ)"
+          other: "%{username}: %{message} ( %{count} منسلکات کے ساتھ)"
+      no_direct_message_channels: "آپ نے ابھی تک کسی براہِ راست پیغامات میں شامل نہیں ہوئے!"
+      no_direct_message_channels_cta: "گفتگو شروع کریں"
+      no_public_channels: "آپ نے ابھی تک کسی بھی چینل میں شمولیت اختیار نہیں کی!"
+      no_public_channels_cta: "چینلز براؤز کریں"
+      kicked_from_channel: "آپکی اب اس چینل تک رسائی نہیں۔"
+      chat_notifications_title: "گفتگو کی اطلاعات"
       personalization_title: "تخصيص"
+      accessibility_title: "رسائی"
       ignore_channel_wide_mention:
         title: "چینل بھر کے تذکروں کو نظر انداز کریں"
+      announce_new_messages:
+        title: "نئے پیغامات کو اسکرین ریڈرز پر دیکھائیں"
+      new_message_sound:
+        title: "نئے پیغامات کے لیے آواز استعمال کریں جب گفتگو کو دیکھا جا رہا ہو"
       show_thread_title_prompts:
+        title: "دھاگے کے عنوان کے اشارات دکھائیں"
         description: "نئے دھاگوں کے لیے عنوان سیٹ کرنے کے لیے بلا تاخیردکھائیں"
+      open: "گفتگو کھولیں"
+      open_full_page: "پورے اسکرین پر گفتگو کھولیں"
+      close_full_page: "پوری اسکرین پر گفتگو بند کریں"
+      open_message: "پیغام کو گفتگو میں کھولیں"
+      placeholder_self: "کچھ لکھیں"
       placeholder_channel: "%{channelName} میں چیٹ کریں"
       placeholder_thread: "دھاگے میں چیٹ کریں"
+      placeholder_users: "%{commaSeparatedNames} کے ساتھ گفتگو کریں"
       placeholder_group: "گروپ میں چیٹ کریں"
+      placeholder_new_message_disallowed:
+        archived: "چینل آرکائیو ہے، آپ اب نئے پیغامات نہیں بھیج سکتے۔"
+        closed: "چینل بند ہے، آپ ابھی نئے پیغامات نہیں بھیج سکتے۔"
+        read_only: "چینل صرف پڑھنے کے لیے ہے، آپ اس وقت نئے پیغامات بھیج نہیں سکتے۔"
+      placeholder_silenced: "آپ اس وقت پیغامات نہیں بھیج سکتے ہیں۔"
+      remove_upload: "فائل حذف کریں"
+      react: "ایموجی کے ساتھ ردِ عمل دیں"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"
@@ -275,10 +353,26 @@ ur:
         memberships_count:
           one: "%{count} رکن"
           other: "%{count} اراکین"
+        empty_state:
+          direct_message_title: "%{name} کے ساتھ گفتگو کا آغاز کریں"
         preview_card:
+          guest_body: "پڑھنا سب کے لیے مفت ہے۔ دھاگہ بنانا، ردعمل دینے اور جواب دینے کے لیے سائن اپ کریں — اس میں تقریباً 30 سیکنڈ لگتے ہیں۔"
+          join_body: "آپ دھاگہ بنا اور جواب دے سکیں گے، اور یہ آپ کی چینل فہرست میں دکھائی دے گا۔"
+          no_access_title: "آپ %{channelName} میں شامل نہیں ہو سکتے"
+          no_access_body: "یہ چینل فی الحال نئے اراکین کے لیے نہیں ہے۔"
           log_in: "لاگ ان"
           sign_up: "سائن اپ"
       create_channel:
+        threading:
+          label: "تھریڈنگ کو فعال کریں"
+        auto_join_users:
+          public_category_warning: "%{category} ایک عوامی زمرہ ہے۔ کیا خود بخود حال ہی میں تمام فعال صارفین کو اس چینل میں شامل کیا جائے؟"
+          warning_1_group:
+            one: "خود بخود %{group} سے %{count} صارف شامل کریں؟"
+            other: "خود بخود %{group} سے %{count} صارفین شامل کریں؟"
+          warning_2_groups:
+            one: "خود بخود %{group1} اور %{group2} سے %{count} صارف کو شامل کریں؟"
+            other: "خود بخود %{group1} اور %{group2} سے %{count} صارفین کو شامل کریں؟"
         choose_category:
           label: "ایک زمرہ منتخب کریں"
           none: "ایک کو منتخب کریں..."
@@ -436,4 +530,11 @@ ur:
         message: "پیغام"
       chat_approval:
         message: "پیغام"
+        buttons: "بٹن"
+        value: "وَیلِیو"
+        style: "ظرز"
+        style_default: "ڈِیفالٹ"
+        style_primary: "بنیادی"
+        style_success: "کامیابی"
+        icon: "آئیکن"
         channel_id: "چَینل"

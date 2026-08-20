@@ -66,6 +66,8 @@ ja:
       starred: "スター付き"
       starred_channels: "スター付きのチャンネル"
       starred_channels_empty: "まだどのチャンネルにもスターを設定していません。チャンネルにスターを設定すると、ここで素早くアクセスできます。"
+      pinned_bar:
+        title: "固定"
       pinned: "固定"
       browse_all_channels: "すべてのチャンネルを閲覧する"
       see_in: "表示:"
@@ -735,4 +737,11 @@ ja:
         message: "メッセージ"
       chat_approval:
         message: "メッセージ"
+        buttons: "ボタン"
+        value: "値"
+        style: "スタイル"
+        style_default: "デフォルト"
+        style_primary: "プライマリー"
+        style_success: "成功"
+        icon: "アイコン"
         channel_id: "チャンネル"

@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import Site from "discourse/models/site";
 import Tag from "discourse/models/tag";
 
@@ -20,6 +21,59 @@ module("Unit | Model | site", function (hooks) {
     assert.present(site.categories, "The instance has a list of categories");
     assert.present(site.flagTypes, "The instance has a list of flag types");
     assert.present(site.trustLevels, "The instance has a list of trust levels");
+  });
+
+  test("groupsById", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const group = { id: 42, name: "test-group", full_name: "Test group" };
+    const site = store.createRecord("site", { groups: [group] });
+
+    assert.strictEqual(
+      site.groupsById[AUTO_GROUPS.admins.id],
+      AUTO_GROUPS.admins,
+      "includes automatic groups"
+    );
+    assert.strictEqual(
+      site.groupsById[group.id],
+      group,
+      "includes groups provided by the site"
+    );
+  });
+
+  test("groupName", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", {
+      groups: [{ id: 42, name: "test-group", full_name: "Test group" }],
+    });
+
+    assert.strictEqual(
+      site.groupName(42),
+      "test-group",
+      "returns the group's name"
+    );
+    assert.strictEqual(
+      site.groupName(999),
+      null,
+      "returns null when the group is not found"
+    );
+  });
+
+  test("groupFullName", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", {
+      groups: [{ id: 42, name: "test-group", full_name: "Test group" }],
+    });
+
+    assert.strictEqual(
+      site.groupFullName(42),
+      "Test group",
+      "returns the group's full name"
+    );
+    assert.strictEqual(
+      site.groupFullName(999),
+      null,
+      "returns null when the group is not found"
+    );
   });
 
   test("create categories", function (assert) {

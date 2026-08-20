@@ -19,6 +19,12 @@ module PageObjects
         find(".d-modal.#{@penalty_type}-user-modal")
       end
 
+      def suspend(reason, date: "tomorrow")
+        fill_in_suspend_reason(reason)
+        set_future_date(date)
+        perform
+      end
+
       def fill_in_suspend_reason(reason)
         find("input.suspend-reason").fill_in with: reason
       end

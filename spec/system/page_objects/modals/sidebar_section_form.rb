@@ -12,7 +12,6 @@ module PageObjects
         fill_in("link-url", with: url, match: :first)
         icon_picker = first_link_icon_picker
         icon_picker.expand
-        icon_picker.filter(icon)
         icon_picker.select_icon(icon)
       end
 
@@ -26,7 +25,6 @@ module PageObjects
 
             icon_picker = PageObjects::Components::DIconGridPicker.new(link_row)
             icon_picker.expand
-            icon_picker.filter(icon)
             icon_picker.select_icon(icon)
           end
       end
@@ -50,45 +48,30 @@ module PageObjects
         all(".delete-link").last.click
       end
 
-      def add_section_title_translation
-        find(".add-localization").click
+      def open_translations
+        find(".sidebar-section-form__manage-translations").click
+        self
       end
 
-      def add_section_localization(title)
-        add_section_title_translation
-        all(section_title_translation_locale_selector)
-          .last
-          .find("option[value='ja']", visible: :all)
-          .select_option
-        all(
-          "input[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.title_label")}']",
-        ).last.fill_in(with: title)
+      def close_translations
+        find(".sidebar-section-translations__back").click
+        self
       end
 
-      def add_first_link_localization(name)
-        find(".add-link-localization", match: :first).click
-        all("select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}']")
-          .last
-          .find("option[value='ja']")
-          .select_option
-        all(
-          "input[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.link_label")}']",
-        ).last.fill_in(with: name)
+      def add_language(locale)
+        find(".sidebar-section-translations__add-language").click
+        PageObjects::Components::DSelect.new(translation_language_selects.last).select(locale)
       end
 
-      def add_last_link_localization(name)
-        primary_links_wrapper
-          .all(".sidebar-section-form-link-wrapper")
-          .last
-          .find(".add-link-localization")
-          .click
-        all("select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}']")
-          .last
-          .find("option[value='ja']")
-          .select_option
-        all(
-          "input[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.link_label")}']",
-        ).last.fill_in(with: name)
+      def remove_language(locale)
+        translation_language(locale).find(".sidebar-section-translations__remove-language").click
+      end
+
+      def fill_translation(locale, source, value)
+        translation_language(locale)
+          .find(".sidebar-section-translations__row", text: source)
+          .find("input")
+          .fill_in(with: value)
       end
 
       def delete
@@ -96,18 +79,25 @@ module PageObjects
       end
 
       def confirm_delete
-        find(".dialog-container .btn-danger").click
+        PageObjects::Components::Dialog.new.click_danger
         closed?
       end
 
       def confirm_update
-        find(".dialog-container .btn-primary").click
+        confirm_dialog
         closed?
+      end
+
+      def confirm_dialog
+        dialog = PageObjects::Components::Dialog.new
+        dialog.click_yes
+        dialog.closed?
+        self
       end
 
       def reset
         find(".reset-link").click
-        find(".dialog-footer .btn-primary").click
+        PageObjects::Components::Dialog.new.click_yes
         closed?
         self
       end
@@ -134,42 +124,64 @@ module PageObjects
       end
 
       def has_localization_controls?
-        page.has_css?(".sidebar-section-form__localization-row") &&
-          page.has_css?(".add-localization") && page.has_css?(".add-link-localization")
+        page.has_css?(".sidebar-section-form__manage-translations")
       end
 
       def has_no_localization_controls?
-        page.has_no_css?(".sidebar-section-form__localization-row") &&
-          page.has_no_css?(".add-localization") && page.has_no_css?(".add-link-localization")
+        page.has_no_css?(".sidebar-section-form__manage-translations")
       end
 
       def has_locale_option?(locale)
         page.has_css?(
-          "select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}'] option[value='#{locale}']",
+          ".sidebar-section-translations__language-select option[value='#{locale}']",
           visible: :all,
         )
       end
 
       def has_no_locale_option?(locale)
         page.has_no_css?(
-          "select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}'] option[value='#{locale}']",
+          ".sidebar-section-translations__language-select option[value='#{locale}']",
           visible: :all,
         )
       end
 
-      def section_title_translation_locales
-        all(section_title_translation_locale_selector).map(&:value)
+      def has_translation_languages?(count)
+        page.has_css?(".sidebar-section-translations__language", count:)
       end
 
-      def has_disabled_section_title_translation_locale?(row, locale)
-        all(section_title_translation_locale_selector)[row].has_css?(
-          "option[value='#{locale}'][disabled]",
+      def has_translation_row?(locale, source)
+        page.has_css?(translation_row_selector(locale), text: source)
+      end
+
+      def has_no_translation_row?(locale, source)
+        page.has_no_css?(translation_row_selector(locale), text: source)
+      end
+
+      def has_translation_language?(locale)
+        page.has_css?(translation_language_selector(locale))
+      end
+
+      def has_selected_translation_language?(locale)
+        page.has_css?(
+          "#{translation_language_selector(locale)} " \
+            ".sidebar-section-translations__language-select option[value='#{locale}']:checked",
           visible: :all,
         )
       end
 
-      def has_no_add_section_title_translation?
-        page.has_no_css?(".add-localization")
+      def has_no_translation_language?(locale)
+        page.has_no_css?(translation_language_selector(locale))
+      end
+
+      def has_disabled_translation_locale?(locale, disabled)
+        translation_language(locale).has_css?(
+          ".sidebar-section-translations__language-select option[value='#{disabled}'][disabled]",
+          visible: :all,
+        )
+      end
+
+      def has_no_add_language?
+        page.has_no_css?(".sidebar-section-translations__add-language")
       end
 
       def has_section_links_label?
@@ -192,10 +204,39 @@ module PageObjects
         find(".draggable[data-link-name='Review']")
       end
 
+      def has_source_language?(locale)
+        page.has_css?(
+          ".sidebar-section-form__source-locale-select option[value='#{locale}']:checked",
+          visible: :all,
+        )
+      end
+
+      def has_no_source_language_control?
+        page.has_no_css?(".sidebar-section-form__source-locale")
+      end
+
+      def select_source_language(locale)
+        PageObjects::Components::DSelect.new(".sidebar-section-form__source-locale-select").select(
+          locale,
+        )
+      end
+
       private
 
-      def section_title_translation_locale_selector
-        ".sidebar-section-form > .sidebar-section-form__localizations select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}']"
+      def translation_language(locale)
+        find(translation_language_selector(locale))
+      end
+
+      def translation_language_selector(locale)
+        ".sidebar-section-translations__language[data-locale='#{locale}']"
+      end
+
+      def translation_row_selector(locale)
+        "#{translation_language_selector(locale)} .sidebar-section-translations__row"
+      end
+
+      def translation_language_selects
+        all(".sidebar-section-translations__language-select")
       end
 
       def primary_links_wrapper

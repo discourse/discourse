@@ -16,6 +16,8 @@ hu:
         image_generation_custom:
           name: "Egyéni"
     ai_bot:
+      read_post:
+        unknown_post: "bejegyzéssel"
       tool_summary:
         suspend_user: "Felhasználó felfüggesztése"
         silence_user: "Felhasználó némítása"

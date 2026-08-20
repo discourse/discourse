@@ -284,7 +284,7 @@ class PostSerializer < BasicPostSerializer
 
   def include_localized_oneboxes?
     SiteSetting.content_localization_enabled && @topic_view.present? &&
-      !ContentLocalization.show_original?(scope) &&
+      ContentLocalization.automatically_translate?(scope) &&
       @topic_view.localized_oneboxes[object.id].present?
   end
 
@@ -738,7 +738,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable
-    @reviewable ||= Reviewable.where(target: object).includes(:reviewable_scores).first
+    @reviewable ||=
+      Reviewable
+        .where(target: object, type: Reviewable.sti_names)
+        .includes(:reviewable_scores)
+        .first
   end
 
   def reviewable_scores

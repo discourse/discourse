@@ -31,6 +31,7 @@ import MultiSelectHeader from "./multi-select/multi-select-header";
   caretDownIcon: "caretIcon",
   caretUpIcon: "caretIcon",
   useHeaderFilter: false,
+  useHeaderSelectedCount: false,
 })
 @pluginApiIdentifiers(["multi-select"])
 export default class MultiSelect extends SelectKitComponent {
@@ -250,6 +251,7 @@ export default class MultiSelect extends SelectKitComponent {
                     @item={{item}}
                     @selectKit={{this.selectKit}}
                     @mandatoryValues={{@mandatoryValues}}
+                    @mandatoryValueTitle={{@mandatoryValueTitle}}
                   />
                 {{/each}}
               {{/let}}

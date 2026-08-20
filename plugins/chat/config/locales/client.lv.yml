@@ -21,6 +21,8 @@ lv:
         yesterday: "Vakar"
       create: "Izveidot"
       cancel: "Atcelt"
+      pinned_bar:
+        title: "Piesprausts"
       pinned: "Piesprausts"
       channel_settings:
         edit: "Rediģēt"
@@ -173,3 +175,9 @@ lv:
         message: "Ziņa"
       chat_approval:
         message: "Ziņa"
+        buttons: "Pogas"
+        value: "Vērtība"
+        style_default: "Noklusējums"
+        style_primary: "Primārais"
+        style_success: "Veiksmīgi"
+        icon: "Ikona"

@@ -68,6 +68,8 @@ el:
         close: "Κλείσιμο καρφιτσωμένων μηνυμάτων"
         pinned_by_you: "Καρφιτσώθηκε από εσάς"
         pinned_by_user: "Καρφιτσώθηκε από %{username}"
+      pinned_bar:
+        title: "Καρφιτσωμένο"
       no_pinned_messages: "Δεν υπάρχουν καρφιτσωμένα μηνύματα σε αυτό το κανάλι."
       pin_message: "Καρφίτσωμα μηνύματος"
       unpin_message: "Ξεκαρφίτσωμα μηνύματος"
@@ -661,4 +663,10 @@ el:
         message: "Μήνυμα"
       chat_approval:
         message: "Μήνυμα"
+        buttons: "Κουμπιά"
+        value: "Τιμή"
+        style: "Στυλ"
+        style_default: "Προεπιλογή"
+        style_success: "Επιτυχία"
+        icon: "Εικονίδιο"
         channel_id: "Κανάλι"

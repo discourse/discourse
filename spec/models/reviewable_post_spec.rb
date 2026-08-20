@@ -5,7 +5,7 @@ RSpec.describe ReviewablePost do
 
   describe "#build_actions" do
     let(:post) { Fabricate.build(:post) }
-    let(:reviewable) { ReviewablePost.new(target: post) }
+    let(:reviewable) { ReviewablePost.new(target: post, target_created_by: post.user) }
     let(:guardian) { Guardian.new }
 
     it "Does not return available actions when the reviewable is no longer pending" do
@@ -51,6 +51,25 @@ RSpec.describe ReviewablePost do
       actions = reviewable_actions(Guardian.new(admin))
 
       expect(actions.has?(:approve_and_restore)).to eq(false)
+    end
+
+    it "doesn't include the suspend action when the author is already suspended" do
+      post.user.suspended_till = 1.year.from_now
+      post.user.suspended_at = Time.zone.now
+
+      actions = reviewable_actions(Guardian.new(admin))
+
+      expect(actions.has?(:reject_and_suspend)).to eq(false)
+      expect(actions.has?(:reject_and_silence)).to eq(true)
+    end
+
+    it "doesn't include the silence action when the author is already silenced" do
+      post.user.silenced_till = 1.year.from_now
+
+      actions = reviewable_actions(Guardian.new(admin))
+
+      expect(actions.has?(:reject_and_suspend)).to eq(true)
+      expect(actions.has?(:reject_and_silence)).to eq(false)
     end
 
     def reviewable_actions(guardian)

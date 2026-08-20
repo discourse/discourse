@@ -159,13 +159,28 @@ export default class SiteSetting extends EmberObject {
     };
   }
 
+  get settingSubtype() {
+    if (this.list_type) {
+      return;
+    }
+
+    if (this.textarea) {
+      return "textarea";
+    }
+
+    if (this.secret) {
+      return "password";
+    }
+  }
+
   get definition() {
     return {
       key: this.setting,
-      label: this.humanized_name,
+      label: this.humanized_name || this.setting,
       description: trustHTML(this.description),
       type: this.type,
       list_type: this.list_type,
+      subtype: this.settingSubtype,
       min: this.min,
       max: this.max,
       choices: this.choices,

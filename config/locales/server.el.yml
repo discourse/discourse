@@ -642,16 +642,15 @@ el:
     success_unapproved: "Αλλάξατε επιτυχώς τον κωδικό πρόσβασής σας"
   email_login:
     title: "Σύνδεση μέσω email"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Εφαρμογή DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Εφαρμογή DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "άγνωστος περιηγητής"
     device:
       android: "Συσκευή Android"
       chromebook: "Chrome OS"
@@ -671,6 +670,10 @@ el:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "άγνωστο λειτουργικό σύστημα"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Συνδεδεμένοι"
+      anonymous: "Ανώνυμοι"
   change_email:
     error: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Ίσως αυτή η διεύθυνση είναι ήδη σε χρήση;"
     error_staged: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Η δεύθυνση αυτή χρησιμοποιείται ήδη από αλλό χρήστη. "
@@ -1065,6 +1068,9 @@ el:
       description: "Οι χώρες από τις οποίες προέρχονται οι περισσότερες προβολές σελίδων μέσω προγράμματος περιήγησης στο φόρουμ σας κατά την επιλεγμένη περίοδο."
       labels:
         country_code: "Κωδικός χώρας"
+        count: "Επισκέψεις"
+    top_entry_urls:
+      labels:
         count: "Επισκέψεις"
     top_referrers_by_browser_pageviews:
       labels:
@@ -2515,9 +2521,6 @@ el:
     user_posted_pm_staged:
       title: "Χρήστης που ανάρτησε σταδιακό ΠΜ"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
@@ -2985,6 +2988,9 @@ el:
     title: "Έναρξη ασφαλούς λειτουργίας"
     enter: "Έναρξη Ασφαλούς Λειτουργίας"
     must_select: "Θα πρέπει να διαλέξτε τουλάχιστον μία επιλογή για να εισέλθετε σε ασφαλή λειτοθργία."
+  design_wizard:
+    palette_pairs:
+      default: "Προεπιλογή"
   wizard:
     title: "Εγκατάσταση Discourse"
     step:
@@ -3138,11 +3144,10 @@ el:
         title: "Όχι"
         delete:
           title: "Διαγραφή Χρήστη"
-          description: "Διαγραφή χρήστη χωρίς αποκλεισμό"
           complete: "Ο χρήστης διαγράφηκε."
         block:
           title: "Διαγραφή και αποκλεισμός χρήστη"
-          description: "Ο χρήστης θα διαγραφεί και θα μπλοκάρουμε την IP και τη διεύθυνση email του."
+          description: "Διαγράψτε τον χρήστη και αποκλείστε τη διεύθυνση email και τη διεύθυνση IP του"
           complete: "Ο χρήστης διαγράφηκε και αποκλείστηκε."
       confirm_spam:
         title: "Ναι "
@@ -3201,12 +3206,10 @@ el:
         bundle_title: "Τι θέλετε να κάνετε με τον χρήστη;"
       silence_user:
         title: "Σίγαση χρήστη"
-        description: "Αποτρέψτε τον χρήστη από το να δημοσιεύσει"
         complete: "Ο χρήστης τέθηκε σε σίγαση"
         reason: "Ο χρήστης τέθηκε σε σίγαση μέσω της ουράς αναθεώρησης"
       suspend_user:
         title: "Αναστολή χρήστη"
-        description: "Αναστολή του λογαριασμού χρήστη"
         complete: "Ο χρήστης τέθηκε σε αναστολή"
         reason: "Ο χρήστης τέθηκε σε αναστολή μέσω της ουράς αναθεώρησης"
       delete_user:

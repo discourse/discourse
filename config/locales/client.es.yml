@@ -478,17 +478,12 @@ es:
       pill: "Sugeridos"
       pm_title: "Mensajes sugeridos"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Empieza en %{step_count} sencillos pasos"
       congrats_onboarding_complete: "¡Enhorabuena por haber completado el proceso de incorporación!"
-      select_theme:
-        enabled: "Seleccionado"
       invite_collaborators:
         title: "Invitar colaboradores"
-        description: "Los primeros miembros ayudan a dar vida a tu comunidad"
         action: "Crear invitación"
       start_posting:
         title: "Empezar a publicar"
-        description: "Dale a la gente algo de qué hablar en conjunto"
         action: "Ver ideas"
         choose_option: "¿Cómo te gustaría empezar?"
         predefined_topics: "Plantillas para romper el hielo"
@@ -509,6 +504,26 @@ es:
           what_is_your_favorite_food:
             title: "¿Cuál es vuestra comida favorita?"
             body: "¡Compartid vuestra comida favorita con la comunidad! Empiezo yo: me encanta la pizza, sobre todo con extra de queso y pepperoni."
+    design_wizard:
+      back: "Atrás"
+      next: "Siguiente"
+      sections:
+        theme: "Tema"
+        fonts: "Tipos de letra"
+        homepage: "Página de inicio"
+      theme:
+        selected: "Seleccionado"
+      colors:
+        light: "Claro"
+        dark: "Oscuro"
+      fonts:
+        base_font: "Fuente base"
+        heading_font: "Tipo de letra para encabezados"
+      homepage:
+        topics: "Temas"
+        categories: "Categorías"
+        styles:
+          boxes: "Cajas"
     about:
       edit: "Editar esta página"
       simple_title: "Acerca de"
@@ -805,10 +820,6 @@ es:
       stale_help: "Este elemento ha sido resuelto por <b>%{username}</b>."
       claim_help:
         optional: "Puedes reclamar este elemento para evitar que otros lo revisen."
-        required: "Debes reclamar los elementos antes de poder revisarlos."
-        claimed_by_you: "Has reclamado este elemento y puedes revisarlo."
-        claimed_by_other: "Este elemento solo puede ser revisado por <b>%{username}</b>."
-        automatically_claimed_by: "<b>%{username}</b> ya está revisando este elemento."
       claim:
         title: "Asignarme este tema"
       unclaim:
@@ -845,6 +856,8 @@ es:
         email: "Correo electrónico"
         name: "Nombre"
         fields: "Campos"
+        silence_reason: "Motivo para silenciar"
+        penalty_forever: "Para siempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registro borrado por"
         scrubbed_reason: "Motivo"
@@ -1644,7 +1657,6 @@ es:
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto seleccionado"
       enable_smart_lists: "Activar listas inteligentes al escribir en el compositor"
-      enable_defer: "Activar marcar temas como no leídos"
       enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor"
       experimental_sidebar:
         enable: "Activar barra lateral"
@@ -2309,7 +2321,8 @@ es:
           email_placeholder: "nombre@ejemplo.com"
           invite_by_email: "Correo electrónico"
           restrict_domain: "Restringir a un dominio"
-          more_options: "Más opciones"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar enlace"
           update: "Actualizar"
           summary:
             role_member: "Miembro"
@@ -2322,7 +2335,7 @@ es:
             expires: "Caduca"
             topic: "Tema"
             groups: "Grupos"
-            edit: "Editar invitación"
+            edit: "Editar"
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -2854,6 +2867,7 @@ es:
       subcategory_count:
         one: "+%{count} subcategoría"
         other: "+%{count} subcategorías"
+      subcategories: "+ Subcategorías"
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
@@ -2926,6 +2940,7 @@ es:
       toggle: "Activar/desactivar filtros desplegables"
     d_icon_grid_picker:
       select_icon: "Seleccionar icono"
+      search_label: "Buscar iconos"
       search_placeholder: "Buscar iconos..."
       no_results: "No se han encontrado iconos"
       results_count:
@@ -3061,7 +3076,6 @@ es:
       italic_label: "I"
       italic_title: "Cursiva"
       italic_text: "Texto en cursiva"
-      heading_title: "Encabezados"
       heading_level_n: "Encabezado %{levelNumber}"
       heading_level_n_title: "Encabezado %{levelNumber}"
       heading_level_paragraph: "Párrafo"
@@ -3258,7 +3272,6 @@ es:
         other: "%{count} solicitudes de membresía pendientes para el grupo «%{group_name}»"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completado"
       new_features: "¡Nuevas características disponibles!"
       admin_problems: "Nuevos consejos en tu panel de control del sitio"
       upcoming_changes:
@@ -5368,9 +5381,9 @@ es:
           always_public: "El contenido de esta sección es siempre público"
           more_menu: "Menú Más"
           localizations:
-            title: "Traducciones"
             locale: "Idioma"
             title_label: "Título de la sección"
+            remove_language: "Eliminar"
           links:
             add: "Añadir otro enlace"
             delete: "Eliminar enlace"
@@ -6246,13 +6259,32 @@ es:
       new_features:
         title: "Novedades"
         check_for_updates: "Buscar actualizaciones"
+      site_traffic_explorer:
+        pageviews: "Vistas de página"
+        view_more: "Ver más"
+        cards:
+          pages: "Páginas"
+          visitors: "Visitantes"
+        columns:
+          countries: "País"
+          top_urls: "URL"
+          browsers: "Navegador"
+          ip_addresses: "Dirección IP"
+        filters:
+          country: "País"
+          browser: "Navegador"
+          ip: "Dirección IP"
+        metrics:
+          pageviews:
+            label: "Vistas de página"
+        series:
+          anonymous_human: "Anónimas"
       dashboard:
         title: "Panel de control"
         last_updated: "Última actualización del panel de control:"
         discourse_last_updated: "Última actualización de Discourse:"
         version: "Versión"
         up_to_date: "Estás en la última versión"
-        critical_available: "Actualización crítica disponible."
         updates_available: "Hay actualizaciones disponibles."
         please_update: "Por favor, ¡actualiza!"
         no_check_performed: "Todavía no se ha realizado ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."

@@ -443,6 +443,23 @@ describe PostRevisor do
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
+    describe "post type changes" do
+      let!(:opening_post) { Fabricate(:post, topic: topic) }
+      let!(:reply) { Fabricate(:post, topic: topic) }
+
+      it "rejects changing a post to a small action" do
+        expect(reply.revise(admin, post_type: Post.types[:small_action])).to eq(false)
+
+        expect(reply.reload.post_type).to eq(Post.types[:regular])
+      end
+
+      it "allows changing a post to a whisper" do
+        expect(opening_post.revise(admin, post_type: Post.types[:whisper])).to eq(true)
+
+        expect(opening_post.reload).to be_whisper
+      end
+    end
+
     it "destroys last revision if edit is undone" do
       old_raw = post.raw
 

@@ -752,6 +752,13 @@ class Theme < ActiveRecord::Base
       translations(internal: true, preloaded_locale_fields: preloaded_locale_fields)
   end
 
+  # preload and pass `:locale_fields` when iterating themes, to avoid N+1
+  def description(preloaded_locale_fields: locale_fields)
+    internal_translations(preloaded_locale_fields: preloaded_locale_fields)
+      .find { |translation| translation.key == "theme_metadata.description" }
+      &.value
+  end
+
   def translations(internal: false, preloaded_locale_fields: nil)
     fallbacks = I18n.fallbacks[I18n.locale]
     begin

@@ -203,19 +203,39 @@ en:
       node_unavailable:
         requires_assign: "Requires the Assign plugin to be enabled"
       nodes:
-        "action:assign_topic": "Assign topic"
+        "action:assign_topic": "Assign topic or post"
+        "action:check_assignment": "Check assignment"
         "trigger:assigned": "Assigned"
+        "trigger:unassigned": "Unassigned"
       node_descriptions:
-        "action:assign_topic": "Assign or unassign a topic"
+        "action:assign_topic": "Assign or unassign a topic or post"
+        "action:check_assignment": "Check whether a user or group is assigned to a topic or post"
         "trigger:assigned": "Fires when a topic or post is assigned"
+        "trigger:unassigned": "Fires when a topic or post is unassigned"
       assign_topic:
+        resource: "Resource"
+        resources:
+          topic: "Topic"
+          post: "Post"
         operation: "Operation"
         operations:
           assign: "Assign"
           unassign: "Unassign"
         topic_id: "Topic ID"
+        post_id: "Post ID"
         assignee: "Assignee"
         replace_existing: "Replace existing assignment"
+      check_assignment:
+        target_type: "Target type"
+        target_types:
+          topic: "Topic"
+          post: "Post"
+        topic_id: "Topic ID"
+        post_id: "Post ID"
+        assignee: "Assignee"
       assigned:
+        topic_assignments_only: "Only trigger when the assignment target is the topic, not an individual post"
+        topic_assignments_only_description: "Topic assignments only"
+      unassigned:
         topic_assignments_only: "Only trigger when the assignment target is the topic, not an individual post"
         topic_assignments_only_description: "Topic assignments only"

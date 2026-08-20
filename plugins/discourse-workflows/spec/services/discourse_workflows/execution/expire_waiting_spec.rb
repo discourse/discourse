@@ -6,7 +6,10 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
 
     fab!(:user)
 
-    def create_waiting_execution(timeout_minutes: nil, timeout_action: nil, limit_wait_time: true)
+    let(:timeout_minutes) { nil }
+    let(:timeout_action) { nil }
+    let(:limit_wait_time) { true }
+    let(:waiting_execution) do
       configuration = { "resume" => "webhook", "limit_wait_time" => limit_wait_time }
       if limit_wait_time
         configuration["timeout_amount"] = timeout_minutes
@@ -23,7 +26,7 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
         Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
 
       execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
-      execution.update!(timeout_action: timeout_action) if timeout_action
+      execution.update!(timeout_action:) if timeout_action
       execution
     end
 
@@ -38,18 +41,21 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
     end
 
     context "when timeout_action is fail" do
+      let(:timeout_minutes) { 30 }
+      let(:timeout_action) { "fail" }
+
       it "fails the expired execution" do
         freeze_time
 
-        execution = create_waiting_execution(timeout_minutes: 30, timeout_action: "fail")
-        expect(execution.status).to eq("waiting")
+        expect(waiting_execution.status).to eq("waiting")
 
         freeze_time(31.minutes.from_now)
         result
 
-        execution.reload
-        expect(execution.status).to eq("error")
-        expect(execution.error).to eq("Approval timed out")
+        waiting_execution.reload
+        expect(waiting_execution.status).to eq("error")
+        expect(waiting_execution.error).to eq("Approval timed out")
+        expect(waiting_execution.timeout_action).to be_nil
       end
     end
 
@@ -74,25 +80,28 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
     end
 
     context "when execution has not timed out" do
+      let(:timeout_minutes) { 60 }
+      let(:timeout_action) { "fail" }
+
       it "does not expire the execution" do
         freeze_time
 
-        execution = create_waiting_execution(timeout_minutes: 60, timeout_action: "fail")
+        waiting_execution
 
         freeze_time(30.minutes.from_now)
         result
 
-        expect(execution.reload.status).to eq("waiting")
+        expect(waiting_execution.reload.status).to eq("waiting")
       end
     end
 
     context "when execution uses the default wait ceiling" do
+      let(:limit_wait_time) { false }
+
       it "expires after the executor timeout" do
         freeze_time
 
-        execution = create_waiting_execution(limit_wait_time: false)
-
-        expect(execution.waiting_until).to eq_time(
+        expect(waiting_execution.waiting_until).to eq_time(
           DiscourseWorkflows::Executor::MAX_WAIT_DURATION_SECONDS.seconds.from_now,
         )
 
@@ -101,7 +110,7 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
         )
         result
 
-        expect(execution.reload.status).to eq("success")
+        expect(waiting_execution.reload).to have_attributes(status: "success", timeout_action: nil)
       end
     end
   end

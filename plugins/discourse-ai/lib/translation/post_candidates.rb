@@ -59,7 +59,6 @@ module DiscourseAi
           (backfill_start_at ? Post.where("posts.created_at >= ?", backfill_start_at) : Post.none)
             .where(deleted_at: nil)
             .where.not(raw: [nil, ""])
-            .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
 
         main_posts =
           main_posts.where(
@@ -90,7 +89,6 @@ module DiscourseAi
           Post
             .where(deleted_at: nil)
             .where.not(raw: [nil, ""])
-            .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
             .joins(:topic)
             .where(topics: { archetype: Archetype.banner, deleted_at: nil })
         banner_posts =
@@ -227,7 +225,6 @@ module DiscourseAi
           (backfill_start_at ? Post.where("posts.created_at >= ?", backfill_start_at) : Post.none)
             .where(deleted_at: nil)
             .where.not(raw: [nil, ""])
-            .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
 
         posts =
           posts.where("posts.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
@@ -261,7 +258,6 @@ module DiscourseAi
           Post
             .where(deleted_at: nil)
             .where.not(raw: [nil, ""])
-            .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
             .joins(:topic)
             .where(topics: { archetype: Archetype.banner, deleted_at: nil })
         banner_posts =

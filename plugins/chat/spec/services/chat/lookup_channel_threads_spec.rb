@@ -92,6 +92,8 @@ RSpec.describe ::Chat::LookupChannelThreads do
   let(:params) { { channel_id:, limit:, offset: } }
   let(:dependencies) { { guardian: } }
 
+  before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+
   context "when data is invalid" do
     let(:channel_id) { nil }
 
@@ -112,6 +114,21 @@ RSpec.describe ::Chat::LookupChannelThreads do
 
   context "when channel cannot be previewed" do
     fab!(:channel) { Fabricate(:private_category_channel, threading_enabled: true) }
+
+    it { is_expected.to fail_a_policy(:can_view_channel) }
+  end
+
+  context "when the user can only see a readonly category channel" do
+    fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+    fab!(:channel) do
+      category =
+        Fabricate(
+          :private_category,
+          group: readonly_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      Fabricate(:category_channel, chatable: category, threading_enabled: true)
+    end
 
     it { is_expected.to fail_a_policy(:can_view_channel) }
   end

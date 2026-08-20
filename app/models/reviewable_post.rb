@@ -3,10 +3,6 @@
 class ReviewablePost < Reviewable
   include ReviewableActionBuilder
 
-  def self.action_aliases
-    { reject_and_silence: :reject_and_suspend }
-  end
-
   def self.queue_for_review_if_possible(post, created_or_edited_by)
     return unless SiteSetting.review_every_post
     return if post.post_type != Post.types[:regular] || post.topic.private_message?
@@ -75,22 +71,12 @@ class ReviewablePost < Reviewable
       end
     end
 
-    if can_penalize
-      build_action(
-        actions,
-        :reject_and_suspend,
-        icon: "ban",
-        bundle: reject,
-        client_action: "suspend",
-      )
-      build_action(
-        actions,
-        :reject_and_silence,
-        icon: "microphone-slash",
-        bundle: reject,
-        client_action: "silence",
-      )
-    end
+    build_penalty_actions(
+      actions,
+      bundle: reject,
+      silence: :reject_and_silence,
+      suspend: :reject_and_suspend,
+    )
   end
 
   def perform_approve(performed_by, _args)
@@ -121,6 +107,10 @@ class ReviewablePost < Reviewable
   end
 
   def perform_reject_and_suspend(performed_by, _args)
+    create_result(:success, :rejected, [created_by_id], false)
+  end
+
+  def perform_reject_and_silence(performed_by, _args)
     create_result(:success, :rejected, [created_by_id], false)
   end
 
@@ -164,6 +154,7 @@ end
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

@@ -97,14 +97,15 @@ class ApplicationController < ActionController::Base
     response.cache_control[:extras] = ["immutable"]
   end
 
+  def bfcache_compatibility_mode?
+    SiteSetting.cache_control_bfcache_compatibility
+  end
+  helper_method :bfcache_compatibility_mode?
+
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
-      if SiteSetting.cache_control_bfcache_compatibility
-        response.cache_control[:no_cache] = true
-      else
-        response.cache_control[:no_cache] = true
-        response.cache_control[:extras] = ["no-store"]
-      end
+      response.cache_control[:no_cache] = true
+      response.cache_control[:extras] = [bfcache_compatibility_mode? ? "private" : "no-store"]
     end
     response.headers["Discourse-No-Onebox"] = "1" if SiteSetting.login_required
   end
@@ -151,7 +152,7 @@ class ApplicationController < ActionController::Base
   rescue_from PG::ReadOnlySqlTransaction do |e|
     Discourse.received_postgres_readonly!
     Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
-    rescue_with_handler(Discourse::ReadOnly) || raise
+    rescue_with_handler(Discourse::ReadOnly.new) || raise
   end
 
   rescue_from ActionController::ParameterMissing do |e|
@@ -303,7 +304,7 @@ class ApplicationController < ActionController::Base
 
       # there are some cases where we have a permalink but no url
       # cause category / topic was deleted
-      if permalink.present? && permalink.target_url
+      if permalink.present? && guardian.can_see_permalink_target?(permalink) && permalink.target_url
         # permalink present, redirect to that URL
         redirect_with_client_support permalink.target_url,
                                      status: :moved_permanently,
@@ -589,7 +590,7 @@ class ApplicationController < ActionController::Base
 
   def handle_permalink(path)
     permalink = Permalink.find_by_url(path)
-    if permalink && permalink.target_url
+    if permalink && guardian.can_see_permalink_target?(permalink) && permalink.target_url
       redirect_to permalink.target_url, status: :moved_permanently
     end
   end
@@ -1095,7 +1096,7 @@ class ApplicationController < ActionController::Base
       value =
         begin
           Integer(params[key])
-        rescue ArgumentError
+        rescue ArgumentError, TypeError
           raise Discourse::InvalidParameters.new(key)
         end
 

@@ -44,16 +44,6 @@ describe DiscourseAi::Translation::PostCandidates do
       expect(DiscourseAi::Translation::PostCandidates.get).not_to include(post)
     end
 
-    it "does not return posts longer than ai_translation_max_post_length" do
-      SiteSetting.ai_translation_max_post_length = 100
-      short_post = Fabricate(:post, raw: "This is a short post that fits within the limit.")
-      long_post = Fabricate(:post, raw: "a" * 50 + " This is a long post. " + "b" * 50)
-
-      posts = DiscourseAi::Translation::PostCandidates.get
-      expect(posts).to include(short_post)
-      expect(posts).not_to include(long_post)
-    end
-
     describe "category and PM filtering" do
       fab!(:target_category, :category)
       fab!(:non_target_category, :category)

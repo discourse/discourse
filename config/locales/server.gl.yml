@@ -636,16 +636,15 @@ gl:
     success_unapproved: "Cambiou correctamente o seu contrasinal."
   email_login:
     title: "Iniciar sesión vía correo electrónico"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "App DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "App DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador descoñecido"
     device:
       android: "Dispositivo Android"
       chromebook: "SO Chrome"
@@ -665,6 +664,9 @@ gl:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operativo descoñecido"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anónimo"
   change_email:
     error: "Produciuse un erro ao cambiar o enderezo electrónico. Estarase usando xa ese enderezo?"
     doesnt_exist: "Este enderezo electrónico non está asociado coa súa conta."
@@ -1071,6 +1073,9 @@ gl:
         num_topics: "Temas"
       description: "Usuarios listados polo número de clics nas ligazóns que compartiron."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_entry_urls:
       labels:
         count: "Visitas"
     top_referrers_by_browser_pageviews:
@@ -1683,7 +1688,6 @@ gl:
     default_other_notification_level_when_replying: "Nivel de notificación predefinida global cando o usuario responde a un tema."
     default_other_external_links_in_new_tab: "Abrir as ligazóns externas nunha nova lapela por defecto."
     default_other_enable_quoting: "Activar resposta citando o texto seleccionado por defecto."
-    default_other_enable_defer: "Activar, de xeito predeterminado, a función de aprazar o tema."
     default_other_dynamic_favicon: "Mostrar o número de temas novos/actualizados na icona do navegador por defecto."
     default_other_skip_new_user_tips: "Saltar os consellos iniciais e as insignias dos novos usuarios."
     default_topics_automatic_unpin: "Soltar automaticamente temas cando o usuario acada o fondo, de modo predeterminado."
@@ -2817,9 +2821,6 @@ gl:
     user_posted_pm_staged:
       title: "Usuario enviou unha MP transitoria"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
@@ -3404,6 +3405,9 @@ gl:
     title: "Entrar en modo seguro"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
+  design_wizard:
+    palette_pairs:
+      default: "Predeterminado"
   wizard:
     title: "Configuración de Discourse"
     step:
@@ -3517,7 +3521,6 @@ gl:
           complete: "Usuario eliminado."
         block:
           title: "Eliminar e bloquear usuario"
-          description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
       confirm_spam:
         title: "Si"
       not_spam:

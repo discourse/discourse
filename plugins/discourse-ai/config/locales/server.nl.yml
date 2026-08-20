@@ -89,7 +89,6 @@ nl:
     ai_helper_allowed_in_pm: "Schakel de AI-hulp van de editor in in PB's."
     ai_helper_automatic_chat_thread_title_delay: "Vertraging in minuten voordat de AI-helper automatisch de titel van de chatthread instelt."
     ai_helper_automatic_chat_thread_title: "Stel automatisch de titel van chatthreads in op basis van de threadinhoud."
-    ai_helper_enabled_features: "Selecteer de functies die je wilt inschakelen in de AI-helper."
     post_ai_helper_allowed_groups: "Gebruikersgroepen die toegang hebben tot AI-helperfuncties in berichten"
     ai_helper_post_illustrator_agent: "De te gebruiken agent voor de berichtillustratiefunctie van de opstellings-AI-helper. Opmerking: je moet ook een hulpmiddel tool voor het genereren van afbeeldingen maken (Beheerde > Plug-ins > Discourse AI > Tools) om deze functie te laten werken."
     ai_helper_chat_thread_title_agent: "De te gebruiken agent voor het genereren van chatthreadtitels."
@@ -131,11 +130,9 @@ nl:
     ai_translation_enabled: "De AI-vertaalfunctie inschakelen"
     ai_translation_personal_messages: "Bepaalt welke persoonlijke berichten worden vertaald. 'none' schakelt het vertalen van PB's uit. 'group' vertaalt alleen groeps-PB's. 'all' vertaalt alle PB's."
     ai_translation_include_bot_content: "Wanneer ingeschakeld, wordt content die is geschreven door bots (gebruikers-ID's lager dan 0) ook voor vertaling verzonden."
-    ai_translation_max_post_length: "Het maximale aantal tekens van een te vertalen bericht. Berichten langer dan dit worden niet vertaald."
     ai_translation_backfill_hourly_rate: "Het aantal te vertalen berichten en topics per uur tijdens aanvulbewerkingen. Stel in op 0 om automatisch aanvullen van vertalingen voor bestaande content uit te schakelen."
     ai_translation_backfill_parallel_jobs: "Het aantal parallelle postlokalisatietaken dat wordt uitgevoerd per aanvulcyclus. Hogere waarden verhogen de doorvoer, maar verbruiken meer bronnen."
     ai_usage_rollup_after_days: "Aantal dagen dat de AI-gebruiksstatistieken per verzoek worden bewaard voordat ze in de dagelijkse aggregaten worden opgenomen. Stel in op 0 om samentellen uit te schakelen."
-    ai_audit_logs_purge_after_days: "Verwijder AI-API-auditlogs ouder dan dit aantal dagen. Standaard ongeveer 6 maanden. Stel in op 0 om onbeperkt te bewaren."
   reviewables:
     reasons:
       flagged_by_toxicity: De AI-plug-in heeft dit gemarkeerd nadat het als toxisch was geclassificeerd.
@@ -327,7 +324,6 @@ nl:
         unknown_error: "Er is een onverwachte fout opgetreden tijdens het genereren van miniaturen. Probeer het opnieuw."
       prompts:
         translate: Vertalen naar %{language}
-        generate_titles: Topictitels voorstellen
         proofread: Tekst proeflezen
         markdown_table: Markdowntabel genereren
         custom_prompt: "Aangepaste prompt"
@@ -358,6 +354,8 @@ nl:
       default_pm_prefix: "[Ongetitelde PB van AI-bot]"
       thinking: "Denken"
       tool_pending_approval: "Deze actie vereist goedkeuring van een moderator voordat deze kan worden uitgevoerd."
+      read_post:
+        unknown_post: "bericht"
       chat_tool_approval:
         unexpected_error: "er is een onverwachte fout opgetreden"
       agents:

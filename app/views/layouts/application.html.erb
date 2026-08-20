@@ -31,6 +31,17 @@
 
     <%= build_plugin_html 'server:before-script-load' %>
 
+    <%- if bfcache_compatibility_mode? %>
+      <script id="bfcache-stale-document-check" nonce="<%= csp_nonce_placeholder %>">
+        {
+          const nav = performance.getEntriesByType("navigation")[0];
+          if (nav?.type === "back_forward" && nav.transferSize === 0) {
+            location.reload();
+          }
+        }
+      </script>
+    <%- end %>
+
     <script nonce="<%= csp_nonce_placeholder %>">
       window.EmberENV ??= {};
       window.EmberENV._DEFAULT_ASYNC_OBSERVERS = true;

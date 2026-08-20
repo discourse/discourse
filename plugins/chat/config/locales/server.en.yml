@@ -262,6 +262,15 @@ en:
         invalid_params: "Chat message failed: %{errors}"
         failed: "Chat message failed: %{steps}"
         timeout_must_be_positive: "Timeout minutes must be greater than 0."
+        invalid_timeout_action: "Invalid timeout action: %{action}."
+        buttons_required: "At least one chat approval button is required."
+        too_many_buttons: "Chat approval supports at most %{max} buttons."
+        button_label_required: "Chat approval button %{position} requires a label."
+        button_label_too_long: "Chat approval button %{position} label must be %{max} characters or fewer."
+        button_value_required: "Chat approval button %{position} requires a value."
+        button_value_too_long: "Chat approval button %{position} value must be %{max} characters or fewer."
+        button_style_invalid: "Chat approval button %{position} style must be one of: %{styles}."
+        button_icon_too_long: "Chat approval button %{position} icon must be %{max} characters or fewer."
 
   reviewable_score_types:
     needs_review:

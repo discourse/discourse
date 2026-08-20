@@ -98,6 +98,49 @@ export default {
   },
 };
 
+// Virtual modules the loader resolves only as a redirect target. They are kept
+// out of the default export, and given a null-byte id, so that plugin and theme
+// code cannot import them by name.
+export const privateVirtualImports = {
+  "virtual:attributed-plugin-api": (opts) =>
+    attributedEntryFunction({
+      module: "discourse/lib/plugin-api",
+      exportName: "withPluginApi",
+      opts,
+    }),
+  "virtual:attributed-api-initializer": (opts) =>
+    attributedEntryFunction({
+      module: "discourse/lib/api",
+      exportName: "apiInitializer",
+      opts,
+    }),
+};
+
+// Wraps a core API-entry function so calls from this plugin or theme carry its
+// source on `opts`. Plugin and theme imports of `module` resolve here, so the
+// wrapper must export everything they are allowed to import from it.
+function attributedEntryFunction({ module, exportName, opts }) {
+  return cleanMultiline(`
+    import { _INTERNAL_SOURCE_KEY } from "discourse/lib/api";
+    import { ${exportName} as _${exportName} } from "${module}";
+
+    const SOURCE = Object.freeze(${JSON.stringify(customizationSourceFor(opts))});
+
+    export function ${exportName}(...args) {
+      // A leading string is the legacy version argument, which shifts opts along.
+      const optsIndex = typeof args[0] === "string" ? 2 : 1;
+      args[optsIndex] = { ...args[optsIndex], [_INTERNAL_SOURCE_KEY]: SOURCE };
+      return _${exportName}(...args);
+    }
+  `);
+}
+
+function customizationSourceFor({ themeId, pluginName }) {
+  return pluginName
+    ? { type: "plugin", name: pluginName }
+    : { type: "theme", id: themeId };
+}
+
 function cleanMultiline(str) {
   const lines = str.split("\n");
 

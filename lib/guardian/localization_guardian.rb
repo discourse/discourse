@@ -55,22 +55,25 @@ module LocalizationGuardian
     can_localize_sidebar_section_title?(section)
   end
 
-  def can_localize_sidebar_section_title?(section_or_section_id)
+  def can_localize_sidebar_section_title?(section_or_section_id, public: nil)
     return false if !SiteSetting.content_localization_enabled
     return false if anonymous?
     return false if !@user.admin?
 
     section = find_sidebar_section(section_or_section_id)
-    section.present? && section.public? && section.custom_section?
+    return false if section.blank?
+
+    (public.nil? ? section.public? : public) && section.custom_section?
   end
 
-  def can_localize_sidebar_section_link?(section_or_section_id, link_value)
+  def can_localize_sidebar_section_link?(section_or_section_id, link_value, public: nil)
     return false if !SiteSetting.content_localization_enabled
     return false if anonymous?
     return false if !@user.admin?
 
     section = find_sidebar_section(section_or_section_id)
-    return false if !section&.public?
+    return false if section.blank?
+    return false if !(public.nil? ? section.public? : public)
     return true if section.custom_section?
 
     section.community_section? && !SidebarUrl.built_in_community_section_link_value?(link_value)

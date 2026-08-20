@@ -100,20 +100,27 @@ export default class CreateInvite extends Component {
 
   async save(data) {
     let isLink = true;
+    const restrictTo = data.emailOrDomain;
+    delete data.emailOrDomain;
 
-    if (data.emailOrDomain) {
+    if (restrictTo) {
       if (this.isEmailInvite) {
         isLink = false;
-        data.email = data.emailOrDomain;
-      } else if (hostnameValid(data.emailOrDomain)) {
-        data.domain = data.emailOrDomain;
+        data.email = restrictTo;
+      } else if (hostnameValid(restrictTo)) {
+        data.domain = restrictTo;
       }
-      delete data.emailOrDomain;
     }
 
     if (isLink) {
       if (this.invite.email) {
         data.email = data.custom_message = "";
+      }
+
+      // the server only touches the column when the key is present, so an
+      // emptied field has to send a blank value to drop the restriction
+      if (!restrictTo && this.invite.domain) {
+        data.domain = "";
       }
     } else {
       if (data.max_redemptions_allowed > 1) {

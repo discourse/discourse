@@ -117,12 +117,23 @@ ur:
         assigned: "تفویض کردہ"
     edit_assignments_modal:
       topic: "موضوع"
-      post: "پوسٹ"
+      post: "دھاگہ"
     discourse_workflows:
       nodes:
         "trigger:assigned": "تفویض کردہ"
       assign_topic:
+        resource: "وسائل"
+        resources:
+          topic: "ٹاپک"
+          post: "دھاگہ"
         operations:
           assign: "تفویض"
           unassign: "غیر اسائین کریں"
         topic_id: "ٹاپک ID"
+        post_id: "پوسٹ ID"
+      check_assignment:
+        target_types:
+          topic: "ٹاپک"
+          post: "دھاگہ"
+        topic_id: "ٹاپک ID"
+        post_id: "پوسٹ ID"

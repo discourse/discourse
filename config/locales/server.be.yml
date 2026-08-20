@@ -428,14 +428,13 @@ be:
         other: " %{Count} дзён таму"
   password_reset:
     title: "скінуць пароль"
+  browsers:
+    discoursehub: "DiscourseHub прыкладанне"
+    edge: "Microsoft Эдж"
+    firefox: "Firefox"
+    ie: "Інтэрнэт эксплорер"
+    opera: "Браузер Опера"
   user_auth_tokens:
-    browser:
-      discoursehub: "DiscourseHub прыкладанне"
-      edge: "Microsoft Эдж"
-      firefox: "Firefox"
-      ie: "Інтэрнэт эксплорер"
-      opera: "Браузер Опера"
-      unknown: "невядомы браўзэр"
     device:
       android: "Android прылада"
       ipad: "IPad"
@@ -453,6 +452,9 @@ be:
       macos: "Macos"
       windows: "Microsoft Windows,"
       unknown: "невядомая аперацыйная сістэма"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "ананімны"
   change_email:
     error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
     error_staged: "Падчас змянення адраса электроннай пошты адбылася памылка. Гэты адрас ужо выкарыстоўваецца зарэгістраваным карыстальнікам."
@@ -789,6 +791,9 @@ be:
         num_topics: "тэмы"
       description: "Карыстальнікі, пералічаныя па колькасці клікаў па спасылках, яны падзяліліся."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "наведванне"
+    top_entry_urls:
       labels:
         count: "наведванне"
     top_referrers_by_browser_pageviews:
@@ -1832,9 +1837,6 @@ be:
     user_posted_pm_staged:
       title: "Карыстальнік Паведамленне PM Пастановачная"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Аккаунт прыпынены"
       subject_template: "[%{email_prefix}] Ваш рахунак быў заблякаваны"
@@ -2278,6 +2280,9 @@ be:
     title: "Калі ласка, увядзіце бяспечны рэжым"
     enter: "Уваход у бяспечным рэжыме"
     must_select: "Вы павінны выбраць, па меншай меры, адзін параметр, каб увайсці ў бяспечным рэжыме."
+  design_wizard:
+    palette_pairs:
+      default: "Прадвызначаная"
   wizard:
     title: "дыскурс Setup"
     step:
@@ -2359,7 +2364,6 @@ be:
           title: "выдаліць карыстальніка"
         block:
           title: "Выдаліць і Заблакаваць карыстальніка"
-          description: "Карыстальнік будзе выдалены, і мы будзем блакаваць іх IP і адрас электроннай пошты."
       confirm_spam:
         title: "Так"
       not_spam:

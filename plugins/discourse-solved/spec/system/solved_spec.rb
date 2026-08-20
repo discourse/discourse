@@ -11,14 +11,10 @@ describe "Solved" do
     Fabricate(:post, topic:, user: solver, cooked: long_cooked)
   end
 
-  let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:topic_page) { PageObjects::Pages::SolvedTopic.new }
 
-  UNACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-unaccepted"
-  ACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-accepted"
   ACCEPTED_ANSWER_SELECTOR = ".accepted-answers .d-post-accordion-item"
   ACCEPTED_ANSWER_CONTENT_SELECTOR = ".d-post-accordion-item__content"
-  SOLVER_SELECTOR = ".d-post-accordion-item__metadata .user-link"
-  ACCEPTER_SELECTOR = ".d-post-accordion-item__metadata .accepter-link"
   QUOTE_TOGGLE_SELECTOR = ".d-post-accordion-item__toggle"
   QUOTE_JUMP_SELECTOR = ".d-post-accordion-item__jump"
 
@@ -32,30 +28,30 @@ describe "Solved" do
 
   it "accepts post as solution and shows in OP" do
     sign_in(accepter)
-    visit_solver_post(2)
+    topic_page.visit_solution(topic:, post: solver_post)
 
-    verify_solution_unaccepted_state(2)
-    accept_solution(2)
-    verify_solution_accepted_state(2)
-    verify_solution_content(2, "The answer is 42")
-    verify_solver_and_accepter_info(2, solver, accepter)
-    verify_solution_excerpt_expanded(2)
-    toggle_solution_excerpt(2)
-    verify_solution_excerpt_collapsed(2)
+    expect(topic_page).to have_unaccepted_solution(solver_post)
+    topic_page.accept_solution(solver_post)
+    expect(topic_page).to have_accepted_solution(solver_post)
+    expect(topic_page).to have_solution_content(solver_post, content: "The answer is 42")
+    expect(topic_page).to have_solution_authors(post: solver_post, solver:, accepter:)
+    expect(topic_page).to have_expanded_solution_excerpt(solver_post)
+    topic_page.toggle_solution_excerpt(solver_post)
+    expect(topic_page).to have_collapsed_solution_excerpt(solver_post)
   end
 
   it "accepts and unaccepts post as solution" do
     sign_in(accepter)
-    visit_solver_post(2)
+    topic_page.visit_solution(topic:, post: solver_post)
 
-    verify_solution_unaccepted_state(2)
-    accept_solution(2)
-    verify_solution_accepted_state(2)
-    verify_solution_info_present
+    expect(topic_page).to have_unaccepted_solution(solver_post)
+    topic_page.accept_solution(solver_post)
+    expect(topic_page).to have_accepted_solution(solver_post)
+    expect(topic_page).to have_solution_info
 
-    unaccept_solution(2)
-    verify_solution_unaccepted_state(2)
-    verify_solution_info_absent
+    topic_page.unaccept_solution(solver_post)
+    expect(topic_page).to have_unaccepted_solution(solver_post)
+    expect(topic_page).to have_no_solution_info
   end
 
   it "shows the solved post in user activity at /my/activity/solved" do
@@ -67,10 +63,8 @@ describe "Solved" do
   end
 
   describe "hidden overflow" do
-    before do
-      solved_topic = Fabricate(:solved_topic, topic:)
-      Fabricate(:topic_answer, solved_topic:, post: solver_post, accepter:)
-    end
+    fab!(:solved_topic) { Fabricate(:solved_topic, topic:) }
+    fab!(:topic_answer) { Fabricate(:topic_answer, solved_topic:, post: solver_post, accepter:) }
 
     describe "when solved_quote_length = 0" do
       before { SiteSetting.solved_quote_length = 0 }
@@ -124,11 +118,11 @@ describe "Solved" do
     sign_in(accepter)
     topic_page.visit_topic(topic)
 
-    verify_solution_excerpt_expanded(2)
-    toggle_solution_excerpt(2)
-    verify_solution_excerpt_collapsed(2)
-    toggle_solution_excerpt(2)
-    verify_solution_excerpt_expanded(2)
+    expect(topic_page).to have_expanded_solution_excerpt(solver_post)
+    topic_page.toggle_solution_excerpt(solver_post)
+    expect(topic_page).to have_collapsed_solution_excerpt(solver_post)
+    topic_page.toggle_solution_excerpt(solver_post)
+    expect(topic_page).to have_expanded_solution_excerpt(solver_post)
   end
 
   describe "solution excerpt formatting" do
@@ -182,153 +176,80 @@ describe "Solved" do
 
     it "accepts two posts as solutions and shows in OP" do
       sign_in(accepter)
-      visit_solver_post(2)
+      topic_page.visit_solution(topic:, post: solver_post)
 
-      verify_solution_info_absent
-      verify_solution_unaccepted_state(2)
-      verify_solution_unaccepted_state(3)
+      expect(topic_page).to have_no_solution_info
+      expect(topic_page).to have_unaccepted_solution(solver_post)
+      expect(topic_page).to have_unaccepted_solution(solver_post2)
 
-      accept_solution(2)
+      topic_page.accept_solution(solver_post)
 
-      verify_solution_info_present
-      verify_solution_accepted_state(2)
-      verify_solution_unaccepted_state(3)
-      verify_solution_excerpt_expanded(2)
-      verify_solution_content(2, "The answer is 42")
-      verify_solver_and_accepter_info(2, solver, accepter)
+      expect(topic_page).to have_solution_info
+      expect(topic_page).to have_accepted_solution(solver_post)
+      expect(topic_page).to have_unaccepted_solution(solver_post2)
+      expect(topic_page).to have_expanded_solution_excerpt(solver_post)
+      expect(topic_page).to have_solution_content(solver_post, content: "The answer is 42")
+      expect(topic_page).to have_solution_authors(post: solver_post, solver:, accepter:)
 
       sign_in(accepter2)
-      visit_solver_post(3)
+      topic_page.visit_solution(topic:, post: solver_post2)
 
-      verify_solution_info_present
-      verify_solution_accepted_state(2)
-      verify_solution_unaccepted_state(3)
+      expect(topic_page).to have_solution_info
+      expect(topic_page).to have_accepted_solution(solver_post)
+      expect(topic_page).to have_unaccepted_solution(solver_post2)
 
-      accept_solution(3)
+      topic_page.accept_solution(solver_post2)
 
-      verify_solution_info_present
-      verify_solution_accepted_state(2)
-      verify_solution_accepted_state(3)
-      verify_solution_excerpt_expanded(2)
-      verify_solution_excerpt_collapsed(3)
-      verify_solver_and_accepter_info(2, solver, accepter)
-      verify_solver_and_accepter_info(3, solver2, accepter2)
-      verify_solution_content(2, "The answer is 42")
-      verify_solution_content_missing(3)
-      toggle_solution_excerpt(3)
-      verify_solution_excerpt_expanded(3)
-      verify_solution_content(3, "The answer is over 9000")
+      expect(topic_page).to have_solution_info
+      expect(topic_page).to have_accepted_solution(solver_post)
+      expect(topic_page).to have_accepted_solution(solver_post2)
+      expect(topic_page).to have_expanded_solution_excerpt(solver_post)
+      expect(topic_page).to have_collapsed_solution_excerpt(solver_post2)
+      expect(topic_page).to have_solution_authors(post: solver_post, solver:, accepter:)
+      expect(topic_page).to have_solution_authors(
+        post: solver_post2,
+        solver: solver2,
+        accepter: accepter2,
+      )
+      expect(topic_page).to have_solution_content(solver_post, content: "The answer is 42")
+      expect(topic_page).to have_no_solution_content(solver_post2)
+      topic_page.toggle_solution_excerpt(solver_post2)
+      expect(topic_page).to have_expanded_solution_excerpt(solver_post2)
+      expect(topic_page).to have_solution_content(solver_post2, content: "The answer is over 9000")
     end
 
     it "correctly updates excerpts when removing one of many accepted solutions" do
       sign_in(accepter)
-      visit_solver_post(2)
+      topic_page.visit_solution(topic:, post: solver_post)
 
-      verify_solution_info_absent
+      expect(topic_page).to have_no_solution_info
 
-      accept_solution(2)
-      accept_solution(3)
+      topic_page.accept_solution(solver_post)
+      topic_page.accept_solution(solver_post2)
 
-      verify_solution_info_present
-      verify_solution_accepted_state(2)
-      verify_solution_accepted_state(3)
-      verify_solution_excerpt_expanded(2)
-      verify_solution_excerpt_collapsed(3)
-      verify_solver_and_accepter_info(2, solver, accepter)
-      verify_solver_and_accepter_info(3, solver2, accepter)
-      verify_solution_content(2, "The answer is 42")
-      verify_solution_content_missing(3)
-      toggle_solution_excerpt(3)
-      verify_solution_excerpt_expanded(3)
-      verify_solution_content(3, "The answer is over 9000")
+      expect(topic_page).to have_solution_info
+      expect(topic_page).to have_accepted_solution(solver_post)
+      expect(topic_page).to have_accepted_solution(solver_post2)
+      expect(topic_page).to have_expanded_solution_excerpt(solver_post)
+      expect(topic_page).to have_collapsed_solution_excerpt(solver_post2)
+      expect(topic_page).to have_solution_authors(post: solver_post, solver:, accepter:)
+      expect(topic_page).to have_solution_authors(post: solver_post2, solver: solver2, accepter:)
+      expect(topic_page).to have_solution_content(solver_post, content: "The answer is 42")
+      expect(topic_page).to have_no_solution_content(solver_post2)
+      topic_page.toggle_solution_excerpt(solver_post2)
+      expect(topic_page).to have_expanded_solution_excerpt(solver_post2)
+      expect(topic_page).to have_solution_content(solver_post2, content: "The answer is over 9000")
 
-      unaccept_solution(2)
+      topic_page.unaccept_solution(solver_post)
 
-      verify_solution_info_present
-      verify_solution_unaccepted_state(2)
-      verify_solution_accepted_state(3)
-      verify_solver_and_accepter_info(3, solver2, accepter)
-      verify_solution_content(3, "The answer is over 9000")
+      expect(topic_page).to have_solution_info
+      expect(topic_page).to have_unaccepted_solution(solver_post)
+      expect(topic_page).to have_accepted_solution(solver_post2)
+      expect(topic_page).to have_solution_authors(post: solver_post2, solver: solver2, accepter:)
+      expect(topic_page).to have_solution_content(solver_post2, content: "The answer is over 9000")
 
-      unaccept_solution(3)
-      verify_solution_info_absent
+      topic_page.unaccept_solution(solver_post2)
+      expect(topic_page).to have_no_solution_info
     end
-  end
-
-  private
-
-  def visit_solver_post(post_number)
-    topic_page.visit_topic(topic, post_number:)
-  end
-
-  def accept_solution(post_number)
-    within("article#post_#{post_number}") { find(UNACCEPTED_BUTTON_SELECTOR).click }
-  end
-
-  def unaccept_solution(post_number)
-    within("article#post_#{post_number}") { find(ACCEPTED_BUTTON_SELECTOR).click }
-  end
-
-  def verify_solution_accepted_state(post_number)
-    within("article#post_#{post_number}") do
-      expect(topic_page).to have_css(ACCEPTED_BUTTON_SELECTOR)
-    end
-
-    expect(topic_page).to have_css("#{ACCEPTED_ANSWER_SELECTOR}[data-post='#{post_number}']")
-  end
-
-  def verify_solution_unaccepted_state(post_number)
-    within("article#post_#{post_number}") do
-      expect(topic_page).to have_css(UNACCEPTED_BUTTON_SELECTOR)
-    end
-  end
-
-  def verify_solution_content(post_number, content)
-    within("#{ACCEPTED_ANSWER_SELECTOR}[data-post='#{post_number}']") do
-      expect(find(ACCEPTED_ANSWER_CONTENT_SELECTOR)).to have_content(content)
-    end
-  end
-
-  def verify_solution_content_missing(post_number)
-    within("#{ACCEPTED_ANSWER_SELECTOR}[data-post='#{post_number}']") do
-      expect(page).not_to have_css(ACCEPTED_ANSWER_CONTENT_SELECTOR)
-    end
-  end
-
-  def verify_solver_and_accepter_info(post_number, solver, accepter)
-    within("#{ACCEPTED_ANSWER_SELECTOR}[data-post='#{post_number}']") do
-      expect(find(SOLVER_SELECTOR)).to have_content(solver.username)
-      expect(find(ACCEPTER_SELECTOR)).to have_content(accepter.username)
-    end
-  end
-
-  def verify_solution_info_present
-    expect(topic_page).to have_css(ACCEPTED_ANSWER_SELECTOR)
-    expect(topic_page).to have_css(SOLVER_SELECTOR)
-    expect(topic_page).to have_css(ACCEPTER_SELECTOR)
-  end
-
-  def verify_solution_info_absent
-    expect(topic_page).to have_no_css(ACCEPTED_ANSWER_SELECTOR)
-    expect(topic_page).to have_no_css(SOLVER_SELECTOR)
-    expect(topic_page).to have_no_css(ACCEPTER_SELECTOR)
-  end
-
-  def toggle_solution_excerpt(post_number)
-    within("#{ACCEPTED_ANSWER_SELECTOR}[data-post='#{post_number}']") do
-      find(QUOTE_TOGGLE_SELECTOR).click
-    end
-  end
-
-  def verify_solution_excerpt_expanded(post_number)
-    expect(topic_page).to have_css(
-      "#{ACCEPTED_ANSWER_SELECTOR}[data-post='#{post_number}'][data-expanded]",
-    )
-  end
-
-  def verify_solution_excerpt_collapsed(post_number)
-    expect(topic_page).to have_css(
-      "#{ACCEPTED_ANSWER_SELECTOR}[data-post='#{post_number}']:not([data-expanded])",
-    )
   end
 end

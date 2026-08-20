@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
@@ -19,6 +18,7 @@ import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin"
 import { clipboardHelpers } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DEditor from "discourse/ui-kit/d-editor";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -45,7 +45,6 @@ export default class DockedComposer extends Component {
   inputElement = null;
   uppyUpload = null;
   fileInputEl = null;
-  #dragStart = null;
   #rootElement = null;
 
   #handlePaste = (event) => {
@@ -367,70 +366,12 @@ export default class DockedComposer extends Component {
   }
 
   @action
-  onResizeStart(event) {
-    event.preventDefault();
-    this.#dragStart = {
-      clientY: event.clientY,
-      offset: this.dragOffset,
-    };
-    event.currentTarget.setPointerCapture(event.pointerId);
-  }
-
-  @action
-  onResizeMove(event) {
-    if (!this.#dragStart || !this.#rootElement?.isConnected) {
-      return;
-    }
-    // dragging UP should grow the composer, so invert
-    const delta = this.#dragStart.clientY - event.clientY;
-    const raw = Math.max(0, this.#dragStart.offset + delta);
-    this.dragOffset =
-      this.maxResizeOffset != null ? Math.min(this.maxResizeOffset, raw) : raw;
-    this.#rootElement.style.setProperty(
-      "--docked-composer-drag-offset",
-      `${this.dragOffset}px`
-    );
-  }
-
-  @action
-  onResizeKeyDown(event) {
-    // Arrow keys nudge height; Home/End snap to bounds. We mirror the
-    // dragOffset state so the keyboard interaction stays in sync with
-    // pointer drags.
-    const STEP = 16;
-    const max = this.maxResizeOffset ?? 400;
-    let next;
-    switch (event.key) {
-      case "ArrowUp":
-        next = Math.min(max, this.dragOffset + STEP);
-        break;
-      case "ArrowDown":
-        next = Math.max(0, this.dragOffset - STEP);
-        break;
-      case "Home":
-        next = 0;
-        break;
-      case "End":
-        next = max;
-        break;
-      default:
-        return;
-    }
-    event.preventDefault();
-    this.dragOffset = next;
+  onResize(offset) {
+    this.dragOffset = offset;
     this.#rootElement?.style.setProperty(
       "--docked-composer-drag-offset",
-      `${next}px`
+      `${offset}px`
     );
-  }
-
-  @action
-  onResizeEnd(event) {
-    if (!this.#dragStart) {
-      return;
-    }
-    this.#dragStart = null;
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
   }
 
   <template>
@@ -451,22 +392,16 @@ export default class DockedComposer extends Component {
         {{willDestroy this.teardown}}
       >
         {{#if this.resizable}}
-          {{! eslint-disable ember/template-no-pointer-down-event-binding }}
-          <div
+          <DResizeSeparator
             class="docked-composer__resize-handle"
-            role="separator"
-            aria-orientation="horizontal"
-            aria-label={{i18n "composer.resize"}}
-            aria-valuenow={{this.dragOffset}}
-            aria-valuemin="0"
-            aria-valuemax={{this.resizeAriaMax}}
-            tabindex="0"
-            {{on "pointerdown" this.onResizeStart}}
-            {{on "pointermove" this.onResizeMove}}
-            {{on "pointerup" this.onResizeEnd}}
-            {{on "pointercancel" this.onResizeEnd}}
-            {{on "keydown" this.onResizeKeyDown}}
-          ></div>
+            @axis="vertical"
+            @side="end"
+            @value={{this.dragOffset}}
+            @min={{0}}
+            @max={{this.resizeAriaMax}}
+            @label={{i18n "composer.resize"}}
+            @onResize={{this.onResize}}
+          />
         {{/if}}
         {{#if (has-block "header")}}
           <div class="docked-composer__header">

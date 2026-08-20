@@ -7,8 +7,8 @@ Migrations::Tooling::Schema.ignored do
   plugin :discourse_adplugin, "Not migrated yet"
   plugin :discourse_ai, "Not migrated yet"
   plugin :discourse_assign, "Not migrated yet"
-  plugin :discourse_calendar, "Not migrated yet"
   plugin :discourse_data_explorer, "Not migrated yet"
+  plugin :discourse_events, "Not migrated yet"
   plugin :discourse_gamification, "Not migrated yet"
   plugin :discourse_github, "Not migrated yet"
   plugin :discourse_oauth2_basic, "Not migrated yet"
@@ -152,7 +152,9 @@ Migrations::Tooling::Schema.ignored do
   tables :admin_dashboard_reports,
          :admin_dashboard_sections,
          :browser_pageview_country_daily_rollups,
-         :browser_pageview_referrer_daily_rollups
+         :browser_pageview_referrer_daily_rollups,
+         :category_activity_daily_rollups,
+         :user_visit_daily_rollups
 
   tables :access_control_lists,
          :admin_notices,
@@ -166,6 +168,7 @@ Migrations::Tooling::Schema.ignored do
          :backup_metadata,
          :badge_types,
          :bookmarks,
+         :browser_pageview_crawler_daily_rollups,
          :browser_pageview_event_scores,
          :browser_pageview_events,
          :browser_pageview_session_engagement_daily_rollups,

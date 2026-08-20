@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: Թեմայի ID
+    discourse_calendar:
+      disable_holiday: "Անջատել"
+      enable_holiday: "Միացնել"
+      date: "Ամսաթիվ"
+      region:
+        none: "Ոչ մի"
+      toolbar_button:
+        today: "Այսօր"
+        month: "Ամիս"
+        week: "Շաբաթ"
+        day: "Օր"
+        year: "Տարի"
+    group_timezones:
+      search: "Որոնում..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "Ցույց տալ ավելին"
+        show_less: "Ցույց տալ ավելի քիչ"
+      created_by: "Ստեղծել է՝"
+      bulk_invite: "Զանգվածային Հրավեր"
+      bulk_invite_modal:
+        confirm: "հաստատել"
+        title: "Զանգվածային Հրավեր"
+        success: "Ֆայլը հաջողությամբ վերբեռնվել է, Դուք կստանաք ծանուցում հաղորդագրության միջոցով, երբ գործընթացն ավարտվի:"
+        error: "Ներողություն, ֆայլը պետք է լինի CSV ձևաչափով:"
+        group_selector_placeholder: "Ընտրեք խումբ..."
+      upcoming_events:
+        status: "Ստատուս"
+      models:
+        event:
+          expired: "Ժամկետանց"
+          closed: "Փակված է"
+          status:
+            public:
+              title: "Հանրային"
+            private:
+              title: "Մասնավոր"
+      composer:
+        url_placeholder: "Ավելացնել URL"
+        reminder:
+          units:
+            minutes:
+              one: "րոպե"
+              other: "րոպե"
+            hours:
+              one: "ժամ"
+              other: "ժամ"
+            days:
+              one: "օր"
+              other: "օր"
+      builder_modal:
+        custom_fields:
+          placeholder: "Ընտրովի"
+        create: "Ստեղծել"
+        update: "Պահպանել"
+        timezone:
+          label: Ժամային գոտի
+        reminders:
+          units:
+            minutes: "րոպե"
+            hours: "ժամ"
+            days: "օր"
+          periods:
+            before: "մինչև"
+            after: "հետո"
+        recurrence:
+          label: "Կրկնություն"
+          none: "Կրկնություն չկա"
+          ordinals:
+            last: "օգտագործել ամսաթվի և ժամանակի վերջին գրառումը  "
+        attendance:
+          none: "Ոչ մի"
+        location:
+          label: "Տեղակայություն"
+        url:
+          label: "URL"
+          placeholder: "Ընտրովի"
+          add: "Ավելացնել URL"
+        description:
+          label: "Նկարագրություն"
+        event_type:
+          public:
+            title: "Հանրային"
+      invite_user_or_group:
+        invite: "Ուղարկել"

@@ -12,6 +12,7 @@ module Migrations
               user_id: item[:user_id],
               allow_private_messages: item[:allow_private_messages],
               auto_track_topics_after_msecs: item[:auto_track_topics_after_msecs],
+              automatically_translate: item[:automatically_translate],
               automatically_unpin_topics: item[:automatically_unpin_topics],
               bookmark_auto_delete_preference: item[:bookmark_auto_delete_preference],
               color_scheme_id: item[:color_scheme_id],
@@ -49,6 +50,7 @@ module Migrations
               oldest_search_log_date: item[:oldest_search_log_date],
               push_notification_level: item[:push_notification_level],
               seen_popups: item[:seen_popups],
+              send_shortcut: item[:send_shortcut],
               show_original_content: item[:show_original_content],
               sidebar_link_to_filtered_list: item[:sidebar_link_to_filtered_list],
               sidebar_show_count_of_new_items: item[:sidebar_show_count_of_new_items],
@@ -60,6 +62,7 @@ module Migrations
               timezone: item[:timezone],
               title_count_mode_key: item[:title_count_mode_key],
               topics_unread_when_closed: item[:topics_unread_when_closed],
+              understood_languages: item[:understood_languages],
               watched_precedence_over_muted: item[:watched_precedence_over_muted],
             )
           end

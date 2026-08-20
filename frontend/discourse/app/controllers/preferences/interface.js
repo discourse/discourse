@@ -14,6 +14,7 @@ import {
   SEND_SHORTCUT_ENTER,
   SEND_SHORTCUT_META_ENTER,
 } from "discourse/lib/constants";
+import { normalizeUnderstoodLanguages } from "discourse/lib/content-localization";
 import { deepEqual } from "discourse/lib/object";
 import {
   currentThemeId,
@@ -70,12 +71,10 @@ export default class InterfaceController extends Controller {
   @computed("makeThemeDefault")
   get saveAttrNames() {
     let attrs = [
-      "locale",
       "external_links_in_new_tab",
       "dynamic_favicon",
       "enable_quoting",
       "enable_smart_lists",
-      "enable_defer",
       "automatically_unpin_topics",
       "allow_private_messages",
       "enable_allowed_pm_users",
@@ -90,9 +89,14 @@ export default class InterfaceController extends Controller {
       "bookmark_auto_delete_preference",
       "interface_color_mode",
       "enable_markdown_monospace_font",
-      "show_original_content",
       "send_shortcut",
+      "automatically_translate",
+      "understood_languages",
     ];
+
+    if (this.siteSettings.allow_user_locale) {
+      attrs.push("locale");
+    }
 
     if (this.makeThemeDefault) {
       attrs.push("theme_ids");
@@ -103,9 +107,32 @@ export default class InterfaceController extends Controller {
     });
   }
 
+  @computed("model.user_option.understood_languages.[]")
+  get understoodLanguages() {
+    return normalizeUnderstoodLanguages(
+      this.model.user_option.understood_languages
+    );
+  }
+
   @computed()
   get availableLocales() {
-    return this.siteSettings.available_locales;
+    return (this.siteSettings.available_locales ?? []).map((locale) => ({
+      ...locale,
+      id: locale.value,
+    }));
+  }
+
+  @action
+  setInterfaceLanguage(locale) {
+    this.model.set("locale", locale);
+  }
+
+  @action
+  setUnderstoodLanguages(locales) {
+    this.model.set(
+      "user_option.understood_languages",
+      normalizeUnderstoodLanguages(locales)
+    );
   }
 
   @computed("currentThemeId")

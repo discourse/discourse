@@ -131,6 +131,38 @@ ko:
         periods:
           last_day: "지난 24시간"
           custom: "사용자 지정..."
+      logs:
+        short_title: "로그"
+        apply: "적용"
+        successful: "성공"
+        failed: "실패"
+        unknown: "알수없음"
+        topic_id: "글 ID"
+        post_id: "글 ID"
+        time: "시간"
+        when: "언제"
+        request: "요청"
+        provider: "공급자"
+        user: "사용자"
+        context: "상황"
+        topic: "글"
+        post: "글"
+        post_short: "%{id}번째 글"
+        duration: "기간"
+        actions: "작업"
+        periods:
+          day: "지난 24시간"
+          week: "지난 7일"
+          custom: "사용자 정의"
+        detail:
+          request: "요청"
+          response: "응답"
+          context: "상황"
+          network_error: "네트워크 오류"
+        retention:
+          summary_stage: "요약"
+          deleted_stage: "삭제됨"
+          save: "저장"
       ai_agent:
         name: "그룹명"
         edit: "편집"
@@ -194,6 +226,9 @@ ko:
       llms:
         display_name: "그룹명"
         provider: "공급자"
+        vision_modes:
+          disabled:
+            title: "비활성"
         save: "저장"
         edit: "편집"
         delete: 삭제
@@ -219,7 +254,6 @@ ko:
         tests:
           success: "성공!"
         providers:
-          google: "구글"
           fake: "사용자 정의"
         provider_fields:
           region: "지역"
@@ -249,6 +283,7 @@ ko:
           fake: "사용자 정의"
       ai_bot:
         debug_ai_modal:
+          duration_label: "기간:"
           request: "요청"
           response: "응답"
           next_log: "다음"

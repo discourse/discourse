@@ -98,6 +98,8 @@ $z-layers: (
     "content": 1300,
     "overlay": 1200,
   ),
+  // below modals, so dialogs opened from the page behind it stay reachable
+  "design-wizard": 1160,
   "fullscreen": 1150,
   "mobile-header": 1150,
   "mobile-composer": 1100,

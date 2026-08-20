@@ -59,7 +59,6 @@ sk:
     ai_helper_allowed_in_pm: "Povolenie pomocníka AI skladateľa v PM."
     ai_helper_automatic_chat_thread_title_delay: "Oneskorenie v minútach, kým pomocník AI automaticky nastaví názov chatového vlákna."
     ai_helper_automatic_chat_thread_title: "Automatické nastavenie názvov chatových vlákien na základe obsahu vlákna."
-    ai_helper_enabled_features: "Vyberte funkcie, ktoré chcete povoliť v pomocníkovi AI."
     post_ai_helper_allowed_groups: "Skupiny používateľov majú povolený prístup k funkciám AI Helper v príspevkoch"
     ai_embeddings_selected_model: "Použitie vybraného modelu na generovanie vložených súborov."
     ai_embeddings_generate_for_pms: "Generovanie vložených osobných správ."
@@ -218,7 +217,6 @@ sk:
         completion_request_failed: "Pri pokuse o poskytnutie návrhov sa niečo pokazilo. Prosím, skúste to znova."
       prompts:
         translate: Preložiť do %{language}
-        generate_titles: Navrhnite názvy tém
         proofread: Korektúra textu
         markdown_table: Generovať tabuľku Markdown
         custom_prompt: "Vlastný prompt"
@@ -246,6 +244,8 @@ sk:
     ai_bot:
       reply_error: "Ospravedlňujeme sa, ale zdá sa, že náš systém narazil na neočakávaný problém pri pokuse o odpoveď.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Bez názvu AI bot PM]"
+      read_post:
+        unknown_post: "príspevok"
       agents:
         default_llm_required: "Predvolený model LLM sa vyžaduje pred povolením funkcie Chat"
         cannot_have_duplicate_tools: "Nemôže mať duplicitné nástroje"

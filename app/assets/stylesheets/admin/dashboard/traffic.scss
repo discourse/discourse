@@ -21,7 +21,7 @@
 
   &__list {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     column-gap: var(--space-4);
     row-gap: var(--space-2);
     list-style: none;
@@ -46,6 +46,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5em;
+    min-width: 0;
+  }
+
+  &__label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -5,8 +5,22 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse پول"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "پول بند ہوا"
+            poll_opened: "پول کھل گیا"
   js:
     poll:
+      title: "پول"
+      closed_by: "%{username} نے بند کیا"
+      dynamic:
+        enabled_hint: "اختیارات شامل یا حذف کیے جا سکتے ہیں۔"
       voters:
         one: "ووٹر"
         other: "ووٹرز"
@@ -25,16 +39,41 @@ ur:
           title: "نتائج <strong>بند ہونے</strong> پر دکھائے جائیں گے۔"
         staff:
           title: "نتائج صرف <strong>سٹاف</strong> ممبران کو دکھائے جاتے ہیں۔"
+        tabs:
+          votes: "ووٹ"
+          outcome: "نتیجہ"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "کم از کم <strong>%{count} کا</strong> انتخاب کریں۔"
+            other: "کم از کم <strong>%{count} کا</strong> انتخاب کریں۔"
+          up_to_max_options:
+            one: "<strong>%{count} تک کا</strong> انتخاب کریں۔"
+            other: "<strong>%{count} تک کا</strong> انتخاب کریں۔"
+          x_options:
+            one: "<strong>%{count} کا</strong> انتخاب کریں۔"
+            other: "<strong>%{count} کا</strong> انتخاب کریں۔"
+          between_min_and_max_options: "<strong>%{min} اور %{max} تک کے</strong> اختیارات میں سے انتخاب کریں۔"
       cast-votes:
-        title: "اپنے ووٹ دیں"
-        label: "ابھی ووٹ دیں۔"
+        title: "اپنے ووٹ ڈالیں"
+        label: "ابھی ووٹ دیں!"
+      keep-vote:
+        label: "واپس"
       show-results:
-        title: "پول کے نتائج ظاہر کریں"
+        title: "پول کے نتائج دکھائیں"
         label: "نتائج"
+      show-tally:
+        title: "ووٹوں کی تعداد کے حساب سے ووٹنگ کے نتائج دکھائیں"
+        label: "گنتی دکھائیں"
+      show-percentage:
+        title: "ووٹنگ کے نتائج فیصد میں دکھائیں"
+        label: "فیصد میں دکھائیں"
       remove-vote:
-        title: "اپنا ووٹ ہٹا دیں"
+        title: "اپنا ووٹ ہٹائیں"
+        label: "ووٹ کالعدم کریں"
       hide-results:
         title: "وآپس اپنے ووٹس پر"
+        label: "ووٹ"
       group-results:
         title: "رکن فیلڈ کے لحاظ سے ووٹوں کو گروپ کریں"
         label: "تجزیہ دکھائیں"
@@ -59,15 +98,33 @@ ur:
         percentage: "فیصد"
         count: "شمار"
       ranked_choice:
+        title:
+          rounds: "مراحل"
+          outcome: "نتیجہ"
         none: "کوئی نہیں"
+        majority: "اکثریت"
+        eliminated: "باہر ہونے والے"
+        round: "مرحلہ"
+        winner:
+          one: "مرحلہ کے بعد فاتح %{winner} تھے۔"
+          other: "%{count} مرحلوں کے بعد فاتح %{winner} تھے۔"
+        tied:
+          one: "مندرجہ ذیل امیدوار ایک مرحلہ کے بعد برابر رہے:"
+          other: "مندرجہ ذیل امیدوار %{count} مراحل کے بعد برابر رہے:"
       options:
         label: "اختیارات"
+        ranked_choice:
+          abstain: "باہر رہیں"
+          highest_priority: "(سب سے زیادہ ترجیح)"
+          lowest_priority: "(کم ترین ترجیح)"
+          login: "ووٹ دینے کے لیے لاگ ان کریں!"
       error_while_toggling_status: "معذرت، اِس پول کی حیثیت تبدیل کرتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا۔"
       error_while_casting_votes: "معذرت، آپ کے ووٹ ڈالتے وقت ایک خرابی کا سامنا کرنا پڑا۔"
       error_while_fetching_voters: "معذرت، ووٹرز کو دکھاتے وقت ایک خرابی کا سامنا کرنا پڑا۔"
       error_while_exporting_results: "معذرت، پول کے نتائج برآمد کرنے میں ایک خرابی پیش آئی۔"
       ui_builder:
-        insert: پول شامل کریے
+        title: پول بنائیں
+        insert: پول درج کریں
         help:
           options_min_count: کم از کم 1 آپشن درج کریں۔
           options_max_count: زیادہ سے زیادہ %{count} آپشنز درج کریں۔
@@ -79,6 +136,7 @@ ur:
           label: قِسم
           regular: اکیلا انتخاب
           multiple: کثیر الانتخاب
+          ranked_choice: ترتیب وار پسندیدگی
           number: نمبر ریٹنگ
         poll_result:
           label: نتائج دکھائیں...
@@ -98,6 +156,8 @@ ur:
           step: قدم
         poll_public:
           label: دکھایں جنہوں نے ووٹ دیا
+        poll_dynamic:
+          label: بنانے کے بعد اختیارات شامل یا حذف کرنے کی اجازت دیں
         poll_title:
           label: عنوان (اختیاری)
         poll_options:

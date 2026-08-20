@@ -16,7 +16,7 @@ RSpec.describe Assigner do
     let(:secure_category) { Fabricate(:private_category, group: Fabricate(:group)) }
     let(:secure_topic) { Fabricate(:post).topic.tap { |t| t.update(category: secure_category) } }
     let(:moderator) { Fabricate(:moderator) }
-    let(:moderator_2) { Fabricate(:moderator) }
+    fab!(:moderator_2, :moderator)
     let(:admin) { Fabricate(:admin) }
     let(:assigner) { described_class.new(topic, moderator_2) }
     let(:assigner_self) { described_class.new(topic, moderator) }
@@ -161,34 +161,112 @@ RSpec.describe Assigner do
       expect(assignment.target).to eq(topic)
     end
 
-    it "enqueues assigned workflows matching the assignment target" do
-      SiteSetting.enable_discourse_workflows = true
-      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
-      DiscourseWorkflows::Registry.reset_indexes!
+    it "triggers unassigned event after unassigning" do
+      assigner.assign(moderator)
+      assignment_id = topic.assignment.id
 
-      create_published_workflow("all-assignments")
-      create_published_workflow("topic-assignments", "topic_assignments_only" => true)
+      event = DiscourseEvent.track(:unassigned) { assigner.unassign }
 
-      post_assignment_topic = Fabricate(:post).topic
-      post_assignment_post = Fabricate(:post, topic: post_assignment_topic)
+      assignment = event[:params].first
+      expect(assignment.id).to eq(assignment_id)
+      expect(assignment.topic_id).to eq(topic.id)
+      expect(assignment.assigned_to_id).to eq(moderator.id)
+    end
 
-      described_class.new(post_assignment_post, moderator_2).assign(moderator)
+    it "triggers unassigned event when deactivating instead of destroying" do
+      assigner.assign(moderator)
+      assignment_id = topic.assignment.id
 
-      expect(enqueued_workflow_trigger_node_ids).to contain_exactly("all-assignments")
+      event = DiscourseEvent.track(:unassigned) { assigner.unassign(deactivate: true) }
 
-      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+      assignment = event[:params].first
+      expect(assignment.id).to eq(assignment_id)
+    end
 
-      described_class.new(topic, moderator_2).assign(moderator)
+    context "with published assignment workflows" do
+      fab!(:all_assignments_workflow) do
+        Fabricate(
+          :discourse_workflows_workflow,
+          created_by: moderator_2,
+          published: true,
+          nodes: [
+            {
+              "id" => "all-assignments",
+              "type" => "trigger:assigned",
+              "typeVersion" => "1.0",
+              "name" => "All assignments",
+              "position" => {
+                "x" => 0,
+                "y" => 0,
+              },
+              "parameters" => {
+              },
+              "credentials" => {
+              },
+            },
+          ],
+          connections: {
+          },
+        )
+      end
+      fab!(:topic_assignments_workflow) do
+        Fabricate(
+          :discourse_workflows_workflow,
+          created_by: moderator_2,
+          published: true,
+          nodes: [
+            {
+              "id" => "topic-assignments",
+              "type" => "trigger:assigned",
+              "typeVersion" => "1.0",
+              "name" => "Topic assignments",
+              "position" => {
+                "x" => 0,
+                "y" => 0,
+              },
+              "parameters" => {
+                "topic_assignments_only" => true,
+              },
+              "credentials" => {
+              },
+            },
+          ],
+          connections: {
+          },
+        )
+      end
 
-      expect(enqueued_workflow_trigger_node_ids).to contain_exactly(
-        "all-assignments",
-        "topic-assignments",
-      )
+      it "enqueues assigned workflows matching the assignment target" do
+        SiteSetting.enable_discourse_workflows = true
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+        DiscourseWorkflows::Registry.reset_indexes!
 
-      trigger_data =
-        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["trigger_data"]
-      expect(trigger_data["assignment"]["target_type"]).to eq("Topic")
-      expect(trigger_data["post"]["id"]).to eq(topic.first_post.id)
+        post_assignment_topic = Fabricate(:post).topic
+        post_assignment_post = Fabricate(:post, topic: post_assignment_topic)
+
+        described_class.new(post_assignment_post, moderator_2).assign(moderator)
+
+        trigger_node_ids =
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
+            job["args"].first["trigger_node_id"]
+          end
+        expect(trigger_node_ids).to contain_exactly("all-assignments")
+
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+
+        described_class.new(topic, moderator_2).assign(moderator)
+
+        trigger_node_ids =
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
+            job["args"].first["trigger_node_id"]
+          end
+        expect(trigger_node_ids).to contain_exactly("all-assignments", "topic-assignments")
+
+        trigger_data =
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["trigger_data"]
+        expect(trigger_data["assignment"]["target_type"]).to eq("Topic")
+        expect(trigger_data["post"]["id"]).to eq(topic.first_post.id)
+      end
     end
 
     it "does not update notification level if already watching" do
@@ -247,48 +325,13 @@ RSpec.describe Assigner do
       another_mod = Fabricate(:moderator)
 
       Email::Sender.any_instance.expects(:send).once
-      expect(assigned_to?(moderator)).to eq(true)
+      expect(assigner.assign(moderator).fetch(:success)).to eq(true)
 
       Email::Sender.any_instance.expects(:send).never
-      expect(assigned_to?(moderator)).to eq(false)
+      expect(assigner.assign(moderator).fetch(:success)).to eq(false)
 
       Email::Sender.any_instance.expects(:send).once
-      expect(assigned_to?(another_mod)).to eq(true)
-    end
-
-    def assigned_to?(assignee)
-      assigner.assign(assignee).fetch(:success)
-    end
-
-    def create_published_workflow(trigger_node_id, configuration = {})
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: moderator_2,
-        published: true,
-        nodes: [
-          {
-            "id" => trigger_node_id,
-            "type" => "trigger:assigned",
-            "typeVersion" => "1.0",
-            "name" => trigger_node_id.humanize,
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "parameters" => configuration.deep_stringify_keys,
-            "credentials" => {
-            },
-          },
-        ],
-        connections: {
-        },
-      )
-    end
-
-    def enqueued_workflow_trigger_node_ids
-      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
-        job["args"].first["trigger_node_id"]
-      end
+      expect(assigner.assign(another_mod).fetch(:success)).to eq(true)
     end
 
     describe "forbidden reasons" do

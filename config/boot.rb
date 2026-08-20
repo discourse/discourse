@@ -35,7 +35,11 @@ if ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
 
   `rm -rf tmp/test_data_#{n} && mkdir -p tmp/test_data_#{n}/redis`
   pid =
-    Process.spawn("redis-server --dir tmp/test_data_#{n}/redis --port #{port}", out: "/dev/null")
+    Process.spawn(
+      { "LD_PRELOAD" => nil },
+      "redis-server --dir tmp/test_data_#{n}/redis --port #{port}",
+      out: "/dev/null",
+    )
 
   ENV["DISCOURSE_REDIS_PORT"] = port.to_s
   ENV["RAILS_DB"] = "discourse_test_#{n}"

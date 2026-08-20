@@ -1,0 +1,210 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
+import bodyClass from "discourse/helpers/body-class";
+import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
+import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
+import zoomFrameUrl from "../../lib/zoom-frame-url";
+import { isWithinEventTimeframe } from "../../models/discourse-post-event-event";
+import dismissKeyboardOnChatSend from "../../modifiers/dismiss-keyboard-on-chat-send";
+import zoomPageViewportFit from "../../modifiers/zoom-page-viewport-fit";
+import EmbeddableChatChannel from "./embeddable-chat-channel";
+
+const FRAME_MESSAGE_SOURCE = "discourse-zoom-frame";
+
+export default class LivestreamZoomPage extends Component {
+  @service currentUser;
+  @service embeddableChat;
+  @service siteSettings;
+
+  @tracked errorMessage;
+
+  // Bumped to reload the frame, which is what a retry amounts to: the meeting
+  // is set up by the page inside it, from scratch, on load.
+  @tracked joinAttempt = 0;
+
+  listenForFrame = modifier(() => {
+    window.addEventListener("message", this.onFrameMessage);
+
+    return () => window.removeEventListener("message", this.onFrameMessage);
+  });
+
+  get post() {
+    return this.args.topic?.postStream?.posts?.[0];
+  }
+
+  get event() {
+    if (!this.post?.event) {
+      return null;
+    }
+
+    return DiscoursePostEventEvent.create(this.post.event);
+  }
+
+  // The join button on the topic page is disabled outside this window, but the
+  // route can be reached directly at any time, so the gate has to be applied
+  // here too. The server enforces the same window when issuing a signature.
+  get canJoinNow() {
+    return (
+      isWithinEventTimeframe(
+        this.event?.allDay,
+        this.event?.startsAt,
+        this.event?.endsAt
+      ) ||
+      // TODO (martin) showzoom is for testing only, remove before merge
+      new URLSearchParams(window.location.search).get("showzoom")
+    );
+  }
+
+  get zoomUrl() {
+    return this.event?.livestreamUrl;
+  }
+
+  get topicUrl() {
+    return getURL(
+      this.args.topic.url || `/t/${this.args.topic.slug}/${this.args.topic.id}`
+    );
+  }
+
+  // Zoom's meeting view sizes itself to the window it is in, so it is given one
+  // of its own. Inside the frame the viewport is the frame, which leaves the
+  // page free to put chat below it.
+  get frameUrl() {
+    return zoomFrameUrl({
+      topicId: this.args.topic.id,
+      attempt: this.joinAttempt,
+      // TODO (martin) showzoom is for testing only, remove before merge
+      ignoreTimeframe: new URLSearchParams(window.location.search).get(
+        "showzoom"
+      ),
+    });
+  }
+
+  get canRenderChat() {
+    return (
+      this.siteSettings.chat_enabled &&
+      this.currentUser &&
+      this.embeddableChat.userCanChat &&
+      this.chatChannelId
+    );
+  }
+
+  get chatChannelId() {
+    return this.args.topic?.chat_channel_id;
+  }
+
+  @bind
+  onFrameMessage(event) {
+    if (
+      event.origin !== window.location.origin ||
+      event.data?.source !== FRAME_MESSAGE_SOURCE
+    ) {
+      return;
+    }
+
+    if (event.data.state === "left") {
+      // This page is only ever the meeting, so a user who leaves it has
+      // nowhere to go but back to the topic the webinar belongs to.
+      window.location.assign(this.topicUrl);
+    } else if (event.data.state === "error") {
+      this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
+    }
+  }
+
+  @action
+  retryZoom() {
+    this.errorMessage = null;
+    this.joinAttempt++;
+  }
+
+  @action
+  viewTopic(event) {
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    window.location.assign(this.topicUrl);
+  }
+
+  <template>
+    {{bodyClass "discourse-calendar-livestream-zoom-full"}}
+    <div
+      class={{dConcatClass
+        "discourse-calendar-livestream-zoom-page"
+        (if this.canRenderChat "--with-chat")
+      }}
+      {{zoomPageViewportFit}}
+    >
+      {{#if this.canJoinNow}}
+        {{#if this.errorMessage}}
+          <div class="discourse-calendar-livestream-zoom-page__fallback">
+            <p>{{this.errorMessage}}</p>
+
+            <DButton
+              @href={{this.zoomUrl}}
+              @label="discourse_calendar.livestream.zoom.open_in_zoom"
+              @icon="up-right-from-square"
+            />
+
+            <DButton
+              @action={{this.retryZoom}}
+              @label="discourse_calendar.livestream.zoom.join"
+              @icon="video"
+              class="btn-primary"
+            />
+          </div>
+        {{/if}}
+
+        <iframe
+          class="discourse-calendar-livestream-zoom-page__frame"
+          src={{this.frameUrl}}
+          title={{i18n "discourse_calendar.livestream.zoom.frame_title"}}
+          allow="camera; microphone; autoplay; display-capture; fullscreen"
+          {{this.listenForFrame}}
+        ></iframe>
+      {{else}}
+        <div class="discourse-calendar-livestream-zoom-page__waiting-wrapper">
+          <p class="discourse-calendar-livestream-zoom-page__waiting">
+            {{i18n "discourse_calendar.livestream.zoom.too_early"}}
+            <a
+              href={{this.topicUrl}}
+              class="raw-link"
+              {{on "click" this.viewTopic}}
+            >
+              {{i18n "discourse_calendar.livestream.zoom.view_topic"}}
+            </a>
+          </p>
+
+          <DiscoursePostEvent
+            @event={{this.event}}
+            @post={{this.post}}
+            @hideLivestreamVideo={{true}}
+          />
+        </div>
+
+      {{/if}}
+
+      {{#if this.canRenderChat}}
+        <div
+          class="discourse-calendar-livestream-zoom-page__chat"
+          {{dismissKeyboardOnChatSend}}
+        >
+          <EmbeddableChatChannel
+            @chatChannelId={{this.chatChannelId}}
+            @inline={{true}}
+          />
+        </div>
+      {{/if}}
+    </div>
+  </template>
+}

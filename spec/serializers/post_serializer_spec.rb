@@ -141,6 +141,21 @@ RSpec.describe PostSerializer do
       expect(json[:reviewable_score_count]).to eq(1)
       expect(json[:reviewable_score_pending_count]).to eq(1)
     end
+
+    it "omits the reviewable data when the reviewable type is no longer defined" do
+      reviewable.update_columns(type: "ReviewableDoesntExist", type_source: "some-plugin")
+      moderator = Fabricate(:moderator)
+
+      json = PostSerializer.new(post, scope: Guardian.new(moderator), root: false).as_json
+      expect(json[:reviewable_id]).to eq(nil)
+      expect(json[:reviewable_score_count]).to eq(0)
+
+      serializer = PostSerializer.new(post, scope: Guardian.new(moderator), root: false)
+      serializer.topic_view = TopicView.new(post.topic, moderator)
+      json = serializer.as_json
+      expect(json[:reviewable_id]).to eq(0)
+      expect(json[:reviewable_score_count]).to eq(0)
+    end
   end
 
   context "with a post by a nuked user" do
@@ -159,20 +174,21 @@ RSpec.describe PostSerializer do
   end
 
   context "with a post by a suspended user" do
-    def serializer
-      PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
-    end
+    fab!(:admin)
 
     it "serializes correctly" do
-      expect(serializer[:user_suspended]).to be_nil
+      serialized_post = described_class.new(post, scope: Guardian.new(admin), root: false).as_json
+      expect(serialized_post[:user_suspended]).to be_nil
 
       post.user.update!(suspended_till: 1.month.from_now)
 
-      expect(serializer[:user_suspended]).to eq(true)
+      serialized_post = described_class.new(post, scope: Guardian.new(admin), root: false).as_json
+      expect(serialized_post[:user_suspended]).to eq(true)
 
       freeze_time(2.months.from_now)
 
-      expect(serializer[:user_suspended]).to be_nil
+      serialized_post = described_class.new(post, scope: Guardian.new(admin), root: false).as_json
+      expect(serialized_post[:user_suspended]).to be_nil
     end
   end
 
@@ -591,19 +607,19 @@ RSpec.describe PostSerializer do
   end
 
   describe "#user_status" do
+    subject(:serialized_user_status) do
+      described_class.new(post, scope: Guardian.new(user), root: false).as_json[:user_status]
+    end
+
     fab!(:user_status)
     fab!(:user) { Fabricate(:user, user_status:) }
     fab!(:post) { Fabricate(:post, user:) }
-
-    def serialize_user_status(scope: Guardian.new(user))
-      described_class.new(post, scope:, root: false).as_json[:user_status]
-    end
 
     context "when user status is disabled" do
       before { SiteSetting.enable_user_status = false }
 
       it "doesn't include status" do
-        expect(serialize_user_status).to be_nil
+        expect(serialized_user_status).to be_nil
       end
     end
 
@@ -611,13 +627,13 @@ RSpec.describe PostSerializer do
       before { SiteSetting.enable_user_status = true }
 
       it "includes status" do
-        expect(serialize_user_status).to be_present
+        expect(serialized_user_status).to be_present
       end
 
       it "doesn't include status if user doesn't have it set" do
         user.clear_status!
         user.reload
-        expect(serialize_user_status).to be_nil
+        expect(serialized_user_status).to be_nil
       end
 
       it "doesn't include status for a public topic author with a hidden profile" do
@@ -633,7 +649,7 @@ RSpec.describe PostSerializer do
       it "respects guardian's can_see_user_status?" do
         user.update!(silenced_till: 1.year.from_now)
         scope = Guardian.new(Fabricate(:user))
-        expect(serialize_user_status(scope:)).to be_nil
+        expect(described_class.new(post, scope:, root: false).as_json[:user_status]).to be_nil
       end
     end
   end
@@ -1004,11 +1020,11 @@ RSpec.describe PostSerializer do
     fab!(:author, :user)
     fab!(:author_post) { Fabricate(:post, user: author) }
     fab!(:group)
+    fab!(:post_localization) { Fabricate(:post_localization, post: author_post, locale: "ja") }
 
     before do
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_allowed_groups = group.id.to_s
-      Fabricate(:post_localization, post: author_post, locale: "ja")
     end
 
     it "is included for users in allowed groups" do
@@ -1041,11 +1057,15 @@ RSpec.describe PostSerializer do
     fab!(:linked_post) do
       Fabricate(:post, topic: linked_topic, post_number: 1, locale: "en", raw: "Subdue the enemy.")
     end
+    fab!(:topic_localization) do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+    end
+    fab!(:post_localization) do
+      Fabricate(:post_localization, post: linked_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+    end
 
     before do
       SiteSetting.content_localization_enabled = true
-      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
-      Fabricate(:post_localization, post: linked_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
       TopicLink.create!(
         topic: source_topic,
         post: source_post,
@@ -1075,19 +1095,22 @@ RSpec.describe PostSerializer do
       expect(entry[:excerpt]).to include("戦わずして勝つ")
     end
 
-    it "is omitted when the reader chose to see original content" do
-      reader.user_option.update!(show_original_content: true)
+    it "is omitted when the reader disables automatic translation" do
+      reader.user_option.update!(automatically_translate: false)
       expect(json_for(reader).key?(:localized_oneboxes)).to eq(false)
     end
 
-    it "is omitted for an anonymous reader with the show-original cookie" do
-      env = create_request_env.merge("HTTP_COOKIE" => ContentLocalization::SHOW_ORIGINAL_COOKIE)
+    it "is omitted for an anonymous reader with automatic translation disabled by cookie" do
+      env =
+        create_request_env.merge(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false",
+        )
       anon_scope = Guardian.new(nil, ActionDispatch::Request.new(env))
 
       expect(json_for(nil, scope: anon_scope).key?(:localized_oneboxes)).to eq(false)
     end
 
-    it "is included for an anonymous reader without the show-original cookie" do
+    it "is included for an anonymous reader without an automatic translation cookie" do
       anon_scope = Guardian.new(nil, ActionDispatch::Request.new(create_request_env))
 
       expect(json_for(nil, scope: anon_scope)[:localized_oneboxes].first[:title]).to eq("孫子の兵法")

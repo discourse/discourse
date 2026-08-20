@@ -4,6 +4,7 @@ import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 import DButton from "discourse/ui-kit/d-button";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
@@ -143,14 +144,6 @@ export default <template>
       <label for="locale-selector" class="control-label">{{i18n
           "user.locale.title"
         }}</label>
-      {{#if @controller.siteSettings.content_localization_enabled}}
-        <PreferenceCheckbox
-          @labelKey="user.show_original_content"
-          @checked={{@controller.model.user_option.show_original_content}}
-          data-setting-name="user-show-original-content"
-          class="pref-show-original-content"
-        />
-      {{/if}}
       <div class="controls">
         <ComboBox
           @id="locale-selector"
@@ -158,7 +151,7 @@ export default <template>
           @langProperty="value"
           @content={{@controller.availableLocales}}
           @value={{@controller.model.locale}}
-          @onChange={{fn (mut @controller.model.locale)}}
+          @onChange={{@controller.setInterfaceLanguage}}
           @options={{hash filterable=true none="user.locale.default"}}
         />
       </div>
@@ -166,6 +159,40 @@ export default <template>
         {{i18n "user.locale.instructions"}}
       </div>
     </div>
+  {{/if}}
+
+  {{#if @controller.siteSettings.content_localization_enabled}}
+    <fieldset
+      class="control-group pref-content-languages"
+      data-setting-name="user-content-languages"
+    >
+      <legend class="control-label">{{i18n
+          "user.content_languages.title"
+        }}</legend>
+      <div class="controls controls-dropdown pref-understood-languages">
+        <label for="understood-languages-selector">{{i18n
+            "user.content_languages.understood"
+          }}</label>
+        <MultiSelect
+          @id="understood-languages-selector"
+          @valueProperty="value"
+          @langProperty="value"
+          @content={{@controller.availableLocales}}
+          @value={{@controller.understoodLanguages}}
+          @onChange={{@controller.setUnderstoodLanguages}}
+          @options={{hash filterable=true}}
+        />
+        <div class="instructions">
+          {{i18n "user.content_languages.understood_description"}}
+        </div>
+      </div>
+      <PreferenceCheckbox
+        @labelKey="user.automatically_translate"
+        @checked={{@controller.model.user_option.automatically_translate}}
+        data-setting-name="user-automatically-translate"
+        class="pref-automatically-translate"
+      />
+    </fieldset>
   {{/if}}
 
   <div class="control-group home" data-setting-name="user-home">
@@ -203,12 +230,6 @@ export default <template>
       @checked={{@controller.model.user_option.enable_smart_lists}}
       data-setting-name="user-enable-smart-lists"
       class="pref-enable-smart-lists"
-    />
-    <PreferenceCheckbox
-      @labelKey="user.enable_defer"
-      @checked={{@controller.model.user_option.enable_defer}}
-      data-setting-name="user-enable-defer"
-      class="pref-defer-unread"
     />
     {{#if @controller.siteSettings.automatically_unpin_topics}}
       <PreferenceCheckbox

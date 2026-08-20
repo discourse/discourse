@@ -119,7 +119,9 @@ module DiscourseAi
 
         def message_for_role(role, msg)
           content_array = []
-          content_array << "#{msg[:id]}: " if msg[:id]
+          if (prefix = user_id_prefix(msg))
+            content_array << prefix
+          end
 
           content_array << msg[:content]
           content_array.flatten!

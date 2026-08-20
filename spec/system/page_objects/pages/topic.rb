@@ -7,12 +7,17 @@ module PageObjects
         @composer_component = PageObjects::Components::Composer.new
         @fast_edit_component = PageObjects::Components::FastEditor.new
         @topic_map_component = PageObjects::Components::TopicMap.new
+        @topic_timeline_component = PageObjects::Components::TopicTimeline.new
         @private_message_map_component = PageObjects::Components::PrivateMessageMap.new
       end
 
       def visit_topic(topic, post_number: nil)
         visit(topic.url(post_number))
         self
+      end
+
+      def timeline
+        @topic_timeline_component
       end
 
       def open_new_topic
@@ -447,6 +452,23 @@ module PageObjects
       def topic_tags
         tags_selector = ".title-wrapper .topic-category .list-tags .discourse-tags .discourse-tag"
         all(tags_selector).map(&:text)
+      end
+
+      def has_topic_tag?(name)
+        has_css?(".title-wrapper .discourse-tag", text: name)
+      end
+
+      def has_content_language_preferences_launcher?
+        has_css?(".topic-content-language-preferences")
+      end
+
+      def has_no_topic_admin_menu?
+        has_no_css?(".topic-admin-menu-trigger")
+      end
+
+      def open_content_language_preferences
+        find(".topic-content-language-preferences").click
+        PageObjects::Modals::ContentLanguagePreferences.new
       end
 
       private

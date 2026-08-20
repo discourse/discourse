@@ -564,6 +564,7 @@ class BulkImport::Base
     active
     staged
     trust_level
+    manual_locked_trust_level
     admin
     moderator
     approved
@@ -1349,6 +1350,8 @@ class BulkImport::Base
   end
 
   def process_user(user)
+    persist_imported_username = user.delete(:persist_imported_username) != false
+
     if user[:email].present?
       user[:email] = user[:email].downcase
 
@@ -1376,7 +1379,7 @@ class BulkImport::Base
     user[:username] = fix_name(user[:username]).presence || random_username
 
     if user[:username] != imported_username
-      @imported_usernames[imported_username] = user[:id]
+      @imported_usernames[imported_username] = user[:id] if persist_imported_username
       @mapped_usernames[imported_username] = user[:username]
     end
 

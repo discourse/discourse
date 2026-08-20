@@ -48,6 +48,8 @@ zh_TW:
       cancel: "取消"
       cancel_reply: "取消回覆"
       chat_channels: "頻道"
+      pinned_bar:
+        title: "已釘選"
       pinned: "已釘選"
       browse_all_channels: "瀏覽所有頻道"
       move_to_channel:
@@ -315,3 +317,9 @@ zh_TW:
         message: "訊息"
       chat_approval:
         message: "訊息"
+        buttons: "按鈕"
+        value: "價值"
+        style_default: "預設"
+        style_primary: "主要"
+        style_success: "成功"
+        icon: "圖示"

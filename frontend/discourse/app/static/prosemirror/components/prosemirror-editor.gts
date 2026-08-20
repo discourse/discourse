@@ -35,6 +35,7 @@ import type MenuService from "discourse/float-kit/services/menu";
 import type ToastsService from "discourse/float-kit/services/toasts";
 import {
   getExtensions,
+  type MarkdownOptions,
   type PluginParams,
   type RichEditorExtension,
 } from "discourse/lib/composer/rich-editor-extensions";
@@ -102,6 +103,8 @@ interface ProsemirrorEditorSignature {
     replaceToolbar?: (toolbar: ToolbarBase | null, owner?: ToolbarBase) => void;
     /** Toggles between the rich and plain-text editors. */
     toggleRichEditor?: () => void;
+    /** Markdown cook options from the host editor, exposed to extensions. */
+    markdownOptions?: MarkdownOptions;
   };
 }
 
@@ -187,6 +190,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         appEvents: this.appEvents,
         dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
+        markdownOptions: this.args.markdownOptions,
         // TODO(devxp-typescript-pending): remove the cast once GlimmerNodeView's
         // component field has a typed invocation signature.
         addGlimmerNodeView: (nodeView) =>
@@ -212,7 +216,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   }
 
   get keymapFromArgs(): Record<string, Command> {
-    const replacements: Record<string, string> = { tab: "Tab" };
+    const replacements: Record<string, string> = {
+      shift: "Shift",
+      tab: "Tab",
+    };
     const result: Record<string, Command> = {};
     for (const [key, value] of Object.entries(this.args.keymap ?? {})) {
       const pmKey = key
@@ -271,6 +278,8 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       dispatchTransaction: (tr) => {
         this.view.updateState(this.view.state.apply(tr));
 
+        // serializing rewrites the whole document, so only the user's own
+        // edits, the ones they can undo, may replace the value
         if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
           // If this gets expensive, we can debounce it
           const value = this.convertToMarkdown(this.view.state.doc);

@@ -79,7 +79,17 @@ ca:
       nodes:
         "trigger:assigned": "Assignat"
       assign_topic:
+        resources:
+          topic: "Tema"
+          post: "Publicació"
         operations:
           assign: "Assigna"
           unassign: "Desassigna"
         topic_id: "ID de tema"
+        post_id: "ID de publicació"
+      check_assignment:
+        target_types:
+          topic: "Tema"
+          post: "Publicació"
+        topic_id: "ID de tema"
+        post_id: "ID de publicació"

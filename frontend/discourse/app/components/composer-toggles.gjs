@@ -9,6 +9,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 export default class ComposerToggles extends Component {
   @service composer;
   @service site;
+  @service siteSettings;
 
   get additionalClasses() {
     return applyValueTransformer("composer-toggles-class", "");
@@ -57,15 +58,17 @@ export default class ComposerToggles extends Component {
     <div class={{dConcatClass "composer-controls" this.additionalClasses}}>
       <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
 
-      {{#if this.showToolbarToggle}}
-        <DButton
-          @icon="bars"
-          @action={{@toggleToolbar}}
-          @title={{this.toggleToolbarTitle}}
-          @preventFocus={{true}}
-          class="btn-transparent toggle-toolbar btn-small"
-        />
-      {{/if}}
+      {{#unless this.siteSettings.enable_composer_redesign}}
+        {{#if this.showToolbarToggle}}
+          <DButton
+            @icon="bars"
+            @action={{@toggleToolbar}}
+            @title={{this.toggleToolbarTitle}}
+            @preventFocus={{true}}
+            class="btn-transparent toggle-toolbar btn-small"
+          />
+        {{/if}}
+      {{/unless}}
       {{#if
         (and
           this.composer.allowPreview

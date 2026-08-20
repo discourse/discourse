@@ -34,6 +34,7 @@ const CREATE_ATTRIBUTES = [
   "allow_chat_direct_messages",
   "mcp_server_ids",
   "mcp_server_tool_names",
+  "subagent_ids",
   "max_turn_tokens",
 
   "compression_threshold",
@@ -164,6 +165,7 @@ export default class AiAgent extends RestModel {
     this.populateTools(attrs);
     attrs.mcp_server_ids = attrs.mcp_server_ids || [];
     attrs.mcp_server_tool_names = attrs.mcp_server_tool_names || {};
+    attrs.subagent_ids = attrs.subagent_ids || [];
     attrs.forced_tool_count = this.forced_tool_count || -1;
     attrs.thinking_effort = attrs.thinking_effort || "default";
     attrs.response_format = attrs.response_format || [];

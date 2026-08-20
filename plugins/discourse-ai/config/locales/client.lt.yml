@@ -307,6 +307,37 @@ lt:
         periods:
           last_day: "Paskutinės 24 valandos"
           custom: "Pasirinktinis..."
+      logs:
+        short_title: "Įrašai"
+        apply: "Kandidatuoti"
+        successful: "Sėkmingas"
+        failed: "Nepavyko"
+        unknown: "Nežinoma"
+        topic_id: "Temos ID"
+        post_id: "Įrašo ID"
+        time: "Laikas"
+        when: "Kada"
+        model: "Modelis"
+        request: "Užklausa"
+        user: "Narys"
+        context: "Kontekstas"
+        topic: "Tema"
+        post: "Įrašai"
+        post_short: "Įrašas %{id}"
+        duration: "Trukmė"
+        actions: "Veiksmai"
+        periods:
+          day: "Paskutinės 24 valandos"
+          week: "Paskutinės 7 dienos"
+          custom: "Išskirtinės"
+        detail:
+          request: "Užklausa"
+          response: "Atsakymas"
+          context: "Kontekstas"
+        retention:
+          summary_stage: "Santrauka"
+          deleted_stage: "Ištrinta"
+          save: "Saugoti"
       ai_agent:
         name: "Vardas"
         edit: "Redaguoti"
@@ -370,6 +401,9 @@ lt:
           required: "Privalomi"
       llms:
         display_name: "Vardas"
+        vision_modes:
+          disabled:
+            title: "Uždrausta"
         save: "Saugoti"
         edit: "Redaguoti"
         delete: Pašalinti
@@ -392,7 +426,6 @@ lt:
         tests:
           success: "Sėkmingai!"
         providers:
-          google: "Google"
           fake: "Išskirtinės"
       ai_helper:
         context_menu:
@@ -428,6 +461,7 @@ lt:
       ai_bot:
         llm: "Modelis:"
         debug_ai_modal:
+          duration_label: "Trukmė:"
           request: "Užklausa"
           response: "Atsakymas"
           next_log: "Kitas"

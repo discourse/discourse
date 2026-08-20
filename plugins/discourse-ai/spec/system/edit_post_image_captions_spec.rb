@@ -126,7 +126,7 @@ describe "Edit AI post image captions" do
     SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:admins]
     SiteSetting.content_localization_supported_locales = "en|ja"
     admin.update!(locale: "ja")
-    admin.user_option.update!(show_original_content: false)
+    admin.user_option.update!(automatically_translate: true)
     Fabricate(:topic_localization, topic: cat_topic, locale: "ja", fancy_title: "猫についての話題")
     create_japanese_localization(second_post)
     seed_english_descriptions
@@ -143,7 +143,7 @@ describe "Edit AI post image captions" do
       description: japanese_second_cat_caption,
     )
 
-    admin.user_option.update!(show_original_content: true)
+    admin.user_option.update!(automatically_translate: false)
     topic_page.visit_topic(cat_topic)
 
     expect(captions).to have_image_caption(second_post, image: 2, description: second_cat_caption)
@@ -155,7 +155,7 @@ describe "Edit AI post image captions" do
     SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:admins]
     SiteSetting.content_localization_supported_locales = "en|ja"
     admin.update!(locale: "ja")
-    admin.user_option.update!(show_original_content: false)
+    admin.user_option.update!(automatically_translate: true)
     Fabricate(:topic_localization, topic: cat_topic, locale: "ja", fancy_title: "猫についての話題")
     create_japanese_localization(second_post)
     seed_english_descriptions
@@ -191,7 +191,7 @@ describe "Edit AI post image captions" do
 
     expect(captions).to have_image_caption(second_post, image: 2, description: "翻訳された二匹目の猫だけの新しい説明")
 
-    admin.user_option.update!(show_original_content: true)
+    admin.user_option.update!(automatically_translate: false)
     topic_page.visit_topic(cat_topic)
 
     expect(captions).to have_image_caption(second_post, image: 2, description: second_cat_caption)

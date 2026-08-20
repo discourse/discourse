@@ -24,6 +24,7 @@ import { and, eq, gt, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 import AiAgentMcpToolSelectorModal from "../components/modal/ai-agent-mcp-tool-selector-modal";
 import AiAgentResponseFormatEditor from "../components/modal/ai-agent-response-format-editor";
@@ -51,32 +52,44 @@ export default class AgentEditor extends Component {
 
   @tracked allGroups = [];
   @tracked isSaving = false;
+  @tracked formApi = null;
 
-  dirtyFormData = null;
+  formDataModel = null;
+  formDataCache = null;
 
   @cached
   get formData() {
-    // This is to recover a dirty state after persisting a single form field.
-    // It's meant to be consumed only once.
-    if (this.dirtyFormData) {
-      const data = this.dirtyFormData;
-      this.dirtyFormData = null;
-      return data;
-    } else {
-      const data = this.args.model.toPOJO();
-
-      if (data.tools) {
-        data.toolOptions = this.mapToolOptions(data.toolOptions, data.tools);
-      }
-
-      data.compression_threshold ??= 80;
-
-      return data;
+    const model = this.args.model;
+    if (this.formDataModel === model) {
+      return this.formDataCache;
     }
+
+    const data = this.formDataFor(model);
+
+    this.formDataModel = model;
+    this.formDataCache = data;
+
+    return data;
+  }
+
+  formDataFor(model) {
+    const data = model.toPOJO();
+
+    if (data.tools) {
+      data.toolOptions = this.mapToolOptions(data.toolOptions, data.tools);
+    }
+
+    data.compression_threshold ??= 80;
+
+    return data;
   }
 
   get chatPluginEnabled() {
     return this.siteSettings.chat_enabled;
+  }
+
+  get hasFloatingActions() {
+    return this.args.model.isNew || this.formApi?.isDirty;
   }
 
   get allTools() {
@@ -85,6 +98,39 @@ export default class AgentEditor extends Component {
 
   get allMcpServers() {
     return this.args.agents.resultSetMeta.mcp_servers || [];
+  }
+
+  @action
+  subagentCandidates(selectedIds = []) {
+    const selected = new Set(selectedIds);
+
+    return this.args.agents.content
+      .filter((agent) => agent.id !== this.args.model.id)
+      .filter((agent) => agent.enabled || selected.has(agent.id))
+      .map((agent) => {
+        const localizedName = agent.enabled
+          ? agent.name
+          : i18n("discourse_ai.ai_agent.subagent_disabled", {
+              name: agent.name,
+            });
+        return {
+          id: agent.id,
+          name: localizedName,
+          disabled: !agent.enabled,
+        };
+      });
+  }
+
+  @action
+  subagentTool(selectedIds = []) {
+    if (!selectedIds.length) {
+      return null;
+    }
+
+    return {
+      name: i18n("discourse_ai.ai_agent.subagent_tool_name"),
+      tokenCount: this.args.model.subagent_tool_token_count || 0,
+    };
   }
 
   get maxPixelValues() {
@@ -149,6 +195,11 @@ export default class AgentEditor extends Component {
   }
 
   @action
+  registerFormApi(api) {
+    this.formApi = api;
+  }
+
+  @action
   async save(data) {
     const isNew = this.args.model.isNew;
     this.isSaving = true;
@@ -160,9 +211,11 @@ export default class AgentEditor extends Component {
       );
 
       await agentToSave.save();
+      await this.formApi.setProperties(this.formDataFor(agentToSave));
+      this.formApi.commit();
       this.#sortAgents();
 
-      if (isNew && this.args.model.rag_uploads.length === 0) {
+      if (isNew) {
         addUniqueValueToArray(this.args.agents.content, agentToSave);
         await this.router.replaceWith(
           "adminPlugins.show.discourse-ai-agents.edit",
@@ -205,15 +258,15 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  async toggleEnabled(dirtyData, value, { set }) {
-    set("enabled", value);
-    await this.persistField(dirtyData, "enabled", value);
+  async toggleEnabled(form, value, { set }) {
+    await set("enabled", value);
+    await this.persistField(form, "enabled", value);
   }
 
   @action
-  async togglePriority(dirtyData, value, { set }) {
-    set("priority", value);
-    await this.persistField(dirtyData, "priority", value, true);
+  async togglePriority(form, value, { set }) {
+    await set("priority", value);
+    await this.persistField(form, "priority", value, true);
   }
 
   @action
@@ -236,15 +289,15 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  async removeUpload(form, dirtyData, currentUploads, upload) {
+  async removeUpload(form, currentUploads, upload) {
     const updatedUploads = currentUploads.filter(
       (file) => file.id !== upload.id
     );
 
-    form.set("rag_uploads", updatedUploads);
+    await form.set("rag_uploads", updatedUploads);
 
     if (!this.args.model.isNew) {
-      await this.persistField(dirtyData, "rag_uploads", updatedUploads);
+      await this.persistField(form, "rag_uploads", updatedUploads);
     }
   }
 
@@ -416,21 +469,30 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  totalSelectedToolTokens(selectedTools = [], selectedMcpServers = []) {
+  totalSelectedToolTokens(
+    selectedTools = [],
+    selectedMcpServers = [],
+    subagentTool = null
+  ) {
     return (
       this.totalToolTokens(selectedTools) +
-      this.totalMcpToolTokens(selectedMcpServers)
+      this.totalMcpToolTokens(selectedMcpServers) +
+      (subagentTool?.tokenCount || 0)
     );
   }
 
   @action
-  totalSelectedToolCount(selectedTools = [], selectedMcpServers = []) {
+  totalSelectedToolCount(
+    selectedTools = [],
+    selectedMcpServers = [],
+    subagentTool = null
+  ) {
     const mcpToolCount = selectedMcpServers.reduce(
       (sum, server) => sum + server.selectedToolCount,
       0
     );
 
-    return selectedTools.length + mcpToolCount;
+    return selectedTools.length + mcpToolCount + (subagentTool ? 1 : 0);
   }
 
   @action
@@ -574,17 +636,14 @@ export default class AgentEditor extends Component {
     return updatedOptions;
   }
 
-  async persistField(dirtyData, field, newValue, sortAgents) {
+  async persistField(form, field, newValue, sortAgents) {
     if (!this.args.model.isNew) {
-      const updatedDirtyData = Object.assign({}, dirtyData);
-      updatedDirtyData[field] = newValue;
-
       try {
         const args = {};
         args[field] = newValue;
 
-        this.dirtyFormData = updatedDirtyData;
         await this.args.model.update(args);
+        form.commitField(field);
         if (sortAgents) {
           this.#sortAgents();
         }
@@ -613,13 +672,47 @@ export default class AgentEditor extends Component {
     window.location.href = getURL(exportUrl);
   }
 
+  @action
+  duplicateAgent() {
+    this.router.transitionTo("adminPlugins.show.discourse-ai-agents.new", {
+      queryParams: { copyFrom: this.args.model.id },
+    });
+  }
+
+  @action
+  positionActions([entry]) {
+    const editorElement = entry.target.closest(".ai-agent-editor");
+    const formElement = editorElement?.querySelector(".form-kit");
+    const actionsElement = formElement?.querySelector(".form-kit__actions");
+
+    if (!formElement || !actionsElement) {
+      return;
+    }
+
+    const { width } = formElement.getBoundingClientRect();
+    const { height } = actionsElement.getBoundingClientRect();
+    actionsElement.style.width = `${width}px`;
+    formElement.style.setProperty("--ai-agent-actions-height", `${height}px`);
+  }
+
   <template>
     <BackButton
       @route="adminPlugins.show.discourse-ai-agents"
       @label="discourse_ai.ai_agent.back"
     />
-    <div class="ai-agent-editor" {{didInsert this.updateAllGroups @model.id}}>
-      <Form @onSubmit={{this.save}} @data={{this.formData}} as |form data|>
+    <div
+      class="ai-agent-editor"
+      {{didInsert this.updateAllGroups @model.id}}
+      {{dOnResize this.positionActions}}
+    >
+      <Form
+        class={{if this.hasFloatingActions "has-floating-actions"}}
+        @commitOnSubmit={{false}}
+        @onSubmit={{this.save}}
+        @onRegisterApi={{this.registerFormApi}}
+        @data={{this.formData}}
+        as |form data|
+      >
         <form.Field
           @name="name"
           @title={{i18n "discourse_ai.ai_agent.name"}}
@@ -635,7 +728,7 @@ export default class AgentEditor extends Component {
         <form.Field
           @name="description"
           @title={{i18n "discourse_ai.ai_agent.description"}}
-          @validation="required|length:1,100"
+          @validation="required|length:1,2000"
           @disabled={{data.system}}
           @format="large"
           @type="textarea"
@@ -834,6 +927,33 @@ export default class AgentEditor extends Component {
             </field.Control>
           </form.Field>
 
+          <form.Field
+            @name="subagent_ids"
+            @title={{i18n "discourse_ai.ai_agent.subagents"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.subagents_help"}}
+            @format="large"
+            @type="custom"
+            as |field|
+          >
+            <field.Control>
+              <AiToolSelector
+                @value={{field.value}}
+                @disabled={{data.system}}
+                @onChange={{field.set}}
+                @content={{this.subagentCandidates field.value}}
+              />
+            </field.Control>
+          </form.Field>
+
+          {{#if data.subagent_ids.length}}
+            <p class="ai-agent-editor__subagent-summary">
+              {{i18n
+                "discourse_ai.ai_agent.subagents_summary"
+                count=data.subagent_ids.length
+              }}
+            </p>
+          {{/if}}
+
           {{#if this.allMcpServers.length}}
             <form.Field
               @name="mcp_server_ids"
@@ -862,7 +982,8 @@ export default class AgentEditor extends Component {
               data.mcp_server_ids data.mcp_server_tool_names
             )
             (this.selectedToolsWithTokens data.tools)
-            as |selectedMcpServers selectedTools|
+            (this.subagentTool data.subagent_ids)
+            as |selectedMcpServers selectedTools subagentTool|
           }}
             {{#if data.mcp_server_ids.length}}
               <div class="ai-agent-editor__mcp-server-summary">
@@ -924,8 +1045,12 @@ export default class AgentEditor extends Component {
             {{/if}}
 
             {{#let
-              (this.totalSelectedToolTokens selectedTools selectedMcpServers)
-              (this.totalSelectedToolCount selectedTools selectedMcpServers)
+              (this.totalSelectedToolTokens
+                selectedTools selectedMcpServers subagentTool
+              )
+              (this.totalSelectedToolCount
+                selectedTools selectedMcpServers subagentTool
+              )
               as |totalSelectedToolTokens totalSelectedToolCount|
             }}
               {{#let
@@ -956,6 +1081,15 @@ export default class AgentEditor extends Component {
                           </span>
                         </li>
                       {{/each}}
+                      {{#if subagentTool}}
+                        <li class="ai-agent-editor__tool-token-item">
+                          <span>{{subagentTool.name}}</span>
+                          <span class="ai-agent-editor__tool-token-count">
+                            {{subagentTool.tokenCount}}
+                            {{i18n "discourse_ai.ai_agent.tokens"}}
+                          </span>
+                        </li>
+                      {{/if}}
                       {{#each selectedMcpServers as |server|}}
                         <li class="ai-agent-editor__tool-token-item">
                           <span>
@@ -1165,7 +1299,7 @@ export default class AgentEditor extends Component {
                   @target={{data}}
                   @targetName="AiAgent"
                   @updateUploads={{fn this.updateUploads form}}
-                  @onRemove={{fn this.removeUpload form data field.value}}
+                  @onRemove={{fn this.removeUpload form field.value}}
                   @allowImages={{@agents.resultSetMeta.settings.rag_images_enabled}}
                 />
               </field.Control>
@@ -1197,7 +1331,7 @@ export default class AgentEditor extends Component {
           <form.Field
             @name="enabled"
             @title={{i18n "discourse_ai.ai_agent.enabled"}}
-            @onSet={{fn this.toggleEnabled data}}
+            @onSet={{fn this.toggleEnabled form}}
             @type="toggle"
             as |field|
           >
@@ -1207,7 +1341,7 @@ export default class AgentEditor extends Component {
           <form.Field
             @name="priority"
             @title={{i18n "discourse_ai.ai_agent.priority"}}
-            @onSet={{fn this.togglePriority data}}
+            @onSet={{fn this.togglePriority form}}
             @tooltip={{i18n "discourse_ai.ai_agent.priority_help"}}
             @type="toggle"
             as |field|
@@ -1304,8 +1438,20 @@ export default class AgentEditor extends Component {
           {{/if}}
         </form.Section>
 
-        <form.Actions>
+        <form.Actions
+          class={{if this.hasFloatingActions "is-floating"}}
+          {{dOnResize this.positionActions}}
+        >
           <form.Submit />
+
+          {{#unless @model.isNew}}
+            <form.Button
+              @label="discourse_ai.ai_agent.duplicate"
+              @action={{this.duplicateAgent}}
+              @icon="copy"
+              class="btn-default ai-agent-editor__duplicate"
+            />
+          {{/unless}}
 
           {{#unless (or @model.isNew @model.system)}}
             <form.Button

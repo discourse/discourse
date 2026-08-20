@@ -142,7 +142,7 @@ module DiscourseWorkflows
         def score_reason_for(exec_ctx, custom_reason)
           parts = [attribution_for(exec_ctx, escape: true)]
           custom_reason = custom_reason.to_s.strip
-          parts << ERB::Util.html_escape(custom_reason) if custom_reason.present?
+          parts << custom_reason if custom_reason.present?
           parts.join("<br>")
         end
 

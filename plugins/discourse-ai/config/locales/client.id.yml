@@ -156,6 +156,30 @@ id:
         total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
+      logs:
+        short_title: "Log"
+        apply: "menerapkan"
+        failed: "Gagal"
+        unknown: "Tidak diketahui"
+        topic_id: "ID Topik"
+        time: "Waktu"
+        when: "Ketika"
+        model: "Model"
+        request: "Pinta"
+        user: "Pengguna"
+        topic: "Topik"
+        post: "Postingan"
+        duration: "Durasi"
+        actions: "Aksi"
+        periods:
+          day: "24 jam terakhir"
+          week: "7 hari terakhir"
+        detail:
+          request: "Pinta"
+        retention:
+          summary_stage: "Ringkasan"
+          deleted_stage: "Dihapus"
+          save: "Simpan"
       ai_agent:
         name: "Nama"
         edit: "Ubah"
@@ -207,6 +231,9 @@ id:
         delete: "Hapus"
       llms:
         display_name: "Nama"
+        vision_modes:
+          disabled:
+            title: "Dinonaktifkan"
         save: "Simpan"
         edit: "Ubah"
         delete: Hapus
@@ -224,8 +251,6 @@ id:
           running: "Tes berlangsung..."
           success: "Sukses!"
           failure: "Mencoba menghubungi model menghasilkan kesalahan ini: %{error}"
-        providers:
-          google: "Google"
         provider_fields:
           region: "Wilayah"
       ai_helper:
@@ -278,6 +303,7 @@ id:
         share: "Salin percakapan AI"
         conversation_shared: "Percakapan disalin"
         debug_ai_modal:
+          duration_label: "Durasi:"
           request: "Pinta"
         share_ai_conversation:
           name: "Bagikan percakapan AI"

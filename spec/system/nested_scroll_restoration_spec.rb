@@ -79,9 +79,9 @@ RSpec.describe "Nested view scroll restoration" do
     saved_position = nested_view.current_scroll_position
 
     nested_view.with_root_pagination_paused(topic) do |pagination|
-      nested_view.visit_nested(topic)
-      expect(nested_view).to have_root_post_count(20)
+      nested_view.reload_with_pending_pagination
       pagination.wait
+      expect(nested_view).to have_root_post_count(20)
 
       restored_position = nested_view.current_scroll_position
       after_user_scroll_position = nested_view.user_scroll_by(distance: -1000)

@@ -471,7 +471,8 @@ CREATE TABLE public.ai_agents (
     max_turn_tokens integer,
     compression_threshold integer DEFAULT 80 NOT NULL,
     require_approval boolean DEFAULT false NOT NULL,
-    thinking_effort character varying
+    thinking_effort character varying,
+    subagent_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL
 );
 
 
@@ -519,7 +520,8 @@ CREATE TABLE public.ai_api_audit_logs (
     llm_id bigint,
     response_status integer,
     request_attempts jsonb,
-    estimated_cost numeric(20,10)
+    estimated_cost numeric(20,10),
+    time_to_first_token_msecs integer
 );
 
 
@@ -1955,7 +1957,9 @@ CREATE TABLE public.browser_pageview_country_daily_rollups (
     date date NOT NULL,
     country_code character varying(2),
     count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -1979,6 +1983,71 @@ ALTER SEQUENCE public.browser_pageview_country_daily_rollups_id_seq OWNED BY pub
 
 
 --
+-- Name: browser_pageview_crawler_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_crawler_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    logged_in boolean NOT NULL,
+    count bigint NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_crawler_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_crawler_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_crawler_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_crawler_daily_rollups_id_seq OWNED BY public.browser_pageview_crawler_daily_rollups.id;
+
+
+--
+-- Name: browser_pageview_entry_url_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_entry_url_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    entry_url character varying(2000) NOT NULL,
+    count bigint NOT NULL,
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_entry_url_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_entry_url_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_entry_url_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_entry_url_daily_rollups_id_seq OWNED BY public.browser_pageview_entry_url_daily_rollups.id;
+
+
+--
 -- Name: browser_pageview_event_scores; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1992,7 +2061,10 @@ CREATE TABLE public.browser_pageview_event_scores (
     rapid_nav_score smallint DEFAULT 0 NOT NULL,
     referrer_score smallint DEFAULT 0 NOT NULL,
     engagement_score smallint DEFAULT 0 NOT NULL,
-    ip_rotation_score smallint DEFAULT 0 NOT NULL
+    ip_rotation_score smallint DEFAULT 0 NOT NULL,
+    datacenter_asn_score smallint DEFAULT 0 NOT NULL,
+    single_request_no_referrer_score smallint DEFAULT 0 NOT NULL,
+    stale_browser_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -2034,7 +2106,10 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL
+    source smallint DEFAULT 1 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer,
+    browser smallint
 );
 
 
@@ -2066,7 +2141,9 @@ CREATE TABLE public.browser_pageview_referrer_daily_rollups (
     date date NOT NULL,
     normalized_referrer character varying(2000),
     count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2099,7 +2176,10 @@ CREATE TABLE public.browser_pageview_session_engagement_daily_rollups (
     logged_in boolean NOT NULL,
     sessions bigint NOT NULL,
     bounced bigint NOT NULL,
-    engaged_seconds_total bigint NOT NULL
+    engaged_seconds_total bigint NOT NULL,
+    likely_crawler_sessions bigint DEFAULT 0 NOT NULL,
+    likely_crawler_bounced bigint DEFAULT 0 NOT NULL,
+    likely_crawler_engaged_seconds_total bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2242,7 +2322,8 @@ CREATE TABLE public.category_activity_daily_rollups (
     category_id integer NOT NULL,
     topics integer DEFAULT 0 NOT NULL,
     posts integer DEFAULT 0 NOT NULL,
-    page_views bigint DEFAULT 0 NOT NULL
+    page_views bigint DEFAULT 0 NOT NULL,
+    likely_crawler_page_views bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -6806,7 +6887,8 @@ CREATE TABLE public.llm_models (
     max_output_tokens integer,
     cache_write_cost double precision DEFAULT 0.0,
     allowed_attachment_types text[] DEFAULT '{}'::text[] NOT NULL,
-    ai_secret_id bigint
+    ai_secret_id bigint,
+    vision_llm_model_id bigint
 );
 
 
@@ -8763,7 +8845,10 @@ CREATE TABLE public.search_logs (
     search_type integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     search_result_type integer,
-    user_agent character varying(2000)
+    user_agent character varying(2000),
+    crawler boolean DEFAULT false NOT NULL,
+    likely_crawler boolean DEFAULT false NOT NULL,
+    session_id character varying(32)
 );
 
 
@@ -11767,7 +11852,13 @@ CREATE TABLE public.user_options (
     chat_announce_new_messages boolean DEFAULT true NOT NULL,
     chat_new_message_sound boolean DEFAULT false NOT NULL,
     push_notification_level integer DEFAULT 1 NOT NULL,
-    send_shortcut integer DEFAULT 0 NOT NULL
+    automatically_translate boolean DEFAULT true NOT NULL,
+    understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    send_shortcut integer DEFAULT 0 NOT NULL,
+    ai_search_discoveries_mode integer DEFAULT 1 NOT NULL,
+    ai_search_discoveries_show_summary boolean DEFAULT true NOT NULL,
+    ai_search_discoveries_summary_detail integer DEFAULT 1 NOT NULL,
+    ai_search_discoveries_related_count integer DEFAULT 2 NOT NULL
 );
 
 
@@ -12435,7 +12526,6 @@ ALTER SEQUENCE public.web_hook_events_daily_aggregates_id_seq OWNED BY public.we
 --
 
 CREATE SEQUENCE public.web_hook_events_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -12753,6 +12843,20 @@ ALTER TABLE ONLY public.bookmarks ALTER COLUMN id SET DEFAULT nextval('public.bo
 --
 
 ALTER TABLE ONLY public.browser_pageview_country_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_country_daily_rollups_id_seq'::regclass);
+
+
+--
+-- Name: browser_pageview_crawler_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_crawler_daily_rollups_id_seq'::regclass);
+
+
+--
+-- Name: browser_pageview_entry_url_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_entry_url_daily_rollups_id_seq'::regclass);
 
 
 --
@@ -15046,6 +15150,22 @@ ALTER TABLE ONLY public.bookmarks
 
 ALTER TABLE ONLY public.browser_pageview_country_daily_rollups
     ADD CONSTRAINT browser_pageview_country_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_crawler_daily_rollups browser_pageview_crawler_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups
+    ADD CONSTRAINT browser_pageview_crawler_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_entry_url_daily_rollups browser_pageview_entry_url_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups
+    ADD CONSTRAINT browser_pageview_entry_url_daily_rollups_pkey PRIMARY KEY (id);
 
 
 --
@@ -17469,6 +17589,41 @@ CREATE INDEX idx_access_control_lists_allowed_user_ids ON public.access_control_
 
 
 --
+-- Name: idx_ai_api_audit_logs_failed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_failed_id ON public.ai_api_audit_logs USING btree (id) WHERE (((response_status IS NOT NULL) AND ((response_status < 200) OR (response_status > 299))) OR ((response_status IS NULL) AND (COALESCE(response_tokens, 0) <= 0)));
+
+
+--
+-- Name: idx_ai_api_audit_logs_feature_name_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_feature_name_id ON public.ai_api_audit_logs USING btree (feature_name, id) WHERE (feature_name IS NOT NULL);
+
+
+--
+-- Name: idx_ai_api_audit_logs_payload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_payload_id ON public.ai_api_audit_logs USING btree (id) WHERE ((raw_request_payload IS NOT NULL) OR (raw_response_payload IS NOT NULL));
+
+
+--
+-- Name: idx_ai_api_audit_logs_retried_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_retried_id ON public.ai_api_audit_logs USING btree (id) WHERE (request_attempts IS NOT NULL);
+
+
+--
+-- Name: idx_ai_api_audit_logs_user_id_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_user_id_id ON public.ai_api_audit_logs USING btree (user_id, id);
+
+
+--
 -- Name: idx_ai_bot_conversation_stars_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17525,6 +17680,27 @@ CREATE UNIQUE INDEX idx_bpcd_rollups_date_country_unique ON public.browser_pagev
 
 
 --
+-- Name: idx_bpcrawler_rollups_date_logged_in_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_bpcrawler_rollups_date_logged_in_unique ON public.browser_pageview_crawler_daily_rollups USING btree (date, logged_in);
+
+
+--
+-- Name: idx_bpe_beacon_created_at_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_beacon_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (source = 2);
+
+
+--
+-- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (source, created_at DESC, id DESC) WHERE (browser IS NULL);
+
+
+--
 -- Name: idx_bpe_created_at_country_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17553,10 +17729,24 @@ CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_even
 
 
 --
+-- Name: idx_bpe_normalized_url_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events USING btree (normalized_url_version);
+
+
+--
 -- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
+
+
+--
+-- Name: idx_bpeu_daily_rollups_date_url_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_bpeu_daily_rollups_date_url_unique ON public.browser_pageview_entry_url_daily_rollups USING btree (date, entry_url);
 
 
 --
@@ -20213,6 +20403,13 @@ CREATE INDEX index_llm_models_on_ai_secret_id ON public.llm_models USING btree (
 
 
 --
+-- Name: index_llm_models_on_vision_llm_model_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_llm_models_on_vision_llm_model_id ON public.llm_models USING btree (vision_llm_model_id);
+
+
+--
 -- Name: index_llm_quota_usages_on_llm_quota_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21095,6 +21292,13 @@ CREATE INDEX index_reviewables_on_status_and_type ON public.reviewables USING bt
 
 
 --
+-- Name: index_reviewables_on_target_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviewables_on_target_created_by_id ON public.reviewables USING btree (target_created_by_id);
+
+
+--
 -- Name: index_reviewables_on_target_id_where_post_type_eq_post; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21169,6 +21373,13 @@ CREATE UNIQUE INDEX index_screened_urls_on_url ON public.screened_urls USING btr
 --
 
 CREATE INDEX index_search_logs_on_created_at ON public.search_logs USING btree (created_at);
+
+
+--
+-- Name: index_search_logs_on_created_at_excluding_crawlers; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_search_logs_on_created_at_excluding_crawlers ON public.search_logs USING btree (created_at) WHERE ((NOT crawler) AND (NOT likely_crawler));
 
 
 --
@@ -23070,10 +23281,41 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260818143417'),
+('20260818081537'),
+('20260818045317'),
+('20260818045314'),
+('20260818045311'),
+('20260818045308'),
+('20260818045305'),
+('20260817092359'),
+('20260817054353'),
+('20260817054044'),
+('20260814083721'),
+('20260814060100'),
+('20260814060000'),
+('20260813202233'),
+('20260813071230'),
+('20260813071223'),
+('20260812094609'),
+('20260811231259'),
+('20260810154331'),
+('20260810012238'),
+('20260807182856'),
+('20260806074210'),
+('20260806074204'),
+('20260803015314'),
+('20260731055703'),
+('20260730183114'),
+('20260729153343'),
 ('20260728162521'),
 ('20260728162516'),
+('20260728150000'),
+('20260728134532'),
 ('20260728071552'),
+('20260728050038'),
 ('20260728045008'),
+('20260728033946'),
 ('20260727085824'),
 ('20260727035337'),
 ('20260723183001'),
@@ -23113,6 +23355,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260701013606'),
 ('20260630034050'),
 ('20260629233141'),
+('20260629210246'),
 ('20260629081606'),
 ('20260629022603'),
 ('20260626055145'),

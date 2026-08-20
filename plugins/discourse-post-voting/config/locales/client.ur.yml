@@ -5,9 +5,25 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_post_voting: "Discourse دھاگے کے لیے ووٹنگ"
+  post_voting:
+    reviewables:
+      comment_already_handled: "شکریہ، لیکن ہم پہلے ہی اس تبصرے کا جائزہ لے چکے اور طے کیا ہے کہ اسے دوبارہ فلیگ کرنے کی ضرورت نہیں۔"
   js:
+    discourse_post_voting:
+      title: "دھاگے کی ووٹنگ"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "نیا تبصرہ"
+      popup:
+        question_answer_user_commented: '%{site_title} پر %{username} نے "%{topic}" میں تبصرہ کیا'
+    category:
+      post_voting_settings_heading: دھاگے کی ووٹنگ
     vote:
       toggle_voters: "دکھایں جنہوں نے ووٹ دیا"
     last_answer_lowercase: آخری جواب

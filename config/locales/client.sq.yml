@@ -315,6 +315,14 @@ sq:
     admin_onboarding_banner:
       start_posting:
         back: "Kthehu mbrapa"
+    design_wizard:
+      back: "Kthehu mbrapa"
+      next: "Vazhdo përpara"
+      sections:
+        theme: "Tema"
+      homepage:
+        topics: "Topics"
+        categories: "Categories"
     about:
       edit: "Modifiko këtë faqe"
       simple_title: "Rreth Faqes"
@@ -564,9 +572,6 @@ sq:
         optional: "opsionale"
       claim_help:
         optional: "Ju mund ta përvetësoni këtë artikull për të parandaluar të tjerët ta shqyrtojnë atë."
-        required: "Ju duhet të përvetësoni artikuj para se t'i rishikoni ato."
-        claimed_by_you: "Ju e keni përvetësuar këtë artikull dhe mund ta rishikoni atë."
-        claimed_by_other: "Ky artikull mund të shqyrtohet vetëm nga <b>%{username}</b>."
       awaiting_approval: "Në pritje të miratimit"
       delete: "Fshij"
       settings:
@@ -597,6 +602,7 @@ sq:
         email: "Email"
         name: "Emri"
         fields: "Fushat"
+        penalty_forever: "Përgjithmonë"
         reject_reason: "Arsye"
         scrubbed_reason: "Arsye"
         scrub_record:
@@ -1283,7 +1289,6 @@ sq:
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
       enable_smart_lists: "Aktivizo listat e zgjuara kur shkruhet në redaktor"
-      enable_defer: "Aktivizo shënimin e temave si të palexuara"
       experimental_sidebar:
         enable: "Aktivizo shiritin anësor"
         options: "Opsione"
@@ -1905,7 +1910,7 @@ sq:
           email_placeholder: "emri@adresa.com"
           invite_by_email: "Email"
           restrict_domain: "Kufizoni në domein"
-          more_options: "Më shumë mundësi"
+          create_and_copy: "Kopjoni lidhjen"
           update: "Përditëso"
           summary:
             role_member: "Anëtar"
@@ -1916,7 +1921,7 @@ sq:
             expires: "Skadon"
             topic: "Topic"
             groups: "Grupet"
-            edit: "Redaktoni ftesën"
+            edit: "Redaktoni"
         bulk_invite:
           none: "Nuk ka ftesë për t'u shfaqur në këtë faqe."
           text: "Ftesë me shumicë"
@@ -2395,6 +2400,7 @@ sq:
       subcategory_count:
         one: "+%{count} nënkategori"
         other: "+%{count} nënkategori"
+      subcategories: "+ Nënkategori"
       topic_count:
         one: "%{count} temë në këtë kategori"
         other: "%{count} tema në këtë kategori"
@@ -2695,7 +2701,6 @@ sq:
         other: "%{count} kërkesa të hapura për anëtarësim për '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - përfunduar"
       new_features: "Karakteristika të reja në dispozicion!"
       admin_problems: "Këshilla të reja në panelin e faqes tuaj"
       dismiss_confirmation:
@@ -3927,6 +3932,8 @@ sq:
         custom:
           save: "Ruaj"
           delete: "Fshij"
+          localizations:
+            remove_language: "Hiq"
           links:
             icon:
               label: "Ikonë"
@@ -4163,11 +4170,21 @@ sq:
         default_value: "Paracaktuar"
       search:
         title: "Kërko"
+      site_traffic_explorer:
+        view_more: "Shiko më shumë"
+        cards:
+          visitors: "Vizitorët"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "Adresa IP"
+        filters:
+          ip: "Adresa IP"
+        series:
+          anonymous_human: "Anonim"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
         up_to_date: "Jeni të azhurnuar!"
-        critical_available: "Përditësim i rëndësishëm."
         updates_available: "Ka përditësime."
         no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "

@@ -226,6 +226,7 @@ ru:
       discourse_workflows:
         ai_agent:
           agent_id: "Агент"
+          mode: "Режим"
           select_agent: "Выберите агента..."
       ai_tool_approval:
         loading: "Загрузка…"
@@ -512,6 +513,48 @@ ru:
           last_week: "На прошлой неделе"
           last_month: "В прошлом месяце"
           custom: "Другое…"
+      logs:
+        short_title: "Журналы"
+        retry: "Попробовать снова"
+        apply: "Применить"
+        all_models: "Все модели"
+        successful: "Выполнена"
+        failed: "Не удалась"
+        unknown: "Расположение неизвестно"
+        topic_id: "ID темы"
+        post_id: "ID сообщения"
+        time: "Время"
+        when: "Когда"
+        outcome: "Результат"
+        feature: "Функция"
+        model: "Модель"
+        request: "Запрос"
+        provider: "Поставщик"
+        user: "Пользователь"
+        context: "Контекст"
+        topic: "Тема"
+        post: "Публикация"
+        post_short: "Публикация %{id}"
+        duration: "Период"
+        actions: "Действия"
+        filters:
+          period: "Временной период"
+        periods:
+          hour: "Последний %{count} час"
+          day: "За последние 24 часа"
+          week: "За последние 7 дней"
+          custom: "Другое"
+        detail:
+          request: "Запрос"
+          response: "Ответ"
+          context: "Контекст"
+          copy_request: "Копировать запрос"
+          copy_response: "Копировать ответ"
+          network_error: "Ошибка сети"
+        retention:
+          summary_stage: "Сводка"
+          deleted_stage: "Удалённые"
+          save: "Сохранить"
       ai_agent:
         ai_tools: "Инструменты"
         mcp_servers: "Серверы MCP"
@@ -537,7 +580,6 @@ ru:
         use_parent_llm: "Используйте языковую модель агента."
         compression_threshold_help: "Процент использования контекста (20–99), при котором включается автоматическое сжатие. Более низкие значения запускают сжатие раньше, сохраняя больший запас по времени."
         vision_enabled: Включить загрузку изображений
-        vision_enabled_help: Если эта функция включена, данный агент может добавлять изображения из сообщений и чатов, если выбранная модель поддерживает ввод изображений.
         vision_max_pixels: Максимальный размер изображения
         vision_max_pixel_sizes:
           low: Низкое качество — самое дешевое (256×256)
@@ -578,6 +620,8 @@ ru:
           clear_all: "Сбросить все"
         forced_tools: "Обязательные инструменты"
         allowed_groups: "Разрешенные группы"
+        duplicate: "Дублировать"
+        copy_name: "Копия «%{name}»"
         title: "Агенты"
         short_title: "Агенты"
         delete: "Удалить"
@@ -726,6 +770,9 @@ ru:
         url: "URL-адрес сервиса, где размещена модель"
         api_key: "API-ключ сервиса, где размещена модель"
         vision_enabled: "Поддерживает ввод изображений."
+        vision_modes:
+          disabled:
+            title: "Отключен"
         allowed_attachment_types: "Разрешено прикреплять документы."
         attachment_types_placeholder: "Выберите или введите расширения файлов (например, pdf, txt, csv, docx, xlsx)."
         ai_bot_user: "Пользователь AI-бота"
@@ -779,8 +826,7 @@ ru:
           anthropic-claude-opus-4-7: "Самая интеллектуальная модель Anthropic"
           anthropic-claude-sonnet-4-6: "Оптимальный баланс скорости и стоимости"
           anthropic-claude-haiku-4-5: "Быстрая и экономически эффективная модель"
-          google-gemini-3-1-pro: "Самая интеллектуальная модель Google"
-          google-gemini-3-flash: "Быстрое и экономичное решение с использованием мультимодального подхода."
+          google-gemini-3-1-pro-preview: "Самая интеллектуальная модель Google"
           open_router-moonshotai-kimi-k2-6: "Мультимодальная модель Moonshot с возможностями компьютерного зрения"
           open_router-deepseek-deepseek-v4-flash: "Новейшая высокопроизводительная модель DeepSeek с обработкой 1 миллиона контекстных данных."
           open_router-minimax-minimax-m2-7: "Модель MiniMax с большим контекстом"
@@ -819,7 +865,6 @@ ru:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -986,6 +1031,7 @@ ru:
           title: "Просмотр взаимодействий с AI"
           copy_request: "Копировать запрос"
           copy_response: "Копировать ответ"
+          duration_label: "Интервал:"
           request: "Запрос"
           response: "Ответ"
           next_log: "Далее"

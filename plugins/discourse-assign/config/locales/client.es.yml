@@ -202,11 +202,22 @@ es:
       post: "Publicación"
     discourse_workflows:
       nodes:
-        "action:assign_topic": "Asignar tema"
         "trigger:assigned": "Asignada"
       assign_topic:
+        resource: "Recurso"
+        resources:
+          topic: "Tema"
+          post: "Publicación"
         operations:
           assign: "Asignar"
           unassign: "Anular asignación"
         topic_id: "ID del tema"
+        post_id: "ID de la publicación"
+        assignee: "Asignado"
+      check_assignment:
+        target_types:
+          topic: "Tema"
+          post: "Publicación"
+        topic_id: "ID del tema"
+        post_id: "ID de la publicación"
         assignee: "Asignado"

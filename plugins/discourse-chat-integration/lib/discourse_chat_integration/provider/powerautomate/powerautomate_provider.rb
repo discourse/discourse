@@ -75,7 +75,7 @@ module DiscourseChatIntegration::Provider::PowerAutomateProvider
                 size: "Large",
                 weight: "Bolder",
                 text:
-                  "[#{topic.title} #{category} #{topic.tags.present? ? topic.tags.map(&:name).join(", ") : ""}](#{post.full_url})",
+                  "[#{topic.title} #{category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}](#{post.full_url})",
                 wrap: true,
                 spacing: "None",
               },

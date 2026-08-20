@@ -66,11 +66,13 @@ class PostActionsController < ApplicationController
 
     post_id =
       if flag_topic
-        begin
-          Topic.find(params[:id]).posts.first.id
-        rescue StandardError
-          raise Discourse::NotFound
-        end
+        topic = Topic.find_by(id: params[:id])
+        raise Discourse::NotFound unless guardian.can_see_topic?(topic)
+
+        post = topic.posts.first
+        raise Discourse::NotFound if post.blank?
+
+        post.id
       else
         params[:id]
       end

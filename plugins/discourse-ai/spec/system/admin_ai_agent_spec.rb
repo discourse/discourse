@@ -4,6 +4,7 @@ RSpec.describe "Admin AI agent configuration" do
   fab!(:admin)
   let(:page_header) { PageObjects::Components::DPageHeader.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }
+  let(:dialog) { PageObjects::Components::Dialog.new }
   let(:agent_editor_page) { PageObjects::Pages::AdminAiAgent.new }
   let(:mcp_tool_selector_modal) { PageObjects::Modals::AiAgentMcpToolSelector.new }
 
@@ -65,10 +66,153 @@ RSpec.describe "Admin AI agent configuration" do
     expect(page).not_to have_selector("input[name='toolOptions.Read.got_deleted']", visible: :all)
   end
 
+  it "saves and reloads selected subagents" do
+    child = Fabricate(:ai_agent, name: "Individual fact checker", enabled: true)
+    parent = Fabricate(:ai_agent, name: "Lead fact checker")
+
+    agent_editor_page.visit_edit(parent)
+    expect(agent_editor_page).to have_no_subagent_option(parent)
+    agent_editor_page.select_subagent(child)
+
+    expect(agent_editor_page).to have_selected_subagent(child)
+    expect(agent_editor_page).to have_subagent_summary(1)
+    expect(agent_editor_page).to have_floating_actions
+
+    agent_editor_page.form.submit
+    expect(page).to have_content(I18n.t("js.discourse_ai.ai_agent.saved"))
+    expect(parent.reload.subagent_ids).to eq([child.id])
+
+    agent_editor_page.visit_edit(parent)
+
+    expect(agent_editor_page).to have_selected_subagent(child)
+    expect(agent_editor_page).to have_subagent_summary(1)
+
+    child.update!(enabled: false)
+    agent_editor_page.visit_edit(parent)
+
+    expect(agent_editor_page).to have_disabled_subagent(child)
+
+    agent_editor_page.clear_subagents.form.submit
+    expect(parent.reload.subagent_ids).to eq([])
+  end
+
   it "will not allow deletion or editing of system agents" do
     visit "/admin/plugins/discourse-ai/ai-agents/#{DiscourseAi::Agents::Agent.system_agents.values.first}/edit"
     expect(page).not_to have_selector(".ai-agent-editor__delete")
     expect(form.field("system_prompt")).to be_disabled
+    expect(agent_editor_page).to have_subagent_selector_disabled
+  end
+
+  it "starts an unsaved custom agent by duplicating a system agent" do
+    source_agent =
+      AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::PostRawTranslator])
+
+    agent_editor_page.visit_edit(source_agent).duplicate
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-agents/new?copyFrom=-28")
+    expect(agent_editor_page).to have_form_field_value("name", "Copy of #{source_agent.name}")
+    expect(agent_editor_page).to have_form_field_value("description", source_agent.description)
+    expect(agent_editor_page).to have_form_field_value("system_prompt", source_agent.system_prompt)
+    expect(agent_editor_page).to have_agent_enabled_state(false)
+    expect(form.field("system_prompt")).not_to be_disabled
+
+    find(".back-button").click
+
+    expect(page).not_to have_selector(".ai-agent-list__name", text: "Copy of #{source_agent.name}")
+
+    find(".ai-agent-list-editor__new-button").click
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-agents/new")
+    expect(agent_editor_page).to have_form_field_value("name", "")
+  end
+
+  it "starts a duplicate from the searchable agent list" do
+    source_agent = Fabricate(:ai_agent, name: "猫 Translator", enabled: true)
+    other_agent = Fabricate(:ai_agent, name: "Unrelated custom agent")
+
+    agent_editor_page.visit_list.open_duplicate_menu.filter_duplicates("猫")
+
+    expect(agent_editor_page).to have_duplicate_option(source_agent.name)
+    expect(agent_editor_page).to have_no_duplicate_option(other_agent.name)
+
+    agent_editor_page.duplicate_from_list(source_agent.name)
+
+    expect(page).to have_current_path(
+      "/admin/plugins/discourse-ai/ai-agents/new?copyFrom=#{source_agent.id}",
+    )
+    expect(agent_editor_page).to have_form_field_value("name", "Copy of #{source_agent.name}")
+    expect(agent_editor_page).to have_agent_enabled_state(false)
+  end
+
+  it "opens a saved duplicate containing RAG uploads on its edit route" do
+    embedding_definition = Fabricate(:embedding_definition)
+    SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+    SiteSetting.ai_embeddings_enabled = true
+    source_agent = Fabricate(:ai_agent, description: "a" * 2000)
+    upload = Fabricate(:upload, user: admin)
+    UploadReference.ensure_exist!(upload_ids: [upload.id], target: source_agent)
+
+    agent_editor_page.visit_edit(source_agent).duplicate
+
+    expect(page).to have_content(upload.original_filename)
+
+    form.submit
+
+    expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-agents/\d+/edit})
+    expect(page).to have_content(upload.original_filename)
+  end
+
+  it "creates a distinct user when a saved duplicate needs one" do
+    llm_model = Fabricate(:llm_model)
+    source_agent =
+      Fabricate(
+        :ai_agent,
+        name: "Mention helper",
+        allow_topic_mentions: true,
+        default_llm_id: llm_model.id,
+      )
+    source_user = source_agent.create_user!
+
+    agent_editor_page.visit_edit(source_agent).duplicate
+
+    expect(agent_editor_page).to have_no_agent_user
+
+    form.submit
+
+    expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-agents/\d+/edit})
+    expect(agent_editor_page).to have_agent_user
+    expect(agent_editor_page).to have_no_agent_user(source_user.username)
+  end
+
+  it "floats the actions after an existing agent is changed" do
+    agent = Fabricate(:ai_agent, enabled: false)
+
+    agent_editor_page.visit_edit(agent)
+
+    expect(agent_editor_page).to have_no_floating_actions
+
+    form.field("enabled").toggle
+
+    expect(agent_editor_page).to have_no_floating_actions
+
+    form.field("name").fill_in("Updated agent")
+
+    expect(agent_editor_page).to have_floating_actions
+  end
+
+  it "keeps the actions floating when saving fails" do
+    agent = Fabricate(:ai_agent)
+    existing_agent = Fabricate(:ai_agent, name: "Existing agent")
+
+    agent_editor_page.visit_edit(agent)
+    form.field("name").fill_in(existing_agent.name)
+    form.submit
+
+    expect(dialog).to be_open
+    expect(dialog).to have_content(
+      I18n.t("js.generic_error_with_reason", error: "Name has already been taken"),
+    )
+    expect(agent_editor_page).to have_floating_actions
   end
 
   it "will enable agent right away when you click on enable but does not save side effects" do

@@ -19,6 +19,7 @@ fr:
         title: Politique
         attach: Créer une politique
         save: Enregistrer les modifications
+        edit: Modifier les paramètres de la politique
         insert: Insérer
         errors:
           group: Le groupe est requis

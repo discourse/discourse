@@ -301,6 +301,17 @@ bg:
     admin_onboarding_banner:
       start_posting:
         back: "Назад"
+    design_wizard:
+      back: "Назад"
+      next: "Напред"
+      sections:
+        theme: "Тема"
+        homepage: "Начална страница"
+      homepage:
+        topics: "Теми"
+        categories: "Категории"
+        styles:
+          boxes: "Кутии"
     about:
       edit: "Редактирайте тази страница"
       simple_title: "Относно"
@@ -470,9 +481,6 @@ bg:
         optional: "по избор"
       claim_help:
         optional: "Можете да заявите този артикул, за да попречите на други да го преглеждат."
-        required: "Трябва да заявите артикули, преди да можете да ги прегледате."
-        claimed_by_you: "Заявихте този артикул и можете да го прегледате."
-        claimed_by_other: "Този артикул може да бъде прегледан само от <b>%{username}</b>."
       awaiting_approval: "Очаква одобрение"
       delete: "Изтрий"
       settings:
@@ -503,6 +511,7 @@ bg:
         email: "Имейл"
         name: "Име"
         fields: "Полета"
+        penalty_forever: "Завинаги"
         reject_reason: "Причина"
         scrubbed_reason: "Причина"
         scrub_record:
@@ -1660,6 +1669,7 @@ bg:
             expires: "Изтича"
             topic: "Тема"
             groups: "Групи"
+            edit: "Редактирай"
         bulk_invite:
           none: "Няма покани за показване на тази страница."
           text: "Групова покана"
@@ -2029,6 +2039,7 @@ bg:
       subcategory_count:
         one: "+%{count} подкатегория"
         other: "+%{count} подкатегории"
+      subcategories: "+ Подкатегории"
       topic_count:
         one: "%{count} тема в тази категория"
         other: "%{count} теми в тази категория"
@@ -2241,7 +2252,6 @@ bg:
         other: "%{count} отворени заявки за членство в '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - завършено"
       new_features: "Налични са нови функции!"
       dismiss_confirmation:
         body:
@@ -3392,6 +3402,8 @@ bg:
           save: "Запази"
           delete: "Изтрий"
           delete_confirm: "Сигурни ли сте, че искате да изтриете този раздел?"
+          localizations:
+            remove_language: "Премахване"
           links:
             add: "Добавете друга връзка"
             delete: "Изтриване на връзката"
@@ -3632,11 +3644,18 @@ bg:
         default_value: "По подразбиране"
       search:
         title: "Търсене"
+      site_traffic_explorer:
+        columns:
+          top_urls: "URL"
+          ip_addresses: "IP адрес"
+        filters:
+          ip: "IP адрес"
+        series:
+          anonymous_human: "Анонимен"
       dashboard:
         title: "Работен плот"
         version: "Версия"
         up_to_date: "Вие сте с последна версия!"
-        critical_available: "Налична е важна актуализация."
         updates_available: "Налична е актуализация."
         no_check_performed: "Не е направена проверка за нова версия. Убедете се, че sidekiq работи."
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."

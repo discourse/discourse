@@ -9,6 +9,8 @@ describe "Reviewables" do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:moderator) { Fabricate(:moderator) }
   let(:toasts) { PageObjects::Components::Toasts.new }
+  let(:suspend_user_modal) { PageObjects::Modals::PenalizeUser.new("suspend") }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(admin) }
 
@@ -141,6 +143,29 @@ describe "Reviewables" do
     end
   end
 
+  describe "when there is a suspect user reviewable" do
+    fab!(:suspect_user) { Fabricate(:user, approved: false) }
+    fab!(:suspect_reviewable) { Fabricate(:suspect_user_reviewable, target: suspect_user) }
+
+    it "allows suspending the user without deleting them" do
+      review_page.visit_reviewable(suspect_reviewable)
+      review_page.select_bundled_action(suspect_reviewable, "user-suspend_user")
+
+      suspend_user_modal.suspend("spam profile")
+
+      expect(suspend_user_modal).to be_closed
+      expect(review_page).to have_reviewable_with_rejected_status(suspect_reviewable)
+      expect(review_page).to have_no_scrub_button(suspect_reviewable)
+      expect(suspect_user.reload).to be_suspended
+      expect(
+        UserHistory.find_by(
+          action: UserHistory.actions[:suspend_user],
+          target_user_id: suspect_user.id,
+        ).reviewable_id,
+      ).to eq(suspect_reviewable.id)
+    end
+  end
+
   context "when performing a review action from the show route" do
     fab!(:contact_group, :group)
     fab!(:contact_user, :user)
@@ -162,11 +187,47 @@ describe "Reviewables" do
 
         review_page.select_bundled_action(queued_post_reviewable, "delete_user")
 
+        expect(dialog).to have_content(
+          "Are you sure you want to delete @#{queued_post_reviewable.target_created_by.username}?",
+        )
+        expect(page).to have_css(".dialog-footer .btn-danger", text: I18n.t("js.delete"))
+        dialog.click_danger
+
         expect(review_page).to have_no_error_dialog_visible
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
         expect(review_page).to have_no_reviewable_action_dropdown
         expect(queued_post_reviewable.reload).to be_rejected
         expect(queued_post_reviewable.target_created_by).to be_nil
+      end
+
+      it "delete_user can be cancelled from the confirmation dialog" do
+        review_page.visit_reviewable(queued_post_reviewable)
+        review_page.select_bundled_action(queued_post_reviewable, "delete_user")
+
+        dialog.click_no
+
+        expect(dialog).to be_closed
+        expect(review_page).to have_reviewable_with_pending_status(queued_post_reviewable)
+        expect(queued_post_reviewable.reload).to be_pending
+        expect(queued_post_reviewable.target_created_by).to be_present
+
+        try_until_success do
+          expect(
+            ReviewableClaimedTopic.where(topic_id: queued_post_reviewable.topic_id),
+          ).to be_empty
+        end
+      end
+
+      it "reject_and_suspend rejects the post and suspends its author" do
+        review_page.visit_reviewable(queued_post_reviewable)
+        review_page.select_bundled_action(queued_post_reviewable, "reject_and_suspend")
+
+        suspend_user_modal.suspend("spam")
+
+        expect(suspend_user_modal).to be_closed
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(queued_post_reviewable.reload).to be_rejected
+        expect(queued_post_reviewable.target_created_by.reload).to be_suspended
       end
 
       it "allows revising and rejecting to send a PM to the user" do

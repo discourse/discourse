@@ -22,19 +22,20 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowAiAgentCatalog do
     )
   end
 
-  def invoke_tool(query:, include_disabled: false)
-    context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
+  subject(:result) do
     described_class.new(
       { query: query, include_disabled: include_disabled },
       bot_user: Discourse.system_user,
       llm: nil,
-      context: context,
+      context: bot_context,
     ).invoke
   end
 
-  it "returns enabled AI agents matching the query", :aggregate_failures do
-    result = invoke_tool(query: "support triage")
+  let(:query) { "support triage" }
+  let(:include_disabled) { false }
+  let(:bot_context) { DiscourseAi::Agents::BotContext.new(messages: [], user: admin) }
 
+  it "returns enabled AI agents matching the query", :aggregate_failures do
     expect(result[:status]).to eq("success")
     expect(result[:agents]).to contain_exactly(
       include(
@@ -47,11 +48,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowAiAgentCatalog do
     )
   end
 
-  it "can include disabled matches for awareness", :aggregate_failures do
-    result = invoke_tool(query: "old", include_disabled: true)
+  context "when disabled agents are included" do
+    let(:query) { "old" }
+    let(:include_disabled) { true }
 
-    expect(result[:agents]).to contain_exactly(
-      include(id: disabled_agent.id, name: disabled_agent.name, enabled: false),
-    )
+    it "returns disabled matches for awareness", :aggregate_failures do
+      expect(result[:agents]).to contain_exactly(
+        include(id: disabled_agent.id, name: disabled_agent.name, enabled: false),
+      )
+    end
   end
 end

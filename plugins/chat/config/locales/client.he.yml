@@ -72,6 +72,8 @@ he:
         close: "סגירת הודעות נעוצות"
         pinned_by_you: "ננעץ על ידיך"
         pinned_by_user: "ננעץ על ידי %{username}"
+      pinned_bar:
+        title: "נעוץ"
       no_pinned_messages: "אין הודעות נעוצות בערוץ הזה."
       pin_message: "נעיצת הודעה"
       unpin_message: "שליפת הודעה"
@@ -424,6 +426,8 @@ he:
           two: "%{count} חברים"
           many: "%{count} חברים"
           other: "%{count} חברים"
+        empty_state:
+          direct_message_title: "פציחה בשיחה עם %{name}"
         preview_card:
           log_in: "כניסה"
           sign_up: "הרשמה"
@@ -823,4 +827,11 @@ he:
         message: "הודעה"
       chat_approval:
         message: "הודעה"
+        buttons: "כפתורים"
+        value: "ערך"
+        style: "סגנון"
+        style_default: "ברירת מחדל"
+        style_primary: "ראשית"
+        style_success: "הצלחה"
+        icon: "סמל"
         channel_id: "ערוץ"

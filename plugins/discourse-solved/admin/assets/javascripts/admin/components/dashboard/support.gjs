@@ -14,6 +14,7 @@ import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { supportHeadlineKeys } from "discourse/plugins/discourse-solved/admin/lib/support-headline";
 import SupportResponseTime from "./support/response-time";
 import SupportTopicOutcomes from "./support/topic-outcomes";
 import SupportWhosAnswering from "./support/whos-answering";
@@ -34,6 +35,7 @@ const DeltaPill = <template>
 
 export default class SupportSection extends Component {
   @service currentUser;
+  @service siteSettings;
   @service toasts;
 
   @tracked selectedCategories = [];
@@ -69,60 +71,56 @@ export default class SupportSection extends Component {
   }
 
   get headline() {
-    const headline = this.data?.headline;
-    if (!headline) {
-      return null;
-    }
-
     const prefix = "admin.dashboard.sections.support.headline";
-    const titleKey = `${prefix}.${headline.key}.title`;
-
-    if (headline.key === "no_data") {
-      return { titleKey, summary: i18n(`${prefix}.no_data.summary`) };
+    const resolutionDirection = this.#direction(
+      this.data?.kpis?.resolution_rate
+    );
+    const replyDirection = this.#direction(this.data?.kpis?.avg_first_reply, {
+      noPriorDirection: "up",
+    });
+    if (
+      resolutionDirection === "unavailable" &&
+      replyDirection === "unavailable"
+    ) {
+      const headlineKeys = supportHeadlineKeys({ noData: true });
+      return {
+        title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+        summary: i18n(`${prefix}.summaries.${headlineKeys.summary}`),
+      };
     }
 
-    const parts = [
-      i18n(`${prefix}.resolution.${headline.resolution_direction}`, {
-        rate: headline.resolution_rate,
-      }),
-    ];
+    const headlineKeys = supportHeadlineKeys({
+      resolutionRate: resolutionDirection,
+      firstReplyTime: replyDirection,
+    });
+    const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
+    const cta = headlineKeys.cta
+      ? i18n(`${prefix}.cta.${headlineKeys.cta}`)
+      : null;
+    return {
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+      summary: cta ? `${summary} ${cta}` : summary,
+    };
+  }
 
-    if (headline.answerers_focus) {
-      parts.push(
-        i18n(`${prefix}.answerers.${headline.answerers_focus}`, {
-          share: headline.answerers_share,
-        })
-      );
+  #direction(kpi, { noPriorDirection } = {}) {
+    if (kpi?.value == null) {
+      return "unavailable";
     }
 
-    if (headline.first_reply_seconds != null) {
-      const dir = headline.first_reply_direction;
-      if (
-        (dir === "faster" || dir === "slower") &&
-        headline.first_reply_delta_seconds != null
-      ) {
-        parts.push(
-          i18n(`${prefix}.reply.${dir}`, {
-            time: durationTiny(headline.first_reply_seconds),
-            delta: durationTiny(headline.first_reply_delta_seconds),
-          })
-        );
-      } else {
-        parts.push(
-          i18n(`${prefix}.reply.flat`, {
-            time: durationTiny(headline.first_reply_seconds),
-          })
-        );
-      }
+    if (kpi.previous_value == null && noPriorDirection) {
+      return noPriorDirection;
     }
 
-    if (headline.key === "struggling" && headline.unanswered_count > 0) {
-      parts.push(
-        i18n(`${prefix}.unanswered`, { count: headline.unanswered_count })
-      );
+    const previousValue = kpi.previous_value ?? 0;
+    const roundedChange = Math.round(kpi.value - previousValue);
+    if (roundedChange > 0) {
+      return "up";
+    } else if (roundedChange < 0) {
+      return "down";
     }
 
-    return { titleKey, summary: parts.join(" ") };
+    return "flat";
   }
 
   get resolutionRate() {
@@ -169,6 +167,77 @@ export default class SupportSection extends Component {
           : `${slower ? "+" : "-"}${durationTiny(Math.abs(diff))}`,
       deltaClass: diff === 0 ? "--neutral" : slower ? "--neg" : "--pos",
     };
+  }
+
+  get appliedCategories() {
+    return (this.data?.category_ids ?? [])
+      .map((id) => Category.findById(id))
+      .filter(Boolean);
+  }
+
+  get categoryFilterTerm() {
+    if (this.appliedCategories.length > 0) {
+      return this.#categoryTerm(this.appliedCategories);
+    }
+
+    if (this.siteSettings.allow_solved_on_all_topics) {
+      return null;
+    }
+
+    const allSupport = (this.args.data?.category_options ?? [])
+      .map((option) => Category.findById(option.id))
+      .filter(Boolean);
+
+    return allSupport.length > 0 ? this.#categoryTerm(allSupport) : null;
+  }
+
+  #categoryTerm(categories) {
+    const slugs = categories.map((category) => Category.slugFor(category, ":"));
+    // `=` restricts to these exact categories, excluding subcategories, to
+    // match the dashboard's own count (accepted answers are opt-in per
+    // category and never inherited by subcategories).
+    return `=category:${slugs.join(",")}`;
+  }
+
+  get dateRangeTerms() {
+    const terms = [];
+    if (this.args.startDate) {
+      terms.push(
+        `created-after:${moment(this.args.startDate).format("YYYY-MM-DD")}`
+      );
+    }
+    if (this.args.endDate) {
+      // `created-before:D` matches created_at <= midnight on D, so pass the
+      // following day to cover all of the selected end date (the dashboard's
+      // own count instead runs through that day's end_of_day).
+      terms.push(
+        `created-before:${moment(this.args.endDate)
+          .add(1, "day")
+          .format("YYYY-MM-DD")}`
+      );
+    }
+    return terms;
+  }
+
+  get outcomeQueries() {
+    const statusTermsByRow = {
+      resolved: ["status:solved"],
+      in_progress: ["status:unsolved", "posts-min:2"],
+      unanswered: ["status:unsolved", "status:noreplies"],
+    };
+
+    return Object.fromEntries(
+      Object.entries(statusTermsByRow).map(([key, statusTerms]) => {
+        const q = [
+          ...statusTerms,
+          ...this.dateRangeTerms,
+          this.categoryFilterTerm,
+        ]
+          .filter(Boolean)
+          .join(" ");
+        return [key, { q }];
+      })
+    );
   }
 
   @action
@@ -267,7 +336,7 @@ export default class SupportSection extends Component {
         {{#if this.headline}}
           <div class="db-section__subheader">
             <div class="db-section__subintro">
-              <h3>{{i18n this.headline.titleKey}}</h3>
+              <h3>{{this.headline.title}}</h3>
               <p>{{this.headline.summary}}</p>
             </div>
 
@@ -353,7 +422,10 @@ export default class SupportSection extends Component {
         <div class="db-section__row-group">
           <div class="db-section__row">
             <div class="db-section__row-block db-support-outcomes">
-              <SupportTopicOutcomes @outcomes={{this.data.topic_outcomes}} />
+              <SupportTopicOutcomes
+                @outcomes={{this.data.topic_outcomes}}
+                @queries={{this.outcomeQueries}}
+              />
 
             </div>
             <div class="db-section__row-block db-support-response">

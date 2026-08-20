@@ -15,17 +15,57 @@ fr:
           kpi:
             accepted_solutions:
               label: "Solutions acceptées"
+              tooltip: "Nombre de sujets comportant une publication marquée comme solution."
         sections:
           support:
             title: "Assistance"
+            fetch_error: "Impossible de charger les données d'assistance."
+            save_error: "Impossible d'enregistrer votre sélection pour la prochaine fois."
+            headline:
+              titles:
+                insufficient_activity: "L'activité d'assistance est encore insuffisante"
+              summaries:
+                insufficient_activity: "Il n'y a encore aucune activité d'assistance pour cette période. Dès que des sujets seront créés, vous pourrez voir comment votre communauté les traite."
+            kpi:
+              resolution_rate:
+                label: "Taux de résolution"
+                tooltip: "Pourcentage de sujets d'assistance ouverts qui ont été résolus."
+              staff_involvement:
+                label: "Intervention des responsables"
+                tooltip: "Pourcentage de sujets d'assistance ouverts auxquels un responsable a apporté la première réponse."
+              avg_first_reply:
+                label: "Délai moyen de première réponse"
+                tooltip: "Délai moyen entre la création d'un sujet d'assistance et sa première réponse."
+            outcomes:
+              title: "Statut des sujets"
+              resolved:
+                label: "Résolus"
+                tooltip: "Nombre de sujets marqués comme résolus."
+              in_progress:
+                label: "En cours"
+                tooltip: "Nombre de sujets comportant au moins une réponse."
+              unanswered:
+                label: "Sans réponse"
+                tooltip: "Nombre de sujets sans réponse."
             answerers:
+              title: "Qui répond ?"
+              empty: "Aucune réponse pendant cette période."
               staff: "Responsables"
+              leader: "Principaux contributeurs"
+              regular: "Habitués"
               member: "Membres"
               basic: "Basique"
             response_time:
+              title: "Répartition des délais de réponse"
               buckets:
                 lt_1h: "< 1 heure"
+                "1_4h": "1 à 4 heures"
+                "4_24h": "4 à 24 heures"
                 gt_24h: "> 24 heures"
+              trend:
+                faster: "%{duration} plus rapide"
+                slower: "%{duration} plus lent"
+                tooltip: "Évolution du délai moyen de réponse."
   js:
     notifications:
       alt:
@@ -35,8 +75,11 @@ fr:
     solutions: "Solutions"
     solved:
       title: "Résolus"
+      notify_on_solved: "M'informer lorsqu'un sujet que je suis ou surveille est résolu. S'applique uniquement aux sujets des catégories qui autorisent les solutions."
       allow_accepted_answers: "Autoriser l'auteur du sujet et les responsables à marquer une réponse comme solution"
       solved_topics_auto_close_hours: "Fermer automatiquement le sujet (n) heures après la dernière réponse, une fois que le sujet a été marqué comme résolu."
+      notify_on_staff_accept_solved: "Informer l'auteur du sujet lorsqu'un responsable marque une solution"
+      empty_box_on_unsolved: "Afficher le statut non résolu des sujets dans la liste pour les thèmes compatibles"
       accept_answer: "Sélectionnez si cette réponse résout le problème"
       accepted_description: "C'est la solution acceptée à ce sujet"
       has_no_accepted_answer: "Ce sujet n'a pas de solution"
@@ -46,6 +89,7 @@ fr:
       solution_summary:
         one: "solution"
         other: "solutions"
+      accepted_answer_solver_info: "par %{user} dans la publication %{post}"
       accepted_answer_post_number: "publication %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -55,17 +99,39 @@ fr:
       no_solved_topics_title: "Vous n'avez encore résolu aucun sujet"
       no_solved_topics_title_others: "%{username} n'a encore résolu aucun sujet."
       no_solved_topics_body: "Lorsque vous fournissez une réponse utile à un sujet, votre réponse peut être sélectionnée comme solution par le ou la propriétaire ou responsable du sujet."
+      marked_solved_by: "acceptée par %{user}"
+      confirm_move_solution_title: "Déplacer la publication servant de solution"
+      confirm_move_solution:
+        one: "La publication sélectionnée est marquée comme solution de ce sujet. Si vous la déplacez, le sujet repassera au statut non résolu."
+        other: "L'une des publications sélectionnées est marquée comme solution de ce sujet. Si vous les déplacez, le sujet repassera au statut non résolu."
+      move_post_confirm:
+        one: "Déplacer la publication"
+        other: "Déplacer les publications"
       move_post_cancel: "Annuler"
+      dont_show_again: "Compris, ne plus afficher ce message"
+      confirm_solved_removal_title: "La solution sera supprimée"
+      confirm_solved_removal: "Cette modification désactivera les solutions pour ce sujet et supprimera la solution acceptée."
       confirm_solved_removal_confirm: "Confirmer"
       confirm_solved_removal_cancel: "Annuler"
       shared_issue:
+        label: "Moi aussi"
         label_with_count: "%{label} (%{count})"
+        title: "Je rencontre également ce problème"
+        author_title: "Vous avez créé ce sujet"
+        closed_title: "Ce sujet est fermé"
+        archived_title: "Ce sujet est archivé"
       no_answer:
         title: Votre question a-t-elle reçu une réponse ?
         description: "Mettez la réponse en surbrillance et aidez les autres utilisateurs en utilisant le bouton de solution sous la réponse adéquate."
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "votre message a été marqué comme solution"
+        topic_solved_title: "Sujet résolu"
+      topic_notifications:
+        tracking:
+          description: "Vous serez informé(e) si quelqu'un mentionne votre @nom, vous répond ou si le sujet est résolu. Le nombre de nouvelles réponses sera affiché pour ce sujet."
+        watching:
+          description: "Vous serez informé(e) de chaque nouvelle réponse dans ce sujet et lorsqu'il sera résolu. Le nombre de nouvelles réponses sera affiché pour ce sujet."
       category_type_support:
         title: "Assistance"
     topic_statuses:

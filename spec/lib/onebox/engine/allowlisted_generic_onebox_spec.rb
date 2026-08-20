@@ -19,13 +19,13 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
       end
     end
 
-    it "doesn't return the HTML when not in the `html_providers`" do
-      Onebox::Engine::AllowlistedGenericOnebox.html_providers = []
+    it "doesn't return the HTML when the provider does not match the URL host" do
+      Onebox::Engine::AllowlistedGenericOnebox.html_providers = {}
       expect(HTMLOnebox.new("http://coolsite.com").to_html).to be_nil
     end
 
-    it "returns the HMTL when in the `html_providers`" do
-      Onebox::Engine::AllowlistedGenericOnebox.html_providers = ["CoolSite"]
+    it "returns the HTML when the provider matches the URL host" do
+      Onebox::Engine::AllowlistedGenericOnebox.html_providers = { "CoolSite" => ["coolsite.com"] }
       expect(HTMLOnebox.new("http://coolsite.com").to_html).to eq "cool html"
     end
   end

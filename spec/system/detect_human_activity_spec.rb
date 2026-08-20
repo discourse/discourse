@@ -26,6 +26,7 @@ describe "Detect human activity" do
     # `steps` interpolates the movement into many small mousemove events,
     # mimicking the continuous path a real pointer traces.
     page.driver.with_playwright_page { |pw_page| pw_page.mouse.move(400, 400, steps: 30) }
+    page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("a") }
     flush_engagement
 
     try_until_success { expect(BrowserPageviewSessionEngagement.count).to eq(1) }
@@ -38,13 +39,15 @@ describe "Detect human activity" do
     expect(discovery.topic_list).to have_topics(count: 5)
 
     # Each move jumps straight to its destination with no intermediate events,
-    # the way a script driving the cursor would. A real keypress is added so a
-    # snapshot is actually sent (teleports alone leave the session empty).
+    # the way a script driving the cursor would. A real keypress and click meet
+    # the two-category threshold so a snapshot is sent.
     page.driver.with_playwright_page do |pw_page|
       pw_page.mouse.move(50, 50)
       pw_page.mouse.move(600, 600)
       pw_page.mouse.move(50, 600)
       pw_page.keyboard.press("a")
+      pw_page.mouse.down
+      pw_page.mouse.up
     end
     flush_engagement
 
@@ -61,6 +64,8 @@ describe "Detect human activity" do
     # beat before flushing so the duration has time to accumulate.
     page.driver.with_playwright_page do |pw_page|
       pw_page.keyboard.press("a")
+      pw_page.mouse.down
+      pw_page.mouse.up
       pw_page.wait_for_timeout(1200)
     end
     flush_engagement
@@ -77,6 +82,7 @@ describe "Detect human activity" do
     # popstate, which is what we count.
     discovery.topic_list.visit_topic(topics[0])
     page.go_back
+    page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("a") }
     flush_engagement
 
     try_until_success { expect(BrowserPageviewSessionEngagement.count).to eq(1) }

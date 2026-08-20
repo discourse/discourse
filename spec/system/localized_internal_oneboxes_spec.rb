@@ -65,8 +65,8 @@ describe "Localized internal oneboxes" do
     expect(host_post_obj).to have_cooked_content("戦わずして勝つ")
   end
 
-  it "leaves the onebox in its original language when 'Show Original' is on" do
-    japanese_user.user_option.update!(show_original_content: true)
+  it "leaves the onebox in its original language when automatic translation is off" do
+    japanese_user.user_option.update!(automatically_translate: false)
     sign_in(japanese_user)
     visit("/t/#{host_topic.id}")
 

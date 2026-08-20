@@ -61,7 +61,8 @@ module DiscourseChatIntegration::Provider::WebexProvider
     end
 
     markdown = "**#{topic.title}**: #{category}"
-    markdown += " #{topic.tags.map(&:name).join(", ")} " if topic.tags.present?
+    markdown +=
+      " #{DiscourseChatIntegration::Provider.display_tag_names(topic)} " if topic.tags.present?
     markdown += "(#{post.full_url}) from #{display_name}:\n"
     markdown +=
       post.excerpt(

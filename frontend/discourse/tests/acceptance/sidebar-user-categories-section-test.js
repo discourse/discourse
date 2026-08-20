@@ -11,7 +11,6 @@ import {
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance(
@@ -1023,18 +1022,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    const headerDropdown = selectKit(
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
-    );
+    const headerDropdown =
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown";
 
-    assert.true(headerDropdown.exists());
+    assert.dom(headerDropdown).exists();
 
-    await headerDropdown.expand();
+    await click(headerDropdown);
 
-    assert.true(headerDropdown.rowByValue("new-category").exists());
-    assert.true(headerDropdown.rowByValue("edit-categories").exists());
+    assert.dom("[data-menu-option-id='new-category']").exists();
+    assert.dom("[data-menu-option-id='edit-categories']").exists();
 
-    await headerDropdown.selectRowByValue("new-category");
+    await click("[data-menu-option-id='new-category']");
 
     assert.true(currentURL().startsWith("/new-category"));
   });
@@ -1382,12 +1380,10 @@ acceptance(
         .dom(".sidebar-hamburger-dropdown")
         .exists("hamburger sidebar is open");
 
-      const headerDropdown = selectKit(
+      await click(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
       );
-
-      await headerDropdown.expand();
-      await headerDropdown.selectRowByValue("new-category");
+      await click("[data-menu-option-id='new-category']");
 
       assert
         .dom(".sidebar-hamburger-dropdown")
@@ -1403,12 +1399,10 @@ acceptance(
         .dom(".sidebar-hamburger-dropdown")
         .exists("hamburger sidebar is open");
 
-      const headerDropdown = selectKit(
+      await click(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
       );
-
-      await headerDropdown.expand();
-      await headerDropdown.selectRowByValue("edit-categories");
+      await click("[data-menu-option-id='edit-categories']");
 
       assert
         .dom(".sidebar-hamburger-dropdown")
@@ -1430,18 +1424,13 @@ acceptance(
       await visit("/");
       await click("#toggle-hamburger-menu");
 
-      const headerDropdown = selectKit(
+      await click(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
       );
 
-      await headerDropdown.expand();
-
-      assert.true(
-        headerDropdown
-          .rowByValue("edit-categories")
-          .label()
-          .includes("Edit nav categories")
-      );
+      assert
+        .dom("[data-menu-option-id='edit-categories']")
+        .includesText("Edit nav categories");
     });
   }
 );

@@ -62,6 +62,7 @@ class SidebarUrl < ActiveRecord::Base
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
   validates :name, presence: true, length: { maximum: MAX_NAME_LENGTH }
   validates :value, presence: true, length: { maximum: MAX_VALUE_LENGTH }
+  validates :locale, presence: true, length: { maximum: 20 }
 
   validate :path_validator
 
@@ -89,7 +90,7 @@ class SidebarUrl < ActiveRecord::Base
   end
 
   def set_default_locale
-    self.locale ||= SiteSetting.default_locale.to_s
+    self.locale = SiteSetting.default_locale.to_s if locale.blank?
   end
 
   def self.built_in_community_section_link_value?(value)

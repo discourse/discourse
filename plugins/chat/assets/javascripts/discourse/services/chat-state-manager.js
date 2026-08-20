@@ -166,6 +166,10 @@ export default class ChatStateManager extends Service {
     return this.isFullPageActive || this.isDrawerActive;
   }
 
+  get isDrawerCollapsed() {
+    return this.isDrawerActive && !this.isDrawerExpanded;
+  }
+
   get isPinnedMessagesPaneOpen() {
     return this.router.currentRouteName === "chat.channel.pins";
   }

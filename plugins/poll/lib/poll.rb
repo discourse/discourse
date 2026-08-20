@@ -168,6 +168,12 @@ class DiscoursePoll::Poll
         return
       end
 
+      # user must be able to see the post
+      unless guardian.can_see?(post)
+        raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic") if raise_errors
+        return
+      end
+
       # either staff member or OP
       unless post.user_id == user&.id || user&.staff?
         if raise_errors
@@ -311,7 +317,14 @@ class DiscoursePoll::Poll
   end
 
   def self.grouped_poll_results(user, post_id, poll_name, user_field_name)
-    raise Discourse::InvalidParameters.new(:post_id) if !Post.where(id: post_id).exists?
+    post = Post.find_by(id: post_id)
+    raise Discourse::InvalidParameters.new(:post_id) unless post
+
+    guardian = Guardian.new(user)
+    if !guardian.can_see?(post)
+      raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic")
+    end
+
     poll =
       Poll.includes(:poll_options, :poll_votes, post: :topic).find_by(
         post_id: post_id,
@@ -320,7 +333,6 @@ class DiscoursePoll::Poll
     raise Discourse::InvalidParameters.new(:poll_name) unless poll
 
     # user must be allowed to post in topic
-    guardian = Guardian.new(user)
     if !guardian.can_create_post?(poll.post.topic)
       raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic")
     end
@@ -512,6 +524,10 @@ class DiscoursePoll::Poll
 
       # user must be allowed to post in topic
       guardian = Guardian.new(user)
+      if !guardian.can_see?(post)
+        raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic")
+      end
+
       if !guardian.can_create_post?(post.topic)
         raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic")
       end

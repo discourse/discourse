@@ -932,8 +932,23 @@ RSpec.describe Email::Receiver do
       expect { process(:tl4_user) }.to change(Topic, :count)
     end
 
-    it "ignores by case-insensitive title" do
-      SiteSetting.ignore_by_title = "foo"
+    it "ignores by case-insensitive title (single)" do
+      SiteSetting.ignore_by_title = "[auto generated]"
+      expect { process(:auto_generated_subject) }.to_not change(Topic, :count)
+    end
+
+    it "does not treat ignore_by_title as a regex" do
+      SiteSetting.ignore_by_title = "[auto generated]"
+      expect { process(:ignored) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
+    end
+
+    it "ignores by case-insensitive title (multiple)" do
+      SiteSetting.ignore_by_title = "not_the_ignored_string|foo|not_the_other_ignored_string"
+      expect { process(:ignored) }.to_not change(Topic, :count)
+    end
+
+    it "ignores by case-insensitive title (regex)" do
+      SiteSetting.ignore_by_title_regex = "t[ah]is.is"
       expect { process(:ignored) }.to_not change(Topic, :count)
     end
 
@@ -1019,6 +1034,15 @@ RSpec.describe Email::Receiver do
       expect { process(:new_user) }.to change(Topic, :count)
     end
 
+    it "queues an email with media from a stranger for review" do
+      SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+
+      expect { process(:new_user_with_media) }.to change(ReviewableQueuedPost, :count).by(1)
+
+      reviewable = ReviewableQueuedPost.order(:id).last
+      expect(reviewable.reviewable_scores.first.reason).to eq("contains_media")
+    end
+
     it "raises an UserNotFoundError if enable_staged_users is false " do
       SiteSetting.enable_staged_users = false
       expect { process(:new_user) }.to raise_error(Email::Receiver::UserNotFoundError)
@@ -1040,6 +1064,24 @@ RSpec.describe Email::Receiver do
       SiteSetting.email_in_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
       expect { process(:tl3_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
+    end
+
+    context "when the sender's address is an alias of a registered address" do
+      before { Fabricate(:user, email: "dis.course@bar.com") }
+
+      it "raises an EmailAliasNotAllowed if normalize_emails is enabled" do
+        SiteSetting.normalize_emails = true
+
+        expect { process(:new_user) }.to raise_error(Email::Receiver::EmailAliasNotAllowed)
+        expect(IncomingEmail.last.error).to eq("Email::Receiver::EmailAliasNotAllowed")
+      end
+
+      it "stages a new user if normalize_emails is disabled" do
+        SiteSetting.normalize_emails = false
+
+        expect { process(:new_user) }.to change(Topic, :count)
+        expect(Topic.last.user.email).to eq("discourse@bar.com")
+      end
     end
   end
 
@@ -1814,12 +1856,13 @@ RSpec.describe Email::Receiver do
           SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
         end
 
-        def create_post_reply_key(value)
-          Fabricate(:post_reply_key, reply_key: value, user: user2, post: post)
-        end
-
         it "when bounce without verp" do
-          create_post_reply_key("4f97315cc828096c9cb34c6f1a0d6fe8")
+          Fabricate(
+            :post_reply_key,
+            reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
+            user: user2,
+            post: post,
+          )
 
           expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
           post = Post.last
@@ -1836,10 +1879,10 @@ RSpec.describe Email::Receiver do
 
         context "when bounce with verp" do
           let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
-
-          before do
-            SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
-            create_post_reply_key(bounce_key)
+          let!(:bounce_post_reply_key) do
+            Fabricate(:post_reply_key, reply_key: bounce_key, user: user2, post: post)
+          end
+          let!(:bounce_email_log) do
             Fabricate(
               :email_log,
               to_address: email_address,
@@ -1848,6 +1891,8 @@ RSpec.describe Email::Receiver do
               post: post,
             )
           end
+
+          before { SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org" }
 
           it "creates a post with the bounce error" do
             expect { process(:hard_bounce_via_verp) }.to raise_error(

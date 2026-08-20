@@ -43,6 +43,7 @@ module Migrations
           TOPIC = 30
           DATETIME = 31
           ICON = 32
+          DATE = 33
         end
       end
     end

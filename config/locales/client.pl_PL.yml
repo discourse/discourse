@@ -6,6 +6,8 @@
 
 pl_PL:
   js:
+    ace_editor:
+      resize: "Zmień rozmiar edytora kodu"
     user_api_key:
       title: 'Autoryzuj "%{application_name}"'
       authorize: "Autoryzuj"
@@ -63,6 +65,7 @@ pl_PL:
         mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
         mandatory: "Obowiązkowe"
         disallowed: "Niedozwolone"
+        required_permission_not_added: "Co najmniej jeden beneficjent musi mieć %{permission} uprawnień do tego %{typeName}"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -584,27 +587,29 @@ pl_PL:
       pill: "Sugerowane"
       pm_title: "Sugerowane wiadomości"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Uruchom w %{step_count} prostych krokach"
+      launch_in_easy_steps: "Skonfiguruj swoją społeczność"
+      launch_in_easy_steps_subtitle: "Wykonano %{completed_steps} z %{step_count} kroków"
       congrats_onboarding_complete: "Gratulacje z okazji ukończenia procesu wdrażania!"
+      expand: "Rozwiń kroki konfiguracji"
+      collapse: "Zwiń kroki konfiguracji"
+      dismiss: "Odrzuć konfigurację"
       select_theme:
         title: "Dostosuj swoją witrynę"
-        description: "Wybierz motyw początkowy dla swojej społeczności"
-        action: "Wybierz motyw"
-        modal_title: "Wybierz motyw"
-        use_theme: "Użyj wybranego motywu"
-        enabled: "Wybrany"
-        applying_theme: "Stosowanie motywu..."
-        browse_all: "Zarządzaj motywami"
+        description: "Wybierz kolory, czcionki i stronę główną."
+        action: "Zobacz opcje"
+        completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
       invite_collaborators:
         title: "Zaproś współpracowników"
-        description: "Pierwsi członkowie pomagają ożywić Twoją społeczność"
+        description: "Pierwsi członkowie wcielają ją w życie."
         action: "Utwórz zaproszenie"
+        completed: "Zaproś więcej"
       start_posting:
         title: "Rozpocznij publikowanie"
-        description: "Daj ludziom temat do wspólnej rozmowy"
+        description: "Daj ludziom temat do dyskusji."
         action: "Zobacz pomysły"
+        completed: "Zobacz więcej pomysłów"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
         predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
@@ -624,6 +629,44 @@ pl_PL:
           what_is_your_favorite_food:
             title: "Jakie jest twoje ulubione jedzenie?"
             body: "Podziel się swoim ulubionym jedzeniem ze społecznością! Zacznę: uwielbiam pizzę, szczególnie z dodatkowym serem i pepperoni."
+    design_wizard:
+      title: "Dostosuj swoją witrynę"
+      subtitle: "Wybierz kolory, czcionki i stronę główną."
+      step_label: "Przejdź do kroku %{index}"
+      save: "Zapisz i zakończ"
+      back: "Wstecz"
+      next: "Dalej"
+      sections:
+        theme: "Motyw"
+        colors: "Domyślny kolor"
+        fonts: "Czcionki"
+        homepage: "Strona główna"
+      theme:
+        selected: "Wybrany"
+        custom_theme_notice: "Twoja witryna używa obecnie motywu %{name} jako domyślnego. Wybierz motyw poniżej, aby go podejrzeć. Zapisanie spowoduje zastąpienie obecnego motywu."
+      colors:
+        light: "Jasny"
+        dark: "Ciemny"
+        dark_only: "%{name} ma tylko tryb ciemny"
+        both_modes: "Każda paleta zawiera pasujący tryb jasny i ciemny"
+        user_selectable: "Umożliw członkom zmianę palet"
+        user_selectable_description: "Pokaż te palety w menu, z którego członkowie mogą wybierać"
+      fonts:
+        base_font: "Czcionka podstawowa"
+        heading_font: "Czcionka nagłówków"
+      homepage:
+        topics: "Tematy"
+        categories: "Kategorie"
+        topic_page_type: "Typ strony tematu"
+        topic_pages:
+          latest: "Tematy posortowane według ostatniej aktywności, najnowsze na początku."
+          new: "Tematy utworzone w ciągu ostatnich kilku dni, najnowsze na początku."
+          hot: "Tematy, które są obecnie popularne, łącząc ogólną popularność z niedawnym zaangażowaniem."
+        category_page_style: "Styl strony kategorii"
+        styles:
+          boxes: "Pola"
+          with_topics: "Kategorie z tematami"
+          only: "Tylko kategorie"
     about:
       edit: "Edytuj tę stronę"
       simple_title: "O stronie"
@@ -936,6 +979,7 @@ pl_PL:
       date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
       filtered_flagged_by: "Oflagowany przez"
+      no_component_found: "Nie znaleziono żadnego komponentu dla %{type}"
       unknown:
         title:
           one: "Masz elementy oczekujące na sprawdzenie w kolejce z wyłączonej wtyczki:"
@@ -980,10 +1024,6 @@ pl_PL:
       stale_help: "Ten element został rozwiązany przez <b>%{username}</b>."
       claim_help:
         optional: "Możesz przejąć tę pozycję, aby uniemożliwić innym jego sprawdzenie."
-        required: "Musisz przejąć tę pozycję, zanim będziesz mógł/mogła je przejrzeć."
-        claimed_by_you: "Przejęto tę pozycję i możesz ją teraz przejrzeć."
-        claimed_by_other: "Tę pozycję może zrecenzować tylko <b>%{username}</b>."
-        automatically_claimed_by: "Ta pozycja jest obecnie sprawdzana przez <b>%{username}</b>."
       claim:
         title: "Przejmij ten temat"
       unclaim:
@@ -1023,6 +1063,11 @@ pl_PL:
         email: "E-mail"
         name: "Imię"
         fields: "Pola"
+        silenced_until: "Wyciszony do"
+        silence_reason: "Powód wyciszenia"
+        suspended_until: "Zawieszony do"
+        suspend_reason: "Powód zawieszenia"
+        penalty_forever: "Zawsze"
         reject_reason: "Powód"
         scrubbed_by: "Rekord wyczyszczony przez"
         scrubbed_reason: "Powód"
@@ -1890,9 +1935,12 @@ pl_PL:
       external_links_in_new_tab: "Otwórz wszystkie linki zewnętrzne w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
-      enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
-      show_original_content: "Pokaż oryginalną treść zamiast przetłumaczonej."
+      automatically_translate: "Automatyczne tłumaczenie tematów i postów w innych językach"
+      content_languages:
+        title: "Języki treści"
+        understood: "Języki, które rozumiem"
+        understood_description: "Tematy i wpisy w tych językach nie będą tłumaczone. Język interfejsu jest zawsze uznawany za zrozumiały."
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -2604,9 +2652,8 @@ pl_PL:
           sent_title: "Zaproszenie wysłane"
           member_tab: "Członkowie"
           admin_tab: "Zespół"
-          member_description: "Zaproś innych do dołączenia do tej witryny. Udostępnij link lub wyślij zaproszenie e-mailem."
-          admin_description: "Zaproś ludzi do dołączenia do Twojego zespołu. Administratorzy mają pełny dostęp do tej witryny."
-          moderator_description: "Zaproś ludzi do swojego zespołu. Moderatorzy mogą pomóc w zarządzaniu treścią i członkami."
+          admin_description: "Administratorzy mają pełny dostęp do tej witryny, jej ustawień i danych."
+          moderator_description: "Moderatorzy mogą pomagać w zarządzaniu treścią i użytkownikami."
           staff_role_label: "Zaproś jako"
           staff_role_admin: "Administrator"
           staff_role_moderator: "Moderator"
@@ -2619,16 +2666,13 @@ pl_PL:
           invite_by_email: "E-mail"
           role_label: "Zaproś jako"
           restrict_domain: "Ogranicz do domeny"
-          restrict_domain_help: "Tylko osoby z adresem e-mail w tej domenie mogą zaakceptować link. Żeby zaprosić konkretną osobę, skorzystaj z pola „E-mail” powyżej."
+          restrict_domain_help: "Tylko osoby z adresem e-mail w tej domenie mogą zaakceptować ten link."
           domain_placeholder: "example.com"
           domain_invalid: "Wpisz poprawną domenę, np. example.com"
           arrive_at_topic_help: "Po zaakceptowaniu przekieruj użytkowników do konkretnego tematu."
-          create_and_send: "Utwórz i wyślij"
-          create_and_copy: "Utwórz i skopiuj link"
-          more_options: "Więcej opcji"
-          fewer_options: "Mniej opcji"
+          create_and_send: "Wyślij"
+          create_and_copy: "Skopiuj link"
           update: "Aktualizuj"
-          role_locked: "Po utworzeniu zaproszenia nie można zmienić jego typu."
           summary:
             sent_to: "Zaproszenie zostało wysłane e-mailem na adres %{email}. Możesz również udostępnić ten link bezpośrednio:"
             role: "Rola"
@@ -2643,7 +2687,7 @@ pl_PL:
             expires: "Wygasa"
             topic: "Temat"
             groups: "Grupy"
-            edit: "Edytuj zaproszenie"
+            edit: "Edytuj"
             view_invites: "Wyświetl zaproszenia"
           email_sent:
             body: "Zaproszenie zostało wysłane e-mailem na adres %{email}."
@@ -3264,6 +3308,7 @@ pl_PL:
         few: "+%{count} podkategorie"
         many: "+%{count} podkategorii"
         other: "+%{count} podkategorii"
+      subcategories: "+ Podkategorie"
       topic_count:
         one: "%{count} temat w tej kategorii"
         few: "%{count} tematy w tej kategorii"
@@ -3350,6 +3395,7 @@ pl_PL:
       toggle: "Przełącz filtry rozwijane"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
+      search_label: "Szukaj ikon"
       search_placeholder: "Szukaj ikon..."
       no_results: "Nie znaleziono ikon"
       results_count:
@@ -3357,6 +3403,11 @@ pl_PL:
         few: "Znaleziono %{count} ikony"
         many: "Znaleziono %{count} ikon"
         other: "Znaleziono %{count} ikon"
+      results_loaded:
+        one: "Załadowano %{count} ikonę, więcej jest dostępnych"
+        few: "Załadowano %{count} ikony, więcej jest dostępnych"
+        many: "Załadowano %{count} ikon, więcej jest dostępnych"
+        other: "Załadowano %{count} ikon, więcej jest dostępnych"
       favorites: "Ulubione"
       selected_icon: "Wybrana ikona: %{iconName}"
       clear: "Wyczyść ikonę"
@@ -3593,11 +3644,14 @@ pl_PL:
       italic_label: "I"
       italic_title: "Wyróżnienie"
       italic_text: "wyróżniony tekst"
-      heading_title: "Nagłówki"
+      text_size_title: "Rozmiary tekstu"
       heading_level_n: "Nagłówek %{levelNumber}"
       heading_level_n_title: "Nagłówek %{levelNumber}"
       heading_level_paragraph: "Akapit"
       heading_level_paragraph_title: "Akapit"
+      heading_level_small: "Mały"
+      heading_level_small_title: "Mały tekst"
+      heading_level_small_text: "Mały tekst"
       link_title: "Link"
       link_description: "tutaj wpisz opis linku"
       link_dialog_title: "Wstaw link"
@@ -3835,7 +3889,6 @@ pl_PL:
         other: "%{count} otwartych wniosków o członkostwo dla '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - zakończone"
       new_features: "Dostępne są nowe funkcje!"
       admin_problems: "Nowe porady w panelu administratora"
       upcoming_changes:
@@ -4475,6 +4528,8 @@ pl_PL:
         link: "Dziennik aktywności"
         title: "Dziennik aktywności tematu"
         empty: "Brak aktywności tematu do wyświetlenia."
+        load_more: "Załaduj więcej aktywności"
+        updated: "Zaktualizowano aktywność tematu."
       context:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
@@ -5393,6 +5448,10 @@ pl_PL:
       click_to_show_translation: "Kliknij, aby wyświetlić tłumaczenie"
       tap_to_show_translation: "Stuknij tutaj, aby wyświetlić tłumaczenie"
       ai_translation_disclaimer: "Tłumaczenia wygenerowane przez AI mogą być niedokładne."
+    content_localization:
+      preferences:
+        title: "Preferencje językowe treści"
+        login_to_set_languages: "Zaloguj się, aby ustawić więcej języków"
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
@@ -5950,6 +6009,7 @@ pl_PL:
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     invalid_video_url: Nie można odtworzyć tego filmu, ponieważ adres URL jest nieprawidłowy lub niedostępny.
     keyboard_shortcuts_help:
+      search_label: "Skróty wyszukiwania"
       search_placeholder: "Wyszukaj skrót według opisu lub kombinacji klawiszy"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -6443,13 +6503,32 @@ pl_PL:
           always_public: "Treść w tej sekcji jest zawsze publiczna"
           more_menu: "Menu więcej"
           localizations:
-            title: "Tłumaczenia"
             locale: "Język"
+            language: "Język sekcji"
+            language_description: "Podstawowy język tytułu i nazw łączy tej sekcji."
             title_label: "Tytuł sekcji"
-            link_label: "Nazwa linku"
-            add_section: "Dodaj tłumaczenie tytułu sekcji"
-            add_link: "Dodaj tłumaczenie nazwy linku"
-            remove: "Usuń tłumaczenie"
+            link_label: "Nazwy linków"
+            back: "Zawartość sekcji"
+            add_first: "Dodaj tłumaczenia"
+            manage:
+              one: "Zarządzaj tłumaczeniami (%{count} język)"
+              few: "Zarządzaj tłumaczeniami (%{count} języki)"
+              many: "Zarządzaj tłumaczeniami (%{count} języków)"
+              other: "Zarządzaj tłumaczeniami (%{count} języków)"
+            incomplete:
+              one: "Brak %{count} ciągu"
+              few: "Brak %{count} ciągów"
+              many: "Brak %{count} ciągów"
+              other: "Brak %{count} ciągów"
+            add_language: "Dodaj język"
+            remove_language: "Usuń"
+            remove_language_confirm: "Czy usunąć każde tłumaczenie %{language} dla tej sekcji?"
+            remove_cleared_confirm:
+              one: "Wyczyściłeś %{count} zapisane tłumaczenie. Zostanie ono usunięte. Kontynuować?"
+              few: "Wyczyściłeś %{count} zapisane tłumaczenia. Zostaną one usunięte. Kontynuować?"
+              many: "Wyczyściłeś %{count} zapisanych tłumaczeń. Zostaną one usunięte. Kontynuować?"
+              other: "Wyczyściłeś %{count} zapisanych tłumaczeń. Zostaną one usunięte. Kontynuować?"
+            untranslated: "Jeszcze nie przetłumaczono"
           links:
             title: "Linki do sekcji"
             add: "Dodaj kolejny link"
@@ -7391,6 +7470,77 @@ pl_PL:
       new_features:
         title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
+      site_traffic_explorer:
+        title: "Eksplorator ruchu w witrynie"
+        loading: "Ładowanie ruchu…"
+        errors:
+          timeout: "To zapytanie o ruch trwało za długo. Wybierz krótszy zakres dat i spróbuj ponownie."
+          unexpected: "Nie można załadować ruchu w witrynie. Spróbuj ponownie."
+        empty: "Brak pasujących wyświetleń stron"
+        summary: "Podsumowanie ruchu"
+        traffic_over_time: "Ruch w czasie"
+        pageviews: "Wyświetlenia strony"
+        metric_information: "O tej metryce"
+        active_filters: "Aktywne filtry ruchu"
+        filter_description: "%{filter} to <strong>%{value}</strong>"
+        filter_by:
+          one: "Filtruj według %{label}, %{count} odsłona strony"
+          few: "Filtruj według %{label}, %{count} odsłony strony"
+          many: "Filtruj według %{label}, %{count} odsłon stron"
+          other: "Filtruj według %{label}, %{count} odsłon stron"
+        remove_filter: "Usuń filtr %{filter}"
+        remove_traffic_type_filter: "Usuń filtr ruchu %{value}"
+        view_more: "Zobacz więcej"
+        no_dimension_data: "Brak danych dla tego podziału."
+        direct_or_unknown: "Bezpośredni / nieznany"
+        cards:
+          acquisition: "Nabytek"
+          pages: "Stron"
+          visitors: "Odwiedzający"
+        dimensions:
+          referrers: "Polecający"
+          countries: "Kraje"
+          networks: "Sieci"
+          top_urls: "Najpopularniejsze adresy URL"
+          entry_urls: "Wpisowe adresy URL"
+          browsers: "Przeglądarki"
+          ip_addresses: "Adresy IP"
+        columns:
+          referrers: "Polecający"
+          countries: "Kraj"
+          networks: "Sieć"
+          top_urls: "URL"
+          entry_urls: "Wpisowy adres URL"
+          browsers: "Przeglądarka"
+          ip_addresses: "Adres IP"
+        filters:
+          traffic_type: "Rodzaj ruchu"
+          top_url: "Najpopularniejszy adres URL"
+          entry_url: "Wpisowy adres URL"
+          referrer: "Polecający"
+          country: "Kraj"
+          network: "Sieć"
+          browser: "Przeglądarka"
+          ip: "Adres IP"
+        metrics:
+          pageviews:
+            label: "Wyświetlenia strony"
+          distinct_sessions:
+            label: "Różne sesje"
+          logged_in_share:
+            label: "Udział zalogowanych"
+          bounce_rate:
+            label: "Współczynnik odrzuceń"
+          average_session_duration:
+            label: "Średni czas trwania sesji"
+        series:
+          logged_in_human: "Zalogowani"
+          anonymous_human: "Anonimowi"
+          likely_crawler: "Prawdopodobne roboty indeksujące"
+        partial:
+          retention: "Dane dotyczące liczby wyświetleń stron przed %{date} nie są już dostępne, dlatego wyniki te obejmują tylko część wybranego zakresu dat."
+          pageview_limit: "Wyniki obejmują ostatnie %{limit} odsłon, począwszy od %{date} o %{time}. Wcześniejsze odsłony w wybranym zakresie dat nie są uwzględniane."
+          combined: "Wyniki obejmują ostatnie %{limit} odsłon, począwszy od %{pageviewLimitDate} o %{pageviewLimitTime}. Wcześniejsze odsłony w wybranym zakresie dat nie są uwzględniane; dane dotyczące odsłon sprzed %{date} nie są już dostępne."
       dashboard:
         title: "Panel"
         last_updated: "Panel zaktualizowany:"
@@ -7402,7 +7552,6 @@ pl_PL:
           few: "Korzystasz z najnowszej wersji, ale dostępne są %{count} nowe zmiany."
           many: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
           other: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
-        critical_available: "Ważna aktualizacja jest dostępna."
         updates_available: "Aktualizacje są dostępne."
         please_update: "Koniecznie zaktualizuj!"
         no_check_performed: "Sprawdzanie aktualizacji nie zostało przeprowadzone. Upewnij się, że sidekiq jest uruchomiony."
@@ -7543,24 +7692,81 @@ pl_PL:
                 other: "%{count} członków zostało zdegradowanych do tego poziomu zaufania"
               stable_aria: "brak ruchu"
             headline:
-              healthy_growth:
-                title: "Członkowie wyrabiają sobie nawyk powracania."
-                summary: "W tym okresie wzrosła lojalność, codzienne zaangażowanie i liczba nowych rejestracji."
-              declining:
-                title: "Członkowie powracają coraz rzadziej."
-                summary: "W tym okresie spadła lojalność, codzienne zaangażowanie i liczba nowych rejestracji."
-              engaged_but_shrinking:
-                title: "Członkowie są zaangażowani, ale społeczność się kurczy."
-                summary: "Przyczepność utrzymuje się na dobrym poziomie, ale dzienne zaangażowanie i liczba nowych rejestracji spadły."
-              growing_but_distracted:
-                title: "Nowi członkowie zapisują się, ale nie zostają na dłużej."
-                summary: "Liczba zapisów wzrosła, ale zainteresowanie spadło w tym okresie."
-              mixed:
-                title: "Trendy zaangażowania są w tym okresie zróżnicowane."
-                summary: "Niektóre wskaźniki rosną, a inne spadają — otwórz kafelki poniżej, aby zobaczyć szczegóły."
-              no_signal:
-                title: "Za mało aktywności, aby podsumować zaangażowanie."
-                summary: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
+              titles:
+                engagement_up: "Zaangażowanie w wybranym okresie wzrosło"
+                stickiness_and_daily_engagement_increased: "W wybranym okresie wzrosła lojalność i codzienne zaangażowanie"
+                stickiness_and_new_signups_increased: "W wybranym okresie wzrosła lojalność i liczba nowych rejestracji"
+                stickiness_increased: "Lojalność wzrosła w wybranym okresie"
+                daily_engagement_and_new_signups_increased: "W wybranym okresie zwiększyła się liczba codziennych interakcji i nowych rejestracji"
+                daily_engagement_increased: "W wybranym okresie wzrosło codzienne zaangażowanie"
+                new_signups_increased: "W wybranym okresie wzrosła liczba nowych rejestracji"
+                engagement_declined: "Zaangażowanie spadło w wybranym okresie"
+                some_engagement_declines: "Niektóre spadki zaangażowania w wybranym okresie"
+                engagement_steady: "Zaangażowanie jest stałe w wybranym okresie"
+                insufficient_activity: "Za mało aktywności, aby podsumować zaangażowanie."
+              summaries:
+                all_metrics_improved: "Wskaźniki lojalności, codziennego zaangażowania i nowych rejestracji wzrosły, co pokazuje, że więcej członków dołącza do Twojej społeczności i bierze w niej udział."
+                stickiness_and_daily_engagement_up_new_signups_down: "Wzrosła lojalność i codzienne zaangażowanie, ale liczba nowych rejestracji spadła."
+                stickiness_and_daily_engagement_up_new_signups_flat: "Wzrosła lojalność i codzienne zaangażowanie, ale liczba nowych rejestracji pozostała na tym samym poziomie."
+                stickiness_and_daily_engagement_up: "Wzrasta lojalność i codzienne zaangażowanie."
+                stickiness_and_new_signups_up_daily_engagement_down: "Wzrosła lojalność i liczba nowych rejestracji, ale spadło dzienne zaangażowanie."
+                stickiness_up_daily_engagement_and_new_signups_down: "Wzrosła lojalność, ale dzienne zaangażowanie i liczba nowych rejestracji spadły."
+                stickiness_up_daily_engagement_down: "Wzrosła lojalność, ale spadło codzienne zaangażowanie."
+                stickiness_and_new_signups_up_daily_engagement_flat: "Wzrosła lojalność i liczba nowych rejestracji, ale dzienne zaangażowanie pozostało na tym samym poziomie."
+                stickiness_up_new_signups_down: "Wzrosła lojalność, ale spadła liczba nowych rejestracji."
+                stickiness_up_daily_engagement_and_new_signups_flat: "Wzrosła lojalność, ale dzienne zaangażowanie i liczba nowych rejestracji pozostają na tym samym poziomie."
+                stickiness_up_daily_engagement_flat: "Lojalność użytkowników rośnie, ale dzienne zaangażowanie pozostaje na tym samym poziomie."
+                stickiness_and_new_signups_up: "Wzrasta lojalność i liczba nowych zapisów."
+                stickiness_up_new_signups_flat: "Wzrosła lojalność, ale liczba nowych rejestracji pozostała na tym samym poziomie."
+                stickiness_up: "Wzrosła lojalność."
+                daily_engagement_and_new_signups_up_stickiness_down: "Wzrosło dzienne zaangażowanie i liczba nowych rejestracji, ale lojalność spadła."
+                daily_engagement_up_stickiness_and_new_signups_down: "Zaangażowanie dzienne rośnie, ale lojalność i liczba nowych rejestracji maleją."
+                daily_engagement_up_stickiness_down: "Codzienne zaangażowanie rośnie, ale lojalność maleje."
+                new_signups_up_stickiness_and_daily_engagement_down: "Liczba nowych rejestracji rośnie, ale lojalność i codzienne zaangażowanie maleją."
+                all_metrics_down: "Wskaźniki lojalności, codziennego zaangażowania i nowych rejestracji spadły."
+                stickiness_and_daily_engagement_down_new_signups_steady: "Lojalność i codzienne zaangażowanie spadają, ale liczba nowych rejestracji utrzymuje się na stałym poziomie."
+                stickiness_and_daily_engagement_down: "Lojalność i codzienne zaangażowanie spadają."
+                new_signups_up_stickiness_down: "Liczba nowych zapisów wzrosła, ale zainteresowanie spadło."
+                stickiness_and_new_signups_down_daily_engagement_steady: "Lojalność i liczba nowych rejestracji spadają, ale dzienne zaangażowanie utrzymuje się na stabilnym poziomie."
+                stickiness_down_daily_engagement_and_new_signups_steady: "Lojalność spadła, ale dzienne zaangażowanie i liczba nowych rejestracji utrzymują się na stabilnym poziomie."
+                stickiness_down_daily_engagement_steady: "Lojalność spadła, ale codzienne zaangażowanie utrzymuje się na stabilnym poziomie."
+                stickiness_and_new_signups_down: "Spadł wskaźnik lojalności i nowych rejestracji."
+                stickiness_down_new_signups_steady: "Lojalność spadła, ale liczba nowych rejestracji utrzymuje się na stałym poziomie."
+                stickiness_down: "Lojalność spadła."
+                daily_engagement_and_new_signups_up_stickiness_flat: "Wzrosło dzienne zaangażowanie i liczba nowych rejestracji, ale lojalność pozostała na tym samym poziomie."
+                daily_engagement_up_new_signups_down: "Dzienne zaangażowanie wzrosło, ale liczba nowych rejestracji spadła."
+                daily_engagement_up_stickiness_and_new_signups_flat: "Zaangażowanie dzienne rośnie, ale lojalność i liczba nowych rejestracji pozostają na tym samym poziomie."
+                daily_engagement_up_stickiness_flat: "Codzienne zaangażowanie rośnie, ale lojalność pozostaje na tym samym poziomie."
+                new_signups_up_daily_engagement_down: "Liczba nowych zapisów rośnie, ale dzienne zaangażowanie spada."
+                daily_engagement_and_new_signups_down_stickiness_steady: "Dzienne zaangażowanie i liczba nowych rejestracji spadła, ale lojalność utrzymuje się na stałym poziomie."
+                daily_engagement_down_stickiness_and_new_signups_steady: "Liczba dziennych zaangażowań spadła, ale lojalność i liczba nowych rejestracji utrzymują się na stabilnym poziomie."
+                daily_engagement_down_stickiness_steady: "Dzienne zaangażowanie spada, ale lojalność utrzymuje się na stabilnym poziomie."
+                new_signups_up_stickiness_and_daily_engagement_flat: "Liczba nowych zapisów rośnie, ale lojalność i codzienne zaangażowanie pozostają na tym samym poziomie."
+                new_signups_down_stickiness_and_daily_engagement_steady: "Liczba nowych rejestracji spadła, ale lojalność i codzienne zaangażowanie utrzymują się na stabilnym poziomie."
+                all_metrics_steady: "Brak znaczących zmian w poziomie lojalnośći, codziennego zaangażowania lub nowych rejestracji."
+                stickiness_and_daily_engagement_steady: "Brak znaczących zmian w poziomie lojalnośći i codziennego zaangażowania."
+                new_signups_up_stickiness_flat: "Liczba nowych zapisów rośnie, ale lojalność pozostaje na tym samym poziomie."
+                new_signups_down_stickiness_steady: "Liczba nowych zapisów spadła, ale lojalność utrzymuje się na stałym poziomie."
+                stickiness_and_new_signups_steady: "Brak znaczących zmian w liczbie lojalnych klientów i nowych rejestracjach."
+                stickiness_steady: "Brak znaczących zmian w lojalności."
+                daily_engagement_and_new_signups_up: "Wzrosło codzienne zaangażowanie i liczba nowych rejestracji."
+                daily_engagement_up_new_signups_flat: "Dzienne zaangażowanie wzrosło, ale liczba nowych rejestracji pozostała na tym samym poziomie."
+                daily_engagement_up: "Dzienny poziom zaangażowania wzrasta."
+                daily_engagement_and_new_signups_down: "Dzienny poziom zaangażowania i nowych rejestracji spadł."
+                daily_engagement_down_new_signups_steady: "Dzienne zaangażowanie spadło, ale liczba nowych rejestracji utrzymuje się na stałym poziomie."
+                daily_engagement_down: "Dzienne zaangażowanie spadło."
+                new_signups_up_daily_engagement_flat: "Liczba nowych zapisów rośnie, ale dzienne zaangażowanie pozostaje na tym samym poziomie."
+                new_signups_down_daily_engagement_steady: "Liczba nowych rejestracji spadła, ale dzienne zaangażowanie utrzymuje się na stabilnym poziomie."
+                daily_engagement_and_new_signups_steady: "Brak znaczących zmian w codziennym zaangażowaniu i liczbie nowych rejestracji."
+                daily_engagement_steady: "Brak znaczących zmian w codziennym zaangażowaniu."
+                new_signups_up: "Nowe rejestracje wzrosły."
+                new_signups_down: "Nowe rejestracje zmalały."
+                new_signups_steady: "Brak znaczących zmian w liczbie nowych rejestracji."
+                insufficient_activity: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
+              cta:
+                dau_mau: "Przyjrzyj się aktywnościom według kategorii, aby sprawdzić, które obszary Twojej społeczności mogą wymagać Twojej uwagi."
+                daily_engaged_users: "Zbadaj spadek, aby zobaczyć, którzy członkowie zrezygnowali."
+                new_signups: "Przyjrzyj się danym dotyczącym ruchu w Twojej witrynie, aby dowiedzieć się, w jaki sposób wzorce ruchu mogą wpływać na liczbę rejestracji w tym okresie."
               metrics:
                 new_signups: "Nowe rejestracje"
                 dau_mau: "Lepkość DAU / MAU"
@@ -7570,38 +7776,39 @@ pl_PL:
             fetch_error: "Nie udało się wczytać danych wyszukiwania. Spróbuj odświeżyć stronę."
             logging_disabled: 'Rejestrowanie wyszukiwania jest wyłączone, więc żadne dane nie są gromadzone. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zapytań wyszukiwania w dzienniku</a> , aby rozpocząć ich gromadzenie.'
             logging_disabled_moderator: "Rejestrowanie wyszukiwania jest wyłączone, więc żadne dane nie są gromadzone. Poproś administratora o włączenie rejestrowania zapytań wyszukiwania, aby rozpocząć ich gromadzenie."
-            count_headline:
-              last_7_days:
-                one: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwanie na stronie"
-                few: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwania na stronie"
-                many: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-                other: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-              last_30_days:
-                one: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwanie na stronie"
-                few: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwania na stronie"
-                many: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-                other: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-              last_3_months:
-                one: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwanie na stronie"
-                few: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwania na stronie"
-                many: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-                other: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
-              selected_period:
-                one: "Członkowie przeprowadzili %{formatted_count} wyszukiwanie na miejscu w wybranym okresie"
-                few: "Członkowie przeprowadzili %{formatted_count} wyszukiwania na miejscu w wybranym okresie"
-                many: "Członkowie przeprowadzili %{formatted_count} wyszukiwań na miejscu w wybranym okresie"
-                other: "Członkowie przeprowadzili %{formatted_count} wyszukiwań na miejscu w wybranym okresie"
             headline:
-              no_signal_title: "Za mało aktywności wyszukiwania, aby dokonać podsumowania."
-              no_signal: "Wybierz dłuższy przedział dat lub wróć, gdy członkowie przeszukają więcej tematów."
-              content_gaps: "Ponad 10% wyszukiwań członków zakończyło się w tym okresie bez kliknięcia. Sprawdź poniższe luki w treściach, aby dowiedzieć się, czego brakuje."
-              rate_climbing: "Wskaźnik braku rezultatów rośnie w porównaniu z poprzednim okresem. Zwróć uwagę na luki w treściach poniżej."
-              shrinking: "W porównaniu z poprzednim okresem liczba wyszukiwań zmalała, jednak większość wyszukiwań nadal prowadzi do treści."
-              healthy: "Użytkownicy wciąż znajdują to, czego szukają, a liczba wyszukiwań jest stała lub rośnie."
+              titles:
+                insufficient_activity: "Za mało aktywności wyszukiwania, aby dokonać podsumowania."
+                searches_increased_no_result_rate_declined: "W wybranym okresie wzrosła liczba wyszukiwań i spadł wskaźnik braku wyników"
+                searches_increased: "Łączna liczba wyszukiwań wzrosła w wybranym okresie"
+                no_result_rate_decreased: "W wybranym okresie wskaźnik braku wyników spadł"
+                searches_decreased_no_result_rate_increased: "W wybranym okresie liczba wyszukiwań spadła, a wskaźnik braku wyników wzrósł"
+                searches_decreased: "Łączna liczba wyszukiwań w wybranym okresie zmalała"
+                no_result_rate_increased: "W wybranym okresie wzrósł wskaźnik braku wyników"
+                search_steady: "Wyszukiwanie jest stabilne w wybranym okresie"
+              summaries:
+                insufficient_activity: "Wybierz dłuższy przedział dat lub wróć, gdy członkowie przeszukają więcej tematów."
+                searches_up_results_improved: "Członkowie częściej wykonują wyszukiwania w Twojej społeczności i częściej znajdują to, czego szukają."
+                searches_up_no_result_rate_up: "Członkowie przeprowadzają więcej wyszukiwań w Twojej społeczności, ale wskaźnik braku wyników wzrósł."
+                searches_up_no_result_rate_flat: "Członkowie przeprowadzają więcej wyszukiwań w Twojej społeczności, ale wskaźnik braku wyników pozostaje na tym samym poziomie."
+                results_improved_searches_down: "Członkowie znajdują to, czego szukają, a całkowity wolumen wyszukiwania zmniejszył się."
+                results_improved_searches_steady: "Członkowie znajdują to, czego szukają, a całkowity wolumen wyszukiwania jest płaski."
+                searches_down_results_worsened: "Członkowie rzadziej wykonują wyszukiwania w Twojej społeczności i nie znajdują tak często tego, czego potrzebują."
+                searches_down_no_result_rate_flat: "Członkowie przeprowadzają mniej wyszukiwań w Twojej społeczności, ale wskaźnik braku wyników pozostaje na tym samym poziomie."
+                results_worsened_searches_steady: "Użytkownicy nie znajdują tak często tego, czego potrzebują, a ogólna liczba wyszukiwań utrzymuje się na stałym poziomie."
+                searches_and_no_result_rate_steady: "Brak znaczących zmian w całkowitej liczbie wyszukiwań lub wskaźniku braku wyników."
+                searches_up: "Członkowie przeprowadzają więcej wyszukiwań w Twojej społeczności."
+                searches_down: "Członkowie przeprowadzają mniej wyszukiwań w Twojej społeczności."
+                searches_steady: "Brak znaczących zmian w łącznej liczbie wyszukiwań."
+                results_worsened: "Członkowie nie znajdują tak często tego, czego potrzebują."
+                results_improved: "Członkowie częściej znajdują to, czego szukają."
+                no_result_rate_steady: "Brak znaczących zmian w odsetku pacjentów bez wyników."
+              cta:
+                content_gaps: "Przejrzyj luki w treściach, aby zobaczyć, czego brakuje."
             kpi:
               total_searches:
                 label: "Łączna liczba wyszukiwań"
-                tooltip: "Liczba wyszukiwań wykonanych przez członków społeczności."
+                tooltip: "Liczba wyszukiwań wykonanych w Twojej społeczności."
               no_result_rate:
                 label: "Wskaźnik braku wyników"
                 tooltip: "Procent wyszukiwań, w których członkowie nie kliknęli żadnego wyniku (0% CTR). Oznacza to, że członkowie mogą szukać treści, których Twoja społeczność nie ma."
@@ -7611,7 +7818,7 @@ pl_PL:
               status: "Status"
             trending:
               title: "Popularne wyszukiwania"
-              tooltip: "Najpopularniejsze wyszukiwane hasła wśród członków."
+              tooltip: "Najpopularniejsze wyszukiwane hasła w Twojej społeczności."
               empty: "Brak wyszukiwań w tym okresie."
             content_gaps:
               title: "Luki w treściach"
@@ -7627,6 +7834,7 @@ pl_PL:
           add: "Dodaj raport"
           remove: "Usuń raport"
           no_data: "Brak danych do wyświetlenia"
+          report_error: "Nie można załadować tego raportu"
           modal:
             title: "Zarządzaj raportami"
             search_placeholder: "Wyszukaj raporty"
@@ -9269,6 +9477,7 @@ pl_PL:
             full_page: "Pełna strona"
             click_through_only: "wszystkie (tylko przeklikiwanie)"
             non_staff_only: "Użytkownicy spoza personelu"
+            human_only: "Z wyłączeniem personelu i robotów indeksujących"
           header_search_results: "Wyniki wyszukiwania w nagłówku"
         logster:
           title: "Dzienniki błędów"

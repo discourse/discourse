@@ -91,10 +91,17 @@ module DiscourseAi
             end
         end
 
+        LlmModel
+          .where.not(vision_llm_model_id: nil)
+          .pluck(:vision_llm_model_id, :display_name, :id)
+          .each do |llm_id, name, id|
+            rval[llm_id] << { type: :vision_delegate, name: name, id: id }
+          end
+
         rval
       end
 
-      def self.valid_value?(val)
+      def self.valid_value?(_val)
         true
       end
 
@@ -102,7 +109,7 @@ module DiscourseAi
       def self.values_for_serialization
         return [] unless table_exists?
 
-        llm_models = LlmModel.all.index_by(&:id)
+        llm_models = LlmModel.includes(:vision_llm_model).index_by(&:id)
 
         DB
           .query_hash(<<~SQL)
@@ -112,6 +119,8 @@ module DiscourseAi
           .map do |row|
             row = row.symbolize_keys
             llm_model = llm_models[row[:id]]
+            row[:vision_mode] = llm_model.vision_mode
+            row[:agent_image_capable] = llm_model.agent_image_capable?
             row[:supported_native_tools] = DiscourseAi::Completions::NativeTools.supported_ids_for(
               llm_model,
             )

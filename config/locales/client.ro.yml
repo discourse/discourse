@@ -464,6 +464,22 @@ ro:
     admin_onboarding_banner:
       start_posting:
         back: "Înapoi"
+    design_wizard:
+      back: "Înapoi"
+      next: "Următorul"
+      sections:
+        theme: "Temă"
+        fonts: "Fonturi"
+        homepage: "Pagina principală"
+      colors:
+        light: "Luminos"
+        dark: "Întunecat"
+      fonts:
+        base_font: "Font de bază"
+        heading_font: "Font titlu"
+      homepage:
+        topics: "Discuții"
+        categories: "Categorii"
     about:
       edit: "Editează această pagină"
       simple_title: "Despre"
@@ -683,10 +699,6 @@ ro:
         optional: "opțional"
       claim_help:
         optional: "Poți revendica acest element pentru a împiedica alte persoane să-l revizuiască."
-        required: "Trebuie să revendici elementele înainte de a le putea revizui."
-        claimed_by_you: "Ai revendicat acest element și îl poți revizui."
-        claimed_by_other: "Acest element poate fi revizuit numai de <b>%{username}</b>."
-        automatically_claimed_by: "Acest element este revizuit momentan de <b>%{username}</b>."
       claim:
         title: "Revendică acest subiect"
       unclaim:
@@ -724,6 +736,7 @@ ro:
         email: "Email"
         name: "Nume"
         fields: "Câmpuri"
+        penalty_forever: "Pentru totdeanua"
         reject_reason: "Motiv"
         scrubbed_reason: "Motiv"
         scrubbed_reject_reason: "Motiv respingere utilizator"
@@ -1406,7 +1419,6 @@ ro:
       external_links_in_new_tab: "Deschide toate legăturile externe într-o filă nouă"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
       enable_smart_lists: "Activează listele inteligente atunci când scrii în compozitor"
-      enable_defer: "Activează marcarea subiectelor ca necitite"
       enable_markdown_monospace_font: "Folosește fontul monospace în modul Markdown al compozitorului"
       experimental_sidebar:
         options: "Opțiuni"
@@ -1836,7 +1848,8 @@ ro:
           admin_email_label: "Adresă email"
           email_placeholder: "nume@exemplu.comb"
           invite_by_email: "E-mail"
-          more_options: "Mai multe opțiuni"
+          create_and_send: "Trimite"
+          create_and_copy: "Copiază legătură"
           update: "Actualizează"
           summary:
             role_member: "Membru"
@@ -1846,7 +1859,7 @@ ro:
             method_email: "E-mail"
             topic: "Subiect"
             groups: "Grupuri"
-            edit: "Editează invitație"
+            edit: "Editează"
         bulk_invite:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"
@@ -2203,6 +2216,7 @@ ro:
         one: "+%{count} subcategorie"
         few: "+%{count} subcategorii"
         other: "+%{count} de subcategorii"
+      subcategories: "+ Subcategorii"
     timezone_input:
       ambiguous_ist: "IST este ambiguu, te rugăm să selectezi un fus orar specific (de exemplu: Asia/Kolkata)"
     select_kit:
@@ -2308,7 +2322,6 @@ ro:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "text italic"
-      heading_title: "Titluri"
       heading_level_n: "Titlu %{levelNumber}"
       heading_level_n_title: "Titlu %{levelNumber}"
       heading_level_paragraph: "Paragraf"
@@ -3746,7 +3759,7 @@ ro:
           delete: "Șterge"
           delete_public_confirm: "Această secțiune este vizibilă pentru toată lumea, sigur vrei să o ștergi?"
           localizations:
-            title: "Traduceri"
+            remove_language: "Elimină"
           links:
             add: "Adaugă altă legătură"
             reset: "Resetare la valorile implicite"
@@ -4275,11 +4288,26 @@ ro:
       new_features:
         title: "Ce este nou?"
         check_for_updates: "Verifică actualizări"
+      site_traffic_explorer:
+        pageviews: "Vizualizări"
+        view_more: "Vezi mai multe"
+        cards:
+          pages: "Pagini"
+          visitors: "Vizitatori"
+        columns:
+          top_urls: "URL"
+          ip_addresses: "Adresă IP"
+        filters:
+          ip: "Adresă IP"
+        metrics:
+          pageviews:
+            label: "Vizualizări"
+        series:
+          anonymous_human: "Anonimi"
       dashboard:
         title: "Panou de control"
         version: "Versiune"
         up_to_date: "Ești la zi!"
-        critical_available: "O actualizare importantă este disponibilă."
         updates_available: "Sunt disponibile actualizări."
         no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
         stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."

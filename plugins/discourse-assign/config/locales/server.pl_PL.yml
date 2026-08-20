@@ -46,6 +46,7 @@ pl_PL:
     already_assigned: "Temat jest już przypisany do @%{username}"
     too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
     too_many_assigns_for_topic: "Osiągnięto limit %{limit} przypisań na temat."
+    assignment_note_too_long: "Notatka o zadaniu musi mieć %{note_max} znaków lub mniej."
     forbidden_assigner_not_allowed: "Możesz przypisywać tematy tylko do kategorii dozwolonych w Twoich grupach."
     forbidden_assign_to: "Nie można przypisać @%{username}, ponieważ nie należy do przypisanych dozwolonych grup."
     forbidden_assignee_not_pm_participant: "@%{username} nie może być przypisany, ponieważ nie ma dostępu do tej prywatnej wiadomości. Możesz przyznać dostęp @%{username}, zapraszając go do tej prywatnej wiadomości."
@@ -66,7 +67,9 @@ pl_PL:
       quarterly: "kwartalnie"
     discourse_workflows:
       assign_topic:
-        error: "Nie udało się przypisać tematu: %{reason}"
+        error: "Nie udało się przypisać: %{reason}"
+      check_assignment:
+        unknown_target_type: "Nieznany typ celu przypisania: %{target_type}"
   assign_mailer:
     title: "Przypisz mailera"
     subject_template: "[%{email_prefix}] %{assignee_name} przypisał Cię do '%{topic_title}'!"

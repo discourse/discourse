@@ -2,7 +2,7 @@
 
 # name: discourse-workflows
 # about: Workflow automation system for Discourse
-# meta_topic_id: 406990
+# meta_topic_id: 407100
 # version: 0.1
 # authors: Discourse
 # url: https://github.com/discourse/discourse-workflows
@@ -48,9 +48,11 @@ register_svg_icon "pause"
 register_svg_icon "window-maximize"
 register_svg_icon "user-plus"
 register_svg_icon "user-minus"
+register_svg_icon "user-xmark"
 register_svg_icon "grip-vertical"
 register_svg_icon "paragraph"
 register_svg_icon "arrow-down-a-z"
+register_svg_icon "layer-group"
 register_svg_icon "copy"
 register_svg_icon "paste"
 register_svg_icon "scissors"

@@ -112,6 +112,37 @@ nb_NO:
         total: "Totalt"
         periods:
           last_day: "Siste 24 timer"
+      logs:
+        short_title: "Logger"
+        apply: "Bruk"
+        successful: "Vellykket"
+        failed: "Feilet"
+        unknown: "Ukjent"
+        topic_id: "Emne-ID"
+        post_id: "Innleggs-ID"
+        time: "Tid"
+        when: "Når"
+        request: "Forespørsel"
+        provider: "Tilbyder"
+        user: "Bruker"
+        context: "Kontekst"
+        topic: "Emne"
+        post: "Innlegg"
+        post_short: "Innlegg %{id}"
+        duration: "Varighet"
+        actions: "Handlinger"
+        periods:
+          day: "Siste 24 timer"
+          week: "Siste 7 dager"
+          custom: "Egendefinert"
+        detail:
+          request: "Forespørsel"
+          response: "Svar"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Sammendrag"
+          deleted_stage: "Slettet"
+          save: "Lagre"
       ai_agent:
         name: "Navn"
         edit: "Rediger"
@@ -171,6 +202,9 @@ nb_NO:
       llms:
         display_name: "Navn"
         provider: "Tilbyder"
+        vision_modes:
+          disabled:
+            title: "Deaktivert"
         save: "Lagre"
         edit: "Rediger"
         delete: Slett
@@ -192,7 +226,6 @@ nb_NO:
         tests:
           success: "Suksess!"
         providers:
-          google: "Google"
           fake: "Egendefinert"
       ai_helper:
         context_menu:
@@ -220,6 +253,7 @@ nb_NO:
           fake: "Egendefinert"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Varighet:"
           request: "Forespørsel"
           response: "Svar"
           next_log: "Neste"

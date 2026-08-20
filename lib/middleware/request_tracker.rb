@@ -81,6 +81,7 @@ class Middleware::RequestTracker
         # Update the documentation for the `add_request_rate_limiter` plugin API if this list changes.
         default_rate_limiters = [
           RequestTracker::RateLimiters::User,
+          RequestTracker::RateLimiters::HealthCheck,
           RequestTracker::RateLimiters::IP,
         ]
 

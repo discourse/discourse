@@ -283,6 +283,15 @@ module DiscourseAi
         end
 
         plugin.register_editable_topic_custom_field(:ai_agent_id)
+        plugin.register_topic_custom_field_type(
+          :ai_agent_id,
+          :string,
+          max_length: TOPIC_AI_AGENT_ID_MAX_LENGTH,
+        )
+
+        plugin.on(:after_validate_topic) do |topic, topic_creator|
+          DiscourseAi::AiBot::TopicAgentValidator.validate(topic, topic_creator)
+        end
 
         plugin.add_api_key_scope(
           :ai,

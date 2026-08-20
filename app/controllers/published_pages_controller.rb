@@ -44,7 +44,7 @@ class PublishedPagesController < ApplicationController
           "published-page",
           params[:slug],
           "topic-#{@topic.id}",
-          @topic.tags.pluck(:name),
+          @topic.tags.visible(guardian).pluck(:name),
         ].flatten.compact,
       )
 

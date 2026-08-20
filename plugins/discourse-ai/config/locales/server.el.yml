@@ -26,7 +26,6 @@ el:
   site_settings:
     ai_nsfw_flag_threshold_drawings: "Όριο για να θεωρηθεί ένα σχέδιο NSFW."
     ai_bot_debugging_allowed_groups: "Να επιτρέπεται σε αυτές τις ομάδες να βλέπουν ένα κουμπί αποσφαλμάτωσης σε αναρτήσεις που εμφανίζει το ακατέργαστο AI αίτημα και απάντηση"
-    ai_translation_max_post_length: "Ο μέγιστος αριθμός χαρακτήρων για τη μετάφραση μιας ανάρτησης. Οι αναρτήσεις που είναι μεγαλύτερες από αυτόν τον αριθμό δεν θα μεταφράζονται."
   reports:
     overall_sentiment:
       yaxis: "Ημερομηνία"
@@ -41,6 +40,8 @@ el:
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
+      read_post:
+        unknown_post: "ανάρτηση"
       agents:
         post_raw_translator:
           name: "Μεταφραστής ανάρτησης"

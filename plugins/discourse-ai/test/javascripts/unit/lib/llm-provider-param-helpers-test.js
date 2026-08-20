@@ -3,6 +3,7 @@ import {
   isParamActive,
   isProviderParamHidden,
   normalizeProviderParams,
+  providerParamLabel,
 } from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
 
 module("Unit | Lib | llm-provider-param-helpers", function () {
@@ -186,6 +187,27 @@ module("Unit | Lib | llm-provider-param-helpers", function () {
     });
   });
 
+  module("providerParamLabel", function () {
+    test("uses a provider-specific label when configured", function (assert) {
+      assert.strictEqual(
+        providerParamLabel("thinking_level", {
+          label:
+            "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+        }),
+        "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+        "the provider-specific translation key is used"
+      );
+    });
+
+    test("falls back to the shared field label", function (assert) {
+      assert.strictEqual(
+        providerParamLabel("thinking_level", {}),
+        "discourse_ai.llms.provider_fields.thinking_level",
+        "legacy providers keep the shared translation key"
+      );
+    });
+  });
+
   module("normalizeProviderParams", function () {
     test("returns empty object for null/undefined input", function (assert) {
       assert.deepEqual(normalizeProviderParams(null), {});
@@ -238,6 +260,23 @@ module("Unit | Lib | llm-provider-param-helpers", function () {
         { id: "default", name: "Server default" },
         { id: "on", name: "Force on" },
       ]);
+    });
+
+    test("preserves provider-specific label metadata", function (assert) {
+      const result = normalizeProviderParams({
+        thinking_level: {
+          type: "enum",
+          values: ["default", "low", "high"],
+          label:
+            "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+        },
+      });
+
+      assert.strictEqual(
+        result.thinking_level.label,
+        "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+        "the label survives metadata normalization"
+      );
     });
 
     test("preserves tooltip and helpText metadata", function (assert) {

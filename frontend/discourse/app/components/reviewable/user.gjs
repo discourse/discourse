@@ -10,6 +10,7 @@ import rawDate from "discourse/helpers/raw-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { longDate } from "discourse/lib/formatter";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
@@ -26,6 +27,26 @@ export default class ReviewableUser extends Component {
   @computed("reviewable.payload")
   get isScrubbed() {
     return !!this.reviewable?.payload?.scrubbed_by;
+  }
+
+  @computed("reviewable.target_user.silenced_till")
+  get silencedTill() {
+    return this.penaltyDate(this.reviewable?.target_user?.silenced_till);
+  }
+
+  @computed("reviewable.target_user.suspended_till")
+  get suspendedTill() {
+    return this.penaltyDate(this.reviewable?.target_user?.suspended_till);
+  }
+
+  penaltyDate(date) {
+    if (!date) {
+      return;
+    }
+
+    return moment().diff(date, "years") < -100
+      ? i18n("review.user.penalty_forever")
+      : longDate(date);
   }
 
   @action
@@ -101,6 +122,32 @@ export default class ReviewableUser extends Component {
                 {{/if}}
               </div>
             </div>
+            {{#if this.reviewable.target_user.silenced_till}}
+              <ReviewableField
+                @classes="reviewable-user-details silenced-till"
+                @name={{i18n "review.user.silenced_until"}}
+                @value={{this.silencedTill}}
+              />
+              <ReviewableField
+                @classes="reviewable-user-details silence-reason"
+                @name={{i18n "review.user.silence_reason"}}
+                @value={{this.reviewable.target_user.silence_reason}}
+              />
+            {{/if}}
+
+            {{#if this.reviewable.target_user.suspended_till}}
+              <ReviewableField
+                @classes="reviewable-user-details suspended-till"
+                @name={{i18n "review.user.suspended_until"}}
+                @value={{this.suspendedTill}}
+              />
+              <ReviewableField
+                @classes="reviewable-user-details suspend-reason"
+                @name={{i18n "review.user.suspend_reason"}}
+                @value={{this.reviewable.target_user.suspend_reason}}
+              />
+            {{/if}}
+
             <ReviewableField
               @classes="reviewable-user-details name"
               @name={{i18n "review.user.name"}}

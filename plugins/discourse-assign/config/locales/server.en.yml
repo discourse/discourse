@@ -40,6 +40,7 @@ en:
     already_assigned: "Topic is already assigned to @%{username}"
     too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."
     too_many_assigns_for_topic: "Limit of %{limit} assignments per topic has been reached."
+    assignment_note_too_long: "Assignment note must be %{note_max} characters or fewer."
     forbidden_assigner_not_allowed: "You can only assign topics in categories allowed for your groups."
     forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     forbidden_assignee_not_pm_participant: "@%{username} can't be assigned because they don't have access to this PM. You can grant @%{username} access by inviting them to this PM."
@@ -60,7 +61,9 @@ en:
       quarterly: "quarterly"
     discourse_workflows:
       assign_topic:
-        error: "Failed to assign topic: %{reason}"
+        error: "Failed to assign: %{reason}"
+      check_assignment:
+        unknown_target_type: "Unknown assignment target type: %{target_type}"
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"

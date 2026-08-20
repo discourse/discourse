@@ -70,6 +70,12 @@ class Reviewable < ActiveRecord::Base
     where("score >= ?", min_score_for_priority)
   end
 
+  def self.sti_class_for(type_name)
+    super
+  rescue ActiveRecord::SubclassNotFound
+    Reviewable::UnknownType
+  end
+
   def self.valid_type?(type)
     type.to_s.safe_constantize.in?(types)
   end
@@ -446,13 +452,20 @@ class Reviewable < ActiveRecord::Base
       ]
       target_associations << :localizations if SiteSetting.content_localization_enabled
 
+      target_created_by_associations = [:user_custom_fields]
+
+      if SiteSetting.allow_anonymous_mode
+        target_associations << { anonymous_user_master: :master_user }
+        target_created_by_associations << { anonymous_user_master: :master_user }
+      end
+
       result =
         result
           .includes(
             { created_by: :user_stat },
             :topic,
             { target: target_associations },
-            { target_created_by: [:user_custom_fields] },
+            { target_created_by: target_created_by_associations },
             :reviewable_histories,
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
@@ -789,6 +802,13 @@ class Reviewable < ActiveRecord::Base
     score
   end
 
+  # The account that the delete user actions destroy. Subclasses that delete a
+  # different account must override this, otherwise the confirmation prompt will
+  # name the wrong user.
+  def target_user
+    target_type == "User" ? target : target_created_by
+  end
+
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(
@@ -797,11 +817,21 @@ class Reviewable < ActiveRecord::Base
         label: "reviewables.actions.reject_user.title",
       )
 
+    # The reject reason modal already acts as a confirmation step, so only ask
+    # for a separate confirmation when it isn't shown.
+    username = target_user&.username
+    confirmable = !require_reject_reason && username.present?
+
     actions.add(:delete_user, bundle: bundle) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.description = "reviewables.actions.reject_user.delete.description"
       a.require_reject_reason = require_reject_reason
+      if confirmable
+        a.confirm_message = "reviewables.actions.reject_user.delete.confirm"
+        a.confirm_message_args = { username: username }
+        a.confirm_destructive = true
+      end
     end
 
     actions.add(:delete_user_block, bundle: bundle) do |a|
@@ -809,6 +839,11 @@ class Reviewable < ActiveRecord::Base
       a.label = "reviewables.actions.reject_user.block.title"
       a.require_reject_reason = require_reject_reason
       a.description = "reviewables.actions.reject_user.block.description"
+      if confirmable
+        a.confirm_message = "reviewables.actions.reject_user.block.confirm"
+        a.confirm_message_args = { username: username }
+        a.confirm_destructive = true
+      end
     end
   end
 
@@ -967,6 +1002,7 @@ end
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

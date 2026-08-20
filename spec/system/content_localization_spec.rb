@@ -42,6 +42,9 @@ describe "Content Localization" do
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
+  let(:preferences_interface_page) { PageObjects::Pages::UserPreferencesInterface.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+  let(:language_switcher) { PageObjects::Components::LanguageSwitcher.new }
 
   def scroll_to_post(post_number)
     5.times do
@@ -66,7 +69,7 @@ describe "Content Localization" do
       SiteSetting.content_localization_allowed_groups =
         "#{Group::AUTO_GROUPS[:admins]}|#{jap_group.id}"
       SiteSetting.content_localization_supported_locales = "en|ja"
-      japanese_user.user_option.update!(show_original_content: false)
+      japanese_user.user_option.update!(automatically_translate: true)
     end
 
     it "shows the user's language based on their user locale" do
@@ -76,24 +79,101 @@ describe "Content Localization" do
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
     end
 
-    it "persists 'Show Original' preference from user preferences interface" do
+    it "lets the user keep topic and post content original without changing localized navigation" do
+      tag = Fabricate(:tag, name: "strategy", locale: "en")
+      Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略")
+      Fabricate(:topic_tag, topic:, tag:)
+      SiteSetting.tagging_enabled = true
+      SiteSetting.navigation_menu = "sidebar"
+      SiteSetting.default_navigation_menu_tags = tag.name
+      SiteSetting.set_locale_from_cookie = true
+      SiteSetting.content_localization_language_switcher = "all"
+
       sign_in(japanese_user)
 
-      visit("/u/#{japanese_user.username}/preferences/interface")
-      page.find(".pref-show-original-content input[type='checkbox']").click
-      page.find(".save-changes").click
+      preferences_interface_page.visit(japanese_user)
+      expect(preferences_interface_page).to have_interface_language_section
+      expect(preferences_interface_page).to have_content_languages_section
+      expect(preferences_interface_page).to have_understood_language_option("ja")
+      expect(preferences_interface_page).to have_understood_language_option("de")
+      expect(preferences_interface_page).to be_automatic_translation_enabled
 
-      I18n.with_locale(:ja) { expect(page).to have_content(I18n.t("js.saved")) }
+      preferences_interface_page.disable_automatic_translation.save_changes
+      page.refresh
+      expect(preferences_interface_page).to be_automatic_translation_disabled
 
-      expect(japanese_user.reload.user_option.show_original_content).to eq(true)
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_topic_title("Life strategies from The Art of War")
+      expect(post_1_obj).to have_cooked_content(post_1.raw)
+      expect(post_3_obj).to have_cooked_content(post_3.raw)
+      expect(topic_page).to have_topic_tag("戦略")
+      expect(sidebar).to have_section_link("戦略")
 
-      # preference persists after page reload
-      visit("/u/#{japanese_user.username}/preferences/interface")
-      expect(page).to have_css(".pref-show-original-content input[type='checkbox']:checked")
+      language_switcher.select_language("en")
+      preferences_interface_page.visit(japanese_user)
+      expect(preferences_interface_page).to be_automatic_translation_disabled
+      language_switcher.select_language("ja")
 
-      # and reflects on topic view
-      visit("/t/#{topic.id}")
-      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      preferences_interface_page.visit(japanese_user)
+      preferences_interface_page.enable_automatic_translation.save_changes
+      page.refresh
+      expect(preferences_interface_page).to be_automatic_translation_enabled
+      expect(preferences_interface_page).to have_no_understood_language("en")
+
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_topic_title("孫子兵法からの人生戦略")
+      expect(post_1_obj).to have_cooked_content("傑作は単なる軍事戦略についてではありません")
+      expect(post_3_obj).to have_cooked_content(post_3.raw)
+      expect(topic_page).to have_topic_tag("戦略")
+      expect(sidebar).to have_section_link("戦略")
+
+      modal = topic_page.open_content_language_preferences
+      expect(modal).to be_open
+      expect(modal).to have_logged_in_language_controls
+      expect(modal).to have_understood_language_option("ja")
+      expect(modal).to have_understood_language_option("de")
+      expect(modal).to be_automatic_translation_enabled
+      modal.close
+
+      SiteSetting.allow_user_locale = false
+      topic_page.visit_topic(topic)
+      modal = topic_page.open_content_language_preferences
+      expect(modal).to have_read_only_interface_language("English")
+      modal.close
+
+      preferences_interface_page.visit(japanese_user)
+      expect(preferences_interface_page).to have_no_interface_language_section
+      expect(preferences_interface_page).to have_understood_language_option("en")
+    end
+
+    it "keeps header and understood language selections independent" do
+      SiteSetting.set_locale_from_cookie = true
+      SiteSetting.content_localization_language_switcher = "all"
+      site_local_user.user_option.update!(understood_languages: ["en"])
+
+      sign_in(site_local_user)
+      visit("/")
+
+      language_switcher.select_language("ja")
+      expect(page.find(switcher_selector)).to have_content("JA")
+
+      preferences_interface_page.visit(site_local_user)
+      expect(preferences_interface_page).to have_removable_understood_language("en")
+      expect(preferences_interface_page).to have_understood_language_option("ja")
+    end
+
+    it "lets users remove their last understood language from the modal" do
+      site_local_user.user_option.update!(understood_languages: ["en"])
+
+      sign_in(site_local_user)
+      topic_page.visit_topic(topic)
+
+      modal = topic_page.open_content_language_preferences
+      expect(modal).to have_removable_understood_language("en")
+      modal.remove_understood_language("en").save
+
+      modal = topic_page.open_content_language_preferences
+      expect(modal).to have_understood_language_option("en")
     end
 
     it "allows users to set their post's locale when posting" do
@@ -158,6 +238,37 @@ describe "Content Localization" do
 
         visit("/t/#{topic2.id}")
         expect(topic_page.topic_title).to have_content("織田信長の生涯")
+      end
+
+      it "lets anonymous users control topic and post translation from the topic-side modal" do
+        tag = Fabricate(:tag, name: "strategy", locale: "en")
+        Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略")
+        Fabricate(:topic_tag, topic:, tag:)
+        SiteSetting.tagging_enabled = true
+        SiteSetting.navigation_menu = "sidebar"
+        SiteSetting.default_navigation_menu_tags = tag.name
+
+        visit("/t/#{topic.id}?tl=ja")
+        expect(topic_page).to have_topic_title("孫子兵法からの人生戦略")
+        expect(post_1_obj).to have_cooked_content("傑作は単なる軍事戦略についてではありません")
+        expect(topic_page).to have_content_language_preferences_launcher
+        expect(topic_page).to have_no_topic_admin_menu
+
+        modal = topic_page.open_content_language_preferences
+        expect(modal).to be_open
+        expect(modal).to have_understood_languages_login_prompt
+        expect(modal).to be_automatic_translation_enabled
+        modal.disable_automatic_translation.save
+
+        expect(topic_page).to have_topic_title("Life strategies from The Art of War")
+        expect(post_1_obj).to have_cooked_content(post_1.raw)
+        expect(topic_page).to have_topic_tag("戦略")
+        expect(sidebar).to have_section_link("戦略")
+
+        SiteSetting.set_locale_from_cookie = false
+        page.refresh
+        modal = topic_page.open_content_language_preferences
+        expect(modal).to have_read_only_interface_language("English")
       end
 
       fab!(:ja_topic) do
@@ -414,7 +525,39 @@ describe "Content Localization" do
         # the per-post toggle shows the original content for the loaded post
         post_21_obj.toggle_localized_content
         expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
+        expect(site_local_user.reload.user_option.automatically_translate).to eq(true)
+
+        page.refresh
+        scroll_to_post(21)
+        expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
       end
+    end
+
+    it "shows the topic-side launcher when only a later visible post has a localization" do
+      late_localization_topic =
+        Fabricate(:topic, title: "A long multilingual topic", locale: "en", user: admin)
+      20.times do |index|
+        Fabricate(
+          :post,
+          topic: late_localization_topic,
+          locale: "en",
+          raw: "English post #{index + 1}",
+        )
+      end
+      late_post =
+        Fabricate(:post, topic: late_localization_topic, locale: "ja", raw: "最初のページより後の投稿")
+      Fabricate(
+        :post_localization,
+        post: late_post,
+        locale: "en",
+        cooked: "<p>A post after the first page</p>",
+      )
+
+      sign_in(site_local_user)
+      topic_page.visit_topic(late_localization_topic)
+
+      expect(page).to have_no_css("#post_21", wait: 0)
+      expect(topic_page).to have_content_language_preferences_launcher
     end
 
     context "for html title" do

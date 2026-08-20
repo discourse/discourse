@@ -86,7 +86,6 @@ pt_BR:
     ai_helper_allowed_in_pm: "Ative o ajudante de IA do compositor em MPs."
     ai_helper_automatic_chat_thread_title_delay: "O atraso, em minutos, até que o ajudante de IA defina automaticamente o título da thread do bate-papo."
     ai_helper_automatic_chat_thread_title: "Defina automaticamente os títulos das linhas de discussão do bate-papo com base no conteúdo delas."
-    ai_helper_enabled_features: "Selecione os recursos para ativar no ajudante de IA."
     post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
     ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
     ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
@@ -122,10 +121,8 @@ pt_BR:
     ai_discord_allowed_guilds: "As guildas do Discord (servidores) nas quais o bot tem permissão para pesquisar"
     ai_translation_enabled: "Ativar o recurso de tradução por IA"
     ai_translation_include_bot_content: "Quando ativada, também enviará para tradução o conteúdo escrito por bots (IDs de usuário abaixo de 0)."
-    ai_translation_max_post_length: "O número máximo de caracteres para uma postagem ser traduzida. Postagens com mais caracteres do que esse limite não serão traduzidas."
     ai_translation_backfill_hourly_rate: "Número de posts e tópicos a serem traduzidos por hora durante operações de backfill. Defina como 0 para desativar o backfill automático de traduções para conteúdo existente."
     ai_usage_rollup_after_days: "Número de dias para manter as estatísticas de uso de IA por solicitação antes de consolidá-las em agregados diários. Defina como 0 para desativar rollups."
-    ai_audit_logs_purge_after_days: "Excluir logs de auditoria da API de IA com mais de um determinado número de dias. O padrão é de aproximadamente 6 meses. Defina como 0 para manter para sempre."
   reviewables:
     reasons:
       flagged_by_toxicity: O plugin de IA sinalizou isto após classificar como tóxico.
@@ -287,7 +284,6 @@ pt_BR:
         unknown_error: "Ocorreu um erro inesperado ao gerar as miniaturas. Tente novamente."
       prompts:
         translate: Traduzir para %{language}
-        generate_titles: Sugerir títulos de tópicos
         proofread: Revisar texto
         markdown_table: Gerar tabela de Markdown
         custom_prompt: "Prompt personalizado"
@@ -317,6 +313,8 @@ pt_BR:
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
       thinking: "Pensando"
+      read_post:
+        unknown_post: "postar"
       chat_tool_approval:
         unexpected_error: "ocorreu um erro inesperado."
       agents:

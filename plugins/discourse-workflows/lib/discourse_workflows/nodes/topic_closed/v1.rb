@@ -71,10 +71,6 @@ module DiscourseWorkflows
 
         private
 
-        def topic_data(topic)
-          serialize_record(topic, TopicListItemSerializer)
-        end
-
         def matches_tags?(tag_names)
           tag_names.empty? || (topic_tag_names & tag_names).any?
         end

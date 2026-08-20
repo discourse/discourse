@@ -1,6 +1,27 @@
 # frozen_string_literal: true
 
 class ReviewableScoreSerializer < ApplicationSerializer
+  REASON_COOK_OPTIONS = {
+    features_override: [].freeze,
+    markdown_it_rules: %w[
+      autolink
+      list
+      backticks
+      newline
+      code
+      fence
+      linkify
+      link
+      strikethrough
+      blockquote
+      emphasis
+      escape
+      entity
+      html_block
+      html_inline
+    ].freeze,
+  }.freeze
+
   REASONS_AND_SETTINGS = {
     post_count: "approve_post_count",
     trust_level: "approve_unless_trust_level",
@@ -14,7 +35,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
     invite_only: "invite_only",
     email_spam: "email_in_spam_header",
     suspect_user: "approve_suspect_users",
-    contains_media: "skip_media_review_groups",
+    contains_media: "skip_review_media_groups",
   }
 
   attributes :id,
@@ -47,6 +68,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
   end
 
   def reason
+    return @reason if defined?(@reason)
     return unless object.reason
 
     link_text = setting_name_for_reason(object.reason)
@@ -56,15 +78,20 @@ class ReviewableScoreSerializer < ApplicationSerializer
       link = build_link_for(object.reason, link_text)
 
       if object.reason == "watched_word"
-        text = watched_word_reason(link)
-      else
-        text = I18n.t("reviewables.reasons.#{object.reason}", link: link, default: object.reason)
+        return @reason = PrettyText.sanitize("<p>#{watched_word_reason(link)}</p>")
       end
+
+      text =
+        if object.reason == "fast_typer"
+          fast_typer_reason(link)
+        else
+          I18n.t("reviewables.reasons.#{object.reason}", link:, default: object.reason)
+        end
     else
       text = I18n.t("reviewables.reasons.#{object.reason}", default: object.reason)
     end
 
-    text
+    @reason = PrettyText.cook(text, REASON_COOK_OPTIONS)
   end
 
   def reason_type
@@ -94,18 +121,37 @@ class ReviewableScoreSerializer < ApplicationSerializer
 
   private
 
+  def fast_typer_reason(link)
+    typing_time = fast_typer_typing_time
+    if typing_time.blank?
+      return I18n.t("reviewables.reasons.fast_typer", link:, default: object.reason)
+    end
+
+    I18n.t("reviewables.reasons.fast_typer_with_time", link:, typing_time:, default: object.reason)
+  end
+
+  def fast_typer_typing_time
+    msecs = object.reviewable.payload&.dig("typing_duration_msecs")
+    return if msecs.blank?
+
+    count = msecs.to_i.fdiv(1000).round(1)
+    count = count.to_i if count == count.to_i
+    I18n.t("reviewables.reasons.fast_typer_time", count:)
+  end
+
   def watched_word_reason(link)
     words = watched_words_found
+    default = "watched_word"
 
     if words.nil? || words.empty?
-      I18n.t("reviewables.reasons.no_context.watched_word", link: link, default: "watched_word")
+      I18n.t("reviewables.reasons.no_context.watched_word", link:, default:)
     else
       I18n.t(
         "reviewables.reasons.watched_word",
-        link: link,
-        words: words.map { |w| CGI.escapeHTML(w) }.join(", "),
-        count: words.length,
-        default: "watched_word",
+        link:,
+        words: words.map { |word| CGI.escapeHTML(word) }.join(", "),
+        count: words.size,
+        default:,
       )
     end
   end

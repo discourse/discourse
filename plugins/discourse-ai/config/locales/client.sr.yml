@@ -112,6 +112,30 @@ sr:
         total: "Ukupno"
         periods:
           last_day: "Последња 24 сата"
+      logs:
+        short_title: "Logovi"
+        apply: "Primeni"
+        failed: "Neuspešno"
+        unknown: "Nepoznato"
+        topic_id: "ID Teme"
+        post_id: "ID Poruke"
+        time: "Vreme"
+        when: "Kada"
+        user: "Korisnik"
+        context: "Kontekst"
+        topic: "Tema"
+        post: "Post"
+        post_short: "Poruka %{id}"
+        actions: "Akcije"
+        periods:
+          day: "Последња 24 сата"
+          week: "Последњих 7 дана"
+          custom: "Posebna"
+        detail:
+          context: "Kontekst"
+        retention:
+          summary_stage: "Rezime"
+          save: "Sačuvaj"
       ai_agent:
         name: "Ime foruma"
         edit: "Izmeni"
@@ -165,6 +189,9 @@ sr:
           required: "Potrebno"
       llms:
         display_name: "Ime foruma"
+        vision_modes:
+          disabled:
+            title: "Isključeno"
         save: "Sačuvaj"
         edit: "Izmeni"
         delete: Obriši
@@ -179,7 +206,6 @@ sr:
         next:
           title: "Dalje"
         providers:
-          google: "Google"
           fake: "Posebna"
       ai_helper:
         context_menu:

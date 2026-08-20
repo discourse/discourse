@@ -1,4 +1,5 @@
-import { render, select } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { render, select, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DSelect, { NO_VALUE_OPTION } from "discourse/ui-kit/d-select";
@@ -23,6 +24,27 @@ module("Integration | ui-kit | DSelect", function (hooks) {
     await select(".d-select", "foo");
 
     assert.verifySteps(["foo"]);
+  });
+
+  test("@onChange with the none option", async function (assert) {
+    let changedValue = "not called";
+    const handleChange = (value) => (changedValue = value);
+
+    await render(
+      <template>
+        <DSelect @value="foo" @onChange={{handleChange}} as |s|>
+          <s.Option @value="foo">The real foo</s.Option>
+        </DSelect>
+      </template>
+    );
+
+    await select(".d-select", NO_VALUE_OPTION);
+
+    assert.strictEqual(
+      changedValue,
+      null,
+      "emits null, so the cleared value survives JSON serialization"
+    );
   });
 
   test("no value", async function (assert) {
@@ -52,6 +74,94 @@ module("Integration | ui-kit | DSelect", function (hooks) {
       value: "foo",
       label: "The real foo",
     });
+  });
+
+  test("selected falsy value", async function (assert) {
+    await render(
+      <template>
+        <DSelect @value={{false}} as |s|>
+          <s.Option @value={{false}}>The real false</s.Option>
+          <s.Option @value={{true}}>The real true</s.Option>
+        </DSelect>
+      </template>
+    );
+
+    assert.dselect().hasOption({
+      value: NO_VALUE_OPTION,
+      label: i18n("none_placeholder"),
+    });
+
+    assert.dselect().hasSelectedOption({
+      value: "false",
+      label: "The real false",
+    });
+  });
+
+  test("keeps the selection when options are rebuilt", async function (assert) {
+    class State {
+      @tracked
+      options = [
+        { value: "foo", label: "The real foo" },
+        { value: "bar", label: "The real bar" },
+      ];
+    }
+
+    const state = new State();
+
+    await render(
+      <template>
+        <DSelect @value="bar" as |s|>
+          {{#each state.options as |option|}}
+            <s.Option @value={{option.value}}>{{option.label}}</s.Option>
+          {{/each}}
+        </DSelect>
+      </template>
+    );
+
+    assert.dselect().hasSelectedOption({
+      value: "bar",
+      label: "The real bar",
+    });
+
+    state.options = [
+      { value: "baz", label: "The real baz" },
+      { value: "foo", label: "The real foo" },
+      { value: "bar", label: "The real bar" },
+    ];
+    await settled();
+
+    assert.dselect().hasSelectedOption({
+      value: "bar",
+      label: "The real bar",
+    });
+  });
+
+  test("keeps the selection when the value is not a string", async function (assert) {
+    class State {
+      @tracked value = 30;
+    }
+
+    const state = new State();
+    const handleChange = (value) => (state.value = value);
+
+    await render(
+      <template>
+        <DSelect
+          @includeNone={{false}}
+          @value={{state.value}}
+          @onChange={{handleChange}}
+          as |s|
+        >
+          <s.Option @value={{1}}>One</s.Option>
+          <s.Option @value={{30}}>Thirty</s.Option>
+          <s.Option @value={{90}}>Ninety</s.Option>
+        </DSelect>
+      </template>
+    );
+
+    await select(".d-select", "90");
+
+    assert.dselect().hasSelectedOption({ value: "90", label: "Ninety" });
   });
 
   test("required field", async function (assert) {

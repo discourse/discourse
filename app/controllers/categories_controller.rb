@@ -36,6 +36,8 @@ class CategoriesController < ApplicationController
   MIN_CATEGORIES_TOPICS = 5
   MAX_CATEGORIES_TOPICS = 100
   MAX_CATEGORIES_LIMIT = 25
+  MAX_CATEGORY_SEARCH_TERM_LENGTH = 250
+  MAX_CATEGORY_SEARCH_WORDS = 25
 
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
@@ -293,10 +295,6 @@ class CategoriesController < ApplicationController
 
       merge_pending_custom_fields!(cat, pending_custom_fields)
 
-      # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in]&.blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
-
       old_permissions = cat.permissions_params
       old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
@@ -312,8 +310,6 @@ class CategoriesController < ApplicationController
           )
         end
       end
-
-      DiscourseEvent.trigger(:category_updated, cat) if result
 
       result
     end
@@ -451,6 +447,10 @@ class CategoriesController < ApplicationController
 
     Category.preload_user_fields!(guardian, categories)
 
+    if serializer == SiteCategorySerializer && Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
+
     render_serialized(categories, serializer, root: :categories, scope: guardian)
   end
 
@@ -469,7 +469,7 @@ class CategoriesController < ApplicationController
   end
 
   def search
-    term = params[:term].to_s.strip
+    term = params[:term].to_s.strip[0, MAX_CATEGORY_SEARCH_TERM_LENGTH]
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
     include_uncategorized =
       (
@@ -512,7 +512,13 @@ class CategoriesController < ApplicationController
 
     categories = Category.secured(guardian)
 
-    if term.present? && words = term.split
+    if term.present?
+      words = []
+      term.scan(/\S+/) do |word|
+        words << word
+        break if words.size >= MAX_CATEGORY_SEARCH_WORDS
+      end
+
       words.each do |word|
         categories =
           categories.where(

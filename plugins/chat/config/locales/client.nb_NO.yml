@@ -22,6 +22,8 @@ nb_NO:
         yesterday: "I går"
       create: "Opprett"
       cancel: "Avbryt"
+      pinned_bar:
+        title: "Fastsatt"
       pinned: "Fastsatt"
       channel_settings:
         edit: "Endre"
@@ -190,4 +192,10 @@ nb_NO:
         message: "Send"
       chat_approval:
         message: "Send"
+        buttons: "Knapper"
+        value: "Verdi"
+        style_default: "Forvalg"
+        style_primary: "Primær"
+        style_success: "Suksess"
+        icon: "Ikon"
         channel_id: "Kanal"

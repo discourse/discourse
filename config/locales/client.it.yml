@@ -431,10 +431,28 @@ it:
       pill: "Suggeriti"
       pm_title: "Messaggi Suggeriti"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Selezionato"
       start_posting:
         back: "Indietro"
+    design_wizard:
+      back: "Indietro"
+      next: "Avanti"
+      sections:
+        theme: "Tema"
+        fonts: "Caratteri"
+        homepage: "Homepage"
+      theme:
+        selected: "Selezionato"
+      colors:
+        light: "Chiaro"
+        dark: "Scuro"
+      fonts:
+        base_font: "Font di base"
+        heading_font: "Carattere dell'intestazione"
+      homepage:
+        topics: "Argomenti"
+        categories: "Categorie"
+        styles:
+          boxes: "Riquadri"
     about:
       edit: "Modifica questa pagina"
       simple_title: "Informazioni"
@@ -700,10 +718,6 @@ it:
         optional: "facoltativo"
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
-        required: "Per poter revisionare gli elementi devi prima rivendicarli."
-        claimed_by_you: "Hai rivendicato questo elemento e puoi revisionarlo."
-        claimed_by_other: "Questo elemento può essere rivisto esclusivamente da <b>%{username}</b>."
-        automatically_claimed_by: "Questo articolo è attualmente in fase di revisione da parte di <b>%{username}</b>."
       awaiting_approval: "In attesa di approvazione"
       delete: "Elimina"
       settings:
@@ -735,6 +749,8 @@ it:
         email: "Email"
         name: "Nome"
         fields: "Campi"
+        silence_reason: "Motivo del silenzio"
+        penalty_forever: "Per sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Record cancellato da"
         scrubbed_reason: "Motivo"
@@ -1480,7 +1496,6 @@ it:
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_smart_lists: "Abilita gli elenchi smart quando scrivi nel compositore"
-      enable_defer: "Abilita opzione di contrassegnare gli argomenti come non letti"
       enable_markdown_monospace_font: "Utilizza il font monospace nella modalità Markdown del compositore"
       experimental_sidebar:
         enable: "Abilita barra laterale"
@@ -2122,7 +2137,8 @@ it:
           invite_by_email: "E-mail"
           restrict_domain: "Limita al dominio"
           domain_placeholder: "example.com"
-          more_options: "Altre opzioni"
+          create_and_send: "Invia"
+          create_and_copy: "Copia link"
           update: "Aggiorna"
           summary:
             role_member: "Membro"
@@ -2134,7 +2150,7 @@ it:
             expires: "Scadenza"
             topic: "Argomento"
             groups: "Gruppi"
-            edit: "Modifica invito"
+            edit: "Modifica"
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -2653,6 +2669,7 @@ it:
       subcategory_count:
         one: "+%{count} sottocategoria"
         other: "+%{count} sottocategorie"
+      subcategories: "+ Sottocategorie"
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
@@ -2828,7 +2845,6 @@ it:
       italic_label: "I"
       italic_title: "Corsivo"
       italic_text: "testo in corsivo"
-      heading_title: "Titoli"
       heading_level_n: "Titolo %{levelNumber}"
       heading_level_n_title: "Titolo %{levelNumber}"
       heading_level_paragraph: "Paragrafo"
@@ -2997,7 +3013,6 @@ it:
         other: "%{count} richieste di iscrizione aperte per '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completato"
       new_features: "Nuove funzionalità disponibili!"
       admin_problems: "Nuovo avviso sul dashboard del tuo sito"
       dismiss_confirmation:
@@ -4868,9 +4883,9 @@ it:
           always_public: "Il contenuto di questa sezione è sempre pubblico"
           more_menu: "Menu Altro"
           localizations:
-            title: "Traduzioni"
             locale: "Lingua"
             title_label: "Titolo della sezione"
+            remove_language: "Rimuovi"
           links:
             add: "Aggiungi un altro link"
             delete: "Elimina link"
@@ -5620,13 +5635,32 @@ it:
       new_features:
         title: "Cosa c'è di nuovo?"
         check_for_updates: "Controlla gli aggiornamenti"
+      site_traffic_explorer:
+        pageviews: "Pagine viste"
+        view_more: "Mostra altro"
+        cards:
+          pages: "Pagine"
+          visitors: "Visitatori"
+        columns:
+          countries: "Paese"
+          top_urls: "URL"
+          browsers: "Browser"
+          ip_addresses: "Indirizzo IP"
+        filters:
+          country: "Paese"
+          browser: "Browser"
+          ip: "Indirizzo IP"
+        metrics:
+          pageviews:
+            label: "Pagine viste"
+        series:
+          anonymous_human: "Anonimo"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aggiornato:"
         discourse_last_updated: "Discourse aggiornato:"
         version: "Versione"
         up_to_date: "Sei aggiornato!"
-        critical_available: "È disponibile un aggiornamento essenziale."
         updates_available: "Sono disponibili aggiornamenti."
         please_update: "Aggiorna!"
         no_check_performed: "Non è stato effettuato un controllo sugli aggiornamenti. Assicurati che sidekiq sia attivo."

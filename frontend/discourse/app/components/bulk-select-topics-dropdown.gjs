@@ -85,7 +85,6 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "defer",
         icon: "circle",
         name: i18n("topic_bulk_actions.defer.name"),
-        visible: ({ currentUser }) => currentUser.user_option.enable_defer,
       },
       {
         id: "close-topics",

@@ -13,13 +13,11 @@ describe DiscoursePolicy::PolicyController do
     group.add(user2)
   end
 
-  def raw
-    <<~MD
+  let(:raw) { <<~MD }
       [policy group=#{group.name}]
       I always open **doors**!
       [/policy]
     MD
-  end
 
   it "allows users to accept/reject policy" do
     post = create_post(raw: raw, user: moderator)
@@ -63,6 +61,46 @@ describe DiscoursePolicy::PolicyController do
       expect(response.status).to eq(200)
       expect(post.reload.post_policy.accepted_by.map(&:id)).to eq([])
       expect(group2.users.pluck(:id)).to contain_exactly(moderator.id)
+    end
+  end
+
+  context "when an add-users-to-group assignment is removed" do
+    it "does not grant accepters access to topics restricted to the former group" do
+      group_to_add = Fabricate(:group)
+      group_to_add.add_owner(moderator)
+      private_category = Fabricate(:private_category, group: group_to_add)
+      private_topic = Fabricate(:topic, category: private_category, user: moderator)
+      private_post = Fabricate(:post, topic: private_topic, user: moderator, raw: "Restricted post")
+      policy_post = create_post(raw: <<~MD, user: moderator)
+            [policy group=#{group.name} add-users-to-group=#{group_to_add.name}]
+            I always open **doors**!
+            [/policy]
+          MD
+
+      sign_in(moderator)
+      put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
+                [policy group=#{group.name}]
+                I always open **doors**!
+                [/policy]
+              MD
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post"]["raw"]).not_to include("add-users-to-group")
+
+      sign_in(user1)
+      get "/t/#{private_topic.id}.json"
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(private_post.raw)
+
+      put "/policy/accept.json", params: { post_id: policy_post.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+
+      get "/t/#{private_topic.id}.json"
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(private_post.raw)
     end
   end
 
@@ -156,13 +194,11 @@ describe DiscoursePolicy::PolicyController do
   describe "private policy restrictions" do
     fab!(:admin)
 
-    def private_raw
-      <<~MD
+    let(:private_raw) { <<~MD }
         [policy group=#{group.name} private=true]
         I always open **doors**!
         [/policy]
       MD
-    end
 
     it "denies non-admin access to accepted users for a private policy" do
       post = create_post(raw: private_raw, user: moderator)

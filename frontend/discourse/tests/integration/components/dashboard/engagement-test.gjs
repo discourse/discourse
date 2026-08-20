@@ -11,9 +11,6 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
   const reportQuery = { start_date: "2026-04-01", end_date: "2026-04-30" };
 
   const engagement = {
-    headline: {
-      key: "admin.dashboard.sections.engagement.headline.healthy_growth",
-    },
     kpis: [
       {
         type: "dau_mau",
@@ -39,22 +36,17 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     ],
   };
 
-  test("renders the headline title, summary and one metric per kpi", async function (assert) {
+  test("shows every KPI with its formatted value", async function (assert) {
     await render(
       <template>
         <DashboardEngagement
           @engagement={{engagement}}
-          @period="last_30_days"
           @startDate={{start}}
           @endDate={{end}}
         />
       </template>
     );
 
-    assert
-      .dom(".db-section__subintro h3")
-      .hasText("Members are forming a habit of coming back.");
-    assert.dom(".db-section__subintro p").exists();
     assert.dom(".db-section__metric").exists({ count: 3 });
     assert
       .dom(
@@ -101,5 +93,189 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     );
 
     assert.dom(".db-section__subintro").doesNotExist();
+  });
+
+  test("shows new activity as an increase when the prior period has no activity", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "new_signups",
+          value: 10,
+          previous_value: null,
+          percent_change: null,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "New signups have increased in the selected period New signups are up."
+      );
+  });
+
+  test("shows the no-data message when no metric is measurable", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "Not enough activity yet to summarise engagement. Pick a longer date range or come back once your community has more activity."
+      );
+  });
+
+  test("shows a decline when a negative half-step rounds to -0.1%", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "dau_mau",
+          value: 1999,
+          previous_value: 2000,
+          percent_change: -0.05,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "Engagement has declined in the selected period Stickiness is down. Take a look at the activity by category to see which areas of your community may need your attention."
+      );
+  });
+
+  test("recommends investigating disengaged members when daily engagement has the largest displayed decline", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "dau_mau",
+          value: 99.4,
+          previous_value: 100,
+          percent_change: -0.6,
+        },
+        {
+          type: "daily_engaged_users",
+          value: 98.6,
+          previous_value: 100,
+          percent_change: -1.4,
+        },
+        {
+          type: "new_signups",
+          value: 100,
+          previous_value: 100,
+          percent_change: 0,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro h3")
+      .hasText("Some declines in engagement in the selected period");
+    assert
+      .dom(".db-section__subintro p")
+      .hasText(
+        "Stickiness and daily engagement are down, but new signups are holding steady. Investigate the decline to see which members have disengaged.",
+        "recommends investigating disengaged members for the largest displayed decline"
+      );
+  });
+
+  test("recommends reviewing activity by category when stickiness and daily engagement have equal displayed declines", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "dau_mau",
+          value: 89.6,
+          previous_value: 100,
+          percent_change: -10.4,
+        },
+        {
+          type: "daily_engaged_users",
+          value: 89.51,
+          previous_value: 100,
+          percent_change: -10.49,
+        },
+        {
+          type: "new_signups",
+          value: 100,
+          previous_value: 100,
+          percent_change: 0,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro p")
+      .hasText(
+        "Stickiness and daily engagement are down, but new signups are holding steady. Take a look at the activity by category to see which areas of your community may need your attention.",
+        "recommends reviewing activity by category for equal displayed declines"
+      );
+  });
+
+  test("summarizes measurable metrics when another metric is unavailable", async function (assert) {
+    const scenarioEngagement = {
+      kpis: [
+        {
+          type: "dau_mau",
+          value: null,
+          previous_value: null,
+          percent_change: null,
+        },
+        {
+          type: "daily_engaged_users",
+          value: 120,
+          previous_value: 100,
+          percent_change: 20,
+        },
+        {
+          type: "new_signups",
+          value: 40,
+          previous_value: 40,
+          percent_change: 0,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <DashboardEngagement @engagement={{scenarioEngagement}} />
+      </template>
+    );
+
+    assert
+      .dom(".db-section__subintro")
+      .hasText(
+        "Daily engagement has increased in the selected period Daily engagement is up, but new signups are flat."
+      );
   });
 });

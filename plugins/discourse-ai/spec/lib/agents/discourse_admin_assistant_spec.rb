@@ -37,12 +37,21 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
   it "requires an administrator request and approval before changing settings" do
     expect(assistant.system_prompt).to include(
       "Only change site settings, categories, tags, reviewable content, topics, posts, or users when an administrator explicitly asks you to do so.",
+      "When an administrator explicitly requests a change and provides the required details, invoke the corresponding write tool before writing any response.",
+      "If required details are missing, ask for them.",
+      "Invoke a separate write tool call for every requested change, including repeated requests and multiple changes in the same message.",
+      "Previous tool calls never apply to later requests.",
+      "Only say that a change is pending approval when the write tool returned a pending approval result in the current turn.",
       "Every change requires human approval.",
     )
   end
 
   it "is registered as a system agent with a deterministic id" do
     expect(DiscourseAi::Agents::Agent.system_agents[described_class]).to eq(-39)
+  end
+
+  it "stops tool chains while an action is pending approval" do
+    expect(assistant.stop_chain_on_pending_approval?).to eq(true)
   end
 
   it "is only available to administrators" do

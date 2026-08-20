@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
-  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({ "$json" => {} }) }
-  after { sandbox.dispose }
+  subject(:result) { described_class.new(parameters: configuration).execute(execution_context) }
 
-  def build_exec_ctx(configuration, resume_token: nil)
+  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({ "$json" => {} }) }
+  let(:resume_token) { nil }
+  let(:execution_context) do
     DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: [{ "json" => {} }],
       parameters: configuration,
@@ -16,6 +17,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
     )
   end
 
+  after { sandbox.dispose }
+
   describe ".capabilities" do
     it "marks the node as not producing data" do
       expect(described_class.capabilities).to include(produces_data: false)
@@ -23,56 +26,59 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
   end
 
   describe "#execute" do
-    it "returns input items for interval mode" do
-      config = { "resume" => "time_interval", "wait_amount" => 2, "wait_unit" => "hours" }
-      exec_ctx = build_exec_ctx(config)
+    context "with interval mode" do
+      let(:configuration) do
+        { "resume" => "time_interval", "wait_amount" => 2, "wait_unit" => "hours" }
+      end
 
-      result = described_class.new(parameters: config).execute(exec_ctx)
-
-      expect(result.first).to eq(exec_ctx.input_items)
+      it "returns input items" do
+        expect(result.first).to eq(execution_context.input_items)
+      end
     end
 
-    it "returns input items for webhook mode" do
-      config = { "resume" => "webhook" }
-      exec_ctx = build_exec_ctx(config, resume_token: "tok-abc")
+    context "with webhook mode" do
+      let(:configuration) { { "resume" => "webhook" } }
+      let(:resume_token) { "tok-abc" }
 
-      result = described_class.new(parameters: config).execute(exec_ctx)
-
-      expect(result.first).to eq(exec_ctx.input_items)
+      it "returns input items" do
+        expect(result.first).to eq(execution_context.input_items)
+      end
     end
 
-    it "returns input items for bounded webhook waits" do
-      config = {
-        "resume" => "webhook",
-        "limit_wait_time" => true,
-        "timeout_amount" => 3,
-        "timeout_unit" => "hours",
-      }
-      exec_ctx = build_exec_ctx(config, resume_token: "tok-abc")
+    context "with a bounded webhook wait" do
+      let(:configuration) do
+        {
+          "resume" => "webhook",
+          "limit_wait_time" => true,
+          "timeout_amount" => 3,
+          "timeout_unit" => "hours",
+        }
+      end
+      let(:resume_token) { "tok-abc" }
 
-      result = described_class.new(parameters: config).execute(exec_ctx)
-
-      expect(result.first).to eq(exec_ctx.input_items)
+      it "returns input items" do
+        expect(result.first).to eq(execution_context.input_items)
+      end
     end
 
-    it "raises on a non-positive wait amount" do
-      config = { "resume" => "time_interval", "wait_amount" => 0, "wait_unit" => "hours" }
-      exec_ctx = build_exec_ctx(config)
+    context "with a non-positive wait amount" do
+      let(:configuration) do
+        { "resume" => "time_interval", "wait_amount" => 0, "wait_unit" => "hours" }
+      end
 
-      expect { described_class.new(parameters: config).execute(exec_ctx) }.to raise_error(
-        DiscourseWorkflows::NodeError,
-        /Wait amount/,
-      )
+      it "raises a node error" do
+        expect { result }.to raise_error(DiscourseWorkflows::NodeError, /Wait amount/)
+      end
     end
 
-    it "raises on an invalid wait unit" do
-      config = { "resume" => "time_interval", "wait_amount" => 1, "wait_unit" => "weeks" }
-      exec_ctx = build_exec_ctx(config)
+    context "with an invalid wait unit" do
+      let(:configuration) do
+        { "resume" => "time_interval", "wait_amount" => 1, "wait_unit" => "weeks" }
+      end
 
-      expect { described_class.new(parameters: config).execute(exec_ctx) }.to raise_error(
-        DiscourseWorkflows::NodeError,
-        /Invalid wait unit/,
-      )
+      it "raises a node error" do
+        expect { result }.to raise_error(DiscourseWorkflows::NodeError, /Invalid wait unit/)
+      end
     end
   end
 end

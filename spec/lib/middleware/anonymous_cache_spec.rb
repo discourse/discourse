@@ -117,6 +117,33 @@ RSpec.describe Middleware::AnonymousCache do
         SiteSetting.set_locale_from_cookie = true
         expect(new_helper("HTTP_COOKIE" => "locale=es;").cache_key).to include("l=es")
       end
+
+      it "keys on the locale cookie when the language switcher is enabled" do
+        SiteSetting.default_locale = "en"
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_cookie = false
+        SiteSetting.content_localization_supported_locales = "es|fr"
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_language_switcher = "all"
+
+        expect(new_helper("HTTP_COOKIE" => "locale=es;").cache_key).to include("l=es")
+
+        # An unsupported locale is not honoured, so it must not fan the cache out either.
+        expect(new_helper("HTTP_COOKIE" => "locale=ja;").cache_key).to eq(new_helper.cache_key)
+      end
+
+      it "keys on the same locale the request renders in" do
+        SiteSetting.default_locale = "en"
+        SiteSetting.allow_user_locale = true
+        SiteSetting.content_localization_supported_locales = "es"
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_language_switcher = "all"
+
+        env = { "HTTP_COOKIE" => "locale=es;" }
+        request = ActionDispatch::Request.new(Rack::MockRequest.env_for("/", env))
+
+        expect(new_helper(env).cache_key).to include("l=#{Discourse.anonymous_locale(request)}")
+      end
     end
 
     it "handles old browsers" do
@@ -145,12 +172,19 @@ RSpec.describe Middleware::AnonymousCache do
       }.not_to raise_error
     end
 
-    it "handles showing original content" do
-      show_orig_key =
-        new_helper("HTTP_COOKIE" => ContentLocalization::SHOW_ORIGINAL_COOKIE).cache_key
+    it "keys only on the resolved automatic translation preference" do
       regular_key = new_helper.cache_key
+      enabled_key =
+        new_helper(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=true",
+        ).cache_key
+      disabled_key =
+        new_helper(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false",
+        ).cache_key
 
-      expect(show_orig_key).not_to eq(regular_key)
+      expect(enabled_key).to eq(regular_key)
+      expect(disabled_key).not_to eq(regular_key)
     end
 
     context "when cached" do

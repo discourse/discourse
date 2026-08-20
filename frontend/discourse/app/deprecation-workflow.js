@@ -374,6 +374,7 @@ const workflows = [
     "discourse.legacy-array-like-object.proxied-array",
     "discourse.legacy-topic-list",
     "discourse.markdown-it.whitelist",
+    "discourse.modify-class-model",
     "discourse.nav-item.built-list-site-settings",
     "discourse.navigation-category-controller",
     "discourse.number-field",

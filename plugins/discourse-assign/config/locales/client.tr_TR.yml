@@ -202,11 +202,22 @@ tr_TR:
       post: "Gönderi"
     discourse_workflows:
       nodes:
-        "action:assign_topic": "Konu Ata"
         "trigger:assigned": "Atandı"
       assign_topic:
+        resource: "Kaynak"
+        resources:
+          topic: "Konu"
+          post: "Gönderi"
         operations:
           assign: "Ata"
           unassign: "Atamayı kaldır"
         topic_id: "Konu kimliği"
+        post_id: "Gönderi kimliği"
+        assignee: "Atanan kişi"
+      check_assignment:
+        target_types:
+          topic: "Konu"
+          post: "Gönderi"
+        topic_id: "Konu kimliği"
+        post_id: "Gönderi kimliği"
         assignee: "Atanan kişi"

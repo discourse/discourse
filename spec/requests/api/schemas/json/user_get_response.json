@@ -739,9 +739,6 @@
             "enable_markdown_monospace_font": {
               "type": "boolean"
             },
-            "enable_defer": {
-              "type": "boolean"
-            },
             "digest_after_minutes": {
               "type": "integer"
             },
@@ -853,6 +850,15 @@
             "interface_color_mode": {
               "type": "integer"
             },
+            "automatically_translate": {
+              "type": "boolean"
+            },
+            "understood_languages": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
             "show_original_content": {
               "type": "boolean"
             },
@@ -874,7 +880,6 @@
             "enable_quoting",
             "enable_smart_lists",
             "enable_markdown_monospace_font",
-            "enable_defer",
             "digest_after_minutes",
             "automatically_unpin_topics",
             "auto_track_topics_after_msecs",
@@ -903,7 +908,9 @@
             "topics_unread_when_closed",
             "interface_color_mode",
             "show_original_content",
-            "send_shortcut"
+            "send_shortcut",
+            "automatically_translate",
+            "understood_languages"
           ]
         }
       },

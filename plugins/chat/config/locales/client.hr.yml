@@ -45,6 +45,8 @@ hr:
       cancel: "Odustani"
       cancel_reply: "Otkaži odgovor"
       chat_channels: "Kanali"
+      pinned_bar:
+        title: "Zakvačeno"
       pinned: "Zakvačeno"
       move_to_channel:
         title: "Premještanje poruka na kanal"
@@ -370,4 +372,11 @@ hr:
         message: "Poruka"
       chat_approval:
         message: "Poruka"
+        buttons: "Gumbi"
+        value: "Vrijednost"
+        style: "Stil"
+        style_default: "Zadano"
+        style_primary: "Primarna"
+        style_success: "Uspjeh"
+        icon: "Ikona"
         channel_id: "Kanal"

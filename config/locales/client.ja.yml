@@ -418,10 +418,28 @@ ja:
       pill: "提案"
       pm_title: "推奨メッセージ"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "選択済み"
       start_posting:
         back: "戻る"
+    design_wizard:
+      back: "戻る"
+      next: "次へ"
+      sections:
+        theme: "テーマ"
+        fonts: "フォント"
+        homepage: "ホームページ"
+      theme:
+        selected: "選択済み"
+      colors:
+        light: "ライト"
+        dark: "ダーク"
+      fonts:
+        base_font: "ベースフォント"
+        heading_font: "見出しのフォント"
+      homepage:
+        topics: "トピック"
+        categories: "カテゴリ"
+        styles:
+          boxes: "ボックス"
     about:
       edit: "このページを編集"
       simple_title: "サイト情報"
@@ -670,10 +688,6 @@ ja:
         optional: "オプション"
       claim_help:
         optional: "この項目を自分に割り当ててほかのユーザーがレビューしないようにできます。"
-        required: "レビューする前に項目を自分に割り当てる必要があります。"
-        claimed_by_you: "この項目を自分に割り当てたため、レビューできます。"
-        claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
-        automatically_claimed_by: "この項目は現在、<b>%{username}</b> がレビューしています。"
       claim:
         title: "このトピックを自分に割り当てる"
       unclaim:
@@ -709,6 +723,8 @@ ja:
         email: "メール"
         name: "名前"
         fields: "フィールド"
+        silence_reason: "投稿禁止の理由"
+        penalty_forever: "永遠"
         reject_reason: "理由"
         scrubbed_by: "レコードを削除したユーザー:"
         scrubbed_reason: "理由"
@@ -1480,8 +1496,10 @@ ja:
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       enable_smart_lists: "コンポーザーに書き込む際にスマートリストを有効にする"
-      enable_defer: "トピックを未読としてマークする"
       enable_markdown_monospace_font: "作成ツールの Markdown モードで等幅フォントを使用する"
+      automatically_translate: "ほかの言語で書かれたトピックや投稿を自動翻訳する"
+      content_languages:
+        understood: "理解できる言語"
       experimental_sidebar:
         enable: "サイドバーを有効にする"
         options: "オプション"
@@ -2104,7 +2122,8 @@ ja:
           invite_by_email: "メールアドレス"
           restrict_domain: "ドメインに制限"
           domain_placeholder: "example.com"
-          more_options: "その他のオプション"
+          create_and_send: "送信"
+          create_and_copy: "リンクをコピー"
           update: "更新"
           summary:
             role_member: "メンバー"
@@ -2116,7 +2135,7 @@ ja:
             expires: "有効期限"
             topic: "トピック"
             groups: "グループ"
-            edit: "招待の編集"
+            edit: "編集"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -2615,6 +2634,7 @@ ja:
     category_row:
       subcategory_count:
         other: "+%{count} 個のサブカテゴリ"
+      subcategories: "+ サブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
       read_only: "読み取り専用"
@@ -2793,7 +2813,6 @@ ja:
       italic_label: "I"
       italic_title: "斜体"
       italic_text: "斜体テキスト"
-      heading_title: "見出し"
       heading_level_n: "見出し %{levelNumber}"
       heading_level_n_title: "見出し %{levelNumber}"
       heading_level_paragraph: "段落"
@@ -2979,7 +2998,6 @@ ja:
         other: "'%{group_name}' の %{count} 件のオープンメンバーシップリクエスト"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
-      votes_released: "%{description} - 完了"
       new_features: "新機能が公開されました！"
       admin_problems: "サイトダッシュボードに関する新しいアドバイス"
       upcoming_changes:
@@ -4043,6 +4061,12 @@ ja:
         instructions: "この投稿へのリンクを共有します:"
       original_language: "元の投稿は%{language}で書かれました"
       original_language_and_outdated: "元の投稿は%{language}で書かれています。翻訳は古い可能性があります"
+      originally_written_in: "元の言語: %{language}"
+      click_to_show_original: "クリックして原文を表示"
+      tap_to_show_original: "タップして原文を表示"
+      click_to_show_translation: "クリックして翻訳を表示"
+      tap_to_show_translation: "タップして翻訳を表示"
+      ai_translation_disclaimer: "AIによる翻訳は正確でない場合があります。"
     category:
       none: "(カテゴリなし)"
       all: "すべてのカテゴリ"
@@ -4855,9 +4879,9 @@ ja:
           always_public: "このセクションのコンテンツは常に公開される"
           more_menu: "その他のメニュー"
           localizations:
-            title: "翻訳"
             locale: "言語"
             title_label: "セクションのタイトル"
+            remove_language: "削除"
           links:
             add: "別のリンクを追加する"
             delete: "リンクを削除する"
@@ -5695,13 +5719,32 @@ ja:
       new_features:
         title: "新機能"
         check_for_updates: "アップデートを確認"
+      site_traffic_explorer:
+        pageviews: "ページビュー"
+        view_more: "さらに表示"
+        cards:
+          pages: "ページ"
+          visitors: "訪問者"
+        columns:
+          countries: "国"
+          top_urls: "URL"
+          browsers: "ブラウザ"
+          ip_addresses: "IP アドレス"
+        filters:
+          country: "国"
+          browser: "ブラウザ"
+          ip: "IP アドレス"
+        metrics:
+          pageviews:
+            label: "ページビュー"
+        series:
+          anonymous_human: "匿名ユーザー"
       dashboard:
         title: "ダッシュボード"
         last_updated: "ダッシュボードが更新されました:"
         discourse_last_updated: "Discourse が更新されました:"
         version: "バージョン"
         up_to_date: "最新のバージョンです!"
-        critical_available: "重大なアップデートがあります。"
         updates_available: "アップデートがあります。"
         please_update: "更新してください！"
         no_check_performed: "アップデートの確認が行われていません。sidekiq が起動していることを確認してください。"

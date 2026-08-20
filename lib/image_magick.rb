@@ -19,8 +19,13 @@ module ImageMagick
 
   DEFAULT_TIMEOUT = 30
 
+  FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
+
   def self.asset_read_paths
-    @asset_read_paths ||= [Rails.root.join("vendor").to_s, ENV["MAGICK_CONFIGURE_PATH"]].compact
+    @asset_read_paths ||=
+      Discourse::SafeExec.existing_paths(
+        [Rails.root.join("vendor").to_s, ENV["MAGICK_CONFIGURE_PATH"], *FONTCONFIG_READ_PATHS],
+      )
   end
 
   def self.magick(*args, read: [], write: [], timeout: nil, nice: nil, failure_message: "")

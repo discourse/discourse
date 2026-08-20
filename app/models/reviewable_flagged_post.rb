@@ -94,25 +94,12 @@ class ReviewableFlaggedPost < Reviewable
       end
     end
 
-    if guardian.can_suspend?(target_created_by)
-      if !target_created_by.silenced?
-        build_action(
-          actions,
-          :agree_and_silence,
-          icon: "microphone-slash",
-          bundle: agree_bundle,
-          client_action: "silence",
-        )
-      end
-
-      build_action(
-        actions,
-        :agree_and_suspend,
-        icon: "ban",
-        bundle: agree_bundle,
-        client_action: "suspend",
-      )
-    end
+    build_penalty_actions(
+      actions,
+      bundle: agree_bundle,
+      silence: :agree_and_silence,
+      suspend: :agree_and_suspend,
+    )
 
     if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
       delete_user_actions(actions, agree_bundle)
@@ -349,10 +336,11 @@ class ReviewableFlaggedPost < Reviewable
   def unassign_topic(performed_by, post)
     topic = post.topic
     return unless topic && performed_by && SiteSetting.reviewable_claiming != "disabled"
-    deleted_count = ReviewableClaimedTopic.where(topic_id: topic.id, automatic: false).delete_all
-    if deleted_count > 0
-      topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, performed_by) }
-    end
+    claim = ReviewableClaimedTopic.find_by(topic_id: topic.id, automatic: false)
+    return if claim.nil?
+
+    claim.delete
+    claim.log_topic_history(:unclaimed, performed_by)
 
     user_ids = User.staff.pluck(:id)
 
@@ -433,6 +421,7 @@ end
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

@@ -6,8 +6,10 @@
 
 fr:
   solved: "Résolu"
+  unsolved: "Non résolu"
   posted: "publié"
   by_username: "par @%{username}"
+  replied: "a répondu"
   vote_count:
     one: "%{count} vote"
     other: "%{count} votes"
@@ -19,3 +21,6 @@ fr:
     other: "%{count} réponses"
   theme_metadata:
     description: "Un thème simple et élégant qui améliore l'expérience prête à l'emploi pour les sites Discourse."
+    settings:
+      topic_card_high_context:
+        description: "Lorsque ce paramètre est activé, des informations contextuelles supplémentaires sont affichées sur les cartes de sujet, notamment les étiquettes, les extraits, le statut de résolution, les utilisateurs assignés et le nombre de votes."

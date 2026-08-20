@@ -41,6 +41,8 @@ sl:
         yesterday: "Včeraj"
       create: "Ustvari"
       cancel: "Prekliči"
+      pinned_bar:
+        title: "Pripeto"
       pinned: "Pripeto"
       channel_settings:
         edit: "Uredi"
@@ -261,3 +263,8 @@ sl:
         message: "Opozorilo"
       chat_approval:
         message: "Opozorilo"
+        value: "Stanje"
+        style_default: "Privzeto"
+        style_primary: "Primarna"
+        style_success: "Uspeh"
+        icon: "Ikona"

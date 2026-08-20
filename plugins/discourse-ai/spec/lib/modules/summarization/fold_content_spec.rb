@@ -39,6 +39,147 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
       expect(result.summarized_text).to eq(summary)
     end
 
+    it "lets a forced-tool gist inspect delegated images before setting the summary" do
+      upload =
+        UploadCreator.new(
+          file_from_fixtures(
+            "1x1.jpg",
+            "images",
+            Rails.root.join("plugins/discourse-ai/spec/fixtures"),
+          ),
+          "gist.jpg",
+        ).create_for(user.id)
+      post_1.update_columns(
+        user_id: user.id,
+        raw: "#{"context " * 20}![image](#{upload.short_url})",
+      )
+      native_model = Fabricate(:llm_model, vision_enabled: true)
+      delegated_model = Fabricate(:llm_model, vision_llm_model: native_model)
+      gist_agent =
+        AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::ShortSummarizer])
+      gist_agent.update_column(:vision_enabled, true)
+      AiAgent.agent_cache.flush!
+      SiteSetting.ai_summary_gists_agent = gist_agent.id
+      image_call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "view_1",
+          name: "view_image",
+          parameters: {
+            images: [upload.id.to_s],
+            question: "What information in this image is relevant to the discussion?",
+          },
+        )
+      summary_call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "summary_1",
+          name: "set_topic_summary",
+          parameters: {
+            summary: "Image-aware gist",
+          },
+        )
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [image_call, "The image contains relevant context.", summary_call],
+        ) do |spy|
+          DiscourseAi::Summarization
+            .topic_gist(topic, locale: "en", llm_model: delegated_model)
+            .summarize(user)
+            .tap { expect(spy.completions).to eq(3) }
+        end
+
+      expect(result.summarized_text).to eq("Image-aware gist")
+    end
+
+    it "forces the gist result after an image-aware attempt omits the output tool" do
+      upload =
+        UploadCreator.new(
+          file_from_fixtures(
+            "1x1.jpg",
+            "images",
+            Rails.root.join("plugins/discourse-ai/spec/fixtures"),
+          ),
+          "fallback-gist.jpg",
+        ).create_for(user.id)
+      post_1.update_columns(
+        user_id: user.id,
+        raw: "#{"context " * 20}![image](#{upload.short_url})",
+      )
+      native_model = Fabricate(:llm_model, vision_enabled: true)
+      delegated_model = Fabricate(:llm_model, vision_llm_model: native_model)
+      custom_agent = Fabricate(:ai_agent, vision_enabled: true)
+      SiteSetting.ai_summary_gists_agent = custom_agent.id
+      summary_call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "summary_1",
+          name: "set_topic_summary",
+          parameters: {
+            summary: "Forced fallback gist",
+          },
+        )
+
+      allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+        :generate,
+      ).and_wrap_original do |original, *args, **kwargs, &block|
+        result = original.call(*args, **kwargs, &block)
+        kwargs[:execution_context]&.token_usage_tracker&.add_effective(
+          request: 40_000,
+          response: 30_000,
+        )
+        result
+      end
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["Output without the required tool", summary_call],
+        ) do |spy|
+          DiscourseAi::Summarization
+            .topic_gist(topic, locale: "en", llm_model: delegated_model)
+            .summarize(user)
+            .tap { expect(spy.completions).to eq(2) }
+        end
+
+      expect(result.summarized_text).to eq("Forced fallback gist")
+    end
+
+    it "forces the gist result immediately when the agent does not allow images" do
+      upload =
+        UploadCreator.new(
+          file_from_fixtures(
+            "1x1.jpg",
+            "images",
+            Rails.root.join("plugins/discourse-ai/spec/fixtures"),
+          ),
+          "policy-off-gist.jpg",
+        ).create_for(user.id)
+      post_1.update_columns(
+        user_id: user.id,
+        raw: "#{"context " * 20}![image](#{upload.short_url})",
+      )
+      native_model = Fabricate(:llm_model, vision_enabled: true)
+      delegated_model = Fabricate(:llm_model, vision_llm_model: native_model)
+      custom_agent = Fabricate(:ai_agent, vision_enabled: false)
+      SiteSetting.ai_summary_gists_agent = custom_agent.id
+      summary_call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "summary_1",
+          name: "set_topic_summary",
+          parameters: {
+            summary: "Policy-off gist",
+          },
+        )
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([summary_call]) do |spy|
+          DiscourseAi::Summarization
+            .topic_gist(topic, locale: "en", llm_model: delegated_model)
+            .summarize(user)
+            .tap { expect(spy.completions).to eq(1) }
+        end
+
+      expect(result.summarized_text).to eq("Policy-off gist")
+    end
+
     it "captures a tool-backed topic gist without structured output" do
       custom_agent =
         Fabricate(:ai_agent, response_format: [{ "key" => "fragile", "type" => "string" }])

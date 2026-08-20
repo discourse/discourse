@@ -13,7 +13,7 @@ class TagGroup < ActiveRecord::Base
 
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tags, through: :tag_group_memberships
-  has_many :none_synonym_tags,
+  has_many :base_tags,
            -> { where(target_tag_id: nil) },
            through: :tag_group_memberships,
            source: "tag"
@@ -37,9 +37,10 @@ class TagGroup < ActiveRecord::Base
   end
 
   def tag_ids=(ids)
-    base_tags = Tag.where(id: ids)
-    synonyms = Tag.where(target_tag_id: base_tags.select(:id)).where.not(id: base_tags.select(:id))
-    self.tags = base_tags + synonyms
+    selected_tags = Tag.where(id: ids)
+    synonyms =
+      Tag.where(target_tag_id: selected_tags.select(:id)).where.not(id: selected_tags.select(:id))
+    self.tags = selected_tags + synonyms
   end
 
   def parent_tag_id=(id)

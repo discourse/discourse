@@ -25,6 +25,8 @@ vi:
     spam_detection:
       logging_subject: "Phát hiện rác rưởi"
     ai_bot:
+      read_post:
+        unknown_post: "tút"
       agents:
         smart_dates:
           name: "Ngày thông minh"

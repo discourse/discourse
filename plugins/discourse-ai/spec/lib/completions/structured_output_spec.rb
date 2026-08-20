@@ -28,6 +28,25 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
 
   before { enable_current_plugin }
 
+  describe "#read_buffered_property_chunk" do
+    it "yields non-empty chunks, including whitespace-only ones" do
+      yielded = []
+
+      structured_output << "{\"message\": \"First."
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      structured_output << "\\n\\n"
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      structured_output << "Second.\"}"
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      expect(yielded).to eq(["First.", "\n\n", "Second."])
+    end
+  end
+
   describe "Parsing structured output on the fly" do
     it "acts as a buffer for an streamed JSON" do
       chunks = [
@@ -71,6 +90,15 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
 
       # No partial string left to read.
       expect(structured_output.read_buffered_property(:status)).to eq("")
+    end
+
+    it "streams pretty-printed JSON" do
+      pretty_json = JSON.pretty_generate(message: 'Hello, "world"!')
+      pretty_json.each_char.each_slice(4) { |chunk| structured_output << chunk.join }
+      structured_output.finish
+
+      expect(structured_output.broken?).to eq(false)
+      expect(structured_output.read_buffered_property(:message)).to eq('Hello, "world"!')
     end
 
     it "supports array types" do

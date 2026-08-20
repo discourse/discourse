@@ -6,6 +6,7 @@ import SettingDefinitionField from "discourse/components/setting-definition-fiel
 import Site from "discourse/models/site";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | SettingDefinitionField", function (hooks) {
   setupRenderingTest(hooks);
@@ -378,6 +379,41 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert.form().field("my_enum").hasValue("a");
   });
 
+  test("enum does not select the first choice when the current value is invalid", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_enum="missing"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_enum"
+              type="enum"
+              label="My enum"
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_enum'] select option[value='missing']")
+      .hasText(
+        i18n("admin.settings.none"),
+        "the invalid value is presented as no selection"
+      )
+      .hasAttribute("disabled", "", "the invalid option cannot be selected");
+    assert
+      .form()
+      .field("my_enum")
+      .hasValue(
+        "missing",
+        "the browser does not select the first valid choice"
+      );
+  });
+
   test("enum only offers a none option when the setting allows a blank value", async function (assert) {
     await render(
       <template>
@@ -460,9 +496,7 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       </template>
     );
 
-    assert
-      .dom("[data-name='my_enum'] select option[value='5']")
-      .hasAttribute("selected");
+    assert.form().field("my_enum").hasValue("5");
   });
 
   test("compact_list offers created entries again after they are removed", async function (assert) {
@@ -713,5 +747,94 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     );
 
     assert.dom("[data-name='my_setting']").hasClass("--full");
+  });
+
+  test("enum keeps a stored value that is no longer one of the choices", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_enum="retired"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_enum"
+              type="enum"
+              label="My enum"
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_enum'] select option[value='retired']")
+      .exists("the stored value is offered as its own option");
+    assert
+      .dom("[data-name='my_enum'] select")
+      .hasValue(
+        "retired",
+        "a native select would otherwise silently fall back to the first option"
+      );
+  });
+
+  test("enum does not invent an option for a blank value", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_enum=""}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_enum"
+              type="enum"
+              label="My enum"
+              allows_none=true
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_enum'] select option")
+      .exists({ count: 3 }, "none plus the two real choices");
+  });
+
+  test("locale_enum labels each option with its language name", async function (assert) {
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+      { value: "fr", name: "French (Français)" },
+    ];
+
+    await render(
+      <template>
+        <Form @data={{hash default_locale="fr"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="default_locale"
+              type="locale_enum"
+              label="Default locale"
+              valid_values=(array
+                (hash value="en" name="languages.en.name")
+                (hash value="fr" name="languages.fr.name")
+              )
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='default_locale'] select option[value='fr']")
+      .hasText(
+        "French (Français)",
+        "the localized name is composed with the native name"
+      );
+    assert.form().field("default_locale").hasValue("fr");
   });
 });

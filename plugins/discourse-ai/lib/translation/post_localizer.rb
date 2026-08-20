@@ -10,7 +10,6 @@ module DiscourseAi
              LocaleNormalizer.is_same?(post.locale, target_locale) || post.raw.blank?
           return
         end
-        return if post.raw.length > SiteSetting.ai_translation_max_post_length
         target_locale = target_locale.to_s.sub("-", "_")
 
         translated_raw =

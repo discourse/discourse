@@ -1081,7 +1081,11 @@
     margin-top: 0.5em;
   }
 
-  .pref-show-original-content {
+  .pref-understood-languages {
+    margin-top: var(--space-2);
+  }
+
+  .pref-automatically-translate {
     margin-top: var(--space-4);
     margin-bottom: var(--space-4);
   }
@@ -1302,6 +1306,10 @@
   .d-table.user-invite-list {
     margin-top: var(--space-4);
 
+    .invite-link-target {
+      display: none;
+    }
+
     .d-table__cell {
       &.--overview {
         .d-icon {
@@ -1377,15 +1385,14 @@
 
 .user-additional-controls {
   display: flex;
+  gap: var(--space-2);
   flex-wrap: wrap;
-  justify-content: end;
 }
 
 .user-invite-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5em;
-  margin-left: auto;
 }
 
 .notification-schedule {
@@ -1453,8 +1460,12 @@
 }
 
 .user-invite-search {
+  min-width: 0;
+  margin-right: auto;
+
   input {
     margin: 0;
+    width: 100%;
   }
 }
 

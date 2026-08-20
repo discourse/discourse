@@ -121,27 +121,35 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include(buffer.links.first[:placeholder])
     end
 
-    it "defers a link whose label is inline code carrying a language" do
-      # A language attribute alone never makes code a block, so code-with-a-
-      # language still renders inline inside a link and stays deferrable — only
-      # multi-line code is hoisted out.
-      raw =
-        link_renderer.to_markdown("see [url=https://example.com/t/5][code=ruby]x = 1[/code][/url]")
+    # `[code]` and `[pre]` are code blocks by definition to markbridge, whatever
+    # they hold, so the normalizer lifts them out of a link label — a single line
+    # and a language attribute make no difference. The link is left with an empty
+    # (deferrable) label and the fence lands as a sibling block in the raw. Only
+    # code that is inline to begin with (`[tt]`, or a Code node with no `block`
+    # flag) can stay in a label; the unit test further down covers that.
+    {
+      "single-line, with a language" => [
+        "[url=https://example.com][code=ruby]x = 1[/code][/url]",
+        "```ruby\nx = 1\n```",
+      ],
+      "single-line, no language" => [
+        "[url=https://example.com][code]x = 1[/code][/url]",
+        "```\nx = 1\n```",
+      ],
+      "multi-line" => [
+        "[url=https://example.com][code=ruby]a\nb[/code][/url]",
+        "```ruby\na\nb\n```",
+      ],
+    }.each do |label, (bbcode, fence)|
+      it "hoists #{label} code out of a link label instead of deferring it into text" do
+        raw = link_renderer.to_markdown(bbcode)
 
-      expect(buffer.links.size).to eq(1)
-      expect(buffer.links.first[:text]).to eq("`x = 1`")
-      expect(raw).to include(buffer.links.first[:placeholder])
-    end
-
-    it "hoists multi-line code out of a link label instead of deferring it into text" do
-      # The normalizer pulls multi-line code out of the inline container before
-      # we render, so the link arrives with an empty (deferrable) label and the
-      # code fence lands as a sibling block in the raw.
-      raw = link_renderer.to_markdown("[url=https://example.com][code=ruby]a\nb[/code][/url]")
-
-      expect(buffer.links).to contain_exactly(hash_including(url: "https://example.com", text: nil))
-      expect(raw).to include(buffer.links.first[:placeholder])
-      expect(raw).to include("```ruby\na\nb\n```")
+        expect(buffer.links).to contain_exactly(
+          hash_including(url: "https://example.com", text: nil),
+        )
+        expect(raw).to include(buffer.links.first[:placeholder])
+        expect(raw).to include(fence)
+      end
     end
 
     it "defers a link whose quote label the normalizer hoisted out" do

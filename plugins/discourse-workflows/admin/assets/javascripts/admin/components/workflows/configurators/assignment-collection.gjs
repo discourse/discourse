@@ -5,6 +5,7 @@ import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import {
   findNodeType,
+  isExpression,
   propertyDescription,
   propertyLabel,
 } from "../../../lib/workflows/property-engine";
@@ -20,6 +21,24 @@ const DEFAULT_ASSIGNMENT_TYPES = [
   "array",
   "object",
 ];
+
+// Expressions are type-agnostic; plain values only survive a type change when
+// they still make sense for the new type.
+function valueForType(value, type) {
+  if (isExpression(value)) {
+    return value;
+  }
+
+  if (type === "boolean") {
+    return value === true;
+  }
+
+  if (typeof value === "boolean") {
+    return "";
+  }
+
+  return value;
+}
 
 function normalizeAssignmentType(type) {
   const option = typeof type === "object" ? { ...type } : { value: type };
@@ -104,12 +123,24 @@ export default class AssignmentCollection extends Component {
   }
 
   @action
+  handleTypeChange(index, type, { set, name }) {
+    set(name, type);
+
+    if (!this.args.formApi) {
+      return;
+    }
+
+    const valuePath = `${this.assignmentsPath}.${index}.value`;
+    set(valuePath, valueForType(this.args.formApi.get(valuePath), type));
+  }
+
+  @action
   valueSchema(item) {
     switch (item?.type) {
       case "number":
         return { type: "number" };
       case "boolean":
-        return { type: "boolean" };
+        return { type: "boolean", ui: { expression: true } };
       case "array":
       case "object":
         return {
@@ -181,6 +212,7 @@ export default class AssignmentCollection extends Component {
               @label={{i18n
                 "discourse_workflows.property_engine.assignment_type"
               }}
+              @onSet={{fn this.handleTypeChange index}}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
@@ -194,6 +226,7 @@ export default class AssignmentCollection extends Component {
             <Field
               @form={{object}}
               @formApi={{@formApi}}
+              @configuration={{item}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName="value"

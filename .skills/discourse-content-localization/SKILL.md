@@ -19,7 +19,7 @@ Use this before localizing dynamic Discourse content such as Sidebar sections, G
 - Add `include Localizable` to the source model and a nullable `locale` column with limit 20.
 - Add `<Model>Localization` with `include LocaleMatchable`, `belongs_to :model`, a `locale` string limit 20, translated fields with source-model length limits, and a unique `(model_id, locale)` index.
 - Use `get_localization` for exact, normalized, and optional default-locale fallback behavior. Do not reimplement locale fallback in serializers.
-- Add `ContentLocalization.show_translated_<model>?` using `SiteSetting.content_localization_enabled`, source `locale.present?`, and `!model.in_user_locale?`. Match Post/Topic only when show-original behavior is relevant.
+- Add `ContentLocalization.show_translated_<model>?` using `SiteSetting.content_localization_enabled`, source `locale.present?`, and `!model.in_user_locale?`. Preserve existing model-specific presentation gates; do not copy them to unrelated model types without explicit product intent.
 - Preload in every list, boot, site JSON, admin list, and controller path that serializes localized fields. Use `includes(:localizations)` or `includes(:localizations, children: :localizations)` as needed.
 - Serializer methods should return `localization.field.presence || original_field` and expose localization rows only to users who can edit them.
 
@@ -44,6 +44,7 @@ Use this before localizing dynamic Discourse content such as Sidebar sections, G
 
 - Model specs: validations, uniqueness, dependency cleanup, fallback via `get_localization`.
 - Serializer/request specs: localized value when enabled, original value when disabled/source locale missing/same locale, editor-only `localizations`, and no N+1 on hot routes.
+- When changing model-specific presentation gates, test authenticated and anonymous behavior and verify unrelated localizable model types remain unaffected.
 - UI/system or QUnit specs: authorized editor can view/add/remove localization rows on the chosen edit surface; unauthorized users cannot.
 - discourse-ai specs: detector text, localizer writes, scheduled job enqueue/credit gates, regular job limits/skips/errors, and candidate completion if the model appears in translation-progress UI.
 

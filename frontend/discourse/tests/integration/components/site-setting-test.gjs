@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import {
   click,
   fillIn,
@@ -13,50 +14,50 @@ import SiteSetting from "discourse/admin/models/site-setting";
 import ThemeSettings from "discourse/admin/models/theme-settings";
 import ThemeSiteSettings from "discourse/admin/models/theme-site-settings";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
+import {
+  logIn,
+  publishToMessageBus,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
+
+function renderSetting(props) {
+  const setting = SiteSetting.create(props);
+  return render(
+    <template><SiteSettingComponent @setting={{setting}} /></template>
+  );
+}
 
 module("Integration | Component | SiteSetting", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays host-list setting value", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "blocked_onebox_domains",
-        value: "a.com|b.com",
-        type: "host_list",
-      })
-    );
-
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "blocked_onebox_domains",
+      value: "a.com|b.com",
+      type: "host_list",
+    });
 
     assert.dom(".formatted-selection").hasText("a.com, b.com");
   });
 
   test("error response with html_message is rendered as HTML", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "test_setting",
-        value: "",
-        type: "input-setting-string",
-      })
-    );
-
     const message = "<h1>Unable to update site settings</h1>";
 
     pretender.put("/admin/site_settings/test_setting", () => {
       return response(422, { html_message: true, errors: [message] });
     });
 
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "test_setting",
+      value: "",
+      type: "input-setting-string",
+    });
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
 
@@ -64,24 +65,17 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("error response without html_message is not rendered as HTML", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "test_setting",
-        value: "",
-        type: "input-setting-string",
-      })
-    );
-
     const message = "<h1>Unable to update site settings</h1>";
 
     pretender.put("/admin/site_settings/test_setting", () => {
       return response(422, { errors: [message] });
     });
 
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "test_setting",
+      value: "",
+      type: "input-setting-string",
+    });
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
 
@@ -89,15 +83,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("error response with html_message discards changes", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "test_setting",
-        value: "original",
-        type: "input-setting-string",
-      })
-    );
-
     pretender.put("/admin/site_settings/test_setting", () => {
       return response(422, {
         html_message: true,
@@ -105,9 +90,11 @@ module("Integration | Component | SiteSetting", function (hooks) {
       });
     });
 
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "test_setting",
+      value: "original",
+      type: "input-setting-string",
+    });
     await fillIn(".setting input", "new value");
     await click(".setting .d-icon-check");
 
@@ -115,18 +102,11 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("displays file types list setting", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "theme_authorized_extensions",
-        value: "jpg|jpeg|png",
-        type: "file_types_list",
-      })
-    );
-
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "theme_authorized_extensions",
+      value: "jpg|jpeg|png",
+      type: "file_types_list",
+    });
 
     assert.dom(".formatted-selection").hasText("jpg, jpeg, png");
 
@@ -144,17 +124,13 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("prevents decimal in integer setting input", async function (assert) {
-    const setting = SiteSetting.create({
+    await renderSetting({
       setting: "suggested_topics_unread_max_days_old",
       value: "",
       type: "integer",
     });
 
-    await render(
-      <template><SiteSettingComponent @setting={{setting}} /></template>
-    );
-
-    const input = document.querySelector(".input-setting-integer");
+    const input = document.querySelector("input[type='number']");
     const isPrevented = (key) => {
       const event = new KeyboardEvent("keydown", {
         key,
@@ -171,62 +147,217 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("does not consider an integer setting overridden if the value is the same as the default", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "suggested_topics_unread_max_days_old",
-        value: "99",
-        default: "99",
-        type: "integer",
-      })
-    );
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
-    await fillIn(".input-setting-integer", "90");
-    assert.dom(".input-setting-integer").hasValue("90");
-    await fillIn(".input-setting-integer", "99");
+    await renderSetting({
+      setting: "suggested_topics_unread_max_days_old",
+      value: "99",
+      default: "99",
+      type: "integer",
+    });
+    await fillIn("input[type='number']", "90");
+    assert.dom("input[type='number']").hasValue("90");
+    await fillIn("input[type='number']", "99");
     assert
       .dom("[data-setting='suggested_topics_unread_max_days_old']")
       .hasNoClass("overridden");
   });
 
+  test("integer setting renders its description below the control", async function (assert) {
+    await renderSetting({
+      setting: "test_int",
+      value: "5",
+      type: "integer",
+      description: "Some helpful text",
+    });
+    assert.dom(".setting-value .desc").hasText("Some helpful text");
+    assert
+      .dom(".form-kit__container-description")
+      .doesNotExist("the FormKit field does not render its own description");
+  });
+
+  test("submitting an unchanged setting does not trigger a save request", async function (assert) {
+    let requested = false;
+    pretender.put("/admin/site_settings/test_int", () => {
+      requested = true;
+      return response(200, {});
+    });
+    pretender.put("/admin/site_settings/bulk_update.json", () => {
+      requested = true;
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_int",
+      value: "5",
+      default: "5",
+      type: "integer",
+    });
+    await triggerEvent("form", "submit");
+
+    assert.false(requested);
+  });
+
+  test("typing in an integer setting does not remount the input", async function (assert) {
+    await renderSetting({
+      setting: "test_int",
+      value: "5",
+      default: "5",
+      type: "integer",
+    });
+
+    const input = document.querySelector("input[type='number']");
+    await fillIn(input, "42");
+
+    assert.strictEqual(document.querySelector("input[type='number']"), input);
+    assert.dom(".setting-controls__ok").exists();
+  });
+
+  test("clearing an integer setting does not mark it dirty", async function (assert) {
+    await renderSetting({
+      setting: "test_int",
+      value: "5",
+      default: "5",
+      type: "integer",
+    });
+    await fillIn("input[type='number']", "");
+
+    assert.dom(".setting-controls__ok").doesNotExist();
+  });
+
+  test("cancelling a changed integer setting reverts the input", async function (assert) {
+    await renderSetting({
+      setting: "test_int",
+      value: "90",
+      default: "90",
+      type: "integer",
+    });
+    await fillIn("input[type='number']", "50");
+    assert.dom("input[type='number']").hasValue("50");
+    await click(".setting-controls__cancel");
+    assert.dom("input[type='number']").hasValue("90");
+  });
+
+  test("resetting an overridden integer setting reverts the input", async function (assert) {
+    await renderSetting({
+      setting: "test_int",
+      value: "50",
+      default: "90",
+      type: "integer",
+    });
+    assert.dom("input[type='number']").hasValue("50");
+    await click(".setting-controls__undo");
+    assert.dom("input[type='number']").hasValue("90");
+  });
+
+  test("toggling a bool setting on and saving persists the wire value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_bool", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_bool",
+      value: "false",
+      default: "false",
+      type: "bool",
+    });
+    await click("input[type='checkbox']");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_bool, "true");
+  });
+
+  test("rewrites setting links in a bool setting description", async function (assert) {
+    logIn(getOwner(this));
+    updateCurrentUser({ admin: true });
+
+    await renderSetting({
+      setting: "test_bool",
+      value: "false",
+      type: "bool",
+      description:
+        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=title" data-setting-name="title" data-setting-area="about">Title</a>',
+    });
+
+    assert
+      .dom("a.site-setting-link")
+      .hasAttribute("href", "/admin/config/about?filter=title");
+  });
+
   test("Input for secret site setting is hidden by default", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "test_setting",
-        secret: true,
-        value: "foo",
-      })
-    );
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
-    assert.dom(".input-setting-string").hasAttribute("type", "password");
-    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
-    await click(".setting-toggle-secret");
-    assert.dom(".input-setting-string").hasAttribute("type", "text");
-    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye-slash");
-    await click(".setting-toggle-secret");
-    assert.dom(".input-setting-string").hasAttribute("type", "password");
-    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
+    await renderSetting({
+      setting: "test_setting",
+      secret: true,
+      value: "foo",
+    });
+
+    assert.dom(".form-kit__control-password").hasAttribute("type", "password");
+    assert
+      .dom(".form-kit__control-password")
+      .hasAttribute(
+        "autocomplete",
+        "new-password",
+        "does not let password managers autofill credentials"
+      );
+    assert
+      .dom(".setting-toggle-secret")
+      .doesNotExist("the control owns the reveal toggle");
+
+    await click(".form-kit__control-password-toggle");
+    assert.dom(".form-kit__control-password").hasAttribute("type", "text");
+  });
+
+  test("an enum setting renders its preview and keeps it in sync", async function (assert) {
+    await renderSetting({
+      setting: "tag_style",
+      value: "simple",
+      type: "enum",
+      preview: '<span class="tag-preview">{{value}}</span>',
+      valid_values: [
+        { name: "Simple", value: "simple" },
+        { name: "Box", value: "box" },
+      ],
+    });
+
+    assert.dom(".preview .tag-preview").hasText("simple");
+
+    await fillIn(".form-kit__control-select", "box");
+
+    assert.dom(".preview .tag-preview").hasText("box");
+  });
+
+  test("a secret setting that is also a textarea stays readable", async function (assert) {
+    await renderSetting({
+      setting: "test_setting",
+      secret: true,
+      textarea: true,
+      value: "-----BEGIN PRIVATE KEY-----",
+    });
+
+    assert.dom(".form-kit__control-textarea").exists();
+    assert.dom(".form-kit__control-password").doesNotExist();
+  });
+
+  test("a secret list setting is not collapsed into a password input", async function (assert) {
+    await renderSetting({
+      setting: "test_setting",
+      type: "list",
+      list_type: "secret",
+      secret: true,
+      value: "key|secret",
+    });
+
+    assert.dom(".form-kit__control-password").doesNotExist();
+    assert.dom(".secret-value-list").exists();
   });
 
   test("shows link to the staff action logs for the setting on hover", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "enable_badges",
-        value: "false",
-        default: "true",
-        type: "bool",
-      })
-    );
-
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "enable_badges",
+      value: "false",
+      default: "true",
+      type: "bool",
+    });
 
     await triggerEvent("[data-setting='enable_badges']", "mouseenter");
 
@@ -240,18 +371,11 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("Shows update status for default_categories_* site settings", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "default_categories_test",
-        value: "",
-        type: "category_list",
-      })
-    );
-
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "default_categories_test",
+      value: "",
+      type: "category_list",
+    });
 
     await publishToMessageBus("/site_setting/default_categories_test/process", {
       status: "enqueued",
@@ -274,18 +398,11 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("Shows update status for default_tags_* site settings", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "default_tags_test",
-        value: "",
-        type: "tag_list",
-      })
-    );
-
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "default_tags_test",
+      value: "",
+      type: "tag_list",
+    });
 
     await publishToMessageBus("/site_setting/default_tags_test/process", {
       status: "enqueued",
@@ -307,18 +424,11 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("Doesn't shows update status for other site settings besides default_tags_test or default_categories_test", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "default_test",
-        value: "",
-        type: "tag_list",
-      })
-    );
-
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "default_test",
+      value: "",
+      type: "tag_list",
+    });
 
     await publishToMessageBus("/site_setting/default_tags_test/process", {
       status: "enqueued",
@@ -332,18 +442,11 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("doesn't listen for job progress on unrelated settings", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "title",
-        value: "",
-        type: "string",
-      })
-    );
-
-    await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
-    );
+    await renderSetting({
+      setting: "title",
+      value: "",
+      type: "string",
+    });
 
     await publishToMessageBus("/site_setting/title/process", {
       status: "enqueued",
@@ -413,7 +516,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("doesn't display the save/cancel buttons when the selected value is returned to the current value", async function (assert) {
-    const setting = SiteSetting.create({
+    await renderSetting({
       setting: "some_enum",
       value: "2",
       default: "1",
@@ -424,14 +527,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       ],
     });
 
-    await render(
-      <template><SiteSettingComponent @setting={{setting}} /></template>
-    );
-
-    const selector = selectKit(".select-kit");
-
-    await selector.expand();
-    await selector.selectRowByValue("1");
+    await fillIn(".form-kit__control-select", "1");
 
     assert
       .dom(".setting-controls__ok")
@@ -440,8 +536,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       .dom(".setting-controls__cancel")
       .exists("the cancel button is shown after changing the value");
 
-    await selector.expand();
-    await selector.selectRowByValue("2");
+    await fillIn(".form-kit__control-select", "2");
 
     assert
       .dom(".setting-controls__ok")
@@ -467,21 +562,14 @@ module(
         { theme_id: 5, default: true, name: "Default Theme" },
       ]);
 
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "test_themeable_setting",
-          value: "test value",
-          type: "string",
-          themeable: true,
-        })
-      );
+      await renderSetting({
+        setting: "test_themeable_setting",
+        value: "test value",
+        type: "string",
+        themeable: true,
+      });
 
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
-
-      assert.dom(".input-setting-string").hasAttribute("disabled", "");
+      assert.dom(".form-kit__control-input").hasAttribute("disabled", "");
       assert
         .dom(".setting-controls__ok")
         .doesNotExist("save button is not shown");
@@ -493,19 +581,12 @@ module(
         { theme_id: 5, default: true, name: "Default Theme" },
       ]);
 
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "test_themeable_setting",
-          value: "test value",
-          type: "string",
-          themeable: true,
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderSetting({
+        setting: "test_themeable_setting",
+        value: "test value",
+        type: "string",
+        themeable: true,
+      });
 
       assert
         .dom(".setting-theme-warning")
@@ -528,20 +609,13 @@ module(
     });
 
     test("shows notice for settings that depend on another setting", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "dependent_setting",
-          value: "1",
-          type: "integer",
-          depends_on: ["parent_setting"],
-          depends_on_humanized_names: ["Parent setting"],
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderSetting({
+        setting: "dependent_setting",
+        value: "1",
+        type: "integer",
+        depends_on: ["parent_setting"],
+        depends_on_humanized_names: ["Parent setting"],
+      });
 
       assert
         .dom(".setting-depends-on-notice")
@@ -561,18 +635,11 @@ module(
     });
 
     test("does not show the depends_on notice when setting has no dependencies", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "plain_setting",
-          value: "1",
-          type: "integer",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderSetting({
+        setting: "plain_setting",
+        value: "1",
+        type: "integer",
+      });
 
       assert.dom(".setting-depends-on-notice").doesNotExist();
     });
@@ -584,62 +651,31 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("shows the reset button when the value has been changed from the default", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "max_image_size_kb",
-          value: "2048",
-          default: "1024",
-          min: 512,
-          max: 4096,
-          type: "file_size_restriction",
-        })
-      );
+    function renderMaxImageSizeSetting(value) {
+      return renderSetting({
+        setting: "max_image_size_kb",
+        value,
+        default: "1024",
+        min: 512,
+        max: 4096,
+        type: "file_size_restriction",
+      });
+    }
 
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+    test("shows the reset button when the value has been changed from the default", async function (assert) {
+      await renderMaxImageSizeSetting("2048");
       assert.dom(".setting-controls__undo").exists("reset button is shown");
     });
 
     test("doesn't show the reset button when the value is the same as the default", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "max_image_size_kb",
-          value: "1024",
-          default: "1024",
-          min: 512,
-          max: 4096,
-          type: "file_size_restriction",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderMaxImageSizeSetting("1024");
       assert
         .dom(".setting-controls__undo")
         .doesNotExist("reset button is not shown");
     });
 
     test("shows validation error when the value exceeds the max limit", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "max_image_size_kb",
-          value: "1024",
-          default: "1024",
-          min: 512,
-          max: 4096,
-          type: "file_size_restriction",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderMaxImageSizeSetting("1024");
       await fillIn(".file-size-input", "5000");
 
       assert.dom(".validation-error").hasText(
@@ -653,21 +689,7 @@ module(
     });
 
     test("shows validation error when the value is below the min limit", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "max_image_size_kb",
-          value: "1000",
-          default: "1024",
-          min: 512,
-          max: 4096,
-          type: "file_size_restriction",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderMaxImageSizeSetting("1000");
       await fillIn(".file-size-input", "100");
 
       assert.dom(".validation-error").hasText(
@@ -681,21 +703,7 @@ module(
     });
 
     test("cancelling pending changes resets the value and removes validation error", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "max_image_size_kb",
-          value: "1000",
-          default: "1024",
-          min: 512,
-          max: 4096,
-          type: "file_size_restriction",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderMaxImageSizeSetting("1000");
 
       await fillIn(".file-size-input", "100");
       assert.dom(".validation-error").hasNoClass("hidden");
@@ -708,21 +716,7 @@ module(
     });
 
     test("resetting to the default value changes the content of input field", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "max_image_size_kb",
-          value: "1000",
-          default: "1024",
-          min: 512,
-          max: 4096,
-          type: "file_size_restriction",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderMaxImageSizeSetting("1000");
       assert
         .dom(".file-size-input")
         .hasValue("1000", "the input field contains the custom value");
@@ -742,19 +736,12 @@ module(
     });
 
     test("resetting to the default value changes the content of checkbox field", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "test_setting",
-          value: "true",
-          default: "false",
-          type: "bool",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderSetting({
+        setting: "test_setting",
+        value: "true",
+        default: "false",
+        type: "bool",
+      });
       assert
         .dom("input[type=checkbox]")
         .isChecked("the checkbox contains the custom value");
@@ -774,21 +761,7 @@ module(
     });
 
     test("clearing the input field keeps the cancel button and the validation error shown", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          setting: "max_image_size_kb",
-          value: "1000",
-          default: "1024",
-          min: 512,
-          max: 4096,
-          type: "file_size_restriction",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderMaxImageSizeSetting("1000");
 
       await fillIn(".file-size-input", "100");
       assert.dom(".validation-error").hasNoClass("hidden");
@@ -825,25 +798,18 @@ module(
     ];
 
     test("base_font sets body-font-X classNames on each field choice", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          category: "",
-          choices: fonts,
-          default: "",
-          description: "Base font",
-          placeholder: null,
-          preview: null,
-          secret: false,
-          setting: "base_font",
-          type: "font_list",
-          value: "arial",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderSetting({
+        category: "",
+        choices: fonts,
+        default: "",
+        description: "Base font",
+        placeholder: null,
+        preview: null,
+        secret: false,
+        setting: "base_font",
+        type: "font_list",
+        value: "arial",
+      });
       const fontSelector = selectKit(".font-selector");
       await fontSelector.expand();
 
@@ -857,25 +823,18 @@ module(
     });
 
     test("heading_font sets heading-font-X classNames on each field choice", async function (assert) {
-      this.set(
-        "setting",
-        SiteSetting.create({
-          category: "",
-          choices: fonts,
-          default: "",
-          description: "Heading font",
-          placeholder: null,
-          preview: null,
-          secret: false,
-          setting: "heading_font",
-          type: "font_list",
-          value: "arial",
-        })
-      );
-
-      await render(
-        <template><SiteSettingComponent @setting={{this.setting}} /></template>
-      );
+      await renderSetting({
+        category: "",
+        choices: fonts,
+        default: "",
+        description: "Heading font",
+        placeholder: null,
+        preview: null,
+        secret: false,
+        setting: "heading_font",
+        type: "font_list",
+        value: "arial",
+      });
       const fontSelector = selectKit(".font-selector");
       await fontSelector.expand();
 
@@ -923,7 +882,7 @@ module(
       assert
         .dom("[data-setting='child_value']")
         .hasClass("disabled-by-dependency");
-      assert.dom(".input-setting-integer").hasAttribute("disabled");
+      assert.dom("input[type='number']").hasAttribute("disabled");
     });
 
     test("child renders enabled when parent is truthy", async function (assert) {
@@ -937,7 +896,7 @@ module(
       assert
         .dom("[data-setting='child_value']")
         .hasNoClass("disabled-by-dependency");
-      assert.dom(".input-setting-integer").doesNotHaveAttribute("disabled");
+      assert.dom("input[type='number']").doesNotHaveAttribute("disabled");
     });
 
     test("toggling parent reactively flips child disabled and latches revealed", async function (assert) {

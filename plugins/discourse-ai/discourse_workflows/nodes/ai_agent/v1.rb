@@ -5,6 +5,9 @@ if defined?(DiscourseWorkflows)
     module Nodes
       module AiAgent
         class V1 < DiscourseWorkflows::NodeType
+          RUN_ONCE_FOR_ALL_ITEMS = "runOnceForAllItems"
+          RUN_ONCE_FOR_EACH_ITEM = "runOnceForEachItem"
+
           description(
             name: "action:ai_agent",
             version: "1.0",
@@ -17,7 +20,13 @@ if defined?(DiscourseWorkflows)
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_ai",
             i18n_prefix: "discourse_ai.discourse_workflows",
             capabilities: {
-              run_scope: "per_item",
+              run_scope: {
+                parameter: "mode",
+                values: {
+                  RUN_ONCE_FOR_EACH_ITEM => "per_item",
+                  RUN_ONCE_FOR_ALL_ITEMS => "all_items",
+                },
+              },
             },
             output_contracts: [
               {
@@ -118,6 +127,13 @@ if defined?(DiscourseWorkflows)
                   control: :actor,
                 },
               },
+              mode: {
+                type: :options,
+                required: true,
+                options: [RUN_ONCE_FOR_EACH_ITEM, RUN_ONCE_FOR_ALL_ITEMS],
+                default: RUN_ONCE_FOR_EACH_ITEM,
+                no_data_expression: true,
+              },
               prompt: {
                 type: :string,
                 ui: {
@@ -190,17 +206,19 @@ if defined?(DiscourseWorkflows)
           end
 
           def execute(exec_ctx)
+            mode = exec_ctx.get_node_parameter("mode", 0, default: RUN_ONCE_FOR_EACH_ITEM)
+            validate_mode!(mode)
+
+            return [[run_once_for_all_items(exec_ctx)]] if mode == RUN_ONCE_FOR_ALL_ITEMS
+
             items =
               exec_ctx.input_items.map.with_index do |item, item_index|
-                config = {
-                  "agent_id" => exec_ctx.get_node_parameter("agent_id", item_index),
-                  "llm_model_id" => exec_ctx.get_node_parameter("llm_model_id", item_index),
-                  "prompt" => exec_ctx.get_node_parameter("prompt", item_index),
-                  "upload_ids" => exec_ctx.get_node_parameter("upload_ids", item_index),
-                }
-                runner =
-                  exec_ctx.actor_from_parameter("runner_username", item_index, default: "system")
-                result = run_agent(config, exec_ctx.log, runner)
+                result =
+                  run_agent(
+                    agent_config(exec_ctx, item_index),
+                    exec_ctx.log,
+                    runner(exec_ctx, item_index),
+                  )
 
                 wrap({ "result" => result }, paired_item: exec_ctx.paired_item_for(item))
               end
@@ -209,6 +227,36 @@ if defined?(DiscourseWorkflows)
           end
 
           private
+
+          def run_once_for_all_items(exec_ctx)
+            result = run_agent(agent_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
+
+            wrap(
+              { "result" => result },
+              paired_item: exec_ctx.input_items.map { |item| exec_ctx.paired_item_for(item) },
+            )
+          end
+
+          def agent_config(exec_ctx, item_index)
+            {
+              "agent_id" => exec_ctx.get_node_parameter("agent_id", item_index),
+              "llm_model_id" => exec_ctx.get_node_parameter("llm_model_id", item_index),
+              "prompt" => exec_ctx.get_node_parameter("prompt", item_index),
+              "upload_ids" => exec_ctx.get_node_parameter("upload_ids", item_index),
+            }
+          end
+
+          def runner(exec_ctx, item_index)
+            exec_ctx.actor_from_parameter("runner_username", item_index, default: "system")
+          end
+
+          def validate_mode!(mode)
+            return if [RUN_ONCE_FOR_ALL_ITEMS, RUN_ONCE_FOR_EACH_ITEM].include?(mode)
+
+            raise_node_error!(
+              I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.invalid_mode", mode: mode),
+            )
+          end
 
           def resolve_llm_model(agent_record, requested_llm_model_id)
             if agent_record.force_default_llm?

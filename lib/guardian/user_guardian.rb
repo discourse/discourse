@@ -68,16 +68,17 @@ module UserGuardian
     return false if user.nil? || user.admin?
 
     if is_me?(user)
-      !SiteSetting.enable_discourse_connect &&
-        !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)
-    else
-      is_staff? &&
-        (
-          user.first_post_created_at.nil? ||
-            !user.has_more_posts_than?(User::MAX_STAFF_DELETE_POST_COUNT) ||
-            user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago
-        )
+      return false if SiteSetting.enable_discourse_connect
+
+      return !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)
     end
+
+    return false unless is_staff?
+    return false if user.moderator? && !is_admin?
+    return true if user.first_post_created_at.nil?
+    return true unless user.has_more_posts_than?(User::MAX_STAFF_DELETE_POST_COUNT)
+
+    user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago
   end
 
   def can_anonymize_user?(user)
@@ -105,6 +106,14 @@ module UserGuardian
   end
 
   def can_check_sso_details?(user)
+    user && (is_admin? || (is_moderator? && SiteSetting.moderators_view_sso_details))
+  end
+
+  def can_check_sso_email?(user)
+    user && is_admin?
+  end
+
+  def can_check_sso_payload?(user)
     user && is_admin?
   end
 
@@ -145,12 +154,17 @@ module UserGuardian
     true
   end
 
+  def can_search_staged_users?(user_directory_search: false)
+    is_staff? || (user_directory_search == true && SiteSetting.enable_user_directory?)
+  end
+
   def public_can_see_profiles?
     !SiteSetting.hide_user_profiles_from_public || !anonymous?
   end
 
   def can_see_profile?(user)
     return false if user.blank?
+    return false unless public_can_see_profiles?
     return true if is_me?(user) || is_staff?
 
     profile_hidden = SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?

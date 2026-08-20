@@ -3,20 +3,6 @@
 RSpec.describe DiscourseAutomation::Statistics do
   before { freeze_time(Time.utc(2026, 6, 15, 12, 0)) }
 
-  def create_stat(automation_id, date:, runs: 1)
-    DiscourseAutomation::Stat.create!(
-      automation_id: automation_id,
-      date: date,
-      last_run_at: date.to_time + 10.hours,
-      total_time: 1.0,
-      average_run_time: 1.0,
-      min_run_time: 1.0,
-      max_run_time: 1.0,
-      total_runs: runs,
-      total_errors: 0,
-    )
-  end
-
   describe ".total" do
     it "counts every automation" do
       Fabricate(:automation)
@@ -62,11 +48,17 @@ RSpec.describe DiscourseAutomation::Statistics do
   end
 
   describe ".executed" do
-    it "counts distinct automations with runs in each window" do
-      create_stat(1, date: Date.current, runs: 3)
-      create_stat(1, date: 10.days.ago.to_date, runs: 2)
-      create_stat(2, date: 45.days.ago.to_date, runs: 5)
+    fab!(:current_automation_stat) do
+      Fabricate(:automation_stat, automation_id: 1, date: Date.new(2026, 6, 15), total_runs: 3)
+    end
+    fab!(:recent_automation_stat) do
+      Fabricate(:automation_stat, automation_id: 1, date: Date.new(2026, 6, 5), total_runs: 2)
+    end
+    fab!(:previous_automation_stat) do
+      Fabricate(:automation_stat, automation_id: 2, date: Date.new(2026, 5, 1), total_runs: 5)
+    end
 
+    it "counts distinct automations with runs in each window" do
       expect(described_class.executed).to eq(
         last_day: 1,
         "7_days": 1,
@@ -77,11 +69,17 @@ RSpec.describe DiscourseAutomation::Statistics do
   end
 
   describe ".executions" do
-    it "sums runs in each window plus a lifetime count" do
-      create_stat(1, date: Date.current, runs: 3)
-      create_stat(1, date: 10.days.ago.to_date, runs: 2)
-      create_stat(1, date: 45.days.ago.to_date, runs: 5)
+    fab!(:current_automation_stat) do
+      Fabricate(:automation_stat, automation_id: 1, date: Date.new(2026, 6, 15), total_runs: 3)
+    end
+    fab!(:recent_automation_stat) do
+      Fabricate(:automation_stat, automation_id: 1, date: Date.new(2026, 6, 5), total_runs: 2)
+    end
+    fab!(:previous_automation_stat) do
+      Fabricate(:automation_stat, automation_id: 1, date: Date.new(2026, 5, 1), total_runs: 5)
+    end
 
+    it "sums runs in each window plus a lifetime count" do
       expect(described_class.executions).to eq(
         last_day: 3,
         "7_days": 3,

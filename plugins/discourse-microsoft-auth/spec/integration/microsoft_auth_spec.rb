@@ -8,33 +8,6 @@ describe "Microsoft OAuth2" do
 
   fab!(:user1, :user)
 
-  def setup_ms_emails_stub(email:)
-    stub_request(:get, "https://graph.microsoft.com/v1.0/me").with(
-      headers: {
-        "Authorization" => "Bearer #{access_token}",
-      },
-    ).to_return(
-      status: 200,
-      body:
-        JSON.dump(
-          businessPhones: ["+1 425 555 0109"],
-          displayName: "Adele Vance",
-          givenName: "Adele",
-          jobTitle: "Retail Manager",
-          mail: email,
-          mobilePhone: "+1 425 555 0109",
-          officeLocation: "18/2111",
-          preferredLanguage: "en-US",
-          surname: "Vance",
-          userPrincipalName: email,
-          id: "87d349ed-44d7-43e1-9a83-5f2406dee5bd",
-        ),
-      headers: {
-        "Content-Type" => "application/json",
-      },
-    )
-  end
-
   before do
     SiteSetting.microsoft_auth_enabled = true
     SiteSetting.microsoft_auth_client_id = client_id
@@ -62,6 +35,31 @@ describe "Microsoft OAuth2" do
         "Content-Type" => "application/x-www-form-urlencoded",
       },
     )
+
+    stub_request(:get, "https://graph.microsoft.com/v1.0/me").with(
+      headers: {
+        "Authorization" => "Bearer #{access_token}",
+      },
+    ).to_return(
+      status: 200,
+      body:
+        JSON.dump(
+          businessPhones: ["+1 425 555 0109"],
+          displayName: "Adele Vance",
+          givenName: "Adele",
+          jobTitle: "Retail Manager",
+          mail: user1.email,
+          mobilePhone: "+1 425 555 0109",
+          officeLocation: "18/2111",
+          preferredLanguage: "en-US",
+          surname: "Vance",
+          userPrincipalName: user1.email,
+          id: "87d349ed-44d7-43e1-9a83-5f2406dee5bd",
+        ),
+      headers: {
+        "Content-Type" => "application/json",
+      },
+    )
   end
 
   it "signs in the user whose email matches the email included in the API response from microsoft when `microsoft_auth_email_verified` site setting is true" do
@@ -73,8 +71,6 @@ describe "Microsoft OAuth2" do
     expect(response.location).to start_with(
       "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
     )
-
-    setup_ms_emails_stub(email: user1.email)
 
     post "/auth/microsoft_office365/callback",
          params: {
@@ -96,8 +92,6 @@ describe "Microsoft OAuth2" do
     expect(response.location).to start_with(
       "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
     )
-
-    setup_ms_emails_stub(email: user1.email)
 
     post "/auth/microsoft_office365/callback",
          params: {

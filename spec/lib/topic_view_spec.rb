@@ -28,6 +28,30 @@ RSpec.describe TopicView do
     end
   end
 
+  describe "#has_localized_content?" do
+    before { SiteSetting.content_localization_enabled = true }
+
+    it "ignores localizations on posts that are not eligible for translation" do
+      localized_topic = Fabricate(:topic, locale: "en")
+      post = Fabricate(:post, topic: localized_topic, locale: nil)
+      Fabricate(:post_localization, post:, locale: "en")
+
+      expect(TopicView.new(localized_topic.id, user).has_localized_content?).to eq(false)
+    end
+
+    it "detects a site-default post localization when default fallback is enabled" do
+      SiteSetting.default_locale = "en"
+      SiteSetting.content_localization_use_default_locale_when_unsupported = true
+      localized_topic = Fabricate(:topic, locale: "de")
+      post = Fabricate(:post, topic: localized_topic, locale: "ja")
+      Fabricate(:post_localization, post:, locale: "en")
+
+      I18n.with_locale(:de) do
+        expect(TopicView.new(localized_topic.id, user).has_localized_content?).to eq(true)
+      end
+    end
+  end
+
   describe "#reset_post_collection" do
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:post2) { Fabricate(:post, topic: topic) }
@@ -1155,6 +1179,21 @@ RSpec.describe TopicView do
 
       topic_view = TopicView.new(pm_topic.id, admin)
       expect(topic_view.show_read_indicator?).to be_truthy
+    end
+
+    it "does not show read indicator if current_user cannot see members of the read state group" do
+      user = Fabricate(:user)
+      group =
+        Fabricate(
+          :group,
+          users: [user],
+          publish_read_state: true,
+          members_visibility_level: Group.visibility_levels[:staff],
+        )
+      pm_topic.topic_allowed_groups = [Fabricate.build(:topic_allowed_group, group: group)]
+
+      topic_view = TopicView.new(pm_topic.id, user)
+      expect(topic_view.show_read_indicator?).to be_falsey
     end
 
     it "does not show read indicator if groups do not have read indicator enabled" do

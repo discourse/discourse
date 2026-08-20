@@ -190,6 +190,9 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      discourse_workflows:
+        ai_agent:
+          mode: "מצב"
       ai_tool_approval:
         loading: "בטעינה…"
         tool: "פעולה"
@@ -433,6 +436,46 @@ he:
           last_week: "בשבוע שעבר"
           last_month: "בחודש שעבר"
           custom: "התאמה אישית…"
+      logs:
+        short_title: "יומנים"
+        retry: "ניסיון נוסף"
+        apply: "החלה"
+        all_models: "כל המודלים"
+        successful: "הצליח"
+        failed: "נכשל"
+        unknown: "לא ידוע"
+        topic_id: "מזהה נושא"
+        post_id: "מזהה פוסט"
+        time: "מועד"
+        when: "מתי"
+        outcome: "תוצאה"
+        feature: "יכולת"
+        model: "מודל"
+        request: "בקשה"
+        provider: "ספק"
+        user: "משתמש"
+        context: "הקשר"
+        topic: "נושא"
+        post: "פוסט"
+        post_short: "פוסט %{id}"
+        duration: "משך"
+        cost: "עלות"
+        actions: "פעולות"
+        periods:
+          hour: "השעה האחרונה"
+          day: "24 השעות האחרונות"
+          week: "7 הימים האחרונים"
+          custom: "מותאם"
+        detail:
+          request: "בקשה"
+          response: "תשובה"
+          context: "הקשר"
+          copy_request: "העתקת הבקשה"
+          copy_response: "העתקת תגובה"
+        retention:
+          summary_stage: "תקציר"
+          deleted_stage: "נמחק"
+          save: "שמירה"
       ai_agent:
         ai_tools: "כלים"
         tool_strategies:
@@ -473,6 +516,8 @@ he:
           clear_all: "לפנות הכול"
         forced_tools: "כלים נאכפים"
         allowed_groups: "קבוצות מורשות"
+        duplicate: "שכפול"
+        copy_name: "עותק של %{name}"
         delete: "מחיקה"
         temperature: "טמפרטורה"
         temperature_help: "טמפרטורה לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 2.0)"
@@ -611,6 +656,9 @@ he:
         max_output_tokens: "כמות אסימוני פלט מרבית"
         url: "כתובת השירות שמארח את המודל"
         api_key: "מפתח ה־API של השירות שמארח את המודל"
+        vision_modes:
+          disabled:
+            title: "כבוי"
         ai_bot_user: "משתמש בוט בינה מלאכותית"
         cost_input: "עלות קלט"
         cost_cached_input: "עלות קלט מאוחסן"
@@ -662,7 +710,7 @@ he:
           anthropic-claude-opus-4-7: "המודל החכם ביותר של Anthropic"
           anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
-          google-gemini-3-1-pro: "המודל החכם ביותר של Google"
+          google-gemini-3-1-pro-preview: "המודל החכם ביותר של Google"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -696,7 +744,6 @@ he:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -846,6 +893,7 @@ he:
           title: "הצגת התכתובת מול הבינה המלאכותית"
           copy_request: "העתקת הבקשה"
           copy_response: "העתקת תגובה"
+          duration_label: "משך:"
           request: "בקשה"
           response: "תשובה"
           next_log: "הבא"

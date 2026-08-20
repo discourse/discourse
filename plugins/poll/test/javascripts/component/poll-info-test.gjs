@@ -19,7 +19,7 @@ module("Component | PollInfo", function (hooks) {
       min: 1,
       max: 2,
       options: OPTIONS,
-      close: null,
+      closesAt: null,
       closed: false,
       results: [],
       showResults: false,
@@ -36,7 +36,7 @@ module("Component | PollInfo", function (hooks) {
           @min={{this.min}}
           @max={{this.max}}
           @isMultiple={{this.isMultiple}}
-          @close={{this.close}}
+          @closesAt={{this.closesAt}}
           @closed={{this.closed}}
           @results={{this.results}}
           @showResults={{this.showResults}}
@@ -69,7 +69,7 @@ module("Component | PollInfo", function (hooks) {
       min: 1,
       max: 2,
       options: OPTIONS,
-      close: null,
+      closesAt: null,
       closed: false,
       results: "on_vote",
       showResults: false,
@@ -86,7 +86,7 @@ module("Component | PollInfo", function (hooks) {
           @min={{this.min}}
           @max={{this.max}}
           @isMultiple={{this.isMultiple}}
-          @close={{this.close}}
+          @closesAt={{this.closesAt}}
           @closed={{this.closed}}
           @results={{this.results}}
           @showResults={{this.showResults}}
@@ -123,7 +123,7 @@ module("Component | PollInfo", function (hooks) {
   test("displays who closed the poll", async function (assert) {
     this.setProperties({
       options: OPTIONS,
-      close: null,
+      closesAt: null,
       closed: true,
       closedBy: { username: "jane" },
       results: [],
@@ -138,7 +138,7 @@ module("Component | PollInfo", function (hooks) {
       <template>
         <PollInfo
           @options={{this.options}}
-          @close={{this.close}}
+          @closesAt={{this.closesAt}}
           @closed={{this.closed}}
           @closedBy={{this.closedBy}}
           @results={{this.results}}

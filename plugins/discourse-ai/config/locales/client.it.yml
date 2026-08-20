@@ -153,6 +153,9 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      discourse_workflows:
+        ai_agent:
+          mode: "Modalità"
       ai_tool_approval:
         loading: "In caricamento..."
         tool: "Azione"
@@ -367,6 +370,46 @@ it:
           last_week: "Ultima settimana"
           last_month: "Ultimo mese"
           custom: "Personalizza..."
+      logs:
+        short_title: "Log"
+        retry: "Riprova"
+        apply: "Applica"
+        all_models: "Tutti i modelli"
+        successful: "Completato"
+        failed: "Non riuscito"
+        unknown: "Sconosciuto"
+        topic_id: "ID dell'argomento"
+        post_id: "ID del messaggio"
+        time: "Ora"
+        when: "Quando"
+        outcome: "Esito"
+        feature: "Funzionalità"
+        model: "Modello"
+        request: "Richiesta"
+        provider: "Fornitore"
+        user: "Utente"
+        context: "Contesto"
+        topic: "Argomento"
+        post: "Messaggio"
+        post_short: "Messaggio %{id}"
+        duration: "Durata"
+        actions: "Azioni"
+        periods:
+          hour: "Ultima ora"
+          day: "Ultime 24 ore"
+          week: "Ultimi 7 giorni"
+          custom: "Personalizzato"
+        detail:
+          request: "Richiesta"
+          response: "Risposta"
+          context: "Contesto"
+          copy_request: "Copia richiesta"
+          copy_response: "Copia risposta"
+          network_error: "Errore di rete"
+        retention:
+          summary_stage: "Riepilogo"
+          deleted_stage: "Eliminato"
+          save: "Salva"
       ai_agent:
         ai_tools: "Strumenti"
         tool_strategies:
@@ -403,6 +446,8 @@ it:
           clear_all: "Deseleziona tutto"
         forced_tools: "Strumenti forzati"
         allowed_groups: "Gruppi ammessi"
+        duplicate: "Duplica"
+        copy_name: "Copia di %{name}"
         delete: "Elimina"
         temperature: "Temperatura"
         temperature_help: "Temperatura da utilizzare per LLM. Aumenta per aumentare la creatività (lascia vuoto per utilizzare il modello predefinito, generalmente un valore compreso tra 0,0 e 2,0)"
@@ -541,6 +586,9 @@ it:
         max_output_tokens: "Massimo token di output"
         url: "URL del servizio che ospita il modello"
         api_key: "Chiave API del servizio che ospita il modello"
+        vision_modes:
+          disabled:
+            title: "Disabilitati"
         ai_bot_user: "Utente bot IA"
         cost_input: "Costo di input"
         cost_cached_input: "Costo di ingresso in cache"
@@ -616,7 +664,6 @@ it:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -769,6 +816,7 @@ it:
           title: "Visualizza l'interazione dell'IA"
           copy_request: "Copia richiesta"
           copy_response: "Copia risposta"
+          duration_label: "Durata:"
           request: "Richiesta"
           response: "Risposta"
           next_log: "Avanti"

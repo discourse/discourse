@@ -21,7 +21,7 @@ type DButtonAction = DButtonActionCallback | DButtonActionObject;
 
 type RouteModel = string | number | object;
 
-interface DButtonSignature {
+export interface DButtonSignature {
   Args: {
     // Text
     title?: string;
@@ -104,7 +104,7 @@ export default class DButton extends Component<DButtonSignature> {
     return this.forceDisabled || this.args.disabled;
   }
 
-  get btnType() {
+  get btnContentClass() {
     if (this.args.icon) {
       return this.computedLabel ? "btn-icon-text" : "btn-icon";
     }
@@ -249,7 +249,7 @@ export default class DButton extends Component<DButtonSignature> {
         (if @isLoading "is-loading")
         (if this.btnLink "btn-link" "btn")
         (if this.noText "no-text")
-        this.btnType
+        this.btnContentClass
       }}
       {{! For legacy compatibility. Prefer passing these as html attributes. }}
       id={{@id}}

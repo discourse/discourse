@@ -120,6 +120,52 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
       end
     end
 
+    it "hides artifacts and future versions when their conversation share is invalidated" do
+      llm_model = Fabricate(:llm_model, name: "artifact-sharing-model")
+      toggle_enabled_bots(bots: [llm_model])
+      SiteSetting.ai_bot_enabled = true
+      SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
+      Group.user_trust_level_change!(user.id, user.trust_level)
+
+      bot_user = llm_model.reload.user
+      topic.topic_allowed_users.where.not(user_id: user.id).delete_all
+      topic.topic_allowed_users.create!(user: bot_user)
+      post.update_columns(
+        cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
+      )
+
+      shared_conversation = SharedAiConversation.share_conversation(user, topic)
+      expect(shared_conversation.publicly_visible?).to eq(true)
+      expect(artifact.reload.public?).to eq(true)
+
+      topic.topic_allowed_users.create!(user: Fabricate(:user))
+      artifact_version =
+        artifact.create_new_version(html: "<div>Future private artifact version</div>")
+
+      get "/discourse-ai/ai-bot/shared-ai-conversations/#{shared_conversation.share_key}.json"
+      shared_conversation_status = response.status
+
+      get artifact.url
+      artifact_response = {
+        status: response.status,
+        body: response.status == 200 ? parse_srcdoc(response.body) : response.body,
+      }
+
+      get AiArtifact.url(artifact.id, artifact_version.version_number)
+      artifact_version_response = {
+        status: response.status,
+        body: response.status == 200 ? parse_srcdoc(response.body) : response.body,
+      }
+
+      aggregate_failures do
+        expect(shared_conversation_status).to eq(404)
+        expect(artifact_response[:status]).to eq(404)
+        expect(artifact_response[:body]).not_to include(artifact.html)
+        expect(artifact_version_response[:status]).to eq(404)
+        expect(artifact_version_response[:body]).not_to include(artifact_version.html)
+      end
+    end
+
     it "sanitizes CSS to prevent style tag breakout" do
       sign_in(user)
       malicious_css = '</style><script>alert("XSS from CSS")</script><style>'

@@ -8,3 +8,10 @@ en_GB:
   js:
     edit_assignments_modal:
       post: "Post"
+    discourse_workflows:
+      assign_topic:
+        resources:
+          post: "Post"
+      check_assignment:
+        target_types:
+          post: "Post"

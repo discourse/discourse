@@ -22,6 +22,8 @@ ca:
         yesterday: "Ahir"
       create: "Crea"
       cancel: "Cancel·la"
+      pinned_bar:
+        title: "Afixat"
       pinned: "Afixat"
       channel_settings:
         edit: "Edita"
@@ -179,4 +181,8 @@ ca:
         message: "Missatge"
       chat_approval:
         message: "Missatge"
+        value: "Valor"
+        style_default: "Per defecte"
+        style_success: "Èxit"
+        icon: "Icona"
         channel_id: "Canal"

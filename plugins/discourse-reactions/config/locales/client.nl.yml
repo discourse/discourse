@@ -13,13 +13,6 @@ nl:
   js:
     discourse_reactions:
       reactions_title: "Reacties"
-      state_panel:
-        more_users: "en nog %{count}..."
-        show_users: "Meer gebruikers weergeven"
-        hide_users: "Minder gebruikers weergeven"
-        reaction_group:
-          one: "%{reaction}: %{count} gebruiker"
-          other: "%{reaction}: %{count} gebruikers"
       reaction:
         forbidden: "Je kunt niet reageren op dit bericht of je reactie op dit bericht wijzigen."
       picker:

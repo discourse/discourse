@@ -134,7 +134,7 @@ No arguments passed to this event.
 
 ### calendar
 
-#### calendar:create-invitee-status [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/assets/javascripts/discourse/components/discourse-post-event/status.gjs#L70)
+#### calendar:create-invitee-status [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/assets/javascripts/discourse/components/discourse-post-event/status.gjs#L70)
 
 | Position | Argument          | Type     | Always Present | Description |
 | -------- | ----------------- | -------- | -------------- | ----------- |
@@ -142,7 +142,7 @@ No arguments passed to this event.
 | -        | objectArg1.status | variable | True           | -           |
 | -        | objectArg1.postId | property | True           | -           |
 
-#### calendar:invitee-left-event [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/assets/javascripts/discourse/components/discourse-post-event/status.gjs#L42)
+#### calendar:invitee-left-event [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/assets/javascripts/discourse/components/discourse-post-event/status.gjs#L42)
 
 | Position | Argument           | Type     | Always Present | Description |
 | -------- | ------------------ | -------- | -------------- | ----------- |
@@ -150,7 +150,7 @@ No arguments passed to this event.
 | -        | objectArg1.invitee | variable | True           | -           |
 | -        | objectArg1.postId  | property | True           | -           |
 
-#### calendar:update-invitee-status [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/assets/javascripts/discourse/components/discourse-post-event/status.gjs#L56)
+#### calendar:update-invitee-status [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/assets/javascripts/discourse/components/discourse-post-event/status.gjs#L56)
 
 | Position | Argument          | Type     | Always Present | Description |
 | -------- | ----------------- | -------- | -------------- | ----------- |
@@ -314,7 +314,7 @@ No arguments passed to this event.
 | 1        | objectArg1        | object   | True           | -           |
 | -        | objectArg1.postId | property | True           | -           |
 
-#### composer:div-resizing [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L55)
+#### composer:div-resizing [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L259)
 
 No arguments passed to this event.
 
@@ -414,11 +414,11 @@ No arguments passed to this event.
 
 </details>
 
-#### composer:resize-ended [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L66)
+#### composer:resize-ended [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L280)
 
 No arguments passed to this event.
 
-#### composer:resize-started [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L51)
+#### composer:resize-started [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L254)
 
 No arguments passed to this event.
 
@@ -432,7 +432,7 @@ No arguments passed to this event.
 
 No arguments passed to this event.
 
-##### /frontend/discourse/app/components/composer-container.gjs#72 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L72)
+##### /frontend/discourse/app/components/composer-container.gjs#296 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L296)
 
 No arguments passed to this event.
 
@@ -1050,70 +1050,70 @@ No arguments passed to this event.
 | -        | objectArg1.currentRouteName        | property        | -           |
 | -        | objectArg1.replacedOnlyQueryParams | variable        | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#37 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L37)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#37 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L37)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |
 | 1        | objectArg1     | object | -           |
 | -        | objectArg1.url | string | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#53 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L53)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#53 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L53)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |
 | 1        | objectArg1     | object | -           |
 | -        | objectArg1.url | string | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#93 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L93)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#93 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L93)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |
 | 1        | objectArg1     | object | -           |
 | -        | objectArg1.url | string | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#124 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L124)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#124 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L124)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |
 | 1        | objectArg1     | object | -           |
 | -        | objectArg1.url | string | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#141 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L141)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#141 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L141)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |
 | 1        | objectArg1     | object | -           |
 | -        | objectArg1.url | string | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#153 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L153)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#153 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L153)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |
 | 1        | objectArg1     | object | -           |
 | -        | objectArg1.url | string | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#172 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L172)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#172 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L172)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |
 | 1        | objectArg1     | object | -           |
 | -        | objectArg1.url | string | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#201 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L201)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#201 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L201)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |
 | 1        | objectArg1     | object | -           |
 | -        | objectArg1.url | string | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#218 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L218)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#218 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L218)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |
 | 1        | objectArg1     | object | -           |
 | -        | objectArg1.url | string | -           |
 
-##### /plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#239 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-calendar/test/javascripts/integration/components/upcoming-events-list-test.gjs#L239)
+##### /plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#239 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-events/test/javascripts/integration/components/upcoming-events-list-test.gjs#L239)
 
 | Position | Argument       | Type   | Description |
 | -------- | -------------- | ------ | ----------- |

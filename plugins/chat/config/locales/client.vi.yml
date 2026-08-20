@@ -29,6 +29,8 @@ vi:
       create: "Tạo"
       cancel: "Hủy"
       chat_channels: "Các kênh"
+      pinned_bar:
+        title: "Đã ghim"
       pinned: "Đã ghim"
       browse_all_channels: "Xem tất cả kênh"
       delete_messages:
@@ -334,3 +336,10 @@ vi:
         message: "Nhắn tin"
       chat_approval:
         message: "Nhắn tin"
+        buttons: "Nút"
+        value: "Giá trị"
+        style: "Phong cách"
+        style_default: "Mặc định"
+        style_primary: "Chính"
+        style_success: "Thành công"
+        icon: "Biểu tượng"

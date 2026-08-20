@@ -64,6 +64,8 @@ fi:
       cancel: "Peruuta"
       cancel_reply: "Peruuta vastaus"
       chat_channels: "Kanavat"
+      pinned_bar:
+        title: "Kiinnitetty"
       pinned: "Kiinnitetty"
       browse_all_channels: "Selaa kaikkia kanavia"
       see_in: "Katso:"
@@ -700,4 +702,11 @@ fi:
         message: "Viesti"
       chat_approval:
         message: "Viesti"
+        buttons: "Painikkeet"
+        value: "Arvo"
+        style: "Tyyli"
+        style_default: "Oletus"
+        style_primary: "Ensisijainen"
+        style_success: "Onnistui"
+        icon: "Kuvake"
         channel_id: "Kanava"
