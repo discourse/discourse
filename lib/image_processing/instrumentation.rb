@@ -3,6 +3,8 @@
 module ImageProcessing
   class Instrumentation
     def self.instrument(operation:)
+      return yield if !SiteSetting.instrument_image_processing
+
       validate_operation!(operation)
       started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       success = false

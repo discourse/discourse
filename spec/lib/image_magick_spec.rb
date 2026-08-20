@@ -4,7 +4,32 @@ require "image_magick"
 
 RSpec.describe ImageMagick do
   describe ".magick" do
+    it "bypasses instrumentation and validation by default" do
+      instrumentation_clock_reads = 0
+      allow(Process).to receive(
+        :clock_gettime,
+      ).and_wrap_original do |original, clock_id, *arguments|
+        if caller_locations.any? { |location|
+             location.path.end_with?("lib/image_processing/instrumentation.rb")
+           }
+          instrumentation_clock_reads += 1
+        end
+        original.call(clock_id, *arguments)
+      end
+      allow(Discourse::SafeExec).to receive(:capture).and_return("image output")
+
+      events =
+        DiscourseEvent.track_events(:image_processing_finished) do
+          expect(described_class.magick("--version", operation: "dynamic")).to eq("image output")
+        end
+
+      expect(SiteSetting.instrument_image_processing).to eq(false)
+      expect(events).to be_empty
+      expect(instrumentation_clock_reads).to eq(0)
+    end
+
     it "emits one monotonic wall-clock measurement for a successful command" do
+      SiteSetting.instrument_image_processing = true
       monotonic_times = [10.0, 11.25]
       allow(Process).to receive(
         :clock_gettime,
@@ -38,6 +63,7 @@ RSpec.describe ImageMagick do
     end
 
     it "emits one unsuccessful measurement and preserves a command failure" do
+      SiteSetting.instrument_image_processing = true
       error = RuntimeError.new("command failed")
       allow(Discourse::SafeExec).to receive(:capture).and_raise(error)
 
@@ -58,6 +84,7 @@ RSpec.describe ImageMagick do
     end
 
     it "rejects non-Symbol operations" do
+      SiteSetting.instrument_image_processing = true
       events =
         DiscourseEvent.track_events(:image_processing_finished) do
           expect { described_class.magick("--version", operation: "dynamic") }.to raise_error(
