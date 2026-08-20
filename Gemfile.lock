@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/discourse/ruby-landlock.git
-  revision: b1c99e7863732123a9972c5c14597ba006c9eb54
-  ref: b1c99e7863732123a9972c5c14597ba006c9eb54
+  revision: eacd44b311eb56c2531ba099cde7fa17bf5ad702
+  ref: eacd44b311eb56c2531ba099cde7fa17bf5ad702
   specs:
     landlock (0.4)
 

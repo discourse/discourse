@@ -230,7 +230,7 @@ gem "rubyzip", require: false
 
 gem "landlock",
     git: "https://github.com/discourse/ruby-landlock.git",
-    ref: "b1c99e7863732123a9972c5c14597ba006c9eb54",
+    ref: "eacd44b311eb56c2531ba099cde7fa17bf5ad702",
     require: false
 
 gem "sshkey", require: false
