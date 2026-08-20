@@ -244,6 +244,9 @@ export default class DVirtualizer<T> extends Modifier<
   #element: HTMLDivElement | null = null;
   #flushScheduled = false;
   #flushTimer: ReturnType<typeof schedule> | null = null;
+  #getItemKey: ((index: number) => VirtualKey) | null = null;
+  #getItemKeyField: string | undefined;
+  #getItemKeyItems: readonly T[] | null = null;
   #lastSignature: StateSignature | null = null;
   #lastEmittedRange: VisibleRange | null = null;
   #named: DVirtualizerSignature<T>["Args"]["Named"] | null = null;
@@ -637,6 +640,18 @@ export default class DVirtualizer<T> extends Modifier<
         ? 5
         : Math.max(0, Math.floor(overscan));
 
+    if (
+      !this.#getItemKey ||
+      this.#getItemKeyItems !== items ||
+      this.#getItemKeyField !== key
+    ) {
+      // Count is insufficient: a same-length replacement must key the incoming
+      // items rather than keep reading the outgoing array.
+      this.#getItemKey = (index) => keyFor(items[index], key);
+      this.#getItemKeyItems = items;
+      this.#getItemKeyField = key;
+    }
+
     const options: VirtualizerOptions = {
       // Despite the name, this does NOT set where the list rests — the component
       // applies the initial position. Unconditional because it gates key-based
@@ -648,7 +663,7 @@ export default class DVirtualizer<T> extends Modifier<
       count: items.length,
       getScrollElement: () => this.#element,
       estimateSize: (index) => estimateSize(items[index]!, index),
-      getItemKey: (index) => keyFor(items[index], key),
+      getItemKey: this.#getItemKey,
       overscan: normalizedOverscan,
       onChange: () => this.#scheduleFlush(),
       // Only a bottom-anchored list tracks the live edge. The engine gates this
