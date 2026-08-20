@@ -989,6 +989,11 @@ module Discourse
     user ||= system_user || User.admins.real.order(:id).first
   end
 
+  # A global override bypasses the write-time name-to-id conversion.
+  def self.site_contact_group
+    Group.find_by_id_or_name(SiteSetting.site_contact_group_name)
+  end
+
   SYSTEM_USER_ID = -1
 
   def self.system_user
