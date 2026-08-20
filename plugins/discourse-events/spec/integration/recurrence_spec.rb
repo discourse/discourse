@@ -17,7 +17,7 @@ describe "discourse_post_event_recurrence" do
   before do
     freeze_time(starts_at + 1.minute)
 
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 

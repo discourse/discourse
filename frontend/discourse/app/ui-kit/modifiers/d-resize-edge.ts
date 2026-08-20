@@ -1,9 +1,14 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
-import { registerPointerDrag } from "discourse/ui-kit/modifiers/d-pointer-drag";
+import type { Side } from "discourse/lib/geometry";
+import type { ResizeAxis } from "discourse/lib/resize-measurements";
+import {
+  type DPointerDragArgs,
+  registerPointerDrag,
+} from "discourse/ui-kit/modifiers/d-pointer-drag";
 
-// How far a single arrow key press moves the edge, in pixels.
+/** How far a single arrow key press moves the edge, in pixels. */
 const KEYBOARD_STEP = 16;
 
 /**
@@ -26,8 +31,12 @@ interface DResizeEdgeSignature {
        * The current size, in pixels, or a function returning it. Read once at the
        * start of each gesture — a press, or the first of a run of key repeats —
        * and never again while one is in flight.
+       *
+       * A measurement may return `null` to say it has nothing yet. There is no
+       * size to resize *from* in that state, so the gesture is refused rather
+       * than started from an assumed zero.
        */
-      value: number | (() => number);
+      value: number | null | (() => number | null);
 
       /**
        * The smallest size the edge may be dragged to, or a function returning it.
@@ -48,15 +57,19 @@ interface DResizeEdgeSignature {
        * should carry: that describes the separator itself, which lies across
        * the axis it moves along.
        */
-      axis?: "horizontal" | "vertical";
+      axis?: ResizeAxis;
 
       /**
        * Which edge the resized element is docked against, in logical terms.
        * Combined with the writing direction this decides whether moving the
        * pointer away from that edge makes it larger or smaller. Defaults to
        * `"start"`.
+       *
+       * Read live, unlike `value`, which is frozen for the length of a gesture.
+       * Changing this or `axis` mid-gesture measures the new orientation against
+       * an origin captured in the old one, so the result is undefined.
        */
-      side?: "start" | "end";
+      side?: Side;
 
       /**
        * A class held on `document.body` for the length of a gesture, for a cursor
@@ -151,14 +164,13 @@ interface DResizeEdgeSignature {
  *     min=this.minWidth
  *     max=this.maxWidth
  *     side="start"
+ *     bodyClass="d-resizing-ew"
+ *     onResizeStart=this.suppressTransitions
  *     onResize=this.previewWidth
  *     onResizeEnd=this.commitWidth
  *   }}
  * ></div>
  * ```
- *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  *
  * @see The `DResizeSeparator` component, which wraps this and supplies the whole block of
  *   separator markup above. Prefer it; reach for this modifier directly only when
@@ -175,11 +187,23 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     // A pointer taking over closes any key still being held, so the two inputs
     // cannot leave two gestures open against a single end.
     this.#endKeyboardGesture();
+
+    const startValue = this.#read(this.#named.value);
+    if (!Number.isFinite(startValue)) {
+      // Nothing to resize from. Vetoing hands the press back rather than
+      // starting a gesture whose first report would be `null + delta` clamped
+      // to a bound, which moves the box somewhere nobody dragged it.
+      return false;
+    }
+
     this.#pointerActive = true;
     this.#rtl = undefined;
     this.#started = false;
     this.#startCoordinate = this.#coordinate(event);
-    this.#startValue = this.#read(this.#named.value);
+    // Reset so a cancellation before any movement reads the origin, not the
+    // previous gesture's last position.
+    this.#pendingCoordinate = this.#startCoordinate;
+    this.#startValue = startValue;
   };
   #onDrag = (event: PointerEvent) => {
     // A pointer can move several times between paints, so only the latest
@@ -198,7 +222,16 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#cancelFrame();
     this.#pointerActive = false;
 
-    const coordinate = this.#coordinate(event);
+    // A cancellation's own coordinates are not the pointer's last position —
+    // A cancelled pointer event may carry (0,0), while a browser-fired
+    // `lostpointercapture` carries no meaningful position either — so the
+    // commit falls back to the last position the pointer actually reached.
+    // Recomputing from the event would snap the size to a clamp bound.
+    const cancelled =
+      event.type === "pointercancel" || event.type === "lostpointercapture";
+    const coordinate = cancelled
+      ? this.#pendingCoordinate
+      : this.#coordinate(event);
     // A press that reported nothing and was released where it landed is a click,
     // not a resize. Reporting it would hand the consumer the size it already
     // had, which is enough to make it persist one. The coordinate is checked as
@@ -237,13 +270,33 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
       return;
     }
 
-    event.preventDefault();
+    // A jump with no bound has nowhere to land. Leave the key to whatever else
+    // would act on it, as the size check below does.
+    let jumpTarget;
+    if (event.key === "Home" || event.key === "End") {
+      jumpTarget = this.#read(
+        event.key === "Home" ? this.#named.min : this.#named.max
+      );
+      if (!Number.isFinite(jumpTarget)) {
+        return;
+      }
+    }
 
     if (this.#keyboardValue === null) {
+      const startValue = this.#read(this.#named.value);
+      // Checked before the key is claimed: with no size to step from there is
+      // nothing to handle, so the key belongs to whatever else would act on it.
+      if (!Number.isFinite(startValue)) {
+        return;
+      }
+
+      event.preventDefault();
       this.#rtl = undefined;
-      this.#keyboardValue = this.#read(this.#named.value);
+      this.#keyboardValue = startValue;
       this.#keyboardKey = event.key;
       this.#named.onResizeStart?.();
+    } else {
+      event.preventDefault();
     }
 
     let next;
@@ -255,11 +308,8 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
       case growKey:
         next = this.#keyboardValue + KEYBOARD_STEP * this.#growthDirection;
         break;
-      case "Home":
-        next = this.#read(this.#named.min);
-        break;
       default:
-        next = this.#read(this.#named.max);
+        next = jumpTarget;
         break;
     }
 
@@ -273,10 +323,12 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
     this.#endKeyboardGesture();
   };
-  // The keyup would land on whatever took focus, so without this the gesture
-  // would stay open and never commit. Bound to the window as well as the
-  // element: focus leaving the page entirely, or the page being replaced, takes
-  // the keyup with it without the element ever seeing a blur.
+  /**
+   * The keyup would land on whatever took focus, so without this the gesture
+   * would stay open and never commit. Bound to the window as well as the
+   * element: focus leaving the page entirely, or the page being replaced, takes
+   * the keyup with it without the element ever seeing a blur.
+   */
   #onBlur = () => this.#endKeyboardGesture();
   #element: HTMLElement;
   #frame?: number;
@@ -317,15 +369,12 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   #started = false;
 
   #startValue = 0;
-  /** The gesture args handed to `registerPointerDrag`. */
-  #gestureArgs: {
-    onDragStart: (event: PointerEvent) => void;
-    onDrag: (event: PointerEvent) => void;
-    onDragEnd: (event: PointerEvent) => void;
-    cancelCommits: boolean;
-    touchAction: string;
-    bodyClass?: string;
-  };
+
+  /**
+   * The gesture args handed to `registerPointerDrag`. Typed from the engine's own
+   * args rather than restated, so narrowing one of them cannot leave this behind.
+   */
+  #gestureArgs: DPointerDragArgs;
 
   constructor(owner: Owner, args: ArgsFor<DResizeEdgeSignature>) {
     super(owner, args);
@@ -378,9 +427,9 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#keyboardKey = null;
     this.#keyboardValue = null;
     this.#pointerActive = false;
-    this.#element.removeEventListener("keydown", this.#onKeyDown);
-    this.#element.removeEventListener("keyup", this.#onKeyUp);
-    this.#element.removeEventListener("blur", this.#onBlur);
+    this.#element?.removeEventListener("keydown", this.#onKeyDown);
+    this.#element?.removeEventListener("keyup", this.#onKeyUp);
+    this.#element?.removeEventListener("blur", this.#onBlur);
     window.removeEventListener("blur", this.#onBlur);
     window.removeEventListener("pagehide", this.#onBlur);
   }
@@ -477,14 +526,17 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   }
 
   #clamp(size: number) {
+    // An absent bound reads as zero in arithmetic, which would collapse the size
+    // onto the other one. Skip it instead.
+    const max = this.#read(this.#named.max);
+    const min = this.#read(this.#named.min);
+
     // The minimum is applied last, so it wins when the two bounds conflict — a
     // short viewport can put `max` below `min`, and the stylesheet's own min-height
     // would still hold the box open. Letting `max` win would report a size the
     // element never takes.
-    return Math.max(
-      Math.min(size, this.#read(this.#named.max)),
-      this.#read(this.#named.min)
-    );
+    const capped = Number.isFinite(max) ? Math.min(size, max) : size;
+    return Number.isFinite(min) ? Math.max(capped, min) : capped;
   }
 
   #cancelFrame() {

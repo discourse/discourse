@@ -259,6 +259,14 @@ module DiscourseAi
           execution_context:
         )
           request_started_at = Time.now
+          request_started_at_msecs = monotonic_milliseconds
+          time_to_first_token_msecs = nil
+          # This is end-to-end latency for the audited request, including retries and backoff.
+          record_first_token =
+            lambda do
+              time_to_first_token_msecs ||=
+                (monotonic_milliseconds - request_started_at_msecs).round
+            end
           cancelled = false
           call_status = :error
           retry_count_429 = 0
@@ -346,7 +354,13 @@ module DiscourseAi
                     xml_stripper = build_xml_stripper(dialect)
 
                     if @streaming_mode
-                      blk = streaming_partial_handler(orig_blk, xml_stripper, structured_output)
+                      blk =
+                        streaming_partial_handler(
+                          orig_blk,
+                          xml_stripper,
+                          structured_output,
+                          record_first_token,
+                        )
                     end
 
                     if !@streaming_mode
@@ -359,6 +373,8 @@ module DiscourseAi
                           response_raw: response_raw,
                           structured_output: structured_output,
                         )
+                      # Non-streaming callers receive their first output only after the response is complete.
+                      record_first_token.call
                       call_status = :success
                       return response_data
                     end
@@ -461,6 +477,7 @@ module DiscourseAi
                   request_attempts: request_attempts.presence,
                   call_status: call_status,
                   start_time: request_started_at,
+                  time_to_first_token_msecs: time_to_first_token_msecs,
                   feature_name: feature_name,
                   user: user,
                   execution_context: execution_context,
@@ -708,8 +725,13 @@ module DiscourseAi
           DiscourseAi::Completions::XmlTagStripper.new(to_strip)
         end
 
-        def streaming_partial_handler(orig_blk, xml_stripper, structured_output)
+        def monotonic_milliseconds
+          Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
+        end
+
+        def streaming_partial_handler(orig_blk, xml_stripper, structured_output, record_first_token)
           lambda do |partial|
+            should_record_first_token = !partial.is_a?(String) || !partial.empty?
             if partial.is_a?(String)
               partial = xml_stripper << partial if xml_stripper && !partial.empty?
 
@@ -718,7 +740,10 @@ module DiscourseAi
                 partial = structured_output
               end
             end
-            orig_blk.call(partial) if partial
+            if partial
+              record_first_token.call if should_record_first_token
+              orig_blk.call(partial)
+            end
           end
         end
 
@@ -809,6 +834,7 @@ module DiscourseAi
           request_attempts:,
           call_status:,
           start_time:,
+          time_to_first_token_msecs:,
           feature_name:,
           user:,
           execution_context:
@@ -822,6 +848,7 @@ module DiscourseAi
           log.created_at = start_time
           log.updated_at = Time.now
           log.duration_msecs = (Time.now - start_time) * 1000
+          log.time_to_first_token_msecs = time_to_first_token_msecs
           log.save!
 
           execution_context&.token_usage_tracker&.add_from_audit_log(log)

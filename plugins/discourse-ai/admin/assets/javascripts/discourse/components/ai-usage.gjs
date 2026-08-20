@@ -31,6 +31,7 @@ const DATE_FORMAT = "YYYY-MM-DD";
 const DEFAULT_PERIOD = "month";
 const CUSTOM_PERIOD = "custom";
 const PRESET_PERIODS = ["day", "week", DEFAULT_PERIOD];
+const MAX_USERS_IN_SINGLE_TABLE = 24;
 
 export default class AiUsage extends Component {
   @service currentUser;
@@ -258,6 +259,11 @@ export default class AiUsage extends Component {
     if (!this.data?.users) {
       return 0;
     }
+
+    if (this.data.users.length <= MAX_USERS_IN_SINGLE_TABLE) {
+      return this.data.users.length;
+    }
+
     return Math.ceil(this.data.users.length / 2);
   }
 
@@ -1046,7 +1052,10 @@ export default class AiUsage extends Component {
                   <div
                     class={{dConcatClass
                       "ai-usage__users-table-wrapper"
-                      (if (gt this.data.users.length 24) "-multi-column")
+                      (if
+                        (gt this.data.users.length MAX_USERS_IN_SINGLE_TABLE)
+                        "-multi-column"
+                      )
                     }}
                   >
                     <table class="ai-usage__users-table">
@@ -1096,7 +1105,9 @@ export default class AiUsage extends Component {
                             </td>
                           </tr>
                         {{/each}}
-                        {{#unless (gt this.data.users.length 24)}}
+                        {{#unless
+                          (gt this.data.users.length MAX_USERS_IN_SINGLE_TABLE)
+                        }}
                           <tr class="ai-usage__total-row">
                             <td>{{i18n "discourse_ai.usage.total"}}</td>
                             <td title={{this.usersTotals.usage_count}}>{{number
@@ -1113,7 +1124,9 @@ export default class AiUsage extends Component {
                       </tbody>
                     </table>
 
-                    {{#if (gt this.data.users.length 24)}}
+                    {{#if
+                      (gt this.data.users.length MAX_USERS_IN_SINGLE_TABLE)
+                    }}
                       <table class="ai-usage__users-table">
                         <thead>
                           <tr>

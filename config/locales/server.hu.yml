@@ -954,16 +954,15 @@ hu:
   email_login:
     invalid_token: 'Hoppá! A használt link már nem működik. <a href="%{base_url}/login">Bejelentkezés</a> most. Ha elfelejtette jelszavát, <a href="%{base_url}/password-reset">kérhet hivatkozást</a> a visszaállításhoz.'
     title: "Bejelentkezés e-maillel"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub alkalmazás"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub alkalmazás"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "ismeretlen böngésző"
     device:
       android: "Android eszköz"
       chromebook: "Chrome OS"
@@ -986,10 +985,6 @@ hu:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Névtelen"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Hiba történt az e-mail-cím módosításakor. Lehet, hogy már használatban van?"
     doesnt_exist: "Ez az e-mail-cím nincs a fiókjához társítva."
@@ -1454,6 +1449,9 @@ hu:
         num_topics: "Témák"
       description: "A felhasználók az általuk megosztott linkekre leadott kattintások száma szerint listázva."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Látogatás"
+    top_entry_urls:
       labels:
         count: "Látogatás"
     top_referrers_by_browser_pageviews:
@@ -3855,9 +3853,6 @@ hu:
     user_posted_pm_staged:
       title: "Ideiglenes felhasználó meghívva PÜ-be"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Fiók felfüggesztve"
       subject_template: "[%{email_prefix}] Fiókja fel lett függesztve"
@@ -4808,6 +4803,9 @@ hu:
       group: "A megadott csoportokba nem tartozó felhasználóknak a stábtagok által jóváhagyott válaszokkal kell rendelkezniük. Lásd: %{link}."
       new_topics_unless_trust_level: "Az alacsony bizalmi szintű felhasználóknak rendelkezniük kell a stábtagok által jóváhagyott témákkal. Lásd: %{link}."
       fast_typer: "Új felhasználó gyanúsan gyorsan írta meg első bejegyzését, feltételezhetően bot vagy spammer. Lásd: %{link}."
+      fast_typer_time:
+        one: "%{count} másodperc"
+        other: "%{count} másodperc"
       auto_silence_regex: "Új felhasználó, akinek az első bejegyzése megfelel a %{link} beállításnak."
       watched_word:
         one: "Ez a bejegyzés tartalmaz egy Figyelt szó, a megjelölt szó: %{words}. További információkért nézze meg a %{link} oldalt."

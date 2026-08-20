@@ -121,18 +121,6 @@ module ReviewableActionBuilder
 
   private
 
-  # Returns the user associated with the reviewable, if applicable.
-  # For most reviewables, this will be the user who created the reviewable target.
-  #
-  # @return [User] The user associated with the reviewable.
-  def target_user
-    if target_type == "User"
-      try(:target)
-    else
-      try(:target_created_by)
-    end
-  end
-
   # Returns the post associated with the reviewable, if applicable.
   # This method assumes that the including class has a `target` that is a Post or
   # a `target_id` that can be used to look up the Post.

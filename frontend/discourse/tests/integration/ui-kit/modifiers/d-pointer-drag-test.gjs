@@ -7,9 +7,16 @@ import {
   triggerEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import {
+  stubPointerCapture,
+  stubSharedPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import dPointerDrag, * as dPointerDragModule from "discourse/ui-kit/modifiers/d-pointer-drag";
+
+const LEGACY_DEPRECATION_ID = "discourse.ui-kit.d-draggable";
 
 function installEventListenerSpy(element) {
   const added = [];
@@ -41,6 +48,126 @@ function caughtError(callback) {
 
 module("Integration | ui-kit | d-pointer-drag", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("reports the gesture geometry alongside every event", async function (assert) {
+    const seen = [];
+    const record = (phase) => (event, info) =>
+      seen.push(
+        `${phase}:origin=${info.origin.x},${info.origin.y}` +
+          ` current=${info.current.x},${info.current.y}` +
+          ` delta=${info.delta.x},${info.delta.y}` +
+          ` moved=${info.moved}`
+      );
+
+    await render(
+      <template>
+        <div
+          class="dpd-target"
+          {{dPointerDrag
+            onDragStart=(record "start")
+            onDrag=(record "drag")
+            onDragEnd=(record "end")
+          }}
+        ></div>
+      </template>
+    );
+
+    stubPointerCapture(".dpd-target");
+    await triggerEvent(".dpd-target", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 10,
+      clientY: 20,
+    });
+    await triggerEvent(".dpd-target", "pointermove", {
+      pointerId: 1,
+      clientX: 40,
+      clientY: 25,
+    });
+    await triggerEvent(".dpd-target", "pointerup", {
+      pointerId: 1,
+      clientX: 40,
+      clientY: 25,
+    });
+
+    assert.deepEqual(
+      seen,
+      [
+        "start:origin=10,20 current=10,20 delta=0,0 moved=false",
+        "drag:origin=10,20 current=40,25 delta=30,5 moved=true",
+        "end:origin=10,20 current=40,25 delta=30,5 moved=true",
+      ],
+      "the origin is the press, the delta is measured from it, and moved latches on the first report"
+    );
+  });
+
+  test("a release that never moved says so, so a click is not a drag", async function (assert) {
+    const ends = [];
+    const onDragEnd = (event, info) => ends.push(info.moved);
+
+    await render(
+      <template>
+        <div class="dpd-target" {{dPointerDrag onDragEnd=onDragEnd}}></div>
+      </template>
+    );
+
+    stubPointerCapture(".dpd-target");
+    await triggerEvent(".dpd-target", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 5,
+      clientY: 5,
+    });
+    await triggerEvent(".dpd-target", "pointerup", {
+      pointerId: 1,
+      clientX: 5,
+      clientY: 5,
+    });
+
+    // A commit guarded on this is the difference between a resize and a click
+    // writing an entry into whatever history the commit feeds.
+    assert.deepEqual(ends, [false], "a press and release reports no movement");
+  });
+
+  test("each report is its own snapshot, not a view that keeps changing", async function (assert) {
+    const stashed = [];
+    const onDrag = (event, info) => stashed.push(info);
+
+    await render(
+      <template>
+        <div class="dpd-target" {{dPointerDrag onDrag=onDrag}}></div>
+      </template>
+    );
+
+    stubPointerCapture(".dpd-target");
+    await triggerEvent(".dpd-target", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+    await triggerEvent(".dpd-target", "pointermove", {
+      pointerId: 1,
+      clientX: 10,
+      clientY: 0,
+    });
+    await triggerEvent(".dpd-target", "pointermove", {
+      pointerId: 1,
+      clientX: 90,
+      clientY: 0,
+    });
+
+    assert.deepEqual(
+      [stashed[0].delta.x, stashed[1].delta.x],
+      [10, 90],
+      "a report kept by the consumer still holds the numbers it was handed"
+    );
+    assert.notStrictEqual(
+      stashed[0],
+      stashed[1],
+      "and each report is a distinct object rather than one mutated in place"
+    );
+  });
 
   test("dispatches start → drag → end and toggles the dragging class", async function (assert) {
     const calls = [];
@@ -114,6 +241,78 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
     );
   });
 
+  test("a second pointer cannot take over a gesture already in flight", async function (assert) {
+    const calls = [];
+    const onDragStart = (event) => calls.push(`start:${event.pointerId}`);
+    const onDrag = (event) => calls.push(`drag:${event.pointerId}`);
+    const onDragEnd = (event) => calls.push(`end:${event.pointerId}`);
+
+    await render(
+      <template>
+        <div
+          class="dpd-target"
+          {{dPointerDrag
+            onDragStart=onDragStart
+            onDrag=onDrag
+            onDragEnd=onDragEnd
+          }}
+        ></div>
+      </template>
+    );
+
+    const target = find(".dpd-target");
+    const capture = stubPointerCapture(target);
+    const prevented = [];
+    const record = (event) => prevented.push(event.defaultPrevented);
+    document.addEventListener("pointerdown", record);
+
+    try {
+      await triggerEvent(target, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+      await triggerEvent(target, "pointerdown", {
+        button: 0,
+        pointerId: 2,
+        clientX: 50,
+        clientY: 50,
+      });
+      await triggerEvent(target, "pointermove", {
+        pointerId: 2,
+        clientX: 60,
+        clientY: 60,
+      });
+      await triggerEvent(target, "pointerup", { pointerId: 2 });
+
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 10,
+        clientY: 0,
+      });
+      await triggerEvent(target, "pointerup", { pointerId: 1 });
+    } finally {
+      document.removeEventListener("pointerdown", record);
+    }
+
+    assert.deepEqual(
+      calls,
+      ["start:1", "drag:1", "end:1"],
+      "the second pointer neither starts, drives nor ends the gesture the first one owns"
+    );
+    assert.deepEqual(
+      prevented,
+      [true, false],
+      "the rejected second press is left for whatever else was listening"
+    );
+    assert.deepEqual(
+      capture.released,
+      [1],
+      "the interloper never captured, so only the owning pointer is released"
+    );
+  });
+
   test("onDragStart can veto the drag", async function (assert) {
     const calls = [];
     const onDragStart = () => {
@@ -148,13 +347,29 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
     );
   });
 
-  module("focus", function () {
-    test("an accepted press and the drag it starts leave focus alone", async function (assert) {
+  module("press suppression", function (suppressionHooks) {
+    // Focus is deliberately not asserted here: `triggerEvent` dispatches an
+    // untrusted event, no compatibility `mousedown` follows it, and so focus stays
+    // put however the modifier behaves. Assert what the modifier owns, which is
+    // whether it cancels the press; focus itself needs a system spec.
+    let prevented;
+    let record;
+
+    suppressionHooks.beforeEach(function () {
+      prevented = [];
+      record = (event) => prevented.push(event.defaultPrevented);
+      document.addEventListener("pointerdown", record);
+    });
+
+    suppressionHooks.afterEach(function () {
+      document.removeEventListener("pointerdown", record);
+    });
+
+    test("an accepted press is cancelled", async function (assert) {
       const onDragStart = () => {};
 
       await render(
         <template>
-          <button type="button" class="dpd-other"></button>
           <button
             type="button"
             class="dpd-target"
@@ -163,35 +378,24 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         </template>
       );
       stubPointerCapture(".dpd-target");
-      find(".dpd-other").focus();
 
       await triggerEvent(".dpd-target", "pointerdown", {
         button: 0,
         pointerId: 1,
       });
-      assert
-        .dom(".dpd-other")
-        .isFocused(
-          "the press takes no focus, so a drag cannot pull the caret out of whatever the user was working in"
-        );
 
-      await triggerEvent(".dpd-target", "pointermove", {
-        pointerId: 1,
-        clientX: 40,
-        clientY: 40,
-      });
-      await triggerEvent(".dpd-target", "pointerup", { pointerId: 1 });
-      assert
-        .dom(".dpd-other")
-        .isFocused("nor does any later phase of the gesture take it");
+      assert.deepEqual(
+        prevented,
+        [true],
+        "cancelling the press is what stops the compatibility mousedown, and with it the focus that would pull the caret out of whatever the user was working in"
+      );
     });
 
-    test("a press that starts no gesture leaves focus alone", async function (assert) {
+    test("a press that starts no gesture is left for other listeners", async function (assert) {
       const vetoed = () => false;
 
       await render(
         <template>
-          <button type="button" class="dpd-other"></button>
           <button
             type="button"
             class="dpd-secondary"
@@ -206,50 +410,21 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
       stubPointerCapture(".dpd-secondary");
       stubPointerCapture(".dpd-vetoed");
-      find(".dpd-other").focus();
 
       await triggerEvent(".dpd-secondary", "pointerdown", {
         button: 2,
         pointerId: 1,
       });
-      assert
-        .dom(".dpd-other")
-        .isFocused(
-          "a secondary-button press starts nothing, so it takes no focus"
-        );
-
       await triggerEvent(".dpd-vetoed", "pointerdown", {
         button: 0,
         pointerId: 2,
       });
-      assert
-        .dom(".dpd-other")
-        .isFocused("a vetoed press starts nothing, so it takes no focus");
-    });
 
-    test("a press on an unfocusable handle is harmless", async function (assert) {
-      const calls = [];
-      const onDragStart = () => calls.push("start");
-
-      await render(
-        <template>
-          <div
-            class="dpd-target"
-            {{dPointerDrag onDragStart=onDragStart}}
-          ></div>
-        </template>
+      assert.deepEqual(
+        prevented,
+        [false, false],
+        "a secondary-button press and a vetoed one both reach document-level listeners"
       );
-      stubPointerCapture(".dpd-target");
-
-      await triggerEvent(".dpd-target", "pointerdown", {
-        button: 0,
-        pointerId: 1,
-      });
-
-      assert.deepEqual(calls, ["start"], "the gesture starts as usual");
-      assert
-        .dom(".dpd-target")
-        .isNotFocused("a handle that cannot take focus does not get it");
     });
   });
 
@@ -341,7 +516,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       cleanup();
     });
 
-    test("threshold suppresses movement until exceeded and stays engaged", async function (assert) {
+    test("threshold suppresses movement until the distance is reached, then stays engaged", async function (assert) {
       const moves = [];
       const onDrag = (event) => moves.push(event.clientX);
 
@@ -368,6 +543,13 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         clientX: 4,
         clientY: 0,
       });
+      // Exactly the threshold. Reaching the distance is enough, so this must
+      // engage; sampling only 4 and 6 would leave `<=` passing just as well.
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 5,
+        clientY: 0,
+      });
       await triggerEvent(target, "pointermove", {
         pointerId: 1,
         clientX: 6,
@@ -381,8 +563,55 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
       assert.deepEqual(
         moves,
-        [6, 2],
-        "a below-threshold move is suppressed, the crossing move is reported, and later moves remain engaged"
+        [5, 6, 2],
+        "a below-threshold move is suppressed, a move exactly at the threshold engages, and later moves remain engaged"
+      );
+    });
+
+    test("a press released below the threshold still ends the gesture", async function (assert) {
+      const calls = [];
+      const onDragStart = () => calls.push("start");
+      const onDrag = (event) => calls.push(`drag:${event.clientX}`);
+      const onDragEnd = (event) => calls.push(`end:${event.clientX}`);
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag
+              threshold=5
+              onDragStart=onDragStart
+              onDrag=onDrag
+              onDragEnd=onDragEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      stubPointerCapture(target);
+
+      await triggerEvent(target, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 2,
+        clientY: 0,
+      });
+      await triggerEvent(target, "pointerup", {
+        pointerId: 1,
+        clientX: 2,
+        clientY: 0,
+      });
+
+      assert.deepEqual(
+        calls,
+        ["start", "end:2"],
+        "the threshold gates onDrag only: a click on a thresholded handle still commits, so a consumer must read the position rather than assume movement"
       );
     });
 
@@ -944,6 +1173,57 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
     });
 
+    test("an ancestor that vetoes the press leaves the descendant's capture in place", async function (assert) {
+      const inner = [];
+      const innerHandlers = recorder(inner);
+      const veto = () => false;
+
+      await render(
+        <template>
+          <div class="dpd-outer" {{dPointerDrag onDragStart=veto}}>
+            <div
+              class="dpd-inner"
+              {{dPointerDrag
+                onDragStart=innerHandlers.onDragStart
+                onDragEnd=innerHandlers.onDragEnd
+                onDragCancel=innerHandlers.onDragCancel
+              }}
+            ></div>
+          </div>
+        </template>
+      );
+
+      const innerTarget = find(".dpd-inner");
+      // The shared stub, because the subject is exactly the displacement: the
+      // ancestor's claim replaces the descendant's pending capture before the
+      // veto is known.
+      const { ownerOf } = stubSharedPointerCapture([".dpd-outer", innerTarget]);
+
+      await triggerEvent(innerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(
+        inner,
+        ["start"],
+        "the descendant's gesture is the live one"
+      );
+      assert.strictEqual(
+        ownerOf(1),
+        innerTarget,
+        "the capture the veto displaced is handed back to the claimant"
+      );
+
+      await triggerEvent(innerTarget, "pointerup", { pointerId: 1 });
+
+      assert.deepEqual(
+        inner,
+        ["start", "end"],
+        "the gesture still reaches its one terminal callback"
+      );
+    });
+
     test("a superseded gesture honours cancelCommits", async function (assert) {
       const inner = [];
       const innerHandlers = recorder(inner);
@@ -1327,6 +1607,140 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       assert
         .dom(document.body)
         .doesNotHaveClass("dragging", "the last one out clears the mark");
+    });
+
+    test("a legacy drag keeps the body class after a pointer drag ends", async function (assert) {
+      const noop = () => {};
+      // The deprecation throws from the constructor, so the modifier would
+      // never reach the listeners these tests need.
+      await withSilencedDeprecationsAsync(LEGACY_DEPRECATION_ID, () =>
+        render(
+          <template>
+            <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+            <div class="legacy-target" {{dDraggable didEndDrag=noop}}></div>
+          </template>
+        )
+      );
+
+      const pointerTarget = find(".dpd-target");
+      stubPointerCapture(pointerTarget);
+
+      await triggerEvent(".legacy-target", "mousedown");
+      await triggerEvent(pointerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+      await triggerEvent(pointerTarget, "pointerup", { pointerId: 1 });
+
+      assert
+        .dom(document.body)
+        .hasClass("dragging", "the legacy gesture still owns the body class");
+
+      await triggerEvent(document, "mouseup");
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "dragging",
+          "the last gesture releases the body class"
+        );
+    });
+
+    test("a pointer drag keeps the body class after a legacy drag ends", async function (assert) {
+      const noop = () => {};
+      // The deprecation throws from the constructor, so the modifier would
+      // never reach the listeners these tests need.
+      await withSilencedDeprecationsAsync(LEGACY_DEPRECATION_ID, () =>
+        render(
+          <template>
+            <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+            <div class="legacy-target" {{dDraggable didEndDrag=noop}}></div>
+          </template>
+        )
+      );
+
+      const pointerTarget = find(".dpd-target");
+      stubPointerCapture(pointerTarget);
+
+      await triggerEvent(pointerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+      await triggerEvent(".legacy-target", "mousedown");
+      await triggerEvent(document, "mouseup");
+
+      assert
+        .dom(document.body)
+        .hasClass("dragging", "the pointer gesture still owns the body class");
+
+      await triggerEvent(pointerTarget, "pointerup", { pointerId: 1 });
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "dragging",
+          "the last gesture releases the body class"
+        );
+    });
+
+    test("preserves a body class that predates the gesture", async function (assert) {
+      document.body.classList.add("dragging");
+      await render(
+        <template>
+          <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      stubPointerCapture(target);
+
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
+      await triggerEvent(target, "pointerup", { pointerId: 1 });
+
+      assert
+        .dom(document.body)
+        .hasClass(
+          "dragging",
+          "the gesture leaves the pre-existing class alone"
+        );
+
+      document.body.classList.remove("dragging");
+    });
+
+    test("an invalid bodyClass costs the page styling but not the gesture", async function (assert) {
+      const calls = [];
+      const onDragStart = () => calls.push("start");
+      const onDragEnd = () => calls.push("end");
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag
+              bodyClass="is dragging"
+              onDragStart=onDragStart
+              onDragEnd=onDragEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      stubPointerCapture(target);
+
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "is",
+          "a whitespace token is rejected whole, not split into parts"
+        );
+
+      await triggerEvent(target, "pointerup", { pointerId: 1 });
+
+      assert.deepEqual(
+        calls,
+        ["start", "end"],
+        "a token the DOM refuses costs the page-level styling only; the gesture runs to completion"
+      );
     });
   });
 });

@@ -18,13 +18,11 @@ import ComposerSaveButton from "discourse/components/composer-save-button";
 import ComposerTitle from "discourse/components/composer-title";
 import ComposerToggles from "discourse/components/composer-toggles";
 import ComposerUserSelector from "discourse/components/composer-user-selector";
-import LinkToInput from "discourse/components/link-to-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
-import { headerOffset } from "discourse/lib/offset-calculator";
 import {
   dampenedOverdrag,
   shouldDeferSwipeToContent,
@@ -39,17 +37,12 @@ import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
-import DTextField from "discourse/ui-kit/d-text-field";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import { i18n } from "discourse-i18n";
-
-// Used only if the composer's min-height computes to `auto`, which would leave
-// the resize with no lower bound at all.
-const FALLBACK_MIN_HEIGHT = 250;
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
   if (!enabled) {
@@ -248,67 +241,10 @@ export default class ComposerContainer extends Component {
     }
   }
 
-  /**
-   * The box the separator announces, found from the separator's own position the
-   * way the composer's retired observer did.
-   *
-   * @param {HTMLElement} separator - The separator element.
-   * @returns {HTMLElement|null} The composer, or null before it is in the DOM.
-   */
+  /** The box being resized. A function, because the separator resolves it. */
   @bind
-  replyControlFor(separator) {
-    return separator.closest("#reply-control");
-  }
-
-  /**
-   * The height the next drag grows or shrinks from.
-   *
-   * Passed as a function because it is a live measurement: an arg whose compute
-   * reads no tracked state is cached for the modifier's lifetime, so a plain
-   * number would pin every drag to the first one's starting height.
-   *
-   * @returns {number} The composer's current height, in pixels.
-   */
-  @bind
-  composerHeight() {
-    return this.#replyControl?.offsetHeight ?? 0;
-  }
-
-  /**
-   * The smallest height the composer may be dragged to.
-   *
-   * Read from the stylesheet rather than hardcoded, so the two stay in step.
-   *
-   * @returns {number} The minimum height, in pixels.
-   */
-  @bind
-  minComposerHeight() {
-    const element = this.#replyControl;
-    if (!element) {
-      return FALLBACK_MIN_HEIGHT;
-    }
-    const declared = getComputedStyle(element).minHeight;
-    return parseInt(declared === "auto" ? FALLBACK_MIN_HEIGHT : declared, 10);
-  }
-
-  /**
-   * The largest height the composer may be dragged to, leaving the header
-   * visible. Live, because it moves with the window.
-   *
-   * @returns {number} The maximum height, in pixels.
-   */
-  @bind
-  maxComposerHeight() {
-    const belowHeader = window.innerHeight - headerOffset();
-    // The stylesheet also caps the composer, and dragging past that cap would
-    // report and persist a height the box never actually takes.
-    const declared = parseInt(
-      getComputedStyle(this.#replyControl ?? document.body).maxHeight,
-      10
-    );
-    return Number.isFinite(declared)
-      ? Math.min(declared, belowHeader)
-      : belowHeader;
+  replyControl() {
+    return document.getElementById("reply-control");
   }
 
   @bind
@@ -320,9 +256,7 @@ export default class ComposerContainer extends Component {
   onResizeDrag(size) {
     this.appEvents.trigger("composer:div-resizing");
 
-    // Added on the first move rather than on the press, so a press that never
-    // becomes a drag does not suppress the composer's transitions.
-    this.#replyControl?.classList.add("clear-transitions");
+    this.replyControl()?.classList.add("clear-transitions");
 
     const height = `${size}px`;
     // resuming from minimized restores the height from the model
@@ -337,7 +271,7 @@ export default class ComposerContainer extends Component {
 
   @bind
   onResizeEnd(size) {
-    this.#replyControl?.classList.remove("clear-transitions");
+    this.replyControl()?.classList.remove("clear-transitions");
     // Announced before persisting, because the write can throw — storage quota —
     // and a subscriber that undoes its own drag-time state has to hear the end of
     // every resize regardless.
@@ -346,10 +280,6 @@ export default class ComposerContainer extends Component {
     // reported once per animation frame instead of on a fixed throttle, and this
     // write is the only thing that cared about the cadence.
     this.keyValueStore.set({ key: "composerHeight", value: `${size}px` });
-  }
-
-  get #replyControl() {
-    return document.getElementById("reply-control");
   }
 
   _triggerComposerResized() {
@@ -377,11 +307,8 @@ export default class ComposerContainer extends Component {
         class="grippie"
         @axis="vertical"
         @side="end"
-        @value={{this.composerHeight}}
-        @min={{this.minComposerHeight}}
-        @max={{this.maxComposerHeight}}
+        @measure={{this.replyControl}}
         @label={{i18n "composer.resize"}}
-        @observe={{this.replyControlFor}}
         @onResizeStart={{this.onResizeStart}}
         @onResize={{this.onResizeDrag}}
         @onResizeEnd={{this.onResizeEnd}}
@@ -438,98 +365,31 @@ export default class ComposerContainer extends Component {
 
             <div class="reply-to">
               {{#unless this.composer.model.viewFullscreen}}
-                {{#if this.siteSettings.enable_new_composer_actions}}
-                  <ComposerActionTitle
-                    @model={{this.composer.model}}
-                    @canWhisper={{this.composer.canWhisper}}
-                    @canUnlistTopic={{this.composer.canUnlistTopic}}
+                <ComposerActionTitle @model={{this.composer.model}} />
+
+                {{#if this.composer.showTranslationSelector}}
+                  <DropdownSelectBox
+                    @nameProperty="name"
+                    @valueProperty="value"
+                    @value={{this.composer.selectedTranslationLocale}}
+                    @content={{this.availableContentLocalizationLocales}}
+                    @onChange={{this.updateSelectedTranslationLocale}}
+                    @options={{hash
+                      icon="language"
+                      showCaret=true
+                      filterable=true
+                      disabled=this.composer.loading
+                      placement="bottom-start"
+                      translatedNone=(i18n "composer.translations.select")
+                    }}
+                    class="translation-selector-dropdown btn-small"
                   />
-
-                  {{#if this.composer.showTranslationSelector}}
-                    <DropdownSelectBox
-                      @nameProperty="name"
-                      @valueProperty="value"
-                      @value={{this.composer.selectedTranslationLocale}}
-                      @content={{this.availableContentLocalizationLocales}}
-                      @onChange={{this.updateSelectedTranslationLocale}}
-                      @options={{hash
-                        icon="language"
-                        showCaret=true
-                        filterable=true
-                        disabled=this.composer.loading
-                        placement="bottom-start"
-                        translatedNone=(i18n "composer.translations.select")
-                      }}
-                      class="translation-selector-dropdown btn-small"
-                    />
-                  {{/if}}
-
-                  <PluginOutlet
-                    @name="composer-action-after"
-                    @outletArgs={{lazyHash model=this.composer.model}}
-                  />
-                {{else}}
-                  <div class="reply-details">
-                    <ComposerActionTitle
-                      @model={{this.composer.model}}
-                      @canWhisper={{this.composer.canWhisper}}
-                      @canUnlistTopic={{this.composer.canUnlistTopic}}
-                    />
-
-                    {{#if this.composer.showTranslationSelector}}
-                      <DropdownSelectBox
-                        @nameProperty="name"
-                        @valueProperty="value"
-                        @value={{this.composer.selectedTranslationLocale}}
-                        @content={{this.availableContentLocalizationLocales}}
-                        @onChange={{this.updateSelectedTranslationLocale}}
-                        @options={{hash
-                          icon="language"
-                          showCaret=true
-                          filterable=true
-                          disabled=this.composer.loading
-                          placement="bottom-start"
-                          translatedNone=(i18n "composer.translations.select")
-                        }}
-                        class="translation-selector-dropdown btn-small"
-                      />
-                    {{/if}}
-
-                    <PluginOutlet
-                      @name="composer-action-after"
-                      @outletArgs={{lazyHash model=this.composer.model}}
-                    />
-
-                    {{#if this.site.desktopView}}
-                      {{#if this.composer.model.unlistTopic}}
-                        <span class="unlist">({{i18n "composer.unlist"}})</span>
-                      {{/if}}
-                      {{#if this.composer.isWhispering}}
-                        {{#if this.composer.model.noBump}}
-                          <span class="no-bump">{{dIcon "anchor"}}</span>
-                        {{/if}}
-                      {{/if}}
-                    {{/if}}
-
-                    {{#if this.composer.canEdit}}
-                      <LinkToInput
-                        @onClick={{this.composer.displayEditReason}}
-                        @showInput={{this.composer.showEditReason}}
-                        @icon="pen-to-square"
-                        class="display-edit-reason
-                          {{if this.composer.showEditReason '--active'}}"
-                        title={{i18n "composer.edit_reason"}}
-                      >
-                        <DTextField
-                          @value={{this.composer.editReason}}
-                          @id="edit-reason"
-                          @maxlength="255"
-                          @placeholderKey="composer.edit_reason_placeholder"
-                        />
-                      </LinkToInput>
-                    {{/if}}
-                  </div>
                 {{/if}}
+
+                <PluginOutlet
+                  @name="composer-action-after"
+                  @outletArgs={{lazyHash model=this.composer.model}}
+                />
               {{/unless}}
 
               <PluginOutlet
@@ -628,6 +488,9 @@ export default class ComposerContainer extends Component {
                               minimum=this.composer.model.minimumRequiredTags
                               icon=(if this.composerRedesign "tag")
                               prioritizeRecentTags=true
+                              useHeaderSelectedCount=(if
+                                this.composerRedesign true
+                              )
                             }}
                           />
                           <PluginOutlet

@@ -22,29 +22,10 @@ fr:
             fetch_error: "Impossible de charger les données d'assistance."
             save_error: "Impossible d'enregistrer votre sélection pour la prochaine fois."
             headline:
-              healthy:
-                title: "La communauté résout elle-même ses problèmes."
-              struggling:
-                title: "La plupart des questions restent sans réponse."
-              mixed:
-                title: "Les résultats de l'assistance sont mitigés."
-              no_data:
-                title: "L'activité d'assistance est encore insuffisante"
-                summary: "Il n'y a encore aucune activité d'assistance pour cette période. Dès que des sujets seront créés, vous pourrez voir comment votre communauté les traite."
-              resolution:
-                up: "Le taux de résolution a augmenté pour atteindre %{rate} %."
-                down: "Le taux de résolution a diminué pour atteindre %{rate} %."
-                flat: "Le taux de résolution est resté à %{rate} %."
-              answerers:
-                members: "Les membres prennent en charge %{share} % des réponses."
-                staff: "Les responsables répondent à %{share} % des réponses."
-              reply:
-                faster: "Le délai de première réponse s'est amélioré pour atteindre %{time}, soit %{delta} de moins que lors de la période précédente."
-                slower: "Le délai de première réponse s'est dégradé pour atteindre %{time}, soit %{delta} de plus que lors de la période précédente."
-                flat: "Le délai de première réponse est resté à %{time}."
-              unanswered:
-                one: "%{count} sujet de cette période est toujours sans réponse."
-                other: "%{count} sujets de cette période sont toujours sans réponse."
+              titles:
+                insufficient_activity: "L'activité d'assistance est encore insuffisante"
+              summaries:
+                insufficient_activity: "Il n'y a encore aucune activité d'assistance pour cette période. Dès que des sujets seront créés, vous pourrez voir comment votre communauté les traite."
             kpi:
               resolution_rate:
                 label: "Taux de résolution"

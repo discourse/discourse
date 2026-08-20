@@ -46,8 +46,6 @@ de:
           %{score_reason}
           %{response}
         flagged_post_response: "Antwort des Modells: %{llm_response}"
-        flagged_post_score_reason: |
-          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
           body: |
@@ -108,7 +106,6 @@ de:
     ai_helper_allowed_in_pm: "Aktiviere den Composer-KI-Helfer in PN."
     ai_helper_automatic_chat_thread_title_delay: "Verzögerung in Minuten, bevor der KI-Helfer automatisch den Titel des Chat-Threads festlegt."
     ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
-    ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
     ai_image_caption_agent: "Der für KI-Bildbeschriftungen zu verwendende Agent. Benutzerdefinierte Agenten müssen Bilduploads aktiviert haben und ein bildverarbeitungsfähiges LLM verwenden."
     ai_post_image_captions_enabled: "Aktiviere KI-Bildbeschriftungen für Beitragsbilder. Das Generieren fehlender Bildbeschriftungen erfordert einen konfigurierten {{setting:ai_image_caption_agent}}."
     ai_post_image_captions_per_post_limit: "Maximale Anzahl der pro Beitrag zu beschriftenden Bilder."
@@ -168,7 +165,6 @@ de:
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
     ai_translation_backfill_parallel_jobs: "Die Anzahl der parallel auszuführenden Beitragslokalisierungsaufträge pro Backfill-Zyklus. Höhere Werte steigern den Durchsatz, verbrauchen aber mehr Ressourcen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
-    ai_audit_logs_purge_after_days: "Lösche die KI-API-Audit-Logs, die älter als diese Anzahl an Tagen sind. Standardmäßig sind es etwa 6 Monate. Setze den Wert auf 0, um die Protokolle unbegrenzt aufzubewahren."
   reviewables:
     reasons:
       flagged_by_toxicity: Das KI-Plug-in meldete dies nach der Klassifizierung als toxisch.
@@ -367,7 +363,6 @@ de:
         unknown_error: "Beim Erzeugen der Vorschaubilder ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut."
       prompts:
         translate: Übersetzen in %{language}
-        generate_titles: Thementitel vorschlagen
         proofread: Text korrekturlesen
         markdown_table: Markdown-Tabelle generieren
         custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
@@ -412,6 +407,8 @@ de:
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
       thinking: "Ich denke"
       tool_pending_approval: "Diese Aktion erfordert die Zustimmung des Moderators, bevor sie ausgeführt werden kann."
+      read_post:
+        unknown_post: "Beitrag"
       chat_tool_approval:
         approved: "Genehmigt von @%{username}."
         rejected: "Abgelehnt von @%{username}."

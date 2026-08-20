@@ -31,7 +31,7 @@ export default {
           route = "discourse-ai-bot-conversations";
           text = i18n("discourse_ai.ai_bot.shortcut_link");
           title = i18n("discourse_ai.ai_bot.shortcut_title");
-          defaultPrefixValue = "robot";
+          defaultPrefixValue = "discobot";
         };
       });
     });

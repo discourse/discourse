@@ -15,11 +15,11 @@ module DiscourseAi
         post = Post.find_by(id: artifact.post_id)
         raise Discourse::NotFound if post.blank? || post.topic.blank?
 
-        if artifact.public?
-          # no guardian needed
-        else
-          raise Discourse::NotFound if !guardian.can_see?(post)
-        end
+        shared_conversation = SharedAiConversation.find_by(target: post.topic) if artifact.public?
+        artifact_is_public =
+          artifact.public? && (shared_conversation.blank? || shared_conversation.publicly_visible?)
+
+        raise Discourse::NotFound if !artifact_is_public && !guardian.can_see?(post)
 
         name = artifact.name
         artifact_version = nil

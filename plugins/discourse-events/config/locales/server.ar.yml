@@ -44,7 +44,7 @@ ar:
   site_settings:
     map_events_to_color: "تعيين لون لكل وسم أو فئة."
     map_events_title: "يستبدل \"الأحداث\" في عنوان الشريط الجانبي \"الأحداث القادمة\" لكل فئة."
-    discourse_post_event_enabled: "يفعِّل ميزات الحدث. ملاحظة: يحتاج أيضًا إلى {{setting:calendar_enabled}} لتفعيله."
+    discourse_post_event_enabled: "يفعِّل ميزات الحدث. ملاحظة: يحتاج أيضًا إلى {{setting:discourse_events_enabled}} لتفعيله."
     displayed_invitees_limit: "يحد من أعداد المدعوين المعروضة في حدث."
     display_post_event_date_on_topic_title: "يعرض تاريخ الحدث بعد عنوان الموضوع."
     use_local_event_date: "استخدام التاريخ المحلي بعد عنوان الموضوع بدلًا من الوقت النسبي."

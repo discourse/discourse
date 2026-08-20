@@ -34,6 +34,10 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      copied: "คัดลอกแล้ว"
+      ai_decoded_transcript:
+        type: "ชนิด"
+        error: "ผิดพลาด"
       ai_tool_approval:
         loading: "กำลังโหลด..."
         user: "ผู้ใช้"
@@ -97,6 +101,31 @@ th:
         total: "ทั้งหมด"
         periods:
           last_day: "24 ชั่วโมงที่ผ่านมา"
+      logs:
+        apply: "นำไปใช้"
+        successful: "สำเร็จ"
+        failed: "ล้มเหลว"
+        unknown: "ไม่ทราบ"
+        topic_id: "หมายเลขกระทู้"
+        post_id: "หมายเลขโพสต์"
+        time: "เวลา"
+        when: "เมื่อ"
+        request: "ร้องขอ"
+        user: "ผู้ใช้"
+        topic: "หัวข้อ"
+        post: "โพส"
+        post_short: "โพสต์ %{id}"
+        duration: "ช่วงเวลา"
+        actions: "การกระทำ"
+        periods:
+          day: "24 ชั่วโมงที่ผ่านมา"
+          week: "7 วันที่ผ่านมา"
+        detail:
+          request: "ร้องขอ"
+        retention:
+          summary_stage: "สรุป"
+          deleted_stage: "ลบ"
+          save: "บันทึก"
       ai_agent:
         name: "ชื่อ"
         edit: "แก้ไข"
@@ -182,6 +211,7 @@ th:
           google: "กูเกิล"
       ai_bot:
         debug_ai_modal:
+          duration_label: "ช่วงเวลา:"
           request: "ร้องขอ"
           next_log: "ต่อไป"
           previous_log: "ก่อนหน้า"

@@ -219,4 +219,8 @@ et:
         message: "Sõnum"
       chat_approval:
         message: "Sõnum"
+        value: "Väärtus"
+        style_default: "Vaikimisi"
+        style_success: "Korras"
+        icon: "Ikoon"
         channel_id: "Kanal"

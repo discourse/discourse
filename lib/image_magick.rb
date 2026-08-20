@@ -19,7 +19,7 @@ module ImageMagick
 
   DEFAULT_TIMEOUT = 30
 
-  FONTCONFIG_READ_PATHS = %w[/etc/fonts].freeze
+  FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
 
   def self.asset_read_paths
     @asset_read_paths ||=

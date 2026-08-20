@@ -613,6 +613,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
           // (the column pair this gutter resizes); `style` places the handle
           // strip on the gridline; `class` styles it as a vertical hairline.
           handles.push({
+            key: `column-${line - 2}-rows-${runStart}-${rowEnd}`,
             payload: line - 2,
             class:
               "wireframe-grid-track-handle wireframe-grid-track-handle--column",

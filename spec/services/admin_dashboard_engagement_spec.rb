@@ -73,7 +73,6 @@ describe AdminDashboardEngagement do
       expect(engaged[:value]).to eq(1.0)
       expect(engaged[:previous_value]).to eq(4.0)
       expect(engaged[:percent_change]).to eq(-75.0)
-      expect(result[:headline][:key]).not_to end_with("healthy_growth")
     end
 
     it "falls back to a default 30-day window when params are blank" do
@@ -238,12 +237,39 @@ describe AdminDashboardEngagement do
     end
 
     describe "activity_by_category" do
+      def page_views_for(result, category)
+        result[:activity_by_category][:rows].find { |row| row[:category_id] == category.id }[
+          :page_views
+        ]
+      end
+
       it "includes the activity_by_category block with rows and total" do
         result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
         activity = result[:activity_by_category]
 
         expect(activity).to have_key(:rows)
         expect(activity).to have_key(:total)
+      end
+
+      it "invalidates the cached rows when crawler detection is toggled" do
+        SiteSetting.improved_crawler_detection = false
+        category = Fabricate(:category)
+        Fabricate(
+          :category_activity_daily_rollup,
+          category: category,
+          date: "2026-04-10",
+          topics: 0,
+          posts: 0,
+          page_views: 10,
+          likely_crawler_page_views: 4,
+        )
+
+        first = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        expect(page_views_for(first, category)).to eq(10)
+
+        SiteSetting.improved_crawler_detection = true
+        second = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        expect(page_views_for(second, category)).to eq(6)
       end
 
       it "honours category visibility when current_user is a moderator" do
@@ -374,57 +400,6 @@ describe AdminDashboardEngagement do
         )
         expect(pipeline[:trend]).to include(:direction, :net)
         expect(pipeline[:total_members]).to be >= 2
-      end
-    end
-
-    describe "headline" do
-      def stub_kpis(signups:, dau: 0, engaged: 0)
-        described_class
-          .any_instance
-          .stubs(:build_kpis)
-          .returns(
-            [
-              { type: :dau_mau, percent_change: dau },
-              { type: :new_signups, percent_change: signups },
-              { type: :daily_engaged_users, percent_change: engaged },
-            ],
-          )
-      end
-
-      it "returns healthy_growth when every metric is non-negative and at least one is positive" do
-        stub_kpis(signups: 12, dau: 3, engaged: 5)
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
-        expect(result[:headline][:key]).to end_with("healthy_growth")
-      end
-
-      it "returns declining when every metric is non-positive and at least one is negative" do
-        stub_kpis(signups: -8, dau: -2, engaged: -5)
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
-        expect(result[:headline][:key]).to end_with("declining")
-      end
-
-      it "returns engaged_but_shrinking when stickiness is up but engagement or signups fell" do
-        stub_kpis(signups: -5, dau: 2, engaged: -3)
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
-        expect(result[:headline][:key]).to end_with("engaged_but_shrinking")
-      end
-
-      it "returns growing_but_distracted when sign-ups rose but stickiness slipped" do
-        stub_kpis(signups: 10, dau: -4, engaged: 0)
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
-        expect(result[:headline][:key]).to end_with("growing_but_distracted")
-      end
-
-      it "returns no_signal when every metric has no change" do
-        stub_kpis(signups: 0, dau: 0, engaged: 0)
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
-        expect(result[:headline][:key]).to end_with("no_signal")
-      end
-
-      it "returns mixed when stickiness fell, sign-ups flat, but engagement rose" do
-        stub_kpis(signups: 0, dau: -3, engaged: 4)
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
-        expect(result[:headline][:key]).to end_with("mixed")
       end
     end
   end

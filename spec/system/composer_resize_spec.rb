@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Composer pointer resize oracle" do
+RSpec.describe "Composer resize" do
   fab!(:user)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic:) }
@@ -17,6 +17,6 @@ RSpec.describe "Composer pointer resize oracle" do
 
     composer.drag_resize_by(50)
 
-    expect(composer).to have_height(initial_height + 50)
+    expect(composer).to have_applied_height(initial_height + 50)
   end
 end

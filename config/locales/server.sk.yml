@@ -1092,16 +1092,15 @@ sk:
   email_login:
     invalid_token: 'Ups! Odkaz, ktorý ste použili, už nefunguje. Teraz <a href="%{base_url}/login">sa</a> môžete prihlásiť. Ak ste zabudli svoje heslo, môžete <a href="%{base_url}/password-reset">si vyžiadať odkaz na</a> jeho obnovenie.'
     title: "Prihlásenie e-mailom"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Aplikácia DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Aplikácia DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "neznámy prehliadač"
     device:
       android: "Zariadenie Android"
       chromebook: "Chrome OS"
@@ -1124,10 +1123,6 @@ sk:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonymný"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Nastala chyba pri aktualizácii emailu. Nieje už náhodou použitý?"
     doesnt_exist: "Táto e-mailová adresa nie je priradená k vášmu účtu."
@@ -1584,6 +1579,9 @@ sk:
         num_topics: "Témy"
       description: "Zoznam používateľov podľa počtu kliknutí na odkazy, ktoré zdieľali."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Návštev"
+    top_entry_urls:
       labels:
         count: "Návštev"
     top_referrers_by_browser_pageviews:
@@ -3993,9 +3991,6 @@ sk:
     user_posted_pm_staged:
       title: "Používateľ odoslal PM nezaktívnený"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Účet pozastavený"
       subject_template: "[%{email_prefix}] Váš účet bol pozastavený"
@@ -4892,6 +4887,11 @@ sk:
       group: "Používatelia, ktorí nie sú v špecifikovaných skupinách, musia mať odpovede schválené personálom. Pozrite si %{link}."
       new_topics_unless_trust_level: "Používatelia s nízkou úrovňou dôvery musia mať témy schválené personálom. Pozri %{link}."
       fast_typer: "Nový používateľ napísal svoj prvý príspevok podozrivo rýchlo, podozrenie na správanie bota alebo spamera. Pozri %{link}."
+      fast_typer_time:
+        one: " %{count} sekundu"
+        few: "%{count} sekundy"
+        many: "%{count} sekúnd"
+        other: "%{count} sekúnd"
       auto_silence_regex: "Nový používateľ, ktorého prvý príspevok zodpovedá nastaveniu %{link} ."
       watched_word:
         one: "Tento príspevok obsahoval sledované slovo, označené slovo je: %{words}. Viac informácií nájdete na stránke %{link} ."

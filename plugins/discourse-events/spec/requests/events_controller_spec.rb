@@ -4,7 +4,7 @@ module DiscoursePostEvent
   describe EventsController do
     before do
       Jobs.run_immediately!
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       SiteSetting.displayed_invitees_limit = 3
     end
@@ -152,10 +152,10 @@ module DiscoursePostEvent
       end
 
       it "strips CR/LF from URL fields so a stored URL cannot inject ICS properties" do
-        Fabricate(
-          :event,
-          original_starts_at: 1.day.from_now,
-          url: "https://example.com/\r\nX-INJECTED:evil\r\n",
+        # Written past validation: the encoder has to hold for imported or legacy rows.
+        Fabricate(:event, original_starts_at: 1.day.from_now).update_column(
+          :url,
+          "https://example.com/\r\nX-INJECTED:evil\r\n",
         )
 
         get "/discourse-post-event/events.ics"
@@ -898,7 +898,7 @@ module DiscoursePostEvent
 
   describe "bulk invite respects capacity" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 
@@ -940,7 +940,7 @@ module DiscoursePostEvent
 
   describe "#show" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 
@@ -1013,7 +1013,7 @@ module DiscoursePostEvent
 
   describe "anonymous access to EventsController" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 

@@ -702,4 +702,11 @@ fi:
         message: "Viesti"
       chat_approval:
         message: "Viesti"
+        buttons: "Painikkeet"
+        value: "Arvo"
+        style: "Tyyli"
+        style_default: "Oletus"
+        style_primary: "Ensisijainen"
+        style_success: "Onnistui"
+        icon: "Kuvake"
         channel_id: "Kanava"

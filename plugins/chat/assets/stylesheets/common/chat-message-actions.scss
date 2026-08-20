@@ -1,32 +1,32 @@
-.chat-message-actions-desktop-anchor {
-  position: relative;
-  z-index: z("dropdown");
-}
-
 .chat-message-actions-container {
   @include unselectable;
-  position: fixed;
+  position: absolute;
   width: max-content;
-  top: 0;
-  left: 0;
+  right: var(--space-2);
+  top: -0.75em;
   z-index: z("composer", "content");
 
-  // dynamically overridden by the component
-  visibility: hidden;
-  pointer-events: none;
+  .-user-info-hidden & {
+    top: -0.25em;
+  }
 
   &.is-size-full {
-    padding-left: 60px !important; /* for easier mouse movement to the element */
+    padding-left: 60px; /* for easier mouse movement to the element */
   }
 
   &.is-size-reduced {
-    padding-left: 20px !important; /* for easier mouse movement to the element */
+    padding-left: 20px; /* for easier mouse movement to the element */
   }
 }
 
 .chat-message-actions {
   border-radius: var(--d-border-radius);
   display: flex;
+
+  :is(button, summary):focus-visible {
+    @include default-focus;
+    z-index: 2;
+  }
 
   .link-to-message-btn {
     .d-icon {
@@ -53,7 +53,7 @@
       pointer-events: none;
     }
 
-    &:focus {
+    &:focus-visible {
       .d-icon {
         color: var(--primary);
       }
@@ -93,9 +93,8 @@
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
 
-      &:focus {
-        border-color: var(--primary-300);
-        border-left-color: transparent;
+      &:focus-visible {
+        background: var(--primary-low);
 
         .select-kit-header-wrapper .d-icon {
           color: var(--primary);
@@ -150,11 +149,6 @@
     padding: 0.5em 0;
     width: 2.5em;
 
-    &:focus {
-      background: var(--primary-low);
-      outline: none;
-    }
-
     &:first-child {
       border-left-color: var(--primary-300);
       border-top-left-radius: var(--d-border-radius);
@@ -164,10 +158,6 @@
     &.reacted {
       border-left-color: var(--tertiary-medium);
       z-index: 1;
-
-      &:focus {
-        background: var(--tertiary-low);
-      }
     }
 
     .emoji {

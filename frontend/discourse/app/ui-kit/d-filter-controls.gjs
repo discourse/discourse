@@ -45,9 +45,11 @@ const ResetButton = <template>
  * @param {String|Object} [defaultDropdownValue="all"] - Default dropdown value(s). For single dropdown: "all",
  *                                                       for multiple: { dropdown1: "all", dropdown2: "all" }
  * @param {String|Object} [dropdownValue] - Current dropdown value(s), defaults to defaultDropdownValue
+ * @param {Boolean} [showDropdownFilterToggle] - Whether to render the dropdown drawer toggle. Defaults to true for multiple dropdowns or when forced.
  * @param {Boolean} [forceShowDropdownFilterToggle=false] - Whether to place a single dropdown behind the filter toggle
  * @param {String} [noResultsMessage] - Message shown when no results found
  * @param {Boolean} [showNoResults=true] - Whether to show the built-in no-results state
+ * @param {Boolean} [showTextFilter=true] - Whether to show the text filter input
  * @param {Boolean} [showResetButton=true] - Whether to show the reset filters button
  * @param {Boolean} [loading] - Whether data is loading (hides reset button during loading)
  * @param {Number} [minItemsForFilter] - Minimum items before showing filters (default: always show)
@@ -92,6 +94,10 @@ export default class DFilterControls extends Component {
   }
 
   get initialTextFilterValue() {
+    if (!this.showTextFilter) {
+      return "";
+    }
+
     // reading router.currentURL makes this getter re-evaluate on transitions,
     // so same-route links carrying the query param re-seed the input
     const fromUrl =
@@ -152,7 +158,10 @@ export default class DFilterControls extends Component {
   }
 
   get showDropdownFilterToggle() {
-    return this.hasMultipleDropdowns || this.args.forceShowDropdownFilterToggle;
+    return (
+      this.args.showDropdownFilterToggle ??
+      (this.hasMultipleDropdowns || this.args.forceShowDropdownFilterToggle)
+    );
   }
 
   get showDropdownFilter() {
@@ -171,6 +180,10 @@ export default class DFilterControls extends Component {
       !this.args.forceShowDropdownFilterToggle &&
       this.hasActiveFilters
     );
+  }
+
+  get showTextFilter() {
+    return this.args.showTextFilter ?? true;
   }
 
   get showResetButton() {
@@ -277,6 +290,19 @@ export default class DFilterControls extends Component {
         ? this.defaultDropdownValue
         : {};
     return defaults[key] || "all";
+  }
+
+  @action
+  dropdownLabel(key) {
+    const options = this.dropdownOptions[key] || [];
+    return options.find((option) => option.value === this.defaultValue(key))
+      ?.label;
+  }
+
+  get singleDropdownLabel() {
+    return this.dropdownOptions.find(
+      (option) => option.value === this.defaultDropdownValue
+    )?.label;
   }
 
   @action
@@ -420,7 +446,11 @@ export default class DFilterControls extends Component {
     }
 
     schedule("afterRender", () => {
-      document.querySelector(".d-filter-controls__input")?.focus();
+      (
+        document.querySelector(".d-filter-controls__input") ||
+        document.querySelector(".d-filter-controls__toggle-filters") ||
+        document.querySelector(".d-filter-controls__dropdown")
+      )?.focus();
     });
   }
 
@@ -448,31 +478,35 @@ export default class DFilterControls extends Component {
           @dropdownValue
         }}
       >
-        <div class="d-filter-controls__inputs">
-          <DFilterInput
-            placeholder={{@inputPlaceholder}}
-            @filterAction={{this.onTextFilterChange}}
-            @value={{this.textFilter}}
-            class="d-filter-controls__input"
-            @icons={{hash left="magnifying-glass"}}
-          />
-
-          {{#if this.showDropdownFilterToggle}}
-            <DButton
-              class="btn-default d-filter-controls__toggle-filters"
-              @icon={{if
-                this.showDropdownFilter
-                "filter-circle-xmark"
-                "filter"
-              }}
-              @title="filter_controls.toggle"
-              @action={{this.toggleFilters}}
-            />
-            {{#if (and this.showResetButton this.hasActiveFilters)}}
-              <ResetButton @action={{this.resetFilters}} />
+        {{#if (or this.showTextFilter this.showDropdownFilterToggle)}}
+          <div class="d-filter-controls__inputs">
+            {{#if this.showTextFilter}}
+              <DFilterInput
+                placeholder={{@inputPlaceholder}}
+                @filterAction={{this.onTextFilterChange}}
+                @value={{this.textFilter}}
+                class="d-filter-controls__input"
+                @icons={{hash left="magnifying-glass"}}
+              />
             {{/if}}
-          {{/if}}
-        </div>
+
+            {{#if this.showDropdownFilterToggle}}
+              <DButton
+                class="btn-default d-filter-controls__toggle-filters"
+                @icon={{if
+                  this.showDropdownFilter
+                  "filter-circle-xmark"
+                  "filter"
+                }}
+                @title="filter_controls.toggle"
+                @action={{this.toggleFilters}}
+              />
+              {{#if (and this.showResetButton this.hasActiveFilters)}}
+                <ResetButton @action={{this.resetFilters}} />
+              {{/if}}
+            {{/if}}
+          </div>
+        {{/if}}
 
         {{#if this.showDropdownFilter}}
           <div class="d-filter-controls__dropdowns">
@@ -492,6 +526,7 @@ export default class DFilterControls extends Component {
                       "--active"
                     )
                   }}
+                  aria-label={{this.dropdownLabel key}}
                   data-dropdown-key={{key}}
                   as |select|
                 >
@@ -514,6 +549,7 @@ export default class DFilterControls extends Component {
                     "--active"
                   )
                 }}
+                aria-label={{this.singleDropdownLabel}}
                 as |select|
               >
                 {{#each this.dropdownOptions as |option|}}

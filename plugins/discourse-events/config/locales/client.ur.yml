@@ -19,9 +19,6 @@ ur:
             topic_id:
               label: ٹاپک ID
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "گفتگو"
       disable_holiday: "غیر فعال کریں"
       enable_holiday: "فعال کریں"
       date: "تاریخ"
@@ -70,6 +67,7 @@ ur:
             private:
               title: "ذاتی"
       composer:
+        url_placeholder: "URL شامل کریں"
         reminder:
           units:
             minutes:
@@ -84,6 +82,8 @@ ur:
             weeks:
               one: "ہفتہ"
               other: "ہفتے"
+          notification_title: "شرکاء کو مطلع کریں"
+          bump_topic_title: "خوبخود عنوان اوپر لائیں"
       builder_modal:
         custom_fields:
           placeholder: "اختیاری"
@@ -117,6 +117,12 @@ ur:
           none: "کوئی نہیں"
         allow_chat:
           label: "چیٹ انٹیگریشن"
+        location:
+          label: "محل وقوع"
+        url:
+          label: "URL"
+          placeholder: "اختیاری"
+          add: "URL شامل کریں"
         description:
           label: "تفصیل"
         event_type:

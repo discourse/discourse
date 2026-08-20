@@ -54,6 +54,8 @@ el:
       cast-votes:
         title: "Δώστε τις ψήφους σας"
         label: "Ψηφίστε τώρα!"
+      keep-vote:
+        label: "Πίσω"
       show-results:
         title: "Εμφάνισε τα αποτελέσματα της ψηφοφορίας"
         label: "Αποτελέσματα"

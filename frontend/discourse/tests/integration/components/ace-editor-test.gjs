@@ -12,28 +12,12 @@ import sinon from "sinon";
 import AceEditor from "discourse/components/ace-editor";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import {
+  dragPointer,
+  settleGestureFrame,
+  stubPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
-
-async function dragResizeEdge(element, { from, to, pointerId = 1 }) {
-  stubPointerCapture(element);
-
-  await triggerEvent(element, "pointerdown", {
-    button: 0,
-    clientY: from,
-    pointerId,
-  });
-  await triggerEvent(element, "pointermove", {
-    button: 0,
-    clientY: to,
-    pointerId,
-  });
-  await triggerEvent(element, "pointerup", {
-    button: 0,
-    clientY: to,
-    pointerId,
-  });
-}
 
 module("Integration | Component | AceEditor", function (hooks) {
   setupRenderingTest(hooks);
@@ -117,7 +101,7 @@ module("Integration | Component | AceEditor", function (hooks) {
       .hasAttribute("data-disabled", "true", "it has a data-disabled attr");
   });
 
-  test("ACE resize oracle renders an accessible separator", async function (assert) {
+  test("renders an accessible separator", async function (assert) {
     await render(
       <template>
         <AceEditor
@@ -168,7 +152,7 @@ module("Integration | Component | AceEditor", function (hooks) {
       );
   });
 
-  test("grippie regression ACE window resize refreshes published maximum", async function (assert) {
+  test("a window resize refreshes the announced maximum", async function (assert) {
     const initialWindowHeight = 600;
     const expandedWindowHeight = 900;
     const innerHeightStub = sinon
@@ -199,7 +183,7 @@ module("Integration | Component | AceEditor", function (hooks) {
       );
   });
 
-  test("ACE resize oracle adjusts and clamps pointer-dragged height", async function (assert) {
+  test("a pointer drag adjusts and clamps the height", async function (assert) {
     await render(
       <template>
         <button class="focus-sentinel" type="button">Keep focus</button>
@@ -220,7 +204,7 @@ module("Integration | Component | AceEditor", function (hooks) {
     const expectedHeight = initialHeight + growBy;
 
     await focus(".focus-sentinel");
-    await dragResizeEdge(grippie, {
+    await dragPointer(grippie, {
       from: startCoordinate,
       to: startCoordinate + growBy,
     });
@@ -232,7 +216,7 @@ module("Integration | Component | AceEditor", function (hooks) {
     );
     assert.dom(".focus-sentinel").isFocused("resizing does not steal focus");
 
-    await dragResizeEdge(grippie, {
+    await dragPointer(grippie, {
       from: 611,
       to: 11,
       pointerId: 2,
@@ -245,7 +229,7 @@ module("Integration | Component | AceEditor", function (hooks) {
     );
   });
 
-  test("ACE resize oracle scopes pointer dragging to its own editor", async function (assert) {
+  test("a drag resizes only its own editor", async function (assert) {
     await render(
       <template>
         <AceEditor
@@ -266,7 +250,7 @@ module("Integration | Component | AceEditor", function (hooks) {
     const editors = findAll(".ace_editor--resizable");
     const grippies = findAll(".grippie");
 
-    await dragResizeEdge(grippies[1], { from: 41, to: 101 });
+    await dragPointer(grippies[1], { from: 41, to: 101 });
 
     assert.strictEqual(
       editors[0].offsetHeight,
@@ -280,7 +264,7 @@ module("Integration | Component | AceEditor", function (hooks) {
     );
   });
 
-  test("ACE resize oracle supports arrow, Home, and End keys", async function (assert) {
+  test("arrow, Home and End keys resize the editor", async function (assert) {
     await render(
       <template>
         <AceEditor
@@ -323,6 +307,54 @@ module("Integration | Component | AceEditor", function (hooks) {
         "aria-valuenow",
         "360",
         "keyboard resizing refreshes the reported height"
+      );
+  });
+
+  test("clears transitions from the first move to the end", async function (assert) {
+    await render(
+      <template>
+        <AceEditor
+          @mode="sql"
+          @content="SELECT * FROM users"
+          style="width: 300px; height: 260px; min-height: 200px"
+          @resizable={{true}}
+        />
+      </template>
+    );
+
+    const editor = find(".ace_editor--resizable");
+    const grippie = find(".grippie");
+    stubPointerCapture(grippie);
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      clientY: 47,
+      pointerId: 1,
+    });
+    assert
+      .dom(editor)
+      .doesNotHaveClass("clear-transitions", "keeps transitions on at press");
+
+    await triggerEvent(grippie, "pointermove", {
+      button: 0,
+      clientY: 167,
+      pointerId: 1,
+    });
+    await settleGestureFrame();
+    assert
+      .dom(editor)
+      .hasClass("clear-transitions", "clears transitions on the first move");
+
+    await triggerEvent(grippie, "pointerup", {
+      button: 0,
+      clientY: 167,
+      pointerId: 1,
+    });
+    assert
+      .dom(editor)
+      .doesNotHaveClass(
+        "clear-transitions",
+        "restores transitions at resize end"
       );
   });
 });

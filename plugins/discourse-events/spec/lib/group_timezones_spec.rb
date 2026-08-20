@@ -3,7 +3,7 @@
 describe DiscourseCalendar::GroupTimezones do
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
   end
 
   let(:calendar_post) { create_post(raw: '[timezones group="admins"]\n[/timezones]') }

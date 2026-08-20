@@ -34,6 +34,11 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      copied: "Nokopēts"
+      ai_decoded_transcript:
+        type: "Tips"
+        error: "Kļūda..."
+        response: "Atbilde"
       ai_tool_approval:
         loading: "Ielādē..."
         tool: "Darbība"
@@ -109,6 +114,35 @@ lv:
         total: "Kopā"
         periods:
           last_day: "Pēdējās 24 stundas"
+      logs:
+        short_title: "Žurnāls"
+        apply: "Pielietot"
+        successful: "Veiksmīgs"
+        failed: "Neizdevies"
+        unknown: "Nezināms"
+        topic_id: "Tēmas ID"
+        post_id: "Ieraksta ID"
+        time: "Laiks"
+        when: "Kad"
+        request: "Pieprasījums"
+        user: "Lietotājs"
+        context: "Konteksts"
+        topic: "Tēmas"
+        post: "Ieraksts"
+        post_short: "Ieraksts %{id}"
+        duration: "Ilgums"
+        actions: "Darbības"
+        periods:
+          day: "Pēdējās 24 stundas"
+          week: "Pēdējās 7 dienas"
+        detail:
+          request: "Pieprasījums"
+          response: "Atbilde"
+          context: "Konteksts"
+        retention:
+          summary_stage: "Kopsavilkums"
+          deleted_stage: "Dzēsts"
+          save: "Saglabāt"
       ai_agent:
         name: "Vārds"
         edit: "Labot"
@@ -202,6 +236,7 @@ lv:
           google: "Google"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Ilgums:"
           request: "Pieprasījums"
           response: "Atbilde"
           next_log: "Nākamais"

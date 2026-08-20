@@ -49,12 +49,36 @@
 
     .db-skeleton__heading-line {
       width: min(24rem, 100%);
-      height: 2rem;
+      height: 1.625rem;
+    }
+
+    .db-skeleton__metric {
+      gap: var(--space-1);
+    }
+
+    .db-skeleton__metric-number {
+      height: 2.125rem;
+    }
+
+    .db-skeleton__metric-label {
+      height: 1.22rem;
     }
 
     .db-skeleton__chart {
       height: 360px;
       min-height: 260px;
+    }
+
+    .db-skeleton__row-block-title {
+      height: 2.4rem;
+    }
+
+    .db-skeleton__list {
+      gap: 0;
+    }
+
+    .db-skeleton__list-row {
+      min-height: 1.72rem;
     }
 
     @include viewport.until(md) {
@@ -79,10 +103,6 @@
     }
 
     @include viewport.until(sm) {
-      .db-skeleton__metric-row {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
       .db-skeleton__chart {
         height: 18rem;
       }
@@ -119,12 +139,6 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         width: 100%;
-      }
-    }
-
-    @include viewport.until(sm) {
-      .db-section__metrics {
-        grid-template-columns: minmax(0, 1fr);
       }
     }
   }
@@ -240,10 +254,10 @@
     color: var(--primary);
     font: inherit;
     text-align: start;
+  }
 
-    > span:not(.site-traffic-explorer__row-count) {
-      @include ellipsis;
-    }
+  &__row-label {
+    @include ellipsis;
   }
 
   &__row-count {
@@ -254,10 +268,16 @@
   }
 
   &__row-link {
-    @include ellipsis;
+    display: block;
+    flex: 0 1 auto;
     min-width: 0;
+    overflow: hidden;
     color: inherit;
     text-decoration: none;
+
+    &:visited {
+      color: inherit;
+    }
 
     &:focus-visible {
       color: var(--tertiary);
@@ -275,7 +295,7 @@
     align-items: center;
     align-self: stretch;
     justify-content: flex-end;
-    flex: 1 1 auto;
+    flex: 1 0 auto;
     min-width: 0;
     margin-block: calc(-1 * var(--space-1));
     margin-inline-end: calc(-1 * var(--space-2));
@@ -311,9 +331,20 @@
   }
 
   &__dimension-label {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: var(--space-2);
+    min-width: 0;
+    width: 100%;
+  }
+
+  &__dimension-prefix {
+    flex: 0 0 auto;
+    margin-inline-end: var(--space-2);
+  }
+
+  &__dimension-text {
+    @include ellipsis;
+    flex: 1 1 auto;
     min-width: 0;
   }
 
@@ -341,8 +372,33 @@
 }
 
 .site-traffic-breakdown-modal {
+  @include viewport.until(md) {
+    .d-table {
+      table-layout: fixed;
+    }
+  }
+
+  &__dimension {
+    max-width: 0;
+    overflow: hidden;
+
+    .site-traffic-explorer__row-link {
+      display: block;
+    }
+
+    @include viewport.until(md) {
+      max-width: none;
+    }
+  }
+
   &__pageviews {
+    width: 1%;
+    white-space: nowrap;
     text-align: end;
+
+    @include viewport.until(md) {
+      width: auto;
+    }
 
     .d-table__mobile-label {
       text-align: start;

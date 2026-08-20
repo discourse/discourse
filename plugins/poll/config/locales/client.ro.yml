@@ -48,6 +48,8 @@ ro:
       cast-votes:
         title: "Exprimă-ți votul"
         label: "Votează acum!"
+      keep-vote:
+        label: "Înapoi"
       show-results:
         title: "Afişează rezultatele sondajului"
         label: "Rezultate"

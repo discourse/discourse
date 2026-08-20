@@ -39,11 +39,6 @@ module PageObjects
       end
 
       def open_composer_actions
-        find(".composer-action-title .btn").click
-        self
-      end
-
-      def open_composer_actions_new
         find(".composer-actions-trigger").click
         self
       end
@@ -71,23 +66,14 @@ module PageObjects
       end
 
       def drag_resize_by(pixels)
-        grippie = find("#{@composer_id} .grippie")
-
-        page.driver.with_playwright_page do |pw_page|
-          box = grippie.native.bounding_box
-          x = box["x"] + box["width"] / 2
-          y = box["y"] + box["height"] / 2
-
-          pw_page.mouse.move(x, y)
-          pw_page.mouse.down
-          pw_page.mouse.move(x, y - pixels, steps: 5)
-          pw_page.mouse.up
-        end
-
+        drag_with_pointer(from: "#{@composer_id} .grippie", by: { y: -pixels })
         self
       end
 
-      def has_height?(height)
+      # The composer's height is driven by this variable, so matching it is how the
+      # resize is observed. Named for what it reads rather than for the height, which
+      # would suggest measuring the box.
+      def has_applied_height?(height)
         has_css?("html[style*='--composer-height: #{height}px']", visible: :all)
       end
 
@@ -422,6 +408,18 @@ module PageObjects
       def select_range_rich_editor(start_index, length)
         focus
         select_text_range(RICH_EDITOR, start_index, length)
+      end
+
+      def select_code_block
+        select_all_content("#{RICH_EDITOR} pre code")
+      end
+
+      def has_nested_list_item?(text)
+        has_css?("#{RICH_EDITOR} li > ul > li", text:, exact_text: true)
+      end
+
+      def has_top_level_list_item?(text)
+        has_css?("#{RICH_EDITOR} > ul > li", text:, exact_text: true)
       end
 
       def submit

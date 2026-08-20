@@ -45,8 +45,6 @@ zh_CN:
           %{score_reason}
           %{response}
         flagged_post_response: "模型回答：%{llm_response}"
-        flagged_post_score_reason: |
-          <b>由 <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> 规则触发</b>。
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
           body: |
@@ -107,7 +105,6 @@ zh_CN:
     ai_helper_allowed_in_pm: "在私信中启用编辑器的 AI 助手。"
     ai_helper_automatic_chat_thread_title_delay: "在 AI 助手自动设置聊天消息串标题之前的延迟（以分钟为单位）。"
     ai_helper_automatic_chat_thread_title: "根据消息串内容自动设置聊天消息串标题。"
-    ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。"
     ai_image_caption_agent: "用于 AI 图片说明的智能体。自定义智能体必须启用图片上传功能，并使用具备视觉功能的 LLM。"
     ai_post_image_captions_enabled: "为帖子图片启用 AI 说明。生成缺失的说明需要配置 {{setting:ai_image_caption_agent}}。"
     ai_post_image_captions_per_post_limit: "每个帖子可以添加图片说明的数量上限。"
@@ -167,7 +164,6 @@ zh_CN:
     ai_translation_backfill_hourly_rate: "回填操作期间每小时翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
     ai_translation_backfill_parallel_jobs: "每个回填周期中并行运行的后置本地化任务数量。数值越高吞吐量越大，但会占用更多资源。"
     ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总到每日统计之前要保留的天数。设为 0 表示不进行汇总。"
-    ai_audit_logs_purge_after_days: "删除超过此天数的 AI API 审核日志。默认值约为 6 个月。设置为 0 则无限期保留。"
   reviewables:
     reasons:
       flagged_by_toxicity: AI 插件将其分类为有毒后对其进行了标记。
@@ -366,7 +362,6 @@ zh_CN:
         unknown_error: "生成缩略图时发生意外错误。请重试。"
       prompts:
         translate: 翻译为%{language}
-        generate_titles: 建议话题标题
         proofread: 审校文本
         markdown_table: 生成 Markdown 表
         custom_prompt: "自定义提示"
@@ -413,6 +408,8 @@ zh_CN:
       default_pm_prefix: "[无标题 AI 机器人私信]"
       thinking: "正在思考"
       tool_pending_approval: "此操作需要版主批准，然后才能执行。"
+      read_post:
+        unknown_post: "帖子"
       chat_tool_approval:
         approved: "由 @%{username} 批准。"
         rejected: "由 @%{username} 拒绝。"

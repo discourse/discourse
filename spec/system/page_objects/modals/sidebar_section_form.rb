@@ -12,7 +12,6 @@ module PageObjects
         fill_in("link-url", with: url, match: :first)
         icon_picker = first_link_icon_picker
         icon_picker.expand
-        icon_picker.filter(icon)
         icon_picker.select_icon(icon)
       end
 
@@ -26,7 +25,6 @@ module PageObjects
 
             icon_picker = PageObjects::Components::DIconGridPicker.new(link_row)
             icon_picker.expand
-            icon_picker.filter(icon)
             icon_picker.select_icon(icon)
           end
       end

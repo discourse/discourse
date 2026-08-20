@@ -219,9 +219,7 @@ vi:
       invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
     requires_groups: "Lời mời không được lưu vì không thể truy cập được chủ đề được chỉ định. Thêm một trong các nhóm sau: %{groups}."
     domain_not_allowed: "Email của bạn không thể được sử dụng để đổi lời mời này."
-    admin_invite_requires_email: "Lời mời quản trị viên phải được gửi đến một địa chỉ thư điện tử (Email)"
     admin_invite_requires_admin_inviter: "Chỉ quản trị viên mới có thể tạo lời mời quản trị viên"
-    moderator_invite_requires_email: "Lời mời điều hành viên phải được gửi đến một địa chỉ thư điện tử (Email)"
     moderator_invite_requires_staff_inviter: "Chỉ ban quản trị mới có thể tạo lời mời điều hành viên"
   bulk_invite:
     file_should_be_csv: "Tệp được tải lên phải có định dạng csv."
@@ -955,6 +953,9 @@ vi:
         num_topics: "Chủ đề"
       description: "Danh sách thành viên theo số lần nhấp vào liên kết họ đã chia sẻ."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Ngày ghé thăm"
+    top_entry_urls:
       labels:
         count: "Ngày ghé thăm"
     top_referrers_by_browser_pageviews:
@@ -2784,6 +2785,8 @@ vi:
     reasons:
       post_count: "Một vài tút đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Thành viên mới nhập tút đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
+      fast_typer_time:
+        other: "%{count} giây"
     actions:
       agree:
         title: "Đồng ý"

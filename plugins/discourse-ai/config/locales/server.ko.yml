@@ -16,6 +16,8 @@ ko:
         image_generation_custom:
           name: "사용자 정의"
     ai_bot:
+      read_post:
+        unknown_post: "글"
       tool_summary:
         search: "검색"
         time: "시간"

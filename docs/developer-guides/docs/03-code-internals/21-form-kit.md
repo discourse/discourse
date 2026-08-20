@@ -1797,6 +1797,8 @@ Rules can be combined using the pipe operator: `|`.
 
 ## Custom Validation
 
+Custom validators can call `preventSubmit` to stop the current submission without marking the form invalid. It only affects the current validation pass and must be called again to prevent a later submission attempt. Calling it during a validation pass that was not triggered by submission has no effect.
+
 ### Field
 
 Field accepts a `@validate` property which allows you to define a callback function to validate a single field.
@@ -1809,6 +1811,7 @@ Field accepts a `@validate` property which allows you to define a callback funct
   - `context.data` (Object): Current form draft data.
   - `context.type` (string): Field control type.
   - `context.addError` (Function): Adds an error if validation fails.
+  - `context.preventSubmit` (Function): Prevents the current submission without adding an error.
 
 **Example**
 
@@ -1846,6 +1849,7 @@ Form accepts a `@validate` property which allows you to define a callback functi
 - `handlers` (Object): An object containing handler functions.
   - `handlers.addError` (Function): A function to add an error if validation fails.
   - `handlers.removeError` (Function): A function to clear an existing error.
+  - `handlers.preventSubmit` (Function): Prevents the current submission without adding an error.
 
 **Example**
 

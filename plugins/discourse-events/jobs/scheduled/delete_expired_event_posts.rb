@@ -6,7 +6,7 @@ module Jobs
       every 10.minutes
 
       def execute(args)
-        return unless SiteSetting.calendar_enabled
+        return unless SiteSetting.discourse_events_enabled
 
         delay = SiteSetting.delete_expired_event_posts_after
         return if delay < 0

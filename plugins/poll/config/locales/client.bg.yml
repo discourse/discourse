@@ -28,6 +28,8 @@ bg:
       cast-votes:
         title: "Изчислете вашите гласове"
         label: "Гласувай сега!"
+      keep-vote:
+        label: "Назад"
       show-results:
         title: "Покажи резултатите от гласуването"
         label: "Резултати"

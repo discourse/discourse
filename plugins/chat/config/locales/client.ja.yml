@@ -737,4 +737,11 @@ ja:
         message: "メッセージ"
       chat_approval:
         message: "メッセージ"
+        buttons: "ボタン"
+        value: "値"
+        style: "スタイル"
+        style_default: "デフォルト"
+        style_primary: "プライマリー"
+        style_success: "成功"
+        icon: "アイコン"
         channel_id: "チャンネル"

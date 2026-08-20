@@ -1161,6 +1161,97 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       );
     });
 
+    test("an absent maximum leaves a pointer drag unclamped", async function (assert) {
+      const state = new Harness();
+      const noMax = () => null;
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=noMax
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      stubPointerCapture(edge);
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 300,
+        pointerId: 1,
+      });
+      await triggerEvent(edge, "pointerup", {
+        button: 0,
+        clientX: 420,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(
+        state.resizeEnds,
+        [420],
+        "the size the pointer reached is reported, not a coerced bound"
+      );
+    });
+
+    test("End is left alone when no maximum resolves", async function (assert) {
+      const state = new Harness();
+      const noMax = () => null;
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=noMax
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      await triggerKeyEvent(EDGE, "keydown", "End");
+      await triggerKeyEvent(EDGE, "keyup", "End");
+
+      assert.deepEqual(state.resizes, [], "no size is reported");
+      assert.deepEqual(state.resizeEnds, [], "no gesture is opened or closed");
+    });
+
+    test("Home is left alone when no minimum resolves", async function (assert) {
+      const state = new Harness();
+      const noMin = () => null;
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=noMin
+              max=360
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      await triggerKeyEvent(EDGE, "keydown", "Home");
+      await triggerKeyEvent(EDGE, "keyup", "Home");
+
+      assert.deepEqual(state.resizes, [], "no size is reported");
+      assert.deepEqual(state.resizeEnds, [], "no gesture is opened or closed");
+    });
+
     test("an interrupted resize keeps the size it was dragged to", async function (assert) {
       const state = new Harness();
 
@@ -1197,9 +1288,11 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       // The OS taking the pointer away mid-gesture. The modifier asks the gesture
       // engine to commit on cancel rather than revert, because snapping a pane
       // back to where it started would discard a resize the user watched happen.
+      // Some browsers initialize `pointercancel` coordinates to (0,0), so the
+      // event's own position must play no part in what gets committed.
       await triggerEvent(edge, "pointercancel", {
         button: 0,
-        clientX: 400,
+        clientX: 0,
         pointerId: 1,
       });
 
@@ -1212,8 +1305,48 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       assert.deepEqual(
         state.resizeEnds,
         [400],
-        "and cancellation commits that size instead of reverting"
+        "and cancellation commits the size the pointer dragged to, not one recomputed from the cancel event"
       );
+    });
+
+    test("an interrupted press that never moved commits nothing", async function (assert) {
+      const state = new Harness();
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResizeStart=state.onResizeStart
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      stubPointerCapture(edge);
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 300,
+        pointerId: 1,
+      });
+
+      // A press the OS interrupts before any movement is still a click, not a
+      // resize — the (0,0) the cancel event carries must not defeat the guard.
+      await triggerEvent(edge, "pointercancel", {
+        button: 0,
+        clientX: 0,
+        pointerId: 1,
+      });
+
+      assert.strictEqual(state.resizeStarts, 0, "no gesture opened");
+      assert.deepEqual(state.resizes, [], "nothing was reported");
+      assert.deepEqual(state.resizeEnds, [], "nothing was committed");
     });
 
     test("coalesces the pointer moves sharing a frame into one report", async function (assert) {
@@ -1539,4 +1672,216 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     await triggerEvent(edge, "pointerup", { pointerId: 1, clientY: 400 });
     assert.dom(document.body).doesNotHaveClass("d-resizing-ns");
   });
+
+  module(
+    "coverage for paths the suite could not previously distinguish",
+    function () {
+      /**
+       * Dispatches a real cancelable KeyboardEvent, because `triggerKeyEvent`'s
+       * return value does not expose whether the handler cancelled it, and
+       * cancellation is the whole contract under test here.
+       */
+      async function pressKey(selector, key, options = {}) {
+        const event = new KeyboardEvent("keydown", {
+          key,
+          bubbles: true,
+          cancelable: true,
+          ...options,
+        });
+        find(selector).dispatchEvent(event);
+        await settled();
+        return event;
+      }
+
+      test("a key the separator acts on is claimed, and one it ignores is left alone", async function (assert) {
+        const state = new Harness();
+
+        await render(
+          <template>
+            <div
+              class="resize-edge"
+              {{dResizeEdge
+                value=state.value
+                min=240
+                max=720
+                onResize=state.onResize
+                onResizeEnd=state.onResizeEnd
+              }}
+            ></div>
+          </template>
+        );
+
+        // Claiming a key means cancelling it. Without that, an arrow also scrolls
+        // the page under the splitter and Cmd+Left still navigates back.
+        const handled = await pressKey(EDGE, "ArrowRight");
+        assert.true(handled.defaultPrevented, "a resize key is claimed");
+
+        const unhandled = await pressKey(EDGE, "ArrowUp");
+        assert.false(
+          unhandled.defaultPrevented,
+          "a key for the other axis is left to the browser"
+        );
+
+        const modified = await pressKey(EDGE, "ArrowRight", { metaKey: true });
+        assert.false(
+          modified.defaultPrevented,
+          "a modified arrow belongs to whatever binding claims it"
+        );
+
+        await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
+      });
+
+      test("releasing a different key does not end the gesture the held one owns", async function (assert) {
+        const state = new Harness();
+
+        await render(
+          <template>
+            <div
+              class="resize-edge"
+              {{dResizeEdge
+                value=state.value
+                min=240
+                max=720
+                onResizeStart=state.onResizeStart
+                onResize=state.onResize
+                onResizeEnd=state.onResizeEnd
+              }}
+            ></div>
+          </template>
+        );
+
+        await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+        await triggerKeyEvent(EDGE, "keyup", "ArrowLeft");
+
+        assert.deepEqual(
+          state.resizeEnds,
+          [],
+          "a stray release does not commit the gesture still being held"
+        );
+
+        await triggerKeyEvent(EDGE, "keydown", "ArrowRight", { repeat: true });
+        await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
+
+        assert.strictEqual(
+          state.resizeStarts,
+          1,
+          "the hold was one gesture throughout"
+        );
+        assert.deepEqual(
+          state.resizeEnds,
+          [332],
+          "and it commits once, when its own key is released"
+        );
+      });
+
+      test("losing pointer capture commits the last position the pointer reached", async function (assert) {
+        const state = new Harness();
+
+        await render(
+          <template>
+            <div
+              class="resize-edge"
+              {{dResizeEdge
+                value=state.value
+                min=240
+                max=720
+                onResize=state.onResize
+                onResizeEnd=state.onResizeEnd
+              }}
+            ></div>
+          </template>
+        );
+
+        const edge = find(EDGE);
+        stubPointerCapture(edge);
+
+        await triggerEvent(edge, "pointerdown", {
+          button: 0,
+          pointerId: 1,
+          clientX: 300,
+        });
+        await triggerEvent(edge, "pointermove", { pointerId: 1, clientX: 340 });
+        await new Promise(requestAnimationFrame);
+        await settled();
+
+        // A browser-fired capture loss carries no meaningful position, so
+        // recomputing from the event would snap the size to a clamp bound.
+        await triggerEvent(edge, "lostpointercapture", {
+          pointerId: 1,
+          clientX: 0,
+        });
+
+        assert.deepEqual(
+          state.resizeEnds,
+          [340],
+          "the commit uses the last real position, not the event's own"
+        );
+      });
+
+      test("arrow keys follow the writing direction, as the pointer does", async function (assert) {
+        const state = new Harness();
+
+        await render(
+          <template>
+            <div dir="rtl">
+              <div
+                class="resize-edge"
+                {{dResizeEdge
+                  value=state.value
+                  min=240
+                  max=720
+                  side="start"
+                  onResize=state.onResize
+                  onResizeEnd=state.onResizeEnd
+                }}
+              ></div>
+            </div>
+          </template>
+        );
+
+        await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+        await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
+
+        // In RTL the inline-start edge sits on the right, so moving right shrinks
+        // the box. The keyboard has to agree with the pointer about that, or the
+        // two inputs disagree on the same handle.
+        assert.deepEqual(
+          state.resizes,
+          [284],
+          "ArrowRight shrinks a start-docked box under RTL, matching the drag direction"
+        );
+      });
+
+      test("teardown mid-keyboard-gesture drops it rather than committing", async function (assert) {
+        const state = new Harness();
+
+        await render(
+          <template>
+            <div
+              class="resize-edge"
+              {{dResizeEdge
+                value=state.value
+                min=240
+                max=720
+                onResizeStart=state.onResizeStart
+                onResize=state.onResize
+                onResizeEnd=state.onResizeEnd
+              }}
+            ></div>
+          </template>
+        );
+
+        await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+        assert.strictEqual(state.resizeStarts, 1, "the hold opened a gesture");
+
+        await clearRender();
+
+        assert.deepEqual(
+          state.resizeEnds,
+          [],
+          "teardown drops the held gesture instead of committing a size the user never released"
+        );
+      });
+    }
+  );
 });

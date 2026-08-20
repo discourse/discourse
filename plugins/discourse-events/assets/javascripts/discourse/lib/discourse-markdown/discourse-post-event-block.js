@@ -31,7 +31,7 @@ export function setup(helper) {
 
   helper.registerOptions((opts, siteSettings) => {
     opts.features.discourse_post_event =
-      siteSettings.calendar_enabled &&
+      siteSettings.discourse_events_enabled &&
       siteSettings.discourse_post_event_enabled;
   });
 

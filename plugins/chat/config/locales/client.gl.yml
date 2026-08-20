@@ -183,4 +183,10 @@ gl:
         message: "Mensaxe"
       chat_approval:
         message: "Mensaxe"
+        buttons: "Botóns"
+        value: "Valor"
+        style_default: "Predeterminado"
+        style_primary: "Primario"
+        style_success: "Feito"
+        icon: "Icona"
         channel_id: "Canle"

@@ -74,6 +74,49 @@ module PageObjects
         @form ||= PageObjects::Components::FormKit.new("form")
       end
 
+      def has_no_subagent_option?(agent)
+        subagent_selector.expand
+        result = subagent_selector.has_no_option_value?(agent.id)
+        subagent_selector.collapse
+        result
+      end
+
+      def has_subagent_selector_disabled?
+        page.has_css?("#control-subagent_ids .select-kit.is-disabled")
+      end
+
+      def select_subagent(agent)
+        subagent_selector.expand
+        subagent_selector.select_row_by_value(agent.id)
+        subagent_selector.collapse
+        self
+      end
+
+      def has_selected_subagent?(agent)
+        page.has_css?("#control-subagent_ids", text: agent.name)
+      end
+
+      def clear_subagents
+        subagent_selector.expand
+        subagent_selector.clear
+        subagent_selector.collapse
+        self
+      end
+
+      def has_disabled_subagent?(agent)
+        page.has_css?(
+          "#control-subagent_ids",
+          text: I18n.t("js.discourse_ai.ai_agent.subagent_disabled", name: agent.name),
+        )
+      end
+
+      def has_subagent_summary?(count)
+        page.has_css?(
+          ".ai-agent-editor__subagent-summary",
+          text: I18n.t("js.discourse_ai.ai_agent.subagents_summary", count: count),
+        )
+      end
+
       def select_mcp_server(server)
         mcp_server_selector.expand
         mcp_server_selector.search(server.name)
@@ -99,6 +142,10 @@ module PageObjects
       end
 
       private
+
+      def subagent_selector
+        PageObjects::Components::SelectKit.new("#control-subagent_ids .select-kit")
+      end
 
       def mcp_server_selector
         PageObjects::Components::SelectKit.new("#control-mcp_server_ids .select-kit")

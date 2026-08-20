@@ -3,6 +3,8 @@
 module DiscourseAi
   module Admin
     class AiAgentsController < ::Admin::AdminController
+      InvalidSubagentIds = Class.new(StandardError)
+
       requires_plugin PLUGIN_NAME
 
       before_action :find_ai_agent, only: %i[edit update destroy create_user export]
@@ -92,6 +94,8 @@ module DiscourseAi
         else
           render_json_error ai_agent
         end
+      rescue InvalidSubagentIds => e
+        render_json_error e.message, status: :unprocessable_entity
       end
 
       def create_user
@@ -117,6 +121,8 @@ module DiscourseAi
         else
           render_json_error @ai_agent
         end
+      rescue InvalidSubagentIds => e
+        render_json_error e.message, status: :unprocessable_entity
       end
 
       def destroy
@@ -165,7 +171,11 @@ module DiscourseAi
             render_ai_agent_resource(agent, status: :created)
           end
         rescue DiscourseAi::AgentImporter::ImportError => e
-          render_json_error e.message, status: :unprocessable_entity
+          render json: {
+                   errors: [e.message],
+                   conflicts: e.conflicts,
+                 },
+                 status: :unprocessable_entity
         rescue StandardError => e
           Rails.logger.error("AI Agent import failed: #{e.message}")
           render_json_error "Import failed: #{e.message}", status: :unprocessable_entity
@@ -491,6 +501,10 @@ module DiscourseAi
           permitted.delete(:mcp_server_ids)
         end
 
+        if payload.key?(:subagent_ids)
+          permitted[:subagent_ids] = normalize_subagent_ids(payload[:subagent_ids])
+        end
+
         permitted[:mcp_server_tool_names] = normalize_mcp_server_tool_names(
           payload[:mcp_server_tool_names],
           permitted[:ai_mcp_server_ids],
@@ -555,6 +569,23 @@ module DiscourseAi
         return [] if !examples.is_a?(Array)
 
         examples.map { |example_arr| example_arr.take(2).map(&:to_s) }
+      end
+
+      def normalize_subagent_ids(raw_ids)
+        unless raw_ids.is_a?(Array)
+          raise InvalidSubagentIds, I18n.t("discourse_ai.ai_bot.agents.invalid_subagent_ids")
+        end
+
+        raw_ids
+          .map do |id|
+            valid_id = id.is_a?(Integer) || id.is_a?(String) && id.match?(/\A-?\d+\z/)
+            unless valid_id
+              raise InvalidSubagentIds, I18n.t("discourse_ai.ai_bot.agents.invalid_subagent_ids")
+            end
+
+            id.is_a?(Integer) ? id : Integer(id, 10)
+          end
+          .uniq
       end
 
       def normalize_mcp_server_tool_names(raw_tool_names, allowed_server_ids)
@@ -672,6 +703,8 @@ module DiscourseAi
           compression_threshold: {
           },
           require_approval: {
+          },
+          subagent_ids: {
           },
           # JSON fields
           json_fields: %i[tools response_format examples allowed_group_ids ai_mcp_server_ids],

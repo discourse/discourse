@@ -45,8 +45,6 @@ fr:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_score_reason: |
-          <b>Déclenché par la règle <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "Votre publication a été temporairement retirée pour vérification"
           body: |
@@ -107,7 +105,6 @@ fr:
     ai_helper_allowed_in_pm: "Activez l'assistant IA de l'éditeur dans les messages privés."
     ai_helper_automatic_chat_thread_title_delay: "Délai en minutes avant que l'assistant IA définisse automatiquement le titre du fil de discussion."
     ai_helper_automatic_chat_thread_title: "Définissez automatiquement les titres des fils de discussion en fonction du contenu du fil."
-    ai_helper_enabled_features: "Sélectionnez les fonctionnalités à activer dans l’assistant IA."
     ai_image_caption_agent: "Agent à utiliser pour les légendes d'image générées par l'IA. Les agents personnalisés doivent autoriser les images téléversées et utiliser un LLM capable de traiter les images."
     ai_post_image_captions_enabled: "Activer les légendes générées par l'IA pour les images des publications. La génération des légendes manquantes nécessite la configuration de {{setting:ai_image_caption_agent}}."
     ai_post_image_captions_per_post_limit: "Nombre maximal d'images de publication à légender par publication."
@@ -167,7 +164,6 @@ fr:
     ai_translation_backfill_hourly_rate: "Nombre de publications et de sujets à traduire par heure pendant les opérations de traitement rétroactif. Définissez cette valeur sur 0 pour désactiver le traitement rétroactif automatique des traductions du contenu existant."
     ai_translation_backfill_parallel_jobs: "Nombre de tâches parallèles de localisation des publications à exécuter à chaque cycle de traitement rétroactif. Des valeurs plus élevées augmentent le débit, mais consomment davantage de ressources."
     ai_usage_rollup_after_days: "Nombre de jours pendant lesquels conserver les statistiques d'utilisation de l'IA par requête avant de les regrouper dans des agrégats quotidiens. Définissez cette valeur sur 0 pour désactiver le regroupement."
-    ai_audit_logs_purge_after_days: "Supprimer les journaux d'audit de l'API d'IA antérieurs à ce nombre de jours. La valeur par défaut est d'environ 6 mois. Définissez cette valeur sur 0 pour les conserver indéfiniment."
   reviewables:
     reasons:
       flagged_by_toxicity: L'extension IA l'a signalé après l'avoir classé comme toxique.
@@ -366,7 +362,6 @@ fr:
         unknown_error: "Une erreur inattendue s'est produite lors de la génération des miniatures. Réessayez."
       prompts:
         translate: Traduire en %{language}
-        generate_titles: Suggérer des titres de sujets
         proofread: Relire le texte
         markdown_table: Générer un tableau Markdown
         custom_prompt: "Invite personnalisée"
@@ -411,6 +406,8 @@ fr:
       default_pm_prefix: "[MP de robot IA sans titre]"
       thinking: "Raisonnement"
       tool_pending_approval: "Cette action doit être approuvée par un modérateur avant de pouvoir être exécutée."
+      read_post:
+        unknown_post: "publication"
       chat_tool_approval:
         approved: "Approuvé par @%{username}."
         rejected: "Rejeté par @%{username}."

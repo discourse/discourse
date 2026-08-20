@@ -36,7 +36,6 @@ ar:
       livestream:
         zoom:
           join: "الانضمام إلى Zoom"
-          chat: "الدردشة"
           open_in_zoom: "الفتح في Zoom"
           load_error: "لقد غادرت الندوة عبر الإنترنت أو يتعذَّر علينا تحميل Zoom في هذه الصفحة."
           too_early: "يمكنك الانضمام إلى الندوة عبر الإنترنت عند اقتراب وقت بدء الحدث."
@@ -487,7 +486,8 @@ ar:
       composer:
         name_placeholder: "اسم الحدث"
         end_date_placeholder: "تاريخ الانتهاء"
-        location_placeholder: "أضف الموقع أو عنوان URL"
+        location_or_url_placeholder: "أضف الموقع أو عنوان URL"
+        url_placeholder: "إضافة عنوان URL"
         max_attendees_placeholder: "عدد غير محدود من الحضور"
         max_attendees_display:
           zero: "أقصى عدد من الحضور: %{count}"
@@ -619,8 +619,13 @@ ar:
           label: "بث مباشر"
           checkbox_label: "قم بتضمين عنوان URL كفيديو وافتح دردشة البث المباشر للحضور"
         location:
-          label: "الموقع أو عنوان URL"
+          label: "الموقع الجغرافي"
+          label_or_url: "الموقع أو عنوان URL"
           placeholder: "أضف موقعًا أو رابطًا أو أي شيء آخر."
+        url:
+          label: "عنوان URL"
+          placeholder: "اختياري"
+          add: "إضافة عنوان URL"
         description:
           label: "الوصف"
           placeholder: "قدّم للجمهور مزيدًا من المعلومات حول حدثك. يدعم النص الأسطر الجديدة والروابط."

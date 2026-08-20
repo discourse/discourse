@@ -4,55 +4,50 @@ describe "Topic timeline scroller drag" do
   fab!(:current_user, :user)
   fab!(:topic)
   fab!(:post_1) { Fabricate(:post, topic: topic) }
+  # More replies than `TopicView::CHUNK_SIZE`, so a late post is only in the DOM
+  # once the drag has actually moved the stream on.
+  fab!(:replies) { 30.times.map { Fabricate(:post, topic: topic) } }
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before do
-    sign_in(current_user)
-    # Enough replies that the timeline renders a scroller with somewhere to travel.
-    30.times { Fabricate(:post, topic: topic) }
-  end
+  before { sign_in(current_user) }
 
-  def scrollarea_bottom
-    page.evaluate_script(<<~JS)
-      (() => {
-        const area = document.querySelector(".timeline-scrollarea");
-        const box = area.getBoundingClientRect();
-        return box.top + box.height - 4;
-      })()
-    JS
-  end
-
-  it "scrolls the topic when the scroller is dragged down the timeline" do
-    visit("/t/#{topic.slug}/#{topic.id}")
+  it "lets the user scroll the topic by dragging down the timeline" do
+    topic_page.visit_topic(topic)
 
     expect(topic_page).to have_post_number(1)
-    expect(page).to have_css(".timeline-scroller")
+    expect(topic_page.timeline).to have_scroller
 
     # The pointer path is only exercised for real in a browser, where pointer
     # capture actually routes the drag back to the scroller. A synthetic dispatch
     # picks its own event target and so cannot tell a live drag from a dead one.
-    drag_with_pointer(from: ".timeline-scroller", to: { x: 20, y: scrollarea_bottom })
+    topic_page.timeline.drag_to_bottom
 
-    expect(page).to have_css(".timeline-scroller")
-    # Dragging to the foot of the timeline lands near the end of a 31-post topic.
-    # Asserting on a late post rather than an exact index keeps this about "the
-    # drag moved the topic" and not about the scroller's pixel-to-post rounding.
+    # A later chunk had to load for this to be in the DOM at all.
     expect(topic_page).to have_post_number(25)
+    # And the reader travelled with it. Asserted separately because the two can
+    # come apart: a cloaked post keeps its `#post_N` id, so the assertion above
+    # proves the stream advanced without saying where the reader ended up, and
+    # the readout is computed from the drag rather than from what loaded.
+    expect(topic_page.timeline).to have_position(31, 31)
   end
 
-  it "does not leave the page marked as dragging once the drag ends" do
-    visit("/t/#{topic.slug}/#{topic.id}")
+  it "clears the user's drag state when the pointer is released" do
+    topic_page.visit_topic(topic)
 
     expect(topic_page).to have_post_number(1)
-    expect(page).to have_css(".timeline-scroller")
+    expect(topic_page.timeline).to have_scroller
 
-    drag_with_pointer(from: ".timeline-scroller", by: { y: 120 }) do
-      # Asserted mid-gesture, because the absence afterwards is also what a drag
-      # that never started would produce.
-      expect(page).to have_css("body.dragging")
-    end
+    topic_page
+      .timeline
+      .drag_by(y: 120) do
+        # Asserted mid-gesture, because the absence afterwards is also what a drag
+        # that never started would produce.
+        expect(topic_page.timeline).to have_dragging_page
+        expect(topic_page.timeline).to have_dragging_scrollarea
+      end
 
-    expect(page).to have_no_css("body.dragging")
+    expect(topic_page.timeline).to have_no_dragging_page
+    expect(topic_page.timeline).to have_no_dragging_scrollarea
   end
 end

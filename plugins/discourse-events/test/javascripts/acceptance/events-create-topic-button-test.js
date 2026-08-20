@@ -14,7 +14,7 @@ acceptance(
   function (needs) {
     needs.user({ can_create_discourse_post_event: true });
     needs.settings({
-      calendar_enabled: true,
+      discourse_events_enabled: true,
       discourse_post_event_enabled: true,
       events_calendar_categories: "1",
     });
@@ -55,7 +55,7 @@ acceptance(
   function (needs) {
     needs.user({ can_create_discourse_post_event: false });
     needs.settings({
-      calendar_enabled: true,
+      discourse_events_enabled: true,
       discourse_post_event_enabled: true,
       events_calendar_categories: "1",
     });

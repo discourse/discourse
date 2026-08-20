@@ -16,6 +16,8 @@ sv:
         image_generation_custom:
           name: "Anpassad"
     ai_bot:
+      read_post:
+        unknown_post: "inlägg"
       tool_summary:
         suspend_user: "Stäng av användare"
         silence_user: "Tysta användare"

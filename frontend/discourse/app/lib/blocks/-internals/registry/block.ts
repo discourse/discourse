@@ -13,6 +13,7 @@ import type {
   BlockFactory,
   BlockRegistryEntry,
 } from "discourse/lib/blocks/-internals/types";
+import type { CustomizationSource } from "discourse/lib/customization-source";
 import { isTesting } from "discourse/lib/environment";
 import {
   assertNotDuplicate,
@@ -282,6 +283,7 @@ export function _freezeBlockRegistry(): void {
  *   callers reach this through `api.registerBlock()`, where a bad or circular
  *   import hands it `undefined`; that call must report the decorator error
  *   rather than fail on a property read.
+ * @param source - The plugin or theme the call came from.
  * @throws If called after registry is locked, or if block is invalid
  *
  * @example
@@ -299,7 +301,10 @@ export function _freezeBlockRegistry(): void {
  * };
  * ```
  */
-export function _registerBlock(klass: BlockClass | null | undefined): void {
+export function _registerBlock(
+  klass: BlockClass | null | undefined,
+  source?: CustomizationSource
+): void {
   const metadata: BlockMetadata | null = getBlockMetadata(klass);
   const blockName = metadata?.blockName;
 
@@ -325,7 +330,9 @@ export function _registerBlock(klass: BlockClass | null | undefined): void {
     return;
   }
 
-  if (!validateSourceNamespace({ name: blockName, entityType: "block" })) {
+  if (
+    !validateSourceNamespace({ name: blockName, entityType: "block", source })
+  ) {
     return;
   }
 
@@ -375,6 +382,7 @@ export function _registerLayoutBlockIfNeeded(BlockClass) {
  *
  * @param name - The name to register the block under.
  * @param factory - Factory function returning Promise<BlockClass>.
+ * @param source - The plugin or theme the call came from.
  * @throws If registry is locked, name is invalid, or factory is not a function.
  *
  * @example
@@ -386,7 +394,8 @@ export function _registerLayoutBlockIfNeeded(BlockClass) {
  */
 export function _registerBlockFactory(
   name: string,
-  factory: BlockFactory
+  factory: BlockFactory,
+  source?: CustomizationSource
 ): void {
   if (
     !assertRegistryNotFrozen({
@@ -410,7 +419,7 @@ export function _registerBlockFactory(
     return;
   }
 
-  if (!validateSourceNamespace({ name, entityType: "block" })) {
+  if (!validateSourceNamespace({ name, entityType: "block", source })) {
     return;
   }
 

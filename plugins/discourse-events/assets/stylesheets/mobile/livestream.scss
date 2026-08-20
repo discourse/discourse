@@ -1,5 +1,4 @@
-body.livestream-topic.chat-enabled,
-body.websdk-body {
+body.livestream-topic.chat-enabled {
   .d-header-icons {
     .livestream-header-icon {
       position: relative;
@@ -197,33 +196,4 @@ body.websdk-body {
 
 body:not(.livestream-topic) .d-header-icons .livestream-header-icon {
   display: none;
-}
-
-.discourse-calendar-livestream-zoom-page {
-  margin-left: calc(var(--topic-body-width-padding, 1rem) * -1);
-  margin-right: calc(var(--topic-body-width-padding, 1rem) * -1);
-}
-
-// zoom specific overrides, undoes core conflicts
-#wc-footer {
-  .btn-group {
-    margin: 0;
-  }
-
-  .audio-option-menu {
-    position: relative;
-  }
-
-  .footer-button__wrapper {
-    display: flex;
-
-    > div {
-      display: flex;
-    }
-
-    .audio-option-menu {
-      display: flex;
-      margin-block: auto;
-    }
-  }
 }

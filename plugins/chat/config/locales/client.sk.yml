@@ -824,4 +824,11 @@ sk:
         message: "Správa"
       chat_approval:
         message: "Správa"
+        buttons: "Tlačidlá"
+        value: "Hodnota"
+        style: "Štýl"
+        style_default: "Predvolené"
+        style_primary: "Primárne"
+        style_success: "Úspech"
+        icon: "Ikona"
         channel_id: "Kanál"

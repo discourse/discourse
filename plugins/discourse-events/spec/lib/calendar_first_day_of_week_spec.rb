@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe SiteSetting do
-  before { SiteSetting.calendar_enabled = true }
+  before { SiteSetting.discourse_events_enabled = true }
 
   it "has the correct default value" do
     expect(SiteSetting.calendar_first_day_of_week).to eq("monday")

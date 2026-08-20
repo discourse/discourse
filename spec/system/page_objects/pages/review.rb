@@ -32,8 +32,11 @@ module PageObjects
         end
       end
 
-      def delete_user_from_reviewable(reviewable, action)
+      # Pass confirm: false for reviewables that require a rejection reason, as
+      # those open a modal instead of the confirmation dialog.
+      def delete_user_from_reviewable(reviewable, action, confirm: true)
         select_bundled_action(reviewable, action, bundle_index: 1)
+        PageObjects::Components::Dialog.new.click_danger if confirm
       end
 
       def click_post_body_toggle

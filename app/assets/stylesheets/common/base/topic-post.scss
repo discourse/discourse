@@ -1237,6 +1237,7 @@ aside.quote {
 }
 
 pre {
+  // safety cap; also covers a `pre` with no `code` child
   max-height: 2000px;
 
   .bidi-warning,
@@ -1282,7 +1283,7 @@ pre {
   }
 
   @include viewport.until(sm) {
-    code {
+    > code {
       padding-right: 2.75em;
     }
   }
@@ -1656,10 +1657,6 @@ a.reply-to-tab {
 
   .d-icon {
     color: var(--primary-medium);
-  }
-
-  .avarar {
-    margin-left: var(--space-1);
   }
 }
 
@@ -2085,12 +2082,6 @@ span.highlighted {
 
   html.discourse-no-touch & {
     transition: box-shadow 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-  }
-}
-
-.fullscreen-code-modal {
-  pre code {
-    max-width: none;
   }
 }
 

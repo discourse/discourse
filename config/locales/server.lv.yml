@@ -373,6 +373,9 @@ lv:
     top_countries_by_browser_pageviews:
       labels:
         count: "Apmeklējumi"
+    top_entry_urls:
+      labels:
+        count: "Apmeklējumi"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Apmeklējumi"

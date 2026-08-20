@@ -2,6 +2,7 @@ import { DEBUG } from "@glimmer/env";
 import type { BlockNamespaceType } from "discourse/blocks/types";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import { parseBlockName } from "discourse/lib/blocks/-internals/patterns";
+import type { CustomizationSource } from "discourse/lib/customization-source";
 import { isTesting } from "discourse/lib/environment";
 import {
   BLOCK_OUTLETS,
@@ -13,13 +14,9 @@ import {
   validateSourceNamespace,
 } from "./helpers";
 
-/**
- * The fully-resolved display metadata for a registered outlet (core or
- * custom), as returned by {@link getOutletMetadata}. Optional fields are
- * resolved to defaults so callers don't have to.
- */
+/** Fully resolved display metadata for a registered outlet. */
 export interface OutletMetadataEntry {
-  /** The full outlet identifier (e.g. `"chat:thread-actions"`). */
+  /** The full outlet identifier. */
   name: string;
 
   /** Human-readable label for display purposes. */
@@ -28,13 +25,13 @@ export interface OutletMetadataEntry {
   /** One-line summary of where the outlet renders. */
   description: string | null;
 
-  /** Optional sub-grouping label (free-form, e.g. `"Layout"`). */
+  /** Optional sub-grouping label. */
   category: string | null;
 
-  /** True for the outlets baked into core. */
+  /** Whether the outlet is registered by core. */
   isCore: boolean;
 
-  /** Derived from the outlet name's namespace prefix. */
+  /** Namespace type derived from the outlet name. */
   namespaceType: BlockNamespaceType;
 }
 
@@ -106,28 +103,15 @@ export function getCustomOutlet(
   return customOutletRegistry.get(name);
 }
 
-/**
- * Returns the fully-resolved display metadata for any registered outlet
- * (core or custom). Defaults are applied for optional fields so callers
- * don't have to.
- *
- * Defaults:
- * - `displayName` defaults to `name` itself when the registration didn't
- *   set one. Consumers can still apply additional title-casing at display
- *   time.
- * - `description`, `category` default to `null`.
- *
- * @param name - The full outlet name.
- * @returns The metadata, or `null` for unregistered names.
- */
+/** Returns resolved display metadata for a registered outlet. */
 export function getOutletMetadata(name: string): OutletMetadataEntry | null {
-  const coreMeta = CORE_OUTLET_METADATA[name];
-  if (coreMeta) {
+  const coreMetadata = CORE_OUTLET_METADATA[name];
+  if (coreMetadata) {
     return {
       name,
-      displayName: coreMeta.displayName ?? name,
-      description: coreMeta.description ?? null,
-      category: coreMeta.category ?? null,
+      displayName: coreMetadata.displayName ?? name,
+      description: coreMetadata.description ?? null,
+      category: coreMetadata.category ?? null,
       isCore: true,
       namespaceType: "core",
     };
@@ -135,30 +119,24 @@ export function getOutletMetadata(name: string): OutletMetadataEntry | null {
 
   const custom = customOutletRegistry.get(name);
   if (custom) {
-    const parsed = parseBlockName(name);
     return {
       name,
       displayName: custom.displayName ?? name,
       description: custom.description ?? null,
       category: custom.category ?? null,
       isCore: false,
-      namespaceType: parsed?.type ?? "core",
+      namespaceType: parseBlockName(name)?.type ?? "core",
     };
   }
 
   return null;
 }
 
-/**
- * Returns the fully-resolved display metadata for every registered outlet.
- * Used by the blocks service to list outlets with their metadata.
- *
- * @returns The metadata for every registered outlet.
- */
+/** Returns resolved display metadata for every registered outlet. */
 export function getAllOutletsWithMetadata(): OutletMetadataEntry[] {
   return getAllOutlets()
     .map((name) => getOutletMetadata(name))
-    .filter((m): m is OutletMetadataEntry => m != null);
+    .filter((metadata): metadata is OutletMetadataEntry => metadata !== null);
 }
 
 /*
@@ -177,13 +155,13 @@ export function _freezeOutletRegistry(): void {
 
 /** Options for {@link _registerOutlet}. */
 interface RegisterOutletOptions {
-  /** Human-readable label for display purposes. Defaults to the outlet name. */
+  /** Human-readable label for display purposes. */
   displayName?: string;
 
-  /** One-line summary of where the outlet renders. */
+  /** Human-readable description. */
   description?: string;
 
-  /** Optional free-form grouping label (e.g. `"Layout"`). */
+  /** Optional sub-grouping label. */
   category?: string;
 }
 
@@ -197,12 +175,14 @@ interface RegisterOutletOptions {
  *
  * @param outletName - The outlet name (must follow naming conventions).
  * @param options - Outlet options.
+ * @param source - The plugin or theme the call came from.
  *
  * @internal
  */
 export function _registerOutlet(
   outletName: string,
-  options: RegisterOutletOptions = {}
+  options: RegisterOutletOptions = {},
+  source?: CustomizationSource
 ): void {
   if (
     !assertRegistryNotFrozen({
@@ -238,6 +218,7 @@ export function _registerOutlet(
     !validateSourceNamespace({
       name: outletName,
       entityType: "outlet",
+      source,
     })
   ) {
     return;

@@ -8,10 +8,13 @@ module Jobs
     WINDOW_DELAY = BrowserPageviewSessionEngagement::BEACON_SETTLE_PERIOD
 
     def execute(args)
-      return if !UpcomingChanges.enabled?(:improved_crawler_detection)
+      return if !CrawlerScorer.enabled?
 
       window_end = Time.now - WINDOW_DELAY
-      CrawlerScorer.score!(window_start: window_end - LOOKBACK, window_end: window_end)
+      window_start = window_end - LOOKBACK
+
+      CrawlerScorer.score!(window_start: window_start, window_end: window_end)
+      SearchLog.flag_likely_crawlers!(window_start: window_start, window_end: window_end)
     end
   end
 end

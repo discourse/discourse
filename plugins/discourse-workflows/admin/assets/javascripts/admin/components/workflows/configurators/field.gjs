@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry";
@@ -48,9 +49,16 @@ export default class Field extends Component {
   }
 
   get entry() {
-    return (
-      FIELD_CONTROL_REGISTRY[this.control] || FIELD_CONTROL_REGISTRY.default
-    );
+    const entry =
+      FIELD_CONTROL_REGISTRY[this.control] || FIELD_CONTROL_REGISTRY.default;
+
+    return applyValueTransformer("workflow-field-control", entry, {
+      control: this.control,
+      fieldName: this.args.fieldName,
+      node: this.args.node,
+      nodeParameters: this.args.nodeParameters,
+      schema: this.args.schema,
+    });
   }
 
   get renderer() {
@@ -254,6 +262,15 @@ export default class Field extends Component {
             @onBeforeStartTestSession={{@onBeforeStartTestSession}}
           />
         {{/if}}
+        {{#each this.entry.addons as |Addon|}}
+          <Addon
+            @field={{field}}
+            @fieldName={{@fieldName}}
+            @node={{@node}}
+            @nodeParameters={{@nodeParameters}}
+            @schema={{@schema}}
+          />
+        {{/each}}
       </@form.Field>
     {{/if}}
   </template>

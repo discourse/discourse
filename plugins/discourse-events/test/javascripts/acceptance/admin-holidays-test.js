@@ -6,7 +6,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 acceptance("Admin - Events - Holidays", function (needs) {
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     available_locales: [{ name: "English", value: "en" }],
   });
 

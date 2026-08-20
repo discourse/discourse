@@ -936,16 +936,15 @@ ug:
   email_login:
     invalid_token: 'ئاپلا! سىز ئىشلەتكەن ئۇلانما ئەمدى ئىشلىمەيدۇ. سىز ھازىر <a href="%{base_url}/login">تىزىمغا كىر</a>ىڭ. ئەگەر ئىم ئۇنۇتقان بولسىڭىز، <a href="%{base_url}/password-reset">ئۇلانما ئىلتىماس</a> قىلىپ ئىم ئەسلىگە قايتۇرۇڭ.'
     title: "ئېلخەتتە تىزىمغا كىرىش"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub ئەپى"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub ئەپى"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "نامەلۇم توركۆرگۈ"
     device:
       android: "Android ئۈسكۈنىسى"
       chromebook: "Chrome OS"
@@ -968,10 +967,6 @@ ug:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "نامسىز"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "ئېلخەت ئادرېسىڭىزنى ئۆزگەرتىۋاتقاندا خاتالىق كۆرۈلگەن. بەلكىم ئۇ ئادرېس ئاللىبۇرۇن ئىشلىتىلگەن بولۇشى مۇمكىن؟"
     doesnt_exist: "ئۇ ئېلخەت ئادرېسى ھېساباتىڭىز بىلەن باغلانمىغان."
@@ -1428,6 +1423,9 @@ ug:
         num_topics: "تېما"
       description: "ئىشلەتكۈچى ھەمبەھىرلەنگەن ئۇلانمىنىڭ چېكىلىش قېتىم سانى بويىچە تىزىلىدۇ."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "زىيارەت"
+    top_entry_urls:
       labels:
         count: "زىيارەت"
     top_referrers_by_browser_pageviews:
@@ -3739,9 +3737,6 @@ ug:
     user_posted_pm_staged:
       title: "ئىشلەتكۈچى يوللىغان شەخسىي ئۇچۇر ۋاقىتلىق ساقلاندى"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ھېسابات توختىتىلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز توختىتىلدى"
@@ -4613,6 +4608,9 @@ ug:
       group: "بەلگىلەنگەن گۇرۇپپىدا يوق ئىشلەتكۈچىلەرنىڭ ئىنكاسىنى چوقۇم باشقۇرغۇچى تەستىقلايدۇ. %{link} نى كۆرۈڭ."
       new_topics_unless_trust_level: "تۆۋەن ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچىنىڭ تېمىسىنى باشقۇرغۇچى خادىملار تەستىقلىشى كېرەك. %{link} نى كۆرۈڭ."
       fast_typer: "يېڭى ئىشلەتكۈچى كىرگۈزگەن تۇنجى يازما سۈرئىتى گۇمانلىق، ماشىنا ئادەم ياكى ئەخلەت ئۇچۇر تارقاتقۇچىنىڭ قىلمىشى بولۇشى مۇمكىن. %{link} نى كۆرۈڭ."
+      fast_typer_time:
+        one: "%{count} سېكۇنت"
+        other: "%{count} سېكۇنت"
       auto_silence_regex: "تۇنجى يازمىسى %{link} تەڭشەك بىلەن ماسلاشقان يېڭى ئىشلەتكۈچى."
       watched_word:
         one: "بۇ يازمىدا كۆزىتىلىدىغان سۆز بار، پاش قىلىنغان سۆز: %{words}. تەپسىلاتىنى %{link} دىن كۆرۈڭ."

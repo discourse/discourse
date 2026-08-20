@@ -1,5 +1,5 @@
-import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
+import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
 import {
   autoScrollForElements,
   autoScrollWindowForElements,
@@ -10,13 +10,14 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/external";
 import { modifier } from "ember-modifier";
 import {
-  ExternalDragKind,
+  type ExternalDragKind,
   matchesExternalKind,
-} from "discourse/services/drag-and-drop";
-import { matchesDragType } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
+} from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
+import { matchesDragType } from "discourse/lib/-internals/drag-and-drop/vocabulary";
+import type { Axis } from "discourse/lib/geometry";
 
 /** Which direction the container is allowed to scroll while a drag is in flight. */
-export type AutoScrollAxis = "vertical" | "horizontal" | "all";
+export type AutoScrollAxis = Axis | "all";
 
 /** What gets scrolled: the element the modifier sits on, or the window. */
 export type AutoScrollTarget = "element" | "window";
@@ -27,19 +28,15 @@ interface DDragAndDropAutoScrollSignature {
   Args: {
     Named: {
       /**
-       * Only drags whose `type` matches engage the auto-scroll. For a drag a
-       * target adopted that is the adoption's own type, so a container scrolls
-       * for one without naming anything about adoption. Omit to engage on any
-       * drag (rare).
+       * Only drags whose `type` matches engage the auto-scroll; an adopted drag
+       * answers to the adoption's declared type. Omit to engage on any element
+       * drag.
        */
       types?: string | string[];
 
       /**
-       * Also auto-scroll for drags coming from outside the window, engaging on
-       * these external kinds. Opt-in and separate from `types` because the two
-       * describe different drags: `types` names a discriminator our own sources
-       * stamp, which a payload dragged in from another application has no way of
-       * carrying. Omit it and an external drag scrolls nothing.
+       * Also auto-scroll for drags from outside the window, engaging on these
+       * external kinds. Omit it and an external drag scrolls nothing.
        */
       accepts?: ExternalDragKind | ExternalDragKind[];
 
@@ -49,10 +46,6 @@ interface DDragAndDropAutoScrollSignature {
       /**
        * `"element"` (default) scrolls the host element; `"window"` scrolls the
        * window and ignores the element.
-       *
-       * Decides which registration to make rather than being consulted per
-       * callback, so changing it replaces the registration instead of taking
-       * effect within it.
        */
       target?: AutoScrollTarget;
     };
@@ -72,25 +65,13 @@ export type DragAndDropAutoScrollArgs =
   };
 
 /**
- * Wraps PDND's `autoScrollForElements` / `autoScrollWindowForElements` behind
- * one shape. Used by the default-exported modifier below, and exported so a
- * consumer can register auto-scroll imperatively (when a template modifier
- * doesn't fit) without importing PDND — parallel to `registerDragAndDropMonitor`.
+ * Imperative auto-scroll registration; the `dDragAndDropAutoScroll` modifier
+ * below wraps it.
  *
- * Library-agnostic by design: PDND auto-scroll is imported only here.
- *
- * @param getArgsRef - Closure returning the latest args. `types` and `axis` are
- *   re-read on every callback, so a caller driving this imperatively can change
- *   what its closure returns and have the change take without re-registering.
- *   `target` and `element` are read once, here, to decide which registration to
- *   make, so changing either needs a fresh one.
- *
- *   Through the modifier below that distinction does not arise: the closure is
- *   invoked in the modifier body, which consumes every arg it reads, so changing
- *   any of them re-runs the modifier and replaces the registration. That is
- *   accepted rather than worked around — auto-scroll args rarely change, and a
- *   replacement between drags costs nothing.
- * @returns Cleanup function. Caller invokes it once on teardown.
+ * @param getArgsRef - Closure returning the latest args. `types`, `axis` and
+ *   `accepts` are re-read on every scroll attempt; `target`, `element` and
+ *   whether `accepts` is set are read once here and need a fresh registration.
+ * @returns Cleanup; call it once on teardown.
  */
 export function registerDragAndDropAutoScroll(
   getArgsRef: () => DragAndDropAutoScrollArgs
@@ -116,9 +97,8 @@ export function registerDragAndDropAutoScroll(
         }),
   ];
 
-  // The two adapters are independent registrations, so an external drag scrolls
-  // only where a consumer asked for it. Registering one unconditionally would
-  // start scrolling every container for every file dragged over the window.
+  // An absent `accepts` would match every external drag, so the external
+  // registration is made only when the consumer asked for one.
   if (args.accepts) {
     cleanups.push(
       scrollsWindow
@@ -138,11 +118,10 @@ export function registerDragAndDropAutoScroll(
 }
 
 /**
- * Enables PDND auto-scroll while a compatible drag is in flight. Every arg is
+ * Enables auto-scroll while a compatible drag is in flight. Every arg is
  * documented on {@link DragAndDropAutoScrollArgs}.
  *
- * Attach to a scroll container to auto-scroll that container when
- * the cursor approaches its edges:
+ * On a scroll container:
  *
  * ```hbs
  * <div class="scroll-container"
@@ -150,8 +129,7 @@ export function registerDragAndDropAutoScroll(
  * >
  * ```
  *
- * Attach to a sentinel element with `target="window"`
- * to auto-scroll the document body / window instead:
+ * On a sentinel with `target="window"` to scroll the window instead:
  *
  * ```hbs
  * <span class="visually-hidden"
@@ -159,32 +137,23 @@ export function registerDragAndDropAutoScroll(
  * ></span>
  * ```
  *
- * Add `accepts` to scroll for payloads dragged in from outside the window too,
- * which is a separate registration and does not happen without it:
+ * With `accepts`, for payloads dragged in from outside the window too:
  *
  * ```hbs
  * <div class="scroll-container"
  *   {{dDragAndDropAutoScroll types=(array "card") accepts="urls"}}
  * >
  * ```
- *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
- *
- * @see The `dDragAndDropTarget` modifier, which this complements — auto-scroll moves the
- *   container, it never accepts a drop of its own.
  */
 export default modifier<DDragAndDropAutoScrollSignature>(
   (element, _positional, args) =>
-    // The closure is the shape the registrar reads args through, not a way of
-    // avoiding consumption: it is invoked in the body, so every arg it reads is
-    // consumed here and any change re-runs this modifier. See the note on
-    // `registerDragAndDropAutoScroll` for why that is fine.
+    // Every arg read here is tracked, so a change re-runs the modifier and
+    // replaces the registration; cheap between drags, and args rarely change.
     registerDragAndDropAutoScroll(() => ({
       types: args.types,
       accepts: args.accepts,
-      axis: args.axis ?? "vertical",
-      target: args.target ?? "element",
+      axis: args.axis,
+      target: args.target,
       element,
     }))
 );

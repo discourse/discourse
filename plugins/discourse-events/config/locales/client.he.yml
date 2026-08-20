@@ -27,9 +27,6 @@ he:
             topic_id:
               label: מזהה נושא
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "צ׳אט"
       invite_user_notification: "קיבלת הזמנה מאת %{username} אל: %{description}"
       on_holiday: "בחג"
       disable_holiday: "השבתה"
@@ -443,6 +440,7 @@ he:
               description: "לאירוע פרטי יכולים להצטרף רק משתמשים שהוזמנו."
       composer:
         name_placeholder: "שם האירוע"
+        url_placeholder: "הוספת כתובת URL"
         event_title_placeholder: "שם האירוע"
         create_event_button: "יצירת אירוע"
         reminder:
@@ -517,7 +515,12 @@ he:
           label: "שילוב צ׳אט"
           checkbox_label: "יצירה וניהול של ערוץ צ׳אט ייעודי לאירוע"
         location:
+          label: "מיקום"
           placeholder: "הוספת מיקום, קישור או משהו."
+        url:
+          label: "כתובת"
+          placeholder: "רשות"
+          add: "הוספת כתובת URL"
         description:
           label: "תיאור"
           placeholder: "כדאי לספר לאנשים קצת יותר על האירוע שלך. יש תמיכה בשורות חדשות ובקישורים."

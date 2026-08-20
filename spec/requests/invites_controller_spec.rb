@@ -706,7 +706,38 @@ RSpec.describe InvitesController do
         expect(response.status).to eq(403)
       end
 
-      it "fails when combined with a topic, groups or a domain" do
+      it "creates a single-use admin invite link when no email is given" do
+        sign_in(admin)
+
+        post "/invites.json", params: { is_admin: "true", skip_email: "true" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["grants_admin"]).to eq(true)
+
+        invite = Invite.last
+        expect(invite.admin).to eq(true)
+        expect(invite.email).to eq(nil)
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "creates an admin invite link restricted to a domain" do
+        sign_in(admin)
+
+        post "/invites.json",
+             params: {
+               is_admin: "true",
+               skip_email: "true",
+               domain: "example.com",
+             }
+
+        expect(response.status).to eq(200)
+
+        invite = Invite.last
+        expect(invite.admin).to eq(true)
+        expect(invite.domain).to eq("example.com")
+      end
+
+      it "fails when combined with a topic or groups" do
         sign_in(admin)
         topic = Fabricate(:topic)
         group = Fabricate(:group)
@@ -725,9 +756,6 @@ RSpec.describe InvitesController do
                is_admin: "true",
                group_ids: [group.id],
              }
-        expect(response.status).to eq(400)
-
-        post "/invites.json", params: { is_admin: "true", domain: "example.com" }
         expect(response.status).to eq(400)
       end
 
@@ -775,7 +803,7 @@ RSpec.describe InvitesController do
         expect(invite.groups).to be_empty
       end
 
-      it "cannot strip the email from an admin invite via #update" do
+      it "can convert an admin email invite into a domain-restricted link via #update" do
         sign_in(admin)
 
         post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
@@ -784,9 +812,23 @@ RSpec.describe InvitesController do
 
         put "/invites/#{invite.id}", params: { domain: "example.com" }
 
-        expect(response.status).to eq(422)
-        expect(invite.reload.email).to eq("test@example.com")
+        expect(response.status).to eq(200)
+        expect(invite.reload.email).to eq(nil)
+        expect(invite.domain).to eq("example.com")
         expect(invite.admin).to eq(true)
+      end
+
+      it "cannot raise max_redemptions_allowed on an admin invite via #update" do
+        sign_in(admin)
+
+        post "/invites.json", params: { is_admin: "true", skip_email: "true" }
+        expect(response.status).to eq(200)
+        invite = Invite.last
+
+        put "/invites/#{invite.id}", params: { max_redemptions_allowed: 10 }
+
+        expect(response.status).to eq(422)
+        expect(invite.reload.max_redemptions_allowed).to eq(1)
       end
 
       it "is rate limited" do
@@ -832,7 +874,21 @@ RSpec.describe InvitesController do
         expect(response.status).to eq(403)
       end
 
-      it "fails when combined with a topic, groups or a domain" do
+      it "creates a single-use moderator invite link when no email is given" do
+        sign_in(admin)
+
+        post "/invites.json", params: { is_moderator: "true", skip_email: "true" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["grants_moderator"]).to eq(true)
+
+        invite = Invite.last
+        expect(invite.moderator).to eq(true)
+        expect(invite.email).to eq(nil)
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "fails when combined with a topic or groups" do
         sign_in(admin)
         topic = Fabricate(:topic)
         group = Fabricate(:group)
@@ -851,9 +907,6 @@ RSpec.describe InvitesController do
                is_moderator: "true",
                group_ids: [group.id],
              }
-        expect(response.status).to eq(400)
-
-        post "/invites.json", params: { is_moderator: "true", domain: "example.com" }
         expect(response.status).to eq(400)
       end
     end

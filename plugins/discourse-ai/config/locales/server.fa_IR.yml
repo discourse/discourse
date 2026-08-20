@@ -24,6 +24,8 @@ fa_IR:
       formatted_excerpt: "گفتگوی هوش‌مصنوعی با %{llm_name}:\n %{excerpt}"
       title: "%{title} - گفتگوی هوش‌مصنوعی - %{site_name}"
     ai_bot:
+      read_post:
+        unknown_post: "نوشته"
       agents:
         dall_e3:
           name: "DALL-E 3"

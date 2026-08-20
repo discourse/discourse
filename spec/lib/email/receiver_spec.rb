@@ -932,8 +932,23 @@ RSpec.describe Email::Receiver do
       expect { process(:tl4_user) }.to change(Topic, :count)
     end
 
-    it "ignores by case-insensitive title" do
-      SiteSetting.ignore_by_title = "foo"
+    it "ignores by case-insensitive title (single)" do
+      SiteSetting.ignore_by_title = "[auto generated]"
+      expect { process(:auto_generated_subject) }.to_not change(Topic, :count)
+    end
+
+    it "does not treat ignore_by_title as a regex" do
+      SiteSetting.ignore_by_title = "[auto generated]"
+      expect { process(:ignored) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
+    end
+
+    it "ignores by case-insensitive title (multiple)" do
+      SiteSetting.ignore_by_title = "not_the_ignored_string|foo|not_the_other_ignored_string"
+      expect { process(:ignored) }.to_not change(Topic, :count)
+    end
+
+    it "ignores by case-insensitive title (regex)" do
+      SiteSetting.ignore_by_title_regex = "t[ah]is.is"
       expect { process(:ignored) }.to_not change(Topic, :count)
     end
 

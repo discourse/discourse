@@ -466,9 +466,7 @@ uk:
     max_redemptions_allowed_one: "для запрошень електронною поштою має бути 1."
     redemption_count_less_than_max: "має бути менше %{max_redemptions_allowed}."
     email_xor_domain: "Поля електронної пошти та домену не можна використовувати одночасно"
-    admin_invite_requires_email: "Запрошення адміністратора повинні бути надіслані на електронну адресу"
     admin_invite_requires_admin_inviter: "Тільки адміністратори можуть надсилати запрошення адміністраторам"
-    moderator_invite_requires_email: "Запрошення модератора повинні бути надіслані на електронну адресу"
     moderator_invite_requires_staff_inviter: "Тільки співробітники можуть створювати запрошення для модераторів"
     existing_user_success: "Запрошення активовано"
     email_invites_disabled: "Надсилання запрошень електронною поштою вимкнено"
@@ -1166,16 +1164,15 @@ uk:
     title: "Вхід по E-mail"
   email_login_code:
     invalid_code: "Цей код неправильний або термін його дії минув. Запросіть новий код і спробуйте ще раз."
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Програма DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Програма DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "невідомий оглядач"
     device:
       android: "Android Пристрій"
       chromebook: "Chrome OS"
@@ -1200,10 +1197,6 @@ uk:
       logged_in: "Ви увійшли"
       anonymous: "Анонімний"
       likely_crawler: "Ймовірні сканери"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Під час зміни адреси електронної пошти сталася помилка. Можливо, адреса вже використовується?"
     doesnt_exist: "Ця адреса е-пошти не пов’язана з вашим обліковим записом."
@@ -1712,6 +1705,9 @@ uk:
       description: "Країни, з яких найбільше переглядів сторінок вашого форуму відбувається у браузерах за вибраний період."
       labels:
         country_code: "Код країни"
+        count: "Відвідини"
+    top_entry_urls:
+      labels:
         count: "Відвідини"
     top_referrers_by_browser_pageviews:
       title: "Найкращі реферали"
@@ -2827,7 +2823,6 @@ uk:
     enable_new_checkbox_style: "Увімкнути перероблений стиль прапорців для прапорців FormKit."
     enable_new_post_reactions_menu: "Увімкніть оновлене меню вподобайок та реакцій публікацій із нескінченною прокруткою та звичним мобільним досвідом."
     enable_composer_redesign: "Увімкнути перероблений редактор текстів."
-    enable_new_composer_actions: "Увімкнути оновлене меню дій редактора та кнопку комбінованого збереження з перемикачами \"шепіт\", \"без підняття\" та \"не в списку\" поруч із дією збереження."
     prioritize_recently_used_tags: "Під час додавання тегів під час створення або редагування теми, відображайте теги, які учасник нещодавно використовував у своїх темах, у верхній частині списку, перед найпопулярнішими тегами форуму."
     experimental_impersonation_time_limit_minutes: "Через який час сеанс імітації автоматично завершується."
     page_loading_indicator: "Вибір індикатора завантаження, який з’являється під час навігації сторінкою в Discourse. «Спіннер» – це індикатор на всю сторінку. «Слайдер» — вузька смужка у верхній частині екрана."
@@ -4581,9 +4576,6 @@ uk:
     user_posted_pm_staged:
       title: "Користувач написав у PM"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Обліковий запис призупинено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис призупинено"
@@ -5851,6 +5843,11 @@ uk:
       group: "Користувачі, які не входять до вказаних груп, повинні мати відповіді, схвалені персоналом. Див. %{link}."
       new_topics_unless_trust_level: "Теми користувачів з низьким рівнем довіри повинні бути схвалені командою підтримки. Дивіться %{link}."
       fast_typer: "Новий користувач набрав свій перший допис підозріло швидко, схоже на поведінку бота або спамера. Дивіться %{link}."
+      fast_typer_time:
+        one: "%{count} секунда"
+        few: "%{count} секунди"
+        many: "%{count} секунд"
+        other: "%{count} секунд"
       auto_silence_regex: "Новий користувач, перший допис якого відповідає параметру %{link}."
       watched_word:
         one: "У цьому дописі міститься слово, що відстежується, позначене прапорцем: %{words}. Більше інформації на %{link} ."

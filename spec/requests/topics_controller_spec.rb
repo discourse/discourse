@@ -3029,6 +3029,16 @@ RSpec.describe TopicsController do
             expect(topic.reload.category).to eq(category)
           end
         end
+
+        it "can not clear the category when the guardian disallows the move" do
+          topic.update!(category:)
+          Guardian.any_instance.stubs(:can_move_topic_to_category?).returns(false)
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: nil }, as: :json
+
+          expect(response.status).to eq(403)
+          expect(topic.reload.category_id).to eq(category.id)
+        end
       end
     end
 
@@ -3085,6 +3095,49 @@ RSpec.describe TopicsController do
             }
 
         expect(response.status).to eq(422)
+      end
+
+      it "allows to remove the featured link" do
+        sign_in(trust_level_1)
+
+        tl1_topic = Fabricate(:topic, user: trust_level_1, featured_link: "https://discourse.org")
+        Fabricate(:post, user: post_author1, topic: tl1_topic)
+        put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json", params: { featured_link: nil }
+
+        expect(response.status).to eq(200)
+        expect(tl1_topic.reload.featured_link).to be_nil
+      end
+
+      it "removes the featured link when moving to a category that forbids them" do
+        sign_in(trust_level_1)
+
+        category = Fabricate(:category, topic_featured_link_allowed: false)
+        tl1_topic = Fabricate(:topic, user: trust_level_1, featured_link: "https://discourse.org")
+        Fabricate(:post, user: post_author1, topic: tl1_topic)
+        put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json",
+            params: {
+              category_id: category.id,
+              featured_link: nil,
+            }
+
+        expect(response.status).to eq(200)
+        expect(tl1_topic.reload.category_id).to eq(category.id)
+        expect(tl1_topic.featured_link).to be_nil
+      end
+
+      it "doesn't reject an edit that sends a blank featured link it cannot set" do
+        sign_in(trust_level_0)
+
+        tl0_topic = Fabricate(:topic, user: trust_level_0)
+        Fabricate(:post, user: post_author1, topic: tl0_topic)
+        put "/t/#{tl0_topic.slug}/#{tl0_topic.id}.json",
+            params: {
+              title: "A brand new title for this topic",
+              featured_link: nil,
+            }
+
+        expect(response.status).to eq(200)
+        expect(tl0_topic.reload.title).to eq("A brand new title for this topic")
       end
     end
   end

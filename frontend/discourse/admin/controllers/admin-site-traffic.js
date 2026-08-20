@@ -7,8 +7,6 @@ import {
   PERIOD_CUSTOM,
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
-import { countryName } from "discourse/admin/lib/format-country";
-import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
@@ -51,13 +49,8 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked network = null;
   @tracked browser = null;
   @tracked ip = null;
-  @tracked traffic = null;
-  @tracked loading = false;
-  @tracked fetchError = null;
 
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
-
-  #fetchId = 0;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -137,6 +130,14 @@ export default class AdminSiteTrafficController extends Controller {
     );
   }
 
+  get traffic() {
+    return this.model?.traffic ?? null;
+  }
+
+  get fetchError() {
+    return this.model?.fetchError ?? null;
+  }
+
   #customDate(value, edge) {
     if (this.safePeriod !== PERIOD_CUSTOM || !value) {
       return null;
@@ -144,73 +145,6 @@ export default class AdminSiteTrafficController extends Controller {
 
     const parsed = moment(value, "YYYY-MM-DD", true);
     return parsed.isValid() ? parsed[edge]("day").toDate() : null;
-  }
-
-  #requestParams() {
-    const params = {
-      start_date: moment(this.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.endDate).format("YYYY-MM-DD"),
-    };
-
-    for (const key of FILTER_KEYS) {
-      if (this[key] !== null) {
-        params[key] = this[key];
-      }
-    }
-
-    return params;
-  }
-
-  #localizeCountryLabels(traffic) {
-    const countries = traffic.dimensions?.countries ?? [];
-    const activeFilters = traffic.active_filters ?? [];
-
-    return {
-      ...traffic,
-      dimensions: {
-        ...traffic.dimensions,
-        countries: countries.map((row) => ({
-          ...row,
-          label: countryName(row.value),
-        })),
-      },
-      active_filters: activeFilters.map((filter) =>
-        filter.key === "country"
-          ? { ...filter, label: countryName(filter.value) }
-          : filter
-      ),
-    };
-  }
-
-  @action
-  async fetchTraffic() {
-    const fetchId = ++this.#fetchId;
-    this.loading = true;
-    this.fetchError = null;
-
-    try {
-      const traffic = await ajax(
-        "/admin/dashboard/site-traffic-explorer.json",
-        {
-          data: this.#requestParams(),
-        }
-      );
-
-      if (fetchId === this.#fetchId) {
-        this.traffic = this.#localizeCountryLabels(traffic);
-      }
-    } catch (error) {
-      if (fetchId === this.#fetchId) {
-        this.fetchError =
-          error.jqXHR?.responseJSON?.error_type === "traffic_query_timeout"
-            ? "timeout"
-            : "unexpected";
-      }
-    } finally {
-      if (fetchId === this.#fetchId) {
-        this.loading = false;
-      }
-    }
   }
 
   @action
@@ -257,16 +191,13 @@ export default class AdminSiteTrafficController extends Controller {
 
   @action
   resetState() {
-    this.#fetchId++;
+    this.model = null;
     this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
     for (const key of FILTER_KEYS) {
       this[key] = null;
     }
-    this.traffic = null;
-    this.loading = false;
-    this.fetchError = null;
   }
 
   #setTrafficTypes(trafficTypes) {

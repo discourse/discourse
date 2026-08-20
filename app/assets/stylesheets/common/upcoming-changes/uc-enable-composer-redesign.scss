@@ -43,6 +43,7 @@
   }
 
   .reply-area {
+    container-type: inline-size;
     padding: 0 !important;
   }
 
@@ -105,6 +106,12 @@
 
       .d-icon-tag {
         color: var(--primary-low-mid) !important;
+      }
+
+      .multi-select-header__selected-count {
+        @include viewport.from(sm) {
+          display: none;
+        }
       }
     }
 
@@ -200,6 +207,7 @@
   #reply-control .d-editor-textarea-wrapper {
     --composer-slide-easing: cubic-bezier(0.2, 0, 0, 1);
     border: 0;
+    border-radius: 0; // core overrule
 
     // padding and border-radius must animate in lockstep with margin,
     // otherwise the text counter-jumps when the focus state toggles
@@ -263,6 +271,10 @@
 
   .d-editor-input {
     padding-inline: var(--space-4) !important;
+
+    &:focus-visible {
+      outline: 0;
+    }
   }
 
   .wmd-controls:not(.toolbar-visible)
@@ -288,6 +300,7 @@
 
     .composer-fields {
       grid-area: fields;
+      min-width: 0;
 
       @include viewport.until(sm) {
         max-width: 100vw;
@@ -319,34 +332,44 @@
     align-items: center;
     flex-wrap: nowrap;
 
-    @include viewport.from(sm) {
-      padding: var(--space-2) var(--space-4);
-      border-top: 1px solid var(--primary-low);
+    @container (width < 600px) {
+      flex-direction: column;
     }
 
-    @include viewport.until(sm) {
-      flex-direction: column;
+    @container (width > 600px) {
+      border-top: 1px solid var(--primary-low);
+      padding: var(--space-2) var(--space-4);
     }
 
     &__toolbar {
       overflow: hidden;
-      flex-grow: 1;
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
 
-      @include viewport.until(sm) {
-        width: 100%;
-        padding-inline: var(--space-2);
-        box-sizing: border-box;
+      @container (width < 600px) {
+        padding: 0 var(--space-4);
         border-top: 1px solid var(--primary-low);
         border-bottom: 1px solid var(--primary-low);
+      }
+
+      @include viewport.until(sm) {
+        padding-inline: var(--space-2);
+        border-top: 1px solid var(--primary-low);
       }
     }
 
     .submit-panel {
       margin: 0 !important;
 
+      @container (width < 600px) {
+        padding: var(--space-2) var(--space-4);
+        align-self: end;
+      }
+
       @include viewport.until(sm) {
         width: 100%;
-        padding-inline: var(--space-2);
+        padding: var(--space-2) var(--space-2) 0; // parent has env safe area padding for bottom
         box-sizing: border-box;
 
         .save-or-cancel {

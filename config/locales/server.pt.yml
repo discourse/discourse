@@ -895,6 +895,9 @@ pt:
     top_countries_by_browser_pageviews:
       labels:
         count: "Visitas"
+    top_entry_urls:
+      labels:
+        count: "Visitas"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Visitas"
@@ -1801,9 +1804,6 @@ pt:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     digest:
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos tópicos"
@@ -2133,6 +2133,9 @@ pt:
       medium: "Médio"
       high: "Elevado"
     reasons:
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
       agree:

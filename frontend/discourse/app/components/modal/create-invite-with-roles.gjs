@@ -47,7 +47,7 @@ export default class CreateInviteWithRoles extends Component {
   @tracked screen = FORM;
   @tracked role;
   @tracked staffRole = "admin";
-  @tracked delivery;
+  @tracked delivery = "link";
   @tracked submitForcedDisabled = false;
   @tracked flashText;
   @tracked flashClass = "info";
@@ -113,7 +113,7 @@ export default class CreateInviteWithRoles extends Component {
   }
 
   get isEmailDelivery() {
-    return this.isAdminInvite || this.delivery === "email";
+    return this.delivery === "email";
   }
 
   get inviteCreated() {
@@ -224,6 +224,7 @@ export default class CreateInviteWithRoles extends Component {
   get adminFormData() {
     const data = {
       email: this.invite.email ?? "",
+      domain: this.invite.domain ?? "",
       description: this.invite.description ?? "",
       customMessage: this.invite.custom_message ?? "",
       // seeded from the untracked copy: reading the tracked property here would
@@ -419,7 +420,6 @@ export default class CreateInviteWithRoles extends Component {
   async onAdminFormSubmit(data) {
     const wasCreated = this.inviteCreated;
     const submitData = {
-      email: data.email?.trim(),
       description: data.description,
       custom_message: data.customMessage,
       expires_at: this.expiresAtFrom(data),
@@ -431,6 +431,16 @@ export default class CreateInviteWithRoles extends Component {
       } else {
         submitData.is_admin = true;
       }
+    }
+
+    if (this.delivery === "email") {
+      submitData.email = data.email?.trim();
+    } else {
+      // a cleared field arrives as null, and an undefined value would be
+      // dropped from the request, leaving the existing domain in place
+      submitData.domain = data.domain?.trim() ?? "";
+      submitData.max_redemptions_allowed = data.maxRedemptions;
+      submitData.skip_email = true;
     }
 
     await this.save(submitData, SUMMARY);
@@ -606,26 +616,85 @@ export default class CreateInviteWithRoles extends Component {
                 </form.Field>
               {{/unless}}
 
-              <form.Field
-                @name="email"
-                @type="input-email"
-                @title={{this.emailFieldLabel}}
-                @validation="required"
-                @validate={{this.validateEmail}}
-                @format="full"
-                as |field|
+              <form.ConditionalContent
+                @activeName={{this.delivery}}
+                @onChange={{this.setDelivery}}
+                as |conditional|
               >
-                <field.Control
-                  autofocus="autofocus"
-                  autocomplete="off"
-                  data-1p-ignore
-                  data-lpignore="true"
-                  disabled={{this.submitDisabled}}
-                  placeholder={{i18n
-                    "user.invited.invite_roles.email_placeholder"
-                  }}
-                />
-              </form.Field>
+                {{#unless this.inviteCreated}}
+                  <fieldset>
+                    <legend class="form-kit__fieldset-title">{{i18n
+                        "user.invited.invite_roles.invite_by"
+                      }}</legend>
+                    <conditional.Conditions as |Condition|>
+                      <Condition @name="link">{{i18n
+                          "user.invited.invite_roles.invite_by_link"
+                        }}</Condition>
+                      {{#if this.allowEmailInvites}}
+                        <Condition @name="email">{{i18n
+                            "user.invited.invite_roles.invite_by_email"
+                          }}</Condition>
+                      {{/if}}
+                    </conditional.Conditions>
+                  </fieldset>
+                {{/unless}}
+
+                <conditional.Contents as |Content|>
+                  <Content @name="link">
+                    <form.Field
+                      @name="domain"
+                      @type="input"
+                      @title={{i18n
+                        "user.invited.invite_roles.restrict_domain"
+                      }}
+                      @description={{i18n
+                        "user.invited.invite_roles.restrict_domain_help"
+                      }}
+                      @validate={{if
+                        (eq this.delivery "link")
+                        this.validateDomain
+                      }}
+                      @format="full"
+                      as |field|
+                    >
+                      <field.Control
+                        autofocus="autofocus"
+                        placeholder={{i18n
+                          "user.invited.invite_roles.domain_placeholder"
+                        }}
+                      />
+                    </form.Field>
+                  </Content>
+
+                  <Content @name="email">
+                    <form.Field
+                      @name="email"
+                      @type="input-email"
+                      @title={{this.emailFieldLabel}}
+                      @description={{i18n
+                        "user.invited.invite_roles.member_email_help"
+                      }}
+                      @validation={{if (eq this.delivery "email") "required"}}
+                      @validate={{if
+                        (eq this.delivery "email")
+                        this.validateEmail
+                      }}
+                      @format="full"
+                      @disabled={{this.inviteCreated}}
+                      as |field|
+                    >
+                      <field.Control
+                        autocomplete="off"
+                        data-1p-ignore
+                        data-lpignore="true"
+                        placeholder={{i18n
+                          "user.invited.invite_roles.email_placeholder"
+                        }}
+                      />
+                    </form.Field>
+                  </Content>
+                </conditional.Contents>
+              </form.ConditionalContent>
 
               {{#if this.showAdvanced}}
                 <form.Field

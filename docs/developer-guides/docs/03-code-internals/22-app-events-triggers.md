@@ -314,7 +314,7 @@ No arguments passed to this event.
 | 1        | objectArg1        | object   | True           | -           |
 | -        | objectArg1.postId | property | True           | -           |
 
-#### composer:div-resizing [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L55)
+#### composer:div-resizing [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L259)
 
 No arguments passed to this event.
 
@@ -414,11 +414,11 @@ No arguments passed to this event.
 
 </details>
 
-#### composer:resize-ended [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L402)
+#### composer:resize-ended [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L280)
 
 No arguments passed to this event.
 
-#### composer:resize-started [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L371)
+#### composer:resize-started [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L254)
 
 No arguments passed to this event.
 
@@ -432,7 +432,7 @@ No arguments passed to this event.
 
 No arguments passed to this event.
 
-##### /frontend/discourse/app/components/composer-container.gjs#72 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L72)
+##### /frontend/discourse/app/components/composer-container.gjs#296 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/composer-container.gjs#L296)
 
 No arguments passed to this event.
 

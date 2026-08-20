@@ -5,7 +5,7 @@ describe Jobs::DiscourseCalendar::DeleteExpiredEventPosts do
 
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.delete_expired_event_posts_after = 1 # hour
   end
 

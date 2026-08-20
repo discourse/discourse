@@ -4,7 +4,9 @@
 // reporting every other error in the file, so a broken declaration would pass
 // unnoticed. Negatives live in drag-and-drop-errors-test.gts.
 import { array, hash } from "@ember/helper";
-import DResizeHandles from "discourse/ui-kit/d-resize-handles";
+import DResizeHandles, {
+  type DResizeHandleDescriptor,
+} from "discourse/ui-kit/d-resize-handles";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
@@ -31,11 +33,7 @@ declare function alwaysAdopt(feedback: {
   source: unknown;
 }): boolean;
 
-declare const columnHandles: {
-  payload: number;
-  class?: string;
-  style?: string;
-}[];
+declare const columnHandles: DResizeHandleDescriptor<number>[];
 declare function onColumnResize(column: number): void;
 declare function onCompassResize(
   direction: "n" | "ne" | "e" | "se" | "s" | "sw" | "w" | "nw"
@@ -85,7 +83,7 @@ const Positives = <template>
       accepts=acceptedTypes
       acceptsSelf=false
       position="inside"
-      axis="x"
+      axis="horizontal"
       indicator=false
       onDragEnter=onDropTargetEvent
       onDrag=onDropTargetEvent
@@ -116,7 +114,9 @@ const Positives = <template>
 
   {{! An external target is a slot rather than a destination once it takes a
       position, and speaks the same vocabulary the element target does }}
-  <li {{dDragAndDropExternalTarget accepts="urls" axis="y" onDrop=noop}}></li>
+  <li
+    {{dDragAndDropExternalTarget accepts="urls" axis="vertical" onDrop=noop}}
+  ></li>
   <li
     {{dDragAndDropExternalTarget accepts="urls" position="inside" onDrop=noop}}
   ></li>
@@ -142,7 +142,7 @@ const Positives = <template>
     @min={{size}}
     @max={{size}}
     @label="Resize"
-    @observe={{box}}
+    @measure={{box}}
     @onResizeStart={{noop}}
     class="my-block__handle"
   />

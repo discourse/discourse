@@ -560,16 +560,15 @@ ca:
     success_unapproved: "Heu canviat la contrasenya satisfactòriament."
   email_login:
     title: "Inici de sessió de correu"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador desconegut"
     device:
       android: "Dispositiu Android"
       ipad: "iPad"
@@ -590,10 +589,6 @@ ca:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anònim"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."
@@ -985,6 +980,9 @@ ca:
         num_topics: "Temes"
       description: "Usuaris llistats per nombre de clics en els enllaços que han compartit."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visites"
+    top_entry_urls:
       labels:
         count: "Visites"
     top_referrers_by_browser_pageviews:
@@ -2319,9 +2317,6 @@ ca:
     user_posted_pm_staged:
       title: "L'usuari ha publicat un missatge personal (MP) fictici"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
@@ -2823,6 +2818,10 @@ ca:
     user_claimed: "Aquest element ha estat reclamat per un altre usuari."
     missing_version: "Heu de proporcionar un paràmetre de versió"
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
+    reasons:
+      fast_typer_time:
+        one: "%{count} segon"
+        other: "%{count} segons"
     actions:
       agree:
         title: "Sí"

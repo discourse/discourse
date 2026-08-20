@@ -13,9 +13,6 @@ et:
             topic_id:
               label: Teema ID
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "Vestlus"
       disable_holiday: "Keela"
       enable_holiday: "Luba"
       date: "Kuupäev"
@@ -48,6 +45,7 @@ et:
             private:
               title: "Privaatne"
       composer:
+        url_placeholder: "Lisa URL"
         reminder:
           units:
             minutes:
@@ -80,6 +78,12 @@ et:
             last: "viimane"
         attendance:
           none: "Pole"
+        location:
+          label: "Asukoht"
+        url:
+          label: "URL"
+          placeholder: "Valikuline"
+          add: "Lisa URL"
         description:
           label: "Kirjeldus"
         event_type:

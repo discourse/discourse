@@ -34,6 +34,10 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "Aina"
+        error: "Hitilafu"
+        response: "Mwitikio"
       ai_tool_approval:
         loading: "Inaandaa...."
         tool: "Kitendo"
@@ -100,6 +104,34 @@ sw:
         username: "Jina la mtumiaji"
         total_requests: "Jumla ya Maombi"
         total: "Jumla"
+      logs:
+        short_title: "Batli"
+        apply: "Tumia"
+        successful: "Fanikiwa"
+        failed: "Kushindwa"
+        unknown: "Haijulikani"
+        topic_id: "Utambulisho wa Mada"
+        post_id: "Utambulisho wa Ujumbe"
+        time: "Muda"
+        when: "Lini"
+        request: "Ombi"
+        provider: "Mkimu"
+        user: "Mtumiaji"
+        context: "Muktadha"
+        topic: "Mada"
+        post: "Ujumbe"
+        actions: "Vitendo"
+        filters:
+          title: "Inachujwa"
+        periods:
+          custom: "Binafsi"
+        detail:
+          request: "Ombi"
+          response: "Mwitikio"
+          context: "Muktadha"
+        retention:
+          summary_stage: "Muhtasari"
+          save: "Hifadhi"
       ai_agent:
         name: "Jina"
         edit: "Hariri"

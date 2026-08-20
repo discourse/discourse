@@ -285,5 +285,68 @@ RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
         have_attributes(sessions: 2, bounced: 2, engaged_seconds_total: 10),
       )
     end
+
+    it "records the likely crawler share of sessions, bounces, and engaged seconds" do
+      crawler_event =
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 10, 9), score: 90)
+      Fabricate(
+        :browser_pageview_session_engagement,
+        session_id: crawler_event.session_id,
+        engaged_seconds: 3,
+      )
+
+      human_event =
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 11, 10), score: 10)
+      Fabricate(
+        :browser_pageview_session_engagement,
+        session_id: human_event.session_id,
+        engaged_seconds: 40,
+      )
+
+      described_class.aggregate(start_date:, end_date:)
+
+      expect(described_class.all).to contain_exactly(
+        have_attributes(
+          date: Date.new(2026, 6, 10),
+          sessions: 1,
+          bounced: 1,
+          engaged_seconds_total: 3,
+          likely_crawler_sessions: 1,
+          likely_crawler_bounced: 1,
+          likely_crawler_engaged_seconds_total: 3,
+        ),
+        have_attributes(
+          date: Date.new(2026, 6, 11),
+          sessions: 1,
+          bounced: 0,
+          engaged_seconds_total: 40,
+          likely_crawler_sessions: 0,
+          likely_crawler_bounced: 0,
+          likely_crawler_engaged_seconds_total: 0,
+        ),
+      )
+    end
+
+    it "treats a session as a likely crawler when any of its pageviews scores above the threshold" do
+      session_id = SecureRandom.hex(16)
+      Fabricate(
+        :browser_pageview_event,
+        session_id: session_id,
+        created_at: Time.utc(2026, 6, 10, 9),
+        score: 10,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        session_id: session_id,
+        created_at: Time.utc(2026, 6, 10, 10),
+        score: 90,
+      )
+
+      described_class.aggregate(start_date:, end_date:)
+
+      expect(described_class.all).to contain_exactly(
+        have_attributes(sessions: 1, likely_crawler_sessions: 1),
+      )
+    end
   end
 end

@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { assert } from "@ember/debug";
 import { fn, hash } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
@@ -8,6 +9,7 @@ import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import { horizontalViewportInset } from "discourse/float-kit/lib/update-position";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
+import FloatKitTabOrderInline from "discourse/float-kit/modifiers/tab-order-inline";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
@@ -32,6 +34,17 @@ interface DFloatBodySignature {
 
     /** Whether to trap Tab focus within the content. */
     trapTab?: boolean;
+
+    /**
+     * Whether the content should take part in the tab sequence as if it were rendered inline
+     * after the trigger, rather than at the portal's position in the document: Tab leads into its
+     * controls from the trigger, and off the end of them it dismisses the float and continues
+     * from the trigger.
+     *
+     * The non-containing alternative to `trapTab`, for a float that is dismissable but whose
+     * content holds focus. See `FloatKitTabOrderInline`.
+     */
+    inlineTabOrder?: boolean;
 
     /**
      * The element to render into. Some callers forward this even though the body
@@ -140,6 +153,22 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
     return this.args.role === "none" || this.args.role === "presentation";
   }
 
+  /**
+   * Whether to repair the tab order, asserting first that containment was not ALSO asked for.
+   *
+   * The two are alternatives, and the conflict is otherwise silent and one-sided: `dTrapTab` is
+   * applied first below, so its `preventDefault` lands before the tab-order handler runs, and the
+   * float traps focus while its author believes they configured the opposite.
+   */
+  get inlineTabOrder() {
+    assert(
+      "float-kit: `trapTab` and `inlineTabOrder` are alternatives — the first contains focus, the second deliberately lets it leave. Setting both keeps the trap and silently ignores the tab-order repair.",
+      !(this.args.trapTab && this.args.inlineTabOrder)
+    );
+
+    return this.args.inlineTabOrder;
+  }
+
   get supportsCloseOnClickOutside() {
     return this.options.closeOnClickOutside;
   }
@@ -195,6 +224,14 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
         {{this.trapInteractionPropagation}}
         {{(if @trapTab (modifier dTrapTab autofocus=this.options.autofocus))}}
+        {{(if
+          this.inlineTabOrder
+          (modifier
+            FloatKitTabOrderInline
+            @instance.triggerElement
+            (fn @instance.close (hash focusTrigger=false))
+          )
+        )}}
         {{(if
           this.supportsCloseOnClickOutside
           (modifier

@@ -177,7 +177,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     )
   end
 
-  context "with top countries and top referrers cards" do
+  context "with top countries, top referrers, and top entry URLs cards" do
     let(:browser_pageview_source) { BrowserPageviewEvent::SOURCE_BEACON }
 
     before do
@@ -199,6 +199,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(traffic).to have_no_top_countries_card
       expect(traffic).to have_no_top_referrers_card
+      expect(traffic).to have_no_top_entry_urls_card
       expect(traffic).to have_no_metric("Direct traffic")
     end
 
@@ -253,9 +254,9 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(traffic).to have_top_country_rows(
         [
-          { country: "DE", percent: 70 },
-          { country: "US", percent: 20 },
-          { country: "GB", percent: 10 },
+          { country: "DE", name: "Germany", percent: 70 },
+          { country: "US", name: "United States", percent: 20 },
+          { country: "GB", name: "United Kingdom", percent: 10 },
         ],
       )
       expect(traffic).to have_top_referrer_rows(
@@ -273,15 +274,48 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       )
     end
 
-    it "shows an empty state in both cards but keeps the headers as drill-down links when no events qualify",
+    it "lets admins identify the URLs that started the most browser entries in the selected period",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      dashboard.visit
+      {
+        "/t/viral-topic/1" => 5,
+        "/associate/secret-token" => 4,
+        "/categories" => 3,
+        "/email/unsubscribe/secret-key" => 2,
+        "/faq" => 1,
+      }.each do |entry_url, count|
+        Fabricate(:browser_pageview_entry_url_daily_rollup, date: "2026-05-12", entry_url:, count:)
+      end
+
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-12", end_date: "2026-05-12")
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_top_entry_url_rows(
+        [
+          { path: "/t/viral-topic/1", percent: 33, count: 5 },
+          { path: "/associate/secret-token", percent: 27, count: 4 },
+          { path: "/categories", percent: 20, count: 3 },
+          { path: "/email/unsubscribe/secret-key", percent: 13, count: 2 },
+          { path: "/faq", percent: 7, count: 1 },
+        ],
+      )
+
+      traffic.click_top_entry_urls_drilldown
+      expect(page).to have_current_path(
+        "/admin/reports/top_entry_urls?end_date=2026-05-12&start_date=2026-05-12",
+      )
+    end
+
+    it "shows empty states but keeps the report headers as drill-down links when no events qualify",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-02", end_date: "2026-05-14")
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_countries_empty_state
       expect(traffic).to have_top_referrers_empty_state
+      expect(traffic).to have_top_entry_urls_empty_state
       expect(traffic).to have_top_referrers_drilldown
       expect(traffic).to have_top_countries_drilldown
+      expect(traffic).to have_top_entry_urls_drilldown
       expect(traffic).to have_no_metric("Direct traffic")
     end
 

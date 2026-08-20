@@ -105,6 +105,7 @@ en:
       edit: "Edit"
       save: "Save"
       cancel: "Cancel"
+      node_name_taken: "Another node already uses this name"
       more_options: "More options"
       publish: "Publish"
       discard_changes: "Discard changes"
@@ -705,6 +706,8 @@ en:
         add_field: "Add field"
         remove_assignment: "Remove %{name}"
         remove_item: "Remove item"
+        move_item_up: "Move item %{position} up"
+        move_item_down: "Move item %{position} down"
         dynamic_hint: "Must resolve to %{value}."
         assignment_types:
           string: "String"

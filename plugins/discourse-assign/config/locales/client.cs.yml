@@ -193,9 +193,22 @@ cs:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Přiděleno"
+        "trigger:unassigned": "Nepřiděleno"
       assign_topic:
+        resource: "Zdroj"
+        resources:
+          topic: "Témata"
+          post: "Příspěvek"
         operations:
           assign: "Přidělit"
           unassign: "Odebrat přidělení"
         topic_id: "ID tématu"
+        post_id: "ID příspěvku"
+        assignee: "Komu"
+      check_assignment:
+        target_types:
+          topic: "Témata"
+          post: "Příspěvek"
+        topic_id: "ID tématu"
+        post_id: "ID příspěvku"
         assignee: "Komu"

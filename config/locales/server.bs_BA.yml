@@ -565,6 +565,9 @@ bs_BA:
     top_countries_by_browser_pageviews:
       labels:
         count: "Visits"
+    top_entry_urls:
+      labels:
+        count: "Visits"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Visits"

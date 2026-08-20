@@ -11,6 +11,8 @@ sr:
         image_generation_custom:
           name: "Posebna"
     ai_bot:
+      read_post:
+        unknown_post: "post"
       tool_summary:
         search: "Pretraži"
         time: "Vreme"

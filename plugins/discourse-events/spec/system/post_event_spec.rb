@@ -11,7 +11,7 @@ describe "Post event" do
   let(:bulk_invite_modal_page) { PageObjects::Pages::DiscourseCalendar::BulkInviteModal.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.discourse_post_event_allowed_custom_fields = "custom"
     sign_in(admin)
@@ -30,7 +30,8 @@ describe "Post event" do
       post_event_form_page.fill_location(location)
       post_event_form_page.submit
 
-      expect(post_event_page).to have_location(location)
+      # the scheme stays on the link but is kept off the screen
+      expect(post_event_page).to have_location("123 Main St, Brisbane, Australia example.com")
       expect(page).to have_css(".event-location a[href='http://example.com']")
     end
   end

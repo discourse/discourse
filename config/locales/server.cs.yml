@@ -1098,16 +1098,15 @@ cs:
   email_login:
     invalid_token: 'Jejda! Odkaz, který jste použili, již nefunguje. Nyní se můžete <a href="%{base_url}/login">Přihlásit</a> . Pokud jste zapomněli heslo, můžete <a href="%{base_url}/password-reset">požádat o odkaz</a> pro jeho obnovení.'
     title: "Přihlášení e-mailem"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Aplikace DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Aplikace DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "neznámý prohlížeč"
     device:
       android: "Zařízení Android"
       chromebook: "Chrome OS"
@@ -1130,10 +1129,6 @@ cs:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonymní"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
     doesnt_exist: "Tato e-mailová adresa není spojena s vaším účtem."
@@ -1595,6 +1590,9 @@ cs:
         num_topics: "Témata"
       description: "Uživatelé uvedení podle počtu kliknutí na odkazy, které sdíleli."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Návštěv"
+    top_entry_urls:
       labels:
         count: "Návštěv"
     top_referrers_by_browser_pageviews:
@@ -4377,6 +4375,11 @@ cs:
       group: "Uživatelé, kteří nejsou v uvedených skupinách, musí mít odpovědi schválené redakcí. Viz %{link}."
       new_topics_unless_trust_level: "Uživatelé s nízkou úrovní důvěry musí mít témata schválená redakcí. Viz %{link}."
       fast_typer: "Nový uživatel napsal svůj první příspěvek podezřele rychle, podezření na chování bota nebo spammera. Viz %{link}."
+      fast_typer_time:
+        one: "%{count} vteřinu"
+        few: "%{count} vteřiny"
+        many: "%{count} vteřin"
+        other: "%{count} vteřin"
       auto_silence_regex: "Nový uživatel, jehož první příspěvek odpovídá nastavení %{link} ."
       watched_word:
         one: "Tento příspěvek obsahoval sledované slovo, označené slovo je: %{words}. Více informací naleznete v %{link} ."

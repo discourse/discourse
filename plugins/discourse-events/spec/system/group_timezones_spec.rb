@@ -15,7 +15,7 @@ describe "Group timezones feature" do
 
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
   end
 
   let(:post) { create_post(raw: <<~RAW) }

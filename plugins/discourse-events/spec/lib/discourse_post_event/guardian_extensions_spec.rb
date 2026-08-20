@@ -19,7 +19,7 @@ RSpec.describe DiscoursePostEvent::GuardianExtensions do
   let(:guardian) { user.guardian }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.discourse_post_event_allowed_on_groups = allowed_group.id
   end

@@ -7,7 +7,7 @@ import { TIME_ZONE_TO_REGION } from "../../lib/regions";
 
 export default class Region extends Component {
   static shouldRender(args, { siteSettings }) {
-    return siteSettings.calendar_enabled;
+    return siteSettings.discourse_events_enabled;
   }
 
   @action

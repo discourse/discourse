@@ -4,6 +4,7 @@ import type Owner from "@ember/owner";
 import { cancel, type Timer } from "@ember/runloop";
 import Service from "@ember/service";
 import discourseLater from "discourse/lib/later";
+import type { DragMonitorEvent } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 
 /** Dwell (ms) the cursor must rest on a control before its target is revealed. */
 const REVEAL_DELAY_MS = 300;
@@ -79,23 +80,7 @@ export default class WireframeDragDwellService extends Service {
    * @param event - Drag-monitor event containing the current pointer location.
    */
   @action
-  handleDrag({
-    location,
-  }: {
-    /** Current drag-monitor location, when pointer data is available. */
-    location?: {
-      /** Most recent pointer snapshot. */
-      current?: {
-        /** Pointer coordinates supplied by the drag monitor. */
-        input?: {
-          /** Horizontal viewport coordinate of the drag pointer. */
-          clientX: number;
-          /** Vertical viewport coordinate of the drag pointer. */
-          clientY: number;
-        };
-      };
-    };
-  }): void {
+  handleDrag({ location }: DragMonitorEvent): void {
     const input = location?.current?.input;
     if (!input) {
       return;

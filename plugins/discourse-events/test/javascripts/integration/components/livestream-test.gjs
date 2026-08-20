@@ -6,7 +6,6 @@ import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import Livestream from "../../discourse/components/discourse-post-event/livestream";
-import ZoomMeetingSession from "../../discourse/lib/zoom-meeting-session";
 
 const ZOOM_URL = "https://us06web.zoom.us/j/123456789?pwd=secret";
 const ZOOM_ENTRY_SELECTOR = ".discourse-calendar-livestream-zoom-entry";
@@ -117,7 +116,7 @@ module(
           .get(() => ({ providerName: "youtube", id: "dQw4w9WgXcQ" }));
 
         withPluginApi((api) => {
-          preventCloak = sinon.stub(api, "preventCloak");
+          preventCloak = sinon.stub(Object.getPrototypeOf(api), "preventCloak");
         });
       });
 
@@ -152,52 +151,6 @@ module(
         assert.false(
           preventCloak.called,
           "no post to keep rendered, e.g. in the calendar or onebox preview"
-        );
-      });
-    });
-
-    module("with a Zoom livestream", function (nestedHooks) {
-      let preventCloak;
-
-      nestedHooks.beforeEach(function () {
-        const owner = getOwner(this);
-        owner.unregister("service:discourse-post-event-api");
-        owner.register(
-          "service:discourse-post-event-api",
-          { joinEvent: () => Promise.resolve() },
-          { instantiate: false }
-        );
-
-        this.event.id = 7;
-        this.event.currentlyWithinEventTimeframe = true;
-        this.event.canUpdateAttendance = false;
-
-        sinon.stub(ZoomMeetingSession.prototype, "performJoin").resolves();
-
-        withPluginApi((api) => {
-          preventCloak = sinon.stub(api, "preventCloak");
-        });
-      });
-
-      test("keeps the post rendered once the webinar has joined", async function (assert) {
-        this.post = { id: 42 };
-
-        await render(
-          <template>
-            <Livestream @event={{this.event}} @post={{this.post}} />
-          </template>
-        );
-
-        assert.false(
-          preventCloak.called,
-          "cloaking is still allowed before the user joins"
-        );
-
-        await click(".discourse-calendar-livestream-zoom-entry .btn-primary");
-
-        assert.true(
-          preventCloak.calledWith(42),
-          "prevents the post holding the Zoom session from being cloaked"
         );
       });
     });

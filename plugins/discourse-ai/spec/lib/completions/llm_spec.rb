@@ -162,7 +162,36 @@ RSpec.describe DiscourseAi::Completions::Llm do
         expect { llm.generate("Hello", user:) }.to raise_error(
           DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
         )
-        expect(AiApiAuditLog.last).to have_attributes(response_status: 401, response_tokens: 0)
+        expect(AiApiAuditLog.last).to have_attributes(
+          response_status: 401,
+          response_tokens: 0,
+          time_to_first_token_msecs: nil,
+        )
+      end
+
+      it "records time to the complete response for non-streaming requests" do
+        DiscourseAi::Completions::Endpoints::Base
+          .any_instance
+          .stubs(:monotonic_milliseconds)
+          .returns(1_000, 1_125)
+        stub_response(body: success_body(content: "Hello"))
+
+        expect(llm.generate("Hello", user:)).to eq("Hello")
+        expect(AiApiAuditLog.last.time_to_first_token_msecs).to eq(125)
+      end
+
+      it "records time to the first emitted partial for streaming requests" do
+        DiscourseAi::Completions::Endpoints::Base
+          .any_instance
+          .stubs(:monotonic_milliseconds)
+          .returns(1_000, 1_075)
+        stub_response(body: streaming_body(content: "Hello"))
+
+        response = +""
+        llm.generate("Hello", user:) { |partial| response << partial }
+
+        expect(response).to eq("Hello")
+        expect(AiApiAuditLog.last.time_to_first_token_msecs).to eq(75)
       end
 
       it "creates usage stats" do
@@ -351,6 +380,10 @@ RSpec.describe DiscourseAi::Completions::Llm do
       end
 
       it "retries streaming responses after rate limits" do
+        DiscourseAi::Completions::Endpoints::Base
+          .any_instance
+          .stubs(:monotonic_milliseconds)
+          .returns(1_000, 3_500)
         request =
           WebMock.stub_request(:post, model.url).to_return(
             { status: 429, body: "rate limited" },
@@ -365,6 +398,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
         expect(AiApiAuditLog.last.request_attempts).to eq(
           [{ "status" => 429, "delay_ms" => 0 }, { "status" => 200, "delay_ms" => 2000 }],
         )
+        expect(AiApiAuditLog.last.time_to_first_token_msecs).to eq(2500)
       end
 
       it "does not retry streaming responses after output has started" do

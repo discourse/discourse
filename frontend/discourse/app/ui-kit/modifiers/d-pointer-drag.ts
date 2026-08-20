@@ -1,10 +1,53 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import ElementClassLease from "discourse/lib/element-class-lease";
 
-// Suppressing every browser touch gesture suits a small handle, which is what
-// most consumers of this are.
-const DEFAULT_TOUCH_ACTION = "none";
+/**
+ * The `touch-action` tokens `d-pointer-drag.scss` has a rule for. A token
+ * without one leaves the element at `auto`, so the two must move together.
+ */
+export type TouchActionToken =
+  | "none"
+  | "pan-x"
+  | "pan-y"
+  | "pinch-zoom"
+  | "manipulation";
+
+/**
+ * Suppressing every browser touch gesture suits a small handle, which is what
+ * most consumers of this are.
+ */
+const DEFAULT_TOUCH_ACTION: TouchActionToken = "none";
+
+/** A point in client coordinates. */
+type Point = Readonly<{ x: number; y: number }>;
+
+/**
+ * Where the gesture is, reported alongside every callback's event.
+ *
+ * A snapshot, not a live view. A fresh one is built per dispatch, so a consumer
+ * that stores it keeps the numbers it was given.
+ */
+export interface DPointerDragInfo {
+  /** Where the press landed. */
+  readonly origin: Point;
+
+  /** Where the pointer is now. */
+  readonly current: Point;
+
+  /** How far the pointer has travelled since the press. */
+  readonly delta: Point;
+
+  /**
+   * Whether `onDrag` has fired at least once for THIS gesture. It separates a
+   * drag from a click that landed on the handle.
+   *
+   * This is not the same as passing `threshold`. With no threshold a gesture can
+   * report from the press onwards, but it may still have reported nothing.
+   */
+  readonly moved: boolean;
+}
 
 interface DPointerDragSignature {
   /** The element the gesture is bound to. */
@@ -12,27 +55,34 @@ interface DPointerDragSignature {
   Args: {
     Named: {
       /**
-       * Capture origin state here. Return `false` to ABORT the gesture (e.g. an
-       * anchor isn't resolvable); any other return starts it. An exception thrown
-       * here is rethrown, having released the pointer capture and started no
-       * gesture.
+       * Return `false` to ABORT the gesture, for example when an anchor cannot
+       * be resolved. Any other return starts it. An exception here is rethrown
+       * after the pointer capture is released, and no gesture starts.
        */
-      onDragStart?: (event: PointerEvent) => boolean | void;
+      onDragStart?: (
+        event: PointerEvent,
+        info: DPointerDragInfo
+      ) => boolean | void;
 
       /**
        * Compute and preview the new value. Only fires during an active gesture,
        * and only once `threshold` has been exceeded.
        */
-      onDrag?: (event: PointerEvent) => void;
+      onDrag?: (event: PointerEvent, info: DPointerDragInfo) => void;
 
       /**
        * Compute and commit the new value. Runs BEFORE the pointer capture is
-       * released.
+       * released. Fires for any release on this element, including one that never
+       * reached `threshold` and saw no `onDrag`. Use `info.moved` to tell them apart.
        */
-      onDragEnd?: (event: PointerEvent) => void;
+      onDragEnd?: (event: PointerEvent, info: DPointerDragInfo) => void;
 
-      /** Release any preview without committing. */
-      onDragCancel?: (event: PointerEvent) => void;
+      /**
+       * Release any preview without committing. Neither this nor `onDragEnd`
+       * runs when the element is destroyed mid-gesture; see the modifier's own
+       * docs for what to do with state that outlives the handle.
+       */
+      onDragCancel?: (event: PointerEvent, info: DPointerDragInfo) => void;
 
       /**
        * A class toggled on the element for the gesture's duration. A single
@@ -60,9 +110,9 @@ interface DPointerDragSignature {
        * Pixels of travel, measured as a straight line from the press origin, that
        * `onDrag` waits for before it starts firing. Reaching the distance is
        * enough; it does not have to be exceeded. Suppresses the jitter of a click
-       * that was never meant to be a drag. Defaults to `0`. Read when the gesture
-       * starts: raising it mid-gesture will not re-suppress movement, because the
-       * latch only opens once.
+       * that was never meant to be a drag. Defaults to `0`. Read live until the
+       * distance is reached; only the latch is permanent, so raising it after
+       * movement has engaged will not re-suppress a gesture already under way.
        */
       threshold?: number;
 
@@ -89,11 +139,14 @@ interface DPointerDragSignature {
        * `app/assets/stylesheets/common/ui-kit/d-pointer-drag.scss`. Defaults to
        * `"none"`, which suits a small handle. Anything large enough that a user
        * might start a scroll or a pinch-zoom on it wants `"pan-x"`, `"pan-y"`,
-       * `"pinch-zoom"` or `"manipulation"` instead. Only those tokens are mapped;
-       * an unrecognised value leaves `touch-action` at its inherited value, so add
-       * a rule to that stylesheet rather than inventing a token here.
+       * `"pinch-zoom"` or `"manipulation"` instead.
+       *
+       * The union is closed against that stylesheet, so widen it only alongside
+       * a rule there: `touch-action` is not inherited, and a token with no rule
+       * behind it leaves the element at `auto`, where the browser claims the
+       * touch as a scroll and the gesture dies through `pointercancel`.
        */
-      touchAction?: string;
+      touchAction?: TouchActionToken;
     };
     Positional: [];
   };
@@ -112,60 +165,20 @@ export type DPointerDragArgs = DPointerDragSignature["Args"]["Named"];
  * Keyed per pointer rather than kept as a single current owner, because two
  * gestures driven by two different pointers are both legitimately live.
  *
- * A pointer ID is a number, so this cannot be a `WeakMap`, and each value closes
- * over its element: an entry left behind holds a detached element alive, and a
+ * A pointer ID is a number, so this cannot be a `WeakMap`, and each entry holds
+ * its element: an entry left behind holds a detached element alive, and a
  * later press reusing that ID would call into a registration that no longer
  * exists. Removing an entry the moment its gesture ends is therefore load-bearing
  * rather than housekeeping.
- */
-const pointerOwners = new Map<number, (event: PointerEvent) => void>();
-
-/**
- * How many live gestures asked for each body class. Counted rather than toggled,
- * because two gestures driven by two pointers can want the same mark at once and
- * the first to end must not take it away from the second.
- */
-const bodyClassHolders = new Map<string, number>();
-
-/**
- * Marks `document.body` for the duration of a gesture.
  *
- * The case this exists for is the cursor. Not every engine keeps the cursor of the
- * element a drag began on: some suppress cursor updates while a button is held,
- * others re-resolve it against whatever the pointer is over, so the cursor changes
- * mid-gesture as it leaves the handle. A page-level rule is the only way to state
- * an intent that outlives the element's own bounds.
- *
- * @param className - The class to hold.
+ * The element is held beside the supersede callback so a claim rejected in the
+ * same dispatch — a veto, a throw — can hand the pending capture it displaced
+ * back to the entry's owner rather than releasing it into nothing.
  */
-function holdBodyClass(className: string) {
-  const held = bodyClassHolders.get(className) ?? 0;
-  if (held === 0) {
-    // Before the count, so a token the DOM rejects leaves nothing to give back.
-    document.body.classList.add(className);
-  }
-  bodyClassHolders.set(className, held + 1);
-}
-
-/**
- * Gives up one hold on a body class, removing it once nothing holds it.
- *
- * @param className - The class to release.
- */
-function releaseBodyClass(className: string) {
-  const held = bodyClassHolders.get(className) ?? 0;
-  if (held > 1) {
-    bodyClassHolders.set(className, held - 1);
-    return;
-  }
-
-  bodyClassHolders.delete(className);
-  try {
-    document.body.classList.remove(className);
-  } catch {
-    // Teardown runs through here and must not be abandoned part-way.
-  }
-}
+const pointerOwners = new Map<
+  number,
+  { element: HTMLElement; supersede: (event: PointerEvent) => void }
+>();
 
 /**
  * Drops all pointer-ownership bookkeeping. For tests only: a consumer of
@@ -174,10 +187,6 @@ function releaseBodyClass(className: string) {
  */
 export function resetPointerDragForTesting() {
   pointerOwners.clear();
-  for (const className of bodyClassHolders.keys()) {
-    document.body.classList.remove(className);
-  }
-  bodyClassHolders.clear();
 }
 
 /**
@@ -189,7 +198,7 @@ export function resetPointerDragForTesting() {
  * @param element - The element carrying the gesture.
  * @param touchAction - A token the stylesheet maps; see its docs.
  */
-function syncTouchAction(element: HTMLElement, touchAction?: string) {
+function syncTouchAction(element: HTMLElement, touchAction?: TouchActionToken) {
   element.setAttribute(
     "data-pointer-drag",
     touchAction ?? DEFAULT_TOUCH_ACTION
@@ -201,12 +210,11 @@ function syncTouchAction(element: HTMLElement, touchAction?: string) {
  * class where the user presses, drags, and a value changes continuously with the
  * pointer (resize handles, sliders, splitters, knobs). Used by the
  * default-exported modifier below, and exported so a consumer can install the
- * gesture imperatively when a template modifier doesn't fit, which is how
- * `dResizeEdge` layers its splitter semantics on top of one shared engine.
+ * gesture imperatively when a template modifier does not fit.
  *
- * This is NOT drag-and-drop: there is no drop target and no transfer payload, so
- * the `d-drag-and-drop-*` modifiers don't fit. The `onDrag*` callback names
- * describe this gesture's lifecycle (start, move, end, cancel), not a transfer.
+ * This is not a transfer operation: there is no drop target or payload. The
+ * `onDrag*` callback names describe this gesture's lifecycle (start, move, end,
+ * cancel).
  *
  * Unified Pointer Events with `setPointerCapture` cover mouse, touch and pen
  * without per-input branching. Only the primary button starts a gesture, and
@@ -235,33 +243,42 @@ export function registerPointerDrag(
   // the rest of the gesture: returning inside the threshold must not start
   // suppressing movement again mid-drag.
   let engaged = false;
+  // Separate from `engaged`, which is already true at the press when no
+  // threshold is set.
+  let moved = false;
   // The class actually added at the start of this gesture. `draggingClass` can
   // change between gestures, so the value really on the element is snapshotted
   // rather than re-read when it is time to remove it.
   let appliedClass: string | null = null;
-  // Snapshotted for the same reason, and separately, because this one is a hold
-  // on shared state that has to be given back exactly once.
-  let heldBodyClass: string | null = null;
+  let bodyClassLease: ElementClassLease | null = null;
   // Set by the cleanup below. A consumer can destroy its own registration from
   // inside `onDragStart`, and the rest of that dispatch still runs.
   let tornDown = false;
 
+  const dragInfo = (event: PointerEvent): DPointerDragInfo => ({
+    origin: { x: originX, y: originY },
+    current: { x: event.clientX, y: event.clientY },
+    delta: { x: event.clientX - originX, y: event.clientY - originY },
+    moved,
+  });
+
   const finish = () => {
     const finishedPointer = pointerId;
     const classToRemove = appliedClass;
-    const bodyClassToRelease = heldBodyClass;
+    const finishedBodyClassLease = bodyClassLease;
 
     // Reset before touching the DOM: either call below can throw, and leaving
     // `pointerId` set would keep the gesture in flight forever.
     pointerId = null;
     engaged = false;
+    moved = false;
     appliedClass = null;
-    heldBodyClass = null;
+    bodyClassLease = null;
 
     if (finishedPointer !== null) {
       // Only while the claim is still ours: a later claimant owns the entry from
       // the moment it supersedes us, and must not have it deleted underneath it.
-      if (pointerOwners.get(finishedPointer) === onSuperseded) {
+      if (pointerOwners.get(finishedPointer)?.supersede === onSuperseded) {
         pointerOwners.delete(finishedPointer);
       }
       try {
@@ -271,15 +288,11 @@ export function registerPointerDrag(
       }
     }
     if (classToRemove) {
-      try {
-        element.classList.remove(classToRemove);
-      } catch {
-        // Teardown runs through here and must not be abandoned part-way.
-      }
+      // Unguarded: `appliedClass` is only ever set to a token `classList.add`
+      // already accepted, and `remove` rejects exactly what `add` rejects.
+      element.classList.remove(classToRemove);
     }
-    if (bodyClassToRelease) {
-      releaseBodyClass(bodyClassToRelease);
-    }
+    finishedBodyClassLease?.release();
   };
 
   /**
@@ -291,11 +304,12 @@ export function registerPointerDrag(
    * @param event - The event ending the gesture.
    */
   const cancelGesture = (args: DPointerDragArgs, event: PointerEvent) => {
+    const info = dragInfo(event);
     try {
       if (args.cancelCommits) {
-        args.onDragEnd?.(event);
+        args.onDragEnd?.(event, info);
       } else {
-        args.onDragCancel?.(event);
+        args.onDragCancel?.(event, info);
       }
     } finally {
       finish();
@@ -341,28 +355,51 @@ export function registerPointerDrag(
       }
     };
 
+    // For a claim rejected during its own dispatch. The `setPointerCapture`
+    // above displaced any earlier claimant's pending capture, so a plain
+    // release here would clear the override entirely and leave that claimant's
+    // live gesture uncaptured — latched until some later press happens to
+    // supersede it, which a touch pointer's unreused ID never does. Handing the
+    // capture back is the only exit that keeps the one-terminal-callback
+    // guarantee; releasing is only right when there was no one to displace.
+    const restoreDisplacedCapture = () => {
+      const prior = pointerOwners.get(event.pointerId);
+      if (!prior) {
+        releaseCapture();
+        return;
+      }
+      try {
+        prior.element.setPointerCapture(event.pointerId);
+      } catch {
+        // The prior claimant's element is gone; nothing to hand back.
+        releaseCapture();
+      }
+    };
+
     const args = getArgsRef();
-    // The caller captures its origin state here and may veto by returning false.
+    // Before the dispatch below, which reports them.
+    originX = event.clientX;
+    originY = event.clientY;
+    moved = false;
+
     let vetoed;
     try {
-      vetoed = args.onDragStart?.(event) === false;
+      vetoed = args.onDragStart?.(event, dragInfo(event)) === false;
     } catch (error) {
       // Rethrown, because a throwing consumer is the consumer's bug. The capture
       // still has to go back: nothing else would release it.
-      releaseCapture();
+      restoreDisplacedCapture();
       throw error;
     }
     // A registration torn down by its own `onDragStart` has already had its
     // listeners removed, so nothing is left to end a gesture installed now — and
     // claiming the pointer would leave an entry no one can remove.
     if (vetoed || tornDown) {
-      releaseCapture();
+      restoreDisplacedCapture();
       return;
     }
 
     pointerId = event.pointerId;
-    originX = event.clientX;
-    originY = event.clientY;
     engaged = !(args.threshold > 0);
 
     // A press bubbles, so an ancestor registration starts its own gesture from
@@ -373,7 +410,7 @@ export function registerPointerDrag(
     // back through `hasPointerCapture`, which cannot tell a lost claim apart from
     // a pointer that was never real.
     const superseded = pointerOwners.get(event.pointerId);
-    pointerOwners.set(event.pointerId, onSuperseded);
+    pointerOwners.set(event.pointerId, { element, supersede: onSuperseded });
 
     if (args.draggingClass) {
       try {
@@ -388,8 +425,7 @@ export function registerPointerDrag(
     }
     if (args.bodyClass) {
       try {
-        holdBodyClass(args.bodyClass);
-        heldBodyClass = args.bodyClass;
+        bodyClassLease = new ElementClassLease(document.body, args.bodyClass);
       } catch {
         // Same as above: a rejected token costs the page-level styling only.
       }
@@ -404,7 +440,7 @@ export function registerPointerDrag(
 
     // Last, so this gesture is fully established before control passes to another
     // consumer's callback, which is free to throw.
-    superseded?.(event);
+    superseded?.supersede(event);
   };
 
   const onPointerMove = (event: PointerEvent) => {
@@ -421,7 +457,9 @@ export function registerPointerDrag(
       }
       engaged = true;
     }
-    args.onDrag?.(event);
+    // Latched before the dispatch, so this report already counts as movement.
+    moved = true;
+    args.onDrag?.(event, dragInfo(event));
   };
 
   const onPointerUp = (event: PointerEvent) => {
@@ -433,7 +471,7 @@ export function registerPointerDrag(
     // throwing callback cannot leave the gesture active and reject every later
     // press.
     try {
-      getArgsRef().onDragEnd?.(event);
+      getArgsRef().onDragEnd?.(event, dragInfo(event));
     } finally {
       finish();
     }
@@ -505,26 +543,27 @@ export function registerPointerDrag(
  * stop when it has a keyboard path worth reaching — that is how it stays operable,
  * not by claiming focus from a gesture assistive technology cannot perform.
  *
+ * That cancellation reaches further than focus: an accepted press produces no
+ * `mousedown` or `mouseup`, so a document-level listener on either never sees it.
+ * Build dismiss-on-outside-press on `pointerdown`, which still bubbles unless
+ * `stopPropagation` is set.
+ *
  * A single element supports one registration. Two would each claim the same
  * pointer capture and the same attribute, and tearing either down would strand
  * the other's gesture.
- *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
- *
- * @see The `DResizeSeparator` component and `dResizeEdge` modifier before reaching for this to build a
- *   resize by hand — they layer the value math, bounds, keyboard path and
- *   separator semantics on top of this same engine.
- * @see The `dDragAndDropSource` modifier when there IS a drop target and a payload to transfer.
- *   This gesture has neither.
  *
  * Nesting one registration inside another is supported, but only one of them can
  * hold a given press: the ancestor sees it too, and whichever claims the pointer
  * last keeps it. The other is ended immediately through `onDragCancel` (or
  * `onDragEnd` under `cancelCommits`) with the same press as its event, so a
- * consumer always gets one terminal callback per `onDragStart`. Pass
- * `stopPropagation` on the inner registration when the press should not reach the
- * ancestor at all.
+ * contested press still leaves each consumer with one terminal callback for the
+ * `onDragStart` it received. Pass `stopPropagation` on the inner registration when
+ * the press should not reach the ancestor at all.
+ *
+ * The one end that reports nothing is teardown: destroying the element mid-gesture
+ * releases the capture and drops the classes but fires no terminal callback, since
+ * one would run against a consumer already being torn down. Release gesture state
+ * that outlives the handle from the consumer's own destructor instead.
  */
 export default class DPointerDragModifier extends Modifier<DPointerDragSignature> {
   #args: DPointerDragArgs | null = null;

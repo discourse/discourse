@@ -9,7 +9,7 @@ RSpec.describe DiscoursePostEvent::Event::Action::ResolveImageUpload do
   let(:image) { nil }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 

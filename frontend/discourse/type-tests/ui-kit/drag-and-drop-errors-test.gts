@@ -3,7 +3,9 @@
 // `@glint-expect-error` suppresses reporting elsewhere in its file, which would
 // let a positive assertion pass against a broken declaration. Positives live in
 // drag-and-drop-test.gts.
-import DResizeHandles from "discourse/ui-kit/d-resize-handles";
+import DResizeHandles, {
+  type DResizeHandleDescriptor,
+} from "discourse/ui-kit/d-resize-handles";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import dDragAndDropExternalTarget, {
@@ -17,7 +19,7 @@ declare const noop: () => void;
 declare const px: number;
 declare const payload: object;
 
-declare const columnHandles: { payload: number }[];
+declare const columnHandles: DResizeHandleDescriptor<number>[];
 declare function onDirectionResize(direction: string): void;
 declare function onColumnResize(column: number): void;
 declare function onExternalDrop(event: ExternalDropTargetEvent): void;
@@ -35,7 +37,7 @@ const Negatives = <template>
   {{! @glint-expect-error - a drag permits a fixed set of operations, and move-copy is not one of their spellings }}
   <li {{dDragAndDropSource type="link" effectAllowed="moveCopy"}}></li>
 
-  {{! @glint-expect-error - the axis vocabulary is x and y }}
+  {{! @glint-expect-error - the axis vocabulary is horizontal and vertical }}
   <li {{dDragAndDropTarget accepts="link" axis="z"}}></li>
 
   {{! @glint-expect-error - a drop lands before, after or inside, nowhere else }}

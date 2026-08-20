@@ -4,7 +4,7 @@ describe PrettyText do
   before do
     freeze_time Time.utc(2018, 6, 5, 18, 40)
 
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
@@ -138,6 +138,32 @@ describe PrettyText do
           result = PrettyText.format_for_email(cooked, post_3)
 
           expect(result).to include('href="https://ftp://files.example.com"')
+        end
+
+        it "keeps the url alongside a location that points somewhere else" do
+          post_with_venue =
+            create_post_with_event(
+              user_1,
+              'location="Discourse HQ" url="https://example.com/meeting"',
+            )
+          cooked = PrettyText.cook(post_with_venue.raw)
+          result = PrettyText.format_for_email(cooked, post_with_venue)
+
+          expect(result).to include("Discourse HQ")
+          expect(result).to include('href="https://example.com/meeting"')
+        end
+
+        it "drops the url row when it only restates the location" do
+          post_with_same_link =
+            create_post_with_event(
+              user_1,
+              'location="example.com/meeting" url="https://example.com/meeting/"',
+            )
+          cooked = PrettyText.cook(post_with_same_link.raw)
+          result = PrettyText.format_for_email(cooked, post_with_same_link)
+
+          expect(result).to include('href="https://example.com/meeting"')
+          expect(result).not_to include('href="https://example.com/meeting/"')
         end
       end
 

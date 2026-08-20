@@ -8,7 +8,6 @@ import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
-import { headerOffset } from "discourse/lib/offset-calculator";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -59,14 +58,11 @@ function overridePlaceholder(ace) {
 // @save
 // @submit
 // @setWarning
-// Used only if the editor's min-height computes to `auto`, which would leave the
-// resize with no lower bound at all.
-const FALLBACK_MIN_HEIGHT = 250;
-
 export default class AceEditor extends Component {
   @service appEvents;
 
   @tracked isLoading = true;
+
   /** The resized box, handed to the separator once the editor has built it. */
   @tracked editorContainer = null;
   editor = null;
@@ -159,7 +155,6 @@ export default class AceEditor extends Component {
 
     this.editor.on("blur", () => this.warnSCSSDeprecations());
 
-    // Only now does the box the separator announces exist.
     this.editorContainer = this.editor.container;
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
@@ -276,66 +271,15 @@ export default class AceEditor extends Component {
     }
   }
 
-  /**
-   * The height the next drag grows or shrinks from.
-   *
-   * A function rather than a number because it is a live measurement: an arg whose
-   * compute reads no tracked state is cached for the modifier's lifetime.
-   *
-   * @returns {number} The editor's current height, in pixels.
-   */
-  @bind
-  editorHeight() {
-    return this.editor?.container.offsetHeight ?? 0;
-  }
-
-  /**
-   * The smallest height the editor may be dragged to, read from the stylesheet so
-   * the two cannot drift apart.
-   *
-   * @returns {number} The minimum height, in pixels.
-   */
-  @bind
-  minEditorHeight() {
-    const container = this.editor?.container;
-    if (!container) {
-      return FALLBACK_MIN_HEIGHT;
-    }
-    const declared = getComputedStyle(container).minHeight;
-    return parseInt(declared === "auto" ? FALLBACK_MIN_HEIGHT : declared, 10);
-  }
-
-  /**
-   * The largest height the editor may be dragged to.
-   *
-   * @returns {number} The maximum height, in pixels.
-   */
-  @bind
-  maxEditorHeight() {
-    const belowHeader = window.innerHeight - headerOffset();
-    const container = this.editor?.container;
-    if (!container) {
-      return belowHeader;
-    }
-    // A declared cap also binds the box, and dragging past it would report a
-    // height the editor never takes.
-    const declared = parseInt(getComputedStyle(container).maxHeight, 10);
-    return Number.isFinite(declared)
-      ? Math.min(declared, belowHeader)
-      : belowHeader;
-  }
-
   @bind
   onResizeDrag(size) {
-    // Added on the first report rather than on the press, so a click that
-    // resizes nothing does not touch the class at all.
-    this.editor.container.classList.add("clear-transitions");
-    this.editor.container.style.height = `${size}px`;
+    this.editorContainer.classList.add("clear-transitions");
+    this.editorContainer.style.height = `${size}px`;
   }
 
   @bind
   onResizeEnd() {
-    this.editor?.container?.classList.remove("clear-transitions");
+    this.editorContainer.classList.remove("clear-transitions");
   }
 
   <template>
@@ -357,13 +301,10 @@ export default class AceEditor extends Component {
             class="grippie"
             @axis="vertical"
             @side="start"
-            @value={{this.editorHeight}}
-            @min={{this.minEditorHeight}}
-            @max={{this.maxEditorHeight}}
+            @measure={{this.editorContainer}}
             @label={{i18n "ace_editor.resize"}}
             @onResize={{this.onResizeDrag}}
             @onResizeEnd={{this.onResizeEnd}}
-            @observe={{this.editorContainer}}
           />
         {{/if}}
       </DConditionalLoadingSpinner>

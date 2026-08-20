@@ -171,3 +171,7 @@ bs_BA:
         message: "Privatna Poruka"
       chat_approval:
         message: "Privatna Poruka"
+        value: "Value"
+        style_default: "Uobičajen"
+        style_success: "Uspjeh"
+        icon: "Icon"

@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import SiteTrafficExplorerBreakdownModal from "discourse/admin/components/site-traffic-explorer-breakdown-modal";
 import SiteTrafficExplorerDimensionLabel from "discourse/admin/components/site-traffic-explorer-dimension-label";
 import SiteTrafficExplorerPageviewCount from "discourse/admin/components/site-traffic-explorer-pageview-count";
+import { countryName } from "discourse/admin/lib/format-country";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -38,8 +39,13 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
 
   @action
   filterLabel(row) {
+    const label =
+      this.activeTab.dimension === "countries"
+        ? countryName(row.value)
+        : row.label;
+
     return i18n("admin.site_traffic_explorer.filter_by", {
-      label: row.label,
+      label,
       count: row.pageviews,
     });
   }
@@ -108,7 +114,11 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
     }
 
     if (["top_urls", "entry_urls"].includes(this.activeTab.dimension)) {
-      return { href: getURL(row.value) };
+      return {
+        href: getURL(row.value),
+        rel: "noopener noreferrer",
+        target: "_blank",
+      };
     }
 
     return null;
@@ -208,7 +218,7 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                     data-test-site-traffic-row
                     {{on "click" (fn this.filter row)}}
                   >
-                    <span>
+                    <span class="site-traffic-explorer__row-label">
                       <SiteTrafficExplorerDimensionLabel
                         @dimension={{this.activeTab.dimension}}
                         @row={{row}}

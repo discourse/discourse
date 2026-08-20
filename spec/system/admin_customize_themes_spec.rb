@@ -345,6 +345,38 @@ describe "Admin Customize Themes" do
     end
   end
 
+  describe "editing an icon type theme setting" do
+    let(:icon_picker) do
+      PageObjects::Components::DIconGridPicker.new(".setting[data-setting='icon_setting']")
+    end
+
+    before do
+      SiteSetting.svg_icon_subset = "gamepad"
+
+      theme.set_field(
+        target: :settings,
+        name: "yaml",
+        value: "icon_setting:\n  type: icon\n  default: heart\n",
+      )
+      theme.save!
+    end
+
+    it "allows admin to pick an icon from the dropdown and save it" do
+      theme_page.visit(theme)
+
+      expect(icon_picker).to have_selected_icon("heart")
+
+      icon_picker.expand
+      icon_picker.filter("gamepad")
+      icon_picker.select_icon("gamepad")
+
+      find(".setting[data-setting='icon_setting'] .setting-controls__ok").click
+
+      expect(page).to have_no_css(".setting[data-setting='icon_setting'] .setting-controls__ok")
+      expect(theme.reload.settings[:icon_setting].value).to eq("gamepad")
+    end
+  end
+
   describe "editing theme site settings" do
     it "shows all themeable site settings and allows editing values" do
       theme_page.visit(theme.id)

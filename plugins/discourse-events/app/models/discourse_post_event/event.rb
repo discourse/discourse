@@ -53,6 +53,7 @@ module DiscoursePostEvent
     validate :raw_invitees_length
     validate :ends_before_start
     validate :allowed_custom_fields
+    validate :url_is_a_uri, if: :url_changed?
 
     def self.attributes_protected_by_default
       super - %w[id]
@@ -173,7 +174,7 @@ module DiscoursePostEvent
 
       if all_day
         opens_at = starts_at.beginning_of_day
-        closes_at = starts_at.end_of_day
+        closes_at = (ends_at || starts_at).end_of_day
         return opens_at <= now && now <= closes_at
       end
 
@@ -245,6 +246,12 @@ module DiscoursePostEvent
           I18n.t("discourse_post_event.errors.models.event.ends_at_before_starts_at"),
         )
       end
+    end
+
+    def url_is_a_uri
+      return if EventParser.valid_url?(url)
+
+      errors.add(:base, I18n.t("discourse_post_event.errors.models.event.invalid_url"))
     end
 
     def allowed_custom_fields

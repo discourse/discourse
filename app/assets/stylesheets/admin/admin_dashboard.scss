@@ -139,11 +139,17 @@ $db-bar-height: var(--space-2);
 
 .db-configure {
   padding: var(--space-4);
+  max-width: 100%;
+  box-sizing: border-box;
 
   &__list {
     @include unstyled-list;
     display: flex;
     flex-direction: column;
+  }
+
+  &__section-name {
+    @include ellipsis;
   }
 
   &__row {

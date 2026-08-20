@@ -273,7 +273,13 @@ class FKForm extends Component {
     try {
       this.isSubmitting = true;
 
-      await this.validate([...this.fields.values()]);
+      const submissionPrevented = await this.validate([
+        ...this.fields.values(),
+      ]);
+
+      if (submissionPrevented) {
+        return;
+      }
 
       if (this.formData.isValid) {
         if (this.args.commitOnSubmit !== false) {
@@ -323,6 +329,8 @@ class FKForm extends Component {
     }
 
     this.isValidating = true;
+    let submissionPrevented = false;
+    const preventSubmit = () => (submissionPrevented = true);
 
     try {
       for (const field of fields) {
@@ -331,17 +339,21 @@ class FKForm extends Component {
         await field.validate?.(
           field.name,
           this.formData.get(field.name),
-          this.formData.draftData
+          this.formData.draftData,
+          { preventSubmit }
         );
       }
 
       await this.args.validate?.(this.formData.draftData, {
         addError: this.addError,
         removeError: this.removeError,
+        preventSubmit,
       });
     } finally {
       this.isValidating = false;
     }
+
+    return submissionPrevented;
   }
 
   <template>

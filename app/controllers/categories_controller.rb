@@ -295,10 +295,6 @@ class CategoriesController < ApplicationController
 
       merge_pending_custom_fields!(cat, pending_custom_fields)
 
-      # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in]&.blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
-
       old_permissions = cat.permissions_params
       old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 

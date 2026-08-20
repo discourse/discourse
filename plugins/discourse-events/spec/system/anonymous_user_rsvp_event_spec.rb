@@ -9,7 +9,7 @@ describe "Anonymous user RSVPing to an event" do
   let(:login_page) { PageObjects::Pages::Login.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:staff]
     EmailToken.confirm(Fabricate(:email_token, user:).token)

@@ -5,36 +5,65 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import bodyClass from "discourse/helpers/body-class";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
-import fetchZoomJoinPayload from "../../lib/fetch-zoom-join-payload";
-import { loadZoomMeetingSdk } from "../../lib/load-zoom-meeting-sdk";
+import zoomFrameUrl from "../../lib/zoom-frame-url";
 import { isWithinEventTimeframe } from "../../models/discourse-post-event-event";
-import MobileEmbeddableChatModal from "./modal/mobile-embeddable-chat-modal";
+import dismissKeyboardOnChatSend from "../../modifiers/dismiss-keyboard-on-chat-send";
+import zoomPageViewportFit from "../../modifiers/zoom-page-viewport-fit";
+import EmbeddableChatChannel from "./embeddable-chat-channel";
+
+const FRAME_MESSAGE_SOURCE = "discourse-zoom-frame";
 
 export default class LivestreamZoomPage extends Component {
-  @service modal;
+  @service appEvents;
+  @service currentUser;
+  @service discoursePostEventApi;
+  @service embeddableChat;
   @service siteSettings;
 
   @tracked errorMessage;
 
-  // Plain (non-tracked) guard so the modifier can read and set it within the
-  // same render without triggering a tracked-property backtracking assertion.
-  // It is only used to ensure the SDK is set up once, never rendered.
-  hasLoaded = false;
+  // Bumped to reload the frame, which is what a retry amounts to: the meeting
+  // is set up by the page inside it, from scratch, on load.
+  @tracked joinAttempt = 0;
 
-  setupZoom = modifier(async () => {
-    if (this.hasLoaded || !this.canJoinNow) {
+  listenForFrame = modifier(() => {
+    window.addEventListener("message", this.onFrameMessage);
+
+    return () => window.removeEventListener("message", this.onFrameMessage);
+  });
+
+  confirmAttendance = modifier(() => {
+    if (this.#attendanceConfirmed) {
       return;
     }
 
-    this.hasLoaded = true;
-    await this.loadZoom();
+    this.#attendanceConfirmed = true;
+    this.markAsGoing();
   });
+  #attendanceConfirmed = false;
+
+  // Attendance is what follows a user into the livestream chat channel, so
+  // someone who reaches the meeting without ever answering the RSVP would sit
+  // in front of a read-only chat beside it. Anyone who has already made a
+  // choice, including an explicit "not going", keeps it.
+  //
+  // This page is the only way into the meeting, and it is addressable in its
+  // own right, so it is asked for here rather than beside the button that
+  // usually leads here.
+  //
+  // Asked once per visit: the body reads tracked state, so it would otherwise
+  // run again whenever the post is invalidated, and `event` is rebuilt from the
+  // raw payload on each access, so a later run cannot see the invitee the first
+  // one wrote
 
   get post() {
     return this.args.topic?.postStream?.posts?.[0];
@@ -67,81 +96,92 @@ export default class LivestreamZoomPage extends Component {
     return this.event?.livestreamUrl;
   }
 
-  get mobileLeaveUrl() {
-    return getURL(
-      `/t/${this.args.topic.slug}/${this.args.topic.id}/zoom?zoom_left=1`
-    );
-  }
-
-  get retryZoomRoute() {
-    return getURL(`/t/${this.args.topic.slug}/${this.args.topic.id}/zoom`);
-  }
-
   get topicUrl() {
     return getURL(
       this.args.topic.url || `/t/${this.args.topic.slug}/${this.args.topic.id}`
     );
   }
 
-  get returnedFromZoom() {
-    return new URLSearchParams(window.location.search).has("zoom_left");
+  // Zoom's meeting view sizes itself to the window it is in, so it is given one
+  // of its own. Inside the frame the viewport is the frame, which leaves the
+  // page free to put chat below it.
+  get frameUrl() {
+    return zoomFrameUrl({
+      topicId: this.args.topic.id,
+      attempt: this.joinAttempt,
+      // TODO (martin) showzoom is for testing only, remove before merge
+      ignoreTimeframe: new URLSearchParams(window.location.search).get(
+        "showzoom"
+      ),
+    });
   }
 
-  @action
-  async loadZoom() {
-    if (this.returnedFromZoom) {
-      this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
+  get canRenderChat() {
+    return (
+      this.siteSettings.chat_enabled &&
+      this.currentUser &&
+      this.embeddableChat.userCanChat &&
+      this.chatChannelId
+    );
+  }
+
+  get chatChannelId() {
+    return this.args.topic?.chat_channel_id;
+  }
+
+  @bind
+  onFrameMessage(event) {
+    if (
+      event.origin !== window.location.origin ||
+      event.data?.source !== FRAME_MESSAGE_SOURCE
+    ) {
       return;
     }
 
-    try {
-      const payload = await fetchZoomJoinPayload(this.args.topic.id);
-      const ZoomMtg = await loadZoomMeetingSdk();
-
-      ZoomMtg.preLoadWasm();
-      ZoomMtg.prepareWebSDK();
-      ZoomMtg.i18n.load("en-US");
-      ZoomMtg.i18n.reload("en-US");
-
-      await new Promise((resolve, reject) => {
-        ZoomMtg.init({
-          leaveUrl: this.mobileLeaveUrl,
-          patchJsMedia: true,
-          disableCallOut: true,
-          success: resolve,
-          error: reject,
-        });
-      });
-
-      await new Promise((resolve, reject) => {
-        ZoomMtg.join({
-          signature: payload.signature,
-          sdkKey: payload.sdk_key,
-          meetingNumber: payload.meeting_number,
-          passWord: payload.password || "",
-          userName: payload.user_name,
-          userEmail: payload.user_email,
-          success: resolve,
-          error: reject,
-        });
-      });
-    } catch {
+    if (event.data.state === "left") {
+      // This page is only ever the meeting, so a user who leaves it has
+      // nowhere to go but back to the topic the webinar belongs to.
+      window.location.assign(this.topicUrl);
+    } else if (event.data.state === "error") {
       this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
     }
   }
 
-  get canOpenChat() {
-    return this.args.topic?.chat_channel_id && this.siteSettings.chat_enabled;
-  }
+  @bind
+  async markAsGoing() {
+    const event = this.event;
 
-  @action
-  openChat() {
-    this.modal.show(MobileEmbeddableChatModal);
+    if (!this.canJoinNow || !event?.canUpdateAttendance) {
+      return;
+    }
+
+    if (event.watchingInvitee?.status) {
+      return;
+    }
+
+    const payload = { status: "going" };
+    const appEventData = { status: payload.status, postId: event.id };
+
+    try {
+      if (event.watchingInvitee) {
+        await this.discoursePostEventApi.updateEventAttendance(event, payload);
+        this.appEvents.trigger("calendar:update-invitee-status", appEventData);
+      } else {
+        await this.discoursePostEventApi.joinEvent(event, payload);
+        this.appEvents.trigger("calendar:create-invitee-status", appEventData);
+      }
+    } catch (e) {
+      // Chat beside the meeting stays read-only without this, and its own RSVP
+      // prompt is the way back from that, so the failure is worth saying out
+      // loud rather than leaving the user to find it there.
+      popupAjaxError(e);
+    }
   }
 
   @action
   retryZoom() {
-    window.location.assign(this.retryZoomRoute);
+    this.errorMessage = null;
+    this.joinAttempt++;
   }
 
   @action
@@ -156,7 +196,14 @@ export default class LivestreamZoomPage extends Component {
 
   <template>
     {{bodyClass "discourse-calendar-livestream-zoom-full"}}
-    <div class="discourse-calendar-livestream-zoom-page">
+    <div
+      class={{dConcatClass
+        "discourse-calendar-livestream-zoom-page"
+        (if this.canRenderChat "--with-chat")
+      }}
+      {{zoomPageViewportFit}}
+      {{this.confirmAttendance}}
+    >
       {{#if this.canJoinNow}}
         {{#if this.errorMessage}}
           <div class="discourse-calendar-livestream-zoom-page__fallback">
@@ -168,21 +215,22 @@ export default class LivestreamZoomPage extends Component {
               @icon="up-right-from-square"
             />
 
-            {{#if this.returnedFromZoom}}
-              <DButton
-                @action={{this.retryZoom}}
-                @label="discourse_calendar.livestream.zoom.join"
-                @icon="video"
-                class="btn-primary"
-              />
-            {{/if}}
+            <DButton
+              @action={{this.retryZoom}}
+              @label="discourse_calendar.livestream.zoom.join"
+              @icon="video"
+              class="btn-primary"
+            />
           </div>
         {{/if}}
 
-        <div
+        <iframe
           class="discourse-calendar-livestream-zoom-page__frame"
-          {{this.setupZoom}}
-        ></div>
+          src={{this.frameUrl}}
+          title={{i18n "discourse_calendar.livestream.zoom.frame_title"}}
+          allow="camera; microphone; autoplay; display-capture; fullscreen"
+          {{this.listenForFrame}}
+        ></iframe>
       {{else}}
         <div class="discourse-calendar-livestream-zoom-page__waiting-wrapper">
           <p class="discourse-calendar-livestream-zoom-page__waiting">
@@ -205,13 +253,16 @@ export default class LivestreamZoomPage extends Component {
 
       {{/if}}
 
-      {{#if this.canOpenChat}}
-        <DButton
-          class="discourse-calendar-livestream-zoom-page__chat-button btn-primary"
-          @action={{this.openChat}}
-          @label="discourse_calendar.livestream.zoom.chat"
-          @icon="comments"
-        />
+      {{#if this.canRenderChat}}
+        <div
+          class="discourse-calendar-livestream-zoom-page__chat"
+          {{dismissKeyboardOnChatSend}}
+        >
+          <EmbeddableChatChannel
+            @chatChannelId={{this.chatChannelId}}
+            @inline={{true}}
+          />
+        </div>
       {{/if}}
     </div>
   </template>

@@ -8,7 +8,7 @@ describe "Discourse Livestream - Topic Livestream - Desktop - Authenticated" do
   let(:topic_livestream) { PageObjects::Pages::TopicLivestream.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.chat_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:everyone].to_s

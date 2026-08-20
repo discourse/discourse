@@ -26,6 +26,27 @@ module("Integration | ui-kit | DSelect", function (hooks) {
     assert.verifySteps(["foo"]);
   });
 
+  test("@onChange with the none option", async function (assert) {
+    let changedValue = "not called";
+    const handleChange = (value) => (changedValue = value);
+
+    await render(
+      <template>
+        <DSelect @value="foo" @onChange={{handleChange}} as |s|>
+          <s.Option @value="foo">The real foo</s.Option>
+        </DSelect>
+      </template>
+    );
+
+    await select(".d-select", NO_VALUE_OPTION);
+
+    assert.strictEqual(
+      changedValue,
+      null,
+      "emits null, so the cleared value survives JSON serialization"
+    );
+  });
+
   test("no value", async function (assert) {
     await render(<template><DSelect /></template>);
 
@@ -52,6 +73,27 @@ module("Integration | ui-kit | DSelect", function (hooks) {
     assert.dselect().hasSelectedOption({
       value: "foo",
       label: "The real foo",
+    });
+  });
+
+  test("selected falsy value", async function (assert) {
+    await render(
+      <template>
+        <DSelect @value={{false}} as |s|>
+          <s.Option @value={{false}}>The real false</s.Option>
+          <s.Option @value={{true}}>The real true</s.Option>
+        </DSelect>
+      </template>
+    );
+
+    assert.dselect().hasOption({
+      value: NO_VALUE_OPTION,
+      label: i18n("none_placeholder"),
+    });
+
+    assert.dselect().hasSelectedOption({
+      value: "false",
+      label: "The real false",
     });
   });
 

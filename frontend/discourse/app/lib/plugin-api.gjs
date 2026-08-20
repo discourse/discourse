@@ -64,8 +64,13 @@ import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
+import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  _INTERNAL_SOURCE_KEY,
+  CORE_SOURCE,
+} from "discourse/lib/customization-source";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -101,6 +106,7 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
+import { reportClientError } from "discourse/lib/report-client-error";
 import {
   addLogSearchLinkClickedCallbacks,
   addSearchResultsCallback,
@@ -143,7 +149,6 @@ import {
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
-import { registerComposerAction } from "discourse/select-kit/components/composer-actions";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -196,11 +201,7 @@ function wrapWithErrorHandler(func, messageKey) {
     try {
       return func.call(this, ...arguments);
     } catch (error) {
-      document.dispatchEvent(
-        new CustomEvent("discourse-error", {
-          detail: { messageKey, error },
-        })
-      );
+      reportClientError(error, messageKey);
       if (isTesting()) {
         throw error;
       }
@@ -213,8 +214,16 @@ function wrapWithErrorHandler(func, messageKey) {
  * @typedef {_PluginApi} PluginApi
  */
 class _PluginApi {
-  constructor(container) {
+  #source;
+
+  constructor(container, source = CORE_SOURCE) {
     this.container = container;
+    this.#source = source;
+  }
+
+  /** The plugin, theme, or core code this api was handed to. */
+  get source() {
+    return this.#source;
   }
 
   /**
@@ -3930,10 +3939,10 @@ class _PluginApi {
           `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
         );
       }
-      _registerBlockFactory(blockOrName, factory);
+      _registerBlockFactory(blockOrName, factory, this.source);
     } else {
       // Direct class: registerBlock(BlockClass)
-      _registerBlock(blockOrName);
+      _registerBlock(blockOrName, this.source);
     }
   }
 
@@ -3974,7 +3983,7 @@ class _PluginApi {
    * ```
    */
   registerBlockOutlet(outletName, options) {
-    _registerOutlet(outletName, options);
+    _registerOutlet(outletName, options, this.source);
   }
 
   /**
@@ -4022,7 +4031,7 @@ class _PluginApi {
    * ```
    */
   registerBlockConditionType(ConditionClass) {
-    _registerConditionType(ConditionClass);
+    _registerConditionType(ConditionClass, this.source);
   }
 
   #deprecateModifyClass(resolverName, apiName) {
@@ -4040,23 +4049,6 @@ class _PluginApi {
   }
 }
 
-function getPluginApi() {
-  const owner = getOwnerWithFallback(this);
-  let pluginApi = owner.lookup("plugin-api:main");
-
-  if (!pluginApi) {
-    pluginApi = new _PluginApi(owner);
-    owner.registry.register("plugin-api:main", pluginApi, {
-      instantiate: false,
-    });
-  } else {
-    // If we are re-using an instance, make sure the container is correct
-    pluginApi.container = owner;
-  }
-
-  return pluginApi;
-}
-
 /**
  * Executes the provided callback function with the `PluginApi` object.
  *
@@ -4072,5 +4064,10 @@ export function withPluginApi(apiCodeCallback, opts) {
 
   opts = opts || {};
 
-  return apiCodeCallback(getPluginApi(), opts);
+  const api = new _PluginApi(
+    getOwnerWithFallback(this),
+    opts[_INTERNAL_SOURCE_KEY]
+  );
+
+  return apiCodeCallback(api, opts);
 }

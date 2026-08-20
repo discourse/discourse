@@ -523,9 +523,7 @@ ar:
     max_redemptions_allowed_one: "يجب أن تكون 1 لدعوات البريد الإلكتروني."
     redemption_count_less_than_max: "ينبغي أن يكون أقل من %{max_redemptions_allowed}."
     email_xor_domain: "غير مسموح بحقول البريد الإلكتروني والنطاق في الوقت نفسه"
-    admin_invite_requires_email: "يجب إرسال دعوات دور المسؤول إلى عنوان بريد إلكتروني"
     admin_invite_requires_admin_inviter: "يمكن للمسؤولين فقط إنشاء دعوات لدور المسؤول"
-    moderator_invite_requires_email: "يجب إرسال دعوات دور المشرف إلى عنوان بريد إلكتروني"
     moderator_invite_requires_staff_inviter: "يمكن لطاقم العمل فقط إنشاء دعوات لدور المشرف"
     existing_user_success: "تم استخدام الدعوة بنجاح"
     email_invites_disabled: "إرسال رسائل الدعوة عبر البريد الإلكتروني معطَّل"
@@ -1320,16 +1318,15 @@ ar:
     title: "تسجيل الدخول عبر البريد الإلكتروني"
   email_login_code:
     invalid_code: "هذا الرمز غير صحيح أو انتهت صلاحيته. اطلب رمزًا جديدًا وحاول مرة أخرى."
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "تطبيق DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "تطبيق DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "متصفح مجهول"
     device:
       android: "جهاز Android"
       chromebook: "نظام تشغيل Chrome OS"
@@ -1353,10 +1350,6 @@ ar:
     traffic_types:
       logged_in: "المسجَّلون الدخول"
       anonymous: "مجهول"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "حدث خطأ في أثناء تغيير عنوان بريدك الإلكتروني. ربما يكون العنوان مستخدمًا بالفعل."
     doesnt_exist: "عنوان البريد الإلكتروني هذا غير مرتبط بحسابك."
@@ -1863,6 +1856,9 @@ ar:
       description: "البلدان التي تجلب أكبر عدد من مشاهدات الصفحة إلى منتداك في الفترة المحدَّدة."
       labels:
         country_code: "رمز البلد"
+        count: "الزيارات"
+    top_entry_urls:
+      labels:
         count: "الزيارات"
     top_referrers_by_browser_pageviews:
       title: "أبرز المُحيلين"
@@ -2978,7 +2974,6 @@ ar:
     enable_new_checkbox_style: "تفعيل نمط مربع الاختيار المُعاد تصميمه لمربعات اختيار FormKit."
     enable_new_post_reactions_menu: "تفعيل القائمة المُعاد تصميمها للإعجابات والتفاعلات على المنشورات، مع تمرير غير محدود وتجربة محسّنة للهواتف المحمولة."
     enable_composer_redesign: "تفعيل أداة الإنشاء المُعاد تصميمها"
-    enable_new_composer_actions: "تفعيل قائمة إجراءات أداة الإنشاء المُعاد تصميمها وزر الحفظ الموحَّد، مع ظهور مفاتيح التبديل الخاصة بالهمس وعدم التداخل وإلغاء الإدراج بجوار إجراء الحفظ"
     prioritize_recently_used_tags: "عرض العلامات التي استخدمها العضو مؤخرًا في موضوعاته الخاصة في أعلى القائمة، قبل العلامات الأكثر شيوعًا في المنتدى، عند إضافة علامات أثناء إنشاء موضوع أو تعديله"
     experimental_impersonation_time_limit_minutes: "المدة الزمنية قبل إنهاء جلسة انتحال الشخصية تلقائيًا."
     page_loading_indicator: "إعداد مؤشر التحميل الذي يظهر في أثناء التنقل في الصفحة داخل Discourse. يكون 'Spinner' مؤشرًا لصفحة كاملة، بينما يعرض 'Slider' شريطًا ضيقًا أعلى الشاشة."
@@ -4825,9 +4820,6 @@ ar:
     user_posted_pm_staged:
       title: "نشر مستخدم مؤقت موضوعك في رسالة خاصة"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "تم تعليق الحساب"
       subject_template: "[%{email_prefix}] تم تعليق حسابك"
@@ -6124,6 +6116,13 @@ ar:
       group: "يجب أن يكون لدى المستخدمين في المجموعات المحدَّدة ردود تمت الموافقة عليها من قِبل فريق العمل. راجع %{link}."
       new_topics_unless_trust_level: "يجب أن تتم الموافقة على موضوعات المستخدمين من مستويات الثقة المنخفضة من قِبل فريق العمل. راجع %{link}."
       fast_typer: "كتب مستخدم جديد أول منشور له بسرعة كبيرة بشكلٍ مريب، ويُشتبَه في أن يكون روبوتًا أو صاحب سلوك غير مرغوب فيه. راجع %{link}."
+      fast_typer_time:
+        zero: "%{count} ثوانٍ"
+        one: "ثانية واحدة (%{count})"
+        two: "ثانيتان (%{count})"
+        few: "%{count} ثوانٍ"
+        many: "%{count} ثانية"
+        other: "%{count} ثوانٍ"
       auto_silence_regex: "مستخدم جديد يتطابق منشوره الأول مع الإعداد %{link}."
       watched_word:
         zero: "يحتوي هذا المنشور على كلمات مُراقَبة، والكلمات التي تم الإبلاغ عنها هي: %{words}. يُرجى الاطلاع على %{link} للحصول على مزيد من المعلومات."

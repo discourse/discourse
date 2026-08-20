@@ -13,6 +13,8 @@ RSpec.describe Jobs::GenerateEmbeddings do
       SiteSetting.ai_embeddings_enabled = true
     end
 
+    after { DiscourseAi::Embeddings::ProviderHealth.clear!(vector_def) }
+
     fab!(:topic)
     fab!(:post) { Fabricate(:post, post_number: 1, topic: topic) }
 
@@ -40,6 +42,20 @@ RSpec.describe Jobs::GenerateEmbeddings do
       job.execute(target_id: post.id, target_type: "Post")
 
       expect(posts_schema.find_by_embedding(expected_embedding).post_id).to eq(post.id)
+    end
+
+    it "quietly skips jobs after a terminal provider failure" do
+      error =
+        DiscourseAi::Inference::EmbeddingInferenceError.new(
+          provider: vector_def.provider,
+          category: :authentication_failed,
+        )
+      expect do
+        DiscourseAi::Embeddings::ProviderHealth.request!(vector_def) { raise error }
+      end.to raise_error(DiscourseAi::Inference::EmbeddingInferenceError)
+
+      expect { job.execute(target_id: topic.id, target_type: "Topic") }.not_to raise_error
+      expect(a_request(:post, vector_def.url)).not_to have_been_made
     end
   end
 end

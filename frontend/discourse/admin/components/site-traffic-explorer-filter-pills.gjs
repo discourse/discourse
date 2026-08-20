@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
+import { countryName } from "discourse/admin/lib/format-country";
 import { escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -27,9 +28,12 @@ export default class SiteTrafficExplorerFilterPills extends Component {
 
   @action
   filterDescription(filter) {
+    const value =
+      filter.key === "country" ? countryName(filter.value) : filter.label;
+
     return i18n("admin.site_traffic_explorer.filter_description", {
       filter: escapeExpression(this.filterLabel(filter.key)),
-      value: escapeExpression(filter.label),
+      value: escapeExpression(value),
     });
   }
 

@@ -56,6 +56,7 @@ pt:
             private:
               title: "Privado"
       composer:
+        url_placeholder: "Adicionar URL"
         reminder:
           units:
             minutes:
@@ -90,6 +91,12 @@ pt:
             last: "último"
         attendance:
           none: "Nenhuma"
+        location:
+          label: "Localização"
+        url:
+          label: "URL"
+          placeholder: "Opcional"
+          add: "Adicionar URL"
         description:
           label: "Descrição"
         event_type:

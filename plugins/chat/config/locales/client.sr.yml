@@ -157,3 +157,8 @@ sr:
         message: "Privatna poruka"
       chat_approval:
         message: "Privatna poruka"
+        buttons: "Дугмад"
+        value: "Vriednost"
+        style_default: "Подразумевано"
+        style_primary: "Primarna"
+        icon: "Ikona"

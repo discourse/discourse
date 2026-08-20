@@ -860,6 +860,13 @@ de:
         message: "Nachricht"
       chat_approval:
         message: "Nachricht"
+        buttons: "Buttons"
+        value: "Wert"
+        style: "Stil"
+        style_default: "Standard"
+        style_primary: "Primär"
+        style_success: "Erfolg"
+        icon: "Symbol"
         approve_label: "Bezeichnung der Schaltfläche „Genehmigen“"
         approve_label_description: "Wird standardmäßig auf „Genehmigen“ gesetzt, wenn das Feld leer bleibt."
         deny_label: "Bezeichnung der Schaltfläche „Ablehnen“"

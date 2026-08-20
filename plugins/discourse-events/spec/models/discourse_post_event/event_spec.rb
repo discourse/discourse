@@ -4,7 +4,7 @@ describe DiscoursePostEvent::Event do
   before do
     freeze_time DateTime.parse("2020-04-24 14:10")
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
@@ -783,10 +783,21 @@ describe DiscoursePostEvent::Event do
         ).to be(true)
       end
 
-      it "is false when now is before the start of the day of the event" do
+      it "is true on a later day of a multi-day event" do
         expect(
           event_with(
-            starts_at: Time.zone.now.tomorrow.beginning_of_day,
+            starts_at: 2.days.ago,
+            ends_at: 1.day.from_now,
+            all_day: true,
+          ).currently_within_event_timeframe?,
+        ).to be(true)
+      end
+
+      it "is false after the final day of a multi-day event" do
+        expect(
+          event_with(
+            starts_at: 5.days.ago,
+            ends_at: 2.days.ago,
             all_day: true,
           ).currently_within_event_timeframe?,
         ).to be(false)
@@ -1458,7 +1469,7 @@ end
 describe DiscoursePostEvent::Event, "#most_likely_going" do
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
@@ -1514,7 +1525,7 @@ end
 describe DiscoursePostEvent::Event, "#capacity" do
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
@@ -1527,5 +1538,35 @@ describe DiscoursePostEvent::Event, "#capacity" do
       [{ user_id: creator.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
     )
     expect(event.at_capacity?).to eq(true)
+  end
+end
+
+describe DiscoursePostEvent::Event, "#url" do
+  fab!(:post)
+
+  before { SiteSetting.discourse_post_event_enabled = true }
+
+  it "accepts a URI, with or without a scheme" do
+    event = Fabricate.build(:event, post: post, url: "meet.google.com/phv-rbyy-gsh")
+
+    expect(event).to be_valid
+  end
+
+  it "rejects a value that would resolve nowhere" do
+    event = Fabricate.build(:event, post: post, url: "Room 5")
+
+    expect(event).not_to be_valid
+    expect(event.errors.full_messages.join).to include("valid web address")
+  end
+
+  it "leaves an existing bad url editable" do
+    event = Fabricate(:event, post: post)
+    event.update_column(:url, "Room 5")
+
+    event.reload.name = "Renamed"
+    expect(event).to be_valid
+
+    event.url = nil
+    expect(event).to be_valid
   end
 end

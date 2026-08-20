@@ -586,6 +586,9 @@ sq:
     top_countries_by_browser_pageviews:
       labels:
         count: "Vizita"
+    top_entry_urls:
+      labels:
+        count: "Vizita"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Vizita"
@@ -1177,9 +1180,6 @@ sq:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     digest:
       new_topics: "Diskutimet e Reja"
       liked_received: "Pëlqime të marra"
@@ -1457,6 +1457,10 @@ sq:
   staff_action_logs:
     unknown: "i panjohur"
   reviewables:
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekondë"
+        other: "%{count} sekonda"
     actions:
       agree:
         title: "Po"

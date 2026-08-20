@@ -46,19 +46,26 @@ export default apiInitializer((api) => {
               type: "POST",
             }
           );
+          const message =
+            result.scheduled_posts === 0
+              ? i18n(
+                  "discourse_ai.features.translation.schedule_topic_only_success"
+                )
+              : i18n(
+                  "discourse_ai.features.translation.schedule_topic_success",
+                  { count: result.scheduled_posts }
+                );
 
           toasts.success({
             duration: "long",
             data: {
-              message: i18n("discourse_ai.translation.schedule_topic_success", {
-                count: result.scheduled_posts,
-              }),
+              message,
             },
           });
         } catch (error) {
           const errorMessage =
             error.jqXHR?.responseJSON?.errors?.[0] ||
-            i18n("discourse_ai.translation.schedule_topic_error");
+            i18n("discourse_ai.features.translation.schedule_topic_error");
 
           toasts.error({
             duration: "long",
