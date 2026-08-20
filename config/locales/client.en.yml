@@ -7625,8 +7625,6 @@ en:
             apply: "Apply"
             enable: "Enable %{title}"
             disable: "Disable %{title}"
-            move_up: "Move %{title} up"
-            move_down: "Move %{title} down"
             footer_note: "These changes will apply for all users."
 
         configure:
