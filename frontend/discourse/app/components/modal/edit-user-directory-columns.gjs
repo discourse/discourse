@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-automatic";
 import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
@@ -11,16 +10,34 @@ import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
-
-const UP = "up";
-const DOWN = "down";
 
 export default class EditUserDirectoryColumns extends Component {
   @tracked loading = true;
   @tracked columns;
   @tracked flash;
+
+  /**
+   * A plain-text name for a column, for the reorder controls and
+   * announcements — the rendered header title can carry icon markup, which an
+   * accessible name cannot.
+   *
+   * @param {Object} column - The column to name.
+   * @returns {string} The translated column name.
+   */
+  columnLabel = (column) => {
+    if (column.type === "automatic") {
+      return i18n(`directory.${column.name}_long`, {
+        defaultValue: i18n(`directory.${column.name}`),
+      });
+    }
+    if (column.user_field) {
+      return column.user_field.name;
+    }
+    return i18n(column.name);
+  };
 
   constructor() {
     super(...arguments);
@@ -83,33 +100,18 @@ export default class EditUserDirectoryColumns extends Component {
     this.columns = resetColumns;
   }
 
+  /**
+   * Applies a committed move and renumbers every column from its new visible
+   * slot — the stored order is exactly the displayed one here.
+   *
+   * @param {Object} move - The normalized move from the list.
+   */
   @action
-  moveUp(column) {
-    this._moveColumn(UP, column);
-  }
-
-  @action
-  moveDown(column) {
-    this._moveColumn(DOWN, column);
-  }
-
-  _moveColumn(direction, column) {
-    if (
-      (direction === UP && column.position === 1) ||
-      (direction === DOWN && column.position === this.columns.length)
-    ) {
-      return;
-    }
-
-    const positionOnClick = column.position;
-    const newPosition =
-      direction === UP ? positionOnClick - 1 : positionOnClick + 1;
-    const previousColumn = this.columns.find((c) => c.position === newPosition);
-    column.position = newPosition;
-    previousColumn.position = positionOnClick;
-    this.columns = this.columns.sort((a, b) =>
-      a.position > b.position ? 1 : -1
-    );
+  handleMove(move) {
+    this.columns = move.proposedToItems.map((column, index) => ({
+      ...column,
+      position: index + 1,
+    }));
   }
 
   <template>
@@ -123,45 +125,40 @@ export default class EditUserDirectoryColumns extends Component {
         {{#if this.loading}}
           {{dLoadingSpinner size="large"}}
         {{else}}
-          <div class="edit-directory-columns-container">
-            {{#each this.columns as |column|}}
-              <div class="edit-directory-column">
-                <div class="left-content">
-                  <label class="column-name">
-                    <Input @type="checkbox" @checked={{column.enabled}} />
-                    {{#if (directoryColumnIsAutomatic column=column)}}
-                      {{directoryTableHeaderTitle
-                        field=column.name
-                        icon=column.icon
-                      }}
-                    {{else if (directoryColumnIsUserField column=column)}}
-                      {{directoryTableHeaderTitle
-                        field=column.user_field.name
-                        translated=true
-                      }}
-                    {{else}}
-                      {{directoryTableHeaderTitle
-                        field=(i18n column.name)
-                        translated=true
-                      }}
-                    {{/if}}
-                  </label>
-                </div>
-                <div class="right-content">
-                  <DButton
-                    @icon="arrow-up"
-                    @action={{fn this.moveUp column}}
-                    class="btn-default button-secondary move-column-up"
-                  />
-                  <DButton
-                    @icon="arrow-down"
-                    @action={{fn this.moveDown column}}
-                    class="btn-default button-secondary move-column-down"
-                  />
-                </div>
-              </div>
-            {{/each}}
-          </div>
+          <DReorderableList
+            @items={{this.columns}}
+            @key="id"
+            @label={{this.columnLabel}}
+            @onMove={{this.handleMove}}
+            @controls="end"
+            @tag="div"
+            @itemTag="div"
+            @rowClass="edit-directory-column"
+            class="edit-directory-columns-container"
+            as |column|
+          >
+            <div class="left-content">
+              <label class="column-name">
+                <Input @type="checkbox" @checked={{column.enabled}} />
+                {{#if (directoryColumnIsAutomatic column=column)}}
+                  {{directoryTableHeaderTitle
+                    field=column.name
+                    icon=column.icon
+                  }}
+                {{else if (directoryColumnIsUserField column=column)}}
+                  {{directoryTableHeaderTitle
+                    field=column.user_field.name
+                    translated=true
+                  }}
+                {{else}}
+                  {{directoryTableHeaderTitle
+                    field=(i18n column.name)
+                    translated=true
+                  }}
+                {{/if}}
+              </label>
+            </div>
+          </DReorderableList>
         {{/if}}
       </:body>
       <:footer>

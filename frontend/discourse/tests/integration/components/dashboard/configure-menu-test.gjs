@@ -635,7 +635,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
   });
 
-  test(`${REORDER_TEST_PREFIX} desktop arrows are reachable by keyboard and bound at the ends`, async function (assert) {
+  test(`${REORDER_TEST_PREFIX} desktop keyboard path is one roving grab stop with pointer arrows bound at the ends`, async function (assert) {
     const sections = FOUR_SECTIONS;
     const noop = () => {};
 
@@ -650,19 +650,19 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     assert
-      .dom(".d-reorderable-list__handle")
-      .hasAttribute(
-        "tabindex",
-        "-1",
-        "the handle stays out of the tab order — the arrows carry the keyboard path"
+      .dom('.d-reorderable-list__handle.--grab[tabindex="0"]')
+      .exists(
+        { count: 1 },
+        "exactly one grab handle carries the list's tab stop"
       );
     assert
       .dom(
         '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
       )
-      .doesNotHaveAttribute(
+      .hasAttribute(
         "tabindex",
-        "the arrows keep their native button tab stop"
+        "-1",
+        "the arrows stay pointer-operable without adding tab stops"
       );
     assert
       .dom(
