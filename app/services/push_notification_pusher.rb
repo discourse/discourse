@@ -78,10 +78,10 @@ class PushNotificationPusher
     subscriptions_count = subscriptions.count
 
     new_subscription =
-      if subscriptions_count > 1
+      if subscriptions_count == 1
+        subscriptions.first
+      else
         subscriptions.destroy_all
-        PushSubscription.create!(user: user, data: data)
-      elsif subscriptions_count == 0
         PushSubscription.create!(user: user, data: data)
       end
 

@@ -1,34 +1,14 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { keyValueStore as pushNotificationKeyValueStore } from "discourse/lib/push-notifications";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-
-const userDismissedPromptKey = "dismissed-prompt";
 
 export default class NotificationConsentBanner extends Component {
   @service capabilities;
   @service currentUser;
   @service desktopNotifications;
   @service siteSettings;
-
-  @tracked bannerDismissed;
-
-  constructor() {
-    super(...arguments);
-    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
-      userDismissedPromptKey
-    );
-  }
-
-  setBannerDismissed(value) {
-    pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
-    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
-      userDismissedPromptKey
-    );
-  }
 
   get showNotificationPromptBanner() {
     return (
@@ -37,21 +17,21 @@ export default class NotificationConsentBanner extends Component {
       this.currentUser &&
       this.capabilities.isPwa &&
       Notification.permission !== "denied" &&
-      Notification.permission !== "granted" &&
       !this.desktopNotifications.isEnabled &&
-      !this.bannerDismissed
+      !this.desktopNotifications.consentPromptDismissed &&
+      (Notification.permission !== "granted" ||
+        this.desktopNotifications.canRestorePushWithoutPrompt)
     );
   }
 
   @action
   turnon() {
     this.desktopNotifications.enable();
-    this.setBannerDismissed(true);
   }
 
   @action
   dismiss() {
-    this.setBannerDismissed(false);
+    this.desktopNotifications.dismissConsentPrompt();
   }
 
   <template>

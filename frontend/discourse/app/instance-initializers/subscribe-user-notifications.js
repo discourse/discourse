@@ -10,11 +10,7 @@ import {
 } from "discourse/lib/desktop-notifications";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
-import {
-  isPushNotificationsEnabled,
-  register as registerPushNotifications,
-  unsubscribe as unsubscribePushNotifications,
-} from "discourse/lib/push-notifications";
+import { listenForPushNotificationMessages } from "discourse/lib/push-notifications";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import Notification from "discourse/models/notification";
 
@@ -22,6 +18,7 @@ class SubscribeUserNotificationsInit {
   @service appEvents;
   @service capabilities;
   @service currentUser;
+  @service desktopNotifications;
   @service messageBus;
   @service pmTopicTrackingState;
   @service router;
@@ -79,16 +76,22 @@ class SubscribeUserNotificationsInit {
 
       initDesktopNotifications(this.messageBus);
 
-      if (isPushNotificationsEnabled(this.currentUser)) {
-        disableDesktopNotifications();
-        registerPushNotifications(
-          this.currentUser,
-          this.router,
-          this.appEvents
-        );
-      } else {
-        unsubscribePushNotifications(this.currentUser);
-      }
+      listenForPushNotificationMessages(this.router, this.appEvents);
+
+      // MessageBus alerts stay on until push is confirmed: disabling them up
+      // front left the device with neither transport whenever the subscription
+      // turned out to be gone
+      this.desktopNotifications
+        .reconcilePushSubscription()
+        .then((result) => {
+          if (result === "subscribed") {
+            disableDesktopNotifications();
+          }
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
     }
   }
 

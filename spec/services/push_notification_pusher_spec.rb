@@ -317,5 +317,25 @@ RSpec.describe PushNotificationPusher do
         )
       end
     end
+
+    describe ".subscribe" do
+      it "sends the confirmation notification when the subscription already exists" do
+        params =
+          ActionController::Parameters.new(
+            endpoint: "endpoint",
+            keys: {
+              p256dh: "p256dh",
+              auth: "auth",
+            },
+          ).permit(:endpoint, keys: %i[p256dh auth])
+
+        WebPush.expects(:payload_send).once
+
+        PushNotificationPusher.subscribe(user, params, "false")
+        PushNotificationPusher.subscribe(user, params, "true")
+
+        expect(user.push_subscriptions.count).to eq(1)
+      end
+    end
   end
 end
