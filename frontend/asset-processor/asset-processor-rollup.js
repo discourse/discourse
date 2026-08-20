@@ -19,6 +19,7 @@ import discourseExternalLoader from "./rollup-plugins/discourse-external-loader"
 import discourseFileSearch from "./rollup-plugins/discourse-file-search";
 import discourseGjs from "./rollup-plugins/discourse-gjs";
 import discourseHbs from "./rollup-plugins/discourse-hbs";
+import discourseRegisterComponents from "./rollup-plugins/discourse-register-components";
 import discourseRouteMaps from "./rollup-plugins/discourse-route-maps";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
@@ -132,6 +133,7 @@ async function performRollup(modules, opts) {
       }),
       discourseHbs(),
       discourseGjs(),
+      discourseRegisterComponents({ basePath }),
       discourseTerser({ opts }),
     ],
   });
