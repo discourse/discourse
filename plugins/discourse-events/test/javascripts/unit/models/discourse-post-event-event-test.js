@@ -130,7 +130,7 @@ module("Unit | Model | DiscoursePostEventEvent", function () {
     const allDayEvent = DiscoursePostEventEvent.create({
       id: 1,
       starts_at: startsAt,
-      ends_at: null,
+      ends_at: startsAt,
       all_day: true,
     });
 
@@ -141,6 +141,48 @@ module("Unit | Model | DiscoursePostEventEvent", function () {
         allDayEvent.endsAt
       ),
       "returns true for all-day events on the same day"
+    );
+  });
+
+  test("isWithinEventTimeframe returns true during a multi-day all-day event", function (assert) {
+    const allDayEvent = DiscoursePostEventEvent.create({
+      id: 1,
+      starts_at: moment().subtract(1, "day").startOf("day").toISOString(),
+      ends_at: moment().add(1, "day").startOf("day").toISOString(),
+      all_day: true,
+    });
+
+    assert.true(
+      isWithinEventTimeframe(
+        allDayEvent.allDay,
+        allDayEvent.startsAt,
+        allDayEvent.endsAt
+      ),
+      "returns true between the all-day event's start and end dates"
+    );
+  });
+
+  test("pastEventTimeframe uses the end date for multi-day all-day events", function (assert) {
+    const ongoingEvent = DiscoursePostEventEvent.create({
+      id: 1,
+      starts_at: moment().subtract(2, "days").startOf("day").toISOString(),
+      ends_at: moment().endOf("day").toISOString(),
+      all_day: true,
+    });
+    const pastEvent = DiscoursePostEventEvent.create({
+      id: 2,
+      starts_at: moment().subtract(2, "days").startOf("day").toISOString(),
+      ends_at: moment().subtract(1, "day").endOf("day").toISOString(),
+      all_day: true,
+    });
+
+    assert.false(
+      ongoingEvent.pastEventTimeframe,
+      "the event remains active through its end date"
+    );
+    assert.true(
+      pastEvent.pastEventTimeframe,
+      "the event is past after its end date"
     );
   });
 
