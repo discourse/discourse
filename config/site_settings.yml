@@ -15,7 +15,8 @@
 # locale_default        - A hash which overrides according to `SiteSetting.default_locale`.
 #                         The key should be as the same as possible value of default_locale.
 # mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
-#                         in the UI.
+#                         in the UI. Only applies to pipe-separated list type settings (e.g. group_list), as the values
+#                         are merged into the setting's value on both read and write.
 # disallowed_groups     - A list of group IDs (pipe-separated) that should be hidden from the group selector.
 #                         These groups cannot be selected and will be stripped if set via API.
 #                         Only applies to group_list type settings.
