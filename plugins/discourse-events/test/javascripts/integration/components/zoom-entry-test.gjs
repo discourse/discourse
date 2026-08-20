@@ -74,19 +74,6 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     );
   });
 
-  test("tags the body while the zoom entry is on screen", async function (assert) {
-    await render(
-      <template><LivestreamZoomEntry @event={{this.event}} /></template>
-    );
-
-    assert.true(
-      document.body.classList.contains(
-        "discourse-calendar-livestream-zoom-topic"
-      ),
-      "the header icon is hidden by CSS while the zoom entry is present"
-    );
-  });
-
   test("disables the join button outside the event timeframe", async function (assert) {
     this.event.currentlyWithinEventTimeframe = false;
 

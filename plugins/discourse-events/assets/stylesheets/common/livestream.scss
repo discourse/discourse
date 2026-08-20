@@ -272,13 +272,3 @@ body.discourse-calendar-livestream-zoom-full {
     display: none;
   }
 }
-
-// On a zoom livestream the join button routes to the dedicated /zoom page,
-// which renders the chat inline, so the overlay chat header icon is redundant
-// while the zoom entry or the zoom page is on screen.
-body.discourse-calendar-livestream-zoom-topic,
-body.discourse-calendar-livestream-zoom-full {
-  .d-header-icons .livestream-header-icon {
-    display: none;
-  }
-}

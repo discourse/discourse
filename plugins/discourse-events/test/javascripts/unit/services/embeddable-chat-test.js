@@ -108,4 +108,36 @@ module("Unit | Service | embeddable-chat", function (hooks) {
 
     assert.false(this.subject.showLivestreamHeaderChatIcon);
   });
+
+  test("hides the header chat icon on a zoom livestream", function (assert) {
+    const owner = getOwner(this);
+    owner.lookup("service:site-settings").livestream_zoom_enabled = true;
+    this.capabilities.viewport.lg = false;
+
+    const event = { is_zoom_livestream: true, ends_at: null };
+    this.topicController.model = {
+      chat_channel_id: 9,
+      // The join button lives on the first post, which is not necessarily the
+      // first post loaded into the stream.
+      postStream: { posts: [{ post_number: 4 }, { post_number: 1, event }] },
+    };
+
+    assert.false(
+      this.subject.showLivestreamHeaderChatIcon,
+      "the zoom page renders the chat inline instead"
+    );
+
+    event.ends_at = moment().subtract(1, "hour").toISOString();
+    assert.true(
+      this.subject.showLivestreamHeaderChatIcon,
+      "the icon comes back once the webinar is over"
+    );
+
+    event.ends_at = null;
+    owner.lookup("service:site-settings").livestream_zoom_enabled = false;
+    assert.true(
+      this.subject.showLivestreamHeaderChatIcon,
+      "and when the zoom integration is off"
+    );
+  });
 });

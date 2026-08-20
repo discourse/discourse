@@ -223,4 +223,40 @@ module("Unit | Model | DiscoursePostEventEvent", function () {
       "returns true for non-all-day events within the timeframe"
     );
   });
+
+  test("isWithinEventTimeframe stays open for an event without an end time", function (assert) {
+    const started = DiscoursePostEventEvent.create({
+      id: 6,
+      starts_at: moment().subtract(3, "hours").toISOString(),
+      ends_at: null,
+      all_day: false,
+    });
+    const notYetOpen = DiscoursePostEventEvent.create({
+      id: 7,
+      starts_at: moment().add(45, "minutes").toISOString(),
+      ends_at: null,
+      all_day: false,
+    });
+
+    assert.true(
+      isWithinEventTimeframe(started.allDay, started.startsAt, started.endsAt),
+      "an event without an end time never closes"
+    );
+    assert.false(
+      isWithinEventTimeframe(
+        notYetOpen.allDay,
+        notYetOpen.startsAt,
+        notYetOpen.endsAt
+      ),
+      "early access still applies"
+    );
+  });
+
+  test("isWithinEventTimeframe returns false without a start time", function (assert) {
+    assert.false(isWithinEventTimeframe(false, null, null), "no start time");
+    assert.false(
+      isWithinEventTimeframe(false, undefined, undefined),
+      "undefined start time"
+    );
+  });
 });

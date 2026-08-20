@@ -1,5 +1,6 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { trackedObject } from "@ember/reactive/collections";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -194,6 +195,23 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
 
     assert.false(this.eventApi.joinEvent.called, "no answer is overwritten");
     assert.false(this.eventApi.updateEventAttendance.called);
+  });
+
+  test("answers once, however often the post changes underneath it", async function (assert) {
+    const event = this.topic.postStream.posts[0].event;
+    event.can_update_attendance = true;
+
+    const post = trackedObject({ event });
+    this.topic.postStream.posts = [post];
+
+    await render(
+      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
+    );
+
+    post.event = { ...event };
+    await settled();
+
+    assert.strictEqual(this.eventApi.joinEvent.callCount, 1);
   });
 
   test("does not answer for a user the event will not take one from", async function (assert) {

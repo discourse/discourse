@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import optionalService from "discourse/lib/optional-service";
+import { isPastEventTimeframe } from "../models/discourse-post-event-event";
 
 export default class EmbeddableChat extends Service {
   @service siteSettings;
@@ -80,7 +81,23 @@ export default class EmbeddableChat extends Service {
   }
 
   get showLivestreamHeaderChatIcon() {
-    return this.isMobileViewport && !!this.chatChannelId;
+    return (
+      this.isMobileViewport &&
+      !!this.chatChannelId &&
+      !this.hasActiveZoomLivestream
+    );
+  }
+
+  get hasActiveZoomLivestream() {
+    if (!this.siteSettings.livestream_zoom_enabled) {
+      return false;
+    }
+
+    const event = this.topic?.postStream?.posts?.find(
+      (post) => post.post_number === 1
+    )?.event;
+
+    return !!event?.is_zoom_livestream && !isPastEventTimeframe(event.ends_at);
   }
 
   get topicController() {

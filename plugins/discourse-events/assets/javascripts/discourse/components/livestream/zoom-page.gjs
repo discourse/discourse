@@ -41,6 +41,16 @@ export default class LivestreamZoomPage extends Component {
     return () => window.removeEventListener("message", this.onFrameMessage);
   });
 
+  confirmAttendance = modifier(() => {
+    if (this.#attendanceConfirmed) {
+      return;
+    }
+
+    this.#attendanceConfirmed = true;
+    this.markAsGoing();
+  });
+  #attendanceConfirmed = false;
+
   // Attendance is what follows a user into the livestream chat channel, so
   // someone who reaches the meeting without ever answering the RSVP would sit
   // in front of a read-only chat beside it. Anyone who has already made a
@@ -49,9 +59,11 @@ export default class LivestreamZoomPage extends Component {
   // This page is the only way into the meeting, and it is addressable in its
   // own right, so it is asked for here rather than beside the button that
   // usually leads here.
-  confirmAttendance = modifier(() => {
-    this.markAsGoing();
-  });
+  //
+  // Asked once per visit: the body reads tracked state, so it would otherwise
+  // run again whenever the post is invalidated, and `event` is rebuilt from the
+  // raw payload on each access, so a later run cannot see the invitee the first
+  // one wrote
 
   get post() {
     return this.args.topic?.postStream?.posts?.[0];

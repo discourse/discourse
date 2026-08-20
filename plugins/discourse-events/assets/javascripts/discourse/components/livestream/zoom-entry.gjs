@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import bodyClass from "discourse/helpers/body-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -66,7 +65,6 @@ export default class LivestreamZoomEntry extends Component {
 
   <template>
     {{#if this.shouldRender}}
-      {{bodyClass "discourse-calendar-livestream-zoom-topic"}}
       <div class="discourse-calendar-livestream-zoom-entry">
         <div class="discourse-calendar-livestream-zoom-entry__actions">
           <DButton
