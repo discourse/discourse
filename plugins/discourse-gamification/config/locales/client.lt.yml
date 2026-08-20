@@ -37,3 +37,8 @@ lt:
       custom_range_from: "Nuo"
       admin:
         name: "Vardas"
+    discourse_workflows:
+      gamification_score:
+        username: "Narys"
+        date: "Data"
+        description: "Aprašymas"

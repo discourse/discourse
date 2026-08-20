@@ -77,7 +77,7 @@ module DiscourseWorkflows
           - remove_node: { op: "remove_node", node_id }
           - add_connection: { op: "add_connection", from, to, output_index, input_index, connection_type }
           - remove_connection: { op: "remove_connection", from, to, output_index, input_index }
-        - In add_connection, use connection_type "main" for normal single-output nodes. For condition:filter and condition:if, connect the passing branch with connection_type "true"; use "false" only when the rejected/false branch should continue.
+        - In add_connection, use the output's numeric index to select a branch and use connection_type "main" for standard workflow ports. For condition:filter and condition:if, output_index 0 is the true/passing branch and output_index 1 is the false/rejected branch; connection_type remains "main" for both.
         - If you update an existing node's parameters, also rename that node when its current name would no longer match the updated behavior. Keep edited node names aligned with the latest requested configuration; for example, when changing a wait node from one hour to two hours, include a rename_node operation such as "Wait 2 hours" in the same proposal.
         - In add_node, node.credentials must be a JSON object. Use {} when no saved credential is selected, and do not copy the catalog's credential requirements array into node.credentials. Keep credentials as a sibling of parameters in node, never nested inside parameters.
         - In add_node, prefer position as an object like { "x": 280, "y": 0 }. The server can normalize [x, y] arrays, but object positions are clearer.

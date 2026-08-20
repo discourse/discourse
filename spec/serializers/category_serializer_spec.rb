@@ -398,14 +398,25 @@ RSpec.describe CategorySerializer do
     subject(:json) { described_class.new(category, scope: scope, root: false).as_json }
 
     fab!(:attached_tag_group) { Fabricate(:tag_group, name: "category-allowed-group") }
+    fab!(:restricted_tag_group) do
+      Fabricate(:tag_group, name: "category-restricted-group", permissions: { "staff" => 1 })
+    end
 
-    before { category.tag_groups << attached_tag_group }
+    before { category.tag_groups << [attached_tag_group, restricted_tag_group] }
 
     context "for a non-editor" do
       let(:scope) { user.guardian }
 
-      it "is not included" do
-        expect(json).not_to have_key(:allowed_tag_groups)
+      it "includes only the names of tag groups visible to the user" do
+        expect(json[:allowed_tag_groups]).to contain_exactly(attached_tag_group.name)
+      end
+    end
+
+    context "for an anonymous user" do
+      let(:scope) { Guardian.new }
+
+      it "includes only the names of publicly visible tag groups" do
+        expect(json[:allowed_tag_groups]).to contain_exactly(attached_tag_group.name)
       end
     end
 
@@ -413,7 +424,10 @@ RSpec.describe CategorySerializer do
       let(:scope) { admin.guardian }
 
       it "is included with all tag-group names" do
-        expect(json[:allowed_tag_groups]).to contain_exactly(attached_tag_group.name)
+        expect(json[:allowed_tag_groups]).to contain_exactly(
+          attached_tag_group.name,
+          restricted_tag_group.name,
+        )
       end
     end
 

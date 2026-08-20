@@ -35,12 +35,20 @@ pre-commit:
         - "plugins/**/*.{js,gjs,ts,gts,mts,cts,scss,css,cjs,mjs}"
         - "themes/**/*.{js,gjs,ts,gts,mts,cts,scss,css,cjs,mjs}"
       run: pnpm pprettier --list-different {staged_files}
+    # docs/developer-guides is its own pnpm workspace package with its own
+    # prettier config. It needs `root` so prettier runs with that directory as
+    # its cwd: the repo-root .prettierignore ignores **/*.md, so a run from the
+    # root silently checks nothing and exits 0.
+    developer-docs-prettier:
+      root: &developer_docs_root "docs/developer-guides/"
+      glob: &developer_docs_glob "docs/developer-guides/**/*.{md,json,mjs,yml}"
+      run: pnpm prettier --list-different {staged_files}
     eslint:
       glob: &eslint_glob
         - "frontend/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}"
         - "plugins/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}"
         - "themes/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}"
-      run: pnpm eslint --max-warnings 0 {staged_files}
+      run: pnpm eslint --max-warnings 0 --no-warn-ignored {staged_files}
     yaml-syntax:
       glob: &yaml_glob "**/*.{yaml,yml}"
       # database.yml is an erb file not a yaml file
@@ -62,9 +70,13 @@ fix-staged:
     prettier:
       glob: *prettier_glob
       run: pnpm pprettier --write {staged_files}
+    developer-docs-prettier:
+      root: *developer_docs_root
+      glob: *developer_docs_glob
+      run: pnpm prettier --write {staged_files}
     eslint:
       glob: *eslint_glob
-      run: pnpm eslint --fix {staged_files}
+      run: pnpm eslint --fix --no-warn-ignored {staged_files}
     stylelint:
       glob: *stylelint_glob
       run: pnpm stylelint --fix {staged_files}
@@ -101,10 +113,15 @@ lint-files:
       files: *working_tree_files
       glob: *prettier_glob
       run: pnpm pprettier --list-different {files}
+    developer-docs-prettier:
+      files: *working_tree_files
+      root: *developer_docs_root
+      glob: *developer_docs_glob
+      run: pnpm prettier --list-different {files}
     eslint:
       files: *working_tree_files
       glob: *eslint_glob
-      run: pnpm eslint --max-warnings 0 {files}
+      run: pnpm eslint --max-warnings 0 --no-warn-ignored {files}
     yaml-syntax:
       files: *working_tree_files
       glob: *yaml_glob
@@ -126,6 +143,11 @@ fix-files:
       files: *working_tree_files
       glob: *prettier_glob
       run: pnpm pprettier --write {files}
+    developer-docs-prettier:
+      files: *working_tree_files
+      root: *developer_docs_root
+      glob: *developer_docs_glob
+      run: pnpm prettier --write {files}
     eslint:
       files: *working_tree_files
       glob: *eslint_glob

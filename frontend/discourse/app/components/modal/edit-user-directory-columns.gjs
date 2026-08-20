@@ -173,7 +173,7 @@ export default class EditUserDirectoryColumns extends Component {
         <DButton
           @label="directory.edit_columns.reset_to_default"
           @action={{this.resetToDefault}}
-          class="btn-default btn-secondary reset-to-default"
+          class="btn-default reset-to-default"
         />
       </:footer>
     </DModal>

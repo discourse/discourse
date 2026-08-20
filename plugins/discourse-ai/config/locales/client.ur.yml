@@ -14,7 +14,7 @@ ur:
               search: "اے آئی تلاش کی اجازت دیتا ہے"
       site_settings:
         categories:
-          discourse_ai: "ڈسکورس اے آئی"
+          discourse_ai: "Discourse AI"
       dashboard:
         emotion:
           title: "جذبات"
@@ -157,6 +157,40 @@ ur:
           last_week: "گزشتہ ہفتے"
           last_month: "گزشتہ ماہ"
           custom: "ترمیم..."
+      logs:
+        short_title: "لاگز"
+        apply: "لاگو کریں"
+        successful: "کامیابی"
+        failed: "ناکامی"
+        unknown: "نامعلوم"
+        topic_id: "ٹاپک ID"
+        post_id: "پوسٹ ID"
+        time: "وقت"
+        when: "کب"
+        outcome: "نتیجہ"
+        request: "ریکویسٹ"
+        provider: "پرووَائیڈر"
+        user: "رکن"
+        context: "سیاق و سباق"
+        topic: "ٹاپک"
+        post: "دھاگہ"
+        post_short: "پوسٹ %{id}"
+        duration: "دورانیہ"
+        actions: "عمل"
+        filters:
+          period: "دورانیہ"
+        periods:
+          day: "پچھلے 24 گھنٹے"
+          week: "پچھلے 7 دن"
+          custom: "اپنی مرضی کا"
+        detail:
+          request: "ریکویسٹ"
+          response: "جواب"
+          context: "سیاق و سباق"
+        retention:
+          summary_stage: "Summary"
+          deleted_stage: "مٹائیں"
+          save: "محفوظ"
       ai_agent:
         name: "نام"
         edit: "ترمیم کریں"
@@ -228,6 +262,9 @@ ur:
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"
+        vision_modes:
+          disabled:
+            title: "غیر فعال"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
         delete: مٹائیں
@@ -282,6 +319,7 @@ ur:
       ai_bot:
         pm_warning: "AI چیٹ بوٹ پیغامات کو نگرانوں کے ذریعے باقاعدگی سے مانیٹر کیا جاتا ہے۔"
         debug_ai_modal:
+          duration_label: "دورانیہ:"
           request: "ریکویسٹ"
           response: "جواب"
           next_log: "اگلا"

@@ -128,6 +128,12 @@ RSpec.describe DiscourseAi::AiBot::BotController do
           response_tokens: 2,
         )
 
+      decoded_stream = <<~SSE
+        data: {"choices":[{"delta":{"content":"decoded response"}}]}
+
+        data: [DONE]
+
+      SSE
       log2 =
         AiApiAuditLog.create!(
           post_id: pm_post.id,
@@ -135,7 +141,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
           topic_id: pm_topic.id,
           feature_name: "ai_bot",
           raw_request_payload: "request",
-          raw_response_payload: "response",
+          raw_response_payload: decoded_stream,
           request_tokens: 1,
           response_tokens: 2,
         )
@@ -166,7 +172,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.parsed_body["request_tokens"]).to eq(1)
       expect(response.parsed_body["response_tokens"]).to eq(2)
       expect(response.parsed_body["raw_request_payload"]).to eq("request")
-      expect(response.parsed_body["raw_response_payload"]).to eq("response")
+      expect(response.parsed_body["raw_response_payload"]).to eq(decoded_stream)
+      expect(response.parsed_body["decoded_response"]).to eq("response" => "decoded response")
 
       get "/discourse-ai/ai-bot/post/#{pm_post3.id}/show-debug-info"
       expect(response.status).to eq(200)
@@ -176,6 +183,10 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       get "/discourse-ai/ai-bot/show-debug-info/#{log1.id}"
       expect(response.status).to eq(200)
       expect(response.parsed_body["id"]).to eq(log1.id)
+      expect(response.parsed_body).to include(
+        "raw_response_payload" => "response",
+        "decoded_response" => nil,
+      )
     end
 
     it "prefers the post's own log over a newer topic-scoped log like title generation" do

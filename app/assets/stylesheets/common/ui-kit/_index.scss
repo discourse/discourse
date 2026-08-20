@@ -1,0 +1,8 @@
+/* Styles owned by ui-kit primitives, mirroring `frontend/discourse/app/ui-kit/`
+   the way `form-kit`, `float-kit` and `select-kit` mirror theirs. Component
+   stylesheets not yet moved out of `common/components/` still live there; new
+   ui-kit styles belong here. */
+
+@import "d-pointer-drag";
+@import "d-resize-separator";
+@import "d-drag-and-drop";

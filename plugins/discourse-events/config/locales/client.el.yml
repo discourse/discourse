@@ -1,0 +1,474 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  admin_js:
+    admin:
+      calendar: "Συμβάντα"
+      site_settings:
+        categories:
+          discourse_post_event: "Εκδήλωση Discourse"
+          discourse_calendar: "Συμβάντα"
+      web_hooks:
+        calendar_event:
+          group_name: "Εκδήλωση ημερολογίου"
+          calendar_event_created: "Εκδήλωση ημερολογίου δημιουργήθηκε"
+          calendar_event_updated: "Εκδήλωση ημερολογίου ενημερώθηκε"
+          calendar_event_destroyed: "Εκδήλωση ημερολογίου καταστράφηκε"
+  js:
+    notifications:
+      titles:
+        event_reminder: "υπενθύμιση εκδήλωσης"
+        event_invitation: "πρόσκληση σε εκδήλωση"
+      popup:
+        event_reminder: Υπενθύμιση εκδήλωσης
+    discourse_automation:
+      triggerables:
+        event_started:
+          title: Η εκδήλωση ξεκίνησε
+          fields:
+            topic_id:
+              label: ID Θέματος
+    discourse_calendar:
+      invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
+      preferences:
+        all_events_description: "Όλες οι εκδηλώσεις του φόρουμ"
+        my_events_description: "Εκδηλώσεις στις οποίες θα παραστείτε ή ενδιαφέρεστε"
+      disable_holiday: "Απενεργοποίηση"
+      enable_holiday: "Ενεργοποίηση"
+      holidays:
+        pick_region_description: "Επιλέξτε μια περιοχή για να δείτε τις αργίες για αυτήν την περιοχή."
+      date: "Ημερομηνία"
+      add_to_calendar: "Προσθήκη στο Ημερολόγιο Google"
+      local_time: "Τοπική ώρα"
+      region:
+        title: "Περιοχή"
+        none: "Κανένα"
+        use_current_region: "Χρήση τρέχουσας περιοχής"
+        select_region: "Επιλέξτε μια περιοχή..."
+        names:
+          ae: "Ηνωμένα Αραβικά Εμιράτα"
+          ar: "Αργεντινή"
+          at: "Αυστρία"
+          au_act: "Αυστραλία (au_act)"
+          au_nsw: "Αυστραλία (au_nsw)"
+          au_nt: "Αυστραλία (au_nt)"
+          au_qld_brisbane: "Αυστραλία (au_qld_brisbane)"
+          au_qld_cairns: "Αυστραλία (au_qld_cairns)"
+          au_qld: "Αυστραλία (au_qld)"
+          au_sa: "Australia (au_sa)"
+          au_tas_north: "Αυστραλία (au_tas_north)"
+          au_tas_south: "Αυστραλία (au_tas_south)"
+          au_tas: "Australia (au_tas)"
+          au_vic_melbourne: "Αυστραλία (au_vic_melbourne)"
+          au_vic: "Αυστραλία (au_vic)"
+          au_wa: "Αυστραλία (au_wa)"
+          au: "Αυστραλία"
+          be_fr: "Βέλγιο (be_fr)"
+          be_nl: "Βέλγιο (be_nl)"
+          bg_bg: "Βουλγαρία (bg_bg)"
+          bg_en: "Βουλγαρία (bg_en)"
+          br: "Βραζιλία"
+          br_sp: "Βραζιλία (br_sp)"
+          br_spcapital: "Βραζιλία (br_spcapital)"
+          ca_ab: "Καναδάς (ca_ab)"
+          ca_bc: "Καναδάς (ca_bc)"
+          ca_mb: "Καναδάς (ca_mb)"
+          ca_nb: "Καναδάς (ca_nb)"
+          ca_nl: "Καναδάς (ca_nl)"
+          ca_ns: "Καναδάς (ca_ns)"
+          ca_nt: "Καναδάς (ca_nt)"
+          ca_nu: "Καναδάς (ca_nu)"
+          ca_on: "Καναδάς (ca_on)"
+          ca: "Καναδάς"
+          ch: "Ελβετία"
+          cl: "Χιλή"
+          co: "Κολομβία"
+          cr: "Κόστα Ρίκα"
+          cz: "Τσεχία"
+          de_bb: "Γερμανία (de_bb)"
+          de_be: "Γερμανία (de_be)"
+          de_bw: "Γερμανία (de_bw)"
+          de_by_augsburg: "Γερμανία (de_by_augsburg)"
+          de_by_cath: "Γερμανία (de_by_cath)"
+          de_by: "Γερμανία (de_by)"
+          de_hb: "Γερμανία (de_hb)"
+          de_he: "Γερμανία (de_he)"
+          de_hh: "Γερμανία (de_hh)"
+          de_mv: "Γερμανία (de_mv)"
+          de_ni: "Γερμανία (de_ni)"
+          de_nw: "Γερμανία (de_nw)"
+          de_rp: "Γερμανία (de_rp)"
+          de_sh: "Γερμανία (de_sh)"
+          de_sl: "Γερμανία (de_sl)"
+          de_sn_sorbian: "Γερμανία (de_sn_sorbian)"
+          de_sn: "Γερμανία (de_sn)"
+          de_st: "Γερμανία (de_st)"
+          de_th_cath: "Γερμανία (de_th_cath)"
+          de_th: "Γερμανία (de_th)"
+          de: "Γερμανία"
+          dk: "Δανία"
+          ee: "Εσθονία"
+          el: "Ελλάδα"
+          gr: "Ελλάδα"
+          es_an: "Ισπανία (es_an)"
+          es_ar: "Ισπανία (es_ar)"
+          es_ce: "Ισπανία (es_ce)"
+          es_cl: "Ισπανία (es_cl)"
+          es_cm: "Ισπανία (es_cm)"
+          es_cn: "Ισπανία (es_cn)"
+          es_ct: "Ισπανία (es_ct)"
+          es_ex: "Ισπανία (es_ex)"
+          es_ga: "Ισπανία (es_ga)"
+          es_ib: "Ισπανία (es_ib)"
+          es_lo: "Ισπανία (es_lo)"
+          es_m: "Ισπανία (es_m)"
+          es_mu: "Ισπανία (es_mu)"
+          es_na: "Ισπανία (es_na)"
+          es_o: "Ισπανία (es_o)"
+          es_pv: "Ισπανία (es_pv)"
+          es_v: "Ισπανία (es_v)"
+          es_vc: "Ισπανία (es_vc)"
+          es: "Ισπανία"
+          fi: "Φινλανδία"
+          fr_a: "Γαλλία (fr_a)"
+          fr_m: "Γαλλία (fr_m)"
+          fr: "Γαλλία"
+          gb_con: "Ηνωμένο Βασίλειο (gb_con)"
+          gb_eaw: "Ηνωμένο Βασίλειο (gb_eaw)"
+          gb_eng: "Ηνωμένο Βασίλειο (gb_eng)"
+          gb: "Ηνωμένο Βασίλειο"
+          ge: "Γεωργία"
+          gg: "Γκέρνσεϊ"
+          gh: "Γκάνα"
+          hk: "Χονγκ Κονγκ"
+          hr: "Κροατία"
+          hu: "Ουγγαρία"
+          id: "Ινδονησία"
+          ie: "Ιρλανδία"
+          im: "Νήσος Μαν"
+          in: "Ινδία"
+          is: "Ισλανδία"
+          it: "Ιταλία"
+          je: "Τζέρσεϊ"
+          jp: "Ιαπωνία"
+          li: "Λιχτενστάιν"
+          lt: "Λιθουανία"
+          lu: "Λουξεμβούργο"
+          lv: "Λετονία"
+          ma: "Μαρόκο"
+          mx: "Μεξικό"
+          my: "Μαλαισία"
+          ng: "Νιγηρία"
+          nl: "Ολλανδία"
+          "no": "Νορβηγία"
+          nz_ak: "Νέα Ζηλανδία (nz_ak)"
+          nz_ca: "Νέα Ζηλανδία (nz_ca)"
+          nz_ch: "Νέα Ζηλανδία (nz_ch)"
+          nz_hb: "Νέα Ζηλανδία (nz_hb)"
+          nz_mb: "Νέα Ζηλανδία (nz_mb)"
+          nz_ne: "Νέα Ζηλανδία (nz_ne)"
+          nz_nl: "Νέα Ζηλανδία (nz_nl)"
+          nz_ot: "Νέα Ζηλανδία (nz_ot)"
+          nz_sc: "Νέα Ζηλανδία (nz_sc)"
+          nz_sl: "Νέα Ζηλανδία (nz_sl)"
+          nz_ta: "Νέα Ζηλανδία (nz_ta)"
+          nz_we: "Νέα Ζηλανδία (nz_we)"
+          nz_wl: "Νέα Ζηλανδία (nz_wl)"
+          nz: "Νέα Ζηλανδία"
+          pe: "Περού"
+          ph: "Φιλιππίνες"
+          pl: "Πολωνία"
+          pt_li: "Πορτογαλία (pt_li)"
+          pt_po: "Πορτογαλία (pt_po)"
+          pt: "Πορτογαλία"
+          ro: "Ρουμανία"
+          rs_cyrl: "Σερβία (rs_cyrl)"
+          rs_la: "Σερβία (rs_la)"
+          ru: "Ρωσική Ομοσπονδία"
+          se: "Σουηδία"
+          sa: "Σαουδική Αραβία"
+          sg: "Σιγκαπούρη"
+          si: "Σλοβενία"
+          sk: "Σλοβακία"
+          th: "Ταϊλάνδη"
+          tn: "Τυνησία"
+          tr: "Τουρκία"
+          ua: "Ουκρανία"
+          us_ak: "Ηνωμένες Πολιτείες (us_ak)"
+          us_al: "Ηνωμένες Πολιτείες (us_al)"
+          us_ar: "Ηνωμένες Πολιτείες (us_ar)"
+          us_az: "Ηνωμένες Πολιτείες (us_az)"
+          us_ca: "Ηνωμένες Πολιτείες (us_ca)"
+          us_co: "Ηνωμένες Πολιτείες (us_co)"
+          us_ct: "Ηνωμένες Πολιτείες (us_ct)"
+          us_dc: "Ηνωμένες Πολιτείες (us_dc)"
+          us_de: "Ηνωμένες Πολιτείες (us_de)"
+          us_fl: "Ηνωμένες Πολιτείες (us_fl)"
+          us_ga: "Ηνωμένες Πολιτείες (us_ga)"
+          us_gu: "Ηνωμένες Πολιτείες (us_gu)"
+          us_hi: "Ηνωμένες Πολιτείες (us_hi)"
+          us_ia: "Ηνωμένες Πολιτείες (us_ia)"
+          us: "Ηνωμένες Πολιτείες"
+          ve: "Βενεζουέλα"
+          vi: "Αμερικανικές Παρθένοι Νήσοι"
+          za: "Νότια Αφρική"
+          zw: "Ζιμπάμπουε"
+      toolbar_button:
+        today: "Σήμερα"
+        month: "Μήνας"
+        week: "Εβδομάδα"
+        day: "Ημέρα"
+        year: "Χρόνος"
+    group_timezones:
+      search: "Αναζήτηση..."
+      group_availability: "Διαθεσιμότητα %{group}"
+    discourse_post_event:
+      new_event: "Νέα εκδήλωση"
+      notifications:
+        before_event_reminder: "Μια εκδήλωση πρόκειται να ξεκινήσει"
+        after_event_reminder: "Μια εκδήλωση έχει λήξει"
+        ongoing_event_reminder: "Μια εκδήλωση βρίσκεται σε εξέλιξη"
+        invite_user_notification: "%{username} %{description}"
+        invite_user_predefined_attendance_notification: "Ο/Η %{username} έχει ορίσει αυτόματα την παρουσία σας και σας έχει προσκαλέσει στο %{eventName}"
+        an_event: "μια εκδήλωση"
+      event_description:
+        show_more: "Δείτε περισσότερα"
+        show_less: "Δείξε λιγότερα"
+      edit_reason: "Η εκδήλωση ενημερώθηκε"
+      edit_reason_closed: "Η εκδήλωση έκλεισε"
+      edit_reason_opened: "Η εκδήλωση άνοιξε"
+      topic_title:
+        starts_at: "Η εκδήλωση θα ξεκινήσει: %{date}"
+        ended_at: "Η εκδήλωση τελείωσε: %{date}"
+        ends_in_duration: "Τελειώνει %{duration}"
+      show_all: "Εμφάνιση όλων"
+      show_participants: "Εμφάνιση συμμετεχόντων"
+      participants:
+        one: "%{count} χρήστης συμμετείχε."
+        other: "%{count} χρήστες συμμετείχαν."
+      invite: "Ειδοποίηση χρήστη"
+      add_to_calendar: "Προσθήκη στο ημερολόγιο"
+      send_pm_to_creator: "Αποστολή ΠΜ στον/στην %{username}"
+      leave: "Αποχώρηση από την εκδήλωση"
+      edit_event: "Επεξεργασία εκδήλωσης"
+      export_event: "Εξαγωγή εκδήλωσης"
+      created_by: "Δημιουργήθηκε από"
+      bulk_invite: "Μαζική πρόσκληση"
+      close_event: "Κλείσιμο εκδήλωσης"
+      open_event: "Άνοιγμα εκδήλωσης"
+      destroy_event: "Καταστροφή εκδήλωσης"
+      invitees_modal:
+        title_invited: "Συμμετοχή σε Εκδήλωση"
+        title_participated: "Λίστα χρηστών που συμμετείχαν"
+        filter_placeholder: "Φιλτράρισμα χρηστών"
+        remove_invitee: "Αφαίρεση προσκεκλημένου από τη λίστα"
+        add_invitee: "Προσθήκη προσκεκλημένου στη λίστα"
+      bulk_invite_modal:
+        confirm: "επιβεβαίωση"
+        text: "Ανέβασμα αρχείου CSV"
+        title: "Μαζική πρόσκληση"
+        success: "Το αρχείο ανέβηκε. Θα ενημερωθείς με ένα μήνυμα όταν ολοκληρωθεί η διαδικασία."
+        error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
+        confirmation_message: "Πρόκειται να ειδοποιήσετε όλους όσους βρίσκονται στο αρχείο που έχετε ανεβάσει."
+        description_public: "Οι δημόσιες εκδηλώσεις δέχονται μόνο ονόματα χρηστών για μαζικές προσκλήσεις."
+        description_private: "Οι ιδιωτικές εκδηλώσεις δέχονται μόνο ονόματα ομάδων για μαζικές προσκλήσεις."
+        download_sample_csv: "Λήψη δείγματος αρχείου CSV"
+        send_bulk_invites: "Αποστολή προσκλήσεων"
+        group_selector_placeholder: "Επιλέξτε μια ομάδα..."
+        user_selector_placeholder: "Επιλέξτε χρήστη..."
+        inline_title: "Ενδογραμμική μαζική πρόσκληση"
+        csv_title: "Μαζική πρόσκληση CSV"
+      upcoming_events:
+        title: "Προσεχείς εκδηλώσεις"
+        creator: "Δημιουργός"
+        status: "Κατάσταση"
+        starts_at: "Ξεκινά στις"
+        all_events: "Όλες οι εκδηλώσεις"
+        my_events: "Οι εκδηλώσεις μου"
+      upcoming_events_list:
+        title: "Προσεχείς εκδηλώσεις"
+        empty: "Δεν υπάρχουν προσεχείς εκδηλώσεις"
+        all_day: "Όλη μέρα"
+        error: "Αποτυχία ανάκτησης εκδηλώσεων"
+        try_again: "Δοκιμάστε ξανά"
+        view_all: "Προβολή όλων"
+      category:
+        sort_topics_by_event_start_date: "Ταξινόμηση θεμάτων κατά ημερομηνία έναρξης εκδήλωσης."
+        disable_topic_resorting: "Απενεργοποίηση αναταξινόμησης θεμάτων."
+        settings_sections:
+          event_sorting: "Ταξινόμηση Εκδηλώσεων"
+      preview:
+        more_than_one_event: "Δεν μπορείτε να έχετε περισσότερες από μία εκδηλώσεις."
+      models:
+        invitee:
+          no_users: "Δεν βρέθηκαν χρήστες"
+          this_event: "Αυτή η εκδήλωση"
+          this_and_following: "Αυτή η εκδήλωση και όλες οι επόμενες εκδηλώσεις"
+          leave_event: "Αποχώρηση από την εκδήλωση"
+          status:
+            going: "Θα παραστεί"
+            not_going: "Δεν θα παραστεί"
+            interested: "Ενδιαφέρεται"
+            going_count:
+              one: "%{count} θα παραστεί"
+              other: "%{count} θα παραστούν"
+            not_going_count:
+              one: "%{count} δεν θα παραστεί"
+              other: "%{count} δεν θα παραστούν"
+            interested_count:
+              one: "%{count} ενδιαφέρεται"
+              other: "%{count} ενδιαφέρονται"
+            invited_count:
+              one: "%{count} χρήστης προσκλήθηκε"
+              other: "%{count} χρήστες προσκλήθηκαν"
+        event:
+          expired: "Έληξε"
+          closed: "Κλειστή"
+          full: "Πλήρης"
+          status:
+            standalone:
+              title: "Αυτόνομη"
+              description: "Δεν είναι δυνατή η συμμετοχή σε μεμονωμένη εκδήλωση."
+            public:
+              title: "Δημόσια"
+              description: "Σε μια δημόσια εκδήλωση μπορεί να συμμετάσχει οποιοσδήποτε."
+            private:
+              title: "Ιδιωτική"
+              description: "Σε μια ιδιωτική εκδήλωση μπορούν να συμμετάσχουν μόνο προσκεκλημένοι χρήστες."
+      composer:
+        name_placeholder: "Όνομα εκδήλωσης"
+        end_date_placeholder: "Ημερομηνία λήξης"
+        location_or_url_placeholder: "Προσθέστε τοποθεσία ή URL"
+        url_placeholder: "Προσθήκη URL"
+        max_attendees_placeholder: "Απεριόριστοι συμμετέχοντες"
+        max_attendees_display:
+          one: "Μέγιστο %{count} συμμετέχων"
+          other: "Μέγιστο %{count} συμμετέχοντες"
+        no_rsvps_label: "Δεν καταγράφεται η παρουσία"
+        description_placeholder: "Προσθήκη περιγραφής εκδήλωσης"
+        event_title_placeholder: "Όνομα εκδήλωσης"
+        create_event_button: "Δημιουργία εκδήλωσης"
+        all_day: "Όλη μέρα"
+        reminder:
+          units:
+            minutes:
+              one: "λεπτό"
+              other: "λεπτά"
+            hours:
+              one: "ώρα"
+              other: "ώρες"
+            days:
+              one: "ημέρα"
+              other: "ημέρες"
+            weeks:
+              one: "εβδομάδα"
+              other: "εβδομάδες"
+          before: "%{unit} πριν"
+          after: "%{unit} μετά"
+          notification_title: "Ειδοποίηση συμμετεχόντων"
+          remove: "Αφαίρεση υπενθύμισης"
+      composer_actions:
+        create_event:
+          label: "Δημιουργία εκδήλωσης"
+        create_topic:
+          label: "Δημιουργία θέματος"
+      builder_modal:
+        custom_fields:
+          label: "Προσαρμοσμένα πεδία"
+          placeholder: "Προαιρετικό"
+          description: "Τα επιτρεπόμενα προσαρμοσμένα πεδία ορίζονται στις ρυθμίσεις του ιστότοπου. Τα προσαρμοσμένα πεδία χρησιμοποιούνται για τη μετάδοση δεδομένων σε άλλα πρόσθετα."
+        create_event_title: "Δημιουργία Εκδήλωσης"
+        update_event_title: "Επεξεργασία Εκδήλωσης"
+        advanced_settings_title: "Προηγμένες ρυθμίσεις"
+        confirm_delete: "Σίγουρα θέλετε να διαγράψετε αυτήν την εκδήλωση;"
+        confirm_close: "Σίγουρα θέλετε να κλείσετε αυτήν την εκδήλωση;"
+        confirm_open: "Σίγουρα θέλετε να ανοίξετε αυτήν την εκδήλωση;"
+        create: "Δημιουργία"
+        update: "Αποθήκευση"
+        attach: "Δημιουργία εκδήλωσης"
+        add_reminder: "Προσθήκη υπενθύμισης"
+        show_local_time:
+          label: "Εμφάνιση τοπικής ώρας"
+          description: "Οι ημερομηνίες και οι ώρες θα εμφανίζονται χρησιμοποιώντας: %{timezone}. Χρησιμοποιήστε αυτήν την επιλογή για εκδηλώσεις σε μια τοποθεσία, ώστε οι ώρες να αντικατοπτρίζουν τη ζώνη ώρας όπου λαμβάνει χώρα η εκδήλωση."
+        timezone:
+          label: Ζώνη ώρας
+          remove_timezone: Χωρίς ζώνη ώρας (UTC)
+        starts_at:
+          label: "Ημερομηνία έναρξης"
+        ends_at:
+          label: "Ημερομηνία λήξης"
+        all_day:
+          label: "Ολοήμερη εκδήλωση"
+          description: "Μια ολοήμερη εκδήλωση δεν θα έχει συγκεκριμένες ώρες, μόνο ημερομηνία. Η εκδήλωση θα διαρκέσει από την αρχή έως το τέλος της ημέρας."
+        reminders:
+          label: "Υπενθυμίσεις"
+          types:
+            notification: "Ειδοποίηση συμμετεχόντων"
+          units:
+            minutes: "λεπτά"
+            hours: "ώρες"
+            days: "ημέρες"
+            weeks: "εβδομάδες"
+          periods:
+            before: "πριν"
+            after: "μετά"
+        recurrence_until:
+          label: "Μέχρι (συμπεριλαμβανομένης αυτής της ημερομηνίας)"
+        recurrence:
+          label: "Επανάληψη"
+          none: "Χωρίς επανάληψη"
+          every_day: "Κάθε μέρα"
+          every_weekday: "Κάθε εργάσιμη ημέρα"
+          every_week: "Κάθε %{weekday}"
+          every_two_weeks: "Κάθε δεύτερη %{weekday}"
+          every_four_weeks: "Κάθε 4 εβδομάδες την %{weekday}"
+          every_month: "Την %{ordinal} %{weekday} κάθε μήνα"
+          ordinals:
+            first: "πρώτη"
+            second: "δεύτερη"
+            third: "τρίτη"
+            fourth: "τέταρτη"
+            last: "τελευταία"
+        max_attendees:
+          label: "Μέγιστος αριθμός συμμετεχόντων"
+          placeholder: "Χωρίς όριο"
+        attendance:
+          label: "Πόσα μέλη μπορούν να δηλώσουν συμμετοχή σε αυτήν την εκδήλωση;"
+          unlimited: "Απεριόριστο"
+          up_to: "Μέχρι και..."
+          none: "Κανένα"
+        allow_chat:
+          label: "Ενσωμάτωση συνομιλίας"
+          checkbox_label: "Δημιουργία και διαχείριση συγκεκριμένου καναλιού συνομιλίας για την εκδήλωση"
+        location:
+          label: "Τοποθεσία"
+          placeholder: "Προσθέστε μια τοποθεσία, έναν σύνδεσμο ή κάτι άλλο."
+        url:
+          label: "URL"
+          placeholder: "Προαιρετικό"
+          add: "Προσθήκη URL"
+        description:
+          label: "Περιγραφή"
+          placeholder: "Πείτε στον κόσμο λίγο περισσότερα για την εκδήλωσή σας. Υποστηρίζονται νέες γραμμές και σύνδεσμοι."
+        name:
+          label: "Όνομα εκδήλωσης"
+          placeholder: "Προαιρετικό, προεπιλογή στον τίτλο θέματος"
+        invitees:
+          label: "Προσκεκλημένες ομάδες"
+        event_type:
+          label: "Τύπος παρουσίας"
+          public:
+            title: "Δημόσια"
+            description: "Οποιοσδήποτε μπορεί να παραστεί."
+          private:
+            title: "Μόνο κατόπιν πρόσκλησης"
+            description: "Μόνο μέλη επιλεγμένων ομάδων μπορούν να παρευρεθούν."
+        delete_confirmation_message: "Διαγραφή αυτής της εκδήλωσης;"
+      invite_user_or_group:
+        title: "Ειδοποίηση χρήστη/ών ή ομάδας/ών"
+        invite: "Αποστολή"
+        success: "Η πρόσκληση στάλθηκε"

@@ -772,16 +772,15 @@ sv:
   email_login:
     invalid_token: 'Hoppsan! Länken du använde fungerar inte längre. Du kan <a href="%{base_url}/login">logga in</a> nu. Om du har glömt ditt lösenord kan du <a href="%{base_url}/password-reset">begära en länk</a> för att återställa det.'
     title: "E-postinloggning"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub-appen"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub-appen"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "okänd webbläsare"
     device:
       android: "Android-enhet"
       chromebook: "Chrome OS"
@@ -801,6 +800,9 @@ sv:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "okänt operativsystem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonym"
   change_email:
     error: "Det uppstod ett fel vid ändringen av din e-postadress. Kanske används adressen redan?"
     doesnt_exist: "Den e-postadressen är inte kopplad till ditt konto."
@@ -1238,6 +1240,9 @@ sv:
         num_topics: "Ämnen"
       description: "Användare listade efter antal klickningar på länkar de har delat."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Besök"
+    top_entry_urls:
       labels:
         count: "Besök"
     top_referrers_by_browser_pageviews:
@@ -3145,9 +3150,6 @@ sv:
     user_posted_pm_staged:
       title: "Användare publicerade PM som arrangerad"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Konto avstängt"
       subject_template: "[%{email_prefix}] Ditt konto har stängts av"
@@ -3748,6 +3750,10 @@ sv:
     deprecation_error_label: Se till att Javascript-utfasningar ger upphov till ett fel
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
+  design_wizard:
+    palette_pairs:
+      default: "Standard"
+      dracula: "Dracula"
   wizard:
     title: "Discourse-inställningar"
     step:

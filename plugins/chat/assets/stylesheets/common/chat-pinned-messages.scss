@@ -4,18 +4,8 @@
 }
 
 .c-navbar__pinned-messages-btn {
-  position: relative;
-
   .d-icon {
     transform: rotate(45deg);
-  }
-
-  &__unread-indicator {
-    @include chat-unread-indicator;
-    position: absolute;
-    inset-block-start: 5px;
-    inset-inline-end: 5px;
-    border: 2px solid var(--secondary);
   }
 }
 

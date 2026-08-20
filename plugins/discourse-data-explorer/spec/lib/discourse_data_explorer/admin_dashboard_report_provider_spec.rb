@@ -31,7 +31,13 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
   let(:user_guardian) { user.guardian }
 
   before { SiteSetting.data_explorer_enabled = true }
-  after { DiscourseDataExplorer::QueryRunner.invalidate(visible_query.id) }
+  let(:query_ids_to_invalidate) { [visible_query.id] }
+
+  after do
+    query_ids_to_invalidate.each do |query_id|
+      DiscourseDataExplorer::QueryRunner.invalidate(query_id)
+    end
+  end
 
   describe ".source_name" do
     it "is 'data_explorer_query'" do
@@ -86,6 +92,54 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
         expect(result.keys).to eq([visible_query.id.to_s])
       end
     end
+
+    it "omits a query with a required parameter that has no default" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- int :topic_id\n\nSELECT :topic_id AS value",
+          user: admin,
+        )
+
+      result = described_class.resolve_many([query.id.to_s], guardian: admin_guardian)
+      expect(result).to be_empty
+    end
+
+    it "resolves a query whose only parameter has a default" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- int :limit = 10\n\nSELECT :limit AS value",
+          user: admin,
+        )
+
+      result = described_class.resolve_many([query.id.to_s], guardian: admin_guardian)
+      expect(result.keys).to eq([query.id.to_s])
+    end
+
+    it "resolves a query whose only parameter is nullable" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- null int :topic_id\n\nSELECT :topic_id AS value",
+          user: admin,
+        )
+
+      result = described_class.resolve_many([query.id.to_s], guardian: admin_guardian)
+      expect(result.keys).to eq([query.id.to_s])
+    end
+
+    it "resolves a query whose required parameters are start_date and end_date" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- date :start_date\n-- date :end_date\n\nSELECT :start_date AS value",
+          user: admin,
+        )
+
+      result = described_class.resolve_many([query.id.to_s], guardian: admin_guardian)
+      expect(result.keys).to eq([query.id.to_s])
+    end
   end
 
   describe ".list_all" do
@@ -106,6 +160,73 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
 
     it "returns nothing when search matches no query" do
       expect(described_class.list_all(search: "zz_no_match_zz")).to be_empty
+    end
+
+    it "omits a query with a required parameter that has no default" do
+      query =
+        Fabricate(
+          :query,
+          name: "Requires topic id",
+          sql: "-- [params]\n-- int :topic_id\n\nSELECT :topic_id AS value",
+          user: admin,
+        )
+
+      reports = described_class.list_all
+      expect(reports.map(&:identifier)).not_to include(query.id.to_s)
+    end
+
+    it "includes a query whose only parameter has a default" do
+      query =
+        Fabricate(
+          :query,
+          name: "Has a default",
+          sql: "-- [params]\n-- int :limit = 10\n\nSELECT :limit AS value",
+          user: admin,
+        )
+
+      reports = described_class.list_all
+      expect(reports.map(&:identifier)).to include(query.id.to_s)
+    end
+
+    it "includes a query whose only parameter is nullable" do
+      query =
+        Fabricate(
+          :query,
+          name: "Has a nullable parameter",
+          sql: "-- [params]\n-- null int :topic_id\n\nSELECT :topic_id AS value",
+          user: admin,
+        )
+
+      reports = described_class.list_all
+      expect(reports.map(&:identifier)).to include(query.id.to_s)
+    end
+
+    it "includes a query whose required parameters are start_date and end_date" do
+      query =
+        Fabricate(
+          :query,
+          name: "Uses dashboard date range",
+          sql: "-- [params]\n-- date :start_date\n-- date :end_date\n\nSELECT :start_date AS value",
+          user: admin,
+        )
+
+      reports = described_class.list_all
+      expect(reports.map(&:identifier)).to include(query.id.to_s)
+    end
+
+    it "keeps paginating past unmountable queries to fill the page instead of coming back short" do
+      Fabricate(
+        :query,
+        name: "zzq_aaa unmountable",
+        sql: "-- [params]\n-- int :topic_id\n\nSELECT :topic_id AS value",
+        user: admin,
+      )
+      mountable =
+        Fabricate(:query, name: "zzq_bbb mountable", sql: "SELECT 1 AS value", user: admin)
+
+      reports = described_class.list_all(search: "zzq_", limit: 1)
+
+      expect(reports.map(&:identifier)).to eq([mountable.id.to_s])
     end
 
     it "returns a title-sorted page and resumes after the cursor across persisted + defaults" do
@@ -195,6 +316,119 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
       result = described_class.fetch_many(%w[-1], guardian: admin_guardian)
       expect(result["-1"]).to be_present
       expect(result["-1"][:success]).to eq(true)
+    end
+
+    it "omits a query with a required parameter that has no default instead of erroring" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- int :topic_id\n\nSELECT :topic_id AS value",
+          user: admin,
+        )
+
+      result = described_class.fetch_many([query.id.to_s], guardian: admin_guardian)
+      expect(result).to be_empty
+    end
+
+    it "runs a query whose required parameters are start_date and end_date, using the dashboard's date range" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- date :start_date\n-- date :end_date\n\nSELECT :start_date AS value",
+          user: admin,
+        )
+
+      result =
+        described_class.fetch_many(
+          [query.id.to_s],
+          guardian: admin_guardian,
+          filters: {
+            start_date: "2026-01-01",
+            end_date: "2026-01-30",
+          },
+        )
+
+      payload = result[query.id.to_s]
+      expect(payload[:success]).to eq(true)
+      expect(payload[:rows]).to eq([["2026-01-01"]])
+    end
+  end
+
+  describe ".prewarm" do
+    it "warms admin-only queries" do
+      described_class.prewarm(
+        [visible_query.id.to_s],
+        guardian: admin_guardian,
+        filters: {
+          start_date: "2026-01-01",
+          end_date: "2026-01-30",
+        },
+      )
+
+      cached = DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {})
+      expect(cached).to be_present
+    end
+
+    it "refreshes cached admin-only queries" do
+      now = Time.now
+      freeze_time(now)
+      DiscourseDataExplorer::QueryRunner.run(visible_query, {}, current_user: admin)
+
+      freeze_time(now + 30.minutes)
+      described_class.prewarm([visible_query.id.to_s], guardian: admin_guardian)
+
+      cached = DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {})
+      expect(cached[:cached_at]).to eq((now + 30.minutes).utc.iso8601)
+    end
+
+    it "uses the cache for queries with default parameters when the dashboard has no filters" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- int :limit = 10\n\nSELECT :limit AS value",
+          user: admin,
+        )
+      query_ids_to_invalidate << query.id
+
+      described_class.prewarm(
+        [query.id.to_s],
+        guardian: admin_guardian,
+        filters: {
+          start_date: "2026-01-01",
+          end_date: "2026-01-30",
+        },
+      )
+
+      result = described_class.fetch_many([query.id.to_s], guardian: admin_guardian, filters: {})
+      expect(result[query.id.to_s][:cached_at]).to be_present
+    end
+
+    it "skips queries shared with a group" do
+      DiscourseDataExplorer::QueryGroup.create!(query: visible_query, group: group)
+
+      described_class.prewarm([visible_query.id.to_s], guardian: admin_guardian)
+
+      expect(DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {})).to be_nil
+    end
+
+    it "skips queries with required parameters outside the dashboard filters" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- int :topic_id\n\nSELECT :topic_id AS value",
+          user: admin,
+        )
+
+      described_class.prewarm(
+        [query.id.to_s],
+        guardian: admin_guardian,
+        filters: {
+          start_date: "2026-01-01",
+          end_date: "2026-01-30",
+        },
+      )
+
+      expect(DiscourseDataExplorer::QueryRunner.cached_result(query, {})).to be_nil
     end
   end
 

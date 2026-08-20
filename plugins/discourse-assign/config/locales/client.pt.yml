@@ -162,8 +162,20 @@ pt:
       nodes:
         "trigger:assigned": "Atribuído(a)"
       assign_topic:
+        resource: "Recurso"
+        resources:
+          topic: "Tópico"
+          post: "Publicação"
         operations:
           assign: "Atribuir"
           unassign: "Cancelar atribuição"
         topic_id: "Id. do Tópico"
+        post_id: "Id. da Publicação"
+        assignee: "Destinatário(a)"
+      check_assignment:
+        target_types:
+          topic: "Tópico"
+          post: "Publicação"
+        topic_id: "Id. do Tópico"
+        post_id: "Id. da Publicação"
         assignee: "Destinatário(a)"

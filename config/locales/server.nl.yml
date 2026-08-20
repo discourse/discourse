@@ -963,16 +963,15 @@ nl:
   email_login:
     invalid_token: 'Oeps! De link die je hebt gebruikt werkt niet meer. Je kunt je nu <a href="%{base_url}/login">aanmelden</a>. Als je je wachtwoord bent vergeten, kun je <a href="%{base_url}/password-reset">een link verzoeken</a> om het te herstellen.'
     title: "E-mailaanmelding"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub-app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub-app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "onbekende browser"
     device:
       android: "Android-apparaat"
       chromebook: "Chrome OS"
@@ -992,6 +991,9 @@ nl:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "onbekend besturingssysteem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anoniem"
   change_email:
     error: "Er is een fout opgetreden bij het wijzigen van je e-mailadres. Misschien is het adres al in gebruik?"
     doesnt_exist: "Dat e-mailadres is niet aan je account gekoppeld."
@@ -1465,6 +1467,9 @@ nl:
         num_topics: "Topics"
       description: "Gebruikers vermeld op volgorde van het aantal klikken op links die ze hebben gedeeld."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Bezoeken"
+    top_entry_urls:
       labels:
         count: "Bezoeken"
     top_referrers_by_browser_pageviews:
@@ -2391,7 +2396,6 @@ nl:
     revoke_user_api_keys_unused_days: "Aantal dagen sinds het laatste gebruik van een gebruikers-API-sleutel voordat deze automatisch wordt ingetrokken (0 voor nooit)"
     revoke_user_api_keys_maxlife_days: "Aantal dagen voordat een gebruikers-API-sleutel automatisch wordt ingetrokken (0 voor nooit)"
     tagging_enabled: "Tags inschakelen voor topics? Zie de <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Beheerdersgids voor tags op Meta</a> voor meer informatie."
-    create_tag_allowed_groups: "Groepen die tags kunnen maken. Beheerders en moderators kunnen altijd tags maken."
     edit_tags_allowed_groups: "Groepen die tags, tagbeschrijvingen en tagsynoniemen mogen bewerken."
     max_tags_per_topic: "De maximale tags die op een topic kunnen worden toegepast."
     max_tags_per_email_subject: "Het maximale aantal tags dat in het onderwerp van een e-mail kan voorkomen"
@@ -2468,7 +2472,6 @@ nl:
     default_composition_mode: "Stel de standaardmodus in voor de editor van je community. De rich text modus biedt een modernere, vertrouwde schrijfervaring voor de meeste gebruikers, terwijl de Markdown-modus geschikter kan zijn voor een technischer publiek. Leden kunnen van modus wisselen met een schakelaar op de editorwerkbalk."
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_use_default_locale_when_unsupported: "Bied gelokaliseerde content in de standaardtaal van de site aan gebruikers aan van wie de voorkeurstaal niet is opgenomen in 'content localization supported locales'."
-    content_localization_allow_author_localization: "Auteurs toestaan om lokalisaties van hun eigen topics en berichten bij te werken via het berichtmenu."
     nested_replies_enabled: "Schakel de weergave met geneste antwoorden voor topics in."
     nested_replies_default: "Gebruik geneste antwoorden als standaard weergave voor alle topics."
     nested_replies_default_sort: "Standaard sorteeralgoritme voor de weergave met geneste antwoorden."
@@ -4069,9 +4072,6 @@ nl:
     user_posted_pm_staged:
       title: "Gefaseerde gebruiker heeft PB geplaatst"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Account geschorst"
       subject_template: "[%{email_prefix}] Je account is geschorst"
@@ -4904,6 +4904,10 @@ nl:
     title: "Ontwikkelaarsmodus"
     enable_rack_mini_profiler: "Schakel Rack Mini Profiler in om sessiewijzigingen 1 uur lang te behouden"
     enter: "Ontwikkelaarsmodus openen"
+  design_wizard:
+    palette_pairs:
+      default: "Standaard"
+      dracula: "Dracula"
   wizard:
     title: "Discourse instellen"
     step:

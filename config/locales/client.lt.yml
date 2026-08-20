@@ -373,6 +373,22 @@ lt:
     admin_onboarding_banner:
       start_posting:
         back: "Atgal"
+    design_wizard:
+      back: "Atgal"
+      next: "Kitas"
+      sections:
+        theme: "Tema"
+        homepage: "Pagrindinis puslapis"
+      colors:
+        light: "Šviesi"
+        dark: "Tamsi"
+      fonts:
+        heading_font: "Antraštės šriftas"
+      homepage:
+        topics: "Temos"
+        categories: "Kategorijos"
+        styles:
+          boxes: "Dėžutės"
     about:
       edit: "Redaguoti šį puslapį"
       simple_title: "Apie"
@@ -668,10 +684,6 @@ lt:
         optional: "pasirinktinai"
       claim_help:
         optional: "Galite pareikšti teises į šį elementą, kad kiti negalėtų jo peržiūrėti."
-        required: "Turite pareikšti teises į elementus, kad galėtumėte juos peržiūrėti."
-        claimed_by_you: "Pareiškėte teises į šį elementą ir galite jį peržiūrėti."
-        claimed_by_other: "Šį elementą gali peržiūrėti tik <b>%{username}</b>."
-        automatically_claimed_by: "Šį elementą šiuo metu peržiūri <b>%{username}</b>."
       awaiting_approval: "Laukiama patvirtinimo"
       delete: "Pašalinti"
       settings:
@@ -2376,6 +2388,7 @@ lt:
         few: "+%{count} subkategorijos"
         many: "+%{count} subkategorijos"
         other: "+%{count} subkategorijos"
+      subcategories: "+ Subkategorijos"
       topic_count:
         one: "%{count} tema šioje kategorijoje"
         few: "%{count} temos šioje kategorijoje"
@@ -2602,7 +2615,6 @@ lt:
       membership_request_accepted: "Narystė priimta „%{group_name}“"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - baigtas"
       admin_problems: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
       upcoming_changes:
         available:
@@ -4379,13 +4391,29 @@ lt:
         default_value: "Numatytasis"
       search:
         title: "Paieška"
+      site_traffic_explorer:
+        pageviews: "Puslapio peržiūros"
+        view_more: "Žiūrėti daugiau"
+        cards:
+          visitors: "Lankytojai"
+        columns:
+          top_urls: "Nuoroda"
+          browsers: "Naršyklė"
+          ip_addresses: "IP adresas"
+        filters:
+          browser: "Naršyklė"
+          ip: "IP adresas"
+        metrics:
+          pageviews:
+            label: "Puslapio peržiūros"
+        series:
+          anonymous_human: "Anonimas"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"
         discourse_last_updated: "Discourse atnaujinta:"
         version: "Versija"
         up_to_date: "Jūs turite naujausią versiją!"
-        critical_available: "Yra kritinių atnaujinimų."
         updates_available: "Yra atnaujinimų."
         no_check_performed: "Atnaujinimų patikrinimas neįvykdytas. Patikrinkite ar veikia sidekiq."
         stale_data: "Artimiausiu metu atnaujinimų patikrinimas nebuvo įvykdytas. Patikrinkite ar veikia sidekiq."

@@ -44,6 +44,15 @@ class CrawlerScorer
   MISSING_ENGAGEMENT_HIGH_SCORE = 40
   ENGAGEMENT_LOOKBACK = 6.hours
 
+  def self.enabled?
+    UpcomingChanges.enabled?(:improved_crawler_detection)
+  end
+
+  def self.likely_crawler_condition(table: nil)
+    prefix = table ? "#{table}." : ""
+    "#{prefix}score > #{BOT_SCORE_THRESHOLD}"
+  end
+
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
     crawler_detection_datacenter_asns =
@@ -113,6 +122,7 @@ class CrawlerScorer
       FROM browser_pageview_events e
       LEFT JOIN browser_pageview_session_engagements se
         ON se.session_id = e.session_id
+        AND #{BrowserPageviewSessionEngagement.engaged_sql("se")}
       WHERE e.created_at >= :window_start
         AND e.created_at <  :window_end
     ),
@@ -127,6 +137,7 @@ class CrawlerScorer
       FROM browser_pageview_events e
       LEFT JOIN browser_pageview_session_engagements se
         ON se.session_id = e.session_id
+        AND #{BrowserPageviewSessionEngagement.engaged_sql("se")}
       WHERE e.created_at >= :engagement_lookback_start
         AND e.created_at <  :window_end
         AND EXISTS (

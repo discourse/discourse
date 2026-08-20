@@ -295,10 +295,6 @@ class CategoriesController < ApplicationController
 
       merge_pending_custom_fields!(cat, pending_custom_fields)
 
-      # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in]&.blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
-
       old_permissions = cat.permissions_params
       old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
@@ -450,6 +446,10 @@ class CategoriesController < ApplicationController
     raise Discourse::NotFound if categories.blank?
 
     Category.preload_user_fields!(guardian, categories)
+
+    if serializer == SiteCategorySerializer && Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
 
     render_serialized(categories, serializer, root: :categories, scope: guardian)
   end

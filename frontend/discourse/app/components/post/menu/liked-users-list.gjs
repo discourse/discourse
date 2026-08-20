@@ -16,14 +16,17 @@ export default class LikedUsersList extends Component {
     return this.args.post.yours ? "d-liked" : null;
   }
 
+  get elementId() {
+    return `post-liked-users-list-${this.args.post.id}`;
+  }
+
+  get expanded() {
+    return this.menu.getByIdentifier(MENU_IDENTIFIER)?.id === this.elementId;
+  }
+
   @action
   togglePopup(event) {
-    const target = event.currentTarget;
-    const virtualElement = {
-      getBoundingClientRect: () => target.getBoundingClientRect(),
-    };
-
-    this.menu.show(virtualElement, {
+    this.menu.show(event.currentTarget, {
       identifier: MENU_IDENTIFIER,
       component: PostLikedUsersMenu,
       modalForMobile: true,
@@ -37,8 +40,11 @@ export default class LikedUsersList extends Component {
 
   <template>
     <button
+      id={{this.elementId}}
       type="button"
       aria-label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
+      aria-haspopup="dialog"
+      aria-expanded={{if this.expanded "true" "false"}}
       class={{dConcatClass
         "btn btn-flat no-text"
         "post-action-menu__like-count"

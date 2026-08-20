@@ -127,6 +127,7 @@ export default class ChatChannelSubscriptionManager {
     stagedMessage.uploads = cloneJSON(data.chat_message.uploads || []);
     stagedMessage.streaming = data.chat_message.streaming;
     stagedMessage.edited = data.chat_message.edited;
+    stagedMessage.isAction = data.chat_message.is_action;
 
     return stagedMessage;
   }
@@ -158,6 +159,7 @@ export default class ChatChannelSubscriptionManager {
       message.edited = data.chat_message.edited;
       message.streaming = data.chat_message.streaming;
       message.blocks = data.chat_message.blocks;
+      message.isAction = data.chat_message.is_action;
     }
   }
 

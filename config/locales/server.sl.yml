@@ -454,15 +454,14 @@ sl:
     success_unapproved: "Uspešno ste zamenjali geslo."
   email_login:
     title: "Prijava z e-naslovom"
+  browsers:
+    chrome: "Google Chrome"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "neznan brskalnik"
     device:
       android: "Android naprava"
       ipad: "iPad"
@@ -480,6 +479,9 @@ sl:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimni"
   change_email:
     error: "Prišlo je do napake med spremembo vašega e-naslova. Mogoče je e-naslov že uporabljen?"
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."
@@ -682,6 +684,9 @@ sl:
         user: "Uporabnik"
         num_topics: "Tem"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Obiskov"
+    top_entry_urls:
       labels:
         count: "Obiskov"
     top_referrers_by_browser_pageviews:
@@ -1535,9 +1540,6 @@ sl:
     user_posted_pm_staged:
       title: "Uporabnik je objavil ZS prirejeni"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Suspendiran račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
@@ -1951,6 +1953,9 @@ sl:
     resend_email:
       title: "Ponovno pošlji aktivacijsko e-sporočilo"
       message: "<p>Ponovno smo poslali aktivacijsko e-sporočilo na<b>%{email}</b>"
+  design_wizard:
+    palette_pairs:
+      default: "Privzeto"
   wizard:
     title: "Postavitev Discourse"
     step:

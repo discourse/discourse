@@ -14,6 +14,7 @@ import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { supportHeadlineKeys } from "discourse/plugins/discourse-solved/admin/lib/support-headline";
 import SupportResponseTime from "./support/response-time";
 import SupportTopicOutcomes from "./support/topic-outcomes";
 import SupportWhosAnswering from "./support/whos-answering";
@@ -70,60 +71,56 @@ export default class SupportSection extends Component {
   }
 
   get headline() {
-    const headline = this.data?.headline;
-    if (!headline) {
-      return null;
-    }
-
     const prefix = "admin.dashboard.sections.support.headline";
-    const titleKey = `${prefix}.${headline.key}.title`;
-
-    if (headline.key === "no_data") {
-      return { titleKey, summary: i18n(`${prefix}.no_data.summary`) };
+    const resolutionDirection = this.#direction(
+      this.data?.kpis?.resolution_rate
+    );
+    const replyDirection = this.#direction(this.data?.kpis?.avg_first_reply, {
+      noPriorDirection: "up",
+    });
+    if (
+      resolutionDirection === "unavailable" &&
+      replyDirection === "unavailable"
+    ) {
+      const headlineKeys = supportHeadlineKeys({ noData: true });
+      return {
+        title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+        summary: i18n(`${prefix}.summaries.${headlineKeys.summary}`),
+      };
     }
 
-    const parts = [
-      i18n(`${prefix}.resolution.${headline.resolution_direction}`, {
-        rate: headline.resolution_rate,
-      }),
-    ];
+    const headlineKeys = supportHeadlineKeys({
+      resolutionRate: resolutionDirection,
+      firstReplyTime: replyDirection,
+    });
+    const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
+    const cta = headlineKeys.cta
+      ? i18n(`${prefix}.cta.${headlineKeys.cta}`)
+      : null;
+    return {
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+      summary: cta ? `${summary} ${cta}` : summary,
+    };
+  }
 
-    if (headline.answerers_focus) {
-      parts.push(
-        i18n(`${prefix}.answerers.${headline.answerers_focus}`, {
-          share: headline.answerers_share,
-        })
-      );
+  #direction(kpi, { noPriorDirection } = {}) {
+    if (kpi?.value == null) {
+      return "unavailable";
     }
 
-    if (headline.first_reply_seconds != null) {
-      const dir = headline.first_reply_direction;
-      if (
-        (dir === "faster" || dir === "slower") &&
-        headline.first_reply_delta_seconds != null
-      ) {
-        parts.push(
-          i18n(`${prefix}.reply.${dir}`, {
-            time: durationTiny(headline.first_reply_seconds),
-            delta: durationTiny(headline.first_reply_delta_seconds),
-          })
-        );
-      } else {
-        parts.push(
-          i18n(`${prefix}.reply.flat`, {
-            time: durationTiny(headline.first_reply_seconds),
-          })
-        );
-      }
+    if (kpi.previous_value == null && noPriorDirection) {
+      return noPriorDirection;
     }
 
-    if (headline.key === "struggling" && headline.unanswered_count > 0) {
-      parts.push(
-        i18n(`${prefix}.unanswered`, { count: headline.unanswered_count })
-      );
+    const previousValue = kpi.previous_value ?? 0;
+    const roundedChange = Math.round(kpi.value - previousValue);
+    if (roundedChange > 0) {
+      return "up";
+    } else if (roundedChange < 0) {
+      return "down";
     }
 
-    return { titleKey, summary: parts.join(" ") };
+    return "flat";
   }
 
   get resolutionRate() {
@@ -339,7 +336,7 @@ export default class SupportSection extends Component {
         {{#if this.headline}}
           <div class="db-section__subheader">
             <div class="db-section__subintro">
-              <h3>{{i18n this.headline.titleKey}}</h3>
+              <h3>{{this.headline.title}}</h3>
               <p>{{this.headline.summary}}</p>
             </div>
 

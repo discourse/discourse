@@ -466,9 +466,7 @@ uk:
     max_redemptions_allowed_one: "для запрошень електронною поштою має бути 1."
     redemption_count_less_than_max: "має бути менше %{max_redemptions_allowed}."
     email_xor_domain: "Поля електронної пошти та домену не можна використовувати одночасно"
-    admin_invite_requires_email: "Запрошення адміністратора повинні бути надіслані на електронну адресу"
     admin_invite_requires_admin_inviter: "Тільки адміністратори можуть надсилати запрошення адміністраторам"
-    moderator_invite_requires_email: "Запрошення модератора повинні бути надіслані на електронну адресу"
     moderator_invite_requires_staff_inviter: "Тільки співробітники можуть створювати запрошення для модераторів"
     existing_user_success: "Запрошення активовано"
     email_invites_disabled: "Надсилання запрошень електронною поштою вимкнено"
@@ -1166,16 +1164,15 @@ uk:
     title: "Вхід по E-mail"
   email_login_code:
     invalid_code: "Цей код неправильний або термін його дії минув. Запросіть новий код і спробуйте ще раз."
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Програма DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Програма DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "невідомий оглядач"
     device:
       android: "Android Пристрій"
       chromebook: "Chrome OS"
@@ -1195,6 +1192,11 @@ uk:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "невідома операційна система"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Ви увійшли"
+      anonymous: "Анонімний"
+      likely_crawler: "Ймовірні сканери"
   change_email:
     error: "Під час зміни адреси електронної пошти сталася помилка. Можливо, адреса вже використовується?"
     doesnt_exist: "Ця адреса е-пошти не пов’язана з вашим обліковим записом."
@@ -1703,6 +1705,9 @@ uk:
       description: "Країни, з яких найбільше переглядів сторінок вашого форуму відбувається у браузерах за вибраний період."
       labels:
         country_code: "Код країни"
+        count: "Відвідини"
+    top_entry_urls:
+      labels:
         count: "Відвідини"
     top_referrers_by_browser_pageviews:
       title: "Найкращі реферали"
@@ -2749,7 +2754,6 @@ uk:
     max_user_api_key_expiry_days: "Максимальний термін дії, у днях, протягом якого клієнти можуть запитувати ключі API користувачів"
     verbose_user_api_key_device_auth_logging: "Реєстрація детальної діагностики для процесу авторизації пристрою з ключем API користувача"
     tagging_enabled: "Увімкнути теги для тем? Дивіться <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Посібник адміністратора щодо тегів на Meta</a> для отримання додаткової інформації."
-    create_tag_allowed_groups: "Групи, яким дозволено створювати теги. Адміністратори та модератори завжди можуть створювати теги."
     edit_tags_allowed_groups: "Групи, яким дозволено редагувати теги, описи тегів та синоніми тегів."
     max_tags_per_topic: "Максимум теґів, які можна застосувати до теми."
     enable_max_tags_per_email_subject: "Використовуйте {{setting:max_tags_per_email_subject}} під час створення теми електронного листа"
@@ -2819,7 +2823,6 @@ uk:
     enable_new_checkbox_style: "Увімкнути перероблений стиль прапорців для прапорців FormKit."
     enable_new_post_reactions_menu: "Увімкніть оновлене меню вподобайок та реакцій публікацій із нескінченною прокруткою та звичним мобільним досвідом."
     enable_composer_redesign: "Увімкнути перероблений редактор текстів."
-    enable_new_composer_actions: "Увімкнути оновлене меню дій редактора та кнопку комбінованого збереження з перемикачами \"шепіт\", \"без підняття\" та \"не в списку\" поруч із дією збереження."
     prioritize_recently_used_tags: "Під час додавання тегів під час створення або редагування теми, відображайте теги, які учасник нещодавно використовував у своїх темах, у верхній частині списку, перед найпопулярнішими тегами форуму."
     experimental_impersonation_time_limit_minutes: "Через який час сеанс імітації автоматично завершується."
     page_loading_indicator: "Вибір індикатора завантаження, який з’являється під час навігації сторінкою в Discourse. «Спіннер» – це індикатор на всю сторінку. «Слайдер» — вузька смужка у верхній частині екрана."
@@ -2839,7 +2842,6 @@ uk:
     content_localization_language_switcher: "Відобразити перемикач мов у заголовку, що дозволить відвідувачам перемикатися між перекладеними версіями Discourse та контентом, наданим користувачами. Використовує мови, визначені в {{setting:content_localization_supported_locales}}"
     content_localization_crawler_param: "Надавати локалізований контент веб-сканерам, коли увімкнено {{setting:content_localization_enabled}} та {{setting:set_locale_from_param}} . Список підтримуваних локалізацій визначено в {{setting:content_localization_supported_locales}}."
     content_localization_use_default_locale_when_unsupported: "Надавати локалізований контент у стандартній локалізації сайту користувачам, чия бажана мова не вказана у списку «локалізацій, що підтримуються локалізацією контенту»."
-    content_localization_allow_author_localization: "Дозволити авторам оновлювати локалізації власних тем і публікацій через меню публікацій."
     nested_replies_enabled: "Увімкнути перегляд вкладених відповідей для тем."
     nested_replies_default: "Використовуйте вкладені відповіді як типовий вигляд для всіх тем."
     nested_replies_hot_sort_enabled: "Дозволити користувачам сортувати вкладені відповіді за показником «гарячого сортування» на основі запиту. Показники «гарячого сортування» обчислюються у фоновому режимі лише для тем, для яких запитується «гаряче сортування»."
@@ -2970,7 +2972,6 @@ uk:
       invalid_uncategorized_category_setting: 'Категорію «Без категорії» неможливо вибрати, якщо не ввімкнено «дозволити теми без категорії».'
       invalid_search_ranking_weights: "Значення є недійсним для параметра search_ranking_weights сайту. Приклад: '{0.1,0.2,0.3,1.0}'. Зверніть увагу, що максимальне значення для кожної ваги дорівнює 1.0."
       content_localization_locale_limit: "Кількість підтримуваних локалізацій не може перевищувати %{max}."
-      content_localization_language_switcher_requirements: "Для перемикача мов потрібно, щоб {{setting:set_locale_from_cookie}} та {{setting:allow_user_locale}} були ввімкнені, а {{setting:content_localization_supported_locales}} мала принаймні одну мову. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "Перш ніж увімкнути цей параметр, потрібно спочатку ввімкнути «встановити локаль з параметра»."
       mediaconvert_role_arn_required: "Роль AWS IAM ARN необхідна при використанні AWS MediaConvert для конвертації відео."
       mediaconvert_output_subdirectory_required: "Підкаталог виводу MediaConvert обов'язковий."
@@ -4575,9 +4576,6 @@ uk:
     user_posted_pm_staged:
       title: "Користувач написав у PM"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Обліковий запис призупинено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис призупинено"
@@ -5690,6 +5688,10 @@ uk:
     title: "Режим розробника"
     enable_rack_mini_profiler: "Дозволити Rack Mini Profiler зберігати зміни сеансу протягом 1 години"
     enter: "Увійти в режим розробника"
+  design_wizard:
+    palette_pairs:
+      default: "Стандартна"
+      dracula: "Дракула"
   wizard:
     title: "Налаштування Discourse"
     step:

@@ -26,8 +26,20 @@ module DiscourseAi
                     :bypass_response_format,
                     :mcp_state,
                     :guardian,
-                    :reviewable_id
-
+                    :reviewable_id,
+                    :server_owned_tools,
+                    :runtime_tools,
+                    :runtime_tools_llm_model_id,
+                    :authorized_image_upload_ids,
+                    :view_image_invocations,
+                    :execution_context,
+                    :subagent_execution_state,
+                    :subagent_depth,
+                    :parent_agent_id,
+                    :current_agent_id,
+                    :turn_token_budget,
+                    :tool_invocation_counts,
+                    :completion_limit_reached
       def initialize(
         post: nil,
         topic: nil,
@@ -50,7 +62,14 @@ module DiscourseAi
         inferred_concepts: [],
         format_dates: false,
         bypass_response_format: false,
-        guardian: nil
+        guardian: nil,
+        server_owned_tools: true,
+        execution_context: nil,
+        subagent_execution_state: nil,
+        subagent_depth: 0,
+        parent_agent_id: nil,
+        current_agent_id: nil,
+        turn_token_budget: nil
       )
         @participants = participants
         @user = user
@@ -59,6 +78,7 @@ module DiscourseAi
         @custom_instructions = custom_instructions
         @feature_context = feature_context || {}
         @format_dates = format_dates
+        @completion_limit_reached = false
 
         @message_id = message_id
         @channel_id = channel_id
@@ -79,6 +99,16 @@ module DiscourseAi
         @mcp_state = {}
 
         @guardian = guardian
+        @server_owned_tools = server_owned_tools
+        @execution_context = execution_context
+        @subagent_execution_state = subagent_execution_state
+        @subagent_depth = subagent_depth
+        @parent_agent_id = parent_agent_id
+        @current_agent_id = current_agent_id
+        @turn_token_budget = turn_token_budget
+        @tool_invocation_counts = Hash.new(0)
+        @authorized_image_upload_ids = Set.new
+        @view_image_invocations = 0
 
         if post
           @post_id = post.id
@@ -94,6 +124,32 @@ module DiscourseAi
           @participants ||= topic.allowed_users.map(&:username).join(", ") if @private_message
           @user ||= topic.user
         end
+      end
+
+      def reserve_tool_invocation(tool_name, limit:)
+        limit = limit.to_i
+        return true if limit <= 0
+        return false if tool_invocation_limit_reached?(tool_name, limit: limit)
+
+        tool_invocation_counts[tool_name.to_s] += 1
+        true
+      end
+
+      def tool_invocation_limit_reached?(tool_name, limit:)
+        limit = limit.to_i
+        limit.positive? && tool_invocation_counts[tool_name.to_s] >= limit
+      end
+
+      def image_guardian(fallback_user: nil)
+        guardian || Guardian.new(user || fallback_user)
+      end
+
+      def register_image_upload(upload_id)
+        authorized_image_upload_ids << upload_id.to_i
+      end
+
+      def image_upload_authorized?(upload_id)
+        authorized_image_upload_ids.include?(upload_id.to_i)
       end
 
       # these are strings that can be safely interpolated into templates

@@ -5,6 +5,7 @@ require "zip"
 RSpec.describe DiscourseAi::Completions::UploadEncoder do
   let(:gif) { plugin_file_from_fixtures("1x1.gif") }
   let(:jpg) { plugin_file_from_fixtures("1x1.jpg") }
+  let(:large_jpg) { plugin_file_from_fixtures("100x100.jpg") }
   let(:webp) { plugin_file_from_fixtures("1x1.webp") }
 
   before { enable_current_plugin }
@@ -115,6 +116,15 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     expect(encoded.length).to eq(1)
     expect(encoded[0][:base64]).to be_present
     expect(encoded[0][:mime_type]).to eq("image/png")
+  end
+
+  it "resizes images to the configured pixel area" do
+    upload = UploadCreator.new(large_jpg, "100x100.jpg").create_for(Discourse.system_user.id)
+
+    described_class.encode(upload_ids: [upload.id], max_pixels: 2_500)
+
+    optimized_image = upload.optimized_images.find_by(width: 50, height: 50)
+    expect(optimized_image).to be_present
   end
 
   it "supports jpg" do

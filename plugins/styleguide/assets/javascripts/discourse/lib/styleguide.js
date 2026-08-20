@@ -12,6 +12,7 @@ import topicLink from "../components/sections/atoms/10-topic-link-status";
 import breadCrumbs from "../components/sections/molecules/bread-crumbs";
 import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
+import comboButton from "../components/sections/molecules/combo-button";
 import dialog from "../components/sections/molecules/dialog";
 import emptyState from "../components/sections/molecules/empty-state";
 import menus from "../components/sections/molecules/menus";
@@ -73,6 +74,7 @@ const SECTIONS = [
   { component: breadCrumbs, category: "molecules", id: "bread-crumbs" },
   { component: categories, category: "molecules", id: "categories" },
   { component: charCounter, category: "molecules", id: "char-counter" },
+  { component: comboButton, category: "molecules", id: "combo-button" },
   { component: emptyState, category: "molecules", id: "empty-state" },
   { component: navigationBar, category: "molecules", id: "navigation-bar" },
   {

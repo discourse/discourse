@@ -20,8 +20,11 @@ register_asset "stylesheets/common/streaming.scss"
 register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
+register_asset "stylesheets/common/ai-payload-viewer.scss"
+register_asset "stylesheets/common/ai-decoded-transcript.scss"
 
 register_asset "stylesheets/admin/ai-features-editor.scss", :admin
+register_asset "stylesheets/admin/ai-logs.scss", :admin
 
 register_asset "stylesheets/modules/translation/admin/translations.scss", :admin
 
@@ -128,6 +131,7 @@ after_initialize do
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus
+  register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
   #register_problem_check ProblemCheck::AiCreditSoftLimit
   #register_problem_check ProblemCheck::AiCreditHardLimit

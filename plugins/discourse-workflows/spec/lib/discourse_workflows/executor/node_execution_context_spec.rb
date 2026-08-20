@@ -256,6 +256,45 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#put_execution_to_wait" do
+    let(:runtime_state) { described_class::RuntimeState.new }
+    let(:ctx) { described_class.new(input_items: [], resolver: nil, runtime_state: runtime_state) }
+
+    it "includes an explicit timeout action in the wait request" do
+      waiting_until = 10.minutes.from_now
+
+      ctx.put_execution_to_wait(
+        waiting_until,
+        kind: :approval,
+        payload: {
+          source: "chat",
+        },
+        timeout_action: "fail",
+      )
+
+      expect(runtime_state.wait_request).to have_attributes(
+        waiting_until: waiting_until,
+        kind: "approval",
+        payload: {
+          "source" => "chat",
+        },
+        timeout_action: "fail",
+      )
+    end
+
+    it "keeps timeout action nil for existing callers that omit it" do
+      ctx.put_execution_to_wait
+
+      expect(runtime_state.wait_request).to have_attributes(
+        waiting_until: nil,
+        kind: "default",
+        payload: {
+        },
+        timeout_action: nil,
+      )
+    end
+  end
+
   describe "#set_metadata" do
     it "merges execution metadata with string keys" do
       ctx = described_class.new(input_items: [], resolver: nil)

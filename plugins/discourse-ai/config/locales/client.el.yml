@@ -200,6 +200,46 @@ el:
         periods:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
+      logs:
+        short_title: "Αρχεία καταγραφής"
+        retry: "Δοκιμάστε ξανά"
+        apply: "Εφαρμογή"
+        successful: "Επιτυχής"
+        failed: "Απέτυχε"
+        unknown: "Άγνωστο"
+        topic_id: "ID Θέματος"
+        post_id: "Post ID"
+        time: "Ώρα"
+        when: "Πότε"
+        outcome: "Αποτέλεσμα"
+        feature: "Λειτουργία"
+        model: "Μοντέλο"
+        request: "Αίτημα"
+        provider: "Πάροχος"
+        user: "Χρήστης"
+        context: "Πλαίσιο αναφοράς"
+        topic: "Νήμα"
+        post: "Ανάρτηση"
+        post_short: "Ανάρτηση %{id}"
+        duration: "Διάρκεια"
+        actions: "Ενέργειες"
+        filters:
+          period: "Χρονική περίοδος"
+        periods:
+          day: "Τελευταίες 24 ώρες"
+          week: "Τελευταίες 7 ημέρες"
+          custom: "Προσαρμοσμένο"
+        detail:
+          request: "Αίτημα"
+          response: "Απάντηση"
+          context: "Πλαίσιο αναφοράς"
+          copy_request: "Αντιγραφή αιτήματος"
+          copy_response: "Αντιγραφή απάντησης"
+          network_error: "Σφάλμα δικτύου"
+        retention:
+          summary_stage: "Περίληψη"
+          deleted_stage: "Διαγράφηκε"
+          save: "Αποθήκευση"
       ai_agent:
         mcp_server_enabled_tools:
           one: "%{count} από %{total} εργαλείο ενεργοποιημένο"
@@ -306,6 +346,9 @@ el:
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
+        vision_modes:
+          disabled:
+            title: "Απενεργοποιημένος"
         attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, csv, docx, xlsx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
@@ -375,6 +418,7 @@ el:
           copy_response: "Αντιγραφή απάντησης"
           this_turn: "Αυτός ο γύρος:"
           whole_conversation: "Συνομιλία:"
+          duration_label: "Διάρκεια:"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"

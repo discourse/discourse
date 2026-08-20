@@ -445,7 +445,11 @@ class Topic < ActiveRecord::Base
   end
 
   def self.clear_page_not_found_topics_cache!
-    Discourse.cache.keys("page_not_found_topics:*").each { |key| Discourse.cache.redis.del(key) }
+    keys =
+      I18n.available_locales.map do |locale|
+        Discourse.cache.normalize_key("page_not_found_topics:#{locale}")
+      end
+    Discourse.cache.redis.del(*keys)
   end
 
   def clear_page_not_found_topics_cache
@@ -1253,6 +1257,7 @@ class Topic < ActiveRecord::Base
         group_user.destroy
         allowed_groups.reload
         add_small_action(removed_by, "removed_group", group.name, skip_guardian: true)
+        Jobs.enqueue(:delete_inaccessible_notifications, topic_id: id)
         return true
       end
     end
@@ -1273,6 +1278,10 @@ class Topic < ActiveRecord::Base
           add_small_action(removed_by, "user_left", user.username, skip_guardian: true)
         else
           add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
+        end
+
+        unless user.guardian.can_see?(self)
+          user.publish_notifications_state if Notification.remove_for(user.id, id).positive?
         end
 
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])

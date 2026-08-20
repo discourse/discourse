@@ -532,15 +532,14 @@ hy:
     success_unapproved: "Դուք հաջողությամբ փոփոխել եք Ձեր գաղտնաբառը:"
   email_login:
     title: "Էլ. հասցեով մուտք"
+  browsers:
+    chrome: "Google Chrome"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "անհայտ բրաուզեր"
     device:
       android: "Android Սարքավորում"
       ipad: "iPad"
@@ -558,6 +557,9 @@ hy:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "անհայտ օպերացիոն համակարգ"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Անանուն"
   change_email:
     error: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Միգուցե հասցեն արդեն օգտագործվո՞ւմ է:"
     error_staged: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Հասցեն արդեն օգտագործվում է աստիճանավորված օգտատիրոջ կողմից:"
@@ -927,6 +929,9 @@ hy:
         num_topics: "Թեմաներ"
       description: "Օգտատերեր՝ ցուցակավորված ըստ այն հղումների սեղմումների, որոնցով կիսվել են:"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Այցելություններ"
+    top_entry_urls:
       labels:
         count: "Այցելություններ"
     top_referrers_by_browser_pageviews:
@@ -2300,9 +2305,6 @@ hy:
     user_posted_pm_staged:
       title: "Անձնական Նամակ Հրապարակած Օգտատերը Աստիճանավորված է"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Հաշիվը Սառեցված է"
       subject_template: "[%{email_prefix}] Ձեր հաշիվը սառեցվել է"
@@ -2759,6 +2761,9 @@ hy:
     title: "Մուտք գործել անվտանգ ռեժիմ"
     enter: "Մուտք գործել Ապահով Ռեժիմ"
     must_select: "Դուք պետք է ընտրեք առնվազն մեկ տարբերակ՝ անվտանգ ռեժիմ մուտք գործելու համար:"
+  design_wizard:
+    palette_pairs:
+      default: "Լռելյայն"
   wizard:
     title: "Discourse Տեղադրում"
     step:

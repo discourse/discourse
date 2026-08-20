@@ -394,12 +394,26 @@ zh_TW:
       pill: "建議"
       pm_title: "推薦訊息"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "已選"
       invite_collaborators:
         title: "邀請協作者"
       start_posting:
         back: "上一步"
+    design_wizard:
+      back: "上一步"
+      next: "下一步"
+      sections:
+        theme: "主題"
+        homepage: "主頁"
+      theme:
+        selected: "已選"
+      colors:
+        light: "輕亮"
+        dark: "黑暗"
+      homepage:
+        topics: "話題"
+        categories: "分類"
+        styles:
+          boxes: "匣"
     about:
       edit: "編輯此頁"
       simple_title: "關於"
@@ -643,10 +657,6 @@ zh_TW:
         optional: "選擇性"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
-        required: "您必須先審核項目才能查看它們。"
-        claimed_by_you: "您已聲明此項目，並可以查看。"
-        claimed_by_other: "此項目只能給<b>%{username}</b>來審核。"
-        automatically_claimed_by: "這個項目目前由 <b>%{username}</b> 審核。"
       awaiting_approval: "等待審核"
       delete: "刪除"
       settings:
@@ -2427,6 +2437,7 @@ zh_TW:
     category_row:
       subcategory_count:
         other: "+%{count} 個子類別"
+      subcategories: "+ 次分類"
       topic_count:
         other: "%{count}個話題在此分類"
       read_only: "唯讀"
@@ -2713,7 +2724,6 @@ zh_TW:
         other: "%{count} 個未處理的加入「%{group_name}」的成員資格請求"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
-      votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
       admin_problems: "有新的建議出現在後台儀表板"
       dismiss_confirmation:
@@ -5014,13 +5024,30 @@ zh_TW:
       new_features:
         title: "有什麼最新消息？"
         check_for_updates: "檢查更新"
+      site_traffic_explorer:
+        pageviews: "頁面瀏覽次數"
+        view_more: "查看更多"
+        cards:
+          pages: "頁面"
+          visitors: "訪客"
+        columns:
+          top_urls: "網址"
+          browsers: "瀏覽器"
+          ip_addresses: "IP 位址"
+        filters:
+          browser: "瀏覽器"
+          ip: "IP 位址"
+        metrics:
+          pageviews:
+            label: "頁面瀏覽次數"
+        series:
+          anonymous_human: "匿名"
       dashboard:
         title: "控制台"
         last_updated: "儀表板更新："
         discourse_last_updated: "話語更新："
         version: "版本"
         up_to_date: "你使用的是最新版本!"
-        critical_available: "有重要更新可以安裝。"
         updates_available: "有更新可以安裝。"
         please_update: "請更新！"
         no_check_performed: "從未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"

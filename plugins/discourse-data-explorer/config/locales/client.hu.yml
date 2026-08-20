@@ -101,7 +101,6 @@ hu:
       nodes:
         "action:sql": "Adatfelfedező"
       sql:
-        queries: "Lekérdezések"
         query_id: "Lekérdezés"
         param_value: "Érték"
         output:

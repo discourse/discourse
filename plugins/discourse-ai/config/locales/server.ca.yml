@@ -16,6 +16,8 @@ ca:
         image_generation_custom:
           name: "Personalitzat"
     ai_bot:
+      read_post:
+        unknown_post: "publicació"
       tool_summary:
         search: "Cerca"
         time: "Hora"

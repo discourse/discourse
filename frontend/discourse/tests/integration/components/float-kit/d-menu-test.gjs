@@ -613,6 +613,71 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(document.activeElement).hasClass("my-button");
   });
 
+  test("closing hands focus back to the trigger when the menu holds it", async function (assert) {
+    await render(
+      <template>
+        <span class="test">test</span><DMenu
+          @inline={{true}}
+          @label="label"
+          @autofocus={{true}}
+        >
+          <:content>
+            <DButton class="my-button" />
+          </:content>
+        </DMenu>
+      </template>
+    );
+
+    await open();
+    assert.dom(document.activeElement).hasClass("my-button");
+
+    await triggerEvent(".test", "pointerdown");
+
+    assert
+      .dom(document.activeElement)
+      .hasClass(
+        "fk-d-menu__trigger",
+        "a click outside closes the menu and returns focus to the trigger"
+      );
+
+    await open();
+    await close();
+
+    assert
+      .dom(document.activeElement)
+      .hasClass(
+        "fk-d-menu__trigger",
+        "toggling the menu shut from its trigger also returns focus"
+      );
+  });
+
+  test("closing leaves focus alone when something else has taken it", async function (assert) {
+    await render(
+      <template>
+        <DButton class="outside-button" /><DMenu
+          @inline={{true}}
+          @label="label"
+          @autofocus={{true}}
+        >
+          <:content>
+            <DButton class="my-button" />
+          </:content>
+        </DMenu>
+      </template>
+    );
+
+    await open();
+    await focus(".outside-button");
+    await triggerEvent(".outside-button", "pointerdown");
+
+    assert
+      .dom(document.activeElement)
+      .hasClass(
+        "outside-button",
+        "focus stays where the user put it rather than snapping to the trigger"
+      );
+  });
+
   test("a menu can be closed by identifier", async function (assert) {
     await render(
       <template>
@@ -775,7 +840,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu__trigger").isFocused();
   });
 
-  test("focusTrigger=false on close", async function (assert) {
+  test("focusTrigger=false still rescues focus the menu was holding", async function (assert) {
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
     this.close = async () => await this.api.close({ focusTrigger: false });
@@ -796,7 +861,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await triggerKeyEvent(document.activeElement, "keydown", "Tab");
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
 
-    assert.dom(document.body).isFocused();
+    assert.dom(".fk-d-menu__trigger").isFocused();
   });
 
   test("traps pointerdown events only when expanded ", async function (assert) {
@@ -1130,5 +1195,72 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu.-content").hasStyle({
       minWidth: "200px",
     });
+  });
+
+  test("@hoverGracePeriod keeps the menu open while the pointer crosses to the content", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "hover"}}
+          @untriggers={{array "hover"}}
+          @hoverGracePeriod={{150}}
+          @content="content"
+        />
+      </template>
+    );
+
+    await triggerEvent(".fk-d-menu__trigger", "pointermove");
+    assert.dom(".fk-d-menu").exists();
+
+    const trigger = document.querySelector(".fk-d-menu__trigger");
+    const content = document.querySelector(".fk-d-menu");
+    trigger.dispatchEvent(new PointerEvent("pointerleave"));
+    content.dispatchEvent(new PointerEvent("pointerenter"));
+    await settled();
+
+    assert.dom(".fk-d-menu").exists();
+  });
+
+  test("@hoverGracePeriod closes the menu after the grace period when the pointer leaves entirely", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "hover"}}
+          @untriggers={{array "hover"}}
+          @hoverGracePeriod={{150}}
+          @content="content"
+        />
+      </template>
+    );
+
+    await triggerEvent(".fk-d-menu__trigger", "pointermove");
+    await triggerEvent(".fk-d-menu__trigger", "pointerleave");
+
+    assert.dom(".fk-d-menu").doesNotExist();
+  });
+
+  test("default hoverGracePeriod (0) does not install hover-close on interactive menus", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "hover"}}
+          @untriggers={{array "hover"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    await triggerEvent(".fk-d-menu__trigger", "pointermove");
+    await triggerEvent(".fk-d-menu__trigger", "pointerleave");
+
+    assert
+      .dom(".fk-d-menu")
+      .exists("interactive menu stays open without grace period");
   });
 });

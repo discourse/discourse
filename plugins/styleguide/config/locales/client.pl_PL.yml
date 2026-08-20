@@ -14,6 +14,10 @@ pl_PL:
     styleguide:
       title: "Przewodnik po stylach"
       welcome: "Aby rozpocząć, wybierz sekcję z menu nawigacji."
+      example:
+        toggle_code: "Przełącz przykład kodu"
+        try_this: "Spróbuj tego:"
+        code_region: "Fragment źródłowy: %{title}"
       categories:
         syntax: Składnia
         atoms: Atomy
@@ -120,5 +124,7 @@ pl_PL:
         char_counter:
           title: "Licznik znaków"
           placeholder: "Tutaj wpisz swój tekst..."
+        combo_button:
+          title: "Przycisk combo"
         segmented_control:
           title: "Sterowanie segmentowe (grupa przełączników przycisków)"

@@ -302,3 +302,9 @@ lt:
         message: "Žinutės"
       chat_approval:
         message: "Žinutės"
+        buttons: "Mygtukai"
+        value: "Reikšmė"
+        style_default: "Numatytasis"
+        style_primary: "Pagrindinė"
+        style_success: "Sėkmingai"
+        icon: "Ikona"

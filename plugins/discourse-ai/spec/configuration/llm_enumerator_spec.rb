@@ -20,12 +20,16 @@ RSpec.describe DiscourseAi::Configuration::LlmEnumerator do
           id: seeded_model.id,
           name: seeded_model.display_name,
           vision_enabled: seeded_model.vision_enabled,
+          vision_mode: "disabled",
+          agent_image_capable: false,
           supported_native_tools: [],
         },
         {
           id: llm_model.id,
           name: llm_model.display_name,
           vision_enabled: llm_model.vision_enabled,
+          vision_mode: "disabled",
+          agent_image_capable: false,
           supported_native_tools: [],
         },
       )

@@ -109,6 +109,14 @@ module DiscourseAi
           @prompts
         end
 
+        def text_from_response(response)
+          if response.is_a?(Array)
+            response.select { |content| content.is_a?(String) }.join
+          else
+            response
+          end
+        end
+
         def proxy(model)
           llm_model =
             if model.is_a?(LlmModel)

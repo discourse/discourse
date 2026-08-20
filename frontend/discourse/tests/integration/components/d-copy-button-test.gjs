@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { render, rerender } from "@ember/test-helpers";
+import { click, render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DCopyButton from "discourse/ui-kit/d-copy-button";
 
@@ -24,6 +25,29 @@ module("Integration | Component | DCopyButton", function (hooks) {
       .exists(
         "a visually-hidden polite live region is rendered so screen readers can announce copy success"
       );
+  });
+
+  test("copies a direct value without a DOM source", async function (assert) {
+    const writeText = sinon.stub().resolves();
+    sinon.stub(window.navigator, "clipboard").get(() => ({ writeText }));
+
+    await render(
+      <template>
+        <DCopyButton
+          @value="direct payload"
+          @selector=".missing-copy-source"
+          @translatedLabel="Copy"
+          @translatedLabelAfterCopy="Copied!"
+        />
+      </template>
+    );
+
+    await click(".copy-button");
+
+    assert.true(
+      writeText.calledWithExactly("direct payload"),
+      "the direct value takes precedence over the selector"
+    );
   });
 
   test("@isCopied shows the confirmation for a copy made by the caller", async function (assert) {

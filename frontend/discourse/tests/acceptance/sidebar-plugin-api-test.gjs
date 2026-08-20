@@ -129,19 +129,15 @@ acceptance("Sidebar - Plugin API", function (needs) {
       .exists();
 
     await click(
-      ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown summary"
+      ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown"
     );
 
     assert
-      .dom(
-        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown .select-kit-collection li"
-      )
+      .dom(".sidebar-section-header-dropdown__item")
       .exists({ count: 2 }, "displays two actions");
 
     const actions = [
-      ...document.querySelectorAll(
-        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown .select-kit-collection li"
-      ),
+      ...document.querySelectorAll(".sidebar-section-header-dropdown__item"),
     ];
 
     assert

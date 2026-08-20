@@ -5,16 +5,81 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
+      title: Rewind
+      loading: "Réticulation des splines..."
+      viewing_other_user: "Vous consultez le rapport Discourse Rewind de <strong>%{username}</strong>."
+      cannot_view_rewind: >
+        Vous ne pouvez pas consulter ce rapport Discourse Rewind. Son propriétaire ne l'a peut-être pas rendu public ?<br><br>$>_ <br><br>
+      preferences:
+        enable_rewind: "Activer Discourse Rewind. Cette fonctionnalité affiche le récapitulatif de votre activité de fin d'année sur votre profil et votre avatar."
+        share_publicly: "Partager le récapitulatif Discourse Rewind avec les autres membres du forum. Tous les membres du forum pourront consulter votre récapitulatif Discourse Rewind."
+        cannot_share_when_profile_hidden: "Pour partager votre Rewind, vous devez autoriser les autres à consulter votre profil public."
+      profile_link: "Voir votre Discourse Rewind %{rewindYear}"
       share:
         toggle_label:
           private: "Privé"
           public: "Public"
+        confirm: "Vérifiez votre Rewind avant de le partager, car il peut contenir des données issues de messages personnels. Vous pourrez le rendre à nouveau privé à tout moment."
+        confirm_button:
+          enable: "Rendre public"
+          disable: "Garder privé"
+        enabled_success: "Votre Rewind peut désormais être consulté par les autres membres du forum."
+        disabled_success: "Votre Rewind est désormais privé."
       reports:
+        activity_calendar:
+          title: Calendrier d'activité
+          cell_title:
+            visited_no_posts: "Vous avez consulté le forum le %{date}, sans publier."
+            visited_no_posts_others: "%{username} a consulté le forum le %{date}, sans publier."
+            visited_with_posts:
+              one: "Vous avez publié %{count} publication le %{date}."
+              other: "Vous avez publié %{count} publications le %{date}."
+            visited_with_posts_others:
+              one: "%{username} a publié %{count} publication le %{date}."
+              other: "%{username} a publié %{count} publications le %{date}."
+            no_activity: "Vous n'étiez pas présent(e) sur le forum le %{date}."
+            no_activity_others: "%{username} n'était pas présent(e) sur le forum le %{date}."
+        top_words:
+          title: Utilisation des mots
         reading_time:
           title: Temps de lecture
+          book_comparison: "Vous avez passé <code>%{readingTime}</code> à lire sur notre site ! C'est le temps qu'il faudrait pour lire <i>%{bookTitle}</i>."
+          book_comparison_others: "%{username} a passé <code>%{readingTime}</code> à lire sur notre site ! C'est le temps qu'il faudrait pour lire <i>%{bookTitle}</i>."
+        post_used_reactions:
+          title: Réactions les plus utilisées dans les sujets
+          total_number: "Nombre total de réactions : %{count}"
+        post_received_reactions:
+          title: Réactions les plus reçues dans les sujets
+        fbff:
+          title: Votre FBFF (meilleur ami du forum pour toujours)
+          title_others: "Le FBFF de %{username} (meilleur ami du forum pour toujours)"
+        most_viewed_categories:
+          title:
+            one: Votre catégorie la plus consultée
+            other: Vos %{count} catégories les plus consultées
+          title_others:
+            one: "La catégorie la plus consultée par %{username}"
+            other: "Les %{count} catégories les plus consultées par %{username}"
+        most_viewed_tags:
+          title:
+            one: Votre étiquette la plus consultée
+            other: Vos %{count} étiquettes les plus consultées
+          title_others:
+            one: "L'étiquette la plus consultée par %{username}"
+            other: "Les %{count} étiquettes les plus consultées par %{username}"
         best_topics:
+          view_topic: Voir le sujet
+          title:
+            one: Votre meilleur sujet
+            other: Vos %{count} meilleurs sujets
           title_others:
             one: "Meilleur sujet de %{username}"
             other: "%{count} meilleurs sujets de %{username}"
@@ -75,6 +140,7 @@ fr:
           message_3:
             one: "Les gens ont adoré vos messages ! Vous avez reçu <strong>%{count}</strong> réaction ❤️"
             other: "Les gens ont adoré vos messages ! Vous avez reçu <strong>%{count}</strong> réactions ❤️"
+          reply_3: "r0fl rAwR 8-)"
           message_4: "La longueur moyenne de vos messages était de <strong>%{length}</strong> caractères"
           message_5: "Vos canaux préférés :"
           dancing_baby_alt: "Bébé dansant"

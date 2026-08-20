@@ -122,7 +122,6 @@ tr_TR:
       nodes:
         "action:sql": "Veri Gezgini"
       sql:
-        queries: "Sorgular"
         query_id: "Sorgu"
         add_param: "Parametre ekle"
         param_value: "Değer"

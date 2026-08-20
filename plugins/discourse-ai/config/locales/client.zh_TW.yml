@@ -111,6 +111,36 @@ zh_TW:
         periods:
           last_day: "過去 24 小時"
           custom: "自訂..."
+      logs:
+        short_title: "紀錄"
+        apply: "套用"
+        successful: "成功"
+        failed: "失敗"
+        topic_id: "話題 ID"
+        post_id: "貼文 ID"
+        time: "時間"
+        when: "時間"
+        request: "請求"
+        user: "使用者"
+        context: "關聯"
+        topic: "話題"
+        post: "貼文"
+        post_short: "貼文 %{id}"
+        duration: "持續時間"
+        actions: "動作"
+        periods:
+          day: "過去 24 小時"
+          week: "過去 7 天"
+          custom: "客製"
+        detail:
+          request: "請求"
+          response: "回應"
+          context: "關聯"
+          network_error: "網路錯誤"
+        retention:
+          summary_stage: "摘要"
+          deleted_stage: "刪除"
+          save: "儲存"
       ai_agent:
         name: "名稱"
         edit: "編輯"
@@ -176,6 +206,9 @@ zh_TW:
           required: "必要設定"
       llms:
         display_name: "名稱"
+        vision_modes:
+          disabled:
+            title: "停用"
         save: "儲存"
         edit: "編輯"
         delete: 刪除
@@ -227,6 +260,7 @@ zh_TW:
           fake: "客製"
       ai_bot:
         debug_ai_modal:
+          duration_label: "持續時間："
           request: "請求"
           response: "回應"
           next_log: "下一步"

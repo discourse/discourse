@@ -1,7 +1,17 @@
-import { click, visit } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  triggerEvent,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  settleGestureFrame,
+  stubPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("Run Query", function (needs) {
@@ -427,5 +437,150 @@ acceptance("Run Query", function (needs) {
     await visit("/g/testgroup/reports/2?run=1");
 
     assert.dom("div.query-results").exists("query results should be displayed");
+  });
+
+  test("dragging the grippie resizes the editor panes", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+    const startingHeight = panes.clientHeight;
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    // No sideways movement: a vertical resize must not need any.
+    await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 240 });
+    await settleGestureFrame();
+
+    assert.strictEqual(
+      panes.style.height,
+      `${startingHeight + 40}px`,
+      "the panes grow by the pointer's vertical travel"
+    );
+    // Asserted mid-gesture as well as after: absence on release alone would
+    // pass against a resize that never held the cursor at all.
+    assert
+      .dom(document.body)
+      .hasClass("d-resizing-ns", "the cursor is held while the drag runs");
+
+    await triggerEvent(grippie, "pointerup", { pointerId: 1, clientY: 240 });
+    assert
+      .dom(document.body)
+      .doesNotHaveClass(
+        "d-resizing-ns",
+        "the held cursor is given back on release"
+      );
+  });
+
+  test("the grippie is an operable separator", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+
+    assert
+      .dom(grippie)
+      .hasAttribute("role", "separator")
+      .hasAttribute("aria-orientation", "horizontal")
+      .hasAttribute("tabindex", "0")
+      .hasAttribute("data-resize-axis", "vertical");
+    assert
+      .dom(grippie)
+      .hasAttribute(
+        "aria-label",
+        i18n("explorer.resize_editor"),
+        "the separator says what it resizes rather than announcing a bare splitter"
+      );
+
+    const panes = find(".query-editor .panels-flex");
+    const startingHeight = panes.clientHeight;
+    await triggerKeyEvent(grippie, "keydown", "ArrowDown");
+
+    assert.true(
+      parseInt(panes.style.height, 10) > startingHeight,
+      "arrow keys resize it without a pointer"
+    );
+  });
+
+  test("the separator announces a size inside the bounds it announces", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const read = (name) => parseFloat(grippie.getAttribute(name));
+
+    // Asserted against each other, not against pixels. The numbers depend on the
+    // stylesheet and the window; a size outside its own range is wrong regardless.
+    assert.true(
+      Number.isFinite(read("aria-valuenow")),
+      "a size is announced once the panes are measured"
+    );
+    assert.true(
+      read("aria-valuemin") <= read("aria-valuenow"),
+      "the announced size is not below the announced minimum"
+    );
+    assert.true(
+      read("aria-valuenow") <= read("aria-valuemax"),
+      "the announced size is not above the announced maximum"
+    );
+  });
+
+  test("dragging far past the maximum stops at it", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+    const ceiling = parseFloat(grippie.getAttribute("aria-valuemax"));
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    await triggerEvent(grippie, "pointermove", {
+      pointerId: 1,
+      clientY: 200 + ceiling * 3,
+    });
+    await settleGestureFrame();
+    await triggerEvent(grippie, "pointerup", {
+      pointerId: 1,
+      clientY: 200 + ceiling * 3,
+    });
+
+    assert.true(
+      parseFloat(panes.style.height) <= ceiling,
+      "the panes stop at the maximum rather than following the pointer"
+    );
+  });
+
+  test("a separator torn down mid-gesture writes nothing afterwards", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 260 });
+    await settleGestureFrame();
+    const heightWhenTornDown = panes.style.height;
+
+    // Leaving the route with the gesture still held: the separator goes, and the
+    // controller is a singleton that outlives it.
+    await visit("/admin/plugins/discourse-data-explorer");
+    await triggerEvent(document, "pointerup", { pointerId: 1, clientY: 900 });
+
+    assert.strictEqual(
+      panes.style.height,
+      heightWhenTornDown,
+      "the detached panes keep the size they had when the separator went"
+    );
   });
 });

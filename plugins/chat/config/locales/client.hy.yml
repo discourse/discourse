@@ -183,4 +183,9 @@ hy:
         message: "Ուղարկել"
       chat_approval:
         message: "Ուղարկել"
+        value: "Արժեք"
+        style_default: "Լռելյայն"
+        style_primary: "Հիմնական"
+        style_success: "Հաջողություն"
+        icon: "Պատկերակ"
         channel_id: "Ալիք"

@@ -816,4 +816,11 @@ pt_BR:
         message: "Mensagem"
       chat_approval:
         message: "Mensagem"
+        buttons: "Botões"
+        value: "Valor"
+        style: "Estilo"
+        style_default: "Padrão"
+        style_primary: "Primário"
+        style_success: "Sucesso"
+        icon: "Ícone"
         channel_id: "Canal"

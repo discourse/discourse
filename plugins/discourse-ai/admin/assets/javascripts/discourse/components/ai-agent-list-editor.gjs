@@ -233,6 +233,17 @@ export default class AiAgentListEditor extends Component {
       })
       .catch((error) => {
         if (error.jqXHR?.status === 422) {
+          const missingSubagents =
+            error.jqXHR.responseJSON?.conflicts?.subagents;
+          if (missingSubagents?.length) {
+            this.dialog.alert(
+              i18n("discourse_ai.ai_agent.import_error_missing_subagents", {
+                names: missingSubagents.join(", "),
+              })
+            );
+            return;
+          }
+
           this.dialog.confirm({
             message:
               i18n("discourse_ai.ai_agent.import_error_conflict", {
@@ -272,10 +283,9 @@ export default class AiAgentListEditor extends Component {
             />
             <actions.Wrapped>
               <DComboButton
-                class={{dConcatClass
-                  "ai-agent-list-editor__new-combo"
-                  (if this.hasAgents "--has-menu")
-                }}
+                @hasMenu={{this.hasAgents}}
+                @btnTypeClass={{this.newAgentButtonClasses}}
+                class="ai-agent-list-editor__new-combo"
                 aria-label={{i18n "discourse_ai.ai_agent.new_group"}}
                 as |combo|
               >
@@ -284,67 +294,58 @@ export default class AiAgentListEditor extends Component {
                   @ariaLabel="discourse_ai.ai_agent.new"
                   @action={{this.newAgent}}
                   @icon="plus"
-                  class={{dConcatClass
-                    this.newAgentButtonClasses
-                    "ai-agent-list-editor__new-button"
-                  }}
+                  class="ai-agent-list-editor__new-button"
                 />
-                {{#if this.hasAgents}}
-                  <combo.Menu
-                    @identifier="duplicate-agent-menu"
-                    @title={{i18n "discourse_ai.ai_agent.duplicate"}}
-                    @placement="bottom-end"
-                    @modalForMobile={{true}}
-                    @autofocus={{true}}
-                    @onRegisterApi={{this.registerDuplicateMenu}}
-                    @onClose={{this.clearDuplicateFilter}}
-                    @triggerClass={{dConcatClass
-                      this.newAgentButtonClasses
-                      "ai-agent-list-editor__duplicate-menu"
-                    }}
-                    aria-label={{i18n "discourse_ai.ai_agent.duplicate"}}
-                  >
-                    <div class="ai-agent-list-editor__duplicate-picker">
-                      <DFilterInput
-                        @value={{this.duplicateFilter}}
-                        @filterAction={{this.filterDuplicateAgents}}
-                        @onClearInput={{this.clearDuplicateFilter}}
-                        @icons={{hash left="magnifying-glass"}}
-                        placeholder={{i18n
-                          "discourse_ai.ai_agent.duplicate_search"
-                        }}
-                        aria-label={{i18n
-                          "discourse_ai.ai_agent.duplicate_search"
-                        }}
-                        data-test-duplicate-agent-filter
-                        autofocus
-                      />
-                      <DDropdownMenu
-                        class="ai-agent-list-editor__duplicate-results"
-                        as |dropdown|
-                      >
-                        {{#each this.filteredDuplicateAgents as |agent|}}
-                          <dropdown.item>
-                            <DButton
-                              @action={{fn this.duplicateAgent agent}}
-                              @translatedLabel={{agent.name}}
-                              @icon="copy"
-                              class="btn-transparent"
-                              data-test-duplicate-agent-option
-                            />
-                          </dropdown.item>
-                        {{else}}
-                          <li
-                            class="ai-agent-list-editor__duplicate-empty"
-                            role="status"
-                          >
-                            {{i18n "discourse_ai.ai_agent.filters.no_results"}}
-                          </li>
-                        {{/each}}
-                      </DDropdownMenu>
-                    </div>
-                  </combo.Menu>
-                {{/if}}
+                <combo.Menu
+                  @identifier="duplicate-agent-menu"
+                  @title={{i18n "discourse_ai.ai_agent.duplicate"}}
+                  @modalForMobile={{true}}
+                  @autofocus={{true}}
+                  @onRegisterApi={{this.registerDuplicateMenu}}
+                  @onClose={{this.clearDuplicateFilter}}
+                  @triggerClass="ai-agent-list-editor__duplicate-menu"
+                  aria-label={{i18n "discourse_ai.ai_agent.duplicate"}}
+                >
+                  <div class="ai-agent-list-editor__duplicate-picker">
+                    <DFilterInput
+                      @value={{this.duplicateFilter}}
+                      @filterAction={{this.filterDuplicateAgents}}
+                      @onClearInput={{this.clearDuplicateFilter}}
+                      @icons={{hash left="magnifying-glass"}}
+                      placeholder={{i18n
+                        "discourse_ai.ai_agent.duplicate_search"
+                      }}
+                      aria-label={{i18n
+                        "discourse_ai.ai_agent.duplicate_search"
+                      }}
+                      data-test-duplicate-agent-filter
+                      autofocus
+                    />
+                    <DDropdownMenu
+                      class="ai-agent-list-editor__duplicate-results"
+                      as |dropdown|
+                    >
+                      {{#each this.filteredDuplicateAgents as |agent|}}
+                        <dropdown.item>
+                          <DButton
+                            @action={{fn this.duplicateAgent agent}}
+                            @translatedLabel={{agent.name}}
+                            @icon="copy"
+                            class="btn-transparent"
+                            data-test-duplicate-agent-option
+                          />
+                        </dropdown.item>
+                      {{else}}
+                        <li
+                          class="ai-agent-list-editor__duplicate-empty"
+                          role="status"
+                        >
+                          {{i18n "discourse_ai.ai_agent.filters.no_results"}}
+                        </li>
+                      {{/each}}
+                    </DDropdownMenu>
+                  </div>
+                </combo.Menu>
               </DComboButton>
             </actions.Wrapped>
           </:actions>

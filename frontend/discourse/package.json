@@ -24,6 +24,8 @@
     "start": "./rolldown.mjs"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^3.0.0",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^3.0.1",
     "@codemirror/autocomplete": "^6.20.3",
     "@codemirror/commands": "^6.10.3",
     "@codemirror/lang-javascript": "^6.2.5",
@@ -129,6 +131,7 @@
     "@rolldown/pluginutils": "1.0.1",
     "@rollup/plugin-babel": "^7.1.0",
     "@types/jquery": "^3.5.33",
+    "@types/picomatch": "^4.0.3",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
     "@types/sinon": "^21.0.1",
@@ -150,7 +153,7 @@
     "ember-cli": "~7.0.1",
     "ember-cli-deprecation-workflow": "^4.0.1",
     "ember-cli-htmlbars": "^7.0.1",
-    "ember-exam": "^10.1.0",
+    "ember-exam": "^10.1.2",
     "ember-modifier": "^4.3.0",
     "ember-qunit": "^9.0.4",
     "ember-template-imports": "^4.4.0",

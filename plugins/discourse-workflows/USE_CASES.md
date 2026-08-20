@@ -61,7 +61,7 @@ For each run, record:
 - Simple trust/text/category/staff checks should use `condition:filter`, not Code nodes. `condition:if` is for separate true/false branches.
 - Trust level is only exposed as `$json.user.trust_level` on triggers with a user object (e.g. `trigger:post_created`); the post/topic payloads have no `trust_level`. When a trust-level check is needed but no `trust_level` field is in scope (topic-only triggers), resolve the cumulative `trust_level_N` automatic group and use `action:group` with `operation: check_membership` plus resolved `group_id` -- do not ask for clarification or add a Code node.
 - Condition builder entries must use `leftValue` and `rightValue`; `left`/`right` will not execute correctly.
-- Connections leaving `condition:filter` or `condition:if` should use `connection_type: "true"` for the passing branch, not `main`.
+- Connections leaving `condition:filter` or `condition:if` use `connection_type: "main"`; select the passing branch with `output_index: 0` and the rejected branch with `output_index: 1`.
 - Group membership checks should use `action:group` with `operation: check_membership` and the resolved `group_id` instead of Code nodes. Branch with `condition:if` on `$json.group_membership.in_group` when different member and non-member paths are needed.
 - DM/personal-message notifications should use `action:send_personal_message` instead of chat or topic reply nodes.
 - Forum `search`/`read` should not be used for node/schema discovery; use `workflow_node_catalog` and `workflow_validate_patch`.

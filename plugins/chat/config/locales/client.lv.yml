@@ -175,3 +175,9 @@ lv:
         message: "Ziņa"
       chat_approval:
         message: "Ziņa"
+        buttons: "Pogas"
+        value: "Vērtība"
+        style_default: "Noklusējums"
+        style_primary: "Primārais"
+        style_success: "Veiksmīgi"
+        icon: "Ikona"

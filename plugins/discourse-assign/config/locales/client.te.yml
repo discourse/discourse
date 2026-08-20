@@ -39,4 +39,15 @@ te:
       nodes:
         "trigger:assigned": "కేటాయించబడింది"
       assign_topic:
+        resource: "వనరు"
+        resources:
+          topic: "విషయం"
+          post: "పోస్ట్"
         topic_id: "విషయపు ఐడీ"
+        post_id: "పోస్ట్ ఐడీ"
+      check_assignment:
+        target_types:
+          topic: "విషయం"
+          post: "పోస్ట్"
+        topic_id: "విషయపు ఐడీ"
+        post_id: "పోస్ట్ ఐడీ"

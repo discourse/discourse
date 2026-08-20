@@ -6,7 +6,6 @@ import { i18n } from "discourse-i18n";
 export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
 
-let warnMissingIcons = true;
 let _iconList;
 
 export const REPLACEMENTS = {
@@ -62,14 +61,6 @@ export function replaceIcon(source, destination) {
   REPLACEMENTS[source] = destination;
 }
 
-export function disableMissingIconWarning() {
-  warnMissingIcons = false;
-}
-
-export function enableMissingIconWarning() {
-  warnMissingIcons = false;
-}
-
 export function renderIcon(renderType, id, params) {
   params ||= {};
 
@@ -88,6 +79,12 @@ export function renderIcon(renderType, id, params) {
   }
 }
 
+/**
+ * @param {string} id - The icon id.
+ * @param {object} [params] - Options passed to the icon renderer. Set
+ *   `ignoreMissing` where the icon is knowingly outside the sprite subset, to
+ *   skip the development-mode missing-icon warning.
+ */
 export function iconHTML(id, params) {
   return renderIcon("string", id, params);
 }
@@ -124,26 +121,29 @@ function iconClasses(icon, params) {
 }
 
 export function setIconList(iconList) {
-  _iconList = iconList;
+  _iconList = new Set(iconList);
 }
 
 export function isExistingIconId(id) {
-  return _iconList?.includes(id);
+  return _iconList?.has(id);
 }
 
 function warnIfMissing(id) {
-  if (warnMissingIcons && isDevelopment() && !isExistingIconId(id)) {
+  if (isDevelopment() && !isExistingIconId(id)) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }
 
-function handleIconId(icon) {
+function handleIconId(icon, params) {
   let id = icon.replacementId || icon.id || "";
 
   // TODO: clean up "thumbtack unpinned" at source instead of here
   id = id.replace(" unpinned", "");
 
-  warnIfMissing(id);
+  if (!params.ignoreMissing) {
+    warnIfMissing(id);
+  }
+
   return id;
 }
 
@@ -152,7 +152,7 @@ registerIconRenderer({
   name: "font-awesome",
 
   string(icon, params) {
-    const id = escape(handleIconId(icon));
+    const id = escape(handleIconId(icon, params));
     let html = `<svg class='${escape(iconClasses(icon, params))} svg-string' width='1em' height='1em'`;
 
     if (params["aria-label"]) {
@@ -187,7 +187,7 @@ registerIconRenderer({
   },
 
   element(icon, params) {
-    const id = escape(handleIconId(icon));
+    const id = escape(handleIconId(icon, params));
     const classes = iconClasses(icon, params) + " svg-node";
 
     const svgElement = document.createElementNS(SVG_NAMESPACE, "svg");

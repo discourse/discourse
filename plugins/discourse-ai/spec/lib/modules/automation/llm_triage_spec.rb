@@ -43,8 +43,9 @@ describe DiscourseAi::Automation::LlmTriage do
     expect(post.topic.reload.visible).to eq(false)
   end
 
-  it "can categorize topics on triage" do
+  it "can categorize topics on triage without bumping the topic" do
     category = Fabricate(:category)
+    bumped_at = post.topic.bumped_at
 
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
@@ -57,6 +58,7 @@ describe DiscourseAi::Automation::LlmTriage do
     end
 
     expect(post.topic.reload.category_id).to eq(category.id)
+    expect(post.topic.bumped_at).to eq_time(bumped_at)
   end
 
   it "can reply to topics on triage" do
@@ -513,7 +515,7 @@ describe DiscourseAi::Automation::LlmTriage do
     expect(reviewable.target_id).to eq(post.id)
     expect(reviewable.target_type).to eq("Post")
     expect(reviewable.reviewable_scores.first.reason).to include(
-      "<a href=\"#{Discourse.base_path}/admin/plugins/automation/",
+      "<a href=\"#{Discourse.base_path}/admin/plugins/automation/automation/",
     )
   end
 
@@ -538,7 +540,7 @@ describe DiscourseAi::Automation::LlmTriage do
       <p>
         <b>
           Triggered by the
-          <a href="/admin/plugins/automation/#{automation.id}">
+          <a href="/admin/plugins/automation/automation/#{automation.id}">
             #{CGI.escapeHTML(automation.name)}
           </a>
           rule.

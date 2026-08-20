@@ -17,6 +17,12 @@ de:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> benötigt Aufmerksamkeit. In den letzten %{count} Stunden hat es %{failed_calls} von %{total_calls} Mal nicht reagiert."
       ai_credit_soft_limit: "Für %{model_name} sind nur noch %{percentage_remaining} % des Guthabens übrig. Das Guthaben wird am %{reset_date} zurückgesetzt. <a href='%{url}'>KI-Modelle ansehen</a>"
       ai_credit_hard_limit: "Du hast kein KI-Guthaben mehr für %{model_name}. Die KI-Funktionen sind bis %{reset_date} nicht mehr verfügbar. <a href='%{url}'>KI-Modelle ansehen</a>"
+      ai_image_caption_agent: "KI-Bildbeschriftungen sind aktiviert, aber der ausgewählte Bildbeschriftungsagent ist noch nicht bereit: %{reason}. <a href=‚%{url}‘>Überprüfe den Bildbeschriftungsagenten</a>."
+      ai_image_caption_agent_reasons:
+        agent_missing: "der ausgewählte Agent existiert nicht"
+        agent_vision_disabled: "der Agent kann keine Bilduploads einbinden"
+        llm_missing: "der Agent löst sich nicht in ein LLM auf"
+        llm_vision_disabled: "das aufgelöste LLM unterstützt keine Bildeingabe"
   discourse_automation:
     ai:
       flag_types:
@@ -40,8 +46,6 @@ de:
           %{score_reason}
           %{response}
         flagged_post_response: "Antwort des Modells: %{llm_response}"
-        flagged_post_score_reason: |
-          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
           body: |
@@ -102,7 +106,11 @@ de:
     ai_helper_allowed_in_pm: "Aktiviere den Composer-KI-Helfer in PN."
     ai_helper_automatic_chat_thread_title_delay: "Verzögerung in Minuten, bevor der KI-Helfer automatisch den Titel des Chat-Threads festlegt."
     ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
-    ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
+    ai_image_caption_agent: "Der für KI-Bildbeschriftungen zu verwendende Agent. Benutzerdefinierte Agenten müssen Bilduploads aktiviert haben und ein bildverarbeitungsfähiges LLM verwenden."
+    ai_post_image_captions_enabled: "Aktiviere KI-Bildbeschriftungen für Beitragsbilder. Das Generieren fehlender Bildbeschriftungen erfordert einen konfigurierten {{setting:ai_image_caption_agent}}."
+    ai_post_image_captions_per_post_limit: "Maximale Anzahl der pro Beitrag zu beschriftenden Bilder."
+    ai_post_image_captions_backfill_hourly_rate: "Maximale Anzahl an Beiträgen pro Stunde, die rückwirkend mit KI-Bildbeschriftungen ergänzt werden sollen. Auf 0 setzen, um das rückwirkende Ergänzen zu deaktivieren."
+    ai_post_image_captions_backfill_max_age_days: "Maximales Alter in Tagen der Beiträge, die mit KI-Bildbeschriftungen rückwirkend ergänzt werden sollen."
     post_ai_helper_allowed_groups: "Benutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
     ai_helper_post_illustrator_agent: "Der Agent, der für die Funktion „Beitrag illustrieren“ des KI-Helfers verwendet werden soll. Hinweis: Du musst auch ein Tool zur Bilderzeugung erstellen (Administration > Plug-ins > KI > Tools), damit diese Funktion funktioniert."
     ai_helper_chat_thread_title_agent: "Der Agent, der zum Generieren von Chat-Thread-Titeln verwendet wird."
@@ -120,10 +128,14 @@ de:
     ai_embeddings_per_post_enabled: Erstelle Einbettungen für jeden Beitrag
     ai_admin_dashboard_enabled: "Aktiviere die KI-Funktionen im Admin-Dashboard."
     ai_admin_dashboard_highlights_agent: "Ein Agent, der bedeutende Community-Veränderungen im Admin-Dashboard erklärt."
+    ai_admin_dashboard_highlights_category_scope: "Wähle aus, welche Kategorien die KI-Hervorhebungen verwenden dürfen. Verwende die Optionen zum Ein- und Ausschließen über {{setting:ai_admin_dashboard_highlights_categories}}. Persönliche Nachrichten werden immer ausgeschlossen."
+    ai_admin_dashboard_highlights_categories: "Kategorien, die verwendet werden, wenn der Bereich für die KI-Hervorhebung auf <strong>include</strong> oder <strong>exclude</strong> eingestellt ist."
     ai_summarization_enabled: "Aktiviere die Zusammenfassungsfunktion"
     ai_summarization_agent: "Der Agent, der für die Zusammenfassungsfunktion verwendet werden soll"
     ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
     ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
+    ai_summary_gists_agent: "Agent, der zur Erstellung kurzer Themenzusammenfassungen verwendet wird. Bei der Erstellung von Zusammenfassungen wird immer das integrierte Tool „final-summary“ verwendet; andere auf dem Agenten konfigurierte Tools und strukturierte Antwortformate werden ignoriert."
+    ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde rückwirkend ergänzt werden sollen. Jede lokalisierte Zusammenfassung zählt zu diesem Limit."
     ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
     ai_bot_enabled_llms: "LLMs zur Auswahl für KI-Bot-Unterhaltungen"
     ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"
@@ -145,12 +157,14 @@ de:
     ai_discord_search_agent: "Der Agent, der für die Discord-Suche verwendet wird."
     ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
     ai_translation_enabled: "KI-Übersetzungsfunktion aktivieren"
+    ai_translation_category_scope: "Wähle aus, welche Kategorien die KI-Übersetzung verwenden darf. Mit den Optionen „include“ und „exclude“ kannst du {{setting:ai_translation_categories}} festlegen. Persönliche Nachrichten werden über {{setting:ai_translation_personal_messages}} gesteuert."
+    ai_translation_categories: "Kategorien, die verwendet werden, wenn der Bereich für die KI-Übersetzung auf <strong>include</strong> oder <strong>exclude</strong> eingestellt ist."
     ai_translation_personal_messages: "Legt fest, welche persönlichen Nachrichten übersetzt werden. „none“ deaktiviert die Übersetzung von privaten Nachrichten. „group“ übersetzt nur private Gruppennachrichten. „all“ übersetzt alle privaten Nachrichten."
     ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
+    ai_translation_backfill_start_date: "Das UTC-Datum, ab dem alte Beiträge und Themen zur rückwirkenden Übersetzung übermittelt werden. Lass das Feld leer, um die rückwirkende Übersetzung zu deaktivieren. Neue Inhalte werden weiterhin übersetzt."
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
     ai_translation_backfill_parallel_jobs: "Die Anzahl der parallel auszuführenden Beitragslokalisierungsaufträge pro Backfill-Zyklus. Höhere Werte steigern den Durchsatz, verbrauchen aber mehr Ressourcen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
-    ai_audit_logs_purge_after_days: "Lösche die KI-API-Audit-Logs, die älter als diese Anzahl an Tagen sind. Standardmäßig sind es etwa 6 Monate. Setze den Wert auf 0, um die Protokolle unbegrenzt aufzubewahren."
   reviewables:
     reasons:
       flagged_by_toxicity: Das KI-Plug-in meldete dies nach der Klassifizierung als toxisch.
@@ -161,6 +175,7 @@ de:
       description: "Dieser Bericht enthält eine Stimmungsanalyse für Beiträge, gruppiert nach Kategorie, mit positiven, negativen und neutralen Bewertungen für jeden Beitrag und jede Kategorie."
     overall_sentiment:
       title: "Allgemeine Stimmung"
+      description: "Das Diagramm vergleicht die Anzahl der Beiträge, die entweder als positiv oder negativ eingestuft wurden. Diese werden ermittelt, wenn die positiven oder negativen Werte den festgelegten Schwellenwert überschreiten. Das bedeutet, dass neutrale Beiträge nicht angezeigt werden. Persönliche Nachrichten (PN) werden ebenfalls ausgeschlossen. Je nach ausgewählter Methode zur Stimmungsanalyse werden die Beiträge entweder mit dem konfigurierten Modell zur Stimmungsanalyse („cardiffnlp/twitter-roberta-base-sentiment-latest“) oder mit dem konfigurierten Agenten zur Stimmungsanalyse klassifiziert."
       xaxis: "Positiv (%)"
       yaxis: "Datum"
     emotion_admiration:
@@ -348,13 +363,26 @@ de:
         unknown_error: "Beim Erzeugen der Vorschaubilder ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut."
       prompts:
         translate: Übersetzen in %{language}
-        generate_titles: Thementitel vorschlagen
         proofread: Text korrekturlesen
         markdown_table: Markdown-Tabelle generieren
         custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
         explain: "Erklären"
         illustrate_post: "Beitrag illustrieren"
         replace_dates: "Intelligente Termine"
+      image_caption:
+        aria_description: "%{description} (beschriftet durch KI)"
+    image_caption:
+      configuration:
+        agent_missing: "Wähle einen vorhandenen Agenten für KI-Bildbeschriftungen aus."
+        agent_vision_disabled: "Beim KI-Agent für Bildbeschriftungen muss das Hochladen von Bildern aktiviert sein."
+        llm_missing: "Der KI-Agent für Bildbeschriftungen muss ein LLM verwenden."
+        llm_vision_disabled: "Der KI-Agent für Bildbeschriftungen muss ein sehfähiges LLM verwenden."
+    post_image_captions:
+      errors:
+        description_blank: "Bildunterschrift darf nicht leer sein."
+        description_too_long:
+          one: "Die Bildunterschrift darf maximal %{count} Zeichen lang sein."
+          other: "Die Bildunterschrift darf maximal %{count} Zeichen lang sein."
     share_ai:
       read_more: "Vollständiges Transkript lesen"
       onebox_title: "KI-Unterhaltung mit %{llm_name}"
@@ -379,7 +407,12 @@ de:
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
       thinking: "Ich denke"
       tool_pending_approval: "Diese Aktion erfordert die Zustimmung des Moderators, bevor sie ausgeführt werden kann."
+      read_post:
+        unknown_post: "Beitrag"
       chat_tool_approval:
+        approved: "Genehmigt von @%{username}."
+        rejected: "Abgelehnt von @%{username}."
+        failed: "Aktion konnte nicht abgeschlossen werden: %{error}"
         unexpected_error: "ein unerwarteter Fehler ist aufgetreten"
       agents:
         default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
@@ -424,6 +457,9 @@ de:
         discourse_helper:
           name: "Discourse-Helfer"
           description: "KI-Bot, der auf die Unterstützung bei Discourse-bezogenen Aufgaben spezialisiert ist"
+        discourse_admin_assistant:
+          name: "Discourse Admin-Assistent"
+          description: "Ein KI-Bot, der Fragen auf Discourse beantwortet und Administratoren bei der Verwaltung der Website-Einstellungen unterstützt"
         web_artifact_creator:
           name: "Web-Artefakt-Ersteller"
           description: "KI-Bot, spezialisiert auf die Erstellung interaktiver Web-Artefakte"
@@ -468,6 +504,7 @@ de:
           description: "Standard-Agent für die Übersetzerfunktion des Helfers"
         image_captioner:
           name: "Bildbeschriftungen"
+          description: "Standard-Agent für die Bildbeschriftungsfunktion"
         locale_detector:
           name: "Sprachdetektor"
           description: "Unterstützt die Übersetzungsfunktion durch Erkennen der Sprache eines bestimmten Textes (Beiträge, Titel usw.)."
@@ -599,12 +636,15 @@ de:
         tags: "Schlagwörter auflisten"
         time: "Zeit"
         summarize: "Zusammenfassen"
+        set_topic_summary: "Themenzusammenfassung festlegen"
         image: "Bild generieren"
         google: "Google-Suche"
         read: "Thema lesen"
         setting_context: "Kontext der Website-Einstellung nachschlagen"
         schema: "Datenbankschema nachschlagen"
         search_settings: "Website-Einstellungen werden durchsucht"
+        read_site_setting: "Website-Einstellungen lesen"
+        change_site_setting: "Website-Einstellungen ändern"
         dall_e: "Bild generieren"
         search_meta_discourse: "Meta-Discourse durchsuchen"
         javascript_evaluator: "JavaScript auswerten"
@@ -626,6 +666,8 @@ de:
         categories: "Alle öffentlich sichtbaren Kategorien im Forum auflisten"
         flag_post: "Melde den aktuellen Beitrag zur Überprüfung durch das Team"
         close_topic: "Thema schließen oder öffnen"
+        suspend_user: "Einen Benutzer sperren (bannen), sodass er sich nicht mehr anmelden oder Beiträge veröffentlichen kann."
+        silence_user: "Einen Benutzer stummschalten und ihn am Veröffentlichen von Beiträgen hindern, wobei er den Lesezugriff behält"
         unlist_topic: "Ein Thema auflisten oder aus der Liste entfernen"
         lock_post: "Einen Beitrag sperren oder entsperren"
         delete_topic: "Ein Thema löschen"
@@ -645,6 +687,7 @@ de:
         tags: "Alle Schlagwörter im Forum auflisten"
         time: "Zeit in verschiedenen Zeitzonen finden"
         summary: "Ein Thema zusammenfassen"
+        set_topic_summary: "Kurze Zusammenfassung des letzten Themas festlegen"
         image: "Bild mit Stable Diffusion generieren"
         create_image: "Erstelle ein Bild mit dem Open AI GPT Bildmodell"
         edit_image: "Bearbeite ein Bild mit dem Open AI GPT Bildmodell"
@@ -653,6 +696,8 @@ de:
         setting_context: "Kontext der Website-Einstellung nachschlagen"
         schema: "Datenbankschema nachschlagen"
         search_settings: "Website-Einstellungen durchsuchen"
+        read_site_setting: "Den aktuellen Wert einer Website-Einstellung lesen"
+        change_site_setting: "Den Wert einer Website-Einstellung ändern"
         dall_e: "Bild mit DALL-E 3 generieren"
         search_meta_discourse: "Meta-Discourse durchsuchen"
         javascript_evaluator: "JavaScript auswerten"
@@ -672,6 +717,8 @@ de:
         random_picker: "Auswahl aus %{options}. Ausgewählt wurde: %{result}"
         flag_post: "Melde Beitrag: %{post_id} (%{flag_post})"
         close_topic: "Schließen des Themas %{topic_id} (geschlossen: %{closed})"
+        suspend_user: "%{username} für %{duration_days} Tag(e) sperren"
+        silence_user: "%{username} für %{duration_days} Tag(e) stummschalten"
         unlist_topic: "Entfernen des Themas %{topic_id} aus der Liste (nicht gelistet: %{unlisted})"
         lock_post: "Sperren des Beitrags %{post_id} (gesperrt: %{locked})"
         delete_topic: "Löschen des Themas %{topic_id} (gelöscht: %{deleted})"
@@ -690,6 +737,7 @@ de:
         read: "Wird gelesen: <a href='%{url}'>%{title}</a>"
         time: "Die Uhrzeit in %{timezone} ist %{time}"
         summarize: "<a href='%{url}'>%{title}</a> zusammengefasst"
+        set_topic_summary: "Kurze Zusammenfassung des letzten Themas festlegen"
         dall_e: "%{prompt}"
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
@@ -720,6 +768,8 @@ de:
         search_settings:
           one: "%{count} Ergebnis für „%{query}“ gefunden"
           other: "%{count} Ergebnisse für „%{query}“ gefunden"
+        read_site_setting: "Website-Einstellung %{setting_name} lesen"
+        change_site_setting: "Website-Einstellung %{setting_name} zu '%{value}' ändern"
       discoveries:
         continue_conversation:
           title: "Entdeckungsunterhaltung: Suche nach %{query}"
@@ -743,9 +793,19 @@ de:
       suspend_user:
         errors:
           not_found: "Benutzer nicht gefunden."
+          not_allowed: "Du darfst diesen Benutzer nicht sperren."
+          no_reason: "Du darfst diesen Benutzer nicht stummschalten."
+          invalid_duration: "Die Dauer muss eine positive ganze Zahl von Tagen sein, bis maximal %{max}."
+          failed: "Fehler beim Sperren des Benutzers."
+        success: "Benutzer %{username} wurde gesperrt."
       silence_user:
         errors:
           not_found: "Benutzer nicht gefunden."
+          not_allowed: "Du darfst diesen Benutzer nicht stummschalten."
+          no_reason: "Um einen Benutzer stummzuschalten, ist ein Grund erforderlich."
+          invalid_duration: "Die Dauer muss eine positive ganze Zahl von Tagen sein, bis maximal %{max}."
+          failed: "Fehler beim Stummschalten des Benutzers."
+        success: "Benutzer %{username} wurde stummgeschaltet."
       unlist_topic:
         errors:
           not_found: "Thema nicht gefunden."
@@ -858,6 +918,28 @@ de:
           no_note: "Um einen Eintrag in der Warteschlange zur Überprüfung mit einer Notiz zu versehen, ist eine Notiz erforderlich"
           failed: "Die Notiz konnte nicht hinzugefügt werden"
         success: "Notiz wurde erfolgreich zum Eintrag %{reviewable_id} in der Warteschlange zur Überprüfung hinzugefügt"
+      change_site_setting:
+        errors:
+          no_reason: "Für die Änderung einer Website-Einstellung ist ein Grund erforderlich."
+          not_found: "Die Website-Einstellung '%{setting_name}' existiert nicht."
+          not_allowed: "Du darfst keine Website-Einstellungen ändern."
+          hidden: "Die Website-Einstellung '%{setting_name}' ist ausgeblendet und kann hier nicht geändert werden."
+          secret: "Die Website-Einstellung '%{setting_name}' enthält einen geheimen Wert und kann hier nicht geändert werden."
+          themeable: "Die Website-Einstellung '%{setting_name}' erfordert ein Theme und kann hier nicht geändert werden."
+          deprecated: "Die Website-Einstellung '%{setting_name}' ist veraltet; verwende stattdessen '%{new_name}'."
+          shadowed: "Die Website-Einstellung '%{setting_name}' wird global überschrieben und kann nicht geändert werden."
+          unconfigurable: "Die Website-Einstellung '%{setting_name}' gehört zu einem Plug-in, das nicht konfiguriert werden kann."
+          unsupported_type: "Website-Einstellungen vom Typ '%{type}' können vom KI-Bot nicht geändert werden."
+          invalid_value: "Ungültiger Wert: %{error}"
+          failed: "Fehler beim Ändern der Website-Einstellung."
+        success: "Die Website-Einstellung %{setting_name} wurde zu '%{value}' geändert."
+      read_site_setting:
+        errors:
+          not_allowed: "Du darfst keine Website-Einstellungen lesen."
+          not_found: "Die Website-Einstellung '%{setting_name}' existiert nicht."
+          hidden: "Die Website-Einstellung '%{setting_name}' ist ausgeblendet und kann hier nicht gelesen werden."
+          secret: "Die Website-Einstellung '%{setting_name}' enthält einen geheimen Wert und kann hier nicht gelesen werden."
+          themeable: "Die Website-Einstellung '%{setting_name}' erfordert ein Theme und kann hier nicht gelesen werden."
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"
@@ -868,6 +950,8 @@ de:
         target_missing: "Das Ziel der Tool-Aktion existiert nicht mehr."
         tool_not_found: "Das Tool '%{tool_name}' ist nicht mehr verfügbar."
         bot_user_missing: "Der Bot-Benutzer existiert nicht mehr."
+        performer_not_human: "Diese Aktion muss von einer echten Person und nicht von einem Bot genehmigt oder abgelehnt werden."
+        post_mismatch: "Diese Genehmigungskarte gehört nicht zu diesem Beitrag."
         execution_error: "Tool-Ausführung fehlgeschlagen: %{error}"
         execution_error_unknown: "ein unerwarteter Fehler ist aufgetreten"
     summarization:
@@ -929,6 +1013,8 @@ de:
       delete_failed_in_use: "Diese Anmeldedaten werden derzeit von einem oder mehreren LLM, Einbettungen oder Tools verwendet und können nicht gelöscht werden."
     llm_models:
       missing_provider_param: "%{param} darf nicht leer sein"
+      invalid_provider_param: "%{param} hat ein ungültiges Format"
+      reasoning_mode_requirements: "Der Pro-Argumentationsmodus erfordert die Responses API"
       secret_required: "Es müssen Anmeldedaten gewählt werden"
       secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht"
       bedrock_invalid_url: "Bitte fülle alle Felder aus, um dieses Modell zu verwenden."

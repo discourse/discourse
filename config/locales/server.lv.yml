@@ -210,6 +210,9 @@ lv:
         other: "pirms %{count} dienām"
   password_reset:
     title: "Atjaunot paroli"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonīmi"
   reviewable_score_types:
     needs_approval:
       title: "Nepieciešama apstiprināšana"
@@ -368,6 +371,9 @@ lv:
         user: "Lietotājs"
         num_topics: "Tēmas"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Apmeklējumi"
+    top_entry_urls:
       labels:
         count: "Apmeklējumi"
     top_referrers_by_browser_pageviews:
@@ -543,6 +549,9 @@ lv:
       button: "Reģistrēties"
     resend_email:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
+  design_wizard:
+    palette_pairs:
+      default: "Noklusējums"
   wizard:
     step:
       setup:

@@ -490,22 +490,12 @@ pt_BR:
       pill: "Sugestões"
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
-      select_theme:
-        action: "Selecionar tema"
-        modal_title: "Escolha um tema"
-        use_theme: "Usar tema selecionado"
-        enabled: "Selecionado(a)"
-        applying_theme: "Aplicando tema..."
-        browse_all: "Gerenciar temas"
       invite_collaborators:
         title: "Convidar colaboradores"
-        description: "Os primeiros membros ajudam a dar vida à sua comunidade."
         action: "Criar convite"
       start_posting:
         title: "Comece a postar"
-        description: "Dê às pessoas algo sobre o que conversar."
         action: "Ver ideias"
         choose_option: "Como você gostaria de começar?"
         predefined_topics: "Modelos para quebrar o gelo"
@@ -526,6 +516,26 @@ pt_BR:
           what_is_your_favorite_food:
             title: "Qual é a sua comida favorita?"
             body: "Compartilhe sua comida favorita com a comunidade! Eu começo: adoro pizza, principalmente com bastante queijo e pepperoni."
+    design_wizard:
+      back: "Voltar"
+      next: "Próximo"
+      sections:
+        theme: "Tema"
+        fonts: "Fontes"
+        homepage: "Página Inicial"
+      theme:
+        selected: "Selecionado(a)"
+      colors:
+        light: "Claro"
+        dark: "Escuro"
+      fonts:
+        base_font: "Fonte de base"
+        heading_font: "Fonte do cabeçalho"
+      homepage:
+        topics: "Tópicos"
+        categories: "Categorias"
+        styles:
+          boxes: "Caixas de seleção"
     about:
       edit: "Editar esta página"
       simple_title: "Sobre"
@@ -820,10 +830,6 @@ pt_BR:
       stale_help: "Este item foi resolvido por <b>%{username}</b>."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
-        required: "Você precisa reivindicar itens antes de poder revisá-los."
-        claimed_by_you: "Você reivindicou este item e pode revisá-lo."
-        claimed_by_other: "Este item só pode ser revisado por <b>%{username}</b>."
-        automatically_claimed_by: "Este item está sendo revisado por <b>%{username}</b>."
       claim:
         title: "Reivindicar este tópico"
       unclaim:
@@ -2894,6 +2900,7 @@ pt_BR:
       subcategory_count:
         one: "+%{count} subcategoria"
         other: "+%{count} subcategorias"
+      subcategories: "+ Subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -2965,6 +2972,7 @@ pt_BR:
       toggle: "Alternar filtros suspensos"
     d_icon_grid_picker:
       select_icon: "Selecionar ícone"
+      search_label: "Buscar ícones"
       search_placeholder: "Buscar ícones..."
       no_results: "Nenhum ícone encontrado"
       results_count:
@@ -3297,7 +3305,6 @@ pt_BR:
         other: "%{count} pedidos de associação abertas para \"%{group_name}\""
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - concluído(a)"
       new_features: "Novos recursos disponíveis!"
       admin_problems: "Nova recomendação no painel de controle do seu site"
       upcoming_changes:
@@ -6208,13 +6215,32 @@ pt_BR:
       new_features:
         title: "Novidades?"
         check_for_updates: "Verificar atualizações"
+      site_traffic_explorer:
+        pageviews: "Visualizações de página"
+        view_more: "Ver mais"
+        cards:
+          pages: "Páginas"
+          visitors: "Visitantes"
+        columns:
+          countries: "País"
+          top_urls: "URL"
+          browsers: "Navegador"
+          ip_addresses: "Endereço IP"
+        filters:
+          country: "País"
+          browser: "Navegador"
+          ip: "Endereço IP"
+        metrics:
+          pageviews:
+            label: "Visualizações de página"
+        series:
+          anonymous_human: "Anônimo(a)"
       dashboard:
         title: "Painel de controle"
         last_updated: "Painel de controle atualizado:"
         discourse_last_updated: "Discourse atualizado:"
         version: "Versão"
         up_to_date: "Você está atualizado(a)!"
-        critical_available: "Uma atualização crítica está disponível."
         updates_available: "Atualizações estão disponíveis."
         please_update: "Atualize agora mesmo!"
         no_check_performed: "Não foi realizada nenhuma verificação de atualizações. Verifique se sidekiq esta em execução."

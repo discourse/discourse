@@ -22,10 +22,8 @@ class AdminDashboardEngagement
   end
 
   def build
-    kpis = build_kpis
     {
-      kpis: kpis,
-      headline: build_headline(kpis),
+      kpis: build_kpis,
       trust_level_pipeline: build_trust_level_pipeline,
       posters: build_posters,
       activity_by_category: build_activity_by_category,
@@ -45,47 +43,6 @@ class AdminDashboardEngagement
 
   def build_kpis
     KPI_REPORTS.filter_map { |type, report| build_kpi(type, report) }
-  end
-
-  HEADLINE_KEYS = {
-    healthy_growth: "admin.dashboard.sections.engagement.headline.healthy_growth",
-    declining: "admin.dashboard.sections.engagement.headline.declining",
-    engaged_but_shrinking: "admin.dashboard.sections.engagement.headline.engaged_but_shrinking",
-    growing_but_distracted: "admin.dashboard.sections.engagement.headline.growing_but_distracted",
-    mixed: "admin.dashboard.sections.engagement.headline.mixed",
-    no_signal: "admin.dashboard.sections.engagement.headline.no_signal",
-  }.freeze
-
-  def build_headline(kpis)
-    stickiness = sign_of(kpi_change(kpis, :dau_mau))
-    signups = sign_of(kpi_change(kpis, :new_signups))
-    engaged = sign_of(kpi_change(kpis, :daily_engaged_users))
-
-    key =
-      if [stickiness, signups, engaged].all?(&:zero?)
-        :no_signal
-      elsif stickiness >= 0 && signups >= 0 && engaged >= 0
-        :healthy_growth
-      elsif stickiness <= 0 && signups <= 0 && engaged <= 0
-        :declining
-      elsif stickiness >= 0 && (signups < 0 || engaged < 0)
-        :engaged_but_shrinking
-      elsif stickiness < 0 && signups > 0
-        :growing_but_distracted
-      else
-        :mixed
-      end
-
-    { key: HEADLINE_KEYS[key] }
-  end
-
-  def kpi_change(kpis, type)
-    kpis.find { |k| k[:type] == type }&.dig(:percent_change)
-  end
-
-  def sign_of(value)
-    return 0 if value.nil? || value.zero?
-    value.positive? ? 1 : -1
   end
 
   def build_trust_level_pipeline

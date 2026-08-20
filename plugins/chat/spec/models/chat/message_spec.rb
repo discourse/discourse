@@ -75,7 +75,35 @@ describe Chat::Message do
 
     let(:blocks) { nil }
 
+    def button_blocks(style: nil, icon: nil)
+      button = { type: "button", text: { text: "Foo", type: "plain_text" } }
+      button[:style] = style if style
+      button[:icon] = icon if icon
+
+      [{ type: "actions", elements: [button] }]
+    end
+
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+
+    context "when button presentation is provided" do
+      it "allows every supported style and an icon at the maximum length" do
+        aggregate_failures do
+          Chat::Schemas::BUTTON_STYLES.each do |style|
+            expect(message).to allow_value(
+              button_blocks(style:, icon: "a" * Chat::Schemas::BUTTON_ICON_MAX_LENGTH),
+            ).for(:blocks)
+          end
+        end
+      end
+
+      it "rejects an unsupported style" do
+        expect(message).not_to allow_value(button_blocks(style: "warning")).for(:blocks)
+      end
+
+      it "rejects an icon longer than 255 characters" do
+        expect(message).not_to allow_value(button_blocks(icon: "a" * 256)).for(:blocks)
+      end
+    end
 
     context "when blocks format is invalid" do
       let(:blocks) { [{ type: "actions", elements: [{ type: "buttoxn" }] }] }

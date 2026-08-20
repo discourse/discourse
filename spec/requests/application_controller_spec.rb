@@ -3,6 +3,20 @@
 RSpec.describe ApplicationController do
   fab!(:user)
 
+  describe "handling PostgreSQL read-only errors" do
+    after { Discourse.clear_postgres_readonly! }
+
+    it "returns a read-only response" do
+      get "/test_postgres_readonly.json"
+
+      expect(response.status).to eq(503)
+      expect(response.parsed_body).to eq(
+        "errors" => [I18n.t("read_only_mode_enabled")],
+        "error_type" => "read_only",
+      )
+    end
+  end
+
   describe "shared session key" do
     before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
 
@@ -1572,6 +1586,53 @@ RSpec.describe ApplicationController do
           get "/latest", headers: { Cookie: "" }
           expect(response.status).to eq(200)
           expect(main_locale_scripts(response.body)).to contain_exactly("en")
+        end
+      end
+    end
+
+    context "with the language switcher enabled and set_locale_from_cookie disabled" do
+      before do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.default_locale = "en"
+        SiteSetting.set_locale_from_cookie = false
+        SiteSetting.content_localization_supported_locales = "es|fr"
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      context "with an anonymous user" do
+        it "uses the locale from the cookie" do
+          get "/latest", headers: { Cookie: "locale=es" }
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("es")
+        end
+
+        it "ignores a locale the site has not configured" do
+          get "/latest", headers: { Cookie: "locale=ja" }
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
+        end
+
+        it "ignores the cookie once the switcher is turned off" do
+          SiteSetting.content_localization_language_switcher = "none"
+
+          get "/latest", headers: { Cookie: "locale=es" }
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
+        end
+      end
+
+      context "with a logged-in user" do
+        fab!(:user) { Fabricate(:user, locale: "fr") }
+
+        it "ignores the cookie and uses the user's preference" do
+          sign_in(user)
+          # Set through the jar rather than a Cookie header, which would drop the auth cookie.
+          cookies[:locale] = "es"
+
+          get "/latest"
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("fr")
         end
       end
     end

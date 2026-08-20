@@ -61,15 +61,18 @@ en:
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
 
+  access_control_list:
+    errors:
+      user_will_not_have_permission: "If you remove this ACL entry you will lose access to this entity."
+      user_will_not_have_permission_on_create: "If you create this entity with these permissions, you will not have access to it. Continue?"
+
   topic_category_changed: "From %{from} to %{to}"
   topic_tag_changed:
     added_and_removed: "Added %{added} and removed %{removed}"
     added: "Added %{added}"
     removed: "Removed %{removed}"
-
   topics_bulk_action:
     too_many_topic_ids: "You can only perform a bulk action on up to %{limit} topics at once."
-
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -441,11 +444,10 @@ en:
     domain_not_allowed: "Your email cannot be used to redeem this invite."
     domain_not_allowed_admin: "This domain cannot be used for invites."
     max_redemptions_allowed_one: "for email invites should be 1."
+    max_redemptions_allowed_one_staff: "for admin or moderator invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
-    admin_invite_requires_email: "Admin invites must be sent to an email address"
     admin_invite_requires_admin_inviter: "Only admins can create admin invites"
-    moderator_invite_requires_email: "Moderator invites must be sent to an email address"
     moderator_invite_requires_staff_inviter: "Only staff can create moderator invites"
     existing_user_success: "Invite redeemed successfully"
     email_invites_disabled: "Sending invite emails is disabled"
@@ -1094,16 +1096,23 @@ en:
   email_login_code:
     invalid_code: "That code is incorrect or has expired. Request a new code and try again."
 
+  browsers:
+    android_browser: "Android Browser"
+    baidu_browser: "Baidu Browser"
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    kaios_browser: "KaiOS Browser"
+    opera: "Opera"
+    qq_browser: "QQ Browser"
+    safari: "Safari"
+    samsung_browser: "Samsung Browser"
+    uc_browser: "UC Browser"
+    unknown: "Unknown browser"
+
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "unknown browser"
     device:
       android: "Android Device"
       chromebook: "Chrome OS"
@@ -1124,6 +1133,12 @@ en:
       windows: "Microsoft Windows"
       unknown: "unknown operating system"
 
+  admin_site_traffic_explorer:
+    direct_or_unknown: "Direct / unknown"
+    traffic_types:
+      logged_in: "Logged in"
+      anonymous: "Anonymous"
+      likely_crawler: "Likely crawlers"
   change_email:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
     doesnt_exist: "That email address is not associated with your account."
@@ -1647,6 +1662,12 @@ en:
       description: "Countries driving the most browser pageviews to your forum in the selected period."
       labels:
         country_code: "Country code"
+        count: "Visits"
+    top_entry_urls:
+      title: "Top entry URLs"
+      description: "Pages that received the most direct or externally referred browser visits in the selected period."
+      labels:
+        entry_url: "Entry URL"
         count: "Visits"
     top_referrers_by_browser_pageviews:
       title: "Top referrers"
@@ -2175,6 +2196,7 @@ en:
     discourse_connect_url: "URL of DiscourseConnect endpoint (must include http:// or https://, and must not include a trailing slash)"
     discourse_connect_secret: "Secret string used to cryptographically authenticate DiscourseConnect information, be sure it is 10 characters or longer"
     discourse_connect_provider_secrets: "A list of domain-secret pairs that are using DiscourseConnect. Make sure DiscourseConnect secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
+    discourse_connect_provider_claims: "When {{setting:enable_discourse_connect_provider}} is enabled, choose which optional user claims are included in Provider responses. Payloads are signed but not encrypted. The stable external ID and username are always included. All claims are selected by default for compatibility; removing claims may break relying sites that use them for account linking, authorization, or profile synchronization."
     discourse_connect_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
     discourse_connect_overrides_groups: "Synchronize all manual group membership with groups specified in the groups attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     auth_overrides_email: "Overrides local email with external site email on every login, and prevent local changes. Applies to all authentication providers. (WARNING: discrepancies can occur due to normalization of local emails)"
@@ -2525,6 +2547,7 @@ en:
     auto_generated_allowlist: "List of email addresses that won't be checked for auto-generated content. Example: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
     ignore_by_title: "Ignore incoming emails based on their title."
+    ignore_by_title_regex: "Ignore incoming emails based on their title using a regular expression."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     sendgrid_verification_key: "Sendgrid verification key used to verify webhook messages."
     aws_sns_topic_arn_allowlist: "SNS topic ARNs allowed to send Amazon SES bounce webhook notifications."
@@ -2895,6 +2918,8 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
+    enable_site_traffic_explorer: "Link the admin dashboard's site traffic details action to the Site Traffic Explorer."
+    site_traffic_explorer_event_limit: "Controls the maximum number of recent pageviews the Site Traffic Explorer processes. Higher limits cover more traffic but may take longer to load or time out on lower-resource database servers."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
@@ -2930,7 +2955,6 @@ en:
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_composer_redesign: "Enable the redesigned composer."
-    enable_new_composer_actions: "Enable the redesigned composer actions menu and combo save button, with whisper, no-bump, and unlist toggles surfaced next to the save action."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
@@ -3074,7 +3098,7 @@ en:
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
-      content_localization_language_switcher_requirements: "The language switcher requires {{setting:set_locale_from_cookie}} and {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
+      content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "You must first enable 'set locale from param' before enabling this setting."
       mediaconvert_role_arn_required: "AWS IAM role ARN is required when using AWS MediaConvert for video conversion."
       mediaconvert_output_subdirectory_required: "MediaConvert output subdirectory is required."
@@ -4806,6 +4830,8 @@ en:
 
         %{message}
 
+        %{respond_instructions}
+
     account_suspended:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
@@ -5634,6 +5660,8 @@ en:
       This document is CC-BY-SA. It was last updated [INSERT LAST UPDATE DATE HERE].
 
   badges:
+    errors:
+      cant_delete_system_badge: System badges cannot be deleted.
     mass_award:
       errors:
         invalid_csv: We encountered an error on line %{line_number}. Please confirm the CSV has one email per line.
@@ -6147,6 +6175,10 @@ en:
       group: "Users not in the specified groups must have replies approved by staff. See %{link}."
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
+      fast_typer_with_time: "New user typed their first post suspiciously fast (%{typing_time}), suspected bot or spammer behavior. See %{link}."
+      fast_typer_time:
+        one: "%{count} second"
+        other: "%{count} seconds"
       auto_silence_regex: "New user whose first post matches the %{link} setting."
       watched_word:
         one: "This post included a Watched Word, the flagged word is: %{words}. Check the %{link} for more."
@@ -6273,10 +6305,12 @@ en:
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
+          confirm: "Are you sure you want to delete @%{username}?"
           complete: "User deleted."
         block:
           title: "Delete and block user"
           description: "Delete the user and block their email and IP address"
+          confirm: "Are you sure you want to delete and block @%{username}?"
           complete: "User deleted and blocked."
       confirm_spam:
         title: "Yes"

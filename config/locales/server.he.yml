@@ -1098,16 +1098,15 @@ he:
   email_login:
     invalid_token: 'אוי ויי! הקישור בו השתמשת לא פעיל עוד. אפשר <a href="%{base_url}/login">להיכנס</a> כעת. אם שכחת את הסיסמה שלך, אפשר <a href="%{base_url}/password-reset">לבקש קישור</a> כדי לאפס אותה.'
     title: "כניסה עם דוא״ל"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "היישומון DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "היישומון DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "דפדפן בלתי ידוע"
     device:
       android: "מכשיר Android"
       chromebook: "Chrome OS"
@@ -1127,6 +1126,9 @@ he:
       macos: "macOS"
       windows: "Windows מבית Microsoft"
       unknown: "מערכת הפעלה בלתי מוכרת"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "אלמוני"
   change_email:
     error: "הייתה שגיאה בעדכון כתובת הדוא״ל. אולי היא כבר בשימוש?"
     doesnt_exist: "כתובת דוא״ל זו אינה משויכת לחשבונך."
@@ -1596,6 +1598,9 @@ he:
       title: "מדינות מובילות"
       labels:
         country_code: "קוד המדינה"
+        count: "ביקורים"
+    top_entry_urls:
+      labels:
         count: "ביקורים"
     top_referrers_by_browser_pageviews:
       title: "מפנים מובילים"
@@ -2505,7 +2510,6 @@ he:
     revoke_user_api_keys_unused_days: "מספר הימים אחרי השימוש האחרון במפתח API של משתמש לפני שלילתו אוטומטית (0 כדי לא לשלול לעולם)"
     revoke_user_api_keys_maxlife_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API של משתמש (0 - לעולם לא)."
     tagging_enabled: "להפעיל תגיות על נושאים? אפשר לעיין <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>במדריך למנהלים על תגיות ב־Meta</a> למידע נוסף."
-    create_tag_allowed_groups: "קבוצות שמורשות ליצור תגיות. מנהלים ומפקחים תמיד יכולים ליצור תגיות."
     edit_tags_allowed_groups: "קבוצות שמורשות לערוך תגיות, תיאורי תגיות ומילים נרדפות לתגיות."
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
     max_tags_per_email_subject: "מס׳ התגיות המרבי שיכול להיות בנושא של הודעת דוא״ל"
@@ -4084,9 +4088,6 @@ he:
     user_posted_pm_staged:
       title: "משתמש/ת פרסם/ה הודעה פרטית מבוימת"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
@@ -4907,6 +4908,10 @@ he:
     deprecation_error_label: לגרום להשבתות נקודתיות של JavaScript לעורר שגיאה
     enter: "כנסו למצב בטוח"
     must_select: "עליך לבחור באפשרות אחת לפחות כדי להיכנס למצב בטוח."
+  design_wizard:
+    palette_pairs:
+      default: "ברירת מחדל"
+      dracula: "דרקולה"
   wizard:
     title: "הקמת Discourse"
     step:

@@ -147,6 +147,39 @@ fa_IR:
         periods:
           last_day: "۲۴ ساعت گذشته"
           custom: "سفارشی..."
+      logs:
+        short_title: "گزارش‌ها"
+        retry: "دوباره امتحان کنید"
+        apply: "اعمال کردن"
+        successful: "موفق"
+        failed: "ناموفق"
+        unknown: "ناشناس"
+        topic_id: "شناسه موضوع"
+        post_id: "شناسه نوشته"
+        time: "زمان"
+        when: "وقتی‌که"
+        model: "مدل"
+        request: "درخواست"
+        provider: "ارائه‌دهنده"
+        user: "کاربر"
+        context: "محتوا"
+        topic: "موضوع"
+        post: "نوشته"
+        post_short: "نوشته %{id}"
+        duration: "مدت زمان"
+        actions: "عملیات"
+        periods:
+          day: "۲۴ ساعت گذشته"
+          week: "۷ روز گذشته"
+          custom: "سفارشی"
+        detail:
+          request: "درخواست"
+          response: "پاسخ"
+          context: "محتوا"
+        retention:
+          summary_stage: "خلاصه"
+          deleted_stage: "حذف شده"
+          save: "ذخیره"
       ai_agent:
         name: "نام"
         edit: "ویرایش"
@@ -216,6 +249,9 @@ fa_IR:
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"
+        vision_modes:
+          disabled:
+            title: "غیرفعال"
         save: "ذخیره"
         edit: "ویرایش"
         delete: حذف
@@ -290,6 +326,7 @@ fa_IR:
         try_again: "دوباره امتحان کنید"
         conversation_shared: "گفتگو کپی شد"
         debug_ai_modal:
+          duration_label: "مدت زمان"
           request: "درخواست"
           response: "پاسخ"
           next_log: "بعدی"

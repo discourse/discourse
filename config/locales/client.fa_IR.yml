@@ -369,10 +369,24 @@ fa_IR:
       pill: "پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "انتخاب شده"
       start_posting:
         back: "بازگشت"
+    design_wizard:
+      back: "بازگشت"
+      next: "بعدی"
+      sections:
+        theme: "قالب"
+        homepage: "صفحه اصلی"
+      theme:
+        selected: "انتخاب شده"
+      colors:
+        light: "روشن"
+        dark: "تیره"
+      homepage:
+        topics: "موضوعات"
+        categories: "دسته‌بندی‌ها"
+        styles:
+          boxes: "جعبه‌ها"
     about:
       edit: "ویرایش این صفحه"
       simple_title: "درباره"
@@ -630,10 +644,6 @@ fa_IR:
         optional: "اختیاری"
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
-        required: "قبل از بازنگری موارد باید آن‌ها را درخواست دهید."
-        claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
-        claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
-        automatically_claimed_by: "این مورد توسط <b>%{username}</b> در حال بازنگری است."
       awaiting_approval: "منتظر تایید"
       delete: "حذف"
       settings:
@@ -2489,6 +2499,7 @@ fa_IR:
       subcategory_count:
         one: "+%{count} زیر دسته"
         other: "+%{count} زیر دسته"
+      subcategories: "+ دسته‌‌بندی‌های فرزند"
       topic_count:
         one: "%{count} موضوع در این دسته"
         other: "%{count} موضوع در این دسته"
@@ -2797,7 +2808,6 @@ fa_IR:
         other: "%{count} درخواست عضویت باز برای '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}، %{username2}</span> %{description}"
-      votes_released: "%{description} - تکمیل شد"
       new_features: "ویژگی‌های جدید در دسترس است!"
       admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
       dismiss_confirmation:
@@ -5128,13 +5138,32 @@ fa_IR:
       new_features:
         title: "چه چیزی جدید شده؟"
         check_for_updates: "برررسی به‌روز‌رسانی‌ها"
+      site_traffic_explorer:
+        pageviews: "بازدید"
+        view_more: "نمایش بیشتر"
+        cards:
+          pages: "صفحه"
+          visitors: "بازدیدکنندگان"
+        columns:
+          countries: "کشور"
+          top_urls: "نشانی اینترنتی"
+          browsers: "مرورگر"
+          ip_addresses: "نشانی IP"
+        filters:
+          country: "کشور"
+          browser: "مرورگر"
+          ip: "نشانی IP"
+        metrics:
+          pageviews:
+            label: "بازدید"
+        series:
+          anonymous_human: "ناشناس"
       dashboard:
         title: "پیشخوان"
         last_updated: "داشبورد بروزرسانی شد:"
         discourse_last_updated: "دیسکورس بروزرسانی شد:"
         version: "نسخه"
         up_to_date: "شما به روز هستید!"
-        critical_available: "به روز رسانی مهم در دسترس است."
         updates_available: "بروز رسانی در درسترس است."
         please_update: "لطفا ارتقا دهید!"
         no_check_performed: "بررسی برای بروزرسانی انجام نشد. از اجرای sidekiq اطمینان حاصل کنید."

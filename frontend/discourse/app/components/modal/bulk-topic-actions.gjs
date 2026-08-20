@@ -549,15 +549,14 @@ export default class BulkTopicActions extends Component {
             {{/if}}
 
             {{#if this.activeComponent}}
-              {{component
-                this.activeComponent
-                onRegisterAction=this.registerCustomAction
-                setSubmitDisabled=this.setSubmitDisabled
-                topics=this.activeComponentProps.topics
-                afterBulkAction=this.activeComponentProps.afterBulkAction
-                categoryId=this.activeComponentProps.categoryId
-                onPerform=this.activeComponentProps.onPerform
-              }}
+              <this.activeComponent
+                @onRegisterAction={{this.registerCustomAction}}
+                @setSubmitDisabled={{this.setSubmitDisabled}}
+                @topics={{this.activeComponentProps.topics}}
+                @afterBulkAction={{this.activeComponentProps.afterBulkAction}}
+                @categoryId={{this.activeComponentProps.categoryId}}
+                @onPerform={{this.activeComponentProps.onPerform}}
+              />
             {{/if}}
 
             {{#if this.isPinAction}}

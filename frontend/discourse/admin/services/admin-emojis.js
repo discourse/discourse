@@ -7,6 +7,7 @@ import {
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
+import { triggerBlobDownload } from "discourse/lib/download-blob";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Session from "discourse/models/session";
@@ -72,15 +73,10 @@ export default class AdminEmojis extends Service {
         return;
       }
 
-      const blob = await response.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = objectUrl;
-      a.download = "emojis.zip";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(objectUrl), 20_000);
+      triggerBlobDownload(await response.blob(), {
+        fallbackFilename: "emojis.zip",
+        contentDisposition: response.headers.get("Content-Disposition"),
+      });
     } catch {
       this.dialog.alert(i18n("admin.emoji.export_failed"));
     } finally {

@@ -87,7 +87,7 @@
 
 .d-editor-input {
   border: 0;
-  padding: 10px;
+  padding: var(--space-2);
   height: 100%;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -316,11 +316,13 @@
 .d-editor-button-bar__wrap {
   position: relative;
   min-width: 0;
-  margin-left: 1px;
-  margin-right: 1px;
   overflow: clip;
   border-start-start-radius: inherit;
   border-start-end-radius: inherit;
+
+  :where(body:not(.uc-enable-composer-redesign) &) {
+    margin-inline: var(--space-2);
+  }
 }
 
 .d-editor-button-bar {

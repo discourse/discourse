@@ -21,6 +21,24 @@ describe TagSettingsUpdater do
       expect(tag.reload.slug).to eq("custom-slug")
     end
 
+    it "regenerates the slug from the name when it is cleared" do
+      tag.update!(slug: "custom-slug")
+
+      result = TagSettingsUpdater.update(tag, admin, { slug: "" })
+
+      expect(result).to eq(true)
+      expect(tag.reload.slug).to eq(tag.name)
+    end
+
+    it "keeps the slug when it isn't provided" do
+      tag.update!(slug: "custom-slug")
+
+      result = TagSettingsUpdater.update(tag, admin, { description: "a description" })
+
+      expect(result).to eq(true)
+      expect(tag.reload.slug).to eq("custom-slug")
+    end
+
     it "cleans tag name using DiscourseTagging" do
       result = TagSettingsUpdater.update(tag, admin, { name: "  New Name  " })
 

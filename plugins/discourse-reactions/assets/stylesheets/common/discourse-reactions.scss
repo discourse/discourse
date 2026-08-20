@@ -244,6 +244,11 @@ html.discourse-reactions-no-select {
   text-align: center;
   cursor: pointer;
   border-radius: var(--d-button-border-radius);
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
 
   &:focus-visible {
     outline: none;

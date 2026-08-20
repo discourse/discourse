@@ -4,13 +4,45 @@ import { LinkTo } from "@ember/routing";
 import {
   formatDeltaPercent,
   formatKpiValue,
+  roundDeltaPercent,
 } from "discourse/admin/lib/dashboard-format";
+import { engagementHeadlineKeys } from "discourse/admin/lib/engagement-headline";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const PRESET_PERIODS = ["last_7_days", "last_30_days", "last_3_months"];
 const PERCENTAGE_KPIS = ["dau_mau"];
+const METRIC_ORDER = ["dau_mau", "daily_engaged_users", "new_signups"];
+
+function direction(metric) {
+  if (metric?.value == null) {
+    return "unavailable";
+  }
+
+  if (metric.previous_value == null || metric.previous_value === 0) {
+    return metric.value > 0 ? "improved" : "flat";
+  }
+
+  const change =
+    metric.percent_change ??
+    ((metric.value - metric.previous_value) / metric.previous_value) * 100;
+  const roundedChange = roundDeltaPercent(change);
+
+  if (roundedChange > 0) {
+    return "improved";
+  } else if (roundedChange < 0) {
+    return "declined";
+  }
+
+  return "flat";
+}
+
+function percentChange(metric) {
+  return (
+    metric.percent_change ??
+    ((metric.value - metric.previous_value) / metric.previous_value) * 100
+  );
+}
 
 class MetricItem extends Component {
   get isPercentage() {
@@ -75,7 +107,6 @@ class MetricItem extends Component {
         {{else}}
           <div class={{concat "db-delta " this.deltaClass}}>
             {{this.deltaText}}
-            <span class="db-delta__label">{{@comparisonLabel}}</span>
           </div>
         {{/if}}
       {{/if}}
@@ -84,26 +115,49 @@ class MetricItem extends Component {
 }
 
 export default class EngagementHeadline extends Component {
-  get titleKey() {
-    return `${this.args.headline.key}.title`;
-  }
+  get headline() {
+    const prefix = "admin.dashboard.sections.engagement.headline";
+    const metricsByType = new Map(
+      this.args.kpis.map((metric) => [metric.type, metric])
+    );
+    const metrics = METRIC_ORDER.map((type) => {
+      const metric = metricsByType.get(type) ?? { type };
+      return { ...metric, direction: direction(metric) };
+    });
+    const declined = metrics.filter(
+      (metric) => metric.direction === "declined"
+    );
+    const ctaOwner = declined.reduce((most, metric) => {
+      if (!most) {
+        return metric;
+      }
+      return roundDeltaPercent(percentChange(metric)) <
+        roundDeltaPercent(percentChange(most))
+        ? metric
+        : most;
+    }, null)?.type;
+    const directionsByType = Object.fromEntries(
+      metrics.map((metric) => [metric.type, metric.direction])
+    );
+    const headlineKeys = engagementHeadlineKeys({
+      stickiness: directionsByType.dau_mau,
+      dailyEngagement: directionsByType.daily_engaged_users,
+      newSignups: directionsByType.new_signups,
+    });
+    const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
+    const cta = ctaOwner ? i18n(`${prefix}.cta.${ctaOwner}`) : null;
 
-  get summaryKey() {
-    return `${this.args.headline.key}.summary`;
-  }
-
-  get comparisonLabel() {
-    const key = PRESET_PERIODS.includes(this.args.period)
-      ? this.args.period
-      : "previous_period";
-    return i18n(`admin.dashboard.highlights.comparison.${key}`);
+    return {
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+      summary: cta ? `${summary} ${cta}` : summary,
+    };
   }
 
   <template>
     <div class="db-section__subheader">
       <div class="db-section__subintro">
-        <h3>{{i18n this.titleKey}}</h3>
-        <p>{{i18n this.summaryKey}}</p>
+        <h3>{{this.headline.title}}</h3>
+        <p>{{this.headline.summary}}</p>
       </div>
       <div class="db-section__metrics">
         {{#each @kpis as |metric|}}

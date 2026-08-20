@@ -9,10 +9,9 @@ import MultiSelect from "discourse/select-kit/components/multi-select";
 import { and, eq, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import DTextField from "discourse/ui-kit/d-text-field";
 import DTextarea from "discourse/ui-kit/d-textarea";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import { i18n } from "discourse-i18n";
 import CodeView from "discourse/plugins/discourse-data-explorer/discourse/components/code-view";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
@@ -22,6 +21,18 @@ import QueryModeSwitch from "discourse/plugins/discourse-data-explorer/discourse
 import QueryResultDownloadButtons from "discourse/plugins/discourse-data-explorer/discourse/components/query-result-download-buttons";
 import QueryResultsWrapper from "discourse/plugins/discourse-data-explorer/discourse/components/query-results-wrapper";
 import QueryRunSplitButton from "discourse/plugins/discourse-data-explorer/discourse/components/query-run-split-button";
+
+const PaneSeparator = <template>
+  <DResizeSeparator
+    class="grippie"
+    @axis="vertical"
+    @side="start"
+    @max={{@controller.maxPaneHeight}}
+    @label={{i18n "explorer.resize_editor"}}
+    @measure={{@controller.panesFor}}
+    @onResize={{@controller.onPaneResize}}
+  />
+</template>;
 
 export default class QueriesEdit extends Component {
   get showDestroyQuery() {
@@ -54,7 +65,7 @@ export default class QueriesEdit extends Component {
               <DButton
                 @action={{@controller.exitEdit}}
                 @icon="xmark"
-                class="previous"
+                class="btn-default previous"
               />
               <div class="name-text-field">
                 <DTextField
@@ -122,7 +133,7 @@ export default class QueriesEdit extends Component {
               </div>
 
               {{#if @controller.editingQuery}}
-                <div class="panels-flex">
+                <div class="panels-flex query-editor__panes">
                   <div class="editor-panel">
                     <AceEditor
                       @content={{@controller.model.sql}}
@@ -143,15 +154,7 @@ export default class QueriesEdit extends Component {
                   </div>
                 </div>
 
-                <div
-                  class="grippie"
-                  {{dDraggable
-                    didStartDrag=@controller.didStartDrag
-                    didEndDrag=@controller.didEndDrag
-                    dragMove=@controller.dragMove
-                  }}
-                >
-                </div>
+                <PaneSeparator @controller={{@controller}} />
 
                 <div class="clear"></div>
               {{else}}
@@ -255,7 +258,7 @@ export default class QueriesEdit extends Component {
             </div>
 
             {{#if @controller.editingQuery}}
-              <div class="panels-flex">
+              <div class="panels-flex query-editor__panes">
                 <div class="editor-panel">
                   <AceEditor
                     @content={{@controller.model.sql}}
@@ -276,16 +279,7 @@ export default class QueriesEdit extends Component {
                 </div>
               </div>
 
-              <div
-                class="grippie"
-                {{dDraggable
-                  didStartDrag=@controller.didStartDrag
-                  didEndDrag=@controller.didEndDrag
-                  dragMove=@controller.dragMove
-                }}
-              >
-                {{dIcon "discourse-expand"}}
-              </div>
+              <PaneSeparator @controller={{@controller}} />
 
               <div class="clear"></div>
             {{else}}

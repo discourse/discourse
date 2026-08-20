@@ -107,6 +107,34 @@ bs_BA:
         summary: "Sažetak"
         username: "Nadimak"
         total: "Suma"
+      logs:
+        short_title: "Logs"
+        apply: "Snimi"
+        successful: "Uspješan"
+        failed: "Neuspješno"
+        unknown: "Unknown"
+        topic_id: "ID teme"
+        post_id: "ID objave"
+        time: "Vrijeme"
+        when: "When"
+        request: "Zatraži"
+        user: "User"
+        context: "Context"
+        topic: "Topic"
+        post: "Objava"
+        post_short: "Post %{id}"
+        duration: "Trajanje"
+        actions: "Akcije"
+        periods:
+          custom: "Custom"
+        detail:
+          request: "Zatraži"
+          response: "Odgovor"
+          context: "Context"
+        retention:
+          summary_stage: "Sažetak"
+          deleted_stage: "Isbrisano"
+          save: "Sačuvaj"
       ai_agent:
         name: "Ime"
         edit: "Izmijeni"
@@ -164,6 +192,9 @@ bs_BA:
           required: "Required"
       llms:
         display_name: "Ime"
+        vision_modes:
+          disabled:
+            title: "Neomogućen"
         save: "Sačuvaj"
         edit: "Izmijeni"
         delete: Delete
@@ -201,6 +232,7 @@ bs_BA:
           fake: "Custom"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Trajanje:"
           request: "Zatraži"
           response: "Odgovor"
           next_log: "Iduće"

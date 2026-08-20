@@ -805,4 +805,11 @@ es:
         message: "Mensaje"
       chat_approval:
         message: "Mensaje"
+        buttons: "Botones"
+        value: "Valor"
+        style: "Estilo"
+        style_default: "Por defecto"
+        style_primary: "Principal"
+        style_success: "Éxito"
+        icon: "Icono"
         channel_id: "Canal"

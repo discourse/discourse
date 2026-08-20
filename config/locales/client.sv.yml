@@ -323,10 +323,27 @@ sv:
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Markerat"
       start_posting:
         back: "Tillbaka"
+    design_wizard:
+      back: "Tillbaka"
+      next: "Nästa"
+      sections:
+        theme: "Tema"
+        fonts: "Typsnitt"
+        homepage: "Hemsida"
+      theme:
+        selected: "Markerat"
+      colors:
+        light: "Ljust"
+        dark: "Mörkt"
+      fonts:
+        heading_font: "Typsnitt för rubrik"
+      homepage:
+        topics: "Ämnen"
+        categories: "Kategorier"
+        styles:
+          boxes: "Boxar"
     about:
       edit: "Redigera denna sida"
       simple_title: "Om"
@@ -518,9 +535,6 @@ sv:
         optional: "valfritt"
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
-        required: "Du måste göra anspråk innan du kan granska dem."
-        claimed_by_you: "Du har gjort anspråk på detta och kan nu granska det."
-        claimed_by_other: "Detta föremål kan enbart granskas av <b>%{username}</b>."
       awaiting_approval: "Inväntar godkännande"
       delete: "Radera"
       settings:
@@ -2175,6 +2189,7 @@ sv:
       subcategory_count:
         one: "+%{count} underkategori"
         other: "+%{count} underkategorier"
+      subcategories: "+ Underkategorier"
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
@@ -2467,7 +2482,6 @@ sv:
         other: "%{count} öppna medlemsansökningar för '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
-      votes_released: "%{description} - slutförd"
       new_features: "Nya funktioner tillgängliga!"
       admin_problems: "Nytt råd på din webbplats översiktspanel"
       dismiss_confirmation:
@@ -4581,13 +4595,26 @@ sv:
         default_value: "Standard"
       search:
         title: "Sök"
+      site_traffic_explorer:
+        pageviews: "Sidvisningar"
+        columns:
+          top_urls: "URL"
+          browsers: "Webbläsare"
+          ip_addresses: "IP-adress"
+        filters:
+          browser: "Webbläsare"
+          ip: "IP-adress"
+        metrics:
+          pageviews:
+            label: "Sidvisningar"
+        series:
+          anonymous_human: "Anonym"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
         discourse_last_updated: "Discourse uppdaterad:"
         version: "Version"
         up_to_date: "Du är aktuell!"
-        critical_available: "En kritisk uppdatering är tillgänglig."
         updates_available: "Uppdateringar är tillgängliga."
         no_check_performed: "En sökning efter uppdateringar har ej genomförts. Kontrollera att sidekiq körs."
         stale_data: "En sökning efter uppdateringar har inte genomförts på sistone. Kontrollera att sidekiq körs."

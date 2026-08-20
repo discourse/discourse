@@ -24,6 +24,29 @@ module("Unit | Blocks | Conditions | decorator", function () {
       );
     });
 
+    test("functional invocation returns the decorated class", function (assert) {
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      const Decorated = blockCondition({ type: "functional-return" })(
+        TestCondition
+      );
+
+      assert.strictEqual(
+        Decorated,
+        TestCondition,
+        "the decorator returns the class it decorated"
+      );
+      assert.strictEqual(
+        Decorated.type,
+        "functional-return",
+        "the returned class carries the condition statics"
+      );
+    });
+
     test("defaults to empty args object when not provided", function (assert) {
       @blockCondition({
         type: "test-no-args",

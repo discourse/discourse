@@ -112,6 +112,34 @@ bg:
         periods:
           last_day: "Последните 24 часа"
           custom: "Ръчно задаване..."
+      logs:
+        short_title: "Логове"
+        apply: "Приложи"
+        failed: "Провалени"
+        unknown: "Неизвестно"
+        topic_id: "Тема ID "
+        post_id: "Публикация ID "
+        time: "Време "
+        when: "Кога "
+        request: "Заявка"
+        user: "Потребител"
+        context: "Контекст "
+        topic: "Тема"
+        post: "Публикация"
+        post_short: "Публикация %{id} "
+        duration: "Продължителност"
+        actions: "Действия"
+        periods:
+          day: "Последните 24 часа"
+          week: "Последните 7 дни"
+          custom: "По избор"
+        detail:
+          request: "Заявка"
+          context: "Контекст "
+        retention:
+          summary_stage: "Сумарно"
+          deleted_stage: "Изтрита"
+          save: "Запази"
       ai_agent:
         name: "Име"
         edit: "Редактирай"
@@ -170,6 +198,9 @@ bg:
           required: "Задъжителни"
       llms:
         display_name: "Име"
+        vision_modes:
+          disabled:
+            title: "Деактивирани"
         save: "Запази"
         edit: "Редактирай"
         delete: Изтрий
@@ -211,6 +242,7 @@ bg:
           fake: "По избор"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Продължителност:"
           request: "Заявка"
           next_log: "Напред"
           previous_log: "Предишни"

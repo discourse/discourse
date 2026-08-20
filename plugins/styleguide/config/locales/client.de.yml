@@ -13,6 +13,7 @@ de:
   js:
     styleguide:
       title: "Styleguide"
+      welcome: "Wähle einen Abschnitt aus dem Navigationsmenü aus, um loszulegen."
       categories:
         syntax: Syntax
         atoms: Atome

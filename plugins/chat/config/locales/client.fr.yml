@@ -860,6 +860,13 @@ fr:
         message: "Message"
       chat_approval:
         message: "Message"
+        buttons: "Boutons"
+        value: "Valeur"
+        style: "Style"
+        style_default: "Par défaut"
+        style_primary: "Principal"
+        style_success: "Succès"
+        icon: "Icône"
         approve_label: "Libellé du bouton « Approuver »"
         approve_label_description: "Utilise « Approuver » par défaut si le champ est vide."
         deny_label: "Libellé du bouton « Refuser »"

@@ -513,6 +513,48 @@ ru:
           last_week: "На прошлой неделе"
           last_month: "В прошлом месяце"
           custom: "Другое…"
+      logs:
+        short_title: "Журналы"
+        retry: "Попробовать снова"
+        apply: "Применить"
+        all_models: "Все модели"
+        successful: "Выполнена"
+        failed: "Не удалась"
+        unknown: "Расположение неизвестно"
+        topic_id: "ID темы"
+        post_id: "ID сообщения"
+        time: "Время"
+        when: "Когда"
+        outcome: "Результат"
+        feature: "Функция"
+        model: "Модель"
+        request: "Запрос"
+        provider: "Поставщик"
+        user: "Пользователь"
+        context: "Контекст"
+        topic: "Тема"
+        post: "Публикация"
+        post_short: "Публикация %{id}"
+        duration: "Период"
+        actions: "Действия"
+        filters:
+          period: "Временной период"
+        periods:
+          hour: "Последний %{count} час"
+          day: "За последние 24 часа"
+          week: "За последние 7 дней"
+          custom: "Другое"
+        detail:
+          request: "Запрос"
+          response: "Ответ"
+          context: "Контекст"
+          copy_request: "Копировать запрос"
+          copy_response: "Копировать ответ"
+          network_error: "Ошибка сети"
+        retention:
+          summary_stage: "Сводка"
+          deleted_stage: "Удалённые"
+          save: "Сохранить"
       ai_agent:
         ai_tools: "Инструменты"
         mcp_servers: "Серверы MCP"
@@ -538,7 +580,6 @@ ru:
         use_parent_llm: "Используйте языковую модель агента."
         compression_threshold_help: "Процент использования контекста (20–99), при котором включается автоматическое сжатие. Более низкие значения запускают сжатие раньше, сохраняя больший запас по времени."
         vision_enabled: Включить загрузку изображений
-        vision_enabled_help: Если эта функция включена, данный агент может добавлять изображения из сообщений и чатов, если выбранная модель поддерживает ввод изображений.
         vision_max_pixels: Максимальный размер изображения
         vision_max_pixel_sizes:
           low: Низкое качество — самое дешевое (256×256)
@@ -729,6 +770,9 @@ ru:
         url: "URL-адрес сервиса, где размещена модель"
         api_key: "API-ключ сервиса, где размещена модель"
         vision_enabled: "Поддерживает ввод изображений."
+        vision_modes:
+          disabled:
+            title: "Отключен"
         allowed_attachment_types: "Разрешено прикреплять документы."
         attachment_types_placeholder: "Выберите или введите расширения файлов (например, pdf, txt, csv, docx, xlsx)."
         ai_bot_user: "Пользователь AI-бота"
@@ -987,6 +1031,7 @@ ru:
           title: "Просмотр взаимодействий с AI"
           copy_request: "Копировать запрос"
           copy_response: "Копировать ответ"
+          duration_label: "Интервал:"
           request: "Запрос"
           response: "Ответ"
           next_log: "Далее"

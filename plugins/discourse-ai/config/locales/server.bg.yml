@@ -14,6 +14,8 @@ bg:
         image_generation_custom:
           name: "По избор"
     ai_bot:
+      read_post:
+        unknown_post: "публикация"
       tool_summary:
         suspend_user: "Спиране на потребителя"
         silence_user: "Заглушаване на потребителя"

@@ -493,16 +493,15 @@ te:
     success_unapproved: "మీరు విజయవంతంగా సంకేతపదం మార్చారు."
   email_login:
     title: "ఇమెయిల్ లాగిన్"
+  browsers:
+    chrome: "గూగుల్ క్రోమ్"
+    discoursehub: "DiscourseHub యాప్"
+    edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
+    firefox: "ఫైర్‌ఫాక్స్"
+    ie: "ఇంటర్నెట్ ఎక్స్ ప్లోరర్"
+    opera: "ఒపేరా"
+    safari: "సఫారి"
   user_auth_tokens:
-    browser:
-      chrome: "గూగుల్ క్రోమ్"
-      discoursehub: "DiscourseHub యాప్"
-      edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
-      firefox: "ఫైర్‌ఫాక్స్"
-      ie: "ఇంటర్నెట్ ఎక్స్ ప్లోరర్"
-      opera: "ఒపేరా"
-      safari: "సఫారి"
-      unknown: "తెలియని బ్రౌజర్"
     device:
       android: "ఆండ్రాయిడ్ పరికరం"
       chromebook: "క్రోమ్ OS"
@@ -522,6 +521,9 @@ te:
       macos: "macOS"
       windows: "మైక్రోసాఫ్ట్ విండోస్"
       unknown: "తెలియని ఆపరేటింగ్ సిస్టమ్"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "అనామక"
   change_email:
     error: "మీ ఈమెయిల్ చిరునామా మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఈసరికే వాడుకలో ఉందా?"
     confirm: "నిర్ధారించండి"
@@ -870,6 +872,9 @@ te:
         num_clicks: "నొక్కులు"
         num_topics: "విషయాలు"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "సందర్శనాలు"
+    top_entry_urls:
       labels:
         count: "సందర్శనాలు"
     top_referrers_by_browser_pageviews:
@@ -1985,10 +1990,6 @@ te:
     user_posted_pm:
       title: "సభ్యుడు పోస్ట్ చేసిన PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-    user_posted_pm_staged:
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ఖాతా నిలిపివేయబడింది"
     account_suspended_forever:
@@ -2406,6 +2407,10 @@ te:
   safe_mode:
     title: "సురక్షిత మోడ్‌ను నమోదు చేయండి"
     enter: "సేఫ్ మోడ్‌ని నమోదు చేయండి"
+  design_wizard:
+    palette_pairs:
+      default: "అప్రమేయ"
+      dracula: "డ్రాక్యులా"
   wizard:
     title: "డిస్కర్స్ సెటప్"
     step:

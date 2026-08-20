@@ -58,7 +58,17 @@ export default class DMenuInstance extends FloatKitInstance {
     super();
 
     setOwner(this, owner);
-    this.options = { ...MENU.options, ...options };
+
+    const merged = { ...MENU.options, ...options };
+
+    // `trapTab` defaults to true and the two are alternatives, so inline ordering has to switch
+    // it off itself or every caller would carry a second flag. An explicit `trapTab: true` is
+    // left alone for `DFloatBody` to assert on rather than resolved silently here.
+    if (options.inlineTabOrder && options.trapTab === undefined) {
+      merged.trapTab = false;
+    }
+
+    this.options = merged;
     this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
@@ -84,13 +94,25 @@ export default class DMenuInstance extends FloatKitInstance {
     return this.expanded;
   }
 
+  /**
+   * Whether focus currently sits inside the menu's content. Read before the content is torn
+   * down, because a menu that owns focus has to hand it back on close — otherwise closing
+   * strands focus on a removed element and the browser drops it to the body.
+   */
+  get #ownsFocus(): boolean {
+    return !!this.content?.contains(document.activeElement);
+  }
+
   @action
   async close(options = { focusTrigger: true }) {
+    this.resetHoverCloseState();
     this.openedByDelayedHover = false;
 
     if (isDestroying(getOwner(this)!)) {
       return;
     }
+
+    const ownedFocus = this.#ownsFocus;
 
     await animateClosing(this.content);
 
@@ -100,11 +122,20 @@ export default class DMenuInstance extends FloatKitInstance {
 
     await this.menu.close(this);
 
-    if (options.focusTrigger) {
+    // A caller that closes without asking for the trigger to be refocused (a click outside,
+    // say) still must not lose focus altogether. Recheck rather than trusting `ownedFocus`:
+    // closing is animated, so by now the click may have deliberately focused something else,
+    // and only focus left with no owner is ours to restore.
+    if (options.focusTrigger || (ownedFocus && this.#focusIsUnowned)) {
       this.triggerElement?.focus();
     }
 
     await super.close(options);
+  }
+
+  get #focusIsUnowned(): boolean {
+    const { activeElement } = document;
+    return !activeElement || activeElement === document.body;
   }
 
   @action
@@ -140,9 +171,14 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   async onPointerLeave(event: PointerEvent) {
-    if (this.untriggers.includes("hover")) {
-      await this.onUntrigger(event);
+    if (!this.untriggers.includes("hover")) {
+      return;
     }
+    if (this.hasHoverGracePeriod) {
+      this.scheduleHoverClose();
+      return;
+    }
+    await this.onUntrigger(event);
   }
 
   @action

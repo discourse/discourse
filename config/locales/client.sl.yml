@@ -324,6 +324,16 @@ sl:
     admin_onboarding_banner:
       start_posting:
         back: "Nazaj"
+    design_wizard:
+      back: "Nazaj"
+      next: "Naprej"
+      sections:
+        theme: "Videz"
+      homepage:
+        topics: "Tem"
+        categories: "Kategorije"
+        styles:
+          boxes: "Škatle"
     about:
       edit: "Uredi to stran"
       simple_title: "O nas"
@@ -1975,6 +1985,8 @@ sl:
       enter: "Enter"
     conditional_loading_section:
       loading: Nalagam...
+    category_row:
+      subcategories: "+ Pod Kategorija"
     select_kit:
       delete_item: "Izbriši %{name}"
       filter_by: "Filtriraj po: %{name}"
@@ -3921,13 +3933,21 @@ sl:
         default_value: "Privzeto"
       search:
         title: "Išči"
+      site_traffic_explorer:
+        pageviews: "Ogledov strani"
+        columns:
+          top_urls: "URL"
+        metrics:
+          pageviews:
+            label: "Ogledov strani"
+        series:
+          anonymous_human: "Anonimni"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
         discourse_last_updated: "Discourse posodobljen:"
         version: "Verzija"
         up_to_date: "Imate zadnjo verzijo!"
-        critical_available: "Nujna posodobitev je na voljo."
         updates_available: "Posodobitve so na voljo."
         no_check_performed: "Preverjanje posodobitev se ni izvedlo. Preverite da sidekiq teče."
         stale_data: "Zadnje čase se preverjanje posodobitev ni izvedlo. Preverite ali se sidekiq izvaja."

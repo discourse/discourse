@@ -930,6 +930,21 @@ login:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
     area: "discourseconnect"
+  discourse_connect_provider_claims:
+    default: "name|email|admin|moderator|groups|avatar_url|profile_background_url|card_background_url"
+    type: list
+    list_type: compact
+    allow_any: false
+    choices:
+      - name
+      - email
+      - admin
+      - moderator
+      - groups
+      - avatar_url
+      - profile_background_url
+      - card_background_url
+    area: "discourseconnect"
   blocked_email_domains:
     default: "mailinator.com"
     type: host_list
@@ -1932,8 +1947,11 @@ content_localization:
       - all
     default: none
     client: true
+    refresh: true
     area: "localization"
     validator: "LanguageSwitcherSettingValidator"
+    depends_on:
+      - "content_localization_enabled"
   content_localization_allowed_groups:
     type: group_list
     list_type: compact
@@ -1948,6 +1966,7 @@ content_localization:
     area: "localization"
   content_localization_max_locales:
     default: 10
+    client: true
     type: integer
     hidden: true
   content_localization_crawler_param:
@@ -2352,6 +2371,9 @@ email:
   ignore_by_title:
     type: list
     list_type: simple
+    default: ""
+    area: "email"
+  ignore_by_title_regex:
     default: ""
     area: "email"
   mailgun_api_key:
@@ -3125,10 +3147,10 @@ security:
     hidden: true
     default: "cubot|MetaIAB"
   # 38365/55967=Baidu, 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
-  # 13238=Yandex
+  # 13238=Yandex, 45102=Alibaba
   crawler_asns:
     hidden: true
-    default: "38365|55967|140577|210743|7941|13238"
+    default: "38365|55967|140577|210743|7941|13238|45102"
     type: list
     list_type: compact
   # 16509/14618=AWS, 16276=OVH, 136907/55990=Huawei Cloud,
@@ -4640,6 +4662,12 @@ dashboard:
       - user_to_user_private_messages_with_replies
       - signups
     area: "reports"
+  site_traffic_explorer_event_limit:
+    default: 200000
+    type: integer
+    min: 1
+    max: 1000000
+    area: "reports"
   verbose_user_stat_count_logging:
     hidden: true
     default: false
@@ -4655,6 +4683,10 @@ dashboard:
     client: true
 
 experimental:
+  enable_site_traffic_explorer:
+    default: false
+    client: true
+    area: "experimental"
   reporting_improvements:
     default: false
     client: true
@@ -4697,23 +4729,15 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
-  enable_new_composer_actions:
-    default: false
-    client: true
-    hidden: true
-    area: "experimental"
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/403635"
   prioritize_recently_used_tags:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "conceptual"
+      status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/410419"
   rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4821,7 +4845,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   improved_crawler_detection:

@@ -51,6 +51,12 @@ module DiscourseAi
 
       def is_using(llm_model)
         in_use_by = AiAgent.where(default_llm_id: llm_model.id).pluck(:name)
+        in_use_by.concat(
+          LlmModel
+            .where(vision_llm_model_id: llm_model.id)
+            .order(:display_name)
+            .pluck(:display_name),
+        )
 
         in_use_by << "ai_default_llm_model" if SiteSetting.ai_default_llm_model.to_i == llm_model.id
 

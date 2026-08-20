@@ -8,6 +8,7 @@ module DiscourseAi
       # 10 minutes is enough for vast majority of cases
       # there is a small chance that some reasoning models may take longer
       MAX_STREAM_DELAY_SECONDS = 600
+      FALLBACK_TITLE_LENGTH = 80
 
       attr_reader :bot
 
@@ -292,17 +293,36 @@ module DiscourseAi
           )
 
         new_title =
-          bot
-            .llm
-            .generate(title_prompt, user: user, feature_name: "bot_title")
-            .strip
-            .split("\n")
-            .last
+          DiscourseAi::Completions::Llm.text_from_response(
+            bot.llm.generate(title_prompt, user: user, feature_name: "bot_title"),
+          )
+        new_title = new_title.to_s.strip.split("\n").last.to_s
+        new_title = new_title.delete_prefix('"').delete_suffix('"')
 
-        PostRevisor.new(post.topic.first_post, post.topic).revise!(
-          bot.bot_user,
-          title: new_title.sub(/\A"/, "").sub(/"\Z/, ""),
-        )
+        first_post = post.topic.first_post
+
+        if new_title.blank?
+          new_title =
+            PrettyText.excerpt(
+              first_post.cooked,
+              FALLBACK_TITLE_LENGTH,
+              strip_links: true,
+              text_entities: true,
+            )
+        end
+
+        return if new_title.blank?
+
+        new_title = new_title.truncate(SiteSetting.max_topic_title_length, separator: /\s/)
+
+        revised =
+          PostRevisor.new(first_post, post.topic).revise!(
+            bot.bot_user,
+            { title: new_title },
+            bypass_rate_limiter: true,
+          )
+
+        return if !revised
 
         allowed_users = post.topic.topic_allowed_users.pluck(:user_id)
         MessageBus.publish(
@@ -315,6 +335,8 @@ module DiscourseAi
           { title: post.topic.title, topic_id: post.topic.id },
           user_ids: allowed_users,
         )
+      rescue StandardError => e
+        Discourse.warn_exception(e, message: "Discourse AI: Unable to generate title")
       end
 
       def reply_to_chat_message(message, channel, context_post_ids)
@@ -691,6 +713,7 @@ module DiscourseAi
             { raw: reply },
             skip_validations: true,
             force_new_version: true,
+            bypass_rate_limiter: true,
           )
           save_ai_custom_fields(reply_post, authorization_user_id: authorization_user_id)
         else
