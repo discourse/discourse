@@ -102,7 +102,7 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.version(upload_id)
-    "#{upload_id}_#{OptimizedImage::VERSION}"
+    "#{upload_id}_#{OptimizedImage.version}"
   end
 
   def self.import_url_for_user(avatar_url, user, options = nil)

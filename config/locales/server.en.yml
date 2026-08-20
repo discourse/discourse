@@ -2347,6 +2347,7 @@ en:
     allow_staff_to_upload_any_file_in_pm: "Allow staff members to upload any files in PM."
 
     strip_image_metadata: "Enable this setting to remove all the additional information from the images uploaded on the site. This includes data such as the camera model, location, creation date etc. This can be useful for privacy reasons, as it prevents users from unintentionally sharing sensitive information."
+    use_vips_for_image_processing: "Use stock libvips command-line tools instead of ImageMagick for upload processing, image probes, and optimized images."
 
     composer_media_optimization_image_enabled: "Enables client-side media optimization of uploaded image files."
     composer_media_optimization_image_bytes_optimization_threshold: "Minimum image file size to trigger client-side optimization"

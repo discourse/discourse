@@ -11,6 +11,15 @@ class Upload < ActiveRecord::Base
   URL_REGEX = %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
   DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
+  SVG_UNIT_TO_PIXELS = {
+    "in" => 96,
+    "cm" => 96 / 2.54,
+    "mm" => 96 / 25.4,
+    "q" => 96 / 101.6,
+    "pt" => 96 / 72.0,
+    "pc" => 16,
+  }.freeze
+  private_constant :SVG_UNIT_TO_PIXELS
   # the maximum length of a base62 encoded sha1
   MAX_BASE62_SHA1_LENGTH = 27
 
@@ -288,6 +297,47 @@ class Upload < ActiveRecord::Base
     Upload.base62_sha1(sha1)
   end
 
+  def self.extract_svg_dimensions(path)
+    document = Nokogiri.XML(File.binread(path)) { |config| config.strict.nonet }
+    root = document.root
+    raise Discourse::InvalidAccess if root.nil? || root.name != "svg"
+
+    vips_width, vips_height =
+      begin
+        Vips
+          .run(
+            "vipsheader",
+            "--field",
+            "width",
+            "--field",
+            "height",
+            path,
+            read: [path],
+            timeout: MAX_IDENTIFY_SECONDS,
+            allow_untrusted: true,
+          )
+          .lines(chomp: true)
+          .map(&:to_i)
+      rescue Discourse::Utils::CommandError
+        [0, 0]
+      end
+    view_box = root["viewBox"].to_s.split.map { |value| Float(value, exception: false) }
+
+    [root["width"], root["height"]].zip([vips_width, vips_height], view_box.drop(2))
+      .map do |value, vips_value, view_box_value|
+        match = value.to_s.strip.match(/\A([+-]?(?:\d+(?:\.\d*)?|\.\d+))(.*)\z/)
+        next vips_value if match.nil?
+
+        number = match[1].to_f
+        unit = match[2].strip.downcase
+        next view_box_value.to_f.round if number.zero? && view_box_value.to_f.positive?
+        next (view_box_value.to_f * number / 100).round if unit == "%"
+
+        scale = SVG_UNIT_TO_PIXELS[unit]
+        scale ? (number * scale).round : vips_value
+      end
+  end
+
   def local?
     !(url =~ %r{\A(https?:)?//})
   end
@@ -306,14 +356,18 @@ class Upload < ActiveRecord::Base
       if extension == "svg"
         w, h =
           begin
-            ImageMagick.identify(
-              "-ping",
-              "-format",
-              "%w %h",
-              "MSVG:#{path}",
-              read: [path],
-              timeout: MAX_IDENTIFY_SECONDS,
-            ).split(" ")
+            if SiteSetting.use_vips_for_image_processing
+              Upload.extract_svg_dimensions(path)
+            else
+              ImageMagick.identify(
+                "-ping",
+                "-format",
+                "%w %h",
+                "MSVG:#{path}",
+                read: [path],
+                timeout: MAX_IDENTIFY_SECONDS,
+              ).split(" ")
+            end
           rescue StandardError
             [0, 0]
           end
@@ -437,17 +491,33 @@ class Upload < ActiveRecord::Base
 
   def target_image_quality(local_path, test_quality)
     @file_quality ||=
-      begin
-        ImageMagick.identify(
-          "-ping",
-          "-format",
-          "%Q",
-          local_path,
-          read: [local_path],
-          timeout: MAX_IDENTIFY_SECONDS,
-        ).to_i
-      rescue StandardError
-        0
+      if SiteSetting.use_vips_for_image_processing
+        begin
+          output =
+            Vips.run(
+              "jhead",
+              "-nofinfo",
+              local_path,
+              read: [local_path],
+              timeout: MAX_IDENTIFY_SECONDS,
+            )
+          output[/^JPEG Quality[ \t]*:[ \t]*(\d+)[ \t]*$/, 1].to_s.to_i
+        rescue Discourse::Utils::CommandError
+          0
+        end
+      else
+        begin
+          ImageMagick.identify(
+            "-ping",
+            "-format",
+            "%Q",
+            local_path,
+            read: [local_path],
+            timeout: MAX_IDENTIFY_SECONDS,
+          ).to_i
+        rescue StandardError
+          0
+        end
       end
 
     test_quality if @file_quality == 0 || @file_quality > test_quality

@@ -29,6 +29,41 @@ RSpec.describe ShrinkUploadedImage do
       expect(upload.filesize).to be < filesize_before
     end
 
+    it "writes a valid resized image with vips" do
+      SiteSetting.use_vips_for_image_processing = true
+      source = file_from_fixtures("large_and_unoptimized.png")
+      source_upload =
+        Fabricate(
+          :upload,
+          width: 2032,
+          height: 1312,
+          filesize: File.size(source.path),
+          sha1: Upload.generate_digest(source.path),
+        )
+      source_upload.update!(url: Discourse.store.store_upload(source, source_upload))
+      post = Fabricate(:post, raw: "<img src='#{source_upload.url}'>", user: user)
+      post.link_post_uploads
+
+      result =
+        ShrinkUploadedImage.new(
+          upload: source_upload,
+          path: Discourse.store.path_for(source_upload),
+          max_pixels: 10_000,
+        ).perform
+      path = Discourse.store.path_for(source_upload)
+
+      expect(
+        {
+          result:,
+          upload_dimensions: [source_upload.width, source_upload.height],
+          file_dimensions: FastImage.size(path),
+          format: FastImage.type(path),
+        },
+      ).to eq(
+        { result: true, upload_dimensions: [124, 80], file_dimensions: [124, 80], format: :png },
+      )
+    end
+
     it "updates HotlinkedMedia records when there is an upload for downsized image" do
       OptimizedImage.downsize(
         Discourse.store.path_for(upload),

@@ -2569,6 +2569,9 @@ files:
     default: ""
     type: list
     regex: '\A((https?:\/\/.+)(\|https?:\/\/.+[|$])*)?\z'
+  use_vips_for_image_processing:
+    default: false
+    hidden: true
   create_thumbnails: true
   animated_topic_thumbnails:
     default: false
