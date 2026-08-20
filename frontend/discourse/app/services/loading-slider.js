@@ -88,6 +88,11 @@ export default class LoadingSlider extends Service.extend(Evented) {
   } = {}) {
     if (this.loading) {
       // Nested transition
+      if (fallbackSpinnerDelayMs === null) {
+        this.stillLoading = false;
+        this.scheduleManager.cancelAll();
+        this.scheduleManager.schedule("render", this.removeClasses);
+      }
       return false;
     }
 

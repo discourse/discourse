@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import {
   calculatePresetStartDate,
@@ -8,7 +9,6 @@ import {
   PERIOD_CUSTOM,
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
-import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
@@ -58,7 +58,9 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked loadingTraffic = false;
 
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
+  #loadingSliderTimer = null;
   #trafficLoadId = 0;
+  #trafficRequest = null;
   #ownsLoadingSlider = false;
 
   get safePeriod() {
@@ -160,34 +162,34 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   @action
-  async fetchTraffic() {
+  async loadTraffic({ request, requestParams, trafficTypes }) {
     const id = ++this.#trafficLoadId;
-    const requestParams = {
-      start_date: moment(this.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.endDate).format("YYYY-MM-DD"),
-    };
-
-    for (const key of FILTER_KEYS) {
-      if (this[key] !== null) {
-        requestParams[key] = this[key];
-      }
+    if (this.#trafficRequest) {
+      this.#trafficRequest.abort();
     }
+    this.#trafficRequest = request;
 
     const isInitialLoad = this.traffic === null;
     this.loadingTraffic = true;
     this.fetchError = null;
 
     if (!isInitialLoad && !this.#ownsLoadingSlider) {
-      this.#ownsLoadingSlider = this.loadingSlider.transitionStarted({
-        fallbackSpinnerDelayMs: null,
+      if (this.#loadingSliderTimer) {
+        cancel(this.#loadingSliderTimer);
+      }
+      this.#loadingSliderTimer = next(() => {
+        this.#loadingSliderTimer = null;
+        if (id !== this.#trafficLoadId || !this.loadingTraffic) {
+          return;
+        }
+        this.#ownsLoadingSlider = this.loadingSlider.transitionStarted({
+          fallbackSpinnerDelayMs: null,
+        });
       });
     }
 
     try {
-      const traffic = await ajax(
-        "/admin/dashboard/site-traffic-explorer.json",
-        { data: requestParams }
-      );
+      const traffic = await request;
 
       if (id !== this.#trafficLoadId) {
         return;
@@ -197,7 +199,7 @@ export default class AdminSiteTrafficController extends Controller {
         ...traffic,
         chart_start_date: requestParams.start_date,
         chart_end_date: requestParams.end_date,
-        chart_traffic_types: this.selectedTrafficTypes,
+        chart_traffic_types: trafficTypes,
       };
     } catch (error) {
       if (id !== this.#trafficLoadId) {
@@ -210,6 +212,11 @@ export default class AdminSiteTrafficController extends Controller {
           : "unexpected";
     } finally {
       if (id === this.#trafficLoadId) {
+        this.#trafficRequest = null;
+        if (this.#loadingSliderTimer) {
+          cancel(this.#loadingSliderTimer);
+          this.#loadingSliderTimer = null;
+        }
         if (this.#ownsLoadingSlider) {
           this.loadingSlider.transitionEnded();
           this.#ownsLoadingSlider = false;
@@ -257,6 +264,14 @@ export default class AdminSiteTrafficController extends Controller {
   @action
   resetState() {
     this.#trafficLoadId += 1;
+    if (this.#loadingSliderTimer) {
+      cancel(this.#loadingSliderTimer);
+      this.#loadingSliderTimer = null;
+    }
+    if (this.#trafficRequest) {
+      this.#trafficRequest.abort();
+      this.#trafficRequest = null;
+    }
     if (this.#ownsLoadingSlider) {
       this.loadingSlider.transitionEnded();
       this.#ownsLoadingSlider = false;
