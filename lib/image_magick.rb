@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "tmpdir"
-require "image_processing/command"
+require "image_processing/instrumentation"
 
 # Runs ImageMagick under the Landlock sandbox (via Discourse::SafeExec) so a
 # decoder bug parsing an untrusted upload is confined to an explicit filesystem
@@ -51,26 +51,28 @@ module ImageMagick
     # A private scratch dir keeps ImageMagick's disk-backed pixel cache inside
     # the write allowlist, so large images that spill to disk still succeed.
     Dir.mktmpdir("discourse-imagemagick-") do |scratch|
-      ImageProcessing::Command.capture(
-        *command,
-        operation:,
-        env: {
-          **ENV.slice("PATH", "MAGICK_CONFIGURE_PATH", "LANG", "LC_ALL"),
-          "MAGICK_TEMPORARY_PATH" => scratch,
-          "TMPDIR" => scratch,
-          "HOME" => scratch,
-          "XDG_CACHE_HOME" => scratch,
-          "MALLOC_ARENA_MAX" => "2",
-        },
-        unsetenv_others: true,
-        read: [*Discourse::SafeExec.default_read_paths, *asset_read_paths, *read],
-        write: [scratch, *write],
-        execute: Discourse::SafeExec.default_execute_paths,
-        timeout: timeout || DEFAULT_TIMEOUT,
-        rlimits: RLIMITS,
-        failure_message:,
-        seccomp_deny_network: true,
-      )
+      timeout_seconds = timeout || DEFAULT_TIMEOUT
+      ImageProcessing::Instrumentation.instrument(operation:, timeout_seconds:) do
+        Discourse::SafeExec.capture(
+          *command,
+          env: {
+            **ENV.slice("PATH", "MAGICK_CONFIGURE_PATH", "LANG", "LC_ALL"),
+            "MAGICK_TEMPORARY_PATH" => scratch,
+            "TMPDIR" => scratch,
+            "HOME" => scratch,
+            "XDG_CACHE_HOME" => scratch,
+            "MALLOC_ARENA_MAX" => "2",
+          },
+          unsetenv_others: true,
+          read: [*Discourse::SafeExec.default_read_paths, *asset_read_paths, *read],
+          write: [scratch, *write],
+          execute: Discourse::SafeExec.default_execute_paths,
+          timeout: timeout_seconds,
+          rlimits: RLIMITS,
+          failure_message:,
+          seccomp_deny_network: true,
+        )
+      end
     end
   end
   private_class_method :run

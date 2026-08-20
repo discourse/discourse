@@ -23,41 +23,28 @@ module Discourse
       rlimits: {},
       seccomp_deny_network: false,
       max_output_bytes: nil,
-      truncate_output: false,
-      &result_callback
+      truncate_output: false
     )
       if ::Landlock.supported?
-        begin
-          result =
-            ::Landlock.capture(
-              command,
-              read: read,
-              write: write,
-              execute: execute,
-              timeout: timeout,
-              failure_message: failure_message,
-              success_status_codes: success_status_codes,
-              env: env,
-              unsetenv_others: unsetenv_others,
-              chdir: chdir,
-              connect_tcp: Array(connect_tcp),
-              bind_tcp: bind_tcp,
-              rlimits: rlimits,
-              seccomp_deny_network: seccomp_deny_network,
-              max_output_bytes: max_output_bytes,
-              truncate_output: truncate_output,
-            )
-        rescue ::Landlock::CommandError => error
-          result_callback&.call(error.result) if error.result
-          raise Discourse::Utils::CommandError.new(
-                  error.message,
-                  stdout: error.stdout,
-                  stderr: error.stderr,
-                  status: error.status,
-                )
-        end
-
-        result_callback&.call(result)
+        result =
+          ::Landlock.capture(
+            command,
+            read: read,
+            write: write,
+            execute: execute,
+            timeout: timeout,
+            failure_message: failure_message,
+            success_status_codes: success_status_codes,
+            env: env,
+            unsetenv_others: unsetenv_others,
+            chdir: chdir,
+            connect_tcp: Array(connect_tcp),
+            bind_tcp: bind_tcp,
+            rlimits: rlimits,
+            seccomp_deny_network: seccomp_deny_network,
+            max_output_bytes: max_output_bytes,
+            truncate_output: truncate_output,
+          )
 
         return result.stdout if result.output_truncated? && truncate_output
 
@@ -77,6 +64,13 @@ module Discourse
           unsetenv_others: unsetenv_others,
         )
       end
+    rescue ::Landlock::CommandError => e
+      raise Discourse::Utils::CommandError.new(
+              e.message,
+              stdout: e.stdout,
+              stderr: e.stderr,
+              status: e.status,
+            )
     end
 
     def self.landlock_supported?
