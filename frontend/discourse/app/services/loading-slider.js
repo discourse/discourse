@@ -9,7 +9,7 @@ const STORE_LOADING_TIMES = 5;
 const DEFAULT_LOADING_TIME = 0.3;
 const MIN_LOADING_TIME = 0.2;
 
-const STILL_LOADING_DURATION = 2;
+const DEFAULT_FALLBACK_SPINNER_DELAY_MS = 2_000;
 
 class RollingAverage {
   @tracked average;
@@ -83,11 +83,11 @@ export default class LoadingSlider extends Service.extend(Evented) {
     return this.rollingAverage.average;
   }
 
-  transitionStarted({ showFallbackSpinner = true } = {}) {
+  transitionStarted({
+    fallbackSpinnerDelayMs = DEFAULT_FALLBACK_SPINNER_DELAY_MS,
+  } = {}) {
     if (this.loading) {
-      if (!showFallbackSpinner) {
-        this.#suppressFallbackSpinner();
-      }
+      // Nested transition
       return;
     }
 
@@ -96,13 +96,7 @@ export default class LoadingSlider extends Service.extend(Evented) {
     this.trigger("stateChanged", true);
 
     this.scheduleManager.cancelAll();
-
-    if (showFallbackSpinner) {
-      this.scheduleManager.later(
-        this.setStillLoading,
-        STILL_LOADING_DURATION * 1000
-      );
-    }
+    this.scheduleManager.later(this.setStillLoading, fallbackSpinnerDelayMs);
   }
 
   @bind
@@ -139,11 +133,5 @@ export default class LoadingSlider extends Service.extend(Evented) {
   @bind
   removeClasses() {
     document.body.classList.remove("loading", "still-loading");
-  }
-
-  #suppressFallbackSpinner() {
-    this.scheduleManager.cancelAll();
-    this.stillLoading = false;
-    document.body.classList.remove("still-loading");
   }
 }

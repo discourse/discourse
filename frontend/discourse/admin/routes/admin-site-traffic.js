@@ -22,6 +22,7 @@ const FILTER_KEYS = [
 ];
 
 const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
+const FALLBACK_SPINNER_DELAY_MS = 10_000;
 
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
   @service loadingSlider;
@@ -79,7 +80,9 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
       return false;
     }
 
-    this.loadingSlider.transitionStarted({ showFallbackSpinner: false });
+    this.loadingSlider.transitionStarted({
+      fallbackSpinnerDelayMs: FALLBACK_SPINNER_DELAY_MS,
+    });
     transition.finally(() => this.loadingSlider.transitionEnded());
     return false;
   }
