@@ -189,20 +189,36 @@ module PageObjects
       end
 
       def move_section_down(id)
-        within(".db-configure__row[data-section-id='#{id}']") do
-          find(".db-configure__arrow:last-child").click
-        end
+        within(configure_row_selector(id)) { find(configure_arrow_selector("down")).click }
         self
       end
 
       def move_section_up(id)
-        within(".db-configure__row[data-section-id='#{id}']") do
-          find(".db-configure__arrow:first-child").click
-        end
+        within(configure_row_selector(id)) { find(configure_arrow_selector("up")).click }
+        self
+      end
+
+      def drag_section(source_id, target_id)
+        drag_and_drop(
+          source: "#{configure_row_selector(source_id)} .db-configure__drag-handle",
+          target: configure_row_selector(target_id),
+          target_position: {
+            x: 100,
+            y: 1,
+          },
+        )
         self
       end
 
       private
+
+      def configure_arrow_selector(direction)
+        ".db-configure__arrows button:has(.d-icon-chevron-#{direction})"
+      end
+
+      def configure_row_selector(id)
+        ".db-configure__row[data-section-id='#{id}']"
+      end
 
       def custom_range_params(from:, to:)
         { range: "custom", start_date: from, end_date: to }
