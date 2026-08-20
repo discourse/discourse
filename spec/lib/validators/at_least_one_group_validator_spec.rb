@@ -31,7 +31,7 @@ RSpec.describe AtLeastOneGroupValidator do
     context "when one of the groups doesn't exist" do
       before { validator.valid_value?("10|1337") }
 
-      it { expect(validator.error_message).to eq("There's no group with that name.") }
+      it { expect(validator.error_message).to eq("There's no group with that ID.") }
     end
   end
 end

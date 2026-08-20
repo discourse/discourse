@@ -18,7 +18,7 @@
 #                         in the UI.
 # disallowed_groups     - A list of group IDs (pipe-separated) that should be hidden from the group selector.
 #                         These groups cannot be selected and will be stripped if set via API.
-#                         Only applies to group_list type settings.
+#                         Only applies to group and group_list type settings.
 # requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
 #                         Valid values are "simple" (always display a confirmation dialog when the setting is changed),
 #                         "simple_on_enable" (only when the setting is enabled), and "simple_on_disable" (only when
@@ -87,7 +87,7 @@
 #                                 are allowed based on authorized_extensions setting.
 #                               - max_file_size_kb: maximum file size in KB. If not specified,
 #                                 uses max_image_size_kb or max_attachment_size_kb.
-# type: group                 - A single group ID.
+# type: group                 - A single group ID. A group name is converted to its id on write.
 # type: group_list            - A list of group IDs.
 # type: tag_list              - A list of tag names.
 # type: emoji_list            - A list of emoji names (e.g. joy, cold_hands)
@@ -127,6 +127,7 @@ required:
     default: ""
     type: username
     area: "about"
+  # Stores a group id, despite its name, since a name can be changed or localized.
   site_contact_group_name:
     default: ""
     type: group

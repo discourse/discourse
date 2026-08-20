@@ -358,6 +358,8 @@ class SiteSettings::TypeSupervisor
       val = val.is_a?(String) ? val : val.map(&:id).join("|")
     elsif type == self.class.types[:upload] && val.present?
       val = val.is_a?(Integer) ? val : val.id
+    elsif type == self.class.types[:group] && val.present?
+      val = normalize_group_input(val)
     elsif type == self.class.types[:objects] && val.present?
       begin
         objects = val.is_a?(String) ? JSON.parse(val) : val
@@ -376,6 +378,16 @@ class SiteSettings::TypeSupervisor
     end
 
     [val, type]
+  end
+
+  # Group settings store an id, since a name can be changed or localized. A name
+  # is still accepted on write, so that callers that predate the id convention
+  # keep working, and is converted here.
+  def normalize_group_input(val)
+    val = val.to_s.strip
+    return val if val.match?(/\A\d+\z/)
+
+    Group.where("lower(name) = ?", val.downcase).pick(:id)&.to_s || val
   end
 
   def get_data_type(name, val)

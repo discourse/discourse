@@ -864,7 +864,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     recipient = Fabricate(:user)
     group = Fabricate(:group)
     group.add(Fabricate(:user))
-    SiteSetting.site_contact_group_name = "#{group.name}"
+    SiteSetting.site_contact_group_name = group.id.to_s
 
     SystemMessage.new(recipient).create("tl2_promotion_message", {})
 

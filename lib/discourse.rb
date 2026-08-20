@@ -983,6 +983,17 @@ module Discourse
     user ||= system_user || User.admins.real.order(:id).first
   end
 
+  # A group name is still resolved here for sites that set the setting through a
+  # global override, which stores nothing in the database and so cannot be
+  # migrated to an id.
+  def self.site_contact_group
+    value = SiteSetting.site_contact_group_name.to_s
+    return if value.blank?
+    return Group.find_by(id: value.to_i) if value.match?(/\A\d+\z/)
+
+    Group.find_by("lower(name) = ?", value.downcase)
+  end
+
   SYSTEM_USER_ID = -1
 
   def self.system_user

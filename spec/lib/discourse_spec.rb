@@ -282,6 +282,36 @@ RSpec.describe Discourse do
     end
   end
 
+  describe "#site_contact_group" do
+    fab!(:group) { Fabricate(:group, name: "support") }
+
+    it "returns nothing when the setting is blank" do
+      SiteSetting.site_contact_group_name = ""
+      expect(Discourse.site_contact_group).to eq(nil)
+    end
+
+    it "resolves the stored group id" do
+      SiteSetting.site_contact_group_name = group.id.to_s
+      expect(Discourse.site_contact_group).to eq(group)
+    end
+
+    it "returns nothing when the group no longer exists" do
+      SiteSetting.site_contact_group_name = group.id.to_s
+      group.destroy!
+      expect(Discourse.site_contact_group).to eq(nil)
+    end
+
+    it "resolves a group name, which a global override cannot store as an id" do
+      SiteSetting.stubs(:site_contact_group_name).returns("SUPPORT")
+      expect(Discourse.site_contact_group).to eq(group)
+    end
+
+    it "does not read a group id out of a value that merely starts with a digit" do
+      SiteSetting.stubs(:site_contact_group_name).returns("0support")
+      expect(Discourse.site_contact_group).to eq(nil)
+    end
+  end
+
   describe "#system_user" do
     it "returns the system user" do
       expect(Discourse.system_user.id).to eq(-1)
