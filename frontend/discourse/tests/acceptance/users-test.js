@@ -232,14 +232,17 @@ acceptance("User directory - Editing columns", function (needs) {
     assert.dom(".column-name", columns[4]).hasText("Topics Viewed");
 
     // Click on row 4 and see if they are swapped
-    await click(columns[4].querySelector(".move-column-up"));
+    await click(
+      columns[4].querySelector(".d-reorder-buttons__button:first-child")
+    );
 
     columns = fetchColumns();
     assert.dom(".column-name", columns[3]).hasText("Topics Viewed");
     assert.dom(".column-name", columns[4]).hasText("Replies Posted");
 
-    const moveUserFieldColumnUpBtn =
-      columns[columns.length - 1].querySelector(".move-column-up");
+    const moveUserFieldColumnUpBtn = columns[columns.length - 1].querySelector(
+      ".d-reorder-buttons__button:first-child"
+    );
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);

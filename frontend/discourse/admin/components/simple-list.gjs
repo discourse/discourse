@@ -6,13 +6,18 @@ import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { gt, not } from "discourse/truth-helpers";
+import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
+
+const INDEX_KEY = "@index";
 
 // args: onChange, inputDelimiter, values, allowAny, choices
 export default class SimpleList extends Component {
   @tracked newValue = "";
+
+  valueLabel = (value) => value;
 
   @cached
   get collection() {
@@ -61,59 +66,51 @@ export default class SimpleList extends Component {
     this.args.onChange?.(this.collection);
   }
 
+  /**
+   * Applies a committed move onto the delimited collection and reports the
+   * new order. Wrapping and announcements are the list's own.
+   *
+   * @param {Object} move - The normalized move from the list.
+   */
   @action
-  shift(index, offset) {
-    let futureIndex = index + offset;
-
-    if (futureIndex > this.collection.length - 1) {
-      futureIndex = 0;
-    } else if (futureIndex < 0) {
-      futureIndex = this.collection.length - 1;
-    }
-
-    const shiftedValue = this.collection[index];
-    this.collection.splice(index, 1);
-    this.collection.splice(futureIndex, 0, shiftedValue);
-
+  handleMove(move) {
+    this.collection.splice(0, this.collection.length, ...move.proposedToItems);
     this.args.onChange?.(this.collection);
   }
 
   <template>
     <div class="simple-list value-list" ...attributes>
-      {{#if this.collection}}
-        <div class="values">
-          {{#each this.collection as |value index|}}
-            <div data-index={{index}} class="value">
-              <DButton
-                @action={{fn this.removeItem index}}
-                @icon="xmark"
-                class="btn-default remove-value-btn btn-small"
-              />
+      <DReorderableList
+        @items={{this.collection}}
+        @key={{INDEX_KEY}}
+        @keyboard="buttons"
+        @label={{this.valueLabel}}
+        @onMove={{this.handleMove}}
+        @wrap={{true}}
+        @arrowsLayout="inline"
+        @controls="split"
+        @controlsVisibility="reveal"
+        @tag="div"
+        @itemTag="div"
+        @rowClass="value"
+        class="values"
+      >
+        <:default as |value row|>
+          <DButton
+            @action={{fn this.removeItem row.index}}
+            @icon="xmark"
+            class="btn-default remove-value-btn btn-small"
+          />
 
-              <input
-                {{on "focusout" (fn this.changeValue index)}}
-                value={{value}}
-                title={{value}}
-                type="text"
-                class="value-input"
-              />
-
-              {{#if (gt this.collection.length 1)}}
-                <DButton
-                  @action={{fn this.shift index -1}}
-                  @icon="arrow-up"
-                  class="btn-default shift-up-value-btn btn-small"
-                />
-                <DButton
-                  @action={{fn this.shift index 1}}
-                  @icon="arrow-down"
-                  class="btn-default shift-down-value-btn btn-small"
-                />
-              {{/if}}
-            </div>
-          {{/each}}
-        </div>
-      {{/if}}
+          <input
+            {{on "focusout" (fn this.changeValue row.index)}}
+            value={{value}}
+            title={{value}}
+            type="text"
+            class="value-input"
+          />
+        </:default>
+      </DReorderableList>
 
       <div class="simple-list-input">
         {{#if this.isPredefinedList}}

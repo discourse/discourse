@@ -8,6 +8,7 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
 
 export default class EditBadgeGroupings extends Component {
@@ -18,14 +19,20 @@ export default class EditBadgeGroupings extends Component {
     this.store.createRecord("badge-grouping", o)
   );
 
-  @action
-  up(item) {
-    this.moveItem(item, -1);
-  }
+  groupingLabel = (grouping) => grouping.displayName || grouping.name;
 
+  /**
+   * Applies a committed move onto the staged working copy.
+   *
+   * @param {Object} move - The normalized move from the list.
+   */
   @action
-  down(item) {
-    this.moveItem(item, 1);
+  handleMove(move) {
+    this.workingCopy.splice(
+      0,
+      this.workingCopy.length,
+      ...move.proposedToItems
+    );
   }
 
   @action
@@ -67,15 +74,6 @@ export default class EditBadgeGroupings extends Component {
     }
   }
 
-  moveItem(item, delta) {
-    const index = this.workingCopy.indexOf(item);
-    if (index + delta < 0 || index + delta >= this.workingCopy.length) {
-      return;
-    }
-    this.workingCopy.splice(index, 1); // remove the item from the old position
-    this.workingCopy.splice(index + delta, 0, item); // insert it in the new position
-  }
-
   <template>
     <DModal
       @title={{i18n "admin.badges.badge_groupings.modal_title"}}
@@ -84,54 +82,47 @@ export default class EditBadgeGroupings extends Component {
     >
       <:body>
         <div class="badge-groupings">
-          <ul class="badge-groupings-list">
-            {{#each this.workingCopy as |wc|}}
-              <li class="badge-grouping-item">
-                <div class="badge-grouping">
-                  {{#if wc.editing}}
-                    <Input
-                      @value={{wc.name}}
-                      class="badge-grouping-name-input"
-                    />
-                  {{else}}
-                    <span>{{wc.displayName}}</span>
-                  {{/if}}
-                </div>
-                <div class="actions">
-                  {{#if wc.editing}}
-                    <DButton
-                      @action={{fn (mut wc.editing) false}}
-                      @icon="check"
-                      class="btn-default"
-                    />
-                  {{else}}
-                    <DButton
-                      @action={{fn (mut wc.editing) true}}
-                      @disabled={{wc.system}}
-                      @icon="pencil"
-                      class="btn-default"
-                    />
-                  {{/if}}
+          <DReorderableList
+            @items={{this.workingCopy}}
+            @label={{this.groupingLabel}}
+            @onMove={{this.handleMove}}
+            @controls="manual"
+            @rowClass="badge-grouping-item"
+            class="badge-groupings-list"
+          >
+            <:default as |wc row|>
+              <div class="badge-grouping">
+                {{#if wc.editing}}
+                  <Input @value={{wc.name}} class="badge-grouping-name-input" />
+                {{else}}
+                  <span>{{wc.displayName}}</span>
+                {{/if}}
+              </div>
+              <div class="actions">
+                {{#if wc.editing}}
                   <DButton
-                    @action={{fn this.up wc}}
-                    @icon="chevron-up"
+                    @action={{fn (mut wc.editing) false}}
+                    @icon="check"
                     class="btn-default"
                   />
+                {{else}}
                   <DButton
-                    @action={{fn this.down wc}}
-                    @icon="chevron-down"
-                    class="btn-default"
-                  />
-                  <DButton
-                    @action={{fn this.delete wc}}
+                    @action={{fn (mut wc.editing) true}}
                     @disabled={{wc.system}}
-                    @icon="xmark"
+                    @icon="pencil"
                     class="btn-default"
                   />
-                </div>
-              </li>
-            {{/each}}
-          </ul>
+                {{/if}}
+                <row.controls />
+                <DButton
+                  @action={{fn this.delete wc}}
+                  @disabled={{wc.system}}
+                  @icon="xmark"
+                  class="btn-default"
+                />
+              </div>
+            </:default>
+          </DReorderableList>
         </div>
         <DButton
           @action={{this.add}}

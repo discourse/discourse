@@ -11,19 +11,10 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 export default class AdminUserFieldItem extends Component {
-  @service adminUserFields;
   @service router;
 
   get fieldName() {
     return UserField.fieldTypeById(this.fieldType)?.name;
-  }
-
-  get cantMoveUp() {
-    return this.args.userField.id === this.adminUserFields.firstField?.id;
-  }
-
-  get cantMoveDown() {
-    return this.args.userField.id === this.adminUserFields.lastField?.id;
   }
 
   get flags() {
@@ -34,18 +25,6 @@ export default class AdminUserFieldItem extends Component {
     })
       .filter(Boolean)
       .join(", ");
-  }
-
-  @action
-  moveUp() {
-    this.args.moveUpAction(this.args.userField);
-    this.dMenu.close();
-  }
-
-  @action
-  moveDown() {
-    this.args.moveDownAction(this.args.userField);
-    this.dMenu.close();
   }
 
   @action
@@ -65,76 +44,56 @@ export default class AdminUserFieldItem extends Component {
   }
 
   <template>
-    <tr class="d-table__row admin-user_field-item">
-      <td class="d-table__cell --overview">
-        <LinkTo
-          class="d-table__overview-link"
-          @route="adminUserFields.edit"
-          @model={{@userField}}
-        >
-          <div class="d-table__overview-name admin-user_field-item__name">
-            {{@userField.name}}
-          </div>
-          <div class="d-table__overview-about">{{trustHTML
-              @userField.description
-            }}</div>
-        </LinkTo>
-        <div class="d-table__overview-flags">{{this.flags}}</div>
-      </td>
-      <td class="d-table__cell --detail">
-        {{@userField.fieldTypeName}}
-      </td>
-      <td class="d-table__cell --controls">
-        <div class="d-table__cell-actions">
-          <DButton
-            class="btn-default btn-small admin-user_field-item__edit"
-            @action={{this.edit}}
-            @label="admin.user_fields.edit"
-          />
-
-          <DMenu
-            @identifier="user_field-menu"
-            @title={{i18n "admin.config_areas.user_fields.more_options.title"}}
-            @icon="ellipsis-vertical"
-            @onRegisterApi={{this.onRegisterApi}}
-            @triggerClass="btn-default"
-          >
-            <:content>
-              <DDropdownMenu as |dropdown|>
-                {{#unless this.cantMoveUp}}
-                  <dropdown.item>
-                    <DButton
-                      @label="admin.config_areas.user_fields.more_options.move_up"
-                      @icon="arrow-up"
-                      class="btn-transparent admin-user_field-item__move-up"
-                      @action={{this.moveUp}}
-                    />
-                  </dropdown.item>
-                {{/unless}}
-                {{#unless this.cantMoveDown}}
-                  <dropdown.item>
-                    <DButton
-                      @label="admin.config_areas.user_fields.more_options.move_down"
-                      @icon="arrow-down"
-                      class="btn-transparent admin-user_field-item__move-down"
-                      @action={{this.moveDown}}
-                    />
-                  </dropdown.item>
-                {{/unless}}
-
-                <dropdown.item>
-                  <DButton
-                    @label="admin.config_areas.user_fields.delete"
-                    @icon="trash-can"
-                    class="btn-transparent --danger admin-user_field-item__delete"
-                    @action={{this.destroy}}
-                  />
-                </dropdown.item>
-              </DDropdownMenu>
-            </:content>
-          </DMenu>
+    <td class="d-table__cell --reorder">
+      <@row.controls />
+    </td>
+    <td class="d-table__cell --overview">
+      <LinkTo
+        class="d-table__overview-link"
+        @route="adminUserFields.edit"
+        @model={{@userField}}
+      >
+        <div class="d-table__overview-name admin-user_field-item__name">
+          {{@userField.name}}
         </div>
-      </td>
-    </tr>
+        <div class="d-table__overview-about">{{trustHTML
+            @userField.description
+          }}</div>
+      </LinkTo>
+      <div class="d-table__overview-flags">{{this.flags}}</div>
+    </td>
+    <td class="d-table__cell --detail">
+      {{@userField.fieldTypeName}}
+    </td>
+    <td class="d-table__cell --controls">
+      <div class="d-table__cell-actions">
+        <DButton
+          class="btn-default btn-small admin-user_field-item__edit"
+          @action={{this.edit}}
+          @label="admin.user_fields.edit"
+        />
+
+        <DMenu
+          @identifier="user_field-menu"
+          @title={{i18n "admin.config_areas.user_fields.more_options.title"}}
+          @icon="ellipsis-vertical"
+          @onRegisterApi={{this.onRegisterApi}}
+          @triggerClass="btn-default"
+        >
+          <:content>
+            <DDropdownMenu as |dropdown|>
+              <dropdown.item>
+                <DButton
+                  @label="admin.config_areas.user_fields.delete"
+                  @icon="trash-can"
+                  class="btn-transparent --danger admin-user_field-item__delete"
+                  @action={{this.destroy}}
+                />
+              </dropdown.item>
+            </DDropdownMenu>
+          </:content>
+        </DMenu>
+      </div>
+    </td>
   </template>
 }
