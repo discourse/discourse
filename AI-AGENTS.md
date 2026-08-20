@@ -20,6 +20,7 @@ Discourse is large with long history. Understand context before changes.
 - Make display strings translatable (use placeholders, not split strings)
 - Use "Sentence case" for strings, not "Proper Case" or "lower case"
 - Plugins/themes can't import npm modules directly; add the dependency to core and expose a `frontend/discourse/app/lib/load-*.js` wrapper that does the `import()` (see `load-morphlex.js`).
+- Use the skill at `.skills/discourse-warpdrive-models` when creating or changing WarpDrive-backed models (`frontend/discourse/app/data`)
 
 ### Comments & Types
 - Prefer self-documenting code. Comments should only be added when future misunderstanding is likely. They should be terse, and should describe 'why', not 'what'. They should not be used to describe history.
