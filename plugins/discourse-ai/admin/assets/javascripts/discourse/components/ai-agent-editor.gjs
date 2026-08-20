@@ -1293,7 +1293,12 @@ export default class AgentEditor extends Component {
               @subtitle={{i18n "discourse_ai.rag.sources.description"}}
               @format="full"
             >
-              <RagDocumentSources @form={{form}} @disabled={{data.system}} />
+              <RagDocumentSources
+                @form={{form}}
+                @sources={{data.rag_document_sources}}
+                @disabled={{data.system}}
+                @isNew={{@model.isNew}}
+              />
             </form.Container>
 
             <form.Field

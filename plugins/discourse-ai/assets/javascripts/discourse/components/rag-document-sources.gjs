@@ -1,80 +1,94 @@
-import { fn, hash } from "@ember/helper";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import RagDocumentSourcesModal from "./modal/rag-document-sources-modal";
 
-const statusLabel = (status) =>
-  i18n(`discourse_ai.rag.sources.status.${status || "pending"}`);
+const SUMMARY_URL_LIMIT = 3;
 
-const RagDocumentSources = <template>
-  <div class="rag-document-sources" ...attributes>
-    <@form.Collection
-      @name="rag_document_sources"
-      as |source sourceIndex sourceData|
-    >
-      <@form.Row as |row|>
-        <row.Col @size={{7}}>
-          <source.Field
-            @name="url"
-            @title={{i18n "discourse_ai.rag.sources.url"}}
-            @validation="required|url"
-            @disabled={{@disabled}}
-            @type="input-url"
-            as |field|
-          >
-            <field.Control @maxlength="2000" />
-          </source.Field>
-        </row.Col>
+export default class RagDocumentSources extends Component {
+  @service modal;
 
-        <row.Col @size={{4}}>
-          <source.Field
-            @name="refresh_interval_hours"
-            @title={{i18n "discourse_ai.rag.sources.refresh_interval_hours"}}
-            @disabled={{@disabled}}
-            @type="input-number"
-            as |field|
-          >
-            <field.Control @min={{1}} @max={{8760}} />
-          </source.Field>
-        </row.Col>
+  get sources() {
+    return this.args.sources || [];
+  }
 
-        <row.Col @size={{1}}>
-          {{#unless @disabled}}
-            <@form.Button
-              class="btn-danger"
-              @icon="trash-can"
-              @title="discourse_ai.rag.sources.remove"
-              @action={{fn source.remove sourceIndex}}
-            />
-          {{/unless}}
-        </row.Col>
-      </@form.Row>
+  get summarySources() {
+    return this.sources.slice(0, SUMMARY_URL_LIMIT);
+  }
 
-      {{#if sourceData.last_error}}
-        <@form.Alert @icon="triangle-exclamation" @type="error">
-          {{i18n
-            "discourse_ai.rag.sources.last_error"
-            error=sourceData.last_error
-          }}
-        </@form.Alert>
-      {{else}}
-        <@form.Alert @icon="circle-info" @type="info">
-          {{statusLabel sourceData.indexing_status}}
-        </@form.Alert>
-      {{/if}}
-    </@form.Collection>
+  get remainingSourceCount() {
+    return Math.max(this.sources.length - SUMMARY_URL_LIMIT, 0);
+  }
 
-    {{#unless @disabled}}
-      <@form.Button
-        class="btn-default"
-        @icon="plus"
-        @label="discourse_ai.rag.sources.add"
-        @action={{fn
-          @form.addItemToCollection
-          "rag_document_sources"
-          (hash url="" refresh_interval_hours=24)
-        }}
-      />
-    {{/unless}}
-  </div>
-</template>;
+  get buttonLabel() {
+    return this.sources.length
+      ? "discourse_ai.rag.sources.edit"
+      : "discourse_ai.rag.sources.add";
+  }
 
-export default RagDocumentSources;
+  @action
+  openEditor() {
+    const currentSources = this.sources;
+
+    this.modal.show(RagDocumentSourcesModal, {
+      model: {
+        sources: currentSources,
+        onSave: ({ urls, refreshIntervalHours }) => {
+          const existingSources = new Map(
+            currentSources.map((source) => [source.url, source])
+          );
+          const updatedSources = urls.map((url) => ({
+            ...existingSources.get(url),
+            url,
+            refresh_interval_hours: refreshIntervalHours,
+          }));
+
+          this.args.form.set("rag_document_sources", updatedSources);
+        },
+      },
+    });
+  }
+
+  <template>
+    <div class="rag-document-sources" ...attributes>
+      {{#unless @isNew}}
+        {{#if this.sources.length}}
+          <p class="rag-document-sources__count">
+            {{i18n
+              "discourse_ai.rag.sources.summary"
+              count=this.sources.length
+            }}
+          </p>
+          <ul class="rag-document-sources__list">
+            {{#each this.summarySources as |source|}}
+              <li class="rag-document-sources__url">{{source.url}}</li>
+            {{/each}}
+          </ul>
+          {{#if this.remainingSourceCount}}
+            <p class="rag-document-sources__remaining">
+              {{i18n
+                "discourse_ai.rag.sources.more"
+                count=this.remainingSourceCount
+              }}
+            </p>
+          {{/if}}
+        {{else}}
+          <p class="rag-document-sources__empty">
+            {{i18n "discourse_ai.rag.sources.empty"}}
+          </p>
+        {{/if}}
+      {{/unless}}
+
+      {{#unless @disabled}}
+        <DButton
+          @action={{this.openEditor}}
+          @icon={{if this.sources.length "pencil" "plus"}}
+          @label={{this.buttonLabel}}
+          class="btn-default rag-document-sources__edit"
+        />
+      {{/unless}}
+    </div>
+  </template>
+}
