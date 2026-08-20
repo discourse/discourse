@@ -13,9 +13,6 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import I18n, { i18n } from "discourse-i18n";
 
-const SKELETON_METRICS = Array.from({ length: 4 });
-const SKELETON_BREAKDOWNS = Array.from({ length: 3 });
-const SKELETON_ROWS = Array.from({ length: 8 });
 const TRAFFIC_TYPE_BY_SERIES = {
   page_view_logged_in_browser: "logged_in",
   page_view_anon_browser: "anonymous",
@@ -211,7 +208,7 @@ export default class SiteTrafficExplorer extends Component {
 
   @action
   announceResults() {
-    if (this.args.loading || !this.args.traffic) {
+    if (!this.args.traffic) {
       return;
     }
 
@@ -243,7 +240,7 @@ export default class SiteTrafficExplorer extends Component {
   <template>
     <div
       class="site-traffic-explorer admin-config-page"
-      {{didUpdate this.announceResults @traffic @loading @hasPageviews}}
+      {{didUpdate this.announceResults @traffic @hasPageviews}}
     >
       <DPageHeader
         @titleLabel={{i18n "admin.site_traffic_explorer.title"}}
@@ -289,46 +286,7 @@ export default class SiteTrafficExplorer extends Component {
             </div>
           </div>
         {{else}}
-          {{#if @loading}}
-            <div
-              class="db-skeleton --animation site-traffic-explorer__skeleton"
-              role="status"
-              aria-label={{i18n "admin.site_traffic_explorer.loading"}}
-              data-test-site-traffic-skeleton
-            >
-              <div class="db-skeleton__section-wrapper">
-                <div class="db-skeleton__subheader">
-                  <div class="db-skeleton__subintro">
-                    <div class="db-skeleton__heading-line"></div>
-                  </div>
-                  <div class="db-skeleton__metric-row">
-                    {{#each SKELETON_METRICS}}
-                      <div class="db-skeleton__metric">
-                        <div class="db-skeleton__metric-number"></div>
-                        <div class="db-skeleton__metric-label"></div>
-                      </div>
-                    {{/each}}
-                  </div>
-                </div>
-                <div class="db-skeleton__chart"></div>
-                <div class="db-skeleton__row">
-                  {{#each SKELETON_BREAKDOWNS}}
-                    <div class="db-skeleton__row-block">
-                      <div class="db-skeleton__row-block-title"></div>
-                      <ul class="db-skeleton__list">
-                        {{#each SKELETON_ROWS}}
-                          <li class="db-skeleton__list-row">
-                            <span class="db-skeleton__list-name"></span>
-                            <span class="db-skeleton__list-value"></span>
-                          </li>
-                        {{/each}}
-                      </ul>
-                    </div>
-                  {{/each}}
-                </div>
-              </div>
-            </div>
-          {{else if this.partialWarning}}
+          {{#if this.partialWarning}}
             <p
               class="alert alert-warning site-traffic-explorer__partial-warning"
               data-test-site-traffic-partial-warning
@@ -339,7 +297,7 @@ export default class SiteTrafficExplorer extends Component {
           {{/if}}
 
           {{#if @traffic}}
-            <div class="site-traffic-explorer__results" hidden={{@loading}}>
+            <div class="site-traffic-explorer__results">
               {{#if @hasPageviews}}
                 <div
                   class="db-section__wrapper --column site-traffic-explorer__report"
