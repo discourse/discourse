@@ -22,7 +22,6 @@ const FILTER_KEYS = [
 ];
 
 const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
-
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
   @service loadingSlider;
 
@@ -74,13 +73,13 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
 
   @action
   loading(transition) {
-    this.loadingSlider.transitionStarted({ showFallbackSpinner: false });
-    transition.finally(() => this.loadingSlider.transitionEnded());
-
     if (this.controllerFor("admin-site-traffic").traffic === null) {
       this.intermediateTransitionTo("adminSiteTraffic_loading");
+      return false;
     }
 
+    this.loadingSlider.transitionStarted({ showFallbackSpinner: false });
+    transition.finally(() => this.loadingSlider.transitionEnded());
     return false;
   }
 
