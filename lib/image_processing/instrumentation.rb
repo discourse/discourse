@@ -2,24 +2,6 @@
 
 module ImageProcessing
   class Instrumentation
-    OPERATIONS = %i[
-      upload_svg_dimensions
-      upload_dominant_color
-      upload_quality_probe
-      upload_format_conversion
-      upload_auto_orient
-      upload_animation_probe
-      optimized_image_resize
-      optimized_image_crop
-      optimized_image_downsize
-      topic_og_asset_render
-      topic_og_render
-      letter_avatar_render
-      letter_avatar_version
-      letter_avatar_font_list
-    ].freeze
-    private_constant :OPERATIONS
-
     def self.instrument(operation:, timeout_seconds:)
       validate_operation!(operation)
       started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -37,14 +19,10 @@ module ImageProcessing
     end
 
     def self.record(operation:, duration_seconds:, error:, timeout_seconds:)
+      result = error ? classify(error, duration_seconds:, timeout_seconds:) : "success"
       DiscourseEvent.trigger(
         :image_processing_finished,
-        {
-          operation: operation.to_s,
-          duration_seconds:,
-          success: error.nil?,
-          error_reason: error && classify(error, duration_seconds:, timeout_seconds:),
-        },
+        { operation: operation.to_s, duration_seconds:, result: },
         continue_on_error: true,
       )
     end
@@ -69,9 +47,7 @@ module ImageProcessing
     private_class_method :classify
 
     def self.validate_operation!(operation)
-      if !OPERATIONS.include?(operation)
-        raise ArgumentError, "unknown image-processing operation: #{operation.inspect}"
-      end
+      raise ArgumentError, "operation must be a Symbol" if !operation.is_a?(Symbol)
     end
     private_class_method :validate_operation!
   end

@@ -22,7 +22,7 @@ RSpec.describe ImageMagick do
 
       events =
         DiscourseEvent.track_events(:image_processing_finished) do
-          expect(described_class.magick("--version", operation: :letter_avatar_version)).to eq(
+          expect(described_class.magick("--version", operation: :custom_image_operation)).to eq(
             "image output",
           )
         end
@@ -30,15 +30,14 @@ RSpec.describe ImageMagick do
       expect(events.size).to eq(1)
       payload = events.first[:params].first
       expect(payload.except(:duration_seconds)).to eq(
-        operation: "letter_avatar_version",
-        success: true,
-        error_reason: nil,
+        operation: "custom_image_operation",
+        result: "success",
       )
       expect(payload[:duration_seconds]).to eq(1.25)
       expect(monotonic_times).to be_empty
     end
 
-    it "emits one measurement with a bounded reason for every command failure" do
+    it "emits one measurement with a bounded result for every command failure" do
       failure_cases = {
         "wall_timeout" => [
           Discourse::Utils::CommandError.new(
@@ -81,8 +80,8 @@ RSpec.describe ImageMagick do
         "exception" => [Errno::ENOENT.new("magick"), 10],
       }
 
-      observed_reasons =
-        failure_cases.map do |expected_reason, (error, timeout_seconds)|
+      observed_results =
+        failure_cases.map do |expected_result, (error, timeout_seconds)|
           allow(Discourse::SafeExec).to receive(:capture).and_raise(error)
 
           events =
@@ -101,22 +100,21 @@ RSpec.describe ImageMagick do
           payload = events.first[:params].first
           expect(payload.except(:duration_seconds)).to eq(
             operation: "optimized_image_resize",
-            success: false,
-            error_reason: expected_reason,
+            result: expected_result,
           )
           expect(payload[:duration_seconds]).to be >= 0
-          payload[:error_reason]
+          payload[:result]
         end
 
-      expect(observed_reasons).to eq(failure_cases.keys)
+      expect(observed_results).to eq(failure_cases.keys)
     end
 
-    it "rejects operations outside the stable operation set" do
+    it "rejects non-Symbol operations" do
       events =
         DiscourseEvent.track_events(:image_processing_finished) do
-          expect { described_class.magick("--version", operation: :unknown) }.to raise_error(
+          expect { described_class.magick("--version", operation: "dynamic") }.to raise_error(
             ArgumentError,
-            /unknown image-processing operation/,
+            /operation must be a Symbol/,
           )
         end
 
