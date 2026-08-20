@@ -5,10 +5,20 @@ require "image_magick"
 RSpec.describe ImageMagick do
   describe ".magick" do
     it "emits one monotonic wall-clock measurement for a successful command" do
-      allow(Discourse::SafeExec).to receive(:capture) do
-        sleep 0.01
-        "image output"
+      monotonic_times = [10.0, 11.25]
+      allow(Process).to receive(
+        :clock_gettime,
+      ).and_wrap_original do |original, clock_id, *arguments|
+        if clock_id == Process::CLOCK_MONOTONIC &&
+             caller_locations.any? { |location|
+               location.path.end_with?("lib/image_processing/instrumentation.rb")
+             }
+          monotonic_times.shift
+        else
+          original.call(clock_id, *arguments)
+        end
       end
+      allow(Discourse::SafeExec).to receive(:capture).and_return("image output")
 
       events =
         DiscourseEvent.track_events(:image_processing_finished) do
@@ -24,7 +34,8 @@ RSpec.describe ImageMagick do
         success: true,
         error_reason: nil,
       )
-      expect(payload[:duration_seconds]).to be >= 0.01
+      expect(payload[:duration_seconds]).to eq(1.25)
+      expect(monotonic_times).to be_empty
     end
 
     it "emits one measurement with a bounded reason for every command failure" do
