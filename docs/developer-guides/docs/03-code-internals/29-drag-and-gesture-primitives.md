@@ -448,19 +448,9 @@ Use `dPointerDrag` instead when a value must track the pointer continuously.
 
 # dOnResize is not a gesture
 
-`dOnResize` wraps `ResizeObserver`. It reports that an element's size changed,
-whether from a font load, a growing sibling, or a gesture somewhere else. Nobody
-resizes anything with it. The similar name is the trap.
-
-```gjs
-<div {{dOnResize this.onLayoutChange (hash delay=100)}}></div>
-```
-
-Its callback and options are positional. If you need to know a size, observe it;
-if you need to let someone change one, use a resize primitive.
-
-The other observer modifiers, `dObserveIntersection` and `dScrollIntoView`, sit
-outside this suite for the same reason: they react to DOM state, not to input.
+`dOnResize` wraps `ResizeObserver`: it reports that an element's size changed,
+and nobody resizes anything with it. The similar name is the trap. To let
+someone change a size, use one of the resize primitives above.
 
 # Accessibility
 
