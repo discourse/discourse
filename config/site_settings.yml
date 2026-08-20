@@ -1432,7 +1432,7 @@ posting:
     client: true
     hidden: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
