@@ -167,6 +167,19 @@
     margin: 0;
   }
 
+  // The auto margin, not the header's `space-between`, is what keeps the badge
+  // beside the title and the code toggle at the far end.
+  &__kind {
+    margin-inline-end: auto;
+    padding: 0 var(--space-2);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+
   &__description code,
   &__try-this code,
   &__note code {
@@ -440,5 +453,280 @@
 .more-topics-examples {
   .more-topics__container {
     flex-grow: 1;
+  }
+}
+
+.styleguide-drag-and-drop {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: var(--token-color-surface-hovered);
+    cursor: grab;
+
+    &.--dual {
+      min-width: 7rem;
+    }
+
+    &.--with-grip {
+      cursor: auto;
+    }
+  }
+
+  &__grip {
+    cursor: grab;
+  }
+
+  &__zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4rem;
+    padding: var(--space-3);
+    border: 1px dashed var(--primary-medium);
+
+    &.--outer {
+      flex-direction: column;
+      gap: var(--space-3);
+      min-height: 9rem;
+    }
+
+    &.--inner {
+      width: 70%;
+      min-height: 3.5rem;
+    }
+  }
+
+  &__columns {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__column {
+    flex: 1;
+    padding: var(--space-4) var(--space-2);
+    background: var(--token-color-surface-hovered);
+    text-align: center;
+  }
+
+  &__panel {
+    padding: var(--space-3);
+    background: var(--token-color-surface-hovered);
+
+    &.--armed {
+      background: var(--tertiary-very-low);
+    }
+  }
+
+  &__log {
+    @include unstyled-list;
+    font-family: var(--font-family-monospace);
+  }
+
+  &__scroller {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    max-height: 9rem;
+    overflow-y: auto;
+  }
+
+  &__scroller-row {
+    padding: var(--space-2) var(--space-3);
+    background: var(--token-color-surface-hovered);
+  }
+
+  &__panes {
+    display: flex;
+    align-items: stretch;
+    min-height: 6rem;
+  }
+
+  // Core ships the separator's cursor only. The visible divider is the
+  // consumer's, drawn through the class it passes rather than the component's
+  // own, which is how the composer does it too.
+  &__divider {
+    flex: 0 0 auto;
+    width: 0.375rem;
+    background: var(--primary-medium);
+  }
+
+  &__pane {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--token-color-surface-hovered);
+
+    &.--grow {
+      flex: 1;
+    }
+  }
+
+  &__track {
+    position: relative;
+    padding: var(--space-2);
+    background: var(--token-color-surface-hovered);
+  }
+
+  &__knob {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    padding: var(--space-2);
+    background: var(--tertiary-low);
+    cursor: grab;
+    user-select: none;
+  }
+
+  &__swipe {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 5rem;
+    background: var(--token-color-surface-hovered);
+    touch-action: pan-y;
+  }
+
+  &__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+  }
+
+  &__swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5.625rem;
+    min-height: 3.75rem;
+    background: var(--token-color-surface-hovered);
+  }
+
+  // A fixed area the box floats inside, so a resize moves the box rather than
+  // reflowing the card, and every bound is measured from something stable.
+  &__stage {
+    position: relative;
+    height: 15rem;
+    overflow: hidden;
+    background: var(--primary-very-low);
+  }
+
+  &__resizable {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--token-color-surface-hovered);
+  }
+
+  &__preview {
+    padding: var(--space-2) var(--space-3);
+    background: var(--tertiary);
+    color: var(--secondary);
+  }
+
+  &__handle {
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    background: var(--tertiary);
+
+    // Compass directions follow physical pointer axes and must not flip in RTL.
+    &.--n,
+    &.--s {
+      /*! rtl:ignore */
+      left: 0.75rem;
+
+      /*! rtl:ignore */
+      right: 0.75rem;
+      width: auto;
+      cursor: ns-resize;
+    }
+
+    &.--e,
+    &.--w {
+      top: 0.75rem;
+      bottom: 0.75rem;
+      height: auto;
+      cursor: ew-resize;
+    }
+
+    &.--n {
+      top: -0.375rem;
+    }
+
+    &.--s {
+      bottom: -0.375rem;
+    }
+
+    &.--e {
+      /*! rtl:ignore */
+      right: -0.375rem;
+    }
+
+    &.--w {
+      /*! rtl:ignore */
+      left: -0.375rem;
+    }
+
+    &.--ne {
+      top: -0.375rem;
+
+      /*! rtl:ignore */
+      right: -0.375rem;
+      cursor: nesw-resize;
+    }
+
+    &.--se {
+      /*! rtl:ignore */
+      right: -0.375rem;
+      bottom: -0.375rem;
+      cursor: nwse-resize;
+    }
+
+    &.--sw {
+      bottom: -0.375rem;
+
+      /*! rtl:ignore */
+      left: -0.375rem;
+      cursor: nesw-resize;
+    }
+
+    &.--nw {
+      top: -0.375rem;
+
+      /*! rtl:ignore */
+      left: -0.375rem;
+      cursor: nwse-resize;
+    }
   }
 }
