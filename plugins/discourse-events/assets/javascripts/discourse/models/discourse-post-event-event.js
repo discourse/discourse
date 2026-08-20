@@ -25,7 +25,7 @@ export function isWithinEventTimeframe(allDay, startsAt, endsAt) {
 
   if (allDay) {
     const opensAt = moment(startsAt).startOf("day");
-    const closesAt = moment(startsAt).endOf("day");
+    const closesAt = moment(endsAt || startsAt).endOf("day");
 
     return now.isBetween(opensAt, closesAt);
   }

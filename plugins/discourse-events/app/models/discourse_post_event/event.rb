@@ -174,7 +174,7 @@ module DiscoursePostEvent
 
       if all_day
         opens_at = starts_at.beginning_of_day
-        closes_at = starts_at.end_of_day
+        closes_at = (ends_at || starts_at).end_of_day
         return opens_at <= now && now <= closes_at
       end
 

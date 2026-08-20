@@ -181,6 +181,12 @@ module DiscourseCalendar
           expect(response.body).to include("zoomFrameConfig")
         end
 
+        it "joins the meeting with chat disabled" do
+          get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+          expect(response.body).to include("isSupportChat: false")
+        end
+
         it "points the page at the signature for its own topic" do
           get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
 
