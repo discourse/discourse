@@ -166,7 +166,7 @@ module(
         );
       });
 
-      test("a gate that turns false after the last dragover refuses the drop", async function (assert) {
+      test("a gate that turns false after the last dragover still lands the drop", async function (assert) {
         let allowed = true;
         let drops = 0;
         const canDrop = () => allowed;
@@ -188,8 +188,8 @@ module(
         const dataTransfer = fileTransfer();
         await externalDragOver("#ext", { dataTransfer });
 
-        // The library settles its target stack at the last dragover and does not
-        // re-ask the gate at drop, so refusing here is this modifier's own doing.
+        // Turned off with no dragover left to observe it, so the release still
+        // sees the target the last hover collected.
         allowed = false;
         await dragEvent("#ext", "drop", {
           dataTransfer,
@@ -198,8 +198,8 @@ module(
 
         assert.strictEqual(
           drops,
-          0,
-          "a permission withdrawn before release does not act"
+          1,
+          "eligibility is sampled while hovering, not re-asked at the release"
         );
       });
 

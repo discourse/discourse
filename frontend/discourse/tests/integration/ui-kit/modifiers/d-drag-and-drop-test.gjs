@@ -3086,6 +3086,99 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
     });
 
+    test("a gate that turns false after the last dragover still lands the drop", async function (assert) {
+      let allow = true;
+      const calls = [];
+      const canDrop = () => allow;
+      const recordTargetDrop = () => calls.push("target onDrop");
+      const recordSourceDrop = () => calls.push("source onDrop");
+      const recordSourceDragEnd = () => calls.push("source onDragEnd");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              onDrop=recordSourceDrop
+              onDragEnd=recordSourceDragEnd
+            }}
+          >src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget
+              accepts="row"
+              canDrop=canDrop
+              onDrop=recordTargetDrop
+            }}
+          >tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
+
+      // Turned off with no dragover left to observe it, so the release still
+      // sees the hierarchy the indicator was drawn from.
+      allow = false;
+
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(
+        calls,
+        ["target onDrop", "source onDragEnd", "source onDrop"],
+        "both ends act on the answer the drag was last given"
+      );
+    });
+
+    test("a gate that turns false before the last dragover refuses the drop", async function (assert) {
+      let allow = true;
+      const calls = [];
+      const canDrop = () => allow;
+      const recordTargetDrop = () => calls.push("target onDrop");
+      const recordSourceDrop = () => calls.push("source onDrop");
+      const recordSourceDragEnd = () => calls.push("source onDragEnd");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              onDrop=recordSourceDrop
+              onDragEnd=recordSourceDragEnd
+            }}
+          >src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget
+              accepts="row"
+              canDrop=canDrop
+              onDrop=recordTargetDrop
+            }}
+          >tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await startDrag("#src", { dataTransfer });
+      await dragOver("#tgt", { dataTransfer });
+
+      allow = false;
+      await dragOver("#tgt", { dataTransfer });
+
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(
+        calls,
+        ["source onDragEnd"],
+        "a dragover observed the refusal, so the drag ends holding nothing"
+      );
+    });
+
     test("getDropEffect decides the effect recorded against this target", async function (assert) {
       const effects = [];
       const copyEffect = () => "copy";

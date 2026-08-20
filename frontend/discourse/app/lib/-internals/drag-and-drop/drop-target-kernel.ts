@@ -56,7 +56,11 @@ export interface DropTargetKernelEvent<Source> {
 
 /** Consumer callbacks and display options shared by every drop target. */
 export interface DropTargetKernelArgs<Source> extends DropPositionOptions {
-  /** Synchronous gate. Returning `false` refuses the drop. */
+  /**
+   * Synchronous gate, asked while the drag hovers. Returning `false` takes
+   * this target out of the running, leaving the drop to an ancestor target.
+   * It is not asked again when the drag is released.
+   */
   canDrop?: (feedback: DropTargetKernelFeedback<Source>) => boolean | void;
 
   /** Determines the cursor feedback browsers show during the drag. */
@@ -418,11 +422,6 @@ export function registerDropTargetKernel<Payload, Source>({
       // hover was measured against.
       const rtl = pairing.isRtl();
       pairing.reset();
-      // The library reuses the hovered hierarchy at drop and does not re-run
-      // the gate, so a gate that changed since must be asked again.
-      if (!passesGate(source, location.current.input)) {
-        return;
-      }
       const args = getArgs();
       consumerMayThrow(() =>
         args.onDrop?.({
