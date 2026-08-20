@@ -1,8 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { cancel, next } from "@ember/runloop";
-import { service } from "@ember/service";
 import {
   calculatePresetStartDate,
   DEFAULT_PERIOD,
@@ -40,8 +38,6 @@ const DIMENSION_KEYS = {
 };
 
 export default class AdminSiteTrafficController extends Controller {
-  @service loadingSlider;
-
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
@@ -53,15 +49,8 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked network = null;
   @tracked browser = null;
   @tracked ip = null;
-  @tracked traffic = null;
-  @tracked fetchError = null;
-  @tracked loadingTraffic = false;
 
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
-  #loadingSliderTimer = null;
-  #trafficLoadId = 0;
-  #trafficRequest = null;
-  #ownsLoadingSlider = false;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -141,8 +130,12 @@ export default class AdminSiteTrafficController extends Controller {
     );
   }
 
-  get initialLoading() {
-    return this.loadingTraffic && this.traffic === null;
+  get traffic() {
+    return this.model?.traffic ?? null;
+  }
+
+  get fetchError() {
+    return this.model?.fetchError ?? null;
   }
 
   #customDate(value, edge) {
@@ -159,71 +152,6 @@ export default class AdminSiteTrafficController extends Controller {
     this.range = period;
     this.start_date = null;
     this.end_date = null;
-  }
-
-  @action
-  async loadTraffic({ request, requestParams, trafficTypes }) {
-    const id = ++this.#trafficLoadId;
-    if (this.#trafficRequest) {
-      this.#trafficRequest.abort();
-    }
-    this.#trafficRequest = request;
-
-    const isInitialLoad = this.traffic === null;
-    this.loadingTraffic = true;
-    this.fetchError = null;
-
-    if (!isInitialLoad && !this.#ownsLoadingSlider) {
-      if (this.#loadingSliderTimer) {
-        cancel(this.#loadingSliderTimer);
-      }
-      this.#loadingSliderTimer = next(() => {
-        this.#loadingSliderTimer = null;
-        if (id !== this.#trafficLoadId || !this.loadingTraffic) {
-          return;
-        }
-        this.#ownsLoadingSlider = this.loadingSlider.transitionStarted({
-          fallbackSpinnerDelayMs: null,
-        });
-      });
-    }
-
-    try {
-      const traffic = await request;
-
-      if (id !== this.#trafficLoadId) {
-        return;
-      }
-
-      this.traffic = {
-        ...traffic,
-        chart_start_date: requestParams.start_date,
-        chart_end_date: requestParams.end_date,
-        chart_traffic_types: trafficTypes,
-      };
-    } catch (error) {
-      if (id !== this.#trafficLoadId) {
-        return;
-      }
-
-      this.fetchError =
-        error.jqXHR?.responseJSON?.error_type === "traffic_query_timeout"
-          ? "timeout"
-          : "unexpected";
-    } finally {
-      if (id === this.#trafficLoadId) {
-        this.#trafficRequest = null;
-        if (this.#loadingSliderTimer) {
-          cancel(this.#loadingSliderTimer);
-          this.#loadingSliderTimer = null;
-        }
-        if (this.#ownsLoadingSlider) {
-          this.loadingSlider.transitionEnded();
-          this.#ownsLoadingSlider = false;
-        }
-        this.loadingTraffic = false;
-      }
-    }
   }
 
   @action
@@ -263,22 +191,7 @@ export default class AdminSiteTrafficController extends Controller {
 
   @action
   resetState() {
-    this.#trafficLoadId += 1;
-    if (this.#loadingSliderTimer) {
-      cancel(this.#loadingSliderTimer);
-      this.#loadingSliderTimer = null;
-    }
-    if (this.#trafficRequest) {
-      this.#trafficRequest.abort();
-      this.#trafficRequest = null;
-    }
-    if (this.#ownsLoadingSlider) {
-      this.loadingSlider.transitionEnded();
-      this.#ownsLoadingSlider = false;
-    }
-    this.traffic = null;
-    this.fetchError = null;
-    this.loadingTraffic = false;
+    this.model = null;
     this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;

@@ -3,7 +3,6 @@ import SiteTrafficExplorer from "discourse/admin/components/site-traffic-explore
 export default <template>
   <SiteTrafficExplorer
     @traffic={{@controller.traffic}}
-    @initialLoading={{@controller.initialLoading}}
     @fetchError={{@controller.fetchError}}
     @hasPageviews={{@controller.hasPageviews}}
     @period={{@controller.safePeriod}}

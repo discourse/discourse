@@ -1,3 +1,5 @@
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import {
   calculatePresetStartDate,
   DEFAULT_PERIOD,
@@ -22,6 +24,8 @@ const FILTER_KEYS = [
 const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
 
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
+  @service loadingSlider;
+
   queryParams = {
     range: { refreshModel: true },
     start_date: { refreshModel: true },
@@ -35,6 +39,7 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     browser: { refreshModel: true },
     ip: { refreshModel: true },
   };
+  #refreshTransition = null;
 
   titleToken() {
     return i18n("admin.site_traffic_explorer.title");
@@ -43,19 +48,46 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
   model(params) {
     const requestParams = this.#requestParams(params);
 
-    return {
-      request: ajax("/admin/dashboard/site-traffic-explorer.json", {
-        data: requestParams,
-        ignoreUnsent: false,
-      }),
-      requestParams,
-      trafficTypes: this.#selectedTrafficTypes(params.traffic_type),
-    };
+    return ajax("/admin/dashboard/site-traffic-explorer.json", {
+      data: requestParams,
+      ignoreUnsent: false,
+    })
+      .then((traffic) => ({
+        traffic: {
+          ...traffic,
+          chart_start_date: requestParams.start_date,
+          chart_end_date: requestParams.end_date,
+          chart_traffic_types: this.#selectedTrafficTypes(params.traffic_type),
+        },
+        fetchError: null,
+      }))
+      .catch((error) => ({
+        traffic: null,
+        fetchError:
+          error.jqXHR?.responseJSON?.error_type === "traffic_query_timeout"
+            ? "timeout"
+            : "unexpected",
+      }));
   }
 
-  setupController(controller, model) {
-    super.setupController(...arguments);
-    controller.loadTraffic(model);
+  @action
+  loading(transition) {
+    if (this.controllerFor("admin-site-traffic").traffic === null) {
+      this.intermediateTransitionTo("adminSiteTraffic_loading");
+      return false;
+    }
+
+    this.#refreshTransition = transition;
+    this.loadingSlider.transitionStarted({ fallbackSpinnerDelayMs: null });
+    transition.finally(() => {
+      if (this.#refreshTransition !== transition) {
+        return;
+      }
+
+      this.#refreshTransition = null;
+      this.loadingSlider.transitionEnded();
+    });
+    return false;
   }
 
   resetController(controller, isExiting) {

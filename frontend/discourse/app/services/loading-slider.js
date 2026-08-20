@@ -88,12 +88,7 @@ export default class LoadingSlider extends Service.extend(Evented) {
   } = {}) {
     if (this.loading) {
       // Nested transition
-      if (fallbackSpinnerDelayMs === null) {
-        this.stillLoading = false;
-        this.scheduleManager.cancelAll();
-        this.scheduleManager.schedule("render", this.removeClasses);
-      }
-      return false;
+      return;
     }
 
     this.timer.start();
@@ -104,7 +99,6 @@ export default class LoadingSlider extends Service.extend(Evented) {
     if (fallbackSpinnerDelayMs !== null) {
       this.scheduleManager.later(this.setStillLoading, fallbackSpinnerDelayMs);
     }
-    return true;
   }
 
   @bind
