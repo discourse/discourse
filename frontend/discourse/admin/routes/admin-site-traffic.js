@@ -1,4 +1,5 @@
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import {
   calculatePresetStartDate,
@@ -22,21 +23,23 @@ const FILTER_KEYS = [
 ];
 
 const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
+const QUERY_PARAM_KEYS = ["range", "start_date", "end_date", ...FILTER_KEYS];
+
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
   @service loadingSlider;
 
   queryParams = {
-    range: { refreshModel: true },
-    start_date: { refreshModel: true },
-    end_date: { refreshModel: true },
-    traffic_type: { refreshModel: true },
-    top_url: { refreshModel: true },
-    entry_url: { refreshModel: true },
-    referrer: { refreshModel: true },
-    country: { refreshModel: true },
-    network: { refreshModel: true },
-    browser: { refreshModel: true },
-    ip: { refreshModel: true },
+    range: { refreshModel: false },
+    start_date: { refreshModel: false },
+    end_date: { refreshModel: false },
+    traffic_type: { refreshModel: false },
+    top_url: { refreshModel: false },
+    entry_url: { refreshModel: false },
+    referrer: { refreshModel: false },
+    country: { refreshModel: false },
+    network: { refreshModel: false },
+    browser: { refreshModel: false },
+    ip: { refreshModel: false },
   };
 
   titleToken() {
@@ -81,6 +84,17 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     this.loadingSlider.transitionStarted({ showFallbackSpinner: false });
     transition.finally(() => this.loadingSlider.transitionEnded());
     return false;
+  }
+
+  @action
+  queryParamsDidChange(changed, _totalPresent, removed) {
+    const changedKeys = [...Object.keys(changed), ...Object.keys(removed)];
+
+    if (changedKeys.some((key) => QUERY_PARAM_KEYS.includes(key))) {
+      next(() => this.refresh());
+    }
+
+    return true;
   }
 
   resetController(controller, isExiting) {
