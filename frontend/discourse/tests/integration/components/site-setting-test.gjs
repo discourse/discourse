@@ -307,6 +307,25 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".form-kit__control-password").hasAttribute("type", "text");
   });
 
+  test("an enum setting renders its preview and keeps it in sync", async function (assert) {
+    await renderSetting({
+      setting: "tag_style",
+      value: "simple",
+      type: "enum",
+      preview: '<span class="tag-preview">{{value}}</span>',
+      valid_values: [
+        { name: "Simple", value: "simple" },
+        { name: "Box", value: "box" },
+      ],
+    });
+
+    assert.dom(".preview .tag-preview").hasText("simple");
+
+    await fillIn(".form-kit__control-select", "box");
+
+    assert.dom(".preview .tag-preview").hasText("box");
+  });
+
   test("a secret setting that is also a textarea stays readable", async function (assert) {
     await renderSetting({
       setting: "test_setting",
@@ -508,10 +527,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       ],
     });
 
-    const selector = selectKit(".select-kit");
-
-    await selector.expand();
-    await selector.selectRowByValue("1");
+    await fillIn(".form-kit__control-select", "1");
 
     assert
       .dom(".setting-controls__ok")
@@ -520,8 +536,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       .dom(".setting-controls__cancel")
       .exists("the cancel button is shown after changing the value");
 
-    await selector.expand();
-    await selector.selectRowByValue("2");
+    await fillIn(".form-kit__control-select", "2");
 
     assert
       .dom(".setting-controls__ok")

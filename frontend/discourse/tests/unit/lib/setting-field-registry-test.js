@@ -84,6 +84,8 @@ module("Unit | Lib | setting-field-registry", function () {
         "email",
         "textarea",
         "password",
+        "enum",
+        "locale_enum",
       ]) {
         assert.true(
           resolveSettingFieldType({ type }).adminReady,
