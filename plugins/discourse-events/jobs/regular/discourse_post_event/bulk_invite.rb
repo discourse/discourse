@@ -19,7 +19,7 @@ module Jobs
       @current_user = User.find_by(id: args[:current_user_id])
       raise Discourse::InvalidParameters.new(:current_user_id) unless @current_user
 
-      @event = DiscoursePostEvent::Event.find_by(id: args[:event_id])
+      @event = DiscourseEvents::Events::Event.find_by(id: args[:event_id])
       raise Discourse::InvalidParameters.new(:event_id) unless @event
 
       @guardian = Guardian.new(@current_user)
@@ -72,7 +72,7 @@ module Jobs
       end
 
       attendance = invitee["attendance"] || "going"
-      status = DiscoursePostEvent::Invitee.statuses[attendance.to_sym]
+      status = DiscourseEvents::Events::Invitee.statuses[attendance.to_sym]
 
       if status.nil?
         save_log "Skipping '#{invitee["identifier"]}' due to unknown attendance: '#{attendance}'"
@@ -101,7 +101,7 @@ module Jobs
 
     def create_attendance(user_id, post_id, status)
       invitee =
-        DiscoursePostEvent::Invitee.find_or_initialize_by(user_id: user_id, post_id: post_id)
+        DiscourseEvents::Events::Invitee.find_or_initialize_by(user_id: user_id, post_id: post_id)
       invitee.notified = false
       invitee.status = status
       invitee.save!
