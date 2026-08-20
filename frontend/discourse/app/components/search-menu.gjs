@@ -54,8 +54,6 @@ export default class SearchMenu extends Component {
   @tracked menuPanelOpen = false;
 
   searchInputId = this.args.searchInputId ?? "search-term";
-  searchInputPlaceholder = this.args.searchInputPlaceholder || "search.title";
-
   closeWhenHidden = modifier((_element, [hidden]) => hidden && this.close());
   _debouncer = null;
   _activeSearch = null;
@@ -66,6 +64,10 @@ export default class SearchMenu extends Component {
       document.removeEventListener("touchend", this.onDocumentPress);
     }
     super.willDestroy(...arguments);
+  }
+
+  get searchInputPlaceholder() {
+    return this.args.searchInputPlaceholder || "search.title";
   }
 
   @bind
@@ -475,10 +477,19 @@ export default class SearchMenu extends Component {
             </div>
           {{/if}}
         </div>
+
+        <PluginOutlet
+          @name="search-menu-after-input"
+          @outletArgs={{lazyHash
+            location=@location
+            triggerSearch=this.triggerSearch
+          }}
+        />
       </div>
 
       {{#if @inlineResults}}
         <Results
+          @location={{@location}}
           @searchInputId={{this.searchInputId}}
           @loading={{this.loading}}
           @invalidTerm={{this.invalidTerm}}
@@ -496,6 +507,7 @@ export default class SearchMenu extends Component {
       {{else if this.displayMenuPanelResults}}
         <MenuPanel class="search-menu-panel">
           <Results
+            @location={{@location}}
             @searchInputId={{this.searchInputId}}
             @loading={{this.loading}}
             @invalidTerm={{this.invalidTerm}}

@@ -450,6 +450,19 @@ discourse_ai:
     client: true
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/search"
+  ai_discover_follow_up_agent:
+    default: "-1"
+    type: enum
+    client: true
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/search"
+  ai_discover_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "10" # 10: @trust_level_0
+    allow_any: false
+    refresh: true
+    area: "ai-features/search"
   ai_automation_max_triage_per_minute:
     default: 60
     hidden: true

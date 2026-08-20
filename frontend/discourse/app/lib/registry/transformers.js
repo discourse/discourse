@@ -153,4 +153,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "user-notes-modal-subtitle",
   "user-path",
   "welcome-banner-display-for-route",
+  "welcome-banner-search-placeholder",
 ]);

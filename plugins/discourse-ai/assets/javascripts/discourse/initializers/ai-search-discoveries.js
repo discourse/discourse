@@ -7,16 +7,35 @@ export default apiInitializer((api) => {
 
   if (
     !settings.ai_discover_enabled ||
-    (!currentUser?.can_use_ai_discover_agent &&
-      !currentUser?.can_use_ai_discover_agent)
+    !currentUser?.can_use_ai_discover_agent
   ) {
     return;
   }
 
-  api.addSaveableUserOption("ai_search_discoveries", { page: "interface" });
+  [
+    "ai_search_discoveries",
+    "ai_search_discoveries_mode",
+    "ai_search_discoveries_show_summary",
+    "ai_search_discoveries_summary_detail",
+    "ai_search_discoveries_related_count",
+  ].forEach((option) => {
+    api.addSaveableUserOption(option, { page: "interface" });
+  });
+
+  if (currentUser.user_option?.ai_search_discoveries === false) {
+    return;
+  }
 
   const discobotDiscoveries = api.container.lookup(
     "service:discobot-discoveries"
+  );
+
+  api.registerValueTransformer(
+    "welcome-banner-search-placeholder",
+    ({ value }) =>
+      discobotDiscoveries.mode === "ask"
+        ? "discourse_ai.discobot_discoveries.mode.ask_placeholder"
+        : value
   );
 
   api.addSearchMenuOnKeyDownCallback((searchMenu, event) => {
@@ -24,10 +43,11 @@ export default apiInitializer((api) => {
       return;
     }
 
-    const query = searchMenu.search.activeGlobalSearchTerm;
+    const query = searchMenu.search.activeGlobalSearchTerm?.trim();
 
     if (
       isScopedSearch(searchMenu.search) ||
+      discobotDiscoveries.mode !== "ask" ||
       discobotDiscoveries.lastQuery === query
     ) {
       return true;
@@ -51,6 +71,10 @@ export default apiInitializer((api) => {
     }
 
     if (isScopedSearch(search)) {
+      return true;
+    }
+
+    if (discobotDiscoveries.mode !== "ask") {
       return true;
     }
 

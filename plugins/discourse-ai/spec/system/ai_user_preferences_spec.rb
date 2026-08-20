@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User AI preferences" do
+describe "User AI preferences" do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:llm_model)
   let(:user_preferences_ai_page) { PageObjects::Pages::UserPreferencesAi.new }
@@ -9,6 +9,9 @@ RSpec.describe "User AI preferences" do
   before do
     enable_current_plugin
     SiteSetting.ai_discover_agent = discovery_agent.id
+    SiteSetting.ai_discover_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+    SiteSetting.ai_embeddings_enabled = true
+    SiteSetting.ai_embeddings_semantic_search_enabled = true
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
     assign_fake_provider_to(:ai_default_llm_model)
     sign_in(user)
