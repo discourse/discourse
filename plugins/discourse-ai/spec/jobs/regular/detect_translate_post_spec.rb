@@ -128,6 +128,26 @@ describe Jobs::DetectTranslatePost do
     expect { job.execute({ post_id: post.id }) }.not_to raise_error
   end
 
+  it "restricts private message notifications to the topic audience" do
+    recipient_group = Fabricate(:group)
+    Fabricate(:group_user, group: recipient_group)
+    private_message_post =
+      Fabricate(:group_private_message_post, recipients: recipient_group, locale: "en")
+    SiteSetting.ai_translation_backfill_limit_to_public_content = false
+
+    messages =
+      MessageBus.track_publish("/topic/#{private_message_post.topic_id}") do
+        job.execute(post_id: private_message_post.id)
+      end
+
+    expect(messages.length).to eq(1)
+    message = messages.first
+    expect(message.data).to eq(type: :localized, id: private_message_post.id)
+    expect(message.user_ids).to contain_exactly(
+      *private_message_post.topic.secure_audience_publish_messages[:user_ids],
+    )
+  end
+
   describe "with public content and PM limitations" do
     fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
     fab!(:private_topic) { Fabricate(:topic, category: private_category) }
