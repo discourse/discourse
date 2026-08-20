@@ -144,6 +144,24 @@ describe Jobs::DetectTranslatePost do
     expect { job.execute({ post_id: post.id }) }.not_to raise_error
   end
 
+  it "restricts private message notifications to the topic audience" do
+    recipient = Fabricate(:user)
+    private_message_post = Fabricate(:private_message_post, recipient: recipient, locale: "en")
+    SiteSetting.ai_translation_personal_messages = "all"
+
+    messages =
+      MessageBus.track_publish("/topic/#{private_message_post.topic_id}") do
+        job.execute(post_id: private_message_post.id)
+      end
+
+    expect(messages.length).to eq(1)
+    message = messages.first
+    expect(message.data).to eq(type: :localized, id: private_message_post.id)
+    expect(message.user_ids).to contain_exactly(
+      *private_message_post.topic.secure_audience_publish_messages[:user_ids],
+    )
+  end
+
   describe "with excluded categories and PM scope" do
     fab!(:included_category, :category)
     fab!(:excluded_category, :category)
