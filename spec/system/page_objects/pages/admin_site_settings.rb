@@ -31,6 +31,10 @@ module PageObjects
         ".row.setting[data-setting='#{setting_name}']"
       end
 
+      def setting_field_selector(setting_name)
+        "#{setting_row_selector(setting_name)} [data-name='#{setting_name}']"
+      end
+
       def select_list_values(setting_name, values)
         setting =
           PageObjects::Components::SelectKit.new(
@@ -203,6 +207,16 @@ module PageObjects
       def has_hidden_reorder_buttons?(setting_name)
         has_css?("#{setting_row_selector(setting_name)} .shift-up-value-btn", visible: :hidden) &&
           has_css?("#{setting_row_selector(setting_name)} .shift-down-value-btn", visible: :hidden)
+      end
+
+      def category_setting(setting_name)
+        PageObjects::Components::SelectKit.new(
+          "#{setting_row_selector(setting_name)} .category-chooser",
+        )
+      end
+
+      def group_setting(setting_name)
+        PageObjects::Components::SelectKit.new("#{setting_row_selector(setting_name)} .combo-box")
       end
 
       def tag_list_setting(setting_name)
