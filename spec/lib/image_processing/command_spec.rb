@@ -37,14 +37,15 @@ RSpec.describe ImageProcessing::Command do
       result = capture_result(status:)
       allow(Landlock).to receive(:capture).and_return(result)
 
-      event =
-        DiscourseEvent.track(:image_processing_finished) do
+      events =
+        DiscourseEvent.track_events(:image_processing_finished) do
           expect(described_class.capture("image-tool", operation: :optimized_image_resize)).to eq(
             "image output",
           )
         end
 
-      expect(event[:params].first).to eq(
+      expect(events.size).to eq(1)
+      expect(events.first[:params].first).to eq(
         operation: "optimized_image_resize",
         success: true,
         error_reason: "none",
@@ -58,11 +59,6 @@ RSpec.describe ImageProcessing::Command do
       failure_cases = {
         "wall_timeout" =>
           capture_result(status: instance_double(Process::Status, exited?: false), timed_out: true),
-        "output_limit" =>
-          capture_result(
-            status: instance_double(Process::Status, exited?: false),
-            output_truncated: true,
-          ),
         "cpu_limit" =>
           capture_result(
             status:
@@ -104,14 +100,15 @@ RSpec.describe ImageProcessing::Command do
         failure_cases.values.map do |result|
           allow(Landlock).to receive(:capture).and_return(result)
 
-          event =
-            DiscourseEvent.track(:image_processing_finished) do
+          events =
+            DiscourseEvent.track_events(:image_processing_finished) do
               expect {
                 described_class.capture("image-tool", operation: :optimized_image_crop)
               }.to raise_error(Discourse::Utils::CommandError)
             end
 
-          payload = event[:params].first
+          expect(events.size).to eq(1)
+          payload = events.first[:params].first
           expect(payload[:success]).to eq(false)
           expect(payload.values_at(:duration_seconds, :cpu_seconds, :max_rss_bytes)).to eq(
             [1.25, 0.75, 16.megabytes],
@@ -120,6 +117,42 @@ RSpec.describe ImageProcessing::Command do
         end
 
       expect(observed_reasons).to eq(failure_cases.keys)
+    end
+
+    it "classifies an output-limit command error and emits one event" do
+      status = instance_double(Process::Status, exited?: false)
+      result = capture_result(status:, output_truncated: true)
+      allow(Landlock).to receive(:capture).and_raise(
+        Landlock::CommandError.new(
+          "output exceeded 10 bytes",
+          stdout: result.stdout,
+          stderr: result.stderr,
+          status:,
+          result:,
+        ),
+      )
+
+      events =
+        DiscourseEvent.track_events(:image_processing_finished) do
+          expect {
+            described_class.capture(
+              "image-tool",
+              operation: :optimized_image_crop,
+              max_output_bytes: 10,
+              truncate_output: false,
+            )
+          }.to raise_error(Discourse::Utils::CommandError, /output exceeded 10 bytes/)
+        end
+
+      expect(events.size).to eq(1)
+      expect(events.first[:params].first).to eq(
+        operation: "optimized_image_crop",
+        success: false,
+        error_reason: "output_limit",
+        duration_seconds: 1.25,
+        cpu_seconds: 0.75,
+        max_rss_bytes: 16.megabytes,
+      )
     end
 
     it "emits no event when SafeExec uses its fallback" do
