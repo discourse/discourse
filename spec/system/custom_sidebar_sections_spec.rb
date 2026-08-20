@@ -243,7 +243,40 @@ describe "Custom sidebar sections" do
     expect(sidebar).to have_no_section_link("Sidebar Categories")
   end
 
-  it "allows the user to reorder links in custom section" do
+  it "lets the user select text in a link's fields" do
+    # The row is a drag source, and a `draggable` element turns a press-drag into
+    # a drag rather than a selection. These rows are a form: the name and URL are
+    # text inputs whose contents a user edits and copies, so only the grip may be
+    # draggable.
+    #
+    # A selection inside a form control does not appear in `window.getSelection`,
+    # so this reads the input's own selection range.
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+    Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+
+    sign_in user
+    visit("/latest")
+    sidebar.edit_custom_section("My section")
+
+    url_field = ".sidebar-section-form-link input[name='link-url']"
+    # Leftwards and well past the field's edge: the press lands at its centre,
+    # which for a short value is beyond the end of the text, so a short sweep
+    # crosses no characters and would fail whether or not selection works. A
+    # drag running off the edge still selects back to the start.
+    drag_with_pointer(from: url_field, by: { x: -400 })
+
+    expect(
+      page.evaluate_script(
+        "(() => { const i = document.querySelector(\"#{url_field}\"); " \
+          "return i.selectionEnd - i.selectionStart; })()",
+      ),
+    ).to be > 0
+  end
+
+  it "lets the user reorder links in a custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
     sidebar_url_1 =
@@ -271,18 +304,87 @@ describe "Custom sidebar sections" do
 
     sidebar.edit_custom_section("My section")
 
-    tags_link = find(".draggable[data-link-name='Sidebar Tags']")
-    latest_link = find(".draggable[data-link-name='Sidebar Latest']")
-    tags_link.drag_to(latest_link, delay: 0.4)
+    drag_and_drop(
+      source: ".sidebar-section-form-link:has(.draggable[data-link-name='Sidebar Tags'])",
+      # Press the grip, not the row centre: the centre is a text input, and a
+      # text-selection drag stalls after dragstart.
+      source_position: {
+        x: 16,
+        y: 20,
+      },
+      target: ".sidebar-section-form-link:has(.draggable[data-link-name='Sidebar Categories'])",
+      target_position: {
+        x: 100,
+        y: 55,
+      },
+    )
+    try_until_success do
+      expect(section_modal.link_names).to eq(
+        ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+      )
+    end
     section_modal.save
     expect(section_modal).to be_closed
 
-    expect(sidebar.primary_section_links("my-section")).to eq(
-      ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
-    )
+    try_until_success do
+      expect(sidebar.primary_section_links("my-section")).to eq(
+        ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+      )
+    end
   end
 
-  it "does not allow to drag on mobile", mobile: true do
+  it "lets the user reorder links with the keyboard" do
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+    ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"].each do |name|
+      Fabricate(:sidebar_url, name: name, value: "/#{name.parameterize}").tap do |sidebar_url|
+        Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+      end
+    end
+
+    sign_in user
+
+    visit("/latest")
+
+    sidebar.edit_custom_section("My section")
+
+    # Asserted before the move: without it, a run where the order already matched
+    # would pass whether or not the arrow did anything.
+    expect(section_modal.link_names).to eq(["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"])
+
+    section_modal.move_link_down("Sidebar Tags")
+
+    try_until_success do
+      expect(section_modal.link_names).to eq(
+        ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+      )
+    end
+
+    # Focus is where the arrows live or die: the row moves in the DOM under the
+    # pressed button, and a lost focus makes a second press impossible.
+    expect(section_modal.focused_label).to eq("Move Sidebar Tags down")
+
+    # So the second press goes through whatever holds focus, not through another
+    # lookup by name, which would pass even if focus had been dropped.
+    section_modal.press_focused_link_arrow
+
+    try_until_success do
+      expect(section_modal.link_names).to eq(
+        ["Sidebar Categories", "Sidebar Latest", "Sidebar Tags"],
+      )
+    end
+
+    section_modal.save
+    expect(section_modal).to be_closed
+
+    try_until_success do
+      expect(sidebar.primary_section_links("my-section")).to eq(
+        ["Sidebar Categories", "Sidebar Latest", "Sidebar Tags"],
+      )
+    end
+  end
+
+  it "offers both the drag handle and the arrows on mobile", mobile: true do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
     Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
@@ -300,7 +402,17 @@ describe "Custom sidebar sections" do
     sidebar.open_on_mobile
     sidebar.edit_custom_section("My section")
 
-    expect(page).not_to have_css(".sidebar-section-form-link .draggable")
+    # The handle renders on every viewport now that the drag begins on the grip
+    # rather than anywhere on the row, so a press meant to scroll still scrolls.
+    expect(page).to have_css(".sidebar-section-form-link .draggable")
+
+    # Neither path substitutes for the other: the arrows are the only route
+    # without a pointer, and the drag is the only route without a keyboard.
+    section_modal.move_link_down("Sidebar Tags")
+
+    try_until_success do
+      expect(section_modal.link_names).to eq(["Sidebar Categories", "Sidebar Tags"])
+    end
   end
 
   it "does not allow the user to edit public section" do
