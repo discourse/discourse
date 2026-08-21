@@ -57,12 +57,10 @@ module JsonApiKit
             validates :anchor, presence: true, if: -> { window? }
 
             validate :check_cursors, if: -> { raw_cursors.present? }
-            validate :check_cursor_ordering,
-                     if: -> { cursors.present? && ordering && resource.sortable_by?(ordering:) }
+            validate :check_cursor_ordering, if: -> { cursors.present? && sortable? }
             validate :check_anchor_name, if: -> { anchor.present? }
             validate :check_anchor_value, if: -> { anchor.present? }
-            validate :check_anchor_ordering,
-                     if: -> { anchor.present? && resource.sortable_by?(ordering:) }
+            validate :check_anchor_ordering, if: -> { anchor.present? && sortable? }
 
             def cursor? = after.present? || before.present?
 
@@ -86,7 +84,13 @@ module JsonApiKit
 
             def raw_sort = options[:raw_parameters][:sort]
 
-            def ordering = raw_sort.nil? ? {} : INDIFFERENT_HASH.cast(raw_sort)
+            def ordering = raw_sort.nil? ? {} : Sorting::SORT.cast(raw_sort)
+
+            def sortable?
+              return false unless ordering
+              ordering.values.all? { it.in?(Sorting::DIRECTIONS.values) } &&
+                resource.sortable_by?(ordering:)
+            end
 
             def window_size
               return unless before_size || after_size

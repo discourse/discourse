@@ -13,6 +13,14 @@ RSpec.describe JsonApiKit::Pagination::Direction do
         expect { direction }.to raise_error(ArgumentError)
       end
     end
+
+    context "when the declaration is a string" do
+      let(:declaration) { "asc" }
+
+      it "refuses the direction" do
+        expect { direction }.to raise_error(ArgumentError)
+      end
+    end
   end
 
   describe "#to_sym" do
