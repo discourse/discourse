@@ -26,8 +26,10 @@ if !system(pkg_config, "--atleast-version=8.13", "vips", out: File::NULL, err: F
       "Install libvips 8.13 or newer with its development headers: " \
         "https://github.com/libvips/libvips/wiki#building-and-installing"
     end
+  detected_version =
+    detected_version == "not found" ? "development files not found" : "found #{detected_version}"
   abort <<~MESSAGE
-    Discourse requires libvips 8.13 or newer to build its image helper (found #{detected_version}).
+    Discourse requires libvips 8.13 or newer to build its image helper (#{detected_version}).
 
     Install the required packages, then run the command again:
       #{installation_command}
