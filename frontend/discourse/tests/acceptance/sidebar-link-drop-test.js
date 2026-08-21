@@ -1,5 +1,12 @@
-import { find, findAll, triggerEvent, visit } from "@ember/test-helpers";
+import {
+  find,
+  findAll,
+  settled,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
+import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import {
   dragEvent,
@@ -285,6 +292,60 @@ const PUBLIC_SECTION = '.sidebar-section[data-section-name="announcements"]';
 acceptance("Sidebar web link drop | public section, admin", function (needs) {
   needs.user({ admin: true, sidebar_sections: publicSection() });
   needs.settings({ navigation_menu: "sidebar" });
+  needs.pretender((server, helper) => {
+    server.get("/sidebar_sections/910.json", () =>
+      helper.response({
+        sidebar_section: {
+          id: 910,
+          title: "Announcements",
+          public: true,
+          section_type: null,
+          locale: "en",
+          localizations: [],
+          links: [
+            {
+              id: 911,
+              name: "Existing link",
+              value: "https://example.org/existing",
+              icon: "link",
+              external: true,
+              segment: "primary",
+              locale: "en",
+              localizations: [],
+            },
+          ],
+        },
+      })
+    );
+  });
+
+  test("still takes a dragged link after a panel switch and back", async function (assert) {
+    await visit("/");
+
+    const sidebarState = this.container.lookup("service:sidebar-state");
+    sidebarState.setPanel(ADMIN_PANEL);
+    await settled();
+    sidebarState.setPanel(MAIN_PANEL);
+    await settled();
+
+    const dataTransfer = linkDataTransfer();
+    await externalDragOver(PUBLIC_SECTION, { dataTransfer });
+
+    assert
+      .dom(PUBLIC_SECTION)
+      .hasClass(
+        "is-link-drop-active",
+        "the section still takes the drop after the sections were remounted"
+      );
+    assert
+      .dom(".sidebar-link-drop-target")
+      .exists("the dwell still reveals the zone after the remount");
+
+    await simulateExternalDrag(PUBLIC_SECTION, { dataTransfer });
+    assert
+      .dom(".sidebar-section-form-modal")
+      .exists("and the drop still opens the section form");
+  });
 
   test("a public section takes a dropped link for someone who can edit it", async function (assert) {
     await visit("/");
