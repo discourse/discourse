@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
@@ -7,11 +8,20 @@ import { gt, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
 const MAX_VISIBLE_FILTER_VALUES = 3;
 
+// Container widths in rem, from the shared scale in lib/breakpoints.scss.
+const VALUE_COUNT_BREAKPOINTS = [
+  { minWidth: 48, count: MAX_VISIBLE_FILTER_VALUES },
+  { minWidth: 40, count: 2 },
+];
+
 export default class SiteTrafficExplorerFilterPills extends Component {
+  @tracked maxVisibleValues = MAX_VISIBLE_FILTER_VALUES;
+
   get applyLabel() {
     const label = i18n("admin.site_traffic_explorer.apply");
 
@@ -41,12 +51,27 @@ export default class SiteTrafficExplorerFilterPills extends Component {
 
   @action
   visibleValues(filter) {
-    return filter.values.slice(0, MAX_VISIBLE_FILTER_VALUES);
+    return filter.values.slice(0, this.maxVisibleValues);
   }
 
   @action
   remainingCount(filter) {
-    return Math.max(0, filter.values.length - MAX_VISIBLE_FILTER_VALUES);
+    return Math.max(0, filter.values.length - this.maxVisibleValues);
+  }
+
+  @action
+  updateMaxVisibleValues([entry]) {
+    const rootFontSize = parseFloat(
+      getComputedStyle(document.documentElement).fontSize
+    );
+    const width = entry.contentRect.width / rootFontSize;
+    const count =
+      VALUE_COUNT_BREAKPOINTS.find(({ minWidth }) => width >= minWidth)
+        ?.count ?? 1;
+
+    if (this.maxVisibleValues !== count) {
+      this.maxVisibleValues = count;
+    }
   }
 
   @action
@@ -78,7 +103,10 @@ export default class SiteTrafficExplorerFilterPills extends Component {
 
   <template>
     {{#if (or (gt @filters.length 0) @hasPendingFilters)}}
-      <div class="site-traffic-explorer__filter-controls">
+      <div
+        class="site-traffic-explorer__filter-controls"
+        {{dOnResize this.updateMaxVisibleValues}}
+      >
         <div
           class="site-traffic-explorer__filters"
           role="group"
