@@ -74,6 +74,7 @@ export default class CodeLoginForm extends Component {
     showValidationOnInit: false,
   });
   #cooldownTimer;
+  #postSignupRedirectUrl;
   #usernameCheckSeq = 0;
   @tracked _step = "email";
 
@@ -368,6 +369,10 @@ export default class CodeLoginForm extends Component {
     // Only prefill an email-derived suggestion; otherwise the user picks one.
     this.username = result.prefill_username ? user.username : "";
     this.avatarTemplate = user.avatar_template;
+    // Set when the server held back a DiscourseConnect provider handoff so this
+    // step could run; continuing resumes it.
+    this.#postSignupRedirectUrl = result.redirect_url;
+
     if (this.usernameEditable && this.username) {
       this.checkUsernameAvailability();
     }
@@ -481,7 +486,7 @@ export default class CodeLoginForm extends Component {
 
     // Leave the button disabled and spinning through the redirect so it doesn't
     // flash back to its idle state before the page navigates away.
-    this.redirectAfterLogin();
+    this.redirectAfterLogin(this.#postSignupRedirectUrl);
   }
 
   @action
