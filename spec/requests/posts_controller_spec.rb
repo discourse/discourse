@@ -632,6 +632,45 @@ RSpec.describe PostsController do
       }
     end
 
+    context "when a wiki editor changes another user's topic title" do
+      fab!(:author) { Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true) }
+      fab!(:editor) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
+      fab!(:wiki_post) do
+        create_post(
+          user: author,
+          title: "Original topic title",
+          raw: "Original wiki body",
+        ).tap { |post| post.update!(wiki: true) }
+      end
+
+      before do
+        Group[:trust_level_1].add(editor)
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        sign_in(editor)
+      end
+
+      it "prevents title changes while allowing wiki body edits" do
+        put "/posts/#{wiki_post.id}.json",
+            params: {
+              title: "Unauthorized topic title",
+              post: {
+                raw: "Unauthorized wiki body",
+              },
+            }
+
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(wiki_post.reload.topic.title).to eq("Original topic title")
+        expect(wiki_post.raw).to eq("Original wiki body")
+
+        put "/posts/#{wiki_post.id}.json", params: { post: { raw: "Authorized wiki body" } }
+
+        expect(response.status).to eq(200), response.body
+        expect(response.parsed_body.dig("post", "raw")).to eq("Authorized wiki body")
+        expect(wiki_post.reload.topic.title).to eq("Original topic title")
+      end
+    end
+
     describe "when logged in as a regular user" do
       before { sign_in(user) }
 
