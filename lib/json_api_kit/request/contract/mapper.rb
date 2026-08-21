@@ -4,9 +4,6 @@ module JsonApiKit
   class Request
     class Contract
       class Mapper
-        MAX_SIZE = "https://jsonapi.org/profiles/ethanresnick/cursor-pagination/max-size-exceeded"
-        RANGE_UNSUPPORTED =
-          "https://jsonapi.org/profiles/ethanresnick/cursor-pagination/range-pagination-not-supported"
         NOT_AN_INTEGER = {
           title: "Page size is not an integer",
           detail: ->(_) { "Page size must be an integer." },
@@ -14,7 +11,7 @@ module JsonApiKit
         RANGE = {
           title: "Range pagination is not supported",
           detail: ->(_) { "Use page[after] or page[before], not both." },
-          type: RANGE_UNSUPPORTED,
+          type: Pagination::Profile::RANGE_UNSUPPORTED,
         }.freeze
         INVALID_CURSOR = {
           title: "Invalid cursor",
@@ -127,7 +124,7 @@ module JsonApiKit
             detail: ->(error) do
               "Page size #{error.options[:value]} exceeds the maximum of #{error.options[:count]}."
             end,
-            type: MAX_SIZE,
+            type: Pagination::Profile::MAX_SIZE,
             meta: ->(error) { { page: { maxSize: error.options[:count] } } },
           },
           [:"page.before_size", :not_an_integer] => SIDE_NOT_AN_INTEGER,
@@ -148,7 +145,7 @@ module JsonApiKit
                 "the maximum of #{error.options[:count]}."
             end,
             source: WINDOW_PARAMETER,
-            type: MAX_SIZE,
+            type: Pagination::Profile::MAX_SIZE,
             meta: ->(error) { { page: { maxSize: error.options[:count] } } },
           },
           [:"page.after", :present] => RANGE,
