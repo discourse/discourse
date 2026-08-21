@@ -8,7 +8,7 @@ module DiscourseAi
           {
             name: name,
             description:
-              "Creates a new tag without applying it to any topic. Use edit_tags to apply tags to a topic.",
+              "Creates a new tag without applying it to any topic. Use edit_topic_tags to apply tags to a topic.",
             parameters: [
               {
                 name: "name",

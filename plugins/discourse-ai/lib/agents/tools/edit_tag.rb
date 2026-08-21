@@ -8,7 +8,7 @@ module DiscourseAi
           {
             name: name,
             description:
-              "Renames an existing tag or changes its description. This edits the tag itself everywhere it is used; use edit_tags to change which tags are on a topic.",
+              "Renames an existing tag or changes its description. This edits the tag itself everywhere it is used; use edit_topic_tags to change which tags are on a topic.",
             parameters: [
               {
                 name: "name",

@@ -35,7 +35,7 @@ module DiscourseAi
           Tools::MoveTopic,
           Tools::CreateTag,
           Tools::EditTag,
-          Tools::EditTags,
+          Tools::EditTopicTags,
           Tools::MovePosts,
           Tools::SuspendUser,
           Tools::SilenceUser,

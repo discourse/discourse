@@ -708,7 +708,7 @@ en:
         lock_post: "Lock post"
         delete_topic: "Delete topic"
         edit_post: "Edit post"
-        edit_tags: "Edit tags"
+        edit_topic_tags: "Edit topic tags"
         create_tag: "Create tag"
         edit_tag: "Edit tag"
         create_category: "Create category"
@@ -766,7 +766,7 @@ en:
         lock_post: "Lock or unlock a post"
         delete_topic: "Delete a topic"
         edit_post: "Edit the content of a post"
-        edit_tags: "Edit the tags on a topic"
+        edit_topic_tags: "Edit the tags on a topic"
         create_tag: "Create a new tag"
         edit_tag: "Rename a tag or change its description"
         create_category: "Create a new category"
@@ -823,7 +823,7 @@ en:
         lock_post: "Locking post %{post_id} (locked: %{locked})"
         delete_topic: "Deleting topic %{topic_id} (deleted: %{deleted})"
         edit_post: "Editing post %{post_id}"
-        edit_tags: "Editing tags on topic %{topic_id}: %{tags}"
+        edit_topic_tags: "Editing tags on topic %{topic_id}: %{tags}"
         create_tag: "Creating tag '%{name}'"
         edit_tag: "Editing tag '%{name}'"
         create_category: "Creating category '%{name}'"
@@ -949,7 +949,7 @@ en:
           revision_failed: "Failed to revise the post."
         success: "Post edited successfully."
 
-      edit_tags:
+      edit_topic_tags:
         errors:
           not_found: "Topic not found."
           not_allowed: "You are not allowed to edit tags on this topic."
