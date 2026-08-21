@@ -7,7 +7,10 @@ require "tmpdir"
 module DiscourseVips
   VERSION = 1
   DEFAULT_TIMEOUT_SECONDS = 5
-  FONT_FAMILIES = { "Helvetica.ttc" => "Helvetica", "NotoSans-Regular.woff2" => "Noto Sans" }.freeze
+  FONT_FAMILIES = {
+    "/System/Library/Fonts/Helvetica.ttc" => "Helvetica",
+    File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2") => "Noto Sans",
+  }.freeze
   FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
   DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
   RLIMITS = {
@@ -31,7 +34,8 @@ module DiscourseVips
     end
 
     def generate_letter_avatar(letter:, background_color:, font_path:, output_path:)
-      font_family = FONT_FAMILIES[File.basename(font_path.to_s)]
+      font_path = File.expand_path(font_path.to_s)
+      font_family = FONT_FAMILIES[font_path]
       if !File.file?(font_path.to_s) || !font_family
         raise ArgumentError, "font_path must reference a supported font file"
       end
