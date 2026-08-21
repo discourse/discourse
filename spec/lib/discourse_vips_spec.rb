@@ -29,6 +29,19 @@ RSpec.describe DiscourseVips do
       }.to raise_error(ArgumentError, "font_path must reference a supported font file")
     end
 
+    it "rejects an unapproved font file" do
+      Tempfile.create(%w[font .ttf]) do |font|
+        expect {
+          described_class.generate_letter_avatar(
+            letter: "A",
+            background_color: [198, 125, 40],
+            font_path: font.path,
+            output_path: "/tmp/avatar.png",
+          )
+        }.to raise_error(ArgumentError, "font_path must reference a supported font file")
+      end
+    end
+
     it "renders an opaque 360 by 360 RGB PNG" do
       Dir.mktmpdir("discourse-vips-spec") do |directory|
         output_path = File.join(directory, "avatar.png")
