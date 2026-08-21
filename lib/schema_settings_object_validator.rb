@@ -208,7 +208,7 @@ class SchemaSettingsObjectValidator
 
     is_value_valid =
       case type
-      when "string", "datetime"
+      when "string", "datetime", "icon"
         value.is_a?(String)
       when "integer", "topic", "post"
         value.is_a?(Integer)

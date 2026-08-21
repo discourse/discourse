@@ -7,6 +7,7 @@ import DatetimeField from "discourse/admin/components/schema-setting/types/datet
 import EnumField from "discourse/admin/components/schema-setting/types/enum";
 import FloatField from "discourse/admin/components/schema-setting/types/float";
 import GroupsField from "discourse/admin/components/schema-setting/types/groups";
+import IconField from "discourse/admin/components/schema-setting/types/icon";
 import IntegerField from "discourse/admin/components/schema-setting/types/integer";
 import StringField from "discourse/admin/components/schema-setting/types/string";
 import TagsField from "discourse/admin/components/schema-setting/types/tags";
@@ -37,6 +38,8 @@ export default class SchemaSettingField extends Component {
         return UploadField;
       case "datetime":
         return DatetimeField;
+      case "icon":
+        return IconField;
       default:
         throw new Error(`unknown type ${type}`);
     }

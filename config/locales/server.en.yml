@@ -238,6 +238,9 @@ en:
         humanize_not_valid_upload_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid upload id."
         not_valid_upload_value: "must be a valid upload id"
 
+        humanize_not_valid_icon_value: "The property at JSON Pointer '%{property_json_pointer}' must be an icon name."
+        not_valid_icon_value: "must be an icon name"
+
         humanize_string_value_not_valid_min:
           one: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} character long."
           other: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} characters long."

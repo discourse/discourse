@@ -1410,5 +1410,42 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
     end
+
+    context "for icon properties" do
+      let(:schema) { { name: "section", properties: { icon_property: { type: "icon" } } } }
+
+      it "should not return any error messages when the value of the property is of type string" do
+        expect(
+          described_class.new(schema: schema, object: { icon_property: "heart" }).validate,
+        ).to eq({})
+      end
+
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            icon_property: {
+              type: "icon",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/icon_property"])
+        expect(errors["/icon_property"].full_messages).to contain_exactly("must be present")
+      end
+
+      it "should return the right hash of error messages when value of property is not of type icon" do
+        errors = described_class.new(schema: schema, object: { icon_property: 1 }).validate
+
+        expect(errors.keys).to eq(["/icon_property"])
+        expect(errors["/icon_property"].full_messages).to contain_exactly("must be an icon name")
+      end
+    end
   end
 end
