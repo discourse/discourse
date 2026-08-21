@@ -332,46 +332,11 @@
   }
 }
 
-.site-traffic-breakdown-modal {
-  @include viewport.until(md) {
-    .d-table {
-      table-layout: fixed;
-    }
-  }
-
-  &__dimension {
-    max-width: 0;
-    overflow: hidden;
-
-    .site-traffic-explorer__row-link {
-      display: block;
-    }
-
-    @include viewport.until(md) {
-      max-width: none;
-    }
-  }
-
-  &__dimension-content {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-width: 0;
-  }
-
-  &__pageviews {
-    width: 1%;
-    white-space: nowrap;
-    text-align: end;
-
-    @include viewport.until(md) {
-      width: auto;
-    }
-
-    .d-table__mobile-label {
-      text-align: start;
-    }
-  }
+// The global `label` rule in common/base/discourse.scss wins on specificity
+// over the block class, so these resets have to match it at element level.
+label.site-traffic-explorer__row {
+  margin-block: 0;
+  font-weight: inherit;
 }
 
 // Layout comes from .dropdown-menu; only the value truncation is ours, since

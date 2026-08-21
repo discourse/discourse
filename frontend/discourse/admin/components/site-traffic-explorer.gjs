@@ -220,7 +220,6 @@ export default class SiteTrafficExplorer extends Component {
       dimension,
       filter,
       label: i18n(`admin.site_traffic_explorer.dimensions.${dimension}`),
-      columnLabel: i18n(`admin.site_traffic_explorer.columns.${dimension}`),
     };
   }
 
