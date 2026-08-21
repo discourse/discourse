@@ -348,7 +348,6 @@ export default class SidebarSection extends Component {
         class={{dConcatClass
           "sidebar-section"
           "sidebar-section-wrapper"
-          (if @linkDropEnabled "is-link-drop-enabled")
           (if this.linkDropActive "is-link-drop-active")
           (if
             this.displaySectionContent

@@ -6282,7 +6282,7 @@ en:
         custom:
           add: "Add custom section"
           edit: "Edit custom section"
-          drop_to_create: "Drop to create a new section"
+          drop_to_add: "Drop here to add a new section"
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"

@@ -85,37 +85,49 @@ acceptance("Sidebar web link drop", function (needs) {
     );
   });
 
-  test("dropping a web link creates a prefilled custom section", async function (assert) {
+  test("dropping a web link on the revealed zone creates a prefilled custom section", async function (assert) {
     await visit("/");
 
     const dataTransfer = linkDataTransfer();
-    await externalDragOver("#d-sidebar", { dataTransfer });
+    const scroller = find(".sidebar-sections").getBoundingClientRect();
+    const coordinates = {
+      clientX: scroller.left + scroller.width / 2,
+      clientY: scroller.top + scroller.height / 2,
+    };
+
+    await externalDragOver("#d-sidebar", { dataTransfer, coordinates });
 
     assert
-      .dom(".sidebar-link-drop-target")
-      .exists("shows the new-section drop target");
+      .dom(".sidebar-custom-sections + .sidebar-link-drop-target")
+      .exists(
+        "dwelling over the sections reveals the drop zone where the new section would go, after the last custom section"
+      );
+    assert
+      .dom(".sidebar-link-drop-target.is-arming")
+      .doesNotExist("the zone has armed and can take the drop");
 
-    await triggerEvent("#d-sidebar", "dragleave", { dataTransfer });
+    await dragEvent("#d-sidebar", "dragleave", {
+      dataTransfer,
+      ...coordinates,
+    });
     assert
       .dom(".sidebar-link-drop-target")
-      .doesNotExist("clears the target after leaving the sidebar");
+      .doesNotExist("hides the zone when the drag leaves the sidebar");
 
-    await simulateExternalDrag("#d-sidebar", { dataTransfer });
+    await externalDragOver("#d-sidebar", { dataTransfer, coordinates });
+    await simulateExternalDrag(".sidebar-link-drop-target", { dataTransfer });
 
     assert
       .dom(".sidebar-section-form-modal")
       .exists("opens the custom section form");
     assert
+      .dom('input[name="section-name"]')
+      .isFocused(
+        "focuses the title, the one field the new section still needs"
+      );
+    assert
       .dom('input[name="link-name"]')
-      .hasValue("Useful link", "prefills the dragged link name")
-      .isFocused("focuses the proposed link name");
-    const nameInput = find('input[name="link-name"]');
-    assert.strictEqual(nameInput.selectionStart, 0, "selects from the start");
-    assert.strictEqual(
-      nameInput.selectionEnd,
-      nameInput.value.length,
-      "selects the full proposed name"
-    );
+      .hasValue("Useful link", "prefills the dragged link name");
     assert
       .dom('input[name="link-url"]')
       .hasValue("https://example.com/useful", "prefills the dragged link URL");
@@ -138,7 +150,9 @@ acceptance("Sidebar web link drop", function (needs) {
       );
     assert
       .dom(".sidebar-link-drop-target")
-      .doesNotExist("does not also advertise a new section");
+      .exists(
+        "the new-section zone is revealed too, but the hovered section claims the drop"
+      );
 
     await triggerEvent(section, "drop", { dataTransfer, clientY });
 
@@ -161,7 +175,33 @@ acceptance("Sidebar web link drop", function (needs) {
       );
     assert
       .dom(".sidebar-link-drop-target")
-      .doesNotExist("does not also create a new section");
+      .doesNotExist("the zone clears once the drag ends");
+  });
+
+  test("a drop on the sidebar background does not create a section", async function (assert) {
+    await visit("/");
+
+    const dataTransfer = linkDataTransfer();
+    const scroller = find(".sidebar-sections").getBoundingClientRect();
+    const coordinates = {
+      clientX: scroller.left + scroller.width / 2,
+      clientY: scroller.top + scroller.height / 2,
+    };
+
+    await externalDragOver("#d-sidebar", { dataTransfer, coordinates });
+    assert.dom(".sidebar-link-drop-target").exists("the zone is revealed");
+
+    // A real browser would not even fire this drop: the sidebar refuses with a
+    // "none" drop effect, so releasing over it cancels the drag. The synthetic
+    // drop proves that one arriving anyway lands on nothing that handles it.
+    await dragEvent("#d-sidebar", "drop", { dataTransfer, ...coordinates });
+
+    assert
+      .dom(".sidebar-section-form-modal")
+      .doesNotExist("no section form opens for a drop outside the zone");
+    assert
+      .dom(".sidebar-link-drop-target")
+      .doesNotExist("the zone clears once the drag ends");
   });
 
   test("scrolls the sections while a dragged link hovers the bottom edge", async function (assert) {
@@ -261,7 +301,9 @@ acceptance("Sidebar web link drop | public section, admin", function (needs) {
       );
     assert
       .dom(".sidebar-link-drop-target")
-      .doesNotExist("and is not offered a new section instead");
+      .exists(
+        "the new-section zone is revealed alongside, for a drop outside the section"
+      );
   });
 });
 
@@ -287,7 +329,7 @@ acceptance(
       assert
         .dom(".sidebar-link-drop-target")
         .exists(
-          "the sidebar claims it instead, offering a section of their own"
+          "the dwell still reveals the zone, offering a section of their own"
         );
     });
   }

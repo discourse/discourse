@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ApiPanels from "discourse/components/sidebar/api-panels";
 import Footer from "discourse/components/sidebar/footer";
@@ -11,36 +9,25 @@ import SwitchPanelButtons from "discourse/components/sidebar/switch-panel-button
 import bodyClass from "discourse/helpers/body-class";
 import { bind } from "discourse/lib/decorators";
 import {
-  extractDroppedWebLink,
   WEB_LINK_ADOPTION,
   WEB_LINK_KINDS,
   webLinkPayload,
 } from "discourse/lib/sidebar/link-drop";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
-/** Dropping a link here copies it into the sidebar; it does not move anything. */
-const copyDropEffect = () => "copy";
+/**
+ * Refuses the drop at the cursor, so releasing over the sidebar background
+ * cancels the drag instead of the browser navigating to the dropped URL.
+ */
+const suppressDropEffect = () => "none";
 
 export default class Sidebar extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
-  @service modal;
   @service sidebarState;
-
-  /**
-   * Whether a drop right now would create a new section.
-   *
-   * Driven by this element's own drop target rather than by global drag state,
-   * which is what makes it go quiet the moment a section underneath claims the
-   * drag: only the innermost target is told, so the offer to create a section
-   * withdraws exactly when the drop would go into an existing one instead.
-   */
-  @tracked linkDragActive = false;
 
   constructor() {
     super(...arguments);
@@ -64,34 +51,6 @@ export default class Sidebar extends Component {
 
   get #canAcceptLinkDrop() {
     return this.currentUser && this.sidebarState.showMainPanel;
-  }
-
-  /**
-   * A drag carrying only text may well turn out to hold nothing droppable, so
-   * the offer stays hidden until the drag declares a real URL.
-   */
-  @action
-  trackLinkDrag({ source }) {
-    this.linkDragActive = webLinkPayload(source).containsURLs();
-  }
-
-  @action
-  clearLinkDrag() {
-    this.linkDragActive = false;
-  }
-
-  @action
-  createSectionFromLink({ source }) {
-    this.clearLinkDrag();
-
-    const link = extractDroppedWebLink(webLinkPayload(source));
-    if (!link) {
-      return;
-    }
-
-    this.modal.show(SidebarSectionForm, {
-      model: { link, focusLinkIndex: 0 },
-    });
   }
 
   /**
@@ -148,34 +107,28 @@ export default class Sidebar extends Component {
   <template>
     {{bodyClass "has-sidebar-page"}}
 
+    {{! A drop suppressor, not a destination: dragging a link over the sidebar
+        is invited, so a drop that misses the real targets inside must cancel
+        with a no-drop cursor rather than take the browser default of
+        navigating to the dropped URL. No callbacks, so nothing can mistake it
+        for handling the drop. }}
     <nav
       {{dDragAndDropExternalTarget
         accepts=WEB_LINK_KINDS
         canDrop=this.canDropLink
-        getDropEffect=copyDropEffect
+        getDropEffect=suppressDropEffect
         indicator=false
-        onDragEnter=this.trackLinkDrag
-        onDrag=this.trackLinkDrag
-        onDragLeave=this.clearLinkDrag
-        onDrop=this.createSectionFromLink
       }}
-      {{! The same offer, for a link the browser started dragging from this page
-          rather than from outside the window. }}
+      {{! The same suppression, for a link the browser started dragging from
+          this page rather than from outside the window. }}
       {{dDragAndDropTarget
         adopts=WEB_LINK_ADOPTION
         canDrop=this.canDropLink
-        getDropEffect=copyDropEffect
+        getDropEffect=suppressDropEffect
         indicator=false
-        onDragEnter=this.trackLinkDrag
-        onDrag=this.trackLinkDrag
-        onDragLeave=this.clearLinkDrag
-        onDrop=this.createSectionFromLink
       }}
       id="d-sidebar"
-      class={{dConcatClass
-        "sidebar-container"
-        (if this.linkDragActive "is-link-drag-active")
-      }}
+      class="sidebar-container"
       aria-label={{i18n "sidebar.title"}}
     >
       {{#if this.showSwitchPanelButtonsOnTop}}
@@ -199,13 +152,6 @@ export default class Sidebar extends Component {
       {{/if}}
 
       <PluginOutlet @name="after-sidebar-sections" />
-
-      {{#if this.linkDragActive}}
-        <div class="sidebar-link-drop-target" aria-hidden="true">
-          {{dIcon "plus"}}
-          <span>{{i18n "sidebar.sections.custom.drop_to_create"}}</span>
-        </div>
-      {{/if}}
 
       {{#unless this.showSwitchPanelButtonsOnTop}}
         <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />

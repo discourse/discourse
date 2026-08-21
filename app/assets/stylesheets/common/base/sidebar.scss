@@ -68,21 +68,35 @@
 }
 
 .sidebar-link-drop-target {
-  position: absolute;
-  z-index: 1;
-  inset-inline: var(--space-2);
-  inset-block-end: calc(var(--d-sidebar-row-height) + var(--space-4));
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  margin-block: var(--space-1);
   padding: var(--space-3);
-  pointer-events: none;
   color: var(--token-color-text-default);
   background: var(--token-color-surface-selected);
-  border: 1px dashed var(--d-drag-indicator-color);
   border-radius: var(--d-border-radius);
   font-weight: var(--token-font-weight-semibold);
+  animation: sidebar-link-drop-target-reveal 0.15s ease-out;
+
+  /* Native drag hit-testing honors this, so while it applies the zone cannot
+     take a drop. */
+
+  &.is-arming {
+    pointer-events: none;
+  }
+
+  &.is-active {
+    outline: 2px solid var(--d-drag-indicator-color);
+    outline-offset: -2px;
+  }
+}
+
+@keyframes sidebar-link-drop-target-reveal {
+  from {
+    opacity: 0;
+  }
 }
 
 .sidebar-row {
@@ -122,17 +136,6 @@
     padding: 0;
     border-right: 1px solid var(--d-sidebar-border-color);
     overflow-x: hidden;
-
-    /* Marks the sections a link can land in, which is not every section: one
-       the user cannot edit refuses the drop and the sidebar claims it instead,
-       offering a new section. */
-
-    &.is-link-drag-active {
-      .sidebar-section.is-link-drop-enabled {
-        outline: 1px dashed var(--d-drag-indicator-color);
-        outline-offset: -1px;
-      }
-    }
 
     // allows sidebar to scroll to the bottom when the composer is open
     height: calc(100% - var(--composer-height, 0px));
