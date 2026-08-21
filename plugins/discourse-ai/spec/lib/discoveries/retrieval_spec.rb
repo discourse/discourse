@@ -24,6 +24,60 @@ describe DiscourseAi::Discoveries::Retrieval do
   end
 
   describe "#call" do
+    it "uses separate prepared queries for keyword and semantic retrieval" do
+      lexical_retriever = instance_spy(Proc, call: [source(post_1)])
+      semantic_retriever = instance_spy(Proc, call: [source(post_2)])
+
+      result =
+        described_class.new(user:, lexical_retriever:, semantic_retriever:).call(
+          "怎么删除具备管理员权限的幽灵机器人用户？",
+          keyword_query: "delete admin bot user",
+          semantic_query: "how to remove a bot account with administrator permissions",
+        )
+
+      expect(lexical_retriever).to have_received(:call).with("delete admin bot user")
+      expect(semantic_retriever).to have_received(:call).with(
+        "how to remove a bot account with administrator permissions",
+      )
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to contain_exactly(
+        topic_1.id,
+        topic_2.id,
+      )
+    end
+
+    it "starts keyword and semantic retrieval concurrently" do
+      started = Queue.new
+      release = Queue.new
+      retriever =
+        lambda do |_query|
+          started << true
+          release.pop
+          []
+        end
+      retrieval =
+        described_class.new(user:, lexical_retriever: retriever, semantic_retriever: retriever)
+
+      worker = Thread.new { retrieval.call("猫") }
+      Timeout.timeout(1) { 2.times { started.pop } }
+      2.times { release << true }
+
+      expect(worker.value.candidates).to eq([])
+    ensure
+      2.times { release << true } if release
+      worker&.join(1)
+    end
+
+    it "keeps results from one retrieval method when the other fails" do
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { raise "keyword unavailable" },
+          semantic_retriever: ->(_query) { [source(post_2)] },
+        ).call("猫")
+
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq([topic_2.id])
+    end
+
     it "fuses, permission-checks, and assigns request-owned source references" do
       lexical = [source(post_1), source(post_2), source(private_post)]
       semantic = [source(post_2), source(post_3), source(private_post)]
@@ -63,15 +117,17 @@ describe DiscourseAi::Discoveries::Retrieval do
     end
 
     it "does not broaden explicit search filters through semantic retrieval" do
+      lexical_retriever = instance_spy(Proc, call: [source(post_1)])
       semantic_retriever = instance_spy(Proc, call: [source(post_2)])
 
       result =
-        described_class.new(
-          user:,
-          lexical_retriever: ->(_query) { [source(post_1)] },
-          semantic_retriever:,
-        ).call("猫 category:#{category.slug}")
+        described_class.new(user:, lexical_retriever:, semantic_retriever:).call(
+          "猫 category:#{category.slug}",
+          keyword_query: "rewritten query without filter",
+          semantic_query: "rewritten semantic query",
+        )
 
+      expect(lexical_retriever).to have_received(:call).with("猫 category:#{category.slug}")
       expect(semantic_retriever).not_to have_received(:call)
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq([topic_1.id])
     end

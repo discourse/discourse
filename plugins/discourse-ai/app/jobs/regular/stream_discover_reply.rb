@@ -43,8 +43,19 @@ module Jobs
       end
       publish_update(user, base.merge(done: false, phase: "searching"))
 
+      rewritten_queries = rewrite_queries(user:, query:, cancel_manager:)
+      if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+        return
+      end
+      return if !active_request?(user, args[:request_id])
+
       retrieval = DiscourseAi::Discoveries::Retrieval.new(user:)
-      retrieval_result = retrieval.call(query)
+      retrieval_result =
+        retrieval.call(
+          query,
+          keyword_query: rewritten_queries.keyword_query,
+          semantic_query: rewritten_queries.semantic_query,
+        )
       if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
         return
       end
@@ -78,7 +89,7 @@ module Jobs
           discovery_title = update[:title].to_s.strip if update[:title].present?
 
           if update[:answerable] == true && update[:source_refs].present? &&
-               update[:answer].present?
+               DiscourseAi::Discoveries::Synthesis.meaningful_answer?(update[:answer])
             streamed_refs = Array(update[:source_refs]).first(preferences[:related_count])
             if selected_refs.present? && selected_refs != streamed_refs
               source_selection_invalid = true
@@ -102,7 +113,8 @@ module Jobs
           end
 
           next if source_selection_invalid || selected_sources.blank?
-          next if update[:answer].blank? || update[:answer] == last_published_answer
+          next if !DiscourseAi::Discoveries::Synthesis.meaningful_answer?(update[:answer])
+          next if update[:answer] == last_published_answer
 
           now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
           if last_published_answer.present? && !Rails.env.test? &&
@@ -135,7 +147,10 @@ module Jobs
         result.answerable && !source_selection_invalid && final_sources.present? &&
           (
             !preferences[:show_summary] ||
-              (selected_sources.present? && final_refs == selected_refs && result.answer.present?)
+              (
+                selected_sources.present? && final_refs == selected_refs &&
+                  DiscourseAi::Discoveries::Synthesis.meaningful_answer?(result.answer)
+              )
           )
 
       if answerable
@@ -236,6 +251,30 @@ module Jobs
     def configured_agent(user)
       agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_agent)
       agent if agent && user.in_any_groups?(agent.allowed_group_ids.to_a)
+    end
+
+    def rewrite_queries(user:, query:, cancel_manager:)
+      fallback =
+        DiscourseAi::Discoveries::QueryRewriter::Result.new(
+          keyword_query: query,
+          semantic_query: query,
+        )
+      return fallback if DiscourseAi::Discoveries.private_message_query?(query)
+      return fallback if DiscourseAi::Discoveries::Retrieval.explicit_filters?(query)
+
+      agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_query_rewrite_agent)
+      return fallback if agent.nil? || !agent.enabled?
+      return fallback if !user.in_any_groups?(agent.allowed_group_ids.to_a)
+
+      llm_model_id = agent.default_llm_id.presence || SiteSetting.ai_default_llm_model
+      return fallback if (llm_model = LlmModel.find_by(id: llm_model_id)).nil?
+
+      DiscourseAi::Discoveries::QueryRewriter.new(
+        user:,
+        ai_agent: agent,
+        llm_model:,
+        cancel_manager:,
+      ).call(query)
     end
 
     def active_request?(user, request_id)

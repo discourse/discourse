@@ -18,6 +18,7 @@ module DiscourseAi
       SOURCE_ONLY_RESPONSE_FORMAT = RESPONSE_FORMAT.first(2).freeze
       TITLELESS_SUMMARY_RESPONSE_FORMAT =
         RESPONSE_FORMAT.reject { |property| property["key"] == "title" }.freeze
+      PLACEHOLDER_ANSWERS = %w[true false null undefined none].freeze
 
       def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil)
         @user = user
@@ -82,15 +83,44 @@ module DiscourseAi
           yield values.deep_dup if block_given?
         end
 
-        Result.new(
-          answerable: values[:answerable] == true,
-          source_refs: Array(values[:source_refs]),
-          title: values[:title].to_s.strip,
-          answer: values[:answer].strip,
-        )
+        result =
+          Result.new(
+            answerable: values[:answerable] == true,
+            source_refs: Array(values[:source_refs]),
+            title: values[:title].to_s.strip,
+            answer: values[:answer].strip,
+          )
+        return empty_result if !result.answerable
+
+        valid_result?(result, candidates:, show_summary:, related_count:) ? result : empty_result
+      end
+
+      def self.meaningful_answer?(answer)
+        normalized = answer.to_s.squish.downcase
+        normalized.present? &&
+          PLACEHOLDER_ANSWERS.none? { |placeholder| placeholder.start_with?(normalized) } &&
+          normalized.match?(/[[:alnum:]]/)
       end
 
       private
+
+      def valid_result?(result, candidates:, show_summary:, related_count:)
+        return false if result.source_refs.empty?
+        return false if result.source_refs.uniq.length != result.source_refs.length
+        return false if result.source_refs.length > related_count
+
+        candidate_refs = candidates.pluck("source_ref")
+        if result.source_refs.any? { |source_ref| !candidate_refs.include?(source_ref) }
+          return false
+        end
+        return false if show_summary && !self.class.meaningful_answer?(result.answer)
+
+        true
+      end
+
+      def empty_result
+        Result.new(answerable: false, source_refs: [], title: "", answer: "")
+      end
 
       def synthesis_agent(show_summary:, show_title:, related_count:)
         response_format =

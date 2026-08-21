@@ -17,16 +17,21 @@ module DiscourseAi
         end
 
       def initialize(user:, lexical_retriever: nil, semantic_retriever: nil)
+        @user = user
         @guardian = Guardian.new(user)
         @lexical_retriever = lexical_retriever || method(:lexical_sources)
         @semantic_retriever = semantic_retriever || method(:semantic_sources)
       end
 
-      def call(query)
+      def call(query, keyword_query: query, semantic_query: query)
         return Result.new(candidates: []) if DiscourseAi::Discoveries.private_message_query?(query)
 
-        rankings = [@lexical_retriever.call(query)]
-        rankings << @semantic_retriever.call(query) if !explicit_filters?(query)
+        rankings =
+          if self.class.explicit_filters?(query)
+            [retrieve(@lexical_retriever, query)]
+          else
+            retrieve_in_parallel(keyword_query, semantic_query)
+          end
         candidates = reciprocal_rank_fusion(rankings)
         candidates = revalidate_and_limit(candidates)
         candidates =
@@ -35,6 +40,25 @@ module DiscourseAi
           end
 
         Result.new(candidates:)
+      end
+
+      def self.explicit_filters?(query)
+        query
+          .to_s
+          .scan(/(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/)
+          .filter_map { |word,| word.presence }
+          .any? do |word|
+            cleaned = word.delete("\"'")
+            direct_filter =
+              cleaned.match?(
+                /\A(?:[lr]|t|order:\w+|in:title|topic:\d+|in:all(?:-posts)?|include:(?:invisible|unlisted))\z/i,
+              )
+
+            direct_filter ||
+              Search.advanced_filters.values.any? do |options|
+                options[:enabled].call && cleaned.match?(options[:case_insensitive_matcher])
+              end
+          end
       end
 
       def validated_sources(result, source_refs)
@@ -57,7 +81,8 @@ module DiscourseAi
       private
 
       def lexical_sources(query)
-        results = ::Search.execute(query, search_type: :full_page, guardian: @guardian)
+        guardian = Guardian.new(@user)
+        results = ::Search.execute(query, search_type: :full_page, guardian:)
         return [] if results.nil?
 
         seen_topic_ids = Set.new
@@ -69,33 +94,54 @@ module DiscourseAi
             next if seen_topic_ids.include?(post.topic_id)
 
             seen_topic_ids << post.topic_id
-            source_from_post(post, excerpt: results.blurb(post, scope: @guardian))
+            source_from_post(post, excerpt: results.blurb(post, scope: guardian))
           end
           .first(CANDIDATE_LIMIT)
       end
 
-      def explicit_filters?(query)
-        query
-          .to_s
-          .scan(/(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/)
-          .filter_map { |word,| word.presence }
-          .any? do |word|
-            cleaned = word.delete("\"'")
-            direct_filter =
-              cleaned.match?(
-                /\A(?:[lr]|t|order:\w+|in:title|topic:\d+|in:all(?:-posts)?|include:(?:invisible|unlisted))\z/i,
-              )
-
-            direct_filter ||
-              Search.advanced_filters.values.any? do |options|
-                options[:enabled].call && cleaned.match?(options[:case_insensitive_matcher])
+      def retrieve_in_parallel(keyword_query, semantic_query)
+        database = RailsMultisite::ConnectionManagement.current_db
+        searches = [[@lexical_retriever, keyword_query], [@semantic_retriever, semantic_query]]
+        threads =
+          searches.map do |retriever, search_query|
+            Thread.new do
+              RailsMultisite::ConnectionManagement.with_connection(database) do
+                retrieve_with_error(retriever, search_query)
               end
+            end
           end
+        results = threads.map(&:value)
+        errors = results.filter_map(&:last)
+        raise errors.first if errors.length == searches.length
+
+        if errors.present?
+          Rails.logger.warn(
+            "Discourse AI Discoveries continued after one retrieval method failed: #{errors.first.class}",
+          )
+        end
+
+        results.map(&:first)
+      ensure
+        threads&.each { |thread| thread.join if thread.alive? }
+      end
+
+      def retrieve(retriever, query)
+        result, error = retrieve_with_error(retriever, query)
+        raise error if error
+
+        result
+      end
+
+      def retrieve_with_error(retriever, query)
+        [Array(retriever.call(query)), nil]
+      rescue StandardError => error
+        [[], error]
       end
 
       def semantic_sources(query)
+        guardian = Guardian.new(@user)
         DiscourseAi::Embeddings::SemanticSearch
-          .new(@guardian)
+          .new(guardian)
           .search_for_topics(query, 1, hyde: false)
           .includes(:topic)
           .to_a

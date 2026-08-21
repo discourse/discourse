@@ -77,6 +77,7 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
     );
     assert.deepEqual(groups[1].settings, [
       "ai_discover_agent",
+      "ai_discover_query_rewrite_agent",
       "ai_discover_follow_up_agent",
     ]);
     assert.deepEqual(groups[2].settings, ["ai_discover_allowed_groups"]);

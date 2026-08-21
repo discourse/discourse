@@ -227,13 +227,16 @@ RSpec.describe DiscourseAi::Configuration::Feature do
 
   describe ".search_features" do
     fab!(:follow_up_agent, :ai_agent)
+    fab!(:query_rewrite_agent, :ai_agent)
 
-    it "includes the discovery and follow-up agents" do
+    it "includes the discovery, query rewrite, and follow-up agents" do
       SiteSetting.ai_discover_agent = ai_agent.id
+      SiteSetting.ai_discover_query_rewrite_agent = query_rewrite_agent.id
       SiteSetting.ai_discover_follow_up_agent = follow_up_agent.id
 
       expect(described_class.search_features.first.agent_ids).to contain_exactly(
         ai_agent.id,
+        query_rewrite_agent.id,
         follow_up_agent.id,
       )
     end

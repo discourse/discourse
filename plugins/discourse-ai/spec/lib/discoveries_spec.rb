@@ -44,6 +44,12 @@ describe DiscourseAi::Discoveries do
       expect(described_class.enabled_for_user?(user)).to eq(false)
     end
 
+    it "does not require the optional query rewrite agent" do
+      SiteSetting.ai_discover_query_rewrite_agent = 99_999
+
+      expect(described_class.enabled_for_user?(user)).to eq(true)
+    end
+
     it "requires semantic search" do
       SiteSetting.ai_embeddings_semantic_search_enabled = false
 

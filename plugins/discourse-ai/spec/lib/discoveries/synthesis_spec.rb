@@ -184,6 +184,71 @@ describe DiscourseAi::Discoveries::Synthesis do
     expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
   end
 
+  it "rejects an answerable response with a placeholder answer" do
+    candidates = [
+      {
+        "source_ref" => "source_1",
+        "title" => "Create a Discourse plugin",
+        "excerpt" => "Start with the plugin skeleton.",
+      },
+    ]
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ answerable: true, source_refs: %w[source_1], title: "Plugin guide", answer: "true" }],
+      ) { synthesis.call(query: "how do I create a plugin", candidates:) }
+
+    expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
+  end
+
+  it "rejects source references outside the supplied candidates" do
+    candidates = [
+      {
+        "source_ref" => "source_1",
+        "title" => "Create a Discourse plugin",
+        "excerpt" => "Start with the plugin skeleton.",
+      },
+    ]
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [
+          {
+            answerable: true,
+            source_refs: %w[source_2],
+            title: "Plugin guide",
+            answer: "Use the plugin skeleton.",
+          },
+        ],
+      ) { synthesis.call(query: "how do I create a plugin", candidates:) }
+
+    expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
+  end
+
+  it "clears fields returned with an abstention" do
+    candidates = [
+      {
+        "source_ref" => "source_1",
+        "title" => "Create a Discourse plugin",
+        "excerpt" => "Start with the plugin skeleton.",
+      },
+    ]
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [
+          {
+            answerable: false,
+            source_refs: [],
+            title: "Unwanted title",
+            answer: "Adjacent advice",
+          },
+        ],
+      ) { synthesis.call(query: "how do I create a plugin", candidates:) }
+
+    expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
+  end
+
   it "keeps every streamed title fragment" do
     candidates = [
       {
