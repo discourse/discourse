@@ -33,7 +33,7 @@ class Config {
 }
 
 // Supplemental regression coverage for a review finding NOT pinned by the
-// decorrelated oracle (d-virtual-list-edges-test.gjs): a runtime change to
+// decorrelated oracle (edges-test.gjs): a runtime change to
 // @edgeThreshold must re-arm the edge latches. Kept in a separate file so the
 // oracle stays the untouched spec.
 module(
