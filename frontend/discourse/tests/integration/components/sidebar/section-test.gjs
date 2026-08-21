@@ -1,10 +1,17 @@
-import { click, find, render, triggerEvent } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Section from "discourse/components/sidebar/section";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   centerOf,
   dragEvent,
+  dragEventNow,
   externalDragOver,
   simulateExternalDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
@@ -342,42 +349,65 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
         );
     });
 
-    /**
-     * Dispatches one drag event and waits a single frame, deliberately without
-     * settling. The section opens on a runloop timer, and `settled()` runs
-     * pending timers out, so anything asserted through the usual helpers would
-     * be asserted against an already-open section. One frame is enough for the
-     * drag library's own batched callback to land.
-     */
-    async function dragEventBeforeItOpens(type, dataTransfer) {
-      find(".sidebar-section").dispatchEvent(
-        new DragEvent(type, {
-          bubbles: true,
-          cancelable: true,
-          dataTransfer,
-          ...centerOf(".sidebar-section"),
-          ...belowAllLinks(),
-        })
-      );
-      await new Promise((resolve) => requestAnimationFrame(resolve));
-    }
-
     test("appends rather than claiming the top while still closed", async function (assert) {
       let index = "not called";
       await renderCollapsed((_source, linkDropIndex) => {
         index = linkDropIndex;
       });
 
-      const dataTransfer = urlTransfer();
-      await dragEventBeforeItOpens("dragenter", dataTransfer);
-      await dragEventBeforeItOpens("dragover", dataTransfer);
-      await dragEventBeforeItOpens("drop", dataTransfer);
+      const aim = {
+        dataTransfer: urlTransfer(),
+        ...centerOf(".sidebar-section"),
+        ...belowAllLinks(),
+      };
+      // All in one task, so the dwell timer cannot open the section before
+      // the drop lands.
+      dragEventNow(".sidebar-section", "dragenter", aim);
+      dragEventNow(".sidebar-section", "dragover", aim);
+      dragEventNow(".sidebar-section", "drop", aim);
+      await settled();
 
       assert.strictEqual(
         index,
         undefined,
         "a section showing no rows has no position to report, so the link goes to the end rather than ahead of links the user cannot see"
       );
+    });
+
+    test("closes again when the link wanders off before dropping", async function (assert) {
+      await renderCollapsed();
+
+      const dataTransfer = urlTransfer();
+      await externalDragOver(".sidebar-section", { dataTransfer });
+      assert.dom(".sidebar-section-content").exists("the dwell opened it");
+
+      const { left, bottom } = find(".sidebar-section").getBoundingClientRect();
+      await dragEvent(document.body, "dragover", {
+        dataTransfer,
+        clientX: left,
+        clientY: bottom + 50,
+      });
+      await settled();
+
+      assert
+        .dom(".sidebar-section-content")
+        .doesNotExist(
+          "a drag that wanders off undoes the reveal, leaving the section as the user had it"
+        );
+    });
+
+    test("stays open after the link is dropped into it", async function (assert) {
+      const dropped = [];
+      await renderCollapsed((link) => dropped.push(link));
+
+      await simulateExternalDrag(".sidebar-section", {
+        dataTransfer: urlTransfer(),
+      });
+
+      assert.strictEqual(dropped.length, 1, "the drop landed");
+      assert
+        .dom(".sidebar-section-content")
+        .exists("the section keeps showing the link the user just dropped");
     });
   });
 });
