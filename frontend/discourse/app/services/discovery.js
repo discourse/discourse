@@ -37,6 +37,17 @@ export default class DiscoveryService extends Service {
     }
   }
 
+  /**
+   * True when the categories on screen are a single category's subcategories
+   * listed above its topics, rather than a full category listing.
+   */
+  get showingSubcategoryList() {
+    return (
+      !!this.category &&
+      this.router.currentRouteName !== "discovery.subcategories"
+    );
+  }
+
   get custom() {
     if (this.onDiscoveryRoute) {
       return this.router.currentRouteName === "discovery.custom";

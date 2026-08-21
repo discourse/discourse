@@ -1,7 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
+import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
+import categoryListSubcategories, {
+  hasGrandchildren,
+} from "discourse/helpers/category-list-subcategories";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
 const LIST_TYPE = {
@@ -11,6 +15,8 @@ const LIST_TYPE = {
 
 @tagName("")
 export default class CategoryListItem extends Component {
+  @service discovery;
+
   category = null;
   listType = LIST_TYPE.NORMAL;
 
@@ -41,6 +47,23 @@ export default class CategoryListItem extends Component {
   @computed("category.path")
   get slugPath() {
     return this.category?.path?.substring("/c/".length);
+  }
+
+  get surface() {
+    const isSubcategoryList =
+      this.isSubcategoryList ?? this.discovery.showingSubcategoryList;
+
+    return isSubcategoryList ? "subcategory_list" : undefined;
+  }
+
+  get displayedSubcategories() {
+    return categoryListSubcategories(this.category, { surface: this.surface });
+  }
+
+  get showsGrandchildren() {
+    return hasGrandchildren(this.displayedSubcategories, {
+      surface: this.surface,
+    });
   }
 
   applyValueTransformer(name, value, context) {
