@@ -308,10 +308,13 @@ class TopicsBulkAction
 
   def delete
     topics.each do |t|
-      if guardian.can_delete?(t)
-        post = t.ordered_posts.first
-        PostDestroyer.new(@user, post).destroy if post
-      end
+      next if !guardian.can_delete?(t)
+
+      post = t.ordered_posts.with_deleted.first
+      next if !post
+
+      PostDestroyer.new(@user, post).destroy
+      @changed_ids << t.id
     end
   end
 
