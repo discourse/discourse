@@ -129,6 +129,7 @@
     "@glimmer/component": "^2.0.0",
     "@rolldown/pluginutils": "1.0.1",
     "@rollup/plugin-babel": "^7.1.0",
+    "@tanstack/virtual-core": "3.17.5",
     "@types/jquery": "^3.5.33",
     "@types/picomatch": "^4.0.3",
     "@types/qunit": "^2.19.13",

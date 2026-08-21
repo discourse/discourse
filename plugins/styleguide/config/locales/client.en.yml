@@ -290,3 +290,5 @@ en:
           title: "Combo Button"
         segmented_control:
           title: "Segmented Control (Button toggle group)"
+        virtual_list:
+          title: "Virtual list"

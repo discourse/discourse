@@ -4,7 +4,16 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import type { ComponentLike } from "@glint/template";
 
 /** The tag names that have a dedicated, higher-performance shortcut wrapper. */
-type ShortcutTag = "div" | "span" | "form" | "a" | "button" | "td" | "aside";
+type ShortcutTag =
+  | "div"
+  | "span"
+  | "form"
+  | "a"
+  | "button"
+  | "td"
+  | "aside"
+  | "ul"
+  | "li";
 
 /**
  * A wrapper component for a single known tag, typed with the matching element so
@@ -46,7 +55,21 @@ const shortcuts: { [K in ShortcutTag]: ElementWrapper<K> } = {
   aside: <template>
     <aside ...attributes>{{yield}}</aside>
   </template>,
+  ul: <template>
+    <ul ...attributes>{{yield}}</ul>
+  </template>,
+  li: <template>
+    <li ...attributes>{{yield}}</li>
+  </template>,
 };
+
+/**
+ * Wrappers built for tags outside the shortcut table, kept so a given tag always
+ * resolves to the same component. A caller that picks its tag at runtime would
+ * otherwise get a new component identity on every call, and rendering it would
+ * tear down and rebuild the whole subtree instead of updating it.
+ */
+const fallbacks = new Map<string, unknown>();
 
 /**
  * Returns a wrapper component that renders the given tag name, or an empty
@@ -119,13 +142,20 @@ export default function dElement(
   } else if (shortcuts[tagName as ShortcutTag]) {
     wrapper = shortcuts[tagName as ShortcutTag];
   } else {
-    wrapper = <template>
-      {{! @glint-nocheck: @ember/component (ClassicComponent) is not glint-typed }}
-      <ClassicComponent
-        @tagName={{tagName}}
-        ...attributes
-      >{{yield}}</ClassicComponent>
-    </template>;
+    const cached = fallbacks.get(tagName);
+    if (cached) {
+      wrapper = cached;
+    } else {
+      const fallback = <template>
+        {{! @glint-nocheck: @ember/component (ClassicComponent) is not glint-typed }}
+        <ClassicComponent
+          @tagName={{tagName}}
+          ...attributes
+        >{{yield}}</ClassicComponent>
+      </template>;
+      fallbacks.set(tagName, fallback);
+      wrapper = fallback;
+    }
   }
 
   return wrapper as ComponentLike<{
