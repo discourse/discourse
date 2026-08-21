@@ -470,6 +470,7 @@ pl_PL:
         native_tool_unsupported_by_llm: "Wybrany domyślny program LLM nie obsługuje żadnego z włączonych narzędzi natywnych dostawcy"
         invalid_subagent_ids: "Identyfikatory podagentów muszą być listą liczb całkowitych"
         too_many_subagents: "Agent może mieć maksymalnie %{max} podagentów"
+        too_many_rag_document_sources: "Agent może mieć maksymalnie %{max} źródeł URL"
         subagent_self: "Agent nie może wybrać siebie jako podagenta"
         subagents_not_found: "Wybrane identyfikatory podagentów nie istnieją: %{ids}"
         subagent_tool_collision: "Agent z podagentami nie może skonfigurować narzędzia o nazwie spawn_agent"

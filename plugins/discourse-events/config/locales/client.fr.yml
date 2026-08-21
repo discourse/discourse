@@ -40,10 +40,6 @@ fr:
           load_error: "Vous avez quitté le webinaire ou nous ne parvenons pas à charger Zoom sur cette page."
           too_early: "Vous pourrez rejoindre le webinaire à l'approche de l'heure de début de l'événement."
           view_topic: "Afficher le sujet de l'événement"
-          not_started_retrying:
-            one: "Le webinaire n'a pas encore commencé. Nouvelle tentative de connexion dans %{count} seconde..."
-            other: "Le webinaire n'a pas encore commencé. Nouvelle tentative de connexion dans %{count} secondes..."
-          not_started_trying_again: "Nouvelle tentative de connexion au webinaire en cours..."
         chat:
           rsvp_to_event: "Confirmez votre participation à l'événement pour commencer à discuter"
           rsvp_to_event_with_link: "Confirmez votre participation à <a href='%{url}'>l'événement</a> pour commencer à discuter"

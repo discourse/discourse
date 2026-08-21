@@ -13,6 +13,9 @@ nl:
   js:
     styleguide:
       title: "Stijlgids"
+      example:
+        kind:
+          component: "Onderdeel"
       categories:
         syntax: Syntax
         atoms: Atomen
@@ -39,6 +42,8 @@ nl:
           title: "Kleuren"
         dialog:
           title: "Dialoog"
+        drag_and_drop:
+          locked: "Vergrendeld"
         icons:
           title: "Pictogrammen"
           full_list: "Zie de volledige lijst van Font Awesome-pictogrammen"

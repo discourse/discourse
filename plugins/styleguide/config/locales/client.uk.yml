@@ -18,6 +18,8 @@ uk:
         toggle_code: "Зразок коду для перемикання"
         try_this: "Спробуйте це:"
         code_region: "Фрагмент джерела: %{title}"
+        kind:
+          component: "Компонент"
       categories:
         syntax: Синтаксис
         atoms: Атоми
@@ -44,6 +46,8 @@ uk:
           title: "Кольори"
         dialog:
           title: "Діалог"
+        drag_and_drop:
+          locked: "Заблоковано"
         icons:
           title: "Іконки"
           full_list: "Перегляньте повний список значків Font Awesome"
