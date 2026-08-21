@@ -147,6 +147,8 @@ module DiscourseAi
 
           if SiteSetting.tagging_enabled
             tools << Tools::ListTags
+            tools << Tools::CreateTag
+            tools << Tools::EditTag
             tools << Tools::EditTags
           end
 

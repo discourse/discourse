@@ -27,6 +27,8 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
         DiscourseAi::Agents::Tools::CreateCategory,
         DiscourseAi::Agents::Tools::EditCategory,
         DiscourseAi::Agents::Tools::MoveTopic,
+        DiscourseAi::Agents::Tools::CreateTag,
+        DiscourseAi::Agents::Tools::EditTag,
         DiscourseAi::Agents::Tools::EditTags,
         DiscourseAi::Agents::Tools::MovePosts,
         DiscourseAi::Agents::Tools::SuspendUser,

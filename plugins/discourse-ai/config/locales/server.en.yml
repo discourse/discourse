@@ -709,6 +709,8 @@ en:
         delete_topic: "Delete topic"
         edit_post: "Edit post"
         edit_tags: "Edit tags"
+        create_tag: "Create tag"
+        edit_tag: "Edit tag"
         create_category: "Create category"
         edit_category: "Edit category"
         move_topic: "Move topic"
@@ -765,6 +767,8 @@ en:
         delete_topic: "Delete a topic"
         edit_post: "Edit the content of a post"
         edit_tags: "Edit the tags on a topic"
+        create_tag: "Create a new tag"
+        edit_tag: "Rename a tag or change its description"
         create_category: "Create a new category"
         edit_category: "Edit an existing category's name, description, or colors"
         move_topic: "Move a topic to a different category"
@@ -820,6 +824,8 @@ en:
         delete_topic: "Deleting topic %{topic_id} (deleted: %{deleted})"
         edit_post: "Editing post %{post_id}"
         edit_tags: "Editing tags on topic %{topic_id}: %{tags}"
+        create_tag: "Creating tag '%{name}'"
+        edit_tag: "Editing tag '%{name}'"
         create_category: "Creating category '%{name}'"
         edit_category: "Editing category %{category_id} (%{fields})"
         move_topic: "Moving topic %{topic_id} to category %{category_id}"
@@ -950,6 +956,24 @@ en:
           no_reason: "A reason is required to edit tags."
           tagging_disabled: "Tagging is not enabled on this site."
         success: "Tags updated successfully."
+
+      create_tag:
+        errors:
+          tagging_disabled: "Tagging is not enabled on this site."
+          no_name: "A name is required to create a tag."
+          already_exists: "A tag named '%{name}' already exists."
+          not_allowed: "You are not allowed to create tags."
+          no_reason: "A reason is required to create a tag."
+        success: "Tag '%{name}' created successfully."
+
+      edit_tag:
+        errors:
+          tagging_disabled: "Tagging is not enabled on this site."
+          not_found: "Tag not found."
+          not_allowed: "You are not allowed to edit this tag."
+          nothing_to_edit: "Either new_name or description must be provided."
+          no_reason: "A reason is required to edit a tag."
+        success: "Tag '%{name}' updated successfully."
 
       create_category:
         errors:

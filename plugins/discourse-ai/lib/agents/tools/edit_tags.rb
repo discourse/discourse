@@ -7,7 +7,8 @@ module DiscourseAi
         def self.signature
           {
             name: name,
-            description: "Adds tags to a topic. By default appends to existing tags.",
+            description:
+              "Adds, replaces, or removes tags on a topic. By default appends the given tags to the existing ones; with replace set, the given list becomes the topic's complete tag set and any omitted tag is removed.",
             parameters: [
               {
                 name: "topic_id",
@@ -17,7 +18,8 @@ module DiscourseAi
               },
               {
                 name: "tags",
-                description: "Array of tag names to add to the topic",
+                description:
+                  "Array of tag names to apply. In replace mode this is the topic's full resulting tag list",
                 type: "array",
                 item_type: "string",
                 required: true,
