@@ -51,6 +51,7 @@
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius-pill);
     background: var(--primary-very-low);
+    font-size: var(--font-down-1-rem);
 
     &.is-pending {
       border-color: var(--tertiary);
@@ -70,7 +71,6 @@
       padding: 0;
       background: transparent;
       color: inherit;
-      font-size: var(--font-down-1-rem);
 
       &:hover,
       &.-expanded {
@@ -102,6 +102,13 @@
 
   &__filter-pill-values {
     @include ellipsis;
+    display: inline-flex;
+
+    strong {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   &__partial-warning {
