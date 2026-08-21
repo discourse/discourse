@@ -327,14 +327,8 @@ export default class SiteTrafficExplorer extends Component {
           {{#if @traffic}}
 
             {{#if @hasPageviews}}
-              <div
-                class="db-section__wrapper --column site-traffic-explorer"
-                hidden={{@loading}}
-              >
+              <div class="db-section__wrapper --column" hidden={{@loading}}>
                 <section class="db-section__subheader">
-                  <h2 id="site-traffic-explorer-metrics" class="sr-only">
-                    {{i18n "admin.site_traffic_explorer.summary"}}
-                  </h2>
 
                   <div class="db-section__metrics">
                     <SiteTrafficExplorerMetric
@@ -343,7 +337,6 @@ export default class SiteTrafficExplorer extends Component {
                       @tooltip={{this.primaryMetric.tooltip}}
                       @value={{this.primaryMetric.value}}
                       @compact={{this.primaryMetric.compact}}
-                      @primary={{true}}
                     />
                     {{#each this.secondaryMetrics as |metric|}}
                       <SiteTrafficExplorerMetric

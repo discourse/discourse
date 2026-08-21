@@ -19,7 +19,10 @@ export default <template>
           class="db-section__info"
           @identifier={{concat "site-traffic-explorer-" @name "-tooltip"}}
           @icon="far-circle-question"
-          @title={{i18n "admin.site_traffic_explorer.metric_information"}}
+          aria-label={{i18n
+            "admin.site_traffic_explorer.metric_information"
+            metric=@label
+          }}
         >
           <:content>{{@tooltip}}</:content>
         </DTooltip>

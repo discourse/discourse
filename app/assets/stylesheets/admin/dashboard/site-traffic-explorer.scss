@@ -309,23 +309,6 @@
     padding-block: var(--space-3);
     color: var(--primary-medium);
   }
-
-  @include viewport.until(md) {
-    &__cards {
-      flex-direction: column;
-    }
-
-    &__card:not(:last-child) {
-      border-right: 0;
-      border-bottom: 1px solid var(--content-border-color);
-    }
-  }
-
-  @include viewport.until(sm) {
-    &__chart {
-      height: 18rem;
-    }
-  }
 }
 
 // The global `label` rule in common/base/discourse.scss wins on specificity

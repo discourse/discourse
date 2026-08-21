@@ -7264,10 +7264,9 @@ en:
           timeout: "This traffic query took too long. Choose a shorter date range and try again."
           unexpected: "Couldn't load site traffic. Try again."
         empty: "No matching pageviews"
-        summary: "Traffic summary"
         traffic_over_time: "Traffic over time"
         pageviews: "Pageviews"
-        metric_information: "About this metric"
+        metric_information: "About %{metric}"
         active_filters: "Active traffic filters"
         filtering_to:
           traffic_type:
