@@ -214,7 +214,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_delete_all_posts_and_topics
-    object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    scope.can_delete_all_posts_and_topics?
   end
 
   def can_upload_avatar
