@@ -58,6 +58,8 @@ const ResetButton = <template>
  *                                              For multiple dropdowns: receives (key, value)
  * @param {Function} [onDropdownChange] - Callback for dropdown selection changes
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
+ * @param {Function} [onFilterDropdownsToggle] - Callback fired when the dropdown drawer is opened or
+ *                                               closed, receiving the new expanded state as a boolean
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
  * @param {Boolean} [showCustomEmptyState] - Whether to show a custom empty state when no results found,
  *                                           if minItemsForFilter is set and the array is empty
@@ -457,6 +459,7 @@ export default class DFilterControls extends Component {
   @action
   toggleFilters() {
     this.showFilterDropdowns = !this.showFilterDropdowns;
+    this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
   }
 
   <template>

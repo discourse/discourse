@@ -3,29 +3,32 @@
 .ai-logs {
   padding: var(--space-4);
 
+  &__table-wrap {
+    position: relative;
+  }
+
   &__filters {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
     margin-bottom: var(--space-4);
 
-    .d-filter-controls {
-      align-self: stretch;
-      margin-block: 0;
+    &.ai-logs__filters--active-hidden .d-filter-controls__toggle-filters {
+      --d-button-default-icon-color: var(--tertiary);
+      --d-button-default-icon-color--hover: var(--tertiary-hover);
     }
 
     .d-filter-controls__dropdowns {
       grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
     }
+
+    .d-filter-controls:not(:has(.d-filter-controls__dropdowns))
+      .ai-logs__specialized-filters {
+      display: none;
+    }
   }
 
-  &__filter-panel {
-    align-self: stretch;
+  &__time-filters {
     display: flex;
-    flex-direction: column;
     gap: var(--space-2);
-    padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
+    justify-content: space-between;
   }
 
   &__periods,
@@ -36,65 +39,43 @@
     gap: var(--space-2);
   }
 
-  &__specialized-filters {
-    display: grid;
-    grid-template-columns: minmax(15rem, 1fr) repeat(2, auto);
-    align-items: end;
-    gap: var(--space-2);
+  &__periods {
+    width: 100%;
 
-    > * {
-      min-width: 0;
+    > button:last-of-type {
+      margin-right: auto;
     }
   }
 
-  &__user-filter .select-kit {
-    width: 100%;
-    max-width: var(--form-kit-medium-input);
+  .d-date-time-input-range {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+
+    .from,
+    .to {
+      margin: 0;
+    }
   }
 
-  &__toggle {
-    align-self: end;
-    padding-bottom: var(--space-2);
-  }
-
-  &__id-filter {
+  &__specialized-filters {
     display: flex;
     flex-wrap: wrap;
     align-items: end;
     gap: var(--space-2);
 
-    > .form-kit__field {
-      min-width: min(10rem, 100%);
+    // DToggleSwitch forwards attributes to its inner button, so the wrapper it
+    // renders is the flex item that needs aligning
+    .d-toggle-switch {
+      align-self: end;
+      padding-block-end: var(--space-1);
     }
   }
 
   @include viewport.until(sm) {
     &__specialized-filters {
-      grid-template-columns: 1fr;
-    }
-
-    &__user-filter .select-kit {
-      max-width: 100%;
-    }
-  }
-
-  &__table-wrapper {
-    border-block: 1px solid var(--content-border-color);
-  }
-
-  &__table {
-    width: 100%;
-    table-layout: fixed;
-
-    th,
-    td {
-      vertical-align: middle;
-    }
-
-    th {
-      color: var(--primary-high);
-      font-size: var(--font-down-1);
-      font-weight: 600;
+      align-items: stretch;
+      flex-direction: column;
     }
   }
 
@@ -112,26 +93,16 @@
     }
   }
 
-  &__col-time {
-    width: 6rem;
-  }
-
-  td.ai-logs__col-time {
+  .ai-logs__col-time {
     color: var(--primary-high);
     white-space: nowrap;
   }
 
   &__col-outcome {
-    width: 5rem;
     text-align: center;
   }
 
-  &__col-user {
-    width: 10rem;
-  }
-
   &__col-duration {
-    width: 10rem;
     text-align: end;
     font-variant-numeric: tabular-nums;
   }
@@ -164,10 +135,6 @@
   &__col-actions {
     width: 3rem;
     text-align: end;
-
-    .btn-flat {
-      color: var(--primary-high);
-    }
   }
 
   &__model,
@@ -181,24 +148,20 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
     gap: var(--space-1);
+
+    @include viewport.from(md) {
+      justify-content: center;
+    }
   }
 
-  &__status-dot {
-    display: inline-block;
-    width: 0.65rem;
-    height: 0.65rem;
-    flex: 0 0 0.65rem;
-    border-radius: 50%;
-    cursor: help;
-
+  &__status-icon {
     &.--success {
-      background: var(--success);
+      color: var(--success);
     }
 
     &.--failed {
-      background: var(--danger);
+      color: var(--danger);
     }
   }
 
@@ -250,44 +213,20 @@
     text-align: center;
   }
 
-  @include viewport.until(xl) {
-    &__col-context {
-      display: none;
-    }
-  }
-
   @include viewport.until(lg) {
     padding: var(--space-2);
 
-    &__col-outcome {
-      width: 4rem;
-    }
-
-    &__col-user {
-      width: 7.5rem;
-    }
-
-    &__col-duration {
-      width: 9.5rem;
-    }
-
-    &__model {
-      display: none;
-    }
-  }
-
-  @include viewport.until(lg) {
-    &__table {
+    .d-table {
       display: block;
       margin-bottom: 0;
       table-layout: auto;
 
-      thead,
-      tbody {
+      .d-table__header,
+      .d-table__body {
         display: block;
       }
 
-      thead {
+      .d-table__header {
         position: absolute;
         width: 1px;
         height: 1px;
@@ -308,42 +247,51 @@
       align-items: center;
       padding-block: var(--space-1);
 
-      > .d-table__cell {
+      .d-table__cell {
         width: auto;
         padding: var(--space-1) var(--space-2);
         border-top: 0;
       }
 
-      > .ai-logs__col-time {
+      .ai-logs__col-time {
         grid-area: time;
       }
 
-      > .ai-logs__col-outcome {
+      .ai-logs__col-outcome {
         grid-area: outcome;
       }
 
-      > .ai-logs__col-request {
+      .ai-logs__col-request {
         grid-area: request;
       }
 
-      > .ai-logs__col-user {
+      .ai-logs__col-user {
         grid-area: user;
         min-width: 0;
+        display: flex;
       }
 
-      > .ai-logs__col-duration {
+      .ai-logs__col-duration {
         grid-area: duration;
         text-align: end;
       }
 
-      > .ai-logs__col-actions {
+      .ai-logs__col-actions {
         position: static;
         grid-area: actions;
+      }
+
+      .ai-logs__col-context {
+        grid-column: 1 / -1;
       }
     }
 
     &__status-cell {
       justify-content: start;
+    }
+
+    &__model {
+      display: none;
     }
   }
 }
@@ -409,7 +357,7 @@
   }
 
   &__error {
-    padding: var(--space-6);
+    margin: var(--space-6);
     text-align: center;
   }
 }

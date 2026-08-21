@@ -22,7 +22,14 @@ module PageObjects
       end
 
       def clear_filters
-        find(".ai-logs__clear").click
+        find(".d-filter-controls__reset").click
+        self
+      end
+
+      def search(value)
+        find("input[placeholder='#{I18n.t("js.discourse_ai.logs.search_placeholder")}']").fill_in(
+          with: value,
+        )
         self
       end
 

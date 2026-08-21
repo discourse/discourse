@@ -81,24 +81,157 @@ RSpec.describe "AI logs admin page" do
     ai_logs_page.select_feature("other-feature")
     expect(ai_logs_page).to have_no_log(log)
 
-    find("input[placeholder='#{I18n.t("js.discourse_ai.logs.id_placeholder")}']").fill_in(
-      with: log.id,
-    )
-    find(".ai-logs__id-filter .btn", text: I18n.t("js.discourse_ai.logs.find")).click
+    # an ID search narrows within the active filters instead of bypassing them
+    ai_logs_page.search(log.id)
+    expect(ai_logs_page).to have_no_log(log)
+
+    ai_logs_page.select_feature(I18n.t("js.discourse_ai.logs.all_features"))
     expect(ai_logs_page).to have_log(log)
   end
 
-  it "keeps focus in the ID input while typing" do
+  it "searches logs by username and typed ID prefixes" do
+    topic_log = Fabricate(:ai_api_audit_log, topic_id: 424_242)
+    user_log = Fabricate(:ai_api_audit_log, user: admin)
+
     ai_logs_page.visit
 
-    id_input = find("input[placeholder='#{I18n.t("js.discourse_ai.logs.id_placeholder")}']")
-    id_input.click
-    "123".each_char { |character| id_input.send_keys(character) }
+    ai_logs_page.search(log.id)
+    expect(ai_logs_page).to have_log(log)
+    expect(ai_logs_page).to have_no_log(topic_log)
 
-    expect(id_input.value).to eq("123")
+    ai_logs_page.search("topic:#{topic_log.topic_id}")
+    expect(ai_logs_page).to have_log(topic_log)
+    expect(ai_logs_page).to have_no_log(log)
+
+    ai_logs_page.search(admin.username)
+    expect(ai_logs_page).to have_log(user_log)
+    expect(ai_logs_page).to have_no_log(log)
+
+    combined_log = Fabricate(:ai_api_audit_log, user: admin, topic_id: 555_555)
+    ai_logs_page.search("#{admin.username} topic:555555")
+    expect(ai_logs_page).to have_log(combined_log)
+    expect(ai_logs_page).to have_no_log(user_log)
+    expect(ai_logs_page).to have_no_log(topic_log)
+    expect(ai_logs_page).to have_no_log(log)
+    expect(page).to have_current_path(/search=.*%20topic%3A555555/, url: true)
+
+    # numeric token combined with a username token
+    ai_logs_page.search("#{admin.username} 555555")
+    expect(ai_logs_page).to have_log(combined_log)
+    expect(ai_logs_page).to have_no_log(user_log)
+    expect(ai_logs_page).to have_no_log(topic_log)
+    expect(ai_logs_page).to have_no_log(log)
+  end
+
+  it "suggests and inserts a user picked from an @-prefixed search" do
+    user_log = Fabricate(:ai_api_audit_log, user: admin)
+
+    ai_logs_page.visit
+
+    search_input = find("input[placeholder='#{I18n.t("js.discourse_ai.logs.search_placeholder")}']")
+    search_input.click
+    "@#{admin.username}".each_char { |char| search_input.send_keys(char) }
+
+    within(".autocomplete.ac-user") { find(".username", text: admin.username).click }
+
+    expect(page).to have_current_path(/search=%40#{Regexp.escape(admin.username)}/, url: true)
+    expect(page.evaluate_script("document.activeElement.value")).to eq("@#{admin.username} ")
+    expect(ai_logs_page).to have_log(user_log)
+    expect(ai_logs_page).to have_no_log(log)
+  end
+
+  it "closes the user picker once a space ends the @username" do
+    ai_logs_page.visit
+
+    search_input = find("input[placeholder='#{I18n.t("js.discourse_ai.logs.search_placeholder")}']")
+    search_input.click
+    "@#{admin.username}".each_char { |char| search_input.send_keys(char) }
+    expect(page).to have_css(".autocomplete.ac-user .username")
+
+    search_input.send_keys(" ")
+    expect(page).to have_no_css(".autocomplete.ac-user")
+
+    # the mention context is gone, so the next search token must not reopen it
+    search_input.send_keys("topic:")
+    expect(page).to have_no_css(".autocomplete.ac-user")
+  end
+
+  it "keeps focus in the search box while typing and searching live" do
+    ai_logs_page.visit
+
+    search_input = find("input[placeholder='#{I18n.t("js.discourse_ai.logs.search_placeholder")}']")
+    search_input.click
+    "123".each_char { |character| search_input.send_keys(character) }
+
+    expect(search_input.value).to eq("123")
     expect(page.evaluate_script("document.activeElement.placeholder")).to eq(
-      I18n.t("js.discourse_ai.logs.id_placeholder"),
+      I18n.t("js.discourse_ai.logs.search_placeholder"),
     )
+
+    # the debounced search fires and the URL updates; focus must stay in the box
+    expect(page).to have_current_path(/search=123/, url: true)
+    expect(page.evaluate_script("document.activeElement.placeholder")).to eq(
+      I18n.t("js.discourse_ai.logs.search_placeholder"),
+    )
+    expect(page.evaluate_script("document.activeElement.value")).to eq("123")
+  end
+
+  it "remembers whether the filter drawer is collapsed across reloads" do
+    ai_logs_page.visit
+    expect(ai_logs_page).to have_log(log)
+    expect(ai_logs_page).to have_expanded_filter_dropdowns
+
+    find(".d-filter-controls__toggle-filters").click
+    expect(page).to have_no_css(".ai-logs .d-filter-controls__dropdown")
+
+    page.refresh
+    expect(page).to have_css(".ai-logs .d-filter-controls__toggle-filters")
+    expect(page).to have_no_css(".ai-logs .d-filter-controls__dropdown")
+
+    find(".d-filter-controls__toggle-filters").click
+    expect(page).to have_css(".ai-logs .d-filter-controls__dropdown", count: 3)
+  end
+
+  it "flags active filters hiding behind a collapsed drawer" do
+    ai_logs_page.visit
+    unless ai_logs_page.has_expanded_filter_dropdowns?
+      find(".d-filter-controls__toggle-filters").click
+    end
+
+    ai_logs_page.select_model(llm_model.display_name)
+    expect(page).to have_no_css(".ai-logs__filters--active-hidden")
+
+    find(".d-filter-controls__toggle-filters").click
+    expect(page).to have_no_css(".ai-logs .d-filter-controls__dropdown")
+    expect(page).to have_css(".ai-logs__filters--active-hidden")
+
+    colors = page.evaluate_script(<<~JS)
+      (() => {
+        const icon = document.querySelector(
+          ".ai-logs .d-filter-controls__toggle-filters .d-icon"
+        );
+        const probe = (color) => {
+          const el = document.createElement("span");
+          el.style.color = `var(${color})`;
+          document.body.appendChild(el);
+          const result = getComputedStyle(el).color;
+          el.remove();
+          return result;
+        };
+        return {
+          icon: getComputedStyle(icon).color,
+          tertiary: probe("--tertiary"),
+          tertiaryHover: probe("--tertiary-hover"),
+        };
+      })()
+    JS
+    # the pointer may linger on the just-clicked toggle, so the icon can show
+    # the hover variant; either state proves the custom property is overridden
+    expect([colors["tertiary"], colors["tertiaryHover"]]).to include(colors["icon"])
+
+    find(".d-filter-controls__toggle-filters").click
+    expect(page).to have_css(".ai-logs .d-filter-controls__dropdown", count: 3)
+    expect(page).to have_no_css(".ai-logs__filters--active-hidden")
   end
 
   it "restores model and period filters from the URL" do
@@ -146,24 +279,24 @@ RSpec.describe "AI logs admin page" do
 
     ai_logs_page.clear_filters
     expect(page).to have_current_path(%r{/ai-logs$}, url: true)
-    expect(page).to have_css(".d-filter-controls__dropdown--outcome:focus")
+    expect(page).to have_css(".d-filter-controls__input:focus")
     expect(ai_logs_page).to have_log(log)
 
-    click_button I18n.t("js.discourse_ai.logs.periods.day")
+    ai_logs_page.select_model(llm_model.display_name)
+    ai_logs_page.search(log.id)
     ai_logs_page.clear_filters
     expect(page).to have_current_path(%r{/ai-logs$}, url: true)
+    expect(page).to have_css(".d-filter-controls__input:focus")
+    expect(ai_logs_page).to have_log(log)
   end
 
   it "lets an admin inspect a raw log and open retention configuration" do
     ai_logs_page.visit
     expect(ai_logs_page).to have_log(log)
-    expect(page).to have_no_css(".d-filter-controls__input")
-    expect(page).to have_no_css(".d-filter-controls__toggle-filters")
+    expect(page).to have_css(".d-filter-controls__input")
+    expect(page).to have_css(".d-filter-controls__toggle-filters")
     expect(page).to have_no_css(".d-filter-controls__reset")
-    expect(page).to have_css(
-      ".ai-logs__filter-panel",
-      text: I18n.t("js.discourse_ai.logs.filters.title"),
-    )
+    expect(page).to have_css(".ai-logs__filters")
     expect(ai_logs_page).to have_expanded_filter_dropdowns
     expect(page).to have_no_css(".ai-logs__retention")
     expect(page).to have_button(I18n.t("js.discourse_ai.logs.retention.configure"))
