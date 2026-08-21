@@ -205,6 +205,7 @@ export default class SectionLink extends Component {
             href={{@href}}
             rel="noopener noreferrer"
             target={{this.target}}
+            draggable={{if @nativeDragDisabled false true}}
             title={{@title}}
             data-link-name={{@linkName}}
             class={{this.linkClass}}
@@ -273,6 +274,7 @@ export default class SectionLink extends Component {
             @query={{or @query (hash)}}
             @models={{this.models}}
             @current-when={{and (not @exactUrlMatch) @currentWhen}}
+            draggable={{if @nativeDragDisabled false true}}
             title={{@title}}
             data-link-name={{@linkName}}
             class={{this.linkClass}}
