@@ -48,6 +48,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
   test("actions all topics can perform", async function (assert) {
     this.currentUser.admin = true;
+    this.site.set("can_tag_topics", true);
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
     await render(
@@ -114,6 +115,23 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
   test("does not allow tagging actions if tagging_enabled is false", async function (assert) {
     this.currentUser.admin = true;
     this.siteSettings.tagging_enabled = false;
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{this.bulkSelectHelper}} />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .manage-tags")
+      .doesNotExist();
+  });
+
+  test("does not allow tagging actions if the user cannot tag topics", async function (assert) {
+    this.currentUser.admin = true;
+    this.site.set("can_tag_topics", false);
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
     await render(
