@@ -225,7 +225,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   get scrollareaHeight() {
     const composerHeight = this.composer.isPreviewVisible
-        ? document.getElementById("reply-control").offsetHeight || 0
+        ? document.getElementById("reply-control")?.offsetHeight || 0
         : 0,
       headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
 
