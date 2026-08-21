@@ -68,6 +68,32 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
     ).to have_been_made.once
   end
 
+  it "requests and preserves Markdown content" do
+    url = "https://example.com/docs.md"
+    markdown = <<~MARKDOWN
+      # Installation
+
+      Run `bundle install`, then:
+
+      - Configure the service
+      - Restart the process
+    MARKDOWN
+    stub_request(:get, url).to_return(
+      status: 200,
+      headers: {
+        "Content-Type" => "text/markdown; charset=utf-8",
+      },
+      body: markdown,
+    )
+
+    result = described_class.fetch(url: url)
+
+    expect(result).to include(not_modified: false, url: url, text: markdown)
+    expect(
+      a_request(:get, url).with(headers: { "Accept" => "text/markdown, */*" }),
+    ).to have_been_made.once
+  end
+
   it "follows redirects without an additional discovery request" do
     original_url = "https://example.com/docs"
     redirected_url = "https://docs.example.com/guide"

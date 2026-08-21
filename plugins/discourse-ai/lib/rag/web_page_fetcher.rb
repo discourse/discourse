@@ -5,7 +5,8 @@ module DiscourseAi
     class WebPageFetcher
       MAX_RESPONSE_BODY_LENGTH = 5.megabytes
       MAX_REDIRECTS = 5
-      SUPPORTED_CONTENT_TYPES = %w[text/html application/xhtml+xml text/plain].freeze
+      ACCEPT_HEADER = "text/markdown, */*"
+      SUPPORTED_CONTENT_TYPES = %w[text/html application/xhtml+xml text/plain text/markdown].freeze
       READABILITY_OPTIONS = {
         tags: %w[div p code pre h1 h2 h3 h4 h5 h6 ul li ol blockquote table thead tbody tr th td],
         remove_empty_nodes: true,
@@ -48,7 +49,7 @@ module DiscourseAi
       private
 
       def request_headers
-        {}.tap do |headers|
+        { "Accept" => ACCEPT_HEADER }.tap do |headers|
           headers["If-None-Match"] = @etag if @etag.present?
           headers["If-Modified-Since"] = @last_modified if @last_modified.present?
         end
@@ -119,7 +120,7 @@ module DiscourseAi
         end
 
         body = response[:body]
-        text = content_type == "text/plain" ? body : extract_html(body)
+        text = content_type.in?(%w[text/plain text/markdown]) ? body : extract_html(body)
         raise FetchError, "The page did not contain readable text" if text.blank?
 
         {
