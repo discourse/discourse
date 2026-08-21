@@ -43,7 +43,6 @@ module DiscourseVips
       red, green, blue = validate_background_color(background_color)
       options = {
         output: output_path,
-        size: 360,
         red:,
         green:,
         blue:,

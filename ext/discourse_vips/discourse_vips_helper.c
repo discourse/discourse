@@ -131,20 +131,13 @@ static int command_version(void) {
 
 static int command_letter_avatar(options_t *options) {
   const char *output = required_option(options, "output");
-  const char *markup = option(options, "markup");
+  const char *markup = required_option(options, "markup");
   const char *font = required_option(options, "font");
-  const char *fontfile = option(options, "fontfile");
-  int size = integer_option(options, "size", 0);
+  const char *fontfile = required_option(options, "fontfile");
   int red = integer_option(options, "red", -1);
   int green = integer_option(options, "green", -1);
   int blue = integer_option(options, "blue", -1);
-  markup = markup ? markup : "";
-  fontfile = fontfile ? fontfile : "";
 
-  if (size < 1 || size > 4096) {
-    report_error("size must be 1..4096");
-    return 1;
-  }
   if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 ||
       blue > 255) {
     report_error("background channels must be 0..255");
@@ -165,14 +158,11 @@ static int command_letter_avatar(options_t *options) {
   VipsArrayDouble *flattened_background =
       vips_array_double_new(flattened_background_values, 3);
 
-  int result = fontfile[0] == '\0'
-                   ? vips_text(&text, markup, "font", font, "dpi", 72, "rgba",
-                               TRUE, NULL)
-                   : vips_text(&text, markup, "font", font, "dpi", 72,
-                               "fontfile", fontfile, "rgba", TRUE, NULL);
+  int result = vips_text(&text, markup, "font", font, "dpi", 72, "fontfile",
+                         fontfile, "rgba", TRUE, NULL);
   if (result == 0) {
-    result = vips_gravity(text, &canvas, VIPS_COMPASS_DIRECTION_CENTRE, size,
-                          size, "extend", VIPS_EXTEND_BACKGROUND, "background",
+    result = vips_gravity(text, &canvas, VIPS_COMPASS_DIRECTION_CENTRE, 360,
+                          360, "extend", VIPS_EXTEND_BACKGROUND, "background",
                           canvas_background, NULL);
   }
   if (result == 0) {
