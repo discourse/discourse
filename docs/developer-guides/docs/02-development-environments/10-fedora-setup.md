@@ -74,7 +74,6 @@ cd ~/discourse
 
 ```sh
 bundle install
-bin/rake discourse_vips:compile
 pnpm install
 ```
 

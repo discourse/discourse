@@ -82,7 +82,6 @@ Install the needed gems
 sudo apt install build-essential pkg-config libvips-dev
 source ~/.bashrc
 bundle install
-bin/rake discourse_vips:compile
 ```
 
 The native helper requires libvips 8.13 or newer. Ubuntu 22.04's package is too
