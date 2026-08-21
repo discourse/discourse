@@ -38,6 +38,8 @@ module Jobs
             chunk_tokens:,
             overlap_tokens:,
           ) do |chunk, metadata|
+            next if chunk.blank?
+
             fragment_ids << RagDocumentFragment.create!(
               target:,
               fragment: chunk,

@@ -5,7 +5,8 @@ module DiscourseAi
     class WebPageFetcher
       MAX_RESPONSE_BODY_LENGTH = 5.megabytes
       MAX_REDIRECTS = 5
-      SUPPORTED_CONTENT_TYPES = %w[text/html application/xhtml+xml text/plain].freeze
+      ACCEPT_HEADER = "text/markdown, */*"
+      SUPPORTED_CONTENT_TYPES = %w[text/html application/xhtml+xml text/plain text/markdown].freeze
 
       FetchError = Class.new(StandardError)
 
@@ -44,7 +45,7 @@ module DiscourseAi
       private
 
       def request_headers
-        {}.tap do |headers|
+        { "Accept" => ACCEPT_HEADER }.tap do |headers|
           headers["If-None-Match"] = @etag if @etag.present?
           headers["If-Modified-Since"] = @last_modified if @last_modified.present?
         end
@@ -115,7 +116,7 @@ module DiscourseAi
         end
 
         body = response[:body]
-        text = content_type == "text/plain" ? body : extract_html(body)
+        text = content_type.in?(%w[text/plain text/markdown]) ? body : extract_html(body)
         raise FetchError, "The page did not contain readable text" if text.blank?
 
         {
@@ -136,7 +137,62 @@ module DiscourseAi
             document.at("#main") || document.at(".main") || document.at("#content") ||
             document.at(".content") || document.at("body")
 
-        main_content&.xpath(".//text()")&.map(&:text)&.join(" ").to_s.gsub(/\s+/, " ").strip
+        text_content(main_content)
+      end
+
+      def text_content(node)
+        return "" if node.blank?
+
+        segments =
+          node
+            .xpath(".//text()[not(ancestor::table)] | .//table[not(ancestor::table)]")
+            .filter_map do |child|
+              if child.name == "table"
+                table_text = table_to_markdown(child) || normalize_whitespace(child.text)
+                "\n\n#{table_text}\n\n" if table_text.present?
+              else
+                normalize_whitespace(child.text) if child.text.present?
+              end
+            end
+
+        segments.join(" ").gsub(/ *\n */, "\n").gsub(/\n{3,}/, "\n\n").strip
+      end
+
+      def table_to_markdown(table)
+        rows = table.xpath("./tr | ./thead/tr | ./tbody/tr | ./tfoot/tr")
+        cells_by_row = rows.map { |row| row.xpath("./th | ./td") }
+        column_count = cells_by_row.map(&:length).max.to_i
+        return if column_count < 2
+
+        cells_by_row.select! do |cells|
+          cells.length == column_count && cells.all? { |cell| cell_span(cell) == [1, 1] }
+        end
+        return if cells_by_row.length < 2
+
+        lines =
+          cells_by_row.map do |cells|
+            "| #{cells.map { |cell| table_cell_text(cell) }.join(" | ")} |"
+          end
+        lines.insert(1, "| #{Array.new(column_count, "---").join(" | ")} |")
+        lines.join("\n")
+      end
+
+      def table_cell_text(cell)
+        text = cell.xpath(".//text()[not(ancestor::table[ancestor::table])]").map(&:text)
+        labels =
+          cell
+            .xpath(".//*[@aria-label] | self::*[@aria-label]")
+            .filter_map { |element| element["aria-label"] if element.text.blank? }
+
+        normalize_whitespace((text + labels.uniq).join(" ")).gsub("|", "\\|")
+      end
+
+      def cell_span(cell)
+        [cell["rowspan"].presence&.to_i || 1, cell["colspan"].presence&.to_i || 1]
+      end
+
+      def normalize_whitespace(text)
+        text.to_s.gsub(/\s+/, " ").strip
       end
     end
   end

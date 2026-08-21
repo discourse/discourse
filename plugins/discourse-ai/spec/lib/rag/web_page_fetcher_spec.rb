@@ -5,6 +5,10 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
 
   it "extracts readable page content and response validators" do
     url = "https://example.com/docs"
+    navigation = "Home Documentation Pricing"
+    article_heading = "Installation"
+    article_paragraph = "Install the package."
+    footer = "Privacy Terms Copyright"
     stub_request(:get, url).to_return(
       status: 200,
       headers: {
@@ -15,8 +19,12 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
       body: <<~HTML,
         <html>
           <body>
-            <nav>Navigation</nav>
-            <main><h1>Installation</h1><p>Install the package.</p></main>
+            <nav>#{navigation}</nav>
+            <main>
+              <h1>#{article_heading}</h1>
+              <p>#{article_paragraph}</p>
+            </main>
+            <footer>#{footer}</footer>
             <script>ignoreMe()</script>
           </body>
         </html>
@@ -28,10 +36,54 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
     expect(result).to include(
       not_modified: false,
       url: url,
-      text: "Installation Install the package.",
+      text: "#{article_heading} #{article_paragraph}",
       etag: '"revision-2"',
       last_modified: "Wed, 19 Aug 2026 16:00:00 GMT",
     )
+  end
+
+  it "converts rectangular HTML table rows to Markdown" do
+    url = "https://example.com/pricing"
+    stub_request(:get, url).to_return(
+      status: 200,
+      headers: {
+        "Content-Type" => "text/html",
+      },
+      body: <<~HTML,
+        <main>
+          <h1>Compare plans &amp; features</h1>
+          <table>
+            <thead>
+              <tr><th colspan="5">Community</th></tr>
+              <tr><th>Feature</th><th>Free</th><th>Pro</th><th>Business</th><th>Enterprise</th></tr>
+            </thead>
+            <tbody>
+              <tr><td></td><td colspan="4">Staff seats</td></tr>
+              <tr><td>Staff seats</td><td>2</td><td>5</td><td>15</td><td>Unlimited</td></tr>
+              <tr><td></td><td colspan="4">Custom groups</td></tr>
+              <tr>
+                <td>Custom groups</td>
+                <td></td>
+                <td><i aria-label="Included"></i></td>
+                <td><i aria-label="Included"></i></td>
+                <td><i aria-label="Included"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </main>
+      HTML
+    )
+
+    result = described_class.fetch(url: url)
+
+    expect(result[:text]).to eq(<<~MARKDOWN.strip)
+      Compare plans & features
+
+      | Feature | Free | Pro | Business | Enterprise |
+      | --- | --- | --- | --- | --- |
+      | Staff seats | 2 | 5 | 15 | Unlimited |
+      | Custom groups |  | Included | Included | Included |
+    MARKDOWN
   end
 
   it "uses conditional request headers and handles an unchanged page" do
@@ -53,6 +105,32 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
           "If-Modified-Since" => "Wed, 19 Aug 2026 16:00:00 GMT",
         },
       ),
+    ).to have_been_made.once
+  end
+
+  it "requests and preserves Markdown content" do
+    url = "https://example.com/docs.md"
+    markdown = <<~MARKDOWN
+      # Installation
+
+      Run `bundle install`, then:
+
+      - Configure the service
+      - Restart the process
+    MARKDOWN
+    stub_request(:get, url).to_return(
+      status: 200,
+      headers: {
+        "Content-Type" => "text/markdown; charset=utf-8",
+      },
+      body: markdown,
+    )
+
+    result = described_class.fetch(url: url)
+
+    expect(result).to include(not_modified: false, url: url, text: markdown)
+    expect(
+      a_request(:get, url).with(headers: { "Accept" => "text/markdown, */*" }),
     ).to have_been_made.once
   end
 
