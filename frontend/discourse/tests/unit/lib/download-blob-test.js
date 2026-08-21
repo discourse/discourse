@@ -1,7 +1,11 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import downloadBlob, { triggerBlobDownload } from "discourse/lib/download-blob";
+import downloadBlob, {
+  bridgeBlobDownload,
+  MAX_BRIDGED_DOWNLOAD_BYTES,
+  triggerBlobDownload,
+} from "discourse/lib/download-blob";
 
 function captureAnchor() {
   const original = document.createElement.bind(document);
@@ -25,6 +29,10 @@ module("Unit | Utility | download-blob", function (hooks) {
   hooks.beforeEach(function () {
     sinon.stub(URL, "createObjectURL").returns("blob:mock");
     sinon.stub(URL, "revokeObjectURL");
+  });
+
+  hooks.afterEach(function () {
+    delete window.ReactNativeWebView;
   });
 
   test("triggerBlobDownload uses fallbackFilename when no Content-Disposition", function (assert) {
@@ -77,6 +85,45 @@ module("Unit | Utility | download-blob", function (hooks) {
     triggerBlobDownload(new Blob(["x"]));
 
     assert.false(created[0].hasAttribute("download"));
+  });
+
+  test("bridgeBlobDownload sends a versioned, bounded message to Hub", async function (assert) {
+    const postMessage = sinon.stub();
+    window.ReactNativeWebView = { postMessage };
+    sinon.stub(window, "FileReader").value(
+      class {
+        readAsDataURL() {
+          this.result = "data:application/zip;base64,eA==";
+          this.onload();
+        }
+      }
+    );
+
+    await bridgeBlobDownload(new Blob(["x"], { type: "application/zip" }), {
+      fallbackFilename: "theme.zip",
+    });
+
+    const message = JSON.parse(postMessage.firstCall.args[0]);
+    assert.deepEqual(message, {
+      type: "download",
+      version: 1,
+      encoding: "base64",
+      filename: "theme.zip",
+      mimeType: "application/zip",
+      byteLength: 1,
+      data: "eA==",
+    });
+    delete window.ReactNativeWebView;
+  });
+
+  test("bridgeBlobDownload rejects files over the bridge limit", async function (assert) {
+    await assert.rejects(
+      bridgeBlobDownload(
+        { size: MAX_BRIDGED_DOWNLOAD_BYTES + 1 },
+        { fallbackFilename: "large.zip" }
+      ),
+      /too large/
+    );
   });
 
   test("downloadBlob fetches the URL and triggers a download", async function (assert) {
