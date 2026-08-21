@@ -684,7 +684,7 @@ GEM
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
     ruby2_keywords (0.0.5)
-    rubyzip (3.3.1)
+    rubyzip (3.4.0)
     samovar (2.5.1)
       console (~> 1.0)
     sanitize (7.0.0)
@@ -1266,7 +1266,7 @@ CHECKSUMS
   ruby-rc4 (0.1.5) sha256=00cc40a39d20b53f5459e7ea006a92cf584e9bc275e2a6f7aa1515510e896c03
   ruby-readability (0.7.3) sha256=bd213fab037118cc15d999e167a8ea2cc6b689dc78c033e78fb36a2a37efc241
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
-  rubyzip (3.3.1) sha256=2ed92112c7c43ba2b2527f35e6d99d9c2c99270b640aad5227516436481b1e4e
+  rubyzip (3.4.0) sha256=6de39bc9eba302b635a476d16c9e16b0872ad24517c2f98f2b3a7ea23caff57b
   samovar (2.5.1) sha256=8a9fc41eb8868084f0321eb41678c485cfbc7d282fb306c0be67c3284b1d2394
   sanitize (7.0.0) sha256=269d1b9d7326e69307723af5643ec032ff86ad616e72a3b36d301ac75a273984
   sass-embedded (1.100.0-aarch64-linux-gnu) sha256=c13187f8eaae7e7e64246b18eb896534a84465a17198829ef65730db4662860e
