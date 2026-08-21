@@ -12,7 +12,6 @@
 
   &__filters {
     display: flex;
-    flex: 1 1 auto;
     flex-wrap: wrap;
     align-items: center;
     min-width: 0;
@@ -44,24 +43,23 @@
   &__filter-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0;
+    gap: var(--space-1);
     min-width: 0;
     max-width: 100%;
-    overflow: hidden;
+    white-space: nowrap;
     padding-inline-start: var(--space-3);
-    border: 1px solid transparent;
-    border-radius: 2rem;
-    background: var(--primary-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-pill);
+    background: var(--primary-very-low);
 
     &.is-pending {
       border-color: var(--tertiary);
       border-style: dashed;
-      background: transparent;
+      background: var(--tertiary-very-low);
     }
 
     .site-traffic-explorer__filter-pill-remaining,
-    .d-icon-angle-down,
-    .site-traffic-explorer__filter-remove {
+    .d-icon-angle-down {
       color: var(--primary-medium);
     }
 
@@ -72,6 +70,7 @@
       padding: 0;
       background: transparent;
       color: inherit;
+      font-size: var(--font-down-1-rem);
 
       &:hover,
       &.-expanded {
@@ -92,28 +91,17 @@
     }
   }
 
-  &__filter-pill-label {
-    display: flex;
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow: hidden;
-    white-space: nowrap;
+  &__filter-remove {
+    color: var(--primary-medium);
+    border-top-right-radius: var(--d-border-radius-pill);
+    border-bottom-right-radius: var(--d-border-radius-pill);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 1px solid var(--primary-low);
   }
 
   &__filter-pill-values {
     @include ellipsis;
-    min-width: 0;
-    margin-inline-start: var(--space-1);
-  }
-
-  &__filter-pill-remaining {
-    flex: 0 0 auto;
-    margin-inline-start: var(--space-1);
-  }
-
-  &__filter-remove {
-    flex: 0 0 auto;
-    padding: var(--space-1) var(--space-2);
   }
 
   &__partial-warning {
@@ -123,6 +111,9 @@
   &__empty {
     border-radius: var(--d-border-radius);
     padding: var(--space-3) var(--space-4);
+    border: 1px dashed var(--content-border-color);
+    background: var(--primary-very-low);
+    text-align: center;
   }
 
   &__skeleton {
@@ -193,73 +184,6 @@
     }
   }
 
-  &__results {
-    min-width: 0;
-  }
-
-  &__metrics {
-    .db-section__subintro {
-      flex: 1 1 15rem;
-    }
-
-    .db-section__metrics {
-      align-items: flex-start;
-    }
-
-    @include viewport.until(md) {
-      flex-direction: column;
-      gap: var(--space-4);
-
-      .db-section__subintro {
-        flex-basis: auto;
-      }
-
-      .db-section__metrics {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        width: 100%;
-      }
-    }
-  }
-
-  // &__metric {
-  //   display: flex;
-  //   flex-direction: column;
-  //   gap: var(--space-1);
-  //   min-width: 0;
-
-  //   &.--primary {
-  //     flex-flow: row wrap;
-  //     align-items: baseline;
-  //   }
-  // }
-  &__metric-value {
-    overflow-wrap: anywhere;
-    font-variant-numeric: tabular-nums;
-  }
-
-  &__metric-label-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    width: max-content;
-    max-width: 100%;
-  }
-
-  &__metric-label {
-    overflow-wrap: anywhere;
-  }
-
-  &__empty {
-    border: 1px dashed var(--content-border-color);
-    background: var(--primary-very-low);
-    text-align: center;
-  }
-
-  &__cards {
-    gap: 0;
-  }
-
   .db-section__row-block {
     display: flex;
     flex-direction: column;
@@ -300,7 +224,6 @@
   }
 
   &__row {
-    position: relative;
     display: flex;
     align-items: center;
     gap: var(--space-1);
@@ -308,7 +231,6 @@
     border-radius: var(--d-border-radius);
     padding-block: var(--space-1);
     padding-inline: var(--space-2);
-    background: transparent;
     cursor: pointer;
   }
 
@@ -431,45 +353,12 @@
   }
 }
 
+// Layout comes from .dropdown-menu; only the value truncation is ours, since
+// referrers and URLs run far longer than a normal menu label.
 .site-traffic-explorer__filter-dropdown {
-  min-width: min(18rem, calc(100vw - 2 * var(--space-4)));
-  padding: var(--space-3);
+  max-width: min(22rem, calc(100vw - 2 * var(--space-4)));
 
-  &-title {
-    margin-block-end: var(--space-2);
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
-    font-weight: normal;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  &-list {
-    @include unstyled-list;
-    margin-inline: calc(-1 * var(--space-2));
-  }
-
-  &-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-    min-width: 0;
-    padding-inline-start: var(--space-2);
-
-    .btn {
-      flex: 0 0 auto;
-    }
-  }
-
-  &-value {
+  .d-button-label {
     @include ellipsis;
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  &-clear {
-    padding-inline: 0;
-    color: var(--tertiary);
   }
 }
