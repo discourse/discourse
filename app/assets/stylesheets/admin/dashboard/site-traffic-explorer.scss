@@ -296,6 +296,7 @@
   &__breakdown-list {
     @include unstyled-list;
     font-size: var(--font-down-1-rem);
+    margin-block-end: var(--space-2);
   }
 
   &__row {
@@ -311,6 +312,13 @@
     cursor: pointer;
   }
 
+  // The global `label` rule in common/base/discourse.scss wins on specificity
+  // over the block class, so these resets have to match it at element level.
+  label.site-traffic-explorer__row {
+    margin-block: 0;
+    font-weight: inherit;
+  }
+
   &__row-count {
     flex-shrink: 0;
     margin-inline-start: auto;
@@ -319,16 +327,20 @@
   }
 
   &__row-link {
-    position: relative;
-    z-index: 1;
-    display: inline-block;
-    flex: 0 1 auto;
-    min-width: 0;
-    width: fit-content;
-    max-width: 100%;
-    overflow: hidden;
+    @include ellipsis;
     color: inherit;
     text-decoration: none;
+    margin: 0;
+    margin-right: var(
+      --space-4
+    ); // leave extra space on purpose to click the row not the link
+
+    &:hover {
+      .discourse-no-touch & {
+        color: var(--tertiary);
+        text-decoration: underline;
+      }
+    }
 
     &:visited {
       color: inherit;
@@ -340,56 +352,18 @@
     }
   }
 
-  html.discourse-no-touch &__row-link:hover {
-    color: var(--tertiary);
-    text-decoration: underline;
-  }
-
-  &__row-checkbox {
-    // Raised above __row-filter-target so the checkbox stays directly clickable.
-    .--linked & {
-      position: relative;
-      z-index: 1;
-    }
-  }
-
-  &__row-filter-target {
-    position: absolute;
-    inset: 0;
-    display: block;
-    cursor: pointer;
-  }
-
   html.discourse-no-touch & .site-traffic-explorer__row:hover {
     background: var(--token-color-surface-hovered);
   }
 
-  &__view-more {
-    width: max-content;
-    max-width: 100%;
-    margin-block-start: auto;
-    margin-inline: calc(-1 * var(--space-2));
-    padding-inline: var(--space-2);
-    font-size: var(--font-down-1-rem);
-  }
-
   &__dimension-label {
     display: flex;
-    flex: 1 1 auto;
     align-items: center;
-    min-width: 0;
-    width: 100%;
-  }
-
-  &__dimension-prefix {
-    flex: 0 0 auto;
-    margin-inline-end: var(--space-2);
+    gap: var(--space-2);
   }
 
   &__dimension-text {
     @include ellipsis;
-    flex: 1 1 auto;
-    min-width: 0;
   }
 
   &__card-empty {

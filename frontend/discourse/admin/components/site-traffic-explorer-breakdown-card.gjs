@@ -139,10 +139,9 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
 
   <template>
     <section
-      class="db-section__row-block site-traffic-explorer__card"
+      class="db-section__row-block"
       data-test-site-traffic-card={{@name}}
     >
-      <h2 class="sr-only">{{@title}}</h2>
       <div
         class="site-traffic-explorer__tabs"
         role="tablist"
@@ -178,25 +177,28 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
         <ul class="site-traffic-explorer__breakdown-list">
           {{#each this.visibleRows as |row index|}}
             <li>
-              {{#let (this.rowLink row) as |rowLink|}}
-                {{#if rowLink}}
-                  <span
-                    class="site-traffic-explorer__row"
-                    data-test-site-traffic-row
-                  >
-                    <input
-                      id={{concat "site-traffic-" @name "-filter-" index}}
-                      type="checkbox"
-                      aria-label={{this.filterLabel row}}
-                      checked={{this.isSelected row}}
-                      {{on "change" (fn this.toggleFilter row)}}
-                    />
-                    <label
-                      for={{concat "site-traffic-" @name "-filter-" index}}
-                      class="site-traffic-explorer__row-filter-target"
-                    >
-                      <span class="sr-only">{{this.filterLabel row}}</span>
-                    </label>
+
+              {{#let
+                (this.rowLink row)
+                (concat "site-traffic-" @name "-filter-" index)
+                as |rowLink rowId|
+              }}
+
+                <label
+                  class="site-traffic-explorer__row"
+                  data-test-site-traffic-row
+                >
+                  <input
+                    id={{rowId}}
+                    class="site-traffic-explorer__row-checkbox"
+                    type="checkbox"
+                    aria-label={{this.filterLabel row}}
+                    checked={{this.isSelected row}}
+                    {{on "change" (fn this.toggleFilter row)}}
+                  />
+
+                  {{#if rowLink}}
+                    {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                     <a
                       href={{rowLink.href}}
                       rel={{rowLink.rel}}
@@ -208,46 +210,19 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
                         @row={{row}}
                       />
                     </a>
-                    <span class="site-traffic-explorer__row-count-wrapper">
-                      <SiteTrafficExplorerPageviewCount
-                        @value={{row.pageviews}}
-                        as |formattedValue|
-                      >
-                        <span class="site-traffic-explorer__row-count">
-                          {{formattedValue}}
-                        </span>
-                      </SiteTrafficExplorerPageviewCount>
-                    </span>
-                  </span>
-                {{else}}
-                  <label
-                    class="site-traffic-explorer__row"
-                    data-test-site-traffic-row
-                  >
-                    <input
-                      type="checkbox"
-                      aria-label={{this.filterLabel row}}
-                      checked={{this.isSelected row}}
-                      {{on "change" (fn this.toggleFilter row)}}
+                  {{else}}
+                    <SiteTrafficExplorerDimensionLabel
+                      @dimension={{this.activeTab.dimension}}
+                      @row={{row}}
                     />
-                    <span class="site-traffic-explorer__row-label">
-                      <SiteTrafficExplorerDimensionLabel
-                        @dimension={{this.activeTab.dimension}}
-                        @row={{row}}
-                      />
-                    </span>
-                    <span class="site-traffic-explorer__row-count-wrapper">
-                      <SiteTrafficExplorerPageviewCount
-                        @value={{row.pageviews}}
-                        as |formattedValue|
-                      >
-                        <span class="site-traffic-explorer__row-count">
-                          {{formattedValue}}
-                        </span>
-                      </SiteTrafficExplorerPageviewCount>
-                    </span>
-                  </label>
-                {{/if}}
+                  {{/if}}
+
+                  <SiteTrafficExplorerPageviewCount
+                    @value={{row.pageviews}}
+                    class="site-traffic-explorer__row-count"
+                    as |formattedValue|
+                  >{{formattedValue}}</SiteTrafficExplorerPageviewCount>
+                </label>
               {{/let}}
             </li>
           {{else}}
@@ -258,7 +233,7 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
         </ul>
         {{#if this.canExpand}}
           <DButton
-            class="site-traffic-explorer__view-more btn-flat"
+            class="btn-small btn-transparent --primary"
             @action={{this.openModal}}
             @label="admin.site_traffic_explorer.view_more"
           />
