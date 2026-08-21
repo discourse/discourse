@@ -1,4 +1,5 @@
 import { destroy } from "@ember/destroyable";
+import { cancel } from "@ember/runloop";
 import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
@@ -7,6 +8,7 @@ import type { CleanupFn } from "@atlaskit/pragmatic-drag-and-drop/types";
 import { modifier } from "ember-modifier";
 import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
 import createDragDwell, {
+  DEFAULT_DRAG_DWELL_DELAY,
   type DragDwell,
 } from "discourse/lib/-internals/drag-and-drop/drag-dwell";
 import type {
@@ -25,9 +27,11 @@ import {
   normalizeDragSource,
 } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 import { makeArray } from "discourse/lib/helpers";
+import discourseLater from "discourse/lib/later";
 
 export {
   default as createDragDwell,
+  DEFAULT_DRAG_DWELL_DELAY,
   type DragDwell,
   type DragDwellOptions,
 } from "discourse/lib/-internals/drag-and-drop/drag-dwell";
@@ -120,10 +124,23 @@ interface DDragDwellSignature {
       externalKinds?: ExternalDragKind | ExternalDragKind[];
 
       /**
-       * Milliseconds of qualifying hover before `onDwell` fires. Defaults to
-       * `500`. Sampled when the first candidacy arms.
+       * How long a qualifying hover lasts before `onDwell` fires. `true`, the
+       * default, is the standard 500 ms; `false` fires on the first qualifying
+       * frame; a number is the wait in milliseconds. Sampled when the first
+       * candidacy arms.
        */
-      delay?: number;
+      delay?: boolean | number;
+
+      /**
+       * Grace before a fired dwell is undone once the drag leaves the
+       * element. `true`, the default, mirrors the entry delay, or the
+       * standard 500 ms when entry is immediate; `false` ends it in the
+       * leaving frame; a number is the grace in milliseconds. A drag
+       * returning within the grace keeps the dwell as if it never left, and
+       * a drag ending during it reports `drag-ended` instead. A candidacy
+       * that has not fired yet ends immediately either way.
+       */
+      leaveDelay?: boolean | number;
 
       /**
        * Whether a drag hovering the element may start or continue a pending
@@ -159,6 +176,39 @@ interface DDragDwellSignature {
  */
 export type DragDwellArgs = DDragDwellSignature["Args"]["Named"];
 
+/**
+ * The entry delay in milliseconds: `true` and omission are the standard
+ * delay, `false` is immediate, and a number stands as given.
+ */
+export function resolveDwellDelay(delay: boolean | number | undefined): number {
+  if (delay === false) {
+    return 0;
+  }
+  if (delay === true || delay == null) {
+    return DEFAULT_DRAG_DWELL_DELAY;
+  }
+  return delay;
+}
+
+/**
+ * The leave grace in milliseconds: `true` and omission mirror the resolved
+ * entry delay and fall back to the standard delay when entry is immediate,
+ * `false` is immediate, and a number stands as given.
+ */
+export function resolveDwellLeaveDelay(
+  leaveDelay: boolean | number | undefined,
+  delay: boolean | number | undefined
+): number {
+  if (leaveDelay === false) {
+    return 0;
+  }
+  if (leaveDelay === true || leaveDelay == null) {
+    const entry = resolveDwellDelay(delay);
+    return entry > 0 ? entry : DEFAULT_DRAG_DWELL_DELAY;
+  }
+  return leaveDelay;
+}
+
 function isWithin(input: DragInput, clientRect: DOMRect) {
   return (
     input.clientX >= clientRect.x &&
@@ -192,7 +242,15 @@ export function registerDragDwell(
   let hovering = false;
   let fired = false;
   let lastEvent: DragDwellEvent | null = null;
+  let pendingLeave: ReturnType<typeof discourseLater> | null = null;
   let isDestroying = false;
+
+  const cancelPendingLeave = () => {
+    if (pendingLeave) {
+      cancel(pendingLeave);
+      pendingLeave = null;
+    }
+  };
 
   const passesGate = (event: DragDwellEvent) => {
     const callback = getArgsRef().canDwell;
@@ -212,10 +270,9 @@ export function registerDragDwell(
       return dwell;
     }
 
-    const { delay } = getArgsRef();
     dwell = createDragDwell<DragDwellEvent>({
       destroyable: lifetime,
-      delay,
+      delay: resolveDwellDelay(getArgsRef().delay),
       identity: () => element,
       onDwell: () => {
         if (isDestroying || !hovering || !lastEvent) {
@@ -268,7 +325,37 @@ export function registerDragDwell(
     }
 
     if (!qualifies) {
-      if (!hovering) {
+      if (!hovering || pendingLeave) {
+        return;
+      }
+
+      const args = getArgsRef();
+      const leaveDelay = fired
+        ? resolveDwellLeaveDelay(args.leaveDelay, args.delay)
+        : 0;
+      if (leaveDelay > 0) {
+        // The factory's latched identity is left untouched while the grace
+        // runs, so a drag returning in time continues the fired candidacy
+        // instead of arming a second dwell.
+        pendingLeave = discourseLater(() => {
+          pendingLeave = null;
+          if (isDestroying || !hovering || !lastEvent) {
+            return;
+          }
+          const endEvent = lastEvent;
+          dwell?.update(null);
+          consumerMayThrow(() =>
+            getArgsRef().onDwellEnd?.({
+              ...endEvent,
+              reason: "left",
+              fired,
+              droppedHere: false,
+            })
+          );
+          hovering = false;
+          fired = false;
+          lastEvent = null;
+        }, leaveDelay);
         return;
       }
 
@@ -289,6 +376,7 @@ export function registerDragDwell(
       return;
     }
 
+    cancelPendingLeave();
     if (!hovering) {
       hovering = true;
       fired = false;
@@ -298,6 +386,9 @@ export function registerDragDwell(
   };
 
   const reportDragEnded = (location: DragLocation) => {
+    // A drag ending inside the grace beats it: the terminal event reports
+    // once, as a drag end.
+    cancelPendingLeave();
     if (isDestroying || !hovering || !lastEvent) {
       return;
     }
@@ -376,6 +467,7 @@ export function registerDragDwell(
 
   return () => {
     isDestroying = true;
+    cancelPendingLeave();
     cleanupElements();
     cleanupExternal();
     destroy(lifetime);

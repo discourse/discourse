@@ -15,8 +15,15 @@ export type DragLocation = DragLocationHistory;
 /** Where a drop would land relative to its target. */
 export type DropPosition = "before" | "after" | "inside";
 
-/** The cursor feedback the browser shows for a drop. */
-export type DropEffect = "copy" | "link" | "move";
+/**
+ * The cursor feedback the browser shows for a drop.
+ *
+ * `"none"` refuses the drop at the cursor: the browser cancels the drag at
+ * release instead of firing a drop event, so the target's `onDrop` never runs
+ * and the browser's own default (such as navigating to a dropped URL) is
+ * suppressed.
+ */
+export type DropEffect = "copy" | "link" | "move" | "none";
 
 /** How a target decides where a drop would land. */
 export interface DropPositionOptions {
@@ -63,8 +70,13 @@ export interface DropTargetKernelArgs<Source> extends DropPositionOptions {
    */
   canDrop?: (feedback: DropTargetKernelFeedback<Source>) => boolean | void;
 
-  /** Determines the cursor feedback browsers show during the drag. */
-  getDropEffect?: (feedback: DropTargetKernelFeedback<Source>) => DropEffect;
+  /**
+   * The cursor feedback browsers show during the drag: a fixed effect, or a
+   * function consulted with the drag's feedback when the effect depends on it.
+   */
+  dropEffect?:
+    | DropEffect
+    | ((feedback: DropTargetKernelFeedback<Source>) => DropEffect);
 
   /** Metadata attached to the drag's record of this target under `.data`. */
   getData?: () => object;
@@ -127,7 +139,9 @@ export type DropTargetRegistrationArgs<Payload> = {
   getData: (
     args: LibraryFeedbackArgs<Payload>
   ) => Record<string | symbol, unknown>;
-  getDropEffect: (args: LibraryFeedbackArgs<Payload>) => DropEffect | undefined;
+  getDropEffect: (
+    args: LibraryFeedbackArgs<Payload>
+  ) => Exclude<DropEffect, "none"> | undefined;
   getIsSticky: (args: LibraryFeedbackArgs<Payload>) => boolean;
   onDropTargetChange: (args: LibraryEventArgs<Payload>) => void;
   onDragEnter: (args: LibraryEventArgs<Payload>) => void;
@@ -394,13 +408,17 @@ export function registerDropTargetKernel<Payload, Source>({
         unknown
       >,
     getDropEffect: ({ source, input }) =>
-      consumerMayThrow(() =>
-        getArgs().getDropEffect?.({
-          source: decorateSource(source),
-          input,
-          element,
-        })
-      ),
+      // The library's type bans "none" so a target cannot opt a nested stack
+      // out of its drop by accident; a suppressor target opts out on purpose,
+      // and the runtime assigns the value to `dataTransfer.dropEffect`
+      // verbatim. The cast is the one place that deviation crosses into the
+      // library.
+      consumerMayThrow(() => {
+        const dropEffect = getArgs().dropEffect;
+        return typeof dropEffect === "function"
+          ? dropEffect({ source: decorateSource(source), input, element })
+          : dropEffect;
+      }) as Exclude<DropEffect, "none"> | undefined,
     getIsSticky: () =>
       consumerMayThrow(() => getArgs().getIsSticky?.() === true, false),
     onDragEnter: ({ source, location }) =>

@@ -5,9 +5,6 @@ import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-sourc
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
-const copyEffect = () => "copy";
-const moveEffect = () => "move";
-
 export default class EffectExample extends Component {
   @tracked effect;
 
@@ -34,7 +31,7 @@ export default class EffectExample extends Component {
           {{dDragAndDropTarget
             accepts="card"
             position="inside"
-            getDropEffect=copyEffect
+            dropEffect="copy"
           }}
         >{{i18n "styleguide.sections.drag_and_drop.asks_for_copy"}}</div>
 
@@ -43,7 +40,7 @@ export default class EffectExample extends Component {
           {{dDragAndDropTarget
             accepts="card"
             position="inside"
-            getDropEffect=moveEffect
+            dropEffect="move"
           }}
         >{{i18n "styleguide.sections.drag_and_drop.asks_for_move"}}</div>
       </div>

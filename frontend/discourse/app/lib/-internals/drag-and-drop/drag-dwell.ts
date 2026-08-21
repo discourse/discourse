@@ -5,7 +5,7 @@ import discourseLater from "discourse/lib/later";
 const EMPTY = Symbol("empty drag dwell");
 
 /** The dwell delay used when the consumer does not pick one. */
-const DEFAULT_DELAY = 500;
+export const DEFAULT_DRAG_DWELL_DELAY = 500;
 
 /** Options for {@link createDragDwell}. */
 export interface DragDwellOptions<Target> {
@@ -76,7 +76,12 @@ export interface DragDwell<Target> {
 export default function createDragDwell<Target>(
   options: DragDwellOptions<Target>
 ): DragDwell<Target> {
-  const { delay = DEFAULT_DELAY, destroyable, identity, onDwell } = options;
+  const {
+    delay = DEFAULT_DRAG_DWELL_DELAY,
+    destroyable,
+    identity,
+    onDwell,
+  } = options;
   let currentKey: unknown | typeof EMPTY = EMPTY;
   let latestTarget: Target | null = null;
   let timer: ReturnType<typeof discourseLater> | null = null;

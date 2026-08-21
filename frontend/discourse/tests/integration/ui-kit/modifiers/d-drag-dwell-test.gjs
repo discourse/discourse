@@ -21,6 +21,8 @@ import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-sourc
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import dDragDwell, {
   registerDragDwell,
+  resolveDwellDelay,
+  resolveDwellLeaveDelay,
 } from "discourse/ui-kit/modifiers/d-drag-dwell";
 
 /* The dwell delay collapses to a 10ms runloop timer under test, which is
@@ -192,6 +194,171 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     assert.strictEqual(ends.length, 1, "the candidacy ended");
     assert.strictEqual(ends[0].reason, "left", "by leaving");
     assert.true(ends[0].fired, "after having fired");
+  });
+
+  test("dDragDwell ends a fired dwell in the leaving frame when the grace is declined", async function (assert) {
+    const ends = [];
+    const onDwell = () => {};
+    const onDwellEnd = (event) => ends.push(event);
+
+    await render(
+      <template>
+        <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+          {{dDragDwell
+            types="card"
+            leaveDelay=false
+            onDwell=onDwell
+            onDwellEnd=onDwellEnd
+          }}
+        >folder</div>
+        <div
+          data-test-outside
+          style="display: block; height: 60px; margin-top: 30px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+        >outside</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    await startDrag(CHIP, { dataTransfer });
+    await dragOver(DWELL, { dataTransfer });
+    await settled();
+
+    dragEventNow(OUTSIDE, "dragenter", { dataTransfer, ...centerOf(OUTSIDE) });
+    assert.strictEqual(
+      ends.length,
+      1,
+      "the end is reported in the leaving frame itself, before any timer"
+    );
+    assert.strictEqual(ends[0].reason, "left", "by leaving");
+  });
+
+  test("dDragDwell keeps a fired dwell through a brief leave by default", async function (assert) {
+    const dwells = [];
+    const ends = [];
+    const onDwell = (event) => dwells.push(event);
+    const onDwellEnd = (event) => ends.push(event);
+
+    await render(
+      <template>
+        <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+          {{dDragDwell types="card" onDwell=onDwell onDwellEnd=onDwellEnd}}
+        >folder</div>
+        <div
+          data-test-outside
+          style="display: block; height: 60px; margin-top: 30px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+        >outside</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    await startDrag(CHIP, { dataTransfer });
+    await dragOver(DWELL, { dataTransfer });
+    await settled();
+    assert.strictEqual(dwells.length, 1, "fired");
+
+    // Leave and return in one task, beating the collapsed grace timer.
+    dragEventNow(OUTSIDE, "dragenter", { dataTransfer, ...centerOf(OUTSIDE) });
+    dragEventNow(DWELL, "dragenter", { dataTransfer, ...centerOf(DWELL) });
+    await settled();
+
+    assert.strictEqual(ends.length, 0, "the brief leave reported no end");
+    assert.strictEqual(dwells.length, 1, "and the return re-fired nothing");
+
+    await dragEvent(DWELL, "drop", { dataTransfer, ...centerOf(DWELL) });
+    await dragEvent(CHIP, "dragend", { dataTransfer, ...centerOf(DWELL) });
+    await settled();
+
+    assert.strictEqual(ends.length, 1, "the drop ended the candidacy");
+    assert.strictEqual(ends[0].reason, "drag-ended", "as a drag end");
+    assert.true(ends[0].fired, "still counted as fired");
+    assert.true(ends[0].droppedHere, "with the drop landing here");
+  });
+
+  test("dDragDwell reports a single left end once the grace expires", async function (assert) {
+    const ends = [];
+    const onDwell = () => {};
+    const onDwellEnd = (event) => ends.push(event);
+
+    await render(
+      <template>
+        <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+          {{dDragDwell types="card" onDwell=onDwell onDwellEnd=onDwellEnd}}
+        >folder</div>
+        <div
+          data-test-outside
+          style="display: block; height: 60px; margin-top: 30px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+        >outside</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    await startDrag(CHIP, { dataTransfer });
+    await dragOver(DWELL, { dataTransfer });
+    await settled();
+
+    await dragEvent(OUTSIDE, "dragenter", {
+      dataTransfer,
+      ...centerOf(OUTSIDE),
+    });
+    await settled();
+
+    assert.strictEqual(ends.length, 1, "one end after the grace ran out");
+    assert.strictEqual(ends[0].reason, "left", "by leaving");
+    assert.true(ends[0].fired, "after having fired");
+  });
+
+  test("dDragDwell reports a drag ending inside the grace as drag-ended once", async function (assert) {
+    const ends = [];
+    const onDwell = () => {};
+    const onDwellEnd = (event) => ends.push(event);
+
+    await render(
+      <template>
+        <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+          {{dDragDwell types="card" onDwell=onDwell onDwellEnd=onDwellEnd}}
+        >folder</div>
+        <div
+          data-test-outside
+          style="display: block; height: 60px; margin-top: 30px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+        >outside</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    await startDrag(CHIP, { dataTransfer });
+    await dragOver(DWELL, { dataTransfer });
+    await settled();
+
+    // Leave and drop elsewhere in one task, while the grace is still pending.
+    dragEventNow(OUTSIDE, "dragenter", { dataTransfer, ...centerOf(OUTSIDE) });
+    dragEventNow(OUTSIDE, "drop", { dataTransfer, ...centerOf(OUTSIDE) });
+    dragEventNow(CHIP, "dragend", { dataTransfer, ...centerOf(OUTSIDE) });
+    await settled();
+
+    assert.strictEqual(ends.length, 1, "exactly one end");
+    assert.strictEqual(ends[0].reason, "drag-ended", "the drag end wins");
+    assert.true(ends[0].fired, "after having fired");
+    assert.false(ends[0].droppedHere, "with the drop landing elsewhere");
   });
 
   test("dDragDwell reports the drop-target onDrop before onDwellEnd, with droppedHere", async function (assert) {
@@ -960,5 +1127,58 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
       document.querySelector(DWELL),
       "and the host element"
     );
+  });
+
+  module("delay resolution", function () {
+    test("resolveDwellDelay maps the boolean shorthands", function (assert) {
+      assert.strictEqual(resolveDwellDelay(undefined), 500, "omitted");
+      assert.strictEqual(resolveDwellDelay(true), 500, "true");
+      assert.strictEqual(resolveDwellDelay(false), 0, "false");
+      assert.strictEqual(resolveDwellDelay(300), 300, "a number stands");
+      assert.strictEqual(resolveDwellDelay(0), 0, "zero stands");
+    });
+
+    test("resolveDwellLeaveDelay mirrors the entry delay on true", function (assert) {
+      assert.strictEqual(
+        resolveDwellLeaveDelay(undefined, 300),
+        300,
+        "omission mirrors, like true"
+      );
+      assert.strictEqual(
+        resolveDwellLeaveDelay(false, 300),
+        0,
+        "false declines"
+      );
+      assert.strictEqual(
+        resolveDwellLeaveDelay(true, 300),
+        300,
+        "true mirrors an explicit entry delay"
+      );
+      assert.strictEqual(
+        resolveDwellLeaveDelay(true, true),
+        500,
+        "true mirrors the standard entry delay"
+      );
+      assert.strictEqual(
+        resolveDwellLeaveDelay(true, undefined),
+        500,
+        "true mirrors the omitted entry delay"
+      );
+      assert.strictEqual(
+        resolveDwellLeaveDelay(true, false),
+        500,
+        "an immediate entry falls back to the standard delay"
+      );
+      assert.strictEqual(
+        resolveDwellLeaveDelay(true, 0),
+        500,
+        "so does an explicit zero entry"
+      );
+      assert.strictEqual(
+        resolveDwellLeaveDelay(250, false),
+        250,
+        "a number stands on its own"
+      );
+    });
   });
 });
