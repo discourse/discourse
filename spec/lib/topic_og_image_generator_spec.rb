@@ -99,6 +99,17 @@ RSpec.describe TopicOgImageGenerator do
       expect([png.width, png.height]).to eq([1200, 630])
       expect(png[180, 520]).to eq(png[500, 520])
     end
+
+    it "returns nil when the final image cannot be rendered" do
+      DiscourseVips.stubs(:generate_topic_og_image).raises(DiscourseVips::Error, "invalid image")
+      Discourse.expects(:warn).with(
+        "Failed to render topic OG image",
+        topic_id: topic.id,
+        error: "invalid image",
+      )
+
+      expect(described_class.new(topic).generate_bytes).to eq(nil)
+    end
   end
 
   describe ".eligible?" do

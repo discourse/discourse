@@ -400,38 +400,8 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          Dir.mktmpdir("dominant-color") do |directory|
-            pixel = File.join(directory, "pixel.raw")
-
-            # Produce one raw pixel whose color channels represent the image's dominant color.
-            Vips.run(
-              "thumbnail",
-              local_path,
-              pixel,
-              "1",
-              "--height",
-              "1",
-              "--size",
-              "force",
-              read: [local_path],
-              write: [directory],
-            )
-
-            components = File.binread(pixel).bytes
-            rgb =
-              case components.length
-              when 1, 2
-                [components.first] * 3
-              when 3, 4
-                components.first(3)
-              end
-            if rgb
-              rgb.map { |component| component.to_s(16).rjust(2, "0") }.join.upcase
-            else
-              ""
-            end
-          end
-        rescue Discourse::Utils::CommandError
+          DiscourseVips.dominant_color(input_path: local_path)
+        rescue DiscourseVips::Error
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation

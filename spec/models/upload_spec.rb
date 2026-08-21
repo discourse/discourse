@@ -1023,11 +1023,10 @@ RSpec.describe Upload do
       expect(unsupported_image_content.dominant_color).to eq("")
     end
 
-    it "stores an empty string when vips produces a pixel with an unexpected channel count" do
+    it "stores an empty string when the native helper rejects the image" do
       expect(white_image.dominant_color).to eq(nil)
 
-      Vips.stubs(:run)
-      File.stubs(:binread).returns("\0" * 5)
+      DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error, "invalid image")
 
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
       expect(white_image.dominant_color).to eq("")
