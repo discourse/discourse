@@ -416,6 +416,19 @@ RSpec.describe PostsController do
         expect(response).to be_forbidden
       end
 
+      it "deletes another user's post for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        post = Fabricate(:post, topic: topic, post_number: 3)
+        sign_in(user)
+
+        delete "/posts/#{post.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(post.reload.deleted_at).to be_present
+      end
+
       it "uses a PostDestroyer" do
         post = Fabricate(:post, topic_id: topic.id, post_number: 3)
         sign_in(moderator)
@@ -553,6 +566,19 @@ RSpec.describe PostsController do
         PostDestroyer.any_instance.expects(:destroy).twice
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
         expect(response.status).to eq(200)
+      end
+
+      it "deletes the posts for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        sign_in(user)
+
+        delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
+
+        expect(response.status).to eq(200)
+        expect(post1.reload.deleted_at).to be_present
+        expect(post2.reload.deleted_at).to be_present
       end
 
       # bookmark
