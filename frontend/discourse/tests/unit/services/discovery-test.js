@@ -18,33 +18,39 @@ module("Unit | Service | discovery", function (hooks) {
     return owner.lookup("service:discovery");
   }
 
-  test("showingSubcategoryList is true on a category's topic list", function (assert) {
-    const discovery = stubRouter(getOwner(this), "discovery.latest", {
-      category: { id: 1 },
-    });
-
-    assert.true(discovery.showingSubcategoryList);
-  });
-
-  test("showingSubcategoryList is false on the categories page", function (assert) {
+  test("categoryListPage names the categories page", function (assert) {
     const discovery = stubRouter(getOwner(this), "discovery.categories");
 
-    assert.false(discovery.showingSubcategoryList);
+    assert.strictEqual(discovery.categoryListPage, "categories");
   });
 
-  test("showingSubcategoryList is false on a category's subcategories page", function (assert) {
+  test("categoryListPage names a category's subcategories page", function (assert) {
     const discovery = stubRouter(getOwner(this), "discovery.subcategories", {
       category: { id: 1 },
     });
 
-    assert.false(discovery.showingSubcategoryList);
+    assert.strictEqual(discovery.categoryListPage, "subcategories");
   });
 
-  test("showingSubcategoryList is false away from discovery", function (assert) {
+  test("categoryListPage names a category's topic list", function (assert) {
+    const discovery = stubRouter(getOwner(this), "discovery.latest", {
+      category: { id: 1 },
+    });
+
+    assert.strictEqual(discovery.categoryListPage, "category");
+  });
+
+  test("categoryListPage is undefined without a category listing", function (assert) {
+    const discovery = stubRouter(getOwner(this), "discovery.latest");
+
+    assert.strictEqual(discovery.categoryListPage, undefined);
+  });
+
+  test("categoryListPage is undefined away from discovery", function (assert) {
     const discovery = stubRouter(getOwner(this), "topic.fromParamsNear", {
       category: { id: 1 },
     });
 
-    assert.false(discovery.showingSubcategoryList);
+    assert.strictEqual(discovery.categoryListPage, undefined);
   });
 });

@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import CategoryTitleLink from "discourse/components/category-title-link";
@@ -11,6 +12,8 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class SubcategoriesWithFeaturedTopics extends Component {
+  @service discovery;
+
   <template>
     <div ...attributes>
       {{#each this.categories as |category|}}
@@ -29,7 +32,9 @@ export default class SubcategoriesWithFeaturedTopics extends Component {
               <div class="subcategories">
                 {{#each
                   (categoryListSubcategories
-                    category subcategories=category.serializedSubcategories
+                    category
+                    page=this.discovery.categoryListPage
+                    subcategories=category.serializedSubcategories
                   )
                   as |subCategory|
                 }}
@@ -68,7 +73,9 @@ export default class SubcategoriesWithFeaturedTopics extends Component {
               <tbody aria-labelledby="categories-only-category">
                 {{#each
                   (categoryListSubcategories
-                    category subcategories=category.serializedSubcategories
+                    category
+                    page=this.discovery.categoryListPage
+                    subcategories=category.serializedSubcategories
                   )
                   as |subCategory|
                 }}

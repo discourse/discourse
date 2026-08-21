@@ -5,26 +5,26 @@ import { applyValueTransformer } from "discourse/lib/transformer";
  *
  * Consumers of the `category-list-subcategories` transformer can return a
  * shorter list, or `[]`, to collapse deeper levels of the list without
- * affecting `Category#subcategories`, which other surfaces rely on.
+ * affecting `Category#subcategories`, which the sidebar and topic lists use.
  *
  * @param {Category} category the category whose children are being listed
  * @param {Object} [options]
- * @param {string} [options.surface] where the list is being rendered:
- *   `"subcategory_list"` when it sits inside a single category's topic list,
- *   otherwise `undefined` for the global categories page
+ * @param {string} [options.page] which category listing is being rendered:
+ *   `"categories"`, `"subcategories"`, or `"category"` for the subcategories
+ *   listed above a category's topics. See `Discovery#categoryListPage`.
  * @param {Category[]} [options.subcategories] the children to transform, for
  *   layouts which don't source them from `category.subcategories`
  * @returns {Category[]} the subcategories to render
  */
 export default function categoryListSubcategories(
   category,
-  { surface, subcategories } = {}
+  { page, subcategories } = {}
 ) {
   return (
     applyValueTransformer(
       "category-list-subcategories",
       subcategories ?? category?.subcategories ?? [],
-      { category, surface }
+      { category, page }
     ) ?? []
   );
 }

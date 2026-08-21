@@ -66,18 +66,14 @@ module(
       });
     }
 
-    // A transformer that only collapses deeper levels when the categories are
-    // rendered inside a single category's topic list (the subcategory-list
-    // surface), leaving the global /categories page at full depth.
-    function hideGrandchildrenOnSubcategoryListSurface() {
+    // A transformer that only collapses deeper levels for the subcategories
+    // listed above a category's topics, leaving /categories at full depth.
+    function hideGrandchildrenAboveTopics() {
       withPluginApi((api) => {
         api.registerValueTransformer(
           "category-list-subcategories",
           ({ value, context }) => {
-            if (
-              context.surface === "subcategory_list" &&
-              context.category.level >= 1
-            ) {
+            if (context.page === "category" && context.category.level >= 1) {
               return [];
             }
             return value;
@@ -86,11 +82,9 @@ module(
       });
     }
 
-    // The surface is derived from the current route, which a rendering test
-    // doesn't have.
     function stubDiscovery(owner) {
       class DiscoveryStub extends Service {
-        showingSubcategoryList = false;
+        categoryListPage = "categories";
       }
 
       owner.unregister("service:discovery");
@@ -153,7 +147,7 @@ module(
       assert.deepEqual(
         child.subcategories.map((c) => c.id),
         [1003],
-        "the model keeps its subcategories for the sidebar and other surfaces"
+        "the model keeps its subcategories for the sidebar and topic lists"
       );
     });
 
@@ -199,8 +193,8 @@ module(
         );
     });
 
-    test("categories_boxes scope pruning to the subcategory-list surface", async function (assert) {
-      hideGrandchildrenOnSubcategoryListSurface();
+    test("categories_boxes scopes pruning to the page the transformer names", async function (assert) {
+      hideGrandchildrenAboveTopics();
       const { parent, child } = seedNestedCategories(getOwner(this));
 
       await render(
@@ -217,23 +211,23 @@ module(
         <template>
           <CategoriesBoxes
             @categories={{array child}}
-            @isSubcategoryList={{true}}
+            @categoryListPage="category"
           />
         </template>
       );
       assert
         .dom(".category-box[data-category-id='1002']")
-        .containsText("Child", "the subcategory-list surface shows its box");
+        .containsText("Child", "the list above a category's topics shows it");
       assert
         .dom(".category-box[data-category-id='1002']")
         .doesNotContainText(
           "Grandchild",
-          "but the same transformer caps the subcategory-list surface at two levels"
+          "but the same transformer caps that page at two levels"
         );
     });
 
-    test("categories_only derives the subcategory-list surface from the route", async function (assert) {
-      hideGrandchildrenOnSubcategoryListSurface();
+    test("categories_only derives the page from the route", async function (assert) {
+      hideGrandchildrenAboveTopics();
       const discovery = stubDiscovery(getOwner(this));
       const { parent, child } = seedNestedCategories(getOwner(this));
 
@@ -247,19 +241,19 @@ module(
           "global /categories rows still show the third level"
         );
 
-      discovery.showingSubcategoryList = true;
+      discovery.categoryListPage = "category";
 
       await render(
         <template><CategoriesOnly @categories={{array child}} /></template>
       );
       assert
         .dom("tr[data-category-id='1002']")
-        .exists("the subcategory-list surface renders the row");
+        .exists("the list above a category's topics renders the row");
       assert
         .dom("table.category-list")
         .doesNotContainText(
           "Grandchild",
-          "and caps it at two levels without anything forwarding the surface"
+          "and caps it at two levels without anything forwarding the page"
         );
     });
   }

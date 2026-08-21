@@ -31,16 +31,12 @@ export default class CategoriesBoxes extends Component {
 
   get hasSubcategories() {
     return this.categories.some(
-      (c) => !isEmpty(categoryListSubcategories(c, { surface: this.surface }))
+      (c) => !isEmpty(categoryListSubcategories(c, { page: this.page }))
     );
   }
 
-  // "subcategory_list" when shown inside a parent category's topic list
-  get surface() {
-    const isSubcategoryList =
-      this.isSubcategoryList ?? this.discovery.showingSubcategoryList;
-
-    return isSubcategoryList ? "subcategory_list" : undefined;
+  get page() {
+    return this.categoryListPage ?? this.discovery.categoryListPage;
   }
 
   categoryName(category) {
@@ -106,12 +102,10 @@ export default class CategoriesBoxes extends Component {
                   </div>
 
                   {{#let
-                    (categoryListSubcategories c surface=this.surface)
+                    (categoryListSubcategories c page=this.page)
                     as |subcategories|
                   }}
-                    {{#if
-                      (hasGrandchildren subcategories surface=this.surface)
-                    }}
+                    {{#if (hasGrandchildren subcategories page=this.page)}}
                       {{#each subcategories as |subcategory|}}
                         <div
                           data-category-id={{subcategory.id}}
@@ -131,7 +125,7 @@ export default class CategoriesBoxes extends Component {
                             />
                             {{#let
                               (categoryListSubcategories
-                                subcategory surface=this.surface
+                                subcategory page=this.page
                               )
                               as |grandchildren|
                             }}

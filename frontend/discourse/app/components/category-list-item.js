@@ -49,21 +49,16 @@ export default class CategoryListItem extends Component {
     return this.category?.path?.substring("/c/".length);
   }
 
-  get surface() {
-    const isSubcategoryList =
-      this.isSubcategoryList ?? this.discovery.showingSubcategoryList;
-
-    return isSubcategoryList ? "subcategory_list" : undefined;
+  get page() {
+    return this.categoryListPage ?? this.discovery.categoryListPage;
   }
 
   get displayedSubcategories() {
-    return categoryListSubcategories(this.category, { surface: this.surface });
+    return categoryListSubcategories(this.category, { page: this.page });
   }
 
   get showsGrandchildren() {
-    return hasGrandchildren(this.displayedSubcategories, {
-      surface: this.surface,
-    });
+    return hasGrandchildren(this.displayedSubcategories, { page: this.page });
   }
 
   applyValueTransformer(name, value, context) {
