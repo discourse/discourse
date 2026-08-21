@@ -198,7 +198,7 @@ export default class SiteTrafficExplorerFilterPills extends Component {
           {{#if (gt @filters.length 0)}}
             <DButton
               class="btn-transparent --primary"
-              @label="admin.site_traffic_explorer.clear_all_filters"
+              @label="admin.site_traffic_explorer.clear_all"
               @action={{@clearAllFilters}}
             />
           {{/if}}

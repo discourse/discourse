@@ -18,6 +18,12 @@
     gap: var(--space-2);
   }
 
+  &__filter-dropdown {
+    .d-button-label {
+      @include ellipsis;
+    }
+  }
+
   &__filter-controls {
     display: flex;
     align-items: flex-start;
@@ -220,17 +226,14 @@
     border-bottom: 1px solid var(--content-border-color);
 
     button {
-      appearance: none;
       border: 0;
       border-bottom: 2px solid transparent;
-      padding-block: var(--space-2);
+      padding-bottom: var(--space-2);
       padding-inline: 0;
       background: transparent;
       color: var(--primary-high);
-      font: inherit;
       font-size: var(--font-down-1-rem);
       white-space: nowrap;
-      cursor: pointer;
 
       &.is-active {
         border-bottom-color: var(--tertiary);
@@ -257,13 +260,6 @@
     html.discourse-no-touch &:hover:not(:has(a:hover)) {
       background: var(--token-color-surface-hovered);
     }
-  }
-
-  // The global `label` rule in common/base/discourse.scss wins on specificity
-  // over the block class, so these resets have to match it at element level.
-  label.site-traffic-explorer__row {
-    margin-block: 0;
-    font-weight: inherit;
   }
 
   &__row-count {
@@ -339,12 +335,12 @@ label.site-traffic-explorer__row {
   font-weight: inherit;
 }
 
-// Layout comes from .dropdown-menu; only the value truncation is ours, since
-// referrers and URLs run far longer than a normal menu label.
-.site-traffic-explorer__filter-dropdown {
-  max-width: min(22rem, calc(100vw - 2 * var(--space-4)));
+.site-traffic-breakdown-modal {
+  .site-traffic-explorer__breakdown-list {
+    font-size: var(--font-0);
+  }
 
-  .d-button-label {
-    @include ellipsis;
+  .site-traffic-explorer__dimension-label {
+    padding-block: var(--space-2);
   }
 }
