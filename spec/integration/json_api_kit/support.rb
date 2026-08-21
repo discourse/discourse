@@ -187,7 +187,7 @@ RSpec.shared_context "with a listing of topics" do
 
   def links_of(**pages) = { self: self_link, **{ prev: nil, next: nil }.merge(pages) }
 
-  def page_url(**page) = "#{current}?#{{ page: page }.to_query}"
+  def page_url(**page) = "#{current}?#{query.except("page").merge(page:).to_query}"
 
   def cursor_at(index, rendered = document) = cursor_of(rendered[:data][index])
 
