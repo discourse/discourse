@@ -6,6 +6,10 @@ module DiscourseAi
       MAX_RESPONSE_BODY_LENGTH = 5.megabytes
       MAX_REDIRECTS = 5
       SUPPORTED_CONTENT_TYPES = %w[text/html application/xhtml+xml text/plain].freeze
+      READABILITY_OPTIONS = {
+        tags: %w[div p code pre h1 h2 h3 h4 h5 h6 ul li ol blockquote table thead tbody tr th td],
+        remove_empty_nodes: true,
+      }.freeze
 
       FetchError = Class.new(StandardError)
 
@@ -128,6 +132,12 @@ module DiscourseAi
       end
 
       def extract_html(html)
+        require "ruby-readability"
+
+        readable_html = Readability::Document.new(html, READABILITY_OPTIONS).content
+        readable_text = text_content(Nokogiri.HTML5(readable_html))
+        return readable_text if readable_text.present?
+
         document = Nokogiri.HTML5(html)
         document.search("script, style, noscript, template").remove
 
@@ -136,7 +146,11 @@ module DiscourseAi
             document.at("#main") || document.at(".main") || document.at("#content") ||
             document.at(".content") || document.at("body")
 
-        main_content&.xpath(".//text()")&.map(&:text)&.join(" ").to_s.gsub(/\s+/, " ").strip
+        text_content(main_content)
+      end
+
+      def text_content(node)
+        node&.xpath(".//text()")&.map(&:text)&.join(" ").to_s.gsub(/\s+/, " ").strip
       end
     end
   end

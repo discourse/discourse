@@ -5,6 +5,14 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
 
   it "extracts readable page content and response validators" do
     url = "https://example.com/docs"
+    navigation = "Home Documentation Pricing"
+    article_heading = "Installation guide"
+    article_paragraphs = [
+      "This guide explains how to install the package safely and configure it for production environments.",
+      "First download the package, verify its checksum, and run the installer using the documented command.",
+      "After installation, edit the configuration file and restart the service to apply all settings.",
+    ]
+    footer = "Privacy Terms Copyright"
     stub_request(:get, url).to_return(
       status: 200,
       headers: {
@@ -15,8 +23,12 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
       body: <<~HTML,
         <html>
           <body>
-            <nav>Navigation</nav>
-            <main><h1>Installation</h1><p>Install the package.</p></main>
+            <nav>#{navigation}</nav>
+            <div class="article-copy">
+              <h1>#{article_heading}</h1>
+              #{article_paragraphs.map { |paragraph| "<p>#{paragraph}</p>" }.join}
+            </div>
+            <footer>#{footer}</footer>
             <script>ignoreMe()</script>
           </body>
         </html>
@@ -28,7 +40,7 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
     expect(result).to include(
       not_modified: false,
       url: url,
-      text: "Installation Install the package.",
+      text: ([article_heading] + article_paragraphs).join(" "),
       etag: '"revision-2"',
       last_modified: "Wed, 19 Aug 2026 16:00:00 GMT",
     )
