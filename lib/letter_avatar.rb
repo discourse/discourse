@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "erb"
-
 class LetterAvatar
   class Identity
     attr_accessor :color, :letter
@@ -22,11 +20,8 @@ class LetterAvatar
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
-  POINTSIZE = 280
   FONT_FILENAME = "NotoSans-Regular.woff2"
-  DEFAULT_FONT_FAMILY = "Noto Sans"
-  MACOS_FONT_FAMILY = "Helvetica"
-  private_constant :FONT_FILENAME, :DEFAULT_FONT_FAMILY, :MACOS_FONT_FAMILY
+  private_constant :FONT_FILENAME
 
   class << self
     def version
@@ -70,31 +65,13 @@ class LetterAvatar
     end
 
     def generate_fullsize(identity)
-      color = identity.color
       filename = fullsize_path(identity)
-
-      Dir.mktmpdir("letter-avatar") do |directory|
-        glyph_path = File.join(directory, "glyph.png")
-        canvas_path = File.join(directory, "canvas.png")
-        Vips.run(
-          ["text", glyph_path, text_markup(identity.letter), *font_arguments, "--rgba"],
-          [
-            "gravity",
-            glyph_path,
-            canvas_path,
-            "centre",
-            FULLSIZE.to_s,
-            FULLSIZE.to_s,
-            "--extend",
-            "background",
-            "--background",
-            "#{color.join(" ")} 255",
-          ],
-          ["flatten", canvas_path, filename, "--background", color.join(" ")],
-          read: [font_path].compact,
-          write: [directory, File.dirname(filename)],
-        )
-      end
+      DiscourseVips.generate_letter_avatar(
+        letter: identity.letter,
+        background_color: identity.color,
+        font_path:,
+        output_path: filename,
+      )
       filename
     end
 
@@ -102,7 +79,7 @@ class LetterAvatar
       return @vips_version if @vips_version
 
       @vips_version =
-        Digest::MD5.hexdigest([VERSION.to_s, Vips.run("--version"), font_version].join("\0"))
+        Digest::MD5.hexdigest([VERSION.to_s, DiscourseVips.version, font_version].join("\0"))
     end
 
     def cleanup_old
@@ -160,22 +137,8 @@ class LetterAvatar
       @font_path ||= File.join(DiscourseFonts.path_for_fonts, FONT_FILENAME)
     end
 
-    def text_markup(letter)
-      %(<span foreground="#ffffff" alpha="80%">#{ERB::Util.html_escape(letter)}</span>)
-    end
-
-    def font_arguments
-      arguments = ["--font", "#{font_family} #{POINTSIZE}"]
-      arguments.unshift("--fontfile", font_path) if font_path
-      arguments
-    end
-
-    def font_family
-      macos? ? MACOS_FONT_FAMILY : DEFAULT_FONT_FAMILY
-    end
-
     def font_version
-      font_path ? Digest::MD5.file(font_path).hexdigest : font_family
+      font_path ? Digest::MD5.file(font_path).hexdigest : "Helvetica"
     end
 
     def macos?

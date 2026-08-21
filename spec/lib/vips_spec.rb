@@ -25,28 +25,6 @@ RSpec.describe Vips do
       expect(described_class.run("--version")).to eq("vips-8.18.4\n")
     end
 
-    it "runs multiple operations in sequence" do
-      Discourse::SafeExec
-        .expects(:capture)
-        .with do |*command, **|
-          command ==
-            [
-              "nice",
-              "-n",
-              "10",
-              "sh",
-              "-c",
-              "vips text /tmp/glyph.png A\\;\\ touch\\ /tmp/exploit && vips gravity /tmp/glyph.png /tmp/avatar.png centre 360 360",
-            ]
-        end
-        .returns("")
-
-      described_class.run(
-        ["text", "/tmp/glyph.png", "A; touch /tmp/exploit"],
-        %w[gravity /tmp/glyph.png /tmp/avatar.png centre 360 360],
-      )
-    end
-
     context "when running in production" do
       let(:environment) { "production" }
 

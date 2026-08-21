@@ -59,7 +59,9 @@ cd ~/discourse
 Install the needed gems
 
 ```sh
+brew install vips pkgconf
 bundle install
+bin/rake discourse_vips:compile
 ```
 
 Install the JS dependencies
