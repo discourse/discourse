@@ -203,6 +203,58 @@ describe OpenIDConnectAuthenticator do
     end
   end
 
+  describe "#required_settings" do
+    it "requires a client secret by default" do
+      expect(authenticator.required_settings).to contain_exactly(
+        :openid_connect_discovery_document,
+        :openid_connect_client_id,
+        :openid_connect_client_secret,
+      )
+    end
+
+    it "does not require a client secret when using PKCE" do
+      SiteSetting.openid_connect_use_pkce = true
+      expect(authenticator.required_settings).not_to include(:openid_connect_client_secret)
+    end
+
+    it "does not require a client secret when using mTLS" do
+      SiteSetting.openid_connect_mtls_client_cert = "cert-pem"
+      SiteSetting.openid_connect_mtls_client_key = "key-pem"
+      expect(authenticator.required_settings).not_to include(:openid_connect_client_secret)
+    end
+
+    it "requires a client secret when only half of the mTLS pair is set" do
+      SiteSetting.openid_connect_mtls_client_cert = "cert-pem"
+      expect(authenticator.required_settings).to include(:openid_connect_client_secret)
+    end
+  end
+
+  describe "enabling the plugin" do
+    before do
+      SiteSetting.openid_connect_discovery_document =
+        "https://id.example.com/.well-known/openid-configuration"
+      SiteSetting.openid_connect_client_id = "my-client-id"
+    end
+
+    it "is refused while credentials are missing" do
+      expect { SiteSetting.openid_connect_enabled = true }.to raise_error(
+        Discourse::InvalidHTMLParameters,
+      )
+    end
+
+    it "is allowed once credentials are set" do
+      SiteSetting.openid_connect_client_secret = "my-client-secret"
+      SiteSetting.openid_connect_enabled = true
+      expect(authenticator.enabled?).to eq(true)
+    end
+
+    it "is allowed without a client secret when using PKCE" do
+      SiteSetting.openid_connect_use_pkce = true
+      SiteSetting.openid_connect_enabled = true
+      expect(authenticator.enabled?).to eq(true)
+    end
+  end
+
   describe "mTLS support" do
     let!(:mtls_key) { OpenSSL::PKey::RSA.new(2048) }
     let!(:mtls_cert) do

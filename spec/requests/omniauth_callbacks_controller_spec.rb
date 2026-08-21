@@ -29,7 +29,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     it "finds an authenticator when enabled" do
-      SiteSetting.enable_twitter_logins = true
+      enable_auth_provider(:twitter)
 
       expect(Users::OmniauthCallbacksController.find_authenticator("twitter")).not_to eq(nil)
     end
@@ -76,7 +76,7 @@ RSpec.describe Users::OmniauthCallbacksController do
   end
 
   describe "Google Oauth2" do
-    before { SiteSetting.enable_google_oauth2_logins = true }
+    before { enable_auth_provider(:google_oauth2) }
 
     describe "#failure" do
       it "defaults to the provider when only one is enabled" do
@@ -94,7 +94,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it "uses the provider parameter when matching an enabled authenticator" do
-        SiteSetting.enable_facebook_logins = true
+        enable_auth_provider(:facebook)
 
         get "/auth/failure", params: { provider: "facebook" }
         expect(response.status).to eq(200)
@@ -104,7 +104,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it "uses the strategy parameter when matching an enabled authenticator" do
-        SiteSetting.enable_facebook_logins = true
+        enable_auth_provider(:facebook)
 
         get "/auth/failure", params: { strategy: "facebook" }
         expect(response.status).to eq(200)
@@ -114,7 +114,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it "shows a generic error message when there are more than one enabled providers" do
-        SiteSetting.enable_facebook_logins = true
+        enable_auth_provider(:facebook)
 
         get "/auth/failure"
         expect(response.status).to eq(200)

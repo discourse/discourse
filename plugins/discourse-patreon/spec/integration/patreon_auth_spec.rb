@@ -11,9 +11,9 @@ describe "Patreon Oauth2" do
 
   before do
     SiteSetting.patreon_creator_discourse_username = user2.username
-    SiteSetting.patreon_login_enabled = true
     SiteSetting.patreon_client_id = client_id
     SiteSetting.patreon_client_secret = client_secret
+    SiteSetting.patreon_login_enabled = true
   end
 
   shared_examples "patreon oauth" do
