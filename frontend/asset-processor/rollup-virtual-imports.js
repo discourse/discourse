@@ -9,79 +9,296 @@ const SUPPORTED_FILE_EXTENSIONS = [
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
-export default {
-  "virtual:entrypoint": (moduleFilenames, { themeId, pluginName }) => {
-    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
-    const imports = [];
-    const entries = [];
-    const warnings = [];
+// Looked up by name at runtime, so they have to be registered with `define()`. Routes are not
+// here: a route is reached through the bundle its route map put it in. Matched against the
+// top-level segment only — `discourse/components/chat/services/chat` is a component.
+const EAGER_DIRECTORIES = [
+  "connectors",
+  "services",
+  "models",
+  "adapters",
+  "discourse-markdown",
+];
 
-    const exportedModules = new Set();
+const EAGER_DIRECTORY_REGEX = new RegExp(
+  `^[^/]+/(${EAGER_DIRECTORIES.join("|")})/`
+);
 
-    let i = 1;
-    for (const moduleFilename of moduleFilenames) {
-      // Type-only declaration files have no runtime module to export.
-      if (moduleFilename.endsWith(".d.ts")) {
-        continue;
-      }
+// Everything else — components, helpers, modifiers, lib — is imported from `.gjs` under
+// `staticModules`, so it can be left to tree-shaking.
+function isEagerModule(compatModuleName) {
+  return (
+    EAGER_DIRECTORY_REGEX.test(compatModuleName) ||
+    // `loadInitializers` enumerates the loader registry and matches these at any depth,
+    /\/(pre-initializers|initializers|api-initializers|instance-initializers)\//.test(
+      compatModuleName
+    ) ||
+    // and `mapRoutes` matches on the suffix alone — plugins name these `<something>-route-map`.
+    /route-map$/.test(compatModuleName)
+  );
+}
 
-      if (
-        !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
-      ) {
-        // Unsupported file type. Log a warning and skip
-        warnings.push(
-          `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
-        );
-        continue;
-      }
+function stripExtension(filename) {
+  return filename.replace(/\.[^\.]+(\.es6)?$/, "");
+}
 
-      const filenameWithoutExtension = moduleFilename.replace(
-        /\.[^\.]+(\.es6)?$/,
-        ""
-      );
+// Turns the raw file list into `{ importPath, compatModuleName }` records, dropping type-only
+// declarations and warning about file types we cannot compile.
+function normalizeModules(moduleFilenames, label) {
+  const records = [];
+  const warnings = [];
+  const seen = new Set();
 
-      let compatModuleName = filenameWithoutExtension;
-
-      if (moduleFilename.match(IS_CONNECTOR_REGEX)) {
-        const isTemplate = moduleFilename.endsWith(".hbs");
-        const isInTemplatesDirectory =
-          moduleFilename.match(/(^|\/)templates\//);
-
-        if (isTemplate && !isInTemplatesDirectory) {
-          compatModuleName = compatModuleName.replace(
-            IS_CONNECTOR_REGEX,
-            "$1templates/connectors/"
-          );
-        } else if (!isTemplate && isInTemplatesDirectory) {
-          compatModuleName = compatModuleName.replace(
-            /(^|\/)templates\//,
-            "$1"
-          );
-        }
-      }
-
-      const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
-        ? moduleFilename
-        : filenameWithoutExtension;
-
-      if (exportedModules.has(importPath)) {
-        continue;
-      }
-      exportedModules.add(importPath);
-
-      imports.push(`import * as Mod${i} from "./${importPath}";`);
-      entries.push(`  "${compatModuleName}": Mod${i},`);
-
-      i += 1;
+  for (const moduleFilename of moduleFilenames) {
+    // Type-only declaration files have no runtime module to export.
+    if (moduleFilename.endsWith(".d.ts")) {
+      continue;
     }
 
+    if (
+      !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
+    ) {
+      warnings.push(
+        `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
+      );
+      continue;
+    }
+
+    const filenameWithoutExtension = stripExtension(moduleFilename);
+
+    let compatModuleName = filenameWithoutExtension;
+
+    if (moduleFilename.match(IS_CONNECTOR_REGEX)) {
+      const isTemplate = moduleFilename.endsWith(".hbs");
+      const isInTemplatesDirectory = moduleFilename.match(/(^|\/)templates\//);
+
+      if (isTemplate && !isInTemplatesDirectory) {
+        compatModuleName = compatModuleName.replace(
+          IS_CONNECTOR_REGEX,
+          "$1templates/connectors/"
+        );
+      } else if (!isTemplate && isInTemplatesDirectory) {
+        compatModuleName = compatModuleName.replace(/(^|\/)templates\//, "$1");
+      }
+    }
+
+    const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
+      ? moduleFilename
+      : filenameWithoutExtension;
+
+    if (seen.has(importPath)) {
+      continue;
+    }
+    seen.add(importPath);
+
+    records.push({ importPath, compatModuleName });
+  }
+
+  return { records, warnings };
+}
+
+// Route names are derived from file paths, the way Embroider does it: strip the
+// `routes/` / `controllers/` / `templates/` prefix and join the remaining segments with a dot.
+// Ember's resolver convention guarantees the path is the route name. Anchored for the same
+// reason `EAGER_DIRECTORY_REGEX` is — a component under `components/chat/routes/` is not a route.
+const ROUTE_FILE_REGEX = /^[^/]+\/(routes|controllers|templates)\/(.+)$/;
+
+function routeNameFor(compatModuleName) {
+  const match = compatModuleName.match(ROUTE_FILE_REGEX);
+
+  if (!match) {
+    return null;
+  }
+
+  const [, type, path] = match;
+
+  // Unlike a core app, Discourse nests connectors and classic component templates under
+  // `templates/`. They are not routes.
+  if (
+    type === "templates" &&
+    (path.startsWith("connectors/") || path.startsWith("components/"))
+  ) {
+    return null;
+  }
+
+  return path.split("/").join(".");
+}
+
+// Ember creates these without a `this.route` call, so they are never in a route map. They
+// belong to the bundle of the route they hang off.
+const IMPLICIT_ROUTE_SUFFIXES = ["index", "loading", "error"];
+
+function bundleNameFor(routeName, bundleByRoute) {
+  let name = routeName;
+
+  while (name) {
+    if (bundleByRoute[name]) {
+      return bundleByRoute[name];
+    }
+
+    const dot = name.lastIndexOf(".");
+
+    if (!IMPLICIT_ROUTE_SUFFIXES.includes(name.slice(dot + 1))) {
+      return null;
+    }
+
+    name = dot === -1 ? "" : name.slice(0, dot);
+  }
+
+  return null;
+}
+
+// Groups route files into the lazy bundle their route map declared, one per `bundleName`.
+// Anything with no bundle is left for the eager set.
+export function routeBundlesFor(records, bundleByRoute) {
+  const bundles = new Map();
+
+  if (!bundleByRoute) {
+    return [];
+  }
+
+  for (const record of records) {
+    const routeName = routeNameFor(record.compatModuleName);
+    const bundleName = routeName && bundleNameFor(routeName, bundleByRoute);
+
+    if (!bundleName) {
+      continue;
+    }
+
+    let bundle = bundles.get(bundleName);
+
+    if (!bundle) {
+      bundle = { bundleName, names: new Set(), records: [] };
+      bundles.set(bundleName, bundle);
+    }
+
+    bundle.names.add(routeName);
+    bundle.records.push(record);
+  }
+
+  return [...bundles.values()].map((bundle) => ({
+    ...bundle,
+    names: [...bundle.names].sort(),
+  }));
+}
+
+function renderMap(name, records, identifiers) {
+  return [
+    `const ${name} = {`,
+    ...records.map(
+      (record) => `  "${record.compatModuleName}": ${identifiers.get(record)},`
+    ),
+    "};",
+  ];
+}
+
+export default {
+  "virtual:entrypoint": (moduleFilenames, opts, extra) => {
+    const { themeId, pluginName, frontendConfig } = opts;
+    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
+
+    const { records, warnings } = normalizeModules(moduleFilenames, label);
+
+    // QUnit discovers tests by executing the module that registers them, and a test bundle has
+    // nothing to lazily route to. Every test module must therefore be imported eagerly, so the
+    // test entrypoint opts out of `staticModules` tree-shaking even when the plugin declares it.
+    const isTestEntrypoint = extra?.entrypointName === "test";
+
+    // `compatModules` is what core registers with `define()`; the default export is the
+    // cross-bundle lookup table that `babel-resolve-plugin-imports` indexes into. Without
+    // `staticModules` they are the same object, and every module is eagerly imported.
+    if (isTestEntrypoint || !frontendConfig?.staticModules) {
+      const identifiers = new Map(
+        records.map((record, i) => [record, `Mod${i + 1}`])
+      );
+
+      return [
+        ...records.map(
+          (record) =>
+            `import * as ${identifiers.get(record)} from "./${record.importPath}";`
+        ),
+        ...warnings,
+        ...renderMap("compatModules", records, identifiers),
+        "export { compatModules };",
+        "export default compatModules;",
+        "",
+      ].join("\n");
+    }
+
+    // Declared with or without the `/index` suffix, matching how cross-plugin imports resolve.
+    const sharedPaths = new Set(
+      (frontendConfig.sharedModules ?? []).flatMap((shared) => {
+        const path = stripExtension(shared);
+        return [path, `${path}/index`];
+      })
+    );
+
+    const bundles = routeBundlesFor(records, opts.routeTables?.bundleByRoute);
+
+    // A module that merely lives under `routes/` is reached through a plain import, the same way
+    // components and lib already are. What no route map names, and nothing imports, is dropped.
+    const eager = records.filter((record) =>
+      isEagerModule(record.compatModuleName)
+    );
+    const shared = records.filter((record) =>
+      sharedPaths.has(stripExtension(record.importPath))
+    );
+
+    // A module can be both eager and shared, so import each at most once.
+    const imported = [...new Set([...eager, ...shared])];
+    const identifiers = new Map(
+      imported.map((record, i) => [record, `Mod${i + 1}`])
+    );
+
     return [
-      ...imports,
+      ...imported.map(
+        (record) =>
+          `import * as ${identifiers.get(record)} from "./${record.importPath}";`
+      ),
       ...warnings,
-      "const compatModules = {",
-      ...entries,
-      "};",
-      "export default compatModules;",
+      ...renderMap("compatModules", eager, identifiers),
+      ...renderMap("sharedModules", shared, identifiers),
+      "export const routes = [",
+      ...bundles.map(
+        (bundle) =>
+          `  { names: ${JSON.stringify(bundle.names)},` +
+          ` load: () => import("virtual:route:${bundle.bundleName}") },`
+      ),
+      "];",
+      "export { compatModules };",
+      "export default sharedModules;",
+      "",
+    ].join("\n");
+  },
+  // One lazy route bundle. `@embroider/router` awaits this and hands the default export to
+  // `Resolver#addModules`, so the shape must be a plain module map.
+  "virtual:route": (moduleFilenames, opts, bundleName) => {
+    const label = opts.pluginName
+      ? `PLUGIN ${opts.pluginName}`
+      : `THEME ${opts.themeId}`;
+
+    const { records } = normalizeModules(moduleFilenames, label);
+    const bundle = routeBundlesFor(
+      records,
+      opts.routeTables?.bundleByRoute
+    ).find((candidate) => candidate.bundleName === bundleName);
+
+    // Null rather than throwing: the caller tries each entrypoint in turn.
+    if (!bundle) {
+      return null;
+    }
+
+    const identifiers = new Map(
+      bundle.records.map((record, i) => [record, `Mod${i + 1}`])
+    );
+
+    return [
+      ...bundle.records.map(
+        (record) =>
+          `import * as ${identifiers.get(record)} from "./${record.importPath}";`
+      ),
+      ...renderMap("routeCompatModules", bundle.records, identifiers),
+      "export default routeCompatModules;",
       "",
     ].join("\n");
   },

@@ -60,13 +60,44 @@ window.moduleBroker = {
   },
 };
 
+// The default export is the bundle's cross-bundle API, reached by ESM import, and must not be
+// registered. Older bundles have no `compatModules`, where the two are the same object.
+function compatModulesOf(bundle) {
+  return bundle.compatModules ?? bundle.default;
+}
+
+// `@embroider/router` finds these by route name and hands the default export to
+// `Resolver#addModules`, which expects the same namespacing as the eager modules.
+function registerRouteBundles(bundle, prefix) {
+  window._embroiderRouteBundles_ ??= [];
+
+  for (const { names, load } of bundle.routes ?? []) {
+    window._embroiderRouteBundles_.push({
+      names,
+      load: async () => {
+        const routeModules = (await load()).default;
+
+        return {
+          default: Object.fromEntries(
+            Object.entries(routeModules).map(([key, mod]) => [
+              `${prefix}/${key}`,
+              mod,
+            ])
+          ),
+        };
+      },
+    });
+  }
+}
+
 async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
   try {
-    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
-    for (const [key, mod] of Object.entries(compatModules)) {
+    const bundle = await import(/* @vite-ignore */ link.href);
+    for (const [key, mod] of Object.entries(compatModulesOf(bundle))) {
       define(`discourse/theme-${themeId}/${key}`, () => mod);
     }
+    registerRouteBundles(bundle, `discourse/theme-${themeId}`);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(
@@ -85,10 +116,11 @@ async function loadThemeFromModulePreload(link) {
 async function loadPluginFromModulePreload(link) {
   const pluginName = link.dataset.pluginName;
   try {
-    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
-    for (const [key, mod] of Object.entries(compatModules)) {
+    const bundle = await import(/* @vite-ignore */ link.href);
+    for (const [key, mod] of Object.entries(compatModulesOf(bundle))) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }
+    registerRouteBundles(bundle, `discourse/plugins/${pluginName}`);
   } catch (error) {
     if (DEBUG) {
       if (isRailsTesting() || isTesting()) {

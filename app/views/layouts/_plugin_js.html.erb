@@ -25,4 +25,12 @@
       nonce="<%= csp_nonce_placeholder %>"
     >
   <%- end %>
+
+  <%- plugin_assets.filter_map { it[:route_bundle] }.uniq.each do |route_bundle| %>
+    <link
+      rel="modulepreload"
+      href="<%= script_asset_path(route_bundle) %>"
+      nonce="<%= csp_nonce_placeholder %>"
+    >
+  <%- end %>
 <%- end %>

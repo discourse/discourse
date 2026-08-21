@@ -31,6 +31,7 @@ export default function discourseVirtualLoader({
     ? rollupVirtualImports
     : {
         "virtual:entrypoint": rollupVirtualImports["virtual:entrypoint"],
+        "virtual:route": rollupVirtualImports["virtual:route"],
       };
 
   return {
@@ -47,7 +48,8 @@ export default function discourseVirtualLoader({
 
       if (
         availableVirtualImports[source] ||
-        source.startsWith("virtual:entrypoint:")
+        source.startsWith("virtual:entrypoint:") ||
+        source.startsWith("virtual:route:")
       ) {
         return `${basePath}${source}`;
       }
@@ -73,7 +75,27 @@ export default function discourseVirtualLoader({
           {
             basePath,
             context: this,
+            entrypointName,
           }
+        );
+      } else if (fromBase.startsWith("virtual:route:")) {
+        const bundleName = fromBase.replace("virtual:route:", "");
+
+        // Entrypoints share a compat-module namespace, so a bundle belongs to exactly one.
+        for (const { modules } of Object.values(entrypoints)) {
+          const source = availableVirtualImports["virtual:route"](
+            modules,
+            opts,
+            bundleName
+          );
+
+          if (source) {
+            return source;
+          }
+        }
+
+        throw new Error(
+          `No route bundle for "${bundleName}" — no route files matched it.`
         );
       } else if (availableVirtualImports[fromBase]) {
         return availableVirtualImports[fromBase](opts);

@@ -63,6 +63,9 @@ loaderShim("@ember/template-factory", () =>
   importSync("@ember/template-factory")
 );
 loaderShim("@ember/template", () => importSync("@ember/template"));
+// Despite the name, this is a production API. Plugins need it to register their dynamic imports
+// with the test framework, or acceptance tests race the chunk they are waiting on.
+loaderShim("@ember/test-waiters", () => importSync("@ember/test-waiters"));
 loaderShim("@ember/utils", () => importSync("@ember/utils"));
 loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
 loaderShim("@glimmer/component", () => importSync("@glimmer/component"));

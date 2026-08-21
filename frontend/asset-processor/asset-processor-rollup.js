@@ -19,6 +19,8 @@ import discourseExternalLoader from "./rollup-plugins/discourse-external-loader"
 import discourseFileSearch from "./rollup-plugins/discourse-file-search";
 import discourseGjs from "./rollup-plugins/discourse-gjs";
 import discourseHbs from "./rollup-plugins/discourse-hbs";
+import discourseRegisterComponents from "./rollup-plugins/discourse-register-components";
+import discourseRouteMaps from "./rollup-plugins/discourse-route-maps";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
@@ -40,6 +42,10 @@ async function performRollup(modules, opts) {
 
   const fs = createVirtualFs(modules, basePath);
 
+  // Filled by `discourse-route-maps` in `buildStart`, before the entrypoint is generated from it.
+  const routeTables = { bundleByRoute: {}, urls: [] };
+  opts.routeTables = routeTables;
+
   const cache = opts.pluginName ? caches.get(opts.pluginName) : false;
 
   const result = await rollup({
@@ -55,6 +61,14 @@ async function performRollup(modules, opts) {
       console.info(level, message);
     },
     plugins: [
+      discourseRouteMaps({
+        modules,
+        label: opts.pluginName
+          ? `PLUGIN ${opts.pluginName}`
+          : `THEME ${opts.themeId}`,
+        tables: routeTables,
+        staticModules: !!opts.frontendConfig?.staticModules,
+      }),
       discourseSourceImports({ fs }),
       discourseFileSearch(),
       discourseVirtualLoader({
@@ -119,6 +133,7 @@ async function performRollup(modules, opts) {
       }),
       discourseHbs(),
       discourseGjs(),
+      discourseRegisterComponents({ basePath }),
       discourseTerser({ opts }),
     ],
   });
@@ -144,6 +159,44 @@ async function performRollup(modules, opts) {
     ),
   ];
 
+  const routeVirtualPrefix = `${basePath}virtual:route:`;
+
+  const bundleNameByFile = {};
+  for (const chunk of bundle.output) {
+    if (chunk.facadeModuleId?.startsWith(routeVirtualPrefix)) {
+      bundleNameByFile[chunk.fileName] = chunk.facadeModuleId.slice(
+        routeVirtualPrefix.length
+      );
+    }
+  }
+
+  // Ties each lazy route chunk back to the urls that reach it, so Ruby can preload it. Rollup is
+  // free to hoist the entrypoint module into a shared chunk, so find where it actually landed.
+  function routeBundlesForEntry(entryName) {
+    const entrypointModuleId = `${basePath}virtual:entrypoint:${entryName}`;
+
+    const owner = bundle.output.find((chunk) =>
+      chunk.moduleIds?.includes(entrypointModuleId)
+    );
+
+    const fileNameByBundle = {};
+
+    for (const fileName of owner?.dynamicImports ?? []) {
+      if (bundleNameByFile[fileName]) {
+        fileNameByBundle[bundleNameByFile[fileName]] = fileName;
+      }
+    }
+
+    // `routeTables.urls` is already ordered most specific first, which is the order Ruby
+    // matches them in.
+    return routeTables.urls
+      .filter(({ bundleName }) => fileNameByBundle[bundleName])
+      .map(({ bundleName, url }) => ({
+        url,
+        fileName: fileNameByBundle[bundleName],
+      }));
+  }
+
   const chunks = Object.fromEntries(
     bundle.output
       .filter((c) => c.code)
@@ -158,6 +211,9 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
+            routeBundles: chunk.isEntry
+              ? routeBundlesForEntry(chunk.name)
+              : undefined,
             externalPluginImports,
           },
         ];
