@@ -393,11 +393,6 @@ class Upload < ActiveRecord::Base
         color = ""
       end
 
-      if color.nil?
-        image_type = FastImage.type(local_path)
-        color = "" if image_type == :svg || !FileHelper.supported_images.include?(image_type.to_s)
-      end
-
       color ||=
         begin
           DiscourseVips.dominant_color(input_path: local_path)

@@ -152,9 +152,7 @@ static void write_vips_error(const char *response) {
 }
 
 static void set_loader_block(const char *name, gboolean blocked) {
-  if (vips_type_find("VipsOperation", name) != 0) {
-    vips_operation_block_set(name, blocked);
-  }
+  vips_operation_block_set(name, blocked);
 }
 
 static void block_loaders(void) {
@@ -170,23 +168,12 @@ static void allow_loader_family(const char *base, const char *file) {
   set_loader_block(file, FALSE);
 }
 
-static int allow_raster_loader(const char *format) {
-  if (strcmp(format, "jpg") == 0) {
-    allow_loader_family("VipsForeignLoadJpeg", "VipsForeignLoadJpegFile");
-  } else if (strcmp(format, "png") == 0) {
-    allow_loader_family("VipsForeignLoadPng", "VipsForeignLoadPngFile");
-  } else if (strcmp(format, "gif") == 0) {
-    allow_loader_family("VipsForeignLoadNsgif", "VipsForeignLoadNsgifFile");
-  } else if (strcmp(format, "webp") == 0) {
-    allow_loader_family("VipsForeignLoadWebp", "VipsForeignLoadWebpFile");
-  } else if (strcmp(format, "heic") == 0 || strcmp(format, "avif") == 0) {
-    allow_loader_family("VipsForeignLoadHeif", "VipsForeignLoadHeifFile");
-  } else if (strcmp(format, "jxl") == 0) {
-    allow_loader_family("VipsForeignLoadJxl", "VipsForeignLoadJxlFile");
-  } else {
-    return -1;
-  }
-  return 0;
+static void allow_dominant_color_loaders(void) {
+  allow_loader_family("VipsForeignLoadJpeg", "VipsForeignLoadJpegFile");
+  allow_loader_family("VipsForeignLoadPng", "VipsForeignLoadPngFile");
+  allow_loader_family("VipsForeignLoadNsgif", "VipsForeignLoadNsgifFile");
+  allow_loader_family("VipsForeignLoadWebp", "VipsForeignLoadWebpFile");
+  allow_loader_family("VipsForeignLoadHeif", "VipsForeignLoadHeifFile");
 }
 
 static int initialize_vips(const char *program) {
@@ -208,6 +195,11 @@ static int initialize_vips(const char *program) {
 
 static int save_png(VipsImage *image, const char *output, int compression) {
   return vips_pngsave(image, output, "compression", compression, NULL);
+}
+
+static unsigned char quantize_sample(double value, double sample_max) {
+  value = fmin(sample_max, fmax(0.0, value));
+  return (unsigned char)floor(value * 255.0 / sample_max + 0.5);
 }
 
 static int command_version(options_t *options) {
@@ -297,46 +289,98 @@ static int command_letter_avatar(options_t *options) {
 static int command_dominant_color(options_t *options) {
   const char *response = required_option(options, "response");
   const char *input = required_option(options, "input");
-  const char *format = required_option(options, "input-format");
-  if (allow_raster_loader(format) != 0) {
+  VipsImage *image = NULL;
+  VipsImage *double_image = NULL;
+  VipsImage *premultiplied = NULL;
+  VipsImage *resized = NULL;
+  VipsImage *unpremultiplied = NULL;
+  double *components = NULL;
+  int result = 1;
+
+  allow_dominant_color_loaders();
+  const char *loader = vips_foreign_find_load(input);
+  if (!loader) {
     write_error(response, "UnsupportedFormatError", "unsupported input format");
-    return 1;
+    goto cleanup;
   }
 
-  VipsImage *pixel = NULL;
-  if (vips_thumbnail(input, &pixel, 1, "height", 1, "size", VIPS_SIZE_FORCE,
-                     NULL) != 0) {
+  if (strcmp(loader, "VipsForeignLoadHeifFile") == 0) {
+    image = vips_image_new_from_file(input, "access", VIPS_ACCESS_SEQUENTIAL,
+                                     "fail_on", VIPS_FAIL_ON_NONE, "thumbnail",
+                                     FALSE, NULL);
+  } else {
+    image = vips_image_new_from_file(input, "access", VIPS_ACCESS_SEQUENTIAL,
+                                     "fail_on", VIPS_FAIL_ON_NONE, NULL);
+  }
+  if (!image) {
     write_vips_error(response);
-    return 1;
-  }
-  if (vips_image_get_width(pixel) != 1 || vips_image_get_height(pixel) != 1 ||
-      vips_image_get_format(pixel) != VIPS_FORMAT_UCHAR) {
-    write_error(response, "InvalidImageError",
-                "dominant color did not produce one uchar pixel");
-    VIPS_UNREF(pixel);
-    return 1;
+    goto cleanup;
   }
 
-  size_t length = 0;
-  unsigned char *components = vips_image_write_to_memory(pixel, &length);
-  int bands = vips_image_get_bands(pixel);
-  if (!components || length != (size_t)bands || bands < 1 || bands > 4) {
+  VipsBandFormat format = vips_image_get_format(image);
+  int bands = vips_image_get_bands(image);
+  if ((format != VIPS_FORMAT_UCHAR && format != VIPS_FORMAT_USHORT) ||
+      bands < 1 || bands > 4) {
+    write_error(response, "InvalidImageError", "unsupported pixel format");
+    goto cleanup;
+  }
+  double sample_max = format == VIPS_FORMAT_USHORT ? 65535.0 : 255.0;
+
+  result = vips_cast(image, &double_image, VIPS_FORMAT_DOUBLE, NULL);
+  bool has_alpha = vips_image_hasalpha(image);
+  VipsImage *resize_input = double_image;
+  if (result == 0 && has_alpha) {
+    result = vips_premultiply(double_image, &premultiplied, "max_alpha",
+                              sample_max, NULL);
+    resize_input = premultiplied;
+  }
+  if (result == 0) {
+    result =
+        vips_resize(resize_input, &resized, 1.0 / vips_image_get_width(image),
+                    "vscale", 1.0 / vips_image_get_height(image), "kernel",
+                    VIPS_KERNEL_LANCZOS3, "gap", 2.0, NULL);
+  }
+  if (result == 0 && has_alpha) {
+    result = vips_unpremultiply(resized, &unpremultiplied, "max_alpha",
+                                sample_max, NULL);
+  }
+  VipsImage *pixel = has_alpha ? unpremultiplied : resized;
+  if (result != 0) {
+    write_vips_error(response);
+    goto cleanup;
+  }
+  if (vips_image_get_width(pixel) != 1 || vips_image_get_height(pixel) != 1) {
+    write_error(response, "InvalidImageError",
+                "dominant color did not produce one pixel");
+    goto cleanup;
+  }
+
+  int component_count = 0;
+  if (vips_getpoint(pixel, &components, &component_count, 0, 0, NULL) != 0 ||
+      !components || component_count != bands) {
     write_error(response, "InvalidImageError",
                 "unable to read dominant color pixel");
-    g_free(components);
-    VIPS_UNREF(pixel);
-    return 1;
+    goto cleanup;
   }
 
-  unsigned char red = components[0];
-  unsigned char green = bands < 3 ? components[0] : components[1];
-  unsigned char blue = bands < 3 ? components[0] : components[2];
+  unsigned char red = quantize_sample(components[0], sample_max);
+  unsigned char green =
+      quantize_sample(bands < 3 ? components[0] : components[1], sample_max);
+  unsigned char blue =
+      quantize_sample(bands < 3 ? components[0] : components[2], sample_max);
   char color[7];
   snprintf(color, sizeof(color), "%02X%02X%02X", red, green, blue);
   write_value(response, color);
+  result = 0;
+
+cleanup:
   g_free(components);
-  VIPS_UNREF(pixel);
-  return 0;
+  VIPS_UNREF(image);
+  VIPS_UNREF(double_image);
+  VIPS_UNREF(premultiplied);
+  VIPS_UNREF(resized);
+  VIPS_UNREF(unpremultiplied);
+  return result;
 }
 
 static int command_topic_og(options_t *options) {

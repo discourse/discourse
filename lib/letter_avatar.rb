@@ -98,38 +98,12 @@ class LetterAvatar
 
     def resize(from, to, size)
       profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
-      output = "#{to}[palette,Q=100,compression=6,strip]"
-
-      Tempfile.create(%w[letter-avatar-resized .png], binmode: true) do |resized|
-        resized.close
-        Vips.run(
-          "thumbnail",
-          from,
-          "#{resized.path}[compression=6,strip]",
-          size.to_s,
-          "--height",
-          size.to_s,
-          "--size",
-          "both",
-          "--crop",
-          "centre",
-          "--output-profile",
-          profile,
-          read: [from, profile],
-          write: [resized.path],
-        )
-        Vips.run(
-          "sharpen",
-          resized.path,
-          output,
-          "--sigma",
-          "0.5",
-          "--m1",
-          "0.7",
-          read: [resized.path],
-          write: [File.dirname(to)],
-        )
-      end
+      DiscourseVips.resize_letter_avatar(
+        input_path: from,
+        output_path: to,
+        size:,
+        profile_path: profile,
+      )
     end
 
     def font_path

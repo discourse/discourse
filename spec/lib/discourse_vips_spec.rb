@@ -67,7 +67,7 @@ RSpec.describe DiscourseVips do
     it "returns an uppercase RGB hex color" do
       input_path = file_from_fixtures("cropped.png").path
 
-      expect(described_class.dominant_color(input_path:)).to eq("3A3730")
+      expect(described_class.dominant_color(input_path:)).to eq("565242")
     end
 
     it "accepts a supported image with a nonstandard file extension" do
@@ -75,13 +75,12 @@ RSpec.describe DiscourseVips do
         file.write(File.binread(file_from_fixtures("cropped.png").path))
         file.flush
 
-        expect(described_class.dominant_color(input_path: file.path)).to eq("3A3730")
+        expect(described_class.dominant_color(input_path: file.path)).to eq("565242")
       end
     end
 
-    it "rejects mismatched image content" do
+    it "rejects unsupported image content" do
       input_path = file_from_fixtures("image.svg").path
-      FastImage.stubs(:type).with(input_path).returns(:png)
 
       expect { described_class.dominant_color(input_path:) }.to raise_error(DiscourseVips::Error)
     end

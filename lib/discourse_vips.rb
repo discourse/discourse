@@ -3,6 +3,7 @@
 require "erb"
 require "json"
 require "rbconfig"
+require "tempfile"
 require "tmpdir"
 
 module DiscourseVips
@@ -16,22 +17,10 @@ module DiscourseVips
     file_size_bytes: 10 * 1024 * 1024 * 1024,
     open_files: 1024,
   }.freeze
-  INPUT_FORMATS = {
-    jpeg: "jpg",
-    jpg: "jpg",
-    png: "png",
-    gif: "gif",
-    webp: "webp",
-    heic: "heic",
-    heif: "heic",
-    avif: "avif",
-    jxl: "jxl",
-  }.freeze
   private_constant :DEFAULT_TIMEOUT_SECONDS,
                    :FONTCONFIG_READ_PATHS,
                    :DYNAMIC_LINKER_CACHE_PATH,
-                   :RLIMITS,
-                   :INPUT_FORMATS
+                   :RLIMITS
 
   class Error < RuntimeError
     attr_reader :status, :stdout, :stderr
@@ -72,18 +61,44 @@ module DiscourseVips
       nil
     end
 
-    def dominant_color(input_path:)
-      input_format = INPUT_FORMATS[FastImage.type(input_path)]
-      raise Error, "unsupported dominant-color image format" if !input_format
+    def resize_letter_avatar(input_path:, output_path:, size:, profile_path:)
+      Tempfile.create(%w[letter-avatar-resized .png], binmode: true) do |resized|
+        resized.close
+        run_cli(
+          "thumbnail",
+          input_path,
+          "#{resized.path}[compression=6,strip]",
+          size.to_s,
+          "--height",
+          size.to_s,
+          "--size",
+          "both",
+          "--crop",
+          "centre",
+          "--output-profile",
+          profile_path,
+          read: [input_path, profile_path],
+          write: [resized.path],
+        )
+        run_cli(
+          "sharpen",
+          resized.path,
+          "#{output_path}[palette,Q=100,compression=6,strip]",
+          "--sigma",
+          "0.5",
+          "--m1",
+          "0.7",
+          read: [resized.path],
+          write: [File.dirname(output_path)],
+        )
+      end
+      nil
+    end
 
-      run(
-        command: "dominant-color",
-        options: {
-          input: input_path,
-          input_format:,
-        },
-        read: [input_path],
-      ).fetch("value")
+    def dominant_color(input_path:)
+      run(command: "dominant-color", options: { input: input_path }, read: [input_path]).fetch(
+        "value",
+      )
     end
 
     def generate_topic_og_image(svg_path:, output_path:)
@@ -111,9 +126,7 @@ module DiscourseVips
     end
 
     def run(command:, options: {}, read: [], write: [])
-      if !Rails.env.local? && !Discourse::SafeExec.landlock_supported?
-        raise Error, "Cannot run libvips because Landlock sandboxing is unavailable"
-      end
+      ensure_sandbox_available!
 
       Dir.mktmpdir("discourse-vips-helper-") do |scratch|
         response_path = File.join(scratch, "response.json")
@@ -142,6 +155,38 @@ module DiscourseVips
         response = read_response(response_path)
         raise Error, response.fetch("message", "native libvips helper failed") if !response["ok"]
         response
+      end
+    end
+
+    def run_cli(*arguments, read:, write:)
+      ensure_sandbox_available!
+
+      Dir.mktmpdir("discourse-vips-") do |scratch|
+        environment = environment(scratch)
+        # Future enhancement: https://github.com/libvips/libvips/issues/5174
+        environment["VIPS_BLOCK_UNTRUSTED"] = "1"
+
+        Discourse::SafeExec.capture(
+          "nice",
+          "-n",
+          "10",
+          "vips",
+          *arguments,
+          env: environment,
+          unsetenv_others: true,
+          read: read_paths([*FONTCONFIG_READ_PATHS, *read]),
+          write: [scratch, *write],
+          execute: Discourse::SafeExec.default_execute_paths,
+          timeout: DEFAULT_TIMEOUT_SECONDS,
+          rlimits: RLIMITS,
+          seccomp_deny_network: true,
+        )
+      end
+    end
+
+    def ensure_sandbox_available!
+      if !Rails.env.local? && !Discourse::SafeExec.landlock_supported?
+        raise Error, "Cannot run libvips because Landlock sandboxing is unavailable"
       end
     end
 
