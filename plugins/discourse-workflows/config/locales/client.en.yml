@@ -41,6 +41,15 @@ en:
       header_auth:
         name: "Header name"
         value: "Header value"
+      oauth2_client_credentials:
+        token_url: "Token URL"
+        client_id: "Client ID"
+        client_secret: "Client secret"
+        client_authentication: "Client authentication"
+        client_authentication_request_body: "Send client credentials in request body"
+        client_authentication_basic_auth: "Send client credentials with HTTP Basic auth"
+        scope: "Scope"
+        scope_description: "Space-separated OAuth scopes. Leave blank when the provider does not require one."
       run_scope:
         per_item: "One run per item"
         all_items: "One run for all items"
@@ -933,6 +942,7 @@ en:
         authentication_none: "None"
         authentication_basic_auth: "Basic auth"
         authentication_bearer_token: "Bearer token"
+        authentication_oauth2_client_credentials: "OAuth 2.0 client credentials"
         authentication_header_auth: "Header auth"
         credential: "Credential"
         method: "Method"

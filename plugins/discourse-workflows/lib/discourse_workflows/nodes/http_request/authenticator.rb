@@ -20,6 +20,8 @@ module DiscourseWorkflows
             apply_basic_auth(headers, cred_data)
           when "bearer_token"
             apply_bearer_token(headers, cred_data)
+          when "oauth2_client_credentials"
+            apply_bearer_token(headers, { "token" => ClientCredentials.fetch(cred_data) })
           when "header_auth"
             apply_header_auth(headers, cred_data)
           else

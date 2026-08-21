@@ -92,6 +92,10 @@ after_initialize do
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
+    DiscourseWorkflows::CredentialTypes::Oauth2ClientCredentials,
+    self,
+  )
+  DiscoursePluginRegistry.register_discourse_workflows_credential_type(
     DiscourseWorkflows::CredentialTypes::HeaderAuth,
     self,
   )
