@@ -330,15 +330,16 @@ composes freely with a real target on the same element.
 
 `onDwellEnd` carries `reason` (`"left"` or `"drag-ended"`), `fired` (whether
 `onDwell` ran for this candidacy), and `droppedHere` (whether the drop landed
-on a drop target registered on the element or inside it — always `false` when
-the host carries no target of its own) — together the undo predicate: close
+on a drop target on the element or on one of its descendants — always `false`
+when that subtree registers no target at all) — together the undo predicate: close
 again when `fired` and not `droppedHere`, and a drop into the element keeps
 it open.
 
 The gate runs when a candidacy would start, on every frame while it is
 pending, and once more as the dwell fires — but not after: a dwell that opens
-a section falsifies its own "only when closed" gate, so a fired candidacy is
-held by geometry alone until the drag leaves or ends. `canDwell` refuses only
+a section falsifies its own "only when closed" gate, so after firing only the
+rectangle and the `types`/`externalKinds` filters decide when the candidacy
+ends. `canDwell` refuses only
 on a literal `false`, after `types`/`externalKinds` filtering, exactly like a
 target's `canDrop` — the two may share one function.
 

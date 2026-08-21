@@ -8,6 +8,7 @@ import dDragDwell, {
   type DragDwellEndEvent,
   type DragDwellEvent,
   type DragDwellFeedback,
+  type DragDwellSource,
 } from "discourse/ui-kit/modifiers/d-drag-dwell";
 
 declare function open(event: DragDwellEvent): void;
@@ -19,6 +20,9 @@ expectTypeOf<DragDwellEndEvent>().toExtend<DragDwellEvent>();
 expectTypeOf<DragDwellEndEvent["reason"]>().toEqualTypeOf<
   "left" | "drag-ended"
 >();
+
+/* The exported source alias is exactly what every event's `source` can be. */
+expectTypeOf<DragDwellEvent["source"]>().toEqualTypeOf<DragDwellSource>();
 
 /* `family` discriminates: checking it narrows `source` to that family's
    payload, on the event, the feedback, and the end event alike. */

@@ -32,8 +32,7 @@ export default class DwellExample extends Component {
 
   @action
   maybeCloseFolder(event) {
-    // The undo predicate: a drop into the folder keeps it open; wandering off
-    // or ending the drag elsewhere closes what the dwell opened.
+    // Dropping into the folder keeps it open; any other end undoes the reveal.
     if (event.fired && !event.droppedHere) {
       this.expanded = false;
     }
@@ -98,9 +97,8 @@ export default class DwellExample extends Component {
           </div>
         {{/if}}
 
-        {{! Outside the reveal: a drop files the chip even while the folder
-        is collapsed, and a count that only appeared after expanding would
-        make that drop look like it did nothing. }}
+        {{! A drop can file the chip while the folder is collapsed. The count
+        stays outside the reveal so that drop is visible at once. }}
         {{#if this.filedCount}}
           <div class="styleguide-drag-and-drop__folder-row">
             {{i18n

@@ -95,9 +95,9 @@ export type DragDwellEndEvent = DragDwellEvent & {
   fired: boolean;
 
   /**
-   * On `"drag-ended"`: whether the drop landed on a drop target registered
-   * on this element or inside it. Always `false` for `"left"`, and `false`
-   * whenever the host carries no drop target of its own.
+   * On `"drag-ended"`: whether the drop landed on a drop target on this
+   * element or on one of its descendants. Always `false` for `"left"`, and
+   * `false` when the host subtree registers no drop target at all.
    */
   droppedHere: boolean;
 };
@@ -161,10 +161,8 @@ export type DragDwellArgs = DDragDwellSignature["Args"]["Named"];
 
 function isWithin(input: DragInput, clientRect: DOMRect) {
   return (
-    // is within horizontal bounds
     input.clientX >= clientRect.x &&
     input.clientX <= clientRect.x + clientRect.width &&
-    // is within vertical bounds
     input.clientY >= clientRect.y &&
     input.clientY <= clientRect.y + clientRect.height
   );
@@ -224,7 +222,12 @@ export function registerDragDwell(
           return;
         }
         const event = lastEvent;
-        if (!passesGate(event)) {
+        const gateAllows = passesGate(event);
+        // The gate is consumer code and may have torn this registration down.
+        if (isDestroying) {
+          return;
+        }
+        if (!gateAllows) {
           dwell?.reset();
           consumerMayThrow(() =>
             getArgsRef().onDwellEnd?.({
@@ -259,6 +262,10 @@ export function registerDragDwell(
       element.getBoundingClientRect()
     );
     const qualifies = adapterMatches && inRect && (fired || passesGate(event));
+    // The gate is consumer code and may have torn this registration down.
+    if (isDestroying) {
+      return;
+    }
 
     if (!qualifies) {
       if (!hovering) {
@@ -304,6 +311,7 @@ export function registerDragDwell(
     consumerMayThrow(() =>
       getArgsRef().onDwellEnd?.({
         ...event,
+        location,
         reason: "drag-ended",
         fired,
         droppedHere,
@@ -349,6 +357,8 @@ export function registerDragDwell(
   };
 
   const cleanupElements = monitorForElements({
+    onDragStart: ({ source, location }) =>
+      reportElementCandidate(source, location),
     onDrag: ({ source, location }) => reportElementCandidate(source, location),
     onDropTargetChange: ({ source, location }) =>
       reportElementCandidate(source, location),
@@ -356,6 +366,8 @@ export function registerDragDwell(
   });
 
   const cleanupExternal = monitorForExternal({
+    onDragStart: ({ source, location }) =>
+      reportExternalCandidate(source, location),
     onDrag: ({ source, location }) => reportExternalCandidate(source, location),
     onDropTargetChange: ({ source, location }) =>
       reportExternalCandidate(source, location),

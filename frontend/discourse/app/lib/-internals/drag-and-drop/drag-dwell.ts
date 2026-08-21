@@ -27,7 +27,7 @@ export interface DragDwellOptions<Target> {
   /**
    * Maps a candidate to the key compared with `Object.is`. Defaults to the
    * candidate itself. Called only for non-null candidates; `null` and
-   * `undefined` are both valid returned keys. Must be pure for a target.
+   * `undefined` are both valid returned keys. Must be pure.
    */
   identity?: (target: Target) => unknown;
 
@@ -114,7 +114,8 @@ export default function createDragDwell<Target>(
     currentKey = key;
     latestTarget = target;
     timer = discourseLater(() => {
-      // This order is load-bearing and must not be reordered.
+      // Null the handle first: a reentrant update() or reset() from
+      // onDwell must see no pending timer.
       timer = null;
       if (isDestroying(destroyable)) {
         return;

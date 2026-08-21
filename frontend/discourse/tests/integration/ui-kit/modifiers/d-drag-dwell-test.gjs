@@ -19,7 +19,9 @@ import {
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
-import dDragDwell from "discourse/ui-kit/modifiers/d-drag-dwell";
+import dDragDwell, {
+  registerDragDwell,
+} from "discourse/ui-kit/modifiers/d-drag-dwell";
 
 /* The dwell delay collapses to a 10ms runloop timer under test, which is
    SHORTER than one ~16ms animation frame. Sequences that must run before a
@@ -231,6 +233,44 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     );
   });
 
+  test("dDragDwell reports the terminal location on drag-ended", async function (assert) {
+    const ends = [];
+    const onDwell = () => {};
+    const onDwellEnd = (event) => ends.push(event);
+
+    await render(
+      <template>
+        <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+          {{dDragDwell types="card" onDwell=onDwell onDwellEnd=onDwellEnd}}
+        >folder</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    await startDrag(CHIP, { dataTransfer });
+    await dragOver(DWELL, { dataTransfer });
+    await settled();
+
+    const point = centerOf(DWELL);
+    const dropPoint = {
+      clientX: point.clientX + 17,
+      clientY: point.clientY + 5,
+    };
+    await dragEvent(DWELL, "drop", { dataTransfer, ...dropPoint });
+    await settled();
+
+    assert.strictEqual(ends.length, 1, "the drop ended the candidacy");
+    assert.strictEqual(
+      ends[0].location.current.input.clientX,
+      dropPoint.clientX,
+      "the end event carries the drop's own position, not the last hover frame"
+    );
+  });
+
   test("dDragDwell reports an abandoned drag as drag-ended without droppedHere", async function (assert) {
     const ends = [];
     const onDwell = () => {};
@@ -370,6 +410,57 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     }
   });
 
+  test("dDragDwell ignores a candidacy whose gate tears the registration down", async function (assert) {
+    const caught = [];
+    setupOnerror((error) => caught.push(error));
+
+    try {
+      const dwells = [];
+      const ends = [];
+      let cleanup;
+      const gate = () => {
+        cleanup();
+        return true;
+      };
+
+      await render(
+        <template>
+          <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
+          <div
+            data-test-dwell
+            style="display: block; height: 60px;"
+          >folder</div>
+        </template>
+      );
+
+      cleanup = registerDragDwell(document.querySelector(DWELL), () => ({
+        types: "card",
+        canDwell: gate,
+        onDwell: (event) => dwells.push(event),
+        onDwellEnd: (event) => ends.push(event),
+      }));
+
+      const dataTransfer = new DataTransfer();
+      const point = centerOf(DWELL);
+      await startDrag(CHIP, { dataTransfer });
+      await dragEvent(DWELL, "dragenter", { dataTransfer, ...point });
+      for (let i = 0; i < 4; i += 1) {
+        await dragEvent(DWELL, "dragover", { dataTransfer, ...point });
+      }
+      await settled();
+
+      assert.deepEqual(
+        caught,
+        [],
+        "the synchronous teardown surfaced no error"
+      );
+      assert.strictEqual(dwells.length, 0, "nothing fires after the teardown");
+      assert.strictEqual(ends.length, 0, "and nothing reports into it");
+    } finally {
+      resetOnerror();
+    }
+  });
+
   test("dDragDwell clears a pending dwell when canDwell stops qualifying", async function (assert) {
     const dwells = [];
     const ends = [];
@@ -448,8 +539,8 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     dragEventNow(DWELL, "dragenter", { dataTransfer, ...centerOf(DWELL) });
     allowed = false;
 
-    // A pending pointer frame or the timer itself may be what re-checks the
-    // gate; either way the veto must report the candidacy's end exactly once.
+    // Either a pending pointer frame or the timer re-checks the gate. Both
+    // paths must report exactly one end.
     await settled();
     assert.strictEqual(dwells.length, 0, "the vetoed dwell never fires");
     assert.strictEqual(ends.length, 1, "the vetoed candidacy reports its end");
@@ -701,6 +792,50 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     );
   });
 
+  test("dDragDwell ignores a drop caught by a target outside the host", async function (assert) {
+    const dwells = [];
+    const ends = [];
+    const onDwell = (event) => dwells.push(event);
+    const onDwellEnd = (event) => ends.push(event);
+
+    await render(
+      <template>
+        <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
+        <div
+          data-test-outside
+          style="display: block; padding: 12px;"
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+        >
+          <div
+            data-test-dwell
+            style="display: block; height: 60px;"
+            {{dDragDwell types="card" onDwell=onDwell onDwellEnd=onDwellEnd}}
+          >folder</div>
+        </div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    const point = centerOf(DWELL);
+    await startDrag(CHIP, { dataTransfer });
+    await dragEvent(DWELL, "dragenter", { dataTransfer, ...point });
+    for (let i = 0; i < 4; i += 1) {
+      await dragEvent(DWELL, "dragover", { dataTransfer, ...point });
+    }
+    await settled();
+    assert.strictEqual(dwells.length, 1, "the dwell fired");
+
+    // The pointer is inside the host, but the catching target is an ancestor,
+    // not the host or a descendant.
+    await dragEvent(DWELL, "drop", { dataTransfer, ...point });
+    await settled();
+    assert.strictEqual(ends.length, 1, "the drop ended the candidacy");
+    assert.false(
+      ends[0].droppedHere,
+      "a target outside the host never counts as droppedHere"
+    );
+  });
+
   test("dDragDwell refuses the element's own drag when acceptsSelf is false", async function (assert) {
     const dwells = [];
     const onDwell = (event) => dwells.push(event);
@@ -754,6 +889,33 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
       dwells.length,
       1,
       "by default the element's own drag may dwell"
+    );
+  });
+
+  test("dDragDwell arms from the drag's own start inside the host", async function (assert) {
+    const dwells = [];
+    const onDwell = (event) => dwells.push(event);
+
+    await render(
+      <template>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragAndDropSource type="card"}}
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+          {{dDragDwell types="card" onDwell=onDwell}}
+        >row</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    await startDrag(DWELL, { dataTransfer });
+    await settled();
+
+    assert.strictEqual(
+      dwells.length,
+      1,
+      "the initial observation armed the dwell without a later frame"
     );
   });
 
