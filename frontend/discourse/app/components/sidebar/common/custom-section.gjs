@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import Section from "discourse/lib/sidebar/section";
 import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/admin-section";
-import { and, eq, or } from "discourse/truth-helpers";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import MoreSectionLink from "../more-section-link";
 import MoreSectionLinks from "../more-section-links";
 import SectionComponent from "../section";
@@ -13,6 +15,7 @@ import SectionLink from "../section-link";
 import SectionLinkButton from "../section-link-button";
 
 export default class SidebarCustomSection extends Component {
+  @service capabilities;
   @service currentUser;
   @service navigationMenu;
   @service router;
@@ -39,6 +42,18 @@ export default class SidebarCustomSection extends Component {
     }
   }
 
+  /**
+   * Rows drag only where a drop may land, and never on touch, which reserves
+   * the press for scrolling and the long-press link preview.
+   */
+  get linkDragDisabled() {
+    return (
+      !this.args.enableLinkDrop ||
+      !this.section.canAcceptLinkDrop ||
+      this.capabilities.touch
+    );
+  }
+
   get exactUrlMatch() {
     return this.section.links.find((link) => {
       return this.router.currentURL === link.value;
@@ -56,12 +71,30 @@ export default class SidebarCustomSection extends Component {
       @hideSectionHeader={{this.section.hideSectionHeader}}
       @linkDropEnabled={{and @enableLinkDrop this.section.canAcceptLinkDrop}}
       @onLinkDrop={{this.section.dropLink}}
-      class={{this.section.dragCss}}
+      @onLinkMove={{this.section.moveLink}}
       as |linkDrop|
     >
       {{#each this.section.links as |link index|}}
         <SectionLink
           data-sidebar-custom-link="true"
+          {{! Rows drag as registered sources; the native anchor drag is turned
+              off with them, or the browser would start its own dead drag from
+              the innermost anchor instead. }}
+          {{dDragAndDropSource
+            type="sidebar-link"
+            data=(hash
+              sectionId=this.section.section.id
+              linkId=link.id
+              index=index
+              public=this.section.section.public
+              name=link.name
+              value=link.value
+              icon=link.icon
+            )
+            effectAllowed="move"
+            disabled=this.linkDragDisabled
+          }}
+          @nativeDragDisabled={{not this.linkDragDisabled}}
           class={{if (eq linkDrop.linkDropIndex index) "is-link-drop-before"}}
           @badgeText={{link.badgeText}}
           @content={{dReplaceEmoji link.text}}
