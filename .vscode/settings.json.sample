@@ -45,7 +45,7 @@
   // disable other stylesheet linters
   "css.validate": false,
   "less.validate": false,
-  "scss.validate": false
+  "scss.validate": false,
 
   // Devcontainer: Allow QUnit Chromium in Docker
   "terminal.integrated.env.linux": {
