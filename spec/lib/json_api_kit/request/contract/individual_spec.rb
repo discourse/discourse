@@ -73,7 +73,7 @@ RSpec.describe JsonApiKit::Request::Contract::Individual, type: :model do
 
   describe "Fieldsets" do
     it { is_expected.to allow_value(nil, {}, { topics: %w[title created_at] }).for(:fields) }
+    it { is_expected.to allow_value({ topics: "title" }, { topics: "" }).for(:fields) }
     it { is_expected.not_to allow_value("title", [1], { topics: 42 }).for(:fields) }
-    it { is_expected.not_to allow_value({ topics: "title" }).for(:fields) }
   end
 end

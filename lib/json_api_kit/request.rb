@@ -10,11 +10,11 @@ module JsonApiKit
       @guardian = guardian
     end
 
-    def ordering = @ordering ||= params[:sort].to_h.transform_values(&:to_sym)
+    def ordering = @ordering ||= params[:sort].to_h
 
     def filtering = @filtering ||= params[:filter].to_h
 
-    def fields = @fields ||= params[:fields].to_h.transform_values { it.map(&:to_s) }
+    def fields = @fields ||= params[:fields].to_h
 
     def including = @including ||= Paths.new(params[:include])
 

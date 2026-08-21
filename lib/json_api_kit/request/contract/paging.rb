@@ -73,7 +73,7 @@ module JsonApiKit
 
             def raw_sort = options[:raw_parameters][:sort]
 
-            def ordering = raw_sort.nil? ? {} : INDIFFERENT_HASH.cast(raw_sort)
+            def ordering = raw_sort.nil? ? {} : Sorting::SORT.cast(raw_sort)
 
             def window_size
               return unless before_size || after_size

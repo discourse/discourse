@@ -58,9 +58,47 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
   describe "Sorting" do
     it { is_expected.to allow_value(nil, {}, { created_at: :asc }).for(:sort) }
     it { is_expected.to allow_value({ created_at: :desc, title: :asc }).for(:sort) }
+    it { is_expected.to allow_value("", "created_at", "-created_at").for(:sort) }
+    it { is_expected.to allow_value("created_at,-title").for(:sort) }
     it { is_expected.not_to allow_value({ secrets: :asc }).for(:sort) }
-    it { is_expected.not_to allow_value({ created_at: :sideways }).for(:sort) }
-    it { is_expected.not_to allow_value("created_at", %w[created_at], 5, "").for(:sort) }
+    it do
+      is_expected.not_to allow_value({ created_at: :sideways }, { created_at: "asc" }).for(:sort)
+    end
+    it { is_expected.not_to allow_value("secrets", "created_at,secrets").for(:sort) }
+    it { is_expected.not_to allow_value(%w[created_at], 5).for(:sort) }
+
+    context "when sort is a string" do
+      let(:params) { { sort: "-created_at,title" } }
+
+      it "converts it as a hash" do
+        expect(contract.sort).to eq("created_at" => :desc, "title" => :asc)
+      end
+
+      context "when there’s a hyphen in the sort name" do
+        let(:params) { { sort: "last-posted-at" } }
+
+        it "converts it as a hash" do
+          expect(contract.sort).to eq("last-posted-at" => :asc)
+        end
+      end
+
+      context "when there’s also a cursor" do
+        let(:params) { { sort: "title", page: { after: cursor } } }
+
+        it "checks the cursor against that sort" do
+          expect(contract).to be_invalid
+          expect(contract.errors).to be_of_kind(:"page.after", :not_the_sort)
+        end
+      end
+    end
+
+    context "when sort is a hash" do
+      let(:params) { { sort: { created_at: :desc } } }
+
+      it "returns it as a hash" do
+        expect(contract.sort).to eq("created_at" => :desc)
+      end
+    end
   end
 
   describe "Filtering" do
@@ -72,14 +110,47 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
   describe "Including" do
     it { is_expected.to allow_value(nil, [], %w[user]).for(:include) }
-    it { is_expected.to allow_value("", [""]).for(:include) }
+    it { is_expected.to allow_value("", [""], "user").for(:include) }
     it { is_expected.not_to allow_value(%w[secrets], %w[user.groups]).for(:include) }
+    it { is_expected.not_to allow_value("secrets", "user,secrets").for(:include) }
+
+    context "when include is a string" do
+      let(:params) { { include: "user,posts.user" } }
+
+      it "converts it as a list of paths" do
+        expect(contract.include).to eq(%w[user posts.user])
+      end
+    end
   end
 
   describe "Fieldsets" do
     it { is_expected.to allow_value(nil, {}, { topics: %w[title created_at] }).for(:fields) }
+    it { is_expected.to allow_value({ topics: "title" }, { topics: "" }).for(:fields) }
     it { is_expected.not_to allow_value("title", [1], { topics: 42 }).for(:fields) }
-    it { is_expected.not_to allow_value({ topics: "title" }).for(:fields) }
+
+    context "when fieldset is a string" do
+      let(:params) { { fields: { topics: "title,created_at" } } }
+
+      it "converts it as a list of fields" do
+        expect(contract.fields).to eq("topics" => %w[title created_at])
+      end
+    end
+
+    context "when fieldset is empty" do
+      let(:params) { { fields: { topics: "" } } }
+
+      it "converts it as an empty list" do
+        expect(contract.fields).to eq("topics" => [])
+      end
+    end
+
+    context "when  fieldset is a list of symbols" do
+      let(:params) { { fields: { topics: %i[title] } } }
+
+      it "converts it as a list of fields" do
+        expect(contract.fields).to eq("topics" => %w[title])
+      end
+    end
   end
 
   describe "Anchoring" do

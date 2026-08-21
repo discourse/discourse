@@ -13,7 +13,7 @@ module JsonApiKit
         )
         .then do |contract|
           next Errors.new(*Request::Contract::Mapper.new(contract.errors).to_a) if contract.invalid?
-          new(yield, urls:).tap(&:to_h)
+          new(yield(contract.to_hash), urls:).tap(&:to_h)
         end
     rescue Error => error
       Errors.new(error)

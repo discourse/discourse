@@ -4,10 +4,10 @@ module JsonApiKit
   module Pagination
     class Direction
       def self.for(direction)
-        case direction.to_s
-        when "asc"
+        case direction
+        when :asc
           Ascending.new
-        when "desc"
+        when :desc
           Descending.new
         else
           raise ArgumentError, "unknown direction: #{direction}"

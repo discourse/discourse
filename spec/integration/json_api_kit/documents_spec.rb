@@ -19,19 +19,38 @@ RSpec.describe "a rendered document" do
 
     context "when all parameters are strings" do
       let(:params) do
-        { "sort" => { "created_at" => "asc" }, "fields" => { "topics" => %w[title] } }
+        {
+          "sort" => "created_at",
+          "include" => "user",
+          "fields" => {
+            "topics" => "title,user",
+          },
+          "page" => {
+            "size" => "1",
+          },
+        }
       end
-      let(:query) { {} }
 
-      it "renders the same listing" do
+      it "renders the same page" do
         expect(document).to eq(
           data: [
-            topic_object(oldest, fields: %w[title], cursor: cursor_of_record(oldest)),
-            topic_object(middle, fields: %w[title], cursor: cursor_of_record(middle)),
-            topic_object(newest, fields: %w[title], cursor: cursor_of_record(newest)),
+            topic_object(
+              oldest,
+              fields: %w[title],
+              cursor: cursor_of_record(oldest),
+              relationships: {
+                "user" =>
+                  relationship_object(
+                    "topics",
+                    oldest,
+                    "user",
+                    data: identifier_of("users", oldest.user),
+                  ),
+              },
+            ),
           ],
-          included: [],
-          links: links_of,
+          included: [user_object(oldest.user)],
+          links: links_of(next: page_url(after: cursor_of_record(oldest), size: 1)),
         )
       end
     end

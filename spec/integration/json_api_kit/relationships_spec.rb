@@ -256,7 +256,7 @@ RSpec.describe "a document with related records" do
   describe "a record two paths reach" do
     fab!(:post) { Fabricate(:post, topic:, user: author) }
 
-    let(:params) { { include: %w[user posts.user.groups] } }
+    let(:params) { { include: "user,posts.user.groups" } }
 
     it "renders it one time with its relationships" do
       expect(document).to eq(
