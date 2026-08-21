@@ -7,17 +7,6 @@ helper = "discourse_vips_helper"
 source = "discourse_vips_helper.c"
 pkg_config = ENV.fetch("PKG_CONFIG", "pkg-config")
 
-installation_command =
-  if RbConfig::CONFIG.fetch("host_os").match?(/darwin/i)
-    "brew install vips pkgconf"
-  elsif File.exist?("/etc/debian_version")
-    "sudo apt install build-essential pkg-config libvips-dev"
-  elsif File.exist?("/etc/fedora-release")
-    "sudo dnf install gcc pkgconf-pkg-config vips-devel"
-  else
-    "Install libvips 8.13 or newer, its development headers, a C compiler, and pkg-config."
-  end
-
 if !system(pkg_config, "--atleast-version=8.13", "vips", out: File::NULL, err: File::NULL)
   detected_version =
     begin
@@ -25,6 +14,17 @@ if !system(pkg_config, "--atleast-version=8.13", "vips", out: File::NULL, err: F
       status.success? && !output.strip.empty? ? output.strip : "not found"
     rescue Errno::ENOENT
       "not found"
+    end
+  installation_command =
+    if RbConfig::CONFIG.fetch("host_os").match?(/darwin/i)
+      "brew install vips pkgconf"
+    elsif File.exist?("/etc/debian_version") && detected_version == "not found"
+      "sudo apt install build-essential pkg-config libvips-dev"
+    elsif File.exist?("/etc/fedora-release") && detected_version == "not found"
+      "sudo dnf install gcc pkgconf-pkg-config vips-devel"
+    else
+      "Install libvips 8.13 or newer with its development headers: " \
+        "https://github.com/libvips/libvips/wiki#building-and-installing"
     end
   abort <<~MESSAGE
     Discourse requires libvips 8.13 or newer to build its image helper (found #{detected_version}).

@@ -1,4 +1,3 @@
-#include <errno.h>
 #include <glib.h>
 #include <limits.h>
 #include <math.h>
@@ -17,6 +16,8 @@ typedef struct {
   option_t items[32];
   int count;
 } options_t;
+
+#define MAX_DIRECT_RESIZE_FACTOR 256
 
 static const char *option(options_t *options, const char *key) {
   for (int index = 0; index < options->count; index++) {
@@ -72,83 +73,13 @@ static void parse_options(int argc, char **argv, options_t *options) {
   }
 }
 
-static void write_json_string(FILE *file, const char *value) {
-  fputc('"', file);
-  for (const unsigned char *character = (const unsigned char *)value;
-       character && *character; character++) {
-    switch (*character) {
-    case '"':
-      fputs("\\\"", file);
-      break;
-    case '\\':
-      fputs("\\\\", file);
-      break;
-    case '\b':
-      fputs("\\b", file);
-      break;
-    case '\f':
-      fputs("\\f", file);
-      break;
-    case '\n':
-      fputs("\\n", file);
-      break;
-    case '\r':
-      fputs("\\r", file);
-      break;
-    case '\t':
-      fputs("\\t", file);
-      break;
-    default:
-      if (*character < 0x20) {
-        fprintf(file, "\\u%04x", *character);
-      } else {
-        fputc(*character, file);
-      }
-    }
-  }
-  fputc('"', file);
+static void report_error(const char *message) {
+  fprintf(stderr, "%s\n", message);
 }
 
-static void write_error(const char *response, const char *error,
-                        const char *message) {
-  FILE *file = fopen(response, "w");
-  if (!file) {
-    return;
-  }
-  fputs("{\"ok\":false,\"error\":", file);
-  write_json_string(file, error);
-  fputs(",\"message\":", file);
-  write_json_string(file, message ? message : "error");
-  fputs("}\n", file);
-  fclose(file);
-}
-
-static void write_success(const char *response, int width, int height) {
-  FILE *file = fopen(response, "w");
-  if (!file) {
-    fprintf(stderr, "could not write response: %s\n", strerror(errno));
-    exit(1);
-  }
-  fprintf(file, "{\"ok\":true,\"width\":%d,\"height\":%d}\n", width, height);
-  fclose(file);
-}
-
-static void write_value(const char *response, const char *value) {
-  FILE *file = fopen(response, "w");
-  if (!file) {
-    fprintf(stderr, "could not write response: %s\n", strerror(errno));
-    exit(1);
-  }
-  fputs("{\"ok\":true,\"value\":", file);
-  write_json_string(file, value);
-  fputs("}\n", file);
-  fclose(file);
-}
-
-static void write_vips_error(const char *response) {
+static void report_vips_error(void) {
   const char *message = vips_error_buffer();
-  write_error(response, "InvalidImageError",
-              message && message[0] ? message : "libvips error");
+  report_error(message && message[0] ? message : "libvips error");
 }
 
 static void set_loader_block(const char *name, gboolean blocked) {
@@ -174,6 +105,7 @@ static void allow_dominant_color_loaders(void) {
   allow_loader_family("VipsForeignLoadNsgif", "VipsForeignLoadNsgifFile");
   allow_loader_family("VipsForeignLoadWebp", "VipsForeignLoadWebpFile");
   allow_loader_family("VipsForeignLoadHeif", "VipsForeignLoadHeifFile");
+  allow_loader_family("VipsForeignLoadJxl", "VipsForeignLoadJxlFile");
 }
 
 static int initialize_vips(const char *program) {
@@ -203,16 +135,12 @@ static unsigned char quantize_sample(double value, double sample_max) {
 }
 
 static int command_version(options_t *options) {
-  const char *response = required_option(options, "response");
-  char version[32];
-  snprintf(version, sizeof(version), "%d.%d.%d", vips_version(0),
-           vips_version(1), vips_version(2));
-  write_value(response, version);
+  (void)options;
+  printf("%d.%d.%d\n", vips_version(0), vips_version(1), vips_version(2));
   return 0;
 }
 
 static int command_letter_avatar(options_t *options) {
-  const char *response = required_option(options, "response");
   const char *output = required_option(options, "output");
   const char *markup = option(options, "markup");
   const char *font = required_option(options, "font");
@@ -225,18 +153,16 @@ static int command_letter_avatar(options_t *options) {
   fontfile = fontfile ? fontfile : "";
 
   if (size < 1 || size > 4096) {
-    write_error(response, "ArgumentError", "size must be 1..4096");
+    report_error("size must be 1..4096");
     return 1;
   }
   if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 ||
       blue > 255) {
-    write_error(response, "ArgumentError",
-                "background channels must be 0..255");
+    report_error("background channels must be 0..255");
     return 1;
   }
   if (vips_type_find("VipsOperation", "text") == 0) {
-    write_error(response, "UnsupportedFormatError",
-                "libvips has no Pango text renderer");
+    report_error("libvips has no Pango text renderer");
     return 1;
   }
 
@@ -268,7 +194,7 @@ static int command_letter_avatar(options_t *options) {
     result = save_png(flattened, output, 6);
   }
   if (result != 0) {
-    write_vips_error(response);
+    report_vips_error();
     VIPS_UNREF(text);
     VIPS_UNREF(canvas);
     VIPS_UNREF(flattened);
@@ -277,7 +203,6 @@ static int command_letter_avatar(options_t *options) {
     return 1;
   }
 
-  write_success(response, size, size);
   VIPS_UNREF(text);
   VIPS_UNREF(canvas);
   VIPS_UNREF(flattened);
@@ -286,13 +211,45 @@ static int command_letter_avatar(options_t *options) {
   return 0;
 }
 
+static int command_resize_letter_avatar(options_t *options) {
+  const char *input = required_option(options, "input");
+  const char *output = required_option(options, "output");
+  const char *profile = required_option(options, "profile");
+  int size = integer_option(options, "size", 0);
+  if (size < 1 || size > 4096) {
+    report_error("size must be 1..4096");
+    return 1;
+  }
+
+  allow_loader_family("VipsForeignLoadPng", "VipsForeignLoadPngFile");
+  VipsImage *thumbnail = NULL;
+  VipsImage *sharpened = NULL;
+  int result = vips_thumbnail(input, &thumbnail, size, "height", size, "size",
+                              VIPS_SIZE_BOTH, "crop", VIPS_INTERESTING_CENTRE,
+                              "output_profile", profile, NULL);
+  if (result == 0) {
+    result = vips_sharpen(thumbnail, &sharpened, "sigma", 0.5, "m1", 0.7, NULL);
+  }
+  if (result == 0) {
+    result = vips_pngsave(sharpened, output, "palette", TRUE, "Q", 100,
+                          "compression", 6, "strip", TRUE, NULL);
+  }
+  if (result != 0) {
+    report_vips_error();
+  }
+  VIPS_UNREF(thumbnail);
+  VIPS_UNREF(sharpened);
+  return result == 0 ? 0 : 1;
+}
+
 static int command_dominant_color(options_t *options) {
-  const char *response = required_option(options, "response");
   const char *input = required_option(options, "input");
   VipsImage *image = NULL;
   VipsImage *double_image = NULL;
   VipsImage *premultiplied = NULL;
+  VipsImage *bordered = NULL;
   VipsImage *resized = NULL;
+  VipsImage *resized_pixel = NULL;
   VipsImage *unpremultiplied = NULL;
   double *components = NULL;
   int result = 1;
@@ -300,7 +257,7 @@ static int command_dominant_color(options_t *options) {
   allow_dominant_color_loaders();
   const char *loader = vips_foreign_find_load(input);
   if (!loader) {
-    write_error(response, "UnsupportedFormatError", "unsupported input format");
+    report_error("unsupported input format");
     goto cleanup;
   }
 
@@ -313,7 +270,14 @@ static int command_dominant_color(options_t *options) {
                                      "fail_on", VIPS_FAIL_ON_NONE, NULL);
   }
   if (!image) {
-    write_vips_error(response);
+    report_vips_error();
+    goto cleanup;
+  }
+
+  int width = vips_image_get_width(image);
+  int height = vips_image_get_height(image);
+  if (width < 1 || height < 1 || width > INT_MAX / 7 || height > INT_MAX / 7) {
+    report_error("unsupported image dimensions");
     goto cleanup;
   }
 
@@ -321,7 +285,7 @@ static int command_dominant_color(options_t *options) {
   int bands = vips_image_get_bands(image);
   if ((format != VIPS_FORMAT_UCHAR && format != VIPS_FORMAT_USHORT) ||
       bands < 1 || bands > 4) {
-    write_error(response, "InvalidImageError", "unsupported pixel format");
+    report_error("unsupported pixel format");
     goto cleanup;
   }
   double sample_max = format == VIPS_FORMAT_USHORT ? 65535.0 : 255.0;
@@ -334,32 +298,43 @@ static int command_dominant_color(options_t *options) {
                               sample_max, NULL);
     resize_input = premultiplied;
   }
-  if (result == 0) {
+  bool direct_resize =
+      width <= MAX_DIRECT_RESIZE_FACTOR && height <= MAX_DIRECT_RESIZE_FACTOR;
+  if (result == 0 && direct_resize && has_alpha) {
     result =
-        vips_resize(resize_input, &resized, 1.0 / vips_image_get_width(image),
-                    "vscale", 1.0 / vips_image_get_height(image), "kernel",
-                    VIPS_KERNEL_LANCZOS3, "gap", 2.0, NULL);
+        vips_embed(resize_input, &bordered, width * 3, height * 3, width * 7,
+                   height * 7, "extend", VIPS_EXTEND_BLACK, NULL);
+    if (result == 0) {
+      result =
+          vips_resize(bordered, &resized, 1.0 / width, "vscale", 1.0 / height,
+                      "kernel", VIPS_KERNEL_LANCZOS3, "gap", 0.0, NULL);
+    }
+    if (result == 0) {
+      result = vips_extract_area(resized, &resized_pixel, 3, 3, 1, 1, NULL);
+    }
+  } else if (result == 0) {
+    result = vips_resize(resize_input, &resized_pixel, 1.0 / width, "vscale",
+                         1.0 / height, "kernel", VIPS_KERNEL_LANCZOS3, "gap",
+                         direct_resize ? 0.0 : 2.0, NULL);
   }
   if (result == 0 && has_alpha) {
-    result = vips_unpremultiply(resized, &unpremultiplied, "max_alpha",
+    result = vips_unpremultiply(resized_pixel, &unpremultiplied, "max_alpha",
                                 sample_max, NULL);
   }
-  VipsImage *pixel = has_alpha ? unpremultiplied : resized;
+  VipsImage *pixel = has_alpha ? unpremultiplied : resized_pixel;
   if (result != 0) {
-    write_vips_error(response);
+    report_vips_error();
     goto cleanup;
   }
   if (vips_image_get_width(pixel) != 1 || vips_image_get_height(pixel) != 1) {
-    write_error(response, "InvalidImageError",
-                "dominant color did not produce one pixel");
+    report_error("dominant color did not produce one pixel");
     goto cleanup;
   }
 
   int component_count = 0;
   if (vips_getpoint(pixel, &components, &component_count, 0, 0, NULL) != 0 ||
       !components || component_count != bands) {
-    write_error(response, "InvalidImageError",
-                "unable to read dominant color pixel");
+    report_error("unable to read dominant color pixel");
     goto cleanup;
   }
 
@@ -370,7 +345,7 @@ static int command_dominant_color(options_t *options) {
       quantize_sample(bands < 3 ? components[0] : components[2], sample_max);
   char color[7];
   snprintf(color, sizeof(color), "%02X%02X%02X", red, green, blue);
-  write_value(response, color);
+  puts(color);
   result = 0;
 
 cleanup:
@@ -378,13 +353,14 @@ cleanup:
   VIPS_UNREF(image);
   VIPS_UNREF(double_image);
   VIPS_UNREF(premultiplied);
+  VIPS_UNREF(bordered);
   VIPS_UNREF(resized);
+  VIPS_UNREF(resized_pixel);
   VIPS_UNREF(unpremultiplied);
   return result;
 }
 
 static int command_topic_og(options_t *options) {
-  const char *response = required_option(options, "response");
   const char *input = required_option(options, "input");
   const char *output = required_option(options, "output");
   allow_loader_family("VipsForeignLoadSvg", "VipsForeignLoadSvgFile");
@@ -399,30 +375,27 @@ static int command_topic_og(options_t *options) {
     result = save_png(flattened, output, 9);
   }
   if (result != 0) {
-    write_vips_error(response);
+    report_vips_error();
     VIPS_UNREF(svg);
     VIPS_UNREF(flattened);
     return 1;
   }
 
-  write_success(response, vips_image_get_width(flattened),
-                vips_image_get_height(flattened));
   VIPS_UNREF(svg);
   VIPS_UNREF(flattened);
   return 0;
 }
 
 int main(int argc, char **argv) {
-  if (argc < 3) {
-    fprintf(stderr, "usage: %s COMMAND --response PATH ...\n", argv[0]);
+  if (argc < 2) {
+    fprintf(stderr, "usage: %s COMMAND [OPTIONS]\n", argv[0]);
     return 2;
   }
 
   options_t options;
   parse_options(argc, argv, &options);
-  const char *response = required_option(&options, "response");
   if (initialize_vips(argv[0]) != 0) {
-    write_vips_error(response);
+    report_vips_error();
     return 1;
   }
 
@@ -432,12 +405,14 @@ int main(int argc, char **argv) {
     result = command_version(&options);
   } else if (strcmp(command, "letter-avatar") == 0) {
     result = command_letter_avatar(&options);
+  } else if (strcmp(command, "resize-letter-avatar") == 0) {
+    result = command_resize_letter_avatar(&options);
   } else if (strcmp(command, "dominant-color") == 0) {
     result = command_dominant_color(&options);
   } else if (strcmp(command, "topic-og") == 0) {
     result = command_topic_og(&options);
   } else {
-    write_error(response, "ArgumentError", "unsupported helper command");
+    report_error("unsupported helper command");
     result = 2;
   }
 
