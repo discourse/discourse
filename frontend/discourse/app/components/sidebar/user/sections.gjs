@@ -23,7 +23,7 @@ export default class SidebarUserSections extends Component {
       class="sidebar-sections"
       {{dDragAndDropAutoScroll
         types=WEB_LINK_ADOPTION.type
-        accepts=WEB_LINK_KINDS
+        externalKinds=WEB_LINK_KINDS
       }}
     >
       <BlockOutlet @name="sidebar-blocks" />

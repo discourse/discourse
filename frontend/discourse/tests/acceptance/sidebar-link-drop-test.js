@@ -2,6 +2,7 @@ import { find, findAll, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import {
+  dragEvent,
   externalDragOver,
   simulateExternalDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
@@ -161,6 +162,34 @@ acceptance("Sidebar web link drop", function (needs) {
     assert
       .dom(".sidebar-link-drop-target")
       .doesNotExist("does not also create a new section");
+  });
+
+  test("scrolls the sections while a dragged link hovers the bottom edge", async function (assert) {
+    await visit("/");
+
+    // The fixture's sections do not overflow the test viewport on their own,
+    // so the scroller is constrained to force it. It is a flex child sized by
+    // the flex algorithm, so a height alone would be ignored.
+    const scroller = find(".sidebar-sections");
+    scroller.style.flex = "none";
+    scroller.style.minHeight = "0";
+    scroller.style.height = "100px";
+    scroller.style.overflowY = "auto";
+
+    const dataTransfer = linkDataTransfer();
+    const { left, bottom, width } = scroller.getBoundingClientRect();
+    const point = { clientX: left + width / 2, clientY: bottom - 2 };
+    await dragEvent(scroller, "dragenter", { dataTransfer, ...point });
+    // Auto-scroll runs off its own animation-frame loop and eases in over
+    // time, so a single event moves nothing measurable.
+    for (let frame = 0; frame < 12; frame++) {
+      await dragEvent(scroller, "dragover", { dataTransfer, ...point });
+    }
+
+    assert.true(
+      scroller.scrollTop > 0,
+      "a link held against the bottom edge scrolls the sections into reach"
+    );
   });
 
   test("points out a dropped link the section already has", async function (assert) {
