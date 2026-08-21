@@ -30,12 +30,15 @@ RSpec.describe DiscourseVips do
     end
 
     it "rejects an unapproved font file" do
-      Tempfile.create(%w[font .ttf]) do |font|
+      Dir.mktmpdir("discourse-vips-font") do |directory|
+        font_path = File.join(directory, "NotoSans-Regular.woff2")
+        File.write(font_path, "not a font")
+
         expect {
           described_class.generate_letter_avatar(
             letter: "A",
             background_color: [198, 125, 40],
-            font_path: font.path,
+            font_path:,
             output_path: "/tmp/avatar.png",
           )
         }.to raise_error(ArgumentError, "font_path must reference a supported font file")
