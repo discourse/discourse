@@ -72,6 +72,10 @@ module PageObjects
         self
       end
 
+      def has_no_password_field?
+        has_no_css?("#password")
+      end
+
       def select_email(email)
         find("#email").select(email)
         self
