@@ -1,0 +1,32 @@
+<% content_for :title do %><%= t("mcp.oauth.authorize_title") %><% end %>
+
+<div class="mcp-consent">
+  <h1><%= t("mcp.oauth.authorize_title") %></h1>
+  <p><%= t("mcp.oauth.client_request", client_name: @client.name, site_name: SiteSetting.title) %></p>
+
+  <dl>
+    <dt><%= t("mcp.oauth.client_id") %></dt>
+    <dd><code><%= @client.client_id %></code></dd>
+    <dt><%= t("mcp.oauth.redirect_uri") %></dt>
+    <dd><code><%= params[:redirect_uri] %></code></dd>
+    <dt><%= t("mcp.oauth.resource") %></dt>
+    <dd><code><%= params[:resource] %></code></dd>
+  </dl>
+
+  <h2><%= t("mcp.oauth.requested_permissions") %></h2>
+  <ul>
+    <% @requested_scopes.each do |scope| %>
+      <li><code><%= scope %></code></li>
+    <% end %>
+  </ul>
+
+  <p><%= t("mcp.oauth.guardian_notice") %></p>
+
+  <%= form_with url: oauth2_mcp_authorize_path, method: :post do |form| %>
+    <% %i[client_id redirect_uri response_type code_challenge code_challenge_method resource scope state].each do |key| %>
+      <%= form.hidden_field key, value: params[key] if params[key].present? %>
+    <% end %>
+    <%= form.button t("mcp.oauth.deny"), name: "decision", value: "deny", class: "btn btn-default" %>
+    <%= form.button t("mcp.oauth.approve"), name: "decision", value: "approve", class: "btn btn-primary" %>
+  <% end %>
+</div>

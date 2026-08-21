@@ -1053,6 +1053,29 @@ class Plugin::Instance
     )
   end
 
+  # Register a capability exposed through Discourse's MCP server. Registered
+  # capabilities remain disabled until an administrator enables them.
+  def register_mcp_tool(identifier, **attributes)
+    register_mcp_capability(:tool, identifier, **attributes)
+  end
+
+  def register_mcp_resource_template(identifier, **attributes)
+    register_mcp_capability(:resource_template, identifier, **attributes)
+  end
+
+  def register_mcp_prompt(identifier, **attributes)
+    register_mcp_capability(:prompt, identifier, **attributes)
+  end
+
+  def register_mcp_capability(kind, identifier, **attributes)
+    configured_availability = attributes.delete(:availability)
+    attributes[:provider] ||= name || directory_name
+    attributes[:availability] = -> do
+      enabled? && (configured_availability.nil? || configured_availability.call)
+    end
+    DiscourseMcp.registry.public_send("register_#{kind}", identifier, **attributes)
+  end
+
   # Register a route which can be authenticated using an api key or user api key
   # in a query parameter rather than a header. For example:
   #

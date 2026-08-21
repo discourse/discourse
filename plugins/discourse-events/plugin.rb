@@ -1039,3 +1039,30 @@ after_initialize do
     end
   end
 end
+
+after_initialize do
+  require_relative "lib/discourse_calendar/mcp_tools"
+  register_mcp_tool(
+    "discourse-calendar.event.list",
+    title: "List events",
+    description: "Lists upcoming events whose posts are visible to the authenticated user.",
+    implementation: DiscourseCalendar::McpTools::ListEvents,
+    input_schema: {
+      type: "object",
+      properties: {
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+        },
+      },
+      additionalProperties: false,
+    },
+    required_scopes: %w[discourse-calendar:read],
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.calendar_enabled && SiteSetting.discourse_post_event_enabled },
+  )
+end

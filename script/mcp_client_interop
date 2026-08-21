@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ -z "${MCP_URL:-}" || -z "${MCP_TOKEN:-}" ]]; then
+  echo "Usage: MCP_URL=https://forum.example.com/mcp MCP_TOKEN=... $0" >&2
+  exit 1
+fi
+
+workdir="$(mktemp -d)"
+trap 'rm -rf "$workdir"' EXIT
+
+cat >"$workdir/package.json" <<'JSON'
+{"private":true,"type":"module"}
+JSON
+pnpm --dir "$workdir" add --silent @modelcontextprotocol/client@2.0.0
+
+cat >"$workdir/client.mjs" <<'JAVASCRIPT'
+import {
+  Client,
+  StreamableHTTPClientTransport,
+} from "@modelcontextprotocol/client";
+
+const client = new Client(
+  { name: "discourse-mcp-interoperability", version: "1.0.0" },
+  { versionNegotiation: { mode: { pin: "2026-07-28" } } }
+);
+const transport = new StreamableHTTPClientTransport(new URL(process.env.MCP_URL), {
+  requestInit: { headers: { Authorization: `Bearer ${process.env.MCP_TOKEN}` } },
+});
+
+await client.connect(transport);
+const tools = await client.listTools();
+const currentUser = await client.callTool({
+  name: "discourse.current_user.get",
+  arguments: {},
+});
+const resourceTemplates = await client.listResourceTemplates();
+const prompts = await client.listPrompts();
+
+console.log(
+  JSON.stringify(
+    {
+      era: client.getProtocolEra(),
+      tools: tools.tools.map((tool) => tool.name),
+      currentUser: currentUser.structuredContent,
+      resourceTemplates: resourceTemplates.resourceTemplates.map(
+        (resource) => resource.uriTemplate
+      ),
+      prompts: prompts.prompts.map((prompt) => prompt.name),
+    },
+    null,
+    2
+  )
+);
+await client.close();
+JAVASCRIPT
+
+node "$workdir/client.mjs"
