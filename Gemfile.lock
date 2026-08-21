@@ -108,9 +108,11 @@ GEM
     annotaterb (4.20.0)
       activerecord (>= 6.0.0)
       activesupport (>= 6.0.0)
+    anonymous_loader (0.1.3)
+      version_gem (~> 1.1, >= 1.1.14)
     ast (2.4.3)
-    auth-sanitizer (0.1.4)
-      version_gem (~> 1.1, >= 1.1.9)
+    auth-sanitizer (0.2.3)
+      version_gem (~> 1.1, >= 1.1.14)
     aws-eventstream (1.4.0)
     aws-partitions (1.1134.0)
     aws-sdk-bedrockruntime (1.74.0)
@@ -407,17 +409,17 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.3-x86_64-linux-musl)
       racc (~> 1.4)
-    oauth (1.1.5)
-      auth-sanitizer (~> 0.1, >= 0.1.3)
+    oauth (1.1.8)
+      anonymous_loader (~> 0.1, >= 0.1.3)
+      auth-sanitizer (~> 0.2, >= 0.2.3)
       base64 (~> 0.1)
-      cgi
-      oauth-tty (~> 1.0, >= 1.0.8)
-      snaky_hash (~> 2.0, >= 2.0.4)
-      version_gem (~> 1.1, >= 1.1.9)
-    oauth-tty (1.0.8)
-      auth-sanitizer (~> 0.1, >= 0.1.3)
-      cgi
-      version_gem (~> 1.1, >= 1.1.9)
+      oauth-tty (~> 1.0, >= 1.0.13)
+      snaky_hash (~> 2.0, >= 2.0.7)
+      version_gem (~> 1.1, >= 1.1.14)
+    oauth-tty (1.0.13)
+      anonymous_loader (~> 0.1, >= 0.1.3)
+      auth-sanitizer (~> 0.2, >= 0.2.3)
+      version_gem (~> 1.1, >= 1.1.14)
     oauth2 (1.4.11)
       faraday (>= 0.17.3, < 3.0)
       jwt (>= 1.0, < 3.0)
@@ -725,9 +727,9 @@ GEM
     simpleidn (0.2.3)
     smarter_json (1.2.6)
       bigdecimal
-    snaky_hash (2.0.4)
+    snaky_hash (2.0.7)
       hashie (>= 0.1.0, < 6)
-      version_gem (>= 1.1.8, < 3)
+      version_gem (~> 1.1, >= 1.1.14)
     sqlite3 (2.9.5-aarch64-linux-gnu)
     sqlite3 (2.9.5-aarch64-linux-musl)
     sqlite3 (2.9.5-arm64-darwin)
@@ -781,7 +783,7 @@ GEM
     uniform_notifier (1.18.0)
     uri (1.1.1)
     useragent (0.16.11)
-    version_gem (1.1.13)
+    version_gem (1.1.14)
     web-push (3.0.1)
       jwt (~> 2.0)
       openssl (~> 3.0)
@@ -998,8 +1000,9 @@ CHECKSUMS
   addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
   afm (1.0.0) sha256=5bd4d6f6241e7014ef090985ec6f4c3e9745f6de0828ddd58bc1efdd138f4545
   annotaterb (4.20.0) sha256=871b2e898d1d60c23bdc59b72a5b840678a56355bf5f6fdeb8c79d317ff98bf7
+  anonymous_loader (0.1.3) sha256=084a18e2439144d955447dc11dfc982f41fcd1583ad32d4d55151325dc44cb55
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
-  auth-sanitizer (0.1.4) sha256=ded72221d4d3a7c91e34e8a87b21e6a42cbf7829697f140dcf49d542422faedc
+  auth-sanitizer (0.2.3) sha256=db10aac92cfbe4c64ab637eebcbe1d67395d1694798041362173370f59933e3c
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
   aws-partitions (1.1134.0) sha256=28f5f6156777ac346904a79ce6cb3b14a521e3866fee12a0da86d7b500266d3e
   aws-sdk-bedrockruntime (1.74.0) sha256=fc5eb0ab9485fc847bfcef058b8c50f2f7996d4a8266ce3562da2daa5bf1dea5
@@ -1163,8 +1166,8 @@ CHECKSUMS
   nokogiri (1.19.3-x86_64-darwin) sha256=77f3fba57d46c53ab31e62fc6c28f705109d1bf6264356c76f132b2be5728d4d
   nokogiri (1.19.3-x86_64-linux-gnu) sha256=2f5078620fe12e83669b5b17311b32532a8153d02eee7ad06948b926d6080976
   nokogiri (1.19.3-x86_64-linux-musl) sha256=248c906d2166eca5efb56d52fdee5f9a1f51d69a72e2b64fdac647b4ce39ea3f
-  oauth (1.1.5) sha256=0ec467908f5819a54d1659d33e8bb520e8475cc87a452d6ecfaa5db351999cca
-  oauth-tty (1.0.8) sha256=d9a63b67af17c22517f868c59f12178e4ee19a367536d1a6dcb74d9d07a41e07
+  oauth (1.1.8) sha256=7bf0b774391af4f820a86ce2cc7fa38c3fad5121b5563592535cff4b2e16d50e
+  oauth-tty (1.0.13) sha256=71ad5f93ceea6fd21fe9a731dc02a4b892c5de9d77e0b303e81bd73f9daeb4a3
   oauth2 (1.4.11) sha256=6739fcc8872bc94f476b0cae3e8bd78a56d8364b1b79b0757794c25e152d5c10
   octokit (10.0.0) sha256=82e99a539b7637b7e905e6d277bb0c1a4bed56735935cc33db6da7eae49a24e8
   oj (3.16.12) sha256=ad9fad6a06dabcf4cfe6a420690a4375377685c16eee0ae88e8d38a43ed7b556
@@ -1285,7 +1288,7 @@ CHECKSUMS
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
   smarter_json (1.2.6) sha256=6638a2d23954e26d268212b4c8f5b9871d31b72f3d169371cca1082c1a722b45
-  snaky_hash (2.0.4) sha256=2b12758c57defa6796341a1620f84b1a23737421d8d7e2575d0550b53cc4fece
+  snaky_hash (2.0.7) sha256=7d02c70012a3f932e48860cd024577908300c9aa615e0cb9b450aaa749cbcb4d
   sqlite3 (2.9.5-aarch64-linux-gnu) sha256=78075b6337d3d182c6d2b4691049ed45cd220826160c9ea18946bf6a1de200dc
   sqlite3 (2.9.5-aarch64-linux-musl) sha256=18c801185deb4adc01ddb281e8f672a39e3d1729979ca91e39439cd3eac0402d
   sqlite3 (2.9.5-arm64-darwin) sha256=d0cf444a70fc9395d513cfbcc1e6719e224aa645314e3824cb0474c721425aa2
@@ -1329,7 +1332,7 @@ CHECKSUMS
   uniform_notifier (1.18.0) sha256=4787785556f66f6418486da0f1d78b3239aaff98e2e7938fb05e2062b0ffce9d
   uri (1.1.1) sha256=379fa58d27ffb1387eaada68c749d1426738bd0f654d812fcc07e7568f5c57c6
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
-  version_gem (1.1.13) sha256=77f3035ac45877cd14610648fec2d23bd8c10fa13dfcf63a588825aa98587260
+  version_gem (1.1.14) sha256=6b7306c7e9416d06067561981ab3444e2cecb844f26cc325ae3c27b44cf85613
   web-push (3.0.1) sha256=5b4dd2f2bba3bd8951da6416492fe920a6f203d14d3080f943c5d01c0cc4b18d
   webmock (3.26.2) sha256=774556f2ea6371846cca68c01769b2eac0d134492d21f6d0ab5dd643965a4c90
   webrick (1.9.2) sha256=beb4a15fc474defed24a3bda4ffd88a490d517c9e4e6118c3edce59e45864131
