@@ -21,7 +21,8 @@ class LetterAvatar
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
   FONT_FILENAME = "NotoSans-Regular.woff2"
-  private_constant :FONT_FILENAME
+  MACOS_FONT_PATH = "/System/Library/Fonts/Helvetica.ttc"
+  private_constant :FONT_FILENAME, :MACOS_FONT_PATH
 
   class << self
     def version
@@ -108,12 +109,12 @@ class LetterAvatar
     end
 
     def font_path
-      return if macos?
-      @font_path ||= File.join(DiscourseFonts.path_for_fonts, FONT_FILENAME)
+      @font_path ||=
+        macos? ? MACOS_FONT_PATH : File.join(DiscourseFonts.path_for_fonts, FONT_FILENAME)
     end
 
     def font_version
-      font_path ? Digest::MD5.file(font_path).hexdigest : "Helvetica"
+      Digest::MD5.file(font_path).hexdigest
     end
 
     def macos?
