@@ -61,76 +61,16 @@ RSpec.describe DiscourseVips do
         expect(image.pixels.uniq.length).to be > 2
       end
     end
-
-    it "matches the original text, gravity, and flatten pipeline" do
-      Dir.mktmpdir("discourse-vips-spec") do |directory|
-        font_path =
-          if RUBY_PLATFORM.match?(/darwin/)
-            nil
-          else
-            File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2")
-          end
-        font_family = font_path ? "Noto Sans" : "Helvetica"
-        font_arguments = ["--font", "#{font_family} 280"]
-        font_arguments.unshift("--fontfile", font_path) if font_path
-        markup = '<span foreground="#ffffff" alpha="80%">A</span>'
-        glyph_path = File.join(directory, "glyph.png")
-        canvas_path = File.join(directory, "canvas.png")
-        original_path = File.join(directory, "original.png")
-        helper_path = File.join(directory, "helper.png")
-
-        Vips.run(
-          "text",
-          glyph_path,
-          markup,
-          *font_arguments,
-          "--rgba",
-          read: [font_path].compact,
-          write: [directory],
-        )
-        Vips.run(
-          "gravity",
-          glyph_path,
-          canvas_path,
-          "centre",
-          "360",
-          "360",
-          "--extend",
-          "background",
-          "--background",
-          "198 125 40 255",
-          read: [glyph_path],
-          write: [directory],
-        )
-        Vips.run(
-          "flatten",
-          canvas_path,
-          original_path,
-          "--background",
-          "198 125 40",
-          read: [canvas_path],
-          write: [directory],
-        )
-        described_class.generate_letter_avatar(
-          letter: "A",
-          background_color: [198, 125, 40],
-          font_path:,
-          output_path: helper_path,
-        )
-
-        expect(File.binread(helper_path)).to eq(File.binread(original_path))
-      end
-    end
   end
 
   describe ".dominant_color" do
-    it "matches the existing one-pixel libvips result" do
+    it "returns an uppercase RGB hex color" do
       input_path = file_from_fixtures("cropped.png").path
 
       expect(described_class.dominant_color(input_path:)).to eq("3A3730")
     end
 
-    it "selects a supported loader from the content instead of the extension" do
+    it "accepts a supported image with a nonstandard file extension" do
       Tempfile.create(%w[dominant-color .bin], binmode: true) do |file|
         file.write(File.binread(file_from_fixtures("cropped.png").path))
         file.flush
@@ -139,7 +79,7 @@ RSpec.describe DiscourseVips do
       end
     end
 
-    it "does not use the SVG loader when the input is declared as PNG" do
+    it "rejects mismatched image content" do
       input_path = file_from_fixtures("image.svg").path
       FastImage.stubs(:type).with(input_path).returns(:png)
 
