@@ -3,11 +3,12 @@
 module DiscourseAi
   module Agents
     module Tools
-      class EditTags < Tool
+      class EditTopicTags < Tool
         def self.signature
           {
             name: name,
-            description: "Adds tags to a topic. By default appends to existing tags.",
+            description:
+              "Adds, replaces, or removes tags on a topic. By default appends the given tags to the existing ones; with replace set, the given list becomes the topic's complete tag set and any omitted tag is removed.",
             parameters: [
               {
                 name: "topic_id",
@@ -17,7 +18,8 @@ module DiscourseAi
               },
               {
                 name: "tags",
-                description: "Array of tag names to add to the topic",
+                description:
+                  "Array of tag names to apply. In replace mode this is the topic's full resulting tag list",
                 type: "array",
                 item_type: "string",
                 required: true,
@@ -44,7 +46,7 @@ module DiscourseAi
         end
 
         def self.name
-          "edit_tags"
+          "edit_topic_tags"
         end
 
         def self.requires_approval?
@@ -53,18 +55,22 @@ module DiscourseAi
 
         def invoke
           if !SiteSetting.tagging_enabled
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_tags.errors.tagging_disabled"))
+            return(
+              error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.tagging_disabled"))
+            )
           end
 
           topic = Topic.find_by(id: parameters[:topic_id])
-          return error_response(I18n.t("discourse_ai.ai_bot.edit_tags.errors.not_found")) if !topic
+          if !topic
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.not_found"))
+          end
 
           if !guardian.can_edit_tags?(topic)
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_tags.errors.not_allowed"))
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.not_allowed"))
           end
 
           if reason.blank?
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_tags.errors.no_reason"))
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.no_reason"))
           end
 
           tag_names = parameters[:tags] || []
@@ -75,14 +81,14 @@ module DiscourseAi
 
           first_post = topic.first_post
           if !first_post
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_tags.errors.not_found"))
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.not_found"))
           end
 
           revisor = PostRevisor.new(first_post, topic)
           result = revisor.revise!(acting_user, fields)
 
           if result
-            { status: "success", message: I18n.t("discourse_ai.ai_bot.edit_tags.success") }
+            { status: "success", message: I18n.t("discourse_ai.ai_bot.edit_topic_tags.success") }
           else
             error_response(topic.errors.full_messages.join(", "))
           end

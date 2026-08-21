@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAi::Agents::Tools::EditTags do
+RSpec.describe DiscourseAi::Agents::Tools::EditTopicTags do
   fab!(:llm_model)
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
