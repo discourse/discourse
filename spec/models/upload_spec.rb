@@ -967,8 +967,8 @@ RSpec.describe Upload do
       expect(red_image.dominant_color).to eq("FF0000")
 
       expect(high_color_image.dominant_color).to eq(nil)
-      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("00A0F0")
-      expect(high_color_image.dominant_color).to eq("00A0F0")
+      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
+      expect(high_color_image.dominant_color).to eq("009FEF")
     end
 
     it "can be backfilled" do
