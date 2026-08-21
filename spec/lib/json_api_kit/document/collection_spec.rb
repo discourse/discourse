@@ -20,9 +20,9 @@ RSpec.describe JsonApiKit::Document::Collection do
     end
   end
   let(:guardian) { Guardian.new }
-  let(:urls) do
-    JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/topics")
-  end
+  let(:urls) { JsonApiKit::Urls.new(base: "https://example.com/api", current:) }
+  let(:current) { "https://example.com/api/topics" }
+  let(:self_link) { { href: current, type: JsonApiKit::Pagination::Profile::MEDIA_TYPE } }
   let(:listing) { resource.all({}, guardian:) }
   let(:primary_data) { document.to_h[:data] }
   let(:first_record) { listing.records.to_a.first }
@@ -66,7 +66,7 @@ RSpec.describe JsonApiKit::Document::Collection do
           data: [],
           included: [],
           links: {
-            self: "https://example.com/api/topics",
+            self: self_link,
             prev: nil,
             next: nil,
           },
@@ -87,7 +87,7 @@ RSpec.describe JsonApiKit::Document::Collection do
 
       it "renders a link to the page at each end" do
         expect(document.to_h[:links]).to eq(
-          self: "https://example.com/api/topics",
+          self: self_link,
           prev: "https://example.com/api/topics?page%5Bbefore%5D=#{page_cursor}",
           next: "https://example.com/api/topics?page%5Bafter%5D=#{page_cursor}",
         )
