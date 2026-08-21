@@ -5,7 +5,7 @@ module JsonApiKit
     def self.build(parameters, resource:, urls:)
       contract_class
         .new(
-          **parameters,
+          **parameters.to_hash,
           options: {
             resource:,
             raw_parameters: parameters.with_indifferent_access,
