@@ -8,6 +8,9 @@ da:
   js:
     styleguide:
       title: "Styleguide"
+      example:
+        kind:
+          component: "Komponent"
       categories:
         syntax: Syntaks
         atoms: Atomer

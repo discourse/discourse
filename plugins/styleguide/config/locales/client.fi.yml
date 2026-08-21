@@ -13,6 +13,9 @@ fi:
   js:
     styleguide:
       title: "Tyyliopas"
+      example:
+        kind:
+          component: "Komponentti"
       categories:
         syntax: Syntaksi
         atoms: Atomit

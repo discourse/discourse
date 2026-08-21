@@ -8,6 +8,9 @@ zh_TW:
   js:
     styleguide:
       title: "風格指南"
+      example:
+        kind:
+          component: "元件"
       categories:
         atoms: 原子
         molecules: 分子

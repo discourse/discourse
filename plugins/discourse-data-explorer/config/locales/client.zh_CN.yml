@@ -28,6 +28,7 @@ zh_CN:
         title: "创建数据资源管理器查询"
         description: "编写自定义 SQL 查询，以查找与您的社区相关的特定内容。"
     explorer:
+      resize_editor: "调整查询编辑器大小"
       default_query: "默认"
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"
       queries: "查询"
