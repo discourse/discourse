@@ -307,15 +307,16 @@ asked, external ones, and tests its own rectangle against the pointer. It
 never joins the drop-target hierarchy: no indicator, no positions, and it
 composes freely with a real target on the same element.
 
-| Argument        | Type                    | Purpose                                                                           |
-| --------------- | ----------------------- | --------------------------------------------------------------------------------- |
-| `types`         | `string \| string[]`    | Element drag types to watch. Omit to watch all.                                   |
-| `externalKinds` | external kinds or array | External kinds to watch. Omitting it, or naming no kinds, refuses external drags. |
-| `delay`         | `number`                | Milliseconds of hovering before the dwell fires; defaults to 500.                 |
-| `canDwell`      | `(feedback) => boolean` | Gates candidacy; shares a drop target's `canDrop` feedback shape.                 |
-| `acceptsSelf`   | `boolean`               | Whether the element's own drag may dwell. Defaults to `true`.                     |
-| `onDwell`       | `(event) => void`       | The drag hovered long enough.                                                     |
-| `onDwellEnd`    | `(event) => void`       | The candidacy ended; the place to undo what `onDwell` did.                        |
+| Argument        | Type                    | Purpose                                                                                                                      |
+| --------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `types`         | `string \| string[]`    | Element drag types to watch. Omit to watch all.                                                                              |
+| `externalKinds` | external kinds or array | External kinds to watch. Omitting it, or naming no kinds, refuses external drags.                                            |
+| `delay`         | `boolean \| number`     | Hover before the dwell fires: `true` (default) the standard 500 ms, `false` immediate, or milliseconds.                      |
+| `leaveDelay`    | `boolean \| number`     | Grace before a fired dwell is undone on leave: `true` (default) mirrors the entry delay, `false` immediate, or milliseconds. |
+| `canDwell`      | `(feedback) => boolean` | Gates candidacy; shares a drop target's `canDrop` feedback shape.                                                            |
+| `acceptsSelf`   | `boolean`               | Whether the element's own drag may dwell. Defaults to `true`.                                                                |
+| `onDwell`       | `(event) => void`       | The drag hovered long enough.                                                                                                |
+| `onDwellEnd`    | `(event) => void`       | The candidacy ended; the place to undo what `onDwell` did.                                                                   |
 
 ```gjs
 <div
