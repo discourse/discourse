@@ -34,14 +34,14 @@ module(
           id="scroller"
           style="height: 100px; overflow-y: auto"
           {{dDragAndDropExternalTarget accepts="text"}}
-          {{dDragAndDropAutoScroll accepts=@accepts}}
+          {{dDragAndDropAutoScroll externalKinds=@externalKinds}}
         >
           <div style="height: 600px">tall</div>
         </div>
       </template>;
 
       test("external auto-scroll moves the container for a drag from outside the window", async function (assert) {
-        await render(<template><scroller @accepts="text" /></template>);
+        await render(<template><scroller @externalKinds="text" /></template>);
 
         await hoverNearBottomEdge("#scroller", textTransfer());
 

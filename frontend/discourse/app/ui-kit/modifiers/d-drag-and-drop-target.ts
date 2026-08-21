@@ -166,6 +166,9 @@ export function registerDragAndDropTarget(
  * Element drags, and with `adopts` browser-started drags from page content;
  * see `dDragAndDropExternalTarget` for payloads dragged in from outside the
  * window.
+ *
+ * @see `dDragDwell` to act once a drag has hovered this element for a delay;
+ *   it composes beside this modifier without joining the target hierarchy.
  */
 export default modifier<DDragAndDropTargetSignature>(
   (element, _positional, args) =>

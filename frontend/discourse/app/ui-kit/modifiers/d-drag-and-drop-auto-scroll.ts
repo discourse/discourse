@@ -38,7 +38,7 @@ interface DDragAndDropAutoScrollSignature {
        * Also auto-scroll for drags from outside the window, engaging on these
        * external kinds. Omit it and an external drag scrolls nothing.
        */
-      accepts?: ExternalDragKind | ExternalDragKind[];
+      externalKinds?: ExternalDragKind | ExternalDragKind[];
 
       /** Defaults to `"vertical"`. */
       axis?: AutoScrollAxis;
@@ -69,8 +69,8 @@ export type DragAndDropAutoScrollArgs =
  * below wraps it.
  *
  * @param getArgsRef - Closure returning the latest args. `types`, `axis` and
- *   `accepts` are re-read on every scroll attempt; `target`, `element` and
- *   whether `accepts` is set are read once here and need a fresh registration.
+ *   `externalKinds` are re-read on every scroll attempt; `target`, `element` and
+ *   whether `externalKinds` is set are read once here and need a fresh registration.
  * @returns Cleanup; call it once on teardown.
  */
 export function registerDragAndDropAutoScroll(
@@ -80,7 +80,7 @@ export function registerDragAndDropAutoScroll(
     matchesDragType(getArgsRef().types, source);
 
   const matchesKind = ({ source }: { source: NativeExternalDragPayload }) =>
-    matchesExternalKind(getArgsRef().accepts, source);
+    matchesExternalKind(getArgsRef().externalKinds, source);
 
   const getAllowedAxis = () => getArgsRef().axis ?? "vertical";
 
@@ -97,9 +97,9 @@ export function registerDragAndDropAutoScroll(
         }),
   ];
 
-  // An absent `accepts` would match every external drag, so the external
+  // An absent `externalKinds` would match every external drag, so the external
   // registration is made only when the consumer asked for one.
-  if (args.accepts) {
+  if (args.externalKinds) {
     cleanups.push(
       scrollsWindow
         ? autoScrollWindowForExternal({
@@ -137,11 +137,11 @@ export function registerDragAndDropAutoScroll(
  * ></span>
  * ```
  *
- * With `accepts`, for payloads dragged in from outside the window too:
+ * With `externalKinds`, for payloads dragged in from outside the window too:
  *
  * ```hbs
  * <div class="scroll-container"
- *   {{dDragAndDropAutoScroll types=(array "card") accepts="urls"}}
+ *   {{dDragAndDropAutoScroll types=(array "card") externalKinds="urls"}}
  * >
  * ```
  */
@@ -151,7 +151,7 @@ export default modifier<DDragAndDropAutoScrollSignature>(
     // replaces the registration; cheap between drags, and args rarely change.
     registerDragAndDropAutoScroll(() => ({
       types: args.types,
-      accepts: args.accepts,
+      externalKinds: args.externalKinds,
       axis: args.axis,
       target: args.target,
       element,
