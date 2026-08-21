@@ -22,12 +22,44 @@ module PageObjects
       end
 
       def clear_filters
-        find(".ai-logs__clear").click
+        find(".d-filter-controls__reset").click
+        self
+      end
+
+      def search(value)
+        find("input[placeholder='#{I18n.t("js.discourse_ai.logs.search_placeholder")}']").fill_in(
+          with: value,
+        )
         self
       end
 
       def filter_value(key)
         find(".d-filter-controls__dropdown--#{key}").value
+      end
+
+      def has_tinted_filter_toggle?
+        page.evaluate_script(<<~JS)
+          (() => {
+            const icon = document.querySelector(
+              ".ai-logs .d-filter-controls__toggle-filters .d-icon"
+            );
+            const probe = (color) => {
+              const el = document.createElement("span");
+              el.style.color = `var(${color})`;
+              document.body.appendChild(el);
+              const result = getComputedStyle(el).color;
+              el.remove();
+              return result;
+            };
+            return [probe("--tertiary"), probe("--tertiary-hover")].includes(
+              getComputedStyle(icon).color
+            );
+          })()
+        JS
+      end
+
+      def has_no_tinted_filter_toggle?
+        !has_tinted_filter_toggle?
       end
 
       def has_expanded_filter_dropdowns?
