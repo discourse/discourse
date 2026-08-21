@@ -15,6 +15,7 @@ import {
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
 import { matchesDragType } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 import type { Axis } from "discourse/lib/geometry";
+import { makeArray } from "discourse/lib/helpers";
 
 /** Which direction the container is allowed to scroll while a drag is in flight. */
 export type AutoScrollAxis = Axis | "all";
@@ -98,8 +99,8 @@ export function registerDragAndDropAutoScroll(
   ];
 
   // An absent `externalKinds` would match every external drag, so the external
-  // registration is made only when the consumer asked for one.
-  if (args.externalKinds) {
+  // registration is made only when the consumer named at least one kind.
+  if (makeArray(args.externalKinds).length > 0) {
     cleanups.push(
       scrollsWindow
         ? autoScrollWindowForExternal({

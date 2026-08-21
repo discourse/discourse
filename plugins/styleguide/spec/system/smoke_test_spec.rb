@@ -167,12 +167,18 @@ RSpec.describe "Styleguide Smoke Test" do
     visit "/styleguide/molecules/drag-and-drop?group=reacting"
 
     expect(page).to have_css(".styleguide-drag-and-drop__folder")
-    page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    expect(page).to have_no_css(".styleguide-drag-and-drop__folder.--open")
+    if ENV["TAKE_SCREENSHOTS"] == "1"
+      page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    end
     screenshot_marker(label: "styleguide-drag-and-drop-dwell")
 
     find(".styleguide-drag-and-drop__folder-toggle").click
     expect(page).to have_css(".styleguide-drag-and-drop__folder.--open")
-    page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    expect(page).to have_css(".styleguide-drag-and-drop__folder-row", count: 3)
+    if ENV["TAKE_SCREENSHOTS"] == "1"
+      page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    end
     screenshot_marker(label: "styleguide-drag-and-drop-dwell-open")
   end
 

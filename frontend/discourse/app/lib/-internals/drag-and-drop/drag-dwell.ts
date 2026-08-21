@@ -1,8 +1,4 @@
-import {
-  isDestroyed,
-  isDestroying,
-  registerDestructor,
-} from "@ember/destroyable";
+import { isDestroying, registerDestructor } from "@ember/destroyable";
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse/lib/later";
 
@@ -102,6 +98,12 @@ export default function createDragDwell<Target>(
       return;
     }
 
+    // isDestroying stays true once destruction completes, so this single
+    // check also covers a fully destroyed destroyable.
+    if (isDestroying(destroyable)) {
+      return;
+    }
+
     const key = identity ? identity(target) : target;
     if (Object.is(key, currentKey)) {
       latestTarget = target;
@@ -114,7 +116,7 @@ export default function createDragDwell<Target>(
     timer = discourseLater(() => {
       // This order is load-bearing and must not be reordered.
       timer = null;
-      if (isDestroying(destroyable) || isDestroyed(destroyable)) {
+      if (isDestroying(destroyable)) {
         return;
       }
 

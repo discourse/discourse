@@ -1,4 +1,6 @@
 import { destroy } from "@ember/destroyable";
+import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
 import type { CleanupFn } from "@atlaskit/pragmatic-drag-and-drop/types";
@@ -22,6 +24,7 @@ import {
   type NormalizedDragSource,
   normalizeDragSource,
 } from "discourse/lib/-internals/drag-and-drop/vocabulary";
+import { makeArray } from "discourse/lib/helpers";
 
 export {
   default as createDragDwell,
@@ -36,43 +39,51 @@ export type DragDwellFamily = "element" | "external";
 export type DragDwellSource = NormalizedDragSource | ExternalDragPayload;
 
 /**
+ * The observed drag: which adapter carried it, discriminating the payload
+ * shape. Checking `family` narrows `source`.
+ */
+type DragDwellObservation =
+  | {
+      /** The drag came from a registered element source. */
+      family: "element";
+
+      /** The dragged payload, normalized. */
+      source: NormalizedDragSource;
+    }
+  | {
+      /** The drag came from outside the window. */
+      family: "external";
+
+      /** The decorated external payload. */
+      source: ExternalDragPayload;
+    };
+
+/**
  * What {@link DragDwellArgs.canDwell} receives — structurally what a drop
  * target's `canDrop` receives, so one gating function can serve both.
  */
-export interface DragDwellFeedback {
-  /** Which adapter the drag arrived through; narrows `source`. */
-  family: DragDwellFamily;
-
-  /** The dragged payload. */
-  source: DragDwellSource;
-
+export type DragDwellFeedback = DragDwellObservation & {
   /** The pointer, with `clientX`/`clientY`. */
   input: DragInput;
 
   /** The dwell host element. */
   element: HTMLElement;
-}
+};
 
 /** What {@link DragDwellArgs.onDwell} receives. */
-export interface DragDwellEvent {
-  /** Which adapter the drag arrived through; narrows `source`. */
-  family: DragDwellFamily;
-
-  /** The dragged payload. */
-  source: DragDwellSource;
-
+export type DragDwellEvent = DragDwellObservation & {
   /** The drag's positions: `initial`, `previous`, and `current`. */
   location: DragLocation;
 
   /** The dwell host element. */
   element: HTMLElement;
-}
+};
 
 /** Why a candidacy ended. */
 export type DragDwellEndReason = "left" | "drag-ended";
 
 /** What {@link DragDwellArgs.onDwellEnd} receives. */
-export interface DragDwellEndEvent extends DragDwellEvent {
+export type DragDwellEndEvent = DragDwellEvent & {
   /**
    * `"left"` when the drag stopped hovering the element or stopped
    * qualifying; `"drag-ended"` when the drag finished anywhere — dropped,
@@ -84,11 +95,12 @@ export interface DragDwellEndEvent extends DragDwellEvent {
   fired: boolean;
 
   /**
-   * On `"drag-ended"`: whether the drop landed on this element or inside it.
-   * Always `false` for `"left"`.
+   * On `"drag-ended"`: whether the drop landed on a drop target registered
+   * on this element or inside it. Always `false` for `"left"`, and `false`
+   * whenever the host carries no drop target of its own.
    */
   droppedHere: boolean;
-}
+};
 
 interface DDragDwellSignature {
   Element: HTMLElement;
@@ -96,14 +108,14 @@ interface DDragDwellSignature {
     Named: {
       /**
        * Element drag types to watch. Omit to watch every element drag.
-       * Consulted as each drag starts.
+       * Re-read on every frame.
        */
       types?: string | string[];
 
       /**
-       * External drag kinds to watch. Omitting it refuses every external
-       * drag: the dwell only reacts to drags from outside the window when a
-       * consumer asks for them.
+       * External drag kinds to watch. Omitting it, or naming no kinds,
+       * refuses every external drag: the dwell only reacts to drags from
+       * outside the window when a consumer asks for them.
        */
       externalKinds?: ExternalDragKind | ExternalDragKind[];
 
@@ -158,18 +170,6 @@ function isWithin(input: DragInput, clientRect: DOMRect) {
   );
 }
 
-function matchesNormalizedDragType(
-  types: DragDwellArgs["types"],
-  source: NormalizedDragSource
-) {
-  // matchesDragType reads only `data`; normalization omits the unrelated
-  // adapter-only `dragHandle` field from its consumer-facing shape.
-  return matchesDragType(
-    types,
-    source as unknown as Parameters<typeof matchesDragType>[1]
-  );
-}
-
 /**
  * Watches drags the way a monitor does and reports dwells on one element.
  *
@@ -201,14 +201,10 @@ export function registerDragDwell(
     if (!callback) {
       return true;
     }
+    const { location, ...observation } = event;
     return consumerMayThrow(
       () =>
-        callback({
-          family: event.family,
-          source: event.source,
-          input: event.location.current.input,
-          element,
-        }) !== false,
+        callback({ ...observation, input: location.current.input }) !== false,
       false
     );
   };
@@ -230,8 +226,15 @@ export function registerDragDwell(
         const event = lastEvent;
         if (!passesGate(event)) {
           dwell?.reset();
+          consumerMayThrow(() =>
+            getArgsRef().onDwellEnd?.({
+              ...event,
+              reason: "left",
+              fired: false,
+              droppedHere: false,
+            })
+          );
           hovering = false;
-          fired = false;
           lastEvent = null;
           return;
         }
@@ -293,8 +296,8 @@ export function registerDragDwell(
     }
 
     const event = lastEvent;
-    const droppedHere = location.current.dropTargets.some(
-      (target) => element === target.element || element.contains(target.element)
+    const droppedHere = location.current.dropTargets.some((target) =>
+      element.contains(target.element)
     );
     // make-adapter.js dispatches source -> drop targets -> monitors, so a
     // target's onDrop is guaranteed to run before this monitor callback.
@@ -312,47 +315,50 @@ export function registerDragDwell(
     lastEvent = null;
   };
 
+  const reportElementCandidate = (
+    source: ElementDragPayload,
+    location: DragLocation
+  ) => {
+    const args = getArgsRef();
+    const normalizedSource = normalizeDragSource(source);
+    const acceptsSelf =
+      args.acceptsSelf !== false || !element.contains(normalizedSource.element);
+    reportCandidate(
+      { family: "element", source: normalizedSource, location, element },
+      // Matched on the raw payload: an adopted drag answers to its adoption's
+      // declared type there, which normalization strips from `data`.
+      matchesDragType(args.types, source) && acceptsSelf
+    );
+  };
+
+  const reportExternalCandidate = (
+    source: NativeExternalDragPayload,
+    location: DragLocation
+  ) => {
+    const { externalKinds } = getArgsRef();
+    reportCandidate(
+      {
+        family: "external",
+        source: decorateExternalSource(source),
+        location,
+        element,
+      },
+      makeArray(externalKinds).length > 0 &&
+        matchesExternalKind(externalKinds, source)
+    );
+  };
+
   const cleanupElements = monitorForElements({
-    onDrag: ({ source, location }) => {
-      const args = getArgsRef();
-      const normalizedSource = normalizeDragSource(source);
-      const acceptsSelf =
-        args.acceptsSelf !== false ||
-        (normalizedSource.element !== element &&
-          !element.contains(normalizedSource.element));
-      reportCandidate(
-        { family: "element", source: normalizedSource, location, element },
-        matchesNormalizedDragType(args.types, normalizedSource) && acceptsSelf
-      );
-    },
-    onDropTargetChange: ({ source, location }) => {
-      const args = getArgsRef();
-      const normalizedSource = normalizeDragSource(source);
-      const acceptsSelf =
-        args.acceptsSelf !== false ||
-        (normalizedSource.element !== element &&
-          !element.contains(normalizedSource.element));
-      reportCandidate(
-        { family: "element", source: normalizedSource, location, element },
-        matchesNormalizedDragType(args.types, normalizedSource) && acceptsSelf
-      );
-    },
+    onDrag: ({ source, location }) => reportElementCandidate(source, location),
+    onDropTargetChange: ({ source, location }) =>
+      reportElementCandidate(source, location),
     onDrop: ({ location }) => reportDragEnded(location),
   });
 
   const cleanupExternal = monitorForExternal({
-    onDrag: ({ source, location }) => {
-      const { externalKinds } = getArgsRef();
-      reportCandidate(
-        {
-          family: "external",
-          source: decorateExternalSource(source),
-          location,
-          element,
-        },
-        externalKinds != null && matchesExternalKind(externalKinds, source)
-      );
-    },
+    onDrag: ({ source, location }) => reportExternalCandidate(source, location),
+    onDropTargetChange: ({ source, location }) =>
+      reportExternalCandidate(source, location),
     onDrop: ({ location }) => reportDragEnded(location),
   });
 

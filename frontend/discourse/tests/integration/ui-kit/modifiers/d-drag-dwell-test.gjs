@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { array } from "@ember/helper";
 import {
   render,
   resetOnerror,
@@ -331,6 +332,44 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     }
   });
 
+  test("dDragDwell contains a throwing onDwell and still reports the end", async function (assert) {
+    const caught = [];
+    setupOnerror((error) => caught.push(error));
+
+    try {
+      const ends = [];
+      const onDwell = () => {
+        throw new Error("dwell failure");
+      };
+      const onDwellEnd = (event) => ends.push(event);
+
+      await render(
+        <template>
+          <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
+          <div
+            data-test-dwell
+            style="display: block; height: 60px;"
+            {{dDragAndDropTarget accepts="card" indicator=false}}
+            {{dDragDwell types="card" onDwell=onDwell onDwellEnd=onDwellEnd}}
+          >folder</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await startDrag(CHIP, { dataTransfer });
+      await dragOver(DWELL, { dataTransfer });
+      await settled();
+      assert.true(caught.length >= 1, "the throw surfaced through onerror");
+
+      await dragEvent(CHIP, "dragend", { dataTransfer, ...centerOf(DWELL) });
+      await settled();
+      assert.strictEqual(ends.length, 1, "the candidacy still ended");
+      assert.true(ends[0].fired, "with fired set before the throw");
+    } finally {
+      resetOnerror();
+    }
+  });
+
   test("dDragDwell clears a pending dwell when canDwell stops qualifying", async function (assert) {
     const dwells = [];
     const ends = [];
@@ -409,20 +448,22 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     dragEventNow(DWELL, "dragenter", { dataTransfer, ...centerOf(DWELL) });
     allowed = false;
 
-    // A pending animation frame may re-check the gate before the timer does;
-    // either way the dwell must not fire, and any reported end is a pre-fire
-    // leave. Outcome-set assertion by design.
+    // A pending pointer frame or the timer itself may be what re-checks the
+    // gate; either way the veto must report the candidacy's end exactly once.
     await settled();
     assert.strictEqual(dwells.length, 0, "the vetoed dwell never fires");
-    assert.true(ends.length <= 1, "at most one candidacy ended");
-    assert.true(
-      ends.every((event) => event.reason === "left" && event.fired === false),
-      "any reported end is a pre-fire leave"
-    );
+    assert.strictEqual(ends.length, 1, "the vetoed candidacy reports its end");
+    assert.strictEqual(ends[0]?.reason, "left", "as a leave");
+    assert.false(ends[0]?.fired, "before ever firing");
 
     await dragEvent(CHIP, "dragend", { dataTransfer, ...centerOf(DWELL) });
     await settled();
     assert.strictEqual(dwells.length, 0, "still nothing after the drag ends");
+    assert.strictEqual(
+      ends.length,
+      1,
+      "and no second end for the dead candidacy"
+    );
   });
 
   test("dDragDwell ignores element drags outside its types", async function (assert) {
@@ -452,6 +493,47 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     assert.strictEqual(ends.length, 0, "and never ends a candidacy");
   });
 
+  test("dDragDwell matches an adopted drag by its adoption's declared type", async function (assert) {
+    const dwells = [];
+    const onDwell = (event) => dwells.push(event);
+    const WEB_LINK = {
+      type: "web-link",
+      match: ({ element }) => Boolean(element.closest("a[href]")),
+    };
+
+    await render(
+      <template>
+        <a data-test-anchor href="https://example.com/adopted">a link</a>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragAndDropTarget adopts=WEB_LINK indicator=false}}
+          {{dDragDwell types="web-link" onDwell=onDwell}}
+        >folder</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData("text/uri-list", "https://example.com/adopted");
+    await dragEvent("[data-test-anchor]", "dragstart", {
+      dataTransfer,
+      ...centerOf("[data-test-anchor]"),
+    });
+    await dragOver(DWELL, { dataTransfer });
+    await settled();
+
+    assert.strictEqual(
+      dwells.length,
+      1,
+      "an explicit types filter matches the adoption's declared type"
+    );
+    assert.strictEqual(
+      dwells[0]?.source.type,
+      "web-link",
+      "the source reports the adoption's type"
+    );
+  });
+
   test("dDragDwell refuses external drags unless externalKinds opts in", async function (assert) {
     const dwells = [];
     const onDwell = (event) => dwells.push(event);
@@ -475,6 +557,31 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     await settled();
 
     assert.strictEqual(dwells.length, 0, "no externalKinds, no external dwell");
+  });
+
+  test("dDragDwell treats an empty externalKinds list as refusing external drags", async function (assert) {
+    const dwells = [];
+    const onDwell = (event) => dwells.push(event);
+
+    await render(
+      <template>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragDwell externalKinds=(array) onDwell=onDwell}}
+        >folder</div>
+      </template>
+    );
+
+    const dataTransfer = textTransfer();
+    const point = centerOf(DWELL);
+    await dragEvent(DWELL, "dragenter", { dataTransfer, ...point });
+    for (let i = 0; i < 4; i += 1) {
+      await dragEvent(DWELL, "dragover", { dataTransfer, ...point });
+    }
+    await settled();
+
+    assert.strictEqual(dwells.length, 0, "an empty kind list opts nothing in");
   });
 
   test("dDragDwell dwells on an external drag and ends with its drop", async function (assert) {
@@ -556,6 +663,44 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     );
   });
 
+  test("dDragDwell reports droppedHere false when the host is not a drop target", async function (assert) {
+    const dwells = [];
+    const ends = [];
+    const onDwell = (event) => dwells.push(event);
+    const onDwellEnd = (event) => ends.push(event);
+
+    await render(
+      <template>
+        <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragDwell types="card" onDwell=onDwell onDwellEnd=onDwellEnd}}
+        >folder</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    const point = centerOf(DWELL);
+    await startDrag(CHIP, { dataTransfer });
+    await dragEvent(DWELL, "dragenter", { dataTransfer, ...point });
+    for (let i = 0; i < 4; i += 1) {
+      await dragEvent(DWELL, "dragover", { dataTransfer, ...point });
+    }
+    await settled();
+    assert.strictEqual(dwells.length, 1, "the dwell fired without a target");
+
+    await dragEvent(CHIP, "dragend", { dataTransfer, ...point });
+    await settled();
+    assert.strictEqual(ends.length, 1, "the drag end reported");
+    assert.strictEqual(ends[0].reason, "drag-ended", "as drag-ended");
+    assert.true(ends[0].fired, "after the fire");
+    assert.false(
+      ends[0].droppedHere,
+      "a host that is no drop target never reports droppedHere"
+    );
+  });
+
   test("dDragDwell refuses the element's own drag when acceptsSelf is false", async function (assert) {
     const dwells = [];
     const onDwell = (event) => dwells.push(event);
@@ -582,6 +727,34 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     await settled();
 
     assert.strictEqual(dwells.length, 0, "its own drag never dwells");
+  });
+
+  test("dDragDwell lets the element's own drag dwell by default", async function (assert) {
+    const dwells = [];
+    const onDwell = (event) => dwells.push(event);
+
+    await render(
+      <template>
+        <div
+          data-test-dwell
+          style="display: block; height: 60px;"
+          {{dDragAndDropSource type="card"}}
+          {{dDragAndDropTarget accepts="card" indicator=false}}
+          {{dDragDwell types="card" onDwell=onDwell}}
+        >row</div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    await startDrag(DWELL, { dataTransfer });
+    await dragOver(DWELL, { dataTransfer });
+    await settled();
+
+    assert.strictEqual(
+      dwells.length,
+      1,
+      "by default the element's own drag may dwell"
+    );
   });
 
   test("dDragDwell hands canDwell the shared drop-gate feedback shape", async function (assert) {

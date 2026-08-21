@@ -165,9 +165,18 @@ module("Unit | Lib | drag-dwell", function (hooks) {
     dwell.update(null);
 
     dwell.update("candidate");
+    await settled();
+    assert.deepEqual(
+      seen,
+      ["candidate"],
+      "idle nulls leave the dwell able to arm and fire"
+    );
+
+    dwell.update(null);
+    dwell.update("candidate");
     dwell.update(null);
     await settled();
-    assert.deepEqual(seen, [], "the cancelled dwell never fires");
+    assert.deepEqual(seen, ["candidate"], "the cancelled dwell never fires");
   });
 
   test("the same identity can dwell again after reset()", async function (assert) {
@@ -252,6 +261,35 @@ module("Unit | Lib | drag-dwell", function (hooks) {
     assert.deepEqual(seen, [], "a report after destroy cannot fire either");
   });
 
+  test("a report after destroy arms no timer at all", async function (assert) {
+    const dwell = createDragDwell({
+      destroyable: parent,
+      delay: 300,
+      onDwell: () => {},
+    });
+
+    destroy(parent);
+    await settled();
+
+    const clock = sinon.useFakeTimers({
+      now: Date.now(),
+      shouldAdvanceTime: false,
+    });
+    try {
+      dwell.update("candidate");
+      assert.strictEqual(
+        clock.countTimers(),
+        0,
+        "no timer is scheduled once the destroyable is gone"
+      );
+      // Drains the orphan a failing run leaves behind, so only the assertion
+      // above reports.
+      clock.tick(20);
+    } finally {
+      clock.restore();
+    }
+  });
+
   test("fires with the latest same-identity object, not the arming one", async function (assert) {
     const seen: { id: number; tag: string }[] = [];
     const dwell = createDragDwell({
@@ -269,38 +307,62 @@ module("Unit | Lib | drag-dwell", function (hooks) {
     assert.strictEqual(seen[0]?.tag, "fresh", "with the latest object");
   });
 
-  test("a custom identity dedups fresh per-report objects onto one dwell", async function (assert) {
-    const element = { name: "shared element" };
-    const seen: { element: object }[] = [];
-    const dwell = createDragDwell({
-      destroyable: parent,
-      delay: 300,
-      identity: (target: { element: object }) => target.element,
-      onDwell: (target: { element: object }) => seen.push(target),
+  test("a custom identity dedups fresh per-report objects onto one dwell", function (assert) {
+    const clock = sinon.useFakeTimers({
+      now: Date.now(),
+      shouldAdvanceTime: false,
     });
 
-    dwell.update({ element });
-    dwell.update({ element });
-    dwell.update({ element });
-    await settled();
+    try {
+      const element = { name: "shared element" };
+      const seen: { element: object }[] = [];
+      const dwell = createDragDwell({
+        destroyable: parent,
+        delay: 300,
+        identity: (target: { element: object }) => target.element,
+        onDwell: (target: { element: object }) => seen.push(target),
+      });
 
-    assert.strictEqual(seen.length, 1, "fires exactly once");
-    assert.strictEqual(seen[0]?.element, element, "for the shared identity");
+      dwell.update({ element });
+      clock.tick(6);
+      dwell.update({ element });
+      clock.tick(6);
+
+      // Past the collapsed 10ms deadline: fresh wrapper objects sharing one
+      // identity kept the original timer rather than restarting it.
+      assert.strictEqual(seen.length, 1, "fires exactly once");
+      assert.strictEqual(seen[0]?.element, element, "for the shared identity");
+    } finally {
+      clock.restore();
+    }
   });
 
-  test("the default identity is the target reference itself", async function (assert) {
-    const target = { label: "candidate" };
-    const seen: object[] = [];
-    const dwell = createDragDwell({
-      destroyable: parent,
-      delay: 300,
-      onDwell: (reported: object) => seen.push(reported),
+  test("the default identity is the target reference itself", function (assert) {
+    const clock = sinon.useFakeTimers({
+      now: Date.now(),
+      shouldAdvanceTime: false,
     });
 
-    dwell.update(target);
-    dwell.update(target);
-    await settled();
-    assert.deepEqual(seen, [target], "one identity, one fire");
+    try {
+      const target = { label: "candidate" };
+      const seen: object[] = [];
+      const dwell = createDragDwell({
+        destroyable: parent,
+        delay: 300,
+        onDwell: (reported: object) => seen.push(reported),
+      });
+
+      dwell.update(target);
+      clock.tick(6);
+      dwell.update(target);
+      clock.tick(6);
+
+      // Past the collapsed 10ms deadline: the repeated reference kept the
+      // original timer, so reference equality is the key.
+      assert.deepEqual(seen, [target], "one identity, one fire");
+    } finally {
+      clock.restore();
+    }
   });
 
   test("onDwell may reset and re-arm the same identity reentrantly", async function (assert) {
@@ -362,19 +424,36 @@ module("Unit | Lib | drag-dwell", function (hooks) {
     }
   });
 
-  test("an identity function returning NaN is a stable key", async function (assert) {
-    const seen: object[] = [];
-    const dwell = createDragDwell({
-      destroyable: parent,
-      delay: 300,
-      identity: () => NaN,
-      onDwell: (target: object) => seen.push(target),
+  test("an identity function returning NaN is a stable key", function (assert) {
+    const clock = sinon.useFakeTimers({
+      now: Date.now(),
+      shouldAdvanceTime: false,
     });
 
-    dwell.update({ frame: 1 });
-    dwell.update({ frame: 2 });
-    await settled();
-    assert.strictEqual(seen.length, 1, "NaN compares equal to itself as a key");
+    try {
+      const seen: object[] = [];
+      const dwell = createDragDwell({
+        destroyable: parent,
+        delay: 300,
+        identity: () => NaN,
+        onDwell: (target: object) => seen.push(target),
+      });
+
+      dwell.update({ frame: 1 });
+      clock.tick(6);
+      dwell.update({ frame: 2 });
+      clock.tick(6);
+
+      // 12ms is past the collapsed 10ms deadline; a comparison for which NaN
+      // is not equal to itself would have restarted the timer and need 16ms.
+      assert.strictEqual(
+        seen.length,
+        1,
+        "NaN compares equal to itself as a key"
+      );
+    } finally {
+      clock.restore();
+    }
   });
 
   test("an identity function returning null is a real key, and null reports never reach it", async function (assert) {

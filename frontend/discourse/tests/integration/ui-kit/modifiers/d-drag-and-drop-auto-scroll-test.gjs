@@ -1,3 +1,4 @@
+import { array } from "@ember/helper";
 import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -60,6 +61,20 @@ module(
           find("#scroller").scrollTop,
           0,
           "a container that named no external kinds is not scrolled by one"
+        );
+      });
+
+      test("external auto-scroll treats an empty kind list as staying off", async function (assert) {
+        await render(
+          <template><scroller @externalKinds={{(array)}} /></template>
+        );
+
+        await hoverNearBottomEdge("#scroller", textTransfer());
+
+        assert.strictEqual(
+          find("#scroller").scrollTop,
+          0,
+          "an empty kind list opts nothing in"
         );
       });
     });

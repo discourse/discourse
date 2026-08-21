@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
@@ -73,35 +73,40 @@ export default class DwellExample extends Component {
           onDwellEnd=this.maybeCloseFolder
         }}
       >
-        <button
-          type="button"
-          class="styleguide-drag-and-drop__folder-toggle"
-          aria-expanded={{if this.expanded "true" "false"}}
-          aria-controls={{if this.expanded this.folderId}}
-          {{on "click" this.toggleFolder}}
-        >
-          {{if
+        <DButton
+          @action={{this.toggleFolder}}
+          @translatedLabel={{if
             this.expanded
             (i18n "styleguide.sections.drag_and_drop.dwell_collapse")
             (i18n "styleguide.sections.drag_and_drop.dwell_expand")
           }}
-        </button>
+          class="styleguide-drag-and-drop__folder-toggle"
+          aria-expanded={{if this.expanded "true" "false"}}
+          aria-controls={{if this.expanded this.folderId}}
+        />
 
         {{#if this.expanded}}
-          <div id={{this.folderId}}>
+          <div
+            id={{this.folderId}}
+            class="styleguide-drag-and-drop__folder-rows"
+          >
             {{#each ROWS as |row|}}
               <div class="styleguide-drag-and-drop__folder-row">
                 {{i18n "styleguide.sections.drag_and_drop.row" number=row}}
               </div>
             {{/each}}
-            {{#if this.filedCount}}
-              <div class="styleguide-drag-and-drop__folder-row">
-                {{i18n
-                  "styleguide.sections.drag_and_drop.dwell_filed"
-                  count=this.filedCount
-                }}
-              </div>
-            {{/if}}
+          </div>
+        {{/if}}
+
+        {{! Outside the reveal: a drop files the chip even while the folder
+        is collapsed, and a count that only appeared after expanding would
+        make that drop look like it did nothing. }}
+        {{#if this.filedCount}}
+          <div class="styleguide-drag-and-drop__folder-row">
+            {{i18n
+              "styleguide.sections.drag_and_drop.dwell_filed"
+              count=this.filedCount
+            }}
           </div>
         {{/if}}
       </div>

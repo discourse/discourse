@@ -36,6 +36,12 @@ createDragDwell({
   identity: (): undefined => undefined,
   onDwell: (target: object) => target,
 });
+createDragDwell({
+  destroyable,
+  delay: 300,
+  identity: (): null => null,
+  onDwell: (target: object) => target,
+});
 
 expectTypeOf<DragDwellOptions<string>["identity"]>().toEqualTypeOf<
   ((target: string) => unknown) | undefined
