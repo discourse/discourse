@@ -90,18 +90,17 @@ static void block_loaders(void) {
   vips_operation_block_set("VipsForeignLoadMagick7", TRUE);
 }
 
-static void allow_loader_family(const char *base, const char *file) {
+static void allow_loader_family(const char *base) {
   vips_operation_block_set(base, FALSE);
-  vips_operation_block_set(file, FALSE);
 }
 
 static void allow_dominant_color_loaders(void) {
-  allow_loader_family("VipsForeignLoadJpeg", "VipsForeignLoadJpegFile");
-  allow_loader_family("VipsForeignLoadPng", "VipsForeignLoadPngFile");
-  allow_loader_family("VipsForeignLoadNsgif", "VipsForeignLoadNsgifFile");
-  allow_loader_family("VipsForeignLoadWebp", "VipsForeignLoadWebpFile");
-  allow_loader_family("VipsForeignLoadHeif", "VipsForeignLoadHeifFile");
-  allow_loader_family("VipsForeignLoadJxl", "VipsForeignLoadJxlFile");
+  allow_loader_family("VipsForeignLoadJpeg");
+  allow_loader_family("VipsForeignLoadPng");
+  allow_loader_family("VipsForeignLoadNsgif");
+  allow_loader_family("VipsForeignLoadWebp");
+  allow_loader_family("VipsForeignLoadHeif");
+  allow_loader_family("VipsForeignLoadJxl");
 }
 
 static int initialize_vips(const char *program) {
@@ -114,7 +113,6 @@ static int initialize_vips(const char *program) {
     return -1;
   }
   block_loaders();
-  vips_concurrency_set(1);
   vips_cache_set_max(0);
   vips_cache_set_max_mem(0);
   vips_cache_set_max_files(0);
@@ -205,7 +203,7 @@ static int command_resize_letter_avatar(options_t *options) {
     return 1;
   }
 
-  allow_loader_family("VipsForeignLoadPng", "VipsForeignLoadPngFile");
+  allow_loader_family("VipsForeignLoadPng");
   VipsImage *thumbnail = NULL;
   VipsImage *sharpened = NULL;
   int result = vips_thumbnail(input, &thumbnail, size, "height", size, "size",
@@ -347,7 +345,7 @@ cleanup:
 static int command_topic_og(options_t *options) {
   const char *input = required_option(options, "input");
   const char *output = required_option(options, "output");
-  allow_loader_family("VipsForeignLoadSvg", "VipsForeignLoadSvgFile");
+  allow_loader_family("VipsForeignLoadSvg");
 
   VipsImage *svg = NULL;
   VipsImage *flattened = NULL;
