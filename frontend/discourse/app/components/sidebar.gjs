@@ -17,12 +17,6 @@ import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-dr
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
-/**
- * Refuses the drop at the cursor, so releasing over the sidebar background
- * cancels the drag instead of the browser navigating to the dropped URL.
- */
-const suppressDropEffect = () => "none";
-
 export default class Sidebar extends Component {
   @service site;
   @service siteSettings;
@@ -116,7 +110,7 @@ export default class Sidebar extends Component {
       {{dDragAndDropExternalTarget
         accepts=WEB_LINK_KINDS
         canDrop=this.canDropLink
-        getDropEffect=suppressDropEffect
+        dropEffect="none"
         indicator=false
       }}
       {{! The same suppression, for a link the browser started dragging from
@@ -124,7 +118,7 @@ export default class Sidebar extends Component {
       {{dDragAndDropTarget
         adopts=WEB_LINK_ADOPTION
         canDrop=this.canDropLink
-        getDropEffect=suppressDropEffect
+        dropEffect="none"
         indicator=false
       }}
       id="d-sidebar"

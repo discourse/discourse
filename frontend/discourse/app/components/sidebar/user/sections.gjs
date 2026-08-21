@@ -24,9 +24,6 @@ import CategoriesSection from "./categories-section";
 import CustomSections from "./custom-sections";
 import TagsSection from "./tags-section";
 
-/** Dropping a link here copies it into a new section; it does not move anything. */
-const copyDropEffect = () => "copy";
-
 /**
  * How long the revealed drop zone stays inert. Revealing shifts everything
  * below it down, so a pointer resting there would land inside the zone the
@@ -165,7 +162,7 @@ export default class SidebarUserSections extends Component {
           {{dDragAndDropExternalTarget
             accepts=WEB_LINK_KINDS
             canDrop=this.canDropLink
-            getDropEffect=copyDropEffect
+            dropEffect="copy"
             indicator=false
             onDragEnter=this.trackZoneHover
             onDragLeave=this.clearZoneHover
@@ -176,7 +173,7 @@ export default class SidebarUserSections extends Component {
           {{dDragAndDropTarget
             adopts=WEB_LINK_ADOPTION
             canDrop=this.canDropLink
-            getDropEffect=copyDropEffect
+            dropEffect="copy"
             indicator=false
             onDragEnter=this.trackZoneHover
             onDragLeave=this.clearZoneHover

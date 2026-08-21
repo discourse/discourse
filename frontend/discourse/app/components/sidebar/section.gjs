@@ -29,9 +29,6 @@ import dDragDwell from "discourse/ui-kit/modifiers/d-drag-dwell";
 import { i18n } from "discourse-i18n";
 import SectionHeader from "./section-header";
 
-/** Dropping a link here copies it into the section; it does not move anything. */
-const copyDropEffect = () => "copy";
-
 export default class SidebarSection extends Component {
   @service keyValueStore;
   @service router;
@@ -318,7 +315,7 @@ export default class SidebarSection extends Component {
         {{dDragAndDropExternalTarget
           accepts=WEB_LINK_KINDS
           canDrop=this.canDropLink
-          getDropEffect=copyDropEffect
+          dropEffect="copy"
           indicator=false
           onDragEnter=this.trackLinkDrop
           onDrag=this.trackLinkDrop
@@ -330,7 +327,7 @@ export default class SidebarSection extends Component {
         {{dDragAndDropTarget
           adopts=WEB_LINK_ADOPTION
           canDrop=this.canDropLink
-          getDropEffect=copyDropEffect
+          dropEffect="copy"
           indicator=false
           onDragEnter=this.trackLinkDrop
           onDrag=this.trackLinkDrop

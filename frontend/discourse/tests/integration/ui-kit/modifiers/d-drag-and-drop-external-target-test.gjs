@@ -513,7 +513,7 @@ module(
         throw new Error("external consumer blew up");
       };
 
-      test("a throwing external getDropEffect is reported and the drop still lands", async function (assert) {
+      test("a throwing external drop effect function is reported and the drop still lands", async function (assert) {
         const reported = [];
         setupOnerror((error) => reported.push(error));
 
@@ -526,7 +526,7 @@ module(
               id="ext"
               {{dDragAndDropExternalTarget
                 accepts="text"
-                getDropEffect=blowUp
+                dropEffect=blowUp
                 onDrop=recordDrop
               }}
             >ext</div>

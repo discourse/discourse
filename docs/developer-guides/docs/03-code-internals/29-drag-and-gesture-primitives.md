@@ -140,22 +140,22 @@ Accepts element drags and reports where the drop would land.
 
 ## Arguments
 
-| Argument        | Type                                         | Purpose                                                       |
-| --------------- | -------------------------------------------- | ------------------------------------------------------------- |
-| `accepts`       | `string \| string[]`                         | Which source types engage the target. Omit to accept any.     |
-| `adopts`        | `NativeDragAdoption \| NativeDragAdoption[]` | Also take browser-started page content. See below.            |
-| `acceptsSelf`   | `boolean`                                    | `false` refuses a drop whose dragged element is this element. |
-| `position`      | `"before" \| "after" \| "inside"`            | A fixed position, which wins over midpoint math.              |
-| `axis`          | `"vertical" \| "horizontal"`                 | Which midpoint is measured. Defaults to `"vertical"`.         |
-| `indicator`     | `boolean`                                    | `false` suppresses the indicator class.                       |
-| `canDrop`       | `(feedback) => boolean`                      | Gate asked while hovering. `false` defers to an ancestor.     |
-| `getDropEffect` | `(feedback) => DropEffect`                   | The cursor feedback the browser shows.                        |
-| `getData`       | `() => object`                               | Metadata attached to the drag's record of this target.        |
-| `getIsSticky`   | `() => boolean`                              | Whether the target stays current after the pointer leaves.    |
-| `onDragEnter`   | `(event) => void`                            | This target became the deepest accepted target.               |
-| `onDrag`        | `(event) => void`                            | Throttled, while it stays the deepest accepted target.        |
-| `onDragLeave`   | `(event) => void`                            | It stopped being the deepest accepted target.                 |
-| `onDrop`        | `(event) => void`                            | The drag was released here.                                   |
+| Argument      | Type                                         | Purpose                                                       |
+| ------------- | -------------------------------------------- | ------------------------------------------------------------- |
+| `accepts`     | `string \| string[]`                         | Which source types engage the target. Omit to accept any.     |
+| `adopts`      | `NativeDragAdoption \| NativeDragAdoption[]` | Also take browser-started page content. See below.            |
+| `acceptsSelf` | `boolean`                                    | `false` refuses a drop whose dragged element is this element. |
+| `position`    | `"before" \| "after" \| "inside"`            | A fixed position, which wins over midpoint math.              |
+| `axis`        | `"vertical" \| "horizontal"`                 | Which midpoint is measured. Defaults to `"vertical"`.         |
+| `indicator`   | `boolean`                                    | `false` suppresses the indicator class.                       |
+| `canDrop`     | `(feedback) => boolean`                      | Gate asked while hovering. `false` defers to an ancestor.     |
+| `dropEffect`  | `DropEffect` or `(feedback) => DropEffect`   | The cursor feedback the browser shows.                        |
+| `getData`     | `() => object`                               | Metadata attached to the drag's record of this target.        |
+| `getIsSticky` | `() => boolean`                              | Whether the target stays current after the pointer leaves.    |
+| `onDragEnter` | `(event) => void`                            | This target became the deepest accepted target.               |
+| `onDrag`      | `(event) => void`                            | Throttled, while it stays the deepest accepted target.        |
+| `onDragLeave` | `(event) => void`                            | It stopped being the deepest accepted target.                 |
+| `onDrop`      | `(event) => void`                            | The drag was released here.                                   |
 
 A registered target carries `data-drop-target`.
 
@@ -245,7 +245,7 @@ sees a drag that began on this page.
 | `axis`     | `"vertical" \| "horizontal"`                     | Same, from the pointer against the midpoint.       |
 
 It shares every kernel argument with the element target: `canDrop`,
-`getDropEffect`, `getData`, `getIsSticky`, `indicator`, and the four lifecycle
+`dropEffect`, `getData`, `getIsSticky`, `indicator`, and the four lifecycle
 callbacks.
 
 Without `position` or `axis` the target is one destination rather than a slot:

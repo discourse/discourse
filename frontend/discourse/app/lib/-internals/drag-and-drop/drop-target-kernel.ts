@@ -70,8 +70,13 @@ export interface DropTargetKernelArgs<Source> extends DropPositionOptions {
    */
   canDrop?: (feedback: DropTargetKernelFeedback<Source>) => boolean | void;
 
-  /** Determines the cursor feedback browsers show during the drag. */
-  getDropEffect?: (feedback: DropTargetKernelFeedback<Source>) => DropEffect;
+  /**
+   * The cursor feedback browsers show during the drag: a fixed effect, or a
+   * function consulted with the drag's feedback when the effect depends on it.
+   */
+  dropEffect?:
+    | DropEffect
+    | ((feedback: DropTargetKernelFeedback<Source>) => DropEffect);
 
   /** Metadata attached to the drag's record of this target under `.data`. */
   getData?: () => object;
@@ -408,13 +413,12 @@ export function registerDropTargetKernel<Payload, Source>({
       // and the runtime assigns the value to `dataTransfer.dropEffect`
       // verbatim. The cast is the one place that deviation crosses into the
       // library.
-      consumerMayThrow(() =>
-        getArgs().getDropEffect?.({
-          source: decorateSource(source),
-          input,
-          element,
-        })
-      ) as Exclude<DropEffect, "none"> | undefined,
+      consumerMayThrow(() => {
+        const dropEffect = getArgs().dropEffect;
+        return typeof dropEffect === "function"
+          ? dropEffect({ source: decorateSource(source), input, element })
+          : dropEffect;
+      }) as Exclude<DropEffect, "none"> | undefined,
     getIsSticky: () =>
       consumerMayThrow(() => getArgs().getIsSticky?.() === true, false),
     onDragEnter: ({ source, location }) =>
