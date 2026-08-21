@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 require "erb"
-require "json"
 require "rbconfig"
-require "tempfile"
 require "tmpdir"
 
 module DiscourseVips
@@ -23,19 +21,11 @@ module DiscourseVips
                    :RLIMITS
 
   class Error < RuntimeError
-    attr_reader :status, :stdout, :stderr
-
-    def initialize(message, status: nil, stdout: nil, stderr: nil)
-      super(message)
-      @status = status
-      @stdout = stdout
-      @stderr = stderr
-    end
   end
 
   class << self
     def version
-      "#{VERSION}-#{run(command: "version").fetch("value")}"
+      "#{VERSION}-#{run(command: "version").strip}"
     end
 
     def generate_letter_avatar(letter:, background_color:, font_path:, output_path:)
@@ -62,43 +52,22 @@ module DiscourseVips
     end
 
     def resize_letter_avatar(input_path:, output_path:, size:, profile_path:)
-      Tempfile.create(%w[letter-avatar-resized .png], binmode: true) do |resized|
-        resized.close
-        run_cli(
-          "thumbnail",
-          input_path,
-          "#{resized.path}[compression=6,strip]",
-          size.to_s,
-          "--height",
-          size.to_s,
-          "--size",
-          "both",
-          "--crop",
-          "centre",
-          "--output-profile",
-          profile_path,
-          read: [input_path, profile_path],
-          write: [resized.path],
-        )
-        run_cli(
-          "sharpen",
-          resized.path,
-          "#{output_path}[palette,Q=100,compression=6,strip]",
-          "--sigma",
-          "0.5",
-          "--m1",
-          "0.7",
-          read: [resized.path],
-          write: [File.dirname(output_path)],
-        )
-      end
+      run(
+        command: "resize-letter-avatar",
+        options: {
+          input: input_path,
+          output: output_path,
+          size:,
+          profile: profile_path,
+        },
+        read: [input_path, profile_path],
+        write: [File.dirname(output_path)],
+      )
       nil
     end
 
     def dominant_color(input_path:)
-      run(command: "dominant-color", options: { input: input_path }, read: [input_path]).fetch(
-        "value",
-      )
+      run(command: "dominant-color", options: { input: input_path }, read: [input_path]).strip
     end
 
     def generate_topic_og_image(svg_path:, output_path:)
@@ -129,8 +98,7 @@ module DiscourseVips
       ensure_sandbox_available!
 
       Dir.mktmpdir("discourse-vips-helper-") do |scratch|
-        response_path = File.join(scratch, "response.json")
-        argv = ["nice", "-n", "10", executable, command, "--response", response_path]
+        argv = ["nice", "-n", "10", executable, command]
         options.each do |key, value|
           next if value.nil?
           argv << "--#{key.to_s.tr("_", "-")}" << value.to_s
@@ -149,38 +117,8 @@ module DiscourseVips
             seccomp_deny_network: true,
           )
         rescue Discourse::Utils::CommandError => error
-          raise helper_error(response_path, error)
+          raise Error, error.message
         end
-
-        response = read_response(response_path)
-        raise Error, response.fetch("message", "native libvips helper failed") if !response["ok"]
-        response
-      end
-    end
-
-    def run_cli(*arguments, read:, write:)
-      ensure_sandbox_available!
-
-      Dir.mktmpdir("discourse-vips-") do |scratch|
-        environment = environment(scratch)
-        # Future enhancement: https://github.com/libvips/libvips/issues/5174
-        environment["VIPS_BLOCK_UNTRUSTED"] = "1"
-
-        Discourse::SafeExec.capture(
-          "nice",
-          "-n",
-          "10",
-          "vips",
-          *arguments,
-          env: environment,
-          unsetenv_others: true,
-          read: read_paths([*FONTCONFIG_READ_PATHS, *read]),
-          write: [scratch, *write],
-          execute: Discourse::SafeExec.default_execute_paths,
-          timeout: DEFAULT_TIMEOUT_SECONDS,
-          rlimits: RLIMITS,
-          seccomp_deny_network: true,
-        )
       end
     end
 
@@ -223,29 +161,6 @@ module DiscourseVips
           executable,
           *paths.compact,
         ],
-      )
-    end
-
-    def read_response(response_path)
-      JSON.parse(File.binread(response_path))
-    rescue Errno::ENOENT, JSON::ParserError => error
-      raise Error, "native libvips helper returned an invalid response: #{error.message}"
-    end
-
-    def helper_error(response_path, command_error)
-      response = read_response(response_path)
-      Error.new(
-        response.fetch("message", command_error.message),
-        status: command_error.status,
-        stdout: command_error.stdout,
-        stderr: command_error.stderr,
-      )
-    rescue Error
-      Error.new(
-        command_error.message,
-        status: command_error.status,
-        stdout: command_error.stdout,
-        stderr: command_error.stderr,
       )
     end
   end

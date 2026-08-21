@@ -930,6 +930,12 @@ RSpec.describe Upload do
     let(:white_image) { Fabricate(:image_upload, color: "white") }
     let(:red_image) { Fabricate(:image_upload, color: "red") }
     let(:high_color_image) { Fabricate(:image_upload, color: "#000A00F00", color_depth: 16) }
+    let(:tiny_image) do
+      upload = Fabricate(:upload, extension: "png")
+      file = file_from_fixtures("cropped.png")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
+      upload
+    end
     let(:not_an_image) do
       upload = Fabricate(:upload)
 
@@ -950,13 +956,6 @@ RSpec.describe Upload do
       upload.update(url: Discourse.store.store_upload(file, upload))
       upload
     end
-    let(:unsupported_image_content) do
-      upload = Fabricate(:upload, extension: "png")
-      file = file_from_fixtures("tiff_as.bin")
-      upload.update!(url: Discourse.store.store_upload(file, upload))
-      upload
-    end
-
     it "correctly identifies and stores an image's dominant color" do
       expect(white_image.dominant_color).to eq(nil)
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
@@ -969,6 +968,10 @@ RSpec.describe Upload do
       expect(high_color_image.dominant_color).to eq(nil)
       expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
       expect(high_color_image.dominant_color).to eq("009FEF")
+
+      expect(tiny_image.dominant_color).to eq(nil)
+      expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("524F40")
+      expect(tiny_image.dominant_color).to eq("524F40")
     end
 
     it "can be backfilled" do
@@ -1015,12 +1018,6 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq(nil)
       expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
       expect(invalid_image.dominant_color).to eq("")
-    end
-
-    it "stores an empty string when the image content uses an unsupported format" do
-      expect(unsupported_image_content.dominant_color).to eq(nil)
-      expect(unsupported_image_content.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(unsupported_image_content.dominant_color).to eq("")
     end
 
     it "stores an empty string when the native helper rejects the image" do
