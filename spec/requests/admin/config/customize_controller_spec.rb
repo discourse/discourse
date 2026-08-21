@@ -213,6 +213,7 @@ RSpec.describe Admin::Config::CustomizeController do
       expect(json["themeable_site_settings"]).to include(
         "search_experience",
         "enable_welcome_banner",
+        "navigation_menu",
       )
 
       search_setting =

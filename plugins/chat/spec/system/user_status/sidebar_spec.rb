@@ -7,8 +7,11 @@ RSpec.describe "User status | sidebar" do
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
-    SiteSetting.navigation_menu = "sidebar"
     SiteSetting.enable_user_status = true
     chat_system_bootstrap
     current_user.set_status!("online", "heart")
