@@ -186,7 +186,8 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "delete-topics",
         icon: "trash-can",
         name: i18n("topic_bulk_actions.delete_topics.name"),
-        visible: ({ currentUser }) => currentUser.staff,
+        visible: ({ currentUser }) =>
+          currentUser.can_delete_all_posts_and_topics,
       },
     ];
 
