@@ -76,7 +76,10 @@ module PrettyText
                   url:
                     (
                       if secure_uploads
-                        Upload.secure_uploads_url_from_upload_url(url)
+                        Upload.secure_uploads_url_from_upload_url(
+                          url,
+                          base62_sha1: Upload.base62_sha1(sha1),
+                        )
                       else
                         Discourse.store.cdn_url(url)
                       end

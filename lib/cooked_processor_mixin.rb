@@ -582,8 +582,17 @@ module CookedProcessorMixin
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    src_url = Upload.secure_uploads_url?(img["src"]) ? upload&.url || img["src"] : img["src"]
-    src = UrlHelper.cook_url(src_url, secure: @should_secure_uploads)
+    src =
+      if Upload.secure_uploads_url?(img["src"])
+        secure_url =
+          Upload.secure_uploads_url_from_upload_url(
+            upload&.url || img["src"],
+            base62_sha1: img["data-base62-sha1"],
+          )
+        UrlHelper.schemaless(UrlHelper.absolute_without_cdn(secure_url))
+      else
+        UrlHelper.cook_url(img["src"], secure: @should_secure_uploads)
+      end
 
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
