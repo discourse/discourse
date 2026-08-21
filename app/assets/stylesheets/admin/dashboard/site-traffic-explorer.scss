@@ -40,6 +40,20 @@
     }
   }
 
+  &__filter-apply {
+    gap: var(--space-2);
+  }
+
+  &__filter-apply-pending-count {
+    color: var(--tertiary);
+    background: var(--secondary);
+    padding: 0.21em 0.42em;
+    min-width: 0.6em;
+    border-radius: 1em;
+    font-size: var(--font-down-2-rem);
+    font-weight: 600;
+  }
+
   &__filter-pill {
     display: inline-flex;
     align-items: center;
@@ -103,12 +117,13 @@
   &__filter-pill-values {
     @include ellipsis;
     display: inline-flex;
+  }
 
-    strong {
-      flex-grow: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  &__filter-pill-value {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
   }
 
   &__partial-warning {
@@ -236,9 +251,12 @@
     gap: var(--space-1);
     margin-inline: calc(-1 * var(--space-2));
     border-radius: var(--d-border-radius);
-    padding-block: var(--space-1);
     padding-inline: var(--space-2);
     cursor: pointer;
+
+    html.discourse-no-touch &:hover:not(:has(a:hover)) {
+      background: var(--token-color-surface-hovered);
+    }
   }
 
   // The global `label` rule in common/base/discourse.scss wins on specificity
@@ -252,7 +270,6 @@
     flex-shrink: 0;
     margin-inline-start: auto;
     color: var(--primary-medium);
-    font-variant-numeric: tabular-nums;
   }
 
   &__row-link {
@@ -281,14 +298,11 @@
     }
   }
 
-  html.discourse-no-touch & .site-traffic-explorer__row:hover {
-    background: var(--token-color-surface-hovered);
-  }
-
   &__dimension-label {
     display: flex;
     align-items: center;
     gap: var(--space-2);
+    padding-block: var(--space-1);
   }
 
   &__dimension-text {

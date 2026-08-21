@@ -306,7 +306,7 @@ $db-bar-height: var(--space-2);
     display: flex;
     justify-content: flex-end;
     flex-grow: 1;
-    gap: var(--space-8);
+    gap: clamp(var(--space-2), var(--space-8), var(--space-8));
 
     @include viewport.until(sm) {
       border-top: 1px solid var(--primary-low);

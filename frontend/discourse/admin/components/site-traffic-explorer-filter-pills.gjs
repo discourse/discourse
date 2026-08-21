@@ -101,7 +101,9 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                     {{this.filterLabel filter.key}}:
                     <span class="site-traffic-explorer__filter-pill-values">
                       {{~#each (this.visibleValues filter) as |value index|~}}
-                        {{~if index ", "~}}<strong>{{value.label}}</strong>
+                        {{~if index ", "~}}<span
+                          class="site-traffic-explorer__filter-pill-value"
+                        >{{value.label}}</span>
                       {{~/each~}}
                     </span>
                     {{#if (gt (this.remainingCount filter) 0)}}
