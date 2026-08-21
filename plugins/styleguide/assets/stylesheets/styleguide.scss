@@ -233,6 +233,12 @@
 
   // Unadorned on purpose: giving it the instruction's fill and stripe sandwiched the control
   // between two identical bars.
+  &__note {
+    grid-row: 5;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin: var(--space-3) 0 0;
+  }
 
   // An opt-in authoring class, like `__note-list`: an example applies it to its own output
   // element inside the default block. Styled as a descendant rather than placed as a slot,
@@ -764,10 +770,6 @@
 
   &--tall .d-virtual-list {
     height: 600px;
-  }
-
-  &__note {
-    color: var(--primary-medium);
   }
 
   &__controls {
