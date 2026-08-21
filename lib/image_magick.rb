@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "tmpdir"
+require "image_processing/instrumentation"
 
 # Runs ImageMagick under the Landlock sandbox (via Discourse::SafeExec) so a
 # decoder bug parsing an untrusted upload is confined to an explicit filesystem
@@ -28,39 +29,49 @@ module ImageMagick
       )
   end
 
-  def self.magick(*args, read: [], write: [], timeout: nil, nice: nil, failure_message: "")
+  def self.magick(
+    *args,
+    operation:,
+    read: [],
+    write: [],
+    timeout: nil,
+    nice: nil,
+    failure_message: ""
+  )
     command = ["magick", *args]
     command = ["nice", "-n", nice.to_s, *command] if nice
-    run(*command, read:, write:, timeout:, failure_message:)
+    run(*command, operation:, read:, write:, timeout:, failure_message:)
   end
 
-  def self.identify(*args, read: [], write: [], timeout: nil, failure_message: "")
-    run("identify", *args, read:, write:, timeout:, failure_message:)
+  def self.identify(*args, operation:, read: [], write: [], timeout: nil, failure_message: "")
+    run("identify", *args, operation:, read:, write:, timeout:, failure_message:)
   end
 
-  def self.run(*command, read:, write:, timeout:, failure_message:)
+  def self.run(*command, operation:, read:, write:, timeout:, failure_message:)
     # A private scratch dir keeps ImageMagick's disk-backed pixel cache inside
     # the write allowlist, so large images that spill to disk still succeed.
     Dir.mktmpdir("discourse-imagemagick-") do |scratch|
-      Discourse::SafeExec.capture(
-        *command,
-        env: {
-          **ENV.slice("PATH", "MAGICK_CONFIGURE_PATH", "LANG", "LC_ALL"),
-          "MAGICK_TEMPORARY_PATH" => scratch,
-          "TMPDIR" => scratch,
-          "HOME" => scratch,
-          "XDG_CACHE_HOME" => scratch,
-          "MALLOC_ARENA_MAX" => "2",
-        },
-        unsetenv_others: true,
-        read: [*Discourse::SafeExec.default_read_paths, *asset_read_paths, *read],
-        write: [scratch, *write],
-        execute: Discourse::SafeExec.default_execute_paths,
-        timeout: timeout || DEFAULT_TIMEOUT,
-        rlimits: RLIMITS,
-        failure_message:,
-        seccomp_deny_network: true,
-      )
+      ImageProcessing::Instrumentation.instrument(operation:) do
+        Discourse::SafeExec.capture(
+          *command,
+          env: {
+            **ENV.slice("PATH", "MAGICK_CONFIGURE_PATH", "LANG", "LC_ALL"),
+            "MAGICK_TEMPORARY_PATH" => scratch,
+            "TMPDIR" => scratch,
+            "HOME" => scratch,
+            "XDG_CACHE_HOME" => scratch,
+            "MALLOC_ARENA_MAX" => "2",
+          },
+          unsetenv_others: true,
+          read: [*Discourse::SafeExec.default_read_paths, *asset_read_paths, *read],
+          write: [scratch, *write],
+          execute: Discourse::SafeExec.default_execute_paths,
+          timeout: timeout || DEFAULT_TIMEOUT,
+          rlimits: RLIMITS,
+          failure_message:,
+          seccomp_deny_network: true,
+        )
+      end
     end
   end
   private_class_method :run

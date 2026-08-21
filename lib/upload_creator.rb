@@ -202,6 +202,7 @@ class UploadCreator
                   "-format",
                   "%w %h",
                   "MSVG:#{@file.path}",
+                  operation: :upload_svg_dimensions,
                   read: [@file.path],
                   timeout: Upload::MAX_IDENTIFY_SECONDS,
                 )
@@ -445,6 +446,7 @@ class UploadCreator
 
     ImageMagick.magick(
       *command,
+      operation: :upload_format_conversion,
       read:,
       write:,
       failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
@@ -557,6 +559,7 @@ class UploadCreator
       path,
       "-auto-orient",
       path,
+      operation: :upload_auto_orient,
       read: [@file.path],
       write: [@file.path, File.dirname(@file.path)],
       timeout: MAX_FIX_ORIENTATION_TIME,
@@ -700,6 +703,7 @@ class UploadCreator
                 "-format",
                 "%n\\n",
                 @file.path,
+                operation: :upload_animation_probe,
                 read: [@file.path],
                 timeout: Upload::MAX_IDENTIFY_SECONDS,
               ).to_i

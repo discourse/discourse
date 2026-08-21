@@ -327,6 +327,7 @@ class TopicOgImageGenerator
       ImageMagick.magick(
         "MSVG:#{svg_path}",
         png_path,
+        operation: :topic_og_asset_render,
         read: [svg_path],
         write: [directory],
         timeout: 10,
@@ -383,6 +384,7 @@ class TopicOgImageGenerator
         "-define",
         "png:compression-level=9",
         png_path,
+        operation: :topic_og_render,
         read: [dir],
         write: [dir],
         nice: 10,
