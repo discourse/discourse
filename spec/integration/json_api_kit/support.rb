@@ -184,7 +184,10 @@ RSpec.shared_context "with a listing of topics" do
 
   def profile_link(name) = "https://jsonapi.org/profiles/ethanresnick/cursor-pagination/#{name}"
 
-  def self_link = query.blank? ? current : "#{current}?#{query.to_query}"
+  def self_link
+    href = query.blank? ? current : "#{current}?#{query.to_query}"
+    { href:, type: JsonApiKit::Pagination::Profile::MEDIA_TYPE }
+  end
 
   def links_of(**pages) = { self: self_link, **{ prev: nil, next: nil }.merge(pages) }
 

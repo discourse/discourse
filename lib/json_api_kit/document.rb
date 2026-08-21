@@ -35,7 +35,7 @@ module JsonApiKit
 
     def contents = @contents ||= Contents.new(primary_records, query.included)
 
-    def links = { self: urls.current.to_s }
+    def links = { self: { href: urls.current.to_s, type: Pagination::Profile::MEDIA_TYPE } }
 
     def included = contents.related.map { ResourceObject.new(it, urls:).to_h }
   end
