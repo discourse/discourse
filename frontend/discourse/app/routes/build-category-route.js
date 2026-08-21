@@ -17,6 +17,7 @@ import { i18n } from "discourse-i18n";
 @disableImplicitInjections
 class AbstractCategoryRoute extends DiscourseRoute {
   @service composer;
+  @service currentUser;
   @service router;
   @service site;
   @service store;
@@ -76,9 +77,19 @@ class AbstractCategoryRoute extends DiscourseRoute {
   }
 
   filter(category) {
-    return this.routeConfig?.filter === "default"
-      ? category.get("default_view") || "latest"
-      : this.routeConfig?.filter;
+    if (this.routeConfig?.filter !== "default") {
+      return this.routeConfig?.filter;
+    }
+
+    // Mirrors `ListController#category_default_view`: `default_view` is free-form,
+    // so only honour it when this visitor could request `/l/<filter>` directly.
+    const allowed = this.currentUser
+      ? this.site.filters
+      : (this.site.anonymous_filters ?? this.site.filters);
+
+    return allowed.includes(category.default_view)
+      ? category.default_view
+      : "latest";
   }
 
   async _createSubcategoryList(category) {

@@ -332,6 +332,10 @@
       "type": "array",
       "items": {}
     },
+    "anonymous_filters": {
+      "type": "array",
+      "items": {}
+    },
     "homepage_choices": {
       "type": "array",
       "items": {}

@@ -59,6 +59,7 @@ PreloadStore.store("site", {
     "unseen",
   ],
   anonymous_top_menu_items: ["latest", "categories", "hot"],
+  anonymous_filters: ["latest", "top", "hot"],
   uncategorized_category_id: 17,
   categories: [
     {
