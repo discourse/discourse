@@ -2302,6 +2302,24 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#generate_random_username" do
+    it "returns a generated username" do
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["username"]).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+    end
+
+    it "rate limits requests per IP" do
+      RateLimiter.enable
+
+      20.times { get "/u/random-username.json" }
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(429)
+    end
+  end
+
   describe "#check_email" do
     it "returns success if hide_email_address_taken is true" do
       SiteSetting.hide_email_address_taken = true
