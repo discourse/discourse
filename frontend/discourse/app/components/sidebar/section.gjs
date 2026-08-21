@@ -328,6 +328,18 @@ export default class SidebarSection extends Component {
   <template>
     {{#if this.displaySection}}
       <div
+        class={{dConcatClass
+          "sidebar-section"
+          "sidebar-section-wrapper"
+          (if this.linkDropActive "is-link-drop-active")
+          (if
+            this.displaySectionContent
+            "sidebar-section--expanded"
+            "sidebar-section--collapsed"
+          )
+        }}
+        data-section-name={{@sectionName}}
+        ...attributes
         {{didInsert this.setExpandedState}}
         {{dDragAndDropExternalTarget
           accepts=WEB_LINK_KINDS
@@ -359,18 +371,6 @@ export default class SidebarSection extends Component {
           onDwell=this.openForLinkDwell
           onDwellEnd=this.endLinkDwell
         }}
-        data-section-name={{@sectionName}}
-        class={{dConcatClass
-          "sidebar-section"
-          "sidebar-section-wrapper"
-          (if this.linkDropActive "is-link-drop-active")
-          (if
-            this.displaySectionContent
-            "sidebar-section--expanded"
-            "sidebar-section--collapsed"
-          )
-        }}
-        ...attributes
       >
         {{#unless @hideSectionHeader}}
           <div class="sidebar-section-header-wrapper sidebar-row">

@@ -43,14 +43,15 @@ export default class SidebarCustomSection extends Component {
   }
 
   /**
-   * Rows drag only where a drop may land, and never on touch, which reserves
-   * the press for scrolling and the long-press link preview.
+   * Rows drag only where a drop may land, and never on touch-first devices,
+   * where the press stays reserved for scrolling and the long-press link
+   * preview. A machine with a mouse and a touch screen keeps dragging.
    */
   get linkDragDisabled() {
     return (
       !this.args.enableLinkDrop ||
       !this.section.canAcceptLinkDrop ||
-      this.capabilities.touch
+      this.capabilities.touchFirst
     );
   }
 
@@ -76,34 +77,18 @@ export default class SidebarCustomSection extends Component {
     >
       {{#each this.section.links as |link index|}}
         <SectionLink
-          data-sidebar-custom-link="true"
-          {{! Rows drag as registered sources; the native anchor drag is turned
-              off with them, or the browser would start its own dead drag from
-              the innermost anchor instead. }}
-          {{dDragAndDropSource
-            type="sidebar-link"
-            data=(hash
-              sectionId=this.section.section.id
-              linkId=link.id
-              index=index
-              public=this.section.section.public
-              name=link.name
-              value=link.value
-              icon=link.icon
-            )
-            effectAllowed="move"
-            disabled=this.linkDragDisabled
-          }}
-          @nativeDragDisabled={{not this.linkDragDisabled}}
           class={{if (eq linkDrop.linkDropIndex index) "is-link-drop-before"}}
+          data-sidebar-custom-link="true"
           @badgeText={{link.badgeText}}
           @content={{dReplaceEmoji link.text}}
           @currentWhen={{link.currentWhen}}
+          @exactUrlMatch={{this.exactUrlMatch}}
           @href={{or link.value link.href}}
           @linkClass={{link.linkDragCss}}
           @linkName={{link.name}}
           @model={{link.model}}
           @models={{link.models}}
+          @nativeDragDisabled={{not this.linkDragDisabled}}
           @prefixType="icon"
           @prefixValue={{link.prefixValue}}
           @query={{link.query}}
@@ -113,7 +98,23 @@ export default class SidebarCustomSection extends Component {
           @suffixType={{link.suffixType}}
           @suffixValue={{link.suffixValue}}
           @title={{link.title}}
-          @exactUrlMatch={{this.exactUrlMatch}}
+          {{! Rows drag as registered sources; the native anchor drag is turned
+              off with them, or the browser would start its own dead drag from
+              the innermost anchor instead. }}
+          {{dDragAndDropSource
+            type="sidebar-link"
+            data=(hash
+              sectionId=@sectionData.id
+              linkId=link.id
+              index=index
+              public=@sectionData.public
+              name=link.name
+              value=link.value
+              icon=link.icon
+            )
+            effectAllowed="move"
+            disabled=this.linkDragDisabled
+          }}
         />
       {{/each}}
 

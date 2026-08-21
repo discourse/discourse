@@ -8,6 +8,7 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import {
@@ -550,6 +551,30 @@ acceptance("Sidebar link move", function (needs) {
     assert
       .dom(".sidebar-section-form-modal")
       .doesNotExist("and no form either");
+  });
+
+  test("a touch screen beside a fine pointer keeps links draggable", async function (assert) {
+    sinon
+      .stub(this.owner.lookup("service:capabilities"), "touch")
+      .get(() => true);
+
+    await visit("/");
+
+    assert
+      .dom(`${READING} li[data-sidebar-custom-link][data-drag-source]`)
+      .exists({ count: 2 }, "rows still drag with the mouse");
+  });
+
+  test("a coarse primary pointer turns link dragging off", async function (assert) {
+    sinon
+      .stub(this.owner.lookup("service:capabilities"), "touchFirst")
+      .get(() => true);
+
+    await visit("/");
+
+    assert
+      .dom(`${READING} li[data-sidebar-custom-link][data-drag-source]`)
+      .doesNotExist("the press stays reserved for scrolling");
   });
 });
 
