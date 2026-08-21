@@ -7,10 +7,6 @@ module DiscourseAi
       MAX_REDIRECTS = 5
       ACCEPT_HEADER = "text/markdown, */*"
       SUPPORTED_CONTENT_TYPES = %w[text/html application/xhtml+xml text/plain text/markdown].freeze
-      READABILITY_OPTIONS = {
-        tags: %w[div p code pre h1 h2 h3 h4 h5 h6 ul li ol blockquote table thead tbody tr th td],
-        remove_empty_nodes: true,
-      }.freeze
 
       FetchError = Class.new(StandardError)
 
@@ -133,12 +129,6 @@ module DiscourseAi
       end
 
       def extract_html(html)
-        require "ruby-readability"
-
-        readable_html = Readability::Document.new(html, READABILITY_OPTIONS).content
-        readable_text = text_content(Nokogiri.HTML5(readable_html))
-        return readable_text if readable_text.present?
-
         document = Nokogiri.HTML5(html)
         document.search("script, style, noscript, template").remove
 
@@ -151,7 +141,58 @@ module DiscourseAi
       end
 
       def text_content(node)
-        node&.xpath(".//text()")&.map(&:text)&.join(" ").to_s.gsub(/\s+/, " ").strip
+        return "" if node.blank?
+
+        segments =
+          node
+            .xpath(".//text()[not(ancestor::table)] | .//table[not(ancestor::table)]")
+            .filter_map do |child|
+              if child.name == "table"
+                table_text = table_to_markdown(child) || normalize_whitespace(child.text)
+                "\n\n#{table_text}\n\n" if table_text.present?
+              else
+                normalize_whitespace(child.text) if child.text.present?
+              end
+            end
+
+        segments.join(" ").gsub(/ *\n */, "\n").gsub(/\n{3,}/, "\n\n").strip
+      end
+
+      def table_to_markdown(table)
+        rows = table.xpath("./tr | ./thead/tr | ./tbody/tr | ./tfoot/tr")
+        cells_by_row = rows.map { |row| row.xpath("./th | ./td") }
+        column_count = cells_by_row.map(&:length).max.to_i
+        return if column_count < 2
+
+        cells_by_row.select! do |cells|
+          cells.length == column_count && cells.all? { |cell| cell_span(cell) == [1, 1] }
+        end
+        return if cells_by_row.length < 2
+
+        lines =
+          cells_by_row.map do |cells|
+            "| #{cells.map { |cell| table_cell_text(cell) }.join(" | ")} |"
+          end
+        lines.insert(1, "| #{Array.new(column_count, "---").join(" | ")} |")
+        lines.join("\n")
+      end
+
+      def table_cell_text(cell)
+        text = cell.xpath(".//text()[not(ancestor::table[ancestor::table])]").map(&:text)
+        labels =
+          cell
+            .xpath(".//*[@aria-label] | self::*[@aria-label]")
+            .filter_map { |element| element["aria-label"] if element.text.blank? }
+
+        normalize_whitespace((text + labels.uniq).join(" ")).gsub("|", "\\|")
+      end
+
+      def cell_span(cell)
+        [cell["rowspan"].presence&.to_i || 1, cell["colspan"].presence&.to_i || 1]
+      end
+
+      def normalize_whitespace(text)
+        text.to_s.gsub(/\s+/, " ").strip
       end
     end
   end
