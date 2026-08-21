@@ -3791,6 +3791,9 @@ en:
         one: "linked %{count} of your posts"
         other: "linked %{count} of your posts"
       linked_consolidated: "<span>%{username}</span> %{description}"
+      linked_topics_with_others:
+        one: "%{topic} and %{count} other topic of yours"
+        other: "%{topic} and %{count} other topics of yours"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
