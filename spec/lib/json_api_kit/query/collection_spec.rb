@@ -117,7 +117,7 @@ RSpec.describe JsonApiKit::Query::Collection do
     end
 
     context "when the fields hold a column attribute" do
-      let(:params) { { fields: { topics: [:title] } } }
+      let(:params) { { fields: { topics: %w[title] } } }
 
       it "renders only those fields" do
         expect(fields.first.keys).to contain_exactly("title")
@@ -143,7 +143,7 @@ RSpec.describe JsonApiKit::Query::Collection do
           attribute(:slug) { |record| record.title.parameterize }
         end
       end
-      let(:params) { { fields: { topics: %i[title slug] } } }
+      let(:params) { { fields: { topics: %w[title slug] } } }
 
       it "reads the whole row" do
         expect(query.records.first.record.attributes.keys).to include("closed", "views")

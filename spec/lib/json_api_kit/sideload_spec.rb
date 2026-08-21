@@ -68,7 +68,7 @@ RSpec.describe JsonApiKit::Sideload do
     end
 
     context "when a request asks for fields of the related type" do
-      let(:params) { { fields: { users: [:username] } } }
+      let(:params) { { fields: { users: %w[username] } } }
 
       it "renders the related record as those fields" do
         expect(linkage.records.map(&:attributes)).to eq([{ "username" => author.username }])
