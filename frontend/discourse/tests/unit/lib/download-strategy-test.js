@@ -13,7 +13,15 @@ module("Unit | Utility | download-strategy", function (hooks) {
     assert.strictEqual(attachmentDownloadStrategy(), "native");
   });
 
+  test("returns 'bridge' in an app webview", function (assert) {
+    sinon.stub(capabilities, "isAppWebview").value(true);
+    sinon.stub(capabilities, "isPwa").value(false);
+
+    assert.strictEqual(attachmentDownloadStrategy(), "bridge");
+  });
+
   test("returns 'blob' in a PWA", function (assert) {
+    sinon.stub(capabilities, "isAppWebview").value(false);
     sinon.stub(capabilities, "isPwa").value(true);
 
     assert.strictEqual(attachmentDownloadStrategy(), "blob");

@@ -1,4 +1,7 @@
+import { capabilities } from "discourse/services/capabilities";
+
 const REVOKE_AFTER = 20_000;
+export const MAX_BRIDGED_DOWNLOAD_BYTES = 25 * 1024 * 1024;
 
 function parseFilename(contentDisposition) {
   if (!contentDisposition) {
@@ -18,11 +21,51 @@ function parseFilename(contentDisposition) {
   return asciiMatch ? asciiMatch[1].trim() : null;
 }
 
-// Triggers a browser download of the given Blob via a hidden `<a download>`.
-// Preferable to a plain `<a href target=_blank>` navigation for large binaries
-// in iOS PWA and embedded WebView contexts, where the new-tab navigation
-// either strands the user in a standalone window or renders the binary as
-// text.
+function blobAsBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("File read failed"));
+    reader.onload = () => {
+      const result = reader.result;
+      const comma = typeof result === "string" ? result.indexOf(",") : -1;
+      if (comma === -1) {
+        reject(new Error("File encoding failed"));
+      } else {
+        resolve(result.slice(comma + 1));
+      }
+    };
+    reader.readAsDataURL(blob);
+  });
+}
+
+export async function bridgeBlobDownload(
+  blob,
+  { fallbackFilename, contentDisposition } = {}
+) {
+  if (blob.size > MAX_BRIDGED_DOWNLOAD_BYTES) {
+    throw new Error("Download is too large for the in-app downloader");
+  }
+
+  const filename = parseFilename(contentDisposition) ?? fallbackFilename;
+  if (!filename) {
+    throw new Error("Download filename is missing");
+  }
+
+  const data = await blobAsBase64(blob);
+  window.ReactNativeWebView.postMessage(
+    JSON.stringify({
+      type: "download",
+      version: 1,
+      encoding: "base64",
+      filename,
+      mimeType: blob.type || "application/octet-stream",
+      byteLength: blob.size,
+      data,
+    })
+  );
+}
+
 export function triggerBlobDownload(
   blob,
   { fallbackFilename, contentDisposition } = {}
@@ -41,7 +84,14 @@ export function triggerBlobDownload(
   setTimeout(() => URL.revokeObjectURL(objectUrl), REVOKE_AFTER);
 }
 
-// Fetches `url` and triggers a browser download of the response body.
+export async function deliverBlobDownload(blob, options = {}) {
+  if (capabilities.isAppWebview) {
+    await bridgeBlobDownload(blob, options);
+  } else {
+    triggerBlobDownload(blob, options);
+  }
+}
+
 export default async function downloadBlob(
   url,
   { fallbackFilename, fetchOptions } = {}
@@ -53,7 +103,7 @@ export default async function downloadBlob(
   if (!response.ok) {
     throw new Error(`Download failed: ${response.status}`);
   }
-  triggerBlobDownload(await response.blob(), {
+  await deliverBlobDownload(await response.blob(), {
     fallbackFilename,
     contentDisposition: response.headers.get("Content-Disposition"),
   });

@@ -10,7 +10,12 @@ import { capabilities } from "discourse/services/capabilities";
 //   "blob"   — a new-tab navigation to an attachment strands the user in a
 //              standalone window (iOS PWA). Callers must fetch the response
 //              and trigger a client-side blob download instead.
+//   "bridge" — Discourse Hub receives a bounded Blob over its web/native
+//              bridge, writes a temporary file, and opens native save/share UI.
 export function attachmentDownloadStrategy() {
+  if (capabilities.isAppWebview) {
+    return "bridge";
+  }
   if (capabilities.isPwa) {
     return "blob";
   }
