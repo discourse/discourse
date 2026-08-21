@@ -58,7 +58,10 @@ RSpec.describe DiscourseVips do
     it "rejects unsupported image content" do
       input_path = file_from_fixtures("image.svg").path
 
-      expect { described_class.dominant_color(input_path:) }.to raise_error(DiscourseVips::Error)
+      expect { described_class.dominant_color(input_path:) }.to raise_error(
+        DiscourseVips::Error,
+        /unsupported input format/,
+      )
     end
   end
 
