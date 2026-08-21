@@ -8,6 +8,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -26,6 +27,7 @@ import NestedHeader from "./nested/header";
 import NestedOp from "./nested/op";
 import NestedPost from "./nested/post";
 import NestedSortSelector from "./nested/sort-selector";
+import NestedTimeline from "./nested/timeline";
 import NestedTopicActions from "./nested/topic-actions";
 
 const postExcerpt = helper(([post]) => {
@@ -38,12 +40,69 @@ const postExcerpt = helper(([post]) => {
 // Depth is zero-based; depth 3 matches the server's root preload depth.
 const MOBILE_ROOT_VIEW_COLLAPSE_DEPTH = 3;
 const STORED_SCROLL_ANCHORS = Object.create(null);
+const DEFAULT_ROOT_HEIGHT_ESTIMATE = 240;
+const LOAD_ROOTS_LEAD_PX = 600;
+const LOAD_MORE_ROOTS_MARGIN = `0px 0px ${LOAD_ROOTS_LEAD_PX}px 0px`;
+const LOAD_PREVIOUS_ROOTS_MARGIN = `${LOAD_ROOTS_LEAD_PX}px 0px 0px 0px`;
 
 // Exported so system specs can wait out the full restoration window.
 export const SCROLL_RESTORE_WINDOW_MS = 1250;
 
+export function shouldShowTimeline({
+  desktopView,
+  contextMode,
+  wideViewport,
+  rootCount,
+  loadedRootCount,
+}) {
+  return (
+    desktopView &&
+    !contextMode &&
+    wideViewport &&
+    Math.max(rootCount ?? 0, loadedRootCount ?? 0) > 0
+  );
+}
+
+export function rootSpacerHeights({
+  rootCount,
+  rootWindowStart,
+  loadedRootCount,
+  rootHeightEstimate,
+}) {
+  return {
+    top: Math.max(rootWindowStart || 0, 0) * rootHeightEstimate,
+    bottom:
+      Math.max(
+        (rootCount || 0) - (rootWindowStart || 0) - (loadedRootCount || 0),
+        0
+      ) * rootHeightEstimate,
+  };
+}
+
+export function rootIndexForLogicalOffset({
+  offset,
+  rootCount,
+  rootHeightEstimate,
+}) {
+  if (
+    !Number.isFinite(offset) ||
+    !Number.isFinite(rootHeightEstimate) ||
+    rootHeightEstimate <= 0 ||
+    !Number.isInteger(rootCount) ||
+    rootCount <= 0
+  ) {
+    return null;
+  }
+
+  return Math.max(
+    0,
+    Math.min(Math.floor(offset / rootHeightEstimate), rootCount - 1)
+  );
+}
+
 export default class Nested extends Component {
   @service appEvents;
+  @service capabilities;
   @service currentUser;
   @service header;
   @service router;
@@ -56,6 +115,7 @@ export default class Nested extends Component {
   @tracked focusDirection = "forward";
   @tracked focusedPath = [];
   @tracked mobileReturnAnchor = null;
+  @tracked rootHeightEstimate = DEFAULT_ROOT_HEIGHT_ESTIMATE;
   viewportTracker = new PostStreamViewportTracker();
   #initialFocusedPathKey = null;
   #focusedPathsByPostNumber = new Map();
@@ -71,6 +131,7 @@ export default class Nested extends Component {
   #restoringStoredScroll = false;
   #scrollRestoreCompletionTimer = null;
   #scrollRestoreTimers = [];
+  #spacerJumpInFlight = false;
   #onPopstate = () => {
     this.#restoringStoredScroll = true;
     next(this, this.syncFocusFromURL);
@@ -172,8 +233,102 @@ export default class Nested extends Component {
       return;
     }
     if (selectedArticle === articles[articles.length - 1]) {
-      this.args.loadMoreRoots?.();
+      this.loadMoreRoots();
     }
+  }
+
+  get rootTopSpacerStyle() {
+    return this.#rootSpacerStyle(this.rootSpacerHeights.top);
+  }
+
+  get rootBottomSpacerStyle() {
+    return this.#rootSpacerStyle(this.rootSpacerHeights.bottom);
+  }
+
+  get rootSpacerHeights() {
+    return rootSpacerHeights({
+      rootCount: this.args.rootCount,
+      rootWindowStart: this.args.rootWindowStart,
+      loadedRootCount: this.args.rootNodes?.length,
+      rootHeightEstimate: this.rootHeightEstimate,
+    });
+  }
+
+  @action
+  measureRootWindow(element) {
+    if (
+      (this.args.rootWindowStart || 0) !== 0 ||
+      !this.args.rootNodes?.length
+    ) {
+      return;
+    }
+
+    schedule("afterRender", () => {
+      if (this.isDestroying || this.isDestroyed || !element.isConnected) {
+        return;
+      }
+
+      const estimate = element.offsetHeight / this.args.rootNodes.length;
+      if (Number.isFinite(estimate) && estimate > 0) {
+        this.rootHeightEstimate = estimate;
+      }
+    });
+  }
+
+  @action
+  loadMoreRoots() {
+    return this.#shiftRootWindow(this.args.loadMoreRoots);
+  }
+
+  @action
+  loadPreviousRoots() {
+    return this.#shiftRootWindow(this.args.loadPreviousRoots);
+  }
+
+  async #shiftRootWindow(loadAction) {
+    if (!loadAction || this.args.loadingMore) {
+      return;
+    }
+
+    const anchor = this.#visibleRootAnchor();
+    await loadAction();
+    schedule("afterRender", () => this.#restoreRootAnchor(anchor));
+  }
+
+  #visibleRootAnchor() {
+    const roots = document.querySelectorAll(
+      ".nested-view:not(.nested-context-view) .nested-view__roots-window > .nested-post"
+    );
+    const eyeline = this.header.headerOffset || 0;
+
+    for (const root of roots) {
+      const rect = root.getBoundingClientRect();
+      if (rect.bottom > eyeline) {
+        return { id: root.dataset.rootId, top: rect.top };
+      }
+    }
+  }
+
+  #restoreRootAnchor(anchor) {
+    if (!anchor?.id) {
+      return;
+    }
+
+    const root = document.querySelector(
+      `.nested-view:not(.nested-context-view) .nested-view__roots-window > .nested-post[data-root-id="${anchor.id}"]`
+    );
+    if (!root) {
+      return;
+    }
+
+    const delta = root.getBoundingClientRect().top - anchor.top;
+    if (Math.abs(delta) > 0.5) {
+      window.scrollBy({ top: delta });
+    }
+  }
+
+  #rootSpacerStyle(height) {
+    return trustHTML(`height: ${Math.max(height, 0).toFixed(1)}px`);
   }
 
   get emptyPath() {
@@ -196,6 +351,16 @@ export default class Nested extends Component {
 
   get showContextBanner() {
     return this.args.contextMode && !this.site.mobileView;
+  }
+
+  get showTimeline() {
+    return shouldShowTimeline({
+      desktopView: this.site.desktopView,
+      contextMode: this.args.contextMode,
+      wideViewport: this.capabilities.viewport["2xl"],
+      rootCount: this.args.rootCount,
+      loadedRootCount: this.args.rootNodes?.length,
+    });
   }
 
   get showParentContextLink() {
@@ -323,6 +488,8 @@ export default class Nested extends Component {
   }
 
   #handleScroll() {
+    this.#maybeJumpFromRootSpacer();
+
     if (!this.#restoringStoredScroll) {
       this.persistScrollAnchor();
       return;
@@ -337,6 +504,62 @@ export default class Nested extends Component {
       this.#scrollAnchorRestoreKey(this.args.scrollAnchor);
     this.#cancelScrollRestoration({ clearAnchor: true });
     this.persistScrollAnchor();
+  }
+
+  #maybeJumpFromRootSpacer() {
+    if (
+      this.#spacerJumpInFlight ||
+      this.args.contextMode ||
+      this.args.loadingMore ||
+      !this.args.jumpToRoot ||
+      !Number.isInteger(this.args.rootCount) ||
+      this.args.rootCount <= (this.args.rootNodes?.length || 0)
+    ) {
+      return;
+    }
+
+    const roots = document.querySelector(
+      ".nested-view:not(.nested-context-view) .nested-view__roots"
+    );
+    const rootWindow = roots?.querySelector(".nested-view__roots-window");
+    if (!roots || !rootWindow) {
+      return;
+    }
+
+    const eyeline = this.header.headerOffset || 0;
+    const rootsRect = roots.getBoundingClientRect();
+    const rootWindowRect = rootWindow.getBoundingClientRect();
+    if (
+      eyeline < rootsRect.top ||
+      eyeline >= rootsRect.bottom ||
+      (eyeline >= rootWindowRect.top && eyeline < rootWindowRect.bottom)
+    ) {
+      return;
+    }
+
+    const index = rootIndexForLogicalOffset({
+      offset: eyeline - rootsRect.top,
+      rootCount: this.args.rootCount,
+      rootHeightEstimate: this.rootHeightEstimate,
+    });
+    const windowStart = this.args.rootWindowStart || 0;
+    const windowEnd = windowStart + (this.args.rootNodes?.length || 0);
+    if (index == null || (index >= windowStart && index < windowEnd)) {
+      return;
+    }
+
+    void this.#jumpFromRootSpacer(index);
+  }
+
+  async #jumpFromRootSpacer(index) {
+    this.#spacerJumpInFlight = true;
+    try {
+      await this.args.jumpToRoot(index);
+    } finally {
+      schedule("afterRender", () => {
+        this.#spacerJumpInFlight = false;
+      });
+    }
   }
 
   #isRestoredScrollEcho() {
@@ -1055,67 +1278,105 @@ export default class Nested extends Component {
           </div>
         {{/if}}
 
-        <div class="nested-view__roots">
-          {{#each @rootNodes key="_renderKey" as |node index|}}
-            <NestedPost
-              @post={{node.post}}
-              @children={{node.children}}
-              @topic={{@topic}}
-              @depth={{0}}
-              @path={{this.emptyPath}}
-              @sort={{@effectiveSort}}
-              @isPinned={{includes @pinnedPostIds node.post.id}}
-              @replyToPost={{@replyToPost}}
-              @editPost={{@editPost}}
-              @deletePost={{@deletePost}}
-              @recoverPost={{@recoverPost}}
-              @showFlags={{@showFlags}}
-              @showHistory={{@showHistory}}
-              @changeNotice={{@changeNotice}}
-              @changePostOwner={{@changePostOwner}}
-              @grantBadge={{@grantBadge}}
-              @lockPost={{@lockPost}}
-              @unlockPost={{@unlockPost}}
-              @permanentlyDeletePost={{@permanentlyDeletePost}}
-              @rebakePost={{@rebakePost}}
-              @showPagePublish={{@showPagePublish}}
-              @togglePostType={{@togglePostType}}
-              @toggleWiki={{@toggleWiki}}
-              @unhidePost={{@unhidePost}}
-              @expansionState={{@expansionState}}
-              @fetchedChildrenCache={{@fetchedChildrenCache}}
-              @scrollAnchor={{this.rootPostScrollAnchor}}
-              @registerPost={{this.viewportTracker.registerPost}}
-              @getCloakingData={{this.viewportTracker.getCloakingData}}
-              @cloakAbove={{this.cloakAbove}}
-              @cloakBelow={{this.cloakBelow}}
-              @collapseFromDepth={{this.collapseFromDepth}}
-              @focusPost={{this.focusPath}}
-              @captureScrollAnchor={{this.captureScrollAnchor}}
-              @multiSelect={{@multiSelect}}
-              @togglePostSelection={{@togglePostSelection}}
-              @selectReplies={{@selectReplies}}
-              @selectBelow={{@selectBelow}}
-              @postSelected={{@postSelected}}
+        <div class="nested-view__roots-region">
+          {{#if this.showTimeline}}
+            <NestedTimeline
+              @rootNodes={{@rootNodes}}
+              @rootCount={{@rootCount}}
+              @rootWindowStart={{@rootWindowStart}}
+              @loadingMore={{@loadingMore}}
+              @jumpToRoot={{@jumpToRoot}}
             />
-            <PluginOutlet
-              @name="nested-roots-between"
-              @outletArgs={{lazyHash topic=@topic index=index}}
+          {{/if}}
+
+          <div class="nested-view__roots">
+            <div
+              class="nested-view__roots-spacer"
+              style={{this.rootTopSpacerStyle}}
+              aria-hidden="true"
+            ></div>
+
+            <DLoadMore
+              @action={{this.loadPreviousRoots}}
+              @enabled={{@hasPreviousRoots}}
+              @isLoading={{@loadingMore}}
+              @rootMargin={{LOAD_PREVIOUS_ROOTS_MARGIN}}
             />
-          {{else}}
-            <div class="nested-view__empty">
-              {{i18n "nested_replies.no_replies"}}
+
+            <div
+              class="nested-view__roots-window"
+              {{didInsert this.measureRootWindow}}
+              {{didUpdate this.measureRootWindow @rootNodes}}
+            >
+              {{#each @rootNodes key="_renderKey" as |node index|}}
+                <NestedPost
+                  @post={{node.post}}
+                  @children={{node.children}}
+                  @topic={{@topic}}
+                  @depth={{0}}
+                  @path={{this.emptyPath}}
+                  @sort={{@effectiveSort}}
+                  @isPinned={{includes @pinnedPostIds node.post.id}}
+                  @replyToPost={{@replyToPost}}
+                  @editPost={{@editPost}}
+                  @deletePost={{@deletePost}}
+                  @recoverPost={{@recoverPost}}
+                  @showFlags={{@showFlags}}
+                  @showHistory={{@showHistory}}
+                  @changeNotice={{@changeNotice}}
+                  @changePostOwner={{@changePostOwner}}
+                  @grantBadge={{@grantBadge}}
+                  @lockPost={{@lockPost}}
+                  @unlockPost={{@unlockPost}}
+                  @permanentlyDeletePost={{@permanentlyDeletePost}}
+                  @rebakePost={{@rebakePost}}
+                  @showPagePublish={{@showPagePublish}}
+                  @togglePostType={{@togglePostType}}
+                  @toggleWiki={{@toggleWiki}}
+                  @unhidePost={{@unhidePost}}
+                  @expansionState={{@expansionState}}
+                  @fetchedChildrenCache={{@fetchedChildrenCache}}
+                  @scrollAnchor={{this.rootPostScrollAnchor}}
+                  @registerPost={{this.viewportTracker.registerPost}}
+                  @getCloakingData={{this.viewportTracker.getCloakingData}}
+                  @cloakAbove={{this.cloakAbove}}
+                  @cloakBelow={{this.cloakBelow}}
+                  @collapseFromDepth={{this.collapseFromDepth}}
+                  @focusPost={{this.focusPath}}
+                  @captureScrollAnchor={{this.captureScrollAnchor}}
+                  @multiSelect={{@multiSelect}}
+                  @togglePostSelection={{@togglePostSelection}}
+                  @selectReplies={{@selectReplies}}
+                  @selectBelow={{@selectBelow}}
+                  @postSelected={{@postSelected}}
+                />
+                <PluginOutlet
+                  @name="nested-roots-between"
+                  @outletArgs={{lazyHash topic=@topic index=index}}
+                />
+              {{else}}
+                <div class="nested-view__empty">
+                  {{i18n "nested_replies.no_replies"}}
+                </div>
+              {{/each}}
             </div>
-          {{/each}}
+
+            <DConditionalLoadingSpinner @condition={{@loadingMore}} />
+
+            <DLoadMore
+              @action={{this.loadMoreRoots}}
+              @enabled={{@hasMoreRoots}}
+              @isLoading={{@loadingMore}}
+              @rootMargin={{LOAD_MORE_ROOTS_MARGIN}}
+            />
+
+            <div
+              class="nested-view__roots-spacer"
+              style={{this.rootBottomSpacerStyle}}
+              aria-hidden="true"
+            ></div>
+          </div>
         </div>
-
-        <DConditionalLoadingSpinner @condition={{@loadingMore}} />
-
-        <DLoadMore
-          @action={{@loadMoreRoots}}
-          @enabled={{@hasMoreRoots}}
-          @isLoading={{@loadingMore}}
-        />
       {{/if}}
 
       <PluginOutlet

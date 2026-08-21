@@ -246,7 +246,44 @@ module PageObjects
       end
 
       def has_root_post_count?(count)
-        has_css?(".nested-view__roots > .nested-post", count: count)
+        has_css?(".nested-view__roots-window > .nested-post", count: count)
+      end
+
+      def has_timeline?
+        has_css?(".nested-timeline", visible: true)
+      end
+
+      def has_timeline_branch_summary?(text)
+        has_css?(".nested-timeline__branch-summary", text: text)
+      end
+
+      def has_timeline_legend?
+        %w[loaded amount depth continuation].all? do |item|
+          has_css?(
+            ".nested-timeline__legend-item",
+            text: I18n.t("js.nested_replies.timeline.legend.#{item}"),
+          )
+        end
+      end
+
+      def has_timeline_marks?(count:)
+        has_css?(".nested-timeline__mark", count: count)
+      end
+
+      def timeline_legend_rows
+        page.evaluate_script(<<~JS)
+          [...document.querySelectorAll(".nested-timeline__legend-item")].map((item) => {
+            const symbol = item.querySelector(".nested-timeline__legend-symbol");
+            const symbolGraphic = symbol.querySelector("path, rect");
+            const graphicStyle = getComputedStyle(symbolGraphic);
+
+            return {
+              painted: graphicStyle.stroke !== "none" || graphicStyle.fill !== "none",
+              symbolWidth: symbol.getBoundingClientRect().width,
+              top: item.getBoundingClientRect().top,
+            };
+          });
+        JS
       end
 
       def current_scroll_position
@@ -327,6 +364,43 @@ module PageObjects
         page.execute_script(<<~JS)
           document.querySelector("[data-post-number='#{post.post_number}']").scrollIntoView();
         JS
+        self
+      end
+
+      # 1536px is the 2xl breakpoint (96rem) the timeline gutter is gated on.
+      TIMELINE_BREAKPOINT_WIDTH = 1536
+
+      def use_wide_timeline_viewport
+        resize_viewport(width: 1920, height: 1200)
+      end
+
+      def use_timeline_breakpoint_viewport
+        resize_viewport(width: TIMELINE_BREAKPOINT_WIDTH, height: 1200)
+      end
+
+      def use_narrow_timeline_viewport
+        resize_viewport(width: TIMELINE_BREAKPOINT_WIDTH - 1, height: 1200)
+      end
+
+      def resize_viewport(width:, height:)
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.set_viewport_size(width: width, height: height)
+        end
+        self
+      end
+
+      def has_no_timeline?
+        has_no_css?(".nested-timeline", visible: true)
+      end
+
+      def has_no_horizontal_overflow?
+        page.evaluate_script(<<~JS) <= 0
+          document.documentElement.scrollWidth - document.documentElement.clientWidth
+        JS
+      end
+
+      def jump_to_last_timeline_branch
+        find(".nested-timeline__scrollarea").send_keys(:end)
         self
       end
 
@@ -749,11 +823,11 @@ module PageObjects
       # ── Cloaking ─────────────────────────────────────────────────
 
       def has_cloaked_root?
-        has_css?(".nested-view__roots > .nested-post--cloaked")
+        has_css?(".nested-view__roots-window > .nested-post--cloaked")
       end
 
       def has_no_cloaked_root?
-        has_no_css?(".nested-view__roots > .nested-post--cloaked")
+        has_no_css?(".nested-view__roots-window > .nested-post--cloaked")
       end
 
       def has_cloaked_root_for?(post)

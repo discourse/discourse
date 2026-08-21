@@ -15,13 +15,26 @@ export function processNestedRootResponse({
   const rootNodes = (data.roots || []).map((root) =>
     processNode(store, topic, root)
   );
+  const pinnedPostIds = data.pinned_post_ids || [];
+  const pinnedIdSet = new Set(pinnedPostIds);
 
   return {
     topic,
     opPost,
     rootNodes,
     page: data.page || 0,
+    rootPageSize: data.root_page_size || 20,
+    rootWindowStart: 0,
+    rootWindowPages: [
+      {
+        page: data.page || 0,
+        nodeCount: rootNodes.length,
+        hasMoreRoots: data.has_more_roots || false,
+        rootPageSize: data.root_page_size || 20,
+      },
+    ],
     hasMoreRoots: data.has_more_roots || false,
+    rootCount: data.root_count ?? null,
     sort: data.sort || siteSettings.nested_replies_default_sort || "top",
     effectiveSort:
       data.effective_sort ||
@@ -29,7 +42,9 @@ export function processNestedRootResponse({
       siteSettings.nested_replies_default_sort ||
       "top",
     messageBusLastId: data.message_bus_last_id,
-    pinnedPostIds: data.pinned_post_ids || [],
+    pinnedPostIds,
+    pinnedRootCount: rootNodes.filter((node) => pinnedIdSet.has(node.post.id))
+      .length,
     postNumber: params.post_number ? Number(params.post_number) : null,
     context: params.context ?? null,
     contextMode: false,
@@ -87,6 +102,7 @@ export function processNestedContextResponse({
     sort,
     effectiveSort: data.effective_sort || sort,
     pinnedPostIds: [],
+    pinnedRootCount: 0,
     messageBusLastId: data.message_bus_last_id,
     postNumber: Number(params.post_number),
     context: params.context ?? null,
@@ -100,7 +116,18 @@ export function processNestedContextResponse({
       ancestors.length > 0 ? ancestors[0].post_number : null,
     rootNodes: [chainTip],
     page: 0,
+    rootPageSize: data.root_page_size || 20,
+    rootWindowStart: 0,
+    rootWindowPages: [
+      {
+        page: 0,
+        nodeCount: 1,
+        hasMoreRoots: false,
+        rootPageSize: data.root_page_size || 20,
+      },
+    ],
     hasMoreRoots: false,
+    rootCount: null,
     newRootPostIds: [],
     editingTopic: false,
   };

@@ -109,12 +109,12 @@ RSpec.describe "Nested view pagination" do
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_nested_view
-      initial_count = all(".nested-view__roots > .nested-post").count
+      initial_count = all(".nested-view__roots-window > .nested-post").count
       expect(initial_count).to eq(20)
 
       page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
 
-      expect(page).to have_css(".nested-view__roots > .nested-post", count: 22, wait: 5)
+      expect(page).to have_css(".nested-view__roots-window > .nested-post", count: 22, wait: 5)
     end
   end
 end

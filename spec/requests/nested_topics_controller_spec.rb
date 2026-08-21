@@ -587,7 +587,7 @@ RSpec.describe NestedTopicsController, type: :request do
       end
     end
 
-    it "paginates with has_more_roots" do
+    it "uses a lookahead row to detect an exact final page" do
       NestedReplies::TreeLoader::ROOTS_PER_PAGE.times do
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       end
@@ -595,8 +595,9 @@ RSpec.describe NestedTopicsController, type: :request do
 
       get show_url(topic, page: 0)
       json = response.parsed_body
-      expect(json["has_more_roots"]).to eq(true)
+      expect(json["has_more_roots"]).to eq(false)
       expect(json["roots"].length).to eq(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
+      expect(json["root_page_size"]).to eq(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
     end
 
     it "returns has_more_roots false on last page" do
@@ -606,6 +607,52 @@ RSpec.describe NestedTopicsController, type: :request do
       get show_url(topic, page: 0)
       json = response.parsed_body
       expect(json["has_more_roots"]).to eq(false)
+    end
+
+    it "returns root_count only on the initial page" do
+      (NestedReplies::TreeLoader::ROOTS_PER_PAGE + 3).times do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      end
+      sign_in(user)
+
+      get show_url(topic, page: 0)
+      expect(response.parsed_body["root_count"]).to eq(
+        NestedReplies::TreeLoader::ROOTS_PER_PAGE + 3,
+      )
+
+      get show_url(topic, page: 1)
+      expect(response.parsed_body).not_to have_key("root_count")
+    end
+
+    it "accepts root pages beyond the legacy pagination ceiling" do
+      sign_in(user)
+
+      get show_url(topic, page: 1001)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.slice("page", "roots", "has_more_roots")).to eq(
+        "page" => 1001,
+        "roots" => [],
+        "has_more_roots" => false,
+      )
+    end
+
+    it "clamps a root page that would overflow the query offset" do
+      sign_in(user)
+
+      get show_url(topic, page: 10**19)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["page"]).to eq(NestedTopicsController::MAX_ROOT_PAGE)
+    end
+
+    it "excludes whispers from root_count for non-whisperers" do
+      2.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      Fabricate(:whisper, topic: topic, user: admin)
+      sign_in(user)
+
+      get show_url(topic, page: 0)
+      expect(response.parsed_body["root_count"]).to eq(2)
     end
 
     it "validates sort parameter and falls back to default" do
@@ -822,6 +869,18 @@ RSpec.describe NestedTopicsController, type: :request do
         root_ids = json["roots"].map { |r| r["id"] }
         expect(root_ids.first).to eq(low_post.id)
         expect(json["pinned_post_ids"]).to contain_exactly(low_post.id)
+      end
+
+      it "excludes deleted pinned roots from root_count since they are never served" do
+        low_post.trash!(Discourse.system_user)
+        pin_posts(low_post)
+        sign_in(user)
+
+        get show_url(topic, sort: "top")
+
+        json = response.parsed_body
+        expect(json["roots"].map { |r| r["id"] }).not_to include(low_post.id)
+        expect(json["root_count"]).to eq(1)
       end
 
       it "does not include pinned_post_ids when none are pinned" do

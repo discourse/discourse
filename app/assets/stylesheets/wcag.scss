@@ -155,6 +155,27 @@ html {
     }
   }
 
+  .nested-timeline {
+    .nested-timeline__scrollarea {
+      border-color: var(--primary-low-mid);
+    }
+
+    .nested-timeline__handle,
+    .nested-timeline__mark-amount,
+    .nested-timeline__mark-notch {
+      background-color: var(--primary-low-mid);
+    }
+
+    .nested-timeline__mark-continuation,
+    .nested-timeline__legend-symbol {
+      color: var(--primary-low-mid);
+    }
+
+    .nested-timeline__loaded-window {
+      border-color: var(--primary-low-mid);
+    }
+  }
+
   .quote-controls,
   .quote-controls .d-icon {
     color: var(--primary-medium);

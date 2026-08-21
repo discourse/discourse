@@ -40,7 +40,7 @@ RSpec.describe "Nested view cloaking" do
       expect(nested_view).to have_cloaked_root
 
       expect(page).to have_no_css(
-        ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
+        ".nested-view__roots-window > .nested-post:first-child.nested-post--cloaked",
       )
     end
 
@@ -51,14 +51,14 @@ RSpec.describe "Nested view cloaking" do
       send_keys(:end)
 
       expect(page).to have_css(
-        ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
+        ".nested-view__roots-window > .nested-post:first-child.nested-post--cloaked",
         wait: 5,
       )
 
       send_keys(:home)
 
       expect(page).to have_no_css(
-        ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
+        ".nested-view__roots-window > .nested-post:first-child.nested-post--cloaked",
       )
     end
 
@@ -67,10 +67,10 @@ RSpec.describe "Nested view cloaking" do
       expect(nested_view).to have_nested_view
 
       expect(page).to have_no_css(
-        ".nested-view__roots > .nested-post--cloaked .nested-post__article",
+        ".nested-view__roots-window > .nested-post--cloaked .nested-post__article",
       )
       expect(page).to have_no_css(
-        ".nested-view__roots > .nested-post--cloaked .nested-post-children",
+        ".nested-view__roots-window > .nested-post--cloaked .nested-post-children",
       )
     end
   end

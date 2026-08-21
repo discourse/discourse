@@ -4371,6 +4371,27 @@ en:
         empty: "No topic activity to show."
         load_more: "Load more activity"
         updated: "Topic activity updated."
+      timeline:
+        branches_short: "%{current} / %{total}"
+        branch_position: "Branch %{current} of %{total}"
+        slider_label: "Topic branches"
+        jump_incomplete: "Reached %{current} of %{total}. Activate again to continue."
+        reply_count:
+          one: "%{count} reply"
+          other: "%{count} replies"
+        depth:
+          one: "%{count} level deep"
+          other: "%{count} levels deep"
+        depth_lower_bound:
+          one: "%{count}+ level deep"
+          other: "%{count}+ levels deep"
+        branch_summary: "%{replies} · %{depth}"
+        details_range: "Details loaded for branches %{start}–%{end}"
+        legend:
+          loaded: "Detailed range"
+          amount: "More replies"
+          depth: "Deeper"
+          continuation: "Continues"
       context:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"

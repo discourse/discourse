@@ -109,8 +109,13 @@ export default <template>
             @topic={{@controller.model}}
             @opPost={{nested.opPost}}
             @rootNodes={{nested.rootNodes}}
+            @rootCount={{nested.rootCount}}
+            @rootWindowStart={{nested.rootWindowStart}}
+            @jumpToRoot={{nested.jumpToRoot}}
+            @hasPreviousRoots={{nested.hasPreviousRoots}}
             @hasMoreRoots={{nested.hasMoreRoots}}
             @loadingMore={{nested.loadingMore}}
+            @loadPreviousRoots={{nested.loadPreviousRoots}}
             @loadMoreRoots={{nested.loadMoreRoots}}
             @sort={{nested.sort}}
             @effectiveSort={{nested.effectiveSort}}

@@ -1,6 +1,6 @@
 import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
 
-export const NESTED_VIEW_CACHE_FORMAT_VERSION = 3;
+export const NESTED_VIEW_CACHE_FORMAT_VERSION = 5;
 
 const EXCLUDED_RECORD_KEYS = new Set([
   "__munge",
@@ -22,11 +22,16 @@ export function snapshotNestedModelData(modelData) {
     opPost: snapshotRecord(modelData.opPost),
     rootNodes: snapshotNodes(modelData.rootNodes),
     page: modelData.page,
+    rootPageSize: modelData.rootPageSize,
+    rootWindowStart: modelData.rootWindowStart,
+    rootWindowPages: snapshotValue(modelData.rootWindowPages),
     hasMoreRoots: modelData.hasMoreRoots,
+    rootCount: modelData.rootCount,
     sort: modelData.sort,
     effectiveSort: modelData.effectiveSort || modelData.sort,
     messageBusLastId: modelData.messageBusLastId,
     pinnedPostIds: snapshotValue(modelData.pinnedPostIds),
+    pinnedRootCount: modelData.pinnedRootCount,
     postNumber: modelData.postNumber,
     context: modelData.context,
     contextMode: modelData.contextMode,
@@ -58,11 +63,16 @@ export function hydrateNestedModelData(store, snapshot) {
     opPost: hydratePost(store, topic, snapshot.opPost),
     rootNodes: hydrateNodes(store, topic, snapshot.rootNodes),
     page: snapshot.page,
+    rootPageSize: snapshot.rootPageSize || 20,
+    rootWindowStart: snapshot.rootWindowStart || 0,
+    rootWindowPages: snapshotValue(snapshot.rootWindowPages) || [],
     hasMoreRoots: snapshot.hasMoreRoots,
+    rootCount: snapshot.rootCount ?? null,
     sort: snapshot.sort,
     effectiveSort: snapshot.effectiveSort || snapshot.sort,
     messageBusLastId: snapshot.messageBusLastId,
     pinnedPostIds: snapshotValue(snapshot.pinnedPostIds) || [],
+    pinnedRootCount: snapshot.pinnedRootCount || 0,
     postNumber: snapshot.postNumber,
     context: snapshot.context ?? null,
     contextMode: snapshot.contextMode,
@@ -199,7 +209,15 @@ export function isValidNestedViewCacheSnapshot(snapshot) {
     snapshot?.topic &&
     isPlainCacheRecord(snapshot.topic) &&
     Array.isArray(snapshot.rootNodes) &&
-    snapshot.rootNodes.every(isValidSnapshotNode)
+    snapshot.rootNodes.every(isValidSnapshotNode) &&
+    Array.isArray(snapshot.rootWindowPages) &&
+    snapshot.rootWindowPages.every(
+      (descriptor) =>
+        Number.isInteger(descriptor.page) &&
+        descriptor.page >= 0 &&
+        Number.isInteger(descriptor.nodeCount) &&
+        descriptor.nodeCount >= 0
+    )
   );
 }
 

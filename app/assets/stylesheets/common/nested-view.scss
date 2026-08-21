@@ -346,6 +346,16 @@
     flex-direction: column;
   }
 
+  &__roots-window {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__roots-spacer {
+    flex: none;
+    pointer-events: none;
+  }
+
   &__empty {
     padding: 2em;
     text-align: center;
@@ -1518,5 +1528,230 @@
 html.footer-nav-visible {
   .nested-view__floating-actions {
     bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom) + 1em);
+  }
+}
+
+// ── Timeline scroller ──────────────────────────────────────────────
+// A vertical gutter hugging the end edge of the roots list; the inner
+// element is sticky so the scroller follows the viewport and stops at the
+// end of the roots region rather than travelling alongside suggested
+// topics and footer content.
+.nested-view__roots-region {
+  position: relative;
+}
+
+.nested-timeline {
+  // Rendering is gated in JS on the same breakpoint, but a mounted timeline
+  // overflows the page horizontally, so the gutter also stays hidden in CSS
+  // until the topic column and sidebar leave room for it.
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-start: 100%;
+  width: 9em;
+  margin-inline-start: var(--space-6);
+  pointer-events: none;
+  z-index: z("timeline");
+
+  @include viewport.from(2xl) {
+    display: block;
+  }
+
+  &__inner {
+    position: sticky;
+    top: calc(var(--header-offset, 60px) + 1.5em);
+    pointer-events: auto;
+  }
+
+  &__scrollarea {
+    position: relative;
+    height: clamp(170px, 40vh, 300px);
+    margin-inline-start: 0.5em;
+    border-inline-start: 1px solid var(--topic-timeline-border-color);
+    cursor: pointer;
+    outline: 2px solid transparent;
+    outline-offset: var(--space-1);
+    transform: translateZ(0);
+
+    &:focus-visible {
+      outline-color: var(--tertiary);
+    }
+  }
+
+  &__map {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  &__loaded-window {
+    position: absolute;
+    inset-inline-start: -0.25em;
+    width: 0.5em;
+    min-height: 2px;
+    box-sizing: border-box;
+    border: 1px solid var(--topic-timeline-handle-color);
+    border-radius: var(--d-border-radius);
+    background-color: var(--tertiary-low);
+  }
+
+  &__mark {
+    position: absolute;
+    inset-inline-end: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 0.75em;
+    margin-top: -0.375em;
+    opacity: 0.72;
+
+    &.is-active {
+      opacity: 1;
+    }
+  }
+
+  &__mark-amount {
+    position: absolute;
+    inset-inline: 0;
+    top: calc(50% - 1px);
+    height: 2px;
+    border-radius: 1px;
+    background-color: var(--topic-timeline-handle-color);
+  }
+
+  &__mark-depth {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    height: 100%;
+  }
+
+  &__mark-notch {
+    width: 2px;
+    height: 0.65em;
+    background-color: var(--topic-timeline-handle-color);
+  }
+
+  &__mark-continuation {
+    align-self: flex-start;
+    color: var(--topic-timeline-handle-color);
+    font-size: var(--font-down-2);
+    font-weight: bold;
+    line-height: 0.7;
+  }
+
+  &__scroller {
+    @include unselectable;
+    display: flex;
+    position: absolute;
+    inset-block-start: 0;
+    align-items: center;
+    margin-inline-start: -0.22em;
+    cursor: ns-resize;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: transform 0.15s ease-out;
+    }
+
+    // dPointerDrag holds this for the gesture's duration; the handle has to
+    // track the pointer without easing behind it.
+    &.is-dragging {
+      transition: none;
+    }
+  }
+
+  &__handle {
+    width: 0.35em;
+    height: 100%;
+    flex-shrink: 0;
+    border-radius: 0.8em;
+    background-color: var(--topic-timeline-handle-color);
+    outline: 1px solid transparent;
+
+    .is-loading & {
+      opacity: 0.5;
+    }
+  }
+
+  &__scroller-content {
+    box-sizing: border-box;
+    position: absolute; // prevents text length from impacting width
+    width: 8.5em;
+    max-height: 5em;
+    overflow: hidden;
+    padding-inline-start: var(--space-4);
+  }
+
+  &__position {
+    font-weight: bold;
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+
+  &__date {
+    color: var(--primary-med-or-secondary-med);
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__branch-summary {
+    color: var(--primary-med-or-secondary-med);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-small);
+    margin-block-start: var(--space-1);
+    overflow-wrap: anywhere;
+  }
+
+  &__legend {
+    display: grid;
+    gap: var(--space-1);
+    margin-block-start: var(--space-3);
+    padding-inline-start: var(--space-4);
+    color: var(--primary-med-or-secondary-med);
+    font-size: var(--font-down-2);
+    line-height: var(--line-height-small);
+  }
+
+  &__legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__legend-symbol {
+    width: 2.25em;
+    height: 0.75em;
+    flex: none;
+    color: var(--topic-timeline-handle-color);
+    fill: none;
+    overflow: visible;
+    stroke: currentcolor;
+    stroke-linecap: round;
+    stroke-width: 2;
+
+    &.--loaded {
+      fill: var(--tertiary-low);
+    }
+  }
+
+  &__metadata-range {
+    margin-block-start: var(--space-2);
+    padding-inline-start: var(--space-4);
+    color: var(--primary-med-or-secondary-med);
+    font-size: var(--font-down-2);
+    line-height: var(--line-height-small);
+    overflow-wrap: anywhere;
+  }
+
+  &__status {
+    margin-block-start: var(--space-2);
+    color: var(--primary-med-or-secondary-med);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-medium);
+    overflow-wrap: anywhere;
   }
 }

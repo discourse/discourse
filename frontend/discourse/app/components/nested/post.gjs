@@ -612,6 +612,7 @@ export default class NestedPost extends Component {
         (if this.cloakingData.active "nested-post--cloaked")
         (if this.selected "selected")
       }}
+      data-root-id={{if this.isRoot @post.id}}
       style={{this.cloakingData.style}}
       {{this.restoreScroll}}
       {{! At depth 0, register wrapper with cloaking observer (captures full subtree height).

@@ -15,7 +15,7 @@ module NestedReplies
           "#{hot_score_expression(posts_table, :hot_score)} DESC, " \
           "#{posts_table}.post_number ASC"
       when "new"
-        "#{posts_table}.created_at DESC"
+        "#{posts_table}.created_at DESC, #{posts_table}.post_number DESC"
       when "old"
         "#{posts_table}.post_number ASC"
       end
@@ -51,7 +51,7 @@ module NestedReplies
           [-thread_hot_score, -hot_score, post.post_number]
         end
       when "new"
-        posts.sort_by { |post| -post.created_at.to_i }
+        posts.sort_by { |post| [-post.created_at.to_f, -post.post_number] }
       when "old"
         posts.sort_by(&:post_number)
       end

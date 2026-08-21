@@ -3,6 +3,7 @@
 class NestedTopicsController < ApplicationController
   include EmbedModeHandler
 
+  MAX_ROOT_PAGE = 1_000_000
   ACTIVITY_PAGE_SIZE = 50
   ACTIVITY_POST_ATTRIBUTES = %i[
     id
@@ -47,7 +48,9 @@ class NestedTopicsController < ApplicationController
   def show
     return redirect_to topic_route_url, status: topic_route_redirect_status if spa_boot_request?
 
-    page = params[:page].to_i.clamp(0, 1000)
+    # The ceiling only keeps the offset within a signed 64-bit integer; it is
+    # far above any reachable page so timeline jumps are never clamped.
+    page = params[:page].to_i.clamp(0, MAX_ROOT_PAGE)
     render json: list_roots_response(page: page)
   end
 

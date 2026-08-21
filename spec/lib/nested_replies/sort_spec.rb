@@ -28,9 +28,11 @@ RSpec.describe NestedReplies::Sort do
       expect(sorted.map(&:post_number)).to eq([4, 2, 3])
     end
 
-    it "sorts by new (created_at desc)" do
+    it "sorts by new with post number as a stable tiebreaker" do
+      posts[0].created_at = posts[1].created_at
+
       sorted = described_class.sort_in_memory(posts, "new")
-      expect(sorted.map(&:post_number)).to eq([3, 4, 2])
+      expect(sorted.map(&:post_number)).to eq([3, 2, 4])
     end
 
     it "sorts by old (post_number asc)" do
@@ -59,6 +61,12 @@ RSpec.describe NestedReplies::Sort do
         "nested_hot_post_scores.thread_hot_score",
         "nested_hot_post_scores.hot_score",
         "candidate_posts.post_number ASC",
+      )
+    end
+
+    it "adds a stable tiebreaker to newest-first ordering" do
+      expect(described_class.sql_order_expression("new")).to eq(
+        "posts.created_at DESC, posts.post_number DESC",
       )
     end
 

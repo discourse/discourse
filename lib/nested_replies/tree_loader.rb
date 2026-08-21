@@ -39,13 +39,22 @@ module NestedReplies
     end
 
     def root_posts_scope(sort)
-      scope =
-        topic
-          .posts
-          .where("posts.reply_to_post_number IS NULL OR posts.reply_to_post_number = 1")
-          .where(post_number: 2..) # exclude OP itself
-      scope = apply_visibility(scope)
-      apply_sort(scope, sort)
+      apply_sort(root_posts_base_scope, sort)
+    end
+
+    # Deleted pinned roots are excluded from every page (the paged scope
+    # skips pinned ids and promotion only re-adds undeleted ones), so leave
+    # them out of the count to keep it in sync with what's reachable.
+    def root_posts_count(pinned_post_ids: nil)
+      scope = root_posts_base_scope
+      if pinned_post_ids.present?
+        scope =
+          scope.where(
+            "posts.deleted_at IS NULL OR posts.id NOT IN (:pinned_post_ids)",
+            pinned_post_ids: pinned_post_ids,
+          )
+      end
+      scope.count
     end
 
     def apply_sort(scope, sort)
@@ -84,6 +93,15 @@ module NestedReplies
       end
 
       pinned_in_page + roots
+    end
+
+    def root_posts_base_scope
+      apply_visibility(
+        topic
+          .posts
+          .where("posts.reply_to_post_number IS NULL OR posts.reply_to_post_number = 1")
+          .where(post_number: 2..), # exclude OP itself
+      )
     end
 
     def load_posts_for_tree(scope)

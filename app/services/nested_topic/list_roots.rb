@@ -19,7 +19,10 @@ class NestedTopic::ListRoots
   step :expand_reply_trees
   step :prepare_posts
   step :serialize_roots
-  only_if(:initial_page) { step :enrich_with_topic_metadata }
+  only_if(:initial_page) do
+    step :attach_root_count
+    step :enrich_with_topic_metadata
+  end
   only_if(:final_page) { step :attach_suggested_and_related }
 
   private
@@ -58,11 +61,13 @@ class NestedTopic::ListRoots
     scope = loader.root_posts_scope(params.sort)
     scope = scope.where.not(id: pinned_post_ids) if pinned_post_ids.present?
     roots =
-      scope.offset(params.page * NestedReplies::TreeLoader::ROOTS_PER_PAGE).limit(
-        NestedReplies::TreeLoader::ROOTS_PER_PAGE,
-      )
-    context[:roots] = loader.load_posts_for_tree(roots).to_a
-    context[:has_more_roots] = context[:roots].size == NestedReplies::TreeLoader::ROOTS_PER_PAGE
+      loader.load_posts_for_tree(
+        scope.offset(params.page * NestedReplies::TreeLoader::ROOTS_PER_PAGE).limit(
+          NestedReplies::TreeLoader::ROOTS_PER_PAGE + 1,
+        ),
+      ).to_a
+    context[:has_more_roots] = roots.size > NestedReplies::TreeLoader::ROOTS_PER_PAGE
+    context[:roots] = roots.first(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
   end
 
   def promote_pinned_roots(loader:, topic_view:, roots:)
@@ -107,7 +112,14 @@ class NestedTopic::ListRoots
         end,
       has_more_roots: has_more_roots,
       page: params.page,
+      root_page_size: NestedReplies::TreeLoader::ROOTS_PER_PAGE,
     }
+  end
+
+  def attach_root_count(loader:, topic_view:, response:)
+    response[:root_count] = loader.root_posts_count(
+      pinned_post_ids: topic_view.topic.nested_topic&.pinned_post_ids.presence,
+    )
   end
 
   def enrich_with_topic_metadata(

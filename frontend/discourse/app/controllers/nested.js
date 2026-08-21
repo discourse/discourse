@@ -23,6 +23,10 @@ import processNode, {
   registerPostInTopicPostStream,
 } from "../lib/process-node";
 
+const ROOT_WINDOW_PAGE_LIMIT = 3;
+const ROOT_PAGE_CACHE_LIMIT = 6;
+const ROOT_PAGE_CACHE_TTL_MS = 2 * 60 * 1000;
+
 export default class NestedController extends Controller {
   @service appEvents;
   @service composer;
@@ -40,7 +44,11 @@ export default class NestedController extends Controller {
   @tracked opPost;
   @tracked rootNodes = [];
   @tracked page = 0;
+  @tracked rootPageSize = 20;
+  @tracked rootWindowStart = 0;
+  @tracked rootWindowPages = [];
   @tracked hasMoreRoots = false;
+  @tracked rootCount = null;
   @tracked loadingMore = false;
   @tracked sort;
   @tracked effectiveSort;
@@ -57,6 +65,7 @@ export default class NestedController extends Controller {
   @tracked newRootPostIds = [];
   @tracked editingTopic = false;
   @tracked pinnedPostIds = [];
+  @tracked pinnedRootCount = 0;
   // Persisted in the URL across in-topic navigation by design — once a
   // user lands via a consolidated reply notification, browsing within
   // the topic keeps the collapsed view, and the URL is shareable in that
@@ -83,6 +92,15 @@ export default class NestedController extends Controller {
   // can find posts at any depth, not just those in the preloaded tree.
   postRegistry = new Map();
   #latestScrollAnchor = null;
+  #loadMorePromise = null;
+  #activeJumpToken = null;
+  #activeRootRequestCount = 0;
+  #rootPageCache = new Map();
+  #rootWindowEntries = [];
+  #rootWindowKey = null;
+  #rootWindowNodesRef = null;
+  #rootWindowGeneration = 0;
+  #rootWindowIndicesStale = false;
   #postEventsSubscribed = false;
   #messageBusChannel = null;
   #pendingPostIds = new Set();
@@ -124,6 +142,16 @@ export default class NestedController extends Controller {
 
   get newRootPostCount() {
     return this.contextMode ? 0 : this.newRootPostIds.length;
+  }
+
+  get hasPreviousRoots() {
+    return !this.contextMode && this.rootWindowStart > 0;
+  }
+
+  // The server only reports rootCount with the initial page, so fall back to
+  // what the active window proves exists rather than assuming a single root.
+  get #knownRootTotal() {
+    return this.rootCount ?? this.rootWindowStart + this.rootNodes.length;
   }
 
   get canSelectAll() {
@@ -249,34 +277,74 @@ export default class NestedController extends Controller {
   }
 
   @action
-  async loadMoreRoots() {
-    if (this.loadingMore || !this.hasMoreRoots) {
+  loadMoreRoots() {
+    if (!this.hasMoreRoots) {
+      return Promise.resolve();
+    }
+    if (this.loadingMore) {
+      return this.#loadMorePromise ?? Promise.resolve();
+    }
+
+    const promise = this.#loadMoreRootsImpl().finally(() => {
+      // A concurrent caller may have installed a newer in-flight promise in
+      // the microtask gap after loadingMore flips false; don't clobber it.
+      if (this.#loadMorePromise === promise) {
+        this.#loadMorePromise = null;
+      }
+    });
+    this.#loadMorePromise = promise;
+    return promise;
+  }
+
+  async #loadMoreRootsImpl() {
+    this.#ensureRootWindowState();
+    const generation = this.#rootWindowGeneration;
+
+    try {
+      const nextPage = this.#rootWindowEntries.at(-1).page + 1;
+      const entry = await this.#getRootPage(nextPage);
+      if (generation !== this.#rootWindowGeneration) {
+        return;
+      }
+
+      this.#activateRootWindow(
+        this.#rootWindowIndicesStale
+          ? [entry]
+          : [...this.#rootWindowEntries, entry]
+      );
+      this.#assignSuggestedAndRelated(entry.data);
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  async loadPreviousRoots() {
+    if (!this.hasPreviousRoots || this.loadingMore) {
       return;
     }
 
-    this.loadingMore = true;
+    this.#ensureRootWindowState();
+    const previousPage = this.#rootWindowEntries[0].page - 1;
+    if (previousPage < 0) {
+      return;
+    }
+
+    const generation = this.#rootWindowGeneration;
     try {
-      const nextPage = this.page + 1;
-      const query = new URLSearchParams({
-        page: nextPage,
-        sort: this.effectiveSort || this.sort || "top",
-      });
-      const data = await ajax(
-        `/n/${this.topic.slug}/${this.topic.id}.json?${query}`
-      );
+      const entry = await this.#getRootPage(previousPage);
+      if (generation !== this.#rootWindowGeneration) {
+        return;
+      }
 
-      const newNodes = (data.roots || []).map((root) =>
-        this.#processNode(root)
+      this.#activateRootWindow(
+        this.#rootWindowIndicesStale
+          ? [entry]
+          : [entry, ...this.#rootWindowEntries],
+        { keep: "start" }
       );
-
-      this.rootNodes = [...this.rootNodes, ...newNodes];
-      this.page = data.page;
-      this.hasMoreRoots = data.has_more_roots || false;
-      this.#assignSuggestedAndRelated(data);
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.loadingMore = false;
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 
@@ -297,7 +365,7 @@ export default class NestedController extends Controller {
 
   #scrollToRoots() {
     const roots = document.querySelector(
-      ".nested-view:not(.nested-context-view) > .nested-view__roots"
+      ".nested-view:not(.nested-context-view) .nested-view__roots"
     );
 
     if (!roots) {
@@ -312,6 +380,358 @@ export default class NestedController extends Controller {
 
     window.scrollTo({
       top: window.scrollY + rect.top - headerOffset() - controlsHeight,
+    });
+  }
+
+  @action
+  async jumpToRoot(index) {
+    const topicId = this.topic?.id;
+    const sort = this.effectiveSort;
+    const jumpToken = (this.#activeJumpToken = {});
+    const targetIndex = Math.max(
+      0,
+      Math.min(index, Math.max(this.#knownRootTotal - 1, 0))
+    );
+
+    if (!this.#rootWindowContains(targetIndex)) {
+      this.#rootWindowGeneration++;
+      const unpinnedIndex = Math.max(targetIndex - this.pinnedRootCount, 0);
+      const targetPage = Math.floor(unpinnedIndex / this.rootPageSize);
+      let result;
+      try {
+        result = await this.#getRootPage(targetPage);
+      } catch (error) {
+        popupAjaxError(error);
+        return {
+          index: this.#nearestLoadedRootIndex(targetIndex),
+          reached: false,
+        };
+      }
+
+      if (
+        !result ||
+        this.topic?.id !== topicId ||
+        this.effectiveSort !== sort ||
+        this.#activeJumpToken !== jumpToken
+      ) {
+        return null;
+      }
+
+      if (result.nodes.length === 0) {
+        return {
+          index: this.#nearestLoadedRootIndex(targetIndex),
+          reached: false,
+        };
+      }
+
+      this.#activateRootWindow([result]);
+      this.#assignSuggestedAndRelated(result.data);
+    }
+
+    if (
+      this.topic?.id !== topicId ||
+      this.effectiveSort !== sort ||
+      this.#activeJumpToken !== jumpToken
+    ) {
+      return null;
+    }
+
+    const localIndex = targetIndex - this.rootWindowStart;
+    if (localIndex < 0 || localIndex >= this.rootNodes.length) {
+      return null;
+    }
+
+    schedule("afterRender", () => this.#scrollToRootAt(localIndex));
+    return { index: targetIndex, reached: targetIndex === index };
+  }
+
+  async #requestRootPage(page) {
+    this.#activeRootRequestCount++;
+    this.loadingMore = true;
+
+    try {
+      const query = new URLSearchParams({
+        page,
+        sort: this.effectiveSort || this.sort || "top",
+      });
+      const data = await ajax(
+        `/n/${this.topic.slug}/${this.topic.id}.json?${query}`
+      );
+
+      return {
+        data,
+        nodes: (data.roots || []).map((root) => this.#processNode(root)),
+      };
+    } finally {
+      this.#activeRootRequestCount--;
+      this.loadingMore = this.#activeRootRequestCount > 0;
+    }
+  }
+
+  async #getRootPage(page) {
+    this.#ensureRootWindowState();
+    const cached = this.#rootPageCache.get(page);
+    // A cached page is a snapshot of replies, votes and deletions as they were
+    // when it was fetched, so it is only reused while it is still fresh.
+    if (cached && !this.#rootPageExpired(cached)) {
+      this.#cacheRootPage(cached);
+      return cached;
+    }
+    if (cached) {
+      this.#rootPageCache.delete(page);
+    }
+
+    const result = await this.#requestRootPage(page);
+    const entry = this.#rootWindowEntry(result, result.data.page ?? page);
+    this.#cacheRootPage(entry);
+    return entry;
+  }
+
+  // A page's absolute start is recorded when it is fetched instead of being
+  // re-derived from its page number later: roots inserted live shift the pages
+  // already in hand, and only the entries that predate the insert move.
+  #rootWindowEntry(result, page) {
+    const rootPageSize = result.data.root_page_size || this.rootPageSize;
+
+    return {
+      ...result,
+      page,
+      fetchedAt: Date.now(),
+      absoluteStart:
+        page === 0 ? 0 : this.pinnedRootCount + page * rootPageSize,
+    };
+  }
+
+  #rootPageExpired(entry) {
+    return (
+      entry.fetchedAt != null &&
+      Date.now() - entry.fetchedAt > ROOT_PAGE_CACHE_TTL_MS
+    );
+  }
+
+  // Jumping makes any page cheap to fetch, so the cache is bounded: pages in
+  // the active window are always kept, the rest evicted oldest-first.
+  #cacheRootPage(entry) {
+    this.#rootPageCache.delete(entry.page);
+    this.#rootPageCache.set(entry.page, entry);
+
+    const windowPages = new Set(
+      this.#rootWindowEntries.map((windowEntry) => windowEntry.page)
+    );
+    for (const page of this.#rootPageCache.keys()) {
+      if (this.#rootPageCache.size <= ROOT_PAGE_CACHE_LIMIT) {
+        break;
+      }
+      if (page !== entry.page && !windowPages.has(page)) {
+        this.#rootPageCache.delete(page);
+      }
+    }
+  }
+
+  #ensureRootWindowState() {
+    const key = `${this.topic?.id}:${this.effectiveSort || this.sort}`;
+    if (
+      this.#rootWindowKey === key &&
+      this.#rootWindowNodesRef === this.rootNodes &&
+      this.#rootWindowEntries.length > 0
+    ) {
+      return;
+    }
+
+    this.#rootWindowKey = key;
+    this.#rootPageCache = new Map();
+    this.#rootWindowEntries = this.#entriesFromRootWindowPages() || [
+      this.#singleRootWindowEntry(),
+    ];
+    if (
+      this.rootWindowPages.length === 0 &&
+      this.rootNodes.length >
+        this.rootPageSize + (this.page === 0 ? this.pinnedRootCount : 0)
+    ) {
+      this.#rootWindowIndicesStale = true;
+    }
+    this.#rootWindowNodesRef = this.rootNodes;
+    for (const entry of this.#rootWindowEntries) {
+      this.#rootPageCache.set(entry.page, entry);
+    }
+    this.#rootWindowGeneration++;
+  }
+
+  #activateRootWindow(entries, { keep = "end" } = {}) {
+    const boundedEntries = this.#dedupeRootWindowEntries(
+      keep === "start"
+        ? entries.slice(0, ROOT_WINDOW_PAGE_LIMIT)
+        : entries.slice(-ROOT_WINDOW_PAGE_LIMIT)
+    );
+    const firstPage = boundedEntries[0].page;
+    const lastEntry = boundedEntries.at(-1);
+
+    this.#rootWindowEntries = boundedEntries;
+    this.rootWindowPages = boundedEntries.map((entry) => ({
+      page: entry.page,
+      nodeCount: entry.nodes.length,
+      hasMoreRoots: entry.data.has_more_roots || false,
+      rootPageSize: entry.data.root_page_size || this.rootPageSize,
+      absoluteStart: entry.absoluteStart,
+    }));
+    this.rootPageSize = lastEntry.data.root_page_size || this.rootPageSize;
+    this.rootWindowStart =
+      boundedEntries[0].absoluteStart ??
+      (firstPage === 0
+        ? 0
+        : this.pinnedRootCount + firstPage * this.rootPageSize);
+    this.rootNodes = boundedEntries.flatMap((entry) => entry.nodes);
+    this.#rootWindowNodesRef = this.rootNodes;
+    this.page = lastEntry.page;
+    this.hasMoreRoots = lastEntry.data.has_more_roots || false;
+    this.#rootWindowIndicesStale = false;
+  }
+
+  // Offsets shift whenever roots are added or removed between page fetches, so
+  // adjacent pages of the window can overlap. Nodes are keyed on post id when
+  // rendered, and a duplicate key breaks the whole list: keep the earliest
+  // occurrence and drop the rest.
+  #dedupeRootWindowEntries(entries) {
+    const seenPostIds = new Set();
+
+    return entries.map((entry) => {
+      let leadingDuplicates = 0;
+      let foundUniqueNode = false;
+      const nodes = entry.nodes.filter((node) => {
+        if (seenPostIds.has(node.post.id)) {
+          if (!foundUniqueNode) {
+            leadingDuplicates++;
+          }
+          return false;
+        }
+
+        foundUniqueNode = true;
+        seenPostIds.add(node.post.id);
+        return true;
+      });
+
+      return {
+        ...entry,
+        absoluteStart:
+          entry.absoluteStart == null
+            ? entry.absoluteStart
+            : entry.absoluteStart + leadingDuplicates,
+        nodes,
+      };
+    });
+  }
+
+  #resetRootWindowState(entry) {
+    this.#rootWindowKey = `${this.topic?.id}:${this.effectiveSort || this.sort}`;
+    this.#rootPageCache = new Map([[entry.page, entry]]);
+    this.#rootWindowEntries = [entry];
+    this.#rootWindowGeneration++;
+    this.#activateRootWindow([entry]);
+  }
+
+  #invalidateRootWindowState() {
+    this.#rootWindowKey = null;
+    this.#rootPageCache = new Map();
+    this.#rootWindowEntries = [];
+    this.#rootWindowNodesRef = null;
+    this.rootWindowPages = [];
+    this.#rootWindowGeneration++;
+  }
+
+  #entriesFromRootWindowPages() {
+    const descriptors = this.rootWindowPages || [];
+    const describedNodeCount = descriptors.reduce(
+      (count, descriptor) => count + descriptor.nodeCount,
+      0
+    );
+
+    if (
+      descriptors.length > 0 &&
+      describedNodeCount === this.rootNodes.length &&
+      descriptors.every(
+        (descriptor, index) =>
+          descriptor.nodeCount >= 0 &&
+          (index === 0 || descriptor.page === descriptors[index - 1].page + 1)
+      )
+    ) {
+      let nodeOffset = 0;
+      return descriptors.map((descriptor) => {
+        const nodes = this.rootNodes.slice(
+          nodeOffset,
+          nodeOffset + descriptor.nodeCount
+        );
+        nodeOffset += descriptor.nodeCount;
+
+        return {
+          data: {
+            page: descriptor.page,
+            root_page_size: descriptor.rootPageSize || this.rootPageSize,
+            has_more_roots: descriptor.hasMoreRoots || false,
+          },
+          nodes,
+          page: descriptor.page,
+          absoluteStart: descriptor.absoluteStart,
+        };
+      });
+    }
+
+    return null;
+  }
+
+  #singleRootWindowEntry() {
+    return {
+      data: {
+        page: this.page,
+        root_page_size: this.rootPageSize,
+        has_more_roots: this.hasMoreRoots,
+      },
+      nodes: this.rootNodes,
+      page: this.page,
+      absoluteStart: this.rootWindowStart,
+    };
+  }
+
+  #rootWindowContains(index) {
+    return (
+      !this.#rootWindowIndicesStale &&
+      index >= this.rootWindowStart &&
+      index < this.rootWindowStart + this.rootNodes.length
+    );
+  }
+
+  #nearestLoadedRootIndex(targetIndex) {
+    if (this.rootNodes.length === 0) {
+      return 0;
+    }
+
+    return Math.max(
+      this.rootWindowStart,
+      Math.min(targetIndex, this.rootWindowStart + this.rootNodes.length - 1)
+    );
+  }
+
+  // Targets the nth root wrapper rather than a post article: roots far from
+  // the viewport are cloaked and don't render their [data-post-number]
+  // article, but the wrapper always exists with a placeholder height.
+  #scrollToRootAt(index) {
+    const element = document.querySelectorAll(
+      ".nested-view:not(.nested-context-view) .nested-view__roots-window > .nested-post"
+    )[index];
+    if (!element) {
+      return;
+    }
+
+    const controls = document.querySelector(
+      ".nested-view:not(.nested-context-view) > .nested-view__controls"
+    );
+    const rect = element.getBoundingClientRect();
+
+    window.scrollTo({
+      top:
+        window.scrollY +
+        rect.top -
+        headerOffset() -
+        (controls?.offsetHeight || 0),
     });
   }
 
@@ -365,11 +785,16 @@ export default class NestedController extends Controller {
       opPost: this.opPost,
       rootNodes: this.rootNodes,
       page: this.page,
+      rootPageSize: this.rootPageSize,
+      rootWindowStart: this.rootWindowStart,
+      rootWindowPages: this.rootWindowPages,
       hasMoreRoots: this.hasMoreRoots,
+      rootCount: this.rootCount,
       sort: this.sort,
       effectiveSort: this.effectiveSort,
       messageBusLastId: this.messageBusLastId,
       pinnedPostIds: this.pinnedPostIds,
+      pinnedRootCount: this.pinnedRootCount,
       postNumber: this.postNumber,
       context: this.context,
       contextMode: this.contextMode,
@@ -505,6 +930,9 @@ export default class NestedController extends Controller {
     }
 
     try {
+      const topicId = this.topic.id;
+      const sort = this.effectiveSort;
+      const anchorRootId = this.#visibleRootId();
       const result = await ajax(
         `/n/${this.topic.slug}/${this.topic.id}/pin.json`,
         {
@@ -514,19 +942,67 @@ export default class NestedController extends Controller {
       );
 
       this.pinnedPostIds = result.pinned_post_ids || [];
+      this.#invalidateRootWindowState();
 
-      if (this.pinnedPostIds.includes(post.id)) {
-        // Move newly pinned post to front of rootNodes
-        const idx = this.rootNodes.findIndex((n) => n.post.id === post.id);
-        if (idx > 0) {
-          const pinned = this.rootNodes[idx];
-          const rest = this.rootNodes.filter((_, i) => i !== idx);
-          this.rootNodes = [pinned, ...rest];
-        }
+      const page = await this.#requestRootPage(0);
+      if (this.topic?.id !== topicId || this.effectiveSort !== sort) {
+        return;
       }
+
+      const entry = this.#rootWindowEntry(page, page.data.page ?? 0);
+      this.pinnedPostIds = page.data.pinned_post_ids || this.pinnedPostIds;
+      const pinnedIdSet = new Set(this.pinnedPostIds);
+      this.pinnedRootCount = page.nodes.filter((node) =>
+        pinnedIdSet.has(node.post.id)
+      ).length;
+      this.rootCount = page.data.root_count ?? this.rootCount;
+      this.#resetRootWindowState(entry);
+      this.#assignSuggestedAndRelated(page.data);
+
+      // Pinning reorders the whole list, so the window falls back to page zero
+      // and the reader's scroll position would otherwise land wherever the
+      // shortened document clamps it. Prefer the root they were reading; an
+      // unpinned post usually leaves the window entirely, so fall back to the
+      // post that moved and then to the top of the roots.
+      this.#restorePinScroll([anchorRootId, post.id]);
     } catch (e) {
       popupAjaxError(e);
     }
+  }
+
+  #visibleRootId() {
+    const roots = document.querySelectorAll(
+      ".nested-view:not(.nested-context-view) .nested-view__roots-window > .nested-post"
+    );
+    const eyeline = headerOffset();
+
+    for (const root of roots) {
+      if (root.getBoundingClientRect().bottom > eyeline) {
+        return Number(root.dataset.rootId) || null;
+      }
+    }
+
+    return null;
+  }
+
+  #restorePinScroll(candidateRootIds) {
+    schedule("afterRender", () => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      for (const rootId of candidateRootIds) {
+        const index = rootId
+          ? this.rootNodes.findIndex((node) => node.post.id === rootId)
+          : -1;
+        if (index >= 0) {
+          this.#scrollToRootAt(index);
+          return;
+        }
+      }
+
+      this.#scrollToRoots();
+    });
   }
 
   @action
@@ -813,8 +1289,11 @@ export default class NestedController extends Controller {
 
         const node = this.#processNode({ ...postData, children: [] });
         if (data.user_id === this.currentUser?.id) {
-          this.rootNodes = [node, ...this.rootNodes];
+          this.#incrementRootCount(1);
+          this.#insertLiveRoots([node]);
         } else {
+          // Not counted yet: the post sits behind the "new replies" button
+          // until loadNewRoots makes it reachable.
           this.newRootPostIds = [...this.newRootPostIds, data.id];
         }
       } else {
@@ -997,7 +1476,140 @@ export default class NestedController extends Controller {
     }
 
     if (newNodes.length > 0) {
-      this.rootNodes = [...newNodes, ...this.rootNodes];
+      this.#incrementRootCount(newNodes.length);
+      this.#insertLiveRoots(newNodes);
+    }
+  }
+
+  #insertLiveRoots(newNodes) {
+    const sort = this.effectiveSort || this.sort;
+
+    if (this.rootWindowStart > 0) {
+      this.#invalidateRootWindowState();
+      if (sort === "new") {
+        this.rootWindowStart += newNodes.length;
+      } else if (sort !== "old") {
+        this.#rootWindowIndicesStale = true;
+      }
+      return;
+    }
+
+    const ids = new Set(newNodes.map((node) => node.post.id));
+    const existingNodes = this.rootNodes.filter(
+      (node) => !ids.has(node.post.id)
+    );
+    // Newest-first puts a new root at the top and oldest-first at the very
+    // bottom; score-based sorts only know the real position server-side, so
+    // show it at the top and stop trusting the window's absolute indices.
+    const placeAtEnd = sort === "old" && !this.hasMoreRoots;
+    const outsideWindow = sort === "old" && this.hasMoreRoots;
+    const positionKnown =
+      sort === "new" || placeAtEnd || existingNodes.length === 0;
+    if (outsideWindow) {
+      this.#invalidateRootWindowState();
+      this.#rootWindowIndicesStale = true;
+      return;
+    }
+
+    const pinnedNodes = existingNodes.slice(0, this.pinnedRootCount);
+    const unpinnedNodes = existingNodes.slice(this.pinnedRootCount);
+    const combined = placeAtEnd
+      ? [...pinnedNodes, ...unpinnedNodes, ...newNodes]
+      : [...pinnedNodes, ...newNodes, ...unpinnedNodes];
+    // Live roots grow the window past the pages it was built from; one page of
+    // headroom bounds a busy topic. Trim the end away from the insertion point
+    // rather than dropping the roots that just arrived.
+    const capacity =
+      this.pinnedRootCount + (ROOT_WINDOW_PAGE_LIMIT + 1) * this.rootPageSize;
+    const overflow = Math.max(combined.length - capacity, 0);
+
+    this.rootNodes = placeAtEnd
+      ? combined.slice(overflow)
+      : combined.slice(0, combined.length - overflow);
+    if (placeAtEnd) {
+      this.rootWindowStart += overflow;
+    }
+    this.#absorbLiveRootsIntoWindow({
+      atStart: !placeAtEnd,
+      insertedCount: newNodes.length,
+    });
+    if (!positionKnown) {
+      this.#rootWindowIndicesStale = true;
+    }
+    this.hasMoreRoots = placeAtEnd
+      ? false
+      : overflow > 0 ||
+        this.rootCount == null ||
+        this.rootWindowStart + this.rootNodes.length < this.rootCount;
+  }
+
+  // The live roots land inside the rendered window rather than replacing it, so
+  // the page they fall into grows by their count. Server page boundaries shift
+  // by the same amount, which the next fetch resolves by de-duplicating.
+  #absorbLiveRootsIntoWindow({ atStart, insertedCount }) {
+    const descriptors = (this.rootWindowPages || []).map((descriptor) => ({
+      ...descriptor,
+    }));
+    if (descriptors.length === 0) {
+      descriptors.push({
+        page: this.page,
+        nodeCount: 0,
+        hasMoreRoots: this.hasMoreRoots,
+        rootPageSize: this.rootPageSize,
+        absoluteStart: this.rootWindowStart,
+      });
+    }
+
+    if (atStart) {
+      // Roots inserted at the head push every page already in hand further
+      // along the global axis; the page they joined still starts where it did.
+      for (const descriptor of descriptors.slice(1)) {
+        if (descriptor.absoluteStart != null) {
+          descriptor.absoluteStart += insertedCount;
+        }
+      }
+    }
+
+    let excess =
+      descriptors.reduce(
+        (count, descriptor) => count + descriptor.nodeCount,
+        0
+      ) - this.rootNodes.length;
+
+    if (excess <= 0) {
+      (atStart ? descriptors[0] : descriptors.at(-1)).nodeCount -= excess;
+      excess = 0;
+    } else {
+      // Walk in from the trimmed end, shrinking pages until the descriptors
+      // account for exactly what is rendered.
+      for (const descriptor of atStart
+        ? [...descriptors].reverse()
+        : descriptors) {
+        const removed = Math.min(descriptor.nodeCount, excess);
+        descriptor.nodeCount -= removed;
+        if (!atStart && descriptor.absoluteStart != null) {
+          descriptor.absoluteStart += removed;
+        }
+        excess -= removed;
+        if (excess === 0) {
+          break;
+        }
+      }
+    }
+
+    this.#invalidateRootWindowState();
+    const kept = descriptors.filter((descriptor) => descriptor.nodeCount > 0);
+    if (excess !== 0 || kept.length === 0) {
+      this.#rootWindowIndicesStale = true;
+      return;
+    }
+
+    this.rootWindowPages = kept;
+  }
+
+  #incrementRootCount(count) {
+    if (this.rootCount != null) {
+      this.rootCount += count;
     }
   }
 
