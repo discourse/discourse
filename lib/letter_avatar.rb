@@ -104,6 +104,7 @@ class LetterAvatar
         size:,
         profile_path: profile,
       )
+      FileHelper.optimize_image!(to)
     end
 
     def font_path
