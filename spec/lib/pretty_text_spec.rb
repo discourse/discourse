@@ -2736,6 +2736,34 @@ HTML
     end
   end
 
+  describe "links inside tables" do
+    it "keeps pipes inside complete links and images within their cells" do
+      cooked = PrettyText.cook <<~MD
+        | Kind | Content |
+        | --- | --- |
+        | Link | [x\\]y|z](https://example.com/link) |
+        | Destination | [destination](<https://example.com/a|b> 'title|value') |
+        | Image | ![rocket|large](https://example.com/rocket.png) |
+        | Reference | [ref|label][ref] |
+
+        [ref]: https://example.com/reference
+      MD
+
+      doc = Nokogiri::HTML5.fragment(cooked)
+      expect(doc.css("tbody tr").map { |row| row.css("td").map(&:text) }).to eq(
+        [["Link", "x]y|z"], %w[Destination destination], ["Image", ""], %w[Reference ref|label]],
+      )
+      expect(doc.css("tbody a").map { |link| [link.text, link["href"], link["title"]] }).to eq(
+        [
+          ["x]y|z", "https://example.com/link", nil],
+          %w[destination https://example.com/a%7Cb title|value],
+          ["ref|label", "https://example.com/reference", nil],
+        ],
+      )
+      expect(doc.at_css("tbody img")["alt"]).to eq("rocket|large")
+    end
+  end
+
   describe "upload decoding" do
     it "can decode upload:// for default setup" do
       set_cdn_url("https://cdn.com")
