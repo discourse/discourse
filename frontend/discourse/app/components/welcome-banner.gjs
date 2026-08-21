@@ -7,6 +7,7 @@ import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
+import getURL from "discourse/lib/get-url";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
@@ -276,7 +277,7 @@ export default class WelcomeBanner extends Component {
             <DButton
               @icon="magnifying-glass"
               @title="search.open_advanced"
-              @href="/search?expanded=true"
+              @href={{getURL "/search?expanded=true"}}
               class="search-icon"
             />
             <SearchMenu

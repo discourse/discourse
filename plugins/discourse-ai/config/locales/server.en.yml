@@ -479,6 +479,7 @@ en:
         native_tool_unsupported_by_llm: "The selected default LLM does not support one of the enabled provider-native tools"
         invalid_subagent_ids: "Subagent IDs must be a list of integers"
         too_many_subagents: "An agent can have at most %{max} subagents"
+        too_many_rag_document_sources: "An agent can have at most %{max} URL sources"
         subagent_self: "An agent cannot select itself as a subagent"
         subagents_not_found: "The selected subagent IDs do not exist: %{ids}"
         subagent_tool_collision: "An agent with subagents cannot configure a tool named spawn_agent"

@@ -157,7 +157,7 @@ body.wizard {
   box-shadow: 0 10px 30px light-dark(rgb(123, 95, 226, 0.15), transparent);
   box-sizing: border-box;
   border-radius: 16px;
-  padding: 3em;
+  padding: var(--space-8);
 
   @include viewport.until(md) {
     padding: 2em 1.5em;
@@ -180,7 +180,7 @@ body.wizard {
   }
 
   &__field {
-    margin-bottom: 2em;
+    margin-bottom: var(--space-4);
   }
 
   &__field.invalid input {
@@ -209,7 +209,7 @@ body.wizard {
 
   &__step-header {
     text-align: center;
-    margin-bottom: 3em;
+    margin-bottom: var(--space-8);
   }
 
   &__step-title {

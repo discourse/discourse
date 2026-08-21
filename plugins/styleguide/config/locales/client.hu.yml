@@ -13,6 +13,9 @@ hu:
   js:
     styleguide:
       title: "Stílus útmutató"
+      example:
+        kind:
+          component: "Összetevő"
       categories:
         syntax: Szintaxis
         atoms: Atomok
@@ -39,6 +42,8 @@ hu:
           title: "Színek"
         dialog:
           title: "Párbeszéd"
+        drag_and_drop:
+          locked: "Zárva"
         icons:
           title: "Ikonok"
           full_list: "A Font Awesome ikonok teljes listájának megtekintése"

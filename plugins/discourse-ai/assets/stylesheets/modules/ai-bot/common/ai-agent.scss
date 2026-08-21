@@ -612,6 +612,32 @@
   }
 }
 
+.rag-document-sources {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+
+  &__count,
+  &__remaining,
+  &__empty {
+    margin: 0;
+    color: var(--primary-medium);
+  }
+
+  &__list {
+    margin: 0;
+    padding-inline-start: 1.5em;
+  }
+
+  &__url {
+    overflow-wrap: anywhere;
+  }
+}
+
+.rag-document-sources-modal__urls {
+  width: 100%;
+}
+
 .rag-uploader {
   &__search-input {
     display: flex;

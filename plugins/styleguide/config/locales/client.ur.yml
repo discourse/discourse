@@ -18,6 +18,8 @@ ur:
         toggle_code: "کوڈ کا نمونہ دیکھیں"
         try_this: "اسے آزمائیں:"
         code_region: "ماخذ کا ٹکڑا: %{title}"
+        kind:
+          component: "جزو"
       categories:
         syntax: نحو
         atoms: ایٹم
