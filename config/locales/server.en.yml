@@ -1,4 +1,4 @@
-un:
+en:
   dates:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
