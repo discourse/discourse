@@ -73,6 +73,21 @@ class SidebarSection < ActiveRecord::Base
     end
   end
 
+  def apply_links_order!(ordered_linkable_ids)
+    order = ordered_linkable_ids.each_with_index.to_h
+    links = sidebar_section_links.reload.to_a
+    return if links.empty?
+
+    position_generator = (0..links.size * 2).excluding(links.map(&:position)).each
+
+    rows =
+      links
+        .sort_by { |link| order.fetch(link.linkable_id, order.size) }
+        .map { |link| link.attributes.merge(position: position_generator.next) }
+
+    sidebar_section_links.upsert_all(rows, update_only: [:position])
+  end
+
   private
 
   def sidebar_urls_count_within_limit
