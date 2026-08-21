@@ -4,6 +4,12 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import richEditorExtension from "../../lib/rich-editor-extension";
 
+function setCheckboxState(checkbox, checked) {
+  checkbox.classList.toggle("checked", checked);
+  checkbox.classList.toggle("fa-square-o", !checked);
+  checkbox.classList.toggle("fa-square-check-o", checked);
+}
+
 function initializePlugin(api) {
   const siteSettings = api.container.lookup("service:site-settings");
 
@@ -78,100 +84,44 @@ export function checklistSyntax(elem, postDecorator) {
     return;
   }
 
-  boxes.forEach((val, idx) => {
-    val.onclick = async (event) => {
-      const box = event.currentTarget;
-      const classList = box.classList;
+  boxes.forEach((box, index) => {
+    box.onclick = async (event) => {
+      const target = event.currentTarget;
+      const classList = target.classList;
 
       if (classList.contains("permanent") || classList.contains("readonly")) {
         return;
       }
 
-      const newValue = classList.contains("checked") ? "[ ]" : "[x]";
+      const wasChecked = classList.contains("checked");
+      setCheckboxState(target, !wasChecked);
+
       const template = document.createElement("template");
       template.innerHTML = iconHTML("spinner", {
         class: "fa-spin list-item-checkbox",
       });
-      box.insertAdjacentElement("afterend", template.content.firstChild);
-      box.classList.add("hidden");
-      boxes.forEach((e) => e.classList.add("readonly"));
+      const spinner = template.content.firstChild;
+      target.insertAdjacentElement("afterend", spinner);
+      target.classList.add("hidden");
+      boxes.forEach((b) => b.classList.add("readonly"));
 
       try {
-        const post = await ajax(`/posts/${postModel.id}`);
-        const blocks = [];
-
-        // Computing offsets where checkbox are not evaluated (i.e. inside
-        // code blocks).
-        [
-          // inline code
-          /`[^`\n]*\n?[^`\n]*`/gm,
-          // multi-line code
-          /^```[^]*?^```/gm,
-          // bbcode
-          /\[code\][^]*?\[\/code\]/gm,
-          // italic/bold
-          /_(?=\S).*?\S_/gm,
-          // strikethrough
-          /~~(?=\S).*?\S~~/gm,
-        ].forEach((regex) => {
-          let match;
-          while ((match = regex.exec(post.raw)) != null) {
-            blocks.push([match.index, match.index + match[0].length]);
-          }
+        await ajax("/checklist/toggle", {
+          type: "PUT",
+          data: {
+            post_id: postModel.id,
+            checkbox_index: index,
+            checkbox_count: boxes.length,
+            checked: !wasChecked,
+          },
         });
-
-        [
-          // italic/bold
-          /([^\[\n]|^)\*\S.+?\S\*(?=[^\]\n]|$)/gm,
-        ].forEach((regex) => {
-          let match;
-          while ((match = regex.exec(post.raw)) != null) {
-            // Simulate lookbehind - skip the first character
-            blocks.push([match.index + 1, match.index + match[0].length]);
-          }
-        });
-
-        // make the first run go to index = 0
-        let nth = -1;
-        let found = false;
-
-        const newRaw = post.raw.replace(
-          /\[( |x)?\]/gi,
-          (match, ignored, off) => {
-            if (found) {
-              return match;
-            }
-
-            // skip empty image URLs - "![](https://example.com/image.jpg)"
-            if (off > 0 && post.raw[off - 1] === "!") {
-              return match;
-            }
-
-            // skip escaped opening bracket - "\[x]"
-            if (off > 0 && post.raw[off - 1] === "\\") {
-              return match;
-            }
-
-            nth += blocks.every(
-              (b) => b[0] >= off + match.length || off > b[1]
-            );
-
-            if (nth === idx) {
-              found = true; // Do not replace any further matches
-              return newValue;
-            }
-
-            return match;
-          }
-        );
-
-        await postModel.save({ raw: newRaw });
       } catch (e) {
+        setCheckboxState(target, wasChecked);
         popupAjaxError(e);
       } finally {
-        boxes.forEach((e) => e.classList.remove("readonly"));
-        box.classList.remove("hidden");
-        box.parentElement.querySelector(".fa-spin").remove();
+        spinner.remove();
+        target.classList.remove("hidden");
+        boxes.forEach((b) => b.classList.remove("readonly"));
       }
     };
   });
