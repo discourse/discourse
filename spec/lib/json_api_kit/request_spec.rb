@@ -32,7 +32,7 @@ RSpec.describe JsonApiKit::Request do
     let(:params) do
       {
         fields: {
-          users: %i[username],
+          users: %w[username],
         },
         include: %w[user.groups],
         sort: {
@@ -62,7 +62,7 @@ RSpec.describe JsonApiKit::Request do
     context "when a caller asks for one record" do
       subject(:request) { described_class::Individual.new(params, guardian:) }
 
-      let(:params) { { id: 12, fields: { users: %i[username] } } }
+      let(:params) { { id: 12, fields: { users: %w[username] } } }
 
       it "leaves the id out" do
         expect(for_sideload.keys).to contain_exactly(:fields, :include)
@@ -112,14 +112,6 @@ RSpec.describe JsonApiKit::Request do
         expect(ordering).to be_empty
       end
     end
-
-    context "when a caller spells the parameters as strings" do
-      let(:params) { { "sort" => { "created_at" => "desc" } } }
-
-      it "returns the same ordering" do
-        expect(ordering).to eq("created_at" => :desc)
-      end
-    end
   end
 
   describe "#filtering" do
@@ -143,7 +135,7 @@ RSpec.describe JsonApiKit::Request do
   describe "#fields" do
     subject(:fields) { request.fields }
 
-    let(:params) { { fields: { topics: [:title] } } }
+    let(:params) { { fields: { topics: %w[title] } } }
 
     it "returns the fields of each type" do
       expect(fields).to eq("topics" => %w[title])

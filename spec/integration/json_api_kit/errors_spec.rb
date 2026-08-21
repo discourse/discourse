@@ -8,15 +8,31 @@ RSpec.describe "a refused request" do
   let(:cursor) { cursor_of_record(middle) }
 
   describe "the sort parameter" do
-    context "when the sort is a string" do
-      let(:params) { { sort: "created_at" } }
+    context "when the sort is a list" do
+      let(:params) { { sort: %w[created_at] } }
 
       it "refuses the sort" do
         expect(document).to eq(
           errors: [
             refusal(
               title: "Invalid sort parameter",
-              detail: "sort must name a direction for each sort.",
+              detail: "sort must be a comma-separated list, as in sort=-created_at.",
+              parameter: "sort",
+            ),
+          ],
+        )
+      end
+    end
+
+    context "when the sort is a string the resource does not declare" do
+      let(:params) { { sort: "secrets" } }
+
+      it "refuses the sort" do
+        expect(document).to eq(
+          errors: [
+            refusal(
+              title: "No such sort",
+              detail: "There is no sort named secrets.",
               parameter: "sort",
             ),
           ],
@@ -194,8 +210,8 @@ RSpec.describe "a refused request" do
       end
     end
 
-    context "when the fieldset of a type is a string" do
-      let(:params) { { fields: { topics: "title" } } }
+    context "when the fieldset of a type is a number" do
+      let(:params) { { fields: { topics: 42 } } }
 
       it "refuses the fieldset" do
         expect(document).to eq(

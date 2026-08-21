@@ -6,8 +6,27 @@ module JsonApiKit
       module Fields
         extend ActiveSupport::Concern
 
+        class FieldsType < IndifferentHashType
+          def cast_value(value)
+            super&.transform_values { fields(it) }
+          end
+
+          private
+
+          def fields(value)
+            case value
+            when String
+              value.split(",")
+            when Array
+              value.map(&:to_s)
+            else
+              value
+            end
+          end
+        end
+
         included do
-          attribute :fields, INDIFFERENT_HASH
+          attribute :fields, FieldsType.new
 
           validate :check_fields, if: -> { fields.present? }
         end

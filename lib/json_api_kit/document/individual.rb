@@ -7,7 +7,7 @@ module JsonApiKit
         def contract_class = Request::Contract::Individual
 
         def for(id, parameters, resource:, guardian:, urls:)
-          build(parameters, resource:, urls:) { resource.find(id, parameters, guardian:) }
+          build(parameters, resource:, urls:) { resource.find(id, it, guardian:) }
         end
       end
 
