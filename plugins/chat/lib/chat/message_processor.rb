@@ -5,12 +5,15 @@ module Chat
     include ::CookedProcessorMixin
     IMG_FILETYPES = %w[jpg jpeg gif png heic heif webp]
 
+    attr_reader :used_hotlinked_media_ids
+
     def initialize(chat_message, opts = {})
       @model = chat_message
       @previous_cooked = (chat_message.cooked || "").dup
       @should_secure_uploads = false
       @size_cache = {}
       @opts = opts
+      @used_hotlinked_media_ids = Set.new
 
       cook_opts = {
         user_id: chat_message.last_editor_id,
@@ -23,10 +26,32 @@ module Chat
 
     def run!
       post_process_oneboxes
+      process_hotlinked_images
       process_thumbnails
       post_process_videos
       add_lightbox_to_images
       DiscourseEvent.trigger(:chat_message_processed, @doc, @model)
+    end
+
+    # Unlike posts, chat keeps the hotlinked src when a download fails or is too large.
+    def process_hotlinked_image(img)
+      normalized_src =
+        Chat::MessageHotlinkedMedia.normalize_src(HotlinkedMedia.download_src_for(img))
+      info = hotlinked_media_map[normalized_src]
+      used_hotlinked_media_ids << info.id if info
+
+      if info&.downloaded? && (upload = info.upload)
+        img["src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+        img["data-base62-sha1"] = upload.base62_sha1
+        img["data-dominant-color"] = upload.dominant_color(calculate_if_missing: true).presence
+        img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
+      end
+
+      true
+    end
+
+    def process_hotlinked_images
+      extract_images.each { |img| process_hotlinked_image(img) }
     end
 
     def process_thumbnails
@@ -67,7 +92,7 @@ module Chat
         .css("img")
         .each do |img|
           if img["class"]&.include?("emoji") || img["class"]&.include?("avatar") ||
-               img["data-base62-sha1"].blank?
+               img["data-base62-sha1"].blank? || img.ancestors(".onebox, .onebox-body").any?
             next
           end
 
@@ -80,6 +105,10 @@ module Chat
             img["class"] = "#{img["class"]} lightbox".strip
           end
         end
+    end
+
+    def hotlinked_media_map
+      @hotlinked_media_map ||= @model.hotlinked_media.preload(:upload).index_by(&:url)
     end
 
     def large_images
