@@ -34,6 +34,10 @@ module DiscourseAi
           nil
         end
 
+        def rag_document_sources
+          []
+        end
+
         def force_default_llm
           false
         end

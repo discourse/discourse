@@ -3,28 +3,29 @@
 .ai-logs {
   padding: var(--space-4);
 
-  &__retention {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-    margin-bottom: var(--space-4);
-    padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
-    background: var(--primary-very-low);
-  }
-
-  &__retention-warning {
-    margin: 0;
-    color: var(--primary-high);
-  }
-
   &__filters {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
     margin-bottom: var(--space-4);
+
+    .d-filter-controls {
+      align-self: stretch;
+      margin-block: 0;
+    }
+
+    .d-filter-controls__dropdowns {
+      grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+    }
+  }
+
+  &__filter-panel {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: 1px solid var(--content-border-color);
   }
 
   &__periods,
@@ -35,29 +36,20 @@
     gap: var(--space-2);
   }
 
-  &__filter-grid {
+  &__specialized-filters {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    grid-template-columns: minmax(15rem, 1fr) repeat(2, auto);
     align-items: end;
-    width: 100%;
     gap: var(--space-2);
 
     > * {
       min-width: 0;
-    }
-
-    .d-select {
-      width: 100%;
     }
   }
 
   &__user-filter .select-kit {
     width: 100%;
     max-width: var(--form-kit-medium-input);
-
-    @include viewport.until(sm) {
-      max-width: 100%;
-    }
   }
 
   &__toggle {
@@ -72,7 +64,17 @@
     gap: var(--space-2);
 
     > .form-kit__field {
-      min-width: 10rem;
+      min-width: min(10rem, 100%);
+    }
+  }
+
+  @include viewport.until(sm) {
+    &__specialized-filters {
+      grid-template-columns: 1fr;
+    }
+
+    &__user-filter .select-kit {
+      max-width: 100%;
     }
   }
 
@@ -129,12 +131,21 @@
   }
 
   &__col-duration {
-    width: 7.5rem;
+    width: 10rem;
     text-align: end;
     font-variant-numeric: tabular-nums;
+  }
+
+  td.ai-logs__col-duration {
     white-space: nowrap;
   }
 
+  &__duration-heading {
+    white-space: nowrap;
+  }
+
+  &__duration-heading,
+  &__tokens-heading,
   &__duration-value,
   &__token-summary {
     display: block;
@@ -257,7 +268,7 @@
     }
 
     &__col-duration {
-      width: 6.5rem;
+      width: 9.5rem;
     }
 
     &__model {
@@ -265,13 +276,30 @@
     }
   }
 
-  @include viewport.until(md) {
+  @include viewport.until(lg) {
     &__table {
+      display: block;
       margin-bottom: 0;
+      table-layout: auto;
+
+      thead,
+      tbody {
+        display: block;
+      }
+
+      thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
     }
 
     &__row {
       display: grid;
+      width: 100%;
       grid-template-columns: auto 1fr auto;
       grid-template-areas:
         "outcome time actions"

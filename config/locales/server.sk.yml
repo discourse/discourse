@@ -4887,6 +4887,11 @@ sk:
       group: "Používatelia, ktorí nie sú v špecifikovaných skupinách, musia mať odpovede schválené personálom. Pozrite si %{link}."
       new_topics_unless_trust_level: "Používatelia s nízkou úrovňou dôvery musia mať témy schválené personálom. Pozri %{link}."
       fast_typer: "Nový používateľ napísal svoj prvý príspevok podozrivo rýchlo, podozrenie na správanie bota alebo spamera. Pozri %{link}."
+      fast_typer_time:
+        one: " %{count} sekundu"
+        few: "%{count} sekundy"
+        many: "%{count} sekúnd"
+        other: "%{count} sekúnd"
       auto_silence_regex: "Nový používateľ, ktorého prvý príspevok zodpovedá nastaveniu %{link} ."
       watched_word:
         one: "Tento príspevok obsahoval sledované slovo, označené slovo je: %{words}. Viac informácií nájdete na stránke %{link} ."

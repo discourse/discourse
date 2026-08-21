@@ -767,16 +767,22 @@ export default class Composer extends RestModel {
 
   @computed("privateMessage", "topicFirstPost", "topic.pm_with_non_human_user")
   get minimumPostLength() {
+    let length;
+
     if (this.topic?.pm_with_non_human_user) {
-      return 1;
+      length = 1;
     } else if (this.privateMessage) {
-      return this.siteSettings.min_personal_message_post_length;
+      length = this.siteSettings.min_personal_message_post_length;
     } else if (this.topicFirstPost) {
       // first post (topic body)
-      return this.siteSettings.min_first_post_length;
+      length = this.siteSettings.min_first_post_length;
     } else {
-      return this.siteSettings.min_post_length;
+      length = this.siteSettings.min_post_length;
     }
+
+    return applyValueTransformer("composer-minimum-post-length", length, {
+      composer: this,
+    });
   }
 
   @computed("title")

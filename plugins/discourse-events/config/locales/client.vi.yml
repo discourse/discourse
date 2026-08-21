@@ -30,9 +30,6 @@ vi:
           load_error: "Bạn đã rời khỏi buổi hội thảo (Webinar) hoặc không thể tải Zoom trên trang này."
           too_early: "Bạn có thể tham gia hội thảo khi gần đến giờ bắt đầu sự kiện"
           view_topic: "Xem bài viết về sự kiện này"
-          not_started_retrying:
-            other: "Buổi hội thảo chưa bắt đầu. Đang thử tham gia lại sau %{count} giây..."
-          not_started_trying_again: "Đang tiến hành tham gia lại buổi hội thảo..."
         chat:
           rsvp_to_event: "Đăng ký tham gia sự kiện để bắt đầu trò chuyện"
           rsvp_to_event_with_link: "Đăng ký <a href='%{url}'>tham gia sự kiện</a> để bắt đầu trò chuyện"

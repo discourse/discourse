@@ -128,8 +128,11 @@ export default class ChatMessageCollapser extends Component {
           : e.firstElementChild.href;
 
         link = escapeExpression(link);
+        const title = youtubeThumbnailOneboxPredicate(e)
+          ? i18n("chat.youtube")
+          : link;
         const header = trustHTML(
-          `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${link}</a>`
+          `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${title}</a>`
         );
         acc.push({ header, body: e.outerHTML, needsCollapser: true });
       } else {
@@ -258,6 +261,15 @@ function externalImageOnebox(e) {
 
 function imageOneboxPredicate(e) {
   return animatedImagePredicate(e) || externalImageOnebox(e);
+}
+
+function youtubeThumbnailOneboxPredicate(e) {
+  return (
+    externalImageOnebox(e) &&
+    e.firstElementChild.firstElementChild.classList.contains(
+      "youtube-thumbnail"
+    )
+  );
 }
 
 function hasImageOnebox(elements) {

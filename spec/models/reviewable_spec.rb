@@ -873,12 +873,14 @@ RSpec.describe Reviewable, type: :model do
 
     it "gets the bundles and actions for a reviewable" do
       actions = reviewable.actions_for(user.guardian)
-      expect(actions.bundles.map(&:id)).to eq(["approve_post", "#{reviewable.id}-reject-post"])
-      expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
-        ["approve_post"],
+      expect(actions.bundles.map(&:id)).to eq(
+        ["#{reviewable.id}-approve_post", "#{reviewable.id}-reject-post"],
       )
       expect(
-        actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }.actions.map(&:id),
+        actions.bundles.find { |b| b.bundle_id == "approve_post" }.actions.map(&:action_name),
+      ).to eq(["approve_post"])
+      expect(
+        actions.bundles.find { |b| b.bundle_id == "reject-post" }.actions.map(&:action_name),
       ).to eq(%w[reject_post revise_and_reject_post])
     end
 

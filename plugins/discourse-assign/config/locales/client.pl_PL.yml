@@ -7,6 +7,11 @@
 pl_PL:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            assign:
+              assign: "Przypisz lub usuń przypisanie tematów lub wpisów."
       site_settings:
         categories:
           discourse_assign: "Przypisanie Discourse"
@@ -217,10 +222,12 @@ pl_PL:
         "action:assign_topic": "Przypisz temat lub wpis"
         "action:check_assignment": "Sprawdź przypisanie"
         "trigger:assigned": "Przypisany"
+        "trigger:unassigned": "Nieprzypisany"
       node_descriptions:
         "action:assign_topic": "Przypisz lub usuń przypisanie tematu lub wpisu"
         "action:check_assignment": "Sprawdź, czy użytkownik lub grupa jest przypisany do tematu lub wpisu"
         "trigger:assigned": "Wyzwala się, gdy przypisany zostanie temat lub wpis"
+        "trigger:unassigned": "Wyzwala się, gdy temat lub wpis jest nieprzypisany"
       assign_topic:
         resource: "Zasób"
         resources:
@@ -243,5 +250,8 @@ pl_PL:
         post_id: "ID wpisu"
         assignee: "Przypisany"
       assigned:
+        topic_assignments_only: "Wyzwalaj tylko wtedy, gdy celem zadania jest temat, a nie pojedynczy wpis"
+        topic_assignments_only_description: "Tylko przypisania tematów"
+      unassigned:
         topic_assignments_only: "Wyzwalaj tylko wtedy, gdy celem zadania jest temat, a nie pojedynczy wpis"
         topic_assignments_only_description: "Tylko przypisania tematów"

@@ -14,6 +14,9 @@ fr:
     styleguide:
       title: "Guide de style"
       welcome: "Pour commencer, choisissez une section dans le menu de navigation."
+      example:
+        kind:
+          component: "Composant"
       categories:
         syntax: Syntaxe
         atoms: Atomes

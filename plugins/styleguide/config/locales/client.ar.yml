@@ -14,6 +14,9 @@ ar:
     styleguide:
       title: "دليل الأنماط"
       welcome: "للبدء، اختر قسمًا من قائمة التنقل."
+      example:
+        kind:
+          component: "المكوِّن"
       categories:
         syntax: بناء الجملة
         atoms: الذرّات (Atoms)
@@ -40,6 +43,8 @@ ar:
           title: "الألوان"
         dialog:
           title: "حوار"
+        drag_and_drop:
+          locked: "مغلق"
         icons:
           title: "الأيقونات"
           full_list: "طالِع قائمة أيقونات Font Awesome كاملةً"

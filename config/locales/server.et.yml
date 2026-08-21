@@ -1121,6 +1121,10 @@ et:
       disabled: "Välja lülitatud"
       medium: "Keskmine"
       high: "Kõrge"
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekund"
+        other: "%{count} sekundit"
     actions:
       agree:
         title: "Jah"

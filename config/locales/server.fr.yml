@@ -5466,6 +5466,9 @@ fr:
       group: "Les réponses des utilisateurs ne faisant pas partie des groupes spécifiés doivent être approuvées par un responsable. Voir %{link}."
       new_topics_unless_trust_level: "Les sujets créés par des utilisateurs dont le niveau de confiance est faible doivent être approuvés par un responsable. Voir %{link}."
       fast_typer: "Un nouvel utilisateur a écrit sa première publication avec une rapidité suspecte, comportement typique des bots et des spammeurs. Voir %{link}."
+      fast_typer_time:
+        one: "%{count} seconde"
+        other: "%{count} secondes"
       auto_silence_regex: "Nouvel utilisateur dont le premier message contient le motif textuel défini par le paramètre %{link}."
       watched_word:
         one: "Cette publication contient un mot surveillé : %{words}. Consultez le %{link} pour en savoir plus."

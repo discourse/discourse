@@ -190,6 +190,7 @@ he:
     discourse_workflows:
       nodes:
         "trigger:assigned": "מוקצה"
+        "trigger:unassigned": "לא מוקצה"
       assign_topic:
         resource: "משאב"
         resources:

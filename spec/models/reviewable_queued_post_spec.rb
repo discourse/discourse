@@ -444,13 +444,13 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
       it "includes actions" do
         actions = reviewable.actions_for(Guardian.new(admin))
-        action_ids = actions.to_a.map(&:id).map(&:to_s)
+        action_names = actions.to_a.map(&:action_name)
 
-        expect(action_ids).to include("approve_post")
-        expect(action_ids).to include("reject_post")
-        expect(action_ids).to include("revise_and_reject_post")
-        expect(action_ids).to include("delete_user")
-        expect(action_ids).to include("delete_user_block")
+        expect(action_names).to include("approve_post")
+        expect(action_names).to include("reject_post")
+        expect(action_names).to include("revise_and_reject_post")
+        expect(action_names).to include("delete_user")
+        expect(action_names).to include("delete_user_block")
       end
     end
   end

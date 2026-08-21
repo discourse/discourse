@@ -233,6 +233,14 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      copied: "Kopiert"
+      ai_decoded_transcript:
+        thinking: "Ich denke"
+        tool: "Tool"
+        arguments: "Argumente"
+        type: "Typ"
+        error: "Fehler"
+        response: "Antwort"
       post_image_captions:
         edit: "KI-Bildbeschriftung bearbeiten"
         title: "KI-Bildbeschriftung bearbeiten"
@@ -632,6 +640,7 @@ de:
         retry: "Erneut versuchen"
         apply: "Anwenden"
         all_models: "Alle Modelle"
+        all_features: "Alle Funktionen"
         successful: "Erfolgreich"
         failed: "Fehlgeschlagen"
         unknown: "Unbekannt"
@@ -653,6 +662,7 @@ de:
         cost: "Kosten"
         actions: "Aktionen"
         filters:
+          title: "Filter"
           period: "Zeitraum"
         periods:
           hour: "Letzte Stunde"

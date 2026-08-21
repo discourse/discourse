@@ -2306,6 +2306,10 @@ ro:
       high: "Ridicată"
     reasons:
       group: "Utilizatorii care nu fac parte din grupurile specificate trebuie să aibă răspunsurile aprobate de echipă. Vezi %{link}."
+      fast_typer_time:
+        one: "o secundă"
+        few: "%{count} secunde"
+        other: "%{count} de secunde"
       watched_word:
         one: "Această postare a inclus un cuvânt urmărit, cuvântul semnalat este: %{words}. Verifică %{link} pentru mai multe."
         few: "Această postare a inclus cuvinte urmărite, cuvintele semnalate sunt: %{words}. Verifică %{link} pentru mai multe."

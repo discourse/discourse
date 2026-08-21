@@ -1,5 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { click, fillIn, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ReviewableItem from "discourse/components/reviewable/item";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -22,6 +23,20 @@ function claimableReviewable(context, attrs = {}) {
       claimed_by: null,
       ...attrs,
     });
+}
+
+function plainReviewable(attrs = {}) {
+  return { id: 456, topic: null, reviewable_scores: [], ...attrs };
+}
+
+function editableReviewable(id) {
+  return plainReviewable({
+    id,
+    type: "ReviewableQueuedPost",
+    can_edit: true,
+    editable_fields: [{ id: "payload.title", type: "text" }],
+    payload: { title: "Original title" },
+  });
 }
 
 function publishClaim({ topicId = 123, claimed, automatic = false }) {
@@ -99,13 +114,7 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
 
   test("does not error when a claim is broadcast for a reviewable without a topic", async function (assert) {
     // e.g. ReviewableUser / a queued new topic have no associated topic object
-    const topiclessReviewable = {
-      id: 456,
-      type: "ReviewableUser",
-      topic: null,
-      reviewable_scores: [],
-      payload: { username: "flagged-user" },
-    };
+    const topiclessReviewable = plainReviewable({ type: "ReviewableUser" });
 
     await render(
       <template>
@@ -276,5 +285,76 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
     );
 
     assert.dom(".custom-reviewable").hasText("ReviewableCustomThing");
+  });
+
+  test("leaves edit mode when a different reviewable is passed in", async function (assert) {
+    const state = new (class {
+      @tracked reviewable = editableReviewable(1);
+    })();
+
+    await render(
+      <template><ReviewableItem @reviewable={{state.reviewable}} /></template>
+    );
+
+    await click(".reviewable-action.edit");
+
+    state.reviewable = editableReviewable(2);
+    await settled();
+
+    assert
+      .dom(".editable-fields")
+      .doesNotExist(
+        "does not carry the pending edit over to the new reviewable"
+      );
+  });
+
+  test("keeps a pending edit when the reviewable it belongs to is refreshed", async function (assert) {
+    const queuedPost = getOwner(this)
+      .lookup("service:store")
+      .createRecord("reviewable", editableReviewable(1));
+
+    await render(
+      <template><ReviewableItem @reviewable={{queuedPost}} /></template>
+    );
+
+    await click(".reviewable-action.edit");
+    await fillIn(".editable-field.payload-title input", "Edited first title");
+
+    queuedPost.setProperties({ version: 2 });
+    await settled();
+
+    assert
+      .dom(".editable-field.payload-title input")
+      .hasValue(
+        "Edited first title",
+        "an in-place refresh of the same reviewable keeps the pending edit"
+      );
+  });
+
+  test("goes back to the timeline tab when a different reviewable is passed in", async function (assert) {
+    const state = new (class {
+      @tracked reviewable = plainReviewable({ id: 1, type: "ReviewableUser" });
+    })();
+
+    await render(
+      <template><ReviewableItem @reviewable={{state.reviewable}} /></template>
+    );
+
+    await click(".d-nav-submenu__tabs .insights a");
+
+    assert
+      .dom(".d-nav-submenu__tabs .insights a")
+      .hasClass("active", "the insights tab is selected");
+    assert.dom(".review-insight").exists("the insights tab is mounted");
+
+    state.reviewable = plainReviewable({ id: 2, type: "ReviewableUser" });
+    await settled();
+
+    assert
+      .dom(".d-nav-submenu__tabs .timeline a")
+      .hasClass("active", "the new reviewable opens on its own timeline");
+    assert
+      .dom(".review-insight")
+      .doesNotExist("the previous reviewable's insights are torn down");
   });
 });

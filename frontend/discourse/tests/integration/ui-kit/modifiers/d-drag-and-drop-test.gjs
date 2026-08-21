@@ -3179,7 +3179,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
     });
 
-    test("getDropEffect decides the effect recorded against this target", async function (assert) {
+    test("a drop effect function decides the effect recorded against this target", async function (assert) {
       const effects = [];
       const copyEffect = () => "copy";
       const recordDrop = ({ location }) =>
@@ -3197,7 +3197,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           >src</div>
           <div
             id="tgt"
-            {{dDragAndDropTarget accepts="row" getDropEffect=copyEffect}}
+            {{dDragAndDropTarget accepts="row" dropEffect=copyEffect}}
           >tgt</div>
         </template>
       );
@@ -3210,6 +3210,37 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         effects,
         ["copy"],
         "the effect the target asked for is the one the drag carries for it"
+      );
+    });
+
+    test("a plain drop effect string is taken as is", async function (assert) {
+      const effects = [];
+      const recordDrop = ({ location }) =>
+        effects.push(location.current.dropTargets[0].dropEffect);
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              effectAllowed="copyMove"
+              onDrop=recordDrop
+            }}
+          >src</div>
+          <div
+            id="tgt"
+            {{dDragAndDropTarget accepts="row" dropEffect="copy"}}
+          >tgt</div>
+        </template>
+      );
+
+      await simulateDrag("#src", "#tgt", { dataTransfer: new DataTransfer() });
+
+      assert.deepEqual(
+        effects,
+        ["copy"],
+        "a fixed effect needs no function around it"
       );
     });
 

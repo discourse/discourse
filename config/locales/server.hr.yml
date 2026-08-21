@@ -2806,6 +2806,11 @@ hr:
       low: "Nizak"
       medium: "Srednji"
       high: "Visok"
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekunda"
+        few: "%{count} sekundi"
+        other: "%{count} sekundi"
     actions:
       agree:
         title: "Da"

@@ -8,6 +8,9 @@ ko:
   js:
     styleguide:
       title: "스타일 가이드"
+      example:
+        kind:
+          component: "구성 요소"
       categories:
         atoms: Atoms
         molecules: 분자

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import SiteTrafficExplorerDimensionLabel from "discourse/admin/components/site-traffic-explorer-dimension-label";
 import SiteTrafficExplorerPageviewCount from "discourse/admin/components/site-traffic-explorer-pageview-count";
+import { countryName } from "discourse/admin/lib/format-country";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
@@ -13,8 +14,13 @@ export default class SiteTrafficExplorerBreakdownModal extends Component {
 
   @action
   filterLabel(row) {
+    const label =
+      this.args.model.dimension === "countries"
+        ? countryName(row.value)
+        : row.label;
+
     return i18n("admin.site_traffic_explorer.filter_by", {
-      label: row.label,
+      label,
       count: row.pageviews,
     });
   }

@@ -1415,6 +1415,10 @@ bg:
       low: "Ниска"
       medium: "Среден"
       high: "Висок"
+    reasons:
+      fast_typer_time:
+        one: "%{count} секунда"
+        other: "%{count} секунди "
     actions:
       agree:
         title: "Да"

@@ -34,6 +34,11 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      copied: "Copiat"
+      ai_decoded_transcript:
+        type: "Tipus"
+        error: "Error"
+        response: "Reacció"
       ai_tool_approval:
         loading: "Carregant..."
         tool: "Acció"
@@ -129,6 +134,8 @@ ca:
         post_short: "Publicació %{id}"
         duration: "Duració"
         actions: "Accions"
+        filters:
+          title: "Filtres"
         periods:
           day: "Últimes 24 hores"
           week: "Els darrers 7 dies"

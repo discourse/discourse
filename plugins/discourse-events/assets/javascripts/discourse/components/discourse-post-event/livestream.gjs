@@ -82,10 +82,7 @@ export default class Livestream extends Component {
     {{#if this.show}}
       <section class="event__section event-livestream">
         {{#if this.isZoomLivestream}}
-          <LivestreamZoomEntry
-            @event={{@event}}
-            @onJoined={{this.preventCloak}}
-          />
+          <LivestreamZoomEntry @event={{@event}} />
         {{else if this.hasLivestreamOnebox}}
           {{#if this.videoAttributes}}
             <this.lazyVideo

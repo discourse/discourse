@@ -2326,6 +2326,12 @@ be:
       disabled: "Адключана"
     missing_version: "Вам трэба будзе падаць параметр версіі"
     conflict: "Быў абнаўленне канфлікт перашкаджае вам рабіць гэта."
+    reasons:
+      fast_typer_time:
+        one: "%{count} секунду"
+        few: "%{count}секунд"
+        many: "%{count}секунды"
+        other: "%{count}секунды"
     actions:
       agree:
         title: "ды"

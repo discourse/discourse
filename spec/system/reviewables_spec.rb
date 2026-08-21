@@ -73,6 +73,38 @@ describe "Reviewables" do
     end
   end
 
+  describe "when there are several flagged posts in the queue" do
+    fab!(:flagger) { Fabricate(:user, trust_level: TrustLevel[3]) }
+    fab!(:spammer_one, :user)
+    fab!(:spammer_two, :user)
+
+    it "confirms deletion of the author of the reviewable that was acted on" do
+      reviewables = {
+        spammer_one =>
+          PostActionCreator.spam(flagger, Fabricate(:post, user: spammer_one)).reviewable,
+        spammer_two =>
+          PostActionCreator.spam(flagger, Fabricate(:post, user: spammer_two)).reviewable,
+      }
+
+      visit("/review")
+
+      reviewables.each do |spammer, reviewable|
+        review_page.delete_user_from_reviewable(
+          reviewable,
+          "post-delete_user_block",
+          confirm: false,
+        )
+
+        expect(dialog).to have_content(
+          I18n.t("reviewables.actions.reject_user.block.confirm", username: spammer.username),
+        )
+
+        dialog.click_no
+        expect(dialog).to be_closed
+      end
+    end
+  end
+
   describe "when there is a queued post reviewable with a short post" do
     fab!(:short_queued_reviewable, :reviewable_queued_post)
 

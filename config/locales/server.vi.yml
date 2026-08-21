@@ -2785,6 +2785,8 @@ vi:
     reasons:
       post_count: "Một vài tút đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Thành viên mới nhập tút đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
+      fast_typer_time:
+        other: "%{count} giây"
     actions:
       agree:
         title: "Đồng ý"

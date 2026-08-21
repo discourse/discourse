@@ -314,30 +314,36 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize(from, to, width, height, opts = {})
-    optimize("resize", from, to, "#{width}x#{height}", opts)
+    optimize(:optimized_image_resize, from, to, "#{width}x#{height}", opts)
   end
 
   def self.crop(from, to, width, height, opts = {})
-    optimize("crop", from, to, "#{width}x#{height}", opts)
+    optimize(:optimized_image_crop, from, to, "#{width}x#{height}", opts)
   end
 
   def self.downsize(from, to, dimensions, opts = {})
-    optimize("downsize", from, to, dimensions, opts)
+    optimize(:optimized_image_downsize, from, to, dimensions, opts)
   end
 
-  def self.optimize(operation, from, to, dimensions, opts = {})
-    method_name = "#{operation}_instructions"
+  INSTRUCTION_METHODS = {
+    optimized_image_resize: :resize_instructions,
+    optimized_image_crop: :crop_instructions,
+    optimized_image_downsize: :downsize_instructions,
+  }.freeze
+  private_constant :INSTRUCTION_METHODS
 
-    instructions = public_send(method_name.to_sym, from, to, dimensions, opts)
-    convert_with(instructions, from, to, opts)
+  def self.optimize(operation, from, to, dimensions, opts = {})
+    instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
+    convert_with(instructions, from, to, opts, operation:)
   end
 
   MAX_PNGQUANT_SIZE = 500_000
   MAX_CONVERT_SECONDS = 20
 
-  def self.convert_with(instructions, from, to, opts = {})
+  def self.convert_with(instructions, from, to, opts = {}, operation:)
     ImageMagick.magick(
       *instructions,
+      operation:,
       read: [from],
       write: [File.dirname(to)],
       nice: 10,

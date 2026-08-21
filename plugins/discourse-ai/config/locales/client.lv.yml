@@ -34,6 +34,11 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      copied: "Nokopēts"
+      ai_decoded_transcript:
+        type: "Tips"
+        error: "Kļūda..."
+        response: "Atbilde"
       ai_tool_approval:
         loading: "Ielādē..."
         tool: "Darbība"

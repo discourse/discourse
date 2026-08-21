@@ -54,6 +54,29 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
     expect(assistant.stop_chain_on_pending_approval?).to eq(true)
   end
 
+  it "reconciles its code-managed RAG document sources" do
+    agent = AiAgent.find(-39)
+    stale_managed_source =
+      RagDocumentSource.create!(
+        target: agent,
+        url: "https://example.com/old-admin-guide",
+        managed: true,
+      )
+    unmanaged_source =
+      RagDocumentSource.create!(target: agent, url: "https://example.com/custom-admin-guide")
+
+    load Rails.root.join("plugins/discourse-ai/db/fixtures/agents/603_ai_agents.rb") # rubocop:disable Discourse/Plugins/UseRequireRelative
+
+    expect(
+      agent.reload.rag_document_sources.pluck(:url, :refresh_interval_hours, :managed),
+    ).to contain_exactly(
+      ["https://www.discourse.org/pricing", 24, true],
+      ["https://example.com/custom-admin-guide", 24, false],
+    )
+    expect(RagDocumentSource.exists?(stale_managed_source.id)).to eq(false)
+    expect(RagDocumentSource.exists?(unmanaged_source.id)).to eq(true)
+  end
+
   it "is only available to administrators" do
     load Rails.root.join("plugins/discourse-ai/db/fixtures/agents/603_ai_agents.rb") # rubocop:disable Discourse/Plugins/UseRequireRelative
 

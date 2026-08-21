@@ -13,6 +13,9 @@ ro:
   js:
     styleguide:
       title: "Ghid stilistic"
+      example:
+        kind:
+          component: "Componentă"
       categories:
         syntax: Sintaxă
         atoms: Atomi
@@ -33,6 +36,8 @@ ro:
           title: "Sistem corpuri de literă"
         colors:
           title: "Culori"
+        drag_and_drop:
+          locked: "Blocat"
         icons:
           title: "Pictograme"
           full_list: "Vezi lista completă a pictogramelor din Font Awesome"

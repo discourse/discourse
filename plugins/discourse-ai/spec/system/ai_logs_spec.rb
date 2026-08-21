@@ -63,41 +63,49 @@ RSpec.describe "AI logs admin page" do
     sign_in(admin)
   end
 
-  it "applies typed feature and ID filters" do
+  it "applies outcome, feature, and ID filters" do
+    Fabricate(:ai_api_audit_log, feature_name: "other-feature")
     ai_logs_page.visit
 
-    select I18n.t("js.discourse_ai.logs.failed"), from: I18n.t("js.discourse_ai.logs.outcome")
+    ai_logs_page.select_outcome(I18n.t("js.discourse_ai.logs.failed"))
     expect(ai_logs_page).to have_no_log(log)
 
-    select I18n.t("js.discourse_ai.logs.all_outcomes"), from: I18n.t("js.discourse_ai.logs.outcome")
+    ai_logs_page.select_outcome(I18n.t("js.discourse_ai.logs.all_outcomes"))
     expect(ai_logs_page).to have_log(log)
 
-    find("input[placeholder='#{I18n.t("js.discourse_ai.logs.feature_placeholder")}']").fill_in(
-      with: "missing-feature",
-    )
-    find("input[placeholder='#{I18n.t("js.discourse_ai.logs.feature_placeholder")}']").send_keys(
-      :enter,
-    )
+    configured_feature = DiscourseAi::Configuration::Feature.all.first.name
+    feature_select = find(".d-filter-controls__dropdown--feature")
+    expect(feature_select).to have_selector("option", text: configured_feature)
+    expect(feature_select).to have_selector("option", text: "system-test")
+    expect(feature_select).to have_selector("option", text: "other-feature")
+    ai_logs_page.select_feature("other-feature")
     expect(ai_logs_page).to have_no_log(log)
+
+    day_period = I18n.t("js.discourse_ai.logs.periods.day")
+    click_button day_period
+    expect(page).to have_css('button[aria-pressed="true"]', text: day_period)
 
     find("input[placeholder='#{I18n.t("js.discourse_ai.logs.id_placeholder")}']").fill_in(
       with: log.id,
     )
     find(".ai-logs__id-filter .btn", text: I18n.t("js.discourse_ai.logs.find")).click
+    expect(ai_logs_page).to have_no_log(log)
+    expect(page).to have_css('button[aria-pressed="true"]', text: day_period)
+
+    ai_logs_page.select_feature(log.feature_name)
     expect(ai_logs_page).to have_log(log)
   end
 
-  it "keeps focus in the feature input while typing" do
+  it "keeps focus in the ID input while typing" do
     ai_logs_page.visit
 
-    feature_input =
-      find("input[placeholder='#{I18n.t("js.discourse_ai.logs.feature_placeholder")}']")
-    feature_input.click
-    "abc".each_char { |char| feature_input.send_keys(char) }
+    id_input = find("input[placeholder='#{I18n.t("js.discourse_ai.logs.id_placeholder")}']")
+    id_input.click
+    "123".each_char { |character| id_input.send_keys(character) }
 
-    expect(feature_input.value).to eq("abc")
+    expect(id_input.value).to eq("123")
     expect(page.evaluate_script("document.activeElement.placeholder")).to eq(
-      I18n.t("js.discourse_ai.logs.feature_placeholder"),
+      I18n.t("js.discourse_ai.logs.id_placeholder"),
     )
   end
 
@@ -117,10 +125,65 @@ RSpec.describe "AI logs admin page" do
     expect(ai_logs_page).to have_no_log(log)
   end
 
-  it "lets an admin inspect a raw log and open retention configuration" do
+  it "filters by a seeded model from selection and a shareable URL" do
+    seeded_model = Fabricate(:seeded_model, id: -1)
+    seeded_log =
+      Fabricate(:ai_api_audit_log, llm_model: seeded_model, language_model: seeded_model.name)
+
+    ai_logs_page.visit
+    ai_logs_page.select_model(seeded_model.display_name)
+
+    expect(ai_logs_page).to have_log(seeded_log)
+    expect(ai_logs_page).to have_no_log(log)
+    expect(page).to have_current_path(/model=-1/, url: true)
+
+    ai_logs_page.visit("model=-1")
+
+    expect(ai_logs_page.filter_value(:model)).to eq("-1")
+    expect(ai_logs_page).to have_log(seeded_log)
+    expect(ai_logs_page).to have_no_log(log)
+  end
+
+  it "clears shared and specialized filters" do
     ai_logs_page.visit
 
+    ai_logs_page.select_model(llm_model.display_name)
+    click_button I18n.t("js.discourse_ai.logs.periods.day")
+    expect(page).to have_current_path(/model=#{llm_model.id}/, url: true)
+    expect(page).to have_current_path(/period=day/, url: true)
+
+    ai_logs_page.clear_filters
+    expect(page).to have_current_path(%r{/ai-logs$}, url: true)
+    expect(page).to have_css(".d-filter-controls__dropdown--outcome:focus")
     expect(ai_logs_page).to have_log(log)
+
+    click_button I18n.t("js.discourse_ai.logs.periods.day")
+    ai_logs_page.clear_filters
+    expect(page).to have_current_path(%r{/ai-logs$}, url: true)
+  end
+
+  it "lets an admin inspect a raw log and open retention configuration" do
+    ai_logs_page.visit
+    expect(ai_logs_page).to have_log(log)
+    expect(page).to have_no_css(".d-filter-controls__input")
+    expect(page).to have_no_css(".d-filter-controls__toggle-filters")
+    expect(page).to have_no_css(".d-filter-controls__reset")
+    expect(page).to have_css(
+      ".ai-logs__filter-panel",
+      text: I18n.t("js.discourse_ai.logs.filters.title"),
+    )
+    expect(ai_logs_page).to have_expanded_filter_dropdowns
+    expect(page).to have_no_css(".ai-logs__retention")
+    expect(page).to have_button(I18n.t("js.discourse_ai.logs.retention.configure"))
+    expect(page).to have_button(I18n.t("js.discourse_ai.logs.refresh"))
+    expect(page).to have_css(
+      ".ai-logs__duration-heading",
+      text: I18n.t("js.discourse_ai.logs.duration"),
+    )
+    expect(page).to have_css(
+      ".ai-logs__tokens-heading",
+      text: I18n.t("js.discourse_ai.logs.tokens_direction"),
+    )
 
     ai_logs_page.open_log(log)
     expect(ai_logs_page).to have_payload("Inspect this request")

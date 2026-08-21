@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
+import getURL from "discourse/lib/get-url";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { eq } from "discourse/truth-helpers";
@@ -170,7 +171,7 @@ export default class VoteButton extends Component {
                       count=this.currentUser.votes_left
                       max=this.currentUser.vote_limit
                     }}
-                    @href="/my/activity/votes"
+                    @href={{getURL "/my/activity/votes"}}
                     @icon="check-to-slot"
                     class="btn-transparent see-votes topic-voting-menu__row-btn"
                   />

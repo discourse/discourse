@@ -190,6 +190,13 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      copied: "הועתק"
+      ai_decoded_transcript:
+        tool: "כלי"
+        arguments: "ארגומנטים"
+        type: "סוג"
+        error: "תקלה"
+        response: "תשובה"
       discourse_workflows:
         ai_agent:
           mode: "מצב"
@@ -441,6 +448,7 @@ he:
         retry: "ניסיון נוסף"
         apply: "החלה"
         all_models: "כל המודלים"
+        all_features: "כל היכולות"
         successful: "הצליח"
         failed: "נכשל"
         unknown: "לא ידוע"
@@ -461,6 +469,8 @@ he:
         duration: "משך"
         cost: "עלות"
         actions: "פעולות"
+        filters:
+          title: "מסננים"
         periods:
           hour: "השעה האחרונה"
           day: "24 השעות האחרונות"

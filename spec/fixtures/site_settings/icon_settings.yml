@@ -2,3 +2,13 @@ category:
   reaction_flair:
     type: icon
     default: ""
+  reaction_list:
+    type: objects
+    default: []
+    schema:
+      name: reaction
+      properties:
+        name:
+          type: string
+        icon:
+          type: icon

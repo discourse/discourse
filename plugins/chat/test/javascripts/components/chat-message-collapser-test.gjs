@@ -24,6 +24,10 @@ const externalImageCooked =
   '<p><a href="http://cat2.com" class="onebox"><img src="/images/d-logo-sketch-small.png" width=8" height="8"></img></a></p>' +
   "<p>and even more</p>";
 
+const youtubeFallbackCooked =
+  '<p><a href="https://img.youtube.com/vi/vljEH7bMe1c/maxresdefault.jpg" class="onebox"><img class="youtube-thumbnail onebox" src="https://img.youtube.com/vi/vljEH7bMe1c/maxresdefault.jpg"></a></p>' +
+  '<iframe src="https://www.youtube.com/embed/vljEH7bMe1c" class="youtube-onebox"></iframe>';
+
 const imageCooked =
   "<p>written text</p>" +
   '<p><img src="/images/avatar.png" alt="shows alt" width="8" height="8"></p>' +
@@ -194,6 +198,18 @@ module("Component | chat message collapser images", function (hooks) {
     );
 
     assert.dom(".chat-message-collapser-link-small").includesText("2 files");
+  });
+
+  test("labels a fallback youtube thumbnail without exposing its URL", async function (assert) {
+    this.set("cooked", youtubeFallbackCooked);
+
+    await render(
+      <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
+    );
+
+    assert
+      .dom(".chat-message-collapser-link-small")
+      .hasText("YouTube", "the fallback thumbnail has a readable label");
   });
 
   test("collapses and expands images", async function (assert) {
