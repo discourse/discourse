@@ -68,13 +68,39 @@ export default class AiBotHeaderIcon extends Component {
           @name="ai-bot-header-icon"
           @outletArgs={{lazyHash onClick=this.onClick icon=this.icon}}
         >
-          <DButton
-            @href={{this.href}}
-            @action={{unless this.href this.onClick}}
-            @icon={{this.icon}}
-            title={{this.title}}
-            class="ai-bot-button icon btn-flat"
-          />
+          {{#if this.clickShouldRouteOutOfConversations}}
+            <DButton
+              @href={{this.href}}
+              @action={{unless this.href this.onClick}}
+              @icon={{this.icon}}
+              title={{this.title}}
+              class="ai-bot-button icon btn-flat"
+            />
+          {{else}}
+            {{! Each piece of the icon is referenced separately so the mouth
+                marks are an element in this document rather than inside a
+                <use> shadow tree, which nothing outside can style. The paths
+                still come from the sprite, so the icon has one definition. }}
+            <DButton
+              @href={{this.href}}
+              @action={{unless this.href this.onClick}}
+              title={{this.title}}
+              class="ai-bot-button icon btn-flat ai-bot-button--yapping"
+            >
+              <svg
+                class="fa d-icon d-icon-far-discobot svg-icon svg-string"
+                viewBox="-25.47 -20.82 509.37 416.46"
+                width="1em"
+                height="1em"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <use href="#far-discobot-bubble" />
+                <use href="#far-discobot-eye" />
+                <use href="#far-discobot-marks" class="ai-bot-yap-marks" />
+              </svg>
+            </DButton>
+          {{/if}}
         </PluginOutlet>
       </li>
     {{/if}}

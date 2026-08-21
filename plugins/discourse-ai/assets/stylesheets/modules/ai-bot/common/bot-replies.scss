@@ -199,3 +199,34 @@ span.onebox-ai-llm-title {
   padding: 0;
   border-bottom: none;
 }
+
+// The bot icon's mouth marks blink in a "yap yap, pause" rhythm. The three
+// pieces are referenced from the sprite individually so this element exists
+// in the document; styling into a <use> shadow tree is not possible.
+.ai-bot-button--yapping .ai-bot-yap-marks {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ai-bot-yap 1.5s steps(1) infinite;
+  }
+}
+
+@keyframes ai-bot-yap {
+  0%,
+  12% {
+    opacity: 1;
+  }
+
+  12.01%,
+  24% {
+    opacity: 0;
+  }
+
+  24.01%,
+  36% {
+    opacity: 1;
+  }
+
+  36.01%,
+  100% {
+    opacity: 0;
+  }
+}
