@@ -48,6 +48,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
   test("actions all topics can perform", async function (assert) {
     this.currentUser.admin = true;
+    this.currentUser.can_delete_all_posts_and_topics = true;
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
     await render(
@@ -143,7 +144,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       .doesNotExist();
   });
 
-  test("does not allow deleting topics if user is not staff", async function (assert) {
+  test("does not allow deleting topics if the user cannot delete all posts and topics", async function (assert) {
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
     await render(
@@ -156,6 +157,22 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
       .doesNotExist();
+  });
+
+  test("allows deleting topics for a non-staff user who can delete all posts and topics", async function (assert) {
+    this.currentUser.can_delete_all_posts_and_topics = true;
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{this.bulkSelectHelper}} />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
+      .exists();
   });
 
   test("does not allow unlisting or relisting PM topics", async function (assert) {
@@ -298,6 +315,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
   test("the delete description does not claim the deletion is permanent", async function (assert) {
     this.currentUser.admin = true;
+    this.currentUser.can_delete_all_posts_and_topics = true;
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
     await render(
