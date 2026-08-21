@@ -82,21 +82,17 @@ static void report_vips_error(void) {
   report_error(message && message[0] ? message : "libvips error");
 }
 
-static void set_loader_block(const char *name, gboolean blocked) {
-  vips_operation_block_set(name, blocked);
-}
-
 static void block_loaders(void) {
   vips_block_untrusted_set(TRUE);
-  set_loader_block("VipsForeignLoad", TRUE);
-  set_loader_block("VipsForeignLoadMagick", TRUE);
-  set_loader_block("VipsForeignLoadMagick6", TRUE);
-  set_loader_block("VipsForeignLoadMagick7", TRUE);
+  vips_operation_block_set("VipsForeignLoad", TRUE);
+  vips_operation_block_set("VipsForeignLoadMagick", TRUE);
+  vips_operation_block_set("VipsForeignLoadMagick6", TRUE);
+  vips_operation_block_set("VipsForeignLoadMagick7", TRUE);
 }
 
 static void allow_loader_family(const char *base, const char *file) {
-  set_loader_block(base, FALSE);
-  set_loader_block(file, FALSE);
+  vips_operation_block_set(base, FALSE);
+  vips_operation_block_set(file, FALSE);
 }
 
 static void allow_dominant_color_loaders(void) {
@@ -125,17 +121,12 @@ static int initialize_vips(const char *program) {
   return 0;
 }
 
-static int save_png(VipsImage *image, const char *output, int compression) {
-  return vips_pngsave(image, output, "compression", compression, NULL);
-}
-
 static unsigned char quantize_sample(double value, double sample_max) {
   value = fmin(sample_max, fmax(0.0, value));
   return (unsigned char)floor(value * 255.0 / sample_max + 0.5);
 }
 
-static int command_version(options_t *options) {
-  (void)options;
+static int command_version(void) {
   printf("%d.%d.%d\n", vips_version(0), vips_version(1), vips_version(2));
   return 0;
 }
@@ -191,24 +182,17 @@ static int command_letter_avatar(options_t *options) {
                           flattened_background, NULL);
   }
   if (result == 0) {
-    result = save_png(flattened, output, 6);
+    result = vips_pngsave(flattened, output, "compression", 6, NULL);
   }
   if (result != 0) {
     report_vips_error();
-    VIPS_UNREF(text);
-    VIPS_UNREF(canvas);
-    VIPS_UNREF(flattened);
-    VipsArrayDouble_unref(canvas_background);
-    VipsArrayDouble_unref(flattened_background);
-    return 1;
   }
-
   VIPS_UNREF(text);
   VIPS_UNREF(canvas);
   VIPS_UNREF(flattened);
   VipsArrayDouble_unref(canvas_background);
   VipsArrayDouble_unref(flattened_background);
-  return 0;
+  return result == 0 ? 0 : 1;
 }
 
 static int command_resize_letter_avatar(options_t *options) {
@@ -372,18 +356,14 @@ static int command_topic_og(options_t *options) {
     result = vips_flatten(svg, &flattened, NULL);
   }
   if (result == 0) {
-    result = save_png(flattened, output, 9);
+    result = vips_pngsave(flattened, output, "compression", 9, NULL);
   }
   if (result != 0) {
     report_vips_error();
-    VIPS_UNREF(svg);
-    VIPS_UNREF(flattened);
-    return 1;
   }
-
   VIPS_UNREF(svg);
   VIPS_UNREF(flattened);
-  return 0;
+  return result == 0 ? 0 : 1;
 }
 
 int main(int argc, char **argv) {
@@ -402,7 +382,7 @@ int main(int argc, char **argv) {
   const char *command = argv[1];
   int result;
   if (strcmp(command, "version") == 0) {
-    result = command_version(&options);
+    result = command_version();
   } else if (strcmp(command, "letter-avatar") == 0) {
     result = command_letter_avatar(&options);
   } else if (strcmp(command, "resize-letter-avatar") == 0) {
