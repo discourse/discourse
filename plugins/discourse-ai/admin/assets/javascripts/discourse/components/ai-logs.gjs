@@ -65,7 +65,6 @@ export default class AiLogs extends Component {
   @tracked unattributed = false;
   @tracked startDate;
   @tracked endDate;
-  @tracked drawerExpanded = true;
   @tracked newLogsCount = 0;
   @tracked loadingNewLogs = false;
   keyValueStore = new KeyValueStore("discourse-ai-logs");
@@ -90,7 +89,6 @@ export default class AiLogs extends Component {
     this.models = this.args.model.models || [];
     this.features = this.mergedFeatures(this.args.model.features, this.logs);
     this.initializeFilters(this.args.queryParams);
-    this.drawerExpanded = this.rememberedDrawerExpanded;
     this.schedulePoll();
 
     if (this.args.queryParams.details) {
@@ -240,19 +238,15 @@ export default class AiLogs extends Component {
 
   @action
   persistDrawerState(expanded) {
-    this.drawerExpanded = expanded;
     this.keyValueStore.set({
       key: "filter_drawer",
       value: expanded ? "expanded" : "collapsed",
     });
   }
 
-  get hasHiddenActiveDropdownFilters() {
-    return (
-      !this.drawerExpanded &&
-      Boolean(
-        this.selectedOutcome || this.selectedModel || this.selectedFeature
-      )
+  get hasActiveDropdownFilters() {
+    return Boolean(
+      this.selectedOutcome || this.selectedModel || this.selectedFeature
     );
   }
 
@@ -729,8 +723,8 @@ export default class AiLogs extends Component {
       <div
         class="ai-logs__filters
           {{if
-            this.hasHiddenActiveDropdownFilters
-            'ai-logs__filters--active-hidden'
+            this.hasActiveDropdownFilters
+            'ai-logs__filters--active-dropdowns'
           }}"
       >
         <DFilterControls

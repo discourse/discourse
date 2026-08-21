@@ -199,39 +199,16 @@ RSpec.describe "AI logs admin page" do
     end
 
     ai_logs_page.select_model(llm_model.display_name)
-    expect(page).to have_no_css(".ai-logs__filters--active-hidden")
+    expect(page).to have_css(".ai-logs__filters--active-dropdowns")
+    expect(ai_logs_page).to have_no_tinted_filter_toggle
 
     find(".d-filter-controls__toggle-filters").click
     expect(page).to have_no_css(".ai-logs .d-filter-controls__dropdown")
-    expect(page).to have_css(".ai-logs__filters--active-hidden")
-
-    colors = page.evaluate_script(<<~JS)
-      (() => {
-        const icon = document.querySelector(
-          ".ai-logs .d-filter-controls__toggle-filters .d-icon"
-        );
-        const probe = (color) => {
-          const el = document.createElement("span");
-          el.style.color = `var(${color})`;
-          document.body.appendChild(el);
-          const result = getComputedStyle(el).color;
-          el.remove();
-          return result;
-        };
-        return {
-          icon: getComputedStyle(icon).color,
-          tertiary: probe("--tertiary"),
-          tertiaryHover: probe("--tertiary-hover"),
-        };
-      })()
-    JS
-    # the pointer may linger on the just-clicked toggle, so the icon can show
-    # the hover variant; either state proves the custom property is overridden
-    expect([colors["tertiary"], colors["tertiaryHover"]]).to include(colors["icon"])
+    expect(ai_logs_page).to have_tinted_filter_toggle
 
     find(".d-filter-controls__toggle-filters").click
     expect(page).to have_css(".ai-logs .d-filter-controls__dropdown", count: 3)
-    expect(page).to have_no_css(".ai-logs__filters--active-hidden")
+    expect(ai_logs_page).to have_no_tinted_filter_toggle
   end
 
   it "restores model and period filters from the URL" do

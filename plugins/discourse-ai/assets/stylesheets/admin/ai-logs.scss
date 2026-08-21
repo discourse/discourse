@@ -10,7 +10,9 @@
   &__filters {
     margin-bottom: var(--space-4);
 
-    &.ai-logs__filters--active-hidden .d-filter-controls__toggle-filters {
+    &.ai-logs__filters--active-dropdowns
+      .d-filter-controls:not(:has(.d-filter-controls__dropdowns))
+      .d-filter-controls__toggle-filters {
       --d-button-default-icon-color: var(--tertiary);
       --d-button-default-icon-color--hover: var(--tertiary-hover);
     }
