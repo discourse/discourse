@@ -234,6 +234,7 @@ task "db:migrate" => %w[
        load_config
        environment
        set_locale
+       discourse_vips:compile
        assets:precompile:asset_processor
        assets:precompile:pretty_text
      ] do |_, args|

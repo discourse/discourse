@@ -16,15 +16,17 @@ class LetterAvatar
   end
 
   # BUMP UP if avatar algorithm changes
-  VERSION = 5
+  VERSION = 6
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
-  POINTSIZE = 280
+  FONT_FILENAME = "NotoSans-Regular.woff2"
+  MACOS_FONT_PATH = "/System/Library/Fonts/Helvetica.ttc"
+  private_constant :FONT_FILENAME, :MACOS_FONT_PATH
 
   class << self
     def version
-      "#{VERSION}_#{image_magick_version}"
+      "#{VERSION}_#{vips_version}"
     end
 
     def cache_path
@@ -47,10 +49,7 @@ class LetterAvatar
         fullsize = fullsize_path(identity)
         generate_fullsize(identity) if !cache || !File.exist?(fullsize)
 
-        # Optimizing here is dubious, it can save up to 2x for large images (eg 359px)
-        # BUT... we are talking 2400 bytes down to 1200 bytes, both fit in one packet
-        # The cost of this is huge, its a 40% perf hit
-        OptimizedImage.resize(fullsize, filename, size, size)
+        resize(fullsize, filename, size)
 
         filename
       end
@@ -67,60 +66,21 @@ class LetterAvatar
     end
 
     def generate_fullsize(identity)
-      color = identity.color
-      letter = identity.letter
-
       filename = fullsize_path(identity)
-
-      # Use NimbusSans-Regular, except for macOS where it is unavailable, use Helvetica there
-      font = RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "NimbusSans-Regular"
-      # and adjust vertical offset accordingly
-      vertical_offset = font == "Helvetica" ? 26 : 34
-
-      instructions = %W[
-        -size
-        #{FULLSIZE}x#{FULLSIZE}
-        xc:#{to_rgb(color)}
-        -pointsize
-        #{POINTSIZE}
-        -fill
-        #FFFFFFCC
-        -font
-        #{font}
-        -gravity
-        Center
-        -annotate
-        -0+#{vertical_offset}
-        #{letter}
-        -depth
-        8
-        #{filename}
-      ]
-
-      ImageMagick.magick(
-        *instructions,
-        operation: :letter_avatar_render,
-        write: [File.dirname(filename)],
+      DiscourseVips.generate_letter_avatar(
+        letter: identity.letter,
+        background_color: identity.color,
+        font_path:,
+        output_path: filename,
       )
-
-      ## do not optimize image, it will end up larger than original
       filename
     end
 
-    def to_rgb(color)
-      r, g, b = color
-      "rgb(#{r},#{g},#{b})"
-    end
+    def vips_version
+      return @vips_version if @vips_version
 
-    def image_magick_version
-      @image_magick_version ||=
-        Digest::MD5.hexdigest(
-          ImageMagick.magick("--version", operation: :letter_avatar_version) << ImageMagick.magick(
-            "-list",
-            "font",
-            operation: :letter_avatar_font_list,
-          ),
-        )
+      @vips_version =
+        Digest::MD5.hexdigest([VERSION.to_s, DiscourseVips.version, font_version].join("\0"))
     end
 
     def cleanup_old
@@ -133,6 +93,32 @@ class LetterAvatar
         end
     rescue Errno::ENOENT
       # no worries, folder doesn't exists
+    end
+
+    private
+
+    def resize(from, to, size)
+      profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
+      DiscourseVips.resize_letter_avatar(
+        input_path: from,
+        output_path: to,
+        size:,
+        profile_path: profile,
+      )
+      FileHelper.optimize_image!(to)
+    end
+
+    def font_path
+      @font_path ||=
+        macos? ? MACOS_FONT_PATH : File.join(DiscourseFonts.path_for_fonts, FONT_FILENAME)
+    end
+
+    def font_version
+      Digest::MD5.file(font_path).hexdigest
+    end
+
+    def macos?
+      RbConfig::CONFIG["host_os"].match?(/darwin/i)
     end
   end
 

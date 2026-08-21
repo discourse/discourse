@@ -10,7 +10,6 @@ class Upload < ActiveRecord::Base
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX = %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
-  DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
   # the maximum length of a base62 encoded sha1
   MAX_BASE62_SHA1_LENGTH = 27
 
@@ -396,33 +395,8 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          data =
-            ImageMagick.magick(
-              local_path,
-              "-depth",
-              "8",
-              "-resize",
-              "1x1",
-              "-define",
-              "histogram:unique-colors=true",
-              "-format",
-              "%c",
-              "histogram:info:",
-              operation: :upload_dominant_color,
-              read: [local_path],
-              nice: 10,
-              timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
-            )
-
-          # Output format:
-          # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
-
-          color = data[/#([0-9A-F]{6})/, 1]
-
-          raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
-
-          color
-        rescue Discourse::Utils::CommandError
+          DiscourseVips.dominant_color(input_path: local_path)
+        rescue DiscourseVips::Error
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation
