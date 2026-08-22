@@ -20,9 +20,7 @@ export default apiInitializer((api) => {
 
       const group = el.dataset.group;
       if (!group) {
-        throw new Error(
-          "Group timezone element is missing 'data-group' attribute"
-        );
+        return;
       }
 
       helper.renderGlimmer(el, GroupTimezonesShim, {

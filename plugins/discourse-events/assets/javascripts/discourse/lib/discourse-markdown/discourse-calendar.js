@@ -9,8 +9,14 @@ const calendarRule = {
     mainCalendarDivToken.attrs = [
       ["class", "calendar"],
       ["data-calendar-type", info.attrs.type || "dynamic"],
-      ["data-calendar-default-timezone", info.attrs.defaultTimezone],
     ];
+
+    if (info.attrs.defaultTimezone) {
+      mainCalendarDivToken.attrs.push([
+        "data-calendar-default-timezone",
+        info.attrs.defaultTimezone,
+      ]);
+    }
 
     if (info.attrs.defaultView) {
       mainCalendarDivToken.attrs.push([
@@ -58,9 +64,12 @@ const groupTimezoneRule = {
     const wrapperDivToken = state.push("div_group_timezones", "div", 1);
     wrapperDivToken.attrs = [
       ["class", "group-timezones"],
-      ["data-group", info.attrs.group],
       ["data-size", info.attrs.size || "medium"],
     ];
+
+    if (info.attrs.group) {
+      wrapperDivToken.attrs.push(["data-group", info.attrs.group]);
+    }
   },
 
   after: function (state) {
