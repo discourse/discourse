@@ -294,6 +294,10 @@ class DiscoursePluginRegistry
     modifiers_for_name.delete_at(i)
   end
 
+  def self.modifiers_registered?(name)
+    @modifiers&.[](name).present?
+  end
+
   def self.apply_modifier(name, arg, *more_args)
     return arg if !@modifiers
 
