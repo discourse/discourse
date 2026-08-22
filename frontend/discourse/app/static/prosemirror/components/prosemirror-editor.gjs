@@ -241,6 +241,11 @@ export default class ProsemirrorEditor extends Component {
           }
         },
         drop: (view, event) => {
+          // A drag started here is a move, even though it also carries a file.
+          if (view.dragging) {
+            return;
+          }
+
           if (
             [...event.dataTransfer.items].some((item) => item.kind === "file")
           ) {

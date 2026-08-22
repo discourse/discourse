@@ -60,6 +60,7 @@ export default class UppyComposerUpload {
 
   #uploadTargetBound = false;
   #userCancelled = false;
+  #draggingFromEditor = false;
 
   #fileInputEl;
   #editorEl;
@@ -111,6 +112,15 @@ export default class UppyComposerUpload {
       capture: true,
     });
 
+    this.#editorEl?.removeEventListener("dragstart", this._dragStartListener, {
+      capture: true,
+    });
+    this.#editorEl?.removeEventListener("dragend", this._dragEndListener, {
+      capture: true,
+    });
+    this.#editorEl?.removeEventListener("drop", this._dropListener);
+    this.#draggingFromEditor = false;
+
     this.appEvents.off(`${this.composerEventPrefix}:add-files`, this._addFiles);
     this.appEvents.off(
       `${this.composerEventPrefix}:cancel-upload`,
@@ -155,6 +165,18 @@ export default class UppyComposerUpload {
     this.#editorEl.addEventListener("paste", this._pasteEventListener, {
       capture: true,
     });
+
+    this.#draggingFromEditor = false;
+    this.#editorEl.addEventListener("dragstart", this._dragStartListener, {
+      capture: true,
+    });
+    this.#editorEl.addEventListener("dragend", this._dragEndListener, {
+      capture: true,
+    });
+    // Same element and phase as the upload drop target added below, so
+    // registration order decides: this runs first and can veto it, while
+    // bubbling still lets the editor handle the drop before either.
+    this.#editorEl.addEventListener("drop", this._dropListener);
 
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.uppyId,
@@ -559,6 +581,38 @@ export default class UppyComposerUpload {
 
   #resetUpload(file) {
     this.textManipulation.placeholder.cancel(file);
+  }
+
+  @bind
+  _dragStartListener(event) {
+    this.#draggingFromEditor = !!event.target.closest?.(this.editorInputClass);
+  }
+
+  @bind
+  _dragEndListener() {
+    this.#draggingFromEditor = false;
+  }
+
+  @bind
+  _dropListener(event) {
+    if (!this.#draggingFromEditor) {
+      return;
+    }
+
+    // A drop ends the drag even when dragend doesn't reach us, which happens
+    // when the editor replaces the element being dragged.
+    this.#draggingFromEditor = false;
+
+    if (!event.dataTransfer?.types?.includes("Files")) {
+      return;
+    }
+
+    // The browser exposes content dragged out of the editor as a file, so a
+    // move reaches the upload drop target looking like an external drop and
+    // gets uploaded again. Also takes over preventing the browser from opening
+    // the file, which that drop target would have done.
+    event.preventDefault();
+    event.stopImmediatePropagation();
   }
 
   @bind

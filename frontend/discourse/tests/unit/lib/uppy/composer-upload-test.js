@@ -20,6 +20,24 @@ function buildUploader(context) {
   });
 }
 
+function dropEventWithFile() {
+  const dataTransfer = new DataTransfer();
+  dataTransfer.items.add(createFile("drag.png"));
+  return new DragEvent("drop", {
+    dataTransfer,
+    bubbles: true,
+    cancelable: true,
+  });
+}
+
+async function settleDrop(predicate, timeout = 300) {
+  const deadline = performance.now() + timeout;
+  while (performance.now() < deadline && !predicate()) {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+  return predicate();
+}
+
 function buildPasteEvent(target, files) {
   const event = new Event("paste", { cancelable: true, bubbles: true });
   Object.defineProperty(event, "target", { value: target });
@@ -133,6 +151,75 @@ module("Unit | Lib | uppy/composer-upload", function (hooks) {
       uploader.uppyWrapper.uppyInstance,
       "second setup replaces the Uppy instance"
     );
+
+    uploader.teardown();
+  });
+  test("a file-carrying drop from a drag started in the editor is not uploaded", async function (assert) {
+    const uploader = buildUploader(this);
+    uploader.setup(this.formEl);
+    const addFiles = sinon.spy();
+    uploader.uppyWrapper.uppyInstance.addFiles = addFiles;
+
+    this.editorInput.dispatchEvent(
+      new DragEvent("dragstart", { bubbles: true })
+    );
+    this.editorInput.dispatchEvent(dropEventWithFile());
+    await settleDrop(() => addFiles.called);
+
+    assert.true(addFiles.notCalled, "the move is not uploaded");
+
+    uploader.teardown();
+  });
+
+  test("an external file drop is uploaded", async function (assert) {
+    const uploader = buildUploader(this);
+    uploader.setup(this.formEl);
+    const addFiles = sinon.spy();
+    uploader.uppyWrapper.uppyInstance.addFiles = addFiles;
+
+    this.editorInput.dispatchEvent(dropEventWithFile());
+    await settleDrop(() => addFiles.called);
+
+    assert.true(addFiles.calledOnce, "the drop is uploaded");
+
+    uploader.teardown();
+  });
+
+  test("a drop from the editor does not block later uploads", async function (assert) {
+    const uploader = buildUploader(this);
+    uploader.setup(this.formEl);
+    const addFiles = sinon.spy();
+    uploader.uppyWrapper.uppyInstance.addFiles = addFiles;
+
+    this.editorInput.dispatchEvent(
+      new DragEvent("dragstart", { bubbles: true })
+    );
+    this.editorInput.dispatchEvent(dropEventWithFile());
+    await settleDrop(() => addFiles.called);
+
+    this.editorInput.dispatchEvent(dropEventWithFile());
+    await settleDrop(() => addFiles.called);
+
+    assert.true(addFiles.calledOnce, "the next drop is still uploaded");
+
+    uploader.teardown();
+  });
+
+  test("a drag abandoned without a drop does not block later uploads", async function (assert) {
+    const uploader = buildUploader(this);
+    uploader.setup(this.formEl);
+    const addFiles = sinon.spy();
+    uploader.uppyWrapper.uppyInstance.addFiles = addFiles;
+
+    this.editorInput.dispatchEvent(
+      new DragEvent("dragstart", { bubbles: true })
+    );
+    this.editorInput.dispatchEvent(new DragEvent("dragend", { bubbles: true }));
+
+    this.editorInput.dispatchEvent(dropEventWithFile());
+    await settleDrop(() => addFiles.called);
+
+    assert.true(addFiles.calledOnce, "the later drop is still uploaded");
 
     uploader.teardown();
   });
