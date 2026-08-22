@@ -6,6 +6,7 @@ import DiscoursePostEventOneboxNodeView, {
 import EventNodeView from "../components/event-node-view";
 import calendarExtension from "../lib/calendar-rich-editor-extension";
 import { buildEventPreview } from "../lib/event-preview";
+import groupTimezonesExtension from "../lib/group-timezones-rich-editor-extension";
 import {
   buildEventSkeleton,
   camelCase,
@@ -148,6 +149,7 @@ export default {
       const siteSettings = api.container.lookup("service:site-settings");
       api.registerRichEditorExtension(buildExtension(siteSettings));
       api.registerRichEditorExtension(calendarExtension);
+      api.registerRichEditorExtension(groupTimezonesExtension);
     });
   },
 };

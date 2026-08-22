@@ -29,6 +29,8 @@ en:
     discourse_calendar:
       rich_editor:
         calendar: "Calendar"
+        group_timezones: "Group timezones"
+        group_timezones_for: "Group timezones: %{group}"
       livestream:
         zoom:
           join: "Join Zoom"
