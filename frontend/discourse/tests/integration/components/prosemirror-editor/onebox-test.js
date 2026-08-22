@@ -1,7 +1,8 @@
 import { settled } from "@ember/test-helpers";
 import { setLocalCache } from "pretty-text/oneboxer-cache";
+import { undo, undoDepth } from "prosemirror-history";
 import { NodeSelection, TextSelection } from "prosemirror-state";
-import { module, test } from "qunit";
+import { module, skip, test } from "qunit";
 import { buildEngine } from "discourse/static/markdown-it";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -9,6 +10,9 @@ import { setupRichEditor } from "discourse/tests/helpers/rich-editor-helper";
 
 // Mocked by create-pretender for both /inline-onebox and /onebox.
 const URL = "http://www.example.com/has-title.html";
+const TOP_LEVEL_URL = "http://www.example.com";
+const ONEBOX_HTML =
+  '<aside class="onebox"><article class="onebox-body"><h3><a href="http://www.example.com">Example</a></h3></article></aside>';
 
 function lastParagraphStart(doc) {
   let pos = null;
@@ -18,6 +22,13 @@ function lastParagraphStart(doc) {
     }
   });
   return pos;
+}
+
+async function undoAll(view) {
+  for (let i = 0; i < 5 && undoDepth(view.state) > 0; i++) {
+    undo(view.state, view.dispatch);
+    await settled();
+  }
 }
 
 function moveCursorTo(view, pos) {
@@ -166,6 +177,71 @@ module(
         view.state.selection instanceof NodeSelection,
         "the cursor lands after the onebox, not selecting the block"
       );
+    });
+
+    // A preview replaces the link that produced it, so it has to undo along with
+    // it. Undoing has to reach the document from before the URL, rather than
+    // stopping at a preview the user can no longer remove.
+    test("undo reaches back past a typed URL's onebox", async function (assert) {
+      pretender.get("/onebox", () => [
+        200,
+        { "Content-Type": "text/html" },
+        ONEBOX_HTML,
+      ]);
+
+      const [editor] = await setupRichEditor(assert, "x");
+      const { view } = editor;
+      const original = editor.value;
+
+      view.dispatch(view.state.tr.insertText(`${TOP_LEVEL_URL} `, 1, 2));
+      await settled();
+      view.dispatch(view.state.tr.split(view.state.selection.from));
+      await settled();
+      assert.dom(".onebox-wrapper").exists("the URL becomes a full onebox");
+
+      await undoAll(view);
+
+      assert.dom(".onebox-wrapper").doesNotExist("undo removes the onebox");
+      assert.strictEqual(editor.value, original, "undo restores the document");
+    });
+
+    // Dropping a link on its own line leaves the cursor away from it, so undoing
+    // the preview restores a lone URL — the exact shape the scan promotes — and
+    // it renders again before the next undo. Reaching past it needs the preview
+    // to stop replacing the link it previews.
+    skip("undo reaches back past a dropped link's onebox", async function (assert) {
+      pretender.get("/onebox", () => [
+        200,
+        { "Content-Type": "text/html" },
+        ONEBOX_HTML,
+      ]);
+
+      const [editor] = await setupRichEditor(assert, "aaaaa\n\nx");
+      const { view } = editor;
+      const { schema } = view.state;
+      const original = editor.value;
+
+      const linkMark = schema.marks.link.create({
+        href: TOP_LEVEL_URL,
+        markup: "linkify",
+      });
+      const lastStart = lastParagraphStart(view.state.doc);
+      const tr = view.state.tr
+        .replaceWith(
+          lastStart,
+          lastStart + 1,
+          schema.text(TOP_LEVEL_URL, [linkMark])
+        )
+        .delete(1, 3);
+      tr.setSelection(TextSelection.create(tr.doc, 1));
+      view.dispatch(tr);
+      await settled();
+      assert.dom(".onebox-wrapper").exists("the dropped link becomes a onebox");
+
+      await undoAll(view);
+
+      assert.dom(".onebox-wrapper").doesNotExist("undo removes the onebox");
+      assert.strictEqual(editor.value, original, "undo restores the document");
     });
   }
 );

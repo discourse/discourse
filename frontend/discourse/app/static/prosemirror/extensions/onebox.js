@@ -114,9 +114,14 @@ const extension = {
   plugins({
     pmState: { Plugin },
     pmView: { Decoration, DecorationSet },
+    pmHistory: { isHistoryTransaction },
     getContext,
   }) {
     const failedUrls = { full: new Set(), inline: new Set() };
+    // undo restores the link a preview replaced, which is exactly the shape the
+    // scan promotes, so it would render right back and re-record the step that
+    // was just undone. Hold off until the user edits again.
+    let skipScanUntilEdit = false;
 
     // Scans for linkified URLs and creates onebox loading decorations.
     // `forceUrl` bypasses selection/topLevel/failed checks for that URL.
@@ -187,6 +192,12 @@ const extension = {
         apply(tr, set) {
           const meta = tr.getMeta(plugin);
 
+          if (isHistoryTransaction(tr)) {
+            skipScanUntilEdit = true;
+          } else if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
+            skipScanUntilEdit = false;
+          }
+
           if (meta?.removeDecorations) {
             set = set.remove(meta.removeDecorations);
           }
@@ -251,6 +262,14 @@ const extension = {
             if (!meta?.forceOneboxUrl) {
               return set;
             }
+          }
+
+          if (!meta?.forceOneboxUrl && skipScanUntilEdit) {
+            // a preview whose data already arrived would render from its
+            // decoration alone, without the scan
+            return set.remove(
+              set.find(undefined, undefined, (spec) => spec.oneboxDataLoaded)
+            );
           }
 
           const decorations = scanForOneboxLinks(
@@ -452,7 +471,9 @@ const extension = {
 
             if (removeDecorations.length || tr.docChanged) {
               tr.setMeta(plugin, { removeDecorations });
-              view.dispatch(tr.setMeta("addToHistory", false));
+              // the preview replaces the link, so it has to undo along with it,
+              // or undoing the edit that introduced the URL leaves it stranded
+              view.dispatch(tr.setMeta("skipSerialization", true));
             }
           },
         };
