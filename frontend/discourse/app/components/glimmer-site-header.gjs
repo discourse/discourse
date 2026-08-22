@@ -27,6 +27,18 @@ const DEBOUNCE_HEADER_DELAY = 10;
 const DRAWER_SETTLE_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
 const DRAWER_CLOSE_DISTANCE_RATIO = 0.25;
 const DRAWER_CLOSE_VELOCITY_THRESHOLD = 0.4;
+const DRAWER_DRAG_THRESHOLD = 5;
+// The platform-conventional tap slop, wider than the gesture threshold above:
+// a press on the cloak asks for a dismissal, and finger jitter that engages the
+// drag must not turn that into a drag too short to close anything.
+const DRAWER_TAP_SLOP = 10;
+
+/**
+ * How stale a velocity sample may be and still count as a flick. Velocity is
+ * only sampled while the pointer moves, so without this a flick followed by a
+ * pause reads as a flick on release and closes a drawer the user parked.
+ */
+export const DRAWER_VELOCITY_EXPIRY_MS = 100;
 
 export default class GlimmerSiteHeader extends Component {
   @service appEvents;
@@ -43,11 +55,14 @@ export default class GlimmerSiteHeader extends Component {
   _swipeMenuOrigin;
   _drawerDragAxis;
   _drawerDragPanel;
+  _drawerDragScroller;
+  _drawerScrollerLocked = false;
   _drawerDragStartedOnCloak = false;
   _drawerDragWidth = PANEL_WIDTH;
   _drawerVelocityX = 0;
-  _drawerLastX;
-  _drawerLastTime;
+  _drawerLastX = 0;
+  _drawerLastTime = 0;
+  _drawerCloseGeneration = 0;
   _drawerGestureCleanups = new Map();
   _applicationElement;
   _resizeObserver;
@@ -382,18 +397,38 @@ export default class GlimmerSiteHeader extends Component {
       animations.push(cloakElement.animate([{ opacity: 0 }], timing).finished);
     }
 
-    const closingFinished = Promise.all(animations).then(() => {
-      this.#clearDrawerGestures();
+    const generation = ++this._drawerCloseGeneration;
+    const closingFinished = Promise.all(animations)
+      .catch(() => {})
+      .then(() => {
+        // The panel stays draggable while it settles, so a gesture that caught
+        // it, a later close, or a re-render all mean something else owns the
+        // drawer by now and committing this close would discard it.
+        if (
+          generation !== this._drawerCloseGeneration ||
+          !panel.isConnected ||
+          this.isDestroying ||
+          this.isDestroyed
+        ) {
+          return;
+        }
 
-      if (cloakElement) {
-        cloakElement.style.display = "none";
-      }
+        this.#clearDrawerGestures();
 
-      if (this.header.hamburgerVisible || this.header.userVisible) {
-        this.header.hamburgerVisible = false;
-        this.header.userVisible = false;
-      }
-    });
+        if (cloakElement) {
+          cloakElement.style.display = "none";
+        }
+
+        // Paired with the visibility flags below rather than released when the
+        // gesture ended, so a close that never commits leaves the page locked
+        // behind the drawer that is still open.
+        scrollLock(false);
+
+        if (this.header.hamburgerVisible || this.header.userVisible) {
+          this.header.hamburgerVisible = false;
+          this.header.userVisible = false;
+        }
+      });
 
     waitForPromise(closingFinished);
     this.pxClosed = null;
@@ -429,7 +464,12 @@ export default class GlimmerSiteHeader extends Component {
       event.stopPropagation();
     }
 
+    // Claims the drawer from any close still settling, so its deferred commit
+    // cannot close what this gesture is about to reopen.
+    this._drawerCloseGeneration++;
+
     this._drawerDragPanel = panel;
+    this._drawerDragScroller = panel.querySelector(".panel-body");
     this._drawerDragStartedOnCloak = Boolean(cloakAtPointer);
     this._drawerDragAxis = null;
     this._drawerVelocityX = 0;
@@ -456,8 +496,9 @@ export default class GlimmerSiteHeader extends Component {
           ? "horizontal"
           : "vertical";
 
-      if (this._drawerDragAxis === "horizontal") {
-        scrollLock(true, this._drawerDragPanel.querySelector(".panel-body"));
+      if (this._drawerDragAxis === "horizontal" && this._drawerDragScroller) {
+        scrollLock(true, this._drawerDragScroller);
+        this._drawerScrollerLocked = true;
       }
     }
 
@@ -467,8 +508,7 @@ export default class GlimmerSiteHeader extends Component {
 
     this.#updateDrawerVelocity(event);
 
-    const closingDelta =
-      this._swipeMenuOrigin === "right" ? dragInfo.delta.x : -dragInfo.delta.x;
+    const closingDelta = dragInfo.delta.x * this.#closingDirection();
     this.pxClosed = Math.min(this._drawerDragWidth, Math.max(0, closingDelta));
     const dragPosition =
       closingDelta >= 0 ? this.pxClosed : -dampenedOverdrag(-closingDelta);
@@ -495,7 +535,7 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  onDrawerDragEnd(_event, dragInfo) {
+  onDrawerDragEnd(event, dragInfo) {
     const panel = this._drawerDragPanel;
     if (!panel) {
       return;
@@ -503,18 +543,11 @@ export default class GlimmerSiteHeader extends Component {
 
     const animationEvent = {
       deltaX: dragInfo.delta.x,
-      velocityX: this._drawerVelocityX,
+      velocityX: this.#releaseVelocity(event),
     };
 
-    if (!dragInfo.moved && this._drawerDragStartedOnCloak) {
-      this._animateClosing(null, panel, this._swipeMenuOrigin);
-      scrollLock(false);
-    } else if (
-      this._drawerDragAxis === "horizontal" &&
-      this.#shouldCloseDrawer(animationEvent)
-    ) {
+    if (this.#shouldCloseDrawer(animationEvent)) {
       this._animateClosing(animationEvent, panel, this._swipeMenuOrigin);
-      scrollLock(false);
     } else {
       this._animateOpening(panel, animationEvent);
     }
@@ -524,7 +557,9 @@ export default class GlimmerSiteHeader extends Component {
 
   @bind
   onDrawerDragCancel() {
-    if (this._drawerDragPanel) {
+    // A vertical scroll inside the panel cancels the pointer on every touch, so
+    // only a gesture that actually moved the drawer has anything to settle.
+    if (this._drawerDragPanel && this._drawerDragAxis === "horizontal") {
       this._animateOpening(this._drawerDragPanel);
     }
     this.#resetDrawerDrag();
@@ -539,31 +574,53 @@ export default class GlimmerSiteHeader extends Component {
     this._drawerLastTime = event.timeStamp;
   }
 
+  #releaseVelocity(event) {
+    const idleMs = event.timeStamp - this._drawerLastTime;
+    return idleMs > DRAWER_VELOCITY_EXPIRY_MS ? 0 : this._drawerVelocityX;
+  }
+
+  #closingDirection() {
+    return this._swipeMenuOrigin === "right" ? 1 : -1;
+  }
+
   #shouldCloseDrawer({ deltaX, velocityX }) {
-    const direction = this._swipeMenuOrigin === "right" ? 1 : -1;
+    const direction = this.#closingDirection();
     const closingDistance = deltaX * direction;
-    const closingVelocity = velocityX * direction;
+
+    // A press on the cloak asks for the drawer to be dismissed, so only a
+    // deliberate pull the other way keeps it. Tap slop rather than the gesture
+    // threshold decides, because jitter that engages the drag still produces a
+    // travel far too small for the thresholds below to close anything.
+    if (this._drawerDragStartedOnCloak) {
+      return closingDistance > -DRAWER_TAP_SLOP;
+    }
+
+    if (this._drawerDragAxis !== "horizontal") {
+      return false;
+    }
 
     return (
-      closingVelocity >= DRAWER_CLOSE_VELOCITY_THRESHOLD ||
+      velocityX * direction >= DRAWER_CLOSE_VELOCITY_THRESHOLD ||
       closingDistance >= this._drawerDragWidth * DRAWER_CLOSE_DISTANCE_RATIO
     );
   }
 
   #unlockDrawerDrag() {
-    if (this._drawerDragPanel) {
-      scrollLock(false, this._drawerDragPanel.querySelector(".panel-body"));
+    if (this._drawerScrollerLocked) {
+      scrollLock(false, this._drawerDragScroller);
+      this._drawerScrollerLocked = false;
     }
   }
 
   #resetDrawerDrag() {
     this.#unlockDrawerDrag();
     this._drawerDragPanel = null;
+    this._drawerDragScroller = null;
     this._drawerDragAxis = null;
     this._drawerDragStartedOnCloak = false;
     this._drawerDragWidth = PANEL_WIDTH;
-    this._drawerLastX = null;
-    this._drawerLastTime = null;
+    this._drawerLastX = 0;
+    this._drawerLastTime = 0;
     this._drawerVelocityX = 0;
   }
 
@@ -584,13 +641,20 @@ export default class GlimmerSiteHeader extends Component {
         continue;
       }
 
+      // The panel carries the content the user is reaching for, so cancelling
+      // the press there would cost every control inside it its focus on tap,
+      // its text selection, and the compatibility mousedown that the panel's
+      // own focus tracking reads. The cloak has nothing to protect.
+      const preventDefault = surface !== panel;
+
       const cleanup = registerPointerDrag(surface, () => ({
         onDragStart: this.onDrawerDragStart,
         onDrag: this.onDrawerDrag,
         onDragEnd: this.onDrawerDragEnd,
         onDragCancel: this.onDrawerDragCancel,
-        threshold: 5,
+        threshold: DRAWER_DRAG_THRESHOLD,
         touchAction: "pan-y",
+        preventDefault,
       }));
       this._drawerGestureCleanups.set(surface, cleanup);
     }
