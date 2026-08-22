@@ -10212,7 +10212,8 @@ CREATE TABLE public.topic_embeds (
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
     deleted_by_id integer,
-    embed_content_cache text
+    embed_content_cache text,
+    content_truncated boolean
 );
 
 
@@ -23361,6 +23362,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260821164114'),
 ('20260820171539'),
 ('20260820143851'),
 ('20260818143417'),
