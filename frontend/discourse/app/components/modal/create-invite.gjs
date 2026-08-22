@@ -23,6 +23,20 @@ import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
 import I18n, { i18n } from "discourse-i18n";
 
+const NEVER_EXPIRES_DAYS = 999999;
+const NEVER_EXPIRES_THRESHOLD_YEARS = 100;
+
+function neverExpiresAt() {
+  return moment().add(NEVER_EXPIRES_DAYS, "days").format(DATE_INPUT_FORMAT);
+}
+
+function isNeverExpiring(value) {
+  return (
+    !!value &&
+    moment(value).diff(moment(), "years") >= NEVER_EXPIRES_THRESHOLD_YEARS
+  );
+}
+
 export default class CreateInvite extends Component {
   @service currentUser;
   @service siteSettings;
@@ -31,6 +45,7 @@ export default class CreateInvite extends Component {
 
   @tracked saving = false;
   @tracked displayAdvancedOptions = false;
+  @tracked showExpiresAtEditor = false;
   @tracked isEmailInvite = emailValid(this.data.restrictTo);
 
   @tracked flashText;
@@ -70,7 +85,7 @@ export default class CreateInvite extends Component {
       });
 
     list.push({
-      value: 999999,
+      value: NEVER_EXPIRES_DAYS,
       text: i18n("time_shortcut.never"),
     });
 
@@ -215,6 +230,21 @@ export default class CreateInvite extends Component {
 
   get inviteCreated() {
     return !!this.invite.get("id");
+  }
+
+  get showNeverExpiresMessage() {
+    return !this.showExpiresAtEditor && isNeverExpiring(this.data.expiresAt);
+  }
+
+  @action
+  editExpiresAt() {
+    this.showExpiresAtEditor = true;
+  }
+
+  @action
+  setNeverExpires(field) {
+    field.set(neverExpiresAt());
+    this.showExpiresAtEditor = false;
   }
 
   @action
@@ -436,12 +466,33 @@ export default class CreateInvite extends Component {
                 as |field|
               >
                 <field.Control>
-                  <DFutureDateInput
-                    @clearable={{true}}
-                    @input={{field.value}}
-                    @noRelativeOptions={{true}}
-                    @onChangeInput={{field.set}}
-                  />
+                  {{#if this.showNeverExpiresMessage}}
+                    <div class="invite-expires-at-never">
+                      <span class="invite-expires-at-never__message">
+                        {{i18n "user.invited.invite.never_expires"}}
+                      </span>
+                      <DButton
+                        @display="link"
+                        @label="user.invited.invite.change_expiration"
+                        @action={{this.editExpiresAt}}
+                      />
+                    </div>
+                  {{else}}
+                    <div class="invite-expires-at-editor">
+                      <DFutureDateInput
+                        @clearable={{true}}
+                        @input={{field.value}}
+                        @noRelativeOptions={{true}}
+                        @onChangeInput={{field.set}}
+                      />
+                      <DButton
+                        @display="link"
+                        @label="user.invited.invite.set_never_expires"
+                        @action={{fn this.setNeverExpires field}}
+                        class="invite-expires-at-set-never"
+                      />
+                    </div>
+                  {{/if}}
                 </field.Control>
               </form.Field>
             {{else}}
