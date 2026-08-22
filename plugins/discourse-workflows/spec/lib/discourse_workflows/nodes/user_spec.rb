@@ -40,6 +40,35 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
       expect(result["user"]).not_to have_key("email")
     end
 
+    it "returns profile images and website", :aggregate_failures do
+      avatar = Fabricate(:upload)
+      profile_background = Fabricate(:upload)
+      card_background = Fabricate(:upload)
+      user.update!(uploaded_avatar_id: avatar.id)
+      user.user_profile.update!(
+        website: "https://example.com",
+        profile_background_upload_id: profile_background.id,
+        card_background_upload_id: card_background.id,
+      )
+
+      result = execute_node(configuration: { "operation" => "get", "username" => user.username })
+
+      expect(result["user"]).to include(
+        "uploaded_avatar_id" => avatar.id,
+        "website" => "https://example.com",
+        "profile_background_upload_id" => profile_background.id,
+        "card_background_upload_id" => card_background.id,
+      )
+      expect(result.dig("user", "avatar_template")).to include(avatar.id.to_s)
+      expect(
+        DiscourseWorkflows::Schema::USER_ACTION_SCHEMA.dig(
+          "properties",
+          "user",
+          "properties",
+        ).keys - result["user"].keys,
+      ).to be_empty
+    end
+
     it "always returns account status signals", :aggregate_failures do
       user.update!(silenced_till: 1.day.from_now, approved: true)
 

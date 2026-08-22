@@ -121,7 +121,9 @@ module DiscourseWorkflows
         "created_at": { "type": "string", "format": "date-time" },
         "approved": { "type": "boolean" },
         "silenced": { "type": "boolean" },
-        "suspended": { "type": "boolean" }
+        "suspended": { "type": "boolean" },
+        "uploaded_avatar_id": { "type": ["integer", "null"] },
+        "avatar_template": { "type": "string" }
       }
     JSON
 
@@ -185,6 +187,9 @@ module DiscourseWorkflows
           {
             "title": { "type": ["string", "null"] },
             "bio_raw": { "type": ["string", "null"] },
+            "website": { "type": ["string", "null"] },
+            "profile_background_upload_id": { "type": ["integer", "null"] },
+            "card_background_upload_id": { "type": ["integer", "null"] },
             "manual_locked_trust_level": { "type": ["integer", "null"] },
             "trust_level_locked": { "type": "boolean" },
             "user_fields": { "type": "object" },
