@@ -112,6 +112,329 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
         expect(result["category_name"]).to eq("Test Category")
         expect(result["category_slug"]).to eq("test-category")
       end
+
+      it "fetches an exact post by topic coordinates, including restricted topics" do
+        reply = Fabricate(:post, topic: topic)
+        private_post = Fabricate(:post, topic: pm_topic)
+        tool.update!(script: <<~JS)
+            function invoke(params) {
+              return {
+                exact: discourse.getTopicPost(params.topic_id, params.post_number),
+                missing: discourse.getTopicPost(params.topic_id, 999999),
+                privatePost: discourse.getTopicPost(params.private_topic_id, params.private_post_number)
+              };
+            }
+          JS
+
+        result =
+          tool.runner(
+            {
+              "topic_id" => topic.id,
+              "post_number" => reply.post_number,
+              "private_topic_id" => pm_topic.id,
+              "private_post_number" => private_post.post_number,
+            },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result["exact"].slice("id", "topic_id", "post_number", "raw")).to eq(
+          "id" => reply.id,
+          "topic_id" => topic.id,
+          "post_number" => reply.post_number,
+          "raw" => reply.raw,
+        )
+        expect(result["exact"].dig("topic", "id")).to eq(topic.id)
+        expect(result["missing"]).to be_nil
+        expect(result["privatePost"]["id"]).to eq(private_post.id)
+      end
+
+      it "accepts null options and rejects malformed topic coordinates" do
+        tool.update!(script: <<~JS)
+            function errorMessage(callback) {
+              try {
+                callback();
+              } catch (error) {
+                return error.message;
+              }
+            }
+
+            function invoke(params) {
+              return {
+                nullOptions: discourse.getTopicPost(
+                  params.topic_id,
+                  params.post_number,
+                  null
+                ),
+                invalidTopicId: errorMessage(function() {
+                  discourse.getTopicPost("2abc", params.post_number);
+                }),
+                invalidPostNumber: errorMessage(function() {
+                  discourse.getTopicPost(params.topic_id, 2.9);
+                })
+              };
+            }
+          JS
+
+        result =
+          tool.runner(
+            { "topic_id" => topic.id, "post_number" => post.post_number },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result["nullOptions"]["id"]).to eq(post.id)
+        expect(result["invalidTopicId"]).to eq("topic_id must be a positive integer")
+        expect(result["invalidPostNumber"]).to eq("post_number must be a positive integer")
+      end
+
+      it "fetches bounded topic posts and can filter by post number" do
+        replies = Fabricate.times(3, :post, topic: topic)
+        tool.update!(script: <<~JS)
+            function invoke(params) {
+              return {
+                limited: discourse.getTopicPosts(params.topic_id, { limit: 2 }),
+                selected: discourse.getTopicPosts(params.topic_id, {
+                  post_numbers: params.post_numbers
+                }),
+                missing: discourse.getTopicPosts(999999)
+              };
+            }
+          JS
+
+        selected_post_numbers = [replies.second.post_number, post.post_number]
+        result =
+          tool.runner(
+            { "topic_id" => topic.id, "post_numbers" => selected_post_numbers },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result["limited"].map { |item| item["post_number"] }).to eq([1, 2])
+        expect(result["selected"].map { |item| item["post_number"] }).to eq(
+          selected_post_numbers.sort,
+        )
+        expect(result["missing"]).to eq([])
+      end
+
+      it "scopes topic post reads through a specified user's Guardian" do
+        group = Fabricate(:group)
+        allowed_user = Fabricate(:user)
+        denied_user = Fabricate(:user)
+        staged_user = Fabricate(:staged)
+        group.add(allowed_user)
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+        private_post = Fabricate(:post, topic: private_topic)
+
+        tool.update!(script: <<~JS)
+            function invoke(params) {
+              return {
+                allowed: discourse.getTopicPost(params.topic_id, params.post_number, {
+                  as_username: params.allowed_username
+                }),
+                allowedById: discourse.getTopicPost(params.topic_id, params.post_number, {
+                  as_user_id: params.allowed_user_id
+                }),
+                denied: discourse.getTopicPost(params.topic_id, params.post_number, {
+                  as_user_id: params.denied_user_id
+                }),
+                staged: discourse.getTopicPost(params.topic_id, params.post_number, {
+                  as_user_id: params.staged_user_id
+                }),
+                deniedTopicPosts: discourse.getTopicPosts(params.topic_id, {
+                  as_user_id: params.denied_user_id
+                })
+              };
+            }
+          JS
+
+        result =
+          tool.runner(
+            {
+              "topic_id" => private_topic.id,
+              "post_number" => private_post.post_number,
+              "allowed_username" => allowed_user.username.upcase,
+              "allowed_user_id" => allowed_user.id,
+              "denied_user_id" => denied_user.id,
+              "staged_user_id" => staged_user.id,
+            },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result["allowed"]["id"]).to eq(private_post.id)
+        expect(result["allowedById"]["id"]).to eq(private_post.id)
+        expect(result["denied"]).to be_nil
+        expect(result["staged"]).to be_nil
+        expect(result["deniedTopicPosts"]).to eq([])
+      end
+
+      it "omits hidden posts and whispers from Guardian-scoped topic collections" do
+        reader = Fabricate(:user)
+        visible_post = Fabricate(:post, topic: topic)
+        hidden_post = Fabricate(:post, topic: topic, hidden: true)
+        whisper = Fabricate(:whisper, topic: topic)
+
+        tool.update!(script: <<~JS)
+            function invoke(params) {
+              return {
+                collection: discourse.getTopicPosts(params.topic_id, {
+                  as_user_id: params.user_id,
+                  post_numbers: params.post_numbers
+                }),
+                exact: discourse.getTopicPost(params.topic_id, params.hidden_post_number, {
+                  as_user_id: params.user_id
+                })
+              };
+            }
+          JS
+
+        result =
+          tool.runner(
+            {
+              "topic_id" => topic.id,
+              "user_id" => reader.id,
+              "post_numbers" => [
+                visible_post.post_number,
+                hidden_post.post_number,
+                whisper.post_number,
+              ],
+              "hidden_post_number" => hidden_post.post_number,
+            },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result["collection"].map { |item| item["id"] }).to eq([visible_post.id])
+        expect(result["exact"]).to be_nil
+      end
+
+      it "scopes private message collections to participants" do
+        sender = Fabricate(:user)
+        recipient = Fabricate(:user)
+        outsider = Fabricate(:user)
+        private_message = Fabricate(:private_message_topic, user: sender, recipient: recipient)
+        private_post = Fabricate(:post, topic: private_message, user: sender)
+
+        tool.update!(script: <<~JS)
+            function invoke(params) {
+              return {
+                participant: discourse.getTopicPosts(params.topic_id, {
+                  as_user_id: params.participant_id
+                }),
+                outsider: discourse.getTopicPosts(params.topic_id, {
+                  as_user_id: params.outsider_id
+                })
+              };
+            }
+          JS
+
+        result =
+          tool.runner(
+            {
+              "topic_id" => private_message.id,
+              "participant_id" => recipient.id,
+              "outsider_id" => outsider.id,
+            },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result["participant"].map { |item| item["id"] }).to eq([private_post.id])
+        expect(result["outsider"]).to eq([])
+      end
+
+      it "rejects invalid and unsupported read scope options" do
+        scenarios = [
+          ["Unsupported option", '{ as_usernme: "validator" }'],
+          ["cannot be used together", '{ as_username: "validator", as_user_id: 1 }'],
+          ["as_username must be a non-empty string", '{ as_username: "" }'],
+          [
+            "as_username must identify a user with a positive ID",
+            "{ as_username: #{::Discourse.system_user.username.to_json} }",
+          ],
+          ["User not found", "{ as_user_id: 99999999 }"],
+          ["positive integer", "{ as_user_id: -1 }"],
+          ["options must be an object", '"validator"'],
+        ]
+
+        scenarios.each do |expected_error, options|
+          tool.update!(script: <<~JS)
+              function invoke(params) {
+                try {
+                  discourse.getTopicPost(params.topic_id, params.post_number, #{options});
+                } catch (error) {
+                  return { error: error.message };
+                }
+              }
+            JS
+
+          result =
+            tool.runner(
+              { "topic_id" => topic.id, "post_number" => post.post_number },
+              llm: nil,
+              bot_user: nil,
+            ).invoke
+
+          expect(result["error"]).to match(/#{expected_error}/)
+        end
+      end
+
+      it "caps topic post limits and rejects oversized selections" do
+        Fabricate.times(20, :post, topic: topic)
+        tool.update!(script: <<~JS)
+            function invoke(params) {
+              const oversizedLimit = discourse.getTopicPosts(params.topic_id, {
+                limit: 100000
+              });
+              try {
+                discourse.getTopicPosts(params.topic_id, {
+                  post_numbers: params.post_numbers
+                });
+              } catch (error) {
+                return { oversizedLimit, selectionError: error.message };
+              }
+            }
+          JS
+
+        post_numbers = topic.posts.order(:post_number).pluck(:post_number)
+        result =
+          tool.runner(
+            { "topic_id" => topic.id, "post_numbers" => post_numbers },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result["oversizedLimit"].size).to eq(20)
+        expect(result["selectionError"]).to eq("post_numbers cannot exceed 20 entries")
+      end
+
+      it "rejects malformed and conflicting topic post collection options" do
+        scenarios = [
+          ["post_numbers must be an array", '{ post_numbers: "1,2" }'],
+          ["post_numbers must contain positive integers", '{ post_numbers: [1, "2"] }'],
+          ["limit must be a positive integer", '{ limit: "20" }'],
+          ["limit must be a positive integer", "{ limit: 0 }"],
+          ["limit must be a positive integer", "{ limit: -1 }"],
+          ["limit and post_numbers cannot be used together", "{ limit: 1, post_numbers: [1] }"],
+        ]
+
+        scenarios.each do |expected_error, options|
+          tool.update!(script: <<~JS)
+              function invoke(params) {
+                try {
+                  discourse.getTopicPosts(params.topic_id, #{options});
+                } catch (error) {
+                  return { error: error.message };
+                }
+              }
+            JS
+          result = tool.runner({ "topic_id" => topic.id }, llm: nil, bot_user: nil).invoke
+
+          expect(result["error"]).to match(/#{expected_error}/)
+        end
+      end
     end
 
     context "when using the topic filter API" do
@@ -174,8 +497,100 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
           tool.runner({ "q" => "category:#{category.slug}", "limit" => 2 }, llm: nil, bot_user: nil)
 
         result = runner.invoke
+        oversized_result =
+          tool.runner(
+            { "q" => "category:#{category.slug}", "limit" => 100_000 },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
 
         expect(result["topics"].size).to eq(2)
+        expect(oversized_result["limit"]).to eq(100)
+      end
+
+      it "returns catchable errors for invalid filter parameters" do
+        script = <<~JS
+          function errorMessage(callback) {
+            try {
+              callback();
+            } catch (error) {
+              return error.message;
+            }
+          }
+
+          function invoke(params) {
+            return {
+              missingQuery: errorMessage(function() {
+                discourse.filterTopics({});
+              }),
+              negativePage: errorMessage(function() {
+                discourse.filterTopics({ q: "order:latest", page: -1 });
+              }),
+              malformedPage: errorMessage(function() {
+                discourse.filterTopics({ q: "order:latest", page: "1" });
+              }),
+              unknownOption: errorMessage(function() {
+                discourse.filterTopics({ q: "order:latest", unexpected: true });
+              }),
+              scopeConflict: errorMessage(function() {
+                discourse.filterTopics({
+                  q: "order:latest",
+                  as_user_id: params.user_id,
+                  with_private: false
+                });
+              })
+            };
+          }
+        JS
+
+        result =
+          create_tool(script: script).runner(
+            { "user_id" => user.id },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result).to eq(
+          "missingQuery" => "Missing required parameter: q",
+          "negativePage" => "page must be greater than or equal to 0",
+          "malformedPage" => "page must be greater than or equal to 0",
+          "unknownOption" => "Unsupported option(s): unexpected",
+          "scopeConflict" => "with_private cannot be used with as_username or as_user_id",
+        )
+      end
+
+      it "applies authenticated topic filters as the scoped user" do
+        scoped_user = Fabricate(:user)
+        tracked_topic = Fabricate(:topic, category: category)
+        Fabricate(:topic_user_tracking, topic: tracked_topic, user: scoped_user)
+        Fabricate(:topic, category: category)
+
+        script = <<~JS
+          function invoke(params) {
+            return {
+              byId: discourse.filterTopics({
+                q: "in:tracking",
+                as_user_id: params.user_id
+              }),
+              byUsername: discourse.filterTopics({
+                q: "in:tracking",
+                as_username: params.username
+              })
+            };
+          }
+        JS
+
+        result =
+          create_tool(script: script).runner(
+            { "user_id" => scoped_user.id, "username" => scoped_user.username.upcase },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result.dig("byId", "topics").map { |topic| topic["id"] }).to eq([tracked_topic.id])
+        expect(result.dig("byUsername", "topics").map { |topic| topic["id"] }).to eq(
+          [tracked_topic.id],
+        )
       end
 
       it "requires with_private to include private categories" do
@@ -208,9 +623,74 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
             llm: nil,
             bot_user: nil,
           ).invoke
+        string_private_result =
+          tool.runner(
+            { "category" => private_category.slug, "with_private" => "true" },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+        string_public_result =
+          tool.runner(
+            { "category" => private_category.slug, "with_private" => "false" },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+        empty_string_public_result =
+          tool.runner(
+            { "category" => private_category.slug, "with_private" => "" },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
 
         expect(public_result["topics"]).to eq([])
         expect(private_result["topics"].map { |topic| topic["id"] }).to eq([private_topic.id])
+        expect(string_private_result["topics"].map { |topic| topic["id"] }).to eq(
+          [private_topic.id],
+        )
+        expect(string_public_result["topics"]).to eq([])
+        expect(empty_string_public_result["topics"]).to eq([])
+      end
+
+      it "scopes filtered topics through a stable user ID" do
+        group = Fabricate(:group)
+        allowed_user = Fabricate(:user)
+        denied_user = Fabricate(:user)
+        group.add(allowed_user)
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+
+        script = <<~JS
+          function invoke(params) {
+            const query = "category:" + params.category;
+            return {
+              allowed: discourse.filterTopics({
+                q: query,
+                as_user_id: params.allowed_user_id
+              }),
+              denied: discourse.filterTopics({
+                q: query,
+                as_user_id: params.denied_user_id
+              })
+            };
+          }
+        JS
+
+        tool = create_tool(script: script)
+        result =
+          tool.runner(
+            {
+              "category" => private_category.slug,
+              "allowed_user_id" => allowed_user.id,
+              "denied_user_id" => denied_user.id,
+            },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result.dig("allowed", "topics").map { |topic| topic["id"] }).to eq(
+          [private_topic.id],
+        )
+        expect(result.dig("denied", "topics")).to eq([])
       end
     end
 
@@ -239,6 +719,57 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
 
         expect(topic_hash["id"]).to eq(topic.id)
       end
+
+      it "scopes getPost and getTopic through a stable user ID" do
+        group = Fabricate(:group)
+        allowed_user = Fabricate(:user)
+        denied_user = Fabricate(:user)
+        group.add(allowed_user)
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+        private_post = Fabricate(:post, topic: private_topic)
+
+        script = <<~JS
+          function invoke(params) {
+            return {
+              legacyPost: discourse.getPost(params.post_id),
+              legacyTopic: discourse.getTopic(params.topic_id),
+              allowedPost: discourse.getPost(params.post_id, {
+                as_user_id: params.allowed_user_id
+              }),
+              deniedPost: discourse.getPost(params.post_id, {
+                as_user_id: params.denied_user_id
+              }),
+              allowedTopic: discourse.getTopic(params.topic_id, {
+                as_user_id: params.allowed_user_id
+              }),
+              deniedTopic: discourse.getTopic(params.topic_id, {
+                as_user_id: params.denied_user_id
+              })
+            };
+          }
+        JS
+
+        tool = create_tool(script: script)
+        result =
+          tool.runner(
+            {
+              "post_id" => private_post.id,
+              "topic_id" => private_topic.id,
+              "allowed_user_id" => allowed_user.id,
+              "denied_user_id" => denied_user.id,
+            },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result["legacyPost"]["id"]).to eq(private_post.id)
+        expect(result["legacyTopic"]["id"]).to eq(private_topic.id)
+        expect(result["allowedPost"]["id"]).to eq(private_post.id)
+        expect(result["deniedPost"]).to be_nil
+        expect(result["allowedTopic"]["id"]).to eq(private_topic.id)
+        expect(result["deniedTopic"]).to be_nil
+      end
     end
 
     context "when using the search API" do
@@ -251,7 +782,10 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
 
         script = <<~JS
           function invoke(params) {
-            return discourse.search({ search_query: params.query });
+            return discourse.search({
+              search_query: params.query,
+              result_style: "compact"
+            });
           }
         JS
 
@@ -262,6 +796,122 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
 
         expect(result["rows"].length).to be > 0
         expect(result["rows"].first["title"]).to eq(topic.title)
+      end
+
+      it "scopes search through a specified user's Guardian" do
+        group = Fabricate(:group)
+        allowed_user = Fabricate(:user)
+        denied_user = Fabricate(:user)
+        group.add(allowed_user)
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+        private_post = Fabricate(:post, topic: private_topic, raw: "private validator needlephrase")
+        SearchIndexer.index(private_post, force: true)
+
+        script = <<~JS
+          function invoke(params) {
+            return {
+              system: discourse.search({
+                search_query: params.query,
+                with_private: true
+              }),
+              allowed: discourse.search({
+                search_query: params.query,
+                as_user_id: params.allowed_user_id
+              }),
+              denied: discourse.search({
+                search_query: params.query,
+                as_user_id: params.denied_user_id
+              })
+            };
+          }
+        JS
+
+        tool = create_tool(script: script)
+        result =
+          tool.runner(
+            {
+              "query" => "private validator needlephrase",
+              "allowed_user_id" => allowed_user.id,
+              "denied_user_id" => denied_user.id,
+            },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(result["system"]["rows"].map { |row| row["title"] }).to eq([private_topic.title])
+        expect(result["allowed"]["rows"].map { |row| row["title"] }).to eq([private_topic.title])
+        expect(result["denied"]["rows"]).to eq([])
+      end
+
+      it "rejects conflicting and unknown search scope options" do
+        scripts = [
+          ["cannot be used", <<~JS],
+              function invoke(params) {
+                try {
+                  discourse.search({
+                    search_query: "banana",
+                    as_user_id: params.user_id,
+                    with_private: false
+                  });
+                } catch (error) {
+                  return { error: error.message };
+                }
+              }
+            JS
+          ["Unsupported option", <<~JS],
+              function invoke(params) {
+                try {
+                  discourse.search({
+                    search_query: "banana",
+                    as_user: params.user_id
+                  });
+                } catch (error) {
+                  return { error: error.message };
+                }
+              }
+            JS
+          ["with_private must be a boolean", <<~JS],
+              function invoke() {
+                try {
+                  discourse.search({
+                    search_query: "banana",
+                    with_private: "yes"
+                  });
+                } catch (error) {
+                  return { error: error.message };
+                }
+              }
+            JS
+          ["max_results must be a positive integer", <<~JS],
+              function invoke() {
+                try {
+                  discourse.search({
+                    search_query: "banana",
+                    max_results: 0
+                  });
+                } catch (error) {
+                  return { error: error.message };
+                }
+              }
+            JS
+          ["options must be an object", <<~JS],
+              function invoke() {
+                try {
+                  discourse.search(null);
+                } catch (error) {
+                  return { error: error.message };
+                }
+              }
+            JS
+        ]
+
+        scripts.each do |expected_error, script|
+          tool = create_tool(script: script)
+          result = tool.runner({ "user_id" => user.id }, llm: nil, bot_user: nil).invoke
+
+          expect(result["error"]).to match(/#{expected_error}/)
+        end
       end
     end
 

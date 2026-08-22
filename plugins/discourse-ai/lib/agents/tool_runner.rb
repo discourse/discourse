@@ -238,10 +238,17 @@ module DiscourseAi
           },
         };
 
+        function unwrapDiscourseReadResult(result) {
+          if (result && result.__discourse_read_error) {
+            throw new Error(result.__discourse_read_error);
+          }
+          return result;
+        }
+
         const discourse = {
           baseUrl: #{::Discourse.base_url.to_json},
           search: function(params) {
-            return _discourse_search(params);
+            return unwrapDiscourseReadResult(_discourse_search(params));
           },
           updateAgent: function(agent_id_or_name, updates) {
             const result = _discourse_update_agent(agent_id_or_name, updates);
@@ -250,14 +257,34 @@ module DiscourseAi
             }
             return result;
           },
-          getPost: _discourse_get_post,
-          getTopic: _discourse_get_topic,
+          getPost: function(postId, options) {
+            return unwrapDiscourseReadResult(
+              _discourse_get_post(postId, options == null ? {} : options)
+            );
+          },
+          getTopicPost: function(topicId, postNumber, options) {
+            return unwrapDiscourseReadResult(
+              _discourse_get_topic_post(
+                topicId,
+                postNumber,
+                options == null ? {} : options
+              )
+            );
+          },
+          getTopicPosts: function(topicId, options) {
+            return unwrapDiscourseReadResult(
+              _discourse_get_topic_posts(topicId, options == null ? {} : options)
+            );
+          },
+          getTopic: function(topicId, options) {
+            return unwrapDiscourseReadResult(
+              _discourse_get_topic(topicId, options == null ? {} : options)
+            );
+          },
           filterTopics: function(params) {
-            const result = _discourse_filter_topics(params || {});
-            if (result.error) {
-              throw new Error(result.error);
-            }
-            return result;
+            return unwrapDiscourseReadResult(
+              _discourse_filter_topics(params == null ? {} : params)
+            );
           },
           getUser: _discourse_get_user,
           getAgent: function(name) {

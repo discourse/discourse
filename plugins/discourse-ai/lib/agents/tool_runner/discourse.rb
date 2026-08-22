@@ -12,12 +12,15 @@ module DiscourseAi
       # to the script. Three non-obvious behaviors to preserve or explicitly
       # revisit if you change them:
       #
-      # 1. Read bindings (`getPost`, `getTopic`, `getUser`, `getAgent`) serialize
-      #    with `system_guardian` and can return staff-visible data including PMs
-      #    and staff-only fields (emails, IPs). `search` and `filterTopics`
-      #    default to public visibility and only elevate when `with_private: true`
-      #    is passed. Existing tools rely on these contracts — don't tighten or
-      #    widen without a corresponding preamble doc change and migration plan.
+      # 1. Source read bindings (`getPost`, `getTopicPost`, `getTopicPosts`,
+      #    `getTopic`) default to `system_guardian` for compatibility, but accept
+      #    `as_user_id` or `as_username` to scope visibility through that user's
+      #    Guardian. `search` and `filterTopics` default to public visibility;
+      #    their user scopes expand access and must only use trusted, admin-authored
+      #    identities. `with_private: true` uses SystemUser. Scope options are
+      #    mutually exclusive and unknown options fail closed with a catchable
+      #    JavaScript error. Other privileged reads (`getUser`, `getAgent`) retain
+      #    their existing SystemUser behavior.
       #
       # 2. `resolve_guardian` elevates staged users to `system_guardian`. This
       #    supports a seeding pattern exercised by the "can seed a category
@@ -36,34 +39,149 @@ module DiscourseAi
       #    If you add a new sub-operation, add its own inner permission check.
       #    Do not assume the outer `can_see?` is sufficient.
       module Discourse
+        MAX_TOPIC_POSTS = 20
+        MAX_FILTER_TOPICS = 100
+        READ_API_ERROR_KEY = "__discourse_read_error"
+        READ_SCOPE_OPTION_KEYS = %i[as_username as_user_id].freeze
+        TRUE_BOOLEAN_VALUES = [true, 1, "1", "t", "T", "true", "TRUE", "on", "ON"].freeze
+        FALSE_BOOLEAN_VALUES = [
+          false,
+          nil,
+          0,
+          "",
+          "0",
+          "f",
+          "F",
+          "false",
+          "FALSE",
+          "off",
+          "OFF",
+        ].freeze
+        TOPIC_POSTS_OPTION_KEYS = [*READ_SCOPE_OPTION_KEYS, :limit, :post_numbers].freeze
+        FILTER_TOPICS_OPTION_KEYS = [
+          :q,
+          :limit,
+          :page,
+          :with_private,
+          *READ_SCOPE_OPTION_KEYS,
+        ].freeze
+        SEARCH_OPTION_KEYS = [
+          :search_query,
+          :category,
+          :user,
+          :order,
+          :max_posts,
+          :tags,
+          :before,
+          :after,
+          :status,
+          :hyde,
+          :max_results,
+          :result_style,
+          :with_private,
+          *READ_SCOPE_OPTION_KEYS,
+        ].freeze
+
         def attach_discourse(mini_racer_context)
           mini_racer_context.attach(
             "_discourse_get_post",
-            ->(post_id) do
-              in_attached_function do
-                post = Post.find_by(id: post_id)
-                return nil if post.nil?
-                obj =
-                  recursive_as_json(
-                    PostSerializer.new(post, scope: system_guardian, root: false, add_raw: true),
+            ->(post_id, options) do
+              in_read_api_function do
+                guardian = resolve_read_guardian(options, allowed_keys: READ_SCOPE_OPTION_KEYS)
+                post = Post.find_by(id: positive_integer(post_id, name: "post_id"))
+                return nil if post.nil? || !guardian.can_see?(post)
+                serialize_post_for_tool(post, scope: guardian)
+              end
+            end,
+          )
+
+          mini_racer_context.attach(
+            "_discourse_get_topic_post",
+            ->(topic_id, post_number, options) do
+              in_read_api_function do
+                guardian = resolve_read_guardian(options, allowed_keys: READ_SCOPE_OPTION_KEYS)
+
+                topic = Topic.find_by(id: positive_integer(topic_id, name: "topic_id"))
+                return nil if topic.nil? || !guardian.can_see?(topic)
+
+                post =
+                  topic.posts.find_by(
+                    post_number: positive_integer(post_number, name: "post_number"),
                   )
-                topic_obj =
-                  recursive_as_json(
-                    ListableTopicSerializer.new(post.topic, scope: system_guardian, root: false),
-                  )
-                obj["topic"] = topic_obj
-                obj
+                return nil if post.nil? || !guardian.can_see?(post)
+                serialize_post_for_tool(post, scope: guardian)
+              end
+            end,
+          )
+
+          mini_racer_context.attach(
+            "_discourse_get_topic_posts",
+            ->(topic_id, options) do
+              in_read_api_function do
+                options = validate_options(options, allowed_keys: TOPIC_POSTS_OPTION_KEYS)
+                guardian = resolve_read_guardian(options, allowed_keys: nil)
+
+                topic = Topic.find_by(id: positive_integer(topic_id, name: "topic_id"))
+                return [] if topic.nil? || !guardian.can_see?(topic)
+
+                posts =
+                  topic.posts.secured(guardian).joins(:topic).preload(:user).order(:post_number)
+                posts = guardian.filter_hidden_posts(posts, category: topic.category)
+
+                if options.key?(:post_numbers)
+                  if options.key?(:limit)
+                    raise ::Discourse::InvalidParameters.new(
+                            "limit and post_numbers cannot be used together",
+                          )
+                  end
+                  unless options[:post_numbers].is_a?(Array)
+                    raise ::Discourse::InvalidParameters.new("post_numbers must be an array")
+                  end
+
+                  if options[:post_numbers].length > MAX_TOPIC_POSTS
+                    raise ::Discourse::InvalidParameters.new(
+                            "post_numbers cannot exceed #{MAX_TOPIC_POSTS} entries",
+                          )
+                  end
+
+                  post_numbers =
+                    options[:post_numbers]
+                      .map do |post_number|
+                        unless post_number.is_a?(Integer) && post_number.positive?
+                          raise ::Discourse::InvalidParameters.new(
+                                  "post_numbers must contain positive integers",
+                                )
+                        end
+                        post_number
+                      end
+                      .uniq
+                  posts = posts.where(post_number: post_numbers)
+                else
+                  if options.key?(:limit)
+                    limit = positive_integer_option(options[:limit], name: "limit")
+                    limit = [limit, MAX_TOPIC_POSTS].min
+                  else
+                    limit = MAX_TOPIC_POSTS
+                  end
+                  posts = posts.limit(limit)
+                end
+
+                serialized_topic = serialize_listable_topic_for_tool(topic, scope: guardian)
+                posts.map do |post|
+                  serialize_post_for_tool(post, scope: guardian, serialized_topic: serialized_topic)
+                end
               end
             end,
           )
 
           mini_racer_context.attach(
             "_discourse_get_topic",
-            ->(topic_id) do
-              in_attached_function do
-                topic = Topic.find_by(id: topic_id)
-                return nil if topic.nil?
-                serialize_topic_for_tool(topic, scope: system_guardian)
+            ->(topic_id, options) do
+              in_read_api_function do
+                guardian = resolve_read_guardian(options, allowed_keys: READ_SCOPE_OPTION_KEYS)
+                topic = Topic.find_by(id: positive_integer(topic_id, name: "topic_id"))
+                return nil if topic.nil? || !guardian.can_see?(topic)
+                serialize_topic_for_tool(topic, scope: guardian)
               end
             end,
           )
@@ -71,23 +189,30 @@ module DiscourseAi
           mini_racer_context.attach(
             "_discourse_filter_topics",
             ->(params) do
-              in_attached_function do
-                return { error: "params must be an object" } if !params.respond_to?(:symbolize_keys)
-
-                params = (params || {}).symbolize_keys
+              in_read_api_function do
+                params = validate_options(params, allowed_keys: FILTER_TOPICS_OPTION_KEYS)
                 query = params[:q].to_s
-                return { error: "Missing required parameter: q" } if query.blank?
+                if query.blank?
+                  raise ::Discourse::InvalidParameters.new("Missing required parameter: q")
+                end
 
-                page = params[:page].to_i
-                return { error: "page must be greater than or equal to 0" } if page.negative?
+                page = params.key?(:page) ? non_negative_integer(params[:page], name: "page") : 0
 
-                with_private = ActiveModel::Type::Boolean.new.cast(params[:with_private])
-                guardian = with_private ? system_guardian : Guardian.new
+                guardian =
+                  resolve_read_guardian(
+                    params,
+                    allowed_keys: nil,
+                    default_guardian: Guardian.new,
+                    allow_with_private: true,
+                  )
 
                 query_options = { guardian: guardian, q: query, page: page }
-                query_options[:per_page] = params[:limit].to_i if params.key?(:limit)
+                if params.key?(:limit)
+                  requested_limit = positive_integer_option(params[:limit], name: "limit")
+                  query_options[:per_page] = [requested_limit, MAX_FILTER_TOPICS].min
+                end
 
-                topic_list = TopicQuery.new(nil, **query_options).list_filter
+                topic_list = TopicQuery.new(guardian.user, **query_options).list_filter
 
                 {
                   query: query,
@@ -360,11 +485,18 @@ module DiscourseAi
           mini_racer_context.attach(
             "_discourse_search",
             ->(params) do
-              in_attached_function do
-                search_params = params.symbolize_keys
-                if search_params.delete(:with_private)
-                  search_params[:current_user] = ::Discourse.system_user
-                end
+              in_read_api_function do
+                search_params = validate_options(params, allowed_keys: SEARCH_OPTION_KEYS)
+                guardian =
+                  resolve_read_guardian(
+                    search_params,
+                    allowed_keys: nil,
+                    default_guardian: Guardian.new,
+                    allow_with_private: true,
+                  )
+
+                search_params = search_params.except(*READ_SCOPE_OPTION_KEYS, :with_private)
+                search_params[:current_user] = guardian.user if guardian.user
                 search_params[:result_style] = :detailed
                 results = DiscourseAi::Utils::Search.perform_search(**search_params)
                 recursive_as_json(results)
@@ -614,6 +746,122 @@ module DiscourseAi
 
         private
 
+        def in_read_api_function
+          in_attached_function { yield }
+        rescue ::Discourse::InvalidParameters, ArgumentError => error
+          { READ_API_ERROR_KEY => error.message }
+        end
+
+        # Positional IDs historically accept canonical numeric strings; security
+        # and collection options remain type-strict.
+        def positive_integer(value, name:)
+          parsed_value =
+            if value.is_a?(Integer)
+              value
+            elsif value.is_a?(String) && value.match?(/\A\d+\z/)
+              value.to_i
+            end
+
+          if !parsed_value || !parsed_value.positive?
+            raise ::Discourse::InvalidParameters.new("#{name} must be a positive integer")
+          end
+
+          parsed_value
+        end
+
+        def positive_integer_option(value, name:)
+          unless value.is_a?(Integer) && value.positive?
+            raise ::Discourse::InvalidParameters.new("#{name} must be a positive integer")
+          end
+
+          value
+        end
+
+        def non_negative_integer(value, name:)
+          unless value.is_a?(Integer) && !value.negative?
+            raise ::Discourse::InvalidParameters.new("#{name} must be greater than or equal to 0")
+          end
+
+          value
+        end
+
+        def boolean_option(value, name:)
+          return true if TRUE_BOOLEAN_VALUES.include?(value)
+          return false if FALSE_BOOLEAN_VALUES.include?(value)
+
+          raise ::Discourse::InvalidParameters.new("#{name} must be a boolean")
+        end
+
+        def validate_options(options, allowed_keys:)
+          unless options.respond_to?(:symbolize_keys)
+            raise ::Discourse::InvalidParameters.new("options must be an object")
+          end
+
+          options = options.symbolize_keys
+          unsupported_keys = options.keys - allowed_keys
+          if unsupported_keys.present?
+            raise ::Discourse::InvalidParameters.new(
+                    "Unsupported option(s): #{unsupported_keys.sort.join(", ")}",
+                  )
+          end
+
+          options
+        end
+
+        def resolve_read_guardian(
+          options,
+          allowed_keys:,
+          default_guardian: system_guardian,
+          allow_with_private: false
+        )
+          options = validate_options(options, allowed_keys: allowed_keys) if allowed_keys
+          has_username = options.key?(:as_username)
+          has_user_id = options.key?(:as_user_id)
+
+          if has_username && has_user_id
+            raise ::Discourse::InvalidParameters.new(
+                    "as_username and as_user_id cannot be used together",
+                  )
+          end
+
+          if options.key?(:with_private) && (has_username || has_user_id)
+            raise ::Discourse::InvalidParameters.new(
+                    "with_private cannot be used with as_username or as_user_id",
+                  )
+          end
+
+          with_private = false
+          if allow_with_private && options.key?(:with_private)
+            with_private = boolean_option(options[:with_private], name: "with_private")
+          end
+
+          return system_guardian if with_private
+          return default_guardian if !has_username && !has_user_id
+
+          user =
+            if has_username
+              username = options[:as_username]
+              unless username.is_a?(String) && username.present?
+                raise ::Discourse::InvalidParameters.new("as_username must be a non-empty string")
+              end
+              User.find_by_username(username)
+            else
+              user_id = positive_integer_option(options[:as_user_id], name: "as_user_id")
+              User.find_by(id: user_id)
+            end
+
+          if has_username && user && !user.id.positive?
+            raise ::Discourse::InvalidParameters.new(
+                    "as_username must identify a user with a positive ID",
+                  )
+          end
+
+          identity = has_username ? options[:as_username] : options[:as_user_id]
+          raise ::Discourse::InvalidParameters.new("User not found: #{identity}") if user.nil?
+
+          Guardian.new(user)
+        end
+
         def resolve_user(username)
           if username.present?
             User.find_by(username: username)
@@ -645,8 +893,20 @@ module DiscourseAi
           end
         end
 
+        def serialize_post_for_tool(post, scope:, serialized_topic: nil)
+          data =
+            recursive_as_json(PostSerializer.new(post, scope: scope, root: false, add_raw: true))
+          data["topic"] = serialized_topic ||
+            serialize_listable_topic_for_tool(post.topic, scope: scope)
+          data
+        end
+
+        def serialize_listable_topic_for_tool(topic, scope:)
+          recursive_as_json(ListableTopicSerializer.new(topic, scope: scope, root: false))
+        end
+
         def serialize_topic_for_tool(topic, scope:)
-          data = recursive_as_json(ListableTopicSerializer.new(topic, scope: scope, root: false))
+          data = serialize_listable_topic_for_tool(topic, scope: scope)
           data["url"] = topic.relative_url
           data["tags"] = topic.tags.map(&:name)
           data["first_post_id"] = topic.first_post&.id

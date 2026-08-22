@@ -150,14 +150,26 @@
  *    the agent. The runner intentionally grants admin-level power to the script.
  *    Know these non-obvious defaults:
  *
- *    - Read ops (`getPost`, `getTopic`, `getUser`, `getAgent`) use the
- *      SystemUser scope. Results may include PMs, user emails, IP addresses,
- *      staff-category content, and other staff-only serializer fields. Do not
- *      return this data verbatim to the invoking user unless you've verified
- *      they're authorized to see it.
+ *    - Source reads (`getPost`, `getTopicPost`, `getTopicPosts`, `getTopic`)
+ *      use the SystemUser scope when no scope option is supplied. Results may
+ *      include PMs, staff-category content, and staff-only serializer fields.
+ *      Pass `as_user_id` (preferred because IDs survive renames) or
+ *      `as_username` to enforce that user's Guardian visibility.
  *
- *    - `search` and `filterTopics` default to public visibility. Pass
- *      `with_private: true` to elevate them to the SystemUser scope.
+ *    - `search` and `filterTopics` default to public visibility. Their user scope
+ *      options expand visibility to content that user can see; a staff identity
+ *      can be as privileged as `with_private: true`. Scope identities must come
+ *      from fixed admin-authored configuration or trusted runtime context. Never
+ *      populate them from tool parameters, model output, or other untrusted input.
+ *      Never combine identity scope with `with_private`. `with_private` accepts
+ *      booleans and, for compatibility, `"true"`/`"false"`, `"1"`/`"0"`, and
+ *      equivalent `t`/`f` or `on`/`off` forms. Scope-option conflicts, missing
+ *      users, malformed values, and unsupported option names throw a catchable
+ *      JavaScript error rather than falling back to a more privileged scope.
+ *
+ *    - Other privileged reads (`getUser`, `getAgent`) retain their SystemUser
+ *      behavior. They do not accept read scope options. Do not return privileged
+ *      data verbatim unless the invoking user is authorized to see it.
  *
  *    - Write ops (`createTopic`, `createPost`, `editPost`, `editTopic`,
  *      `createChatMessage`) enforce permissions via the Guardian of the user
@@ -185,33 +197,61 @@
  *
  *    discourse.search(params): Performs a Discourse search.
  *    Parameters:
- *      params (Object): Search parameters (e.g., { search_query: "keyword", with_private: true, max_results: 10 }).
- *                       By default this searches public content. `with_private: true` searches across all posts visible to the
- *                       SystemUser. `result_style: 'detailed'` is used by default.
+ *      params (Object): Supports `search_query`, `category`, `user`, `order`, `max_posts`, `tags`,
+ *                       `before`, `after`, `status`, `hyde`, `max_results`, `result_style`,
+ *                       `with_private`, `as_user_id`, and `as_username`.
+ *                       By default this searches public content. `with_private: true` searches as
+ *                       SystemUser. `as_user_id` or `as_username` instead scopes search through that
+ *                       user's Guardian. `result_style` is accepted for backwards compatibility,
+ *                       but `"detailed"` is always used.
  *    Returns: Object (Discourse search results structure, includes posts, topics, users etc.)
  *
  *    discourse.filterTopics(params): Filters topics using Discourse topic filter syntax.
  *    Parameters:
- *      params (Object): { q: string, limit?: number, page?: number, with_private?: boolean }
+ *      params (Object): { q: string, limit?: number, page?: number, with_private?: boolean,
+ *                         as_user_id?: number, as_username?: string }
  *                       `q` uses Discourse topic filter syntax (for example: "category:support order:created").
- *                       By default this only returns topics visible publicly. Pass `with_private: true` to elevate to the
- *                       SystemUser scope.
+ *                       By default this only returns topics visible publicly. Pass `with_private: true`
+ *                       for SystemUser scope, or a user scope option to use that user's Guardian.
  *    Returns: Object { query, page, limit, topics }
  *      query (string): The filter query that was executed.
  *      page (number): The page number used.
- *      limit (number): The effective per-page limit used.
+ *      limit (number): The effective per-page limit used (maximum 100).
  *      topics (Array<Object>): Topic summaries — same shape as `getTopic` (ListableTopicSerializer plus
  *                              `url`, `tags`, `first_post_id`, `category_id`, `category_name`,
  *                              `category_slug`, `views`, `like_count`).
  *
- *    discourse.getPost(post_id): Retrieves details for a specific post.
+ *    discourse.getPost(post_id, options?): Retrieves details for a specific post.
  *    Parameters:
  *      post_id (number): The ID of the post.
+ *      options (Object, optional): { as_user_id?: number, as_username?: string }.
+ *                                  Omission preserves the SystemUser read scope.
  *    Returns: Object (Post details including `raw`, nested `topic` object with ListableTopicSerializer structure) or null if not found/accessible.
  *
- *    discourse.getTopic(topic_id): Retrieves details for a specific topic.
+ *    discourse.getTopicPost(topic_id, post_number, options?): Retrieves one exact post by its topic coordinates.
+ *    Parameters:
+ *      topic_id (number): The topic ID.
+ *      post_number (number): The post number within the topic.
+ *      options (Object, optional): { as_user_id?: number, as_username?: string }.
+ *                                  Omission preserves the SystemUser read scope.
+ *    Returns: Object (same shape as `getPost`, including `raw` and nested `topic`) or null if not found/accessible.
+ *
+ *    discourse.getTopicPosts(topic_id, options?): Retrieves posts from a topic in post-number order.
+ *    Parameters:
+ *      topic_id (number): The topic ID.
+ *      options (Object, optional):
+ *        as_user_id (number): Scope the read through this user's Guardian (preferred).
+ *        as_username (string): Scope the read through this user's Guardian.
+ *        post_numbers (Array<number>): Return only these positive post numbers. At most 20 entries are accepted.
+ *        limit (number): Positive maximum when `post_numbers` is omitted (default 20; values above 20 are capped).
+ *                       Do not combine `limit` and `post_numbers`.
+ *    Returns: Array<Object> (each item has the same shape as `getPost`). Returns an empty array if the topic is not found or accessible.
+ *
+ *    discourse.getTopic(topic_id, options?): Retrieves details for a specific topic.
  *    Parameters:
  *      topic_id (number): The ID of the topic.
+ *      options (Object, optional): { as_user_id?: number, as_username?: string }.
+ *                                  Omission preserves the SystemUser read scope.
  *    Returns: Object (Topic details using ListableTopicSerializer structure, plus `url`, `tags`,
  *             `first_post_id`, `category_id`, `category_name`, `category_slug`, `views`, `like_count`)
  *             or null if not found/accessible.
