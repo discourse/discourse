@@ -341,6 +341,7 @@ en:
         other: "%{count} new messages"
       sound:
         title: "Desktop chat notification sound"
+        preview: "Play a preview of the selected sound"
       sounds:
         none: "None"
         classic: "Classic and clean"
