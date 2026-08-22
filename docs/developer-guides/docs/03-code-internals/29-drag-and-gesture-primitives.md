@@ -420,21 +420,31 @@ everything.
 Press, move, and release on one element, for a value that tracks the pointer.
 It transfers nothing and has no targets.
 
-| Argument          | Type                               | Purpose                                          |
-| ----------------- | ---------------------------------- | ------------------------------------------------ |
-| `onDragStart`     | `(event, info) => boolean \| void` | The gesture began. Returning `false` refuses it. |
-| `onDrag`          | `(event, info) => void`            | The pointer moved.                               |
-| `onDragEnd`       | `(event, info) => void`            | The gesture finished.                            |
-| `onDragCancel`    | `(event, info) => void`            | It was interrupted rather than finished.         |
-| `threshold`       | `number`                           | Pixels of movement before the gesture starts.    |
-| `draggingClass`   | `string`                           | Class applied to the element while dragging.     |
-| `bodyClass`       | `string`                           | Class applied to `document.body` while dragging. |
-| `cancelCommits`   | `boolean`                          | Whether a cancel commits the last value.         |
-| `stopPropagation` | `boolean`                          | Whether to stop the pointer events propagating.  |
-| `touchAction`     | `TouchActionToken`                 | The `touch-action` to apply for the gesture.     |
+| Argument             | Type                               | Purpose                                          |
+| -------------------- | ---------------------------------- | ------------------------------------------------ |
+| `onDragStart`        | `(event, info) => boolean \| void` | The gesture began. Returning `false` refuses it. |
+| `onDrag`             | `(event, info) => void`            | The pointer moved.                               |
+| `onDragEnd`          | `(event, info) => void`            | The gesture finished.                            |
+| `onDragCancel`       | `(event, info) => void`            | It was interrupted rather than finished.         |
+| `threshold`          | `number`                           | Pixels of movement before the gesture starts.    |
+| `draggingClass`      | `string`                           | Class applied to the element while dragging.     |
+| `bodyClass`          | `string`                           | Class applied to `document.body` while dragging. |
+| `cancelCommits`      | `boolean`                          | Whether a cancel commits the last value.         |
+| `stopPropagation`    | `boolean`                          | Whether to stop the pointer events propagating.  |
+| `preventDefault`     | `boolean`                          | Whether to cancel the press. Defaults to `true`. |
+| `capturePressTarget` | `boolean`                          | Capture the pressed node, not this element.      |
+| `touchAction`        | `TouchActionToken`                 | The `touch-action` to apply for the gesture.     |
 
 Always handle `onDragCancel`. A gesture interrupted by the browser otherwise
 leaves whatever `onDragStart` opened still open.
+
+A handle is the usual consumer, and the defaults suit it: the press is cancelled
+so it moves no focus, and this element takes the capture. A surface large enough
+to wrap the content the user is reaching for wants both reversed —
+`preventDefault=false` so its controls keep their focus on tap, their text
+selection and their `mousedown`, and `capturePressTarget=true` so the capture
+does not retarget `mouseup`, and with it `click`, away from the control that was
+pressed.
 
 # DResizeSeparator
 

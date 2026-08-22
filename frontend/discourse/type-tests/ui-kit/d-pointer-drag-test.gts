@@ -22,6 +22,7 @@ const Test = <template>
       threshold=4
       stopPropagation=true
       preventDefault=false
+      capturePressTarget=true
       cancelCommits=true
       touchAction="pan-y"
     }}

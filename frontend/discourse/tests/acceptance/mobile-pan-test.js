@@ -2,7 +2,10 @@ import { click, find, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { DRAWER_VELOCITY_EXPIRY_MS } from "discourse/components/glimmer-site-header";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import {
+  stubPointerCapture,
+  stubSharedPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 
 const PANEL_WIDTH_FALLBACK = 340;
 // Past the gesture's 5px threshold, so the drag engages, but far under the
@@ -50,7 +53,15 @@ async function startDrawerDrag(targetSelector) {
     time: 1000,
   };
 
+  // Either node may take the capture: the panel hands it to the pressed
+  // descendant so a control there stays activatable, while the cloak keeps it.
+  // A real `setPointerCapture` refuses a pointer id that never existed, and the
+  // gesture then aborts at the press without saying so.
   stubPointerCapture(gestureSurface);
+  if (target !== gestureSurface) {
+    stubPointerCapture(target);
+  }
+
   dispatchPointerEvent(target, "pointerdown", drag);
   await settled();
 
@@ -83,6 +94,13 @@ async function endDrawerDrag(drag, options) {
 /** A release the gesture must read as a parked pointer rather than a flick. */
 async function endParkedDrawerDrag(drag) {
   await endDrawerDrag(drag, { afterMs: DRAWER_VELOCITY_EXPIRY_MS + 1 });
+}
+
+/** The browser claiming the touch for itself, rather than the user letting go. */
+async function cancelDrawerDrag(drag, { afterMs = 16 } = {}) {
+  drag.time += afterMs;
+  dispatchPointerEvent(drag.gestureSurface, "pointercancel", drag);
+  await settled();
 }
 
 acceptance("Mobile - menu drawer gestures", function (needs) {
@@ -269,6 +287,93 @@ acceptance("Mobile - menu drawer gestures", function (needs) {
       .dom(".panel-body")
       .doesNotExist("it closes the user drawer on a right drag");
     assert.dom(document.documentElement).doesNotHaveClass(/scroll-lock/);
+  });
+
+  test("a cloak gesture the browser claims still closes the drawer", async function (assert) {
+    await visit("/");
+    await click(".hamburger-dropdown button");
+
+    const drag = await startDrawerDrag(".header-cloak");
+    // touchAction leaves vertical panning to the browser, so a mostly-vertical
+    // jitter on the cloak ends as a cancellation rather than a release.
+    await moveDrawerDrag(drag, { by: -JITTER_PX, afterMs: 400 });
+    await cancelDrawerDrag(drag);
+
+    assert
+      .dom(".panel-body")
+      .doesNotExist(
+        "a press outside the drawer dismisses it however the gesture ends, since the outside-press handler it displaced will not fire"
+      );
+    assert.dom(document.documentElement).doesNotHaveClass(/scroll-lock/);
+  });
+
+  test("a cloak gesture pulling the drawer open survives a claim", async function (assert) {
+    await visit("/");
+    await click(".hamburger-dropdown button");
+
+    const drag = await startDrawerDrag(".header-cloak");
+    await moveDrawerDrag(drag, { by: drawerWidth() / 4, afterMs: 400 });
+    await cancelDrawerDrag(drag);
+
+    assert
+      .dom(".panel-body")
+      .exists(
+        { count: 1 },
+        "a deliberate pull the other way is still not a dismissal"
+      );
+  });
+
+  test("a reversal sharing a timestamp does not close the drawer", async function (assert) {
+    await visit("/");
+    await click(".hamburger-dropdown button");
+
+    const drag = await startDrawerDrag(".panel-body");
+    await moveDrawerDrag(drag, { by: -drawerWidth() / 10, afterMs: 16 });
+    // Timestamps are resolution-coarsened, so a move can legitimately land on
+    // the same one as its predecessor. The reversal cannot be timed, and must
+    // not release with the closing velocity it just undid.
+    await moveDrawerDrag(drag, { by: JITTER_PX * 2, afterMs: 0 });
+    await endDrawerDrag(drag);
+
+    assert
+      .dom(".panel-body")
+      .exists(
+        { count: 1 },
+        "an untimeable sample leaves the decision to distance, which this drag never covers"
+      );
+    assert.dom(document.documentElement).hasClass(/scroll-lock/);
+  });
+
+  test("a press inside the panel hands the capture to the pressed control", async function (assert) {
+    await visit("/");
+    await click(".hamburger-dropdown button");
+
+    const { ownerOf } = stubSharedPointerCapture([
+      ".menu-panel",
+      ".panel-body",
+    ]);
+    const drag = {
+      gestureSurface: find(".menu-panel"),
+      pointerId: nextPointerId++,
+      x: 200,
+      y: 200,
+      time: 1000,
+    };
+
+    dispatchPointerEvent(find(".panel-body"), "pointerdown", drag);
+    await settled();
+
+    // Capture retargets mouseup, and with it the click the browser computes from
+    // the mousedown/mouseup pair. Held by the panel, every link and button
+    // inside it stops activating.
+    assert
+      .dom(ownerOf(drag.pointerId))
+      .hasClass(
+        "panel-body",
+        "the pressed node keeps the capture, not the panel"
+      );
+
+    await endDrawerDrag(drag);
   });
 
   test("a press inside the panel is left uncancelled, a press on the cloak is not", async function (assert) {

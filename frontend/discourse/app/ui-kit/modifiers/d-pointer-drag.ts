@@ -142,6 +142,26 @@ interface DPointerDragSignature {
       preventDefault?: boolean;
 
       /**
+       * Whether the pointer capture is taken by the element the press landed on
+       * rather than by this one. Defaults to `false`.
+       *
+       * Capture retargets the rest of the gesture at whichever node holds it,
+       * and the compatibility mouse events with it. A capture held here
+       * therefore makes `mouseup` — and the `click` the browser computes from
+       * the mousedown/mouseup pair — land on this element instead of the control
+       * the press began on, so that control never activates. A handle has no
+       * descendants to lose, but a surface wrapping links or buttons does, and
+       * wants `true`.
+       *
+       * The gesture is unaffected: retargeted events still bubble to this
+       * element, where the listeners are. The cost is reach — if the captured
+       * descendant is removed mid-gesture the capture dies with it, and a
+       * pointer that then leaves this element delivers its release elsewhere.
+       * Pair with `preventDefault=false`, which the same surfaces want.
+       */
+      capturePressTarget?: boolean;
+
+      /**
        * Whether a gesture that ends without the pointer being released on this
        * element — `pointercancel`, or the capture being taken away — commits via
        * `onDragEnd` instead of discarding via `onDragCancel`. Defaults to
@@ -194,7 +214,7 @@ export type DPointerDragArgs = DPointerDragSignature["Args"]["Named"];
  */
 const pointerOwners = new Map<
   number,
-  { element: HTMLElement; supersede: (event: PointerEvent) => void }
+  { element: Element; supersede: (event: PointerEvent) => void }
 >();
 
 /**
@@ -268,6 +288,9 @@ export function registerPointerDrag(
   // rather than re-read when it is time to remove it.
   let appliedClass: string | null = null;
   let bodyClassLease: ElementClassLease | null = null;
+  // The node actually holding the capture. `capturePressTarget` lets that be a
+  // descendant, and the release has to go back to whichever node took it.
+  let capturedNode: Element = element;
   // Set by the cleanup below. A consumer can destroy its own registration from
   // inside `onDragStart`, and the rest of that dispatch still runs.
   let tornDown = false;
@@ -299,10 +322,11 @@ export function registerPointerDrag(
         pointerOwners.delete(finishedPointer);
       }
       try {
-        element.releasePointerCapture(finishedPointer);
+        capturedNode.releasePointerCapture(finishedPointer);
       } catch {
         // Already released if the element was removed mid-gesture.
       }
+      capturedNode = element;
     }
     if (classToRemove) {
       // Unguarded: `appliedClass` is only ever set to a token `classList.add`
@@ -353,20 +377,37 @@ export function registerPointerDrag(
     if (event.button !== 0 || pointerId !== null) {
       return;
     }
+    const args = getArgsRef();
+    // Capture retargets every later event of the gesture at whatever holds it,
+    // and the compatibility mouse events with them — so a capture taken by this
+    // element makes `mouseup`, and with it the `click` computed from the
+    // mousedown/mouseup pair, land here rather than on the control the press
+    // began on. Holding the press target instead keeps that control activatable,
+    // and costs the gesture nothing: retargeted events still bubble to this
+    // element, where the listeners are.
+    // `Element`, not `HTMLElement`: the icon inside a link or button is an
+    // `SVGElement`, and a press landing on it must still capture the control.
+    const captureNode =
+      args.capturePressTarget &&
+      event.target instanceof Element &&
+      element.contains(event.target)
+        ? event.target
+        : element;
+
     // Capture first, before telling anyone a gesture started. Capture is what
     // routes the rest of the gesture back to this element, so without it a
     // pointer leaving the element would never deliver its release and the
     // in-flight guard would then reject every later press. Abort rather than
     // begin a gesture that cannot finish.
     try {
-      element.setPointerCapture(event.pointerId);
+      captureNode.setPointerCapture(event.pointerId);
     } catch {
       return;
     }
 
     const releaseCapture = () => {
       try {
-        element.releasePointerCapture(event.pointerId);
+        captureNode.releasePointerCapture(event.pointerId);
       } catch {
         // Already gone if the element was detached in between.
       }
@@ -393,7 +434,6 @@ export function registerPointerDrag(
       }
     };
 
-    const args = getArgsRef();
     // Before the dispatch below, which reports them.
     originX = event.clientX;
     originY = event.clientY;
@@ -417,6 +457,7 @@ export function registerPointerDrag(
     }
 
     pointerId = event.pointerId;
+    capturedNode = captureNode;
     engaged = !(args.threshold > 0);
 
     // A press bubbles, so an ancestor registration starts its own gesture from
@@ -427,7 +468,10 @@ export function registerPointerDrag(
     // back through `hasPointerCapture`, which cannot tell a lost claim apart from
     // a pointer that was never real.
     const superseded = pointerOwners.get(event.pointerId);
-    pointerOwners.set(event.pointerId, { element, supersede: onSuperseded });
+    pointerOwners.set(event.pointerId, {
+      element: captureNode,
+      supersede: onSuperseded,
+    });
 
     if (args.draggingClass) {
       try {

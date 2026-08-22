@@ -18,6 +18,9 @@ const Test = <template>
   {{! @glint-expect-error - preventDefault is a flag, not a string }}
   <span {{dPointerDrag preventDefault="false"}}></span>
 
+  {{! @glint-expect-error - capturePressTarget is a flag, not a string }}
+  <span {{dPointerDrag capturePressTarget="true"}}></span>
+
   {{! @glint-expect-error - onDrag receives the event; it cannot take extra arguments }}
   <span {{dPointerDrag onDrag=onGesture extra=1}}></span>
 

@@ -497,6 +497,100 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
     });
   });
 
+  module("capturePressTarget", function () {
+    // What this buys cannot be asserted here: `click` is computed by the browser
+    // from the mousedown/mouseup pair, and a synthetic press produces neither, so
+    // a retargeted activation looks identical to a working one. The capture node
+    // is the mechanism behind it, and that is what these pin.
+    test("the element takes the capture by default", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-surface" {{dPointerDrag}}>
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      const { ownerOf } = stubSharedPointerCapture([
+        ".dpd-surface",
+        ".dpd-child",
+      ]);
+
+      await triggerEvent(".dpd-child", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.dom(ownerOf(1)).hasClass("dpd-surface");
+    });
+
+    test("capturePressTarget hands it to the pressed descendant", async function (assert) {
+      const seen = [];
+      const onDrag = () => seen.push("drag");
+
+      await render(
+        <template>
+          <div
+            class="dpd-surface"
+            {{dPointerDrag onDrag=onDrag capturePressTarget=true}}
+          >
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      const { ownerOf } = stubSharedPointerCapture([
+        ".dpd-surface",
+        ".dpd-child",
+      ]);
+
+      await triggerEvent(".dpd-child", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+      });
+
+      assert
+        .dom(ownerOf(1))
+        .hasClass(
+          "dpd-child",
+          "so mouseup, and the click computed from it, stay on the control that was pressed"
+        );
+
+      await triggerEvent(".dpd-child", "pointermove", {
+        pointerId: 1,
+        clientX: 30,
+      });
+
+      assert.true(
+        seen.length > 0,
+        "and the gesture still reports, because a retargeted event bubbles to the element holding the listeners"
+      );
+    });
+
+    test("a press outside the element keeps the capture on it", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-surface" {{dPointerDrag capturePressTarget=true}}>
+          </div>
+          <button type="button" class="dpd-outsider"></button>
+        </template>
+      );
+      const { stubs, ownerOf } = stubSharedPointerCapture([
+        ".dpd-surface",
+        ".dpd-outsider",
+      ]);
+      const surface = stubs[0].element;
+
+      // A press relayed from elsewhere names a target this element does not
+      // contain; capturing it would put the gesture somewhere it cannot reach.
+      await triggerEvent(surface, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.dom(ownerOf(1)).hasClass("dpd-surface");
+    });
+  });
+
   module("configurable pointer lifecycle", function () {
     test("exports registerPointerDrag for lifecycle reuse", function (assert) {
       assert.strictEqual(

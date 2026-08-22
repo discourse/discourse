@@ -556,20 +556,36 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  onDrawerDragCancel() {
-    // A vertical scroll inside the panel cancels the pointer on every touch, so
-    // only a gesture that actually moved the drawer has anything to settle.
-    if (this._drawerDragPanel && this._drawerDragAxis === "horizontal") {
-      this._animateOpening(this._drawerDragPanel);
+  onDrawerDragCancel(_event, dragInfo) {
+    const panel = this._drawerDragPanel;
+
+    if (panel && this._drawerDragStartedOnCloak) {
+      // Still a press outside the drawer, and the outside-press handler this
+      // gesture displaced will not fire. The browser claims a cloak touch as a
+      // pan and cancels the pointer, so leaving it unhandled would strand the
+      // drawer open with nothing left to dismiss it.
+      const cancelEvent = { deltaX: dragInfo.delta.x, velocityX: 0 };
+
+      if (this.#shouldCloseDrawer(cancelEvent)) {
+        this._animateClosing(cancelEvent, panel, this._swipeMenuOrigin);
+      }
+    } else if (panel && this._drawerDragAxis === "horizontal") {
+      // A vertical scroll inside the panel cancels the pointer on every touch,
+      // so only a gesture that actually moved the drawer has anything to settle.
+      this._animateOpening(panel);
     }
+
     this.#resetDrawerDrag();
   }
 
   #updateDrawerVelocity(event) {
     const elapsed = event.timeStamp - this._drawerLastTime;
-    if (elapsed > 0) {
-      this._drawerVelocityX = (event.clientX - this._drawerLastX) / elapsed;
-    }
+    // Timestamps are resolution-coarsened, so two moves can legitimately share
+    // one. A sample that cannot be timed is not evidence of a flick, and keeping
+    // the previous velocity would let a reversal release with the motion it just
+    // undid; unset, the distance rule decides on its own.
+    this._drawerVelocityX =
+      elapsed > 0 ? (event.clientX - this._drawerLastX) / elapsed : 0;
     this._drawerLastX = event.clientX;
     this._drawerLastTime = event.timeStamp;
   }
@@ -655,6 +671,7 @@ export default class GlimmerSiteHeader extends Component {
         threshold: DRAWER_DRAG_THRESHOLD,
         touchAction: "pan-y",
         preventDefault,
+        capturePressTarget: !preventDefault,
       }));
       this._drawerGestureCleanups.set(surface, cleanup);
     }
