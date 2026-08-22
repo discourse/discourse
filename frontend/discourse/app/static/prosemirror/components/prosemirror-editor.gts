@@ -317,6 +317,14 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
           }
         },
         drop: (view, event) => {
+          if (view.dragging) {
+            // A drag from this editor is a move, but the browser exposes the
+            // dragged content as a file too, so keep it away from the upload
+            // drop target on an ancestor, which would upload it again.
+            event.stopPropagation();
+            return;
+          }
+
           if (
             [...event.dataTransfer.items].some((item) => item.kind === "file")
           ) {
