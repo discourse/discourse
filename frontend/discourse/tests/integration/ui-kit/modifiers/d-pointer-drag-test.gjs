@@ -426,6 +426,75 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         "a secondary-button press and a vetoed one both reach document-level listeners"
       );
     });
+
+    test("preventDefault=false leaves an accepted press uncancelled", async function (assert) {
+      const onDragStart = () => {};
+
+      await render(
+        <template>
+          <button
+            type="button"
+            class="dpd-target"
+            {{dPointerDrag onDragStart=onDragStart preventDefault=false}}
+          ></button>
+        </template>
+      );
+      stubPointerCapture(".dpd-target");
+
+      await triggerEvent(".dpd-target", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(
+        prevented,
+        [false],
+        "a surface holding its own interactive content keeps the compatibility mousedown, and with it focus on tap and text selection"
+      );
+    });
+
+    test("an uncancelled press still drives the whole gesture", async function (assert) {
+      const seen = [];
+      const recordPhase = (phase) => () => seen.push(phase);
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag
+              onDragStart=(recordPhase "start")
+              onDrag=(recordPhase "drag")
+              onDragEnd=(recordPhase "end")
+              preventDefault=false
+            }}
+          ></div>
+        </template>
+      );
+      stubPointerCapture(".dpd-target");
+
+      await triggerEvent(".dpd-target", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 10,
+        clientY: 10,
+      });
+      await triggerEvent(".dpd-target", "pointermove", {
+        pointerId: 1,
+        clientX: 40,
+        clientY: 10,
+      });
+      await triggerEvent(".dpd-target", "pointerup", {
+        pointerId: 1,
+        clientX: 40,
+        clientY: 10,
+      });
+
+      assert.deepEqual(
+        seen,
+        ["start", "drag", "end"],
+        "capture is what routes the gesture, so opting out of the cancellation costs it nothing"
+      );
+    });
   });
 
   module("configurable pointer lifecycle", function () {

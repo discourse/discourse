@@ -125,6 +125,23 @@ interface DPointerDragSignature {
       stopPropagation?: boolean;
 
       /**
+       * Whether an accepted press is cancelled. Defaults to `true`, which is what
+       * suppresses the compatibility `mousedown`, and with it the focus a press
+       * would otherwise move — right for a handle that sits beside the thing it
+       * drives.
+       *
+       * Pass `false` for a surface large enough to hold content the user
+       * interacts with, where cancelling the press costs that content its
+       * `mousedown`, its focus on tap and its text selection. The gesture does
+       * not need the cancellation to work: pointer capture routes the rest of it
+       * here either way, and `touchAction` is what keeps the browser from
+       * claiming the touch. The cost runs the other way — a native
+       * text-selection drag can begin underneath the gesture, and
+       * `mousedown`-based document listeners see the press.
+       */
+      preventDefault?: boolean;
+
+      /**
        * Whether a gesture that ends without the pointer being released on this
        * element — `pointercancel`, or the capture being taken away — commits via
        * `onDragEnd` instead of discarding via `onDragCancel`. Defaults to
@@ -433,7 +450,9 @@ export function registerPointerDrag(
 
     // Only an accepted press is suppressed. A secondary button, a press during
     // an active gesture, or a vetoed one must reach whatever else was listening.
-    event.preventDefault();
+    if (args.preventDefault ?? true) {
+      event.preventDefault();
+    }
     if (args.stopPropagation) {
       event.stopPropagation();
     }
@@ -536,17 +555,20 @@ export function registerPointerDrag(
  * }} />
  * ```
  *
- * A press never moves focus. Cancelling `pointerdown` suppresses the compatibility
- * `mousedown` that focus rides on, and that suppression is kept: a handle usually
- * sits beside the thing it resizes or reorders, so taking focus on press would pull
- * the caret out of whatever the user was working in. Give the handle its own tab
- * stop when it has a keyboard path worth reaching — that is how it stays operable,
- * not by claiming focus from a gesture assistive technology cannot perform.
+ * By default a press moves no focus. Cancelling `pointerdown` suppresses the
+ * compatibility `mousedown` that focus rides on, and that is the default: a handle
+ * usually sits beside the thing it resizes or reorders, so taking focus on press
+ * would pull the caret out of whatever the user was working in. Give the handle its
+ * own tab stop when it has a keyboard path worth reaching — that is how it stays
+ * operable, not by claiming focus from a gesture assistive technology cannot
+ * perform.
  *
  * That cancellation reaches further than focus: an accepted press produces no
  * `mousedown` or `mouseup`, so a document-level listener on either never sees it.
  * Build dismiss-on-outside-press on `pointerdown`, which still bubbles unless
- * `stopPropagation` is set.
+ * `stopPropagation` is set. A surface that carries the content the user is
+ * reaching for, rather than driving something beside it, wants
+ * `preventDefault=false` instead — see that arg for what each side costs.
  *
  * A single element supports one registration. Two would each claim the same
  * pointer capture and the same attribute, and tearing either down would strand
