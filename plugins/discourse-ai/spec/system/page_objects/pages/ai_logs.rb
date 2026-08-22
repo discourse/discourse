@@ -21,8 +21,12 @@ module PageObjects
         select_filter(:feature, label)
       end
 
+      def select_period(label)
+        select_filter(:period, label)
+      end
+
       def clear_filters
-        find(".ai-logs__clear").click
+        find(".d-filter-controls__reset").click
         self
       end
 
@@ -31,7 +35,7 @@ module PageObjects
       end
 
       def has_expanded_filter_dropdowns?
-        page.has_css?(".d-filter-controls__dropdown", count: 3)
+        page.has_css?(".d-filter-controls__dropdown", count: 4)
       end
 
       def open_log(log)

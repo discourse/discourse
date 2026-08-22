@@ -676,6 +676,7 @@ en:
         apply: "Apply"
         find: "Find"
         clear_filters: "Clear all filters"
+        all_periods: "All time periods"
         all_outcomes: "All outcomes"
         all_models: "All models"
         all_features: "All features"

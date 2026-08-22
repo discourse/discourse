@@ -148,16 +148,16 @@ RSpec.describe "AI logs admin page" do
     ai_logs_page.visit
 
     ai_logs_page.select_model(llm_model.display_name)
-    click_button I18n.t("js.discourse_ai.logs.periods.day")
+    ai_logs_page.select_period(I18n.t("js.discourse_ai.logs.periods.day"))
     expect(page).to have_current_path(/model=#{llm_model.id}/, url: true)
     expect(page).to have_current_path(/period=day/, url: true)
 
     ai_logs_page.clear_filters
     expect(page).to have_current_path(%r{/ai-logs$}, url: true)
-    expect(page).to have_css(".d-filter-controls__dropdown--outcome:focus")
+    expect(page).to have_css(".d-filter-controls__dropdown--period:focus")
     expect(ai_logs_page).to have_log(log)
 
-    click_button I18n.t("js.discourse_ai.logs.periods.day")
+    ai_logs_page.select_period(I18n.t("js.discourse_ai.logs.periods.day"))
     ai_logs_page.clear_filters
     expect(page).to have_current_path(%r{/ai-logs$}, url: true)
   end
@@ -169,7 +169,7 @@ RSpec.describe "AI logs admin page" do
     expect(page).to have_no_css(".d-filter-controls__toggle-filters")
     expect(page).to have_no_css(".d-filter-controls__reset")
     expect(page).to have_css(
-      ".ai-logs__filter-panel",
+      ".ai-logs__filters-title",
       text: I18n.t("js.discourse_ai.logs.filters.title"),
     )
     expect(ai_logs_page).to have_expanded_filter_dropdowns
