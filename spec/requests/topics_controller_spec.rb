@@ -7250,6 +7250,23 @@ RSpec.describe TopicsController do
         expect(pm.reload.topic_allowed_users.pluck(:user_id)).not_to include(user_2.id)
       end
 
+      it "returns generic success without side effects when an authorized email invite matches an existing user" do
+        sign_in(admin)
+        pm = Fabricate(:private_message_topic, user: admin)
+        small_actions =
+          pm.posts.where(post_type: Post.types[:small_action], action_code: "invited_user")
+
+        expect do
+          post "/t/#{pm.id}/invite.json", params: { email: user_2.email }
+        end.to not_change { pm.reload.topic_allowed_users.count }.and not_change {
+                small_actions.reload.count
+              }.and not_change { Invite.count }.and not_change { EmailLog.count }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+        expect(pm.topic_allowed_users.pluck(:user_id)).not_to include(user_2.id)
+      end
+
       context "when user does not have permission to invite to the topic" do
         fab!(:topic) { pm }
 
