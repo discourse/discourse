@@ -257,7 +257,7 @@ export default class Post extends Component {
   }
 
   @action
-  async expandFirstPost() {
+  expandFirstPost() {
     this.expandedFirstPost = new TrackedAsyncData(this.args.post.expand());
   }
 
@@ -598,7 +598,7 @@ export default class Post extends Component {
                           @translatedLabel={{if
                             this.expandedFirstPost.isPending
                             (i18n "loading")
-                            (concat (i18n "post.show_full") "...")
+                            (i18n "post.show_more")
                           }}
                         />
                       {{/if}}
