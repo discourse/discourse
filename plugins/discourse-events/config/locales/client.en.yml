@@ -27,6 +27,8 @@ en:
             topic_id:
               label: Topic ID
     discourse_calendar:
+      rich_editor:
+        calendar: "Calendar"
       livestream:
         zoom:
           join: "Join Zoom"
