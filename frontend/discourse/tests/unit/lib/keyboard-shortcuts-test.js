@@ -24,20 +24,20 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
     assert.true(called, "history.back is called");
   });
 
-  test("nextSection calls _changeSection with 1", function (assert) {
+  test("nextSection moves selection to the next section", function (assert) {
     const keyboardShortcuts = this.owner.lookup("service:keyboard-shortcuts");
     let spy = sinon.spy(keyboardShortcuts, "_changeSection");
 
     keyboardShortcuts.nextSection();
-    assert.true(spy.calledWith(1), "_changeSection is called with 1");
+    assert.true(spy.calledWith(1), "moves selection forward");
   });
 
-  test("prevSection calls _changeSection with -1", function (assert) {
+  test("prevSection moves selection to the previous section", function (assert) {
     const keyboardShortcuts = this.owner.lookup("service:keyboard-shortcuts");
     let spy = sinon.spy(keyboardShortcuts, "_changeSection");
 
     keyboardShortcuts.prevSection();
-    assert.true(spy.calledWith(-1), "_changeSection is called with -1");
+    assert.true(spy.calledWith(-1), "moves selection backward");
   });
 
   module("addShortcut context option", function () {
@@ -371,7 +371,7 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
       );
     });
 
-    test("selectDown outside the nested view delegates to _moveSelection", function (assert) {
+    test("selectDown moves selection down in the flat topic stream", function (assert) {
       const ks = this.owner.lookup("service:keyboard-shortcuts");
       const stub = sinon.stub(ks, "_moveSelection");
       try {

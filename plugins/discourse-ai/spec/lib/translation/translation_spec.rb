@@ -10,7 +10,7 @@ describe DiscourseAi::Translation do
   end
 
   describe ".locales" do
-    it "delegates to SiteSetting.content_localization_locales" do
+    it "returns the configured content localization locales" do
       SiteSetting.content_localization_supported_locales = "es|fr"
       SiteSetting.default_locale = "en"
 

@@ -42,7 +42,7 @@ module("Integration | Component | <LanguageSwitcher />", function (hooks) {
     assert.dom("[data-menu-option-id='de']").exists();
   });
 
-  test("displays locale names from language lookup service", async function (assert) {
+  test("shows localized names for available languages", async function (assert) {
     await render(<template><LanguageSwitcher /></template>);
     await open();
 

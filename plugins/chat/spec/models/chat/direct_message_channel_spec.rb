@@ -64,7 +64,7 @@ RSpec.describe Chat::DirectMessageChannel do
     let(:user) { stub }
     let(:direct_message) { channel.direct_message }
 
-    it "delegates to direct_message" do
+    it "returns the direct message title for the user" do
       direct_message.expects(:chat_channel_title_for_user).with(channel, user).returns("something")
       expect(title).to eq("something")
     end
