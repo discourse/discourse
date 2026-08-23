@@ -350,12 +350,7 @@ export default class SiteTrafficExplorer extends Component {
                   </div>
                 </section>
 
-                <div
-                  class="db-section__traffic-chart"
-                  aria-label={{i18n
-                    "admin.site_traffic_explorer.traffic_over_time"
-                  }}
-                >
+                <div class="db-section__traffic-chart">
                   <AdminReportStackedChart
                     @model={{this.chartModel}}
                     @options={{this.chartOptions}}

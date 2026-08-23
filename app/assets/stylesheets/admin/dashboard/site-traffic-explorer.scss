@@ -212,6 +212,12 @@
     }
   }
 
+  .db-section__metrics {
+    @include viewport.until(sm) {
+      flex-wrap: wrap;
+    }
+  }
+
   .db-section__row-block {
     display: flex;
     flex-direction: column;
