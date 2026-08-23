@@ -7,6 +7,7 @@ import DashboardDateRange from "discourse/admin/components/dashboard/date-range"
 import SiteTrafficExplorerBreakdownCard from "discourse/admin/components/site-traffic-explorer-breakdown-card";
 import SiteTrafficExplorerFilterPills from "discourse/admin/components/site-traffic-explorer-filter-pills";
 import SiteTrafficExplorerMetric from "discourse/admin/components/site-traffic-explorer-metric";
+import { formatPageviewCount } from "discourse/admin/lib/format-pageview-count";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -31,12 +32,6 @@ export default class SiteTrafficExplorer extends Component {
 
   get metrics() {
     return [
-      {
-        name: "pageviews",
-        label: i18n("admin.site_traffic_explorer.metrics.pageviews.label"),
-        value: this.summary.pageviews ?? 0,
-        compact: true,
-      },
       {
         name: "distinct_sessions",
         label: i18n(
@@ -75,12 +70,13 @@ export default class SiteTrafficExplorer extends Component {
     ];
   }
 
-  get primaryMetric() {
-    return this.metrics[0];
-  }
+  get headlineText() {
+    const count = this.summary.pageviews ?? 0;
 
-  get secondaryMetrics() {
-    return this.metrics.slice(1);
+    return i18n("admin.site_traffic_explorer.headline", {
+      count,
+      formatted_count: formatPageviewCount(count),
+    });
   }
 
   get chartModel() {
@@ -329,22 +325,17 @@ export default class SiteTrafficExplorer extends Component {
             {{#if @hasPageviews}}
               <div class="db-section__wrapper --column" hidden={{@loading}}>
                 <section class="db-section__subheader">
+                  <div class="db-section__subintro">
+                    <h3>{{this.headlineText}}</h3>
+                  </div>
 
                   <div class="db-section__metrics">
-                    <SiteTrafficExplorerMetric
-                      @name={{this.primaryMetric.name}}
-                      @label={{this.primaryMetric.label}}
-                      @tooltip={{this.primaryMetric.tooltip}}
-                      @value={{this.primaryMetric.value}}
-                      @compact={{this.primaryMetric.compact}}
-                    />
-                    {{#each this.secondaryMetrics as |metric|}}
+                    {{#each this.metrics as |metric|}}
                       <SiteTrafficExplorerMetric
                         @name={{metric.name}}
                         @label={{metric.label}}
                         @tooltip={{metric.tooltip}}
                         @value={{metric.value}}
-                        @compact={{metric.compact}}
                       />
                     {{/each}}
                   </div>

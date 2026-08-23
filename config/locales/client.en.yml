@@ -7264,8 +7264,6 @@ en:
           timeout: "This traffic query took too long. Choose a shorter date range and try again."
           unexpected: "Couldn't load site traffic. Try again."
         empty: "No matching pageviews"
-        traffic_over_time: "Traffic over time"
-        pageviews: "Pageviews"
         metric_information: "About %{metric}"
         active_filters: "Active traffic filters"
         filtering_to:
@@ -7316,14 +7314,6 @@ en:
           entry_urls: "Entry URLs"
           browsers: "Browsers"
           ip_addresses: "IP addresses"
-        columns:
-          referrers: "Referrer"
-          countries: "Country"
-          networks: "Network"
-          top_urls: "URL"
-          entry_urls: "Entry URL"
-          browsers: "Browser"
-          ip_addresses: "IP address"
         filters:
           traffic_type: "Traffic type"
           top_url: "Top URL"
@@ -7333,9 +7323,10 @@ en:
           network: "Network"
           browser: "Browser"
           ip: "IP address"
+        headline:
+          one: "%{formatted_count} pageview"
+          other: "%{formatted_count} pageviews"
         metrics:
-          pageviews:
-            label: "Pageviews"
           distinct_sessions:
             label: "Distinct sessions"
           logged_in_share:
