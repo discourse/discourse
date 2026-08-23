@@ -13,6 +13,9 @@ es:
   js:
     styleguide:
       title: "Guía de estilos"
+      example:
+        kind:
+          component: "Componente"
       categories:
         syntax: Sintaxis
         atoms: Átomos
@@ -39,6 +42,8 @@ es:
           title: "Colores"
         dialog:
           title: "Diálogo"
+        drag_and_drop:
+          locked: "Bloqueado"
         icons:
           title: "Iconos"
           full_list: "Ver la lista completa de iconos de Font Awesome"

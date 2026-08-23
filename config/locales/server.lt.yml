@@ -1079,6 +1079,9 @@ lt:
     top_countries_by_browser_pageviews:
       labels:
         count: "Apsilankymai"
+    top_entry_urls:
+      labels:
+        count: "Apsilankymai"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Apsilankymai"
@@ -2615,6 +2618,11 @@ lt:
     reasons:
       post_count: "Pirmąsias kelias kiekvieno vartotojo žinutes turi patvirtinti darbuotojai. Žr. %{link}."
       trust_level: "Vartotojai, kurių patikimumo lygis yra žemas, turi turėti atsakymus, kuriuos patvirtina darbuotojai. Žr. %{link}."
+      fast_typer_time:
+        one: "%{count} sekundė"
+        few: "%{count} sekundės"
+        many: "%{count} sekundžių"
+        other: "%{count} sekundžių"
       suspect_user: "Šis naujas vartotojas įvedė profilio informaciją neskaitydamas jokių temų ar įrašų, o tai rodo, kad jie gali būti šlamšto siuntėjai. Žr. %{link}."
       contains_media: "Šis įrašas apima įterptąją laikmeną. Žr. %{link}."
       queued_by_staff: "Darbuotojas mano, kad šį įrašą reikia peržiūrėti. Iki tol jis bus paslėptas."

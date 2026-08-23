@@ -79,6 +79,109 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .hasAttribute("placeholder", "Search...", "has correct placeholder");
   });
 
+  test("can hide the text filter without affecting other controls", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", {
+      category: SAMPLE_DROPDOWN_OPTIONS,
+    });
+    this.set("resetCount", 0);
+    this.set("onReset", () => this.set("resetCount", this.resetCount + 1));
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @showTextFilter={{false}}
+          @onResetFilters={{this.onReset}}
+        >
+          <:actions>
+            <button type="button" class="custom-action">Custom action</button>
+          </:actions>
+          <:content as |filteredData|>
+            <div class="results">{{filteredData.length}}</div>
+          </:content>
+        </DFilterControls>
+      </template>
+    );
+
+    assert
+      .dom(".d-filter-controls__input")
+      .doesNotExist("hides the text input");
+    assert
+      .dom(".d-filter-controls__dropdown--category")
+      .hasAttribute("aria-label", "All", "labels the dropdown filter");
+    assert.dom(".custom-action").exists("renders yielded actions");
+    assert.dom(".results").hasText("3", "renders yielded content");
+
+    await select(".d-filter-controls__dropdown--category", "feature");
+    await click(".d-filter-controls__reset");
+
+    assert.strictEqual(this.resetCount, 1, "calls the reset callback once");
+    assert
+      .dom(".d-filter-controls__dropdown--category")
+      .hasValue("all", "resets dropdown filters");
+    assert
+      .dom(".d-filter-controls__input")
+      .doesNotExist("keeps the input hidden");
+    assert
+      .dom(".d-filter-controls__toggle-filters")
+      .isFocused("moves focus to the remaining filter control");
+  });
+
+  test("does not render an empty inputs container when text filtering is hidden", async function (assert) {
+    await render(
+      <template>
+        <DFilterControls @array={{SAMPLE_DATA}} @showTextFilter={{false}}>
+          <:content as |filteredData|>
+            <div class="results">{{filteredData.length}}</div>
+          </:content>
+        </DFilterControls>
+      </template>
+    );
+
+    assert
+      .dom(".d-filter-controls__inputs")
+      .doesNotExist("omits the empty inputs container");
+    assert.dom(".results").hasText("3", "still renders yielded content");
+  });
+
+  test("supports additional filters and includes them in reset state", async function (assert) {
+    this.set("additionalFiltersActive", false);
+    this.set("resetCount", 0);
+    this.set("onReset", () => this.set("resetCount", this.resetCount + 1));
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{SAMPLE_DATA}}
+          @additionalFiltersActive={{this.additionalFiltersActive}}
+          @showTextFilter={{false}}
+          @onResetFilters={{this.onReset}}
+        >
+          <:additionalFilters>
+            <input class="custom-filter" aria-label="Custom filter" />
+          </:additionalFilters>
+        </DFilterControls>
+      </template>
+    );
+
+    assert.dom(".custom-filter").exists("renders the additional filter");
+    assert
+      .dom(".d-filter-controls__reset")
+      .doesNotExist("hides reset while the additional filter is inactive");
+
+    this.set("additionalFiltersActive", true);
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .exists("shows reset while the additional filter is active");
+
+    await click(".d-filter-controls__reset");
+
+    assert.strictEqual(this.resetCount, 1, "calls the reset callback once");
+  });
+
   test("filters data by text (client-side)", async function (assert) {
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name", "description"]);
@@ -170,6 +273,42 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert
       .dom(".d-filter-controls__dropdown")
       .exists("reveals the dropdown after toggling filters");
+  });
+
+  test("can show expanded dropdowns without a filter toggle", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", {
+      category: SAMPLE_DROPDOWN_OPTIONS,
+      status: [
+        { label: "All statuses", value: "all" },
+        { label: "Enabled", value: "enabled" },
+      ],
+    });
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @filterDropdownsExpanded={{true}}
+          @showDropdownFilterToggle={{false}}
+          @showTextFilter={{false}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-filter-controls__toggle-filters")
+      .doesNotExist("hides the filter toggle");
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .exists({ count: 2 }, "keeps the dropdowns expanded");
+
+    await select(".d-filter-controls__dropdown--category", "feature");
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .exists({ count: 1 }, "shows reset when an expanded filter is active");
   });
 
   test("shows one reset button with a forced single-dropdown toggle", async function (assert) {

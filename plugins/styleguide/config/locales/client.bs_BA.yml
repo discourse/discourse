@@ -7,6 +7,9 @@
 bs_BA:
   js:
     styleguide:
+      example:
+        kind:
+          component: "Komponenta"
       sections:
         colors:
           title: "Colors"

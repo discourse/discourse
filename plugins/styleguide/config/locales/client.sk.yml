@@ -13,6 +13,9 @@ sk:
   js:
     styleguide:
       title: "Sprievodca štýlom"
+      example:
+        kind:
+          component: "Komponent"
       categories:
         syntax: Syntax
         atoms: Atómy

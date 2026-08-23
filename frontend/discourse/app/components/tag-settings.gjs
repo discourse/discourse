@@ -9,6 +9,7 @@ import AddSynonymsConfirmation from "discourse/components/tag-settings/add-synon
 import TagSettingsLocalizations from "discourse/components/tag-settings/localizations";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
 import { slugify } from "discourse/lib/utilities";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
@@ -100,7 +101,9 @@ export default class TagSettings extends Component {
           ? i18n("tagging.tag_groups_info_prefix.one")
           : i18n("tagging.tag_groups_info_prefix.other");
       const groups = (this.args.tag.tag_groups || [])
-        .map((tg) => `<a href="/tag_groups/${tg.id}">${tg.name}</a>`)
+        .map(
+          (tg) => `<a href="${getURL(`/tag_groups/${tg.id}`)}">${tg.name}</a>`
+        )
         .join(", ");
       parts.push(`${prefix}${groups}.`);
     }

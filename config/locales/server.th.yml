@@ -292,6 +292,9 @@ th:
     top_countries_by_browser_pageviews:
       labels:
         count: "เยี่ยมชม"
+    top_entry_urls:
+      labels:
+        count: "เยี่ยมชม"
     top_referrers_by_browser_pageviews:
       labels:
         count: "เยี่ยมชม"

@@ -7,7 +7,7 @@ RSpec.describe Chat::ChannelSerializer do
   let(:first_post) { Fabricate(:post, topic:) }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.chat_enabled = true
     # avoid the onebox-warming job making a real request

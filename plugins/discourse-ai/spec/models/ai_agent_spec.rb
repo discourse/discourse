@@ -58,6 +58,25 @@ RSpec.describe AiAgent do
     expect(agent).not_to be_valid
   end
 
+  it "allows at most 100 URL-backed RAG sources" do
+    agent = Fabricate.build(:ai_agent)
+    AiAgent::MAX_RAG_DOCUMENT_SOURCES.times do |index|
+      agent.rag_document_sources.build(url: "https://example.com/knowledge/#{index}")
+    end
+
+    expect(agent).to be_valid
+
+    agent.rag_document_sources.build(url: "https://example.com/knowledge/over-limit")
+
+    expect(agent).not_to be_valid
+    expect(agent.errors[:base]).to include(
+      I18n.t(
+        "discourse_ai.ai_bot.agents.too_many_rag_document_sources",
+        max: AiAgent::MAX_RAG_DOCUMENT_SOURCES,
+      ),
+    )
+  end
+
   it "does not allow system agents to change subagent IDs" do
     child = Fabricate(:ai_agent)
     system_agent = Fabricate(:ai_agent, system: true)

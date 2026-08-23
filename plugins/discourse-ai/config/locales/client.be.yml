@@ -34,6 +34,9 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "Тып"
+        error: "памылка"
       ai_tool_approval:
         loading: "Загрузка ..."
         tool: "Дзеянне"

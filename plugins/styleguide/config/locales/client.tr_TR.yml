@@ -13,6 +13,9 @@ tr_TR:
   js:
     styleguide:
       title: "Stil rehberi"
+      example:
+        kind:
+          component: "Bileşen"
       categories:
         syntax: Sözdizimi
         atoms: Atomlar
@@ -39,6 +42,8 @@ tr_TR:
           title: "Renkler"
         dialog:
           title: "Diyalog"
+        drag_and_drop:
+          locked: "Kilitli"
         icons:
           title: "Simgeler"
           full_list: "Font Awesome Simgelerinin tam listesine bakın"

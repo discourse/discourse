@@ -114,6 +114,63 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when user can only see a readonly category channel" do
+      fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+      fab!(:channel) do
+        category =
+          Fabricate(
+            :private_category,
+            group: readonly_group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        Fabricate(:category_channel, chatable: category)
+      end
+      fab!(:restricted_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          message: "Confidential restricted channel history",
+        )
+      end
+
+      it "does not expose the channel messages" do
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(response.body).not_to include(restricted_message.message)
+      end
+    end
+
+    context "when logged-in user can only read an anonymous-public category channel" do
+      fab!(:channel) do
+        category = Fabricate(:category)
+        category.set_permissions(everyone: :readonly)
+        category.save!
+        Fabricate(:category_channel, chatable: category)
+      end
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+
+      before do
+        SiteSetting.chat_allowed_groups =
+          "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+      end
+
+      it "exposes the same channel messages anonymous users can read" do
+        expect(current_user.guardian.can_join_chat_channel?(channel)).to eq(false)
+        expect(current_user.guardian.can_preview_anonymous_public_chat_channel?(channel)).to eq(
+          true,
+        )
+
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["messages"].map { |message| message["id"] }).to contain_exactly(
+          message.id,
+        )
+      end
+    end
+
     context "when page_size is above limit" do
       fab!(:messages) { Fabricate.times(5, :chat_message, chat_channel: channel) }
 

@@ -28,6 +28,7 @@ pl_PL:
         title: "Utwórz zapytanie w Eksploratorze danych"
         description: "Napisz niestandardowe zapytanie SQL, aby wyświetlić informacje specyficzne dla Twojej społeczności."
     explorer:
+      resize_editor: "Zmień rozmiar edytora zapytań"
       default_query: "Domyślny"
       default_query_notice: "To jest zapytanie domyślne, którego nie można edytować. Aby edytować zapytanie SQL, utwórz nowe zapytanie."
       queries: "Zapytania"

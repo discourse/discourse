@@ -254,9 +254,9 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(traffic).to have_top_country_rows(
         [
-          { country: "DE", percent: 70 },
-          { country: "US", percent: 20 },
-          { country: "GB", percent: 10 },
+          { country: "DE", name: "Germany", percent: 70 },
+          { country: "US", name: "United States", percent: 20 },
+          { country: "GB", name: "United Kingdom", percent: 10 },
         ],
       )
       expect(traffic).to have_top_referrer_rows(

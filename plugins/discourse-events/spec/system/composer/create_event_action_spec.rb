@@ -8,7 +8,7 @@ describe "Composer - Create event action" do
   let(:composer) { PageObjects::Components::Composer.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     DiscourseCalendar::Categories::Types::Events.configure_category(
       events_category,

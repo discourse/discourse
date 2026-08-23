@@ -6,7 +6,7 @@ describe DiscoursePostEvent::EventOneboxData do
 
   before do
     freeze_time Time.utc(2018, 6, 5, 18, 40)
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 

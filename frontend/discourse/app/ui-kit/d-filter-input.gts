@@ -93,6 +93,9 @@ export default class DFilterInput extends Component<DFilterInputSignature> {
         type="text"
         value={{@value}}
         class="filter-input"
+        autocapitalize="none"
+        autocorrect="off"
+        autocomplete="off"
         ...attributes
       />
 

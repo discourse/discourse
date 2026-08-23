@@ -955,6 +955,9 @@ vi:
     top_countries_by_browser_pageviews:
       labels:
         count: "Ngày ghé thăm"
+    top_entry_urls:
+      labels:
+        count: "Ngày ghé thăm"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Ngày ghé thăm"
@@ -2782,6 +2785,8 @@ vi:
     reasons:
       post_count: "Một vài tút đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Thành viên mới nhập tút đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
+      fast_typer_time:
+        other: "%{count} giây"
     actions:
       agree:
         title: "Đồng ý"

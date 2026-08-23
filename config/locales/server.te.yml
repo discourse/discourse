@@ -874,6 +874,9 @@ te:
     top_countries_by_browser_pageviews:
       labels:
         count: "సందర్శనాలు"
+    top_entry_urls:
+      labels:
+        count: "సందర్శనాలు"
     top_referrers_by_browser_pageviews:
       labels:
         count: "సందర్శనాలు"
@@ -2481,6 +2484,9 @@ te:
       medium: "మధ్యస్థం"
       high: "అధిక"
     reasons:
+      fast_typer_time:
+        one: "ఒక సెకను"
+        other: "%{count} సెకన్లు"
       links:
         category: వర్గం సెట్టింగులు
     actions:

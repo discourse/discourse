@@ -25,7 +25,7 @@ acceptance("Topic Calendar Events", function (needs) {
     this.clock.restore();
   });
 
-  needs.settings({ calendar_enabled: true });
+  needs.settings({ discourse_events_enabled: true });
 
   test("renders calendar events with fullDay='true'", async function (assert) {
     pretender.get("/t/252.json", () => fixtureWithFullDay("true"));

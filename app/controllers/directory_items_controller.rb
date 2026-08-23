@@ -69,7 +69,12 @@ class DirectoryItemsController < ApplicationController
 
     user_ids = nil
     if params[:name].present?
-      opts = { include_staged_users: true, limit: 200, search_custom_fields: true }
+      opts = {
+        include_staged_users: true,
+        user_directory_search: true,
+        limit: 200,
+        search_custom_fields: true,
+      }
       user_ids = UserSearch.new(params[:name], opts).search.pluck(:id)
       if user_ids.present?
         # Add the current user if we have at least one other match

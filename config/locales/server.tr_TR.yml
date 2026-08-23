@@ -1469,6 +1469,9 @@ tr_TR:
     top_countries_by_browser_pageviews:
       labels:
         count: "Ziyaretler"
+    top_entry_urls:
+      labels:
+        count: "Ziyaretler"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Ziyaretler"
@@ -5006,6 +5009,9 @@ tr_TR:
       group: "Belirtilen gruplarda yer almayan kullanıcıların yanıtlarının personel tarafından onaylanması gerekir. Bkz. %{link}."
       new_topics_unless_trust_level: "Düşük güven seviyesindeki kullanıcıların konularının personel tarafından onaylanması gerekiyor. Bkz. %{link}."
       fast_typer: "Yeni kullanıcı ilk gönderisini şüpheli bir şekilde hızlı yazdı, bot veya spam davranışından şüpheleniliyor. Bkz. %{link}."
+      fast_typer_time:
+        one: "%{count} saniye"
+        other: "%{count} saniye"
       auto_silence_regex: "İlk gönderisi %{link} ayarıyla eşleşen yeni kullanıcı."
       watched_word:
         one: "Bu gönderide bir İzlenen Kelime var, bayrak eklenen kelime: %{words}. Daha fazlası için %{link} bölümüne bakın."

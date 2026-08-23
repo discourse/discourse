@@ -1069,6 +1069,9 @@ el:
       labels:
         country_code: "Κωδικός χώρας"
         count: "Επισκέψεις"
+    top_entry_urls:
+      labels:
+        count: "Επισκέψεις"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Επισκέψεις"
@@ -3047,6 +3050,9 @@ el:
       high: "Υψηλή"
     user_claimed: "Αυτό το στοιχείο έχει διεκδικηθεί από άλλον χρήστη."
     reasons:
+      fast_typer_time:
+        one: "%{count} δευτερόλεπτο"
+        other: "%{count} δευτερόλεπτα"
       invite_only: "Όλοι οι νέοι χρήστες θα πρέπει να προσκληθούν. Δείτε %{link}."
       links:
         watched_word: ρυθμίσεις παρακολουθούμενης λέξης

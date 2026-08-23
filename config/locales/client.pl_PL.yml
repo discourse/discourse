@@ -460,6 +460,7 @@ pl_PL:
     broken_transformer_alert: "Wystąpił błąd. Twoja witryna może nie działać prawidłowo."
     broken_block_alert: "Wykryto błąd konfiguracji bloku. Szczegóły znajdziesz w konsoli przeglądarki."
     broken_block_factory_alert: "Nie udało się załadować bloku. Niektóre elementy interfejsu użytkownika mogą nie wyświetlać się poprawnie."
+    broken_drag_and_drop_alert: "Błąd obsługi przeciągania i upuszczania. Działanie mogło nie zostać ukończone."
     on_before_category_types_change_error: "Wystąpił błąd podczas zmiany typów kategorii. Więcej informacji znajdziesz w konsoli przeglądarki."
     critical_deprecation:
       notice: "<b>[Uwaga administratora]</b> %{source} zawiera kod, który wymaga aktualizacji. (id:%{id})"
@@ -7935,6 +7936,10 @@ pl_PL:
             title: "Najpopularniejsi polecający"
             empty: "Brak danych o polecających w tym okresie."
             error: "Nie udało się załadować najpopularniejszych polecających. Spróbuj odświeżyć stronę."
+          top_entry_urls:
+            title: "Najpopularniejsze wejściowe adresy URL"
+            empty: "Brak danych wejściowych adresów URL dla tego okresu."
+            error: "Nie udało się załadować najpopularniejszych wejściowych adresów URL. Spróbuj odświeżyć stronę."
           series:
             logged_in: "Zalogowani"
             anonymous: "Anonimowi"

@@ -34,6 +34,11 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      copied: "Պատճենված է"
+      ai_decoded_transcript:
+        type: "Տիպ"
+        error: "Սխալ"
+        response: "Արձագանք"
       ai_tool_approval:
         loading: "Բեռնվում է..."
         tool: "Գործողություն"
@@ -124,6 +129,8 @@ hy:
         post: "Գրառում"
         post_short: "Գրառում %{id}"
         actions: "Գործողություններ"
+        filters:
+          title: "Ֆիլտրներ"
         periods:
           custom: "Մասնավոր"
         detail:

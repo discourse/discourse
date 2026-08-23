@@ -4,7 +4,7 @@ describe DiscoursePostEvent::Event do
   before do
     freeze_time DateTime.parse("2020-04-24 14:10")
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
@@ -783,10 +783,21 @@ describe DiscoursePostEvent::Event do
         ).to be(true)
       end
 
-      it "is false when now is before the start of the day of the event" do
+      it "is true on a later day of a multi-day event" do
         expect(
           event_with(
-            starts_at: Time.zone.now.tomorrow.beginning_of_day,
+            starts_at: 2.days.ago,
+            ends_at: 1.day.from_now,
+            all_day: true,
+          ).currently_within_event_timeframe?,
+        ).to be(true)
+      end
+
+      it "is false after the final day of a multi-day event" do
+        expect(
+          event_with(
+            starts_at: 5.days.ago,
+            ends_at: 2.days.ago,
             all_day: true,
           ).currently_within_event_timeframe?,
         ).to be(false)
@@ -1458,7 +1469,7 @@ end
 describe DiscoursePostEvent::Event, "#most_likely_going" do
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
@@ -1514,7 +1525,7 @@ end
 describe DiscoursePostEvent::Event, "#capacity" do
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 

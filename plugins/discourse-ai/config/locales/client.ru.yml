@@ -223,6 +223,13 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      copied: "Скопировано"
+      ai_decoded_transcript:
+        tool: "Инструмент"
+        arguments: "Аргументы"
+        type: "Тип"
+        error: "Ошибка"
+        response: "Ответ"
       discourse_workflows:
         ai_agent:
           agent_id: "Агент"
@@ -518,6 +525,7 @@ ru:
         retry: "Попробовать снова"
         apply: "Применить"
         all_models: "Все модели"
+        all_features: "Все функции"
         successful: "Выполнена"
         failed: "Не удалась"
         unknown: "Расположение неизвестно"
@@ -538,6 +546,7 @@ ru:
         duration: "Период"
         actions: "Действия"
         filters:
+          title: "Фильтры"
           period: "Временной период"
         periods:
           hour: "Последний %{count} час"

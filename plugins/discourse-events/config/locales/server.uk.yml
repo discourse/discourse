@@ -44,7 +44,7 @@ uk:
   site_settings:
     map_events_to_color: "Призначити колір для кожного тегу або категорії."
     map_events_title: "Перезаписує «Події» у заголовку бічної панелі «Майбутні події» для кожної категорії."
-    discourse_post_event_enabled: "Увімкнути функції подій. Примітка: також потрібно увімкнути {{setting:calendar_enabled}}."
+    discourse_post_event_enabled: "Увімкнути функції подій. Примітка: також потрібно увімкнути {{setting:discourse_events_enabled}}."
     displayed_invitees_limit: "Обмежує кількість запрошених, що відображаються в події."
     display_post_event_date_on_topic_title: "Відображає дату події після назви теми."
     use_local_event_date: "Використовувати локальну дату після назви теми замість відносного часу."
@@ -74,6 +74,8 @@ uk:
     sidebar_show_upcoming_events: "Показати посилання на майбутні події на бічній панелі в розділі «Більше»."
     calendar_first_day_of_week: "Встановіть перший день тижня для відображення календаря. Доступні варіанти: субота, неділя або понеділок."
     enable_events_category_type_setup: "Вмикає опцію типу категорії «Події» під час налаштування створення категорії."
+    livestream_allowed_hosts: "Ведучі, які можна використовувати для прямої трансляції подій."
+    livestream_allowed_hosts_invalid: "Ці записи не є хостами: %{hosts}. Введіть хост окремо (наприклад, zoom.us), що дозволить усі URL-адреси на ньому та його піддоменах."
     livestream_zoom_enabled: "Увімкнути вбудовування відео Zoom для тем прямих трансляцій."
     livestream_zoom_sdk_key: "Ідентифікатор клієнта SDK для зустрічі Zoom."
     livestream_zoom_sdk_secret: "Секретний ключ клієнта Zoom Meeting SDK."

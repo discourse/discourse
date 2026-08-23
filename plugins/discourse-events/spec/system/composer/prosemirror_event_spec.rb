@@ -4,7 +4,7 @@ describe "Composer - ProseMirror - Event Editor" do
   include_context "with prosemirror editor"
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 

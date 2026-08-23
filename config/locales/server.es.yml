@@ -1464,6 +1464,9 @@ es:
     top_countries_by_browser_pageviews:
       labels:
         count: "Visitas"
+    top_entry_urls:
+      labels:
+        count: "Visitas"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Visitas"
@@ -4951,6 +4954,9 @@ es:
       group: "Los usuarios que no pertenezcan a los grupos especificados deben tener respuestas aprobadas por el personal. Ver %{link}."
       new_topics_unless_trust_level: "El personal debe aprobar los temas de usuarios con niveles de confianza bajos. Ver %{link}."
       fast_typer: "El usuario escribió su primera publicación sospechosamente rápido, lo que le hace sospechoso de ser un bot o un spammer. Ver %{link}."
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       auto_silence_regex: "La primera publicación del usuario nuevo coincide con el ajuste %{link}."
       watched_word:
         one: "Esta publicación incluía una palabra vigilada. La palabra es: %{words}. Consulta los %{link} para obtener más información."

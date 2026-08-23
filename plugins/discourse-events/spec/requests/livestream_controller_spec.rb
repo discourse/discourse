@@ -18,7 +18,7 @@ module DiscourseCalendar
     end
 
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       SiteSetting.livestream_zoom_enabled = true
       SiteSetting.livestream_zoom_sdk_key = "sdk-key"
@@ -179,6 +179,12 @@ module DiscourseCalendar
 
           expect(response.status).to eq(200)
           expect(response.body).to include("zoomFrameConfig")
+        end
+
+        it "joins the meeting with chat disabled" do
+          get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+          expect(response.body).to include("isSupportChat: false")
         end
 
         it "points the page at the signature for its own topic" do

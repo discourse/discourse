@@ -1537,6 +1537,9 @@ de:
       labels:
         country_code: "Ländercode"
         count: "Aufrufe"
+    top_entry_urls:
+      labels:
+        count: "Aufrufe"
     top_referrers_by_browser_pageviews:
       title: "Top-Referrer"
       description: "Externe Websites, aus denen im ausgewählten Zeitraum die meisten Browser-Seitenaufrufe in deinem Forum kamen."
@@ -5627,6 +5630,9 @@ de:
       group: "Benutzer, die nicht zu den angegebenen Gruppen gehören, müssen ihre Antworten von Team-Mitgliedern genehmigen lassen. Siehe %{link}."
       new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
       fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe %{link}."
+      fast_typer_time:
+        one: "%{count} Sekunde"
+        other: "%{count} Sekunden"
       auto_silence_regex: "Neuer Benutzer, dessen erster Beitrag mit der %{link}-Einstellung übereinstimmt."
       watched_word:
         one: "Dieser Beitrag enthält ein beobachtetes Wort, das gemeldete Wort ist: %{words}. Für weitere Informationen prüfe die %{link}."

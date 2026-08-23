@@ -3603,6 +3603,9 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
+  instrument_image_processing:
+    default: false
+    hidden: true
   warn_critical_js_deprecations:
     default: true
     client: true
@@ -4735,8 +4738,9 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "conceptual"
+      status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/410419"
   rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4844,7 +4848,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   improved_crawler_detection:
@@ -4852,8 +4856,9 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "conceptual"
+      status: "experimental"
       impact: "other,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/409316"
       allow_enabled_for:
         - everyone
   admin_dashboard_reports_seeded:

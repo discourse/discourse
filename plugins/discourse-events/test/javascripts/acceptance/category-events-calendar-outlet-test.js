@@ -35,7 +35,7 @@ const eventsPretender = (server, helper) => {
 acceptance("Category Events Calendar Outlet None", function (needs) {
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     events_calendar_categories: "1",
     calendar_categories: "",
@@ -60,7 +60,7 @@ acceptance("Category Events Calendar Outlet None", function (needs) {
 acceptance("Category Events Calendar Outlet Container Top", function (needs) {
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     events_calendar_categories: "1",
     calendar_categories: "",
@@ -87,7 +87,7 @@ acceptance(
   function (needs) {
     needs.user();
     needs.settings({
-      calendar_enabled: true,
+      discourse_events_enabled: true,
       discourse_post_event_enabled: true,
       events_calendar_categories: "1",
       calendar_categories: "",
@@ -109,7 +109,7 @@ acceptance(
   function (needs) {
     needs.user();
     needs.settings({
-      calendar_enabled: true,
+      discourse_events_enabled: true,
       discourse_post_event_enabled: true,
       events_calendar_categories: "1",
       calendar_categories: "",

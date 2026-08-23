@@ -598,6 +598,56 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.rag_llm_model_id).to eq(llm_model.id)
     end
 
+    it "supports creating, updating, and removing URL-backed RAG sources" do
+      agent = Fabricate(:ai_agent, name: "url_source_bot")
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_document_sources_attributes: [
+                { url: "https://example.com/docs", refresh_interval_hours: 12 },
+              ],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      source = agent.rag_document_sources.find_by!(url: "https://example.com/docs")
+      expect(response.parsed_body.dig("ai_agent", "rag_document_sources", 0)).to include(
+        "id" => source.id,
+        "url" => source.url,
+        "refresh_interval_hours" => 12,
+      )
+
+      source_upload = Fabricate(:upload)
+      source.update_columns(upload_id: source_upload.id)
+      UploadReference.ensure_exist!(target: agent, upload_ids: [source_upload.id])
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_uploads: [],
+              rag_document_sources_attributes: [
+                { id: source.id, url: source.url, refresh_interval_hours: 48 },
+              ],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(source.reload.refresh_interval_hours).to eq(48)
+      expect(UploadReference.exists?(target: agent, upload_id: source_upload.id)).to eq(true)
+      expect(response.parsed_body.dig("ai_agent", "rag_uploads")).to eq([])
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_document_sources_attributes: [{ id: source.id, _destroy: true }],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(RagDocumentSource.exists?(source.id)).to eq(false)
+    end
+
     it "supports updating token budget params" do
       agent = Fabricate(:ai_agent, name: "test_bot2")
 

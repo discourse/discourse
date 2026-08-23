@@ -1070,6 +1070,9 @@ hr:
     top_countries_by_browser_pageviews:
       labels:
         count: "Posjeta"
+    top_entry_urls:
+      labels:
+        count: "Posjeta"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Posjeta"
@@ -2803,6 +2806,11 @@ hr:
       low: "Nizak"
       medium: "Srednji"
       high: "Visok"
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekunda"
+        few: "%{count} sekundi"
+        other: "%{count} sekundi"
     actions:
       agree:
         title: "Da"

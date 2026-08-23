@@ -1075,6 +1075,9 @@ gl:
     top_countries_by_browser_pageviews:
       labels:
         count: "Visitas"
+    top_entry_urls:
+      labels:
+        count: "Visitas"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Visitas"
@@ -3470,6 +3473,9 @@ gl:
     missing_version: "Debe incluír un parámetro de versión"
     conflict: "Hai un conflito de actualización que non lle permitiu realizar esta acción."
     reasons:
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       email_auth_res_enqueue: "Neste correo fallou a comprobación DMARC polo que máis seguro que non sexa de quen semella ser. Comprobe as cabeceiras de correo para máis información."
       queued_by_staff: "Un membro do equipo pensa que esta publicación necesita revisión. Permanecerá agochada ata entón."
     actions:

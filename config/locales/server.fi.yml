@@ -1428,6 +1428,9 @@ fi:
     top_countries_by_browser_pageviews:
       labels:
         count: "Vierailuja"
+    top_entry_urls:
+      labels:
+        count: "Vierailuja"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Vierailuja"
@@ -4561,6 +4564,9 @@ fi:
       group: "Vastaukset käyttäjiltä, jotka eivät ole määritetyissä ryhmissä, tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
       new_topics_unless_trust_level: "Matalan luottamustason käyttäjien ketjut tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
       fast_typer: "Uusi käyttäjä kirjoitti ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Katso %{link}."
+      fast_typer_time:
+        one: "%{count} sekunti"
+        other: "%{count} sekuntia"
       auto_silence_regex: "Uusi käyttäjä, jonka ensimmäinen viesti vastaa %{link}-asetusta."
       watched_word:
         one: "Tässä viestissä oli tarkkailtu sana, liputettu sana on: %{words}. Katso lisätietoja kohdasta %{link}."

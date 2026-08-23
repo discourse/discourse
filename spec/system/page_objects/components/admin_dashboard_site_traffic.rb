@@ -98,7 +98,8 @@ module PageObjects
           rows.each_with_index.all? do |row, index|
             nth =
               ".db-traffic__list-row:nth-child(#{index + 1})[data-test-country-code='#{row[:country]}']"
-            has_css?(nth) && has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
+            has_css?("#{nth} .db-traffic__name[title='#{row[:name]}']") &&
+              has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
           end
         end
       end
@@ -109,7 +110,12 @@ module PageObjects
 
           rows.each_with_index.all? do |row, index|
             nth = ".db-traffic__list-row:nth-child(#{index + 1})"
-            next false unless has_css?("#{nth} a.db-traffic__link", text: row[:referrer])
+            unless has_css?(
+                     "#{nth} a.db-traffic__link[title='#{row[:referrer]}']",
+                     text: row[:referrer],
+                   )
+              next false
+            end
             next true unless row.key?(:percent)
 
             has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
@@ -123,8 +129,10 @@ module PageObjects
 
           rows.each_with_index.all? do |row, index|
             nth = ".db-traffic__list-row:nth-child(#{index + 1})"
-            has_css?("#{nth} a.db-traffic__link[href='#{row[:path]}']", text: row[:path]) &&
-              has_css?("#{nth} .db-traffic__percent", exact_text: "#{row[:percent]}%") &&
+            has_css?(
+              "#{nth} a.db-traffic__link[href='#{row[:path]}'][title='#{row[:path]}']",
+              text: row[:path],
+            ) && has_css?("#{nth} .db-traffic__percent", exact_text: "#{row[:percent]}%") &&
               has_css?("#{nth} .db-traffic__count", exact_text: "(#{row[:count]})")
           end
         end

@@ -1451,6 +1451,9 @@ hu:
     top_countries_by_browser_pageviews:
       labels:
         count: "Látogatás"
+    top_entry_urls:
+      labels:
+        count: "Látogatás"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Látogatás"
@@ -4800,6 +4803,9 @@ hu:
       group: "A megadott csoportokba nem tartozó felhasználóknak a stábtagok által jóváhagyott válaszokkal kell rendelkezniük. Lásd: %{link}."
       new_topics_unless_trust_level: "Az alacsony bizalmi szintű felhasználóknak rendelkezniük kell a stábtagok által jóváhagyott témákkal. Lásd: %{link}."
       fast_typer: "Új felhasználó gyanúsan gyorsan írta meg első bejegyzését, feltételezhetően bot vagy spammer. Lásd: %{link}."
+      fast_typer_time:
+        one: "%{count} másodperc"
+        other: "%{count} másodperc"
       auto_silence_regex: "Új felhasználó, akinek az első bejegyzése megfelel a %{link} beállításnak."
       watched_word:
         one: "Ez a bejegyzés tartalmaz egy Figyelt szó, a megjelölt szó: %{words}. További információkért nézze meg a %{link} oldalt."

@@ -5,7 +5,7 @@ import { i18n } from "discourse-i18n";
 
 acceptance("Notifications", function (needs) {
   needs.user({ redesigned_user_menu_enabled: true });
-  needs.settings({ calendar_enabled: true });
+  needs.settings({ discourse_events_enabled: true });
 
   needs.pretender((server, helper) => {
     server.get("/notifications", () => {

@@ -60,6 +60,12 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      copied: "کپی شد"
+      ai_decoded_transcript:
+        tool: "ابزار"
+        type: "نوع"
+        error: "خطا"
+        response: "پاسخ"
       ai_tool_approval:
         loading: "بارگذاری..."
         tool: "عمل"
@@ -168,6 +174,8 @@ fa_IR:
         post_short: "نوشته %{id}"
         duration: "مدت زمان"
         actions: "عملیات"
+        filters:
+          title: "فیلترها"
         periods:
           day: "۲۴ ساعت گذشته"
           week: "۷ روز گذشته"

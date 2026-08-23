@@ -19,7 +19,7 @@ span.chcklst-stroked {
 span.chcklst-box {
   cursor: pointer;
   display: inline-flex;
-  vertical-align: text-bottom;
+  vertical-align: -0.125em;
 
   &:not(.checked) {
     &.fa-square-o {

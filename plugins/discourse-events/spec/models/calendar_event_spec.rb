@@ -5,7 +5,7 @@ describe CalendarEvent do
 
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.all_day_event_start_time = ""
     SiteSetting.all_day_event_end_time = ""
   end

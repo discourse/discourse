@@ -1130,6 +1130,9 @@ da:
     top_countries_by_browser_pageviews:
       labels:
         count: "Besøg"
+    top_entry_urls:
+      labels:
+        count: "Besøg"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Besøg"
@@ -3195,6 +3198,9 @@ da:
     missing_version: "Du skal angive en versionsparameter"
     conflict: "Der var en opdateringskonflikt, der forhindrede dig i at gøre dette."
     reasons:
+      fast_typer_time:
+        one: "%{count} sekund"
+        other: "%{count} sekunder"
       email_auth_res_enqueue: "Denne e-mail fejlede et DMARC tjek, den er højst sandsynligt ikke fra hvem den ser ud til at være fra. Tjek de rå e-mail-headere for mere information."
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:

@@ -10,7 +10,7 @@ RSpec.describe TopicListItemSerializer do
   before do
     freeze_time(Time.utc(2020, 4, 24, 14, 10))
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     DiscoursePostEvent::Event.create!(
       id: first_post.id,

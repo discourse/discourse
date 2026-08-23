@@ -1316,6 +1316,9 @@ fa_IR:
     top_countries_by_browser_pageviews:
       labels:
         count: "بازدیدها"
+    top_entry_urls:
+      labels:
+        count: "بازدیدها"
     top_referrers_by_browser_pageviews:
       labels:
         count: "بازدیدها"
@@ -2844,6 +2847,10 @@ fa_IR:
       low: "کم"
       medium: "متوسط"
       high: "بالا"
+    reasons:
+      fast_typer_time:
+        one: "%{count} ثانیه"
+        other: "%{count} ثانیه"
     actions:
       agree:
         title: "بله"

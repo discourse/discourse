@@ -238,6 +238,9 @@ en:
         humanize_not_valid_upload_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid upload id."
         not_valid_upload_value: "must be a valid upload id"
 
+        humanize_not_valid_icon_value: "The property at JSON Pointer '%{property_json_pointer}' must be an icon name."
+        not_valid_icon_value: "must be an icon name"
+
         humanize_string_value_not_valid_min:
           one: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} character long."
           other: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} characters long."
@@ -2276,6 +2279,7 @@ en:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
+    instrument_image_processing: "Record wall-clock duration and success for image-processing operations. Disabled by default."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
@@ -2498,7 +2502,7 @@ en:
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP. Set to 0 to disable the limit."
-    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
+    min_ban_entries_for_roll_up: "A new subnet ban entry will be created daily by the <a href='https://github.com/discourse/discourse/blob/main/app/jobs/scheduled/clean_up_unmatched_ips.rb'>CleanUpUnmatchedIPs</a> job when there are at least (N) blocked IP addresses within the same subnet."
 
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
@@ -6175,6 +6179,10 @@ en:
       group: "Users not in the specified groups must have replies approved by staff. See %{link}."
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
+      fast_typer_with_time: "New user typed their first post suspiciously fast (%{typing_time}), suspected bot or spammer behavior. See %{link}."
+      fast_typer_time:
+        one: "%{count} second"
+        other: "%{count} seconds"
       auto_silence_regex: "New user whose first post matches the %{link} setting."
       watched_word:
         one: "This post included a Watched Word, the flagged word is: %{words}. Check the %{link} for more."

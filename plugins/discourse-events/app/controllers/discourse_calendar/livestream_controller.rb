@@ -7,8 +7,9 @@ module DiscourseCalendar
 
     skip_before_action :check_xhr, only: [:zoom_frame]
 
-    # Kept in step with the version the app itself loads the SDK at, in
-    # `lib/load-zoom-meeting-sdk.js`.
+    # The frame is the only thing that loads the SDK, so this is the one place
+    # the version is stated. Bump it to adopt a newer release.
+    # https://developers.zoom.us/docs/meeting-sdk/web/get-started/
     ZOOM_SDK_VERSION = "6.2.0"
     ZOOM_SDK_CDN = "https://source.zoom.us"
 

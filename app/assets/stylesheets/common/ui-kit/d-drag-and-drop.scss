@@ -1,0 +1,98 @@
+/* Full-strength `--tertiary`, not `--token-color-border-accent`: that tint
+   misses the 3:1 contrast a non-text UI component needs on a light surface. */
+
+:root {
+  --d-drag-indicator-color: var(--tertiary);
+}
+
+@mixin d-drag-line($axis) {
+  content: "";
+  position: absolute;
+  background: var(--d-drag-indicator-color);
+  pointer-events: none;
+
+  @if $axis == horizontal {
+    left: 0;
+    right: 0;
+    height: 2px;
+  } @else {
+    top: 0;
+    bottom: 0;
+    width: 2px;
+  }
+}
+
+@mixin d-drag-outline {
+  outline: 2px solid var(--d-drag-indicator-color);
+  outline-offset: -2px;
+}
+
+[data-drag-source] {
+  &.--dragging {
+    opacity: 0.5;
+  }
+}
+
+/* `:where()` so a target that positions itself keeps its own value; the line's
+   pseudo-element only needs some containing block. */
+
+:where(
+  [data-drop-target].--drag-above,
+  [data-drop-target].--drag-below,
+  [data-drop-target].--drag-left,
+  [data-drop-target].--drag-right,
+  [data-drop-target-external].--drag-above,
+  [data-drop-target-external].--drag-below,
+  [data-drop-target-external].--drag-left,
+  [data-drop-target-external].--drag-right
+) {
+  position: relative;
+}
+
+[data-drop-target],
+[data-drop-target-external] {
+  &.--drag-above {
+    &::before {
+      @include d-drag-line(horizontal);
+      top: -1px;
+    }
+  }
+
+  &.--drag-below {
+    &::after {
+      @include d-drag-line(horizontal);
+      bottom: -1px;
+    }
+  }
+
+  /* `--drag-left` / `--drag-right` name the physical side under the pointer, so
+     the RTL flip must leave them alone. */
+
+  &.--drag-left {
+    &::before {
+      @include d-drag-line(vertical);
+
+      /*! rtl:ignore */
+      left: -1px;
+    }
+  }
+
+  &.--drag-right {
+    &::after {
+      @include d-drag-line(vertical);
+
+      /*! rtl:ignore */
+      right: -1px;
+    }
+  }
+
+  &.--drag-inside {
+    @include d-drag-outline;
+  }
+}
+
+[data-drop-target-external] {
+  &.--drag-over-external {
+    @include d-drag-outline;
+  }
+}

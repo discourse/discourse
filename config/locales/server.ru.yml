@@ -1630,6 +1630,9 @@ ru:
     top_countries_by_browser_pageviews:
       labels:
         count: "Посещений"
+    top_entry_urls:
+      labels:
+        count: "Посещений"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Посещений"
@@ -5248,6 +5251,11 @@ ru:
       group: "Пользователи, не входящие в указанные группы, должны иметь ответы, одобренные персоналом. См. %{link}."
       new_topics_unless_trust_level: "Пользователи с низким уровнем доверия должны иметь темы, одобренные персоналом. См. %{link}."
       fast_typer: "Сообщение было набрано подозрительно быстро — похоже на поведение бота или спамера. См. %{link}."
+      fast_typer_time:
+        one: "%{count} секунда"
+        few: "%{count} секунды"
+        many: "%{count} секунд"
+        other: "%{count} секунд"
       auto_silence_regex: "Новый пользователь, первое сообщение которого соответствует параметру %{link}."
       watched_word:
         one: "В этой публикации найдено контролируемое слово: %{words}. См. %{link} для получения подробной информации."

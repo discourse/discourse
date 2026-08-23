@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const trackViewSessionId = document.querySelector(
       "meta[name=discourse-track-view-session-id]"
     )?.content;
+    if (!trackViewSessionId) {
+      return;
+    }
 
     const useBeacon =
       document.querySelector("meta[name=discourse-beacon-pageview-enabled]")

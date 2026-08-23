@@ -6,7 +6,7 @@ acceptance("hamburger action shown", function (needs) {
   needs.user();
 
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     sidebar_show_upcoming_events: true,
   });
@@ -29,7 +29,7 @@ acceptance("hamburger action shown", function (needs) {
 acceptance("hamburger action hidden", function (needs) {
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     sidebar_show_upcoming_events: false,
     navigation_menu: "legacy",
@@ -45,7 +45,7 @@ acceptance("hamburger action hidden", function (needs) {
 acceptance("sidebar link shown", function (needs) {
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     sidebar_show_upcoming_events: true,
     navigation_menu: "sidebar",
@@ -63,7 +63,7 @@ acceptance("sidebar link shown", function (needs) {
 acceptance("sidebar link hidden", function (needs) {
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     sidebar_show_upcoming_events: false,
     navigation_menu: "sidebar",

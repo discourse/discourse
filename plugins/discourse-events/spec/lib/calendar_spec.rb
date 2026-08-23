@@ -3,7 +3,7 @@
 describe DiscourseCalendar::Calendar do
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
   end
 
   let(:raw) { "[calendar]\n[/calendar]" }

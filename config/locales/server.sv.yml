@@ -1242,6 +1242,9 @@ sv:
     top_countries_by_browser_pageviews:
       labels:
         count: "Besök"
+    top_entry_urls:
+      labels:
+        count: "Besök"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Besök"
@@ -3849,6 +3852,9 @@ sv:
       group: "Användare som inte ingår i de angivna grupperna måste ha svar godkända av personalen. Se %{link}."
       new_topics_unless_trust_level: "Användare på låga förtroendenivåer måste ha ämnen godkända av personal. Se %{link}."
       fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, vi misstänker bot- eller skräppostbeteende. Se %{link}."
+      fast_typer_time:
+        one: "%{count} sekund"
+        other: "%{count} sekunder"
       auto_silence_regex: "Ny användare vars första inlägg matchar inställningen %{link}"
       staged: "Nya ämnen och inlägg för iscensatta användare måste godkännas av personal. Se %{link}."
       category: "Inlägg i denna kategori kräver manuellt godkännande av personal. Se %{link}."

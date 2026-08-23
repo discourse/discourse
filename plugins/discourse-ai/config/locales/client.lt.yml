@@ -131,6 +131,12 @@ lt:
               label: "Slėpti temą"
     discourse_ai:
       title: "AI"
+      copied: "Nukopijuota"
+      ai_decoded_transcript:
+        tool: "Įrankis"
+        type: "Tipas"
+        error: "Klaida"
+        response: "Atsakymas"
       ai_tool_approval:
         loading: "Kraunasi..."
         tool: "Veiksmai"
@@ -326,6 +332,8 @@ lt:
         post_short: "Įrašas %{id}"
         duration: "Trukmė"
         actions: "Veiksmai"
+        filters:
+          title: "Filtrai"
         periods:
           day: "Paskutinės 24 valandos"
           week: "Paskutinės 7 dienos"

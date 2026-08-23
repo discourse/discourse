@@ -920,6 +920,9 @@ zh_TW:
     top_countries_by_browser_pageviews:
       labels:
         count: "造訪"
+    top_entry_urls:
+      labels:
+        count: "造訪"
     top_referrers_by_browser_pageviews:
       labels:
         count: "造訪"
@@ -2852,6 +2855,9 @@ zh_TW:
     user_claimed: "該項目已被其他的使用者要求"
     missing_version: "您必須提供版本參數（Version parameter）"
     conflict: "有一個更新衝突阻止您這樣做"
+    reasons:
+      fast_typer_time:
+        other: "%{count} 秒"
     actions:
       agree:
         title: "是"

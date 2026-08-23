@@ -476,8 +476,11 @@ export default class DashboardTraffic extends Component {
                             href={{concat "https://" row.normalized_referrer}}
                             rel="noopener noreferrer nofollow ugc"
                             target="_blank"
+                            title={{row.normalized_referrer}}
                           >
-                            {{row.normalized_referrer}}
+                            <span class="db-traffic__label">
+                              {{row.normalized_referrer}}
+                            </span>
                           </a>
                           <span class="db-traffic__metric">
                             <span class="db-traffic__percent">
@@ -532,8 +535,11 @@ export default class DashboardTraffic extends Component {
                             <a
                               class="db-traffic__link"
                               href={{getURL row.entry_url}}
+                              title={{row.entry_url}}
                             >
-                              {{row.entry_url}}
+                              <span class="db-traffic__label">
+                                {{row.entry_url}}
+                              </span>
                             </a>
                             <span class="db-traffic__metric">
                               <span class="db-traffic__percent">
@@ -587,11 +593,16 @@ export default class DashboardTraffic extends Component {
                           class="db-traffic__list-row"
                           data-test-country-code={{row.country_code}}
                         >
-                          <span class="db-traffic__name">
+                          <span
+                            class="db-traffic__name"
+                            title={{countryName row.country_code}}
+                          >
                             <span aria-hidden="true">
                               {{countryFlag row.country_code}}
                             </span>
-                            {{countryName row.country_code}}
+                            <span class="db-traffic__label">
+                              {{countryName row.country_code}}
+                            </span>
                           </span>
                           <span class="db-traffic__metric">
                             <span class="db-traffic__percent">

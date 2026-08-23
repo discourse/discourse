@@ -1221,6 +1221,9 @@ ur:
       labels:
         country_code: "ملکی کوڈ"
         count: "زائرین کی تعداد"
+    top_entry_urls:
+      labels:
+        count: "دورے"
     top_referrers_by_browser_pageviews:
       title: "سرفہرست حوالہ دہندگان"
       labels:
@@ -3654,6 +3657,9 @@ ur:
     conflict: "ایک اَپ ڈیٹ کا تنازع آپ کو ایسا کرنے سے روک رہا تھا۔"
     reasons:
       fast_typer: "نئے رکن نے اپنا پہلا دھگہ لکھنے میں مشکوک حد تک تیزی کی، اس رویے پر بوٹ یا سپیمر ہونے کا شبہ ہے۔ دیکھیں %{link}۔"
+      fast_typer_time:
+        one: "%{count} سیکنڈ"
+        other: "%{count} سیکنڈ"
       email_auth_res_enqueue: "یہ ای میل ڈی ایم اے آر سی کی جانچ میں ناکام ہوگئی، غالباً یہ اس کی طرف سے نہیں ہے جس کی طرف سے معلوم ہوتا ہے۔ مزید معلومات کے لیے خام ای میل ہیڈر چیک کریں۔"
     actions:
       agree:

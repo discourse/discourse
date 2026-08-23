@@ -6,6 +6,8 @@
 
 zh_CN:
   js:
+    ace_editor:
+      resize: "调整代码编辑器大小"
     user_api_key:
       title: '授权“%{application_name}”'
       authorize: "授权"
@@ -371,6 +373,7 @@ zh_CN:
     broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
     broken_block_alert: "检测到块配置错误。请查看浏览器控制台了解详情。"
     broken_block_factory_alert: "块加载失败。某些 UI 元素可能无法正确显示。"
+    broken_drag_and_drop_alert: "拖放操作失败。操作可能尚未完成。"
     on_before_category_types_change_error: "更改类别类型时出错。请检查浏览器控制台以获取更多信息。"
     critical_deprecation:
       notice: "<b>[管理员通知]</b> %{source} 包含需要更新的代码。（id：%{id}）"
@@ -2960,6 +2963,8 @@ zh_CN:
       no_results: "找不到图标"
       results_count:
         other: "找到 %{count} 个图标"
+      results_loaded:
+        other: "%{count} 个图标已加载，更多图标可用"
       favorites: "收藏夹"
       selected_icon: "所选图标：%{iconName}"
       clear: "清除图标"
@@ -6531,33 +6536,55 @@ zh_CN:
         traffic_over_time: "一段时间内的流量"
         pageviews: "页面浏览量"
         metric_information: "关于这项指标"
+        active_filters: "活跃的流量过滤器"
         filter_description: "%{filter} 是 <strong>%{value}</strong>"
         filter_by:
           other: "按 %{label}, %{count} 网页浏览量筛选"
         remove_filter: "移除 %{filter} 过滤器"
         remove_traffic_type_filter: "移除 %{value} 流量过滤器"
         view_more: "展开"
+        no_dimension_data: "没有此分类的数据。"
+        direct_or_unknown: "直接 / 未知"
         cards:
+          acquisition: "获得"
           pages: "页面"
           visitors: "访客"
+        dimensions:
+          referrers: "引荐来源"
+          countries: "国家"
+          networks: "网络"
+          top_urls: "热门网址"
+          entry_urls: "入口网址"
+          browsers: "浏览器"
+          ip_addresses: "IP 地址"
         columns:
           referrers: "推荐人"
           countries: "国家/地区"
+          networks: "网络"
           top_urls: "URL"
+          entry_urls: "入口网址"
           browsers: "浏览器"
           ip_addresses: "IP 地址"
         filters:
+          traffic_type: "流量类型"
+          top_url: "热门网址"
+          entry_url: "入口网址"
           referrer: "推荐人"
           country: "国家/地区"
+          network: "网络"
           browser: "浏览器"
           ip: "IP 地址"
         metrics:
           pageviews:
             label: "页面浏览量"
+          distinct_sessions:
+            label: "不同的会话"
           logged_in_share:
             label: "登录成员占比"
           bounce_rate:
             label: "跳出率"
+          average_session_duration:
+            label: "平均会话时长"
         series:
           logged_in_human: "登录成员"
           anonymous_human: "匿名"
@@ -6687,8 +6714,34 @@ zh_CN:
               stable_aria: "不变"
             headline:
               titles:
+                engagement_up: "在选定的时间段内，参与度有所上升"
+                stickiness_and_daily_engagement_increased: "在选定的时间段内，用户粘性和每日参与度均有所提高。"
+                stickiness_and_new_signups_increased: "在选定的时间段内，用户粘性和新注册用户数量均有所增加。"
+                stickiness_increased: "在选定的时间段内，粘性有所增加。"
+                daily_engagement_and_new_signups_increased: "在选定的时间段内，每日参与度和新注册用户数均有所增加。"
+                daily_engagement_increased: "在选定的时间段内，每日参与度有所增加。"
+                new_signups_increased: "在选定的时间段内，新注册用户数量有所增加。"
+                engagement_declined: "在选定的时间段内，参与度有所下降。"
+                some_engagement_declines: "在选定的时间段内，部分参与度有所下降。"
+                engagement_steady: "在选定的时间段内，参与度保持稳定。"
                 insufficient_activity: "活动量不足，无法总结参与情况。"
               summaries:
+                all_metrics_improved: "用户粘性、每日参与度和新注册用户数量均有所提高，表明越来越多的成员正在加入和参与您的社区。"
+                stickiness_and_daily_engagement_up_new_signups_down: "用户粘性和每日参与度有所上升，但新注册用户数有所下降。"
+                stickiness_and_daily_engagement_up_new_signups_flat: "用户粘性和每日参与度有所上升，但新注册用户数量持平。"
+                stickiness_and_daily_engagement_up: "用户粘性和每日参与度均有所提升。"
+                stickiness_and_new_signups_up_daily_engagement_down: "用户粘性和新注册用户数量有所上升，但每日参与度有所下降。"
+                stickiness_up_daily_engagement_and_new_signups_down: "用户粘性上升，但每日参与度和新注册用户数下降。"
+                stickiness_up_daily_engagement_down: "用户粘性上升，但每日参与度下降。"
+                stickiness_and_new_signups_up_daily_engagement_flat: "用户粘性和新注册用户数量有所上升，但每日参与度持平。"
+                stickiness_up_new_signups_down: "用户粘性上升，但新注册用户下降。"
+                stickiness_up_daily_engagement_and_new_signups_flat: "用户粘性有所提高，但每日参与度和新注册用户数持平。"
+                stickiness_up_daily_engagement_flat: "用户粘性提升，但每日参与度持平。"
+                stickiness_and_new_signups_up: "用户粘性和新注册用户数均有所上升。"
+                stickiness_up_new_signups_flat: "用户粘性提升，但新用户注册量持平。"
+                stickiness_up: "用户粘性增强了。"
+                daily_engagement_and_new_signups_up_stickiness_down: "每日参与度和新注册用户数有所上升，但用户粘性下降了。"
+                daily_engagement_up_stickiness_and_new_signups_down: "每日参与度上升，但用户粘性和新注册用户数下降。"
                 insufficient_activity: "请选择更长的日期范围，或者等您的社区有更多活动后再回来。"
               metrics:
                 new_signups: "新注册用户"
