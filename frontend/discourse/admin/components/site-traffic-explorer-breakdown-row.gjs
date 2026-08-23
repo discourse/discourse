@@ -43,8 +43,9 @@ export default <template>
 
     <SiteTrafficExplorerPageviewCount
       @value={{@row.pageviews}}
-      class="site-traffic-explorer__row-count"
       as |formattedValue|
-    >{{formattedValue}}</SiteTrafficExplorerPageviewCount>
+    >
+      <span class="site-traffic-explorer__row-count">{{formattedValue}}</span>
+    </SiteTrafficExplorerPageviewCount>
   </label>
 </template>

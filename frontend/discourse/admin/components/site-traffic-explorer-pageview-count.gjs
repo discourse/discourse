@@ -5,7 +5,7 @@ import {
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 
 export default <template>
-  <DTooltip @content={{formatExactPageviewCount @value}} ...attributes>
+  <DTooltip @content={{formatExactPageviewCount @value}}>
     <:trigger>{{yield (formatPageviewCount @value)}}</:trigger>
   </DTooltip>
 </template>

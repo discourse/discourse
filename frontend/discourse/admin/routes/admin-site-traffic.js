@@ -158,8 +158,12 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
   }
 
   #filterValues(key, value) {
-    if (!value) {
+    if (value === null || value === undefined) {
       return [];
+    }
+
+    if (value === "") {
+      return key === "referrer" ? [value] : [];
     }
 
     if (value.startsWith("[")) {
