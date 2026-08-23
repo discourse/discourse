@@ -45,6 +45,7 @@ module DiscourseWorkflows
         "title": { "type": "string" },
         "fancy_title": { "type": "string" },
         "slug": { "type": "string" },
+        "archetype": { "type": "string", "description": "regular for topics, private_message for PMs" },
         "posts_count": { "type": "integer" },
         "category_id": { "type": ["integer", "null"] },
         "user_id": { "type": "integer" },
