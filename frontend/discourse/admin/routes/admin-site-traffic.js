@@ -69,6 +69,11 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
       }));
   }
 
+  setupController(controller, model) {
+    super.setupController(controller, model);
+    controller.loadTraffic(model);
+  }
+
   @action
   loading(transition) {
     if (!this.controllerFor("admin-site-traffic").model) {
@@ -132,8 +137,9 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     };
 
     for (const key of FILTER_KEYS) {
-      if (params[key] !== null && params[key] !== undefined) {
-        requestParams[key] = params[key];
+      const values = this.#filterValues(key, params[key]);
+      if (values.length) {
+        requestParams[key] = values;
       }
     }
 
@@ -145,9 +151,31 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
       return TRAFFIC_TYPES;
     }
 
-    const selected = value.split(",");
+    const selected = this.#filterValues("traffic_type", value);
     return TRAFFIC_TYPES.filter((trafficType) =>
       selected.includes(trafficType)
     );
+  }
+
+  #filterValues(key, value) {
+    if (!value) {
+      return [];
+    }
+
+    if (value.startsWith("[")) {
+      try {
+        const values = JSON.parse(value);
+        if (
+          Array.isArray(values) &&
+          values.every((item) => typeof item === "string")
+        ) {
+          return values;
+        }
+      } catch {
+        return [];
+      }
+    }
+
+    return key === "traffic_type" ? value.split(",") : [value];
   }
 }

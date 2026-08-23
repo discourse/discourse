@@ -8,7 +8,6 @@ import {
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
 import { countryName } from "discourse/admin/lib/format-country";
-import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
@@ -53,15 +52,12 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked browser = null;
   @tracked ip = null;
   @tracked traffic = null;
-  @tracked loading = false;
   @tracked fetchError = null;
   @tracked draftFilters = Object.fromEntries(
     FILTER_KEYS.map((key) => [key, []])
   );
 
   queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
-
-  #fetchId = 0;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -140,22 +136,6 @@ export default class AdminSiteTrafficController extends Controller {
     return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
-  #requestParams() {
-    const params = {
-      start_date: moment(this.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.endDate).format("YYYY-MM-DD"),
-    };
-
-    for (const key of FILTER_KEYS) {
-      const values = this.#appliedValues(key);
-      if (values.length) {
-        params[key] = values;
-      }
-    }
-
-    return params;
-  }
-
   #decorateTraffic(traffic) {
     const countries = traffic.dimensions?.countries ?? [];
     const activeFilters = (traffic.active_filters ?? []).map((filter) =>
@@ -202,37 +182,11 @@ export default class AdminSiteTrafficController extends Controller {
     };
   }
 
-  @action
-  async fetchTraffic() {
+  loadTraffic(model) {
     this.#resetDraftFilters();
-    const fetchId = ++this.#fetchId;
-    this.loading = true;
-    this.fetchError = null;
-
-    try {
-      const traffic = await ajax(
-        "/admin/dashboard/site-traffic-explorer.json",
-        {
-          data: this.#requestParams(),
-        }
-      );
-
-      if (fetchId === this.#fetchId) {
-        this.traffic = this.#decorateTraffic(traffic);
-        this.#reconcileFilters(this.traffic.active_filters ?? []);
-      }
-    } catch (error) {
-      if (fetchId === this.#fetchId) {
-        this.fetchError =
-          error.jqXHR?.responseJSON?.error_type === "traffic_query_timeout"
-            ? "timeout"
-            : "unexpected";
-      }
-    } finally {
-      if (fetchId === this.#fetchId) {
-        this.loading = false;
-      }
-    }
+    this.traffic = model.traffic ? this.#decorateTraffic(model.traffic) : null;
+    this.fetchError = model.fetchError;
+    this.#reconcileFilters(this.traffic?.active_filters ?? []);
   }
 
   @action
@@ -319,7 +273,6 @@ export default class AdminSiteTrafficController extends Controller {
 
   @action
   resetState() {
-    this.#fetchId++;
     this.range = DEFAULT_PERIOD;
     this.start_date = null;
     this.end_date = null;
@@ -328,7 +281,6 @@ export default class AdminSiteTrafficController extends Controller {
     }
     this.#resetDraftFilters();
     this.traffic = null;
-    this.loading = false;
     this.fetchError = null;
   }
 
