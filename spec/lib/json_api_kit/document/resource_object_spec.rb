@@ -5,6 +5,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
 
   fab!(:topic) { Fabricate(:topic, title: "A row a document renders") }
 
+  let(:guardian) { Guardian.new }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
       model Topic
@@ -12,7 +13,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
       attribute :title
     end
   end
-  let(:fields) { resource.fields }
+  let(:fields) { resource.fields(guardian:) }
   let(:row) { JsonApiKit::Pagination::Row.new(record: topic, segment: nil) }
   let(:record) { JsonApiKit::Record.new(row, fields, type: "topics") }
   let(:meta) { {} }
@@ -43,7 +44,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
     end
 
     context "when the record holds no attribute" do
-      let(:fields) { resource.fields(["secrets"]) }
+      let(:fields) { resource.fields(["secrets"], guardian:) }
 
       it "renders no attributes" do
         expect(resource_object.to_h).not_to have_key(:attributes)
@@ -58,7 +59,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
       let(:author_record) do
         JsonApiKit::Record.new(
           JsonApiKit::Pagination::Row.new(record: topic.user, segment: nil),
-          users_resource.fields,
+          users_resource.fields(guardian:),
           type: "users",
         )
       end
@@ -99,7 +100,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
       let(:post_record) do
         JsonApiKit::Record.new(
           JsonApiKit::Pagination::Row.new(record: post, segment: nil),
-          posts_resource.fields,
+          posts_resource.fields(guardian:),
           type: "posts",
         )
       end

@@ -281,7 +281,7 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".attribute" do
-    subject(:attribute_values) { topic_resource.fields.attributes.values_for(topic) }
+    subject(:attribute_values) { topic_resource.fields(guardian:).attributes.values_for(topic) }
 
     fab!(:topic) { Fabricate(:topic, title: "A field a resource renders") }
 
@@ -291,7 +291,7 @@ RSpec.describe JsonApiKit::Resource do
 
     context "when the resource declares one more after a reading" do
       before do
-        topic_resource.fields.attributes
+        topic_resource.fields(guardian:).attributes
         topic_resource.attribute(:closed)
       end
 
@@ -302,7 +302,7 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".has_one" do
-    subject(:user_relationships) { topic_resource.fields.relationships.pick(%w[user]) }
+    subject(:user_relationships) { topic_resource.fields(guardian:).relationships.pick(%w[user]) }
 
     it "relates the resource to one record of another" do
       expect(user_relationships.first.resource).to eq(user_resource)
@@ -313,10 +313,12 @@ RSpec.describe JsonApiKit::Resource do
     end
 
     context "when the resource declares one more after a reading" do
-      subject(:category_relationships) { topic_resource.fields.relationships.pick(%w[category]) }
+      subject(:category_relationships) do
+        topic_resource.fields(guardian:).relationships.pick(%w[category])
+      end
 
       before do
-        topic_resource.fields
+        topic_resource.fields(guardian:)
         topic_resource.has_one(:category, resource: user_resource)
       end
 
@@ -327,7 +329,7 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".has_many" do
-    subject(:posts_relationships) { topic_resource.fields.relationships.pick(%w[posts]) }
+    subject(:posts_relationships) { topic_resource.fields(guardian:).relationships.pick(%w[posts]) }
 
     it "relates the resource to many records of another" do
       expect(posts_relationships.first).to be_a(JsonApiKit::Declarations::Relationship::ToMany)

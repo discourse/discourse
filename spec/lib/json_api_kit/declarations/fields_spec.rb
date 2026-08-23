@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Declarations::Fields do
-  subject(:fields) { described_class.for(names, attributes:, relationships:, schema:) }
+  subject(:fields) { described_class.for(names, guardian:, attributes:, relationships:, schema:) }
+
+  let(:guardian) { Guardian.new }
 
   fab!(:topic) { Fabricate(:topic, title: "A record read as its fields", closed: false) }
 

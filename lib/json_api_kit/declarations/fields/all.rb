@@ -10,7 +10,7 @@ module JsonApiKit
 
         private
 
-        def pick(fields) = fields
+        def pick(fields) = readable(fields)
       end
     end
   end

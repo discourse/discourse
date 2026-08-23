@@ -6,6 +6,7 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
   fab!(:author, :user)
   fab!(:topic)
 
+  let(:guardian) { Guardian.new }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/topics")
   end
@@ -25,14 +26,14 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
   let(:record) do
     JsonApiKit::Record.new(
       JsonApiKit::Pagination::Row.new(record: author, segment: nil),
-      users_resource.fields,
+      users_resource.fields(guardian:),
       type: "users",
     )
   end
   let(:owner) do
     JsonApiKit::Record.new(
       JsonApiKit::Pagination::Row.new(record: topic, segment: nil),
-      topics_resource.fields,
+      topics_resource.fields(guardian:),
       type: "topics",
     )
   end

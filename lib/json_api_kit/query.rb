@@ -49,7 +49,7 @@ module JsonApiKit
 
     def schema = @schema ||= resource.schema
 
-    def fields = @fields ||= resource.fields(request.fields[resource.type])
+    def fields = @fields ||= resource.fields(request.fields[resource.type], guardian:)
 
     def sideloads
       @sideloads ||= Sideloads.for(relationships, paths:, rows:, request:, schema:)
