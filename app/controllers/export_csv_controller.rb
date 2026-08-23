@@ -11,9 +11,14 @@ class ExportCsvController < ApplicationController
     raise Discourse::InvalidParameters.new(:entity) unless entity.is_a?(String) && entity.size < 100
 
     (export_params[:args] || {}).each do |key, value|
-      unless value.is_a?(String) && value.size < 100
-        raise Discourse::InvalidParameters.new("args.#{key}")
-      end
+      valid =
+        if value.is_a?(Array)
+          value.all? { |v| (v.is_a?(String) || v.is_a?(Integer)) && v.to_s.size < 100 }
+        else
+          value.is_a?(String) && value.size < 100
+        end
+
+      raise Discourse::InvalidParameters.new("args.#{key}") unless valid
     end
 
     if entity == "user_archive"
@@ -90,7 +95,10 @@ class ExportCsvController < ApplicationController
     @_export_params ||=
       begin
         params.require(:entity)
-        params.permit(:entity, args: [*Report::FILTERS, *UserHistory.staff_filters]).to_h
+        params.permit(
+          :entity,
+          args: [*Report::FILTERS, *UserHistory.staff_filters, category_ids: [], groups: []],
+        ).to_h
       end
   end
 end

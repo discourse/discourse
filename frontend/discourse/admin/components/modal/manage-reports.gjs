@@ -1,177 +1,27 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import ManageableRowListItem from "discourse/admin/components/manageable-row-list-item";
+import ToggleableOrderedList from "discourse/admin/lib/toggleable-ordered-list";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DModal from "discourse/ui-kit/d-modal";
-import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const VISIBLE_CAP = 10;
 const SEARCH_DEBOUNCE_MS = 200;
-
-class ManageReportsRow extends Component {
-  @service site;
-
-  @tracked dragCssClass;
-  dragCount = 0;
-
-  isAboveElement(event) {
-    const domRect = event.currentTarget.getBoundingClientRect();
-    return event.offsetY < domRect.height / 2;
-  }
-
-  @action
-  dragStart(event) {
-    event.dataTransfer.effectAllowed = "move";
-    this.args.onDragStart(this.args.row.key);
-    this.dragCssClass = "dragging";
-  }
-
-  @action
-  dragOver(event) {
-    if (!this.args.row.enabled) {
-      return;
-    }
-    event.preventDefault();
-    if (this.dragCssClass === "dragging") {
-      return;
-    }
-    this.dragCssClass = this.isAboveElement(event)
-      ? "drag-above"
-      : "drag-below";
-  }
-
-  @action
-  dragEnter() {
-    this.dragCount++;
-  }
-
-  @action
-  dragLeave() {
-    this.dragCount--;
-    if (
-      this.dragCount === 0 &&
-      (this.dragCssClass === "drag-above" || this.dragCssClass === "drag-below")
-    ) {
-      this.dragCssClass = null;
-    }
-  }
-
-  @action
-  drop(event) {
-    if (!this.args.row.enabled) {
-      return;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-    this.dragCount = 0;
-    const dropAbove = this.isAboveElement(event);
-    this.dragCssClass = null;
-    this.args.onDrop(this.args.row.key, dropAbove);
-  }
-
-  @action
-  dragEnd() {
-    this.dragCount = 0;
-    this.dragCssClass = null;
-    this.args.onDragEnd();
-  }
-
-  <template>
-    <li
-      class={{dConcatClass
-        "manage-reports__row"
-        (if @row.enabled "--enabled")
-        this.dragCssClass
-      }}
-      data-identifier={{@row.key}}
-      draggable={{and @row.enabled @reorderable}}
-      {{on "dragstart" this.dragStart}}
-      {{on "dragover" this.dragOver}}
-      {{on "dragenter" this.dragEnter}}
-      {{on "dragleave" this.dragLeave}}
-      {{on "drop" this.drop}}
-      {{on "dragend" this.dragEnd}}
-    >
-
-      {{#unless this.site.mobileView}}
-        <span class="manage-reports__grip">
-          {{dIcon "grip-vertical"}}
-        </span>
-      {{/unless}}
-
-      {{#if this.site.mobileView}}
-        <div class="manage-reports__order-mobile">
-          <DButton
-            @icon="arrow-up"
-            @action={{fn @onMoveUp @row}}
-            @disabled={{eq @index 0}}
-            @translatedAriaLabel={{i18n
-              "admin.dashboard.reports_section.modal.move_up"
-              title=@row.title
-            }}
-            class="manage-reports__arrow btn-transparent"
-          />
-          <DButton
-            @icon="arrow-down"
-            @action={{fn @onMoveDown @row}}
-            @disabled={{eq @index @lastEnabledIndex}}
-            @translatedAriaLabel={{i18n
-              "admin.dashboard.reports_section.modal.move_down"
-              title=@row.title
-            }}
-            class="manage-reports__arrow btn-transparent"
-          />
-        </div>
-      {{/if}}
-
-      <div class="manage-reports__row-text">
-        <div class="manage-reports__row-heading">
-          <span class="manage-reports__title">{{@row.title}}</span>
-          {{#if @row.label}}
-            <span class="db-report__label">
-              {{@row.label}}
-            </span>
-          {{/if}}
-        </div>
-        {{#if @row.description}}
-          <p class="manage-reports__description">{{@row.description}}</p>
-        {{/if}}
-      </div>
-
-      <DToggleSwitch
-        @state={{@row.enabled}}
-        disabled={{@toggleDisabled}}
-        aria-label={{i18n
-          (if
-            @row.enabled
-            "admin.dashboard.reports_section.modal.disable"
-            "admin.dashboard.reports_section.modal.enable"
-          )
-          title=@row.title
-        }}
-        {{on "click" (fn @onToggle @row)}}
-      />
-    </li>
-  </template>
-}
+const ARIA_LABEL_PREFIX = "admin.dashboard.reports_section.modal";
 
 export default class ManageReports extends Component {
   @tracked allKeys = [];
-  @tracked enabledOrder = [];
   @tracked providers = [];
   @tracked search = "";
   @tracked nextCursor = null;
@@ -179,23 +29,19 @@ export default class ManageReports extends Component {
   @tracked loading = true;
   @tracked loadingMore = false;
   @tracked applying = false;
-  @tracked draggedId = null;
+  list = new ToggleableOrderedList({ cap: VISIBLE_CAP });
+
   itemsByKey = new Map();
 
-  isEnabled = (row) => this.enabledKeys.has(row.key);
-  toggleDisabled = (row) => this.atCap && !this.isEnabled(row);
+  toggleDisabled = (row) => this.list.toggleDisabled(row.key);
 
   constructor() {
     super(...arguments);
     this.load();
   }
 
-  get enabledKeys() {
-    return new Set(this.enabledOrder);
-  }
-
   get enabledRows() {
-    return this.enabledOrder
+    return this.list.enabledOrder
       .map((key) => this.itemsByKey.get(key))
       .filter(Boolean);
   }
@@ -205,7 +51,8 @@ export default class ManageReports extends Component {
   }
 
   get disabledRows() {
-    return this.allRows.filter((row) => !this.enabledKeys.has(row.key));
+    const enabled = this.list.enabledKeys;
+    return this.allRows.filter((row) => !enabled.has(row.key));
   }
 
   get filteredEnabledRows() {
@@ -225,14 +72,6 @@ export default class ManageReports extends Component {
       ...this.filteredEnabledRows.map((row) => ({ ...row, enabled: true })),
       ...this.disabledRows.map((row) => ({ ...row, enabled: false })),
     ];
-  }
-
-  get atCap() {
-    return this.enabledOrder.length >= VISIBLE_CAP;
-  }
-
-  get reorderable() {
-    return this.enabledOrder.length > 1;
   }
 
   get lastEnabledIndex() {
@@ -256,7 +95,7 @@ export default class ManageReports extends Component {
       this.providers = response.providers ?? [];
       this.cacheItems(enabled);
       this.cacheItems(page);
-      this.enabledOrder = enabled.map((item) => item.key);
+      this.list.enabledOrder = enabled.map((item) => item.key);
       this.allKeys = page.map((item) => item.key);
       this.nextCursor = response.cursor ?? null;
       this.hasMore = !!response.has_more;
@@ -323,70 +162,32 @@ export default class ManageReports extends Component {
   @action
   toggle(row) {
     this.itemsByKey.set(row.key, row);
-    if (this.enabledKeys.has(row.key)) {
-      this.enabledOrder = this.enabledOrder.filter((k) => k !== row.key);
-    } else if (!this.atCap) {
-      this.enabledOrder = [...this.enabledOrder, row.key];
-    }
+    this.list.toggle(row.key);
   }
 
   @action
   moveUp(row) {
-    const index = this.enabledOrder.indexOf(row.key);
-    if (index <= 0) {
-      return;
-    }
-    const next = [...this.enabledOrder];
-    [next[index - 1], next[index]] = [next[index], next[index - 1]];
-    this.enabledOrder = next;
+    this.list.moveUp(row.key);
   }
 
   @action
   moveDown(row) {
-    const index = this.enabledOrder.indexOf(row.key);
-    if (index < 0 || index === this.enabledOrder.length - 1) {
-      return;
-    }
-    const next = [...this.enabledOrder];
-    [next[index], next[index + 1]] = [next[index + 1], next[index]];
-    this.enabledOrder = next;
+    this.list.moveDown(row.key);
   }
 
   @action
   onDragStart(key) {
-    this.draggedId = key;
+    this.list.onDragStart(key);
   }
 
   @action
   onDrop(targetKey, dropAbove) {
-    const fromIndex = this.enabledOrder.indexOf(this.draggedId);
-    this.draggedId = null;
-    if (fromIndex < 0) {
-      return;
-    }
-
-    const targetIndex = this.enabledOrder.indexOf(targetKey);
-    if (targetIndex < 0) {
-      return;
-    }
-
-    let toIndex = dropAbove ? targetIndex : targetIndex + 1;
-    if (fromIndex < toIndex) {
-      toIndex -= 1;
-    }
-    if (fromIndex === toIndex) {
-      return;
-    }
-
-    const next = [...this.enabledOrder];
-    const [moved] = next.splice(fromIndex, 1);
-    next.splice(toIndex, 0, moved);
-    this.enabledOrder = next;
+    this.list.onDrop(targetKey, dropAbove);
   }
 
   @action
   onDragEnd() {
-    this.draggedId = null;
+    this.list.onDragEnd();
   }
 
   @action
@@ -423,7 +224,7 @@ export default class ManageReports extends Component {
         <span class="manage-reports__counter">
           {{i18n
             "admin.dashboard.reports_section.modal.counter"
-            count=this.enabledOrder.length
+            count=this.list.enabledOrder.length
             max=VISIBLE_CAP
           }}
         </span>
@@ -448,16 +249,18 @@ export default class ManageReports extends Component {
           <ul
             class={{dConcatClass
               "manage-reports__list"
-              (if this.draggedId "--dragging")
-              (if this.reorderable "--reorderable")
+              (if this.list.draggedId "--dragging")
+              (if this.list.reorderable "--reorderable")
             }}
           >
             {{#each this.visibleRows key="key" as |row index|}}
-              <ManageReportsRow
+              <ManageableRowListItem
+                @blockName="manage-reports"
+                @ariaLabelPrefix={{ARIA_LABEL_PREFIX}}
                 @row={{row}}
                 @index={{index}}
                 @lastEnabledIndex={{this.lastEnabledIndex}}
-                @reorderable={{this.reorderable}}
+                @reorderable={{this.list.reorderable}}
                 @toggleDisabled={{this.toggleDisabled row}}
                 @onToggle={{this.toggle}}
                 @onMoveUp={{this.moveUp}}

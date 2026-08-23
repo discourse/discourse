@@ -7430,6 +7430,23 @@ en:
               staff: "Staff"
               empty: "No posts in the selected period."
               save_error: "Couldn't save your selection for next time."
+              add_group: "Add group"
+              members_title: "%{name} — %{users} users · %{posts} posts"
+              members_fetch_error: "Couldn't load users for this group."
+              modal:
+                title: "Compare groups"
+                search_placeholder: "Search groups..."
+                counter: "%{count} of %{max} groups selected"
+                apply: "Save"
+                enable: "Enable %{title}"
+                disable: "Disable %{title}"
+                move_up: "Move %{title} up"
+                move_down: "Move %{title} down"
+                footer_note: "These changes will apply for all users."
+                descriptions:
+                  new_members: "Signed up during the selected period"
+                  returning: "Signed up before the selected period"
+                  staff: "Admins and moderators"
             trust_level_pipeline:
               title: "Trust level pipeline"
               trust_levels:

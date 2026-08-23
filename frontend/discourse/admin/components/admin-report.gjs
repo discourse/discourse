@@ -18,7 +18,9 @@ import ReportFilterBoolComponent from "discourse/admin/components/report-filters
 import ReportFilterCategoryComponent from "discourse/admin/components/report-filters/category";
 import ReportFilterCategoryListComponent from "discourse/admin/components/report-filters/category-list";
 import ReportFilterGroupComponent from "discourse/admin/components/report-filters/group";
+import ReportFilterGroupsComponent from "discourse/admin/components/report-filters/groups";
 import ReportFilterListComponent from "discourse/admin/components/report-filters/list";
+import PostersByMemberTypeReport from "discourse/admin/components/reports/posters-by-member-type-report";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
 import Report, {
   DAILY_LIMIT_DAYS,
@@ -247,6 +249,8 @@ export default class AdminReport extends Component {
         return ReportFilterCategoryListComponent;
       case "group":
         return ReportFilterGroupComponent;
+      case "groups":
+        return ReportFilterGroupsComponent;
       case "list":
         return ReportFilterListComponent;
     }
@@ -271,6 +275,8 @@ export default class AdminReport extends Component {
         return AdminReportRadar;
       case REPORT_MODES.storage_stats:
         return AdminReportStorageStats;
+      case "posters_by_member_type":
+        return PostersByMemberTypeReport;
       default:
         if (reportModeComponent(reportMode)) {
           return reportModeComponent(reportMode);

@@ -171,6 +171,35 @@ RSpec.describe ExportCsvController do
         post "/export_csv/export_entity.json", params: { entity: "foo", args: { name: "x" * 200 } }
         expect(response.status).to eq(400)
       end
+
+      it "accepts array-shaped filter args like category_ids and groups" do
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "posters_by_member_type",
+                 category_ids: %w[1 2],
+                 groups: %w[new_members staff],
+               },
+             }
+        expect(response.status).to eq(200)
+
+        job_data = Jobs::ExportCsvFile.jobs.last["args"].first
+        expect(job_data["args"]["category_ids"]).to eq(%w[1 2])
+        expect(job_data["args"]["groups"]).to eq(%w[new_members staff])
+      end
+
+      it "fails requests where an array filter arg contains an oversized value" do
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "posters_by_member_type",
+                 groups: ["x" * 200],
+               },
+             }
+        expect(response.status).to eq(400)
+      end
     end
 
     describe "#latest_user_archive" do

@@ -1,0 +1,26 @@
+.posters-by-member-type-report {
+  &__numeric {
+    text-align: right;
+  }
+
+  &__row {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+
+    &.--selected {
+      background: var(--tertiary-low);
+
+      td {
+        color: var(--tertiary);
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__members {
+    margin-top: var(--space-4);
+  }
+}
