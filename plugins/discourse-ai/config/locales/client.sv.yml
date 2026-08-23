@@ -36,6 +36,11 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      copied: "Kopierad"
+      ai_decoded_transcript:
+        type: "Typ"
+        error: "Fel"
+        response: "Svar"
       ai_tool_approval:
         loading: "Laddar..."
         tool: "Åtgärd"
@@ -137,6 +142,8 @@ sv:
         post_short: "Inlägg %{id}"
         duration: "Varaktighet"
         actions: "Åtgärder"
+        filters:
+          title: "Filter"
         periods:
           hour: "Senaste timmen"
           day: "Senaste 24 timmarna"

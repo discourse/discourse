@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Styleguide Smoke Test" do
+  include ThemeScreenshotMarker
+
   fab!(:admin)
 
   let(:styleguide) { PageObjects::Pages::Styleguide.new }
@@ -36,6 +38,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
       { href: "/molecules/dialog", title: "Dialog" },
+      { href: "/molecules/drag-and-drop", title: "Drag and drop" },
       { href: "/molecules/tooltips", title: "Tooltips" },
       { href: "/molecules/topic-list-item", title: "Topic List Item" },
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
@@ -121,6 +124,62 @@ RSpec.describe "Styleguide Smoke Test" do
 
     expect(styleguide).to have_breadcrumb("Styleguide")
     expect(styleguide).to have_breadcrumb("Buttons")
+  end
+
+  it "renders the drag and drop examples" do
+    visit "/styleguide/molecules/drag-and-drop"
+
+    expect(styleguide).to have_heading("Drag and drop")
+    # The first group renders by default; the rest are behind the group subnav.
+    expect(page).to have_css("[data-test-styleguide-group='basics']")
+    expect(page).to have_css(".styleguide-drag-and-drop__zone")
+    screenshot_marker(label: "styleguide-drag-and-drop")
+  end
+
+  # Asserting on each group's own markup, not just its wrapper: the wrapper
+  # renders before a broken example inside it throws, so a wrapper-only check
+  # passes for a group whose examples never mounted.
+  it "renders each drag and drop group's examples" do
+    {
+      "basics" => ".styleguide-drag-and-drop__swatches",
+      "sources" => ".styleguide-drag-and-drop__grip",
+      "targets" => ".styleguide-drag-and-drop__zone.--inner",
+      "outside" => ".styleguide-drag-and-drop__zone",
+      "reacting" => %w[.styleguide-drag-and-drop__panel .styleguide-drag-and-drop__folder],
+      "resize" => ".styleguide-drag-and-drop__resizable",
+      "gestures" => ".styleguide-drag-and-drop__knob",
+    }.each do |group, selectors|
+      visit "/styleguide/molecules/drag-and-drop?group=#{group}"
+
+      expect(page).to have_css("[data-test-styleguide-group='#{group}']")
+      Array(selectors).each { |selector| expect(page).to have_css(selector) }
+    end
+  end
+
+  it "labels each drag and drop example with what it demonstrates" do
+    visit "/styleguide/molecules/drag-and-drop?group=resize"
+
+    # The separator and the handles are components; the raw edge is a modifier.
+    expect(page).to have_css(".styleguide-example__kind", count: 3)
+  end
+
+  it "renders the dwell example collapsed and open" do
+    visit "/styleguide/molecules/drag-and-drop?group=reacting"
+
+    expect(page).to have_css(".styleguide-drag-and-drop__folder")
+    expect(page).to have_no_css(".styleguide-drag-and-drop__folder.--open")
+    if ENV["TAKE_SCREENSHOTS"] == "1"
+      page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    end
+    screenshot_marker(label: "styleguide-drag-and-drop-dwell")
+
+    find(".styleguide-drag-and-drop__folder-toggle").click
+    expect(page).to have_css(".styleguide-drag-and-drop__folder.--open")
+    expect(page).to have_css(".styleguide-drag-and-drop__folder-row", count: 3)
+    if ENV["TAKE_SCREENSHOTS"] == "1"
+      page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    end
+    screenshot_marker(label: "styleguide-drag-and-drop-dwell-open")
   end
 
   it "renders the index page correctly on a site with no default color schemes" do

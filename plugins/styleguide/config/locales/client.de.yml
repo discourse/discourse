@@ -14,6 +14,9 @@ de:
     styleguide:
       title: "Styleguide"
       welcome: "Wähle einen Abschnitt aus dem Navigationsmenü aus, um loszulegen."
+      example:
+        kind:
+          component: "Komponente"
       categories:
         syntax: Syntax
         atoms: Atome
@@ -40,6 +43,8 @@ de:
           title: "Farben"
         dialog:
           title: "Dialog"
+        drag_and_drop:
+          locked: "Gesperrt"
         icons:
           title: "Symbole"
           full_list: "Siehe vollständige Liste der „Font Awesome“-Symbole"

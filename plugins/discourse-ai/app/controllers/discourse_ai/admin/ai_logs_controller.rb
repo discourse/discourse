@@ -183,13 +183,13 @@ module DiscourseAi
 
         if id_filters.one?
           name = id_filters.first
-          return scope.where(name => positive_integer!(name))
+          scope = scope.where(name => positive_integer!(name))
         end
 
         scope = apply_date_filters(scope)
         scope = apply_outcome_filter(scope)
         scope = scope.where.not(request_attempts: nil) if boolean_param(:has_retries)
-        scope = scope.where(llm_id: positive_integer!(:llm_id)) if params[:llm_id].present?
+        scope = scope.where(llm_id: params[:llm_id]) if params[:llm_id].present?
         scope = scope.where(feature_name: params[:feature].to_s) if params[:feature].present?
 
         if params[:user_id].present? || params[:username].present?

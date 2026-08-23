@@ -92,6 +92,12 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      copied: "Αντιγράφηκε"
+      ai_decoded_transcript:
+        arguments: "Παράμετροι"
+        type: "Τύπος"
+        error: "Σφάλμα"
+        response: "Απάντηση"
       discourse_workflows:
         ai_agent:
           mode: "Λειτουργία"
@@ -224,6 +230,7 @@ el:
         duration: "Διάρκεια"
         actions: "Ενέργειες"
         filters:
+          title: "Φίλτρα"
           period: "Χρονική περίοδος"
         periods:
           day: "Τελευταίες 24 ώρες"

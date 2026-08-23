@@ -7,6 +7,9 @@
 te:
   js:
     styleguide:
+      example:
+        kind:
+          component: "భాగం"
       sections:
         colors:
           title: "రంగులు"

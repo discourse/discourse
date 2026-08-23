@@ -4375,6 +4375,11 @@ cs:
       group: "Uživatelé, kteří nejsou v uvedených skupinách, musí mít odpovědi schválené redakcí. Viz %{link}."
       new_topics_unless_trust_level: "Uživatelé s nízkou úrovní důvěry musí mít témata schválená redakcí. Viz %{link}."
       fast_typer: "Nový uživatel napsal svůj první příspěvek podezřele rychle, podezření na chování bota nebo spammera. Viz %{link}."
+      fast_typer_time:
+        one: "%{count} vteřinu"
+        few: "%{count} vteřiny"
+        many: "%{count} vteřin"
+        other: "%{count} vteřin"
       auto_silence_regex: "Nový uživatel, jehož první příspěvek odpovídá nastavení %{link} ."
       watched_word:
         one: "Tento příspěvek obsahoval sledované slovo, označené slovo je: %{words}. Více informací naleznete v %{link} ."

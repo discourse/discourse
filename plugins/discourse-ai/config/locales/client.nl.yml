@@ -228,6 +228,14 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      copied: "Gekopieerd"
+      ai_decoded_transcript:
+        thinking: "Denken"
+        tool: "Tool"
+        arguments: "Argumenten"
+        type: "Type"
+        error: "Fout"
+        response: "Antwoord"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -535,6 +543,7 @@ nl:
         retry: "Opnieuw proberen"
         apply: "Toepassen"
         all_models: "Alle modellen"
+        all_features: "Alle functies"
         successful: "Gelukt"
         failed: "Mislukt"
         unknown: "Onbekend"
@@ -556,6 +565,7 @@ nl:
         cost: "Kosten"
         actions: "Acties"
         filters:
+          title: "Filters"
           period: "Tijdsperiode"
         periods:
           hour: "Afgelopen uur"

@@ -228,6 +228,14 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      copied: "Kopyalandı"
+      ai_decoded_transcript:
+        thinking: "Düşünme"
+        tool: "Araç"
+        arguments: "Tartışmalar"
+        type: "Tür"
+        error: "Hata"
+        response: "Yanıt"
       discourse_workflows:
         ai_agent:
           agent_id: "Ajan"
@@ -535,6 +543,7 @@ tr_TR:
         retry: "Tekrar deneyin"
         apply: "Uygula"
         all_models: "Tüm modeller"
+        all_features: "Tüm özellikler"
         successful: "Başarılı"
         failed: "Başarısız"
         unknown: "Bilinmeyen"
@@ -556,6 +565,7 @@ tr_TR:
         cost: "Maliyet"
         actions: "Eylemler"
         filters:
+          title: "Filtreler"
           period: "Zaman aralığı"
         periods:
           hour: "Son bir saat"

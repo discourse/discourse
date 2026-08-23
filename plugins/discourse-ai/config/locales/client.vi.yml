@@ -88,6 +88,11 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      copied: "Đã sao chép"
+      ai_decoded_transcript:
+        type: "Loại"
+        error: "Lỗi"
+        response: "Đáp ứng"
       post_image_captions:
         edit: "Không có tiến trình ngôn ngữ nào."
         title: "Đã dịch %{translated}/%{total} sang %{language}"
@@ -251,6 +256,7 @@ vi:
         duration: "Thời hạn"
         actions: "Hành động"
         filters:
+          title: "Bộ lọc"
           period: "Khoảng thời gian"
         periods:
           day: "24 giờ qua"

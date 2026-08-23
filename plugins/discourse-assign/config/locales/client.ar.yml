@@ -223,6 +223,7 @@ ar:
         requires_assign: "يتطلَّب تفعيل المكوِّن الإضافي لتعيين الموضوعات"
       nodes:
         "trigger:assigned": "تم التعيين"
+        "trigger:unassigned": "غير معيَّنة"
       node_descriptions:
         "trigger:assigned": "يتم تشغيله عند تعيين موضوع أو منشور"
       assign_topic:
@@ -246,5 +247,8 @@ ar:
         post_id: "معرِّف المنشور"
         assignee: "المعيَّن"
       assigned:
+        topic_assignments_only: "التشغيل فقط عندما يكون هدف التعيين هو الموضوع وليس منشورًا فرديًا"
+        topic_assignments_only_description: "تعيينات الموضوعات فقط"
+      unassigned:
         topic_assignments_only: "التشغيل فقط عندما يكون هدف التعيين هو الموضوع وليس منشورًا فرديًا"
         topic_assignments_only_description: "تعيينات الموضوعات فقط"

@@ -368,21 +368,23 @@ export default class ComposerEditor extends Component {
     }
 
     let reason;
-    if (this.composer?.model?.replyLength < 1) {
-      reason = i18n("composer.error.post_missing");
-    } else if (this.composer?.model?.missingReplyCharacters > 0) {
-      reason = i18n("composer.error.post_length", {
-        count: this.composer?.model?.minimumPostLength,
-      });
-      const tl = this.get("currentUser.trust_level");
-      if ((tl === 0 || tl === 1) && !this._isNewTopic) {
-        reason +=
-          "<br/>" +
-          i18n("composer.error.try_like", {
-            heart: iconHTML("heart", {
-              label: i18n("likes_lowercase", { count: 1 }),
-            }),
-          });
+    if (this.composer?.model?.missingReplyCharacters > 0) {
+      if (this.composer?.model?.replyLength < 1) {
+        reason = i18n("composer.error.post_missing");
+      } else {
+        reason = i18n("composer.error.post_length", {
+          count: this.composer?.model?.minimumPostLength,
+        });
+        const tl = this.get("currentUser.trust_level");
+        if ((tl === 0 || tl === 1) && !this._isNewTopic) {
+          reason +=
+            "<br/>" +
+            i18n("composer.error.try_like", {
+              heart: iconHTML("heart", {
+                label: i18n("likes_lowercase", { count: 1 }),
+              }),
+            });
+        }
       }
     }
 

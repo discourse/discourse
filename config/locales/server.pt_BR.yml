@@ -4870,6 +4870,9 @@ pt_BR:
       group: "Usuários(as) que não estiverem nos grupos especificados devem ter as respostas aprovadas pela equipe. Confira %{link}."
       new_topics_unless_trust_level: "Usuários(as) com níveis de confiança baixos precisam ter tópicos aprovados pela equipe. Veja %{link}."
       fast_typer: "O(a) novo(a) usuário(a) digitou sua primeira postagem desconfiadamente rápido, há suspeita de comportamento de robô ou remetente de spam. Veja %{link}."
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       auto_silence_regex: "Novo(a) usuário(a) cuja primeira postagem correspponde à configuração %{link}."
       watched_word:
         one: "Esta postagem inclui uma palavra acompanhada, a palavra sinalizada é: %{words}. Veja %{link} para obter mais informações."

@@ -2133,6 +2133,9 @@ pt:
       medium: "Médio"
       high: "Elevado"
     reasons:
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
       agree:

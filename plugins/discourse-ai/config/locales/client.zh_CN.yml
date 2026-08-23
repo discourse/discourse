@@ -233,6 +233,13 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      ai_decoded_transcript:
+        thinking: "正在思考"
+        tool: "工具"
+        arguments: "参数"
+        type: "类型"
+        error: "错误"
+        response: "回答"
       post_image_captions:
         edit: "编辑 AI 图片说明"
         title: "编辑 AI 图片说明"
@@ -612,6 +619,7 @@ zh_CN:
         retry: "重试"
         apply: "应用"
         all_models: "所有模型"
+        all_features: "所有功能"
         successful: "成功"
         failed: "失败"
         topic_id: "话题 ID"
@@ -632,6 +640,7 @@ zh_CN:
         cost: "成本"
         actions: "操作"
         filters:
+          title: "筛选器"
           period: "时间段"
         periods:
           day: "过去 24 小时"

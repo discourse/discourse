@@ -13,6 +13,9 @@ pt_BR:
   js:
     styleguide:
       title: "Guia de estilo"
+      example:
+        kind:
+          component: "Componente"
       categories:
         syntax: Sintaxe
         atoms: Átomos
@@ -39,6 +42,8 @@ pt_BR:
           title: "Cores"
         dialog:
           title: "Diálogo"
+        drag_and_drop:
+          locked: "Bloqueado"
         icons:
           title: "Ícones"
           full_list: "Exibir a lista completa de ícones incríveis de fonte"

@@ -21,6 +21,7 @@ class AiAgent < ActiveRecord::Base
   # places a hard limit, so per site we cache a maximum of 500 classes
   MAX_AGENTS_PER_SITE = 500
   MAX_SUBAGENTS = 20
+  MAX_RAG_DOCUMENT_SOURCES = 100
 
   validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
   validates :description, presence: true, length: { maximum: 2000 }
@@ -58,8 +59,10 @@ class AiAgent < ActiveRecord::Base
   validate :native_tools_require_supported_forced_llm
   validate :subagent_ids_are_valid
   validate :subagents_can_not_use_spawn_agent
+  validate :rag_document_sources_count_within_limit
 
   has_many :rag_document_fragments, dependent: :destroy, as: :target
+  has_many :rag_document_sources, dependent: :destroy, as: :target
   has_many :ai_agent_mcp_servers, dependent: :destroy
   has_many :ai_mcp_servers, through: :ai_agent_mcp_servers
 
@@ -71,6 +74,8 @@ class AiAgent < ActiveRecord::Base
 
   has_many :upload_references, as: :target, dependent: :destroy
   has_many :uploads, through: :upload_references
+
+  accepts_nested_attributes_for :rag_document_sources, allow_destroy: true
 
   before_validation :set_default_compression_threshold
   before_validation :normalize_subagent_ids
@@ -524,6 +529,19 @@ class AiAgent < ActiveRecord::Base
     if configured_tool_function_names.any? { |name| name.to_s.casecmp("spawn_agent").zero? }
       errors.add(:tools, I18n.t("discourse_ai.ai_bot.agents.subagent_tool_collision"))
     end
+  end
+
+  def rag_document_sources_count_within_limit
+    count = rag_document_sources.reject(&:marked_for_destruction?).size
+    return if count <= MAX_RAG_DOCUMENT_SOURCES
+
+    errors.add(
+      :base,
+      I18n.t(
+        "discourse_ai.ai_bot.agents.too_many_rag_document_sources",
+        max: MAX_RAG_DOCUMENT_SOURCES,
+      ),
+    )
   end
 
   def configured_tool_function_names

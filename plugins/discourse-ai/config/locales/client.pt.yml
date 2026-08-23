@@ -67,6 +67,11 @@ pt:
               label: "Responder"
     discourse_ai:
       title: "IA"
+      copied: "Copiado"
+      ai_decoded_transcript:
+        type: "Tipo"
+        error: "Erro"
+        response: "Resposta"
       discourse_workflows:
         ai_agent:
           mode: "Modo"
@@ -202,6 +207,7 @@ pt:
       logs:
         short_title: "Logs"
         apply: "Aplicar"
+        all_features: "Todas as funcionalidades"
         successful: "Sucesso"
         failed: "Falhado"
         unknown: "Desconhecido"
@@ -220,6 +226,8 @@ pt:
         post_short: "Publicação %{id}"
         duration: "Duração"
         actions: "Ações"
+        filters:
+          title: "Filtros"
         periods:
           day: "Últimas 24 horas"
           week: "Últimos 7 Dias"

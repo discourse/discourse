@@ -34,6 +34,10 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "napaka"
       ai_tool_approval:
         loading: "Nalagam..."
         tool: "Dejanje"
@@ -141,6 +145,8 @@ sl:
         post_short: "Prispevek %{id}"
         duration: "Trajanje"
         actions: "Akcije"
+        filters:
+          title: "Filtri"
         periods:
           day: "Zadnjih 24 ur"
           week: "Zadnjih 7 dni"

@@ -59,6 +59,12 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      copied: "کاپی کر لیا"
+      ai_decoded_transcript:
+        arguments: "دلائل"
+        type: "قِسم"
+        error: "خرابی"
+        response: "جواب"
       discourse_workflows:
         ai_agent:
           mode: "موڈ"
@@ -178,6 +184,7 @@ ur:
         duration: "دورانیہ"
         actions: "عمل"
         filters:
+          title: "فِلٹر"
           period: "دورانیہ"
         periods:
           day: "پچھلے 24 گھنٹے"

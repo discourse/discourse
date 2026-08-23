@@ -223,13 +223,50 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
             topic_id: matching_log.topic_id,
             start_date: 50.years.from_now.to_date,
           }
+      expect(response.parsed_body["logs"]).to be_empty
+
+      get index_path,
+          params: {
+            topic_id: matching_log.topic_id,
+            start_date: 1.day.ago.iso8601,
+            outcome: "failed",
+            has_retries: true,
+            llm_id: llm_model.id,
+            feature: matching_log.feature_name,
+            user_id: user.id,
+          }
       expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([matching_log.id])
 
       get index_path, params: { post_id: matching_log.post_id }
       expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([matching_log.id])
 
-      get index_path, params: { id: matching_log.id, cursor: matching_log.id }
+      get index_path, params: { id: matching_log.id, outcome: "successful" }
+      expect(response.parsed_body["logs"]).to be_empty
+
+      get index_path, params: { id: matching_log.id, cursor: matching_log.id, outcome: "failed" }
       expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([matching_log.id])
+    end
+
+    it "filters by seeded models and exposes them in filter metadata" do
+      seeded_model = Fabricate(:seeded_model, id: -1)
+      matching_log = Fabricate(:ai_api_audit_log, llm_model: seeded_model)
+      Fabricate(:ai_api_audit_log, llm_model: llm_model)
+
+      get index_path, params: { llm_id: seeded_model.id, include_meta: true }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["logs"].map { |returned_log| returned_log["id"] }).to eq(
+        [matching_log.id],
+      )
+      expect(response.parsed_body["models"]).to include(
+        "id" => seeded_model.id,
+        "name" => seeded_model.display_name,
+      )
+
+      get index_path, params: { llm_id: -999_999 }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["logs"]).to be_empty
     end
 
     it "uses the health-check outcome semantics" do

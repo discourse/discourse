@@ -4694,6 +4694,8 @@ ja:
       group: "指定されたグループに属しないユーザーの返信はスタッフによる承認が必要です。%{link} をご覧ください。"
       new_topics_unless_trust_level: "信頼レベルが低いユーザーはそのトピックをスタッフが承認する必要があります。%{link} をご覧ください。"
       fast_typer: "新規ユーザーは、最初の投稿を、ボットまたは迷惑行為者と疑われる速さで入力しました。%{link} をご覧ください。"
+      fast_typer_time:
+        other: "%{count} 秒"
       auto_silence_regex: "最初の投稿が %{link} 設定に一致する新規ユーザー。"
       watched_word:
         other: "この投稿にはウォッチ語が含まれていました。通報された語: %{words}。%{link} をご覧ください。"

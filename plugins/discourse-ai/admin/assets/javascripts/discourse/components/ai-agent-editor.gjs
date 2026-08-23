@@ -33,6 +33,7 @@ import AiAgentCollapsableExample from "./ai-agent-example";
 import AiAgentToolOptions from "./ai-agent-tool-options";
 import AiLlmSelector from "./ai-llm-selector";
 import AiToolSelector from "./ai-tool-selector";
+import RagDocumentSources from "./rag-document-sources";
 import RagOptionsFk from "./rag-options-fk";
 import RagUploader from "./rag-uploader";
 
@@ -1287,6 +1288,19 @@ export default class AgentEditor extends Component {
 
         {{#if this.siteSettings.ai_embeddings_enabled}}
           <form.Section @title={{i18n "discourse_ai.rag.title"}}>
+            <form.Container
+              @title={{i18n "discourse_ai.rag.sources.title"}}
+              @subtitle={{i18n "discourse_ai.rag.sources.description"}}
+              @format="full"
+            >
+              <RagDocumentSources
+                @form={{form}}
+                @sources={{data.rag_document_sources}}
+                @disabled={{data.system}}
+                @isNew={{@model.isNew}}
+              />
+            </form.Container>
+
             <form.Field
               @name="rag_uploads"
               @title={{i18n "discourse_ai.rag.uploads.title"}}

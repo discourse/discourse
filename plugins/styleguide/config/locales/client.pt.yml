@@ -8,6 +8,9 @@ pt:
   js:
     styleguide:
       title: "Styleguide"
+      example:
+        kind:
+          component: "Componente"
       categories:
         atoms: Átomos
         molecules: Moléculas

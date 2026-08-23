@@ -11,7 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import getURL from "discourse/lib/get-url";
 import { deepEqual } from "discourse/lib/object";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import DiscourseURL, { groupPath, userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation";
 import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation";
@@ -89,7 +89,7 @@ export default class AdminUserIndexController extends Controller {
     return this.model.automaticGroups
       .map((group) => {
         const name = trustHTML(group.name);
-        return `<a href="/g/${name}">${name}</a>`;
+        return `<a href="${groupPath(name)}">${name}</a>`;
       })
       .join(", ");
   }

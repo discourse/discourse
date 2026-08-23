@@ -390,6 +390,7 @@ pl_PL:
         few: "%{count} pliki"
         many: "%{count} plików"
         other: "%{count} plików"
+      youtube: "YouTube"
       you_flagged: "Oflagowałeś tę wiadomość"
       exit: "opuść czat"
       channel_status:

@@ -38,6 +38,12 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      copied: "Zkopírováno"
+      ai_decoded_transcript:
+        tool: "Nástroj"
+        type: "Typ"
+        error: "Chyba"
+        response: "Odpověď"
       discourse_workflows:
         ai_agent:
           mode: "Režim"
@@ -166,6 +172,8 @@ cs:
         post_short: "Příspěvek č. %{id}"
         duration: "Doba trvání"
         actions: "Akce"
+        filters:
+          title: "Filtry"
         periods:
           hour: "Poslední hodina"
           day: "Posledních 24 hodin"

@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import Section from "discourse/lib/sidebar/section";
 import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/admin-section";
-import { or } from "discourse/truth-helpers";
+import { and, eq, or } from "discourse/truth-helpers";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import MoreSectionLink from "../more-section-link";
 import MoreSectionLinks from "../more-section-links";
@@ -54,10 +54,15 @@ export default class SidebarCustomSection extends Component {
       @headerActions={{this.section.headerActions}}
       @headerActionsIcon={{this.section.headerActionIcon}}
       @hideSectionHeader={{this.section.hideSectionHeader}}
+      @linkDropEnabled={{and @enableLinkDrop this.section.canAcceptLinkDrop}}
+      @onLinkDrop={{this.section.dropLink}}
       class={{this.section.dragCss}}
+      as |linkDrop|
     >
-      {{#each this.section.links as |link|}}
+      {{#each this.section.links as |link index|}}
         <SectionLink
+          data-sidebar-custom-link="true"
+          class={{if (eq linkDrop.linkDropIndex index) "is-link-drop-before"}}
           @badgeText={{link.badgeText}}
           @content={{dReplaceEmoji link.text}}
           @currentWhen={{link.currentWhen}}

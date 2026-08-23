@@ -84,6 +84,10 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      copied: "Disalin"
+      ai_decoded_transcript:
+        type: "Tipe"
+        error: "Gangguan"
       ai_tool_approval:
         loading: "Diproses..."
         tool: "Aksi"

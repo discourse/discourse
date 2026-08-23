@@ -360,6 +360,7 @@ en:
       uploaded_files:
         one: "%{count} file"
         other: "%{count} files"
+      youtube: "YouTube"
       you_flagged: "You flagged this message"
       exit: "exit chat"
       channel_status:

@@ -2,6 +2,7 @@
 
 class ReviewableActionSerializer < ApplicationSerializer
   attributes :id,
+             :action_name,
              :icon,
              :button_class,
              :label,

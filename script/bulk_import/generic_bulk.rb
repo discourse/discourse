@@ -111,7 +111,7 @@ class BulkImport::Generic < BulkImport::Base
     import_topic_allowed_users
     import_topic_allowed_groups
 
-    import_likes
+    import_engagement
     import_post_voting_votes
     import_topic_voting_votes
     import_answers
@@ -149,10 +149,6 @@ class BulkImport::Generic < BulkImport::Base
 
     update_chat_threads
     update_chat_membership_metadata
-
-    import_reactions
-    import_reaction_users
-    import_reaction_shadow_likes
 
     import_upload_references
   end
@@ -1474,45 +1470,73 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     likes.close
+  end
 
-    puts "", "Updating like counts of posts..."
+  def import_engagement
+    import_likes
+    import_reactions
+    import_reaction_users
+    import_reaction_shadow_likes
+
+    puts "", "Updating engagement statistics..."
     start_time = Time.now
-
-    DB.exec(<<~SQL)
-      UPDATE posts
-         SET like_count = (
-               SELECT COUNT(*)
-                 FROM post_actions pa
-                WHERE pa.post_id = posts.id
-                  AND pa.post_action_type_id = 2
-                  AND pa.deleted_at IS NULL
-             )
-       WHERE id IN (
-               SELECT DISTINCT post_id
-                 FROM post_actions
-                WHERE post_action_type_id = 2
-                  AND deleted_at IS NULL
-             )
-    SQL
-
+    update_engagement_stats
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
+  end
 
-    puts "", "Updating like counts of topics..."
-    start_time = Time.now
+  def update_engagement_stats
+    DB.exec(
+      <<~SQL,
+        WITH post_likes AS (
+          SELECT post_actions.post_id,
+                 COUNT(*) AS like_count,
+                 SUM(
+                   CASE
+                     WHEN users.moderator OR users.admin THEN :staff_like_weight
+                     ELSE 1
+                   END
+                 ) AS like_score
+            FROM post_actions
+                 LEFT JOIN users ON users.id = post_actions.user_id
+           WHERE post_actions.post_action_type_id = :like_type_id
+             AND post_actions.deleted_at IS NULL
+           GROUP BY post_actions.post_id
+        )
+        UPDATE posts
+           SET like_count = post_likes.like_count,
+               like_score = post_likes.like_score
+          FROM post_likes
+         WHERE posts.id = post_likes.post_id
+      SQL
+      like_type_id: PostActionType::LIKE_POST_ACTION_ID,
+      staff_like_weight: SiteSetting.staff_like_weight,
+    )
 
-    DB.exec(<<~SQL)
-        WITH
-          likes AS (
-                     SELECT topic_id, SUM(like_count) AS like_count FROM posts WHERE like_count > 0 GROUP BY topic_id
-                   )
+    DB.exec(<<~SQL, whisper_post_type: Post.types[:whisper])
+      WITH topic_likes AS (
+        SELECT topic_id, SUM(like_count) AS like_count
+          FROM posts
+         WHERE deleted_at IS NULL
+           AND post_type <> :whisper_post_type
+         GROUP BY topic_id
+      )
       UPDATE topics
-         SET like_count = likes.like_count
-        FROM likes
-       WHERE topics.id = likes.topic_id
-         AND topics.like_count <> likes.like_count
+         SET like_count = topic_likes.like_count
+        FROM topic_likes
+       WHERE topics.id = topic_likes.topic_id
+         AND topics.like_count <> topic_likes.like_count
     SQL
 
-    puts "  Update took #{(Time.now - start_time).to_i} seconds."
+    return unless defined?(DiscourseReactions)
+
+    DB.exec(<<~SQL)
+      UPDATE discourse_reactions_reactions
+         SET reaction_users_count = (
+           SELECT COUNT(*)
+             FROM discourse_reactions_reaction_users
+            WHERE discourse_reactions_reaction_users.reaction_id = discourse_reactions_reactions.id
+         )
+    SQL
   end
 
   def import_topic_users

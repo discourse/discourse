@@ -32,7 +32,7 @@ export default class DiscourseAiLogsRoute extends DiscourseRoute {
       : null;
     const hasRetries = String(params.has_retries) === "true" ? "true" : null;
     const unattributed = String(params.unattributed) === "true" ? "true" : null;
-    const selectedModel = /^[1-9]\d*$/.test(params.selectedModel || "")
+    const selectedModel = /^-?[1-9]\d*$/.test(params.selectedModel || "")
       ? params.selectedModel
       : null;
     const idValue = /^[1-9]\d*$/.test(params.id_value || "")

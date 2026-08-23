@@ -30,6 +30,13 @@
     gap: var(--space-2);
   }
 
+  &__additional-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--space-2);
+  }
+
   &__dropdown {
     flex: 1 1 auto;
 

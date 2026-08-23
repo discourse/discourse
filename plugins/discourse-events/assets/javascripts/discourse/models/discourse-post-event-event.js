@@ -20,19 +20,44 @@ const DEFAULT_REMINDER = {
 const EARLY_ACCESS_MINUTES = 30;
 const GRACE_PERIOD_MINUTES = 10;
 
+export function isPastEventTimeframe(allDay, startsAt, endsAt) {
+  if (allDay) {
+    if (!startsAt && !endsAt) {
+      return false;
+    }
+
+    return moment().isAfter(moment(endsAt || startsAt).endOf("day"));
+  }
+
+  if (!endsAt) {
+    return false;
+  }
+
+  return moment().isAfter(moment(endsAt).add(GRACE_PERIOD_MINUTES, "minutes"));
+}
+
 export function isWithinEventTimeframe(allDay, startsAt, endsAt) {
+  if (!startsAt) {
+    return false;
+  }
+
   const now = moment();
 
   if (allDay) {
     const opensAt = moment(startsAt).startOf("day");
-    const closesAt = moment(
-      moment(endsAt).isSame(moment(startsAt), "day") ? startsAt : endsAt
-    ).endOf("day");
+    const closesAt = moment(endsAt || startsAt).endOf("day");
 
     return now.isBetween(opensAt, closesAt);
   }
 
   const opensAt = moment(startsAt).subtract(EARLY_ACCESS_MINUTES, "minutes");
+
+  // An event without an end time never closes, which is what the server does
+  // when it issues a signature for one.
+  if (!endsAt) {
+    return now.isAfter(opensAt);
+  }
+
   const closesAt = moment(endsAt).add(GRACE_PERIOD_MINUTES, "minutes");
 
   return now.isBetween(opensAt, closesAt);
@@ -194,23 +219,7 @@ export default class DiscoursePostEventEvent {
   }
 
   get pastEventTimeframe() {
-    if (this.allDay) {
-      return moment().isAfter(
-        moment(
-          moment(this.endsAt).isSame(moment(this.startsAt), "day")
-            ? this.startsAt
-            : this.endsAt
-        ).endOf("day")
-      );
-    }
-
-    if (!this.endsAt) {
-      return false;
-    }
-
-    return moment().isAfter(
-      moment(this.endsAt).add(GRACE_PERIOD_MINUTES, "minutes")
-    );
+    return isPastEventTimeframe(this.allDay, this.startsAt, this.endsAt);
   }
 
   updateFromEvent(event) {

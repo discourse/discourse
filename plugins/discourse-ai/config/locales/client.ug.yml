@@ -46,6 +46,12 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      copied: "كۆچۈرۈلدى"
+      ai_decoded_transcript:
+        arguments: "ئۆزگەرگۈچى"
+        type: "تىپى"
+        error: "خاتالىق"
+        response: "ئىنكاس"
       discourse_workflows:
         ai_agent:
           mode: "ھالەت"

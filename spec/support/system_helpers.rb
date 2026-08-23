@@ -422,8 +422,41 @@ module SystemHelpers
     page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
   end
 
+  # Drives a real native drag through Playwright's CDP drag interception.
+  #
+  # Capybara's own `drag_to` synthesises mouse events, and a native drag driven
+  # that way can fire `dragstart` and then stall with no `dragover`, `drop` or
+  # `dragend`, so the drop silently no-ops.
+  #
+  # `source:` and `target:` are CSS selectors.
+  #
+  # `source_position:` picks the press point, which decides what starts: a press
+  # on a text input starts a text-selection drag that stalls the same way, and a
+  # drag handle only starts a drag when the press lands inside it.
+  #
+  # `target_position:` (`{ x:, y: }` from the target's top-left) picks where the
+  # drop lands; the centre is the ambiguous midpoint of a before/after zone.
+  # `steps:` adds intermediate moves for a drag that needs more to register.
+  #
+  # This does NOT wait for the client to settle: that wait lives in Capybara's
+  # patched node methods, and driving Playwright directly bypasses it. Assert
+  # through a retrying matcher, not a value read once.
+  def drag_and_drop(source:, target:, source_position: nil, target_position: nil, steps: nil)
+    page.driver.with_playwright_page do |pw_page|
+      options = {}
+      options[:sourcePosition] = source_position if source_position
+      options[:targetPosition] = target_position if target_position
+      options[:steps] = steps if steps
+      pw_page.drag_and_drop(source, target, **options)
+    end
+  end
+
   # Drives a press-drag-release with the real mouse, for the surfaces built on
   # pointer events rather than native drag-and-drop.
+  #
+  # Not interchangeable with `drag_and_drop`: CDP drag interception suppresses
+  # the ordinary mouse moves a pointer gesture needs, so a pointer-driven
+  # surface sees the press and then nothing, exactly like a dead drag.
   #
   # `from:` is a CSS selector for the element to press. `to:` is an absolute
   # viewport point; `by:` is an offset from the press point, for when the distance
@@ -431,8 +464,8 @@ module SystemHelpers
   # gesture with a movement threshold actually crosses it, and so anything driven
   # by intermediate moves sees more than one.
   #
-  # This bypasses Capybara's client-settle wait, so assert through a retrying
-  # matcher rather than a value read once.
+  # Like `drag_and_drop`, this bypasses Capybara's client-settle wait, so assert
+  # through a retrying matcher rather than a value read once.
   #
   # The mouse moves through absolute viewport coordinates. An element below the
   # fold would otherwise be measured where it cannot be pressed, so it is scrolled

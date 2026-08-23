@@ -3,76 +3,106 @@
 .ai-logs {
   padding: var(--space-4);
 
-  &__retention {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
+  > .d-filter-controls {
     margin-bottom: var(--space-4);
-    padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
-    background: var(--primary-very-low);
   }
 
-  &__retention-warning {
+  &__filters-title {
+    margin-block: var(--space-4) var(--space-2);
+    font-size: var(--font-up-1);
+  }
+
+  .d-filter-controls__dropdowns {
+    grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  }
+
+  .d-filter-controls__additional-filters {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+
+    @include viewport.from(md) {
+      grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    }
+  }
+
+  &__date-range-filter,
+  &__user-filter {
+    min-width: 0;
     margin: 0;
-    color: var(--primary-high);
+    padding: 0;
+    border: 0;
   }
 
-  &__filters {
+  &__date-range-filter {
+    display: flex;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--space-2);
+
+    legend {
+      flex-basis: 100%;
+    }
+  }
+
+  &__user-filter {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    margin-bottom: var(--space-4);
-  }
+    gap: var(--space-1);
 
-  &__periods,
-  &__date-range {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  &__filter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    align-items: end;
-    width: 100%;
-    gap: var(--space-2);
-
-    > * {
-      min-width: 0;
+    // a rendered legend sits outside flex layout, so gap does not apply to it
+    legend {
+      margin-bottom: var(--space-1);
     }
 
-    .d-select {
+    .select-kit {
       width: 100%;
     }
   }
 
-  &__user-filter .select-kit {
-    width: 100%;
-    max-width: var(--form-kit-medium-input);
+  &__id-filter {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+    align-items: end;
+    gap: var(--space-2);
+    margin: 0;
+  }
 
-    @include viewport.until(sm) {
-      max-width: 100%;
+  &__id-type,
+  &__id-value {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+    margin: 0;
+
+    select,
+    input {
+      width: 100%;
+      min-height: 2.375rem;
+      margin: 0;
     }
   }
 
-  &__toggle {
-    align-self: end;
-    padding-bottom: var(--space-2);
+  &__toggles {
+    display: flex;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    gap: var(--space-3);
   }
 
-  &__id-filter {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: end;
-    gap: var(--space-2);
+  @include viewport.until(sm) {
+    &__date-range-filter .d-date-time-input-range {
+      flex-basis: 100%;
+    }
 
-    > .form-kit__field {
-      min-width: 10rem;
+    &__id-filter {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    &__find {
+      justify-self: start;
     }
   }
 
@@ -120,21 +150,34 @@
   }
 
   &__col-outcome {
-    width: 5rem;
+    width: 2rem;
     text-align: center;
   }
 
   &__col-user {
-    width: 10rem;
+    width: 7rem;
+  }
+
+  &__col-request {
+    width: 15rem;
   }
 
   &__col-duration {
-    width: 7.5rem;
+    width: 10rem;
     text-align: end;
     font-variant-numeric: tabular-nums;
+  }
+
+  td.ai-logs__col-duration {
     white-space: nowrap;
   }
 
+  &__duration-heading {
+    white-space: nowrap;
+  }
+
+  &__duration-heading,
+  &__tokens-heading,
   &__duration-value,
   &__token-summary {
     display: block;
@@ -257,7 +300,7 @@
     }
 
     &__col-duration {
-      width: 6.5rem;
+      width: 9.5rem;
     }
 
     &__model {
@@ -265,13 +308,30 @@
     }
   }
 
-  @include viewport.until(md) {
+  @include viewport.until(lg) {
     &__table {
+      display: block;
       margin-bottom: 0;
+      table-layout: auto;
+
+      thead,
+      tbody {
+        display: block;
+      }
+
+      thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
     }
 
     &__row {
       display: grid;
+      width: 100%;
       grid-template-columns: auto 1fr auto;
       grid-template-areas:
         "outcome time actions"

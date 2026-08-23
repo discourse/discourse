@@ -1385,6 +1385,10 @@ nb_NO:
       low: "Lav"
       medium: "Middels"
       high: "Høy"
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekund"
+        other: "%{count} sekunder"
     actions:
       agree:
         title: "Ja"

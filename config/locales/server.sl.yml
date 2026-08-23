@@ -2011,6 +2011,12 @@ sl:
       high: "Visoka"
     missing_version: "Podati morate verzijo parametra"
     conflict: "Prišlo je do konflikta, ki to preprečuje. "
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekunda"
+        two: "%{count} sekundi"
+        few: "%{count} sekunde"
+        other: "%{count} sekund"
     actions:
       agree:
         title: "Ja"

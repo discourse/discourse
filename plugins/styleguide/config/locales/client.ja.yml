@@ -13,6 +13,9 @@ ja:
   js:
     styleguide:
       title: "スタイルガイド"
+      example:
+        kind:
+          component: "コンポーネント"
       categories:
         syntax: 構文
         atoms: 原子
@@ -39,6 +42,8 @@ ja:
           title: "色"
         dialog:
           title: "ダイアログ"
+        drag_and_drop:
+          locked: "ロック済み"
         icons:
           title: "アイコン"
           full_list: "Font Awesome Icons の全リストを表示"

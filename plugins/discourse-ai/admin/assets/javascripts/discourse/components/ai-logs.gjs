@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { cached, tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import Form from "discourse/components/form";
+import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
@@ -13,14 +14,16 @@ import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DSelect from "discourse/ui-kit/d-select";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log-row";
 import AiLogDetailModal from "./modal/ai-log-detail-modal";
 import AiLogRetentionModal from "./modal/ai-log-retention-modal";
 
-const ALL_FILTER_VALUE = "__all__";
 const MAX_SAFE_ID = Number.MAX_SAFE_INTEGER;
 const PERIODS = {
   hour: 1,
@@ -52,7 +55,6 @@ export default class AiLogs extends Component {
   @tracked startDate;
   @tracked endDate;
 
-  filterFormApi;
   _requestId = 0;
   _openRequestId = 0;
   _openLogId;
@@ -65,7 +67,6 @@ export default class AiLogs extends Component {
     this.models = this.args.model.models || [];
     this.features = this.mergedFeatures(this.args.model.features, this.logs);
     this.initializeFilters(this.args.queryParams);
-    this.filterFormData = this.buildFilterFormData();
 
     if (this.args.queryParams.details) {
       next(() =>
@@ -122,36 +123,30 @@ export default class AiLogs extends Component {
       : new Date();
   }
 
-  // must stay referentially stable: a new object passed as Form @data
-  // recreates the form and drops input focus
-  buildFilterFormData() {
-    return {
-      period: this.selectedPeriod,
-      date_range: { from: this.startDate, to: this.endDate },
-      outcome: this.selectedOutcome || ALL_FILTER_VALUE,
-      model: this.selectedModel || ALL_FILTER_VALUE,
-      feature: this.selectedFeature,
-      usernames: this.selectedUsernames,
-      has_retries: this.hasRetries,
-      unattributed: this.unattributed,
-      id_type: this.idType,
-      id_value: this.idValue,
-    };
-  }
-
   get periodOptions() {
     return [
-      { id: "hour", name: i18n("discourse_ai.logs.periods.hour") },
-      { id: "day", name: i18n("discourse_ai.logs.periods.day") },
-      { id: "week", name: i18n("discourse_ai.logs.periods.week") },
-      { id: "custom", name: i18n("discourse_ai.logs.periods.custom") },
+      {
+        value: "all",
+        label: i18n("discourse_ai.logs.all_periods"),
+      },
+      { value: "hour", label: i18n("discourse_ai.logs.periods.hour") },
+      { value: "day", label: i18n("discourse_ai.logs.periods.day") },
+      { value: "week", label: i18n("discourse_ai.logs.periods.week") },
+      { value: "custom", label: i18n("discourse_ai.logs.periods.custom") },
     ];
   }
 
   get outcomeOptions() {
     return [
-      { id: "successful", name: i18n("discourse_ai.logs.successful") },
-      { id: "failed", name: i18n("discourse_ai.logs.failed") },
+      {
+        value: "all",
+        label: i18n("discourse_ai.logs.all_outcomes"),
+      },
+      {
+        value: "successful",
+        label: i18n("discourse_ai.logs.successful"),
+      },
+      { value: "failed", label: i18n("discourse_ai.logs.failed") },
     ];
   }
 
@@ -163,11 +158,60 @@ export default class AiLogs extends Component {
     ];
   }
 
+  @cached
   get modelOptions() {
-    return this.models.map((model) => ({
-      id: String(model.id),
-      name: model.name,
+    const options = this.models.map((model) => ({
+      value: String(model.id),
+      label: model.name,
     }));
+
+    if (
+      this.selectedModel &&
+      !options.some((option) => option.value === this.selectedModel)
+    ) {
+      options.push({ value: this.selectedModel, label: this.selectedModel });
+    }
+
+    return [
+      { value: "all", label: i18n("discourse_ai.logs.all_models") },
+      ...options,
+    ];
+  }
+
+  @cached
+  get featureOptions() {
+    const features = [...this.features];
+    if (this.selectedFeature && !features.includes(this.selectedFeature)) {
+      features.push(this.selectedFeature);
+    }
+
+    return [
+      {
+        value: "all",
+        label: i18n("discourse_ai.logs.all_features"),
+      },
+      ...features.map((feature) => ({ value: feature, label: feature })),
+    ];
+  }
+
+  @cached
+  get dropdownOptions() {
+    return {
+      period: this.periodOptions,
+      outcome: this.outcomeOptions,
+      model: this.modelOptions,
+      feature: this.featureOptions,
+    };
+  }
+
+  @cached
+  get dropdownValues() {
+    return {
+      period: this.selectedPeriod || "all",
+      outcome: this.selectedOutcome || "all",
+      model: this.selectedModel || "all",
+      feature: this.selectedFeature || "all",
+    };
   }
 
   get hasFilters() {
@@ -183,27 +227,13 @@ export default class AiLogs extends Component {
     );
   }
 
-  get lifecycleSummary() {
-    const detailed = this.meta.retention?.detailed_days ?? 0;
-    const summary = this.meta.retention?.summary_days ?? 0;
-
-    if (detailed === 0 && summary === 0) {
-      return i18n("discourse_ai.logs.retention.lifecycle.complete_forever");
-    }
-    if (detailed === 0) {
-      return i18n("discourse_ai.logs.retention.lifecycle.detail_until_delete", {
-        summary,
-      });
-    }
-    if (summary === 0) {
-      return i18n("discourse_ai.logs.retention.lifecycle.summary_forever", {
-        detailed,
-      });
-    }
-    return i18n("discourse_ai.logs.retention.lifecycle.finite", {
-      detailed,
-      summary,
-    });
+  get additionalFiltersActive() {
+    return Boolean(
+      this.hasRetries ||
+      this.selectedUsernames.length ||
+      this.unattributed ||
+      this.idValue
+    );
   }
 
   get requestParams() {
@@ -218,7 +248,6 @@ export default class AiLogs extends Component {
 
     if (this.idValue) {
       params[this.idType] = this.idValue;
-      return params;
     }
 
     if (this.selectedPeriod === "custom") {
@@ -259,7 +288,7 @@ export default class AiLogs extends Component {
   }
 
   updateUrl(extra = {}) {
-    this.router.transitionTo(this.router.currentRouteName, {
+    return this.router.transitionTo(this.router.currentRouteName, {
       queryParams: { ...this.queryParams, ...extra },
     });
   }
@@ -300,7 +329,7 @@ export default class AiLogs extends Component {
         result.features || this.features,
         result.logs
       );
-      this.updateUrl();
+      await this.updateUrl();
     } catch (error) {
       if (
         requestId === this._requestId &&
@@ -365,111 +394,64 @@ export default class AiLogs extends Component {
   }
 
   @action
-  registerFilterFormApi(api) {
-    this.filterFormApi = api;
-  }
-
-  @action
-  applyFilterForm(data) {
-    this.selectedPeriod = data.period || undefined;
-    this.startDate = data.date_range?.from || this.startDate;
-    this.endDate = data.date_range?.to || this.endDate;
-    this.selectedOutcome =
-      data.outcome === ALL_FILTER_VALUE ? undefined : data.outcome;
-    this.selectedModel =
-      data.model === ALL_FILTER_VALUE ? undefined : data.model;
-    this.selectedFeature = data.feature || undefined;
-    this.hasRetries = Boolean(data.has_retries);
-    this.unattributed = Boolean(data.unattributed);
-    this.selectedUsernames = this.unattributed ? [] : data.usernames || [];
-    this.idType = data.id_type || "id";
-    this.idValue = data.id_value || undefined;
-    this.refresh();
-  }
-
-  @action
-  selectPeriod(period) {
-    this.selectedPeriod = this.selectedPeriod === period ? undefined : period;
-    this.filterFormApi?.set("period", this.selectedPeriod);
-    if (this.selectedPeriod && this.selectedPeriod !== "custom") {
-      this.endDate = new Date();
-      this.startDate = moment()
-        .subtract(PERIODS[this.selectedPeriod], "hours")
-        .toDate();
-      this.filterFormApi?.set("date_range", {
-        from: this.startDate,
-        to: this.endDate,
-      });
-    }
-    this.refresh();
-  }
-
-  @action
   changeDateRange(value) {
-    this.filterFormApi?.set("date_range", value);
     this.startDate = value.from;
     this.endDate = value.to;
   }
 
   @action
-  changeOutcome(value, { set }) {
-    set("outcome", value);
-    this.selectedOutcome =
-      value === ALL_FILTER_VALUE ? undefined : value || undefined;
-    this.refresh();
-  }
+  changeDropdown(key, value) {
+    const selectedValue = value === "all" ? undefined : value;
 
-  @action
-  changeModel(value, { set }) {
-    set("model", value);
-    this.selectedModel =
-      value === ALL_FILTER_VALUE ? undefined : value || undefined;
+    if (key === "period") {
+      this.selectedPeriod = selectedValue;
+      if (this.selectedPeriod && this.selectedPeriod !== "custom") {
+        this.endDate = new Date();
+        this.startDate = moment()
+          .subtract(PERIODS[this.selectedPeriod], "hours")
+          .toDate();
+      }
+    } else if (key === "outcome") {
+      this.selectedOutcome = selectedValue;
+    } else if (key === "model") {
+      this.selectedModel = selectedValue;
+    } else if (key === "feature") {
+      this.selectedFeature = selectedValue;
+    }
+
     this.refresh();
   }
 
   @action
   changeUser(usernames) {
     const selectedUsernames = usernames || [];
-    this.filterFormApi?.set("usernames", selectedUsernames);
-    this.filterFormApi?.set("unattributed", false);
     this.selectedUsernames = selectedUsernames;
     this.unattributed = false;
     this.refresh();
   }
 
   @action
-  toggleRetries(value, { set }) {
-    set("has_retries", value);
-    this.hasRetries = Boolean(value);
+  toggleRetries() {
+    this.hasRetries = !this.hasRetries;
     this.refresh();
   }
 
   @action
-  toggleUnattributed(value, { set }) {
-    set("unattributed", value);
-    this.unattributed = Boolean(value);
+  toggleUnattributed() {
+    this.unattributed = !this.unattributed;
     if (this.unattributed) {
-      set("usernames", []);
       this.selectedUsernames = [];
     }
     this.refresh();
   }
 
   @action
-  setFeature(value, { set }) {
-    set("feature", value);
-    this.selectedFeature = value || undefined;
-  }
-
-  @action
-  setIdValue(value, { set }) {
-    set("id_value", value);
+  setIdValue(value) {
     this.idValue = value || undefined;
   }
 
   @action
-  changeIdType(value, { set }) {
-    set("id_type", value);
+  changeIdType(value) {
     this.idType = value;
     if (this.idValue) {
       this.refresh();
@@ -477,26 +459,16 @@ export default class AiLogs extends Component {
   }
 
   @action
+  findById(event) {
+    event.preventDefault();
+    this.refresh();
+  }
+
+  @action
   clearFilters() {
-    const cleared = {
-      period: undefined,
-      date_range: {
-        from: moment().subtract(24, "hours").toDate(),
-        to: new Date(),
-      },
-      outcome: ALL_FILTER_VALUE,
-      model: ALL_FILTER_VALUE,
-      feature: undefined,
-      usernames: [],
-      has_retries: false,
-      unattributed: false,
-      id_type: "id",
-      id_value: undefined,
-    };
-    this.filterFormApi?.setProperties(cleared);
     this.selectedPeriod = undefined;
-    this.startDate = cleared.date_range.from;
-    this.endDate = cleared.date_range.to;
+    this.startDate = moment().subtract(24, "hours").toDate();
+    this.endDate = new Date();
     this.selectedOutcome = undefined;
     this.hasRetries = false;
     this.selectedModel = undefined;
@@ -505,7 +477,7 @@ export default class AiLogs extends Component {
     this.unattributed = false;
     this.idType = "id";
     this.idValue = undefined;
-    this.refresh();
+    return this.refresh();
   }
 
   @action
@@ -569,52 +541,29 @@ export default class AiLogs extends Component {
         </:actions>
       </DPageSubheader>
 
-      <aside class="ai-logs__retention">
-        <p class="ai-logs__retention-warning">{{i18n
-            "discourse_ai.logs.sensitive_warning"
-          }}</p>
-        <DButton
-          class="btn-transparent ai-logs__retention-action"
-          @action={{this.configureRetention}}
-          @translatedLabel={{this.lifecycleSummary}}
-        />
-      </aside>
-
-      <Form
-        class="ai-logs__filters"
-        @data={{this.filterFormData}}
-        @onRegisterApi={{this.registerFilterFormApi}}
-        @onSubmit={{this.applyFilterForm}}
-        as |form|
+      <DFilterControls
+        @array={{this.logs}}
+        @dropdownOptions={{this.dropdownOptions}}
+        @dropdownValue={{this.dropdownValues}}
+        @additionalFiltersActive={{this.additionalFiltersActive}}
+        @filterDropdownsExpanded={{true}}
+        @showDropdownFilterToggle={{false}}
+        @showTextFilter={{false}}
+        @showNoResults={{false}}
+        @loading={{this.loading}}
+        @onDropdownFilterChange={{this.changeDropdown}}
+        @onResetFilters={{this.clearFilters}}
       >
-        <form.Fieldset
-          class="ai-logs__period-field"
-          @name="period-filter"
-          @title={{i18n "discourse_ai.logs.filters.period"}}
-        >
-          <div class="ai-logs__periods">
-            {{#each this.periodOptions as |period|}}
-              <DButton
-                class={{if
-                  (eq this.selectedPeriod period.id)
-                  "btn-primary"
-                  "btn-default"
-                }}
-                @action={{fn this.selectPeriod period.id}}
-                @ariaPressed={{eq this.selectedPeriod period.id}}
-                @translatedLabel={{period.name}}
-              />
-            {{/each}}
-          </div>
-        </form.Fieldset>
+        <:aboveFilters>
+          <h2 class="ai-logs__filters-title">
+            {{i18n "discourse_ai.logs.filters.title"}}
+          </h2>
+        </:aboveFilters>
 
-        {{#if (eq this.selectedPeriod "custom")}}
-          <form.Fieldset
-            class="ai-logs__date-range-field"
-            @name="date-range-filter"
-            @title={{i18n "discourse_ai.logs.filters.date_range"}}
-          >
-            <div class="ai-logs__date-range">
+        <:additionalFilters>
+          {{#if (eq this.selectedPeriod "custom")}}
+            <fieldset class="ai-logs__date-range-filter">
+              <legend>{{i18n "discourse_ai.logs.filters.date_range"}}</legend>
               <DDateTimeInputRange
                 @from={{this.startDate}}
                 @to={{this.endDate}}
@@ -622,79 +571,16 @@ export default class AiLogs extends Component {
                 @showToTime={{false}}
                 @onChange={{this.changeDateRange}}
               />
-              <form.Submit
+              <DButton
                 class="btn-default"
+                @action={{this.refresh}}
                 @label="discourse_ai.logs.apply"
               />
-            </div>
-          </form.Fieldset>
-        {{/if}}
+            </fieldset>
+          {{/if}}
 
-        <div class="ai-logs__filter-grid">
-          <form.Field
-            class="ai-logs__outcome-filter"
-            @name="outcome"
-            @title={{i18n "discourse_ai.logs.outcome"}}
-            @type="select"
-            @onSet={{this.changeOutcome}}
-            as |field|
-          >
-            <field.Control @includeNone={{false}} as |select|>
-              <select.Option @value={{ALL_FILTER_VALUE}}>{{i18n
-                  "discourse_ai.logs.all_outcomes"
-                }}</select.Option>
-              {{#each this.outcomeOptions as |outcome|}}
-                <select.Option @value={{outcome.id}}>
-                  {{outcome.name}}
-                </select.Option>
-              {{/each}}
-            </field.Control>
-          </form.Field>
-
-          <form.Field
-            class="ai-logs__model-filter"
-            @name="model"
-            @title={{i18n "discourse_ai.logs.model"}}
-            @type="select"
-            @onSet={{this.changeModel}}
-            as |field|
-          >
-            <field.Control @includeNone={{false}} as |select|>
-              <select.Option @value={{ALL_FILTER_VALUE}}>{{i18n
-                  "discourse_ai.logs.all_models"
-                }}</select.Option>
-              {{#each this.modelOptions as |model|}}
-                <select.Option @value={{model.id}}>
-                  {{model.name}}
-                </select.Option>
-              {{/each}}
-            </field.Control>
-          </form.Field>
-
-          <form.Field
-            class="ai-logs__feature-filter"
-            @name="feature"
-            @title={{i18n "discourse_ai.logs.feature"}}
-            @type="input"
-            @onSet={{this.setFeature}}
-            as |field|
-          >
-            <field.Control
-              placeholder={{i18n "discourse_ai.logs.feature_placeholder"}}
-              list="ai-log-features"
-            />
-          </form.Field>
-          <datalist id="ai-log-features">
-            {{#each this.features as |feature|}}
-              <option value={{feature}}></option>
-            {{/each}}
-          </datalist>
-
-          <form.Fieldset
-            class="ai-logs__user-filter"
-            @name="user-filter"
-            @title={{i18n "discourse_ai.logs.user"}}
-          >
+          <fieldset class="ai-logs__user-filter">
+            <legend>{{i18n "discourse_ai.logs.user"}}</legend>
             <UserChooser
               @value={{this.selectedUsernames}}
               @onChange={{this.changeUser}}
@@ -705,75 +591,61 @@ export default class AiLogs extends Component {
                 headerAriaLabel=(i18n "discourse_ai.logs.user_placeholder")
               }}
             />
-          </form.Fieldset>
+          </fieldset>
 
-          <form.Field
-            class="ai-logs__toggle"
-            @name="has_retries"
-            @title={{i18n "discourse_ai.logs.has_retries"}}
-            @type="checkbox"
-            @onSet={{this.toggleRetries}}
-            as |field|
-          >
-            <field.Control />
-          </form.Field>
+          <form class="ai-logs__id-filter" {{on "submit" this.findById}}>
+            <label class="ai-logs__id-type">
+              <span>{{i18n "discourse_ai.logs.filters.id_type"}}</span>
+              <DSelect
+                @value={{this.idType}}
+                @includeNone={{false}}
+                @onChange={{this.changeIdType}}
+                as |select|
+              >
+                {{#each this.idTypeOptions as |idType|}}
+                  <select.Option @value={{idType.id}}>
+                    {{idType.name}}
+                  </select.Option>
+                {{/each}}
+              </DSelect>
+            </label>
 
-          <form.Field
-            class="ai-logs__toggle"
-            @name="unattributed"
-            @title={{i18n "discourse_ai.logs.unattributed"}}
-            @type="checkbox"
-            @onSet={{this.toggleUnattributed}}
-            as |field|
-          >
-            <field.Control />
-          </form.Field>
-        </div>
+            <label class="ai-logs__id-value">
+              <span>{{i18n "discourse_ai.logs.filters.id_value"}}</span>
+              <input
+                type="number"
+                min="1"
+                max={{MAX_SAFE_ID}}
+                placeholder={{i18n "discourse_ai.logs.id_placeholder"}}
+                value={{this.idValue}}
+                {{on "input" (withEventValue this.setIdValue)}}
+              />
+            </label>
 
-        <div class="ai-logs__id-filter">
-          <form.Field
-            @name="id_type"
-            @title={{i18n "discourse_ai.logs.filters.id_type"}}
-            @type="select"
-            @onSet={{this.changeIdType}}
-            as |field|
-          >
-            <field.Control @includeNone={{false}} as |select|>
-              {{#each this.idTypeOptions as |idType|}}
-                <select.Option @value={{idType.id}}>
-                  {{idType.name}}
-                </select.Option>
-              {{/each}}
-            </field.Control>
-          </form.Field>
-
-          <form.Field
-            @name="id_value"
-            @title={{i18n "discourse_ai.logs.filters.id_value"}}
-            @type="input-number"
-            @onSet={{this.setIdValue}}
-            as |field|
-          >
-            <field.Control
-              min="1"
-              max={{MAX_SAFE_ID}}
-              placeholder={{i18n "discourse_ai.logs.id_placeholder"}}
-            />
-          </form.Field>
-
-          <form.Submit
-            class="btn-default ai-logs__find"
-            @label="discourse_ai.logs.find"
-          />
-          {{#if this.hasFilters}}
             <DButton
-              class="btn-transparent ai-logs__clear"
-              @action={{this.clearFilters}}
-              @label="discourse_ai.logs.clear_filters"
+              type="submit"
+              class="btn-default ai-logs__find"
+              @label="discourse_ai.logs.find"
             />
-          {{/if}}
-        </div>
-      </Form>
+          </form>
+
+          <div class="ai-logs__toggles">
+            <DToggleSwitch
+              @state={{this.hasRetries}}
+              @label="discourse_ai.logs.has_retries"
+              aria-label={{i18n "discourse_ai.logs.has_retries"}}
+              {{on "click" this.toggleRetries}}
+            />
+
+            <DToggleSwitch
+              @state={{this.unattributed}}
+              @label="discourse_ai.logs.unattributed"
+              aria-label={{i18n "discourse_ai.logs.unattributed"}}
+              {{on "click" this.toggleUnattributed}}
+            />
+          </div>
+        </:additionalFilters>
+      </DFilterControls>
 
       <DConditionalLoadingSpinner @condition={{this.loading}}>
         {{#if this.logs.length}}
@@ -801,9 +673,14 @@ export default class AiLogs extends Component {
                     <th class="ai-logs__col-user" scope="col">{{i18n
                         "discourse_ai.logs.user"
                       }}</th>
-                    <th class="ai-logs__col-duration" scope="col">{{i18n
-                        "discourse_ai.logs.duration_tokens"
-                      }}</th>
+                    <th class="ai-logs__col-duration" scope="col">
+                      <span class="ai-logs__duration-heading">{{i18n
+                          "discourse_ai.logs.duration"
+                        }}</span>
+                      <span class="ai-logs__tokens-heading">{{i18n
+                          "discourse_ai.logs.tokens_direction"
+                        }}</span>
+                    </th>
                     <th class="ai-logs__col-context" scope="col">{{i18n
                         "discourse_ai.logs.context"
                       }}</th>
@@ -830,13 +707,6 @@ export default class AiLogs extends Component {
                 (i18n "discourse_ai.logs.no_results")
                 (i18n "discourse_ai.logs.no_logs")
               }}</p>
-            {{#if this.hasFilters}}
-              <DButton
-                class="btn-default"
-                @action={{this.clearFilters}}
-                @label="discourse_ai.logs.clear_filters"
-              />
-            {{/if}}
           </div>
         {{/if}}
       </DConditionalLoadingSpinner>

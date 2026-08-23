@@ -8,6 +8,9 @@ lt:
   js:
     styleguide:
       title: "Stiliaus vadovas"
+      example:
+        kind:
+          component: "Komponentas"
       categories:
         atoms: Atomai
         molecules: Molekulės

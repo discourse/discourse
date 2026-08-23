@@ -121,6 +121,7 @@ hu:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Kiosztott"
+        "trigger:unassigned": "Nem kiosztott"
       assign_topic:
         resource: "Forrás"
         resources:

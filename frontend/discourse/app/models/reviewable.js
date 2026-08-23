@@ -1,8 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { dasherize, underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import I18n, { i18n } from "discourse-i18n";
 import Category from "./category";
@@ -19,6 +21,47 @@ export default class Reviewable extends RestModel {
     delete json.category;
     return json;
   }
+
+  @tracked blank_post;
+  @tracked bundled_actions;
+  @tracked can_edit;
+  @tracked category_id;
+  @tracked claimed_by;
+  @tracked cooked;
+  @tracked created_at;
+  @tracked created_by;
+  @tracked created_from_flag;
+  @tracked deleted_at;
+  @tracked editable_fields;
+  @tracked fancy_title;
+  @tracked id;
+  @tracked last_performing_username;
+  @tracked payload;
+  @tracked post_id;
+  @tracked post_updated_at;
+  @tracked post_version;
+  @tracked raw;
+  @tracked removed_topic_id;
+  @tracked reviewable_histories;
+  @tracked reviewable_scores;
+  @tracked score;
+  @tracked status;
+  @tracked target_created_at;
+  @tracked target_created_by;
+  @tracked target_created_by_trust_level;
+  @tracked target_deleted_at;
+  @tracked target_deleted_by;
+  @tracked target_id;
+  @tracked target_type;
+  @tracked target_url;
+  @tracked topic;
+  @tracked topic_id;
+  @tracked topic_tags;
+  @tracked topic_url;
+  @tracked type;
+  @tracked type_source;
+  @tracked version;
+  @autoTrackedArray reviewable_notes = [];
 
   @computed("type", "topic")
   get resolvedType() {
