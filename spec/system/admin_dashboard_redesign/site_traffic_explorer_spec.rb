@@ -378,6 +378,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     additional_paths.each { |path| traffic.select_expanded_filter_row(label: path) }
 
     expect(traffic).to have_expanded_breakdown(title: "Top URLs")
+    expect(traffic).to have_metric(label: "Pageviews", value: "45")
     traffic.apply_expanded_filters
 
     expect(traffic).to have_grouped_filter_pill(
