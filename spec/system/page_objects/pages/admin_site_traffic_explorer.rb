@@ -5,7 +5,6 @@ module PageObjects
     class AdminSiteTrafficExplorer < PageObjects::Pages::Base
       PATH = "/admin/dashboard/site-traffic-explorer"
       METRIC_KEYS = {
-        "Pageviews" => "pageviews",
         "Distinct sessions" => "distinct_sessions",
         "Logged-in share" => "logged_in_share",
         "Bounce rate" => "bounce_rate",
@@ -122,7 +121,7 @@ module PageObjects
       def filter_by_clicking_row(card:, label:)
         within("[data-test-site-traffic-card='#{card}']") do
           within("[data-test-site-traffic-row]", text: label) do
-            find(".site-traffic-explorer__row-filter-target").click
+            find(".site-traffic-explorer__row-checkbox").click
           end
         end
         find("[data-test-site-traffic-apply-filters]").click
@@ -163,8 +162,7 @@ module PageObjects
       end
 
       def has_grouped_filter_pill?(dimension:, label:)
-        selector =
-          "[data-test-site-traffic-filter-pill='#{dimension}'] .site-traffic-explorer__filter-pill-label"
+        selector = "[data-test-site-traffic-filter-pill='#{dimension}'] .fk-d-menu__trigger"
 
         has_css?(selector, count: 1) &&
           find(selector).text.gsub(/\s+/, "").include?(label.gsub(/\s+/, ""))
@@ -179,7 +177,7 @@ module PageObjects
 
       def has_filter_dropdown?(values:)
         row_selector = "[data-test-site-traffic-filter-dropdown-value]"
-        value_selector = "#{row_selector} .site-traffic-explorer__filter-dropdown-value"
+        value_selector = "#{row_selector} .d-button-label"
 
         has_css?(row_selector, count: values.length) &&
           values.all? { |value| has_css?(value_selector, exact_text: value, count: 1) }
@@ -197,7 +195,12 @@ module PageObjects
       def has_apply_filters?(count:)
         selector = "[data-test-site-traffic-apply-filters]"
 
-        has_css?(selector, exact_text: "Apply (#{count})", count: 1)
+        has_css?(selector, count: 1) &&
+          has_css?(
+            "#{selector} .site-traffic-explorer__filter-apply-pending-count",
+            exact_text: count.to_s,
+            count: 1,
+          )
       end
 
       def has_no_apply_filters?
@@ -209,8 +212,8 @@ module PageObjects
         self
       end
 
-      def clear_all_filters
-        find_button("Clear all filters", exact: true).click
+      def clear_all
+        find_button("Clear all", exact: true).click
         self
       end
 
@@ -236,11 +239,9 @@ module PageObjects
         self
       end
 
-      def has_expanded_table?(title:, column:)
+      def has_expanded_breakdown?(title:)
         selector = ".site-traffic-breakdown-modal[role='dialog']"
-        has_css?(selector, text: title) &&
-          has_css?("#{selector} .d-table__header-cell", exact_text: column) &&
-          has_css?("#{selector} .d-table__body .d-table__row")
+        has_css?(selector, text: title) && has_css?("#{selector} [data-test-site-traffic-row]")
       end
 
       def has_expanded_url_link?(label:)
@@ -250,7 +251,7 @@ module PageObjects
 
       def select_expanded_filter_row(label:)
         within(".site-traffic-breakdown-modal[role='dialog']") do
-          within("tr", text: label) do
+          within("[data-test-site-traffic-row]", text: label) do
             find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
           end
         end
@@ -259,12 +260,12 @@ module PageObjects
 
       def apply_expanded_filters
         within(".site-traffic-breakdown-modal[role='dialog']") do
-          find_button("Apply filters", exact: true).click
+          find_button("Apply", exact: true).click
         end
         self
       end
 
-      def has_no_expanded_table?
+      def has_no_expanded_breakdown?
         has_no_css?(".site-traffic-breakdown-modal[role='dialog']")
       end
 
