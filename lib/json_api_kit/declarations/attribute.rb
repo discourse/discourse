@@ -5,8 +5,11 @@ module JsonApiKit
     class Attribute
       attr_reader :name
 
-      def initialize(name, &value)
+      delegate :readable_by?, :readable_for?, to: :readable
+
+      def initialize(name, readable: Readable::ALWAYS, &value)
         @name = name.to_s
+        @readable = Readable.for(readable)
         @value = value
       end
 
@@ -16,13 +19,13 @@ module JsonApiKit
       end
 
       def column_for(schema)
-        return if value
+        return if value || readable.per_record?
         schema.column(name)
       end
 
       private
 
-      attr_reader :value
+      attr_reader :readable, :value
     end
   end
 end

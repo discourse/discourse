@@ -23,22 +23,18 @@ module JsonApiKit
       class_methods do
         delegate :resolves?, to: :relationships
 
-        def attribute(name, &value)
-          self.declared_attributes =
-            declared_attributes + [Declarations::Attribute.new(name, &value)]
+        def attribute(...)
+          self.declared_attributes = declared_attributes + [Declarations::Attribute.new(...)]
         end
 
-        def has_one(name, resource:)
-          relate(Declarations::Relationship::ToOne.new(name, resource:))
-        end
+        def has_one(...) = relate(Declarations::Relationship::ToOne.new(...))
 
-        def has_many(name, resource:)
-          relate(Declarations::Relationship::ToMany.new(name, resource:))
-        end
+        def has_many(...) = relate(Declarations::Relationship::ToMany.new(...))
 
-        def fields(names = nil)
+        def fields(names = nil, guardian:)
           Declarations::Fields.for(
             names,
+            guardian:,
             attributes: declared_attributes,
             relationships: declared_relationships,
             schema:,

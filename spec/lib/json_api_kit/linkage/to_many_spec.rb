@@ -5,6 +5,7 @@ RSpec.describe JsonApiKit::Linkage::ToMany do
 
   fab!(:topic)
 
+  let(:guardian) { Guardian.new }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
       model Topic
@@ -14,7 +15,7 @@ RSpec.describe JsonApiKit::Linkage::ToMany do
   let(:record) do
     JsonApiKit::Record.new(
       JsonApiKit::Pagination::Row.new(record: topic, segment: nil),
-      resource.fields,
+      resource.fields(guardian:),
       type: "topics",
     )
   end

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Declarations::Attributes do
-  subject(:attributes) { described_class.new(declarations, schema:) }
+  subject(:attributes) { described_class.new(declarations, guardian:, schema:) }
 
   fab!(:topic) { Fabricate(:topic, title: "A field rendered from a record", closed: false) }
 
+  let(:guardian) { Guardian.new }
   let(:schema) { JsonApiKit::Schema.new(Topic) }
   let(:attribute) { JsonApiKit::Declarations::Attribute }
   let(:declarations) { [attribute.new(:title), attribute.new(:closed)] }

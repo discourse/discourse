@@ -13,11 +13,14 @@ RSpec.describe JsonApiKit::Document::Contents do
   let(:records) { [record_of(topic, "topics", "user" => linkage(author_record))] }
   let(:related_records) { [author_record] }
 
+  let(:guardian) { Guardian.new }
+
   def record_of(model, type, relationships = {})
     JsonApiKit::Record.new(
       JsonApiKit::Pagination::Row.new(record: model, segment: nil),
       JsonApiKit::Declarations::Fields.for(
         nil,
+        guardian:,
         attributes: [],
         relationships: [],
         schema: JsonApiKit::Schema.new(model.class),
