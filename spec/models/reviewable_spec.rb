@@ -812,9 +812,10 @@ RSpec.describe Reviewable, type: :model do
     after { Reviewable.clear_custom_filters! }
 
     it "correctly add a new filter" do
-      Reviewable.add_custom_filter([:assigned_to, Proc.new { |results, value| results }])
+      custom_filter = [:assigned_to, Proc.new { |results, value| results }]
+      Reviewable.add_custom_filter(custom_filter)
 
-      expect(Reviewable.custom_filters.size).to eq(1)
+      expect(Reviewable.custom_filters).to include(custom_filter)
     end
 
     it "applies the custom filter" do
@@ -829,6 +830,26 @@ RSpec.describe Reviewable, type: :model do
 
       expect(results.size).to eq(1)
       expect(results.first).to eq first_reviewable
+    end
+
+    it "composes multiple custom filters" do
+      admin = Fabricate(:admin)
+      matching_reviewable = Fabricate(:reviewable)
+      first_filter_reviewable = Fabricate(:reviewable)
+      second_filter_reviewable = Fabricate(:reviewable)
+      Reviewable.add_custom_filter([:first_ids, ->(results, value) { results.where(id: value) }])
+      Reviewable.add_custom_filter([:second_ids, ->(results, value) { results.where(id: value) }])
+
+      results =
+        Reviewable.list_for(
+          admin,
+          additional_filters: {
+            first_ids: [matching_reviewable.id, first_filter_reviewable.id],
+            second_ids: [matching_reviewable.id, second_filter_reviewable.id],
+          },
+        )
+
+      expect(results).to contain_exactly(matching_reviewable)
     end
 
     context "when listing for a moderator with a custom filter that joins tables with same named columns" do

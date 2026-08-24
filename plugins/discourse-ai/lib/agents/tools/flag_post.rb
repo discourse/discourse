@@ -82,6 +82,7 @@ module DiscourseAi
                 PostActionType.types[:spam],
                 message: spam_post_action_message,
                 reason: spam_score_reason,
+                context: triage_automation_context,
                 queue_for_review: true,
               ).perform
             flag_success = result.success?
@@ -106,6 +107,7 @@ module DiscourseAi
               Discourse.system_user,
               ReviewableScore.types[:needs_approval],
               reason: flag_reason,
+              context: triage_automation_context,
               force_review: true,
             )
 
@@ -183,6 +185,10 @@ module DiscourseAi
 
         def spam_flag?
           %w[spam spam_silence].include?(flag_type)
+        end
+
+        def triage_automation_context
+          DiscourseAi::Automation.triage_automation_context(feature_context[:automation_id])
         end
 
         def feature_context

@@ -47,4 +47,36 @@ RSpec.describe ReviewablesController do
     json = JSON.parse(response.body)
     expect(json["reviewables"].length).to eq(2)
   end
+
+  it "filters by the stable AI triage automation score context" do
+    reviewable.add_score(
+      Discourse.system_user,
+      ReviewableScore.types[:needs_approval],
+      context: DiscourseAi::Automation.triage_automation_context(42),
+    )
+    reviewable2.add_score(
+      Discourse.system_user,
+      ReviewableScore.types[:needs_approval],
+      context: DiscourseAi::Automation.triage_automation_context(43),
+    )
+    sign_in(admin)
+
+    get "/review.json", params: { additional_filters: { ai_triage_automation_id: 42 }.to_json }
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["reviewables"].map { |item| item["id"] }).to contain_exactly(
+      reviewable.id,
+    )
+  end
+
+  it "rejects a malformed AI triage automation ID" do
+    sign_in(admin)
+
+    get "/review.json",
+        params: {
+          additional_filters: { ai_triage_automation_id: "1) OR TRUE--" }.to_json,
+        }
+
+    expect(response.status).to eq(400)
+  end
 end

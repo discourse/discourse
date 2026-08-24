@@ -2,6 +2,14 @@
 
 module DiscourseAi
   module Automation
+    TRIAGE_AUTOMATION_CONTEXT_PREFIX = "discourse_ai:triage_automation:"
+
+    def self.triage_automation_context(automation_id)
+      return if automation_id.blank?
+
+      "#{TRIAGE_AUTOMATION_CONTEXT_PREFIX}#{automation_id}"
+    end
+
     def self.spam_based_flag_types
       %w[spam spam_silence]
     end

@@ -44,6 +44,7 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
         reviewable_score_type: ReviewableScore.types[:needs_approval],
       )
     expect(score.reason).to include("Clear spam")
+    expect(score.context).to be_nil
   end
 
   it "skips when flag_post is false" do
@@ -132,5 +133,35 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
       </p>
       <p>Response from the model: <img src=""></p>
     HTML
+    expect(score.context).to eq(DiscourseAi::Automation.triage_automation_context(123))
+  end
+
+  it "stores the automation context on spam scores while preserving their reason" do
+    automation = Fabricate(:automation, name: "Agent spam triage", script: "llm_agent_triage")
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        post:,
+        feature_context: {
+          automation_id: automation.id,
+          automation_name: automation.name,
+        },
+      )
+
+    result =
+      described_class.new(
+        { flag_post: true, reason: "Spam links" },
+        bot_user: bot_user,
+        llm: llm,
+        context: context,
+        agent_options: {
+          flag_type: "spam",
+        },
+      ).invoke
+
+    score = ReviewableFlaggedPost.find_by(target: post).reviewable_scores.first
+
+    expect(result[:status]).to eq("flagged")
+    expect(score.context).to eq(DiscourseAi::Automation.triage_automation_context(automation.id))
+    expect(score.reason).to include(automation.name)
   end
 end

@@ -626,7 +626,7 @@ class Reviewable < ActiveRecord::Base
           filter_query = filter.last
 
           next(memo) unless additional_filters[key]
-          filter_query.call(result, additional_filters[key])
+          filter_query.call(memo, additional_filters[key])
         end
     end
 

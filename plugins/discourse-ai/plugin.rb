@@ -90,6 +90,39 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  add_to_serializer(
+    :current_user,
+    :ai_triage_automations,
+    include_condition: -> { scope.can_see_review_queue? },
+  ) do
+    DiscourseAutomation::Automation
+      .where(script: %w[llm_triage llm_agent_triage])
+      .order(:name)
+      .pluck(:id, :name)
+      .map { |id, name| { id: id, name: name } }
+  end
+
+  add_custom_reviewable_filter(
+    [
+      :ai_triage_automation_id,
+      Proc.new do |results, value|
+        value = value.to_s
+        if !value.match?(/\A[1-9]\d{0,18}\z/)
+          raise Discourse::InvalidParameters.new(:ai_triage_automation_id)
+        end
+
+        results.where(<<~SQL, context: DiscourseAi::Automation.triage_automation_context(value))
+            EXISTS (
+              SELECT 1
+              FROM reviewable_scores
+              WHERE reviewable_scores.reviewable_id = reviewables.id
+                AND reviewable_scores.context = :context
+            )
+          SQL
+      end,
+    ],
+  )
+
   if defined?(Rack::MiniProfiler)
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
   end

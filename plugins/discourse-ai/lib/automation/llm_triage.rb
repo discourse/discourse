@@ -263,6 +263,7 @@ module DiscourseAi
                     PostActionType.types[:spam],
                     message: spam_post_action_message,
                     reason: spam_score_reason,
+                    context: DiscourseAi::Automation.triage_automation_context(automation&.id),
                     queue_for_review: true,
                   ).perform
 
@@ -282,6 +283,7 @@ module DiscourseAi
                   Discourse.system_user,
                   ReviewableScore.types[:needs_approval],
                   reason: score_reason,
+                  context: DiscourseAi::Automation.triage_automation_context(automation&.id),
                   force_review: true,
                 )
 

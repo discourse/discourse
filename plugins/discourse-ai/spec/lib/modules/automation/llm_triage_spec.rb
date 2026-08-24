@@ -148,6 +148,37 @@ describe DiscourseAi::Automation::LlmTriage do
     )
   end
 
+  it "stores the automation context for review and spam scores without replacing their reasons" do
+    automation = Fabricate(:automation, name: "Unsafe content triage", script: "llm_triage")
+    spam_post = Fabricate(:post)
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review,
+        automation: automation,
+      )
+      triage(
+        post: spam_post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :spam,
+        automation: automation,
+      )
+    end
+
+    scores =
+      [post, spam_post].map { |target| Reviewable.find_by(target: target).reviewable_scores.first }
+    expected_context = DiscourseAi::Automation.triage_automation_context(automation.id)
+
+    expect(scores.map(&:context)).to contain_exactly(expected_context, expected_context)
+    expect(scores.map(&:reason)).to all(include(automation.name))
+  end
+
   it "keeps one reviewable when spam follows review" do
     DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
       triage(

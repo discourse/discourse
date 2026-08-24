@@ -30,4 +30,28 @@ describe Plugin::Instance do
       )
     end
   end
+
+  describe "current_user_serializer#ai_triage_automations" do
+    fab!(:moderator)
+
+    it "exposes classic and agent triage automations to reviewers" do
+      classic = Fabricate(:automation, name: "Classic triage", script: "llm_triage")
+      agent = Fabricate(:automation, name: "Agent triage", script: "llm_agent_triage")
+      Fabricate(:automation, name: "Report", script: "llm_report")
+
+      json = CurrentUserSerializer.new(moderator, scope: moderator.guardian, root: nil).as_json
+
+      expect(json[:ai_triage_automations]).to eq(
+        [{ id: agent.id, name: agent.name }, { id: classic.id, name: classic.name }],
+      )
+    end
+
+    it "does not expose triage automations to users without review access" do
+      user = Fabricate(:user)
+
+      json = CurrentUserSerializer.new(user, scope: user.guardian, root: nil).as_json
+
+      expect(json).not_to have_key(:ai_triage_automations)
+    end
+  end
 end

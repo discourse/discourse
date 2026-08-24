@@ -231,6 +231,10 @@ en:
               description: "Allow tagging of posts created by the system user."
 
     discourse_ai:
+      review_filters:
+        ai_automation: "AI automation"
+        all_ai_automations: "(all AI automations)"
+
       title: "AI"
       copied: "Copied"
       view_raw: "View raw"
