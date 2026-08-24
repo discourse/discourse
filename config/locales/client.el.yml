@@ -6243,23 +6243,19 @@ el:
         title: "Τι νέο υπάρχει;"
         check_for_updates: "Ελέγξτε για ενημερώσεις"
       site_traffic_explorer:
-        pageviews: "Προβολές σελίδας"
+        metric_information: "Σχετικά με %{metric}"
+        remove_filter_value: "Αφαίρεση %{value}"
+        clear_all: "Εκκαθάριση όλων"
+        apply: "Εφαρμογή"
         view_more: "Δείτε περισσότερα"
         cards:
           pages: "Σελίδες"
           visitors: "Επισκέπτες"
-        columns:
-          countries: "Χώρα"
-          top_urls: "URL"
-          browsers: "Περιηγητής"
-          ip_addresses: "IP διεύθυνση"
         filters:
           country: "Χώρα"
           browser: "Περιηγητής"
           ip: "IP διεύθυνση"
         metrics:
-          pageviews:
-            label: "Προβολές σελίδας"
           logged_in_share:
             label: "Μερίδιο συνδεδεμένων"
         series:

@@ -245,6 +245,8 @@ pl_PL:
           other: "musi mieć co najwyżej %{count} nazw tagów"
         humanize_not_valid_upload_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem przesyłania."
         not_valid_upload_value: "musi być prawidłowym identyfikatorem przesyłania"
+        humanize_not_valid_icon_value: "Właściwość wskaźnika JSON „%{property_json_pointer}” musi być nazwą ikony."
+        not_valid_icon_value: "musi być nazwą ikony"
         humanize_string_value_not_valid_min:
           one: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć co najmniej %{count} znak."
           few: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć długość co najmniej %{count} znaki."
@@ -2479,7 +2481,7 @@ pl_PL:
     user_profile_view_duration_hours: "Licz nowe wyświetlenia profilu użytkownika na IP/Użytkownika co N godzin"
     levenshtein_distance_spammer_emails: "Przy dopasowywaniu emaili spamowych, różnica liczby znaków, która w dalszym ciągu pozwoli na przybliżone dopasowanie."
     max_new_accounts_per_registration_ip: "Jeśli istnieje już (x) kont o poziomie zaufania 0 z tego adresu IP (i żadne z nich nie jest członkiem personelu ani na poziomie TL2 lub wyższym), przestań akceptować nowe rejestracje z tego adresu IP. Ustaw na 0, aby wyłączyć limit."
-    min_ban_entries_for_roll_up: "Podczas naciskania na przycisk Przewiń do góry, utwórz nowy wpis blokady podsieci jeśli jest co najmniej (N) wpisów."
+    min_ban_entries_for_roll_up: "Nowy wpis zakazu podsieci będzie tworzony codziennie przez zadanie <a href='https://github.com/discourse/discourse/blob/main/app/jobs/scheduled/clean_up_unmatched_ips.rb'>CleanUpUnmatchedIPs</a>, gdy w tej samej podsieci znajduje się co najmniej (N) zablokowanych adresów IP."
     max_age_unmatched_emails: "Usuń niedopasowane wiadomości e-mail po (N) dniach."
     max_age_unmatched_ips: "Usuń niedopasowane adresy IP po (N) dniach."
     num_flaggers_to_close_topic: "Minimalna liczba unikalnych oflagowań, które są potrzebne aby automatycznie zatrzymać temat do czasu interwencji."

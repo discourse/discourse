@@ -6532,16 +6532,14 @@ zh_CN:
           timeout: "本次流量查询耗时过长。请选择较短的日期范围重试。"
           unexpected: "网站流量加载失败，请重试。"
         empty: "没有匹配的页面浏览量"
-        summary: "流量摘要"
-        traffic_over_time: "一段时间内的流量"
-        pageviews: "页面浏览量"
-        metric_information: "关于这项指标"
+        metric_information: "关于%{metric}"
         active_filters: "活跃的流量过滤器"
-        filter_description: "%{filter} 是 <strong>%{value}</strong>"
+        remove_filter_value: "移除 %{value}"
+        clear_all: "全部清除"
+        apply: "应用"
         filter_by:
           other: "按 %{label}, %{count} 网页浏览量筛选"
         remove_filter: "移除 %{filter} 过滤器"
-        remove_traffic_type_filter: "移除 %{value} 流量过滤器"
         view_more: "展开"
         no_dimension_data: "没有此分类的数据。"
         direct_or_unknown: "直接 / 未知"
@@ -6557,14 +6555,6 @@ zh_CN:
           entry_urls: "入口网址"
           browsers: "浏览器"
           ip_addresses: "IP 地址"
-        columns:
-          referrers: "推荐人"
-          countries: "国家/地区"
-          networks: "网络"
-          top_urls: "URL"
-          entry_urls: "入口网址"
-          browsers: "浏览器"
-          ip_addresses: "IP 地址"
         filters:
           traffic_type: "流量类型"
           top_url: "热门网址"
@@ -6575,8 +6565,6 @@ zh_CN:
           browser: "浏览器"
           ip: "IP 地址"
         metrics:
-          pageviews:
-            label: "页面浏览量"
           distinct_sessions:
             label: "不同的会话"
           logged_in_share:
