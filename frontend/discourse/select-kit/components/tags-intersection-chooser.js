@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { attributeBindings, classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
+import { originalTagName, tagPath } from "discourse/lib/tag-identity";
 import DiscourseURL from "discourse/lib/url";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { pluginApiIdentifiers } from "discourse/select-kit/components/select-kit";
@@ -24,8 +25,10 @@ export default class TagsIntersectionChooser extends MiniTagChooser {
   @action
   onChange(tags) {
     const mainTag = this.mainTag;
-    const mainTagName = mainTag?.name;
-    const tagNames = tags.map((t) => t.name ?? t);
+    // Intersection routes are filtered by name server-side, so a localized
+    // `name` cannot be used to build them.
+    const mainTagName = mainTag && originalTagName(mainTag);
+    const tagNames = tags.map((t) => originalTagName(t));
 
     if (mainTagName && tagNames.includes(mainTagName)) {
       const remainingTags = tagNames.filter((t) => t !== mainTagName);
@@ -34,17 +37,14 @@ export default class TagsIntersectionChooser extends MiniTagChooser {
         DiscourseURL.routeTo(
           `/tags/intersection/${mainTagName}/${remainingTags.join("/")}`
         );
-      } else if (mainTag.id) {
-        const slug = mainTag.slug || `${mainTag.id}-tag`;
-        DiscourseURL.routeTo(`/tag/${slug}/${mainTag.id}`);
       } else {
-        DiscourseURL.routeTo(`/tag/${mainTagName}`);
+        DiscourseURL.routeTo(tagPath(mainTag));
       }
     } else {
       if (tagNames.length >= 2) {
         DiscourseURL.routeTo(`/tags/intersection/${tagNames.join("/")}`);
       } else if (tagNames.length === 1) {
-        DiscourseURL.routeTo(`/tag/${tagNames[0]}`);
+        DiscourseURL.routeTo(tagPath(tags[0]));
       } else {
         DiscourseURL.routeTo("/tags");
       }

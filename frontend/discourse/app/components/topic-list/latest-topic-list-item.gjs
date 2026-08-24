@@ -6,6 +6,7 @@ import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import { originalTagName } from "discourse/lib/tag-identity";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
 import DUserLink from "discourse/ui-kit/d-user-link";
@@ -18,10 +19,7 @@ import dTopicLink from "discourse/ui-kit/helpers/d-topic-link";
 
 export default class LatestTopicListItem extends Component {
   get tagClassNames() {
-    return this.args.topic.tags?.map((tag) => {
-      const tagName = typeof tag === "string" ? tag : tag.name;
-      return `tag-${tagName}`;
-    });
+    return this.args.topic.tags?.map((tag) => `tag-${originalTagName(tag)}`);
   }
 
   get additionalClasses() {

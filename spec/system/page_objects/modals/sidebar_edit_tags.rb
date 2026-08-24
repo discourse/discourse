@@ -22,7 +22,7 @@ module PageObjects
 
       def toggle_tag_checkbox(tag)
         find(
-          ".sidebar-tags-form .sidebar-tags-form__tag[data-tag-name='#{tag.name}'] .sidebar-tags-form__input",
+          ".sidebar-tags-form .sidebar-tags-form__tag[data-tag-id='#{tag.id}'] .sidebar-tags-form__input",
         ).click
 
         self
@@ -30,7 +30,7 @@ module PageObjects
 
       def scroll_to_tag(tag)
         page.execute_script(
-          "document.querySelector('.sidebar-tags-form__tag[data-tag-name=\"#{tag.name}\"]').scrollIntoView()",
+          "document.querySelector('.sidebar-tags-form__tag[data-tag-id=\"#{tag.id}\"]').scrollIntoView()",
         )
       end
 

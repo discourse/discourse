@@ -22,7 +22,7 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
 
   @tracked disableFiltering = false;
   @tracked saving = false;
-  @tracked selectedTags = trackedSet([...this.currentUser.sidebarTagNames]);
+  @tracked selectedTagIds = trackedSet([...this.currentUser.sidebarTagIds]);
   @tracked tags = [];
   @tracked tagsLoading = false;
   observer;
@@ -45,14 +45,14 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
       }
 
       if (this.onlySelected) {
-        if (this.selectedTags.size === 0) {
+        if (this.selectedTagIds.size === 0) {
           this.tags = [];
           return;
         }
 
-        findArgs.only_tags = [...this.selectedTags].join(",");
+        findArgs.only_tag_ids = [...this.selectedTagIds].join(",");
       } else if (this.onlyUnselected) {
-        findArgs.exclude_tags = [...this.selectedTags].join(",");
+        findArgs.exclude_tag_ids = [...this.selectedTagIds].join(",");
       }
 
       try {
@@ -68,11 +68,8 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
   }
 
   @action
-  didInsertTag(element) {
-    const tagName = element.dataset.tagName;
-    const lastTagName = this.tags.content.at(-1).name;
-
-    if (tagName === lastTagName) {
+  didInsertTag(element, [tagId]) {
+    if (tagId === this.tags.content.at(-1).id) {
       if (this.observer) {
         this.observer.disconnect();
       } else {
@@ -135,22 +132,33 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
 
   @action
   deselectAll() {
-    this.selectedTags.clear();
+    this.selectedTagIds.clear();
   }
 
   @action
-  resetToDefaults() {
-    this.selectedTags = trackedSet(
-      this.siteSettings.default_navigation_menu_tags.split("|")
-    );
+  async resetToDefaults() {
+    // The setting stores tag names, and the ids they resolve to are only known
+    // to the server.
+    try {
+      const tags = await this.store.findAll("listTag", {
+        only_tags: this.siteSettings.default_navigation_menu_tags.replaceAll(
+          "|",
+          ","
+        ),
+      });
+
+      this.selectedTagIds = trackedSet(tags.content.map((tag) => tag.id));
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
-  toggleTag(tag) {
-    if (this.selectedTags.has(tag)) {
-      this.selectedTags.delete(tag);
+  toggleTag(tagId) {
+    if (this.selectedTagIds.has(tagId)) {
+      this.selectedTagIds.delete(tagId);
     } else {
-      this.selectedTags.add(tag);
+      this.selectedTagIds.add(tagId);
     }
   }
 
@@ -158,10 +166,10 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
   async save() {
     this.saving = true;
     const initialSidebarTags = this.currentUser.sidebar_tags;
-    this.currentUser.set("sidebar_tag_names", [...this.selectedTags]);
+    this.currentUser.set("sidebar_tag_ids", [...this.selectedTagIds]);
 
     try {
-      const result = await this.currentUser.save(["sidebar_tag_names"]);
+      const result = await this.currentUser.save(["sidebar_tag_ids"]);
       this.currentUser.set("sidebar_tags", result.user.sidebar_tags);
       this.args.closeModal();
     } catch (error) {
@@ -201,20 +209,20 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
         <form class="sidebar-tags-form">
           {{#each this.tags.content as |tag|}}
             <div
-              {{didInsert this.didInsertTag}}
-              data-tag-name={{tag.name}}
+              {{didInsert this.didInsertTag tag.id}}
+              data-tag-id={{tag.id}}
               class="sidebar-tags-form__tag"
             >
               <input
-                {{on "click" (fn this.toggleTag tag.name)}}
+                {{on "click" (fn this.toggleTag tag.id)}}
                 type="checkbox"
-                checked={{has this.selectedTags tag.name}}
-                id={{concat "sidebar-tags-form__input--" tag.name}}
+                checked={{has this.selectedTagIds tag.id}}
+                id={{concat "sidebar-tags-form__input--" tag.id}}
                 class="sidebar-tags-form__input"
               />
 
               <label
-                for={{concat "sidebar-tags-form__input--" tag.name}}
+                for={{concat "sidebar-tags-form__input--" tag.id}}
                 class="sidebar-tags-form__tag-label"
               >
                 <p>

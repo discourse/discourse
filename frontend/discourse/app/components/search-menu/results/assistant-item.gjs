@@ -6,7 +6,7 @@ import Category from "discourse/components/search-menu/results/type/category";
 import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
 import { debounce } from "discourse/lib/decorators";
-import getURL from "discourse/lib/get-url";
+import { tagUrl } from "discourse/lib/tag-identity";
 import { and, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -33,14 +33,14 @@ export default class AssistantItem extends Component {
       href = this.args.category.url;
 
       if (this.args.tags && this.args.isIntersection) {
-        href = getURL(`/tag/${this.args.tag}`);
+        href = tagUrl(this.args.tag);
       }
     } else if (
       this.args.tags &&
       this.args.isIntersection &&
       this.args.additionalTags?.length
     ) {
-      href = getURL(`/tag/${this.args.tag}`);
+      href = tagUrl(this.args.tag);
     }
 
     return href;

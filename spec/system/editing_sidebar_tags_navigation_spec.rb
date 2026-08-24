@@ -25,6 +25,40 @@ RSpec.describe "Editing sidebar tags navigation" do
 
   before { sign_in(user) }
 
+  context "with a localized tag" do
+    fab!(:localized_tag) do
+      Fabricate(:tag, name: "strategic_access", locale: "en").tap do |tag|
+        Fabricate(:topic, tags: [tag])
+      end
+    end
+
+    fab!(:localization) do
+      Fabricate(:tag_localization, tag: localized_tag, locale: "ja", name: "戦略")
+    end
+
+    fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
+
+    before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+
+      sign_in(japanese_user)
+    end
+
+    it "adds the tag under its untranslated name" do
+      visit "/latest"
+
+      modal = sidebar.click_edit_tags_button
+      modal.toggle_tag_checkbox(localized_tag).save
+
+      expect(modal).to be_closed
+      expect(sidebar).to have_section_link("戦略")
+
+      expect(japanese_user.reload.visible_sidebar_tags.pluck(:id)).to eq([localized_tag.id])
+    end
+  end
+
   shared_examples "a user can edit the sidebar tags navigation" do |mobile|
     it "allows a user to edit the sidebar tags navigation", mobile: mobile do
       visit "/latest"

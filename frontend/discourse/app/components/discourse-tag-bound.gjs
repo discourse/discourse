@@ -2,24 +2,19 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import getURL from "discourse/lib/get-url";
+import { originalTagName, tagUrl } from "discourse/lib/tag-identity";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class DiscourseTagBound extends Component {
-  @computed("tagRecord.name")
+  @computed("tagRecord.name", "tagRecord.original_name")
   get tagClass() {
-    return "tag-" + this.tagRecord?.name;
+    return "tag-" + originalTagName(this.tagRecord);
   }
 
-  @computed("tagRecord.slug", "tagRecord.id")
+  @computed("tagRecord.slug", "tagRecord.id", "tagRecord.name")
   get href() {
-    if (this.tagRecord?.id) {
-      const slugForUrl = this.tagRecord?.slug || `${this.tagRecord?.id}-tag`;
-      return getURL(`/tag/${slugForUrl}/${this.tagRecord?.id}`);
-    }
-    // fallback for tags without id
-    return getURL("/tag/" + this.tagRecord.name);
+    return tagUrl(this.tagRecord);
   }
 
   <template>

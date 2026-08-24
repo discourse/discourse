@@ -2,7 +2,7 @@ import BaseTagSectionLink from "discourse/lib/sidebar/user/tags-section/base-tag
 
 export default class PMTagSectionLink extends BaseTagSectionLink {
   get models() {
-    return [this.currentUser, this.tagName];
+    return [this.currentUser, this.originalName];
   }
 
   get route() {

@@ -103,9 +103,13 @@ class TagsController < ::ApplicationController
 
   def list
     offset = params[:offset].to_i || 0
-    only_tags = params[:only_tags]
 
-    tags = only_tags.present? ? Tag.visible(guardian) : Tag.browsable(guardian)
+    # Callers holding tag records filter by id; callers holding user input, such
+    # as a tag name typed into a composer preset, filter by name.
+    only_tag_ids = params[:only_tag_ids].presence
+    only_tags = params[:only_tags].presence
+
+    tags = (only_tag_ids || only_tags) ? Tag.visible(guardian) : Tag.browsable(guardian)
     tags = tags.without_pm_only_tags(guardian) unless show_all_tags?
 
     load_more_query_params = { offset: offset + 1 }
@@ -115,12 +119,18 @@ class TagsController < ::ApplicationController
       load_more_query_params[:filter] = filter
     end
 
-    if only_tags
-      tags = tags.where("LOWER(tags.name) IN (?)", only_tags.split(",").map(&:downcase))
+    if only_tag_ids
+      tags = tags.where(id: only_tag_ids.split(","))
+      load_more_query_params[:only_tag_ids] = only_tag_ids
+    elsif only_tags
+      tags = tags.where_name(only_tags.split(","))
       load_more_query_params[:only_tags] = only_tags
     end
 
-    if exclude_tags = params[:exclude_tags]
+    if exclude_tag_ids = params[:exclude_tag_ids].presence
+      tags = tags.where.not(id: exclude_tag_ids.split(","))
+      load_more_query_params[:exclude_tag_ids] = exclude_tag_ids
+    elsif exclude_tags = params[:exclude_tags].presence
       tags = tags.where("LOWER(tags.name) NOT IN (?)", exclude_tags.split(",").map(&:downcase))
       load_more_query_params[:exclude_tags] = exclude_tags
     end
@@ -604,6 +614,10 @@ class TagsController < ::ApplicationController
             target ? { id: target.id, name: target.name, slug: target.slug } : nil
           end,
       }
+
+      # Customizations are keyed on the untranslated name, which is otherwise
+      # unrecoverable from a localized payload.
+      attrs[:original_name] = t.name if tag_name != t.name
 
       if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
         attrs[:pm_count] = t.pm_topic_count

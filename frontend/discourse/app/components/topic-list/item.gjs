@@ -19,6 +19,7 @@ import {
   removeValueFromArray,
 } from "discourse/lib/array-tools";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { originalTagName } from "discourse/lib/tag-identity";
 import {
   applyBehaviorTransformer,
   applyValueTransformer,
@@ -61,10 +62,7 @@ export default class Item extends Component {
   }
 
   get tagClassNames() {
-    return this.args.topic.tags?.map((tag) => {
-      const tagName = typeof tag === "string" ? tag : tag.name;
-      return `tag-${tagName}`;
-    });
+    return this.args.topic.tags?.map((tag) => `tag-${originalTagName(tag)}`);
   }
 
   get #transformerContext() {

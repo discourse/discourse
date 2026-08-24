@@ -1,24 +1,12 @@
 # frozen_string_literal: true
 
 class SidebarTagSerializer < ApplicationSerializer
-  attributes :id, :name, :slug, :description, :pm_only
+  include LocalizedTagMixin
+
+  attributes :id, :slug, :pm_only
 
   def slug
     object.slug_for_url
-  end
-
-  def name
-    translated =
-      (object.get_localization&.name if ContentLocalization.show_translated_tag?(object, scope))
-    translated || object.name
-  end
-
-  def description
-    translated =
-      if ContentLocalization.show_translated_tag?(object, scope)
-        object.get_localization&.description
-      end
-    translated || object.description
   end
 
   def pm_only

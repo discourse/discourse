@@ -2216,18 +2216,13 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
-    if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
-      params[:sidebar_category_ids] = []
-    end
+    sidebar_keys = [:sidebar_category_ids]
+    # `sidebar_tag_names` is deprecated in favour of `sidebar_tag_ids`.
+    sidebar_keys.concat(%i[sidebar_tag_ids sidebar_tag_names]) if SiteSetting.tagging_enabled
 
-    permitted << { sidebar_category_ids: [] }
-
-    if SiteSetting.tagging_enabled
-      if params.has_key?(:sidebar_tag_names) && params[:sidebar_tag_names].blank?
-        params[:sidebar_tag_names] = []
-      end
-
-      permitted << { sidebar_tag_names: [] }
+    sidebar_keys.each do |key|
+      params[key] = [] if params.has_key?(key) && params[key].blank?
+      permitted << { key => [] }
     end
 
     if SiteSetting.enable_user_status

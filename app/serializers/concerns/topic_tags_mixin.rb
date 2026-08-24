@@ -17,14 +17,23 @@ module TopicTagsMixin
   end
 
   def tags
-    all_tags.map { |tag| { id: tag.id, name: localized_tag_name(tag), slug: tag.slug_for_url } }
+    all_tags.map do |tag|
+      display_name = tag.display_name(scope)
+
+      {
+        id: tag.id,
+        name: display_name,
+        slug: tag.slug_for_url,
+        original_name: (tag.name if display_name != tag.name),
+      }.compact
+    end
   end
 
   def tags_descriptions
     all_tags
       .each
       .with_object({}) do |tag, acc|
-        acc[localized_tag_name(tag)] = localized_tag_description(tag)&.truncate(DESCRIPTION_LIMIT)
+        acc[tag.display_name(scope)] = tag.display_description(scope)&.truncate(DESCRIPTION_LIMIT)
       end
       .compact
   end
@@ -34,22 +43,6 @@ module TopicTagsMixin
   end
 
   private
-
-  def localized_tag_name(tag)
-    if ContentLocalization.show_translated_tag?(tag, scope)
-      tag.get_localization&.name || tag.name
-    else
-      tag.name
-    end
-  end
-
-  def localized_tag_description(tag)
-    if ContentLocalization.show_translated_tag?(tag, scope)
-      tag.get_localization&.description || tag.description
-    else
-      tag.description
-    end
-  end
 
   def all_tags
     return @tags if defined?(@tags)
