@@ -191,7 +191,7 @@ export default class CreateInvite extends Component {
   get canInviteToGroup() {
     return (
       this.currentUser.staff ||
-      this.currentUser.groups.some((g) => g.group_user?.owner)
+      this.currentUser.visibleGroups.some((g) => g.group_user?.owner)
     );
   }
 

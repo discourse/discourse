@@ -1001,7 +1001,8 @@ export default class User extends RestModel.extend(Evented) {
           groups.push(group);
         }
 
-        json.user.groups = groups;
+        json.user.visibleGroups = groups;
+        delete json.user.groups;
       }
 
       if (json.user.invited_by) {
