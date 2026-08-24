@@ -30,6 +30,12 @@ class FakeExternalAgent < DiscourseAi::Agents::Agent
   end
 end
 
+class FakeExternalBotAgent < FakeExternalAgent
+  def self.supports_bot_user?
+    true
+  end
+end
+
 class TestAgent < DiscourseAi::Agents::Agent
   def tools
     [
@@ -376,16 +382,19 @@ RSpec.describe DiscourseAi::Agents::Agent do
       plugin
     end
 
-    def register_fake_feature(module_name: :test_module, feature: :test_feature)
+    def register_fake_feature(
+      module_name: :test_module,
+      feature: :test_feature,
+      agent_klass: FakeExternalAgent
+    )
       DiscoursePluginRegistry.register_external_ai_feature(
-        {
-          module_name: module_name,
-          feature: feature,
-          agent_klass: FakeExternalAgent,
-          enabled_by_setting: nil,
-        },
+        { module_name:, feature:, agent_klass:, enabled_by_setting: nil },
         fake_plugin,
       )
+    end
+
+    def external_agent_row(agent_klass)
+      AiAgent.new(system: true, id: described_class.external_agent_id(agent_klass))
     end
 
     def reset_external_registry!
@@ -450,6 +459,17 @@ RSpec.describe DiscourseAi::Agents::Agent do
       instance = FakeExternalAgent.new
       tool_names = instance.available_tools.map { |t| t.signature[:name] }
       expect(tool_names).to include("fake_external_tool")
+    end
+
+    it "lets an external agent opt into a bot user" do
+      register_fake_feature(feature: :bot_feature, agent_klass: FakeExternalBotAgent)
+      register_fake_feature
+
+      opted_in = external_agent_row(FakeExternalBotAgent)
+      default = external_agent_row(FakeExternalAgent)
+
+      expect(opted_in.can_have_bot_user?).to eq(true)
+      expect(default.can_have_bot_user?).to eq(false)
     end
 
     it "produces one agent entry when two features share the same agent_klass" do
