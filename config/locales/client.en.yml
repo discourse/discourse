@@ -7294,6 +7294,7 @@ en:
         remove_filter_value: "Remove %{value}"
         clear_all: "Clear all"
         apply: "Apply"
+        apply_filters: "Apply filters"
         filter_by:
           one: "Filter by %{label}, %{count} pageview"
           other: "Filter by %{label}, %{count} pageviews"
