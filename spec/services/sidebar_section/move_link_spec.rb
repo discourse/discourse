@@ -85,6 +85,27 @@ RSpec.describe SidebarSection::MoveLink do
       it { is_expected.to fail_to_find_a_model(:link) }
     end
 
+    # Signed in as an admin, who may edit a built-in section. The refusal can
+    # only come from the section being built in, not from permission.
+    context "when the source section is built in" do
+      let(:community_section) { SidebarSection.find_by(section_type: :community) }
+      let(:source_section_id) { community_section.id }
+      let(:link_id) { community_section.sidebar_urls.first.id }
+
+      before { current_user.update!(admin: true) }
+
+      it { is_expected.to fail_a_policy(:sections_are_custom) }
+    end
+
+    context "when the target section is built in" do
+      let(:community_section) { SidebarSection.find_by(section_type: :community) }
+      let(:target_section_id) { community_section.id }
+
+      before { current_user.update!(admin: true) }
+
+      it { is_expected.to fail_a_policy(:sections_are_custom) }
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

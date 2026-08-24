@@ -1306,6 +1306,21 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"]).to be_present
     end
+
+    it "says which parameter was wrong when the order misses a link" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}/reorder.json",
+          params: {
+            links_order: [sidebar_url_1.id],
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].join).to include("links_order")
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [sidebar_url_1.id, sidebar_url_2.id],
+      )
+    end
   end
 
   describe "#move_link" do
@@ -1384,6 +1399,42 @@ RSpec.describe SidebarSectionsController do
             link_id: moved_url.id,
             target_section_id: target_section.id,
             position: -1,
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
+    end
+
+    it "names the limit when the target section is full" do
+      SiteSetting.max_sidebar_section_links = 1
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        [
+          I18n.t(
+            "activerecord.errors.models.sidebar_section.attributes.base.too_many_sidebar_urls",
+            limit: 1,
+            count: 2,
+          ),
+        ],
+      )
+      expect(moved_link.reload.sidebar_section_id).to eq(source_section.id)
+    end
+
+    it "returns 400 when the target section is the source section" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: source_section.id,
           }
 
       expect(response.status).to eq(400)

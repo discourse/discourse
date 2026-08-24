@@ -21,13 +21,16 @@ class SidebarSection::MoveLink
   model :source_section
   model :target_section
   policy :sections_are_distinct
+  policy :sections_are_custom
   policy :can_edit_source_section
   policy :can_edit_target_section
-  policy :target_section_has_room
   model :link
 
   transaction do
     step :lock_sections
+    # Runs under the lock. Two moves into the same near-full section would
+    # otherwise both find room, and both take it.
+    policy :target_section_has_room
     step :attach_link_to_target
     step :place_link
   end
@@ -48,6 +51,12 @@ class SidebarSection::MoveLink
 
   def sections_are_distinct(source_section:, target_section:)
     source_section.id != target_section.id
+  end
+
+  # A built-in section's links come from the server, and `reset_community!`
+  # restores them wholesale. They cannot move in or out, even for an admin.
+  def sections_are_custom(source_section:, target_section:)
+    source_section.custom_section? && target_section.custom_section?
   end
 
   def can_edit_source_section(guardian:, source_section:)
