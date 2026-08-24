@@ -1,24 +1,24 @@
 import I18n from "discourse-i18n";
 
-function roundHalfDown(value, unit) {
-  return Math.floor((value + unit / 2 - 1) / unit) * unit;
+function truncateToUnit(value, unit) {
+  return Math.floor(value / unit) * unit;
 }
 
 export function formatPageviewCount(value) {
   if (value >= 1_000_000) {
-    const rounded = roundHalfDown(value, 100_000);
-    const formatted = I18n.toNumber(rounded / 1_000_000, { precision: 1 });
+    const truncated = truncateToUnit(value, 100_000);
+    const formatted = I18n.toNumber(truncated / 1_000_000, { precision: 1 });
     return `${formatted.replace(/[,.]0$/, "")}M`;
   }
 
   if (value >= 10_000) {
-    const rounded = roundHalfDown(value, 1_000);
-    return `${I18n.toNumber(rounded / 1_000, { precision: 0 })}K`;
+    const truncated = truncateToUnit(value, 1_000);
+    return `${I18n.toNumber(truncated / 1_000, { precision: 0 })}K`;
   }
 
   if (value >= 1_000) {
-    const rounded = roundHalfDown(value, 100);
-    const formatted = I18n.toNumber(rounded / 1_000, { precision: 1 });
+    const truncated = truncateToUnit(value, 100);
+    const formatted = I18n.toNumber(truncated / 1_000, { precision: 1 });
     return `${formatted.replace(/[,.]0$/, "")}K`;
   }
 
