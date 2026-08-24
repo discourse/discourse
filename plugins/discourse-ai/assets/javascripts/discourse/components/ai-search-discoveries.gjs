@@ -23,10 +23,83 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { tagNames, tagSuggestionParams } from "../lib/ai-helper-suggestions";
+import { showComposerAiHelper } from "../lib/show-ai-helper";
 import AiBlinkingAnimation from "./ai-blinking-animation";
 import AiIndicatorWave from "./ai-indicator-wave";
 
 const SUMMARY_DETAIL_VALUES = ["quiet", "balanced", "detailed"];
+
+async function requestSuggestion(url, data) {
+  try {
+    return await ajax(url, { type: "POST", data });
+  } catch {
+    return null;
+  }
+}
+
+async function enrichNewTopic({
+  model,
+  query,
+  suggestTitle,
+  suggestTaxonomy,
+  canTagTopics,
+  maxTitleLength,
+}) {
+  const initialTitle = model.title;
+  const initialCategoryId = model.categoryId;
+  const initialTags = tagNames(model.tags);
+  const titleRequest = suggestTitle
+    ? requestSuggestion("/discourse-ai/ai-helper/suggest_title", {
+        text: query,
+      })
+    : null;
+  const categoryRequest = suggestTaxonomy
+    ? requestSuggestion("/discourse-ai/ai-helper/suggest_category", {
+        text: query,
+      })
+    : null;
+  const [titleResult, categoryResult] = await Promise.all([
+    titleRequest,
+    categoryRequest,
+  ]);
+
+  const suggestedTitle = titleResult?.suggestions?.[0]?.trim();
+  if (suggestedTitle && model.title === initialTitle) {
+    model.set("title", suggestedTitle.slice(0, maxTitleLength));
+  }
+
+  const suggestedCategory = categoryResult?.assistant?.[0];
+  if (suggestedCategory && model.categoryId === initialCategoryId) {
+    model.set("categoryId", suggestedCategory.id);
+  }
+
+  if (
+    !suggestTaxonomy ||
+    !canTagTopics ||
+    tagNames(model.tags).join("\0") !== initialTags.join("\0")
+  ) {
+    return;
+  }
+
+  const tagResult = await requestSuggestion(
+    "/discourse-ai/ai-helper/suggest_tags",
+    {
+      text: query,
+      ...tagSuggestionParams(model.categoryId, model.tags),
+    }
+  );
+  const suggestedTags = tagResult?.assistant
+    ?.map((tag) => tag.name)
+    .filter(Boolean);
+
+  if (
+    suggestedTags?.length &&
+    tagNames(model.tags).join("\0") === initialTags.join("\0")
+  ) {
+    model.set("tags", suggestedTags);
+  }
+}
 
 export default class AiSearchDiscoveries extends Component {
   @service search;
@@ -35,6 +108,7 @@ export default class AiSearchDiscoveries extends Component {
   @service appEvents;
   @service currentUser;
   @service siteSettings;
+  @service composer;
 
   @tracked loadingConversationTopic = false;
   @tracked followUpQuestion = "";
@@ -292,6 +366,33 @@ export default class AiSearchDiscoveries extends Component {
     }
   }
 
+  @action
+  async createTopic() {
+    if (this.args.closeSearchMenu) {
+      this.args.closeSearchMenu();
+    }
+
+    await this.composer.openNewTopic({ title: this.query });
+
+    const model = this.composer.model;
+    const suggestionsEnabled = showComposerAiHelper(
+      model,
+      this.siteSettings,
+      this.currentUser,
+      "suggestions"
+    );
+
+    await enrichNewTopic({
+      model,
+      query: this.query,
+      suggestTitle: suggestionsEnabled,
+      suggestTaxonomy:
+        suggestionsEnabled && this.siteSettings.ai_embeddings_enabled,
+      canTagTopics: this.currentUser.can_tag_topics,
+      maxTitleLength: this.siteSettings.max_topic_title_length,
+    });
+  }
+
   <template>
     <div
       class={{dConcatClass
@@ -428,9 +529,18 @@ export default class AiSearchDiscoveries extends Component {
         {{else if this.discobotDiscoveries.discoveryTimedOut}}
           {{i18n "discourse_ai.discobot_discoveries.timed_out"}}
         {{else if this.noAnswer}}
-          <p class="ai-search-discoveries__no-answer">
-            {{i18n "discourse_ai.discobot_discoveries.no_answer"}}
-          </p>
+          <div class="ai-search-discoveries__no-answer">
+            <p class="ai-search-discoveries__no-answer-message">
+              {{i18n "discourse_ai.discobot_discoveries.no_answer"}}
+            </p>
+            {{#if this.currentUser.can_create_topic}}
+              <DButton
+                @label="discourse_ai.discobot_discoveries.create_topic"
+                @action={{this.createTopic}}
+                class="btn-primary btn-small ai-search-discoveries__create-topic"
+              />
+            {{/if}}
+          </div>
         {{else if this.showSummary}}
           {{! eslint-disable ember/template-no-invalid-interactive }}
           <article

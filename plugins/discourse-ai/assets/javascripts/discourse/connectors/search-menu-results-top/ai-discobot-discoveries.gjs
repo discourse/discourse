@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
+import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
 
@@ -61,6 +62,7 @@ export default class AiDiscobotDiscoveries extends Component {
           "ai-discobot-discoveries"
           (if this.isGenerating "is-generating")
           (if this.discobotDiscoveries.sources.length "has-sources")
+          (if (eq this.discobotDiscoveries.answerable false) "has-no-answer")
         }}
       >
         <AiSearchDiscoveries

@@ -6,6 +6,7 @@ import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { i18n } from "discourse-i18n";
 import AiSearchDiscoveries from "discourse/plugins/discourse-ai/discourse/components/ai-search-discoveries";
 
 module("Integration | Component | AiSearchDiscoveries", function (hooks) {
@@ -702,6 +703,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
   });
 
   test("shows a useful no-answer state after completion", async function (assert) {
+    this.currentUser.can_create_topic = true;
     this.owner.register(
       "service:discobot-discoveries",
       class extends Service {
@@ -726,11 +728,115 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       </template>
     );
 
-    assert.dom(".ai-search-discoveries__title").hasText("Discoveries");
     assert
-      .dom(".ai-search-discoveries__no-answer")
-      .hasText(
-        "Discoveries couldn’t find enough useful discussion to answer this."
-      );
+      .dom(".ai-search-discoveries__title")
+      .hasText(i18n("discourse_ai.discobot_discoveries.main_title"));
+    assert
+      .dom(".ai-search-discoveries__no-answer-message")
+      .hasText(i18n("discourse_ai.discobot_discoveries.no_answer"));
+    assert
+      .dom(".ai-search-discoveries__create-topic")
+      .hasText(i18n("discourse_ai.discobot_discoveries.create_topic"))
+      .hasClass("btn-primary", "Create topic is the primary next action");
+  });
+
+  test("uses enabled AI helpers to prepare the new topic", async function (assert) {
+    const composerModel = {
+      title: "",
+      categoryId: 4,
+      tags: [],
+      privateMessage: false,
+      set(name, value) {
+        this[name] = value;
+      },
+    };
+    let openedTitle;
+    let tagRequest;
+
+    this.currentUser.can_create_topic = true;
+    this.currentUser.can_use_assistant = true;
+    this.currentUser.can_tag_topics = true;
+    this.siteSettings.discourse_ai_enabled = true;
+    this.siteSettings.ai_helper_enabled = true;
+    this.siteSettings.ai_helper_enabled_features = ["suggestions"];
+    this.siteSettings.ai_helper_title_suggestions_agent = "-23";
+    this.siteSettings.ai_embeddings_enabled = true;
+
+    this.owner.register(
+      "service:composer",
+      class extends Service {
+        model = composerModel;
+
+        async openNewTopic({ title }) {
+          openedTitle = title;
+          this.model.title = title;
+        }
+      }
+    );
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        answerable = false;
+        streamedText = "";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    pretender.post("/discourse-ai/ai-helper/suggest_title", () => [
+      200,
+      { "Content-Type": "application/json" },
+      { suggestions: ["How do I catch a Pokémon?"] },
+    ]);
+    pretender.post("/discourse-ai/ai-helper/suggest_category", () => [
+      200,
+      { "Content-Type": "application/json" },
+      { assistant: [{ id: 125, name: "Pokemon" }] },
+    ]);
+    pretender.post("/discourse-ai/ai-helper/suggest_tags", (request) => {
+      tagRequest = new URLSearchParams(request.requestBody);
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        { assistant: [{ id: 1, name: "games" }] },
+      ];
+    });
+
+    await render(
+      <template>
+        <AiSearchDiscoveries
+          @searchTerm="how do i catch a pokemon"
+          @closeSearchMenu={{this.closeSearchMenu}}
+        />
+      </template>
+    );
+    await click(".ai-search-discoveries__create-topic");
+
+    assert.true(this.closeSearchMenuCalled, "the search menu closes");
+    assert.strictEqual(
+      openedTitle,
+      "how do i catch a pokemon",
+      "the original question opens the composer immediately"
+    );
+    assert.strictEqual(
+      composerModel.title,
+      "How do I catch a Pokémon?",
+      "the title helper can improve the title"
+    );
+    assert.strictEqual(
+      composerModel.categoryId,
+      125,
+      "the category helper can choose a category"
+    );
+    assert.deepEqual(composerModel.tags, ["games"], "the tag helper adds tags");
+    assert.strictEqual(
+      tagRequest.get("category_id"),
+      "125",
+      "tags are suggested for the selected category"
+    );
   });
 });

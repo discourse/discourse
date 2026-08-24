@@ -76,6 +76,7 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
           <li>Search in all topics and posts</li>
         </ul>
         <div class="search-result-topic">Indexed result</div>
+        <div class="no-results">No results found</div>
       </template>
     );
 
@@ -106,6 +107,9 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
       .isVisible(
         "the indexed-search action returns when Discoveries cannot answer"
       );
+    assert
+      .dom(".no-results")
+      .isNotVisible("the redundant native no-results message stays hidden");
 
     this.discobotDiscoveries.sources = [
       { title: "A selected source", url: "/t/source/1" },

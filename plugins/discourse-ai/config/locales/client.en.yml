@@ -1640,7 +1640,8 @@ en:
           submit: "Ask"
         timed_out: "Discoveries took too long to complete this search. Try again or use Search."
         request_failed: "Discoveries could not start this search. Try again or use Search."
-        no_answer: "Discoveries couldn’t find enough useful discussion to answer this."
+        no_answer: "We couldn’t find enough useful discussion to answer this. Ask the community instead."
+        create_topic: "Create topic"
         answer_ready: "Discoveries answer ready."
         user_setting: "Enable AI search discoveries"
         mode:

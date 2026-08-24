@@ -9,6 +9,10 @@
   }
 }
 
+.ai-discobot-discoveries.has-no-answer ~ .no-results {
+  display: none;
+}
+
 .ai-search-discoveries {
   color: var(--token-color-text-default);
 
@@ -87,8 +91,15 @@
     flex: none;
   }
 
-  &__error,
   &__no-answer {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  &__error,
+  &__no-answer-message {
     margin: 0;
     color: var(--token-color-text-subtle);
   }
