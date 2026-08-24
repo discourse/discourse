@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+pid_file = ARGV[2]
+require_relative "../lib/discourse_vips/configuration"
+at_exit { DiscourseVips.remove_owned_pid_file(pid_file) }
+
+discourse_root = File.expand_path("..", __dir__)
+socket_path, parent_pid, _pid_file, gemfile_path = ARGV
+ENV["BUNDLE_GEMFILE"] = gemfile_path || File.join(discourse_root, "Gemfile")
+
+require "rubygems"
+require "bundler/setup"
+
+$LOAD_PATH.unshift(File.join(discourse_root, "lib"))
+require "discourse_vips/broker"
+
+Process.setproctitle("discourse discourse_vips")
+DiscourseVips::Broker.new(
+  socket_path:,
+  parent_pid: Integer(parent_pid),
+  pid_file:,
+).run

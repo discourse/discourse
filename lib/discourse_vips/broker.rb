@@ -5,6 +5,8 @@ require "json"
 require "socket"
 require "tmpdir"
 
+require_relative "../freedom_patches/landlock_capture_fork"
+require_relative "configuration"
 require_relative "operations"
 
 module DiscourseVips
@@ -21,9 +23,16 @@ module DiscourseVips
     }.freeze
     private_constant :MAX_OUTPUT_BYTES, :MAX_REQUEST_BYTES, :REQUEST_TIMEOUT_SECONDS, :OPERATIONS
 
-    def initialize(socket_path: DiscourseVips.socket_path, parent_pid: nil)
+    def initialize(
+      socket_path: DiscourseVips.socket_path,
+      parent_pid: nil,
+      pid_file: nil,
+      allow_unsupported: ALLOW_UNSUPPORTED
+    )
       @socket_path = socket_path
       @parent_pid = parent_pid
+      @pid_file = pid_file
+      @allow_unsupported = allow_unsupported
       @children = []
       @stopping = false
     end
@@ -50,12 +59,13 @@ module DiscourseVips
       @server&.close
       wait_for_children
       remove_socket
+      DiscourseVips.remove_owned_pid_file(@pid_file)
     end
 
     private
 
     def trap_signals
-      %w[INT TERM].each do |signal|
+      %w[HUP INT TERM].each do |signal|
         Signal.trap(signal) do
           @stopping = true
           @server.close
@@ -159,7 +169,7 @@ module DiscourseVips
             rlimits: rlimits,
             seccomp_deny_network: true,
             max_output_bytes: MAX_OUTPUT_BYTES,
-            allow_unsupported: Rails.env.local?,
+            allow_unsupported: @allow_unsupported,
           ) do
             Process.setpriority(Process::PRIO_PROCESS, 0, 10)
             value = Operations.public_send(method_name, **arguments)
@@ -192,9 +202,10 @@ module DiscourseVips
           []
         end
 
-      Discourse::SafeExec.existing_paths(
-        [*Discourse::SafeExec.default_read_paths, DYNAMIC_LINKER_CACHE_PATH, *operation_paths],
-      )
+      [*DEFAULT_READ_PATHS, DYNAMIC_LINKER_CACHE_PATH, *operation_paths].filter do |path|
+          path.to_s != "" && File.exist?(path)
+        end
+        .uniq
     end
 
     def write_paths(operation, arguments)

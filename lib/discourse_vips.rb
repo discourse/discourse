@@ -5,29 +5,15 @@ require "json"
 require "socket"
 
 require_relative "freedom_patches/landlock_capture_fork"
+require_relative "discourse_vips/configuration"
 
 module DiscourseVips
-  VERSION = 1
-  DEFAULT_TIMEOUT_SECONDS = 5
   CLIENT_TIMEOUT_SECONDS = 7
   FONT_FAMILIES = {
     "/System/Library/Fonts/Helvetica.ttc" => "Helvetica",
     File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2") => "Noto Sans",
   }.freeze
-  FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
-  DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
-  RLIMITS = {
-    cpu_seconds: 5,
-    memory_bytes: 4 * 1024 * 1024 * 1024,
-    file_size_bytes: 10 * 1024 * 1024 * 1024,
-    open_files: 1024,
-  }.freeze
-  private_constant :DEFAULT_TIMEOUT_SECONDS,
-                   :CLIENT_TIMEOUT_SECONDS,
-                   :FONT_FAMILIES,
-                   :FONTCONFIG_READ_PATHS,
-                   :DYNAMIC_LINKER_CACHE_PATH,
-                   :RLIMITS
+  private_constant :CLIENT_TIMEOUT_SECONDS, :FONT_FAMILIES
 
   class Error < RuntimeError
   end
@@ -83,10 +69,6 @@ module DiscourseVips
         },
       )
       nil
-    end
-
-    def socket_path
-      ENV["DISCOURSE_VIPS_SOCKET_PATH"] || Rails.root.join("tmp/discourse-vips.sock").to_s
     end
 
     private

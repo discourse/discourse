@@ -2,6 +2,7 @@
 
 require "demon/base"
 require "discourse_vips"
+require "rbconfig"
 
 class Demon::DiscourseVips < Demon::Base
   START_TIMEOUT_SECONDS = 5
@@ -39,9 +40,7 @@ class Demon::DiscourseVips < Demon::Base
         ready_writer.close
         exit! 1 if ready_reader.read(1) != "1"
         ready_reader.close
-        Process.setproctitle("discourse #{self.class.prefix}")
-        establish_app
-        after_fork
+        exec_broker
       end
     ready_reader.close
     write_pid_file
@@ -51,31 +50,23 @@ class Demon::DiscourseVips < Demon::Base
     ready_writer&.close unless ready_writer&.closed?
   end
 
-  def after_fork
-    require "discourse_vips/broker"
-    ::DiscourseVips::Broker.new(parent_pid:).run
-  ensure
-    remove_owned_pid_file
-  end
-
   private
 
-  def establish_app
-    ObjectSpace
-      .each_object(IO)
-      .to_a
-      .each do |io|
-        next if io.closed? || io.fileno <= 2
-
-        io.close
-      rescue IOError
-      end
-
-    Signal.trap("HUP") { Process.kill("TERM", Process.pid) }
-  end
-
-  def remove_owned_pid_file
-    FileUtils.rm_f(pid_file) if File.read(pid_file).to_i == Process.pid
-  rescue Errno::ENOENT
+  def exec_broker
+    environment = { "BUNDLE_GEMFILE" => nil, "RUBYOPT" => nil }
+    entrypoint = File.join(@rails_root, "script", "discourse_vips_broker")
+    Process.exec(
+      environment,
+      RbConfig.ruby,
+      entrypoint,
+      ::DiscourseVips.socket_path,
+      parent_pid.to_s,
+      pid_file,
+      File.join(@rails_root, "Gemfile"),
+      close_others: true,
+    )
+  rescue StandardError
+    ::DiscourseVips.remove_owned_pid_file(pid_file)
+    raise
   end
 end
