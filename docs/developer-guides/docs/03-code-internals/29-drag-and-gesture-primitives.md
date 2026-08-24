@@ -431,10 +431,17 @@ It transfers nothing and has no targets.
 | `bodyClass`       | `string`                           | Class applied to `document.body` while dragging. |
 | `cancelCommits`   | `boolean`                          | Whether a cancel commits the last value.         |
 | `stopPropagation` | `boolean`                          | Whether to stop the pointer events propagating.  |
+| `preservePress`   | `boolean`                          | Keep descendants interactive through a press.    |
 | `touchAction`     | `TouchActionToken`                 | The `touch-action` to apply for the gesture.     |
 
 Always handle `onDragCancel`. A gesture interrupted by the browser otherwise
 leaves whatever `onDragStart` opened still open.
+
+A handle is the usual consumer, and the defaults suit it: the press is cancelled
+so it moves no focus, and this element takes the capture. A surface large enough
+to wrap the content the user is reaching for wants `preservePress`, which keeps
+the press, leaves the capture on the pressed node until the gesture moves, and
+refuses native drag-and-drop.
 
 # DResizeSeparator
 

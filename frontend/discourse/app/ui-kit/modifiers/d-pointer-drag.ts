@@ -125,6 +125,18 @@ interface DPointerDragSignature {
       stopPropagation?: boolean;
 
       /**
+       * Whether a press on a descendant keeps behaving like a press on that
+       * descendant. Defaults to `false`, which suits a handle: the press is
+       * cancelled, moves no focus, and this element takes the pointer capture.
+       *
+       * When set — for a surface wrapping interactive content — descendants keep
+       * focus, selection, `mousedown`, and a tap's `click`; a drag's `click` is
+       * still suppressed, and native drag-and-drop is refused while the gesture
+       * is live.
+       */
+      preservePress?: boolean;
+
+      /**
        * Whether a gesture that ends without the pointer being released on this
        * element — `pointercancel`, or the capture being taken away — commits via
        * `onDragEnd` instead of discarding via `onDragCancel`. Defaults to
@@ -177,7 +189,7 @@ export type DPointerDragArgs = DPointerDragSignature["Args"]["Named"];
  */
 const pointerOwners = new Map<
   number,
-  { element: HTMLElement; supersede: (event: PointerEvent) => void }
+  { captureTarget: Element; supersede: (event: PointerEvent) => void }
 >();
 
 /**
@@ -251,6 +263,8 @@ export function registerPointerDrag(
   // rather than re-read when it is time to remove it.
   let appliedClass: string | null = null;
   let bodyClassLease: ElementClassLease | null = null;
+  let capturedNode: Element = element;
+  let watchingDocumentLoss = false;
   // Set by the cleanup below. A consumer can destroy its own registration from
   // inside `onDragStart`, and the rest of that dispatch still runs.
   let tornDown = false;
@@ -278,14 +292,21 @@ export function registerPointerDrag(
     if (finishedPointer !== null) {
       // Only while the claim is still ours: a later claimant owns the entry from
       // the moment it supersedes us, and must not have it deleted underneath it.
-      if (pointerOwners.get(finishedPointer)?.supersede === onSuperseded) {
+      const owner = pointerOwners.get(finishedPointer);
+      const stillOurs = !owner || owner.supersede === onSuperseded;
+
+      if (owner && stillOurs) {
         pointerOwners.delete(finishedPointer);
       }
-      try {
-        element.releasePointerCapture(finishedPointer);
-      } catch {
-        // Already released if the element was removed mid-gesture.
+      if (stillOurs) {
+        try {
+          capturedNode.releasePointerCapture(finishedPointer);
+        } catch {
+          // Already released if the element was removed mid-gesture.
+        }
       }
+      capturedNode = element;
+      unwatchDocumentLoss();
     }
     if (classToRemove) {
       // Unguarded: `appliedClass` is only ever set to a token `classList.add`
@@ -293,6 +314,46 @@ export function registerPointerDrag(
       element.classList.remove(classToRemove);
     }
     finishedBodyClassLease?.release();
+  };
+
+  const watchDocumentLoss = () => {
+    if (!watchingDocumentLoss) {
+      document.addEventListener(
+        "lostpointercapture",
+        onLostPointerCapture,
+        true
+      );
+      watchingDocumentLoss = true;
+    }
+  };
+
+  const unwatchDocumentLoss = () => {
+    if (watchingDocumentLoss) {
+      document.removeEventListener(
+        "lostpointercapture",
+        onLostPointerCapture,
+        true
+      );
+      watchingDocumentLoss = false;
+    }
+  };
+
+  const transferCaptureToSurface = (event: PointerEvent) => {
+    if (capturedNode === element) {
+      return;
+    }
+    try {
+      element.setPointerCapture(event.pointerId);
+    } catch {
+      return;
+    }
+    capturedNode = element;
+    unwatchDocumentLoss();
+
+    const owner = pointerOwners.get(event.pointerId);
+    if (owner?.supersede === onSuperseded) {
+      owner.captureTarget = element;
+    }
   };
 
   /**
@@ -336,20 +397,26 @@ export function registerPointerDrag(
     if (event.button !== 0 || pointerId !== null) {
       return;
     }
+    const args = getArgsRef();
+    const initialCaptureTarget =
+      args.preservePress && event.target instanceof Element
+        ? event.target
+        : element;
+
     // Capture first, before telling anyone a gesture started. Capture is what
     // routes the rest of the gesture back to this element, so without it a
     // pointer leaving the element would never deliver its release and the
     // in-flight guard would then reject every later press. Abort rather than
     // begin a gesture that cannot finish.
     try {
-      element.setPointerCapture(event.pointerId);
+      initialCaptureTarget.setPointerCapture(event.pointerId);
     } catch {
       return;
     }
 
     const releaseCapture = () => {
       try {
-        element.releasePointerCapture(event.pointerId);
+        initialCaptureTarget.releasePointerCapture(event.pointerId);
       } catch {
         // Already gone if the element was detached in between.
       }
@@ -369,14 +436,13 @@ export function registerPointerDrag(
         return;
       }
       try {
-        prior.element.setPointerCapture(event.pointerId);
+        prior.captureTarget.setPointerCapture(event.pointerId);
       } catch {
         // The prior claimant's element is gone; nothing to hand back.
         releaseCapture();
       }
     };
 
-    const args = getArgsRef();
     // Before the dispatch below, which reports them.
     originX = event.clientX;
     originY = event.clientY;
@@ -400,6 +466,10 @@ export function registerPointerDrag(
     }
 
     pointerId = event.pointerId;
+    capturedNode = initialCaptureTarget;
+    if (initialCaptureTarget !== element) {
+      watchDocumentLoss();
+    }
     engaged = !(args.threshold > 0);
 
     // A press bubbles, so an ancestor registration starts its own gesture from
@@ -410,7 +480,10 @@ export function registerPointerDrag(
     // back through `hasPointerCapture`, which cannot tell a lost claim apart from
     // a pointer that was never real.
     const superseded = pointerOwners.get(event.pointerId);
-    pointerOwners.set(event.pointerId, { element, supersede: onSuperseded });
+    pointerOwners.set(event.pointerId, {
+      captureTarget: initialCaptureTarget,
+      supersede: onSuperseded,
+    });
 
     if (args.draggingClass) {
       try {
@@ -433,7 +506,9 @@ export function registerPointerDrag(
 
     // Only an accepted press is suppressed. A secondary button, a press during
     // an active gesture, or a vetoed one must reach whatever else was listening.
-    event.preventDefault();
+    if (!args.preservePress) {
+      event.preventDefault();
+    }
     if (args.stopPropagation) {
       event.stopPropagation();
     }
@@ -456,6 +531,9 @@ export function registerPointerDrag(
         return;
       }
       engaged = true;
+    }
+    if (!moved) {
+      transferCaptureToSurface(event);
     }
     // Latched before the dispatch, so this report already counts as movement.
     moved = true;
@@ -484,8 +562,23 @@ export function registerPointerDrag(
     cancelGesture(getArgsRef(), event);
   };
 
+  /**
+   * Refuses native drag-and-drop while a gesture is live, which the cancelled
+   * press would otherwise have done.
+   */
+  const onNativeDragStart = (event: DragEvent) => {
+    if (pointerId !== null) {
+      event.preventDefault();
+    }
+  };
+
   const onLostPointerCapture = (event: PointerEvent) => {
     if (pointerId === null || event.pointerId !== pointerId) {
+      return;
+    }
+    const activeCaptureWasLost =
+      event.target === capturedNode || event.target === document;
+    if (!activeCaptureWasLost) {
       return;
     }
     // Once capture is gone, a pointer no longer over this element delivers its
@@ -502,6 +595,7 @@ export function registerPointerDrag(
   // changes orientation between gestures is not stuck with the first value.
   syncTouchAction(element, getArgsRef().touchAction);
 
+  element.addEventListener("dragstart", onNativeDragStart);
   element.addEventListener("pointerdown", onPointerDown);
   element.addEventListener("pointermove", onPointerMove);
   element.addEventListener("pointerup", onPointerUp);
@@ -511,6 +605,8 @@ export function registerPointerDrag(
   return () => {
     tornDown = true;
     finish();
+    unwatchDocumentLoss();
+    element.removeEventListener("dragstart", onNativeDragStart);
     element.removeEventListener("pointerdown", onPointerDown);
     element.removeEventListener("pointermove", onPointerMove);
     element.removeEventListener("pointerup", onPointerUp);

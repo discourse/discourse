@@ -426,6 +426,297 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         "a secondary-button press and a vetoed one both reach document-level listeners"
       );
     });
+
+    test("preservePress leaves an accepted press uncancelled and functional", async function (assert) {
+      const seen = [];
+      const recordPhase = (phase) => () => seen.push(phase);
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag
+              onDragStart=(recordPhase "start")
+              onDrag=(recordPhase "drag")
+              onDragEnd=(recordPhase "end")
+              preservePress=true
+            }}
+          ></div>
+        </template>
+      );
+      stubPointerCapture(".dpd-target");
+
+      await triggerEvent(".dpd-target", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 10,
+        clientY: 10,
+      });
+      await triggerEvent(".dpd-target", "pointermove", {
+        pointerId: 1,
+        clientX: 40,
+        clientY: 10,
+      });
+      await triggerEvent(".dpd-target", "pointerup", {
+        pointerId: 1,
+        clientX: 40,
+        clientY: 10,
+      });
+
+      assert.deepEqual(
+        prevented,
+        [false],
+        "a surface holding its own interactive content keeps the compatibility mousedown"
+      );
+      assert.deepEqual(
+        seen,
+        ["start", "drag", "end"],
+        "and the uncancelled press still drives the whole gesture"
+      );
+    });
+  });
+
+  module("preservePress", function () {
+    test("the element takes the capture by default", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-surface" {{dPointerDrag}}>
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      const { ownerOf } = stubSharedPointerCapture([
+        ".dpd-surface",
+        ".dpd-child",
+      ]);
+
+      await triggerEvent(".dpd-child", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.dom(ownerOf(1)).hasClass("dpd-surface");
+    });
+
+    test("preserves a pressed descendant until dragging begins", async function (assert) {
+      const seen = [];
+      const onDrag = () => seen.push("drag");
+
+      await render(
+        <template>
+          <div
+            class="dpd-surface"
+            {{dPointerDrag onDrag=onDrag preservePress=true}}
+          >
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      const { ownerOf } = stubSharedPointerCapture([
+        ".dpd-surface",
+        ".dpd-child",
+      ]);
+
+      await triggerEvent(".dpd-child", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+      });
+
+      assert
+        .dom(ownerOf(1))
+        .hasClass(
+          "dpd-child",
+          "so mouseup, and the click computed from it, stay on the control that was pressed"
+        );
+
+      await triggerEvent(".dpd-child", "pointermove", {
+        pointerId: 1,
+        clientX: 30,
+      });
+
+      assert.true(
+        seen.length > 0,
+        "and the gesture still reports, because a retargeted event bubbles to the element holding the listeners"
+      );
+    });
+
+    test("the capture comes back once the gesture moves", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-surface" {{dPointerDrag preservePress=true}}>
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      const { ownerOf } = stubSharedPointerCapture([
+        ".dpd-surface",
+        ".dpd-child",
+      ]);
+
+      await triggerEvent(".dpd-child", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+      });
+      await triggerEvent(".dpd-child", "pointermove", {
+        pointerId: 1,
+        clientX: 40,
+      });
+
+      assert
+        .dom(ownerOf(1))
+        .hasClass(
+          "dpd-surface",
+          "a drag hands the capture back to the element"
+        );
+    });
+
+    test("handing the capture back does not end the gesture", async function (assert) {
+      const seen = [];
+      const onDrag = () => seen.push("drag");
+      const onDragCancel = () => seen.push("cancel");
+
+      await render(
+        <template>
+          <div
+            class="dpd-surface"
+            {{dPointerDrag
+              onDrag=onDrag
+              onDragCancel=onDragCancel
+              preservePress=true
+            }}
+          >
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      stubSharedPointerCapture([".dpd-surface", ".dpd-child"]);
+
+      await triggerEvent(".dpd-child", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+      });
+      await triggerEvent(".dpd-child", "pointermove", {
+        pointerId: 1,
+        clientX: 40,
+      });
+      await triggerEvent(".dpd-child", "lostpointercapture", { pointerId: 1 });
+      await triggerEvent(".dpd-child", "pointermove", {
+        pointerId: 1,
+        clientX: 80,
+      });
+
+      assert.deepEqual(
+        seen,
+        ["drag", "drag"],
+        "the gesture still holds the pointer, so the handover is not an ending"
+      );
+    });
+
+    test("a captured descendant's loss reaches the gesture from the document", async function (assert) {
+      const seen = [];
+      const onDragStart = () => seen.push("start");
+      const onDragCancel = () => seen.push("cancel");
+
+      await render(
+        <template>
+          <div
+            class="dpd-surface"
+            {{dPointerDrag
+              onDragStart=onDragStart
+              onDragCancel=onDragCancel
+              preservePress=true
+            }}
+          >
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      stubSharedPointerCapture([".dpd-surface", ".dpd-child"]);
+
+      await triggerEvent(".dpd-child", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+      const lost = new PointerEvent("lostpointercapture", { pointerId: 1 });
+      document.dispatchEvent(lost);
+      await settled();
+
+      await triggerEvent(".dpd-child", "pointerdown", {
+        button: 0,
+        pointerId: 2,
+      });
+
+      assert.deepEqual(
+        seen,
+        ["start", "cancel", "start"],
+        "the gesture ends, rather than latching and rejecting every later press"
+      );
+    });
+
+    test("a superseded registration leaves the winner's capture alone", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-surface" {{dPointerDrag preservePress=true}}>
+            <button type="button" class="dpd-child" {{dPointerDrag}}></button>
+          </div>
+        </template>
+      );
+      const { ownerOf } = stubSharedPointerCapture([
+        ".dpd-surface",
+        ".dpd-child",
+      ]);
+
+      await triggerEvent(".dpd-child", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert
+        .dom(ownerOf(1))
+        .hasClass(
+          "dpd-child",
+          "the claim that won still holds it, rather than being released by the one it displaced"
+        );
+    });
+
+    test("a live gesture refuses native drag-and-drop", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-surface" {{dPointerDrag preservePress=true}}>
+            <a href="#test" class="dpd-link">link</a>
+          </div>
+        </template>
+      );
+      stubPointerCapture(".dpd-surface");
+
+      const beforePress = new DragEvent("dragstart", {
+        bubbles: true,
+        cancelable: true,
+      });
+      find(".dpd-link").dispatchEvent(beforePress);
+
+      await triggerEvent(".dpd-surface", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+      const duringGesture = new DragEvent("dragstart", {
+        bubbles: true,
+        cancelable: true,
+      });
+      find(".dpd-link").dispatchEvent(duringGesture);
+
+      assert.false(
+        beforePress.defaultPrevented,
+        "a drag with no gesture in flight is left alone"
+      );
+      assert.true(
+        duringGesture.defaultPrevented,
+        "a drag begun during the gesture is refused, so the pointer is not cancelled under it"
+      );
+    });
   });
 
   module("configurable pointer lifecycle", function () {
@@ -907,15 +1198,9 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         "teardown still removes the pointer-drag attribute"
       );
       assert.deepEqual(
-        events.removed,
-        [
-          "pointerdown",
-          "pointermove",
-          "pointerup",
-          "pointercancel",
-          "lostpointercapture",
-        ],
-        "teardown still removes every pointer listener"
+        [...events.removed].sort(),
+        [...events.added].sort(),
+        "teardown still removes every listener it added"
       );
     });
 

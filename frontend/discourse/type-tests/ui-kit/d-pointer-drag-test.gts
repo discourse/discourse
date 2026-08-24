@@ -21,6 +21,7 @@ const Test = <template>
       bodyClass="d-resizing-ew"
       threshold=4
       stopPropagation=true
+      preservePress=true
       cancelCommits=true
       touchAction="pan-y"
     }}
