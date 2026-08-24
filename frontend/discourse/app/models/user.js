@@ -201,6 +201,9 @@ export default class User extends RestModel.extend(Evented) {
     const userJson = PreloadStore.get("currentUser");
     if (userJson) {
       userJson.isCurrent = true;
+
+      // Calling user.groups is deprecated, see discourse.user.groups,
+      // it is replaced by visibleGroups
       userJson.visibleGroups = userJson.groups;
       delete userJson.groups;
 
@@ -1588,6 +1591,11 @@ User.reopenClass({
   create(args) {
     args = args || {};
     this.deleteStatusTrackingFields(args);
+
+    // Calling user.groups is deprecated, see discourse.user.groups,
+    // it is replaced by visibleGroups
+    args.visibleGroups = args.groups;
+    delete args.groups;
 
     return this._super(args);
   },
