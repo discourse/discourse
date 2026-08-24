@@ -33,7 +33,6 @@ class Demon::DiscourseVips < Demon::Base
   end
 
   def run
-    Discourse.before_fork
     ready_reader, ready_writer = IO.pipe
     @pid =
       fork do
