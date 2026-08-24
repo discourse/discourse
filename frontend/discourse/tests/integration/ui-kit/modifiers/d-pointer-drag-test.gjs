@@ -477,6 +477,53 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
     });
 
+    test("a drag swallows the click that follows it; a tap's click passes", async function (assert) {
+      const clicks = [];
+
+      await render(
+        <template>
+          <div class="dpd-surface" {{dPointerDrag preservePress=true}}>
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      stubSharedPointerCapture([".dpd-surface", ".dpd-child"]);
+      find(".dpd-surface").addEventListener("click", () =>
+        clicks.push("click")
+      );
+      const child = find(".dpd-child");
+
+      const dispatch = (type, options = {}) =>
+        child.dispatchEvent(
+          new PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            button: 0,
+            pointerId: 1,
+            ...options,
+          })
+        );
+      const clickChild = () =>
+        child.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+      // the click follows the release within one task; settling in between
+      // would flush the swallow away, as the browser's next task does
+      dispatch("pointerdown", { clientX: 0 });
+      dispatch("pointermove", { clientX: 40 });
+      dispatch("pointerup", { clientX: 40 });
+      clickChild();
+      await settled();
+
+      assert.deepEqual(clicks, [], "the drag's click never lands");
+
+      dispatch("pointerdown", { clientX: 0 });
+      dispatch("pointerup", { clientX: 0 });
+      clickChild();
+      await settled();
+
+      assert.deepEqual(clicks, ["click"], "a tap's click still does");
+    });
+
     test("a press on the element itself takes the handle path despite preservePress", async function (assert) {
       await render(
         <template>

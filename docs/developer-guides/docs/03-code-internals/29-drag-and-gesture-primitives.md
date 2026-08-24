@@ -441,7 +441,8 @@ A handle is the usual consumer, and the defaults suit it: the press is cancelled
 so it moves no focus, and this element takes the capture. A surface large enough
 to wrap the content the user is reaching for wants `preservePress`, which keeps
 the press, leaves the capture on the pressed node until the gesture moves, and
-refuses native drag-and-drop.
+refuses native drag-and-drop. On either path, the click that would trail a
+completed drag is swallowed — a tap clicks, a drag never does.
 
 # DResizeSeparator
 

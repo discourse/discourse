@@ -126,10 +126,9 @@ interface DPointerDragSignature {
 
       /**
        * Whether a press on a descendant keeps behaving like a press on that
-       * descendant: it keeps focus, selection, `mousedown`, and a tap's `click`,
-       * while a drag's `click` and native drag-and-drop are still suppressed.
+       * descendant: it keeps focus, selection, `mousedown`, and a tap's `click`.
        * Defaults to `false`, which suits a handle; presses on the element itself
-       * always take the handle path.
+       * always take the handle path, and a drag never produces a click either way.
        */
       preservePress?: boolean;
 
@@ -543,9 +542,30 @@ export function registerPointerDrag(
     args.onDrag?.(event, dragInfo(event));
   };
 
+  // Cancelling the press does not suppress the click; capture only retargets
+  // it at this element. At the target node listeners run in registration
+  // order whatever their phase, so the swallow has to sit above it.
+  const swallowClick = (event: MouseEvent) => {
+    if (event.target instanceof Node && element.contains(event.target)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
+
+  const suppressDragClick = () => {
+    window.addEventListener("click", swallowClick, true);
+    // the click, if any, arrives in the same task as the release
+    setTimeout(() => {
+      window.removeEventListener("click", swallowClick, true);
+    }, 0);
+  };
+
   const onPointerUp = (event: PointerEvent) => {
     if (pointerId === null || event.pointerId !== pointerId) {
       return;
+    }
+    if (moved) {
+      suppressDragClick();
     }
     // Commit before releasing capture, so the caller sees a consistent gesture
     // state while it reads the final value. Finalised in a `finally` so a
@@ -565,10 +585,6 @@ export function registerPointerDrag(
     cancelGesture(getArgsRef(), event);
   };
 
-  /**
-   * Refuses native drag-and-drop while a gesture is live, which the cancelled
-   * press would otherwise have done.
-   */
   const onNativeDragStart = (event: DragEvent) => {
     if (pointerId !== null && pressPreserved) {
       event.preventDefault();
@@ -598,7 +614,7 @@ export function registerPointerDrag(
   // changes orientation between gestures is not stuck with the first value.
   syncTouchAction(element, getArgsRef().touchAction);
 
-  element.addEventListener("dragstart", onNativeDragStart);
+  element.addEventListener("dragstart", onNativeDragStart, true);
   element.addEventListener("pointerdown", onPointerDown);
   element.addEventListener("pointermove", onPointerMove);
   element.addEventListener("pointerup", onPointerUp);
@@ -609,7 +625,7 @@ export function registerPointerDrag(
     tornDown = true;
     finish();
     unwatchDocumentLoss();
-    element.removeEventListener("dragstart", onNativeDragStart);
+    element.removeEventListener("dragstart", onNativeDragStart, true);
     element.removeEventListener("pointerdown", onPointerDown);
     element.removeEventListener("pointermove", onPointerMove);
     element.removeEventListener("pointerup", onPointerUp);
