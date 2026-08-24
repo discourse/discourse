@@ -13,6 +13,9 @@ module DiscourseVips
     DEFAULT_TIMEOUT_SECONDS = 5
     private_constant :DEFAULT_TIMEOUT_SECONDS
 
+    SVG_TO_PNG_TIMEOUT_SECONDS = 20
+    private_constant :SVG_TO_PNG_TIMEOUT_SECONDS
+
     DEFAULT_READ_PATHS = %w[/bin /lib /lib64 /usr].freeze
     private_constant :DEFAULT_READ_PATHS
 
@@ -53,9 +56,8 @@ module DiscourseVips
     }.freeze
     private_constant :OPERATIONS
 
-    def initialize(socket_path:, parent_pid: nil, allow_unsupported: ALLOW_UNSUPPORTED)
+    def initialize(socket_path:, allow_unsupported: ALLOW_UNSUPPORTED)
       @socket_path = socket_path
-      @parent_pid = parent_pid
       @allow_unsupported = allow_unsupported
       @children = []
       @stopping = false
@@ -71,7 +73,7 @@ module DiscourseVips
       File.chmod(0o600, @socket_path)
       trap_signals
 
-      until @stopping || !parent_alive?
+      until @stopping
         reap_children
         next if !IO.select([@server], nil, nil, 1)
 
@@ -100,15 +102,6 @@ module DiscourseVips
       socket_stat = File.stat(@socket_path)
       FileUtils.rm_f(@socket_path) if [socket_stat.dev, socket_stat.ino] == @socket_identity
     rescue Errno::ENOENT
-    end
-
-    def parent_alive?
-      return true if !@parent_pid
-
-      Process.kill(0, @parent_pid)
-      true
-    rescue Errno::ESRCH
-      false
     end
 
     def reap_children
@@ -186,7 +179,8 @@ module DiscourseVips
             read: read_paths(operation, arguments),
             write: [scratch, *write_paths(operation, arguments)],
             execute: [],
-            timeout: DEFAULT_TIMEOUT_SECONDS,
+            timeout:
+              operation == "svg_to_png" ? SVG_TO_PNG_TIMEOUT_SECONDS : DEFAULT_TIMEOUT_SECONDS,
             env: environment(scratch),
             unsetenv_others: true,
             rlimits: rlimits,
