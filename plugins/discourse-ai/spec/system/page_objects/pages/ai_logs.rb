@@ -34,6 +34,10 @@ module PageObjects
         find(".d-filter-controls__dropdown--#{key}").value
       end
 
+      def has_filter_value?(key, value)
+        find(".d-filter-controls__dropdown--#{key}").value == value
+      end
+
       def has_expanded_filter_dropdowns?
         page.has_css?(".d-filter-controls__dropdown", count: 4)
       end
