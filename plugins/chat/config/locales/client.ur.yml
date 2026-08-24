@@ -259,6 +259,8 @@ ur:
       react: "ایموجی کے ساتھ ردِ عمل دیں"
       reply: "جواب"
       edit: "ترمیم کریں"
+      copy_link: "رابطہ کاپی کریں"
+      copy_text: "متن کاپی کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"
       bookmark_message: "بُک مارک"
       bookmark_message_edit: "بک مارک میں ترمیم کریں"
@@ -351,6 +353,7 @@ ur:
       direct_message_creator:
         title: نیا پیغام
         prefix: "کے لئے:"
+        no_results: کوئی نتائج نہیں
       channel:
         no_memberships_found: کوئی اراکین نہیں ملے
         memberships_count:
@@ -422,6 +425,8 @@ ur:
           confirm_export: "یہ تمام چینلز کے تمام پیغامات برآمد کرتا ہے اور نتیجہ آپ کو ذاتی پیغام میں بھیجتا ہے۔ کیا آپ واقعی برآمد کرنا چاہتے ہیں؟"
       search:
         short_title: تلاش کریں
+        title: گفتگو میں تلاش کریں
+        no_results: "کوئی نتائج نہیں ملے"
         sort:
           relevance: "مطابقت"
           latest: "تازہ ترین"
@@ -465,6 +470,7 @@ ur:
         activities: "سرگرمیاں"
         flags: "فلَیگز"
         symbols: "علامات"
+        no_results: "کوئی نتائج نہیں"
       thread:
         title: "عنوان"
         replies:

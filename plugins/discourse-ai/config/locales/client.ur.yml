@@ -315,6 +315,7 @@ ur:
           close: "خلاصہ پینل بند کریں"
       discobot_discoveries:
         regular_results: "موضوعات"
+        continue_convo: "گفتگو جاری رکھیں..."
         collapse: "بند کریں"
         tooltip:
           header: "AI سے چلنے والی تلاش"
