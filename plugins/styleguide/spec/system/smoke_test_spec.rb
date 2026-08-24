@@ -145,14 +145,14 @@ RSpec.describe "Styleguide Smoke Test" do
       "sources" => ".styleguide-drag-and-drop__grip",
       "targets" => ".styleguide-drag-and-drop__zone.--inner",
       "outside" => ".styleguide-drag-and-drop__zone",
-      "reacting" => ".styleguide-drag-and-drop__panel",
+      "reacting" => %w[.styleguide-drag-and-drop__panel .styleguide-drag-and-drop__folder],
       "resize" => ".styleguide-drag-and-drop__resizable",
       "gestures" => ".styleguide-drag-and-drop__knob",
-    }.each do |group, selector|
+    }.each do |group, selectors|
       visit "/styleguide/molecules/drag-and-drop?group=#{group}"
 
       expect(page).to have_css("[data-test-styleguide-group='#{group}']")
-      expect(page).to have_css(selector)
+      Array(selectors).each { |selector| expect(page).to have_css(selector) }
     end
   end
 
@@ -161,6 +161,25 @@ RSpec.describe "Styleguide Smoke Test" do
 
     # The separator and the handles are components; the raw edge is a modifier.
     expect(page).to have_css(".styleguide-example__kind", count: 3)
+  end
+
+  it "renders the dwell example collapsed and open" do
+    visit "/styleguide/molecules/drag-and-drop?group=reacting"
+
+    expect(page).to have_css(".styleguide-drag-and-drop__folder")
+    expect(page).to have_no_css(".styleguide-drag-and-drop__folder.--open")
+    if ENV["TAKE_SCREENSHOTS"] == "1"
+      page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    end
+    screenshot_marker(label: "styleguide-drag-and-drop-dwell")
+
+    find(".styleguide-drag-and-drop__folder-toggle").click
+    expect(page).to have_css(".styleguide-drag-and-drop__folder.--open")
+    expect(page).to have_css(".styleguide-drag-and-drop__folder-row", count: 3)
+    if ENV["TAKE_SCREENSHOTS"] == "1"
+      page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    end
+    screenshot_marker(label: "styleguide-drag-and-drop-dwell-open")
   end
 
   it "renders the index page correctly on a site with no default color schemes" do

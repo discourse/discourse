@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -31,6 +31,7 @@ import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log-row";
 import { newLogsPollIntervalMs } from "../lib/ai-logs-poll-interval";
+import AiLogFeatureFilter from "./ai-log-feature-filter";
 import AiLogDetailModal from "./modal/ai-log-detail-modal";
 import AiLogRetentionModal from "./modal/ai-log-retention-modal";
 
@@ -191,18 +192,11 @@ export default class AiLogs extends Component {
 
   @cached
   get featureOptions() {
-    const features = [...this.features];
-    if (this.selectedFeature && !features.includes(this.selectedFeature)) {
-      features.push(this.selectedFeature);
+    if (this.selectedFeature && !this.features.includes(this.selectedFeature)) {
+      return [...this.features, this.selectedFeature];
     }
 
-    return [
-      {
-        value: ALL_FILTER_VALUE,
-        label: i18n("discourse_ai.logs.all_features"),
-      },
-      ...features.map((feature) => ({ value: feature, label: feature })),
-    ];
+    return this.features;
   }
 
   @cached
@@ -210,7 +204,6 @@ export default class AiLogs extends Component {
     return {
       outcome: this.outcomeOptions,
       model: this.modelOptions,
-      feature: this.featureOptions,
     };
   }
 
@@ -219,7 +212,6 @@ export default class AiLogs extends Component {
     return {
       outcome: this.selectedOutcome || ALL_FILTER_VALUE,
       model: this.selectedModel || ALL_FILTER_VALUE,
-      feature: this.selectedFeature || ALL_FILTER_VALUE,
     };
   }
 
@@ -228,7 +220,6 @@ export default class AiLogs extends Component {
     return {
       outcome: ALL_FILTER_VALUE,
       model: ALL_FILTER_VALUE,
-      feature: ALL_FILTER_VALUE,
     };
   }
 
@@ -244,9 +235,15 @@ export default class AiLogs extends Component {
     });
   }
 
-  get hasActiveDropdownFilters() {
+  get additionalFiltersActive() {
     return Boolean(
-      this.selectedOutcome || this.selectedModel || this.selectedFeature
+      this.selectedFeature || this.hasRetries || this.unattributed
+    );
+  }
+
+  get hasActiveDrawerFilters() {
+    return Boolean(
+      this.selectedOutcome || this.selectedModel || this.additionalFiltersActive
     );
   }
 
@@ -556,10 +553,14 @@ export default class AiLogs extends Component {
       this.selectedOutcome = selectedValue;
     } else if (key === "model") {
       this.selectedModel = selectedValue;
-    } else if (key === "feature") {
-      this.selectedFeature = selectedValue;
     }
 
+    this.refresh();
+  }
+
+  @action
+  changeFeature(value) {
+    this.selectedFeature = value || undefined;
     this.refresh();
   }
 
@@ -722,16 +723,14 @@ export default class AiLogs extends Component {
 
       <div
         class="ai-logs__filters
-          {{if
-            this.hasActiveDropdownFilters
-            'ai-logs__filters--active-dropdowns'
-          }}"
+          {{if this.hasActiveDrawerFilters 'ai-logs__filters--drawer-active'}}"
       >
         <DFilterControls
           @array={{this.logs}}
           @dropdownOptions={{this.dropdownOptions}}
           @dropdownValue={{this.dropdownValues}}
           @defaultDropdownValue={{this.defaultDropdownValues}}
+          @additionalFiltersActive={{this.additionalFiltersActive}}
           @filterDropdownsExpanded={{this.rememberedDrawerExpanded}}
           @onFilterDropdownsToggle={{this.persistDrawerState}}
           @inputPlaceholder={{i18n "discourse_ai.logs.search_placeholder"}}
@@ -743,42 +742,56 @@ export default class AiLogs extends Component {
           @onResetFilters={{this.clearFilters}}
         >
           <:aboveFilters>
-            <div class="ai-logs__time-filters">
-              <div class="ai-logs__periods">
-                {{#each this.periodOptions as |period|}}
-                  <DButton
-                    class={{if
-                      (eq this.selectedPeriod period.id)
-                      "btn-primary"
-                      "btn-default"
-                    }}
-                    @action={{fn this.selectPeriod period.id}}
-                    @ariaPressed={{eq this.selectedPeriod period.id}}
-                    @translatedLabel={{period.name}}
+            <div class="ai-logs__periods">
+              {{#each this.periodOptions as |period|}}
+                <DButton
+                  class={{if
+                    (eq this.selectedPeriod period.id)
+                    "btn-primary"
+                    "btn-default"
+                  }}
+                  @action={{fn this.selectPeriod period.id}}
+                  @ariaPressed={{eq this.selectedPeriod period.id}}
+                  @translatedLabel={{period.name}}
+                />
+              {{/each}}
+              {{#if (eq this.selectedPeriod "custom")}}
+                <div class="ai-logs__date-range">
+                  <DDateTimeInputRange
+                    @from={{this.startDate}}
+                    @to={{this.endDate}}
+                    @showFromTime={{false}}
+                    @showToTime={{false}}
+                    @onChange={{this.changeDateRange}}
                   />
-                {{/each}}
-                {{#if (eq this.selectedPeriod "custom")}}
-                  <div class="ai-logs__date-range">
-                    <DDateTimeInputRange
-                      @from={{this.startDate}}
-                      @to={{this.endDate}}
-                      @showFromTime={{false}}
-                      @showToTime={{false}}
-                      @onChange={{this.changeDateRange}}
-                    />
-                    <DButton
-                      class="btn-default"
-                      @action={{this.refresh}}
-                      @label="discourse_ai.logs.apply"
-                    />
-                  </div>
-                {{/if}}
-              </div>
-
+                  <DButton
+                    class="btn-default"
+                    @action={{this.refresh}}
+                    @label="discourse_ai.logs.apply"
+                  />
+                </div>
+              {{/if}}
             </div>
           </:aboveFilters>
 
-          <:actions>
+          <:additionalFilters>
+            <fieldset class="ai-logs__feature-filter">
+              <legend>{{i18n "discourse_ai.logs.feature"}}</legend>
+              <AiLogFeatureFilter
+                @valueProperty={{null}}
+                @nameProperty={{null}}
+                @value={{this.selectedFeature}}
+                @content={{this.featureOptions}}
+                @onChange={{this.changeFeature}}
+                @options={{hash
+                  translatedNone=(i18n "discourse_ai.logs.all_features")
+                  translatedFilterPlaceholder=(i18n
+                    "discourse_ai.logs.feature_placeholder"
+                  )
+                }}
+              />
+            </fieldset>
+
             <div class="ai-logs__specialized-filters">
               <DToggleSwitch
                 @label="discourse_ai.logs.has_retries"
@@ -792,7 +805,7 @@ export default class AiLogs extends Component {
                 {{on "click" this.toggleUnattributed}}
               />
             </div>
-          </:actions>
+          </:additionalFilters>
         </DFilterControls>
       </div>
 

@@ -73,24 +73,27 @@ RSpec.describe "AI logs admin page" do
     ai_logs_page.select_outcome(I18n.t("js.discourse_ai.logs.all_outcomes"))
     expect(ai_logs_page).to have_log(log)
 
-    configured_feature = DiscourseAi::Configuration::Feature.all.first.name
-    feature_select = find(".d-filter-controls__dropdown--feature")
-    expect(feature_select).to have_selector("option", text: configured_feature)
-    expect(feature_select).to have_selector("option", text: "system-test")
-    expect(feature_select).to have_selector("option", text: "other-feature")
     ai_logs_page.select_feature("other-feature")
     expect(ai_logs_page).to have_no_log(log)
 
-    day_period = I18n.t("js.discourse_ai.logs.periods.day")
-    click_button day_period
-    expect(page).to have_css('button[aria-pressed="true"]', text: day_period)
+    ai_logs_page.select_period(I18n.t("js.discourse_ai.logs.periods.day"))
+    expect(page).to have_current_path(/period=day/, url: true)
 
     # an ID search narrows within the active filters instead of bypassing them
     ai_logs_page.search(log.id)
     expect(ai_logs_page).to have_no_log(log)
-    expect(page).to have_css('button[aria-pressed="true"]', text: day_period)
+    expect(page).to have_current_path(/period=day/, url: true)
 
     ai_logs_page.select_feature(log.feature_name)
+    expect(ai_logs_page).to have_log(log)
+  end
+
+  it "filters by a feature outside the initial page of logs" do
+    Fabricate.times(50, :ai_api_audit_log, feature_name: "recent-feature")
+    ai_logs_page.visit
+
+    ai_logs_page.select_feature(log.feature_name)
+
     expect(ai_logs_page).to have_log(log)
   end
 
@@ -194,7 +197,7 @@ RSpec.describe "AI logs admin page" do
     expect(page).to have_no_css(".ai-logs .d-filter-controls__dropdown")
 
     find(".d-filter-controls__toggle-filters").click
-    expect(page).to have_css(".ai-logs .d-filter-controls__dropdown", count: 3)
+    expect(page).to have_css(".ai-logs .d-filter-controls__dropdown", count: 2)
   end
 
   it "flags active filters hiding behind a collapsed drawer" do
@@ -204,7 +207,7 @@ RSpec.describe "AI logs admin page" do
     end
 
     ai_logs_page.select_model(llm_model.display_name)
-    expect(page).to have_css(".ai-logs__filters--active-dropdowns")
+    expect(page).to have_css(".ai-logs__filters--drawer-active")
     expect(ai_logs_page).to have_no_tinted_filter_toggle
 
     find(".d-filter-controls__toggle-filters").click
@@ -212,7 +215,7 @@ RSpec.describe "AI logs admin page" do
     expect(ai_logs_page).to have_tinted_filter_toggle
 
     find(".d-filter-controls__toggle-filters").click
-    expect(page).to have_css(".ai-logs .d-filter-controls__dropdown", count: 3)
+    expect(page).to have_css(".ai-logs .d-filter-controls__dropdown", count: 2)
     expect(ai_logs_page).to have_no_tinted_filter_toggle
   end
 
@@ -223,13 +226,15 @@ RSpec.describe "AI logs admin page" do
         :ai_api_audit_log,
         llm_model: other_model,
         language_model: other_model.name,
+        feature_name: "url-feature",
         created_at: 10.minutes.ago,
       )
 
-    ai_logs_page.visit("model=#{other_model.id}&period=hour")
+    ai_logs_page.visit("model=#{other_model.id}&period=hour&feature=url-feature")
 
     expect(ai_logs_page).to have_log(other_log)
     expect(ai_logs_page).to have_no_log(log)
+    expect(ai_logs_page.feature_filter_value).to eq("url-feature")
   end
 
   it "filters by a seeded model from selection and a shareable URL" do
@@ -255,7 +260,7 @@ RSpec.describe "AI logs admin page" do
     ai_logs_page.visit
 
     ai_logs_page.select_model(llm_model.display_name)
-    click_button I18n.t("js.discourse_ai.logs.periods.day")
+    ai_logs_page.select_period(I18n.t("js.discourse_ai.logs.periods.day"))
     expect(page).to have_current_path(/model=#{llm_model.id}/, url: true)
     expect(page).to have_current_path(/period=day/, url: true)
 
@@ -264,6 +269,7 @@ RSpec.describe "AI logs admin page" do
     expect(page).to have_css(".d-filter-controls__input:focus")
     expect(ai_logs_page).to have_log(log)
 
+    ai_logs_page.select_period(I18n.t("js.discourse_ai.logs.periods.day"))
     ai_logs_page.select_model(llm_model.display_name)
     ai_logs_page.search(log.id)
     ai_logs_page.clear_filters
@@ -277,6 +283,7 @@ RSpec.describe "AI logs admin page" do
     expect(ai_logs_page).to have_log(log)
     expect(page).to have_css(".d-filter-controls__input")
     expect(page).to have_css(".d-filter-controls__toggle-filters")
+    expect(page).to have_css(".ai-logs__feature-filter .combo-box")
     expect(page).to have_no_css(".d-filter-controls__reset")
     expect(page).to have_css(".ai-logs__filters")
     expect(ai_logs_page).to have_expanded_filter_dropdowns

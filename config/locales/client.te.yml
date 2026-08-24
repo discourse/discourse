@@ -4539,17 +4539,11 @@ te:
       search:
         title: "వెతుకు"
       site_traffic_explorer:
-        pageviews: "పేజీ వీక్షణలు"
-        columns:
-          top_urls: "URL"
-          browsers: "బ్రౌజర్"
-          ip_addresses: "ఐపీ చిరునామా"
+        metric_information: "%{metric} గురించి"
+        apply: "దరఖాస్తు చేసుకోండి"
         filters:
           browser: "బ్రౌజర్"
           ip: "ఐపీ చిరునామా"
-        metrics:
-          pageviews:
-            label: "పేజీ వీక్షణలు"
         series:
           anonymous_human: "అనామక"
       dashboard:

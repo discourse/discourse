@@ -6493,6 +6493,7 @@ pl_PL:
         custom:
           add: "Dodaj niestandardową sekcję"
           edit: "Edytuj niestandardową sekcję"
+          drop_to_add: "Upuść tutaj, aby dodać nową sekcję"
           save: "Zapisz"
           delete: "Usuń"
           delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
@@ -6555,6 +6556,7 @@ pl_PL:
                   other: "Nazwa musi być krótsza niż %{count} znaków"
             value:
               label: "Link"
+              duplicate: "Inny link w tej sekcji już tutaj wskazuje"
               validation:
                 blank: "Link nie może być pusty"
                 maximum:
@@ -7478,19 +7480,17 @@ pl_PL:
           timeout: "To zapytanie o ruch trwało za długo. Wybierz krótszy zakres dat i spróbuj ponownie."
           unexpected: "Nie można załadować ruchu w witrynie. Spróbuj ponownie."
         empty: "Brak pasujących wyświetleń stron"
-        summary: "Podsumowanie ruchu"
-        traffic_over_time: "Ruch w czasie"
-        pageviews: "Wyświetlenia strony"
-        metric_information: "O tej metryce"
+        metric_information: "O %{metric}"
         active_filters: "Aktywne filtry ruchu"
-        filter_description: "%{filter} to <strong>%{value}</strong>"
+        remove_filter_value: "Usuń %{value}"
+        clear_all: "Wyczyść wszystkie"
+        apply: "Zastosuj"
         filter_by:
           one: "Filtruj według %{label}, %{count} odsłona strony"
           few: "Filtruj według %{label}, %{count} odsłony strony"
           many: "Filtruj według %{label}, %{count} odsłon stron"
           other: "Filtruj według %{label}, %{count} odsłon stron"
         remove_filter: "Usuń filtr %{filter}"
-        remove_traffic_type_filter: "Usuń filtr ruchu %{value}"
         view_more: "Zobacz więcej"
         no_dimension_data: "Brak danych dla tego podziału."
         direct_or_unknown: "Bezpośredni / nieznany"
@@ -7506,14 +7506,6 @@ pl_PL:
           entry_urls: "Wpisowe adresy URL"
           browsers: "Przeglądarki"
           ip_addresses: "Adresy IP"
-        columns:
-          referrers: "Polecający"
-          countries: "Kraj"
-          networks: "Sieć"
-          top_urls: "URL"
-          entry_urls: "Wpisowy adres URL"
-          browsers: "Przeglądarka"
-          ip_addresses: "Adres IP"
         filters:
           traffic_type: "Rodzaj ruchu"
           top_url: "Najpopularniejszy adres URL"
@@ -7524,8 +7516,6 @@ pl_PL:
           browser: "Przeglądarka"
           ip: "Adres IP"
         metrics:
-          pageviews:
-            label: "Wyświetlenia strony"
           distinct_sessions:
             label: "Różne sesje"
           logged_in_share:

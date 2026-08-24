@@ -112,7 +112,7 @@ function initInlineCategorySuggester(api) {
       return;
     }
 
-    if (!stateFor(component).loading && context.available) {
+    if (!stateFor(component).loading && context.categoryAvailable) {
       return triggerRow(component, context);
     }
   });

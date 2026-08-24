@@ -53,6 +53,7 @@ over it.
 | Upload the files somebody dropped                              | the upload pipeline, not the modifier above |
 | React to a drag without becoming a drop target                 | `dDragAndDropMonitor`                       |
 | Scroll a container while a drag hovers near its edge           | `dDragAndDropAutoScroll`                    |
+| Open or reveal something once a drag has hovered it a moment   | `dDragDwell`                                |
 | Render from the in-flight drag                                 | the `dragAndDrop` service                   |
 | Press, move, and track a value continuously                    | `dPointerDrag`                              |
 | Put an accessible handle between two regions                   | `DResizeSeparator`                          |
@@ -139,22 +140,22 @@ Accepts element drags and reports where the drop would land.
 
 ## Arguments
 
-| Argument        | Type                                         | Purpose                                                       |
-| --------------- | -------------------------------------------- | ------------------------------------------------------------- |
-| `accepts`       | `string \| string[]`                         | Which source types engage the target. Omit to accept any.     |
-| `adopts`        | `NativeDragAdoption \| NativeDragAdoption[]` | Also take browser-started page content. See below.            |
-| `acceptsSelf`   | `boolean`                                    | `false` refuses a drop whose dragged element is this element. |
-| `position`      | `"before" \| "after" \| "inside"`            | A fixed position, which wins over midpoint math.              |
-| `axis`          | `"vertical" \| "horizontal"`                 | Which midpoint is measured. Defaults to `"vertical"`.         |
-| `indicator`     | `boolean`                                    | `false` suppresses the indicator class.                       |
-| `canDrop`       | `(feedback) => boolean`                      | Gate asked while hovering. `false` defers to an ancestor.     |
-| `getDropEffect` | `(feedback) => DropEffect`                   | The cursor feedback the browser shows.                        |
-| `getData`       | `() => object`                               | Metadata attached to the drag's record of this target.        |
-| `getIsSticky`   | `() => boolean`                              | Whether the target stays current after the pointer leaves.    |
-| `onDragEnter`   | `(event) => void`                            | This target became the deepest accepted target.               |
-| `onDrag`        | `(event) => void`                            | Throttled, while it stays the deepest accepted target.        |
-| `onDragLeave`   | `(event) => void`                            | It stopped being the deepest accepted target.                 |
-| `onDrop`        | `(event) => void`                            | The drag was released here.                                   |
+| Argument      | Type                                         | Purpose                                                       |
+| ------------- | -------------------------------------------- | ------------------------------------------------------------- |
+| `accepts`     | `string \| string[]`                         | Which source types engage the target. Omit to accept any.     |
+| `adopts`      | `NativeDragAdoption \| NativeDragAdoption[]` | Also take browser-started page content. See below.            |
+| `acceptsSelf` | `boolean`                                    | `false` refuses a drop whose dragged element is this element. |
+| `position`    | `"before" \| "after" \| "inside"`            | A fixed position, which wins over midpoint math.              |
+| `axis`        | `"vertical" \| "horizontal"`                 | Which midpoint is measured. Defaults to `"vertical"`.         |
+| `indicator`   | `boolean`                                    | `false` suppresses the indicator class.                       |
+| `canDrop`     | `(feedback) => boolean`                      | Gate asked while hovering. `false` defers to an ancestor.     |
+| `dropEffect`  | `DropEffect` or `(feedback) => DropEffect`   | The cursor feedback the browser shows.                        |
+| `getData`     | `() => object`                               | Metadata attached to the drag's record of this target.        |
+| `getIsSticky` | `() => boolean`                              | Whether the target stays current after the pointer leaves.    |
+| `onDragEnter` | `(event) => void`                            | This target became the deepest accepted target.               |
+| `onDrag`      | `(event) => void`                            | Throttled, while it stays the deepest accepted target.        |
+| `onDragLeave` | `(event) => void`                            | It stopped being the deepest accepted target.                 |
+| `onDrop`      | `(event) => void`                            | The drag was released here.                                   |
 
 A registered target carries `data-drop-target`.
 
@@ -244,7 +245,7 @@ sees a drag that began on this page.
 | `axis`     | `"vertical" \| "horizontal"`                     | Same, from the pointer against the midpoint.       |
 
 It shares every kernel argument with the element target: `canDrop`,
-`getDropEffect`, `getData`, `getIsSticky`, `indicator`, and the four lifecycle
+`dropEffect`, `getData`, `getIsSticky`, `indicator`, and the four lifecycle
 callbacks.
 
 Without `position` or `axis` the target is one destination rather than a slot:
@@ -286,16 +287,105 @@ The element only anchors the modifier's lifecycle; a monitor is global.
 
 Scrolls a container while a drag hovers near its edge.
 
-| Argument  | Type                                             | Purpose                            |
-| --------- | ------------------------------------------------ | ---------------------------------- |
-| `types`   | `string \| string[]`                             | Element drag types that engage it. |
-| `accepts` | `"files" \| "html" \| "text" \| "urls"` or array | External kinds that engage it.     |
-| `axis`    | `"vertical" \| "horizontal" \| "all"`            | Which direction to scroll.         |
-| `target`  | `"element" \| "window"`                          | Scroll this element or the window. |
+| Argument        | Type                                             | Purpose                            |
+| --------------- | ------------------------------------------------ | ---------------------------------- |
+| `types`         | `string \| string[]`                             | Element drag types that engage it. |
+| `externalKinds` | `"files" \| "html" \| "text" \| "urls"` or array | External kinds that engage it.     |
+| `axis`          | `"vertical" \| "horizontal" \| "all"`            | Which direction to scroll.         |
+| `target`        | `"element" \| "window"`                          | Scroll this element or the window. |
 
-Element drags and external drags arrive through different adapters, so a surface
-that takes both names both: `types` for the element side, `accepts` for the
-external side.
+Element drags and external drags arrive through different adapters, so an
+observer that watches both names both: `types` for the element side,
+`externalKinds` for the external side. `accepts` stays a drop-taking word.
+
+# dDragDwell
+
+Fires a callback once a drag has hovered its element for a delay — a folder
+opening under a file held over it — without making the element a drop target.
+It watches drags the way a monitor does, for both element drags and, when
+asked, external ones, and tests its own rectangle against the pointer. It
+never joins the drop-target hierarchy: no indicator, no positions, and it
+composes freely with a real target on the same element.
+
+| Argument        | Type                    | Purpose                                                                                                                      |
+| --------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `types`         | `string \| string[]`    | Element drag types to watch. Omit to watch all.                                                                              |
+| `externalKinds` | external kinds or array | External kinds to watch. Omitting it, or naming no kinds, refuses external drags.                                            |
+| `delay`         | `boolean \| number`     | Hover before the dwell fires: `true` (default) the standard 500 ms, `false` immediate, or milliseconds.                      |
+| `leaveDelay`    | `boolean \| number`     | Grace before a fired dwell is undone on leave: `true` (default) mirrors the entry delay, `false` immediate, or milliseconds. |
+| `canDwell`      | `(feedback) => boolean` | Gates candidacy; shares a drop target's `canDrop` feedback shape.                                                            |
+| `acceptsSelf`   | `boolean`               | Whether the element's own drag may dwell. Defaults to `true`.                                                                |
+| `onDwell`       | `(event) => void`       | The drag hovered long enough.                                                                                                |
+| `onDwellEnd`    | `(event) => void`       | The candidacy ended; the place to undo what `onDwell` did.                                                                   |
+
+```gjs
+<div
+  {{dDragDwell
+    types="card"
+    canDwell=this.canDwell
+    onDwell=this.open
+    onDwellEnd=this.close
+  }}
+>
+```
+
+`onDwellEnd` carries `reason` (`"left"` or `"drag-ended"`), `fired` (whether
+`onDwell` ran for this candidacy), and `droppedHere` (whether the drop landed
+on a drop target on the element or on one of its descendants — always `false`
+when that subtree registers no target at all) — together the undo predicate: close
+again when `fired` and not `droppedHere`, and a drop into the element keeps
+it open.
+
+The gate runs when a candidacy would start, on every frame while it is
+pending, and once more as the dwell fires — but not after: a dwell that opens
+a section falsifies its own "only when closed" gate, so after firing only the
+rectangle and the `types`/`externalKinds` filters decide when the candidacy
+ends. `canDwell` refuses only
+on a literal `false`, after `types`/`externalKinds` filtering, exactly like a
+target's `canDrop` — the two may share one function.
+
+Adoption stays the co-located target's job: the dwell has no `adopts`, and an
+adopted browser drag answers to its adoption's declared type in `types`.
+
+Two limits worth knowing: the rectangle test does not see occlusion — the
+dwell answers to the pointer being inside the element's box, not to the box
+being visible under the pointer — and an element drag that leaves the window
+freezes its last position, so a pending dwell can fire while the pointer is
+outside; the drag's eventual end delivers the `onDwellEnd` that undoes it.
+
+## createDragDwell, the engine underneath
+
+The modifier wraps `createDragDwell`, a plain factory re-exported from the
+same module, for a consumer driving a dwell directly when it is coordinate-driven
+rather than element-bound: one tracker across many discovered elements, or a
+sub-rect rule such as a center-third band.
+
+| Option        | Type                  | Purpose                                                           |
+| ------------- | --------------------- | ----------------------------------------------------------------- |
+| `destroyable` | `object`              | Bounds the dwell's lifetime; usually the owning component.        |
+| `delay`       | `number`              | Milliseconds of hovering before the dwell fires; defaults to 500. |
+| `identity`    | `(target) => unknown` | Keys candidacy; defaults to the target itself.                    |
+| `onDwell`     | `(target) => void`    | Fires once, with the latest same-identity target.                 |
+
+The returned tracker has two members: `update(target)` reports the current
+candidate (`null` for none), and `reset()` cancels and clears, ready for the
+next drag.
+
+Semantics worth knowing:
+
+- One fire per uninterrupted candidacy. Reporting the same identity again never
+  pushes the deadline out and never re-fires an already-fired dwell. A new
+  identity restarts the full delay, and `null` clears, so the same identity can
+  dwell again after leaving and returning.
+- Silence is not `null`. A consumer that stops calling `update` — a monitor
+  frame without input, a pointer holding still — leaves the pending dwell
+  running. Only an explicit `null` or `reset()` cancels it.
+- A drop or teardown ends the drag without a leave, so wire `reset()` into the
+  drop and drag-end paths explicitly. The destructor registered on
+  `destroyable` covers teardown.
+- When the consumer builds a fresh descriptor per report, pass `identity` to
+  name the stable part, or every report reads as a new candidate and the dwell
+  never fires.
 
 # The dragAndDrop service
 
@@ -474,6 +564,11 @@ move within one labeled list while a drag crosses between lists. The keyboard
 path should follow the list the user is stepping through rather than silently
 crossing a semantic boundary.
 
+**A dwell only shortcuts a pointer drag.** Whatever `dDragDwell` reveals
+must stay reachable without it: the surface keeps its ordinary affordance — a
+disclosure control, a keyboard path — and the dwell merely saves the pointer a
+detour mid-drag.
+
 # Testing
 
 Synthetic mouse events do not drive a native drag; they stall. Use the helpers.
@@ -492,6 +587,12 @@ In JavaScript tests, from
 
 Every synthetic drag event must carry finite `clientX` and `clientY`, which is
 what `centerOf` is for.
+
+A dwell needs no clock control: its delay collapses under test (see
+`discourse/lib/later`), so hover with `startDrag` and `dragOver`, then
+`await settled()` for the fire. Edges that must land before the collapsed
+delay ride synchronous drop-target hierarchy changes via `dragEventNow`, which
+is why a dwell test co-locates a drop target on the dwell element.
 
 In system specs, use `SystemHelpers#drag_and_drop`.
 

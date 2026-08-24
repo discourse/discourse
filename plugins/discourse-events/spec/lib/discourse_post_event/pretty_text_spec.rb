@@ -248,6 +248,16 @@ describe PrettyText do
 
           expect(result).to include("The first Tuesday of every month")
         end
+
+        it "displays a fourth weekday as fourth even when the month has no fifth" do
+          # 2026-02-26 is both the fourth and the final Thursday of February
+          post_3 =
+            create_post_with_event(user_1, 'recurrence="every_month"', Time.utc(2026, 2, 26, 17, 0))
+          cooked = PrettyText.cook(post_3.raw)
+          result = PrettyText.format_for_email(cooked, post_3)
+
+          expect(result).to include("The fourth Thursday of every month")
+        end
       end
 
       context "when the event is closed" do

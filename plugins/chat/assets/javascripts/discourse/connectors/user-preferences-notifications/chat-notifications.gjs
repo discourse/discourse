@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import {
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,
@@ -86,6 +87,11 @@ export default class ChatNotifications extends Component {
     this.model.set("user_option.chat_sound", sound ?? null);
   }
 
+  @action
+  previewChatSound() {
+    this.chatAudioManager?.play(this.chatSound, { throttle: false });
+  }
+
   <template>
     <div class="control-group chat-notifications">
       <label class="control-label">{{i18n
@@ -101,14 +107,24 @@ export default class ChatNotifications extends Component {
 
       <div class="controls controls-dropdown">
         <label>{{i18n "chat.sound.title"}}</label>
-        <ComboBox
-          @valueProperty="value"
-          @content={{this.chatSounds}}
-          @value={{this.chatSound}}
-          @options={{hash none="chat.sounds.none"}}
-          @onChange={{this.setChatSound}}
-          class="chat-sound"
-        />
+        <div class="chat-sound-controls">
+          <ComboBox
+            @valueProperty="value"
+            @content={{this.chatSounds}}
+            @value={{this.chatSound}}
+            @options={{hash none="chat.sounds.none"}}
+            @onChange={{this.setChatSound}}
+            class="chat-sound"
+          />
+          {{#if this.chatSound}}
+            <DButton
+              @icon="play"
+              @action={{this.previewChatSound}}
+              @title="chat.sound.preview"
+              class="btn-flat chat-sound-preview"
+            />
+          {{/if}}
+        </div>
       </div>
 
       <div class="controls controls-dropdown">

@@ -3,7 +3,9 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import LivestreamZoomEntry from "../../discourse/components/livestream/zoom-entry";
+import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
 
 const JOIN_BUTTON_SELECTOR =
   ".discourse-calendar-livestream-zoom-entry .discourse-calendar-livestream-zoom-entry__join";
@@ -85,6 +87,58 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     assert
       .dom(WAITING_SELECTOR)
       .hasText("You can join the webinar closer to the event start time");
+  });
+
+  test("allows joining a multi-day all-day event through its end date", async function (assert) {
+    const clock = fakeTime("2026-08-20T12:00:00Z", "UTC");
+    this.event = DiscoursePostEventEvent.create({
+      id: 42,
+      starts_at: "2026-08-19T00:00:00Z",
+      ends_at: "2026-08-21T00:00:00Z",
+      all_day: true,
+      livestream_chat_channel_id: 9,
+      post: { topic: { id: 1, slug: "test-topic", chat_channel_id: 9 } },
+    });
+
+    try {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      assert
+        .dom(JOIN_BUTTON_SELECTOR)
+        .hasAttribute(
+          "href",
+          "/t/test-topic/1/zoom",
+          "the event remains joinable between its start and end dates"
+        );
+    } finally {
+      clock.restore();
+    }
+  });
+
+  test("renders nothing after a multi-day all-day event's end date", async function (assert) {
+    const clock = fakeTime("2026-08-22T12:00:00Z", "UTC");
+    this.event = DiscoursePostEventEvent.create({
+      id: 42,
+      starts_at: "2026-08-19T00:00:00Z",
+      ends_at: "2026-08-21T00:00:00Z",
+      all_day: true,
+      livestream_chat_channel_id: 9,
+      post: { topic: { id: 1, slug: "test-topic", chat_channel_id: 9 } },
+    });
+
+    try {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      assert
+        .dom(".discourse-calendar-livestream-zoom-entry")
+        .doesNotExist("the event is past after its final day");
+    } finally {
+      clock.restore();
+    }
   });
 
   test("renders nothing once the event is past its grace period", async function (assert) {

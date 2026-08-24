@@ -81,7 +81,7 @@ interface DDragAndDropSourceSignature {
        * browser badging the pointer with its copy offer.
        *
        * A source whose drop duplicates wants `"copyMove"`: a target's
-       * `getDropEffect` may only return an effect this permits.
+       * `dropEffect` may only name an effect this permits.
        */
       effectAllowed?: DataTransfer["effectAllowed"];
 

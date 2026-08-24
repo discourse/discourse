@@ -136,7 +136,9 @@ export default class DMenu<Data = unknown> extends Component<
     this.options.onRegisterApi?.(this.menuInstance);
 
     return () => {
-      this.menuInstance.destroy();
+      if (this.isDestroying || this.isDestroyed) {
+        this.menuInstance.destroy();
+      }
     };
   });
 

@@ -682,11 +682,14 @@ en:
           workflow_vars: "Workflow variables defined in the admin panel."
           execution: "Execution metadata: id, workflow_id, workflow_name"
           node_ref: "Reference a previous node's output. Example: $('Node Name').item.json"
+          helpers: "Utility functions. Currently: $helpers.absoluteUrl(path)."
         methods:
           input:
             all: "Returns an array of the current node's input items."
             first: "Returns the current node's first input item."
             last: "Returns the current node's last input item."
+          helpers:
+            absolute_url: "Converts a relative path (e.g. a post or topic URL) into an absolute URL using the site's base URL. Already-absolute paths are returned unchanged."
       node_preview:
         title: "Preview"
         counts: "%{input} → %{output}"

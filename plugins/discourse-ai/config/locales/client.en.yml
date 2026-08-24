@@ -685,6 +685,7 @@ en:
         retried: "Retried"
         unattributed: "Unattributed"
         search_placeholder: "Search by @username or ID (e.g. @user1 topic:123 log:45)"
+        feature_placeholder: "Feature name"
         time: "Time"
         when: "When"
         outcome: "Outcome"
@@ -716,12 +717,6 @@ en:
         new_logs_count:
           one: "See %{count} new log"
           other: "See %{count} new logs"
-        filters:
-          title: "Filters"
-          period: "Time period"
-          date_range: "Date range"
-          id_type: "ID type"
-          id_value: "ID value"
         periods:
           hour: "Last hour"
           day: "Last 24 hours"

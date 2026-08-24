@@ -6767,25 +6767,20 @@ fr:
         title: "Quoi de neuf ?"
         check_for_updates: "Vérifier les mises à jour"
       site_traffic_explorer:
-        pageviews: "Pages vues"
+        metric_information: "À propos du site %{metric}"
+        remove_filter_value: "Supprimer %{value}"
+        clear_all: "Tout effacer"
+        apply: "Appliquer"
         view_more: "Voir plus"
         cards:
           pages: "Pages"
           visitors: "Visiteurs"
-        columns:
-          referrers: "Source de trafic"
-          countries: "Pays"
-          top_urls: "URL"
-          browsers: "Navigateur"
-          ip_addresses: "Adresse IP"
         filters:
           referrer: "Source de trafic"
           country: "Pays"
           browser: "Navigateur"
           ip: "Adresse IP"
         metrics:
-          pageviews:
-            label: "Pages vues"
           logged_in_share:
             label: "Part des pages vues par des utilisateurs connectés"
           bounce_rate:

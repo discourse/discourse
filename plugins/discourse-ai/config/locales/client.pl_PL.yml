@@ -715,6 +715,7 @@ pl_PL:
         has_retries: "Ma ponowne próby"
         retried: "Powtórnie próbowano"
         unattributed: "Nieprzypisane"
+        feature_placeholder: "Nazwa funkcji"
         user_placeholder: "Filtruj według użytkownika"
         id_placeholder: "Wprowadź identyfikator"
         log_id: "Identyfikator dziennika"

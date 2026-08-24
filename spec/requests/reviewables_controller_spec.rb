@@ -75,6 +75,34 @@ RSpec.describe ReviewablesController do
         expect(json["meta"]["status"]).to eq("pending")
       end
 
+      it "scopes action ids to their reviewable so confirmations name the right user" do
+        flagger = Fabricate(:user, trust_level: TrustLevel[3])
+        first = PostActionCreator.spam(flagger, Fabricate(:post)).reviewable
+        second = PostActionCreator.spam(flagger, Fabricate(:post)).reviewable
+
+        get "/review.json"
+        expect(response.code).to eq("200")
+        json = response.parsed_body
+
+        action_ids = json["actions"].map { |a| a["id"] }
+        expect(action_ids).to eq(action_ids.uniq)
+        expect(json["bundled_actions"].map { |b| b["id"] }).to eq(
+          json["bundled_actions"].map { |b| b["id"] }.uniq,
+        )
+
+        [first, second].each do |reviewable|
+          action = json["actions"].find { |a| a["id"] == "#{reviewable.id}-post-delete_user_block" }
+
+          expect(action["action_name"]).to eq("post-delete_user_block")
+          expect(action["confirm_message"]).to eq(
+            I18n.t(
+              "reviewables.actions.reject_user.block.confirm",
+              username: reviewable.target_created_by.username,
+            ),
+          )
+        end
+      end
+
       context "with trashed topics and posts" do
         fab!(:post1, :post)
         fab!(:reviewable) do

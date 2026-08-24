@@ -3632,17 +3632,11 @@ gl:
       search:
         title: "Buscar"
       site_traffic_explorer:
-        pageviews: "Visualizacións de páxinas"
-        columns:
-          top_urls: "URL"
-          browsers: "Navegador"
-          ip_addresses: "Enderezo IP"
+        metric_information: "Verbo de %{metric}"
+        apply: "Aplicar"
         filters:
           browser: "Navegador"
           ip: "Enderezo IP"
-        metrics:
-          pageviews:
-            label: "Visualizacións de páxinas"
         series:
           anonymous_human: "Anónimo"
       dashboard:

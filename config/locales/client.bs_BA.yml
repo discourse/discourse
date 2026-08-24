@@ -3354,15 +3354,10 @@ bs_BA:
       search:
         title: "Pretraži"
       site_traffic_explorer:
-        pageviews: "Prikazi stranica"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "IP address"
+        metric_information: "O Nama %{metric}"
+        apply: "Snimi"
         filters:
           ip: "IP address"
-        metrics:
-          pageviews:
-            label: "Prikazi stranica"
         series:
           anonymous_human: "Anoniman"
       dashboard:

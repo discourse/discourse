@@ -10,7 +10,9 @@
   &__filters {
     margin-bottom: var(--space-4);
 
-    &.ai-logs__filters--active-dropdowns
+    // the drawer's contents are hidden while collapsed, so tint the toggle to
+    // signal that filters are still narrowing the list
+    &.ai-logs__filters--drawer-active
       .d-filter-controls:not(:has(.d-filter-controls__dropdowns))
       .d-filter-controls__toggle-filters {
       --d-button-default-icon-color: var(--tertiary);
@@ -21,32 +23,62 @@
       grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
     }
 
+    // additional filters render outside the dropdown drawer, so they have to
+    // follow its collapsed state themselves
     .d-filter-controls:not(:has(.d-filter-controls__dropdowns))
-      .ai-logs__specialized-filters {
+      .d-filter-controls__additional-filters {
       display: none;
+    }
+
+    .d-filter-controls__additional-filters {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+
+      @include viewport.from(md) {
+        grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+      }
     }
   }
 
-  &__time-filters {
+  &__periods {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-2);
-    justify-content: space-between;
+
+    > button:last-of-type {
+      margin-right: auto;
+    }
   }
 
-  &__periods,
+  &__feature-filter {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  &__feature-filter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+
+    // a rendered legend sits outside flex layout, so gap does not apply to it
+    legend {
+      margin-bottom: var(--space-1);
+    }
+
+    .select-kit {
+      width: 100%;
+    }
+  }
+
   &__date-range {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
-  }
-
-  &__periods {
-    width: 100%;
-
-    > button:last-of-type {
-      margin-right: auto;
-    }
   }
 
   .d-date-time-input-range {
@@ -62,6 +94,7 @@
 
   &__specialized-filters {
     display: flex;
+    grid-column: 1 / -1;
     flex-wrap: wrap;
     align-items: end;
     gap: var(--space-2);

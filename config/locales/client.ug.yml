@@ -5971,21 +5971,17 @@ ug:
         title: "يېڭىلىق?"
         check_for_updates: "يېڭىلانمىنى تەكشۈر"
       site_traffic_explorer:
-        pageviews: "بەت كۆرۈلۈشى"
+        metric_information: "%{metric} ھەققىدە"
+        remove_filter_value: "%{value} نى چىقىرىۋەت"
+        clear_all: "ھەممىنى تازىلا"
+        apply: "قوللان"
         view_more: "تېخىمۇ كۆپ كۆرسەت"
         cards:
           pages: "بەت"
           visitors: "زىيارەتچى"
-        columns:
-          top_urls: "تور ئادرېسى"
-          browsers: "توركۆرگۈ"
-          ip_addresses: "IP ئادرېس"
         filters:
           browser: "توركۆرگۈ"
           ip: "IP ئادرېس"
-        metrics:
-          pageviews:
-            label: "بەت كۆرۈلۈشى"
         series:
           anonymous_human: "نامسىز"
       dashboard:

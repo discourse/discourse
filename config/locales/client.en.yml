@@ -6282,6 +6282,7 @@ en:
         custom:
           add: "Add custom section"
           edit: "Edit custom section"
+          drop_to_add: "Drop here to add a new section"
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
@@ -6334,6 +6335,7 @@ en:
                   other: "Name must be shorter than %{count} characters"
             value:
               label: "Link"
+              duplicate: "Another link in this section already points here"
               validation:
                 blank: "Link cannot be blank"
                 maximum:
@@ -7262,17 +7264,42 @@ en:
           timeout: "This traffic query took too long. Choose a shorter date range and try again."
           unexpected: "Couldn't load site traffic. Try again."
         empty: "No matching pageviews"
-        summary: "Traffic summary"
-        traffic_over_time: "Traffic over time"
-        pageviews: "Pageviews"
-        metric_information: "About this metric"
+        metric_information: "About %{metric}"
         active_filters: "Active traffic filters"
-        filter_description: "%{filter} is <strong>%{value}</strong>"
+        filtering_to:
+          traffic_type:
+            one: "Filtering to %{count} traffic type"
+            other: "Filtering to %{count} traffic types"
+          top_url:
+            one: "Filtering to %{count} top URL"
+            other: "Filtering to %{count} top URLs"
+          entry_url:
+            one: "Filtering to %{count} entry URL"
+            other: "Filtering to %{count} entry URLs"
+          referrer:
+            one: "Filtering to %{count} referrer"
+            other: "Filtering to %{count} referrers"
+          country:
+            one: "Filtering to %{count} country"
+            other: "Filtering to %{count} countries"
+          network:
+            one: "Filtering to %{count} network"
+            other: "Filtering to %{count} networks"
+          browser:
+            one: "Filtering to %{count} browser"
+            other: "Filtering to %{count} browsers"
+          ip:
+            one: "Filtering to %{count} IP address"
+            other: "Filtering to %{count} IP addresses"
+        remove_filter_value: "Remove %{value}"
+        clear_all: "Clear all"
+        apply: "Apply"
+        apply_filters: "Apply filters"
         filter_by:
           one: "Filter by %{label}, %{count} pageview"
           other: "Filter by %{label}, %{count} pageviews"
         remove_filter: "Remove %{filter} filter"
-        remove_traffic_type_filter: "Remove %{value} traffic filter"
+        # remove_traffic_type_filter: "Remove %{value} traffic filter"
         view_more: "View more"
         no_dimension_data: "No data for this breakdown."
         direct_or_unknown: "Direct / unknown"
@@ -7288,14 +7315,6 @@ en:
           entry_urls: "Entry URLs"
           browsers: "Browsers"
           ip_addresses: "IP addresses"
-        columns:
-          referrers: "Referrer"
-          countries: "Country"
-          networks: "Network"
-          top_urls: "URL"
-          entry_urls: "Entry URL"
-          browsers: "Browser"
-          ip_addresses: "IP address"
         filters:
           traffic_type: "Traffic type"
           top_url: "Top URL"
@@ -7305,9 +7324,10 @@ en:
           network: "Network"
           browser: "Browser"
           ip: "IP address"
+        headline:
+          one: "%{formatted_count} pageview"
+          other: "%{formatted_count} pageviews"
         metrics:
-          pageviews:
-            label: "Pageviews"
           distinct_sessions:
             label: "Distinct sessions"
           logged_in_share:

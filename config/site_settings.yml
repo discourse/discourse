@@ -4686,10 +4686,6 @@ dashboard:
     client: true
 
 experimental:
-  enable_site_traffic_explorer:
-    default: false
-    client: true
-    area: "experimental"
   reporting_improvements:
     default: false
     client: true
@@ -4728,7 +4724,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"

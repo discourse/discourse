@@ -54,6 +54,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-display-name",
   "category-list-attributes",
   "category-list-request",
+  "category-list-subcategories",
   "category-sort-orders",
   "category-subcategories",
   "category-text-color",
