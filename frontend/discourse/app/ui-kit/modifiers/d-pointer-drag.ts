@@ -126,13 +126,10 @@ interface DPointerDragSignature {
 
       /**
        * Whether a press on a descendant keeps behaving like a press on that
-       * descendant. Defaults to `false`, which suits a handle: the press is
-       * cancelled, moves no focus, and this element takes the pointer capture.
-       *
-       * When set — for a surface wrapping interactive content — descendants keep
-       * focus, selection, `mousedown`, and a tap's `click`; a drag's `click` is
-       * still suppressed, and native drag-and-drop is refused while the gesture
-       * is live.
+       * descendant: it keeps focus, selection, `mousedown`, and a tap's `click`,
+       * while a drag's `click` and native drag-and-drop are still suppressed.
+       * Defaults to `false`, which suits a handle; presses on the element itself
+       * always take the handle path.
        */
       preservePress?: boolean;
 
@@ -264,6 +261,7 @@ export function registerPointerDrag(
   let appliedClass: string | null = null;
   let bodyClassLease: ElementClassLease | null = null;
   let capturedNode: Element = element;
+  let pressPreserved = false;
   let watchingDocumentLoss = false;
   // Set by the cleanup below. A consumer can destroy its own registration from
   // inside `onDragStart`, and the rest of that dispatch still runs.
@@ -286,6 +284,7 @@ export function registerPointerDrag(
     pointerId = null;
     engaged = false;
     moved = false;
+    pressPreserved = false;
     appliedClass = null;
     bodyClassLease = null;
 
@@ -398,10 +397,13 @@ export function registerPointerDrag(
       return;
     }
     const args = getArgsRef();
-    const initialCaptureTarget =
-      args.preservePress && event.target instanceof Element
+    const pressedDescendant =
+      args.preservePress &&
+      event.target instanceof Element &&
+      event.target !== element
         ? event.target
-        : element;
+        : null;
+    const initialCaptureTarget = pressedDescendant ?? element;
 
     // Capture first, before telling anyone a gesture started. Capture is what
     // routes the rest of the gesture back to this element, so without it a
@@ -506,9 +508,10 @@ export function registerPointerDrag(
 
     // Only an accepted press is suppressed. A secondary button, a press during
     // an active gesture, or a vetoed one must reach whatever else was listening.
-    if (!args.preservePress) {
+    if (!pressedDescendant) {
       event.preventDefault();
     }
+    pressPreserved = Boolean(pressedDescendant);
     if (args.stopPropagation) {
       event.stopPropagation();
     }
@@ -567,7 +570,7 @@ export function registerPointerDrag(
    * press would otherwise have done.
    */
   const onNativeDragStart = (event: DragEvent) => {
-    if (pointerId !== null) {
+    if (pointerId !== null && pressPreserved) {
       event.preventDefault();
     }
   };

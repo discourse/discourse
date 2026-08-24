@@ -427,37 +427,39 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
     });
 
-    test("preservePress leaves an accepted press uncancelled and functional", async function (assert) {
+    test("preservePress leaves a descendant press uncancelled and functional", async function (assert) {
       const seen = [];
       const recordPhase = (phase) => () => seen.push(phase);
 
       await render(
         <template>
           <div
-            class="dpd-target"
+            class="dpd-surface"
             {{dPointerDrag
               onDragStart=(recordPhase "start")
               onDrag=(recordPhase "drag")
               onDragEnd=(recordPhase "end")
               preservePress=true
             }}
-          ></div>
+          >
+            <button type="button" class="dpd-child"></button>
+          </div>
         </template>
       );
-      stubPointerCapture(".dpd-target");
+      stubSharedPointerCapture([".dpd-surface", ".dpd-child"]);
 
-      await triggerEvent(".dpd-target", "pointerdown", {
+      await triggerEvent(".dpd-child", "pointerdown", {
         button: 0,
         pointerId: 1,
         clientX: 10,
         clientY: 10,
       });
-      await triggerEvent(".dpd-target", "pointermove", {
+      await triggerEvent(".dpd-child", "pointermove", {
         pointerId: 1,
         clientX: 40,
         clientY: 10,
       });
-      await triggerEvent(".dpd-target", "pointerup", {
+      await triggerEvent(".dpd-child", "pointerup", {
         pointerId: 1,
         clientX: 40,
         clientY: 10,
@@ -466,12 +468,34 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       assert.deepEqual(
         prevented,
         [false],
-        "a surface holding its own interactive content keeps the compatibility mousedown"
+        "the descendant keeps the compatibility mousedown its content needs"
       );
       assert.deepEqual(
         seen,
         ["start", "drag", "end"],
         "and the uncancelled press still drives the whole gesture"
+      );
+    });
+
+    test("a press on the element itself takes the handle path despite preservePress", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-surface" {{dPointerDrag preservePress=true}}>
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      stubSharedPointerCapture([".dpd-surface", ".dpd-child"]);
+
+      await triggerEvent(".dpd-surface", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(
+        prevented,
+        [true],
+        "there is no descendant to preserve, so a drag here cannot end in a click on the surface"
       );
     });
   });
@@ -495,7 +519,9 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         pointerId: 1,
       });
 
-      assert.dom(ownerOf(1)).hasClass("dpd-surface");
+      assert
+        .dom(ownerOf(1))
+        .hasClass("dpd-surface", "without preservePress the element captures");
     });
 
     test("preserves a pressed descendant until dragging begins", async function (assert) {
@@ -541,38 +567,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
     });
 
-    test("the capture comes back once the gesture moves", async function (assert) {
-      await render(
-        <template>
-          <div class="dpd-surface" {{dPointerDrag preservePress=true}}>
-            <button type="button" class="dpd-child"></button>
-          </div>
-        </template>
-      );
-      const { ownerOf } = stubSharedPointerCapture([
-        ".dpd-surface",
-        ".dpd-child",
-      ]);
-
-      await triggerEvent(".dpd-child", "pointerdown", {
-        button: 0,
-        pointerId: 1,
-        clientX: 0,
-      });
-      await triggerEvent(".dpd-child", "pointermove", {
-        pointerId: 1,
-        clientX: 40,
-      });
-
-      assert
-        .dom(ownerOf(1))
-        .hasClass(
-          "dpd-surface",
-          "a drag hands the capture back to the element"
-        );
-    });
-
-    test("handing the capture back does not end the gesture", async function (assert) {
+    test("the capture comes back once the gesture moves, without ending it", async function (assert) {
       const seen = [];
       const onDrag = () => seen.push("drag");
       const onDragCancel = () => seen.push("cancel");
@@ -591,17 +586,34 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
           </div>
         </template>
       );
-      stubSharedPointerCapture([".dpd-surface", ".dpd-child"]);
+      const { ownerOf } = stubSharedPointerCapture([
+        ".dpd-surface",
+        ".dpd-child",
+      ]);
 
       await triggerEvent(".dpd-child", "pointerdown", {
         button: 0,
         pointerId: 1,
         clientX: 0,
       });
+
+      assert
+        .dom(ownerOf(1))
+        .hasClass("dpd-child", "a tap's click stays on the pressed control");
+
       await triggerEvent(".dpd-child", "pointermove", {
         pointerId: 1,
         clientX: 40,
       });
+
+      assert
+        .dom(ownerOf(1))
+        .hasClass(
+          "dpd-surface",
+          "a drag hands the capture back to the element"
+        );
+
+      // the node that gave the capture up reports a loss, and it bubbles here
       await triggerEvent(".dpd-child", "lostpointercapture", { pointerId: 1 });
       await triggerEvent(".dpd-child", "pointermove", {
         pointerId: 1,
@@ -611,7 +623,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       assert.deepEqual(
         seen,
         ["drag", "drag"],
-        "the gesture still holds the pointer, so the handover is not an ending"
+        "the handover is not an ending: the gesture keeps reporting"
       );
     });
 
@@ -690,7 +702,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
           </div>
         </template>
       );
-      stubPointerCapture(".dpd-surface");
+      stubSharedPointerCapture([".dpd-surface", ".dpd-link"]);
 
       const beforePress = new DragEvent("dragstart", {
         bubbles: true,
@@ -698,7 +710,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       });
       find(".dpd-link").dispatchEvent(beforePress);
 
-      await triggerEvent(".dpd-surface", "pointerdown", {
+      await triggerEvent(".dpd-link", "pointerdown", {
         button: 0,
         pointerId: 1,
       });
