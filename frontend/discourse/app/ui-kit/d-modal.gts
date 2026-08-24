@@ -300,7 +300,6 @@ export default class DModal extends Component<DModalSignature> {
   @action
   handleDragStart(event: PointerEvent) {
     // pointer events unify mouse and touch, so the mobile gate is explicit
-    // where touch-only events used to imply it
     if (!this.mobileDismissable || this.animating) {
       return false;
     }
@@ -374,8 +373,7 @@ export default class DModal extends Component<DModalSignature> {
     const drag = this.#drag;
     this.#drag = null;
 
-    // the browser claimed the touch, usually for the modal body's own scroll;
-    // a displaced modal settles back rather than staying where it was left
+    // the browser claimed the touch; a displaced modal settles back
     if (drag && info.moved && !this.animating) {
       await this.#animateWrapperPosition(0, getMaxAnimationTimeMs());
     }

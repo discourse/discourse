@@ -725,8 +725,8 @@ module("Integration | ui-kit | DModal", function (hooks) {
       forceMobile();
     });
 
-    // `timeStamp` is a prototype accessor an own property shadows; the real
-    // spacing of synthetic events reads as a flick to the velocity rule
+    // synthetic events are milliseconds apart, which reads as a flick; an own
+    // `timeStamp` property shadows the prototype accessor
     function dispatchPointer(type, { y, time }) {
       const event = new PointerEvent(type, {
         bubbles: true,

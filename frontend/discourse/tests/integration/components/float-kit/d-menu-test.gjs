@@ -22,6 +22,7 @@ import DTooltips from "discourse/float-kit/components/d-tooltips";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import DButton from "discourse/ui-kit/d-button";
 import dElement from "discourse/ui-kit/helpers/d-element";
 
@@ -37,18 +38,14 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   }
 
   async function swipeDown(selector) {
-    await triggerEvent(selector, "touchstart", {
-      touches: [{ clientX: 0, clientY: 0 }],
-      changedTouches: [{ clientX: 0, clientY: 0 }],
+    stubPointerCapture(selector);
+    await triggerEvent(selector, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 0,
     });
-    await triggerEvent(selector, "touchmove", {
-      touches: [{ clientX: 0, clientY: 200 }],
-      changedTouches: [{ clientX: 0, clientY: 200 }],
-    });
-    await triggerEvent(selector, "touchend", {
-      touches: [],
-      changedTouches: [{ clientX: 0, clientY: 200 }],
-    });
+    await triggerEvent(selector, "pointermove", { pointerId: 1, clientY: 200 });
+    await triggerEvent(selector, "pointerup", { pointerId: 1, clientY: 200 });
   }
 
   test("@label", async function (assert) {
@@ -234,7 +231,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu-modal").doesNotExist();
   });
 
-  test("@modalForMobile - swipe down defers to scrolled content", async function (assert) {
+  test("@modalForMobile - leaves content panning to the browser", async function (assert) {
     forceMobile();
 
     await render(
@@ -248,11 +245,15 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     );
     await open();
 
-    document.querySelector(".test-scroll-area").scrollTop = 100;
-
-    await swipeDown(".test-scroll-area");
-
-    assert.dom(".fk-d-menu-modal").exists();
+    // scroll deferral is the browser's own pan arbitration, which synthetic
+    // events cannot trigger; the touch-action wiring it rides on is observable
+    assert
+      .dom(".fk-d-menu-modal .d-modal__container")
+      .hasAttribute(
+        "data-pointer-drag",
+        "pan-x",
+        "vertical pans over scrollable content stay with the browser"
+      );
   });
 
   test("@onRegisterApi", async function (assert) {
