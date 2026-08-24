@@ -60,6 +60,7 @@ gem "message_bus"
 gem "rails_multisite"
 
 gem "fastimage"
+gem "ruby-vips", "~> 2.3", require: false
 
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sns", require: false

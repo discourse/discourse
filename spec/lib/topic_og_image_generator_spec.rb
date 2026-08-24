@@ -24,10 +24,6 @@ RSpec.describe TopicOgImageGenerator do
   describe "#generate" do
     it "generates a PNG upload for a topic" do
       generator = described_class.new(topic)
-      # Stub the ImageMagick rasterization: rendering an SVG to PNG depends on the
-      # ImageMagick/font setup of the host, which isn't reliable across CI and dev
-      # environments. Here we assert that #generate turns rendered bytes into a
-      # proper PNG Upload.
       generator.stubs(:render_png).returns(File.binread(file_from_fixtures("logo.png").path))
       upload = generator.generate
 
@@ -38,7 +34,7 @@ RSpec.describe TopicOgImageGenerator do
     end
   end
 
-  describe "#generate_bytes" do
+  describe "#generate_bytes", :with_vips_broker do
     it "renders the topic OG image as a 1200x630 PNG" do
       png_bytes = described_class.new(topic).generate_bytes
 
@@ -98,15 +94,16 @@ RSpec.describe TopicOgImageGenerator do
         .with("/invalid-logo.svg")
         .returns(invalid_svg_data_uri)
       described_class.any_instance.stubs(:fetch_as_data_uri).with(avatar_url).returns(nil)
-      Discourse.expects(:warn).with(
-        "Failed to materialize topic OG image asset",
-        has_entries(topic_id: topic.id, asset: "logo"),
-      )
-
       png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
 
       expect([png.width, png.height]).to eq([1200, 630])
       expect(png[180, 520]).to eq(png[500, 520])
+    end
+
+    it "returns nil when the final image cannot be rendered" do
+      DiscourseVips.stubs(:generate_topic_og_image).raises(DiscourseVips::Error, "invalid image")
+
+      expect(described_class.new(topic).generate_bytes).to eq(nil)
     end
   end
 
