@@ -68,15 +68,28 @@ function prepareSidebarSectionClass(Section, routerService) {
 
     @cached
     get filteredLinks() {
+      return this.#applyFilter(this.links);
+    }
+
+    @cached
+    get filteredMoreLinks() {
+      return this.#applyFilter(this.moreLinks);
+    }
+
+    #applyFilter(links) {
+      if (!links?.length) {
+        return links;
+      }
+
       if (!this.filterable || !this.sidebarState.filter) {
-        return this.links;
+        return links;
       }
 
       if (this.text?.toLowerCase()?.match(this.sidebarState.sanitizedFilter)) {
-        return this.links;
+        return links;
       }
 
-      return this.links.filter((link) => {
+      return links.filter((link) => {
         return (
           link.text
             .toString()
@@ -91,11 +104,18 @@ function prepareSidebarSectionClass(Section, routerService) {
 
     @cached
     get activeLink() {
-      return findActiveLink(this.filteredLinks, routerService);
+      return findActiveLink(
+        [...this.filteredLinks, ...(this.filteredMoreLinks || [])],
+        routerService
+      );
     }
 
     get filtered() {
-      return !this.filterable || this.filteredLinks?.length > 0;
+      return (
+        !this.filterable ||
+        this.filteredLinks?.length > 0 ||
+        this.filteredMoreLinks?.length > 0
+      );
     }
   };
 }

@@ -43,7 +43,10 @@ export default class SidebarCustomSection extends Component {
 
   @cached
   get activeLink() {
-    return findActiveLink(this.section.links, this.router);
+    return findActiveLink(
+      [...this.section.links, ...(this.section.moreLinks || [])],
+      this.router
+    );
   }
 
   get exactUrlMatch() {
