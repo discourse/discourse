@@ -5,20 +5,31 @@ require "json"
 require "socket"
 
 require_relative "freedom_patches/landlock_capture_fork"
-require_relative "discourse_vips/configuration"
 
 module DiscourseVips
+  VERSION = 1
   CLIENT_TIMEOUT_SECONDS = 7
+  private_constant :CLIENT_TIMEOUT_SECONDS
+
   FONT_FAMILIES = {
     "/System/Library/Fonts/Helvetica.ttc" => "Helvetica",
     File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2") => "Noto Sans",
   }.freeze
-  private_constant :CLIENT_TIMEOUT_SECONDS, :FONT_FAMILIES
+  private_constant :FONT_FAMILIES
 
   class Error < RuntimeError
   end
 
   class << self
+    def socket_path
+      ENV["DISCOURSE_VIPS_SOCKET_PATH"] || File.expand_path("../tmp/discourse-vips.sock", __dir__)
+    end
+
+    def remove_owned_pid_file(pid_file)
+      File.delete(pid_file) if pid_file && File.read(pid_file).to_i == Process.pid
+    rescue Errno::ENOENT
+    end
+
     def version(expected_broker_pid: nil)
       "#{VERSION}-#{request(operation: "version", expected_broker_pid:)}"
     end
