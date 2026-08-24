@@ -1,24 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import DSegmentedControl from "discourse/components/d-segmented-control";
-import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
-import { and, eq, not, or } from "discourse/truth-helpers";
+import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
-import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -27,8 +23,6 @@ import { tagNames, tagSuggestionParams } from "../lib/ai-helper-suggestions";
 import { showComposerAiHelper } from "../lib/show-ai-helper";
 import AiBlinkingAnimation from "./ai-blinking-animation";
 import AiIndicatorWave from "./ai-indicator-wave";
-
-const SUMMARY_DETAIL_VALUES = ["quiet", "balanced", "detailed"];
 
 async function requestSuggestion(url, data) {
   try {
@@ -174,48 +168,16 @@ export default class AiSearchDiscoveries extends Component {
     return this.discobotDiscoveries.answerable === false;
   }
 
-  get showSummary() {
-    return this.discobotDiscoveries.showSummary !== false;
-  }
-
   get showAnswerTitle() {
-    return this.showSummary && this.discobotDiscoveries.summaryDetail !== 0;
+    return this.siteSettings.ai_discover_summary_detail !== "quiet";
   }
 
   get relatedCount() {
-    const count = this.discobotDiscoveries.relatedCount;
-    return count >= 2 && count <= 6 ? count : 2;
+    return this.siteSettings.ai_discover_related_count;
   }
 
   get visibleSources() {
     return this.sources.slice(0, this.relatedCount);
-  }
-
-  get summaryDetails() {
-    return [
-      {
-        value: "quiet",
-        label: i18n("discourse_ai.discobot_discoveries.preferences.quiet"),
-        disabled: !this.showSummary,
-      },
-      {
-        value: "balanced",
-        label: i18n("discourse_ai.discobot_discoveries.preferences.balanced"),
-        disabled: !this.showSummary,
-      },
-      {
-        value: "detailed",
-        label: i18n("discourse_ai.discobot_discoveries.preferences.detailed"),
-        disabled: !this.showSummary,
-      },
-    ];
-  }
-
-  get summaryDetailValue() {
-    return (
-      SUMMARY_DETAIL_VALUES[this.discobotDiscoveries.summaryDetail] ??
-      "balanced"
-    );
   }
 
   get fullSearchUrl() {
@@ -274,33 +236,6 @@ export default class AiSearchDiscoveries extends Component {
   triggerDiscoveryOnInsert() {
     if (this.args.triggerOnInsert !== false) {
       this.triggerDiscovery();
-    }
-  }
-
-  @action
-  decreaseRelatedCount() {
-    this.discobotDiscoveries.setRelatedCount(
-      this.discobotDiscoveries.relatedCount - 1
-    );
-  }
-
-  @action
-  increaseRelatedCount() {
-    this.discobotDiscoveries.setRelatedCount(
-      this.discobotDiscoveries.relatedCount + 1
-    );
-  }
-
-  @action
-  toggleSummary() {
-    this.discobotDiscoveries.setShowSummary(!this.showSummary);
-  }
-
-  @action
-  selectSummaryDetail(detail) {
-    const value = SUMMARY_DETAIL_VALUES.indexOf(detail);
-    if (value !== -1) {
-      this.discobotDiscoveries.setSummaryDetail(value);
     }
   }
 
@@ -411,104 +346,6 @@ export default class AiSearchDiscoveries extends Component {
               {{dIcon "far-circle"}}
               {{i18n "discourse_ai.discobot_discoveries.main_title"}}
             </h3>
-            <div class="ai-discovery-preferences-menu">
-              <DMenu
-                @identifier="ai-discovery-preferences"
-                @icon="ellipsis"
-                @ariaLabel={{i18n
-                  "discourse_ai.discobot_discoveries.preferences.label"
-                }}
-                @placement="bottom-end"
-                @triggerClass="btn-flat ai-discovery-preferences-menu__trigger"
-              >
-                <:content>
-                  <div class="ai-discovery-preferences">
-                    <div class="ai-discovery-preferences__row">
-                      <span class="ai-discovery-preferences__label">
-                        {{i18n
-                          "discourse_ai.discobot_discoveries.preferences.related_discussions"
-                        }}
-                      </span>
-                      <div class="ai-discovery-preferences__stepper">
-                        <DButton
-                          class="btn-flat ai-discovery-preferences__decrement"
-                          @icon="minus"
-                          @translatedTitle={{i18n
-                            "discourse_ai.discobot_discoveries.preferences.show_fewer_discussions"
-                          }}
-                          @disabled={{or
-                            this.discobotDiscoveries.savingPreferences
-                            (eq this.discobotDiscoveries.relatedCount 2)
-                          }}
-                          @action={{this.decreaseRelatedCount}}
-                        />
-                        <span class="ai-discovery-preferences__count">
-                          {{this.discobotDiscoveries.relatedCount}}
-                        </span>
-                        <DButton
-                          class="btn-flat ai-discovery-preferences__increment"
-                          @icon="plus"
-                          @translatedTitle={{i18n
-                            "discourse_ai.discobot_discoveries.preferences.show_more_discussions"
-                          }}
-                          @disabled={{or
-                            this.discobotDiscoveries.savingPreferences
-                            (eq this.discobotDiscoveries.relatedCount 6)
-                          }}
-                          @action={{this.increaseRelatedCount}}
-                        />
-                      </div>
-                    </div>
-
-                    <div class="ai-discovery-preferences__summary-row">
-                      <span class="ai-discovery-preferences__label">
-                        {{i18n
-                          "discourse_ai.discobot_discoveries.preferences.show_summary"
-                        }}
-                      </span>
-                      <DToggleSwitch
-                        class="ai-discovery-preferences__summary-toggle"
-                        @state={{this.showSummary}}
-                        aria-label={{i18n
-                          "discourse_ai.discobot_discoveries.preferences.show_summary"
-                        }}
-                        disabled={{this.discobotDiscoveries.savingPreferences}}
-                        {{on "click" this.toggleSummary}}
-                      />
-                    </div>
-
-                    <div class="ai-discovery-preferences__detail-group">
-                      <span
-                        class="ai-discovery-preferences__label"
-                        aria-hidden="true"
-                      >
-                        {{i18n
-                          "discourse_ai.discobot_discoveries.preferences.summary_detail"
-                        }}
-                      </span>
-                      <DSegmentedControl
-                        class="ai-discovery-preferences__detail"
-                        @name="ai-discovery-summary-detail"
-                        @items={{this.summaryDetails}}
-                        @value={{this.summaryDetailValue}}
-                        @onSelect={{this.selectSummaryDetail}}
-                        @translatedLabel={{i18n
-                          "discourse_ai.discobot_discoveries.preferences.summary_detail"
-                        }}
-                      />
-                      <p class="ai-discovery-preferences__hint">
-                        {{i18n
-                          (concat
-                            "discourse_ai.discobot_discoveries.preferences.detail_hint_"
-                            this.discobotDiscoveries.summaryDetail
-                          )
-                        }}
-                      </p>
-                    </div>
-                  </div>
-                </:content>
-              </DMenu>
-            </div>
           </header>
         {{/if}}
       {{/if}}
@@ -541,7 +378,7 @@ export default class AiSearchDiscoveries extends Component {
               />
             {{/if}}
           </div>
-        {{else if this.showSummary}}
+        {{else}}
           {{! eslint-disable ember/template-no-invalid-interactive }}
           <article
             class={{dConcatClass

@@ -57,6 +57,15 @@ describe DiscourseAi::Discoveries do
     end
   end
 
+  describe ".result_settings" do
+    it "returns the configured Discoveries presentation settings" do
+      SiteSetting.ai_discover_summary_detail = "detailed"
+      SiteSetting.ai_discover_related_count = 5
+
+      expect(described_class.result_settings).to eq(summary_detail: :detailed, related_count: 5)
+    end
+  end
+
   describe ".bind_request" do
     it "atomically binds a request ID to one normalized query" do
       request_id = SecureRandom.uuid

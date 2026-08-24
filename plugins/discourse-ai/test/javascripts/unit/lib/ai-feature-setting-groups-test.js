@@ -75,6 +75,12 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
       groups.map((group) => group.key),
       ["settings", "agents", "access_control"]
     );
+    assert.deepEqual(groups[0].settings, [
+      "ai_discover_enabled",
+      "ai_discover_default_mode",
+      "ai_discover_summary_detail",
+      "ai_discover_related_count",
+    ]);
     assert.deepEqual(groups[1].settings, [
       "ai_discover_agent",
       "ai_discover_query_rewrite_agent",

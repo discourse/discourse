@@ -44,6 +44,8 @@ describe DiscourseAi::Discover::DiscoveriesController do
       end
 
       it "returns a 200 and queues a job to reply" do
+        SiteSetting.ai_discover_summary_detail = "detailed"
+        SiteSetting.ai_discover_related_count = 5
         allow(Jobs).to receive(:enqueue).and_call_original
 
         expect {
@@ -58,7 +60,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.parsed_body["request_id"]).to eq(request_id)
         expect(Jobs).to have_received(:enqueue) do |job_name, **args|
           expect(job_name).to eq(:stream_discover_reply)
-          expect(args).to include(show_summary: true, summary_detail: "balanced", related_count: 2)
+          expect(args).to include(summary_detail: "detailed", related_count: 5)
         end
       end
 

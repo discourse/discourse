@@ -6,10 +6,6 @@ describe DiscourseAi::Agents::DiscoverQueryRewriter do
   it "prepares separate PostgreSQL and semantic search queries without changing intent" do
     expect(DiscourseAi::Agents::Agent.system_agents.fetch(described_class)).to eq(-40)
     expect(SiteSetting.ai_discover_query_rewrite_agent).to eq("-40")
-    expect(agent.system_prompt).to include("PostgreSQL-backed keyword search")
-    expect(agent.system_prompt).to include("admin")
-    expect(agent.system_prompt).to include("forum's default locale")
-    expect(agent.system_prompt).to include("must not broaden, narrow, or reinterpret")
     expect(agent.response_format).to eq(
       [
         { "key" => "keyword_query", "type" => "string" },

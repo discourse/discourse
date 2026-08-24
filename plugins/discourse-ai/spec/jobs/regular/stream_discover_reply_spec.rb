@@ -72,10 +72,9 @@ describe Jobs::StreamDiscoverReply do
     end
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, show_summary:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
-      expect(show_summary).to eq(true)
       expect(summary_detail).to eq(:balanced)
       expect(related_count).to eq(2)
       stream.call(
@@ -173,10 +172,9 @@ describe Jobs::StreamDiscoverReply do
   it "publishes a supported answer when the model omits the optional title" do
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, show_summary:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
-      expect(show_summary).to eq(true)
       expect(summary_detail).to eq(:balanced)
       expect(related_count).to eq(2)
       stream.call(
@@ -208,31 +206,30 @@ describe Jobs::StreamDiscoverReply do
     )
   end
 
-  it "uses the result preferences captured when the search was submitted" do
-    user.user_option.update!(
-      ai_search_discoveries_show_summary: false,
-      ai_search_discoveries_summary_detail: 0,
-      ai_search_discoveries_related_count: 5,
-    )
-    submitted_preferences = DiscourseAi::Discoveries.preferences_for(user)
-    user.user_option.update!(
-      ai_search_discoveries_show_summary: true,
-      ai_search_discoveries_summary_detail: 2,
-      ai_search_discoveries_related_count: 2,
-    )
+  it "uses the result settings captured when the search was submitted" do
+    SiteSetting.ai_discover_summary_detail = "quiet"
+    SiteSetting.ai_discover_related_count = 5
+    submitted_settings = DiscourseAi::Discoveries.result_settings
+    SiteSetting.ai_discover_summary_detail = "detailed"
+    SiteSetting.ai_discover_related_count = 2
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, show_summary:, summary_detail:, related_count:|
+    ) do |query:, candidates:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
-      expect(show_summary).to eq(false)
       expect(summary_detail).to eq(:quiet)
       expect(related_count).to eq(5)
+      stream.call(
+        answerable: true,
+        source_refs: %w[source_1],
+        title: "",
+        answer: "Use the plugin skeleton.",
+      )
       DiscourseAi::Discoveries::Synthesis::Result.new(
         answerable: true,
         source_refs: %w[source_1],
         title: "",
-        answer: "",
+        answer: "Use the plugin skeleton.",
       )
     end
 
@@ -243,23 +240,24 @@ describe Jobs::StreamDiscoverReply do
             user_id: user.id,
             query:,
             request_id:,
-            show_summary: submitted_preferences[:show_summary],
-            summary_detail: submitted_preferences[:summary_detail].to_s,
-            related_count: submitted_preferences[:related_count],
+            summary_detail: submitted_settings[:summary_detail].to_s,
+            related_count: submitted_settings[:related_count],
           )
         end
         .map(&:data)
 
-    expect(messages.map { |message| message[:phase] }).to eq(%w[searching sources complete])
+    expect(messages.map { |message| message[:phase] }).to eq(
+      %w[searching sources answering complete],
+    )
     expect(messages.last).to include(
       done: true,
       answerable: true,
       ai_discover_title: "",
-      ai_discover_reply: "",
+      ai_discover_reply: "Use the plugin skeleton.",
     )
     expect(messages.last[:sources]).to be_present
     expect(DiscourseAi::Discoveries.cached_result_for(user:, request_id:)).to include(
-      "answer" => "",
+      "answer" => "Use the plugin skeleton.",
     )
   end
 
@@ -274,10 +272,9 @@ describe Jobs::StreamDiscoverReply do
     ).and_return([candidate, second_candidate])
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, show_summary:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate, second_candidate])
-      expect(show_summary).to eq(true)
       expect(summary_detail).to eq(:balanced)
       expect(related_count).to eq(2)
       stream.call(

@@ -27,16 +27,15 @@ module DiscourseAi
         binding =
           DiscourseAi::Discoveries.bind_request(user_id: current_user.id, request_id:, query:)
         if binding == :created
-          preferences = DiscourseAi::Discoveries.preferences_for(current_user)
+          result_settings = DiscourseAi::Discoveries.result_settings
           Jobs.enqueue(
             :stream_discover_reply,
             user_id: current_user.id,
             query:,
             request_id:,
             queued_at: Time.now.to_f,
-            show_summary: preferences[:show_summary],
-            summary_detail: preferences[:summary_detail].to_s,
-            related_count: preferences[:related_count],
+            summary_detail: result_settings[:summary_detail].to_s,
+            related_count: result_settings[:related_count],
           )
         end
 

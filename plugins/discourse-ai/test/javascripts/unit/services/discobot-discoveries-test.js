@@ -27,32 +27,14 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
     );
   });
 
-  test("loads and saves Discoveries result preferences", async function (assert) {
-    const savedFields = [];
-    const currentUser = {
-      user_option: {
-        ai_search_discoveries_mode: 0,
-        ai_search_discoveries_show_summary: false,
-        ai_search_discoveries_summary_detail: 2,
-        ai_search_discoveries_related_count: 5,
-      },
-      save: async (fields) => savedFields.push(fields),
-    };
-    getOwner(this).unregister("service:current-user");
-    getOwner(this).register("service:current-user", currentUser, {
-      instantiate: false,
-    });
+  test("uses the configured default mode and allows local mode changes", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.ai_discover_default_mode = "search";
     const service = getOwner(this).lookup("service:discobot-discoveries");
 
     assert.strictEqual(service.mode, "search");
-    assert.false(service.showSummary);
-    assert.strictEqual(service.summaryDetail, 2);
-    assert.strictEqual(service.relatedCount, 5);
-
-    await service.setRelatedCount(6);
-
-    assert.strictEqual(service.relatedCount, 6);
-    assert.deepEqual(savedFields, [["ai_search_discoveries_related_count"]]);
+    service.setMode("ask");
+    assert.strictEqual(service.mode, "ask");
   });
 
   test("does not send duplicate requests for the same successful query", async function (assert) {

@@ -28,7 +28,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Discoveries do
 
       expect(result[:raw]).to eq("Search overview")
       expect(result[:metadata]).to include(query: "chat integrations")
-      expect(feature_name).to eq("discoveries")
+      expect(feature_name).to eq("discover")
     end
 
     it "evaluates each provided case" do

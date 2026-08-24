@@ -166,7 +166,12 @@ export const AI_FEATURE_SETTING_GROUPS = {
     {
       key: "settings",
       titleKey: "discourse_ai.features.search.setting_groups.settings",
-      settings: ["ai_discover_enabled"],
+      settings: [
+        "ai_discover_enabled",
+        "ai_discover_default_mode",
+        "ai_discover_summary_detail",
+        "ai_discover_related_count",
+      ],
     },
     {
       key: "agents",

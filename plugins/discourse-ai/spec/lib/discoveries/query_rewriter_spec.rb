@@ -68,7 +68,7 @@ describe DiscourseAi::Discoveries::QueryRewriter do
       keyword_query: "delete admin bot user",
       semantic_query: "how to remove a bot account with administrator permissions",
     )
-    expect(feature_name).to eq("discoveries_query_rewrite")
+    expect(feature_name).to eq("discover_query_rewrite")
   end
 
   it "falls back to the original query when the agent returns unusable values" do

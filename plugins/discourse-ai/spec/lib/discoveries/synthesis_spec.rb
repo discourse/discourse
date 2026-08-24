@@ -3,7 +3,7 @@
 describe DiscourseAi::Discoveries::Synthesis do
   subject(:synthesis) { described_class.new(user:, ai_agent:, llm_model:) }
 
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, locale: "fr") }
   fab!(:llm_model)
   fab!(:ai_agent) do
     Fabricate(
@@ -18,6 +18,7 @@ describe DiscourseAi::Discoveries::Synthesis do
   before { enable_current_plugin }
 
   it "uses one tool-free structured call to select sources and stream an answer" do
+    SiteSetting.ai_discover_related_count = 4
     feature_name = nil
     allow(DiscourseAi::Agents::BotContext).to receive(:new).and_wrap_original do |original, **args|
       feature_name = args[:feature_name]
@@ -49,14 +50,11 @@ describe DiscourseAi::Discoveries::Synthesis do
         ],
       ) do |_, _, prompts, prompt_options|
         response =
-          synthesis.call(
-            query: "how do I create a plugin",
-            candidates:,
-            related_count: 4,
-          ) { |update| updates << update }
+          synthesis.call(query: "怎么删除具备管理员权限的幽灵机器人用户？", candidates:, related_count: 4) do |update|
+            updates << update
+          end
 
         prompt = prompts.first
-        expect(prompt.system_message_text).to eq(ai_agent.system_prompt)
         expect(prompt.tools).to be_empty
         expect(prompt_options.first).to include(temperature: 0.3, top_p: 0.8)
         expect(prompt_options.first[:response_format]).to include(
@@ -76,8 +74,9 @@ describe DiscourseAi::Discoveries::Synthesis do
             ),
         )
         supplied_input = JSON.parse(prompt.messages.last[:content])
-        expect(supplied_input.fetch("preferences")).to eq(
-          "show_summary" => true,
+        expect(supplied_input.fetch("original_query")).to eq("怎么删除具备管理员权限的幽灵机器人用户？")
+        expect(supplied_input.fetch("user_locale")).to eq("fr")
+        expect(supplied_input.fetch("settings")).to eq(
           "summary_detail" => "balanced",
           "related_count" => 4,
         )
@@ -109,10 +108,10 @@ describe DiscourseAi::Discoveries::Synthesis do
       title: "Create a Discourse plugin",
       answer: "Use the plugin skeleton.",
     )
-    expect(feature_name).to eq("discoveries")
+    expect(feature_name).to eq("discover")
   end
 
-  it "requests only answerability and sources when the summary is hidden" do
+  it "keeps the fixed response contract for quiet summaries" do
     candidates = [
       {
         "source_ref" => "source_1",
@@ -123,53 +122,20 @@ describe DiscourseAi::Discoveries::Synthesis do
 
     result =
       DiscourseAi::Completions::Llm.with_prepared_responses(
-        [{ answerable: true, source_refs: %w[source_1] }],
-      ) do |_, _, prompts, prompt_options|
-        response =
-          synthesis.call(
-            query: "how do I create a plugin",
-            candidates:,
-            show_summary: false,
-            summary_detail: :quiet,
-            related_count: 3,
-          )
-
-        properties = prompt_options.first.dig(:response_format, :json_schema, :schema, :properties)
-        expect(properties.keys).to contain_exactly(:answerable, :source_refs)
-        expect(JSON.parse(prompts.first.messages.last[:content]).fetch("preferences")).to eq(
-          "show_summary" => false,
-          "summary_detail" => "quiet",
-          "related_count" => 3,
-        )
-        response
-      end
-
-    expect(result).to have_attributes(
-      answerable: true,
-      source_refs: %w[source_1],
-      title: "",
-      answer: "",
-    )
-  end
-
-  it "requests a concise answer without a title for quiet summaries" do
-    candidates = [
-      {
-        "source_ref" => "source_1",
-        "title" => "Create a Discourse plugin",
-        "excerpt" => "Start with the plugin skeleton.",
-      },
-    ]
-
-    result =
-      DiscourseAi::Completions::Llm.with_prepared_responses(
-        [{ answerable: true, source_refs: %w[source_1], answer: "Use the plugin skeleton." }],
+        [
+          {
+            answerable: true,
+            source_refs: %w[source_1],
+            title: "",
+            answer: "Use the plugin skeleton.",
+          },
+        ],
       ) do |_, _, _, prompt_options|
         response =
           synthesis.call(query: "how do I create a plugin", candidates:, summary_detail: :quiet)
 
         properties = prompt_options.first.dig(:response_format, :json_schema, :schema, :properties)
-        expect(properties.keys).to contain_exactly(:answerable, :source_refs, :answer)
+        expect(properties.keys).to contain_exactly(:answerable, :source_refs, :title, :answer)
         response
       end
 
@@ -179,6 +145,37 @@ describe DiscourseAi::Discoveries::Synthesis do
       title: "",
       answer: "Use the plugin skeleton.",
     )
+  end
+
+  it "does not repeat structured sources in the answer text" do
+    candidates = [
+      {
+        "source_ref" => "source_1",
+        "title" => "Create a Discourse plugin",
+        "excerpt" => "Start with the plugin skeleton.",
+      },
+    ]
+    updates = []
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [
+          {
+            answerable: true,
+            source_refs: %w[source_1],
+            title: "Create a plugin",
+            answer:
+              "Start with the plugin skeleton [[source_1]].\n\n**Sources:**\n- [Create a Discourse plugin](https://example.com/source_1)",
+          },
+        ],
+      ) do
+        synthesis.call(query: "how do I create a plugin", candidates:) do |update|
+          updates << update
+        end
+      end
+
+    expect(result.answer).to eq("Start with the plugin skeleton.")
+    expect(updates.last[:answer]).to eq("Start with the plugin skeleton.")
   end
 
   it "returns an empty result without calling the model when there are no candidates" do

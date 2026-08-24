@@ -3,13 +3,7 @@
 module DiscourseAi
   module Discover
     class EntryPoint
-      USER_OPTION_ATTRIBUTES = %i[
-        ai_search_discoveries
-        ai_search_discoveries_mode
-        ai_search_discoveries_show_summary
-        ai_search_discoveries_summary_detail
-        ai_search_discoveries_related_count
-      ].freeze
+      USER_OPTION_ATTRIBUTES = %i[ai_search_discoveries].freeze
 
       def inject_into(plugin)
         plugin.add_to_serializer(
@@ -37,21 +31,6 @@ module DiscourseAi
               attribute,
               include_condition: eligible_for_discoveries,
             ) { object.public_send(attribute) }
-          end
-        end
-
-        plugin.add_model_callback(UserOption, :validate) do
-          if !DiscourseAi::Discoveries::SEARCH_MODES.value?(ai_search_discoveries_mode)
-            errors.add(:ai_search_discoveries_mode, :inclusion)
-          end
-          if !DiscourseAi::Discoveries::SUMMARY_DETAILS.value?(ai_search_discoveries_summary_detail)
-            errors.add(:ai_search_discoveries_summary_detail, :inclusion)
-          end
-          if !ai_search_discoveries_related_count.to_i.between?(
-               DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS,
-               DiscourseAi::Discoveries::MAX_RELATED_DISCUSSIONS,
-             )
-            errors.add(:ai_search_discoveries_related_count, :inclusion)
           end
         end
       end

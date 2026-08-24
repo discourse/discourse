@@ -12,15 +12,7 @@ export default apiInitializer((api) => {
     return;
   }
 
-  [
-    "ai_search_discoveries",
-    "ai_search_discoveries_mode",
-    "ai_search_discoveries_show_summary",
-    "ai_search_discoveries_summary_detail",
-    "ai_search_discoveries_related_count",
-  ].forEach((option) => {
-    api.addSaveableUserOption(option, { page: "interface" });
-  });
+  api.addSaveableUserOption("ai_search_discoveries", { page: "interface" });
 
   if (currentUser.user_option?.ai_search_discoveries === false) {
     return;

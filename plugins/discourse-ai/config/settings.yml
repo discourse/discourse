@@ -444,6 +444,26 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/search"
+  ai_discover_default_mode:
+    default: "ask"
+    type: enum
+    choices:
+      - "search"
+      - "ask"
+    client: true
+    area: "ai-features/search"
+  ai_discover_summary_detail:
+    default: "balanced"
+    type: enum
+    enum: "DiscourseAi::Configuration::DiscoveriesSummaryDetailEnumerator"
+    client: true
+    area: "ai-features/search"
+  ai_discover_related_count:
+    default: 2
+    min: 2
+    max: 6
+    client: true
+    area: "ai-features/search"
   ai_discover_agent:
     default: "-34"
     type: enum
@@ -460,6 +480,7 @@ discourse_ai:
     type: enum
     client: true
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    validator: "DiscourseAi::Configuration::DiscoveriesFollowUpAgentValidator"
     area: "ai-features/search"
   ai_discover_allowed_groups:
     type: group_list

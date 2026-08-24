@@ -197,22 +197,10 @@ describe DiscourseAi::AiBot::EntryPoint do
       SiteSetting.ai_discover_allowed_groups = group.id.to_s
       SiteSetting.ai_embeddings_enabled = true
       SiteSetting.ai_embeddings_semantic_search_enabled = true
-      user.user_option.update!(
-        ai_search_discoveries: true,
-        ai_search_discoveries_mode: 0,
-        ai_search_discoveries_show_summary: false,
-        ai_search_discoveries_summary_detail: 2,
-        ai_search_discoveries_related_count: 5,
-      )
+      user.user_option.update!(ai_search_discoveries: true)
       serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user))
       serializer = serializer.as_json
-      expect(serializer[:current_user][:user_option]).to include(
-        ai_search_discoveries: true,
-        ai_search_discoveries_mode: 0,
-        ai_search_discoveries_show_summary: false,
-        ai_search_discoveries_summary_detail: 2,
-        ai_search_discoveries_related_count: 5,
-      )
+      expect(serializer[:current_user][:user_option]).to include(ai_search_discoveries: true)
     end
   end
 end

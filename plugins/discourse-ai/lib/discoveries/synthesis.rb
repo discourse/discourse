@@ -4,21 +4,11 @@ module DiscourseAi
   module Discoveries
     class Synthesis
       Result = Struct.new(:answerable, :source_refs, :title, :answer, keyword_init: true)
-      RESPONSE_FORMAT = [
-        { "key" => "answerable", "type" => "boolean" },
-        {
-          "key" => "source_refs",
-          "type" => "array",
-          "array_type" => "string",
-          "max_items" => DiscourseAi::Discoveries::Retrieval::SELECTED_SOURCE_LIMIT,
-        },
-        { "key" => "title", "type" => "string" },
-        { "key" => "answer", "type" => "string" },
-      ].freeze
-      SOURCE_ONLY_RESPONSE_FORMAT = RESPONSE_FORMAT.first(2).freeze
-      TITLELESS_SUMMARY_RESPONSE_FORMAT =
-        RESPONSE_FORMAT.reject { |property| property["key"] == "title" }.freeze
       PLACEHOLDER_ANSWERS = %w[true false null undefined none].freeze
+      SOURCE_REFERENCE_PATTERN =
+        /[ \t]*(?:\[\[source_\d+\]\]|\[source_\d+\](?:\([^)]+\))?|\(source_\d+\))(?:[ \t]*,[ \t]*(?:\[\[source_\d+\]\]|\[source_\d+\](?:\([^)]+\))?|\(source_\d+\)))*/i
+      SOURCES_SECTION_PATTERN =
+        /\n{2,}(?:\#{1,6}\s*)?(?:\*\*|__)?(?:sources|references)\s*:?(?:\*\*|__)?\s*\n.*\z/im
 
       def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil)
         @user = user
@@ -30,7 +20,6 @@ module DiscourseAi
       def call(
         query:,
         candidates:,
-        show_summary: true,
         summary_detail: :balanced,
         related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
       )
@@ -38,25 +27,21 @@ module DiscourseAi
           return Result.new(answerable: false, source_refs: [], title: "", answer: "")
         end
         related_count = normalized_related_count(related_count)
-        show_title = show_summary && summary_detail.to_s != "quiet"
 
         context =
           DiscourseAi::Agents::BotContext.new(
             user: @user,
             messages: [
-              {
-                type: :user,
-                content: input(query, candidates, show_summary:, summary_detail:, related_count:),
-              },
+              { type: :user, content: input(query, candidates, summary_detail:, related_count:) },
             ],
             skip_show_thinking: true,
-            feature_name: "discoveries",
+            feature_name: "discover",
             cancel_manager: @cancel_manager,
           )
         bot =
           DiscourseAi::Agents::Bot.as(
             Discourse.system_user,
-            agent: synthesis_agent(show_summary:, show_title:, related_count:),
+            agent: synthesis_agent(summary_detail:),
             model: @llm_model,
           )
         values = { answerable: nil, source_refs: nil, title: +"", answer: +"" }
@@ -70,17 +55,17 @@ module DiscourseAi
           source_refs = partial.read_buffered_property(:source_refs)
           values[:source_refs] = source_refs if !source_refs.nil?
 
-          if show_title
-            title = partial.read_buffered_property(:title)
-            values[:title] << title if title.present?
-          end
+          title = partial.read_buffered_property(:title)
+          values[:title] << title if title.present?
 
-          if show_summary
-            answer_delta = partial.read_buffered_property(:answer)
-            values[:answer] << answer_delta if !answer_delta.nil?
-          end
+          answer_delta = partial.read_buffered_property(:answer)
+          values[:answer] << answer_delta if !answer_delta.nil?
 
-          yield values.deep_dup if block_given?
+          if block_given?
+            update = values.deep_dup
+            update[:answer] = answer_without_source_references(update[:answer])
+            yield update
+          end
         end
 
         result =
@@ -88,11 +73,11 @@ module DiscourseAi
             answerable: values[:answerable] == true,
             source_refs: Array(values[:source_refs]),
             title: values[:title].to_s.strip,
-            answer: values[:answer].strip,
+            answer: answer_without_source_references(values[:answer]),
           )
         return empty_result if !result.answerable
 
-        valid_result?(result, candidates:, show_summary:, related_count:) ? result : empty_result
+        valid_result?(result, candidates:, related_count:) ? result : empty_result
       end
 
       def self.meaningful_answer?(answer)
@@ -104,7 +89,7 @@ module DiscourseAi
 
       private
 
-      def valid_result?(result, candidates:, show_summary:, related_count:)
+      def valid_result?(result, candidates:, related_count:)
         return false if result.source_refs.empty?
         return false if result.source_refs.uniq.length != result.source_refs.length
         return false if result.source_refs.length > related_count
@@ -113,7 +98,7 @@ module DiscourseAi
         if result.source_refs.any? { |source_ref| !candidate_refs.include?(source_ref) }
           return false
         end
-        return false if show_summary && !self.class.meaningful_answer?(result.answer)
+        return false if !self.class.meaningful_answer?(result.answer)
 
         true
       end
@@ -122,44 +107,55 @@ module DiscourseAi
         Result.new(answerable: false, source_refs: [], title: "", answer: "")
       end
 
-      def synthesis_agent(show_summary:, show_title:, related_count:)
-        response_format =
-          if !show_summary
-            SOURCE_ONLY_RESPONSE_FORMAT
-          elsif !show_title
-            TITLELESS_SUMMARY_RESPONSE_FORMAT
-          else
-            RESPONSE_FORMAT
-          end.deep_dup
-        response_format.find { |property| property["key"] == "source_refs" }[
-          "max_items"
-        ] = related_count
+      def synthesis_agent(summary_detail:)
+        configured_agent = @ai_agent.class_instance.new
+        system_prompt = [configured_agent.system_prompt, summary_instruction(summary_detail:)].join(
+          "\n\n",
+        )
 
         Class
-          .new(@ai_agent.class_instance) do
-            define_method(:tools) { [] }
-            define_method(:available_tools) { [] }
-            define_method(:runtime_tools) { |**| [] }
-            define_method(:native_tools) { [] }
-            define_method(:required_tools) { [] }
-            define_method(:force_tool_use) { [] }
-            define_method(:forced_tool_count) { -1 }
-            define_method(:response_format) { response_format }
+          .new(DiscourseAi::Agents::Discover) do
+            define_method(:system_prompt) { system_prompt }
+            define_method(:temperature) { configured_agent.temperature }
+            define_method(:top_p) { configured_agent.top_p }
+            define_method(:thinking_effort) { configured_agent.thinking_effort }
           end
           .new
+      end
+
+      def summary_instruction(summary_detail:)
+        detail_instruction =
+          case summary_detail.to_s
+          when "quiet"
+            "For this request, write exactly one concise sentence with no title."
+          when "detailed"
+            "For this request, write two or three short paragraphs totaling 100 to 160 words. Separate paragraphs with a blank line. Do not combine them into one paragraph."
+          else
+            "For this request, write exactly one paragraph of 40 to 80 words."
+          end
+
+        "#{detail_instruction} Do not include source identifiers, citations, or a sources or references section. The selected discussions are shown separately."
+      end
+
+      def answer_without_source_references(answer)
+        answer
+          .to_s
+          .sub(SOURCES_SECTION_PATTERN, "")
+          .gsub(SOURCE_REFERENCE_PATTERN, "")
+          .gsub(/[ \t]+([.,;:!?])/, '\\1')
+          .strip
       end
 
       def input(
         query,
         candidates,
-        show_summary: true,
         summary_detail: :balanced,
         related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
       )
         JSON.generate(
-          query:,
-          preferences: {
-            show_summary:,
+          original_query: query,
+          user_locale: @user.effective_locale,
+          settings: {
             summary_detail:,
             related_count:,
           },

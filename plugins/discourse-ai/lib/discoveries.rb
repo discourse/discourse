@@ -5,8 +5,7 @@ module DiscourseAi
     REQUEST_TTL = 30.minutes.to_i
     SITE_CONCURRENCY_LIMIT = 4
     WORK_LEASE_TTL = 25.seconds.to_i
-    SEARCH_MODES = { search: 0, ask: 1 }.freeze
-    SUMMARY_DETAILS = { quiet: 0, balanced: 1, prominent: 2 }.freeze
+    SUMMARY_DETAILS = %i[quiet balanced detailed].freeze
     MIN_RELATED_DISCUSSIONS = 2
     MAX_RELATED_DISCUSSIONS = 6
     REQUEST_ID_PATTERN =
@@ -71,16 +70,11 @@ module DiscourseAi
         query.to_s.match?(PRIVATE_MESSAGE_FILTER)
       end
 
-      def preferences_for(user)
-        option = user.user_option
-        summary_detail =
-          SUMMARY_DETAILS.key(option.ai_search_discoveries_summary_detail) || :balanced
-        related_count = option.ai_search_discoveries_related_count.to_i
-        if !related_count.between?(MIN_RELATED_DISCUSSIONS, MAX_RELATED_DISCUSSIONS)
-          related_count = MIN_RELATED_DISCUSSIONS
-        end
-
-        { show_summary: option.ai_search_discoveries_show_summary, summary_detail:, related_count: }
+      def result_settings
+        {
+          summary_detail: SiteSetting.ai_discover_summary_detail.to_sym,
+          related_count: SiteSetting.ai_discover_related_count,
+        }
       end
 
       def bind_request(user_id:, request_id:, query:)

@@ -46,6 +46,12 @@ en:
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
+    admin:
+      site_settings:
+        ai_discover_summary_detail:
+          quiet: "Quiet (one sentence, no heading)"
+          balanced: "Balanced (one short paragraph)"
+          detailed: "Detailed (two or three short paragraphs)"
     discourse_workflows:
       node_unavailable:
         requires_ai: "Requires the AI plugin to be enabled"
@@ -1640,7 +1646,7 @@ en:
           submit: "Ask"
         timed_out: "Discoveries took too long to complete this search. Try again or use Search."
         request_failed: "Discoveries could not start this search. Try again or use Search."
-        no_answer: "We couldn’t find enough useful discussion to answer this. Ask the community instead."
+        no_answer: "We couldn’t find a clear answer. Ask the community."
         create_topic: "Create topic"
         answer_ready: "Discoveries answer ready."
         user_setting: "Enable AI search discoveries"
@@ -1654,19 +1660,6 @@ en:
         sources:
           related_discussions: "Related discussions"
           show_all_matching: "Show all matching posts"
-        preferences:
-          label: "Discoveries preferences"
-          related_discussions: "Related discussions"
-          show_fewer_discussions: "Show fewer related discussions"
-          show_more_discussions: "Show more related discussions"
-          show_summary: "Show useful summary"
-          summary_detail: "Summary detail"
-          quiet: "Quiet"
-          balanced: "Balanced"
-          detailed: "Detailed"
-          detail_hint_0: "One concise takeaway."
-          detail_hint_1: "A short answer with key context."
-          detail_hint_2: "A fuller answer with more detail."
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:

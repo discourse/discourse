@@ -1,6 +1,6 @@
 /* eslint-disable qunit/no-conditional-assertions */
 import Service from "@ember/service";
-import { click, fillIn, find, render, waitUntil } from "@ember/test-helpers";
+import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
@@ -14,6 +14,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
 
   hooks.beforeEach(function () {
     this.siteSettings.ai_discover_enabled = true;
+    this.siteSettings.ai_discover_summary_detail = "balanced";
+    this.siteSettings.ai_discover_related_count = 2;
     this.currentUser.can_use_ai_discover_agent = true;
 
     this.closeSearchMenuCalled = false;
@@ -65,12 +67,12 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
   });
 
   test("hides the structured answer title in Quiet mode", async function (assert) {
+    this.siteSettings.ai_discover_summary_detail = "quiet";
     this.owner.register(
       "service:discobot-discoveries",
       class extends Service {
         discoveryTitle = "Two Miyazakis, two bodies of work";
         streamedText = "A concise answer.";
-        summaryDetail = 0;
         loadingDiscoveries = false;
         isStreaming = false;
         discoveryTimedOut = false;
@@ -135,6 +137,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
   });
 
   test("shows the requested discussions and links to all matching posts", async function (assert) {
+    this.siteSettings.ai_discover_related_count = 3;
     const sources = [
       {
         title: "Recurring ideas across Hayao Miyazaki’s films",
@@ -197,7 +200,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .hasText("Related discussions", "the source group is clearly labelled");
     assert
       .dom(".ai-discovery-sources__item")
-      .exists({ count: 2 }, "two discussions are shown by default");
+      .exists({ count: 3 }, "the configured number of discussions is shown");
     assert
       .dom(".ai-discovery-source__avatar .avatar")
       .exists({ count: 2 }, "discussion cards show their source authors");
@@ -227,8 +230,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     );
   });
 
-  test("offers compact result preferences from the Discoveries menu", async function (assert) {
-    const changes = [];
+  test("does not show result preferences in the Discoveries result", async function (assert) {
     this.owner.register(
       "service:discobot-discoveries",
       class extends Service {
@@ -237,24 +239,9 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         isStreaming = false;
         discoveryTimedOut = false;
         showDiscoveryTitle = true;
-        showSummary = true;
-        summaryDetail = 0;
-        relatedCount = 2;
-        savingPreferences = false;
 
         triggerDiscovery() {}
         onDiscoveryUpdate() {}
-        setRelatedCount(value) {
-          changes.push(["related", value]);
-        }
-
-        setShowSummary(value) {
-          changes.push(["summary", value]);
-        }
-
-        setSummaryDetail(value) {
-          changes.push(["detail", value]);
-        }
       }
     );
 
@@ -264,61 +251,9 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       </template>
     );
 
-    await click(".ai-discovery-preferences-menu .fk-d-menu__trigger");
-
     assert
-      .dom(".ai-discovery-preferences")
-      .exists("the preferences open in a menu");
-    assert.dom(".ai-discovery-preferences__count").hasText("2");
-    assert
-      .dom(
-        ".ai-discovery-preferences__summary-row > .ai-discovery-preferences__label"
-      )
-      .hasText(
-        "Show useful summary",
-        "the summary setting follows the same label-control layout"
-      );
-    assert
-      .dom(
-        ".ai-discovery-preferences__detail-group > .ai-discovery-preferences__label"
-      )
-      .hasText("Summary detail", "the detail control has a visible label");
-    assert
-      .dom(".ai-discovery-preferences__detail")
-      .doesNotHaveClass(
-        "d-segmented-control--small",
-        "the three detail choices have a comfortable target size"
-      );
-    assert
-      .dom('.ai-discovery-preferences input[value="quiet"]')
-      .isChecked("Quiet is selected");
-    await waitUntil(() =>
-      find(".ai-discovery-preferences__detail")?.style.getPropertyValue(
-        "--slider-width"
-      )
-    );
-    assert.notStrictEqual(
-      find(".ai-discovery-preferences__detail").style.getPropertyValue(
-        "--slider-width"
-      ),
-      "",
-      "Quiet has a visible selected state"
-    );
-    assert
-      .dom('.ai-discovery-preferences input[value="detailed"] + span')
-      .hasText("Detailed", "the most detailed option describes its output");
-
-    await click(".ai-discovery-preferences__increment");
-    await click(
-      ".ai-discovery-preferences__summary-toggle + .d-toggle-switch__checkbox-slider"
-    );
-    await click('.ai-discovery-preferences input[value="detailed"]');
-
-    assert.deepEqual(changes, [
-      ["related", 3],
-      ["summary", false],
-      ["detail", 2],
-    ]);
+      .dom(".ai-discovery-preferences-menu")
+      .doesNotExist("result density is configured by site settings");
   });
 
   test("clicking a link in discovery text closes search menu", async function (assert) {
@@ -659,47 +594,6 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     assert
       .dom(".ai-search-discoveries__continue-conversation")
       .doesNotExist("the selected follow-up agent must be available");
-  });
-
-  test("offers a follow-up from selected discussions when summary prose is hidden", async function (assert) {
-    this.currentUser.ai_enabled_agents = [
-      {
-        id: -1,
-        username: null,
-        allow_personal_messages: true,
-      },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
-    ];
-    this.siteSettings.ai_bot_enabled = true;
-    this.siteSettings.ai_discover_agent = "-34";
-    this.siteSettings.ai_discover_follow_up_agent = "-1";
-
-    this.owner.register(
-      "service:discobot-discoveries",
-      class extends Service {
-        discovery = "";
-        streamedText = "";
-        sources = [{ title: "A selected discussion", url: "/t/topic/1" }];
-        showSummary = false;
-        answerable = true;
-        loadingDiscoveries = false;
-        isStreaming = false;
-        discoveryTimedOut = false;
-
-        triggerDiscovery() {}
-        onDiscoveryUpdate() {}
-      }
-    );
-
-    await render(
-      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
-    );
-
-    assert
-      .dom(".ai-search-discoveries__continue-conversation")
-      .exists("selected discussions provide server-owned follow-up context");
   });
 
   test("shows a useful no-answer state after completion", async function (assert) {

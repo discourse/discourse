@@ -8,7 +8,6 @@ acceptance("AI Discoveries - search mode", function (needs) {
     can_use_ai_discover_agent: true,
     user_option: {
       ai_search_discoveries: true,
-      ai_search_discoveries_mode: 1,
     },
   });
 
@@ -16,6 +15,7 @@ acceptance("AI Discoveries - search mode", function (needs) {
     discourse_ai_enabled: true,
     ai_discover_enabled: true,
     ai_discover_agent: -34,
+    ai_discover_default_mode: "ask",
   });
 
   needs.pretender((server, helper) => {
@@ -65,7 +65,6 @@ acceptance("AI Discoveries - user disabled", function (needs) {
     can_use_ai_discover_agent: true,
     user_option: {
       ai_search_discoveries: false,
-      ai_search_discoveries_mode: 1,
     },
   });
 
@@ -73,6 +72,7 @@ acceptance("AI Discoveries - user disabled", function (needs) {
     discourse_ai_enabled: true,
     ai_discover_enabled: true,
     ai_discover_agent: -34,
+    ai_discover_default_mode: "ask",
   });
 
   needs.pretender((server, helper) => {
