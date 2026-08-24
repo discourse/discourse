@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -10,6 +10,7 @@ import {
   SCROLLER_HEIGHT,
   timelineDate,
 } from "discourse/components/topic-timeline/container";
+import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import { i18n } from "discourse-i18n";
@@ -173,6 +174,9 @@ export default class NestedTimeline extends Component {
     return this.args.rootNodes?.[localIndex];
   }
 
+  // Three consumers read this per frame while scrubbing (the label, the
+  // accessible description and the scroller body); walk the branch once.
+  @cached
   get displayBranchSummary() {
     return this.#branchSummary(this.displayNode);
   }
@@ -190,6 +194,11 @@ export default class NestedTimeline extends Component {
   // One mark per loaded root that has replies, aligned with where the
   // scroller centre sits for that root. Length encodes subtree size; notches
   // encode the depth proven by loaded nodes and aggregate reply counts.
+  //
+  // Cached, and deliberately free of the active index: walking every loaded
+  // root's subtree once per scrub frame is the expensive part, and which mark
+  // is active is settled in the template instead.
+  @cached
   get branchMarks() {
     const trackHeight = this.#trackHeight;
     const marks = [];
@@ -213,14 +222,14 @@ export default class NestedTimeline extends Component {
         SCROLLER_HEIGHT / 2;
 
       marks.push({
-        active: absoluteIndex === this.displayIndex,
         continues: shape.continues,
         depthIndicators: [...Array(Math.min(shape.depth, 4)).keys()],
+        index: absoluteIndex,
         key: node.post.id,
         style: trustHTML(
           `top: ${top.toFixed(1)}px; width: ${width.toFixed(2)}em`
         ),
-        title: this.#branchSummary(node),
+        title: this.#branchSummary(node, shape),
       });
     });
 
@@ -234,14 +243,19 @@ export default class NestedTimeline extends Component {
     );
   }
 
+  // Measured against the track, like the marks it brackets: the scrollarea is
+  // taller than the travel available to the handle, so spanning the full height
+  // would leave the band off the marks everywhere but the middle of the axis.
   get loadedWindowStyle() {
+    const trackHeight = this.#trackHeight;
     const start = Math.max(this.args.rootWindowStart || 0, 0);
     const count = Math.max(
       0,
       Math.min(this.args.rootNodes?.length || 0, this.total - start)
     );
-    const top = (start / this.total) * this.scrollareaHeight;
-    const height = Math.max((count / this.total) * this.scrollareaHeight, 2);
+    const top =
+      this.#percentageForPosition(start) * trackHeight + SCROLLER_HEIGHT / 2;
+    const height = Math.max((count / this.total) * trackHeight, 2);
 
     return trustHTML(
       `top: ${top.toFixed(1)}px; height: ${height.toFixed(1)}px`
@@ -536,13 +550,13 @@ export default class NestedTimeline extends Component {
     return Math.max(0, Math.min(value, 1));
   }
 
-  #branchSummary(node) {
+  #branchSummary(node, precomputedShape = null) {
     const descendants = node?.post?.total_descendant_count ?? 0;
     if (descendants <= 0) {
       return null;
     }
 
-    const shape = branchShape(node);
+    const shape = precomputedShape ?? branchShape(node);
     const replies = i18n("nested_replies.timeline.reply_count", {
       count: descendants,
     });
@@ -592,7 +606,7 @@ export default class NestedTimeline extends Component {
               <div
                 class={{dConcatClass
                   "nested-timeline__mark"
-                  (if mark.active "is-active")
+                  (if (eq mark.index this.displayIndex) "is-active")
                 }}
                 style={{mark.style}}
                 title={{mark.title}}

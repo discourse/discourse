@@ -1,6 +1,8 @@
 import { module, test } from "qunit";
 import {
+  effectiveRootHeight,
   rootIndexForLogicalOffset,
+  rootIndexForSpacerPosition,
   rootSpacerHeights,
   shouldShowTimeline,
 } from "discourse/components/nested";
@@ -65,6 +67,30 @@ module("Unit | Component | Nested", function () {
     );
   });
 
+  test("keeps the logical axis inside the browser's document ceiling", function (assert) {
+    assert.strictEqual(
+      effectiveRootHeight({ rootCount: 1_000, rootHeightEstimate: 240 }),
+      240,
+      "leaves the measured estimate alone while the axis fits"
+    );
+
+    const rootCount = 500_000;
+    const height = effectiveRootHeight({ rootCount, rootHeightEstimate: 240 });
+    assert.true(
+      height < 240,
+      "shrinks the per-root height once the axis would outgrow the ceiling"
+    );
+    assert.true(
+      rootCount * height <= 33_554_432,
+      "keeps the whole axis scrollable, so offsets still map back to roots"
+    );
+    assert.strictEqual(
+      effectiveRootHeight({ rootCount: null, rootHeightEstimate: 240 }),
+      240,
+      "has nothing to bound before the total is known"
+    );
+  });
+
   test("infers a direct root target anywhere in a large logical axis", function (assert) {
     assert.strictEqual(
       rootIndexForLogicalOffset({
@@ -92,6 +118,25 @@ module("Unit | Component | Nested", function () {
       }),
       null,
       "does not infer a target without a usable height estimate"
+    );
+  });
+
+  test("maps a bottom spacer independently of the rendered window height", function (assert) {
+    const rootCount = 500_000;
+    const rootHeightEstimate = effectiveRootHeight({
+      rootCount,
+      rootHeightEstimate: 240,
+    });
+
+    assert.strictEqual(
+      rootIndexForSpacerPosition({
+        distanceFromSpacerStart: 80 * rootHeightEstimate,
+        spacerStartIndex: 20,
+        rootCount,
+        rootHeightEstimate,
+      }),
+      100,
+      "measures the bottom spacer from the first unloaded root instead of including the real rendered window height"
     );
   });
 });

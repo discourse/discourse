@@ -83,9 +83,9 @@ module NestedReplies
 
       if pinned_missing_ids.present?
         fetched =
-          load_posts_for_tree(apply_visibility(topic.posts.where(id: pinned_missing_ids))).index_by(
-            &:id
-          )
+          load_posts_for_tree(
+            apply_visibility(topic.posts.where(id: pinned_missing_ids).where(post_number: 2..)),
+          ).index_by(&:id)
         pinned_missing_ids.each do |pid|
           post = fetched[pid]
           pinned_in_page << post if post && post.deleted_at.nil?

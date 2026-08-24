@@ -48,8 +48,8 @@ class NestedTopicsController < ApplicationController
   def show
     return redirect_to topic_route_url, status: topic_route_redirect_status if spa_boot_request?
 
-    # The ceiling only keeps the offset within a signed 64-bit integer; it is
-    # far above any reachable page so timeline jumps are never clamped.
+    # The ceiling only keeps an arbitrary page number out of the query's offset;
+    # it is far above any reachable page so timeline jumps are never clamped.
     page = params[:page].to_i.clamp(0, MAX_ROOT_PAGE)
     render json: list_roots_response(page: page)
   end

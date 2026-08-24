@@ -33,7 +33,12 @@ class NestedTopic::TogglePin
     guardian.can_edit?(topic) && guardian.is_staff?
   end
 
+  # The OP has no reply_to_post_number either, but it is not one of the roots
+  # the nested view lists: pinning it would show it twice and put the root
+  # count out of step with the list it describes.
   def post_is_root(post:)
+    return false if post.post_number == 1
+
     post.reply_to_post_number.blank? || post.reply_to_post_number == 1
   end
 

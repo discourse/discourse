@@ -883,6 +883,17 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(json["root_count"]).to eq(1)
       end
 
+      it "leaves a pinned OP out of the roots it is not counted among" do
+        pin_posts(op)
+        sign_in(user)
+
+        get show_url(topic, sort: "top")
+
+        json = response.parsed_body
+        expect(json["roots"].map { |r| r["id"] }).not_to include(op.id)
+        expect(json["roots"].length).to eq(json["root_count"])
+      end
+
       it "does not include pinned_post_ids when none are pinned" do
         sign_in(user)
 

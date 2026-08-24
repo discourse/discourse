@@ -25,6 +25,7 @@ export function processNestedRootResponse({
     page: data.page || 0,
     rootPageSize: data.root_page_size || 20,
     rootWindowStart: 0,
+    rootWindowIndicesStale: false,
     rootWindowPages: [
       {
         page: data.page || 0,
@@ -118,6 +119,7 @@ export function processNestedContextResponse({
     page: 0,
     rootPageSize: data.root_page_size || 20,
     rootWindowStart: 0,
+    rootWindowIndicesStale: false,
     rootWindowPages: [
       {
         page: 0,

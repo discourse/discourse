@@ -41,6 +41,10 @@ const postExcerpt = helper(([post]) => {
 const MOBILE_ROOT_VIEW_COLLAPSE_DEPTH = 3;
 const STORED_SCROLL_ANCHORS = Object.create(null);
 const DEFAULT_ROOT_HEIGHT_ESTIMATE = 240;
+// Browsers cap how tall a document can be (Chrome stops at ~33.5M px), and a
+// logical axis that runs past the cap silently stops matching the roots the
+// spacers stand in for. Kept under it, with room for the rest of the page.
+const MAX_LOGICAL_DOCUMENT_PX = 30_000_000;
 const LOAD_ROOTS_LEAD_PX = 600;
 const LOAD_MORE_ROOTS_MARGIN = `0px 0px ${LOAD_ROOTS_LEAD_PX}px 0px`;
 const LOAD_PREVIOUS_ROOTS_MARGIN = `${LOAD_ROOTS_LEAD_PX}px 0px 0px 0px`;
@@ -79,6 +83,17 @@ export function rootSpacerHeights({
   };
 }
 
+// The measured estimate, held down to whatever keeps the whole axis inside the
+// browser's ceiling. Spacers and offset-to-root both read it, so the mapping
+// stays reversible however many roots the topic has.
+export function effectiveRootHeight({ rootCount, rootHeightEstimate }) {
+  if (!rootCount || rootCount <= 0) {
+    return rootHeightEstimate;
+  }
+
+  return Math.min(rootHeightEstimate, MAX_LOGICAL_DOCUMENT_PX / rootCount);
+}
+
 export function rootIndexForLogicalOffset({
   offset,
   rootCount,
@@ -98,6 +113,19 @@ export function rootIndexForLogicalOffset({
     0,
     Math.min(Math.floor(offset / rootHeightEstimate), rootCount - 1)
   );
+}
+
+export function rootIndexForSpacerPosition({
+  distanceFromSpacerStart,
+  spacerStartIndex,
+  rootCount,
+  rootHeightEstimate,
+}) {
+  return rootIndexForLogicalOffset({
+    offset: spacerStartIndex * rootHeightEstimate + distanceFromSpacerStart,
+    rootCount,
+    rootHeightEstimate,
+  });
 }
 
 export default class Nested extends Component {
@@ -250,6 +278,13 @@ export default class Nested extends Component {
       rootCount: this.args.rootCount,
       rootWindowStart: this.args.rootWindowStart,
       loadedRootCount: this.args.rootNodes?.length,
+      rootHeightEstimate: this.effectiveRootHeight,
+    });
+  }
+
+  get effectiveRootHeight() {
+    return effectiveRootHeight({
+      rootCount: this.args.rootCount,
       rootHeightEstimate: this.rootHeightEstimate,
     });
   }
@@ -537,13 +572,18 @@ export default class Nested extends Component {
       return;
     }
 
-    const index = rootIndexForLogicalOffset({
-      offset: eyeline - rootsRect.top,
+    const belowWindow = eyeline >= rootWindowRect.bottom;
+    const windowEnd =
+      (this.args.rootWindowStart || 0) + (this.args.rootNodes?.length || 0);
+    const index = rootIndexForSpacerPosition({
+      distanceFromSpacerStart: belowWindow
+        ? eyeline - rootWindowRect.bottom
+        : eyeline - rootsRect.top,
+      spacerStartIndex: belowWindow ? windowEnd : 0,
       rootCount: this.args.rootCount,
-      rootHeightEstimate: this.rootHeightEstimate,
+      rootHeightEstimate: this.effectiveRootHeight,
     });
     const windowStart = this.args.rootWindowStart || 0;
-    const windowEnd = windowStart + (this.args.rootNodes?.length || 0);
     if (index == null || (index >= windowStart && index < windowEnd)) {
       return;
     }

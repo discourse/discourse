@@ -11,7 +11,8 @@ RSpec.describe NestedTopic::TogglePin do
 
     fab!(:admin)
     fab!(:topic)
-    fab!(:post) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:post) { Fabricate(:post, topic: topic, reply_to_post_number: nil) }
 
     let(:params) { { topic_id: topic.id, post_id: post.id } }
     let(:dependencies) { { guardian: admin.guardian } }
@@ -42,6 +43,12 @@ RSpec.describe NestedTopic::TogglePin do
 
     context "when post is not a root post" do
       fab!(:post) { Fabricate(:post, topic: topic, reply_to_post_number: 2) }
+
+      it { is_expected.to fail_a_policy(:post_is_root) }
+    end
+
+    context "when post is the topic's first post" do
+      let(:params) { { topic_id: topic.id, post_id: op.id } }
 
       it { is_expected.to fail_a_policy(:post_is_root) }
     end

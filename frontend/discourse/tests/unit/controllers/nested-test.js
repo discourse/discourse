@@ -1,6 +1,7 @@
 import { settled, waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { processNestedRootResponse } from "discourse/lib/nested-topic-model";
 import { NESTED_VIEW_CACHE_FORMAT_VERSION } from "discourse/lib/nested-view-cache-snapshot";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -24,6 +25,7 @@ module("Unit | Controller | nested", function (hooks) {
     this.controller.rootNodes = [];
     this.controller.rootWindowStart = 0;
     this.controller.rootWindowPages = [];
+    this.controller.rootWindowIndicesStale = false;
     this.controller.rootPageSize = 20;
     this.controller.pinnedRootCount = 0;
     this.controller.page = 0;
@@ -678,6 +680,79 @@ module("Unit | Controller | nested", function (hooks) {
     );
   });
 
+  test("a live batch that overflows the window keeps page boundaries honest", async function (assert) {
+    const topic = buildTopic(this.store, 926);
+
+    pretender.get("/posts/:id.json", (request) =>
+      response({
+        id: Number(request.params.id),
+        post_number: 900 + (Number(request.params.id) - 9_000),
+        topic_id: topic.id,
+        user_id: this.currentUser.id,
+        actions_summary: [],
+        direct_reply_count: 0,
+        total_descendant_count: 0,
+        reply_to_post_number: null,
+        children: [],
+      })
+    );
+    pretender.get(`/n/${topic.slug}/${topic.id}.json`, (request) => {
+      const page = Number(request.queryParams.page);
+      return response({
+        roots: [...Array(20)].map((_, offset) => ({
+          id: 7_000 + page * 20 + offset,
+          post_number: 3_000 + page * 20 + offset,
+          children: [],
+        })),
+        page,
+        root_page_size: 20,
+        has_more_roots: true,
+      });
+    });
+
+    this.controller.setProperties({
+      topic,
+      page: 2,
+      hasMoreRoots: true,
+      sort: "new",
+      effectiveSort: "new",
+      rootCount: 200,
+      rootPageSize: 20,
+      rootNodes: [...Array(60)].map((_, offset) => ({
+        post: buildPost(this.store, topic, 3_000 + offset, 2 + offset),
+        children: [],
+        _renderKey: 3_000 + offset,
+      })),
+      rootWindowPages: [0, 1, 2].map((page) => ({
+        page,
+        nodeCount: 20,
+        hasMoreRoots: true,
+        rootPageSize: 20,
+        absoluteStart: page * 20,
+      })),
+      // One page worth of new roots: more than the window's headroom, so the
+      // far end is trimmed at the same time as the near end grows.
+      newRootPostIds: [...Array(25)].map((_, offset) => 9_000 + offset),
+    });
+
+    await this.controller.loadNewRoots();
+
+    const beforeSlide = this.controller.rootNodes.map((node) => node.post.id);
+    assert.deepEqual(
+      this.controller.rootWindowPages.map((descriptor) => descriptor.nodeCount),
+      [45, 20, 15],
+      "charges the trim to the page it came off, not the page that grew"
+    );
+
+    await this.controller.loadMoreRoots();
+
+    assert.strictEqual(
+      this.controller.rootWindowStart,
+      beforeSlide.indexOf(this.controller.rootNodes[0].post.id),
+      "the retained pages report the global index they actually start at"
+    );
+  });
+
   test("overlapping root pages render each post once", async function (assert) {
     const topic = buildTopic(this.store, 724);
 
@@ -808,6 +883,222 @@ module("Unit | Controller | nested", function (hooks) {
     );
     assert.strictEqual(this.controller.rootWindowStart, 80);
     assert.strictEqual(this.controller.rootNodes.length, 20);
+  });
+
+  test("a page in flight cannot land on the topic navigated to next", async function (assert) {
+    const first = buildTopic(this.store, 941);
+    const second = buildTopic(this.store, 942);
+
+    pretender.get(`/n/${first.slug}/${first.id}.json`, (request) =>
+      response({
+        roots: [...Array(20)].map((_, offset) => ({
+          id: 1_000 + offset,
+          post_number: 22 + offset,
+          children: [],
+        })),
+        page: Number(request.queryParams.page),
+        root_page_size: 20,
+        has_more_roots: true,
+      })
+    );
+
+    const secondNodes = [
+      {
+        post: buildPost(this.store, second, 4_000, 2),
+        children: [],
+        _renderKey: 4_000,
+      },
+    ];
+
+    this.controller.setProperties({
+      topic: first,
+      page: 0,
+      hasMoreRoots: true,
+      sort: "old",
+      effectiveSort: "old",
+      rootCount: 100,
+      rootNodes: [...Array(20)].map((_, offset) => ({
+        post: buildPost(this.store, first, 2_000 + offset, 2 + offset),
+        children: [],
+        _renderKey: 2_000 + offset,
+      })),
+    });
+
+    const inFlight = this.controller.loadMoreRoots();
+    // The reader leaves for another topic before the page comes back.
+    this.controller.setProperties({
+      topic: second,
+      page: 0,
+      hasMoreRoots: false,
+      rootCount: 1,
+      rootNodes: secondNodes,
+      rootWindowStart: 0,
+      rootWindowPages: [
+        {
+          page: 0,
+          nodeCount: 1,
+          hasMoreRoots: false,
+          rootPageSize: 20,
+          absoluteStart: 0,
+        },
+      ],
+    });
+    await inFlight;
+    await settled();
+
+    assert.deepEqual(
+      this.controller.rootNodes.map((node) => node.post.id),
+      [4_000],
+      "the abandoned page does not replace the window of the topic now open"
+    );
+    assert.deepEqual(
+      (second.postStream?.posts || []).map((post) => post.id),
+      [],
+      "and its roots are not registered against the new topic's stream"
+    );
+  });
+
+  test("a stale index window does not follow a sort change", async function (assert) {
+    const topic = buildTopic(this.store, 943);
+    const liveRootId = 6_100;
+
+    pretender.get(`/posts/${liveRootId}.json`, () =>
+      response({
+        id: liveRootId,
+        post_number: 800,
+        topic_id: topic.id,
+        user_id: this.currentUser.id,
+        actions_summary: [],
+        direct_reply_count: 0,
+        total_descendant_count: 0,
+        reply_to_post_number: null,
+        children: [],
+      })
+    );
+    pretender.get(`/n/${topic.slug}/${topic.id}.json`, (request) => {
+      const page = Number(request.queryParams.page);
+      return response({
+        roots: [...Array(20)].map((_, offset) => ({
+          id: 7_500 + page * 20 + offset,
+          post_number: 2 + page * 20 + offset,
+          children: [],
+        })),
+        page,
+        root_page_size: 20,
+        has_more_roots: true,
+      });
+    });
+
+    this.controller.setProperties({
+      topic,
+      page: 0,
+      hasMoreRoots: true,
+      sort: "top",
+      effectiveSort: "top",
+      rootCount: 100,
+      rootNodes: [...Array(20)].map((_, offset) => ({
+        post: buildPost(this.store, topic, 5_000 + offset, 2 + offset),
+        children: [],
+        _renderKey: 5_000 + offset,
+      })),
+    });
+
+    // A score-sorted live root leaves the window's absolute indices unknown.
+    this.controller._onMessage(
+      { type: "created", id: liveRootId, user_id: this.currentUser.id },
+      null,
+      125
+    );
+    await settled();
+
+    // Switching sort transitions the route, which rebuilds the model from the
+    // fresh first page exactly as `#setupNestedController` does.
+    this.controller.setProperties(
+      processNestedRootResponse({
+        data: {
+          topic: { id: topic.id, slug: topic.slug },
+          roots: [...Array(20)].map((_, offset) => ({
+            id: 6_000 + offset,
+            post_number: 2 + offset,
+            children: [],
+          })),
+          page: 0,
+          root_page_size: 20,
+          has_more_roots: true,
+          root_count: 100,
+          sort: "new",
+          effective_sort: "new",
+        },
+        params: {},
+        site: this.owner.lookup("service:site"),
+        siteSettings: this.owner.lookup("service:site-settings"),
+        store: this.store,
+      })
+    );
+
+    await this.controller.loadMoreRoots();
+
+    assert.strictEqual(
+      this.controller.rootNodes.length,
+      40,
+      "the first page after a sort change is appended to, not replaced"
+    );
+    assert.strictEqual(this.controller.rootWindowStart, 0);
+  });
+
+  test("a restored page is refetched once its recorded age expires", async function (assert) {
+    const topic = buildTopic(this.store, 944);
+    const requestedPages = [];
+
+    pretender.get(`/n/${topic.slug}/${topic.id}.json`, (request) => {
+      const page = Number(request.queryParams.page);
+      requestedPages.push(page);
+      return response({
+        roots: [...Array(20)].map((_, offset) => ({
+          id: 3_300 + page * 20 + offset,
+          post_number: 2 + page * 20 + offset,
+          children: [],
+        })),
+        page,
+        root_page_size: 20,
+        has_more_roots: true,
+      });
+    });
+
+    this.controller.setProperties({
+      topic,
+      page: 0,
+      hasMoreRoots: true,
+      sort: "old",
+      effectiveSort: "old",
+      rootCount: 100,
+      rootWindowStart: 0,
+      rootNodes: [...Array(20)].map((_, offset) => ({
+        post: buildPost(this.store, topic, 3_300 + offset, 2 + offset),
+        children: [],
+        _renderKey: 3_300 + offset,
+      })),
+      // As restored from a cache snapshot taken well over the page TTL ago.
+      rootWindowPages: [
+        {
+          page: 0,
+          nodeCount: 20,
+          hasMoreRoots: true,
+          rootPageSize: 20,
+          absoluteStart: 0,
+          fetchedAt: 1,
+        },
+      ],
+    });
+
+    await this.controller.jumpToRoot(60);
+    await this.controller.jumpToRoot(0);
+
+    assert.deepEqual(
+      requestedPages,
+      [3, 0],
+      "the aged page zero is fetched again instead of served from the snapshot"
+    );
   });
 
   test("a restored multi-page window keeps its page boundaries", async function (assert) {

@@ -47,6 +47,9 @@ export default class NestedController extends Controller {
   @tracked rootPageSize = 20;
   @tracked rootWindowStart = 0;
   @tracked rootWindowPages = [];
+  // Model state, not controller state: a window whose absolute indices stopped
+  // being trustworthy must not carry that verdict into the next topic or sort.
+  @tracked rootWindowIndicesStale = false;
   @tracked hasMoreRoots = false;
   @tracked rootCount = null;
   @tracked loadingMore = false;
@@ -100,7 +103,6 @@ export default class NestedController extends Controller {
   #rootWindowKey = null;
   #rootWindowNodesRef = null;
   #rootWindowGeneration = 0;
-  #rootWindowIndicesStale = false;
   #postEventsSubscribed = false;
   #messageBusChannel = null;
   #pendingPostIds = new Set();
@@ -303,12 +305,12 @@ export default class NestedController extends Controller {
     try {
       const nextPage = this.#rootWindowEntries.at(-1).page + 1;
       const entry = await this.#getRootPage(nextPage);
-      if (generation !== this.#rootWindowGeneration) {
+      if (!entry || generation !== this.#rootWindowGeneration) {
         return;
       }
 
       this.#activateRootWindow(
-        this.#rootWindowIndicesStale
+        this.rootWindowIndicesStale
           ? [entry]
           : [...this.#rootWindowEntries, entry]
       );
@@ -333,12 +335,12 @@ export default class NestedController extends Controller {
     const generation = this.#rootWindowGeneration;
     try {
       const entry = await this.#getRootPage(previousPage);
-      if (generation !== this.#rootWindowGeneration) {
+      if (!entry || generation !== this.#rootWindowGeneration) {
         return;
       }
 
       this.#activateRootWindow(
-        this.#rootWindowIndicesStale
+        this.rootWindowIndicesStale
           ? [entry]
           : [entry, ...this.#rootWindowEntries],
         { keep: "start" }
@@ -445,18 +447,23 @@ export default class NestedController extends Controller {
     return { index: targetIndex, reached: targetIndex === index };
   }
 
+  // Returns null when the reader has moved on. Processing the roots would bind
+  // them to whatever topic is open by then, putting one topic's posts into
+  // another's stream, so the response is dropped before it is turned into nodes.
   async #requestRootPage(page) {
     this.#activeRootRequestCount++;
     this.loadingMore = true;
+    const topicId = this.topic?.id;
+    const sort = this.effectiveSort || this.sort || "top";
 
     try {
-      const query = new URLSearchParams({
-        page,
-        sort: this.effectiveSort || this.sort || "top",
-      });
+      const query = new URLSearchParams({ page, sort });
       const data = await ajax(
         `/n/${this.topic.slug}/${this.topic.id}.json?${query}`
       );
+      if (!this.#isCurrentRootContext(topicId, sort)) {
+        return null;
+      }
 
       return {
         data,
@@ -466,6 +473,13 @@ export default class NestedController extends Controller {
       this.#activeRootRequestCount--;
       this.loadingMore = this.#activeRootRequestCount > 0;
     }
+  }
+
+  #isCurrentRootContext(topicId, sort) {
+    return (
+      this.topic?.id === topicId &&
+      (this.effectiveSort || this.sort || "top") === sort
+    );
   }
 
   async #getRootPage(page) {
@@ -482,6 +496,10 @@ export default class NestedController extends Controller {
     }
 
     const result = await this.#requestRootPage(page);
+    if (!result) {
+      return null;
+    }
+
     const entry = this.#rootWindowEntry(result, result.data.page ?? page);
     this.#cacheRootPage(entry);
     return entry;
@@ -507,6 +525,20 @@ export default class NestedController extends Controller {
       entry.fetchedAt != null &&
       Date.now() - entry.fetchedAt > ROOT_PAGE_CACHE_TTL_MS
     );
+  }
+
+  // Restored windows come back with the age their pages had when the snapshot
+  // was taken, so a page the reader returns to hours later is refetched rather
+  // than served from a descriptor that outlived its freshness.
+  #rootWindowDescriptor(entry) {
+    return {
+      page: entry.page,
+      nodeCount: entry.nodes.length,
+      hasMoreRoots: entry.data.has_more_roots || false,
+      rootPageSize: entry.data.root_page_size || this.rootPageSize,
+      absoluteStart: entry.absoluteStart,
+      fetchedAt: entry.fetchedAt,
+    };
   }
 
   // Jumping makes any page cheap to fetch, so the cache is bounded: pages in
@@ -548,7 +580,7 @@ export default class NestedController extends Controller {
       this.rootNodes.length >
         this.rootPageSize + (this.page === 0 ? this.pinnedRootCount : 0)
     ) {
-      this.#rootWindowIndicesStale = true;
+      this.rootWindowIndicesStale = true;
     }
     this.#rootWindowNodesRef = this.rootNodes;
     for (const entry of this.#rootWindowEntries) {
@@ -567,13 +599,9 @@ export default class NestedController extends Controller {
     const lastEntry = boundedEntries.at(-1);
 
     this.#rootWindowEntries = boundedEntries;
-    this.rootWindowPages = boundedEntries.map((entry) => ({
-      page: entry.page,
-      nodeCount: entry.nodes.length,
-      hasMoreRoots: entry.data.has_more_roots || false,
-      rootPageSize: entry.data.root_page_size || this.rootPageSize,
-      absoluteStart: entry.absoluteStart,
-    }));
+    this.rootWindowPages = boundedEntries.map((entry) =>
+      this.#rootWindowDescriptor(entry)
+    );
     this.rootPageSize = lastEntry.data.root_page_size || this.rootPageSize;
     this.rootWindowStart =
       boundedEntries[0].absoluteStart ??
@@ -584,7 +612,7 @@ export default class NestedController extends Controller {
     this.#rootWindowNodesRef = this.rootNodes;
     this.page = lastEntry.page;
     this.hasMoreRoots = lastEntry.data.has_more_roots || false;
-    this.#rootWindowIndicesStale = false;
+    this.rootWindowIndicesStale = false;
   }
 
   // Offsets shift whenever roots are added or removed between page fetches, so
@@ -671,6 +699,7 @@ export default class NestedController extends Controller {
           nodes,
           page: descriptor.page,
           absoluteStart: descriptor.absoluteStart,
+          fetchedAt: descriptor.fetchedAt,
         };
       });
     }
@@ -693,7 +722,7 @@ export default class NestedController extends Controller {
 
   #rootWindowContains(index) {
     return (
-      !this.#rootWindowIndicesStale &&
+      !this.rootWindowIndicesStale &&
       index >= this.rootWindowStart &&
       index < this.rootWindowStart + this.rootNodes.length
     );
@@ -788,6 +817,7 @@ export default class NestedController extends Controller {
       rootPageSize: this.rootPageSize,
       rootWindowStart: this.rootWindowStart,
       rootWindowPages: this.rootWindowPages,
+      rootWindowIndicesStale: this.rootWindowIndicesStale,
       hasMoreRoots: this.hasMoreRoots,
       rootCount: this.rootCount,
       sort: this.sort,
@@ -945,7 +975,7 @@ export default class NestedController extends Controller {
       this.#invalidateRootWindowState();
 
       const page = await this.#requestRootPage(0);
-      if (this.topic?.id !== topicId || this.effectiveSort !== sort) {
+      if (!page || this.topic?.id !== topicId || this.effectiveSort !== sort) {
         return;
       }
 
@@ -1489,7 +1519,7 @@ export default class NestedController extends Controller {
       if (sort === "new") {
         this.rootWindowStart += newNodes.length;
       } else if (sort !== "old") {
-        this.#rootWindowIndicesStale = true;
+        this.rootWindowIndicesStale = true;
       }
       return;
     }
@@ -1507,7 +1537,7 @@ export default class NestedController extends Controller {
       sort === "new" || placeAtEnd || existingNodes.length === 0;
     if (outsideWindow) {
       this.#invalidateRootWindowState();
-      this.#rootWindowIndicesStale = true;
+      this.rootWindowIndicesStale = true;
       return;
     }
 
@@ -1532,9 +1562,10 @@ export default class NestedController extends Controller {
     this.#absorbLiveRootsIntoWindow({
       atStart: !placeAtEnd,
       insertedCount: newNodes.length,
+      trimmedCount: overflow,
     });
     if (!positionKnown) {
-      this.#rootWindowIndicesStale = true;
+      this.rootWindowIndicesStale = true;
     }
     this.hasMoreRoots = placeAtEnd
       ? false
@@ -1544,9 +1575,10 @@ export default class NestedController extends Controller {
   }
 
   // The live roots land inside the rendered window rather than replacing it, so
-  // the page they fall into grows by their count. Server page boundaries shift
-  // by the same amount, which the next fetch resolves by de-duplicating.
-  #absorbLiveRootsIntoWindow({ atStart, insertedCount }) {
+  // the page they fall into grows by their count while the far end gives up
+  // whatever the trim took. Server page boundaries shift by the same amount,
+  // which the next fetch resolves by de-duplicating.
+  #absorbLiveRootsIntoWindow({ atStart, insertedCount, trimmedCount }) {
     const descriptors = (this.rootWindowPages || []).map((descriptor) => ({
       ...descriptor,
     }));
@@ -1560,6 +1592,8 @@ export default class NestedController extends Controller {
       });
     }
 
+    (atStart ? descriptors[0] : descriptors.at(-1)).nodeCount += insertedCount;
+
     if (atStart) {
       // Roots inserted at the head push every page already in hand further
       // along the global axis; the page they joined still starts where it did.
@@ -1570,37 +1604,37 @@ export default class NestedController extends Controller {
       }
     }
 
-    let excess =
-      descriptors.reduce(
-        (count, descriptor) => count + descriptor.nodeCount,
-        0
-      ) - this.rootNodes.length;
-
-    if (excess <= 0) {
-      (atStart ? descriptors[0] : descriptors.at(-1)).nodeCount -= excess;
-      excess = 0;
-    } else {
-      // Walk in from the trimmed end, shrinking pages until the descriptors
-      // account for exactly what is rendered.
-      for (const descriptor of atStart
-        ? [...descriptors].reverse()
-        : descriptors) {
-        const removed = Math.min(descriptor.nodeCount, excess);
-        descriptor.nodeCount -= removed;
-        if (!atStart && descriptor.absoluteStart != null) {
-          descriptor.absoluteStart += removed;
-        }
-        excess -= removed;
-        if (excess === 0) {
-          break;
-        }
+    // Walk in from the end the trim took nodes off. Charging the trim to the
+    // page the roots joined instead would leave every later page claiming a
+    // global start it does not have, which survives into the next window.
+    let remaining = trimmedCount;
+    for (const descriptor of atStart
+      ? [...descriptors].reverse()
+      : descriptors) {
+      if (remaining === 0) {
+        break;
       }
+
+      const removed = Math.min(descriptor.nodeCount, remaining);
+      descriptor.nodeCount -= removed;
+      if (!atStart && descriptor.absoluteStart != null) {
+        descriptor.absoluteStart += removed;
+      }
+      remaining -= removed;
     }
 
     this.#invalidateRootWindowState();
     const kept = descriptors.filter((descriptor) => descriptor.nodeCount > 0);
-    if (excess !== 0 || kept.length === 0) {
-      this.#rootWindowIndicesStale = true;
+    const describedNodeCount = kept.reduce(
+      (count, descriptor) => count + descriptor.nodeCount,
+      0
+    );
+    if (
+      remaining !== 0 ||
+      kept.length === 0 ||
+      describedNodeCount !== this.rootNodes.length
+    ) {
+      this.rootWindowIndicesStale = true;
       return;
     }
 

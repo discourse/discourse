@@ -350,6 +350,106 @@ module("Integration | Component | Nested | Timeline", function (hooks) {
       );
   });
 
+  test("the loaded-details band brackets the marks it describes", async function (assert) {
+    const nodes = buildNodes(3);
+    nodes.forEach((node) => (node.post.total_descendant_count = 4));
+
+    await render(
+      <template>
+        <NestedTimeline
+          @rootNodes={{nodes}}
+          @rootCount={{40}}
+          style="display: block"
+        />
+      </template>
+    );
+
+    const band = find(".nested-timeline__loaded-window");
+    const bandTop = parseFloat(band.style.top);
+    const bandBottom = bandTop + parseFloat(band.style.height);
+    const markTops = findAll(".nested-timeline__mark").map((mark) =>
+      parseFloat(mark.style.top)
+    );
+
+    assert.true(
+      bandTop <= markTops[0],
+      `the band starts at or above its first mark (${bandTop} vs ${markTops[0]})`
+    );
+    assert.true(
+      bandBottom >= markTops.at(-1),
+      `the band ends at or below its last mark (${bandBottom} vs ${markTops.at(-1)})`
+    );
+  });
+
+  test("branch shapes are not rewalked while scrubbing", async function (assert) {
+    let subtreeReads = 0;
+    const countingPost = (id) => ({
+      id,
+      post_number: id,
+      created_at: "2026-07-01T10:00:00Z",
+      direct_reply_count: 1,
+      get total_descendant_count() {
+        subtreeReads++;
+        return 6;
+      },
+    });
+    const nodes = [...Array(30)].map((_, index) => ({
+      post: countingPost(2_000 + index),
+      children: [
+        {
+          post: countingPost(5_000 + index),
+          children: [{ post: countingPost(8_000 + index), children: [] }],
+        },
+      ],
+      _renderKey: 2_000 + index,
+    }));
+
+    await render(
+      <template>
+        <NestedTimeline
+          @rootNodes={{nodes}}
+          @rootCount={{40}}
+          style="display: block"
+        />
+      </template>
+    );
+
+    const scroller = find(".nested-timeline__scroller");
+    const scrollarea = find(".nested-timeline__scrollarea");
+    const trackHeight = scrollarea.offsetHeight - scroller.offsetHeight;
+    stubPointerCapture(scroller);
+    const grabY = scroller.getBoundingClientRect().top + 10;
+
+    await triggerEvent(scroller, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: grabY,
+    });
+
+    subtreeReads = 0;
+    for (let frame = 1; frame <= 4; frame++) {
+      await triggerEvent(scroller, "pointermove", {
+        pointerId: 1,
+        clientX: 0,
+        clientY: grabY + (trackHeight * frame) / 10,
+      });
+    }
+    const readsWhileScrubbing = subtreeReads;
+
+    await triggerEvent(scroller, "pointerup", {
+      pointerId: 1,
+      clientX: 0,
+      clientY: grabY + trackHeight / 10,
+    });
+
+    assert.true(
+      readsWhileScrubbing < nodes.length,
+      `the whole gesture stays under one pass over the loaded roots ` +
+        `(${readsWhileScrubbing} reads across four frames of ${nodes.length} roots)`
+    );
+  });
+
   test("dragging tracks the pointer's travel and commits once on release", async function (assert) {
     const nodes = buildNodes(2);
     const jumps = [];
