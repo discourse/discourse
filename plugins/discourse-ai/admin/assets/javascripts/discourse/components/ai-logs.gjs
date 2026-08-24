@@ -199,24 +199,36 @@ export default class AiLogs extends Component {
     return this.features;
   }
 
+  // one model leaves nothing to choose between, but a model carried in on the
+  // URL still needs somewhere to show and be cleared from
+  get showModelFilter() {
+    return this.models.length > 1 || Boolean(this.selectedModel);
+  }
+
   @cached
   get dropdownOptions() {
-    return {
-      outcome: this.outcomeOptions,
-      model: this.modelOptions,
-    };
+    const options = { outcome: this.outcomeOptions };
+    if (this.showModelFilter) {
+      options.model = this.modelOptions;
+    }
+
+    return options;
   }
 
   @cached
   get dropdownValues() {
-    return {
-      outcome: this.selectedOutcome || ALL_FILTER_VALUE,
-      model: this.selectedModel || ALL_FILTER_VALUE,
-    };
+    const values = { outcome: this.selectedOutcome || ALL_FILTER_VALUE };
+    if (this.showModelFilter) {
+      values.model = this.selectedModel || ALL_FILTER_VALUE;
+    }
+
+    return values;
   }
 
   @cached
   get defaultDropdownValues() {
+    // model stays listed even while hidden: DFilterControls keeps the value it
+    // last tracked, and without a default to match it reads as an active filter
     return {
       outcome: ALL_FILTER_VALUE,
       model: ALL_FILTER_VALUE,

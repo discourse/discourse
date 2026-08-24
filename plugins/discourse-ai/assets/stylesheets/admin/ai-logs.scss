@@ -44,6 +44,11 @@
     }
   }
 
+  // select-kit bolds its header; the plain selects beside it do not
+  &__feature-filter.select-kit .select-kit-header {
+    font-weight: normal;
+  }
+
   // the switches read as one control, so they stay together and keep their
   // own width instead of stretching with the selects
   &__toggles {

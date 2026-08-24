@@ -3,6 +3,7 @@
 RSpec.describe "AI logs admin page" do
   fab!(:admin)
   fab!(:llm_model)
+  fab!(:other_llm_model) { Fabricate(:llm_model, display_name: "Another model") }
   fab!(:log) do
     Fabricate(
       :ai_api_audit_log,
@@ -86,6 +87,21 @@ RSpec.describe "AI logs admin page" do
 
     ai_logs_page.select_feature(log.feature_name)
     expect(ai_logs_page).to have_log(log)
+  end
+
+  it "drops the model filter when a single model leaves nothing to choose" do
+    other_llm_model.destroy!
+    ai_logs_page.visit
+
+    expect(ai_logs_page).to have_log(log)
+    expect(page).to have_css(".d-filter-controls__dropdown--outcome")
+    expect(page).to have_no_css(".d-filter-controls__dropdown--model")
+
+    # a model carried in on the URL still needs somewhere to be cleared from
+    ai_logs_page.visit("model=#{llm_model.id}")
+
+    expect(ai_logs_page).to have_log(log)
+    expect(ai_logs_page.filter_value(:model)).to eq(llm_model.id.to_s)
   end
 
   it "filters by a feature outside the initial page of logs" do
