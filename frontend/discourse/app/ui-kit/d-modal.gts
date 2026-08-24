@@ -14,7 +14,6 @@ import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import {
   dampenedOverdrag,
   getMaxAnimationTimeMs,
-  shouldDeferSwipeToContent,
 } from "discourse/lib/swipe-events";
 import type Site from "discourse/models/site";
 import type AppEventsService from "discourse/services/app-events";
@@ -28,7 +27,9 @@ import DFlashMessage, {
 } from "discourse/ui-kit/d-flash-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
-import dSwipe, { type SwipeState } from "discourse/ui-kit/modifiers/d-swipe";
+import dPointerDrag, {
+  type DPointerDragInfo,
+} from "discourse/ui-kit/modifiers/d-pointer-drag";
 import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
@@ -224,6 +225,7 @@ export default class DModal extends Component<DModalSignature> {
   });
   #modalContainer: HTMLElement;
   #lockedScrollY?: number;
+  #drag: { lastY: number; lastTime: number; velocityY: number } | null = null;
   @tracked _wrapperElement?: HTMLElement;
 
   get autofocus() {
@@ -296,33 +298,45 @@ export default class DModal extends Component<DModalSignature> {
   }
 
   @action
-  handleSwipeStart(swipeState: SwipeState, event: Event) {
-    if (shouldDeferSwipeToContent(swipeState, this.#modalContainer)) {
-      event.preventDefault();
+  handleDragStart(event: PointerEvent) {
+    // pointer events unify mouse and touch, so the mobile gate is explicit
+    // where touch-only events used to imply it
+    if (!this.mobileDismissable || this.animating) {
+      return false;
     }
+    this.#drag = {
+      lastY: event.clientY,
+      lastTime: event.timeStamp,
+      velocityY: 0,
+    };
   }
 
   @action
-  async handleSwipe(swipeEvent: SwipeState) {
-    if (this.animating) {
+  async handleDrag(event: PointerEvent, info: DPointerDragInfo) {
+    const drag = this.#drag;
+    if (!drag || this.animating) {
       return;
     }
+
+    const elapsed = event.timeStamp - drag.lastTime;
+    drag.velocityY = elapsed > 0 ? (event.clientY - drag.lastY) / elapsed : 0;
+    drag.lastY = event.clientY;
+    drag.lastTime = event.timeStamp;
 
     // applied instantly so the modal tracks the finger 1:1; easing only
     // happens when the gesture ends
     const position =
-      swipeEvent.deltaY >= 0
-        ? swipeEvent.deltaY
-        : -dampenedOverdrag(-swipeEvent.deltaY);
+      info.delta.y >= 0 ? info.delta.y : -dampenedOverdrag(-info.delta.y);
 
     await this.#animateWrapperPosition(position, 0);
   }
 
   @action
-  async handleSwipeEnded(swipeEvent: SwipeState) {
-    if (this.animating) {
-      // if the modal is animating we don't want to risk resetting the position
-      // as the user releases the swipe at the same time
+  async handleDragEnd(event: PointerEvent, info: DPointerDragInfo) {
+    const drag = this.#drag;
+    this.#drag = null;
+
+    if (!drag || !info.moved || this.animating) {
       return;
     }
 
@@ -330,15 +344,41 @@ export default class DModal extends Component<DModalSignature> {
       this.#modalContainer.clientHeight * SWIPE_CLOSE_DISTANCE_RATIO;
 
     if (
-      swipeEvent.goingUp() ||
-      swipeEvent.deltaY <= 0 ||
-      (swipeEvent.velocityY < SWIPE_VELOCITY_THRESHOLD &&
-        swipeEvent.deltaY < closeDistance)
+      info.delta.y <= 0 ||
+      (drag.velocityY < SWIPE_VELOCITY_THRESHOLD &&
+        info.delta.y < closeDistance)
     ) {
       return await this.#animateWrapperPosition(0, getMaxAnimationTimeMs());
     }
 
     this.closeModal(CLOSE_INITIATED_BY_SWIPE_DOWN);
+  }
+
+  @action
+  async handleBackdropDragEnd(event: PointerEvent, info: DPointerDragInfo) {
+    if (!this.#drag) {
+      return;
+    }
+
+    // the gesture claims the press, so a motionless release is the backdrop tap
+    if (!info.moved) {
+      this.#drag = null;
+      return this.closeModal(CLOSE_INITIATED_BY_CLICK_OUTSIDE);
+    }
+
+    await this.handleDragEnd(event, info);
+  }
+
+  @action
+  async handleDragCancel(event: PointerEvent, info: DPointerDragInfo) {
+    const drag = this.#drag;
+    this.#drag = null;
+
+    // the browser claimed the touch, usually for the modal body's own scroll;
+    // a displaced modal settles back rather than staying where it was left
+    if (drag && info.moved && !this.animating) {
+      await this.#animateWrapperPosition(0, getMaxAnimationTimeMs());
+    }
   }
 
   @action
@@ -566,11 +606,14 @@ export default class DModal extends Component<DModalSignature> {
         <div
           class="d-modal__container"
           {{this.registerModalContainer}}
-          {{dSwipe
-            onDidStartSwipe=this.handleSwipeStart
-            onDidSwipe=this.handleSwipe
-            onDidEndSwipe=this.handleSwipeEnded
-            enabled=this.dismissable
+          {{dPointerDrag
+            onDragStart=this.handleDragStart
+            onDrag=this.handleDrag
+            onDragEnd=this.handleDragEnd
+            onDragCancel=this.handleDragCancel
+            threshold=5
+            touchAction="pan-x"
+            preservePress=true
           }}
         >
           {{yield to="aboveHeader"}}
@@ -682,10 +725,13 @@ export default class DModal extends Component<DModalSignature> {
         {{! eslint-disable ember/template-no-pointer-down-event-binding }}
         <div
           class="d-modal__backdrop"
-          {{dSwipe
-            onDidSwipe=this.handleSwipe
-            onDidEndSwipe=this.handleSwipeEnded
-            enabled=this.dismissable
+          {{dPointerDrag
+            onDragStart=this.handleDragStart
+            onDrag=this.handleDrag
+            onDragEnd=this.handleBackdropDragEnd
+            onDragCancel=this.handleDragCancel
+            threshold=5
+            touchAction="pan-x"
           }}
           {{on "click" this.handleWrapperClick}}
           {{on "pointerdown" this.handleWrapperPointerDown}}

@@ -7,12 +7,14 @@ import {
   focus,
   render,
   settled,
+  triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import noop from "discourse/helpers/noop";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { stubSharedPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 
@@ -716,5 +718,91 @@ module("Integration | ui-kit | DModal", function (hooks) {
       event.defaultPrevented,
       "the underlying modal does not preventDefault keystrokes aimed at the modal stacked above it"
     );
+  });
+
+  module("mobile swipe dismissal", function (innerHooks) {
+    innerHooks.beforeEach(function () {
+      forceMobile();
+    });
+
+    // `timeStamp` is a prototype accessor an own property shadows; the real
+    // spacing of synthetic events reads as a flick to the velocity rule
+    function dispatchPointer(type, { y, time }) {
+      const event = new PointerEvent(type, {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+        pointerId: 1,
+        clientY: y,
+      });
+      Object.defineProperty(event, "timeStamp", { value: time });
+      find(".d-modal__container").dispatchEvent(event);
+    }
+
+    async function dragContainer({ by, overMs = 400 }) {
+      stubSharedPointerCapture([".d-modal__container"]);
+      dispatchPointer("pointerdown", { y: 100, time: 1000 });
+      dispatchPointer("pointermove", { y: 100 + by, time: 1000 + overMs });
+      dispatchPointer("pointerup", { y: 100 + by, time: 1000 + overMs + 16 });
+      await settled();
+    }
+
+    test("dragging down far enough closes the modal", async function (assert) {
+      const closeModal = () => assert.step("closeModal");
+      await render(
+        <template>
+          <DModal @inline={{true}} @closeModal={{closeModal}} />
+        </template>
+      );
+
+      const distance = find(".d-modal__container").clientHeight * 0.25 + 10;
+      await dragContainer({ by: distance });
+
+      assert.verifySteps(["closeModal"], "past a quarter height it dismisses");
+    });
+
+    test("a short drag settles the modal back", async function (assert) {
+      const closeModal = () => assert.step("closeModal");
+      await render(
+        <template>
+          <DModal @inline={{true}} @closeModal={{closeModal}} />
+        </template>
+      );
+
+      await dragContainer({ by: 10 });
+
+      assert.verifySteps([], "a short slow drag does not dismiss");
+      const { transform } = window.getComputedStyle(
+        find(".d-modal__container")
+      );
+      assert.strictEqual(
+        transform === "none" ? 0 : new DOMMatrixReadOnly(transform).m42,
+        0,
+        "and it settles back to resting position"
+      );
+    });
+
+    test("a press on a control hands it the pointer capture", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}} @title="test" @closeModal={{noop}} />
+        </template>
+      );
+
+      const { ownerOf } = stubSharedPointerCapture([
+        ".d-modal__container",
+        ".modal-close",
+      ]);
+      await triggerEvent(".modal-close", "pointerdown", {
+        button: 0,
+        pointerId: 2,
+      });
+
+      assert
+        .dom(ownerOf(2))
+        .hasClass("modal-close", "a tap's click reaches the control");
+
+      await triggerEvent(".modal-close", "pointerup", { pointerId: 2 });
+    });
   });
 });
