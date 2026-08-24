@@ -18,7 +18,14 @@ module PageObjects
       end
 
       def select_feature(label)
-        select_filter(:feature, label)
+        feature_filter.expand
+        feature_filter.search(label)
+        feature_filter.select_row_by_value(label)
+        self
+      end
+
+      def feature_filter_value
+        feature_filter.value
       end
 
       def select_period(label)
@@ -39,7 +46,7 @@ module PageObjects
       end
 
       def has_expanded_filter_dropdowns?
-        page.has_css?(".d-filter-controls__dropdown", count: 4)
+        page.has_css?(".d-filter-controls__dropdown", count: 3)
       end
 
       def open_log(log)
@@ -72,6 +79,10 @@ module PageObjects
       end
 
       private
+
+      def feature_filter
+        PageObjects::Components::SelectKit.new(".ai-logs__feature-filter .combo-box")
+      end
 
       def select_filter(key, label)
         find(".d-filter-controls__dropdown--#{key}").select(label)

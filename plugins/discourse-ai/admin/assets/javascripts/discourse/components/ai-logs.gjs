@@ -21,6 +21,7 @@ import DSelect from "discourse/ui-kit/d-select";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log-row";
+import AiLogFeatureFilter from "./ai-log-feature-filter";
 import AiLogDetailModal from "./modal/ai-log-detail-modal";
 import AiLogRetentionModal from "./modal/ai-log-retention-modal";
 
@@ -123,6 +124,15 @@ export default class AiLogs extends Component {
       : new Date();
   }
 
+  @cached
+  get featureOptions() {
+    if (this.selectedFeature && !this.features.includes(this.selectedFeature)) {
+      return [...this.features, this.selectedFeature];
+    }
+
+    return this.features;
+  }
+
   get periodOptions() {
     return [
       {
@@ -179,28 +189,11 @@ export default class AiLogs extends Component {
   }
 
   @cached
-  get featureOptions() {
-    const features = [...this.features];
-    if (this.selectedFeature && !features.includes(this.selectedFeature)) {
-      features.push(this.selectedFeature);
-    }
-
-    return [
-      {
-        value: "all",
-        label: i18n("discourse_ai.logs.all_features"),
-      },
-      ...features.map((feature) => ({ value: feature, label: feature })),
-    ];
-  }
-
-  @cached
   get dropdownOptions() {
     return {
       period: this.periodOptions,
       outcome: this.outcomeOptions,
       model: this.modelOptions,
-      feature: this.featureOptions,
     };
   }
 
@@ -210,7 +203,6 @@ export default class AiLogs extends Component {
       period: this.selectedPeriod || "all",
       outcome: this.selectedOutcome || "all",
       model: this.selectedModel || "all",
-      feature: this.selectedFeature || "all",
     };
   }
 
@@ -230,6 +222,7 @@ export default class AiLogs extends Component {
   get additionalFiltersActive() {
     return Boolean(
       this.hasRetries ||
+      this.selectedFeature ||
       this.selectedUsernames.length ||
       this.unattributed ||
       this.idValue
@@ -415,10 +408,14 @@ export default class AiLogs extends Component {
       this.selectedOutcome = selectedValue;
     } else if (key === "model") {
       this.selectedModel = selectedValue;
-    } else if (key === "feature") {
-      this.selectedFeature = selectedValue;
     }
 
+    this.refresh();
+  }
+
+  @action
+  changeFeature(value) {
+    this.selectedFeature = value || undefined;
     this.refresh();
   }
 
@@ -561,6 +558,23 @@ export default class AiLogs extends Component {
         </:aboveFilters>
 
         <:additionalFilters>
+          <fieldset class="ai-logs__feature-filter">
+            <legend>{{i18n "discourse_ai.logs.feature"}}</legend>
+            <AiLogFeatureFilter
+              @valueProperty={{null}}
+              @nameProperty={{null}}
+              @value={{this.selectedFeature}}
+              @content={{this.featureOptions}}
+              @onChange={{this.changeFeature}}
+              @options={{hash
+                translatedNone=(i18n "discourse_ai.logs.all_features")
+                translatedFilterPlaceholder=(i18n
+                  "discourse_ai.logs.feature_placeholder"
+                )
+              }}
+            />
+          </fieldset>
+
           {{#if (eq this.selectedPeriod "custom")}}
             <fieldset class="ai-logs__date-range-filter">
               <legend>{{i18n "discourse_ai.logs.filters.date_range"}}</legend>

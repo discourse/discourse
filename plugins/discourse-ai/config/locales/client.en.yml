@@ -686,6 +686,7 @@ en:
         has_retries: "Has retries"
         retried: "Retried"
         unattributed: "Unattributed"
+        feature_placeholder: "Feature name"
         user_placeholder: "Filter by user"
         id_placeholder: "Enter an ID"
         log_id: "Log ID"
