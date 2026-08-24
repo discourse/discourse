@@ -15,12 +15,24 @@ pt_BR:
       reactions_title: "Reações"
       state_panel:
         more_users: "e mais %{count}..."
+        show_users: "Mostrar mais usuários"
+        hide_users: "Mostrar menos usuários"
+        reaction_group:
+          one: "%{reaction}: %{count} usuário"
+          other: "%{reaction}: %{count} usuários"
       picker:
         react_with: "Reaja a esta postagem com: %{reaction}"
         cant_remove_reaction: "Você não pode mais remover sua reação"
         remove_reaction: "Remova esta %{reaction} reação"
       users_popup:
-        all: "Todos"
+        all: "Todas"
+        title:
+          one: "%{count} Reação"
+          other: "%{count} Reações"
+      counter:
+        aria_label:
+          one: "%{count} reação"
+          other: "%{count} reações"
       main_reaction:
         add: "Curtir esta postagem"
         remove: "Remova essa curtida"
