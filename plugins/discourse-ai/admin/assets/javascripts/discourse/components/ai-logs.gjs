@@ -775,22 +775,21 @@ export default class AiLogs extends Component {
           </:aboveFilters>
 
           <:additionalFilters>
-            <fieldset class="ai-logs__feature-filter">
-              <legend>{{i18n "discourse_ai.logs.feature"}}</legend>
-              <AiLogFeatureFilter
-                @valueProperty={{null}}
-                @nameProperty={{null}}
-                @value={{this.selectedFeature}}
-                @content={{this.featureOptions}}
-                @onChange={{this.changeFeature}}
-                @options={{hash
-                  translatedNone=(i18n "discourse_ai.logs.all_features")
-                  translatedFilterPlaceholder=(i18n
-                    "discourse_ai.logs.feature_placeholder"
-                  )
-                }}
-              />
-            </fieldset>
+            <AiLogFeatureFilter
+              class="ai-logs__feature-filter"
+              @valueProperty={{null}}
+              @nameProperty={{null}}
+              @value={{this.selectedFeature}}
+              @content={{this.featureOptions}}
+              @onChange={{this.changeFeature}}
+              @options={{hash
+                translatedNone=(i18n "discourse_ai.logs.all_features")
+                translatedFilterPlaceholder=(i18n
+                  "discourse_ai.logs.feature_placeholder"
+                )
+                headerAriaLabel=(i18n "discourse_ai.logs.feature")
+              }}
+            />
 
             <div class="ai-logs__specialized-filters">
               <DToggleSwitch

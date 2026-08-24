@@ -283,7 +283,7 @@ RSpec.describe "AI logs admin page" do
     expect(ai_logs_page).to have_log(log)
     expect(page).to have_css(".d-filter-controls__input")
     expect(page).to have_css(".d-filter-controls__toggle-filters")
-    expect(page).to have_css(".ai-logs__feature-filter .combo-box")
+    expect(page).to have_css(".ai-logs__feature-filter.combo-box")
     expect(page).to have_no_css(".d-filter-controls__reset")
     expect(page).to have_css(".ai-logs__filters")
     expect(ai_logs_page).to have_expanded_filter_dropdowns

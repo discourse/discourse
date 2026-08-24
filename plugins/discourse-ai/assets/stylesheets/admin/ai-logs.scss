@@ -30,14 +30,10 @@
       display: none;
     }
 
+    // nothing in this row carries a label, so the controls centre on each
+    // other instead of sitting on a shared baseline
     .d-filter-controls__additional-filters {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      align-items: start;
-
-      @include viewport.from(md) {
-        grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
-      }
+      align-items: center;
     }
   }
 
@@ -52,26 +48,9 @@
     }
   }
 
-  &__feature-filter {
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    border: 0;
-  }
-
-  &__feature-filter {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-
-    // a rendered legend sits outside flex layout, so gap does not apply to it
-    legend {
-      margin-bottom: var(--space-1);
-    }
-
-    .select-kit {
-      width: 100%;
-    }
+  &__feature-filter.select-kit {
+    width: 12rem;
+    max-width: 100%;
   }
 
   &__date-range {
@@ -94,17 +73,9 @@
 
   &__specialized-filters {
     display: flex;
-    grid-column: 1 / -1;
     flex-wrap: wrap;
-    align-items: end;
-    gap: var(--space-2);
-
-    // DToggleSwitch forwards attributes to its inner button, so the wrapper it
-    // renders is the flex item that needs aligning
-    .d-toggle-switch {
-      align-self: end;
-      padding-block-end: var(--space-1);
-    }
+    align-items: center;
+    gap: var(--space-3);
   }
 
   @include viewport.until(sm) {

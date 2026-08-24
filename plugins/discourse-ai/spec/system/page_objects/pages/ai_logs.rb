@@ -110,7 +110,7 @@ module PageObjects
       private
 
       def feature_filter
-        PageObjects::Components::SelectKit.new(".ai-logs__feature-filter .combo-box")
+        PageObjects::Components::SelectKit.new(".ai-logs__feature-filter")
       end
 
       def select_filter(key, label)
