@@ -18,6 +18,13 @@ import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class ParentCategoryRow extends CategoryListItem {
+  get hiddenSubcategoryCount() {
+    return (
+      (this.category.subcategory_count ?? 0) -
+      this.displayedSubcategories.length
+    );
+  }
+
   <template>
     {{#unless this.isHidden}}
       <PluginOutlet
@@ -70,18 +77,18 @@ export default class ParentCategoryRow extends CategoryListItem {
                   {{/each}}
                 {{/if}}
               {{/unless}}
-              {{#if this.category.isGrandParent}}
-                {{#each this.category.subcategories as |subcategory|}}
+              {{#if this.showsGrandchildren}}
+                {{#each this.displayedSubcategories as |subcategory|}}
                   <SubCategoryRow
                     @category={{subcategory}}
                     @listType={{this.listType}}
                   />
                 {{/each}}
-              {{else if this.category.subcategories}}
+              {{else if this.displayedSubcategories}}
                 <tr class="subcategories-list">
                   <td>
                     <div class="subcategories">
-                      {{#each this.category.subcategories as |subcategory|}}
+                      {{#each this.displayedSubcategories as |subcategory|}}
                         <SubCategoryItem
                           @category={{subcategory}}
                           @listType={{this.listType}}
@@ -156,32 +163,32 @@ export default class ParentCategoryRow extends CategoryListItem {
               </div>
             {{/if}}
 
-            {{#if this.category.isGrandParent}}
+            {{#if this.showsGrandchildren}}
               <table class="category-list subcategories-with-subcategories">
                 <tbody>
-                  {{#each this.category.subcategories as |subcategory|}}
+                  {{#each this.displayedSubcategories as |subcategory|}}
                     <SubCategoryRow
                       @category={{subcategory}}
                       @listType={{this.listType}}
                     />
                   {{/each}}
-                  {{#if (gt this.category.unloadedSubcategoryCount 0)}}
+                  {{#if (gt this.hiddenSubcategoryCount 0)}}
                     {{i18n
                       "category_row.subcategory_count"
-                      count=this.category.unloadedSubcategoryCount
+                      count=this.hiddenSubcategoryCount
                     }}
                   {{/if}}
                 </tbody>
               </table>
-            {{else if this.category.subcategories}}
+            {{else if this.displayedSubcategories}}
               <div class="subcategories">
-                {{#each this.category.subcategories as |subcategory|}}
+                {{#each this.displayedSubcategories as |subcategory|}}
                   <SubCategoryItem
                     @category={{subcategory}}
                     @listType={{this.listType}}
                   />
                 {{/each}}
-                {{#if (gt this.category.unloadedSubcategoryCount 0)}}
+                {{#if (gt this.hiddenSubcategoryCount 0)}}
                   <div class="subcategories__more-subcategories">
                     <LinkTo
                       @route="discovery.subcategories"
@@ -189,7 +196,7 @@ export default class ParentCategoryRow extends CategoryListItem {
                     >
                       {{i18n
                         "category_row.subcategory_count"
-                        count=this.category.unloadedSubcategoryCount
+                        count=this.hiddenSubcategoryCount
                       }}
                     </LinkTo>
                   </div>
