@@ -13,9 +13,15 @@ module JsonApiKit
       included do
         class_attribute :declared_model,
                         :declared_type,
+                        :declared_namespace,
                         instance_accessor: false,
                         instance_predicate: false
-        private_class_method :declared_model, :declared_model=, :declared_type, :declared_type=
+        private_class_method :declared_model,
+                             :declared_model=,
+                             :declared_type,
+                             :declared_type=,
+                             :declared_namespace,
+                             :declared_namespace=
       end
 
       class_methods do
@@ -30,6 +36,11 @@ module JsonApiKit
         def type(declaration = nil)
           return declared_type || inferred_type unless declaration
           self.declared_type = declaration.to_s
+        end
+
+        def namespace(declaration = nil)
+          return declared_namespace unless declaration
+          self.declared_namespace = declaration.to_s
         end
 
         private

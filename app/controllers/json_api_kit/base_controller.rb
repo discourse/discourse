@@ -2,6 +2,8 @@
 
 module JsonApiKit
   class BaseController < ::ApplicationController
+    MissingDeclaration = Class.new(StandardError)
+
     ROOT = "/api"
     OTHER_PARAMETER = "Content-Type accepts the ext and profile parameters only."
     NO_EXTENSION = "This API applies no extension."
@@ -13,17 +15,49 @@ module JsonApiKit
                        :verify_authenticity_token,
                        raise: false
 
+    class_attribute :declared_resource, instance_accessor: false
+
     before_action :set_json_format
     before_action :set_vary_header
     before_action :negotiate
 
     rescue_from(Discourse::InvalidAccess) { render_document(Document::Errors.new(Forbidden.new)) }
 
+    class << self
+      def resource(declaration)
+        self.declared_resource = ResourceLookup.resource(declaration, within: self)
+      end
+    end
+
     def rescue_with_handler(*)
       super || render_server_error(*)
     end
 
+    def index
+      render_document(
+        Document::Collection.for(request.query_parameters, resource:, guardian:, urls:),
+      )
+    end
+
+    def show
+      render_document(
+        Document::Individual.for(
+          params[:id],
+          request.query_parameters,
+          resource:,
+          guardian:,
+          urls:,
+        ),
+      )
+    end
+
     private
+
+    def resource
+      self.class.declared_resource or
+        raise MissingDeclaration,
+              "#{self.class}: declare the resource it serves with `resource :things`"
+    end
 
     def urls
       Urls.new(

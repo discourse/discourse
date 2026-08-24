@@ -43,6 +43,18 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
       end
     end
 
+    context "with a namespace" do
+      let(:record) do
+        JsonApiKit::Record.new(row, fields, type: "topics", namespace: "data-explorer")
+      end
+
+      it "renders the self link under it" do
+        expect(resource_object.to_h[:links]).to eq(
+          self: "https://example.com/api/data-explorer/topics/#{topic.id}",
+        )
+      end
+    end
+
     context "when the record holds no attribute" do
       let(:fields) { resource.fields(["secrets"], guardian:) }
 

@@ -4,28 +4,12 @@ require_relative "support"
 
 module JsonApiKitSpec
   class TopicsController < JsonApiKit::BaseController
-    def index
-      render_document(
-        JsonApiKit::Document::Collection.for(
-          request.query_parameters,
-          resource: TopicResource,
-          guardian:,
-          urls:,
-        ),
-      )
-    end
+    resource :topics
+  end
+end
 
-    def show
-      render_document(
-        JsonApiKit::Document::Individual.for(
-          params[:id],
-          request.query_parameters,
-          resource: TopicResource,
-          guardian:,
-          urls:,
-        ),
-      )
-    end
+module JsonApiKitSpec
+  class UndeclaredController < JsonApiKit::BaseController
   end
 end
 
@@ -53,10 +37,12 @@ RSpec.describe "a JSON:API endpoint", type: :request do
   let(:error) { parsed_body["errors"].sole }
 
   before do
+    allow(Discourse).to receive(:warn_exception)
     Rails.application.routes.disable_clear_and_finalize = true
     Rails.application.routes.draw do
       get "/api/topics" => "json_api_kit_spec/topics#index"
       get "/api/topics/:id" => "json_api_kit_spec/topics#show"
+      get "/api/undeclared" => "json_api_kit_spec/undeclared#index"
       get "/api/failing" => "json_api_kit_spec/failing#index"
       get "/api/missing" => "json_api_kit_spec/failing#show"
       get "/api/forbidden" => "json_api_kit_spec/failing#forbidden"
@@ -66,6 +52,37 @@ RSpec.describe "a JSON:API endpoint", type: :request do
   end
 
   after { Rails.application.reload_routes! }
+
+  describe "the resource a controller serves" do
+    it "registers the resource that name matches" do
+      expect(JsonApiKitSpec::TopicsController.declared_resource).to eq(
+        JsonApiKitSpec::TopicResource,
+      )
+    end
+
+    context "when the controller names the class itself" do
+      subject(:controller) do
+        Class.new(JsonApiKit::BaseController) { resource JsonApiKitSpec::TopicResource }
+      end
+
+      it "registers that class" do
+        expect(controller.declared_resource).to eq(JsonApiKitSpec::TopicResource)
+      end
+    end
+
+    context "when the controller declares none" do
+      let(:path) { "/api/undeclared" }
+
+      it { expect(response).to have_http_status(:internal_server_error) }
+
+      it "reports a missing declaration" do
+        expect(Discourse).to have_received(:warn_exception) do |error, _|
+          expect(error).to be_a(JsonApiKit::BaseController::MissingDeclaration)
+          expect(error.message).to match(/declare the resource it serves/)
+        end
+      end
+    end
+  end
 
   describe "the response" do
     it "sends the JSON:API media type" do
