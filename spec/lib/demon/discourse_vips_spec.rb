@@ -1,12 +1,29 @@
 # frozen_string_literal: true
 
 RSpec.describe Demon::DiscourseVips do
+  describe ".start" do
+    it "returns after the standalone broker is ready" do
+      socket_path = Rails.root.join("tmp", "discourse-vips-start-#{Process.pid}.sock").to_s
+
+      described_class.reset_demons
+      DiscourseVips.stubs(socket_path:)
+
+      described_class.start
+      daemon = described_class.demons.fetch("discourse_vips_0")
+
+      expect(DiscourseVips.version(expected_broker_pid: daemon.pid)).to be_present
+    ensure
+      described_class.stop
+      described_class.reset_demons
+      FileUtils.rm_f(socket_path) if socket_path
+    end
+  end
+
   describe "#run" do
     it "does not start the broker when the pid file cannot be written" do
       daemon = described_class.new(0)
       socket_path = Rails.root.join("tmp", "discourse-vips-gated-#{Process.pid}.sock").to_s
 
-      Discourse.stubs(:before_fork)
       DiscourseVips.stubs(socket_path:)
       daemon.stubs(:write_pid_file).raises("cannot write pid file")
 

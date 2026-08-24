@@ -103,8 +103,7 @@ before_service_worker_ready do |server, service_worker|
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
   require "demon/discourse_vips"
-  Demon::DiscourseVips.start(1, logger: server.logger)
-  Demon::DiscourseVips.wait_until_ready
+  Demon::DiscourseVips.start(logger: server.logger)
   LetterAvatar.cleanup_old
 
   if sidekiqs > 0
