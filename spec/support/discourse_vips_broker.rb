@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.configure do |config|
-  broker_pid = nil
+  broker_daemon = nil
   socket_path = nil
 
   config.before do |example|
@@ -17,17 +17,17 @@ RSpec.configure do |config|
 
     socket_path = Rails.root.join("tmp", "discourse-vips-#{Process.pid}.sock").to_s
     ENV["DISCOURSE_VIPS_SOCKET_PATH"] = socket_path
-    Discourse.before_fork
-
-    broker_pid =
-      fork do
-        require "discourse_vips/broker"
-        DiscourseVips::Broker.new(socket_path:, parent_pid: Process.ppid).run
-        exit! 0
-      end
+    require "demon/discourse_vips"
+    broker_daemon = Demon::DiscourseVips.new("spec-#{Process.pid}")
+    broker_daemon.start
 
     deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5
-    until File.socket?(socket_path)
+    loop do
+      begin
+        break if DiscourseVips.version(expected_broker_pid: broker_daemon.pid)
+      rescue DiscourseVips::Error
+      end
+
       if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
         raise "DiscourseVips test broker did not start"
       end
@@ -37,16 +37,7 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    if broker_pid
-      begin
-        Process.kill("TERM", broker_pid)
-      rescue Errno::ESRCH
-      end
-      begin
-        Process.wait(broker_pid)
-      rescue Errno::ECHILD
-      end
-    end
+    broker_daemon&.stop
     FileUtils.rm_f(socket_path) if socket_path
     ENV.delete("DISCOURSE_VIPS_SOCKET_PATH")
   end
