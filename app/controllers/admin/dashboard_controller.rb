@@ -61,21 +61,7 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def traffic
-    permitted =
-      params.permit(
-        :start_date,
-        :end_date,
-        :traffic_type,
-        :top_url,
-        :entry_url,
-        :referrer,
-        :country,
-        :network,
-        :browser,
-        :ip,
-      )
-
-    AdminDashboardSiteTrafficExplorer.call(service_params.deep_merge(params: permitted.to_h)) do
+    AdminDashboardSiteTrafficExplorer.call(service_params.deep_merge(params: traffic_params)) do
       on_success { |traffic:| render json: traffic }
       on_failed_contract { raise Discourse::InvalidParameters }
       on_failed_step(:load_traffic) do |step|
@@ -175,6 +161,27 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   private
+
+  def traffic_params
+    permitted = params.permit(:start_date, :end_date).to_h
+
+    AdminDashboardSiteTrafficExplorer::FILTER_KEYS.each do |key|
+      value = params[key]
+      next if value.nil?
+
+      if !value.is_a?(Array) || value.any? { |item| !item.is_a?(String) }
+        raise Discourse::InvalidParameters.new(key)
+      end
+
+      permitted[key] = if key == :traffic_type
+        value.flat_map { |item| item.split(",") }
+      else
+        value
+      end
+    end
+
+    permitted
+  end
 
   def serialized_problems
     serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
