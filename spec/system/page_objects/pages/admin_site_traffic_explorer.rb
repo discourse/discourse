@@ -196,6 +196,7 @@ module PageObjects
         selector = "[data-test-site-traffic-apply-filters]"
 
         has_css?(selector, count: 1) &&
+          has_css?("#{selector} .d-button-label", exact_text: "Apply", count: 1) &&
           has_css?(
             "#{selector} .site-traffic-explorer__filter-apply-pending-count",
             exact_text: count.to_s,
@@ -204,7 +205,7 @@ module PageObjects
       end
 
       def has_no_apply_filters?
-        has_no_button?("Apply", exact: false)
+        has_no_css?("[data-test-site-traffic-apply-filters]")
       end
 
       def apply_filters
@@ -260,7 +261,7 @@ module PageObjects
 
       def apply_expanded_filters
         within(".site-traffic-breakdown-modal[role='dialog']") do
-          find_button("Apply", exact: true).click
+          find_button("Apply filters", exact: true).click
         end
         self
       end
