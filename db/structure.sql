@@ -11898,11 +11898,7 @@ CREATE TABLE public.user_options (
     push_notification_level integer DEFAULT 1 NOT NULL,
     automatically_translate boolean DEFAULT true NOT NULL,
     understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
-    send_shortcut integer DEFAULT 0 NOT NULL,
-    ai_search_discoveries_mode integer DEFAULT 1 NOT NULL,
-    ai_search_discoveries_show_summary boolean DEFAULT true NOT NULL,
-    ai_search_discoveries_summary_detail integer DEFAULT 1 NOT NULL,
-    ai_search_discoveries_related_count integer DEFAULT 2 NOT NULL
+    send_shortcut integer DEFAULT 0 NOT NULL
 );
 
 
@@ -23362,6 +23358,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260824072257'),
+('20260824051214'),
 ('20260820171539'),
 ('20260820143851'),
 ('20260818143417'),
