@@ -1,6 +1,14 @@
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 
+let animationTimeOverride = null;
+
+// test-only: animations otherwise collapse to 0ms and finish before a gesture
+// could catch anything mid-flight
+export function overrideAnimationTimeForTesting(durationMs = null) {
+  animationTimeOverride = durationMs;
+}
+
 // common max animation time in ms for swipe events for swipe end
 // prefers reduced motion and tests return 0
 export function getMaxAnimationTimeMs(durationMs = MAX_ANIMATION_TIME) {
@@ -8,7 +16,7 @@ export function getMaxAnimationTimeMs(durationMs = MAX_ANIMATION_TIME) {
     isTesting() ||
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   ) {
-    return 0;
+    return animationTimeOverride ?? 0;
   }
   return Math.min(durationMs, MAX_ANIMATION_TIME);
 }
