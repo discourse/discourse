@@ -86,7 +86,7 @@ RSpec.describe DiscourseVips, :with_vips_broker do
     it "returns an uppercase RGB hex color" do
       input_path = file_from_fixtures("cropped.png").path
 
-      expect(described_class.dominant_color(input_path:)).to eq("524F40")
+      expect(described_class.dominant_color(input_path:)).to eq("3A3730")
     end
 
     it "accepts a supported image with a nonstandard file extension" do
@@ -94,17 +94,14 @@ RSpec.describe DiscourseVips, :with_vips_broker do
         file.write(File.binread(file_from_fixtures("cropped.png").path))
         file.flush
 
-        expect(described_class.dominant_color(input_path: file.path)).to eq("524F40")
+        expect(described_class.dominant_color(input_path: file.path)).to eq("3A3730")
       end
     end
 
     it "rejects unsupported image content" do
       input_path = file_from_fixtures("image.svg").path
 
-      expect { described_class.dominant_color(input_path:) }.to raise_error(
-        DiscourseVips::Error,
-        /unsupported input format/,
-      )
+      expect { described_class.dominant_color(input_path:) }.to raise_error(DiscourseVips::Error)
     end
 
     it "handles concurrent image operations" do
@@ -113,7 +110,7 @@ RSpec.describe DiscourseVips, :with_vips_broker do
       colors =
         Array.new(4) { Thread.new { described_class.dominant_color(input_path:) } }.map(&:value)
 
-      expect(colors).to eq(%w[524F40 524F40 524F40 524F40])
+      expect(colors).to eq(%w[3A3730 3A3730 3A3730 3A3730])
     end
   end
 

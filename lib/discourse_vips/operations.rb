@@ -15,9 +15,6 @@ module DiscourseVips
     ].freeze
     private_constant :DOMINANT_COLOR_LOADERS
 
-    MAX_DIRECT_RESIZE_FACTOR = 256
-    private_constant :MAX_DIRECT_RESIZE_FACTOR
-
     class << self
       def version
         block_loaders
@@ -52,28 +49,10 @@ module DiscourseVips
       def dominant_color(input_path:)
         block_loaders(allowed: DOMINANT_COLOR_LOADERS)
 
-        loader = Vips.vips_foreign_find_load(input_path)
-        raise Vips::Error, "unsupported input format" if loader.nil?
-
-        options = { access: :sequential, fail_on: :none }
-        options[:thumbnail] = false if loader == "VipsForeignLoadHeifFile"
-        image = Vips::Image.new_from_file(input_path, **options)
-        validate_dominant_color_image(image)
-
-        sample_max = image.format == :ushort ? 65_535.0 : 255.0
-        resize_input = image.cast(:double)
-        resize_input = resize_input.premultiply(max_alpha: sample_max) if image.has_alpha?
-        pixel = resize_to_pixel(resize_input, has_alpha: image.has_alpha?)
-        pixel = pixel.unpremultiply(max_alpha: sample_max) if image.has_alpha?
-        raise Vips::Error, "dominant color did not produce one pixel" if pixel.size != [1, 1]
-
-        components = pixel.getpoint(0, 0)
-        raise Vips::Error, "unable to read dominant color pixel" if components.length != image.bands
-
-        red = quantize_sample(components[0], sample_max:)
-        green = quantize_sample(image.bands < 3 ? components[0] : components[1], sample_max:)
-        blue = quantize_sample(image.bands < 3 ? components[0] : components[2], sample_max:)
-        format("%02X%02X%02X", red, green, blue)
+        thumbnail = Vips::Image.thumbnail(input_path, 1, height: 1, size: :force)
+        components = thumbnail.getpoint(0, 0).map(&:round)
+        components = [components.first] * 3 if thumbnail.bands < 3
+        format("%02X%02X%02X", *components.first(3))
       end
 
       def svg_to_png(input_path:, output_path:)
@@ -92,45 +71,6 @@ module DiscourseVips
         Vips.block("VipsForeignLoadMagick6", true)
         Vips.block("VipsForeignLoadMagick7", true)
         allowed.each { |loader| Vips.block(loader, false) }
-      end
-
-      def validate_dominant_color_image(image)
-        max_dimension = ((2**31) - 1) / 7
-        if image.width < 1 || image.height < 1 || image.width > max_dimension ||
-             image.height > max_dimension
-          raise Vips::Error, "unsupported image dimensions"
-        end
-        if !%i[uchar ushort].include?(image.format) || image.bands < 1 || image.bands > 4
-          raise Vips::Error, "unsupported pixel format"
-        end
-      end
-
-      def resize_to_pixel(image, has_alpha:)
-        direct_resize =
-          image.width <= MAX_DIRECT_RESIZE_FACTOR && image.height <= MAX_DIRECT_RESIZE_FACTOR
-        if direct_resize && has_alpha
-          image
-            .embed(
-              image.width * 3,
-              image.height * 3,
-              image.width * 7,
-              image.height * 7,
-              extend: :black,
-            )
-            .resize(1.0 / image.width, vscale: 1.0 / image.height, kernel: :lanczos3, gap: 0.0)
-            .extract_area(3, 3, 1, 1)
-        else
-          image.resize(
-            1.0 / image.width,
-            vscale: 1.0 / image.height,
-            kernel: :lanczos3,
-            gap: direct_resize ? 0.0 : 2.0,
-          )
-        end
-      end
-
-      def quantize_sample(value, sample_max:)
-        (value.clamp(0.0, sample_max) * 255.0 / sample_max + 0.5).floor
       end
     end
   end
