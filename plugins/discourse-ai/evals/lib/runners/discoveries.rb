@@ -36,7 +36,7 @@ module DiscourseAi
             DiscourseAi::Agents::BotContext.new(
               user: user,
               skip_show_thinking: true,
-              feature_name: "discover",
+              feature_name: "discoveries",
               messages: [{ type: :user, content: query }],
             )
 

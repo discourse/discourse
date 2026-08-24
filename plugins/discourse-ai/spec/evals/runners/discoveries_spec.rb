@@ -11,6 +11,13 @@ RSpec.describe DiscourseAi::Evals::Runners::Discoveries do
 
   describe "#run" do
     it "returns a discovery payload with the model output" do
+      feature_name = nil
+      allow(DiscourseAi::Agents::BotContext).to receive(
+        :new,
+      ).and_wrap_original do |original, **args|
+        feature_name = args[:feature_name]
+        original.call(**args)
+      end
       runner = described_class.new("discoveries")
       result =
         runner.run(
@@ -21,6 +28,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Discoveries do
 
       expect(result[:raw]).to eq("Search overview")
       expect(result[:metadata]).to include(query: "chat integrations")
+      expect(feature_name).to eq("discoveries")
     end
 
     it "evaluates each provided case" do

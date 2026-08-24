@@ -10,6 +10,9 @@ describe Jobs::StreamDiscoverReply do
   fab!(:ai_agent) do
     Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
   end
+  fab!(:query_rewrite_agent, :ai_agent) do
+    Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
+  end
 
   let(:query) { "how do I create a plugin" }
   let(:request_id) { SecureRandom.uuid }
@@ -32,20 +35,33 @@ describe Jobs::StreamDiscoverReply do
     DiscourseAi::Discoveries::Retrieval::Result.new(candidates: [candidate])
   end
   let(:retrieval) { instance_double(DiscourseAi::Discoveries::Retrieval) }
+  let(:query_rewriter) { instance_double(DiscourseAi::Discoveries::QueryRewriter) }
   let(:synthesis) { instance_double(DiscourseAi::Discoveries::Synthesis) }
 
   before do
     enable_current_plugin
     SiteSetting.ai_discover_enabled = true
     SiteSetting.ai_discover_agent = ai_agent.id
+    SiteSetting.ai_discover_query_rewrite_agent = query_rewrite_agent.id
     SiteSetting.ai_discover_allowed_groups = group.id.to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
     group.add(user)
     DiscourseAi::Discoveries.bind_request(user_id: user.id, request_id:, query:)
 
+    allow(DiscourseAi::Discoveries::QueryRewriter).to receive(:new) do |arguments|
+      expect(arguments).to include(user:, ai_agent: query_rewrite_agent, llm_model:)
+      expect(arguments[:cancel_manager]).to be_a(DiscourseAi::Completions::CancelManager)
+      query_rewriter
+    end
+    allow(query_rewriter).to receive(:call).with(query).and_return(
+      DiscourseAi::Discoveries::QueryRewriter::Result.new(
+        keyword_query: query,
+        semantic_query: query,
+      ),
+    )
     allow(DiscourseAi::Discoveries::Retrieval).to receive(:new).with(user:).and_return(retrieval)
-    allow(retrieval).to receive(:call).with(query).and_return(retrieval_result)
+    allow(retrieval).to receive(:call).and_return(retrieval_result)
     allow(retrieval).to receive(:validated_sources).with(retrieval_result, %w[source_1]).and_return(
       [candidate],
     )
@@ -88,6 +104,11 @@ describe Jobs::StreamDiscoverReply do
     expect(messages.map { |message| message[:phase] }).to eq(
       %w[searching sources answering complete],
     )
+    expect(retrieval).to have_received(:call).with(
+      query,
+      keyword_query: query,
+      semantic_query: query,
+    )
     expect(messages).to all(include(query:, request_id:))
     expect(messages.second[:sources]).to eq(
       [
@@ -116,6 +137,36 @@ describe Jobs::StreamDiscoverReply do
     )
     expect(DiscourseAi::Discoveries.cached_result_for(user:, request_id:)).to include(
       "answer" => "Use the plugin skeleton.",
+    )
+  end
+
+  it "uses the configured rewrite agent's queries for retrieval" do
+    allow(query_rewriter).to receive(:call).with(query).and_return(
+      DiscourseAi::Discoveries::QueryRewriter::Result.new(
+        keyword_query: "create plugin",
+        semantic_query: "how to create a Discourse plugin",
+      ),
+    )
+
+    job.execute(user_id: user.id, query:, request_id:)
+
+    expect(retrieval).to have_received(:call).with(
+      query,
+      keyword_query: "create plugin",
+      semantic_query: "how to create a Discourse plugin",
+    )
+  end
+
+  it "uses the original query when the configured rewrite agent is unavailable" do
+    SiteSetting.ai_discover_query_rewrite_agent = 99_999
+
+    job.execute(user_id: user.id, query:, request_id:)
+
+    expect(DiscourseAi::Discoveries::QueryRewriter).not_to have_received(:new)
+    expect(retrieval).to have_received(:call).with(
+      query,
+      keyword_query: query,
+      semantic_query: query,
     )
   end
 
@@ -216,7 +267,7 @@ describe Jobs::StreamDiscoverReply do
     second_candidate = candidate.merge("source_ref" => "source_2")
     progressive_result =
       DiscourseAi::Discoveries::Retrieval::Result.new(candidates: [candidate, second_candidate])
-    allow(retrieval).to receive(:call).with(query).and_return(progressive_result)
+    allow(retrieval).to receive(:call).and_return(progressive_result)
     allow(retrieval).to receive(:validated_sources).with(
       progressive_result,
       %w[source_1 source_2],
@@ -284,6 +335,27 @@ describe Jobs::StreamDiscoverReply do
       ai_discover_reply: "",
       sources: [],
     )
+  end
+
+  it "does not release a placeholder answer" do
+    allow(synthesis).to receive(:call).and_return(
+      DiscourseAi::Discoveries::Synthesis::Result.new(
+        answerable: true,
+        source_refs: %w[source_1],
+        title: "Plugin guide",
+        answer: "true",
+      ),
+    )
+
+    messages =
+      MessageBus
+        .track_publish("/discourse-ai/discoveries") do
+          job.execute(user_id: user.id, query:, request_id:)
+        end
+        .map(&:data)
+
+    expect(messages.map { |message| message[:phase] }).to eq(%w[searching complete])
+    expect(messages.last).to include(answerable: false, ai_discover_reply: "", sources: [])
   end
 
   it "revalidates selected sources before the final answer" do

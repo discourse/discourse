@@ -171,7 +171,11 @@ export const AI_FEATURE_SETTING_GROUPS = {
     {
       key: "agents",
       titleKey: "discourse_ai.features.search.setting_groups.agents",
-      settings: ["ai_discover_agent", "ai_discover_follow_up_agent"],
+      settings: [
+        "ai_discover_agent",
+        "ai_discover_query_rewrite_agent",
+        "ai_discover_follow_up_agent",
+      ],
     },
     {
       key: "access_control",

@@ -204,9 +204,11 @@ module DiscourseAi
         end
 
         def lookup_discoveries_agent_ids
-          [SiteSetting.ai_discover_agent, SiteSetting.ai_discover_follow_up_agent].map(&:to_i)
-            .reject(&:zero?)
-            .uniq
+          [
+            SiteSetting.ai_discover_agent,
+            SiteSetting.ai_discover_query_rewrite_agent,
+            SiteSetting.ai_discover_follow_up_agent,
+          ].map(&:to_i).reject(&:zero?).uniq
         end
 
         def lookup_bot_llms

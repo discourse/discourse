@@ -161,6 +161,7 @@ en:
 
     ai_discover_enabled: "Enable the discovery search feature"
     ai_discover_agent: "Agent to use for discovery search feature"
+    ai_discover_query_rewrite_agent: "Agent used to prepare separate keyword and semantic queries for Discoveries. If this agent or its model is unavailable, Discoveries searches with the user's original query."
     ai_discover_follow_up_agent: "Agent used when a user continues a Discoveries result in a personal message. Defaults to Forum Helper. The agent must be enabled, allow personal messages, and be available to the user."
     ai_discover_allowed_groups: "Groups allowed to use Discoveries and its follow-up handoff. The Discovery agent's permissions, the follow-up agent's permissions, and normal topic and category visibility still apply. Personal messages are always excluded from search. Content from restricted categories visible to an allowed user may be sent to the configured LLM provider."
 
@@ -594,6 +595,9 @@ en:
         discover:
           name: "Discover"
           description: "Default agent used in the discoveries feature (complimentary search)"
+        discover_query_rewriter:
+          name: "Discover query rewriter"
+          description: "Prepares keyword and semantic search queries for Discoveries"
         chat_thread_titler:
           name: "Chat Thread Titler"
           description: "Default agent powering automatic chat thread title generation"
