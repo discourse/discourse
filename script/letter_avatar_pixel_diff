@@ -231,4 +231,35 @@ module LetterAvatarPixelDiff
   end
 end
 
-exit LetterAvatarPixelDiff.run(ARGV)
+socket_path = Rails.root.join("tmp", "discourse-vips-pixel-diff-#{Process.pid}.sock").to_s
+ENV["DISCOURSE_VIPS_SOCKET_PATH"] = socket_path
+Discourse.before_fork
+broker_pid =
+  fork do
+    require "discourse_vips/broker"
+    DiscourseVips::Broker.new(socket_path:, parent_pid: Process.ppid).run
+    exit! 0
+  end
+begin
+  deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5
+  until File.socket?(socket_path)
+    if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+      raise "DiscourseVips broker did not start"
+    end
+
+    sleep 0.01
+  end
+  result = LetterAvatarPixelDiff.run(ARGV)
+ensure
+  begin
+    Process.kill("TERM", broker_pid)
+  rescue Errno::ESRCH
+  end
+  begin
+    Process.wait(broker_pid)
+  rescue Errno::ECHILD
+  end
+  FileUtils.rm_f(socket_path)
+  ENV.delete("DISCOURSE_VIPS_SOCKET_PATH")
+end
+exit result
