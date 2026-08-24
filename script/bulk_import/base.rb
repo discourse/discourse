@@ -306,7 +306,8 @@ class BulkImport::Base
   def load_indexes
     puts "Loading groups indexes..."
     @last_group_id = last_id(Group)
-    @group_names_lower = Group.unscoped.pluck(:name).map(&:downcase).to_set
+    @group_names_lower =
+      Group.unscoped.pluck(:name).map { |name| User.normalize_username(name) }.to_set
 
     puts "Loading users indexes..."
     @last_user_id = last_id(User)
@@ -1360,7 +1361,16 @@ class BulkImport::Base
 
     @groups[group[:imported_id].to_i] = group[:id] = @last_group_id += 1
 
-    group[:name] = fix_name(group[:name])
+    fixed_name = fix_name(group[:name])
+    if fixed_name.blank?
+      fallback = "group_#{SecureRandom.hex(8)}"
+      log_import_issue(
+        "group name sanitized to blank",
+        "group #{group[:imported_id]} #{group[:name].inspect} -> #{fallback}",
+      )
+      fixed_name = fallback
+    end
+    group[:name] = fixed_name
 
     if group_or_user_exist?(group[:name])
       group_name = group[:name] + "_1"
@@ -1387,7 +1397,7 @@ class BulkImport::Base
   end
 
   def group_or_user_exist?(name)
-    name_lowercase = name.downcase
+    name_lowercase = User.normalize_username(name)
     return true if @usernames_lower.include?(name_lowercase)
     @group_names_lower.add?(name_lowercase).nil?
   end
@@ -1419,7 +1429,15 @@ class BulkImport::Base
 
     imported_username = user[:original_username].presence || user[:username].dup
 
-    user[:username] = fix_name(user[:username]).presence || random_username
+    user[:username] = fix_name(user[:username]).presence
+
+    if user[:username].blank?
+      user[:username] = random_username
+      log_import_issue(
+        "username sanitized to blank",
+        "user #{user[:imported_id]} #{imported_username.inspect} -> #{user[:username]}",
+      )
+    end
 
     if user[:username] != imported_username
       @imported_usernames[imported_username] = user[:id] if persist_imported_username
@@ -1428,12 +1446,18 @@ class BulkImport::Base
 
     # unique username_lower
     if user_exist?(user[:username])
-      username = user[:username] + "_1"
-      username.next! while user_exist?(username)
-      user[:username] = username
+      i = 0
+      candidate = nil
+      begin
+        i += 1
+        suffix = "_#{i}"
+        candidate =
+          truncate_name(user[:username], UsernameValidator::MAX_CHARS - suffix.length) + suffix
+      end while user_exist?(candidate)
+      user[:username] = candidate
     end
 
-    user[:username_lower] = user[:username].downcase
+    user[:username_lower] = User.normalize_username(user[:username])
     user[:trust_level] ||= TrustLevel[1]
     user[:active] = true unless user.has_key?(:active)
     user[:staged] = false if user[:staged].nil?
@@ -1464,7 +1488,7 @@ class BulkImport::Base
   end
 
   def user_exist?(username)
-    username_lowercase = username.downcase
+    username_lowercase = User.normalize_username(username)
     @usernames_lower.add?(username_lowercase).nil?
   end
 
@@ -2443,16 +2467,20 @@ class BulkImport::Base
   end
 
   def fix_name(name)
-    name.scrub! if name && !name.valid_encoding?
+    name = name.scrub if name && !name.valid_encoding?
     return if name.blank?
-    # TODO Support Unicode if allowed in site settings and try to reuse logic from UserNameSuggester if possible
-    name = ActiveSupport::Inflector.transliterate(name)
-    name.gsub!(/[^\w.-]+/, "_")
-    name.gsub!(/^\W+/, "")
-    name.gsub!(/[^A-Za-z0-9]+$/, "")
-    name.gsub!(/([-_.]{2,})/) { $1.first }
-    name.strip!
-    name.truncate(60, omission: "")
+    name = UserNameSuggester.sanitize_username(name)
+    return if name.blank?
+    UserNameSuggester.truncate(name, UsernameValidator::MAX_CHARS)
+  end
+
+  # unlike UserNameSuggester.truncate, caps the codepoint length at max_chars
+  # so an ASCII dedup suffix can be appended without overflowing varchar(60)
+  def truncate_name(name, max_chars)
+    clusters = name.grapheme_clusters
+    clusters = clusters[0...max_chars] if clusters.size > max_chars
+    clusters.pop while clusters.join.length > max_chars
+    clusters.join
   end
 
   def random_username
@@ -2536,7 +2564,9 @@ class BulkImport::Base
       %{<img src="#{cdn_url}" data-base62-sha1="#{upload_base62} #{attributes}>}
     end
 
-    cooked.gsub!(/@([-_.\w]+)/) do
+    cooked.gsub!(
+      /@([\p{Alpha}\p{M}\p{Nd}_](?:[\p{Alpha}\p{M}\p{Nd}._-]{0,58}[\p{Alpha}\p{M}\p{Nd}])?)/,
+    ) do
       name = @mapped_usernames[$1] || $1
       normalized_name = User.normalize_username(name)
 
