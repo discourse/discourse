@@ -69,5 +69,36 @@ module(
         `the graph source is untouched, got: ${editorClass.value}`
       );
     });
+
+    test("keeps the line breaks of a pasted diagram", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, "");
+      const { view } = editorClass;
+
+      view.pasteHTML(
+        '<div class="graphviz is-loading" data-engine="neato">\ndigraph G {\n  a -&gt; b;\n  b -&gt; c;\n}\n</div>'
+      );
+
+      assert.strictEqual(
+        editorClass.value.trim(),
+        "[graphviz engine=neato]\ndigraph G {\n  a -> b;\n  b -> c;\n}\n[/graphviz]",
+        "the source survives the round trip through cooked HTML"
+      );
+    });
+
+    test("puts the caret in the source of a diagram it just inserted", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, "before");
+      const { view } = editorClass;
+
+      view.dispatch(view.state.tr.insertText("[graphviz"));
+      const pos = view.state.selection.from;
+      view.someProp("handleTextInput", (f) => f(view, pos, pos, "]"));
+
+      const { selection } = view.state;
+      assert.strictEqual(
+        selection.$head.parent.type.name,
+        "preview_source",
+        "typing carries on inside the new diagram"
+      );
+    });
   }
 );

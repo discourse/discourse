@@ -1,4 +1,8 @@
 import PreviewNodeView from "discourse/components/composer/preview-node-view";
+import {
+  previewSourceNode,
+  selectPreviewSource,
+} from "discourse/lib/composer/preview-block";
 import { i18n } from "discourse-i18n";
 import GraphvizFullscreen from "../components/graphviz-fullscreen";
 import GraphvizPreview from "../components/graphviz-preview";
@@ -32,6 +36,13 @@ const extension = {
         {
           tag: "div.graphviz",
           getAttrs: (dom) => ({ engine: toEngine(dom.dataset.engine) }),
+          // a cooked diagram holds its source as plain text, which the parser
+          // would otherwise collapse, running the statements together
+          getContent: (dom, schema) =>
+            schema.nodes.graphviz.create(
+              null,
+              previewSourceNode(schema, dom.textContent, LANGUAGE)
+            ).content,
         },
       ],
       toDOM: (node) => [
@@ -78,16 +89,21 @@ const extension = {
     },
   },
 
-  inputRules: ({ schema }) => ({
+  inputRules: ({ schema, pmState: { TextSelection } }) => ({
     match: /\[graphviz(?: engine=(\w+))?]$/,
     handler: (state, match, start, end) => {
-      const graphviz = schema.nodes.graphviz.createAndFill(
-        { engine: match[1] || "dot" },
-        schema.nodes.preview_source.create({ params: LANGUAGE })
+      const graphviz = schema.nodes.graphviz.create(
+        { engine: toEngine(match[1]) },
+        previewSourceNode(schema, "", LANGUAGE)
       );
       const isAtStart = state.doc.resolve(start).parentOffset === 0;
+      const from = isAtStart ? start - 1 : start;
 
-      return state.tr.replaceWith(isAtStart ? start - 1 : start, end, graphviz);
+      return selectPreviewSource(
+        state.tr.replaceWith(from, end, graphviz),
+        TextSelection,
+        from
+      );
     },
   }),
 

@@ -1,8 +1,7 @@
 // Reserve the diagram box up-front (placeholder and rendered wrapper alike) so
 // the layout does not shift when the client renders the graph.
 div.graphviz.is-loading,
-.graphviz-wrapper,
-.composer-graphviz-node .composer-preview-node__preview {
+.graphviz-wrapper {
   margin: 1em 0;
   aspect-ratio: 16 / 9;
   background-color: var(--primary-50);
@@ -10,6 +9,12 @@ div.graphviz.is-loading,
   &:first-child {
     margin-top: 0;
   }
+}
+
+// In the editor the block already has a frame, and both of its faces share one
+// cell, so the box needs no reserving — only a floor for a source not yet typed.
+.composer-graphviz-node .composer-preview-node__preview {
+  min-height: 3em;
 }
 
 // Hide the raw DOT source until the client replaces the placeholder.

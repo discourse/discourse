@@ -62,6 +62,12 @@ export default class GlimmerNodeView {
   }
 
   update(node) {
+    // the editor offers this view for reuse before creating a new one; a node
+    // of another type needs its own view, and its own component
+    if (node.type !== this.node.type) {
+      return false;
+    }
+
     // the editor calls this for every transaction, but only hands over a new
     // node object when this node changed; assigning regardless would re-render
     // the component on every keystroke anywhere in the document

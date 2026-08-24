@@ -145,12 +145,12 @@ export default class PreviewNodeView extends Component {
       role="group"
     >{{#each @options.controls as |control|}}<DButton
           @icon={{control.icon}}
-          @title={{control.label}}
+          @translatedTitle={{control.label}}
           @action={{fn this.runControl control}}
           class="btn-flat composer-preview-node__control"
         />{{/each}}<DButton
         @icon={{if this.showingSource "eye" "code"}}
-        @title={{this.toggleLabel}}
+        @translatedTitle={{this.toggleLabel}}
         @action={{this.toggleSource}}
         aria-pressed={{if this.showingSource "true" "false"}}
         class="btn-flat composer-preview-node__control composer-preview-node__toggle"
