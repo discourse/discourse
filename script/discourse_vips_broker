@@ -1,11 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-socket_path, parent_pid, pid_file, gemfile_path = ARGV
-at_exit do
-  File.delete(pid_file) if pid_file && File.read(pid_file).to_i == Process.pid
-rescue Errno::ENOENT
-end
+socket_path, gemfile_path = ARGV
 
 discourse_root = File.expand_path("..", __dir__)
 ENV["BUNDLE_GEMFILE"] = gemfile_path || File.join(discourse_root, "Gemfile")
@@ -17,7 +13,4 @@ $LOAD_PATH.unshift(File.join(discourse_root, "lib"))
 require "discourse_vips/broker"
 
 Process.setproctitle("discourse discourse_vips")
-DiscourseVips::Broker.new(
-  socket_path:,
-  parent_pid: Integer(parent_pid),
-).run
+DiscourseVips::Broker.new(socket_path:).run

@@ -1,6 +1,25 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseVips, :with_vips_broker do
+  describe ".start" do
+    it "starts one broker and returns after it is ready" do
+      socket_path = Rails.root.join("tmp", "discourse-vips-start-#{Process.pid}.sock").to_s
+      described_class.stubs(socket_path:)
+
+      broker_pid = described_class.start
+
+      expect(described_class.start).to eq(broker_pid)
+      expect(described_class.version).to match(/\A1-8\.\d+\.\d+\z/)
+    ensure
+      begin
+        Process.kill("TERM", broker_pid) if broker_pid
+      rescue Errno::ESRCH
+      end
+      FileUtils.rm_f(socket_path) if socket_path
+      FileUtils.rm_f("#{socket_path}.lock") if socket_path
+    end
+  end
+
   describe ".version" do
     it "returns the interface and libvips versions" do
       expect(described_class.version).to match(/\A1-8\.\d+\.\d+\z/)
@@ -16,20 +35,55 @@ RSpec.describe DiscourseVips, :with_vips_broker do
       )
     end
 
-    it "wraps broker connection errors" do
-      UNIXSocket.stubs(:open).raises(Errno::EPIPE)
+    it "starts one broker for concurrent requests when none is running" do
+      socket_path = Rails.root.join("tmp", "discourse-vips-lazy-#{Process.pid}.sock").to_s
+      described_class.stubs(socket_path:)
 
-      expect { described_class.version }.to raise_error(
-        DiscourseVips::Error,
-        /libvips broker request failed/,
-      )
+      versions = Array.new(4) { Thread.new { described_class.version } }.map(&:value)
+      broker_pid = described_class.start
+
+      expect(versions).to all(match(/\A1-8\.\d+\.\d+\z/))
+    ensure
+      begin
+        Process.kill("TERM", broker_pid) if broker_pid
+      rescue Errno::ESRCH
+      end
+      FileUtils.rm_f(socket_path) if socket_path
+      FileUtils.rm_f("#{socket_path}.lock") if socket_path
     end
 
-    it "rejects a response from another broker process" do
-      expect { described_class.version(expected_broker_pid: -1) }.to raise_error(
-        DiscourseVips::Error,
-        "libvips broker identity did not match",
-      )
+    it "replaces a broker that stops" do
+      socket_path = Rails.root.join("tmp", "discourse-vips-restart-#{Process.pid}.sock").to_s
+      described_class.stubs(socket_path:)
+      previous_broker_pid = described_class.start
+      Process.kill("KILL", previous_broker_pid)
+
+      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5
+      loop do
+        begin
+          Process.kill(0, previous_broker_pid)
+        rescue Errno::ESRCH
+          break
+        end
+        if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+          raise "libvips broker did not stop"
+        end
+
+        sleep 0.01
+      end
+
+      version = described_class.version
+      replacement_broker_pid = described_class.start
+
+      expect(version).to match(/\A1-8\.\d+\.\d+\z/)
+      expect(replacement_broker_pid).not_to eq(previous_broker_pid)
+    ensure
+      begin
+        Process.kill("TERM", replacement_broker_pid) if replacement_broker_pid
+      rescue Errno::ESRCH
+      end
+      FileUtils.rm_f(socket_path) if socket_path
+      FileUtils.rm_f("#{socket_path}.lock") if socket_path
     end
   end
 
@@ -111,6 +165,23 @@ RSpec.describe DiscourseVips, :with_vips_broker do
         Array.new(4) { Thread.new { described_class.dominant_color(input_path:) } }.map(&:value)
 
       expect(colors).to eq(%w[3A3730 3A3730 3A3730 3A3730])
+    end
+
+    it "records image-processing instrumentation" do
+      SiteSetting.instrument_image_processing = true
+      input_path = file_from_fixtures("cropped.png").path
+
+      events =
+        DiscourseEvent.track_events(:image_processing_finished) do
+          described_class.dominant_color(input_path:)
+        end
+
+      payload = events.first[:params].first
+      expect(payload.except(:duration_seconds)).to eq(
+        operation: "upload_dominant_color",
+        success: true,
+      )
+      expect(payload[:duration_seconds]).to be >= 0
     end
   end
 
