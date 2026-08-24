@@ -555,7 +555,6 @@ export default class GlimmerSiteHeader extends Component {
     const translation =
       this._swipeMenuOrigin === "right" ? dragPosition : -dragPosition;
 
-    // Avoid allocating an Animation per pointermove.
     drawerDrag.panel.style.transform = `translate3d(${translation}px, 0, 0)`;
     if (drawerDrag.cloak) {
       drawerDrag.cloak.style.opacity =
@@ -698,6 +697,7 @@ export default class GlimmerSiteHeader extends Component {
         onDragEnd: this.onDrawerDragEnd,
         onDragCancel: this.onDrawerDragCancel,
         threshold: DRAWER_DRAG_THRESHOLD,
+        // arbitration stops at .panel-body, which declares its own pan-y
         touchAction: "pan-y",
         preservePress: isPanel,
       }));

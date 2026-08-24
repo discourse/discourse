@@ -427,7 +427,6 @@ acceptance("Mobile - menu drawer gestures", function (needs) {
     await moveDrawerDrag(drag, { by: -width / 5, afterMs: 400 });
     const pulledTo = drawerTranslateX();
 
-    // a real duration keeps the settle in flight for the press to catch
     overrideAnimationTimeForTesting(1_000);
     releaseDrawerDrag(drag, { afterMs: PARKED_RELEASE_MS });
     const caught = await startDrawerDrag(".panel-body");
