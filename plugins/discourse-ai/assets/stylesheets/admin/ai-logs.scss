@@ -27,6 +27,7 @@
   }
 
   &__date-range-filter,
+  &__feature-filter,
   &__user-filter {
     min-width: 0;
     margin: 0;
@@ -46,6 +47,7 @@
     }
   }
 
+  &__feature-filter,
   &__user-filter {
     display: flex;
     flex-direction: column;
