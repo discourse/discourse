@@ -16,6 +16,7 @@ end
 require "pg"
 require "redcarpet"
 require "htmlentities"
+require "tmpdir"
 
 puts "Loading application..."
 require_relative "../../config/environment"
@@ -100,8 +101,36 @@ class BulkImport::Base
     execute
     fix_primary_keys
     execute_after
+    report_import_issues
     puts "Done! (#{((Time.now - start_time) / 60).to_i} minutes)"
     puts "Now run the 'import:ensure_consistency' rake task."
+  end
+
+  # counts data issues per category for the final summary and streams the
+  # details to a log file, keeping them out of the inline progress output
+  def log_import_issue(category, detail)
+    @import_issue_counts ||= Hash.new(0)
+    @import_issue_counts[category] += 1
+    import_issue_log.puts("[#{category}] #{detail}")
+  end
+
+  def import_issue_log_path
+    @import_issue_log_path ||=
+      File.join(Dir.tmpdir, "generic_bulk_import_issues_#{Time.now.strftime("%Y%m%d_%H%M%S")}.log")
+  end
+
+  def import_issue_log
+    @import_issue_log ||= File.open(import_issue_log_path, "a").tap { |file| file.sync = true }
+  end
+
+  def report_import_issues
+    return if @import_issue_counts.blank?
+
+    puts "", "Import issues (details in #{import_issue_log_path}):"
+    @import_issue_counts
+      .sort_by { |_, count| -count }
+      .each { |category, count| puts "  #{category}: #{count}" }
+    @import_issue_log&.close
   end
 
   def preflight
@@ -1693,14 +1722,14 @@ class BulkImport::Base
     post[:updated_at] ||= post[:created_at]
 
     if post[:raw].bytes.include?(0)
-      STDERR.puts "Skipping post with original ID #{post[:imported_id]} because `raw` contains null bytes"
+      log_import_issue("post skipped (raw contains null bytes)", "post #{post[:imported_id]}")
       post[:skip] = true
     end
 
     post[:reply_to_post_number] = nil if post[:reply_to_post_number] == 1
 
     if post[:cooked].bytes.include?(0)
-      STDERR.puts "Skipping post with original ID #{post[:imported_id]} because `cooked` contains null bytes"
+      log_import_issue("post skipped (cooked contains null bytes)", "post #{post[:imported_id]}")
       post[:skip] = true
     end
 
@@ -2172,12 +2201,18 @@ class BulkImport::Base
     @chat_message_mapping[message[:original_id].to_s] = message[:id]
 
     if message[:message].bytes.include?(0)
-      STDERR.puts "Skipping chat message with original ID #{message[:original_id]} because `message` contains null bytes"
+      log_import_issue(
+        "chat message skipped (message contains null bytes)",
+        "chat message #{message[:original_id]}",
+      )
       message[:skip] = true
     end
 
     if message[:cooked].bytes.include?(0)
-      STDERR.puts "Skipping chat message with original ID #{message[:original_id]} because `cooked` contains null bytes"
+      log_import_issue(
+        "chat message skipped (cooked contains null bytes)",
+        "chat message #{message[:original_id]}",
+      )
       message[:skip] = true
     end
 

@@ -439,6 +439,39 @@ if generic_import_dependencies_available
         connection&.close
       end
     end
+
+    describe "#log_import_issue" do
+      it "aggregates counts per category and streams details to the log file" do
+        importer = described_class.allocate
+        log_path = File.join(Dir.mktmpdir, "issues.log")
+        importer.instance_variable_set(:@import_issue_log_path, log_path)
+
+        importer.log_import_issue("unresolved user mention", "[mention|abc] (content 1)")
+        importer.log_import_issue("unresolved user mention", "[mention|def] (content 2)")
+        importer.log_import_issue("post skipped (raw contains null bytes)", "post 3")
+
+        expect(File.readlines(log_path, chomp: true)).to eq(
+          [
+            "[unresolved user mention] [mention|abc] (content 1)",
+            "[unresolved user mention] [mention|def] (content 2)",
+            "[post skipped (raw contains null bytes)] post 3",
+          ],
+        )
+        expect { importer.report_import_issues }.to output(
+          [
+            "",
+            "Import issues (details in #{log_path}):",
+            "  unresolved user mention: 2",
+            "  post skipped (raw contains null bytes): 1",
+            "",
+          ].join("\n"),
+        ).to_stdout
+      end
+
+      it "reports nothing when no issues were logged" do
+        expect { described_class.allocate.report_import_issues }.not_to output.to_stdout
+      end
+    end
   end
 else
   RSpec.describe "generic bulk import specs" do

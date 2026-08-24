@@ -1407,7 +1407,7 @@ class BulkImport::Generic < BulkImport::Base
         if EmailAddressValidator.valid_value?(email)
           email_updates << { id: primary_email.id, user_id: discourse_id, email: email }
         else
-          STDERR.puts "Skipping invalid email update for user with original ID #{row["id"]}"
+          log_import_issue("invalid email update skipped", "user #{row["id"]}")
         end
       end
     end
@@ -2055,7 +2055,7 @@ class BulkImport::Generic < BulkImport::Base
     raw = normalize_text(raw)
 
     if raw.bytes.include?(0)
-      STDERR.puts "Skipping raw update for post with original ID #{original_id} because `raw` contains null bytes"
+      log_import_issue("raw update skipped (raw contains null bytes)", "post #{original_id}")
       return nil
     end
 
@@ -2098,7 +2098,12 @@ class BulkImport::Generic < BulkImport::Base
       mentions.each do |mention|
         name = resolve_mentioned_name(mention)
 
-        puts "#{mention["type"]} not found -- #{mention["placeholder"]}" unless name
+        unless name
+          log_import_issue(
+            "unresolved #{mention["type"]} mention",
+            "#{mention["placeholder"]} (content #{row["id"]})",
+          )
+        end
         raw.gsub!(mention["placeholder"], " @#{name} ")
       end
     end
@@ -3356,7 +3361,6 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def reconcile_delta_post_upload_references
-    skipped_post_count = 0
     rows = query("SELECT id, upload_ids FROM posts WHERE upload_ids IS NOT NULL ORDER BY id")
     rows.each do |row|
       post_id = post_id_from_imported_id(row["id"])
@@ -3366,9 +3370,10 @@ class BulkImport::Generic < BulkImport::Base
       upload_ids =
         original_upload_ids.filter_map { |original_id| upload_id_from_original_id(original_id) }
       if upload_ids.size != original_upload_ids.size
-        STDERR.puts "Skipping upload reconciliation for post with original ID #{row["id"]} " \
-                      "because one or more uploads are not mapped"
-        skipped_post_count += 1
+        log_import_issue(
+          "post upload reconciliation skipped (unmapped uploads)",
+          "post #{row["id"]}",
+        )
         next
       end
       existing_ids =
@@ -3379,10 +3384,6 @@ class BulkImport::Generic < BulkImport::Base
       if delta_update_mapping(:posts).key?(row["id"].to_i)
         @delta_stats[:posts][:updated_ids] << post_id
       end
-    end
-
-    if skipped_post_count > 0
-      puts "  Skipped upload reconciliation for #{skipped_post_count} posts with unmapped uploads."
     end
   ensure
     rows&.close
@@ -3507,7 +3508,10 @@ class BulkImport::Generic < BulkImport::Base
               tag_group_id: discourse_tag_group_id,
             )
           else
-            puts "Warning: Intermediate tag group ID #{intermediate_group_id} from row not found in @tag_group_mapping for tag '#{tag.name}'"
+            log_import_issue(
+              "tag group mapping missing",
+              "intermediate tag group #{intermediate_group_id} for tag '#{tag.name}'",
+            )
           end
         end
       end
