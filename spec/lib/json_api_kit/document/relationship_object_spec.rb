@@ -35,8 +35,10 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
       JsonApiKit::Pagination::Row.new(record: topic, segment: nil),
       topics_resource.fields(guardian:),
       type: "topics",
+      namespace:,
     )
   end
+  let(:namespace) { nil }
   let(:linkage) { JsonApiKit::Linkage::ToOne.new([record]) }
   let(:relationship_url) { "https://example.com/api/topics/#{topic.id}/relationships/posts" }
   let(:related_url) { "https://example.com/api/topics/#{topic.id}/posts" }
@@ -48,6 +50,17 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
 
     it "renders the relationship link and the related link" do
       expect(relationship_object.to_h[:links]).to eq(self: relationship_url, related: related_url)
+    end
+
+    context "with a namespace" do
+      let(:namespace) { "data-explorer" }
+
+      it "renders both links under it" do
+        expect(relationship_object.to_h[:links]).to eq(
+          self: "https://example.com/api/data-explorer/topics/#{topic.id}/relationships/posts",
+          related: "https://example.com/api/data-explorer/topics/#{topic.id}/posts",
+        )
+      end
     end
 
     context "when the relationship holds a page of records" do

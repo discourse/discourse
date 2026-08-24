@@ -10,11 +10,7 @@ module JsonApiKit
 
     def current = Url.new(@current, parameters)
 
-    def record(type, id) = Url.new("#{base}/#{type}/#{id}")
-
-    def relationship(type, id, name) = Url.new("#{record(type, id)}/relationships/#{name}")
-
-    def related(type, id, name) = Url.new("#{record(type, id)}/#{name}")
+    def for(record) = RecordUrl.new(base, record)
 
     private
 

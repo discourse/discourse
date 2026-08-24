@@ -23,7 +23,7 @@ module JsonApiKit
         end
       end
 
-      def links = { self: urls.record(type, id).to_s }
+      def links = { self: urls.for(record).to_s }
     end
   end
 end

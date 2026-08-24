@@ -22,9 +22,11 @@ module JsonApiKit
 
       def links = { self: relationship_url.to_s, related: related_url.to_s }.merge(page_links)
 
-      def relationship_url = urls.relationship(owner.type, owner.id, name)
+      def relationship_url = owner_url.relationship(name)
 
-      def related_url = urls.related(owner.type, owner.id, name)
+      def related_url = owner_url.related(name)
+
+      def owner_url = @owner_url ||= urls.for(owner)
 
       def page_links = PageLinks.new(relationship_url, pages).to_h
     end
