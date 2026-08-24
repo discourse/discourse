@@ -288,14 +288,15 @@ export default class GlimmerSiteHeader extends Component {
 
       if (this._animate) {
         let animationFinished;
-        let finalPosition = PANEL_WIDTH;
+        let finalPosition = this.#drawerWidth(panel);
         this._swipeMenuOrigin = "right";
         if (this.slideInMode && this.#isLeftMenu(panel)) {
           this._swipeMenuOrigin = "left";
-          finalPosition = -PANEL_WIDTH;
+          finalPosition = -finalPosition;
         }
         animationFinished = this.#driveDrawer(
           panel,
+          "transform",
           [{ transform: `translate3d(${finalPosition}px, 0, 0)` }],
           { fill: "forwards" }
         ).finished;
@@ -303,7 +304,7 @@ export default class GlimmerSiteHeader extends Component {
         waitForPromise(animationFinished.catch(() => {}));
 
         if (cloakElement) {
-          this.#driveDrawer(cloakElement, [{ opacity: 0 }], {
+          this.#driveDrawer(cloakElement, "opacity", [{ opacity: 0 }], {
             fill: "forwards",
           });
           cloakElement.style.display = "block";
@@ -339,13 +340,18 @@ export default class GlimmerSiteHeader extends Component {
       easing: DRAWER_SETTLE_EASING,
     };
     const animations = [
-      this.#driveDrawer(panel, [{ transform: `translate3d(0, 0, 0)` }], timing)
-        .finished,
+      this.#driveDrawer(
+        panel,
+        "transform",
+        [{ transform: `translate3d(0, 0, 0)` }],
+        timing
+      ).finished,
     ];
     if (cloakElement) {
       cloakElement.style.display = "block";
       animations.push(
-        this.#driveDrawer(cloakElement, [{ opacity: 1 }], timing).finished
+        this.#driveDrawer(cloakElement, "opacity", [{ opacity: 1 }], timing)
+          .finished
       );
     }
 
@@ -378,13 +384,15 @@ export default class GlimmerSiteHeader extends Component {
     const animations = [
       this.#driveDrawer(
         panel,
+        "transform",
         [{ transform: `translate3d(${endPosition}px, 0, 0)` }],
         timing
       ).finished,
     ];
     if (cloakElement) {
       animations.push(
-        this.#driveDrawer(cloakElement, [{ opacity: 0 }], timing).finished
+        this.#driveDrawer(cloakElement, "opacity", [{ opacity: 0 }], timing)
+          .finished
       );
     }
 
@@ -479,9 +487,9 @@ export default class GlimmerSiteHeader extends Component {
     this.pxClosed = startClosed;
   }
 
-  #driveDrawer(element, keyframes, timing) {
+  #driveDrawer(element, property, keyframes, timing) {
     const animation = element.animate(keyframes, timing);
-    this._drawerAnimations.push(animation);
+    this._drawerAnimations.push({ animation, property });
     return animation;
   }
 
@@ -501,11 +509,10 @@ export default class GlimmerSiteHeader extends Component {
   // a cancelled fill-forwards animation reverts its element, so pin what is
   // on screen first
   #stopDrawerAnimations() {
-    for (const animation of this._drawerAnimations) {
+    for (const { animation, property } of this._drawerAnimations) {
       const target = animation.effect?.target;
       if (target?.isConnected) {
-        const { transform, opacity } = window.getComputedStyle(target);
-        Object.assign(target.style, { transform, opacity });
+        target.style[property] = window.getComputedStyle(target)[property];
       }
       animation.cancel();
     }

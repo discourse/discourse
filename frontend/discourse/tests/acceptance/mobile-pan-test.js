@@ -385,6 +385,38 @@ acceptance("Mobile - menu drawer gestures", function (needs) {
     );
   });
 
+  test("a drawer wider than the 340px default starts fully offscreen", async function (assert) {
+    const style = document.createElement("style");
+    style.textContent =
+      ".menu-panel.slide-in { width: 450px !important; max-width: 450px !important; }";
+    document.head.appendChild(style);
+
+    try {
+      await visit("/");
+      overrideAnimationTimeForTesting(600_000);
+      // the raw click leaves the slide-in settle running for the press to
+      // catch; the click helper would wait on it
+      find(".hamburger-dropdown button").click();
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      const drag = await startDrawerDrag(".panel-body");
+      overrideAnimationTimeForTesting();
+      const width = Math.round(drawerWidth());
+
+      assert.strictEqual(
+        drawerTranslateX(),
+        -width,
+        "the slide-in enters from the drawer's measured width, not from -340px"
+      );
+
+      // a press that never moves is a tap on the panel, which keeps it open
+      await endParkedDrawerDrag(drag);
+      assert.strictEqual(drawerTranslateX(), 0, "and the tap settles it open");
+    } finally {
+      style.remove();
+    }
+  });
+
   test("catching a settling drawer carries on from where it is", async function (assert) {
     await openHamburgerDrawer();
 
