@@ -24,6 +24,8 @@ export default class SidebarCustomSections extends Component {
           @collapsable={{@collapsable}}
           @enableLinkDrop={{@enableLinkDrop}}
           @toggleNavigationMenu={{@toggleNavigationMenu}}
+          @expandActiveSection={{@expandActiveSection}}
+          @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
         />
       {{/each}}
     </div>
