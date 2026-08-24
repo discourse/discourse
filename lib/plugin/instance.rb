@@ -1009,8 +1009,11 @@ class Plugin::Instance
   # Receives an array with two elements:
   # 1. A symbol that represents the name of the value to filter.
   # 2. A Proc that takes the existing ActiveRecord::Relation and the value received from the front-end.
-  def add_custom_reviewable_filter(filter)
-    reloadable_patch { Reviewable.add_custom_filter(filter) }
+  #
+  # type_filter accepts an id and filter value for the Type control. reason_filters accepts an
+  # array or callable returning ids, names, and filter values for the Reason control.
+  def add_custom_reviewable_filter(filter, type_filter: nil, reason_filters: nil)
+    reloadable_patch { Reviewable.add_custom_filter(filter, type_filter:, reason_filters:) }
   end
 
   # Register a new API key scope.
