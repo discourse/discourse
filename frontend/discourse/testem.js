@@ -229,6 +229,7 @@ class Reporter extends TapReporter {
   reportDeprecations() {
     if (this.deprecationCounts.size === 0) {
       this.out.write("\n[Deprecation Counter] No deprecations logged\n\n");
+      this.writeDeprecationReport();
       return;
     }
 
@@ -287,24 +288,12 @@ class Reporter extends TapReporter {
   }
 
   generateDeprecationDetailTable(document) {
-    const rows = document.deprecations
-      .slice()
-      .sort((a, b) => b.count - a.count)
-      .slice(0, SUMMARY_DETAIL_LIMIT);
+    let table = "| id | call site | count | specs |\n";
+    table += "| -- | --------- | ----- | ----- |\n";
 
-    let table = "| id | spec | deprecated call site | count |\n";
-    table += "| -- | ---- | -------------------- | ----- |\n";
-
-    for (const row of rows) {
-      const line = row.test.callSiteLine || row.test.declarationLine;
-      const spec = row.test.file
-        ? `${row.test.file}${line ? `:${line}` : ""}${row.test.name ? ` — ${row.test.name}` : ""}`
-        : row.test.name || "(unknown)";
-      const site = row.deprecationSite
-        ? `${row.deprecationSite.file}:${row.deprecationSite.line}`
-        : "(unknown)";
-
-      table += `| ${row.id} | ${spec} | ${site} | ${row.count} |\n`;
+    for (const site of document.sites.slice(0, SUMMARY_DETAIL_LIMIT)) {
+      const location = `${site.file}:${site.line}`;
+      table += `| ${site.id} | ${location} | ${site.count} | ${site.specCount} |\n`;
     }
 
     return table;
@@ -324,7 +313,7 @@ class Reporter extends TapReporter {
     }
 
     if (report) {
-      jobSummary += `\n\nTop ${SUMMARY_DETAIL_LIMIT} deprecation call sites (full details in the \`deprecation-reports\` artifact):\n\n`;
+      jobSummary += `\n\nTop ${SUMMARY_DETAIL_LIMIT} deprecated call sites (full details in the \`deprecation-reports\` artifact):\n\n`;
       jobSummary += this.generateDeprecationDetailTable(report.document);
     }
 

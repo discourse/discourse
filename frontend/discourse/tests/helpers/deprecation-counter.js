@@ -16,7 +16,9 @@ const skipCountIds = new Set();
 // Detailed per-occurrence records are deduplicated and capped so a noisy
 // deprecation in a hot code path can't blow up memory or the reporter payload.
 const MAX_DETAIL_ENTRIES = 2000;
-const MAX_STACK_FRAMES = 15;
+// Deep enough to get past the runloop and computed-property machinery which sits
+// between a deprecated getter and the code that actually called it.
+const MAX_STACK_FRAMES = 60;
 
 /**
  * Marks a deprecation ID to be skipped when counting deprecations during tests.
@@ -63,13 +65,22 @@ export default class DeprecationCounter {
   details = new Map();
   #origin = null;
   #qunit = null;
+  #unflushedDetails = [];
 
   start(origin, qunit) {
+    this.startDiscourseHandler(origin, qunit);
+    this.startEmberHandler();
+  }
+
+  startDiscourseHandler(origin, qunit) {
     this.#origin = origin;
     this.#qunit = qunit;
 
-    registerDeprecationHandler(this.handleEmberDeprecation);
     registerDiscourseDeprecationHandler(this.handleDiscourseDeprecation);
+  }
+
+  startEmberHandler() {
+    registerDeprecationHandler(this.handleEmberDeprecation);
   }
 
   shouldCount(id) {
@@ -151,6 +162,7 @@ export default class DeprecationCounter {
     };
 
     this.details.set(key, detail);
+    this.#unflushedDetails.push(detail);
 
     if (isRailsTesting()) {
       // System specs identify the spec themselves, so only the JS stack is
@@ -158,6 +170,19 @@ export default class DeprecationCounter {
       // eslint-disable-next-line no-console
       console.log(`deprecation_detail:${JSON.stringify({ id, stack })}`);
     }
+  }
+
+  /**
+   * Hands over the details recorded since the last call. Flushing while the run
+   * is still in progress keeps the reporter socket alive; a flush deferred to
+   * `QUnit.done` races the browser teardown and gets dropped.
+   *
+   * @returns {Object[]}
+   */
+  takeDetails() {
+    const pending = this.#unflushedDetails;
+    this.#unflushedDetails = [];
+    return pending;
   }
 
   get hasDeprecations() {
@@ -192,13 +217,14 @@ export default class DeprecationCounter {
 }
 
 function captureStack() {
+  const previousLimit = Error.stackTraceLimit;
+
+  // Browsers default to a handful of frames, which never reaches the caller.
+  Error.stackTraceLimit = MAX_STACK_FRAMES;
   const { stack } = new Error();
+  Error.stackTraceLimit = previousLimit;
 
-  if (!stack) {
-    return "";
-  }
-
-  return stack.split("\n").slice(0, MAX_STACK_FRAMES).join("\n");
+  return stack || "";
 }
 
 function reportDeprecationToTestem(id, origin) {
@@ -226,16 +252,28 @@ export function setupDeprecationCounter({ QUnit, origin } = {}) {
   }
 
   if (QUnit) {
-    // for QUnit tests
-    QUnit.begin(() => deprecationCounter.start(origin, QUnit));
+    // The counter has to see a deprecation before the handler which raises on
+    // it, or anything that raises goes unrecorded and the suites which must stay
+    // deprecation-free report nothing at all. Discourse handlers run in
+    // registration order and Ember's run in reverse, so the counter registers
+    // ahead of `configureRaiseOnDeprecation` for one and behind it for the
+    // other.
+    deprecationCounter.startDiscourseHandler(origin, QUnit);
+    QUnit.begin(() => deprecationCounter.startEmberHandler());
+
+    const flushDetails = () => {
+      const pending = deprecationCounter.takeDetails();
+      if (window.Testem && pending.length > 0) {
+        reportDeprecationDetailsToTestem(pending);
+      }
+    };
+
+    QUnit.testDone(flushDetails);
 
     QUnit.done(() => {
+      flushDetails();
+
       if (window.Testem) {
-        if (deprecationCounter.details.size > 0) {
-          reportDeprecationDetailsToTestem(
-            Array.from(deprecationCounter.details.values())
-          );
-        }
         return;
       } else if (deprecationCounter.hasDeprecations) {
         // eslint-disable-next-line no-console

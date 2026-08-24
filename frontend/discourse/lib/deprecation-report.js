@@ -28,7 +28,15 @@ const PLUMBING_PATTERNS = [
   /\/@ember\/debug\//,
 ];
 
+// A stack going through this wrapper means the innermost owned frame is the
+// deprecated API, not the code calling it.
+const DEPRECATION_WRAPPER_PATTERN = /(^|\/)app\/lib\/deprecated\.js$/;
+
 const TEST_FILE_PATTERN = /\/(tests|spec)\/.*-test\.(js|gjs|ts|gts)$/;
+
+// Raw frames to resolve per stack, and owned frames to keep in the report.
+const MAX_RESOLVED_FRAMES = 60;
+const MAX_REPORTED_FRAMES = 15;
 
 const BASE64 =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -314,30 +322,28 @@ function isVendored(file) {
   return file.includes("node_modules/");
 }
 
+function toLocation(frame) {
+  return {
+    function: frame.function || null,
+    file: frame.file,
+    line: frame.line,
+    column: frame.column,
+    code: frame.code || null,
+  };
+}
+
 /**
- * Picks the frame which triggered the deprecation: the caller of the deepest
- * `deprecated()`/`deprecate()` call. Handlers run inside a runloop join, so
- * framework frames sit between the reporting plumbing and the code at fault and
- * a plain "first non-plumbing frame" would point at the runloop.
+ * Frames in code we own: everything the report is actually about. Framework and
+ * reporting frames are dropped, since a deprecation raised through a computed
+ * property or the runloop buries the interesting frames under dozens of them.
  *
  * @param {Object[]} frames resolved frames, innermost first
- * @returns {?Object}
+ * @returns {Object[]}
  */
-function findDeprecationSite(frames) {
-  const isCandidate = (frame) =>
-    frame.resolved && !isPlumbing(frame.file) && !isVendored(frame.file);
-
-  let lastPlumbing = -1;
-  frames.forEach((frame, index) => {
-    if (frame.resolved && isPlumbing(frame.file)) {
-      lastPlumbing = index;
-    }
-  });
-
-  return (
-    frames.slice(lastPlumbing + 1).find(isCandidate) ||
-    frames.find(isCandidate) ||
-    null
+function ownFrames(frames) {
+  return frames.filter(
+    (frame) =>
+      frame.resolved && !isPlumbing(frame.file) && !isVendored(frame.file)
   );
 }
 
@@ -373,7 +379,7 @@ class DeprecationStackResolver {
     };
   }
 
-  resolveStack(stack, { maxFrames = 25 } = {}) {
+  resolveStack(stack, { maxFrames = MAX_RESOLVED_FRAMES } = {}) {
     return parseStack(stack)
       .slice(0, maxFrames)
       .map((frame) => this.resolveFrame(frame));
@@ -381,20 +387,28 @@ class DeprecationStackResolver {
 
   /**
    * Expands one collected deprecation occurrence into a report entry with the
-   * spec location, the deprecation call site, and the surrounding frames.
+   * spec location, the code that must be fixed, and the frames in between.
    *
    * @param {Object} entry as emitted by the browser-side deprecation counter
    * @returns {Object}
    */
   buildEntry(entry) {
     const frames = this.resolveStack(entry.stack);
-    const meaningful = frames.filter(
-      (f) => f.resolved && !isPlumbing(f.file) && !isVendored(f.file)
-    );
+    const own = ownFrames(frames);
 
-    const deprecationSite = findDeprecationSite(frames) || frames[0] || null;
+    // With a Discourse `deprecated()` call the innermost owned frame is the
+    // deprecated API itself, and its caller is what needs changing. Ember's own
+    // deprecations have no such wrapper, so the innermost owned frame is already
+    // the caller.
+    const viaWrapper = frames.some(
+      (frame) => frame.resolved && DEPRECATION_WRAPPER_PATTERN.test(frame.file)
+    );
+    const deprecatedApi = viaWrapper ? own[0] || null : null;
+    const callers = viaWrapper ? own.slice(1) : own;
+
+    const deprecationSite = callers[0] || own[0] || frames[0] || null;
     const specCallSite =
-      meaningful.find((f) => TEST_FILE_PATTERN.test(`/${f.file}`)) || null;
+      callers.find((f) => TEST_FILE_PATTERN.test(`/${f.file}`)) || null;
     const specFile = this.resolveStack(entry.testStack, { maxFrames: 1 })[0];
 
     return {
@@ -414,13 +428,13 @@ class DeprecationStackResolver {
         // through directly rather than recovering it from a JS stack.
         ...entry.test,
       },
-      deprecationSite: deprecationSite && {
-        file: deprecationSite.file,
-        line: deprecationSite.line,
-        column: deprecationSite.column,
-        code: deprecationSite.code || null,
-      },
-      stack: frames,
+      // The code to change: what called the deprecated API.
+      deprecationSite: deprecationSite && toLocation(deprecationSite),
+      // The deprecated API itself, for context.
+      deprecatedApi: deprecatedApi && toLocation(deprecatedApi),
+      // Framework and reporting frames are dropped; they are the same for every
+      // occurrence and bury the frames that matter.
+      stack: callers.slice(0, MAX_REPORTED_FRAMES).map(toLocation),
     };
   }
 }
@@ -487,8 +501,61 @@ function buildReport({ group, entries }) {
     group,
     generatedAt: new Date().toISOString(),
     totals,
+    sites: aggregateSites(deprecations),
     deprecations,
   };
+}
+
+// Specs listed per call site before the list is truncated.
+const MAX_SITE_SPECS = 10;
+
+/**
+ * The work list: every distinct place that calls a deprecated API, ranked by how
+ * often it fires, with a sample of the specs which exercise it.
+ *
+ * @param {Object[]} deprecations
+ * @returns {Object[]}
+ */
+function aggregateSites(deprecations) {
+  const sites = new Map();
+
+  for (const deprecation of deprecations) {
+    const site = deprecation.deprecationSite;
+    if (!site) {
+      continue;
+    }
+
+    const key = `${deprecation.id} ${site.file}:${site.line}`;
+    let entry = sites.get(key);
+
+    if (!entry) {
+      entry = {
+        id: deprecation.id,
+        file: site.file,
+        line: site.line,
+        code: site.code,
+        count: 0,
+        specCount: 0,
+        specs: [],
+      };
+      sites.set(key, entry);
+    }
+
+    entry.count += deprecation.count;
+
+    const spec = deprecation.test.file
+      ? `${deprecation.test.file}${deprecation.test.callSiteLine ? `:${deprecation.test.callSiteLine}` : ""}`
+      : deprecation.test.name;
+
+    if (spec && !entry.specs.includes(spec)) {
+      entry.specCount++;
+      if (entry.specs.length < MAX_SITE_SPECS) {
+        entry.specs.push(spec);
+      }
+    }
+  }
+
+  return Array.from(sites.values()).sort((a, b) => b.count - a.count);
 }
 
 module.exports = {
