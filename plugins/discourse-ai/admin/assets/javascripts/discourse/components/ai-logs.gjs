@@ -791,17 +791,19 @@ export default class AiLogs extends Component {
               }}
             />
 
-            <DToggleSwitch
-              @label="discourse_ai.logs.has_retries"
-              @state={{this.hasRetries}}
-              {{on "click" this.toggleRetries}}
-            />
+            <div class="ai-logs__toggles">
+              <DToggleSwitch
+                @label="discourse_ai.logs.has_retries"
+                @state={{this.hasRetries}}
+                {{on "click" this.toggleRetries}}
+              />
 
-            <DToggleSwitch
-              @label="discourse_ai.logs.unattributed"
-              @state={{this.unattributed}}
-              {{on "click" this.toggleUnattributed}}
-            />
+              <DToggleSwitch
+                @label="discourse_ai.logs.unattributed"
+                @state={{this.unattributed}}
+                {{on "click" this.toggleUnattributed}}
+              />
+            </div>
           </:additionalFilters>
         </DFilterControls>
       </div>

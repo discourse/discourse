@@ -19,9 +19,17 @@
       --d-button-default-icon-color--hover: var(--tertiary-hover);
     }
 
+    // the row mixes selects with switches, so it sizes to its contents rather
+    // than forcing every filter into an equal column
     .d-filter-controls__dropdowns {
-      grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+      display: flex;
+      flex-wrap: wrap;
       align-items: center;
+    }
+
+    .d-filter-controls__dropdown,
+    .ai-logs__feature-filter {
+      flex: 1 1 12rem;
     }
   }
 
@@ -36,8 +44,14 @@
     }
   }
 
-  &__feature-filter.select-kit {
-    width: 100%;
+  // the switches read as one control, so they stay together and keep their
+  // own width instead of stretching with the selects
+  &__toggles {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
   }
 
   &__date-range {
