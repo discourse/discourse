@@ -414,9 +414,10 @@ function moveFixtureSections() {
       links: [
         {
           id: 901,
+          // Not the "link" fallback, so a split-out that loses the icon fails.
+          icon: "bookmark",
           name: "Existing link",
           value: "https://example.org/existing",
-          icon: "link",
           external: true,
           segment: "primary",
         },
@@ -781,9 +782,10 @@ acceptance("Sidebar link move | split out to a new section", function (needs) {
     });
     await settled();
 
+    await dragOver(".sidebar-link-drop-target", { dataTransfer });
+
     // Captured before the drop: the zone hides the moment the drag ends.
     const zonePoint = centerOf(".sidebar-link-drop-target");
-    await dragOver(".sidebar-link-drop-target", { dataTransfer });
     await dragEvent(".sidebar-link-drop-target", "drop", {
       dataTransfer,
       ...zonePoint,
@@ -814,6 +816,11 @@ acceptance("Sidebar link move | split out to a new section", function (needs) {
       createRequests[0].links[0].value,
       "https://example.org/existing",
       "with the moved link"
+    );
+    assert.strictEqual(
+      createRequests[0].links[0].icon,
+      "bookmark",
+      "carrying the row's own icon rather than the generic fallback"
     );
     assert.strictEqual(
       cleanupRequests.length,

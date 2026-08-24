@@ -15,6 +15,7 @@ import {
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
 import {
+  linkDropEffectFor,
   WEB_LINK_ADOPTION,
   WEB_LINK_KINDS,
   webLinkPayload,
@@ -185,10 +186,9 @@ export default class SidebarSection extends Component {
     return !webLinkPayload(source).containsFiles();
   }
 
-  /** A moved link is taken from where it was; an incoming one is copied in. */
   @action
   linkDropEffect({ source }) {
-    return source.type === "sidebar-link" ? "move" : "copy";
+    return linkDropEffectFor(source);
   }
 
   /**

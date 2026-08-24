@@ -335,6 +335,40 @@ describe "Custom sidebar sections" do
     )
   end
 
+  # The browser refuses a drop whose effect mismatches the row's `effectAllowed`,
+  # with no `drop` event. A synthetic drag cannot see that, so this must be real.
+  it "splits a link out into a new section by dropping it on the zone" do
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+    Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+    Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+
+    sign_in user
+    visit("/latest")
+
+    rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
+    expect(page).to have_css("#{rows}[data-drag-source]", count: 2)
+
+    drag_and_hold(
+      from: "#{rows}:first-child",
+      over: ".sidebar-sections",
+      to: ".sidebar-link-drop-target",
+    ) { expect(page).to have_css(".sidebar-link-drop-target:not(.is-arming)") }
+
+    expect(page).to have_css(".sidebar-section-form-modal")
+    expect(find("input[name='link-name']").value).to eq("Sidebar Tags")
+
+    find("input[name='section-name']").fill_in(with: "Split out")
+    find("#save-section").click
+
+    expect(page).to have_css("[data-section-name='split-out']")
+    expect(sidebar.primary_section_links("split-out")).to eq(["Sidebar Tags"])
+    expect(sidebar.primary_section_links("my-section")).to eq(["Sidebar Categories"])
+  end
+
   it "does not make sidebar links draggable on mobile", mobile: true do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
     Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|

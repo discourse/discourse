@@ -110,7 +110,7 @@ export default class SidebarCustomSection extends Component {
               public=@sectionData.public
               name=link.name
               value=link.value
-              icon=link.icon
+              icon=link.prefixValue
             )
             effectAllowed="move"
             disabled=this.linkDragDisabled

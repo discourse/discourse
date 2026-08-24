@@ -12,6 +12,7 @@ import discourseLater from "discourse/lib/later";
 import { replaceUserSidebarSections } from "discourse/lib/sidebar/helpers";
 import {
   extractDroppedWebLink,
+  linkDropEffectFor,
   WEB_LINK_ADOPTION,
   WEB_LINK_KINDS,
   webLinkPayload,
@@ -115,6 +116,11 @@ export default class SidebarUserSections extends Component {
       return true;
     }
     return !webLinkPayload(source).containsFiles();
+  }
+
+  @action
+  linkDropEffect({ source }) {
+    return linkDropEffectFor(source);
   }
 
   @action
@@ -259,7 +265,7 @@ export default class SidebarUserSections extends Component {
             accepts="sidebar-link"
             adopts=WEB_LINK_ADOPTION
             canDrop=this.canDropLink
-            dropEffect="copy"
+            dropEffect=this.linkDropEffect
             indicator=false
             onDragEnter=this.trackZoneHover
             onDragLeave=this.clearZoneHover
