@@ -542,19 +542,22 @@ export function registerPointerDrag(
     args.onDrag?.(event, dragInfo(event));
   };
 
-  // Cancelling the press does not suppress the click; capture only retargets
-  // it at this element. At the target node listeners run in registration
-  // order whatever their phase, so the swallow has to sit above it.
-  const swallowClick = (event: MouseEvent) => {
-    if (event.target instanceof Node && element.contains(event.target)) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  };
+  // a drag still ends in a click; only a listener above the target beats its own
+  const suppressDragClick = (draggedPointerId: number) => {
+    const swallowClick = (event: MouseEvent) => {
+      const isThisPointersClick =
+        event instanceof PointerEvent &&
+        event.pointerId === draggedPointerId &&
+        event.target instanceof Node &&
+        element.contains(event.target);
 
-  const suppressDragClick = () => {
+      if (isThisPointersClick) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+
     window.addEventListener("click", swallowClick, true);
-    // the click, if any, arrives in the same task as the release
     setTimeout(() => {
       window.removeEventListener("click", swallowClick, true);
     }, 0);
@@ -565,7 +568,7 @@ export function registerPointerDrag(
       return;
     }
     if (moved) {
-      suppressDragClick();
+      suppressDragClick(event.pointerId);
     }
     // Commit before releasing capture, so the caller sees a consistent gesture
     // state while it reads the final value. Finalised in a `finally` so a

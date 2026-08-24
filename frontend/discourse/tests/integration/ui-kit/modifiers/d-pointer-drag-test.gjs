@@ -499,12 +499,12 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
             bubbles: true,
             cancelable: true,
             button: 0,
-            pointerId: 1,
+            pointerId: 7,
             ...options,
           })
         );
-      const clickChild = () =>
-        child.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      // a real trailing click carries the pointer that drew the gesture
+      const clickChild = () => dispatch("click");
 
       // the click follows the release within one task; settling in between
       // would flush the swallow away, as the browser's next task does
@@ -522,6 +522,50 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       await settled();
 
       assert.deepEqual(clicks, ["click"], "a tap's click still does");
+    });
+
+    test("a click raised by the drag's own end handler still lands", async function (assert) {
+      const clicks = [];
+      const onDragEnd = () => find(".dpd-child").click();
+
+      await render(
+        <template>
+          <div
+            class="dpd-surface"
+            {{dPointerDrag preservePress=true onDragEnd=onDragEnd}}
+          >
+            <button type="button" class="dpd-child"></button>
+          </div>
+        </template>
+      );
+      stubSharedPointerCapture([".dpd-surface", ".dpd-child"]);
+      find(".dpd-surface").addEventListener("click", () =>
+        clicks.push("click")
+      );
+      const child = find(".dpd-child");
+
+      const dispatch = (type, options = {}) =>
+        child.dispatchEvent(
+          new PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            button: 0,
+            pointerId: 7,
+            ...options,
+          })
+        );
+
+      dispatch("pointerdown", { clientX: 0 });
+      dispatch("pointermove", { clientX: 40 });
+      dispatch("pointerup", { clientX: 40 });
+      await settled();
+
+      // the swallow is armed, but a programmatic click carries no pointer to match
+      assert.deepEqual(
+        clicks,
+        ["click"],
+        "the handler's own click is not the drag's"
+      );
     });
 
     test("a press on the element itself takes the handle path despite preservePress", async function (assert) {
