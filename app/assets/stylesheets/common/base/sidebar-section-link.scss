@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  scroll-margin-block: var(--space-6);
 
   &[data-list-item-name="all-categories"],
   &[data-list-item-name="all-tags"],

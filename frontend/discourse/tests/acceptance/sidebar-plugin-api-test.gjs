@@ -1097,6 +1097,149 @@ acceptance("Sidebar - Plugin API", function (needs) {
       .exists({ count: 1 });
   });
 
+  test("Scroll active link into view on first load, for a short section below long ones", async function (assert) {
+    withPluginApi((api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-long-section";
+            text = "Long";
+            collapsedByDefault = false;
+
+            get links() {
+              return [...Array(100)].map(
+                (_, i) =>
+                  new (class extends BaseCustomSidebarSectionLink {
+                    get name() {
+                      return `filler-${i}`;
+                    }
+
+                    get href() {
+                      return `/filler${i}`;
+                    }
+
+                    get title() {
+                      return `Filler ${i}`;
+                    }
+
+                    get text() {
+                      return `Filler ${i}`;
+                    }
+                  })()
+              );
+            }
+          };
+        }
+      );
+
+      // its own single-link section, rendered after the long one
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-trailing-section";
+            hideSectionHeader = true;
+            text = null;
+
+            get links() {
+              return [
+                new (class extends BaseCustomSidebarSectionLink {
+                  name = "trailing-search";
+                  route = "full-page-search";
+                  title = "Search";
+                  text = "Search";
+                })(),
+              ];
+            }
+          };
+        }
+      );
+    });
+
+    // land on the page directly rather than transitioning to it
+    await visit("/search");
+
+    assert
+      .dom(
+        ".sidebar-section-link-wrapper[data-list-item-name='trailing-search'] > a.active"
+      )
+      .exists("precondition: the link is detected as active");
+
+    assert.true(
+      document.querySelector(".sidebar-sections").scrollTop > 0,
+      "the sidebar scrolled the trailing section's link into view on load"
+    );
+  });
+
+  test("Scroll active link into view for a section in the main sidebar", async function (assert) {
+    // Sections can be appended to the main sidebar rather than living in a
+    // panel of their own; those render through ApiSections inside the main
+    // panel, so the main panel's flag has to reach them.
+    withPluginApi((api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-appended-section";
+            text = "Appended";
+            collapsedByDefault = false;
+
+            get links() {
+              const values = [...Array(100)].map(
+                (_, i) =>
+                  new (class extends BaseCustomSidebarSectionLink {
+                    get name() {
+                      return `appended-link-${i}`;
+                    }
+
+                    get href() {
+                      return `/appended${i}`;
+                    }
+
+                    get title() {
+                      return `Appended Link ${i}`;
+                    }
+
+                    get text() {
+                      return `Appended Link ${i}`;
+                    }
+                  })()
+              );
+
+              values.push(
+                new (class extends BaseCustomSidebarSectionLink {
+                  name = "appended-search";
+                  route = "full-page-search";
+                  title = "Search";
+                  text = "Search";
+                })()
+              );
+
+              return values;
+            }
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".sidebar-sections")
+      .hasProperty("scrollTop", 0, "the sidebar is not scrolled initially");
+
+    await visit("/search");
+
+    assert
+      .dom(
+        ".sidebar-section-link-wrapper[data-list-item-name='appended-search'] > a.active"
+      )
+      .exists();
+
+    assert.true(
+      document.querySelector(".sidebar-sections").scrollTop > 0,
+      "the main sidebar scrolled the appended section's active link into view"
+    );
+  });
+
   test("Scroll active link into view", async function (assert) {
     withPluginApi((api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
