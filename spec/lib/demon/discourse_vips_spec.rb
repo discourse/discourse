@@ -77,10 +77,6 @@ RSpec.describe Demon::DiscourseVips do
           Rails.root.join("script/discourse_vips_broker"),
           rails_root.join("script/discourse_vips_broker"),
         )
-        FileUtils.ln_s(
-          Rails.root.join("lib/discourse_vips/configuration.rb"),
-          rails_root.join("lib/discourse_vips/configuration.rb"),
-        )
         File.write(rails_root.join("Gemfile"), "")
         if broker_contents
           File.write(rails_root.join("lib/discourse_vips/broker.rb"), broker_contents)

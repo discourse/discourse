@@ -13,8 +13,10 @@ module DiscourseVips
       VipsForeignLoadHeif
       VipsForeignLoadJxl
     ].freeze
+    private_constant :DOMINANT_COLOR_LOADERS
+
     MAX_DIRECT_RESIZE_FACTOR = 256
-    private_constant :DOMINANT_COLOR_LOADERS, :MAX_DIRECT_RESIZE_FACTOR
+    private_constant :MAX_DIRECT_RESIZE_FACTOR
 
     class << self
       def version
