@@ -2953,13 +2953,11 @@ sr:
       search:
         title: "Pretraži"
       site_traffic_explorer:
+        metric_information: "O %{metric}"
+        apply: "Primeni"
         view_more: "Pogledajte više"
         cards:
           visitors: "Posetioci"
-        columns:
-          referrers: "Upućivač"
-          top_urls: "URL"
-          ip_addresses: "IP adrese"
         filters:
           referrer: "Upućivač"
           ip: "IP adrese"

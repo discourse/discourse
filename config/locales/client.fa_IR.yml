@@ -5139,23 +5139,17 @@ fa_IR:
         title: "چه چیزی جدید شده؟"
         check_for_updates: "برررسی به‌روز‌رسانی‌ها"
       site_traffic_explorer:
-        pageviews: "بازدید"
+        metric_information: "درباره %{metric}"
+        clear_all: "پاکسازی همه"
+        apply: "اعمال کردن"
         view_more: "نمایش بیشتر"
         cards:
           pages: "صفحه"
           visitors: "بازدیدکنندگان"
-        columns:
-          countries: "کشور"
-          top_urls: "نشانی اینترنتی"
-          browsers: "مرورگر"
-          ip_addresses: "نشانی IP"
         filters:
           country: "کشور"
           browser: "مرورگر"
           ip: "نشانی IP"
-        metrics:
-          pageviews:
-            label: "بازدید"
         series:
           anonymous_human: "ناشناس"
       dashboard:

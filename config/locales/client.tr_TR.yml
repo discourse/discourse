@@ -6354,23 +6354,18 @@ tr_TR:
         title: "Yenilikler"
         check_for_updates: "Güncellemeleri kontrol et"
       site_traffic_explorer:
-        pageviews: "Sayfa Görüntülemeleri"
+        metric_information: "%{metric} Hakkında"
+        remove_filter_value: "%{value} öğesini kaldır"
+        clear_all: "Tümünü temizle"
+        apply: "Uygula"
         view_more: "Daha fazla görüntüle"
         cards:
           pages: "Sayfa"
           visitors: "Ziyaretçiler"
-        columns:
-          countries: "Ülke"
-          top_urls: "URL"
-          browsers: "Tarayıcı"
-          ip_addresses: "IP adresi"
         filters:
           country: "Ülke"
           browser: "Tarayıcı"
           ip: "IP adresi"
-        metrics:
-          pageviews:
-            label: "Sayfa Görüntülemeleri"
         series:
           anonymous_human: "Anonim"
       dashboard:

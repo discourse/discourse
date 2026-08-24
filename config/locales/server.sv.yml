@@ -1795,7 +1795,6 @@ sv:
     user_profile_view_duration_hours: "Räkna en ny användarprofilgranskning en gång per IP/Användare per N timmar"
     levenshtein_distance_spammer_emails: "Skillnad i antal tecken vid matchning av e-postadresser som används för skräppostutskick som fortfarande tillåter en suddig matchning."
     max_new_accounts_per_registration_ip: "Sluta acceptera nya registreringar från en IP-adress om det redan finns (n) användare med förtroendenivå 0 från den här IP-adressen (och ingen av dem är en medlem i personalen eller en användare med förtroendenivå 2 eller högre). Ange värde 0 för att inaktivera begränsningen."
-    min_ban_entries_for_roll_up: "När upprullningsknappen klickas skapas en ny delnätspost om det finns minst (N) poster."
     max_age_unmatched_emails: "Ta bort omatchade undersökta e-postinlägg efter (N) dagar."
     max_age_unmatched_ips: "Ta bort omatchade undersökta IP-poster efter (N) dagar."
     num_flaggers_to_close_topic: "Minsta antal unika flaggare som krävs för att automatiskt pausa ett ämne för ingripande"
