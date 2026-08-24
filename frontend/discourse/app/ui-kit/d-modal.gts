@@ -73,6 +73,7 @@ const ENTER_HANDLING_CONTROLS = [
  */
 const UNAVAILABLE_PRIMARY = '[disabled], :disabled, [aria-disabled="true"]';
 
+const BODY_NO_SCROLL_CLASS = "--no-scroll";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 const SWIPE_VELOCITY_EXPIRY_MS = 100;
 const SWIPE_CLOSE_DISTANCE_RATIO = 0.25;
@@ -212,8 +213,29 @@ export default class DModal extends Component<DModalSignature> {
       );
     }
 
+    // the browser claims a vertical pan started here even with nothing to
+    // scroll, so the swipe only gets the axis back while that is true
+    const watched = new WeakSet<Element>();
+    const overflowObserver = new ResizeObserver((_entries, observer) => {
+      el.classList.toggle(
+        BODY_NO_SCROLL_CLASS,
+        el.scrollHeight <= el.clientHeight
+      );
+
+      // content can outgrow a body whose own box has stopped changing; the
+      // guard keeps re-observation from re-reporting on its own
+      for (const child of el.children) {
+        if (!watched.has(child)) {
+          watched.add(child);
+          observer.observe(child);
+        }
+      }
+    });
+    overflowObserver.observe(el);
+
     return () => {
       unlock(el, undefined);
+      overflowObserver.disconnect();
 
       if (this.capabilities.isIOS) {
         this.appEvents.off(

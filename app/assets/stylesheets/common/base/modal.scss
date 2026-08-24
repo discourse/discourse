@@ -160,11 +160,14 @@ html:not(.keyboard-visible).mobile-device {
   &__body {
     overflow-y: auto;
 
-    // pan arbitration stops at the nearest scroll container, so the swipe
-    // gesture's touch-action on the modal container does not reach in here
+    // pan arbitration stops here, so this is where the axes are split
     touch-action: pan-y pinch-zoom;
     padding: 1rem 1.5rem;
     box-sizing: border-box;
+
+    &.--no-scroll {
+      touch-action: pan-x pinch-zoom;
+    }
 
     &.empty {
       display: none;

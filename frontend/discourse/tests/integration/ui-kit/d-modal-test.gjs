@@ -798,6 +798,40 @@ module("Integration | ui-kit | DModal", function (hooks) {
       assert.verifySteps([], "the flick's velocity expires while parked");
     });
 
+    test("the body keeps the vertical axis only while it can scroll", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}} @closeModal={{noop}}>
+            <:body>short</:body>
+          </DModal>
+        </template>
+      );
+
+      const body = find(".d-modal__body");
+      // the measurement lands with the observer's first report, a frame in
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      assert
+        .dom(body)
+        .hasClass(
+          "--no-scroll",
+          "a body with nothing to scroll leaves vertical to the swipe"
+        );
+
+      // the stylesheet is absent here, so the scrolling box is set up by hand
+      body.style.height = "40px";
+      body.style.overflowY = "auto";
+      body.insertAdjacentHTML("beforeend", "<div style='height: 400px'></div>");
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await settled();
+
+      assert
+        .dom(body)
+        .doesNotHaveClass(
+          "--no-scroll",
+          "and hands it back to the browser once there is"
+        );
+    });
+
     test("a press on a control hands it the pointer capture", async function (assert) {
       await render(
         <template>
