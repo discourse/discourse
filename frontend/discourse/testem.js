@@ -1,7 +1,9 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
 const fs = require("fs");
+const path = require("path");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
+const { buildReport } = require("./lib/deprecation-report");
 
 require("./patch-testem-output")();
 require("./patch-testem-browser-watchdog")();
@@ -13,10 +15,38 @@ const sandboxDisabled =
     (process.env.DISCOURSE_DISABLE_BROWSER_SANDBOX || "").toLowerCase()
   );
 
+const REPO_ROOT = path.resolve(__dirname, "..", "..");
+
+// Number of detailed rows included in the GitHub job summary. The full set
+// always goes to the JSON report artifact.
+const SUMMARY_DETAIL_LIMIT = 25;
+
+/**
+ * Label identifying which CI run group produced a report, so the artifacts of a
+ * single workflow run stay distinguishable.
+ *
+ * @returns {string}
+ */
+function deprecationReportGroup() {
+  const explicit = process.env.DEPRECATION_REPORT_GROUP;
+  if (explicit) {
+    return explicit.replace(/[^\w.-]+/g, "-");
+  }
+
+  if (process.env.THEME_TEST_PAGES) {
+    return "frontend-themes";
+  } else if (process.env.PLUGIN_TARGETS) {
+    return "frontend-plugins";
+  }
+
+  return "frontend-core";
+}
+
 class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
   deprecationCountsByOrigin = new Map();
+  deprecationDetails = [];
 
   constructor() {
     super(...arguments);
@@ -45,6 +75,8 @@ class Reporter extends TapReporter {
       const originMap = this.deprecationCountsByOrigin.get(originKey);
       const originCount = originMap.get(id) || 0;
       originMap.set(id, originCount + 1);
+    } else if (tag === "deprecation-details") {
+      this.deprecationDetails.push(...(metadata.details || []));
     } else if (tag === "summary-line") {
       this.out.write(`\n${metadata.message}\n`);
     } else {
@@ -210,11 +242,75 @@ class Reporter extends TapReporter {
       deprecationMessage += "\nDeprecations by test origin:\n\n" + originTable;
     }
 
-    this.writeGitHubSummary(table, originTable);
+    const report = this.writeDeprecationReport();
+
+    if (report) {
+      deprecationMessage += `\nDetailed report: ${report.path}\n`;
+    }
+
+    this.writeGitHubSummary(table, originTable, report);
     this.out.write(`\n${deprecationMessage}\n\n`);
   }
 
-  writeGitHubSummary(table, originTable) {
+  /**
+   * Writes the machine-readable report which pairs every deprecation with the
+   * spec that triggered it and the source location it came from.
+   *
+   * @returns {?{path: string, document: Object}}
+   */
+  writeDeprecationReport() {
+    if (this.deprecationDetails.length === 0) {
+      return null;
+    }
+
+    const group = deprecationReportGroup();
+    const dir =
+      process.env.DEPRECATION_REPORT_DIR ||
+      path.join(REPO_ROOT, "tmp", "deprecation-reports");
+
+    let document;
+    try {
+      document = buildReport({ group, entries: this.deprecationDetails });
+    } catch (error) {
+      this.out.write(
+        `\n[Deprecation Counter] Failed to build detailed report: ${error}\n`
+      );
+      return null;
+    }
+
+    fs.mkdirSync(dir, { recursive: true });
+
+    const file = path.join(dir, `${group}-${process.pid}.json`);
+    fs.writeFileSync(file, JSON.stringify(document, null, 2));
+
+    return { path: path.relative(REPO_ROOT, file), document };
+  }
+
+  generateDeprecationDetailTable(document) {
+    const rows = document.deprecations
+      .slice()
+      .sort((a, b) => b.count - a.count)
+      .slice(0, SUMMARY_DETAIL_LIMIT);
+
+    let table = "| id | spec | deprecated call site | count |\n";
+    table += "| -- | ---- | -------------------- | ----- |\n";
+
+    for (const row of rows) {
+      const line = row.test.callSiteLine || row.test.declarationLine;
+      const spec = row.test.file
+        ? `${row.test.file}${line ? `:${line}` : ""}${row.test.name ? ` — ${row.test.name}` : ""}`
+        : row.test.name || "(unknown)";
+      const site = row.deprecationSite
+        ? `${row.deprecationSite.file}:${row.deprecationSite.line}`
+        : "(unknown)";
+
+      table += `| ${row.id} | ${spec} | ${site} | ${row.count} |\n`;
+    }
+
+    return table;
+  }
+
+  writeGitHubSummary(table, originTable, report) {
     if (!process.env.GITHUB_ACTIONS || !process.env.GITHUB_STEP_SUMMARY) {
       return;
     }
@@ -225,6 +321,11 @@ class Reporter extends TapReporter {
 
     if (originTable) {
       jobSummary += "\n\nDeprecations by test origin:\n\n" + originTable;
+    }
+
+    if (report) {
+      jobSummary += `\n\nTop ${SUMMARY_DETAIL_LIMIT} deprecation call sites (full details in the \`deprecation-reports\` artifact):\n\n`;
+      jobSummary += this.generateDeprecationDetailTable(report.document);
     }
 
     jobSummary += "\n\n";

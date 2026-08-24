@@ -13,6 +13,11 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
  */
 const skipCountIds = new Set();
 
+// Detailed per-occurrence records are deduplicated and capped so a noisy
+// deprecation in a hot code path can't blow up memory or the reporter payload.
+const MAX_DETAIL_ENTRIES = 2000;
+const MAX_STACK_FRAMES = 15;
+
 /**
  * Marks a deprecation ID to be skipped when counting deprecations during tests.
  * This is useful when you want to temporarily ignore specific deprecations
@@ -55,10 +60,13 @@ export function restoreCountingDeprecation(id) {
 
 export default class DeprecationCounter {
   counts = new Map();
+  details = new Map();
   #origin = null;
+  #qunit = null;
 
-  start(origin) {
+  start(origin, qunit) {
     this.#origin = origin;
+    this.#qunit = qunit;
 
     registerDeprecationHandler(this.handleEmberDeprecation);
     registerDiscourseDeprecationHandler(this.handleDiscourseDeprecation);
@@ -96,12 +104,59 @@ export default class DeprecationCounter {
     const existingCount = this.counts.get(id) || 0;
     this.counts.set(id, existingCount + 1);
 
+    this.recordDetail(id);
+
     if (window.Testem) {
       reportDeprecationToTestem(id, this.#origin);
     }
     if (isRailsTesting()) {
       // eslint-disable-next-line no-console
       console.count(`deprecation_id:${id}`); // origin will be identified using the spec metadata
+    }
+  }
+
+  /**
+   * Captures the call stack and the surrounding test context for a deprecation,
+   * so the CI report can point at both the spec and the deprecated call site.
+   * Identical occurrences are collapsed into a single entry with a count.
+   */
+  recordDetail(id) {
+    const stack = captureStack();
+    const currentTest = this.#qunit?.config?.current;
+    const key = [
+      id,
+      currentTest?.module?.name,
+      currentTest?.testName,
+      stack,
+    ].join("\u0000");
+
+    const existing = this.details.get(key);
+    if (existing) {
+      existing.count++;
+      return;
+    }
+
+    if (this.details.size >= MAX_DETAIL_ENTRIES) {
+      return;
+    }
+
+    const detail = {
+      id,
+      origin: this.#origin,
+      module: currentTest?.module?.name,
+      testName: currentTest?.testName,
+      testStack: currentTest?.stack,
+      stack,
+      count: 1,
+    };
+
+    this.details.set(key, detail);
+
+    if (isRailsTesting()) {
+      // System specs identify the spec themselves, so only the JS stack is
+      // needed here.
+      // eslint-disable-next-line no-console
+      console.log(`deprecation_detail:${JSON.stringify({ id, stack })}`);
     }
   }
 
@@ -136,6 +191,16 @@ export default class DeprecationCounter {
   }
 }
 
+function captureStack() {
+  const { stack } = new Error();
+
+  if (!stack) {
+    return "";
+  }
+
+  return stack.split("\n").slice(0, MAX_STACK_FRAMES).join("\n");
+}
+
 function reportDeprecationToTestem(id, origin) {
   window.Testem.useCustomAdapter(function (socket) {
     socket.emit("test-metadata", "increment-deprecation", {
@@ -145,21 +210,32 @@ function reportDeprecationToTestem(id, origin) {
   });
 }
 
+function reportDeprecationDetailsToTestem(details) {
+  window.Testem.useCustomAdapter(function (socket) {
+    socket.emit("test-metadata", "deprecation-details", { details });
+  });
+}
+
 export function setupDeprecationCounter({ QUnit, origin } = {}) {
   const deprecationCounter = new DeprecationCounter();
 
   // for system specs
   if (isRailsTesting()) {
-    deprecationCounter.start(origin);
+    deprecationCounter.start(origin, QUnit);
     return;
   }
 
   if (QUnit) {
     // for QUnit tests
-    QUnit.begin(() => deprecationCounter.start(origin));
+    QUnit.begin(() => deprecationCounter.start(origin, QUnit));
 
     QUnit.done(() => {
       if (window.Testem) {
+        if (deprecationCounter.details.size > 0) {
+          reportDeprecationDetailsToTestem(
+            Array.from(deprecationCounter.details.values())
+          );
+        }
         return;
       } else if (deprecationCounter.hasDeprecations) {
         // eslint-disable-next-line no-console

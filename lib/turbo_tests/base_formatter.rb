@@ -10,7 +10,11 @@ module TurboTests
       output_slowest_examples(timings) if timings.present?
 
       totals_by_id, totals_by_origin = aggregate_js_deprecations(notification.examples)
-      output_js_deprecations(totals_by_id, totals_by_origin) if totals_by_id.present?
+
+      if totals_by_id.present?
+        report_path = write_js_deprecation_report(notification.examples)
+        output_js_deprecations(totals_by_id, totals_by_origin, report_path)
+      end
 
       super(notification)
     end
@@ -41,7 +45,7 @@ module TurboTests
       [totals_by_id, totals_by_origin]
     end
 
-    def output_js_deprecations(totals_by_id, totals_by_origin)
+    def output_js_deprecations(totals_by_id, totals_by_origin, report_path = nil)
       output.puts "\n[Deprecation Counter] Test run completed with deprecations:\n\n"
 
       deprecations_table = generate_deprecations_table(totals_by_id)
@@ -54,7 +58,60 @@ module TurboTests
         output.puts origin_table
       end
 
-      write_github_summary(deprecations_table, origin_table)
+      output.puts "\nDetailed report: #{report_path}\n" if report_path
+
+      write_github_summary(deprecations_table, origin_table, report_path)
+    end
+
+    # Label identifying which CI run group produced a report, so the artifacts of
+    # a single workflow run stay distinguishable.
+    def js_deprecation_report_group
+      ENV["DEPRECATION_REPORT_GROUP"].presence&.gsub(/[^\w.-]+/, "-") || "system"
+    end
+
+    # Pairs each collected JS deprecation with the spec that triggered it and,
+    # via the frontend sourcemaps, the original call site it came from.
+    def write_js_deprecation_report(examples)
+      entries =
+        examples.flat_map do |example|
+          details = example.metadata[:js_deprecation_details]
+          next [] if details.blank?
+
+          details.map do |detail|
+            {
+              id: detail["id"],
+              count: 1,
+              origin: extract_origin_from_example(example) || "unknown",
+              stack: detail["stack"],
+              test: {
+                module: nil,
+                name: example.full_description,
+                file: example.metadata[:rerun_file_path],
+                declarationLine: example.location[/:(\d+)\z/, 1]&.to_i,
+                callSiteLine: nil,
+                callSiteCode: nil,
+              },
+            }
+          end
+        end
+
+      return nil if entries.empty?
+
+      group = js_deprecation_report_group
+      dir =
+        ENV["DEPRECATION_REPORT_DIR"].presence || Rails.root.join("tmp/deprecation-reports").to_s
+      FileUtils.mkdir_p(dir)
+      report_path = File.join(dir, "#{group}-#{Process.pid}.json")
+
+      cli = Rails.root.join("frontend/discourse/lib/deprecation-report-cli.js").to_s
+      IO.popen(["node", cli, group, report_path], "w") { |io| io.write(entries.to_json) }
+
+      return nil unless $?.success?
+
+      Pathname.new(report_path).relative_path_from(Rails.root).to_s
+    rescue StandardError => e
+      output.puts "\n[Deprecation Counter] Failed to build detailed report: #{e.message}\n"
+      nil
     end
 
     def generate_deprecations_table(totals_by_id)
@@ -95,15 +152,19 @@ module TurboTests
       table
     end
 
-    def write_github_summary(deprecations_table, origin_table)
+    def write_github_summary(deprecations_table, origin_table, report_path = nil)
       return unless ENV["GITHUB_ACTIONS"] && ENV["GITHUB_STEP_SUMMARY"]
 
       summary = "### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n"
       summary += deprecations_table
       summary += "\n\nDeprecations by spec origin:\n\n#{origin_table}" if origin_table
+      if report_path
+        summary += "\n\nPer-deprecation call sites are in the `deprecation-reports` artifact."
+      end
       summary += "\n\n"
 
-      File.write(ENV["GITHUB_STEP_SUMMARY"], summary)
+      # Appended, so a job running several suites keeps every table.
+      File.write(ENV["GITHUB_STEP_SUMMARY"], summary, mode: "a")
     end
 
     def extract_origin_from_example(example)

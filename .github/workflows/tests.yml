@@ -61,6 +61,7 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
+      DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
 
     strategy:
       fail-fast: false
@@ -339,6 +340,14 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
+      - name: Upload JS deprecation reports
+        uses: actions/upload-artifact@v7
+        if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
+        with:
+          name: deprecation-reports-${{ matrix.build_type }}-${{ matrix.target }}
+          if-no-files-found: ignore
+          path: tmp/deprecation-reports/*.json
+
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'system'
@@ -388,6 +397,9 @@ jobs:
           if echo "$names" | grep -q '^flaky-test-reports-'; then
             echo "has_flaky=true" >> "$GITHUB_OUTPUT"
           fi
+          if echo "$names" | grep -q '^deprecation-reports-'; then
+            echo "has_deprecations=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Merge failed system test artifacts
         if: steps.check-artifacts.outputs.has_failed_system == 'true'
@@ -403,4 +415,12 @@ jobs:
         with:
           name: flaky-test-reports
           pattern: flaky-test-reports-*
+          delete-merged: true
+
+      - name: Merge JS deprecation reports
+        if: steps.check-artifacts.outputs.has_deprecations == 'true'
+        uses: actions/upload-artifact/merge@v7
+        with:
+          name: deprecation-reports
+          pattern: deprecation-reports-*
           delete-merged: true
