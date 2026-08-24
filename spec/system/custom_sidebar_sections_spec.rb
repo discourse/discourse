@@ -317,6 +317,9 @@ describe "Custom sidebar sections" do
 
     rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
     expect(page).to have_css("#{rows}[data-drag-source]", count: 2)
+    # The row drags as a registered source, so its anchor must not drag too.
+    # Checked on the rendered value: the binding only works as a real boolean.
+    expect(page).to have_css("#{rows} a[draggable='false']", count: 2)
 
     # Dropped below the target row's midpoint: its exact center sits on the
     # boundary the insertion index is measured against.
@@ -382,6 +385,9 @@ describe "Custom sidebar sections" do
     rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
     expect(page).to have_css(rows)
     expect(page).not_to have_css("#{rows}[data-drag-source]")
+    # With no registered drag to make room for, the attribute is left off and
+    # the anchor keeps the browser default.
+    expect(page).not_to have_css("#{rows} a[draggable]")
   end
 
   it "does not allow the user to edit public section" do

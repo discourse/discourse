@@ -47,11 +47,11 @@ export default class SidebarCustomSection extends Component {
    * where the press stays reserved for scrolling and the long-press link
    * preview. A machine with a mouse and a touch screen keeps dragging.
    */
-  get linkDragDisabled() {
+  get linkDragEnabled() {
     return (
-      !this.args.enableLinkDrop ||
-      !this.section.canAcceptLinkDrop ||
-      this.capabilities.touchFirst
+      Boolean(this.args.enableLinkDrop) &&
+      this.section.canAcceptLinkDrop &&
+      !this.capabilities.touchFirst
     );
   }
 
@@ -84,11 +84,9 @@ export default class SidebarCustomSection extends Component {
           @currentWhen={{link.currentWhen}}
           @exactUrlMatch={{this.exactUrlMatch}}
           @href={{or link.value link.href}}
-          @linkClass={{link.linkDragCss}}
           @linkName={{link.name}}
           @model={{link.model}}
           @models={{link.models}}
-          @nativeDragDisabled={{not this.linkDragDisabled}}
           @prefixType="icon"
           @prefixValue={{link.prefixValue}}
           @query={{link.query}}
@@ -97,6 +95,7 @@ export default class SidebarCustomSection extends Component {
           @suffixCSSClass={{link.suffixCSSClass}}
           @suffixType={{link.suffixType}}
           @suffixValue={{link.suffixValue}}
+          @suppressNativeDrag={{this.linkDragEnabled}}
           @title={{link.title}}
           {{! Rows drag as registered sources; the native anchor drag is turned
               off with them, or the browser would start its own dead drag from
@@ -106,14 +105,13 @@ export default class SidebarCustomSection extends Component {
             data=(hash
               sectionId=@sectionData.id
               linkId=link.id
-              index=index
               public=@sectionData.public
               name=link.name
               value=link.value
               icon=link.prefixValue
             )
             effectAllowed="move"
-            disabled=this.linkDragDisabled
+            disabled=(not this.linkDragEnabled)
           }}
         />
       {{/each}}

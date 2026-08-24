@@ -125,7 +125,7 @@ export default class Section {
    * section reorders it, one from another section transfers the link here.
    *
    * @param {Object} dragData - The drag source's payload: `sectionId`,
-   *   `linkId`, `index`, and whether the source section is `public`.
+   *   `linkId`, and whether the source section is `public`.
    * @param {number|undefined} dropIndex - The measured drop offset;
    *   undefined appends.
    */
@@ -134,7 +134,7 @@ export default class Section {
     const reordering = dragData.sectionId === this.section.id;
     // A drop right back into the gap it came from, on either side of the row,
     // changes nothing; decided before anything asks, so it never nags either.
-    if (reordering && this.#reorderIsNoop(dragData.index, dropIndex)) {
+    if (reordering && this.#reorderIsNoop(dragData.linkId, dropIndex)) {
       return;
     }
 
@@ -153,9 +153,18 @@ export default class Section {
     }
   }
 
-  #reorderIsNoop(fromIndex, dropIndex) {
+  #reorderIsNoop(linkId, dropIndex) {
+    const fromIndex = this.#indexOfLink(linkId);
     const toIndex = dropIndex ?? this.links.length;
     return toIndex === fromIndex || toIndex === fromIndex + 1;
+  }
+
+  /**
+   * Where a link sits right now. The drag payload only snapshots the list at
+   * `dragstart`, and the drop may land in a different one.
+   */
+  #indexOfLink(linkId) {
+    return this.links.findIndex((link) => link.id === linkId);
   }
 
   #confirmPublicChange() {
@@ -168,7 +177,12 @@ export default class Section {
     });
   }
 
-  async #reorderLink({ linkId, index: fromIndex }, dropIndex) {
+  async #reorderLink({ linkId }, dropIndex) {
+    const fromIndex = this.#indexOfLink(linkId);
+    if (fromIndex === -1) {
+      return;
+    }
+
     const toIndex = dropIndex ?? this.links.length;
     const ids = this.links.map((link) => link.id);
     ids.splice(fromIndex, 1);
