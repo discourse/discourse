@@ -12,6 +12,11 @@ class Demon::DiscourseVips < Demon::Base
     "discourse_vips"
   end
 
+  def self.start(verbose: false, logger: nil)
+    super(1, verbose:, logger:)
+    wait_until_ready
+  end
+
   def self.wait_until_ready
     deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + START_TIMEOUT_SECONDS
     broker_pid = demons.fetch("#{prefix}_0").pid
@@ -31,6 +36,7 @@ class Demon::DiscourseVips < Demon::Base
       sleep 0.01
     end
   end
+  private_class_method :wait_until_ready
 
   def run
     ready_reader, ready_writer = IO.pipe
