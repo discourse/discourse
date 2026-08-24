@@ -51,8 +51,8 @@ RSpec.describe Onebox::Engine do
       result = Onebox::Engine.origins_to_regexes(%w[https://example.com https://example2.com])
       expect(result).to eq(
         [
-          %r{\Ahttps://example\.com(?::\d+(?:[/?#]|\z)|[/?#]|\z)}i,
-          %r{\Ahttps://example2\.com(?::\d+(?:[/?#]|\z)|[/?#]|\z)}i,
+          %r{\Ahttps://example\.com(?::\d+(?:[/\\?#]|\z)|[/\\?#]|\z)}i,
+          %r{\Ahttps://example2\.com(?::\d+(?:[/\\?#]|\z)|[/\\?#]|\z)}i,
         ],
       )
     end
@@ -71,7 +71,10 @@ RSpec.describe Onebox::Engine do
       %w[
         https://example.com.attacker.example/embed
         https://example.com:3000.attacker.example/embed
+        https://example.com@attacker.example/embed
       ].each { |url| expect(url).not_to match(regex) }
+
+      expect(regex).to match("https://example.com\\embed")
     end
 
     it "limits wildcard origins to a single URL authority" do
@@ -86,7 +89,16 @@ RSpec.describe Onebox::Engine do
         https://attacker.example?.example.com/
         https://attacker.example#.example.com/
         https://embed.example.com.attacker.example/player
+        https://attacker.example\path.example.com/player
       ].each { |url| expect(url).not_to match(regex) }
+
+      expect(regex).to match("https://embed.example.com\\player")
+    end
+
+    it "preserves configured paths after the URL authority" do
+      regex = Onebox::Engine.origins_to_regexes(["https://example.com/embed?"]).first
+
+      expect(regex).to match("https://example.com/embed?key=value")
     end
 
     it "treats '*' as a catch-all" do
