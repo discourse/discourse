@@ -2,6 +2,7 @@
 
 describe DiscourseAi::Discoveries::Retrieval do
   fab!(:user)
+  fab!(:staff_user, :admin)
   fab!(:category)
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:topic_1) { Fabricate(:topic, category:) }
@@ -9,7 +10,7 @@ describe DiscourseAi::Discoveries::Retrieval do
   fab!(:topic_3) { Fabricate(:topic, category:) }
   fab!(:private_topic) { Fabricate(:topic, category: private_category) }
   fab!(:post_1) { Fabricate(:post, topic: topic_1, raw: "First useful answer") }
-  fab!(:post_2) { Fabricate(:post, topic: topic_2, raw: "Second useful answer") }
+  fab!(:post_2) { Fabricate(:post, topic: topic_2, user: staff_user, raw: "Second useful answer") }
   fab!(:post_3) { Fabricate(:post, topic: topic_3, raw: "Third useful answer") }
   fab!(:private_post) { Fabricate(:post, topic: private_topic, raw: "Private answer") }
 
@@ -17,9 +18,11 @@ describe DiscourseAi::Discoveries::Retrieval do
     {
       "topic_id" => post.topic_id,
       "post_id" => post.id,
+      "post_number" => post.post_number,
       "title" => post.topic.title,
       "url" => post.relative_url,
       "excerpt" => excerpt,
+      "post_updated_at" => post.updated_at.iso8601(6),
     }
   end
 
@@ -79,6 +82,12 @@ describe DiscourseAi::Discoveries::Retrieval do
     end
 
     it "fuses, permission-checks, and assigns request-owned source references" do
+      SiteSetting.tagging_enabled = true
+      parent_category = Fabricate(:category)
+      category.update!(parent_category:)
+      tag = Fabricate(:tag, name: "guide")
+      topic_2.tags << tag
+      PostActionCreator.like(user, post_2)
       lexical = [source(post_1), source(post_2), source(private_post)]
       semantic = [source(post_2), source(post_3), source(private_post)]
 
@@ -96,12 +105,53 @@ describe DiscourseAi::Discoveries::Retrieval do
         %w[source_1 source_2 source_3],
       )
       expect(result.candidates.map { |candidate| candidate.fetch("category") }).to eq(
-        [category.name, category.name, category.name],
+        3.times.map { "#{parent_category.name} > #{category.name}" },
       )
       expect(result.candidates.first).to include(
+        "title" => topic_2.title,
+        "url" => post_2.relative_url,
         "username" => post_2.user.username,
+        "excerpt" => post_2.raw,
+        "created" => post_2.created_at,
+        "likes" => 1,
+        "topic_views" => topic_2.views,
+        "topic_likes" => topic_2.reload.like_count,
+        "topic_replies" => topic_2.posts_count - 1,
+        "tags" => tag.name,
         "name" => post_2.user.name,
         "avatar_template" => post_2.user.avatar_template,
+        "author_is_staff" => true,
+        "is_topic_op" => true,
+      )
+    end
+
+    it "keeps distinct matched posts as passages when retrieval methods find the same topic" do
+      matching_reply = Fabricate(:post, topic: topic_2, raw: "A later matching answer")
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [source(matching_reply)] },
+          semantic_retriever: ->(_query) { [source(post_2)] },
+        ).call("matching answer")
+
+      expect(result.candidates.first.fetch("passages")).to eq(
+        [
+          {
+            "post_id" => matching_reply.id,
+            "post_number" => matching_reply.post_number,
+            "url" => matching_reply.relative_url,
+            "excerpt" => matching_reply.raw,
+            "post_updated_at" => matching_reply.updated_at.iso8601(6),
+          },
+          {
+            "post_id" => post_2.id,
+            "post_number" => post_2.post_number,
+            "url" => post_2.relative_url,
+            "excerpt" => post_2.raw,
+            "post_updated_at" => post_2.updated_at.iso8601(6),
+          },
+        ],
       )
     end
 

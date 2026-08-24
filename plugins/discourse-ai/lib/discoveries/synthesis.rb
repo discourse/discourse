@@ -47,7 +47,7 @@ module DiscourseAi
         bot =
           DiscourseAi::Agents::Bot.as(
             Discourse.system_user,
-            agent: synthesis_agent(summary_detail:),
+            agent: @ai_agent.class_instance.new,
             model: @llm_model,
           )
         values = { answerable: nil, source_refs: nil, title: +"", answer: +"" }
@@ -113,36 +113,6 @@ module DiscourseAi
         Result.new(answerable: false, source_refs: [], title: "", answer: "")
       end
 
-      def synthesis_agent(summary_detail:)
-        configured_agent = @ai_agent.class_instance.new
-        system_prompt = [configured_agent.system_prompt, summary_instruction(summary_detail:)].join(
-          "\n\n",
-        )
-
-        Class
-          .new(DiscourseAi::Agents::Discover) do
-            define_method(:system_prompt) { system_prompt }
-            define_method(:temperature) { configured_agent.temperature }
-            define_method(:top_p) { configured_agent.top_p }
-            define_method(:thinking_effort) { configured_agent.thinking_effort }
-          end
-          .new
-      end
-
-      def summary_instruction(summary_detail:)
-        detail_instruction =
-          case summary_detail.to_s
-          when "quiet"
-            "For this request, write exactly one concise sentence with no title."
-          when "detailed"
-            "For this request, write two or three short paragraphs totaling 100 to 160 words. Separate paragraphs with a blank line. Do not combine them into one paragraph."
-          else
-            "For this request, write exactly one paragraph of 40 to 80 words."
-          end
-
-        "#{detail_instruction} Do not include source identifiers, citations, or a sources or references section. The selected discussions are shown separately."
-      end
-
       def answer_without_source_references(answer)
         answer
           .to_s
@@ -171,7 +141,29 @@ module DiscourseAi
       end
 
       def candidate_input(candidate)
-        input = candidate.slice("source_ref", "title", "excerpt", "category").compact
+        input =
+          candidate.slice(
+            "source_ref",
+            "title",
+            "url",
+            "username",
+            "created",
+            "category",
+            "likes",
+            "topic_views",
+            "topic_likes",
+            "topic_replies",
+            "tags",
+            "author_is_staff",
+            "is_topic_op",
+          ).compact
+        if candidate["passages"].present?
+          input["passages"] = candidate["passages"].map do |passage|
+            passage.slice("post_number", "excerpt").compact
+          end
+        else
+          input["excerpt"] = candidate["excerpt"] if candidate["excerpt"]
+        end
         input["last_updated_at"] = candidate["post_updated_at"] if candidate["post_updated_at"]
         input
       end

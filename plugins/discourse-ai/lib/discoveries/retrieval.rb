@@ -154,9 +154,11 @@ module DiscourseAi
         {
           "topic_id" => post.topic_id,
           "post_id" => post.id,
+          "post_number" => post.post_number,
           "title" => post.topic.title,
           "url" => post.relative_url,
           "excerpt" => plain_text(excerpt.presence || post.excerpt),
+          "post_updated_at" => post.updated_at.iso8601(6),
         }
       end
 
@@ -165,7 +167,15 @@ module DiscourseAi
         rankings.each_with_index do |ranking, ranking_index|
           ranking.each_with_index do |source, index|
             topic_id = source.fetch("topic_id")
-            candidate = fused[topic_id] ||= source.merge("rrf_score" => 0.0, "retrievals" => [])
+            candidate =
+              fused[topic_id] ||= source.merge(
+                "rrf_score" => 0.0,
+                "retrievals" => [],
+                "passages" => [passage_from_source(source)],
+              )
+            if candidate["passages"].none? { |passage| passage["post_id"] == source["post_id"] }
+              candidate["passages"] << passage_from_source(source)
+            end
             candidate["rrf_score"] += 1.0 / (RRF_K + index + 1)
             candidate["retrievals"] << { "ranking" => ranking_index + 1, "rank" => index + 1 }
           end
@@ -176,10 +186,21 @@ module DiscourseAi
         end
       end
 
+      def passage_from_source(source)
+        source.slice("post_id", "post_number", "url", "excerpt", "post_updated_at")
+      end
+
       def revalidate_and_limit(candidates)
-        post_ids = candidates.map { |candidate| candidate.fetch("post_id") }
+        post_ids =
+          candidates.flat_map do |candidate|
+            candidate.fetch("passages", [candidate]).map { |passage| passage.fetch("post_id") }
+          end
         posts =
-          Post.where(id: post_ids, deleted_at: nil).includes(:user, topic: :category).index_by(&:id)
+          Post
+            .where(id: post_ids, deleted_at: nil)
+            .includes(:user, topic: [{ category: :parent_category }, :tags])
+            .index_by(&:id)
+        hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
 
         candidates
           .filter_map do |candidate|
@@ -197,15 +218,43 @@ module DiscourseAi
               next
             end
 
+            candidate_passages = candidate.fetch("passages", [candidate])
+            passages =
+              candidate_passages.filter_map do |passage|
+                passage_post = posts[passage.fetch("post_id")]
+                next if passage_post.nil? || passage_post.topic_id != topic.id
+                next if !@guardian.can_see?(passage_post)
+                if passage["post_updated_at"] &&
+                     passage["post_updated_at"] != passage_post.updated_at.iso8601(6)
+                  next
+                end
+
+                passage_from_source(
+                  passage.merge(
+                    "post_number" => passage_post.post_number,
+                    "url" => passage_post.relative_url,
+                    "post_updated_at" => passage_post.updated_at.iso8601(6),
+                  ),
+                )
+              end
+            next if passages.length != candidate_passages.length
+
+            search_metadata =
+              DiscourseAi::Utils::Search.format_row(
+                topic:,
+                post:,
+                hidden_tags:,
+                excerpt: plain_text(candidate["excerpt"]),
+              ).stringify_keys
+
             candidate.merge(
-              "title" => topic.title,
-              "url" => post.relative_url,
-              "excerpt" => plain_text(candidate["excerpt"]),
-              "category" => topic.category&.name,
-              "topic_replies" => [topic.posts_count - 1, 0].max,
+              search_metadata,
               "username" => post.user&.username,
               "name" => post.user&.name,
               "avatar_template" => post.user&.avatar_template,
+              "author_is_staff" => post.user&.staff? || false,
+              "is_topic_op" => post.post_number == 1,
+              "passages" => passages,
               "post_updated_at" => post.updated_at.iso8601(6),
               "topic_updated_at" => topic.updated_at.iso8601(6),
             )
