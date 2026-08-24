@@ -20,6 +20,7 @@ module DiscourseAi
       def call(
         query:,
         candidates:,
+        original_query_locale: nil,
         summary_detail: :balanced,
         related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
       )
@@ -27,12 +28,17 @@ module DiscourseAi
           return Result.new(answerable: false, source_refs: [], title: "", answer: "")
         end
         related_count = normalized_related_count(related_count)
+        original_query_locale = normalized_original_query_locale(original_query_locale)
 
         context =
           DiscourseAi::Agents::BotContext.new(
             user: @user,
             messages: [
-              { type: :user, content: input(query, candidates, summary_detail:, related_count:) },
+              {
+                type: :user,
+                content:
+                  input(query, candidates, original_query_locale:, summary_detail:, related_count:),
+              },
             ],
             skip_show_thinking: true,
             feature_name: "discover",
@@ -149,12 +155,13 @@ module DiscourseAi
       def input(
         query,
         candidates,
+        original_query_locale:,
         summary_detail: :balanced,
         related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
       )
         JSON.generate(
           original_query: query,
-          user_locale: @user.effective_locale,
+          original_query_locale:,
           settings: {
             summary_detail:,
             related_count:,
@@ -179,6 +186,13 @@ module DiscourseAi
         end
 
         DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
+      end
+
+      def normalized_original_query_locale(locale)
+        locale = LocaleNormalizer.normalize_to_i18n(locale)&.to_s
+        return locale if LocaleSiteSetting.supported_locales.include?(locale)
+
+        @user.effective_locale
       end
     end
   end

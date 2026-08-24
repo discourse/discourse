@@ -32,6 +32,7 @@ describe DiscourseAi::Discoveries::QueryRewriter do
           {
             keyword_query: "delete admin bot user",
             semantic_query: "how to remove a bot account with administrator permissions",
+            original_query_locale: "zh_CN",
           },
         ],
       ) do |_, _, prompts, prompt_options|
@@ -51,6 +52,7 @@ describe DiscourseAi::Discoveries::QueryRewriter do
                     include(
                       keyword_query: include(type: "string"),
                       semantic_query: include(type: "string"),
+                      original_query_locale: include(type: "string"),
                     ),
                 ),
             ),
@@ -67,6 +69,7 @@ describe DiscourseAi::Discoveries::QueryRewriter do
     expect(result).to have_attributes(
       keyword_query: "delete admin bot user",
       semantic_query: "how to remove a bot account with administrator permissions",
+      original_query_locale: "zh_CN",
     )
     expect(feature_name).to eq("discover_query_rewrite")
   end
@@ -77,7 +80,11 @@ describe DiscourseAi::Discoveries::QueryRewriter do
         [{ keyword_query: " ", semantic_query: "" }],
       ) { rewriter.call("topic previe") }
 
-    expect(result).to have_attributes(keyword_query: "topic previe", semantic_query: "topic previe")
+    expect(result).to have_attributes(
+      keyword_query: "topic previe",
+      semantic_query: "topic previe",
+      original_query_locale: user.effective_locale,
+    )
   end
 
   it "falls back to the original query when rewriting fails" do
@@ -88,7 +95,11 @@ describe DiscourseAi::Discoveries::QueryRewriter do
 
     result = rewriter.call("猫")
 
-    expect(result).to have_attributes(keyword_query: "猫", semantic_query: "猫")
+    expect(result).to have_attributes(
+      keyword_query: "猫",
+      semantic_query: "猫",
+      original_query_locale: user.effective_locale,
+    )
     expect(Rails.logger).to have_received(:warn).with(
       "Discourse AI Discoveries query rewrite failed: StandardError",
     )

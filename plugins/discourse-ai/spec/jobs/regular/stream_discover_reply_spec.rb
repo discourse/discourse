@@ -58,6 +58,7 @@ describe Jobs::StreamDiscoverReply do
       DiscourseAi::Discoveries::QueryRewriter::Result.new(
         keyword_query: query,
         semantic_query: query,
+        original_query_locale: user.effective_locale,
       ),
     )
     allow(DiscourseAi::Discoveries::Retrieval).to receive(:new).with(user:).and_return(retrieval)
@@ -72,7 +73,7 @@ describe Jobs::StreamDiscoverReply do
     end
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, original_query_locale:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
       expect(summary_detail).to eq(:balanced)
@@ -144,6 +145,7 @@ describe Jobs::StreamDiscoverReply do
       DiscourseAi::Discoveries::QueryRewriter::Result.new(
         keyword_query: "create plugin",
         semantic_query: "how to create a Discourse plugin",
+        original_query_locale: "zh_CN",
       ),
     )
 
@@ -153,6 +155,13 @@ describe Jobs::StreamDiscoverReply do
       query,
       keyword_query: "create plugin",
       semantic_query: "how to create a Discourse plugin",
+    )
+    expect(synthesis).to have_received(:call).with(
+      query:,
+      candidates: [candidate],
+      original_query_locale: "zh_CN",
+      summary_detail: :balanced,
+      related_count: 2,
     )
   end
 
@@ -172,7 +181,7 @@ describe Jobs::StreamDiscoverReply do
   it "publishes a supported answer when the model omits the optional title" do
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, original_query_locale:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
       expect(summary_detail).to eq(:balanced)
@@ -214,7 +223,7 @@ describe Jobs::StreamDiscoverReply do
     SiteSetting.ai_discover_related_count = 2
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, original_query_locale:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
       expect(summary_detail).to eq(:quiet)
@@ -272,7 +281,7 @@ describe Jobs::StreamDiscoverReply do
     ).and_return([candidate, second_candidate])
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, original_query_locale:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate, second_candidate])
       expect(summary_detail).to eq(:balanced)

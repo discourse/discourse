@@ -13,6 +13,11 @@ module DiscourseAi
 
           The input is JSON containing the user's query and the forum's default locale.
 
+          original_query_locale is the locale the final answer must use.
+          - Detect it from the user's query when the language is clear.
+          - Return an empty string when the language is unclear.
+          - Return a Discourse locale identifier, such as en, fr, or zh_CN.
+
           keyword_query is for Discourse's PostgreSQL-backed keyword search.
           - Keep only two to four essential terms.
           - Do not add synonyms or alternate word forms to the same query.
@@ -34,6 +39,7 @@ module DiscourseAi
         [
           { "key" => "keyword_query", "type" => "string" },
           { "key" => "semantic_query", "type" => "string" },
+          { "key" => "original_query_locale", "type" => "string" },
         ]
       end
 
@@ -44,6 +50,7 @@ module DiscourseAi
             {
               keyword_query: "delete admin bot user",
               semantic_query: "how to remove a bot account that has administrator permissions",
+              original_query_locale: "zh_CN",
             }.to_json,
           ],
         ]

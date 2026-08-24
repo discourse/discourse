@@ -10,6 +10,7 @@ describe DiscourseAi::Agents::DiscoverQueryRewriter do
       [
         { "key" => "keyword_query", "type" => "string" },
         { "key" => "semantic_query", "type" => "string" },
+        { "key" => "original_query_locale", "type" => "string" },
       ],
     )
     expect(agent.examples).to include(
@@ -18,6 +19,7 @@ describe DiscourseAi::Agents::DiscoverQueryRewriter do
         {
           keyword_query: "delete admin bot user",
           semantic_query: "how to remove a bot account that has administrator permissions",
+          original_query_locale: "zh_CN",
         }.to_json,
       ],
     )

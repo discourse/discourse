@@ -45,7 +45,7 @@ module DiscourseAi
 
           ### Language
 
-          Write the title and answer in original_query's language whenever it is identifiable. Do not switch to the language used by the candidates. Use user_locale only when original_query does not provide a clear language signal.
+          Write the title and answer in original_query_locale. This is required even when the candidates use another language.
 
           ### Answer
 

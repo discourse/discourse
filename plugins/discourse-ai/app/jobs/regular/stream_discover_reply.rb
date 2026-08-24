@@ -79,6 +79,7 @@ module Jobs
         synthesis.call(
           query:,
           candidates: retrieval_result.synthesis_candidates,
+          original_query_locale: rewritten_queries.original_query_locale,
           summary_detail: result_settings[:summary_detail],
           related_count: result_settings[:related_count],
         ) do |update|
@@ -238,6 +239,7 @@ module Jobs
         DiscourseAi::Discoveries::QueryRewriter::Result.new(
           keyword_query: query,
           semantic_query: query,
+          original_query_locale: user.effective_locale,
         )
       return fallback if DiscourseAi::Discoveries.private_message_query?(query)
       return fallback if DiscourseAi::Discoveries::Retrieval.explicit_filters?(query)

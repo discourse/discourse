@@ -50,9 +50,12 @@ describe DiscourseAi::Discoveries::Synthesis do
         ],
       ) do |_, _, prompts, prompt_options|
         response =
-          synthesis.call(query: "怎么删除具备管理员权限的幽灵机器人用户？", candidates:, related_count: 4) do |update|
-            updates << update
-          end
+          synthesis.call(
+            query: "怎么删除具备管理员权限的幽灵机器人用户？",
+            candidates:,
+            original_query_locale: "zh_CN",
+            related_count: 4,
+          ) { |update| updates << update }
 
         prompt = prompts.first
         expect(prompt.tools).to be_empty
@@ -75,7 +78,13 @@ describe DiscourseAi::Discoveries::Synthesis do
         )
         supplied_input = JSON.parse(prompt.messages.last[:content])
         expect(supplied_input.fetch("original_query")).to eq("怎么删除具备管理员权限的幽灵机器人用户？")
-        expect(supplied_input.fetch("user_locale")).to eq("fr")
+        expect(supplied_input.fetch("original_query_locale")).to eq("zh_CN")
+        expect(supplied_input.keys).to contain_exactly(
+          "original_query",
+          "original_query_locale",
+          "settings",
+          "candidates",
+        )
         expect(supplied_input.fetch("settings")).to eq(
           "summary_detail" => "balanced",
           "related_count" => 4,
