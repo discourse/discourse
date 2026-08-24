@@ -216,26 +216,35 @@ export default class DModal extends Component<DModalSignature> {
     // the browser claims a vertical pan started here even with nothing to
     // scroll, so the swipe only gets the axis back while that is true
     const watched = new WeakSet<Element>();
-    const overflowObserver = new ResizeObserver((_entries, observer) => {
+    const syncPannableAxis = () => {
       el.classList.toggle(
         BODY_NO_SCROLL_CLASS,
         el.scrollHeight <= el.clientHeight
       );
 
-      // content can outgrow a body whose own box has stopped changing; the
-      // guard keeps re-observation from re-reporting on its own
+      // the body's own box can stop changing while a child still grows
       for (const child of el.children) {
         if (!watched.has(child)) {
           watched.add(child);
-          observer.observe(child);
+          overflowObserver.observe(child);
         }
       }
-    });
+    };
+    const overflowObserver = new ResizeObserver(syncPannableAxis);
+    // content can also arrive, or grow in place, resizing nothing that is watched
+    const contentObserver = new MutationObserver(syncPannableAxis);
     overflowObserver.observe(el);
+    contentObserver.observe(el, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+    syncPannableAxis();
 
     return () => {
       unlock(el, undefined);
       overflowObserver.disconnect();
+      contentObserver.disconnect();
 
       if (this.capabilities.isIOS) {
         this.appEvents.off(

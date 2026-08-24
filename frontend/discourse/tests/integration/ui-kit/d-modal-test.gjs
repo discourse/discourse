@@ -725,6 +725,14 @@ module("Integration | ui-kit | DModal", function (hooks) {
       forceMobile();
     });
 
+    // two frames: the first flushes any observation still in flight, so the
+    // second can only be reporting what the test just did
+    const settleObservers = async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await settled();
+    };
+
     // synthetic events are milliseconds apart, which reads as a flick; an own
     // `timeStamp` property shadows the prototype accessor
     function dispatchPointer(type, { y, time }) {
@@ -802,14 +810,20 @@ module("Integration | ui-kit | DModal", function (hooks) {
       await render(
         <template>
           <DModal @inline={{true}} @closeModal={{noop}}>
-            <:body>short</:body>
+            <:body><div class="body-content" style="height: 10px"></div></:body>
           </DModal>
         </template>
       );
 
+      // the stylesheet is absent here, so the capped box is set up by hand:
+      // measured against its own content, with the scrollbar space reserved so
+      // overflowing it later resizes nothing
       const body = find(".d-modal__body");
-      // the measurement lands with the observer's first report, a frame in
-      await new Promise((resolve) => requestAnimationFrame(resolve));
+      body.style.overflowY = "scroll";
+      body.style.scrollbarGutter = "stable";
+      body.style.height = `${body.scrollHeight + 20}px`;
+      await settleObservers();
+
       assert
         .dom(body)
         .hasClass(
@@ -817,18 +831,31 @@ module("Integration | ui-kit | DModal", function (hooks) {
           "a body with nothing to scroll leaves vertical to the swipe"
         );
 
-      // the stylesheet is absent here, so the scrolling box is set up by hand
-      body.style.height = "40px";
-      body.style.overflowY = "auto";
-      body.insertAdjacentHTML("beforeend", "<div style='height: 400px'></div>");
-      await new Promise((resolve) => requestAnimationFrame(resolve));
-      await settled();
+      // neither the capped body nor its existing child resizes here
+      find(".body-content").insertAdjacentHTML(
+        "afterend",
+        "<div style='height: 400px'></div>"
+      );
+      await settleObservers();
 
       assert
         .dom(body)
         .doesNotHaveClass(
           "--no-scroll",
           "and hands it back to the browser once there is"
+        );
+
+      // text grows in place: no child list changes and no element resizes
+      body.replaceChildren(document.createTextNode("short"));
+      await settleObservers();
+      body.firstChild.data = "long ".repeat(500);
+      await settleObservers();
+
+      assert
+        .dom(body)
+        .doesNotHaveClass(
+          "--no-scroll",
+          "content that grows in place is seen too"
         );
     });
 

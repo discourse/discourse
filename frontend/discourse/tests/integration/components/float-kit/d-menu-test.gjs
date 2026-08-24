@@ -245,8 +245,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     );
     await open();
 
-    // the browser's own arbitration cannot be driven synthetically, so only the
-    // component's half of the wiring is observable
+    // the browser's arbitration cannot be driven synthetically
     assert
       .dom(".fk-d-menu-modal .d-modal__container")
       .hasAttribute(
