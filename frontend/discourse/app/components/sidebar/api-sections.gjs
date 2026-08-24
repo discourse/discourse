@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import ApiSection from "./api-section";
 import PanelHeader from "./panel-header";
 
@@ -88,44 +89,9 @@ function prepareSidebarSectionClass(Section, routerService) {
       });
     }
 
+    @cached
     get activeLink() {
-      return this.filteredLinks.find((link) => {
-        try {
-          const currentWhen = link.currentWhen;
-
-          if (typeof currentWhen === "boolean") {
-            return currentWhen;
-          }
-
-          // TODO detect active links using the href field
-
-          const queryParams = link.query || {};
-          let models;
-
-          if (link.model) {
-            models = [link.model];
-          } else if (link.models) {
-            models = link.models;
-          } else {
-            models = [];
-          }
-
-          if (typeof currentWhen === "string") {
-            return currentWhen.split(" ").some((route) =>
-              routerService.isActive(route, ...models, {
-                queryParams,
-              })
-            );
-          }
-
-          return routerService.isActive(link.route, ...models, {
-            queryParams,
-          });
-        } catch {
-          // false if ember throws an exception while checking the routes
-          return false;
-        }
-      });
+      return findActiveLink(this.filteredLinks, routerService);
     }
 
     get filtered() {
