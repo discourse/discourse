@@ -63,7 +63,7 @@ export default class SiteTrafficExplorerBreakdownModal extends Component {
         <DButton
           class="btn-primary"
           @action={{this.applyFilters}}
-          @label="admin.site_traffic_explorer.apply"
+          @label="admin.site_traffic_explorer.apply_filters"
         />
       </:footer>
     </DModal>

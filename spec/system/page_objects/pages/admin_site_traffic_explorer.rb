@@ -196,7 +196,7 @@ module PageObjects
         selector = "[data-test-site-traffic-apply-filters]"
 
         has_css?(selector, count: 1) &&
-          has_css?("#{selector} .d-button-label", exact_text: "Apply filters", count: 1) &&
+          has_css?("#{selector} .d-button-label", exact_text: "Apply", count: 1) &&
           has_css?(
             "#{selector} .site-traffic-explorer__filter-apply-pending-count",
             exact_text: count.to_s,
@@ -205,7 +205,7 @@ module PageObjects
       end
 
       def has_no_apply_filters?
-        has_no_button?("Apply filters", exact: true)
+        has_no_css?("[data-test-site-traffic-apply-filters]")
       end
 
       def apply_filters
