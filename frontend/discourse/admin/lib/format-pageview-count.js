@@ -6,11 +6,28 @@ export function formatPageviewCount(value) {
     return `${formatted.replace(/[,.]0$/, "")}M`;
   }
 
-  if (value >= 1_000) {
+  if (value >= 10_000) {
     return `${I18n.toNumber(Math.round(value / 1_000), { precision: 0 })}K`;
   }
 
+  if (value >= 1_000) {
+    const formatted = I18n.toNumber(value / 1_000, { precision: 1 });
+    return `${formatted.replace(/[,.]0$/, "")}K`;
+  }
+
   return I18n.toNumber(value, { precision: 0 });
+}
+
+export function isPageviewCountRounded(value) {
+  if (value >= 1_000_000) {
+    return value % 100_000 !== 0;
+  }
+
+  if (value >= 10_000) {
+    return value % 1_000 !== 0;
+  }
+
+  return value >= 1_000 && value % 100 !== 0;
 }
 
 export function formatExactPageviewCount(value) {

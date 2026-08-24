@@ -41,11 +41,13 @@ export default <template>
       />
     {{/if}}
 
-    <SiteTrafficExplorerPageviewCount
-      @value={{@row.pageviews}}
-      as |formattedValue|
-    >
-      <span class="site-traffic-explorer__row-count">{{formattedValue}}</span>
-    </SiteTrafficExplorerPageviewCount>
+    <span class="site-traffic-explorer__row-count">
+      <SiteTrafficExplorerPageviewCount
+        @value={{@row.pageviews}}
+        as |formattedValue|
+      >
+        {{formattedValue}}
+      </SiteTrafficExplorerPageviewCount>
+    </span>
   </label>
 </template>

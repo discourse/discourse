@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -79,21 +80,28 @@ export default class SiteTrafficExplorer extends Component {
     });
   }
 
+  @cached
   get chartModel() {
     return {
-      start_date: moment(this.args.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.args.endDate).format("YYYY-MM-DD"),
+      start_date:
+        this.args.traffic?.chart_start_date ??
+        moment(this.args.startDate).format("YYYY-MM-DD"),
+      end_date:
+        this.args.traffic?.chart_end_date ??
+        moment(this.args.endDate).format("YYYY-MM-DD"),
       data: this.series,
     };
   }
 
+  @cached
   get chartOptions() {
+    const trafficTypes =
+      this.args.traffic?.chart_traffic_types ?? this.args.trafficTypes;
+
     return {
       hideYAxisGridLines: true,
       hiddenLabels: Object.entries(TRAFFIC_TYPE_BY_SERIES)
-        .filter(
-          ([, trafficType]) => !this.args.trafficTypes.includes(trafficType)
-        )
+        .filter(([, trafficType]) => !trafficTypes.includes(trafficType))
         .map(([series]) => series),
       onLegendClick: this.toggleTrafficType,
     };
