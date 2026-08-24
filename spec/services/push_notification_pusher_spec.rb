@@ -336,6 +336,23 @@ RSpec.describe PushNotificationPusher do
 
         expect(user.push_subscriptions.count).to eq(1)
       end
+
+      it "transfers an existing browser subscription to the current user" do
+        previous_user = Fabricate(:user)
+        params =
+          ActionController::Parameters.new(
+            endpoint: "shared-endpoint",
+            keys: {
+              p256dh: "p256dh",
+              auth: "auth",
+            },
+          ).permit(:endpoint, keys: %i[p256dh auth])
+
+        PushNotificationPusher.subscribe(previous_user, params, "false")
+        PushNotificationPusher.subscribe(user, params, "false")
+
+        expect(PushSubscription.where(data: params.to_json).pluck(:user_id)).to eq([user.id])
+      end
     end
   end
 end

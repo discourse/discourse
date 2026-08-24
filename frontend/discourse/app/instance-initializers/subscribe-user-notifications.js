@@ -4,9 +4,9 @@ import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import {
   alertChannel,
-  disable as disableDesktopNotifications,
   init as initDesktopNotifications,
   onNotification as onDesktopNotification,
+  unsubscribe as unsubscribeDesktopNotifications,
 } from "discourse/lib/desktop-notifications";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
@@ -14,7 +14,7 @@ import { listenForPushNotificationMessages } from "discourse/lib/push-notificati
 import { currentThemeId } from "discourse/lib/theme-selector";
 import Notification from "discourse/models/notification";
 
-class SubscribeUserNotificationsInit {
+export class SubscribeUserNotificationsInit {
   @service appEvents;
   @service capabilities;
   @service currentUser;
@@ -78,20 +78,7 @@ class SubscribeUserNotificationsInit {
 
       listenForPushNotificationMessages(this.router, this.appEvents);
 
-      // MessageBus alerts stay on until push is confirmed: disabling them up
-      // front left the device with neither transport whenever the subscription
-      // turned out to be gone
-      this.desktopNotifications
-        .reconcilePushSubscription()
-        .then((result) => {
-          if (result === "subscribed") {
-            disableDesktopNotifications();
-          }
-        })
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-        });
+      this.reconcileTransports();
     }
   }
 
@@ -127,6 +114,36 @@ class SubscribeUserNotificationsInit {
     this.messageBus.unsubscribe("/client_settings", this.onClientSettings);
 
     this.messageBus.unsubscribe(alertChannel(this.currentUser), this.onAlert);
+  }
+
+  reconcileTransports() {
+    this.pushReconciliation ??= this.desktopNotifications
+      .reconcilePushSubscription()
+      .then((result) => {
+        if (result === "subscribed") {
+          // Push suppression is session-local so a later failed recovery still
+          // has a MessageBus fallback.
+          unsubscribeDesktopNotifications(this.messageBus, this.currentUser);
+        } else if (
+          this.desktopNotifications.pushIntent === "subscribed" &&
+          this.desktopNotifications.isGrantedPermission &&
+          !this.capabilities.isMobileDevice
+        ) {
+          // Clear persistent suppression written by older builds when the
+          // browser transport is needed as a fallback.
+          this.desktopNotifications.setIsEnabledBrowser(true);
+        }
+
+        return result;
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        return null;
+      })
+      .finally(() => (this.pushReconciliation = null));
+
+    return this.pushReconciliation;
   }
 
   @bind
@@ -286,14 +303,24 @@ class SubscribeUserNotificationsInit {
 
   @bind
   onAlert(data) {
-    if (!this.capabilities.isMobileDevice) {
-      return onDesktopNotification(
-        data,
-        this.siteSettings,
-        this.currentUser,
-        this.appEvents
-      );
+    if (this.capabilities.isMobileDevice) {
+      if (
+        this.desktopNotifications.pushIntent === "subscribed" &&
+        this.desktopNotifications.pushSubscriptionConfirmed !== true
+      ) {
+        // MessageBus cannot display mobile notifications, but an alert proves
+        // connectivity is back, so repair push for subsequent notifications.
+        this.reconcileTransports();
+      }
+      return;
     }
+
+    return onDesktopNotification(
+      data,
+      this.siteSettings,
+      this.currentUser,
+      this.appEvents
+    );
   }
 }
 

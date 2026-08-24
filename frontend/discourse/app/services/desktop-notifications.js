@@ -22,8 +22,26 @@ const keyValueStore = new KeyValueStore(context);
 const DISABLED = "disabled";
 const ENABLED = "enabled";
 
+// the dismissal used to be recorded once for the whole browser
+const LEGACY_CONSENT_PROMPT_DISMISSED_KEY = "dismissed-prompt";
+
 function consentPromptDismissedKey(user) {
   return `dismissed-prompt-${user.get("id")}`;
+}
+
+function readConsentPromptDismissed(user) {
+  const userKey = consentPromptDismissedKey(user);
+  const userDismissed = pushNotificationKeyValueStore.getItem(userKey);
+  const legacyDismissed = pushNotificationKeyValueStore.getItem(
+    LEGACY_CONSENT_PROMPT_DISMISSED_KEY
+  );
+
+  if (legacyDismissed) {
+    pushNotificationKeyValueStore.setItem(userKey, "dismissed");
+    pushNotificationKeyValueStore.remove(LEGACY_CONSENT_PROMPT_DISMISSED_KEY);
+  }
+
+  return Boolean(userDismissed || legacyDismissed);
 }
 
 @disableImplicitInjections
@@ -43,11 +61,7 @@ export default class DesktopNotificationsService extends Service {
     super(...arguments);
 
     this.consentPromptDismissed = this.currentUser
-      ? Boolean(
-          pushNotificationKeyValueStore.getItem(
-            consentPromptDismissedKey(this.currentUser)
-          )
-        )
+      ? readConsentPromptDismissed(this.currentUser)
       : false;
 
     this.isEnabledBrowser = this.isGrantedPermission
@@ -170,7 +184,11 @@ export default class DesktopNotificationsService extends Service {
       applicationServerKey: this.siteSettings.vapid_public_key_bytes,
     });
 
-    this.pushSubscriptionConfirmed = result === "subscribed";
+    // "unconfirmed" leaves the question open, so the stored intent stays the
+    // best evidence and the UI does not flip on a single failed request
+    if (result !== "unconfirmed") {
+      this.pushSubscriptionConfirmed = result === "subscribed";
+    }
 
     if (result === "lost") {
       this.pushIntent = null;

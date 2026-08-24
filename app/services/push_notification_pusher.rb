@@ -74,6 +74,10 @@ class PushNotificationPusher
 
   def self.subscribe(user, push_params, send_confirmation)
     data = push_params.to_json
+    # An origin has one live subscription, so registering it transfers delivery
+    # away from any account that is no longer active in that browser.
+    PushSubscription.where(data: data).where.not(user: user).delete_all
+
     subscriptions = PushSubscription.where(user: user, data: data)
     subscriptions_count = subscriptions.count
 

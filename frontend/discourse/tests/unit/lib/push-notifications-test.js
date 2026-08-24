@@ -1,12 +1,15 @@
-import { settled } from "@ember/test-helpers";
+import { settled, waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { helperContext } from "discourse/lib/helpers";
 import {
   getSubscriptionIntent,
   keyValueStore,
   reconcileSubscription,
   setSubscriptionIntent,
+  subscribe,
+  unsubscribe,
   userSubscriptionKey,
 } from "discourse/lib/push-notifications";
 import pretender, {
@@ -92,7 +95,14 @@ module(
         },
         subscribe() {
           this.subscribeCalls++;
-          this.subscription = { toJSON: () => ({ endpoint: "restored" }) };
+          this.subscription = {
+            toJSON: () => ({ endpoint: "restored" }),
+            unsubscribe: () => {
+              this.platformUnsubscribeCalls++;
+              this.subscription = null;
+              return Promise.resolve(true);
+            },
+          };
           return Promise.resolve(this.subscription);
         },
       };
@@ -169,7 +179,13 @@ module(
     });
 
     test("never adopts an existing subscription when the intent is unknown", async function (assert) {
-      pushManager.subscription = { toJSON: () => ({ endpoint: "other-user" }) };
+      pushManager.subscription = {
+        toJSON: () => ({ endpoint: "other-user" }),
+        unsubscribe: () => {
+          pushManager.platformUnsubscribeCalls++;
+          return Promise.resolve(true);
+        },
+      };
       sinon.stub(Notification, "permission").get(() => "granted");
 
       const result = await reconcileSubscription(user, {
@@ -185,6 +201,11 @@ module(
       );
       await settled();
       assert.deepEqual(subscribeRequests, [], "nothing is sent to the server");
+      assert.strictEqual(
+        pushManager.platformUnsubscribeCalls,
+        1,
+        "an unverifiably owned subscription cannot leak the previous account's notifications"
+      );
     });
 
     test("does not resubscribe when push is not the preferred transport", async function (assert) {
@@ -252,6 +273,31 @@ module(
         "subscribed",
         "the intent survives for the next boot to retry"
       );
+      assert.strictEqual(
+        pushManager.platformUnsubscribeCalls,
+        1,
+        "the unconfirmed endpoint is discarded so the next boot restores it again"
+      );
+      assert.strictEqual(pushManager.subscription, null);
+    });
+
+    test("keeps an existing subscription when only the resync failed", async function (assert) {
+      setSubscriptionIntent(user, "subscribed");
+      sinon.stub(Notification, "permission").get(() => "granted");
+      pushManager.subscription = { toJSON: () => ({ endpoint: "existing" }) };
+      pretender.post("/push_notifications/subscribe", () => response(500, {}));
+
+      const result = await reconcileSubscription(user, {
+        resubscribe: true,
+        applicationServerKey,
+      });
+
+      assert.strictEqual(
+        result,
+        "unconfirmed",
+        "the server was told about this endpoint when it was created, so a failed resync does not stop delivery"
+      );
+      assert.strictEqual(getSubscriptionIntent(user), "subscribed");
     });
 
     test("treats a revoked permission grant as a loss even when the subscription survived", async function (assert) {
@@ -313,6 +359,10 @@ module(
       setSubscriptionIntent(user, "off");
       pushManager.subscription = {
         toJSON: () => ({ endpoint: "left-behind" }),
+        unsubscribe: () => {
+          pushManager.platformUnsubscribeCalls++;
+          return Promise.resolve(true);
+        },
       };
 
       const result = await reconcileSubscription(user, { resubscribe: true });
@@ -330,9 +380,133 @@ module(
       );
       assert.strictEqual(
         pushManager.platformUnsubscribeCalls,
-        0,
-        "the platform subscription is left alone, it may belong to another account"
+        1,
+        "the endpoint is invalidated so it cannot retain another account's delivery"
       );
+    });
+  }
+);
+
+module(
+  "Unit | Lib | push-notifications | subscribe and unsubscribe",
+  function (hooks) {
+    setupTest(hooks);
+
+    const user = { get: (key) => (key === "id" ? 42 : undefined) };
+    const applicationServerKey = "1|2|3";
+
+    let pushManager;
+    let subscribeRequests;
+    let unsubscribeRequests;
+    let platformUnsubscribeCalls;
+
+    hooks.beforeEach(function () {
+      subscribeRequests = [];
+      unsubscribeRequests = [];
+      platformUnsubscribeCalls = 0;
+
+      pretender.post("/push_notifications/subscribe", (request) => {
+        subscribeRequests.push(parsePostData(request.requestBody));
+        return response({ success: "OK" });
+      });
+      pretender.post("/push_notifications/unsubscribe", (request) => {
+        unsubscribeRequests.push(parsePostData(request.requestBody));
+        return response({ success: "OK" });
+      });
+
+      const subscription = {
+        toJSON: () => ({ endpoint: "current" }),
+        // the platform reports false once it has dropped the subscription
+        // itself, which is exactly when the server row is still there
+        unsubscribe: () => {
+          platformUnsubscribeCalls++;
+          return Promise.resolve(false);
+        },
+      };
+
+      pushManager = {
+        subscription,
+        getSubscription: () => Promise.resolve(pushManager.subscription),
+        subscribe: () => Promise.resolve(subscription),
+      };
+
+      sinon
+        .stub(navigator.serviceWorker, "ready")
+        .get(() => Promise.resolve({ pushManager }));
+    });
+
+    hooks.afterEach(function () {
+      keyValueStore.remove(userSubscriptionKey(user));
+    });
+
+    test("retires the server subscription even when the platform already dropped it", async function (assert) {
+      await unsubscribe(user, () => {});
+
+      assert.deepEqual(
+        unsubscribeRequests,
+        [{ subscription: { endpoint: "current" } }],
+        "delivery only stops once the server row is gone, so it is never conditional on the platform teardown"
+      );
+      assert.strictEqual(platformUnsubscribeCalls, 1);
+      assert.strictEqual(getSubscriptionIntent(user), "off");
+    });
+
+    test("records the opt-out when push is no longer supported", async function (assert) {
+      sinon.stub(helperContext().capabilities, "isAppWebview").value(true);
+
+      assert.true(await unsubscribe(user, () => assert.step("disabled")));
+
+      assert.strictEqual(getSubscriptionIntent(user), "off");
+      assert.verifySteps(["disabled"]);
+    });
+
+    test("does not finish disabling until platform teardown settles", async function (assert) {
+      let finishPlatformUnsubscribe;
+      pushManager.subscription.unsubscribe = () => {
+        platformUnsubscribeCalls++;
+        return new Promise((resolve) => {
+          finishPlatformUnsubscribe = resolve;
+        });
+      };
+
+      const disabling = unsubscribe(user, () => assert.step("disabled"));
+
+      await waitUntil(() => platformUnsubscribeCalls === 1);
+      assert.verifySteps(
+        [],
+        "the callback does not report disabled while platform teardown is pending"
+      );
+
+      finishPlatformUnsubscribe(true);
+      assert.true(await disabling);
+      assert.verifySteps(["disabled"]);
+    });
+
+    test("reports success once the server has the subscription", async function (assert) {
+      const subscribed = await subscribe(() => {}, applicationServerKey);
+
+      assert.true(subscribed);
+      assert.deepEqual(subscribeRequests, [
+        {
+          subscription: { endpoint: "current" },
+          send_confirmation: "true",
+        },
+      ]);
+    });
+
+    test("does not report success when the server never recorded the subscription", async function (assert) {
+      pretender.post("/push_notifications/subscribe", () => response(500, {}));
+
+      const subscribed = await subscribe(
+        () => assert.step("enabled"),
+        applicationServerKey
+      );
+
+      assert.false(
+        subscribed,
+        "a subscription the server does not know about receives nothing"
+      );
+      assert.verifySteps([], "the intent is never recorded as subscribed");
     });
   }
 );

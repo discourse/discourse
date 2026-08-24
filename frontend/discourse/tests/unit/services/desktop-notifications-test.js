@@ -1,6 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Service | desktop-notifications", function (hooks) {
@@ -115,6 +116,73 @@ module("Unit | Service | desktop-notifications", function (hooks) {
       "but the UI must not claim push is working"
     );
     assert.false(this.service.isSubscribed);
+  });
+
+  test("keeps push enabled when only the boot resync failed", async function (assert) {
+    const { setSubscriptionIntent } =
+      await import("discourse/lib/push-notifications");
+    setSubscriptionIntent(
+      this.owner.lookup("service:current-user"),
+      "subscribed"
+    );
+    this.service.pushIntent = "subscribed";
+
+    sinon.stub(Notification, "permission").get(() => "granted");
+    sinon.stub(navigator.serviceWorker, "ready").get(() =>
+      Promise.resolve({
+        pushManager: {
+          getSubscription: () =>
+            Promise.resolve({ toJSON: () => ({ endpoint: "existing" }) }),
+        },
+      })
+    );
+    pretender.post("/push_notifications/subscribe", () => response(500, {}));
+
+    const result = await this.service.reconcilePushSubscription();
+
+    assert.strictEqual(result, "unconfirmed");
+    assert.true(
+      this.service.isEnabledPush,
+      "one unreachable request must not report a working subscription as off"
+    );
+    assert.true(this.service.isSubscribed);
+  });
+
+  test("migrates a legacy consent prompt dismissal to the current user", async function (assert) {
+    const { keyValueStore } = await import("discourse/lib/push-notifications");
+    const currentUser = this.owner.lookup("service:current-user");
+    // older builds stored the stringified boolean under one key per browser
+    keyValueStore.setItem("dismissed-prompt", "false");
+
+    const serviceFactory = this.owner.factoryFor(
+      "service:desktop-notifications"
+    );
+    const service = serviceFactory.create();
+
+    assert.true(
+      service.consentPromptDismissed,
+      "a prompt the user already refused does not come back on upgrade"
+    );
+    assert.strictEqual(
+      keyValueStore.getItem("dismissed-prompt"),
+      undefined,
+      "the browser-wide key is consumed so it cannot affect another account"
+    );
+    assert.strictEqual(
+      keyValueStore.getItem(`dismissed-prompt-${currentUser.id}`),
+      "dismissed",
+      "the dismissal is retained for the account that inherited it"
+    );
+
+    const originalUserId = currentUser.id;
+    currentUser.set("id", originalUserId + 1);
+    const otherUserService = serviceFactory.create();
+    currentUser.set("id", originalUserId);
+
+    assert.false(
+      otherUserService.consentPromptDismissed,
+      "the legacy dismissal does not suppress the prompt for another account"
+    );
   });
 
   test("push can still be switched off after an unconfirmed restore", async function (assert) {

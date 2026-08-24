@@ -122,13 +122,23 @@ function retireServerSubscription(subscription) {
   });
 }
 
+async function discardPlatformSubscription(subscription) {
+  try {
+    await subscription.unsubscribe();
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+  }
+}
+
 // Reconciles the device's actual push subscription with the user's stored
 // intent.
 //
-// Returns "subscribed" when a subscription exists (or was restored), "lost"
-// when the user has to opt in again, and null when there was nothing to
-// conclude — a transient failure, so the intent is kept and the next boot
-// retries.
+// Returns "subscribed" when the server knows about a working subscription,
+// "unconfirmed" when the device still has the one it was told about earlier but
+// the resync could not reach the server, "lost" when the user has to opt in
+// again, and null when there was nothing to conclude — a transient failure, so
+// the intent is kept and the next boot retries.
 export async function reconcileSubscription(
   user,
   { resubscribe = false, applicationServerKey } = {}
@@ -138,10 +148,6 @@ export async function reconcileSubscription(
   }
 
   const intent = getSubscriptionIntent(user);
-  if (intent === null) {
-    return null;
-  }
-
   const registration = await serviceWorkerRegistration();
   if (!registration) {
     return null;
@@ -156,14 +162,20 @@ export async function reconcileSubscription(
     return null;
   }
 
+  if (intent === null) {
+    if (subscription) {
+      // An origin has only one subscription. With no current-user intent its
+      // ownership cannot be verified, so retaining it could expose another
+      // account's notifications after an abnormal session replacement.
+      await discardPlatformSubscription(subscription);
+    }
+    return null;
+  }
+
   if (intent === "off") {
-    // The browser subscription is deliberately left alone: only one exists per
-    // origin, so on a shared browser it may now belong to whoever subscribed
-    // most recently. Retiring our own server row is what actually stops
-    // delivery, and it retries here because the teardown at the time may have
-    // failed offline.
     if (subscription) {
       await retireServerSubscription(subscription);
+      await discardPlatformSubscription(subscription);
     }
     return null;
   }
@@ -177,9 +189,11 @@ export async function reconcileSubscription(
   }
 
   if (subscription) {
+    // The server was told about this endpoint when it was created, so a failed
+    // resync leaves it working; only a restored one is new to the server.
     return (await resyncSubscriptionWithServer(subscription))
       ? "subscribed"
-      : null;
+      : "unconfirmed";
   }
 
   // The platform dropped the subscription but the grant survived, so it can be
@@ -202,9 +216,14 @@ export async function reconcileSubscription(
     return null;
   }
 
-  return (await resyncSubscriptionWithServer(subscription))
-    ? "subscribed"
-    : null;
+  if (await resyncSubscriptionWithServer(subscription)) {
+    return "subscribed";
+  }
+
+  // Do not let an endpoint that was never confirmed become indistinguishable
+  // from one that previously worked when the next boot finds it.
+  await discardPlatformSubscription(subscription);
+  return null;
 }
 
 export function subscribe(callback, applicationServerKey) {
@@ -222,11 +241,10 @@ export function subscribe(callback, applicationServerKey) {
         userVisibleOnly: true,
         applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
       })
-      .then((subscription) => {
-        sendSubscriptionToServer(subscription, true).catch((e) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-        });
+      .then(async (subscription) => {
+        // a subscription the server never recorded receives nothing, so it
+        // must not be reported as enabled
+        await sendSubscriptionToServer(subscription, true);
         callback?.();
         return true;
       })
@@ -257,34 +275,30 @@ export async function getCurrentPushSubscription() {
   }
 }
 
-export function unsubscribe(user, callback) {
-  if (!isPushNotificationsSupported()) {
-    return;
-  }
-
+export async function unsubscribe(user, callback) {
   setSubscriptionIntent(user, "off");
 
-  return serviceWorkerRegistration().then((registration) => {
-    registration?.pushManager
-      .getSubscription()
-      .then((subscription) => {
-        if (subscription) {
-          subscription.unsubscribe().then((successful) => {
-            if (successful) {
-              ajax("/push_notifications/unsubscribe", {
-                type: "POST",
-                data: { subscription: subscription.toJSON() },
-              });
-            }
-          });
-        }
-      })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
-
+  if (!isPushNotificationsSupported()) {
     callback?.();
     return true;
-  });
+  }
+
+  const registration = await serviceWorkerRegistration();
+
+  try {
+    const subscription = await registration?.pushManager.getSubscription();
+
+    if (subscription) {
+      // `unsubscribe()` resolves false when the platform already dropped the
+      // subscription, so the server row has to be retired either way
+      await retireServerSubscription(subscription);
+      await subscription.unsubscribe();
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+  }
+
+  callback?.();
+  return true;
 }
