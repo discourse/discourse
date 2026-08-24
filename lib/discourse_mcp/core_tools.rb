@@ -93,7 +93,9 @@ module DiscourseMcp
     class GetPost
       def self.call(arguments:, principal:)
         post = Post.secured(principal.guardian).find_by(id: arguments.fetch("post_id").to_i)
-        raise DiscourseMcp::ToolError, "Post not found" if post.blank?
+        if post.blank? || !principal.guardian.can_see?(post)
+          raise DiscourseMcp::ToolError, "Post not found"
+        end
 
         ToolHelpers.text_and_structured(post: ToolHelpers.post_json(post))
       end

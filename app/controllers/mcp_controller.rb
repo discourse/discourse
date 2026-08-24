@@ -27,7 +27,7 @@ class McpController < ApplicationController
 
     principal = DiscourseMcp::Authenticator.new(request).authenticate!
     enforce_rate_limits!(principal)
-    raw_payload = request.body.read(SiteSetting.mcp_max_request_bytes + 1)
+    raw_payload = request.body.read(SiteSetting.mcp_max_request_bytes + 1) || ""
     if raw_payload.bytesize > SiteSetting.mcp_max_request_bytes
       return(
         render json: jsonrpc_error(nil, -32_600, "Request too large"), status: :payload_too_large
@@ -49,6 +49,7 @@ class McpController < ApplicationController
 
     render json: encoded_response, status: mcp_response.http_status
   rescue RateLimiter::LimitExceeded => error
+    record_rate_limited_audit(principal)
     response.set_header("Retry-After", error.available_in.to_s)
     render json: jsonrpc_error(nil, -32_000, "Rate limit exceeded"), status: :too_many_requests
   rescue JSON::ParserError
@@ -86,6 +87,19 @@ class McpController < ApplicationController
       1.minute,
       apply_limit_to_staff: true,
     ).performed!
+  end
+
+  def record_rate_limited_audit(principal)
+    McpAuditLog.create!(
+      occurred_at: Time.zone.now,
+      user_id: principal&.user_id,
+      mcp_oauth_client_id: principal&.oauth_client_id,
+      mcp_server_profile_id: principal&.profile_id,
+      outcome: "rate_limited",
+      http_status: 429,
+    )
+  rescue StandardError => error
+    Discourse.warn_exception(error, message: "MCP audit record failed")
   end
 
   def ensure_mcp_enabled

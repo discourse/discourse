@@ -387,7 +387,7 @@ module DiscourseMcp
       def self.call(uri:, principal:)
         id = uri.delete_prefix("discourse://post/").to_i
         post = ::Post.secured(principal.guardian).find_by(id: id)
-        raise ToolError, "Resource not found" if post.blank?
+        raise ToolError, "Resource not found" if post.blank? || !principal.guardian.can_see?(post)
         { uri: uri, mimeType: "application/json", text: JSON.generate(ToolHelpers.post_json(post)) }
       end
     end

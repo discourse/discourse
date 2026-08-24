@@ -3,10 +3,13 @@
 class Admin::McpActivityController < Admin::AdminController
   def index
     limit = fetch_limit_from_params(default: 50, max: 100)
-    relation = McpAuditLog.includes(:user, :client).recent_first
+    relation = McpAuditLog.includes(:user, :client).order(id: :desc)
     relation = relation.where("id < ?", params[:cursor].to_i) if params[:cursor].present?
     values = relation.limit(limit + 1).to_a
-    next_cursor = values.pop.id if values.length > limit
+    if values.length > limit
+      values.pop
+      next_cursor = values.last.id
+    end
     recent = McpAuditLog.where("occurred_at > ?", 24.hours.ago)
     p95_latency_ms =
       recent
@@ -37,7 +40,7 @@ class Admin::McpActivityController < Admin::AdminController
       username: entry.user&.username,
       client_id: entry.client&.client_id,
       client_name: entry.client&.name,
-      method: entry.method,
+      method: entry[:method],
       capability: entry.capability,
       tool: entry.capability,
       outcome: entry.outcome,

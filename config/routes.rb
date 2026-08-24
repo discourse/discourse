@@ -1943,8 +1943,14 @@ Discourse::Application.routes.draw do
       get "/activity" => "admin/mcp_activity#index"
     end
 
-    get "/u/:username/preferences/mcp-authorizations" => "mcp_user_authorizations#index"
-    delete "/u/:username/preferences/mcp-authorizations/:id" => "mcp_user_authorizations#destroy"
+    get "/u/:username/preferences/mcp-authorizations" => "mcp_user_authorizations#index",
+        :constraints => {
+          username: RouteFormat.username,
+        }
+    delete "/u/:username/preferences/mcp-authorizations/:id" => "mcp_user_authorizations#destroy",
+           :constraints => {
+             username: RouteFormat.username,
+           }
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

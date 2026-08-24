@@ -377,7 +377,12 @@ module DiscourseMcp
     end
 
     def paginate(values, cursor)
-      offset = cursor.present? ? Base64.urlsafe_decode64(cursor).to_i : 0
+      offset = 0
+      if cursor.present?
+        decoded = Base64.urlsafe_decode64(cursor)
+        raise Error.new("Invalid cursor", code: -32_602) if !decoded.match?(/\A\d+\z/)
+        offset = decoded.to_i
+      end
       page = values.slice(offset, PAGE_SIZE) || []
       next_cursor = Base64.urlsafe_encode64((offset + PAGE_SIZE).to_s, padding: false) if offset +
         PAGE_SIZE < values.length

@@ -1063,6 +1063,8 @@ after_initialize do
       readOnlyHint: true,
       destructiveHint: false,
     },
-    availability: -> { SiteSetting.calendar_enabled && SiteSetting.discourse_post_event_enabled },
+    availability: -> do
+      SiteSetting.discourse_events_enabled && SiteSetting.discourse_post_event_enabled
+    end,
   )
 end

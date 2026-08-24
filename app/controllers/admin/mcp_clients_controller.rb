@@ -20,7 +20,8 @@ class Admin::McpClientsController < Admin::AdminController
   end
 
   def block
-    client.update!(trust_state: params.fetch(:blocked, true) ? "blocked" : "approved")
+    blocked = ActiveModel::Type::Boolean.new.cast(params.fetch(:blocked, true))
+    client.update!(trust_state: blocked ? "blocked" : "approved")
     if client.blocked?
       client.authorizations.active.find_each do |authorization|
         authorization.revoke!(by_user: current_user, reason: "client_blocked")

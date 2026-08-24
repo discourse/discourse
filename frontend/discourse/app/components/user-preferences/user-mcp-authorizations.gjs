@@ -17,6 +17,7 @@ function scopesValue(scopes) {
 
 export default class UserMcpAuthorizations extends Component {
   @service a11y;
+  @service currentUser;
   @service dialog;
   @service siteSettings;
   @service toasts;
@@ -26,11 +27,18 @@ export default class UserMcpAuthorizations extends Component {
 
   constructor() {
     super(...arguments);
-    if (!this.siteSettings.mcp_server_enabled) {
+    if (!this.shouldRender) {
       this.loading = false;
       return;
     }
     this.#loadAuthorizations();
+  }
+
+  get shouldRender() {
+    return (
+      this.siteSettings.mcp_server_enabled &&
+      this.args.model?.id === this.currentUser?.id
+    );
   }
 
   get username() {
@@ -99,7 +107,7 @@ export default class UserMcpAuthorizations extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.mcp_server_enabled}}
+    {{#if this.shouldRender}}
       <section
         class="user-mcp-authorizations"
         aria-labelledby="user-mcp-authorizations-title"
