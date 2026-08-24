@@ -21,18 +21,6 @@
 
     .d-filter-controls__dropdowns {
       grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
-    }
-
-    // additional filters render outside the dropdown drawer, so they have to
-    // follow its collapsed state themselves
-    .d-filter-controls:not(:has(.d-filter-controls__dropdowns))
-      .d-filter-controls__additional-filters {
-      display: none;
-    }
-
-    // nothing in this row carries a label, so the controls centre on each
-    // other instead of sitting on a shared baseline
-    .d-filter-controls__additional-filters {
       align-items: center;
     }
   }
@@ -49,8 +37,7 @@
   }
 
   &__feature-filter.select-kit {
-    width: 12rem;
-    max-width: 100%;
+    width: 100%;
   }
 
   &__date-range {
@@ -68,20 +55,6 @@
     .from,
     .to {
       margin: 0;
-    }
-  }
-
-  &__specialized-filters {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3);
-  }
-
-  @include viewport.until(sm) {
-    &__specialized-filters {
-      align-items: stretch;
-      flex-direction: column;
     }
   }
 
