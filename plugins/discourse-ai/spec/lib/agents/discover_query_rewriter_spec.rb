@@ -22,6 +22,17 @@ describe DiscourseAi::Agents::DiscoverQueryRewriter do
           original_query_locale: "zh_CN",
         }.to_json,
       ],
+      [
+        {
+          query: "What are the 3 most popular topics on the forum?",
+          forum_default_locale: "en",
+        }.to_json,
+        { keyword_query: "order:likes", semantic_query: "", original_query_locale: "en" }.to_json,
+      ],
+      [
+        { query: "@nat l logs", forum_default_locale: "en" }.to_json,
+        { keyword_query: "@nat l logs", semantic_query: "", original_query_locale: "en" }.to_json,
+      ],
     )
   end
 end

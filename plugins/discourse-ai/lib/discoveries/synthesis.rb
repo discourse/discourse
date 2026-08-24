@@ -20,6 +20,7 @@ module DiscourseAi
       def call(
         query:,
         candidates:,
+        keyword_query: query,
         original_query_locale: nil,
         summary_detail: :balanced,
         related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
@@ -37,7 +38,14 @@ module DiscourseAi
               {
                 type: :user,
                 content:
-                  input(query, candidates, original_query_locale:, summary_detail:, related_count:),
+                  input(
+                    query,
+                    candidates,
+                    keyword_query:,
+                    original_query_locale:,
+                    summary_detail:,
+                    related_count:,
+                  ),
               },
             ],
             skip_show_thinking: true,
@@ -125,6 +133,7 @@ module DiscourseAi
       def input(
         query,
         candidates,
+        keyword_query:,
         original_query_locale:,
         summary_detail: :balanced,
         related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
@@ -132,6 +141,9 @@ module DiscourseAi
         JSON.generate(
           original_query: query,
           original_query_locale:,
+          retrieval: {
+            keyword_query:,
+          },
           settings: {
             summary_detail:,
             related_count:,

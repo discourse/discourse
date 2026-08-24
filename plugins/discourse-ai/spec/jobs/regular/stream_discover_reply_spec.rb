@@ -73,7 +73,7 @@ describe Jobs::StreamDiscoverReply do
     end
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, original_query_locale:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, keyword_query:, original_query_locale:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
       expect(candidates).to eq([candidate])
       expect(summary_detail).to eq(:balanced)
@@ -159,6 +159,7 @@ describe Jobs::StreamDiscoverReply do
     expect(synthesis).to have_received(:call).with(
       query:,
       candidates: [candidate],
+      keyword_query: "create plugin",
       original_query_locale: "zh_CN",
       summary_detail: :balanced,
       related_count: 2,
@@ -181,8 +182,9 @@ describe Jobs::StreamDiscoverReply do
   it "publishes a supported answer when the model omits the optional title" do
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, original_query_locale:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, keyword_query:, original_query_locale:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
+      expect(keyword_query).to eq(self.query)
       expect(candidates).to eq([candidate])
       expect(summary_detail).to eq(:balanced)
       expect(related_count).to eq(2)
@@ -223,8 +225,9 @@ describe Jobs::StreamDiscoverReply do
     SiteSetting.ai_discover_related_count = 2
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, original_query_locale:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, keyword_query:, original_query_locale:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
+      expect(keyword_query).to eq(self.query)
       expect(candidates).to eq([candidate])
       expect(summary_detail).to eq(:quiet)
       expect(related_count).to eq(5)
@@ -281,8 +284,9 @@ describe Jobs::StreamDiscoverReply do
     ).and_return([candidate, second_candidate])
     allow(synthesis).to receive(
       :call,
-    ) do |query:, candidates:, original_query_locale:, summary_detail:, related_count:, &stream|
+    ) do |query:, candidates:, keyword_query:, original_query_locale:, summary_detail:, related_count:, &stream|
       expect(query).to eq(self.query)
+      expect(keyword_query).to eq(self.query)
       expect(candidates).to eq([candidate, second_candidate])
       expect(summary_detail).to eq(:balanced)
       expect(related_count).to eq(2)

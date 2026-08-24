@@ -71,6 +71,7 @@ describe DiscourseAi::Discoveries::Synthesis do
           synthesis.call(
             query: "怎么删除具备管理员权限的幽灵机器人用户？",
             candidates:,
+            keyword_query: "order:likes",
             original_query_locale: "zh_CN",
             related_count: 4,
           ) { |update| updates << update }
@@ -100,9 +101,11 @@ describe DiscourseAi::Discoveries::Synthesis do
         expect(supplied_input.keys).to contain_exactly(
           "original_query",
           "original_query_locale",
+          "retrieval",
           "settings",
           "candidates",
         )
+        expect(supplied_input.fetch("retrieval")).to eq("keyword_query" => "order:likes")
         expect(supplied_input.fetch("settings")).to eq(
           "summary_detail" => "balanced",
           "related_count" => 4,

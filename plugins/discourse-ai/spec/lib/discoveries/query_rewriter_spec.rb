@@ -77,13 +77,26 @@ describe DiscourseAi::Discoveries::QueryRewriter do
   it "falls back to the original query when the agent returns unusable values" do
     result =
       DiscourseAi::Completions::Llm.with_prepared_responses(
-        [{ keyword_query: " ", semantic_query: "" }],
+        [{ keyword_query: " ", semantic_query: " " }],
       ) { rewriter.call("topic previe") }
 
     expect(result).to have_attributes(
       keyword_query: "topic previe",
       semantic_query: "topic previe",
       original_query_locale: user.effective_locale,
+    )
+  end
+
+  it "preserves an empty semantic query for a native Discourse search" do
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ keyword_query: "order:likes", semantic_query: "", original_query_locale: "en" }],
+      ) { rewriter.call("What are the 3 most popular topics on the forum?") }
+
+    expect(result).to have_attributes(
+      keyword_query: "order:likes",
+      semantic_query: "",
+      original_query_locale: "en",
     )
   end
 

@@ -29,6 +29,8 @@ module DiscourseAi
         rankings =
           if self.class.explicit_filters?(query)
             [retrieve(@lexical_retriever, query)]
+          elsif semantic_query.blank? || self.class.explicit_filters?(keyword_query)
+            [retrieve(@lexical_retriever, keyword_query)]
           else
             retrieve_in_parallel(keyword_query, semantic_query)
           end

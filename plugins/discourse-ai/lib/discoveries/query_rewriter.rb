@@ -58,10 +58,9 @@ module DiscourseAi
               MAX_KEYWORD_QUERY_LENGTH,
             ),
           semantic_query:
-            normalized_query(
+            normalized_semantic_query(
               output&.read_buffered_property(:semantic_query),
               original_query,
-              MAX_SEMANTIC_QUERY_LENGTH,
             ),
           original_query_locale:
             normalized_locale(output&.read_buffered_property(:original_query_locale)),
@@ -97,6 +96,12 @@ module DiscourseAi
       def normalized_query(value, fallback, max_length)
         normalized = value.to_s.dup.force_encoding(Encoding::UTF_8).scrub.unicode_normalize(:nfc)
         normalized.squish.first(max_length).presence || fallback
+      end
+
+      def normalized_semantic_query(value, fallback)
+        return "" if value == ""
+
+        normalized_query(value, fallback, MAX_SEMANTIC_QUERY_LENGTH)
       end
 
       def normalized_locale(value)

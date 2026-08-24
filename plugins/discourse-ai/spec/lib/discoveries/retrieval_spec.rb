@@ -48,6 +48,21 @@ describe DiscourseAi::Discoveries::Retrieval do
       )
     end
 
+    it "uses only the prepared keyword query when it contains native search operators" do
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(query) { query == "order:likes" ? [source(post_1)] : [] },
+          semantic_retriever: ->(_query) { [source(post_2)] },
+        ).call(
+          "What are the 3 most popular topics on the forum?",
+          keyword_query: "order:likes",
+          semantic_query: "the most popular forum topics",
+        )
+
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq([topic_1.id])
+    end
+
     it "starts keyword and semantic retrieval concurrently" do
       started = Queue.new
       release = Queue.new

@@ -79,6 +79,7 @@ module Jobs
         synthesis.call(
           query:,
           candidates: retrieval_result.synthesis_candidates,
+          keyword_query: rewritten_queries.keyword_query,
           original_query_locale: rewritten_queries.original_query_locale,
           summary_detail: result_settings[:summary_detail],
           related_count: result_settings[:related_count],

@@ -45,6 +45,15 @@ module DiscourseAi
           - Topic authors, staff, and documentation categories are useful signals. Treat likes as a weak signal only.
           - Consider freshness only for time-sensitive questions.
 
+          ### Ranked and filtered searches
+
+          When retrieval.keyword_query contains native ordering or filtering operators, the forum search engine has already applied those constraints. The candidates are live search results in that order.
+
+          - For list and ranking questions, treat candidate order and metadata as sufficient evidence. The excerpts do not need to describe the ranking.
+          - Use the first candidates that satisfy the request. Do not replace the search engine's ordering with your own judgement.
+          - Select up to related_count source references. The answer may describe additional supplied candidates when the user explicitly requests more results.
+          - If ranked candidates are tied on the requested measure, state that rather than abstaining.
+
           ### Language
 
           Write the title and answer in original_query_locale. This is required even when the candidates use another language.

@@ -25,11 +25,14 @@ module DiscourseAi
           - Correct obvious spelling mistakes and remove connector words and nonessential modifiers.
           - Preserve the user's intent, product names, numbers, quoted text, and explicit Discourse search filters.
           - If the query is not in the forum's default locale, translate it to that locale for the keyword search.
+          - Use native Discourse search operators when they express the request exactly. For example, use order:likes for the most-liked topics, l for the latest results, and @username to restrict results to an author.
+          - Do not add a text term when an operator-only query expresses the complete request.
 
           semantic_query is a natural-language description of the information that would answer the user.
           - Preserve the same intent but express it clearly enough for embedding search.
           - Use the forum's default locale so it matches the forum's content.
           - Keep it to one sentence and under twenty words.
+          - Return an empty string when the keyword query relies on native search operators for filtering, ordering, or live forum state. Semantic search cannot preserve those constraints.
 
           The two queries must not broaden, narrow, or reinterpret the user's request.
         PROMPT
@@ -51,6 +54,25 @@ module DiscourseAi
               keyword_query: "delete admin bot user",
               semantic_query: "how to remove a bot account that has administrator permissions",
               original_query_locale: "zh_CN",
+            }.to_json,
+          ],
+          [
+            {
+              query: "What are the 3 most popular topics on the forum?",
+              forum_default_locale: "en",
+            }.to_json,
+            {
+              keyword_query: "order:likes",
+              semantic_query: "",
+              original_query_locale: "en",
+            }.to_json,
+          ],
+          [
+            { query: "@nat l logs", forum_default_locale: "en" }.to_json,
+            {
+              keyword_query: "@nat l logs",
+              semantic_query: "",
+              original_query_locale: "en",
             }.to_json,
           ],
         ]
