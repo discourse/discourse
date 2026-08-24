@@ -7,21 +7,13 @@ class RRuleConfigurator
       when "every_day"
         "FREQ=DAILY"
       when "every_month"
-        start_date = starts_at.beginning_of_month.to_date
-        end_date = starts_at.end_of_month.to_date
         weekday = starts_at.strftime("%A")
+        nth = ((starts_at.day - 1) / 7) + 1
 
-        count = 0
-        (start_date..end_date).each do |date|
-          count += 1 if date.strftime("%A") == weekday
-          break if date.day == starts_at.day
-        end
-
-        # If this is the last occurrence of the weekday in the month, use -1
-        # ("last") so the rule fires every month, including months where this
-        # weekday only occurs four times.
-        is_last = starts_at.day + 7 > starts_at.end_of_month.day
-        byday_count = is_last ? -1 : count
+        # Every month has at least four of each weekday, so the first four
+        # positions are safe. A fifth only exists in some months, so anchor it
+        # to -1 ("last") instead, otherwise the rule would skip months.
+        byday_count = nth == 5 ? -1 : nth
 
         "FREQ=MONTHLY;BYDAY=#{byday_count}#{weekday.upcase[0, 2]}"
       when "every_weekday"
