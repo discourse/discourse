@@ -74,6 +74,7 @@ const ENTER_HANDLING_CONTROLS = [
 const UNAVAILABLE_PRIMARY = '[disabled], :disabled, [aria-disabled="true"]';
 
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
+const SWIPE_VELOCITY_EXPIRY_MS = 100;
 const SWIPE_CLOSE_DISTANCE_RATIO = 0.25;
 const SWIPE_SETTLE_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
 
@@ -225,7 +226,12 @@ export default class DModal extends Component<DModalSignature> {
   });
   #modalContainer: HTMLElement;
   #lockedScrollY?: number;
-  #drag: { lastY: number; lastTime: number; velocityY: number } | null = null;
+  #drag: {
+    pointerId: number;
+    lastY: number;
+    lastTime: number;
+    velocityY: number;
+  } | null = null;
   @tracked _wrapperElement?: HTMLElement;
 
   get autofocus() {
@@ -299,11 +305,11 @@ export default class DModal extends Component<DModalSignature> {
 
   @action
   handleDragStart(event: PointerEvent) {
-    // pointer events unify mouse and touch, so the mobile gate is explicit
-    if (!this.mobileDismissable || this.animating) {
+    if (!this.mobileDismissable || this.animating || this.#drag) {
       return false;
     }
     this.#drag = {
+      pointerId: event.pointerId,
       lastY: event.clientY,
       lastTime: event.timeStamp,
       velocityY: 0,
@@ -313,7 +319,7 @@ export default class DModal extends Component<DModalSignature> {
   @action
   async handleDrag(event: PointerEvent, info: DPointerDragInfo) {
     const drag = this.#drag;
-    if (!drag || this.animating) {
+    if (!drag || drag.pointerId !== event.pointerId || this.animating) {
       return;
     }
 
@@ -333,19 +339,23 @@ export default class DModal extends Component<DModalSignature> {
   @action
   async handleDragEnd(event: PointerEvent, info: DPointerDragInfo) {
     const drag = this.#drag;
+    if (!drag || drag.pointerId !== event.pointerId) {
+      return;
+    }
     this.#drag = null;
 
-    if (!drag || !info.moved || this.animating) {
+    if (!info.moved || this.animating) {
       return;
     }
 
     const closeDistance =
       this.#modalContainer.clientHeight * SWIPE_CLOSE_DISTANCE_RATIO;
+    const idleMs = event.timeStamp - drag.lastTime;
+    const velocityY = idleMs > SWIPE_VELOCITY_EXPIRY_MS ? 0 : drag.velocityY;
 
     if (
       info.delta.y <= 0 ||
-      (drag.velocityY < SWIPE_VELOCITY_THRESHOLD &&
-        info.delta.y < closeDistance)
+      (velocityY < SWIPE_VELOCITY_THRESHOLD && info.delta.y < closeDistance)
     ) {
       return await this.#animateWrapperPosition(0, getMaxAnimationTimeMs());
     }
@@ -354,27 +364,14 @@ export default class DModal extends Component<DModalSignature> {
   }
 
   @action
-  async handleBackdropDragEnd(event: PointerEvent, info: DPointerDragInfo) {
-    if (!this.#drag) {
-      return;
-    }
-
-    // the gesture claims the press, so a motionless release is the backdrop tap
-    if (!info.moved) {
-      this.#drag = null;
-      return this.closeModal(CLOSE_INITIATED_BY_CLICK_OUTSIDE);
-    }
-
-    await this.handleDragEnd(event, info);
-  }
-
-  @action
   async handleDragCancel(event: PointerEvent, info: DPointerDragInfo) {
     const drag = this.#drag;
+    if (!drag || drag.pointerId !== event.pointerId) {
+      return;
+    }
     this.#drag = null;
 
-    // the browser claimed the touch; a displaced modal settles back
-    if (drag && info.moved && !this.animating) {
+    if (info.moved && !this.animating) {
       await this.#animateWrapperPosition(0, getMaxAnimationTimeMs());
     }
   }
@@ -726,7 +723,7 @@ export default class DModal extends Component<DModalSignature> {
           {{dPointerDrag
             onDragStart=this.handleDragStart
             onDrag=this.handleDrag
-            onDragEnd=this.handleBackdropDragEnd
+            onDragEnd=this.handleDragEnd
             onDragCancel=this.handleDragCancel
             threshold=5
             touchAction="pan-x"

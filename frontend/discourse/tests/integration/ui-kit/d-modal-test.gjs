@@ -739,11 +739,14 @@ module("Integration | ui-kit | DModal", function (hooks) {
       find(".d-modal__container").dispatchEvent(event);
     }
 
-    async function dragContainer({ by, overMs = 400 }) {
+    async function dragContainer({ by, overMs = 400, parkMs = 16 }) {
       stubSharedPointerCapture([".d-modal__container"]);
       dispatchPointer("pointerdown", { y: 100, time: 1000 });
       dispatchPointer("pointermove", { y: 100 + by, time: 1000 + overMs });
-      dispatchPointer("pointerup", { y: 100 + by, time: 1000 + overMs + 16 });
+      dispatchPointer("pointerup", {
+        y: 100 + by,
+        time: 1000 + overMs + parkMs,
+      });
       await settled();
     }
 
@@ -780,6 +783,19 @@ module("Integration | ui-kit | DModal", function (hooks) {
         0,
         "and it settles back to resting position"
       );
+    });
+
+    test("a flick parked before release settles instead of dismissing", async function (assert) {
+      const closeModal = () => assert.step("closeModal");
+      await render(
+        <template>
+          <DModal @inline={{true}} @closeModal={{closeModal}} />
+        </template>
+      );
+
+      await dragContainer({ by: 10, overMs: 8, parkMs: 250 });
+
+      assert.verifySteps([], "the flick's velocity expires while parked");
     });
 
     test("a press on a control hands it the pointer capture", async function (assert) {

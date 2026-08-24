@@ -246,7 +246,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await open();
 
     // scroll deferral is the browser's own pan arbitration, which synthetic
-    // events cannot trigger; the touch-action wiring it rides on is observable
+    // events cannot trigger; only the component-owned half of the wiring is
+    // observable here — the body's own pan-y lives in modal.scss, which the
+    // qunit harness does not load
     assert
       .dom(".fk-d-menu-modal .d-modal__container")
       .hasAttribute(
