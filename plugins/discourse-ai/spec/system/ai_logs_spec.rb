@@ -83,14 +83,14 @@ RSpec.describe "AI logs admin page" do
 
     day_period = I18n.t("js.discourse_ai.logs.periods.day")
     ai_logs_page.select_period(day_period)
-    expect(ai_logs_page.filter_value(:period)).to eq("day")
+    expect(ai_logs_page).to have_filter_value(:period, "day")
 
     find("input[placeholder='#{I18n.t("js.discourse_ai.logs.id_placeholder")}']").fill_in(
       with: log.id,
     )
     find(".ai-logs__id-filter .btn", text: I18n.t("js.discourse_ai.logs.find")).click
     expect(ai_logs_page).to have_no_log(log)
-    expect(ai_logs_page.filter_value(:period)).to eq("day")
+    expect(ai_logs_page).to have_filter_value(:period, "day")
 
     ai_logs_page.select_feature(log.feature_name)
     expect(ai_logs_page).to have_log(log)
