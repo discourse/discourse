@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import Section from "discourse/lib/sidebar/section";
 import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/admin-section";
@@ -39,6 +41,14 @@ export default class SidebarCustomSection extends Component {
     }
   }
 
+  @cached
+  get activeLink() {
+    return findActiveLink(
+      [...this.section.links, ...(this.section.moreLinks || [])],
+      this.router
+    );
+  }
+
   get exactUrlMatch() {
     return this.section.links.find((link) => {
       return this.router.currentURL === link.value;
@@ -48,6 +58,8 @@ export default class SidebarCustomSection extends Component {
   <template>
     <SectionComponent
       @sectionName={{this.section.slug}}
+      @activeLink={{this.activeLink}}
+      @expandWhenActive={{@expandActiveSection}}
       @headerLinkText={{this.section.decoratedTitle}}
       @indicatePublic={{this.section.indicatePublic}}
       @collapsable={{@collapsable}}
@@ -63,6 +75,10 @@ export default class SidebarCustomSection extends Component {
         <SectionLink
           data-sidebar-custom-link="true"
           class={{if (eq linkDrop.linkDropIndex index) "is-link-drop-before"}}
+          @scrollIntoView={{and
+            @scrollActiveLinkIntoView
+            (eq link.name this.activeLink.name)
+          }}
           @badgeText={{link.badgeText}}
           @content={{dReplaceEmoji link.text}}
           @currentWhen={{link.currentWhen}}
