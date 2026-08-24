@@ -170,19 +170,14 @@ export default class ValueList extends Component {
       <DReorderableList
         @items={{this.collection}}
         @key={{INDEX_KEY}}
-        @keyboard="buttons"
         @label={{this.valueLabel}}
         @onMove={{this.handleMove}}
-        @wrap={{true}}
-        @arrowsLayout="inline"
-        @controls="split"
-        @controlsVisibility="reveal"
         @tag="div"
         @itemTag="div"
         @rowClass="value"
         class="values"
       >
-        <:default as |value row|>
+        <:row as |value row|>
           <DButton
             @action={{fn this.removeValue value}}
             @icon="xmark"
@@ -195,7 +190,7 @@ export default class ValueList extends Component {
             class="value-input"
             {{on "focusout" (fn this.changeValue row.index)}}
           />
-        </:default>
+        </:row>
       </DReorderableList>
     {{/if}}
 

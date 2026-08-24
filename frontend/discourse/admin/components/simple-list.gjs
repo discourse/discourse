@@ -83,19 +83,14 @@ export default class SimpleList extends Component {
       <DReorderableList
         @items={{this.collection}}
         @key={{INDEX_KEY}}
-        @keyboard="buttons"
         @label={{this.valueLabel}}
         @onMove={{this.handleMove}}
-        @wrap={{true}}
-        @arrowsLayout="inline"
-        @controls="split"
-        @controlsVisibility="reveal"
         @tag="div"
         @itemTag="div"
         @rowClass="value"
         class="values"
       >
-        <:default as |value row|>
+        <:row as |value row|>
           <DButton
             @action={{fn this.removeItem row.index}}
             @icon="xmark"
@@ -109,7 +104,7 @@ export default class SimpleList extends Component {
             type="text"
             class="value-input"
           />
-        </:default>
+        </:row>
       </DReorderableList>
 
       <div class="simple-list-input">

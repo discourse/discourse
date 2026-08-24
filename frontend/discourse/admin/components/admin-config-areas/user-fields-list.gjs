@@ -97,7 +97,6 @@ export default class AdminConfigAreasUserFieldsList extends Component {
           <DReorderableList
             @items={{this.sortedFields}}
             @key="id"
-            @keyboard="buttons"
             @label={{this.fieldLabel}}
             @onMove={{this.handleMove}}
             @controls="manual"
@@ -106,14 +105,14 @@ export default class AdminConfigAreasUserFieldsList extends Component {
             @rowClass="d-table__row admin-user_field-item"
             class="d-table__body"
           >
-            <:default as |field row|>
+            <:row as |field row|>
               <AdminUserFieldItem
                 @row={{row}}
                 @userField={{field}}
                 @fieldTypes={{this.fieldTypes}}
                 @destroyAction={{this.destroyField}}
               />
-            </:default>
+            </:row>
           </DReorderableList>
         </table>
       {{else}}

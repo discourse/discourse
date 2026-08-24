@@ -196,28 +196,39 @@ module PageObjects
         page.has_field?("link-name", with: name, match: :first)
       end
 
-      # Activated with Enter rather than clicked: these buttons exist because a
-      # drag has no keyboard path, so the spec has to go through the keyboard to
-      # be testing the thing they were added for.
+      # Driven by the keyboard rather than clicked: the reorder control exists
+      # because a drag has no keyboard path, so the spec has to go through the
+      # keyboard to be testing the thing it was added for. The chord is the
+      # single-press keyboard path; the menu behind Enter is the other one.
       def move_link_up(name)
-        find("button[aria-label='Move #{name} up']").send_keys(:enter)
+        link_handle(name).send_keys(%i[alt up])
       end
 
       def move_link_down(name)
-        find("button[aria-label='Move #{name} down']").send_keys(:enter)
+        link_handle(name).send_keys(%i[alt down])
       end
 
       # Presses whatever the previous move left focused, rather than looking the
-      # button up again. Finding it by name would pass even if focus had been
+      # handle up again. Finding it by name would pass even if focus had been
       # lost, which is most of what there is to get wrong here.
-      def press_focused_link_arrow
+      def press_focused_link_move_down
+        page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("Alt+ArrowDown") }
+      end
+
+      # Opens the focused link's move menu, for the path that does not depend
+      # on a modifier chord reaching the page.
+      def open_focused_link_menu
         page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("Enter") }
       end
 
       # The accessible name of whatever currently holds focus, for asserting the
-      # arrows are reachable by tabbing rather than only clickable.
+      # reorder control is reachable by tabbing rather than only clickable.
       def focused_label
         page.evaluate_script("document.activeElement?.getAttribute('aria-label')")
+      end
+
+      def link_handle(name)
+        find("button[aria-label='Reorder #{name}']")
       end
 
       # Read from the name inputs, not from the drag handles, so it reports the

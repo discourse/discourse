@@ -104,7 +104,6 @@ export default class AdminConfigAreasFlags extends Component {
         <DReorderableList
           @items={{this.flags}}
           @key="id"
-          @keyboard="buttons"
           @label={{this.flagLabel}}
           @movable={{this.movable}}
           @onMove={{this.handleMove}}
@@ -114,14 +113,14 @@ export default class AdminConfigAreasFlags extends Component {
           @rowClass={{this.rowClass}}
           class="d-table__body"
         >
-          <:default as |flag row|>
+          <:row as |flag row|>
             <AdminFlagItem
               @row={{row}}
               @flag={{flag}}
               @deleteFlagCallback={{this.deleteFlagCallback}}
               @setPending={{this.setPending}}
             />
-          </:default>
+          </:row>
         </DReorderableList>
       </table>
     </div>

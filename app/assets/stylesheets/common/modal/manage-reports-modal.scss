@@ -75,21 +75,18 @@
     }
   }
 
+  /* Hidden with visibility rather than display so the row keeps the handle's
+     box and does not reflow as a list becomes reorderable. Written as one flat
+     selector: nesting the ancestors under the handle put `&` after them, which
+     compiled to a descendant that can never exist. */
+
   .d-reorderable-list__handle {
     color: var(--primary-low-mid);
     visibility: hidden;
-
-    .manage-reports__list.--reorderable .manage-reports__row.--enabled & {
-      visibility: visible;
-    }
   }
 
-  .d-reorderable-list__arrows {
-    visibility: hidden;
-
-    .manage-reports__list.--reorderable .manage-reports__row.--enabled & {
-      visibility: visible;
-    }
+  &__list.--reorderable &__row.--enabled .d-reorderable-list__handle {
+    visibility: visible;
   }
 
   &__row-text {

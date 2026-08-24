@@ -195,21 +195,8 @@ module PageObjects
         find_setting(setting_name).has_css?("input[disabled]", visible: :all)
       end
 
-      def has_visible_reorder_buttons?(setting_name)
-        reorder_buttons_opacity(setting_name) == "1"
-      end
-
-      def has_hidden_reorder_buttons?(setting_name)
-        reorder_buttons_opacity(setting_name) == "0"
-      end
-
-      # The reveal styling hides the controls with opacity so they keep their
-      # tab stops, which Capybara's visibility filters cannot observe.
-      def reorder_buttons_opacity(setting_name)
-        find("#{setting_row_selector(setting_name)} .d-reorderable-list__arrows", visible: :all)
-        page.evaluate_script(
-          "getComputedStyle(document.querySelector(#{"#{setting_row_selector(setting_name)} .d-reorderable-list__arrows".to_json})).opacity",
-        )
+      def has_reorder_handle?(setting_name)
+        has_css?("#{setting_row_selector(setting_name)} .d-reorderable-list__handle")
       end
 
       def category_setting(setting_name)

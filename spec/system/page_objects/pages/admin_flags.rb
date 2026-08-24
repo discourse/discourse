@@ -72,13 +72,17 @@ module PageObjects
       end
 
       def move_down(key)
-        within(".admin-flag-item.#{key}") { find(".d-reorder-buttons__button:last-child").click }
+        reorderable(key).move(:down)
         self
       end
 
       def move_up(key)
-        within(".admin-flag-item.#{key}") { find(".d-reorder-buttons__button:first-child").click }
+        reorderable(key).move(:up)
         self
+      end
+
+      def reorderable(key)
+        PageObjects::Components::ReorderableList.new(".admin-flag-item.#{key}")
       end
 
       def click_add_flag

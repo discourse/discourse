@@ -2,7 +2,6 @@ import { click, fillIn, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ReorderableListBasicExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/reorderable-list/basic";
-import ReorderableListButtonsExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/reorderable-list/buttons";
 import ReorderableListCreateExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/reorderable-list/create";
 import ReorderableListCrossListExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/reorderable-list/cross-list";
 import ReorderableListEditableExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/reorderable-list/editable";
@@ -15,27 +14,25 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("the basic example renders and commits an arrow move", async function (assert) {
+    test("the basic example renders and commits a menu move", async function (assert) {
       await render(<template><ReorderableListBasicExample /></template>);
 
       assert
         .dom(".d-reorderable-list__row")
         .exists({ count: 4 }, "every fixture row renders");
-      assert
-        .dom(
-          "[data-reorderable-key='inbox'] .d-reorder-buttons__button:last-child"
-        )
-        .exists("the arrow pair renders");
 
-      await click(
-        "[data-reorderable-key='inbox'] .d-reorder-buttons__button:last-child"
-      );
+      await click("[data-reorderable-key='inbox'] .d-reorderable-list__handle");
+      assert
+        .dom(".d-reorderable-list__move-item")
+        .exists({ count: 4 }, "the handle opens its move menu");
+
+      await click(".d-reorderable-list__move-item.--down");
       assert.deepEqual(
         findAll(".d-reorderable-list__row")
           .map((row) => row.dataset.reorderableKey)
           .slice(0, 2),
         ["starred", "inbox"],
-        "the arrow press applies the proposed order"
+        "the chosen destination applies the proposed order"
       );
     });
 
@@ -57,31 +54,17 @@ module(
           "pinned-bottom",
           "the bottom-pinned row keeps the last slot"
         );
-      assert
-        .dom(".d-reorderable-list")
-        .hasClass("--reveal-controls", "reveal visibility marks the list");
     });
 
-    test("the basic example is the grab composite by default", async function (assert) {
+    test("the basic example is one composite tab stop", async function (assert) {
       await render(<template><ReorderableListBasicExample /></template>);
 
       assert
-        .dom("button.d-reorderable-list__handle.--grab")
-        .exists({ count: 4 }, "every row renders a grab button");
+        .dom("button.d-reorderable-list__handle")
+        .exists({ count: 4 }, "every row renders a real handle button");
       assert
-        .dom("button.d-reorderable-list__handle.--grab[tabindex='0']")
-        .exists({ count: 1 }, "the grips form one roving tab stop");
-    });
-
-    test("the buttons example opts out of the grab composite", async function (assert) {
-      await render(<template><ReorderableListButtonsExample /></template>);
-
-      assert
-        .dom("button.d-reorderable-list__handle.--grab")
-        .doesNotExist("buttons mode renders no grab button");
-      assert
-        .dom(".d-reorder-buttons")
-        .exists({ count: 4 }, "every row renders its arrow pair");
+        .dom("button.d-reorderable-list__handle[tabindex='0']")
+        .exists({ count: 1 }, "the handles form one roving tab stop");
     });
 
     test("the cross-list example renders both grouped members", async function (assert) {
@@ -150,14 +133,15 @@ module(
         .exists("the controls sit in the first cell");
 
       await click(
-        "tr[data-reorderable-key='name'] .d-reorder-buttons__button:last-child"
+        "tr[data-reorderable-key='name'] .d-reorderable-list__handle"
       );
+      await click(".d-reorderable-list__move-item.--down");
       assert.deepEqual(
         findAll("tr.d-reorderable-list__row").map(
           (row) => row.dataset.reorderableKey
         ),
         ["location", "name", "website"],
-        "the arrow press reorders the table rows"
+        "the chosen destination reorders the table rows"
       );
     });
 

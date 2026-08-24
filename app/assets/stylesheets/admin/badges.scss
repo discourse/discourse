@@ -171,15 +171,27 @@
     .badge-grouping-item {
       border-bottom: 1px solid var(--content-border-color);
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 0.5em;
       padding: 5px 0;
     }
 
+    /* The name takes the slack, so the actions stay against the row's end
+       while the grip stays against its start. */
+
     .badge-grouping {
-      .badge-grouping-name-input {
-        margin: 0;
-      }
+      flex: 1 1 auto;
+    }
+
+    .badge-grouping-name-input {
+      margin: 0;
+    }
+
+    /* Keeps the row's buttons on one line rather than stacking them. */
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 0.25em;
     }
   }
 }

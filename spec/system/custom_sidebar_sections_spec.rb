@@ -360,13 +360,14 @@ describe "Custom sidebar sections" do
       )
     end
 
-    # Focus is where the arrows live or die: the row moves in the DOM under the
-    # pressed button, and a lost focus makes a second press impossible.
-    expect(section_modal.focused_label).to eq("Move Sidebar Tags down")
+    # Focus is where the keyboard path lives or dies: the row moves in the DOM
+    # under the pressed control, and a lost focus makes a second press
+    # impossible.
+    expect(section_modal.focused_label).to eq("Reorder Sidebar Tags")
 
     # So the second press goes through whatever holds focus, not through another
     # lookup by name, which would pass even if focus had been dropped.
-    section_modal.press_focused_link_arrow
+    section_modal.press_focused_link_move_down
 
     try_until_success do
       expect(section_modal.link_names).to eq(
@@ -406,8 +407,9 @@ describe "Custom sidebar sections" do
     # rather than anywhere on the row, so a press meant to scroll still scrolls.
     expect(page).to have_css(".sidebar-section-form-link .draggable")
 
-    # Neither path substitutes for the other: the arrows are the only route
-    # without a pointer, and the drag is the only route without a keyboard.
+    # Neither path substitutes for the other: the menu behind the handle is the
+    # only route without a drag, and the drag is the only route without a
+    # keyboard.
     section_modal.move_link_down("Sidebar Tags")
 
     try_until_success do

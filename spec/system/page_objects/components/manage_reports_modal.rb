@@ -63,19 +63,33 @@ module PageObjects
       end
 
       def has_disabled_move_up?(identifier)
-        has_css?(arrow_selector(identifier, "up", disabled: true))
+        reorderable(identifier).has_destination?(:up, disabled: true)
       end
 
       def has_disabled_move_down?(identifier)
-        has_css?(arrow_selector(identifier, "down", disabled: true))
+        reorderable(identifier).has_destination?(:down, disabled: true)
       end
 
       def has_enabled_move_up?(identifier)
-        has_css?(arrow_selector(identifier, "up", disabled: false))
+        reorderable(identifier).has_destination?(:up, disabled: false)
       end
 
       def has_enabled_move_down?(identifier)
-        has_css?(arrow_selector(identifier, "down", disabled: false))
+        reorderable(identifier).has_destination?(:down, disabled: false)
+      end
+
+      def move_report_up(identifier)
+        reorderable(identifier).move(:up)
+        self
+      end
+
+      def move_report_down(identifier)
+        reorderable(identifier).move(:down)
+        self
+      end
+
+      def reorderable(identifier)
+        PageObjects::Components::ReorderableList.new(row_selector(identifier))
       end
 
       def has_drag_controls?
@@ -107,16 +121,6 @@ module PageObjects
       end
 
       private
-
-      def arrow_selector(identifier, direction, disabled:)
-        # `aria-disabled`, not the real attribute: an arrow at the end of the
-        # list stays focusable so a keyboard user keeps their place in the tab
-        # order.
-        state = disabled ? "[aria-disabled='true']" : ":not([aria-disabled])"
-
-        "#{row_selector(identifier)} .d-reorder-buttons " \
-          "button#{state} .d-icon-chevron-#{direction}"
-      end
 
       def row_selector(identifier)
         "#{MODAL} #{ROW}[data-reorderable-key='#{identifier}']"

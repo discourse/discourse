@@ -36,22 +36,21 @@ export default class ReorderableListEditableExample extends Component {
       @key="id"
       @label={{this.itemLabel}}
       @onMove={{this.applyMove}}
-      @controls="split"
-      @arrowsLayout="inline"
       class="styleguide-reorderable-list"
-      as |item|
     >
-      <input
-        {{on "input" (fn this.updateValue item)}}
-        value={{item.value}}
-        type="text"
-        class="styleguide-reorderable-list__input"
-      />
-      <DButton
-        @icon="xmark"
-        @action={{fn this.remove item}}
-        class="btn-flat btn-small"
-      />
+      <:row as |item|>
+        <input
+          {{on "input" (fn this.updateValue item)}}
+          value={{item.value}}
+          type="text"
+          class="styleguide-reorderable-list__input"
+        />
+        <DButton
+          @icon="xmark"
+          @action={{fn this.remove item}}
+          class="btn-flat btn-small"
+        />
+      </:row>
     </DReorderableList>
   </template>
 }

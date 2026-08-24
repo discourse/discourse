@@ -87,7 +87,8 @@
   .edit-directory-columns-container {
     .edit-directory-column {
       display: flex;
-      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-2);
       padding: 12px 0;
       border-bottom: 1px solid var(--table-border-color);
 
@@ -95,6 +96,13 @@
         display: flex;
         align-items: center;
         margin-bottom: 0;
+
+        /* The global nudge on checkboxes aligns them to a text baseline; in a
+           centred flex row it only sits the box below the label and the grip. */
+
+        input[type="checkbox"] {
+          margin-top: 0;
+        }
       }
 
       .d-icon-heart {
@@ -102,12 +110,7 @@
         margin: 0 var(--space-1) 0 0;
       }
 
-      .move-column-up {
-        margin-right: 5px;
-      }
-
-      .left-content,
-      .right-content {
+      .left-content {
         display: flex;
         align-items: center;
       }

@@ -86,11 +86,10 @@ export default class EditBadgeGroupings extends Component {
             @items={{this.workingCopy}}
             @label={{this.groupingLabel}}
             @onMove={{this.handleMove}}
-            @controls="manual"
             @rowClass="badge-grouping-item"
             class="badge-groupings-list"
           >
-            <:default as |wc row|>
+            <:row as |wc|>
               <div class="badge-grouping">
                 {{#if wc.editing}}
                   <Input @value={{wc.name}} class="badge-grouping-name-input" />
@@ -113,7 +112,6 @@ export default class EditBadgeGroupings extends Component {
                     class="btn-default"
                   />
                 {{/if}}
-                <row.controls />
                 <DButton
                   @action={{fn this.delete wc}}
                   @disabled={{wc.system}}
@@ -121,7 +119,7 @@ export default class EditBadgeGroupings extends Component {
                   class="btn-default"
                 />
               </div>
-            </:default>
+            </:row>
           </DReorderableList>
         </div>
         <DButton

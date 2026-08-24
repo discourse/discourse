@@ -1,6 +1,6 @@
 /* The reorderable-list shell. The interaction pieces carry their own styles
-   (d-drag-handle, d-reorder-buttons, d-drag-and-drop); what lives here is only
-   what the list itself owns. */
+   (d-drag-handle, d-drag-and-drop); what lives here is only what the list
+   itself owns. */
 
 .d-reorderable-list {
   /* Base layout for the default list shell. The :where() tag guards carry zero
@@ -18,27 +18,29 @@
     display: flex;
     align-items: center;
     gap: 0.5em;
-
-    /* The stacked arrow pair is taller than a line of text, so without block
-       padding it visually bleeds into the neighboring rows. */
     padding-block: 0.25em;
-
-    /* Split placement ends the row with its arrow pair; in a flex row,
-       sitting at the row's inline end is what that placement means. */
-
-    > .d-reorderable-list__arrows:last-child {
-      margin-inline-start: auto;
-    }
   }
 
-  /* The grab-mode handle is a real button, but it must occupy exactly the box
-     the decorative handle does, so a surface can switch keyboard modes without
-     its rows shifting. */
+  /* The handle is a real button carrying an icon, sized to the grip rather
+     than to a button: it sits in dense rows and must not drive their height.
+     Chained with `.btn` to outrank the base button rules it would otherwise
+     tie with on source order alone — the grab cursor in particular. */
 
-  &__handle.--grab {
+  &__handle.btn {
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Sized explicitly rather than by its glyph. The button carries a
+       screen-reader description as its block, and a button with a block gets
+       none of the spacing an icon-only one does, so it would otherwise be a
+       press target the size of the grip itself. 24px is the smallest target
+       the guidelines accept. */
+    min-width: 24px;
+    min-height: 24px;
     padding: 0;
     border: 0;
+    background: none;
     font-size: inherit;
     line-height: inherit;
     color: var(--primary-low-mid);
@@ -50,8 +52,8 @@
     }
   }
 
-  /* The roving cursor is drawn on the whole row rather than on the grab
-     button it technically rests on; the flat-button focus background alone is
+  /* The roving cursor is drawn on the whole row rather than on the handle it
+     technically rests on; the flat-button focus background alone is
      indistinguishable at that size. */
 
   &__row.--focused {
@@ -59,42 +61,28 @@
     outline-offset: -2px;
   }
 
-  /* A held row must read differently from one the cursor is merely resting
-     on, so the sighted picture matches what aria-pressed already says. */
-
-  &__row.--grabbed {
-    background: var(--tertiary-low);
-  }
-
   &__create {
     display: flex;
     align-items: center;
     gap: 0.25em;
   }
+}
 
-  /* Reveal mode hides only the arrow pair, and with opacity rather than
-     display: the handle stays visible as the persistent reorder affordance,
-     and the arrows must keep their layout and any tab stops, revealing
-     themselves the moment one is focused. A touch screen has no hover to
-     reveal with, so the arrows stay visible there. */
+/* A destination that is unavailable from this row — the top two items on the
+   first row, the bottom two on the last — stays in the menu and stays
+   focusable, so reaching an end is something the reader is told rather than a
+   press that silently does nothing. */
 
-  &.--reveal-controls {
-    .d-reorderable-list__arrows {
-      opacity: 0;
-      transition: opacity 0.15s ease-in-out;
-    }
+.d-reorderable-list__move-item[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
 
-    .d-reorderable-list__row:hover,
-    .d-reorderable-list__row:focus-within {
-      .d-reorderable-list__arrows {
-        opacity: 1;
-      }
-    }
+/* Reorderable lists are routinely hosted inside a modal — the sidebar section
+   form, manage reports, the dashboard's configure menu — where the default
+   dropdown layer sits under the modal and its backdrop swallows the clicks.
+   This is the layer the scale reserves for exactly that. */
 
-    @media (pointer: coarse) {
-      .d-reorderable-list__arrows {
-        opacity: 1;
-      }
-    }
-  }
+[data-identifier="reorderable-list-move"] {
+  z-index: z("modal", "dropdown");
 }

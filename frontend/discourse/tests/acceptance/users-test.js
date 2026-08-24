@@ -232,21 +232,22 @@ acceptance("User directory - Editing columns", function (needs) {
     assert.dom(".column-name", columns[4]).hasText("Topics Viewed");
 
     // Click on row 4 and see if they are swapped
-    await click(
-      columns[4].querySelector(".d-reorder-buttons__button:first-child")
-    );
+    await click(columns[4].querySelector(".d-reorderable-list__handle"));
+    await click(".d-reorderable-list__move-item.--up");
 
     columns = fetchColumns();
     assert.dom(".column-name", columns[3]).hasText("Topics Viewed");
     assert.dom(".column-name", columns[4]).hasText("Replies Posted");
 
-    const moveUserFieldColumnUpBtn = columns[columns.length - 1].querySelector(
-      ".d-reorder-buttons__button:first-child"
+    // The handle is a keyed element, so it travels with its own row: the same
+    // node keeps opening the same column's menu as the column climbs.
+    const userFieldColumnHandle = columns[columns.length - 1].querySelector(
+      ".d-reorderable-list__handle"
     );
-    await click(moveUserFieldColumnUpBtn);
-    await click(moveUserFieldColumnUpBtn);
-    await click(moveUserFieldColumnUpBtn);
-    await click(moveUserFieldColumnUpBtn);
+    for (let step = 0; step < 4; step++) {
+      await click(userFieldColumnHandle);
+      await click(".d-reorderable-list__move-item.--up");
+    }
 
     columns = fetchColumns();
     assert.dom(".column-name", columns[4]).hasText("Favorite Color");

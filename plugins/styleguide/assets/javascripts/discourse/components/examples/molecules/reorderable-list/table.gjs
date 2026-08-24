@@ -39,13 +39,13 @@ export default class ReorderableListTableExample extends Component {
         @tag="tbody"
         @itemTag="tr"
       >
-        <:default as |item row|>
+        <:row as |item row|>
           <td class="styleguide-reorderable-table__reorder">
-            <row.controls />
+            <row.handle />
           </td>
           <td>{{item.name}}</td>
           <td>{{item.type}}</td>
-        </:default>
+        </:row>
       </DReorderableList>
     </table>
   </template>

@@ -59,7 +59,7 @@ describe "Admin Dashboard Configure menu" do
       expect(dashboard.section_ids_in_order).to eq(%w[highlights reports traffic engagement search])
     end
 
-    it "reorders sections via the arrow buttons on mobile", mobile: true do
+    it "reorders sections via the move menu on mobile", mobile: true do
       dashboard.visit
 
       dashboard.open_configure_menu.move_section_up("reports")

@@ -1380,8 +1380,8 @@ export default class SidebarSectionForm extends Component {
               >
                 <:header>
                   {{! The list element around this block carries the table role
-                      through its role argument, which the static rule cannot
-                      see from here. }}
+                        through its role argument, which the static rule cannot
+                        see from here. }}
                   {{! eslint-disable-next-line ember/template-require-context-role }}
                   <div class="row-wrapper header" role="row">
                     <div
@@ -1418,7 +1418,7 @@ export default class SidebarSectionForm extends Component {
                     </div>
                   </div>
                 </:header>
-                <:default as |link row|>
+                <:row as |link row|>
                   <SectionFormLink
                     @row={{row}}
                     @link={{link}}
@@ -1432,7 +1432,7 @@ export default class SidebarSectionForm extends Component {
                     }}
                     @deleteLink={{this.deleteLink}}
                   />
-                </:default>
+                </:row>
               </DReorderableList>
               <DButton
                 @action={{this.addLink}}
@@ -1467,7 +1467,7 @@ export default class SidebarSectionForm extends Component {
                   aria-rowcount={{this.activeSecondaryLinks.length}}
                   class="sidebar-section-form__links-wrapper --secondary"
                 >
-                  <:default as |link row|>
+                  <:row as |link row|>
                     <SectionFormLink
                       @row={{row}}
                       @link={{link}}
@@ -1477,7 +1477,7 @@ export default class SidebarSectionForm extends Component {
                       }}
                       @deleteLink={{this.deleteLink}}
                     />
-                  </:default>
+                  </:row>
                 </DReorderableList>
                 <DButton
                   @action={{this.addSecondaryLink}}

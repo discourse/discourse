@@ -187,13 +187,17 @@ module PageObjects
       end
 
       def move_section_down(id)
-        within(configure_row_selector(id)) { find(configure_arrow_selector("down")).click }
+        configure_reorderable(id).move(:down)
         self
       end
 
       def move_section_up(id)
-        within(configure_row_selector(id)) { find(configure_arrow_selector("up")).click }
+        configure_reorderable(id).move(:up)
         self
+      end
+
+      def configure_reorderable(id)
+        PageObjects::Components::ReorderableList.new(configure_row_selector(id))
       end
 
       def drag_section(source_id, target_id)
@@ -209,10 +213,6 @@ module PageObjects
       end
 
       private
-
-      def configure_arrow_selector(direction)
-        ".db-configure__arrows button:has(.d-icon-chevron-#{direction})"
-      end
 
       def configure_row_selector(id)
         ".db-configure__row[data-reorderable-key='#{id}']"

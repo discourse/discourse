@@ -1,5 +1,11 @@
 import { getOwner } from "@ember/owner";
-import { click, find, findAll, render } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  findAll,
+  render,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
@@ -100,19 +106,25 @@ function rowSelector(name) {
   return `[data-reorderable-key="${row.dataset.reorderableKey}"]`;
 }
 
-function arrowSelector(name, direction) {
-  return `${rowSelector(name)} button[aria-label="Move ${name} ${direction}"]`;
+function moveItemSelector(target) {
+  return `.d-reorderable-list__move-item.--${target}`;
 }
 
-async function moveLink(name, direction) {
-  await click(arrowSelector(name, direction));
+/** Opens one link's move menu, leaving it open for inspection. */
+async function openLinkMenu(name) {
+  await click(`${rowSelector(name)} .d-reorderable-list__handle`);
+}
+
+async function moveLink(name, target) {
+  await openLinkMenu(name);
+  await click(moveItemSelector(target));
 }
 
 async function dragLink(sourceName, targetName, position) {
   const source = rowSelector(sourceName);
   const target = rowSelector(targetName);
 
-  assertDragRegistered(gripSelector(sourceName), target);
+  assertDragRegistered(source, target);
 
   const targetRect = find(target).getBoundingClientRect();
   const targetCoordinates = {
@@ -314,11 +326,14 @@ module(
         .dom(".sidebar-section-form-link[data-drop-target]")
         .exists({ count: 4 }, "every link row is a drop target");
       assert
-        .dom(".sidebar-section-form-link .draggable[data-drag-source]")
+        .dom(".sidebar-section-form-link[data-drag-source]")
         .exists(
           { count: 4 },
-          "every link row's grip carries the drag registration"
+          "every link row carries the drag registration, so a drag shows the row"
         );
+      assert
+        .dom('.sidebar-section-form-link .draggable[draggable="true"]')
+        .exists({ count: 4 }, "and its grip is where the drag begins");
 
       const source = rowSelector("Primary 1");
       const target = rowSelector("Primary 2");
@@ -426,7 +441,7 @@ module(
 
       const row = rowSelector("Primary 1");
       const sharedDragIsRegistered =
-        find(`${row} .draggable`).hasAttribute("data-drag-source") &&
+        find(row).hasAttribute("data-drag-source") &&
         find(row).hasAttribute("data-drop-target");
       const dataTransfer = new DataTransfer();
       const sourceGrip = gripSelector("Primary 1");
@@ -503,11 +518,18 @@ module(
           "the grip renders on mobile, so the drag has a target to press"
         );
       assert
-        .dom(grip)
+        .dom(row)
         .hasAttribute(
           "data-drag-source",
           "",
-          "a mobile grip carries an active drag-source registration"
+          "a mobile row carries an active drag-source registration"
+        );
+      assert
+        .dom(grip)
+        .hasAttribute(
+          "draggable",
+          "true",
+          "and the grip is what a touch press starts the drag from"
         );
 
       await dragEvent(grip, "dragstart", {
@@ -520,7 +542,7 @@ module(
       await dragEvent(grip, "dragend", { dataTransfer, ...centerOf(grip) });
     });
 
-    test(`${REORDER_TEST}: moves a link down its own list with the arrow`, async function (assert) {
+    test(`${REORDER_TEST}: moves a link down its own list from the menu`, async function (assert) {
       await renderForm(this);
 
       await moveLink("Primary 1", "down");
@@ -535,7 +557,7 @@ module(
       );
     });
 
-    test(`${REORDER_TEST}: moves a link up its own list with the arrow`, async function (assert) {
+    test(`${REORDER_TEST}: moves a link up its own list from the menu`, async function (assert) {
       await renderForm(this);
 
       await moveLink("Secondary 2", "up");
@@ -550,35 +572,42 @@ module(
       );
     });
 
-    test(`${REORDER_TEST}: disables the arrows at each list's boundaries`, async function (assert) {
+    test(`${REORDER_TEST}: marks the destinations at each list's boundaries`, async function (assert) {
       await renderForm(this);
 
+      await openLinkMenu("Primary 1");
       assert
-        .dom(arrowSelector("Primary 1", "up"))
+        .dom(moveItemSelector("up"))
         .hasAttribute(
           "aria-disabled",
           "true",
           "the first link has nothing above it"
         );
       assert
-        .dom(arrowSelector("Primary 2", "down"))
+        .dom(moveItemSelector("down"))
+        .doesNotHaveAttribute(
+          "aria-disabled",
+          "a link with a row below it can still move down"
+        );
+      await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+
+      await openLinkMenu("Primary 2");
+      assert
+        .dom(moveItemSelector("down"))
         .hasAttribute(
           "aria-disabled",
           "true",
           "the last primary link has nothing below it"
         );
+      await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+
+      await openLinkMenu("Secondary 1");
       assert
-        .dom(arrowSelector("Secondary 1", "up"))
+        .dom(moveItemSelector("up"))
         .hasAttribute(
           "aria-disabled",
           "true",
           "each list boundary is counted within that list"
-        );
-      assert
-        .dom(arrowSelector("Primary 1", "down"))
-        .doesNotHaveAttribute(
-          "aria-disabled",
-          "a link with a row below it can still move down"
         );
     });
 
@@ -593,7 +622,7 @@ module(
       assert.deepEqual(
         renderedLinks().primary,
         ["Primary 3", "Primary 1"],
-        "the arrow swaps with the next visible link, not with the deleted one between them"
+        "the move swaps with the next visible link, not with the deleted one between them"
       );
       assert.strictEqual(
         a11y.politeMessage,
@@ -635,11 +664,13 @@ module(
       await moveLink("Primary 1", "down");
 
       // Through whatever holds focus, which is what a keyboard user presses a
-      // second time. Selecting by label instead would find the right button no
-      // matter where focus went, and so would pass even if the arrows were
-      // unusable: on an unkeyed list the row keeps its DOM node and takes on a
-      // different link, so the second press would move the wrong one back.
-      await click(document.activeElement);
+      // second time. Selecting by name instead would find the right control no
+      // matter where focus went, and so would pass even if the keyboard path
+      // were unusable: on an unkeyed list the row keeps its DOM node and takes
+      // on a different link, so the second press would move the wrong one back.
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown", {
+        altKey: true,
+      });
 
       assert.deepEqual(
         renderedLinks().primary,
@@ -670,7 +701,7 @@ module(
       );
     });
 
-    test(`${REORDER_TEST}: announces where an arrow move landed`, async function (assert) {
+    test(`${REORDER_TEST}: announces where a menu move landed`, async function (assert) {
       const a11y = getOwner(this).lookup("service:a11y");
       await renderForm(this);
 

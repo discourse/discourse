@@ -15,6 +15,12 @@ import {
   dragEvent,
   simulateDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
+import {
+  handleSelector,
+  moveItemSelector,
+  moveVia,
+  openMoveMenu,
+} from "discourse/tests/helpers/ui-kit/reorderable-list-helper";
 
 const REORDER_TEST_PREFIX = "Dashboard section reordering";
 
@@ -40,7 +46,7 @@ async function dragSection(sourceId, targetId, position) {
   const source = rowSelector(sourceId);
   const target = rowSelector(targetId);
 
-  assertDragRegistered(gripSelector(sourceId), target);
+  assertDragRegistered(rowSelector(sourceId), target);
 
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {
@@ -213,10 +219,16 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
         "every configure row is a drop target"
       );
     assert
-      .dom(".db-configure__row .d-reorderable-list__handle[data-drag-source]")
+      .dom(".db-configure__row[data-drag-source]")
       .exists(
         { count: FOUR_SECTIONS.length },
-        "every configure row's grip carries the drag registration"
+        "every configure row carries the drag registration, so a drag shows the row"
+      );
+    assert
+      .dom('.db-configure__row .d-reorderable-list__handle[draggable="true"]')
+      .exists(
+        { count: FOUR_SECTIONS.length },
+        "and its grip is where the drag begins"
       );
   });
 
@@ -343,7 +355,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       );
   });
 
-  test(`${REORDER_TEST_PREFIX} renders the drag handle alongside the arrows on desktop`, async function (assert) {
+  test(`${REORDER_TEST_PREFIX} renders one handle per row on desktop`, async function (assert) {
     const sections = FOUR_SECTIONS;
     const noop = () => {};
 
@@ -358,15 +370,17 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     assert.dom(".d-reorderable-list__handle").exists({ count: 4 });
+
+    await openMoveMenu("reports");
     assert
-      .dom(".d-reorder-buttons__button")
+      .dom(".d-reorderable-list__move-item")
       .exists(
-        { count: 8 },
-        "desktop keeps a keyboard path to reorder, not only the pointer drag"
+        { count: 4 },
+        "desktop keeps a pointer path to reorder, not only the drag"
       );
   });
 
-  test(`${REORDER_TEST_PREFIX} keeps the pressed arrow focused once the row has moved`, async function (assert) {
+  test(`${REORDER_TEST_PREFIX} keeps the moved row's handle focused once it has moved`, async function (assert) {
     // A live list, unlike the sibling tests: the row has to actually move for
     // this to say anything about what happens to focus when it does.
     const state = new (class {
@@ -390,9 +404,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       </template>
     );
 
-    const downArrow =
-      '[data-reorderable-key="highlights"] .d-reorder-buttons__button:last-child';
-    await click(downArrow);
+    await moveVia("highlights", "down");
 
     assert.deepEqual(
       state.sections.map((section) => section.id),
@@ -400,11 +412,11 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       "the row moved, so focus has something to survive"
     );
     // Without this a keyboard user is dropped to the top of the document after
-    // one press and cannot make a second one, which defeats the arrows entirely.
+    // one move and cannot make a second, which defeats the keyboard path.
     assert.strictEqual(
       document.activeElement,
-      find(downArrow),
-      "focus stays on the same row's arrow rather than falling back to the body"
+      find(handleSelector("highlights")),
+      "focus follows the row rather than falling back to the body"
     );
   });
 
@@ -424,18 +436,14 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       </template>
     );
 
-    await click(
-      '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
-    );
+    await moveVia("reports", "up");
     assert.deepEqual(
       calls.at(-1),
       [1, 0],
       "the up arrow moves the row earlier"
     );
 
-    await click(
-      '[data-reorderable-key="highlights"] .d-reorder-buttons__button:last-child'
-    );
+    await moveVia("highlights", "down");
     assert.deepEqual(
       calls.at(-1),
       [0, 1],
@@ -559,18 +567,14 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       </template>
     );
 
-    await click(
-      '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
-    );
+    await moveVia("reports", "up");
     assert.strictEqual(
       a11y.politeMessage,
       "Moved Reports to position 1 of 4",
       "the announcement names the row and its resulting position"
     );
 
-    await click(
-      '[data-reorderable-key="highlights"] .d-reorder-buttons__button:last-child'
-    );
+    await moveVia("highlights", "down");
     assert.strictEqual(
       a11y.politeMessage,
       "Moved Highlights to position 2 of 4",
@@ -635,7 +639,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
   });
 
-  test(`${REORDER_TEST_PREFIX} desktop keyboard path is one roving grab stop with pointer arrows bound at the ends`, async function (assert) {
+  test(`${REORDER_TEST_PREFIX} desktop keyboard path is one roving stop with destinations bound at the ends`, async function (assert) {
     const sections = FOUR_SECTIONS;
     const noop = () => {};
 
@@ -650,46 +654,25 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     assert
-      .dom('.d-reorderable-list__handle.--grab[tabindex="0"]')
-      .exists(
-        { count: 1 },
-        "exactly one grab handle carries the list's tab stop"
-      );
+      .dom('.d-reorderable-list__handle[tabindex="0"]')
+      .exists({ count: 1 }, "exactly one handle carries the list's tab stop");
+
+    await openMoveMenu("highlights");
     assert
-      .dom(
-        '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
-      )
-      .hasAttribute(
-        "tabindex",
-        "-1",
-        "the arrows stay pointer-operable without adding tab stops"
-      );
+      .dom(moveItemSelector("up"))
+      .hasAttribute("aria-disabled", "true", "the first row cannot move up");
+    await click(moveItemSelector("down"));
+
+    await openMoveMenu("engagement");
     assert
-      .dom(
-        '[data-reorderable-key="highlights"] .d-reorder-buttons__button:first-child'
-      )
-      .hasAttribute(
-        "aria-disabled",
-        "true",
-        "first row's up arrow is unavailable"
-      );
+      .dom(moveItemSelector("down"))
+      .hasAttribute("aria-disabled", "true", "the last row cannot move down");
+    await click(moveItemSelector("up"));
+
+    await openMoveMenu("reports");
     assert
-      .dom(
-        '[data-reorderable-key="engagement"] .d-reorder-buttons__button:last-child'
-      )
-      .hasAttribute(
-        "aria-disabled",
-        "true",
-        "last row's down arrow is unavailable"
-      );
-    assert
-      .dom(
-        '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
-      )
-      .doesNotHaveAttribute(
-        "aria-disabled",
-        "middle row's up arrow is available"
-      );
+      .dom(moveItemSelector("up"))
+      .doesNotHaveAttribute("aria-disabled", "a middle row can move up");
   });
 });
 
@@ -702,7 +685,7 @@ module(
 
     setupRenderingTest(hooks);
 
-    test(`${REORDER_TEST_PREFIX} renders the drag handle and arrow buttons on mobile`, async function (assert) {
+    test(`${REORDER_TEST_PREFIX} renders one handle per row on mobile`, async function (assert) {
       const sections = FOUR_SECTIONS;
       const noop = () => {};
 
@@ -719,7 +702,7 @@ module(
       // Both paths render: a touch screen can drag from the grip and has no
       // keyboard, so neither is a substitute for the other here.
       assert.dom(".d-reorderable-list__handle").exists({ count: 4 });
-      assert.dom(".d-reorder-buttons__button").exists({ count: 8 });
+      assert.dom(".d-reorderable-list__handle").exists({ count: 4 });
     });
 
     test(`${REORDER_TEST_PREFIX} keeps the row draggable from its grip on mobile`, async function (assert) {
@@ -741,15 +724,22 @@ module(
           "the grip renders on mobile, so the drag has a target to press"
         );
       assert
-        .dom(".db-configure__row .d-reorderable-list__handle")
+        .dom(".db-configure__row")
         .hasAttribute(
           "data-drag-source",
           "",
-          "a mobile grip carries an active drag-source registration"
+          "a mobile row carries an active drag-source registration"
+        );
+      assert
+        .dom(".db-configure__row .d-reorderable-list__handle")
+        .hasAttribute(
+          "draggable",
+          "true",
+          "and its grip is where a touch press starts the drag"
         );
     });
 
-    test(`${REORDER_TEST_PREFIX} mobile arrow buttons fire @onReorder`, async function (assert) {
+    test(`${REORDER_TEST_PREFIX} mobile menu moves fire @onReorder`, async function (assert) {
       const sections = FOUR_SECTIONS;
       const calls = [];
       const onReorder = (from, to) => calls.push([from, to]);
@@ -765,18 +755,14 @@ module(
         </template>
       );
 
-      await click(
-        '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
-      );
+      await moveVia("reports", "up");
       assert.deepEqual(calls.at(-1), [1, 0]);
 
-      await click(
-        '[data-reorderable-key="highlights"] .d-reorder-buttons__button:last-child'
-      );
+      await moveVia("highlights", "down");
       assert.deepEqual(calls.at(-1), [0, 1]);
     });
 
-    test(`${REORDER_TEST_PREFIX} disables unavailable mobile arrow buttons`, async function (assert) {
+    test(`${REORDER_TEST_PREFIX} marks unavailable mobile destinations`, async function (assert) {
       const sections = FOUR_SECTIONS;
       const noop = () => {};
 
@@ -790,32 +776,22 @@ module(
         </template>
       );
 
+      await openMoveMenu("highlights");
       assert
-        .dom(
-          '[data-reorderable-key="highlights"] .d-reorder-buttons__button:first-child'
-        )
-        .hasAttribute(
-          "aria-disabled",
-          "true",
-          "first row's up arrow is unavailable"
-        );
+        .dom(moveItemSelector("up"))
+        .hasAttribute("aria-disabled", "true", "the first row cannot move up");
+      await click(moveItemSelector("down"));
+
+      await openMoveMenu("engagement");
       assert
-        .dom(
-          '[data-reorderable-key="engagement"] .d-reorder-buttons__button:last-child'
-        )
-        .hasAttribute(
-          "aria-disabled",
-          "true",
-          "last row's down arrow is unavailable"
-        );
+        .dom(moveItemSelector("down"))
+        .hasAttribute("aria-disabled", "true", "the last row cannot move down");
+      await click(moveItemSelector("up"));
+
+      await openMoveMenu("reports");
       assert
-        .dom(
-          '[data-reorderable-key="reports"] .d-reorder-buttons__button:first-child'
-        )
-        .doesNotHaveAttribute(
-          "aria-disabled",
-          "middle row's up arrow is available"
-        );
+        .dom(moveItemSelector("up"))
+        .doesNotHaveAttribute("aria-disabled", "a middle row can move up");
     });
   }
 );

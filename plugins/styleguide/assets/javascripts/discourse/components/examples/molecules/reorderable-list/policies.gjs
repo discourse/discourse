@@ -27,15 +27,12 @@ export default class ReorderableListPoliciesExample extends Component {
       @key="id"
       @label={{this.itemLabel}}
       @movable={{this.movable}}
-      @wrap={{true}}
-      @controls="split"
-      @arrowsLayout="inline"
-      @controlsVisibility="reveal"
       @onMove={{this.applyMove}}
       class="styleguide-reorderable-list"
-      as |item|
     >
-      <span>{{item.name}}</span>
+      <:row as |item|>
+        <span>{{item.name}}</span>
+      </:row>
     </DReorderableList>
   </template>
 }

@@ -33,7 +33,7 @@ describe "Admin Dashboard Redesign | Reports section" do
     expect(modal).to have_drag_controls
   end
 
-  it "disables the reorder arrows at the ends of the enabled list on mobile", mobile: true do
+  it "marks the unavailable destinations at the ends of the enabled list on mobile", mobile: true do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
 

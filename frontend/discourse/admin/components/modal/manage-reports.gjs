@@ -308,14 +308,14 @@ export default class ManageReports extends Component {
               (if this.reorderable "--reorderable")
             }}
           >
-            <:default as |row|>
+            <:row as |row|>
               <ReportRowContent
                 @row={{row}}
                 @enabled={{true}}
                 @toggleDisabled={{this.toggleDisabled row}}
                 @onToggle={{this.toggle}}
               />
-            </:default>
+            </:row>
             <:static>
               {{#each this.disabledRows key="key" as |row|}}
                 <li

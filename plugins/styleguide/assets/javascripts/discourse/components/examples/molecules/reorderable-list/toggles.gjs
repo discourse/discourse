@@ -41,10 +41,10 @@ export default class ReorderableListTogglesExample extends Component {
       @onMove={{this.applyMove}}
       class="styleguide-reorderable-list"
     >
-      <:default as |item|>
+      <:row as |item|>
         <span class="styleguide-reorderable-list__label">{{item.name}}</span>
         <DToggleSwitch @state={{true}} {{on "click" (fn this.toggle item)}} />
-      </:default>
+      </:row>
       <:static>
         {{#each this.disabled key="id" as |item|}}
           <li class="d-reorderable-list__row" data-reorderable-key={{item.id}}>

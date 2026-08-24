@@ -30,9 +30,10 @@ interface DReorderableListGroupSignature {
  * The group is renderless: it inserts no element of its own, and its only
  * output is the API it yields. Member lists that receive it as `@group` share
  * one drag token — which is what lets a row dragged out of one member land in
- * another — and route every move through the group's single `@onMove`. Arrow
- * moves stay within their own member by construction; only a drag crosses
- * lists.
+ * another — and route every move through the group's single `@onMove`. Every
+ * member that carries a `@listLabel` also appears as a destination in the
+ * other members' move menus, which is how a cross-list move is reachable
+ * without a pointer.
  *
  * Members register themselves on construction and deregister on destruction,
  * so a drop whose source member has since been torn down resolves to nothing
@@ -77,9 +78,27 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
       };
     },
     lookupMember: (listId: string) => this.#members.get(listId),
+    siblings: (listId: string) =>
+      [...this.#members.values()]
+        .filter(
+          (member) => member.listId !== listId && member.listLabel !== undefined
+        )
+        .map((member) => ({
+          listId: member.listId,
+          listLabel: member.listLabel!,
+        })),
     onMove: (move: ReorderableMove) => this.args.onMove(move),
   };
-  /** The registered members, by listId. */
+  /**
+   * The registered members, by listId.
+   *
+   * Deliberately NOT tracked. Members register during their own construction,
+   * so the first list registers, renders, and would read this set before the
+   * second list exists — a read followed by a write inside one render pass,
+   * which is the backtracking-rerender error. Nothing reads it during render
+   * instead: `siblings` is consulted when a move menu opens, by which point
+   * every member has long since registered.
+   */
   #members = new Map<string, ReorderableGroupMember>();
 
   <template>{{yield this.api}}</template>

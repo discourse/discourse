@@ -25,9 +25,10 @@ export default class ReorderableListBasicExample extends Component {
       @label={{this.itemLabel}}
       @onMove={{this.applyMove}}
       class="styleguide-reorderable-list"
-      as |item|
     >
-      <span>{{item.name}}</span>
+      <:row as |item|>
+        <span>{{item.name}}</span>
+      </:row>
     </DReorderableList>
   </template>
 }

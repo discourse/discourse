@@ -7,25 +7,25 @@ import {
   isDestroying,
   registerDestructor,
 } from "@ember/destroyable";
-import { fn, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import type Owner from "@ember/owner";
-import { next, schedule } from "@ember/runloop";
+import { type default as Owner, getOwner } from "@ember/owner";
+import { cancel, next, schedule, type Timer } from "@ember/runloop";
 import { service } from "@ember/service";
 import type { ComponentLike, ModifierLike } from "@glint/template";
 import { modifier } from "ember-modifier";
+import DHeadlessMenu from "discourse/float-kit/components/d-headless-menu";
+import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import discourseLater from "discourse/lib/later";
 import type A11yService from "discourse/services/a11y";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DDragHandle from "discourse/ui-kit/d-drag-handle";
-import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dDragAndDropSource, {
-  DragSource,
-} from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget, {
   DropTargetEvent,
   registerDragAndDropTarget,
@@ -34,13 +34,32 @@ import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 
 /**
+ * How long after the last chord move the full announcement lands. Long enough
+ * that a held key reads as one run rather than a stream of sentences, short
+ * enough that a deliberate single press still speaks it as a single press.
+ */
+const RUN_SETTLE_MS = 400;
+
+/** The list's move menu, identified by the attribute float-kit stamps on it. */
+const MENU_IDENTIFIER = "reorderable-list-move";
+const MENU_CONTENT_SELECTOR = `[data-identifier="${MENU_IDENTIFIER}"]`;
+
+/** The destination each accelerator chord asks for. */
+const CHORD_TARGETS: Record<string, MoveTarget | undefined> = {
+  ArrowUp: "up",
+  ArrowDown: "down",
+  Home: "top",
+  End: "bottom",
+};
+
+/**
  * One normalized move, as both input methods report it. The indices and item
  * arrays all describe the VISIBLE list — the `items` the consumer passed —
  * never a backing store the consumer may keep behind it.
  */
 export interface ReorderableMove<T = unknown> {
   /** How the user asked for the move. */
-  method: "drag" | "buttons";
+  method: "drag" | "menu" | "keyboard";
 
   /** The item that moved, resolved against the current items at commit time. */
   item: T;
@@ -84,31 +103,14 @@ export interface ReorderableRowApi {
   /** Whether the row can be reordered at all. */
   movable: boolean;
 
-  /** Whether this row's drag is currently in flight. */
-  isDragging: boolean;
-
   /**
    * The pre-wired handle for this row, present only under
-   * `@controls="manual"` on a movable row: the grab button in grab mode (the
-   * keyboard path, so a grab-mode row must place it), or the decorative drag
-   * handle in buttons mode.
+   * `@controls="manual"` on a movable row. It is the drag source, the roving
+   * cursor's item, and the move menu's trigger all at once, so a movable
+   * manual row must place it; a development assertion fires when one does
+   * not.
    */
   handle?: ComponentLike<{ Element: HTMLElement }>;
-
-  /**
-   * The pre-wired arrow pair for this row, present only under
-   * `@controls="manual"` on a movable row. A movable manual row must place
-   * either this or `controls` — the pair is the keyboard path in buttons mode
-   * and the single-pointer alternative to dragging in grab mode, and a
-   * development assertion fires when both are missing.
-   */
-  arrows?: ComponentLike<{ Element: HTMLSpanElement }>;
-
-  /**
-   * The handle and arrows fused in their standard order, for manual
-   * placements that keep both controls in one cell.
-   */
-  controls?: ComponentLike<object>;
 }
 
 /** The context handed to a `@rowClass` function. */
@@ -143,6 +145,18 @@ export interface ReorderableGroupMember {
         proposedFromItems: readonly unknown[];
       }
     | undefined;
+
+  /**
+   * The destination half of a cross-list move, as the menu path calls it. A
+   * drop already runs on the destination, but a menu item runs on the source,
+   * so the source reaches across to the member that owns the projections and
+   * the announcement for where the item is landing.
+   *
+   * @param sourceListId - The member the item is leaving.
+   * @param key - The moved row's key in that member.
+   * @param toIndex - The visible landing index in this member.
+   */
+  acceptMove: (sourceListId: string, key: string, toIndex: number) => void;
 }
 
 /**
@@ -163,6 +177,14 @@ export interface ReorderableGroupApi {
   /** The member registered under a listId, if it still exists. */
   lookupMember: (listId: string) => ReorderableGroupMember | undefined;
 
+  /**
+   * The other members registered right now, in registration order, as the
+   * move menu's cross-list destinations. Only members carrying a `listLabel`
+   * are returned: an unnamed destination has nothing to put in the menu item,
+   * so it stays pointer-only rather than offering "Move to undefined".
+   */
+  siblings: (listId: string) => { listId: string; listLabel: string }[];
+
   /** The group's single move callback, shared by every member. */
   onMove: (move: ReorderableMove) => void | false;
 }
@@ -179,16 +201,11 @@ interface Row<T> {
   movable: boolean;
   isFirst: boolean;
   isLast: boolean;
-  isDragging: boolean;
   disableUp: boolean;
   disableDown: boolean;
   handleLabel: string;
-  upLabel: string;
-  downLabel: string;
   yieldControls: boolean;
-  isGrabbed: boolean;
   isFocused: boolean;
-  grabLabel: string;
 }
 
 interface DReorderableListSignature<T> {
@@ -233,12 +250,12 @@ interface DReorderableListSignature<T> {
 
     /**
      * The API yielded by a surrounding `DReorderableListGroup`. Joining a
-     * group makes cross-list drags between members possible and routes every
+     * group makes cross-list moves between members possible and routes every
      * move through the group's callback. Requires `@listId`. Fixed at
      * construction: a list that must change groups is re-created, not
-     * re-pointed. Cross-list movement is pointer-only — the arrows stay
-     * within their own list, matching the shipped behavior of the surfaces
-     * this component standardizes.
+     * re-pointed. Every member carrying a `@listLabel` also becomes a
+     * destination in the other members' move menus, which is how a cross-list
+     * move is reachable without a pointer.
      */
     group?: ReorderableGroupApi;
 
@@ -250,8 +267,10 @@ interface DReorderableListSignature<T> {
 
     /**
      * Translated name for this list, spoken in cross-list announcements when
-     * an item lands here from another member. Without it the standard
-     * announcement is used.
+     * an item lands here from another member, and shown as this list's
+     * "Move to …" entry in every other member's move menu. Without it the
+     * standard announcement is used and the list stays a pointer-only
+     * destination.
      */
     listLabel?: string;
 
@@ -262,14 +281,6 @@ interface DReorderableListSignature<T> {
      * being movable.
      */
     movable?: (item: T) => boolean;
-
-    /**
-     * When true, the boundary arrows stay enabled and a move past either end
-     * carries the item around to the other one. The default keeps boundary
-     * arrows visible but marked unavailable, which is how a keyboard user
-     * learns they reached an end without losing their place.
-     */
-    wrap?: boolean;
 
     /** Tag name for the list element. Defaults to `"ul"`. */
     tag?: string;
@@ -295,50 +306,17 @@ interface DReorderableListSignature<T> {
     rowClass?: string | ((item: T, context: RowClassContext) => string);
 
     /**
-     * Where the standard controls render relative to the row's block content.
-     * `"start"` (the default) and `"end"` render the fused pair
-     * automatically; `"split"` renders the handle at the row start and the
-     * arrows at the row end — the conventional arrangement for rows whose
-     * content sits between a leading drag affordance and trailing actions;
-     * `"manual"` renders none and instead yields pre-wired `handle`, `arrows`,
-     * and `controls` components on the row API, for layouts where the
-     * controls must occupy specific cells or grid tracks.
-     */
-    controls?: "start" | "end" | "split" | "manual";
-
-    /**
-     * Layout for the arrow pair, forwarded to the underlying buttons: the
-     * stacked default, or `"inline"` for short rows the stacked pair would
-     * stretch.
-     */
-    arrowsLayout?: "stacked" | "inline";
-
-    /**
-     * The keyboard interaction model. The default `"grab"` treats the list as
-     * one composite widget with a single tab stop: each movable row renders a
-     * grab button, arrow keys move focus between rows, Space or Enter grabs,
-     * arrows then move the grabbed row, Space drops, and Escape returns it to
-     * where it was picked up. The arrow pair still renders as the
-     * single-pointer alternative to dragging, but with `tabindex="-1"`, so it
-     * adds no tab stops.
+     * Who places the row's handle. `"auto"` (the default) renders it ahead of
+     * the row's block content; `"manual"` renders none and instead yields a
+     * pre-wired `handle` component on the row API, for layouts where it must
+     * occupy a specific cell, grid track, or position.
      *
-     * `"buttons"` renders a decorative handle and keeps the arrow pair in the
-     * tab order as the keyboard path — for lists whose items lack the stable
-     * identity a grab needs (index identity names positions, not items), or
-     * whose only controls are the arrows.
-     *
-     * Grab mode assumes the list is not nested inside another grab-mode list —
-     * the roving cursor matches grab buttons among its descendants.
+     * There is deliberately no automatic "at the end": a handle is focusable
+     * and is the roving cursor's item, so where it sits in the DOM is its
+     * position in the reading and focus order, not decoration. A row that
+     * wants it last says so by placing it last.
      */
-    keyboard?: "grab" | "buttons";
-
-    /**
-     * `"reveal"` marks the list so styling can show controls only on row
-     * hover or focus-within; the default keeps them always visible. The
-     * controls stay in the tab order either way — reveal is presentation,
-     * never reachability.
-     */
-    controlsVisibility?: "always" | "reveal";
+    controls?: "auto" | "manual";
 
     /**
      * Read-only mode: rows render without controls and without any drag
@@ -369,11 +347,27 @@ interface DReorderableListSignature<T> {
     onCreate?: (value: string) => void;
   };
   Blocks: {
-    /** The row content, rendered beside the standard controls. */
-    default: [item: T, row: ReorderableRowApi];
+    /**
+     * The contents of one row, rendered inside the row element the component
+     * owns. Named rather than the implicit block because what it fills is not
+     * obvious: a table shell yields `td`s into a `tr` the consumer never
+     * writes, and `<:default>` gave no way to tell that from replacing the
+     * row outright.
+     */
+    row: [item: T, row: ReorderableRowApi];
 
     /** Rendered inside the list element, before every row. */
     header: [];
+
+    /**
+     * Rendered before the header, for the visible sentence that teaches the
+     * interaction ("Drag the handle, or press Enter for move options"). The
+     * component never renders one of its own: a dense table wants no such
+     * paragraph, and where it belongs on the page is the surface's call. The
+     * screen-reader description on each handle is separate and always
+     * present.
+     */
+    hint: [];
 
     /**
      * Rendered inside the list element, after every row — for content that
@@ -393,163 +387,223 @@ interface DReorderableListSignature<T> {
   Element: HTMLElement;
 }
 
+/** Where a menu-driven move sends the row. */
+type MoveTarget = "up" | "down" | "top" | "bottom";
+
+interface MoveItemSignature {
+  Args: {
+    target: string;
+    icon: string;
+    label: string;
+    disabled?: boolean;
+    move: () => void;
+  };
+}
+
+/**
+ * One destination in the move menu.
+ *
+ * Unavailable directions are marked rather than removed, and marked with
+ * `aria-disabled` rather than the `disabled` attribute, so the menu presents
+ * the same destinations on every row and a reader who lands on one at a
+ * boundary is told it is unavailable instead of finding it missing. The guard
+ * lives in the handler for the same reason.
+ *
+ * Each destination carries its own modifier class, which is what lets a test
+ * or a page object name the destination it wants rather than counting menu
+ * positions that shift as soon as a group adds a cross-list entry.
+ */
+const MoveItem: TOC<MoveItemSignature> = <template>
+  <DButton
+    @icon={{@icon}}
+    @translatedLabel={{@label}}
+    @action={{@move}}
+    aria-disabled={{if @disabled "true"}}
+    class={{dConcatClass
+      "btn-transparent d-reorderable-list__move-item"
+      (concat "--" @target)
+    }}
+  />
+</template>;
+
 interface HandlePartSignature {
   Args: {
     row: Row<unknown>;
-    dragType: string;
-    sourceListId: string;
-    onDragStart: (event: { source: DragSource }) => void;
-    onDragEnd: () => void;
+
+    /** Opens the list's shared menu against this row. */
+    onOpen: (key: string) => void;
+
+    /** Whether the shared menu is currently open on this row. */
+    isOpen: boolean;
+    register: ModifierLike<{ Args: { Positional: [string] } }>;
   };
-  Element: HTMLSpanElement;
+  Element: HTMLElement;
+}
+
+/** What the shared move menu is told to act on. */
+interface MoveMenuData {
+  /** The list that owns the menu, asked for live row state as it renders. */
+  list: {
+    rowFor: (key: string) => Row<unknown> | undefined;
+    siblings: () => { listId: string; listLabel: string }[];
+    onMenuMove: (key: string, target: MoveTarget, close: () => void) => void;
+    onMenuMoveToList: (key: string, listId: string, close: () => void) => void;
+  };
+
+  /** The row the menu was opened from. */
+  key: string;
+}
+
+interface MoveMenuSignature {
+  Args: {
+    data?: MoveMenuData;
+    close?: () => void;
+  };
 }
 
 /**
- * The standard drag handle for one row.
+ * The destinations behind one handle.
  *
- * The drag source registers on the handle itself, so the handle is both what
- * carries `draggable` and what the registration marks — the row stays free
- * for text selection and nested controls without any ref plumbing.
+ * Rendered by the list's single menu instance rather than per row, so it reads
+ * the row it was opened for out of `@data` and asks the list for that row's
+ * live state. Boundary marks therefore reflect the list as it stands while the
+ * menu is open, not as it stood when the row last rendered.
+ *
+ * A disclosure of ordinary buttons rather than `role="menu"`, matching every
+ * other Discourse menu, which keeps the reader in the same browse mode they
+ * navigate the rest of the page with.
  */
-const HandlePart: TOC<HandlePartSignature> = <template>
-  <DDragHandle
-    {{dDragAndDropSource
-      type=@dragType
-      data=(hash key=@row.key listId=@sourceListId)
-      onDragStart=@onDragStart
-      onDragEnd=@onDragEnd
-    }}
-    @label={{@row.handleLabel}}
-    class="d-reorderable-list__handle"
-    ...attributes
-  />
-</template>;
+class MoveMenu extends Component<MoveMenuSignature> {
+  get row(): Row<unknown> | undefined {
+    return this.args.data?.list.rowFor(this.args.data.key);
+  }
 
-interface GrabHandlePartSignature {
-  Args: {
-    row: Row<unknown>;
-    dragType: string;
-    sourceListId: string;
-    instructionsId: string;
-    onDragStart: (event: { source: DragSource }) => void;
-    onDragEnd: () => void;
-    onToggle: (event: MouseEvent) => void;
-    register: ModifierLike<{ Args: { Positional: [string] } }>;
-  };
-  Element: HTMLButtonElement;
+  get siblings(): { listId: string; listLabel: string }[] {
+    return this.args.data?.list.siblings() ?? [];
+  }
+
+  @action
+  move(target: MoveTarget) {
+    const { data, close } = this.args;
+    data?.list.onMenuMove(data.key, target, close ?? (() => {}));
+  }
+
+  @action
+  moveToList(listId: string) {
+    const { data, close } = this.args;
+    data?.list.onMenuMoveToList(data.key, listId, close ?? (() => {}));
+  }
+
+  <template>
+    <DDropdownMenu as |dropdown|>
+      <dropdown.item>
+        <MoveItem
+          @target="top"
+          @icon="angles-up"
+          @label={{i18n "reorder.move_to_top"}}
+          @disabled={{this.row.disableUp}}
+          @move={{fn this.move "top"}}
+        />
+      </dropdown.item>
+      <dropdown.item>
+        <MoveItem
+          @target="up"
+          @icon="arrow-up"
+          @label={{i18n "reorder.move_up"}}
+          @disabled={{this.row.disableUp}}
+          @move={{fn this.move "up"}}
+        />
+      </dropdown.item>
+      <dropdown.item>
+        <MoveItem
+          @target="down"
+          @icon="arrow-down"
+          @label={{i18n "reorder.move_down"}}
+          @disabled={{this.row.disableDown}}
+          @move={{fn this.move "down"}}
+        />
+      </dropdown.item>
+      <dropdown.item>
+        <MoveItem
+          @target="bottom"
+          @icon="angles-down"
+          @label={{i18n "reorder.move_to_bottom"}}
+          @disabled={{this.row.disableDown}}
+          @move={{fn this.move "bottom"}}
+        />
+      </dropdown.item>
+      {{#if this.siblings.length}}
+        <dropdown.divider />
+        {{#each this.siblings key="listId" as |sibling|}}
+          <dropdown.item>
+            <MoveItem
+              @target="list"
+              @icon="arrow-right"
+              @label={{i18n "reorder.move_to_list" list=sibling.listLabel}}
+              @move={{fn this.moveToList sibling.listId}}
+            />
+          </dropdown.item>
+        {{/each}}
+      {{/if}}
+    </DDropdownMenu>
+  </template>
 }
 
 /**
- * The grab-mode control: one real button per movable row, serving both input
- * channels — pointer users drag it, keyboard users press Space on it. Its
- * grabbed state is spoken through `aria-pressed`, and the shared instructions
- * element it references teaches the key vocabulary.
+ * The one control a movable row renders: a real button that is the drag
+ * source, the roving cursor's item, and the move menu's trigger at once.
+ *
+ * Fusing the three is what lets the row carry a single affordance. A pointer
+ * user drags it or clicks it for the menu; a keyboard user arrows onto it and
+ * presses Enter for the same menu, because a plain button's native activation
+ * is the click the roving modifier declines to intercept.
+ *
+ * The menu itself belongs to the list, not to this button: a list is arbitrarily
+ * long, and one instance and one set of listeners per row is a cost that scales
+ * with the wrong thing. The button therefore carries the menu's ARIA itself,
+ * driven by the list's single record of which row is open.
+ *
+ * The drag registration belongs to the row for the same reason it is not here:
+ * the registered element is what a drop target receives and what the browser
+ * photographs for the drag preview. Registered on this button, a drag would
+ * show a picture of the grip rather than of the row being moved. The row
+ * registers instead and names this button as its `dragHandle`.
  */
-const GrabHandlePart: TOC<GrabHandlePartSignature> = <template>
-  <button
-    {{dDragAndDropSource
-      type=@dragType
-      data=(hash key=@row.key listId=@sourceListId)
-      onDragStart=@onDragStart
-      onDragEnd=@onDragEnd
-    }}
-    {{@register @row.key}}
-    {{on "click" @onToggle}}
-    type="button"
-    class="d-reorderable-list__handle --grab btn-flat"
-    aria-label={{@row.grabLabel}}
-    aria-pressed={{if @row.isGrabbed "true" "false"}}
-    aria-describedby={{@instructionsId}}
-    title={{@row.grabLabel}}
-    ...attributes
-  >{{dIcon "grip-vertical"}}</button>
-</template>;
+class HandlePart extends Component<HandlePartSignature> {
+  /**
+   * The id of this handle's own description. Per handle rather than one
+   * shared node, because the list root cannot legally hold a `span` — its
+   * children are `li`, or the rows of whatever table shell a consumer chose —
+   * and the description belongs to the control either way.
+   */
+  get descriptionId(): string {
+    return `${guidFor(this)}-move-description`;
+  }
 
-interface ArrowsPartSignature {
-  Args: {
-    row: Row<unknown>;
-    arrowsLayout?: "stacked" | "inline";
-    moveRow: (key: string, direction: "up" | "down") => void;
-    register: ModifierLike<{ Args: { Positional: [string] } }>;
-    tabindex?: string;
-  };
-  Element: HTMLSpanElement;
+  @action
+  open() {
+    this.args.onOpen(this.args.row.key);
+  }
+
+  <template>
+    <DButton
+      {{@register @row.key}}
+      @icon="grip-vertical"
+      @action={{this.open}}
+      @translatedAriaLabel={{@row.handleLabel}}
+      @translatedTitle={{@row.handleLabel}}
+      @ariaExpanded={{@isOpen}}
+      aria-haspopup="menu"
+      aria-describedby={{this.descriptionId}}
+      class="btn-flat d-reorderable-list__handle"
+      ...attributes
+    >
+      <span id={{this.descriptionId}} class="sr-only">
+        {{i18n "reorder.handle_description"}}
+      </span>
+    </DButton>
+  </template>
 }
-
-/**
- * The standard arrow pair for one row. It reports its presence through
- * `@register`, which is how the manual-placement guard knows the row kept its
- * keyboard path.
- */
-const ArrowsPart: TOC<ArrowsPartSignature> = <template>
-  <DReorderButtons
-    {{@register @row.key}}
-    @onMoveUp={{fn @moveRow @row.key "up"}}
-    @onMoveDown={{fn @moveRow @row.key "down"}}
-    @disableUp={{@row.disableUp}}
-    @disableDown={{@row.disableDown}}
-    @upLabel={{@row.upLabel}}
-    @downLabel={{@row.downLabel}}
-    @layout={{@arrowsLayout}}
-    @tabindex={{@tabindex}}
-    class="d-reorderable-list__arrows"
-    ...attributes
-  />
-</template>;
-
-interface ReorderControlsSignature {
-  Args: {
-    row: Row<unknown>;
-    dragType: string;
-    sourceListId: string;
-    arrowsLayout?: "stacked" | "inline";
-    grab: boolean;
-    instructionsId: string;
-    onToggle: (event: MouseEvent) => void;
-    registerGrab: ModifierLike<{ Args: { Positional: [string] } }>;
-    onDragStart: (event: { source: DragSource }) => void;
-    onDragEnd: () => void;
-    moveRow: (key: string, direction: "up" | "down") => void;
-    register: ModifierLike<{ Args: { Positional: [string] } }>;
-  };
-}
-
-/**
- * The standard per-row controls in their fixed order: the handle, then the
- * arrow pair. In grab mode the handle is the grab button and the arrows leave
- * the tab order — they remain the single-pointer alternative to dragging. The
- * automatic placements render this shape, and a manual placement receives it
- * as the fused `controls` component.
- */
-const ReorderControls: TOC<ReorderControlsSignature> = <template>
-  {{#if @grab}}
-    <GrabHandlePart
-      @row={{@row}}
-      @dragType={{@dragType}}
-      @sourceListId={{@sourceListId}}
-      @instructionsId={{@instructionsId}}
-      @onDragStart={{@onDragStart}}
-      @onDragEnd={{@onDragEnd}}
-      @onToggle={{@onToggle}}
-      @register={{@registerGrab}}
-    />
-  {{else}}
-    <HandlePart
-      @row={{@row}}
-      @dragType={{@dragType}}
-      @sourceListId={{@sourceListId}}
-      @onDragStart={{@onDragStart}}
-      @onDragEnd={{@onDragEnd}}
-    />
-  {{/if}}
-  <ArrowsPart
-    @row={{@row}}
-    @arrowsLayout={{@arrowsLayout}}
-    @moveRow={{@moveRow}}
-    @register={{@register}}
-    @tabindex={{if @grab "-1"}}
-  />
-</template>;
 
 interface CreateRowSignature {
   Args: {
@@ -630,12 +684,36 @@ class CreateRow extends Component<CreateRowSignature> {
  * changes the order of visible rows.
  *
  * The component owns the whole interaction — keyed iteration, the drag
- * handle, the arrow-button keyboard path, boundary state, drop normalization,
- * no-op suppression, and the screen-reader announcement — so a consumer
- * supplies only its row content and one `@onMove` that projects the proposed
- * visible order into its own store. Both input methods converge on a single
- * commit: one callback and one announcement per real move, and neither for a
- * move that lands where it started.
+ * handle, the move menu, the keyboard path, boundary state, drop
+ * normalization, no-op suppression, focus restoration, and the screen-reader
+ * announcement — so a consumer supplies only its row content and one
+ * `@onMove` that projects the proposed visible order into its own store.
+ * Every input method converges on a single commit: one callback and one
+ * announcement per real move, and neither for a move that lands where it
+ * started.
+ *
+ * Each movable row renders exactly one control, the handle, which is three
+ * things at once: the drag source, the roving cursor's item, and the trigger
+ * for a menu of move destinations. Fusing them is what lets a dense row carry
+ * a single affordance while still satisfying the three ways a reorder has to
+ * be operable.
+ *
+ * - **Pointer**: drag the handle, or click it and choose a destination. The
+ *   menu is the single-pointer path WCAG 2.5.1 and 2.5.7 require, since a
+ *   drag alone leaves anyone who cannot perform one with nothing.
+ * - **Keyboard**: the list is one composite widget with one tab stop. Arrows
+ *   and Home/End move the cursor between handles; Enter or Space opens the
+ *   menu; Escape closes it. There is no mode to enter or leave.
+ * - **Accelerator**: Alt with an arrow moves the row one step, and Alt with
+ *   Home/End sends it to an end. Deliberately never the only path, so
+ *   assistive software that swallows the chord costs speed rather than
+ *   access.
+ *
+ * A move at either end is refused and the refusal is announced, and the
+ * destination stays in the menu marked unavailable rather than disappearing:
+ * reaching an end is something the reader should be told, and the silent
+ * boundary no-op is one of the failures this component exists to stop
+ * surfaces from reinventing.
  *
  * The list and row elements stay stylable and semantically flexible through
  * `@tag` / `@itemTag` / `@role` / `@itemRole`, which is what lets one
@@ -649,9 +727,10 @@ class CreateRow extends Component<CreateRowSignature> {
  *   @label={{this.sectionLabel}}
  *   @onMove={{this.applyMove}}
  *   class="my-sections"
- *   as |section|
  * >
- *   <span>{{section.name}}</span>
+ *   <:row as |section|>
+ *     <span>{{section.name}}</span>
+ *   </:row>
  * </DReorderableList>
  * ```
  */
@@ -660,6 +739,18 @@ export default class DReorderableList<T> extends Component<
 > {
   @service declare a11y: A11yService;
 
+  /**
+   * The list's one menu, created on first use and re-anchored per row. Tracked
+   * because the template renders it, and it does not exist until a row asks.
+   */
+  @tracked menu: DMenuInstance | null = null;
+  /**
+   * The row whose menu is open, and the list's only record of it. One menu
+   * means one answer: with an instance per row there were as many claims about
+   * what was open as there were rows, and keeping them agreeing was work the
+   * design should not have needed.
+   */
+  @tracked openKey: string | null = null;
   rowClassFor = (row: Row<T>): string | undefined => {
     const { rowClass } = this.args;
     if (typeof rowClass === "function") {
@@ -668,26 +759,24 @@ export default class DReorderableList<T> extends Component<
     return rowClass;
   };
   /**
-   * Applied by the arrow pair wherever it renders, so the component knows the
-   * row kept its keyboard path regardless of where a manual placement put it.
+   * Applied by the handle wherever it renders, so the component knows the row
+   * kept its one control regardless of where a manual placement put it.
    */
-  registerKeyboardPath = modifier((_element: Element, [key]: [string]) => {
-    this.#keyboardPathKeys.add(key);
-    return () => this.#keyboardPathKeys.delete(key);
-  });
-  /** The grab-mode counterpart of `registerKeyboardPath`, for the guard. */
-  registerGrabPath = modifier((_element: Element, [key]: [string]) => {
-    this.#grabPathKeys.add(key);
-    return () => this.#grabPathKeys.delete(key);
+  registerHandle = modifier((element: Element, [key]: [string]) => {
+    this.#handles.set(key, element as HTMLElement);
+    return () => {
+      if (this.#handles.get(key) === element) {
+        this.#handles.delete(key);
+      }
+    };
   });
   /**
    * Guards the manual-placement contract: a movable row under
-   * `@controls="manual"` must place the yielded arrows (alone or fused) — in
-   * buttons mode they are the keyboard path, in grab mode the single-pointer
-   * alternative to dragging — and in grab mode it must also place the yielded
-   * handle, which is the keyboard path there. Checked once per row element,
-   * after its first render — a consumer that conditionally removes its placed
-   * controls later is beyond this guard's reach.
+   * `@controls="manual"` must place the yielded handle. It is the drag source,
+   * the keyboard path and the single-pointer path at once, so a row that omits
+   * it has no way to reorder at all. Checked once per row element, after its
+   * first render — a consumer that conditionally removes its placed handle
+   * later is beyond this guard's reach.
    */
   verifyKeyboardPath = modifier((element: Element) => {
     // The key is read from the element rather than taken as an argument: an
@@ -704,12 +793,8 @@ export default class DReorderableList<T> extends Component<
         return;
       }
       assert(
-        `d-reorderable-list: the manual row "${key}" renders no arrow pair — place the yielded arrows or controls`,
-        this.#keyboardPathKeys.has(key)
-      );
-      assert(
-        `d-reorderable-list: the manual row "${key}" renders no grab handle — in the grab keyboard mode the handle is the keyboard path; place the yielded handle or controls`,
-        !this.isGrab || this.#grabPathKeys.has(key)
+        `d-reorderable-list: the manual row "${key}" renders no handle — place the yielded handle, which is its only drag, keyboard and single-pointer path`,
+        this.#handles.has(key)
       );
     });
   });
@@ -739,96 +824,90 @@ export default class DReorderableList<T> extends Component<
     }));
   });
 
-  trackRowDragState = modifier((element: Element) => {
-    // The key is read from the element for the same reason as in
-    // `verifyKeyboardPath`: consuming a reactive argument would re-run this
-    // modifier on every rows recompute, and its cleanup would then wrongly
-    // clear a drag that is still in flight.
-    const key = element.getAttribute("data-reorderable-key") ?? "";
-    return () => {
-      if (this._draggingKey !== key) {
-        return;
-      }
-      next(() => {
-        if (
-          !isDestroying(this) &&
-          !isDestroyed(this) &&
-          this._draggingKey === key
-        ) {
-          this._draggingKey = null;
-        }
-      });
-    };
-  });
   /**
-   * Intercepts the movement keys while a row is grabbed, ahead of the roving
-   * cursor's own listener: a grabbed arrow press moves the row, not the
-   * focus. Also releases the grab when focus settles outside the list, so an
-   * abandoned grab cannot make a later arrow press move the row unexpectedly,
-   * and points the roving cursor at a row whose non-interactive area is
-   * clicked, so the pointer and the keyboard agree on where "here" is.
-   * Consumes nothing reactive — the grabbed key is read at event time.
+   * The chord accelerator, plus the cursor bookkeeping the roving modifier
+   * does not own.
+   *
+   * The chord can be a plain listener because the roving modifier declines
+   * every keydown carrying a modifier, so the two never contend for the same
+   * press. It is deliberately an accelerator and never the only path — the
+   * menu behind Enter is what a reader whose software swallows the chord uses
+   * instead. Consumes nothing reactive: the row is resolved at event time.
    */
-  grabKeys = modifier((element: Element) => {
+  moveKeys = modifier((element: Element) => {
     this.#listElement = element;
-    const handler = (event: Event) => {
-      const { key, target } = event as KeyboardEvent;
+
+    const onKeydown = (event: Event) => {
+      const { key, altKey, target } = event as KeyboardEvent;
       if (
-        !this.isGrab ||
-        !this._grabbedKey ||
+        !altKey ||
         !(target instanceof Element) ||
-        !target.closest(".d-reorderable-list__handle.--grab")
+        !target.closest(".d-reorderable-list__handle")
       ) {
         return;
       }
-      if (key === "ArrowDown" || key === "ArrowUp") {
-        event.preventDefault();
-        event.stopPropagation();
-        this.moveRow(this._grabbedKey, key === "ArrowDown" ? "down" : "up");
-        this.#refocusGrabbed();
-      } else if (key === "Escape") {
-        event.preventDefault();
-        event.stopPropagation();
-        this.#cancelGrab();
+      const destination = CHORD_TARGETS[key];
+      if (!destination) {
+        return;
       }
+      const rowKey = target
+        .closest("[data-reorderable-key]")
+        ?.getAttribute("data-reorderable-key");
+      if (!rowKey) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      this.#move(rowKey, destination, "keyboard");
     };
+
     const onFocusIn = (event: Event) => {
       if (!(event.target instanceof Element)) {
         return;
       }
-      const grip = event.target.closest(".d-reorderable-list__handle.--grab");
+      // The menu renders inside the list when it is not portaled, so its own
+      // focus must not read as the cursor leaving the row it belongs to —
+      // that would close the menu before a destination could be chosen.
+      if (event.target.closest(MENU_CONTENT_SELECTOR)) {
+        return;
+      }
+      const grip = event.target.closest(".d-reorderable-list__handle");
       const key = grip
         ?.closest("[data-reorderable-key]")
         ?.getAttribute("data-reorderable-key");
       if (this._focusedKey !== (key ?? null)) {
         this._focusedKey = key ?? null;
+        // The menu is anchored to one row, so a cursor that has moved on would
+        // otherwise leave it floating over a row it no longer describes.
+        if (this.openKey && this.openKey !== this._focusedKey) {
+          this.closeMenu(false);
+        }
       }
     };
+
     const onFocusOut = () => {
-      // Deferred past the render that may be moving the grabbed row: a
-      // grabbed move blurs its button until the after-render refocus lands,
-      // so only focus that has settled outside the list clears the cursor
-      // and releases the grab.
+      // Deferred past the render that may be moving the row: a move blurs its
+      // handle until the after-render refocus lands, so only focus that has
+      // settled outside the list clears the cursor.
       next(() => {
         if (
           isDestroying(this) ||
           isDestroyed(this) ||
-          this.#listElement?.contains(document.activeElement)
+          this.#listElement?.contains(document.activeElement) ||
+          document.activeElement?.closest(MENU_CONTENT_SELECTOR)
         ) {
           return;
         }
         this._focusedKey = null;
-        if (this._grabbedKey) {
-          this.#releaseGrab();
-        }
       });
     };
+
     const onRowClick = (event: Event) => {
-      if (!this.isGrab || !(event.target instanceof Element)) {
+      if (!(event.target instanceof Element)) {
         return;
       }
-      // Interactive content owns its clicks; the grip itself is the grab
-      // toggle and already carries a roving tabindex.
+      // Interactive content owns its clicks; the handle itself is the menu
+      // trigger and already carries a roving tabindex.
       if (
         event.target.closest(
           "button, a, input, select, textarea, [tabindex], [contenteditable='true']"
@@ -845,29 +924,15 @@ export default class DReorderableList<T> extends Component<
       if (!row || !element.contains(row)) {
         return;
       }
-      const grip = row.querySelector<HTMLElement>(
-        ".d-reorderable-list__handle.--grab"
-      );
-      if (!grip) {
-        return;
-      }
-      // Pointing the cursor at another row is not compatible with still
-      // holding this one — the arrows would move a row the cursor is no
-      // longer on — so a held row is dropped in place first.
-      if (
-        this._grabbedKey &&
-        this._grabbedKey !== row.getAttribute("data-reorderable-key")
-      ) {
-        this.#releaseGrab();
-      }
-      grip.focus();
+      row.querySelector<HTMLElement>(".d-reorderable-list__handle")?.focus();
     };
-    element.addEventListener("keydown", handler, { capture: true });
+
+    element.addEventListener("keydown", onKeydown, { capture: true });
     element.addEventListener("click", onRowClick);
     element.addEventListener("focusin", onFocusIn);
     element.addEventListener("focusout", onFocusOut);
     return () => {
-      element.removeEventListener("keydown", handler, { capture: true });
+      element.removeEventListener("keydown", onKeydown, { capture: true });
       element.removeEventListener("click", onRowClick);
       element.removeEventListener("focusin", onFocusIn);
       element.removeEventListener("focusout", onFocusOut);
@@ -875,33 +940,40 @@ export default class DReorderableList<T> extends Component<
     };
   });
 
-  /** The list's root element, held for grab-mode focus restoration. */
+  /**
+   * A row's handle element, for the row's drag registration to point at.
+   *
+   * Deliberately untracked: modifiers install children-first, so a row's own
+   * handle is in the map before the row's drag registration reads it. Making
+   * it reactive only reintroduced the write-after-read this ordering avoids.
+   *
+   * @param key - The row key.
+   */
+  handleFor = (key: string): HTMLElement | undefined => this.#handles.get(key);
+  /** The list's root element, held for post-move focus restoration. */
   #listElement: Element | null = null;
   /** The private drag discriminator used when the list stands alone. */
   #ownDragType = `d-reorderable-list:${guidFor(this)}`;
 
-  /** The keys whose arrow pair is currently rendered, for the manual guard. */
-  #keyboardPathKeys = new Set<string>();
-
-  /** The keys whose grab button is currently rendered, for the manual guard. */
-  #grabPathKeys = new Set<string>();
-
-  /** The grabbed row's visible index at grab time, for Escape to restore. */
-  #grabOriginIndex: number | null = null;
   /**
-   * The key of the row whose drag is in flight, so every row can yield its
-   * own `isDragging`. Keyed rather than held as an element or item reference,
-   * because the host may replace its items mid-drag.
+   * Each row's handle element, by key. Serves the manual-placement guard and
+   * gives the shared menu something to anchor against when a row asks to open
+   * it.
    */
-  @tracked _draggingKey: string | null = null;
-
-  /** The key of the row currently held by the grab keyboard mode. */
-  @tracked _grabbedKey: string | null = null;
+  #handles = new Map<string, HTMLElement>();
 
   /**
-   * The key of the row whose grab button holds the roving cursor, mirrored
-   * onto the row as a class so the cursor reads at row level rather than on
-   * the small button it technically rests on.
+   * The run of consecutive chord moves in flight, if any. A held Alt+arrow
+   * would otherwise speak a full sentence per step into a live region that
+   * re-announces even an unchanged string, so a run says only where the row
+   * now is and the full sentence waits for the run to settle.
+   */
+  #run: { key: string; timer: Timer } | null = null;
+
+  /**
+   * The key of the row whose handle holds the roving cursor, mirrored onto the
+   * row as a class so the cursor reads at row level rather than on the small
+   * button it technically rests on.
    */
   @tracked _focusedKey: string | null = null;
 
@@ -926,6 +998,13 @@ export default class DReorderableList<T> extends Component<
         listId: this.args.listId!,
         listLabel: this.args.listLabel,
         getItems: () => this.args.items,
+        acceptMove: (sourceListId: string, key: string, toIndex: number) => {
+          this.#commitCrossMove(sourceListId, key, toIndex, "menu");
+          // Focus follows the item across: the row is destroyed in the source
+          // list's iteration and rebuilt in this one, so only the destination
+          // can put the cursor back on it.
+          this.#refocusRow(key);
+        },
         removalProjection: (key: string) => {
           const rows = this.rows;
           const moved = rows.find((candidate) => candidate.key === key);
@@ -989,46 +1068,23 @@ export default class DReorderableList<T> extends Component<
     return this.args.itemTag ?? "li";
   }
 
-  get controlsPlacement(): "start" | "end" | "split" | "manual" {
-    return this.args.controls ?? "start";
-  }
-
   get isManual(): boolean {
-    return this.controlsPlacement === "manual";
-  }
-
-  get isSplit(): boolean {
-    return this.controlsPlacement === "split";
+    return this.args.controls === "manual";
   }
 
   /**
-   * Whether a control renders before the row's block content: the fused pair
-   * in `"start"` placement, or the lone handle (the grab button, in grab
-   * mode) in `"split"` placement.
+   * The cross-list destinations this list's move menus offer: the group's
+   * other named members. Empty for a standalone list, which is what makes the
+   * menu collapse to its four in-list destinations without a conditional at
+   * the call site.
+   *
+   * Handed to the handle as a function rather than an array, so the group is
+   * consulted when a menu opens rather than while the row renders — members
+   * are still registering at that point.
    */
-  get controlsAtStart(): boolean {
-    return this.controlsPlacement === "start" || this.isSplit;
-  }
-
-  /**
-   * Whether a control renders after the row's block content: the fused pair
-   * in `"end"` placement, or the lone arrow pair in `"split"` placement.
-   */
-  get controlsAtEnd(): boolean {
-    return this.controlsPlacement === "end" || this.isSplit;
-  }
-
-  get revealControls(): boolean {
-    return this.args.controlsVisibility === "reveal";
-  }
-
-  get isGrab(): boolean {
-    return this.args.keyboard !== "buttons";
-  }
-
-  /** The id linking every grab button to the shared instructions element. */
-  get instructionsId(): string {
-    return `${guidFor(this)}-grab-instructions`;
+  @action
+  siblings(): { listId: string; listLabel: string }[] {
+    return this.args.group?.siblings(this.listIdOrDefault) ?? [];
   }
 
   /** This list's move-payload identity: its group listId, or `"default"`. */
@@ -1054,7 +1110,7 @@ export default class DReorderableList<T> extends Component<
    * event handlers read one consistent projection of `@items`.
    */
   get rows(): Row<T>[] {
-    const { disabled, items, label, movable, wrap } = this.args;
+    const { disabled, items, label, movable } = this.args;
     const seen = new Set<string>();
 
     const rows = items.map((item, index) => {
@@ -1074,111 +1130,160 @@ export default class DReorderableList<T> extends Component<
         movable: rowMovable,
         isFirst: false,
         isLast: false,
-        isDragging: key === this._draggingKey,
         disableUp: false,
         disableDown: false,
-        handleLabel: i18n("reorder.drag_handle", { label: itemLabel }),
-        upLabel: i18n("reorder.move_up", { label: itemLabel }),
-        downLabel: i18n("reorder.move_down", { label: itemLabel }),
+        handleLabel: i18n("reorder.handle", { label: itemLabel }),
         yieldControls: rowMovable && this.isManual,
-        isGrabbed: key === this._grabbedKey,
         isFocused: key === this._focusedKey,
-        grabLabel: i18n("reorder.grab_handle", { label: itemLabel }),
       };
     });
 
     const movableRows = rows.filter((row) => row.movable);
-    // With a single movable item every direction is a no-op, so both arrows
-    // are marked unavailable even under `@wrap` — wrapping a list of one
-    // would otherwise leave enabled-looking controls that never do anything.
+    // With a single movable item every direction is a no-op, so the whole
+    // menu is marked unavailable rather than offering four destinations that
+    // all lead nowhere.
     const alone = movableRows.length < 2;
     for (const [seqIndex, row] of movableRows.entries()) {
       row.isFirst = seqIndex === 0;
       row.isLast = seqIndex === movableRows.length - 1;
-      row.disableUp = alone || (!wrap && row.isFirst);
-      row.disableDown = alone || (!wrap && row.isLast);
+      row.disableUp = alone || row.isFirst;
+      row.disableDown = alone || row.isLast;
     }
 
     return rows;
   }
 
   /**
-   * The grab toggle, invoked by the roving cursor's activation keys on a grab
-   * button. First press grabs and announces the held position; second press
-   * drops and announces the final one.
+   * Opens the list's one menu against a row's handle, creating it on first use.
    *
-   * @param element - The activated grab button.
-   */
-  /**
-   * Pointer (and assistive-technology synthesized) activation of a grab
-   * button. Keyboard activation arrives through the roving cursor instead,
-   * whose prevented keydown suppresses the browser's synthetic click, so the
-   * two paths never double-toggle.
+   * The instance is re-anchored rather than replaced, so a long list costs one
+   * menu and one set of listeners no matter how many rows it has.
    *
-   * @param event - The click event.
+   * @param key - The row whose handle was activated.
    */
   @action
-  onGrabClick(event: MouseEvent) {
-    if (event.currentTarget instanceof HTMLElement) {
-      this.onGrabActivate(event.currentTarget);
-    }
-  }
-
-  @action
-  onGrabActivate(element: HTMLElement) {
-    // Index identity cannot hold a grab: the key names a position, so after
-    // one step it would name a different item. Stable identity is a
-    // precondition of the grab mode.
-    assert(
-      'd-reorderable-list: the grab keyboard mode requires stable item identity — do not combine it with @key="@index"',
-      this.args.key !== "@index"
-    );
-    const key = element
-      .closest("[data-reorderable-key]")
-      ?.getAttribute("data-reorderable-key");
-    const row = this.rows.find((candidate) => candidate.key === key);
-    if (!row?.movable) {
+  async openMenu(key: string) {
+    const trigger = this.#handles.get(key);
+    if (!trigger) {
       return;
     }
 
-    if (this._grabbedKey === row.key) {
-      this.#releaseGrab();
+    if (this.openKey === key) {
+      await this.closeMenu();
       return;
     }
 
-    this._grabbedKey = row.key;
-    this.#grabOriginIndex = row.index;
-    this.a11y.announce(
-      i18n("reorder.grabbed", {
-        label: this.args.label(row.item),
-        position: row.index + 1,
-        total: this.rows.length,
-      })
-    );
-  }
+    const instance = this.#menuInstance();
+    // Listeners are off, so the trigger is only an anchor and reassigning it
+    // is how one menu serves every row. The teardown is still required: the
+    // base binds a pointer guard to whatever trigger it is given.
+    instance.tearDownListeners();
+    instance.trigger = trigger;
+    instance.options = { ...instance.options, data: { list: this, key } };
 
-  @action
-  onSourceDragStart({ source }: { source: DragSource }) {
-    this._draggingKey = source.data.key as string;
-  }
-
-  @action
-  onSourceDragEnd() {
-    this._draggingKey = null;
+    this.openKey = key;
+    await instance.show();
   }
 
   /**
-   * The arrow-button path: one step within the movable subsequence, wrapping
-   * around the ends when `@wrap` asks for it.
+   * Closes the list's menu, if it is open.
+   *
+   * @param focusTrigger - Whether to hand focus back to the handle the menu
+   *   was opened from. False when the cursor has already moved elsewhere: the
+   *   menu's own habit of refocusing its trigger would otherwise drag the
+   *   cursor back to the row the reader just left.
+   */
+  @action
+  async closeMenu(focusTrigger = true) {
+    this.openKey = null;
+    if (this.menu?.expanded) {
+      await this.menu.close({ focusTrigger });
+    }
+  }
+
+  /**
+   * The list's one menu, built on first open.
+   *
+   * Built rather than obtained from the `menu` service so that it keeps an
+   * attached trigger: a service-created menu is rendered by the app-root
+   * `DMenus`, which a component rendering in isolation has no access to. This
+   * list renders its own, and `DFloatPortal` still teleports the content out
+   * of the row's stacking context.
+   */
+  #menuInstance(): DMenuInstance {
+    this.menu ??= new DMenuInstance(getOwner(this)!, {
+      identifier: MENU_IDENTIFIER,
+      placement: "bottom-start",
+      component: MoveMenu,
+      listeners: false,
+      autoUpdate: true,
+      onClose: () => (this.openKey = null),
+    });
+    return this.menu;
+  }
+
+  /**
+   * The row a key names, for the menu to read boundary state from while open.
+   *
+   * @param key - The row key.
+   */
+  rowFor(key: string): Row<T> | undefined {
+    return this.rows.find((row) => row.key === key);
+  }
+
+  /**
+   * A move chosen from the menu: commit, then close and hand focus back to the
+   * handle, which the closing float would otherwise return to its pre-open
+   * position.
+   *
+   * @param key - The row to move.
+   * @param target - Where to move it.
+   * @param close - Closes the menu the item was chosen from.
+   */
+  @action
+  onMenuMove(key: string, target: MoveTarget, close: () => void) {
+    close();
+    this.#move(key, target, "menu");
+  }
+
+  /**
+   * A cross-list move chosen from the menu, which is the only way to reach
+   * another member without a pointer.
+   *
+   * @param key - The row to move.
+   * @param listId - The destination member.
+   * @param close - Closes the menu the item was chosen from.
+   */
+  @action
+  onMenuMoveToList(key: string, listId: string, close: () => void) {
+    close();
+    const member = this.args.group?.lookupMember(listId);
+    if (!member) {
+      return;
+    }
+    // The destination lands the item, exactly as it does for a drop, because
+    // the projections it needs are its own. This list only supplies the key.
+    member.acceptMove(this.listIdOrDefault, key, member.getItems().length);
+  }
+
+  /**
+   * The in-list move both the menu and the chord funnel into: one step or one
+   * jump within the movable subsequence, then focus back onto the handle the
+   * move just displaced.
    *
    * Resolved fresh by key rather than acting on the row object the render
-   * captured, because a press commits against the list as it stands now.
+   * captured, because a move commits against the list as it stands now.
    *
-   * @param key - The pressed row's key.
-   * @param direction - Which arrow was pressed.
+   * A move that would leave the list past either end is refused, and the
+   * refusal is announced. Reaching an end is information — it is why the
+   * boundary items are marked rather than removed — and a silent no-op is the
+   * failure this component exists to stop repeating.
+   *
+   * @param key - The row to move.
+   * @param target - Where to move it.
+   * @param method - Which input method asked.
    */
-  @action
-  moveRow(key: string, direction: "up" | "down") {
+  #move(key: string, target: MoveTarget, method: "menu" | "keyboard") {
     const rows = this.rows;
     const row = rows.find((candidate) => candidate.key === key);
     if (!row?.movable) {
@@ -1187,15 +1292,21 @@ export default class DReorderableList<T> extends Component<
 
     const seq = rows.filter((candidate) => candidate.movable);
     const from = seq.indexOf(row);
-    let to = direction === "up" ? from - 1 : from + 1;
+    const to = {
+      up: from - 1,
+      down: from + 1,
+      top: 0,
+      bottom: seq.length - 1,
+    }[target];
 
-    if (this.args.wrap) {
-      to = (to + seq.length) % seq.length;
-    } else if (to < 0 || to >= seq.length) {
+    if (to < 0 || to >= seq.length || to === from) {
+      this.#announceBoundary(row, target);
       return;
     }
 
-    this.#commitSeqMove("buttons", rows, seq, from, to);
+    this.#noteRun(key, method);
+    this.#commitSeqMove(method, rows, seq, from, to);
+    this.#refocusRow(key);
   }
 
   /**
@@ -1237,7 +1348,12 @@ export default class DReorderableList<T> extends Component<
     const sourceListId = source.data.listId as string | undefined;
     if (this.args.group && sourceListId !== this.listIdOrDefault) {
       const toIndex = targetRow.index + (position === "after" ? 1 : 0);
-      this.#commitCrossMove(sourceListId, source.data.key as string, toIndex);
+      this.#commitCrossMove(
+        sourceListId,
+        source.data.key as string,
+        toIndex,
+        "drag"
+      );
       return;
     }
 
@@ -1275,7 +1391,8 @@ export default class DReorderableList<T> extends Component<
     this.#commitCrossMove(
       source.data.listId as string | undefined,
       source.data.key as string,
-      0
+      0,
+      "drag"
     );
   }
 
@@ -1375,11 +1492,13 @@ export default class DReorderableList<T> extends Component<
    * @param sourceListId - The group listId the payload named as its origin.
    * @param key - The dragged row's key in the source member.
    * @param toIndex - The visible landing index in this list.
+   * @param method - Which input method asked for the move.
    */
   #commitCrossMove(
     sourceListId: string | undefined,
     key: string,
-    toIndex: number
+    toIndex: number,
+    method: ReorderableMove<T>["method"]
   ) {
     const { group } = this.args;
     if (!group || !sourceListId) {
@@ -1417,7 +1536,7 @@ export default class DReorderableList<T> extends Component<
     }
 
     this.#finalize({
-      method: "drag",
+      method,
       item,
       fromList: sourceListId,
       toList: this.listIdOrDefault,
@@ -1444,30 +1563,39 @@ export default class DReorderableList<T> extends Component<
       return;
     }
 
-    let message: string;
     if (this.args.announceMove) {
       const custom = this.args.announceMove(move);
-      if (custom === false) {
-        return;
+      if (custom !== false) {
+        this.a11y.announce(custom);
       }
-      message = custom;
-    } else {
-      const label = this.args.label(move.item);
-      const position = move.toIndex + 1;
-      const total = move.proposedToItems.length;
-      if (move.fromList !== move.toList && this.args.listLabel) {
-        message = i18n("reorder_announcement_cross_list", {
+      return;
+    }
+
+    const label = this.args.label(move.item);
+    const position = move.toIndex + 1;
+    const total = move.proposedToItems.length;
+
+    // Mid-run, only where the row now is: the live region re-speaks even an
+    // unchanged string, so a held key would otherwise read the same sentence
+    // once per step. The full one lands when the run settles.
+    if (this.#run) {
+      this.a11y.announce(i18n("reorder.position", { position, total }));
+      return;
+    }
+
+    if (move.fromList !== move.toList && this.args.listLabel) {
+      this.a11y.announce(
+        i18n("reorder_announcement_cross_list", {
           label,
           list: this.args.listLabel,
           position,
           total,
-        });
-      } else {
-        message = i18n("reorder_announcement", { label, position, total });
-      }
+        })
+      );
+      return;
     }
 
-    this.a11y.announce(message);
+    this.#announceMoved(move.item, move.toIndex, total);
   }
 
   /**
@@ -1483,84 +1611,82 @@ export default class DReorderableList<T> extends Component<
   }
 
   /**
-   * Escape while grabbed: one restoring commit back to the grab-start index
-   * when the row has moved (reported but not given the standard step
-   * announcement — the cancellation is the announcement), then the cleared
-   * state.
+   * Marks a chord move as part of a run, so a held key speaks position only
+   * and the full sentence lands once the key is released. A menu move is
+   * always deliberate and single, so it ends any run rather than joining one.
+   *
+   * @param key - The row being moved.
+   * @param method - Which input method asked.
    */
-  #cancelGrab() {
-    const key = this._grabbedKey;
-    const origin = this.#grabOriginIndex;
-    this._grabbedKey = null;
-    this.#grabOriginIndex = null;
-
-    const rows = this.rows;
-    const row = rows.find((candidate) => candidate.key === key);
-    if (!row?.movable || origin == null) {
+  #noteRun(key: string, method: "menu" | "keyboard") {
+    if (this.#run) {
+      cancel(this.#run.timer);
+      this.#run = null;
+    }
+    if (method !== "keyboard") {
       return;
     }
-
-    if (row.index !== origin) {
-      const seq = rows.filter((candidate) => candidate.movable);
-      const movableSlots = seq.map((candidate) => candidate.index);
-      const from = seq.indexOf(row);
-      const to = movableSlots.indexOf(origin);
-      // The origin slot can vanish while grabbed (the host mutated its items);
-      // the cancellation then simply leaves the row where it stands.
-      if (to >= 0) {
-        const move = this.#buildSeqMove("buttons", rows, seq, from, to);
-        if (move) {
-          this.#dispatch(move);
+    this.#run = {
+      key,
+      timer: discourseLater(() => {
+        const run = this.#run;
+        this.#run = null;
+        const row = this.rows.find((candidate) => candidate.key === run?.key);
+        if (row) {
+          this.#announceMoved(row.item, row.index, this.rows.length);
         }
-      }
-    }
+      }, RUN_SETTLE_MS),
+    };
+  }
 
+  /**
+   * Speaks a refused move at either end of the list. The refusal is
+   * information rather than an error: it is how a reader learns they have
+   * arrived, which a silent no-op never tells them.
+   *
+   * @param row - The row that could not move.
+   * @param target - The direction that was refused.
+   */
+  #announceBoundary(row: Row<T>, target: MoveTarget) {
+    const key = target === "up" || target === "top" ? "at_start" : "at_end";
     this.a11y.announce(
-      i18n("reorder.cancelled", {
-        label: this.args.label(row.item),
-        position: origin + 1,
+      i18n(`reorder.${key}`, { label: this.args.label(row.item) })
+    );
+  }
+
+  /**
+   * Speaks a committed move in the standard form.
+   *
+   * @param item - The item that moved.
+   * @param index - Its visible index afterwards.
+   * @param total - The visible list length afterwards.
+   */
+  #announceMoved(item: T, index: number, total: number) {
+    this.a11y.announce(
+      i18n("reorder_announcement", {
+        label: this.args.label(item),
+        position: index + 1,
+        total,
       })
     );
-    this.#refocusGrabbed(key);
   }
 
   /**
-   * Drops the grabbed row where it stands and clears the grab state — the
-   * shared tail of a Space drop and of focus leaving the list mid-grab.
-   * Moves already committed stay committed; only the held state ends.
-   */
-  #releaseGrab() {
-    const key = this._grabbedKey;
-    this._grabbedKey = null;
-    this.#grabOriginIndex = null;
-
-    const row = this.rows.find((candidate) => candidate.key === key);
-    if (row) {
-      this.a11y.announce(
-        i18n("reorder.dropped", {
-          label: this.args.label(row.item),
-          position: row.index + 1,
-          total: this.rows.length,
-        })
-      );
-    }
-  }
-
-  /**
-   * Takes focus back to a grab button after its row moved in the DOM, which
-   * blurs it — the grab mode's counterpart of the arrow pair's own refocus.
+   * Takes focus back onto a handle after its row moved in the DOM, which
+   * blurs it. Without this a keyboard user lands on the body after one move
+   * and cannot make a second.
    *
-   * @param key - The row key to refocus; defaults to the grabbed row.
+   * @param key - The row key to refocus.
    */
-  #refocusGrabbed(key: string | null = this._grabbedKey) {
+  #refocusRow(key: string) {
     schedule("afterRender", () => {
-      if (isDestroying(this) || isDestroyed(this) || !key) {
+      if (isDestroying(this) || isDestroyed(this)) {
         return;
       }
       const root = this.#listElement ?? document;
       root
         .querySelector<HTMLElement>(
-          `[data-reorderable-key="${CSS.escape(key)}"] .d-reorderable-list__handle.--grab`
+          `[data-reorderable-key="${CSS.escape(key)}"] .d-reorderable-list__handle`
         )
         ?.focus();
     });
@@ -1569,26 +1695,21 @@ export default class DReorderableList<T> extends Component<
   <template>
     {{#let (dElement this.listTag) as |List|}}
       <List
-        class={{dConcatClass
-          "d-reorderable-list"
-          (if this.revealControls "--reveal-controls")
-        }}
+        class="d-reorderable-list"
         role={{@role}}
         {{this.rootDropTarget}}
         {{dRovingFocus
-          itemSelector=".d-reorderable-list__handle.--grab"
+          itemSelector=".d-reorderable-list__handle"
           orientation="vertical"
           itemsKey=this.rows
-          onActivate=this.onGrabActivate
         }}
-        {{this.grabKeys}}
+        {{this.moveKeys}}
         ...attributes
       >
-        {{#if this.isGrab}}
-          <span id={{this.instructionsId}} class="sr-only">
-            {{i18n "reorder.grab_instructions"}}
-          </span>
+        {{#if this.menu}}
+          <DHeadlessMenu @menu={{this.menu}} />
         {{/if}}
+        {{yield to="hint"}}
         {{yield to="header"}}
         {{#if this.rows.length}}
           {{#let (dElement this.itemTag) as |Item|}}
@@ -1602,60 +1723,31 @@ export default class DReorderableList<T> extends Component<
                 <Item
                   class={{dConcatClass
                     "d-reorderable-list__row"
-                    (if row.isDragging "--dragging")
-                    (if row.isGrabbed "--grabbed")
                     (if row.isFocused "--focused")
                     (this.rowClassFor row)
                   }}
                   role={{@itemRole}}
                   data-reorderable-key={{row.key}}
+                  {{dDragAndDropSource
+                    type=this.dragType
+                    data=(hash key=row.key listId=this.listIdOrDefault)
+                    dragHandle=(this.handleFor row.key)
+                  }}
                   {{dDragAndDropTarget
                     accepts=this.dragType
                     canDrop=(fn this.canDropOnRow row.key)
                     onDrop=(fn this.onRowDrop row.key)
                   }}
                   {{this.verifyKeyboardPath}}
-                  {{this.trackRowDragState}}
                 >
-                  {{#if this.controlsAtStart}}
-                    {{#if this.isSplit}}
-                      {{#if this.isGrab}}
-                        <GrabHandlePart
-                          @row={{row}}
-                          @dragType={{this.dragType}}
-                          @sourceListId={{this.listIdOrDefault}}
-                          @instructionsId={{this.instructionsId}}
-                          @onDragStart={{this.onSourceDragStart}}
-                          @onDragEnd={{this.onSourceDragEnd}}
-                          @onToggle={{this.onGrabClick}}
-                          @register={{this.registerGrabPath}}
-                        />
-                      {{else}}
-                        <HandlePart
-                          @row={{row}}
-                          @dragType={{this.dragType}}
-                          @sourceListId={{this.listIdOrDefault}}
-                          @onDragStart={{this.onSourceDragStart}}
-                          @onDragEnd={{this.onSourceDragEnd}}
-                        />
-                      {{/if}}
-                    {{else}}
-                      <ReorderControls
-                        @row={{row}}
-                        @dragType={{this.dragType}}
-                        @sourceListId={{this.listIdOrDefault}}
-                        @arrowsLayout={{@arrowsLayout}}
-                        @grab={{this.isGrab}}
-                        @instructionsId={{this.instructionsId}}
-                        @onToggle={{this.onGrabClick}}
-                        @registerGrab={{this.registerGrabPath}}
-                        @onDragStart={{this.onSourceDragStart}}
-                        @onDragEnd={{this.onSourceDragEnd}}
-                        @moveRow={{this.moveRow}}
-                        @register={{this.registerKeyboardPath}}
-                      />
-                    {{/if}}
-                  {{/if}}
+                  {{#unless this.isManual}}
+                    <HandlePart
+                      @row={{row}}
+                      @onOpen={{this.openMenu}}
+                      @isOpen={{eq this.openKey row.key}}
+                      @register={{this.registerHandle}}
+                    />
+                  {{/unless}}
                   {{yield
                     row.item
                     (hash
@@ -1663,89 +1755,19 @@ export default class DReorderableList<T> extends Component<
                       isFirst=row.isFirst
                       isLast=row.isLast
                       movable=row.movable
-                      isDragging=row.isDragging
                       handle=(if
                         row.yieldControls
-                        (if
-                          this.isGrab
-                          (component
-                            GrabHandlePart
-                            row=row
-                            dragType=this.dragType
-                            sourceListId=this.listIdOrDefault
-                            instructionsId=this.instructionsId
-                            onDragStart=this.onSourceDragStart
-                            onDragEnd=this.onSourceDragEnd
-                            onToggle=this.onGrabClick
-                            register=this.registerGrabPath
-                          )
-                          (component
-                            HandlePart
-                            row=row
-                            dragType=this.dragType
-                            sourceListId=this.listIdOrDefault
-                            onDragStart=this.onSourceDragStart
-                            onDragEnd=this.onSourceDragEnd
-                          )
-                        )
-                      )
-                      arrows=(if
-                        row.yieldControls
                         (component
-                          ArrowsPart
+                          HandlePart
                           row=row
-                          arrowsLayout=@arrowsLayout
-                          moveRow=this.moveRow
-                          register=this.registerKeyboardPath
-                          tabindex=(if this.isGrab "-1")
-                        )
-                      )
-                      controls=(if
-                        row.yieldControls
-                        (component
-                          ReorderControls
-                          row=row
-                          dragType=this.dragType
-                          sourceListId=this.listIdOrDefault
-                          arrowsLayout=@arrowsLayout
-                          grab=this.isGrab
-                          instructionsId=this.instructionsId
-                          onToggle=this.onGrabClick
-                          registerGrab=this.registerGrabPath
-                          onDragStart=this.onSourceDragStart
-                          onDragEnd=this.onSourceDragEnd
-                          moveRow=this.moveRow
-                          register=this.registerKeyboardPath
+                          onOpen=this.openMenu
+                          isOpen=(eq this.openKey row.key)
+                          register=this.registerHandle
                         )
                       )
                     )
+                    to="row"
                   }}
-                  {{#if this.controlsAtEnd}}
-                    {{#if this.isSplit}}
-                      <ArrowsPart
-                        @row={{row}}
-                        @arrowsLayout={{@arrowsLayout}}
-                        @moveRow={{this.moveRow}}
-                        @register={{this.registerKeyboardPath}}
-                        @tabindex={{if this.isGrab "-1"}}
-                      />
-                    {{else}}
-                      <ReorderControls
-                        @row={{row}}
-                        @dragType={{this.dragType}}
-                        @sourceListId={{this.listIdOrDefault}}
-                        @arrowsLayout={{@arrowsLayout}}
-                        @grab={{this.isGrab}}
-                        @instructionsId={{this.instructionsId}}
-                        @onToggle={{this.onGrabClick}}
-                        @registerGrab={{this.registerGrabPath}}
-                        @onDragStart={{this.onSourceDragStart}}
-                        @onDragEnd={{this.onSourceDragEnd}}
-                        @moveRow={{this.moveRow}}
-                        @register={{this.registerKeyboardPath}}
-                      />
-                    {{/if}}
-                  {{/if}}
                 </Item>
               {{else}}
                 <Item
@@ -1763,8 +1785,8 @@ export default class DReorderableList<T> extends Component<
                       isFirst=row.isFirst
                       isLast=row.isLast
                       movable=row.movable
-                      isDragging=row.isDragging
                     )
+                    to="row"
                   }}
                 </Item>
               {{/if}}

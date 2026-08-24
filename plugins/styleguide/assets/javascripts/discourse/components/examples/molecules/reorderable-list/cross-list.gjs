@@ -47,9 +47,10 @@ export default class ReorderableListCrossListExample extends Component {
             @key="id"
             @label={{this.itemLabel}}
             class="styleguide-reorderable-list"
-            as |item|
           >
-            <span>{{item.name}}</span>
+            <:row as |item|>
+              <span>{{item.name}}</span>
+            </:row>
           </DReorderableList>
         </div>
         <div class="styleguide-reorderable-list-group__panel">
@@ -66,9 +67,10 @@ export default class ReorderableListCrossListExample extends Component {
             @key="id"
             @label={{this.itemLabel}}
             class="styleguide-reorderable-list"
-            as |item|
           >
-            <span>{{item.name}}</span>
+            <:row as |item|>
+              <span>{{item.name}}</span>
+            </:row>
           </DReorderableList>
         </div>
       </div>

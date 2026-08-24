@@ -130,34 +130,34 @@ export default class EditUserDirectoryColumns extends Component {
             @key="id"
             @label={{this.columnLabel}}
             @onMove={{this.handleMove}}
-            @controls="end"
             @tag="div"
             @itemTag="div"
             @rowClass="edit-directory-column"
             class="edit-directory-columns-container"
-            as |column|
           >
-            <div class="left-content">
-              <label class="column-name">
-                <Input @type="checkbox" @checked={{column.enabled}} />
-                {{#if (directoryColumnIsAutomatic column=column)}}
-                  {{directoryTableHeaderTitle
-                    field=column.name
-                    icon=column.icon
-                  }}
-                {{else if (directoryColumnIsUserField column=column)}}
-                  {{directoryTableHeaderTitle
-                    field=column.user_field.name
-                    translated=true
-                  }}
-                {{else}}
-                  {{directoryTableHeaderTitle
-                    field=(i18n column.name)
-                    translated=true
-                  }}
-                {{/if}}
-              </label>
-            </div>
+            <:row as |column|>
+              <div class="left-content">
+                <label class="column-name">
+                  <Input @type="checkbox" @checked={{column.enabled}} />
+                  {{#if (directoryColumnIsAutomatic column=column)}}
+                    {{directoryTableHeaderTitle
+                      field=column.name
+                      icon=column.icon
+                    }}
+                  {{else if (directoryColumnIsUserField column=column)}}
+                    {{directoryTableHeaderTitle
+                      field=column.user_field.name
+                      translated=true
+                    }}
+                  {{else}}
+                    {{directoryTableHeaderTitle
+                      field=(i18n column.name)
+                      translated=true
+                    }}
+                  {{/if}}
+                </label>
+              </div>
+            </:row>
           </DReorderableList>
         {{/if}}
       </:body>

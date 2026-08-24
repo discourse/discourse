@@ -140,17 +140,12 @@ export default class EmojiValueList extends Component {
         <DReorderableList
           @items={{this.collection}}
           @key="value"
-          @keyboard="buttons"
           @label={{this.emojiLabel}}
           @onMove={{this.handleMove}}
-          @wrap={{true}}
-          @arrowsLayout="inline"
-          @controls="split"
-          @controlsVisibility="reveal"
           @rowClass="value"
           class="values emoji-value-list"
         >
-          <:default as |data row|>
+          <:row as |data row|>
             <DButton
               @action={{fn this.removeValue data}}
               @icon="xmark"
@@ -173,7 +168,7 @@ export default class EmojiValueList extends Component {
               />
               <span class="emoji-name">{{data.value}}</span>
             </div>
-          </:default>
+          </:row>
         </DReorderableList>
       {{/if}}
 

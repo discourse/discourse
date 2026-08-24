@@ -17,12 +17,13 @@ interface DDragHandleSignature {
  *
  * Deliberately decorative: `aria-hidden` with no tab stop, because a drag is
  * unreachable by keyboard and exposing the handle would offer assistive
- * technology a control it cannot operate. The keyboard path is a separate pair
- * of buttons beside it, which is what `DReorderButtons` is for. Pair the two.
+ * technology a control it cannot operate. Pair it with a keyboard path that
+ * reaches the same outcome, or the surface has none.
  *
  * This is NOT the right component for a handle that is itself an operable
  * control — one that takes focus and can be driven by keyboard. Use a real
- * button there and give it its own accessible name.
+ * button there and give it its own accessible name, the way
+ * `DReorderableList` does.
  *
  * Attributes pass through, so a consumer keeps its own class and can attach the
  * modifier that registers the handle with a drag source.

@@ -2,8 +2,6 @@ import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
 import ReorderableListBasicExample from "../../examples/molecules/reorderable-list/basic";
 import reorderableListBasicSource from "../../examples/molecules/reorderable-list/basic?source=file";
-import ReorderableListButtonsExample from "../../examples/molecules/reorderable-list/buttons";
-import reorderableListButtonsSource from "../../examples/molecules/reorderable-list/buttons?source=file";
 import ReorderableListCreateExample from "../../examples/molecules/reorderable-list/create";
 import reorderableListCreateSource from "../../examples/molecules/reorderable-list/create?source=file";
 import ReorderableListCrossListExample from "../../examples/molecules/reorderable-list/cross-list";
@@ -57,18 +55,6 @@ export default class ReorderableList extends Component {
           @code={{reorderableListBasicSource}}
         >
           <ReorderableListBasicExample />
-        </Example>
-        <Example
-          @title={{i18n "styleguide.sections.reorderable_list.buttons_example"}}
-          @description={{i18n
-            "styleguide.sections.reorderable_list.buttons_description"
-          }}
-          @tryThis={{i18n
-            "styleguide.sections.reorderable_list.buttons_try_this"
-          }}
-          @code={{reorderableListButtonsSource}}
-        >
-          <ReorderableListButtonsExample />
         </Example>
       </Group>
 

@@ -1,12 +1,5 @@
 import { getOwner } from "@ember/owner";
-import {
-  click,
-  fillIn,
-  find,
-  findAll,
-  settled,
-  visit,
-} from "@ember/test-helpers";
+import { fillIn, find, findAll, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import ManageReports from "discourse/admin/components/modal/manage-reports";
 import {
@@ -20,6 +13,10 @@ import {
   dragEvent,
   simulateDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
+import {
+  moveVia,
+  openMoveMenu,
+} from "discourse/tests/helpers/ui-kit/reorderable-list-helper";
 
 const REORDER_TEST_PREFIX = "Manage reports reordering";
 
@@ -74,7 +71,7 @@ async function dragReport(sourceKey, targetKey, position) {
   const source = rowSelector(sourceKey);
   const target = rowSelector(targetKey);
 
-  assertDragRegistered(gripSelector(sourceKey), target);
+  assertDragRegistered(rowSelector(sourceKey), target);
 
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {
@@ -129,20 +126,19 @@ acceptance("Manage reports drag and drop", function (needs) {
     await openModal(this);
 
     assert.dom(".d-reorderable-list__handle").exists({ count: 2 });
+    await openMoveMenu("core_report:topics");
     assert
-      .dom(".d-reorder-buttons__button")
+      .dom(".d-reorderable-list__move-item")
       .exists(
         { count: 4 },
-        "desktop keeps a keyboard path to reorder, not only the pointer drag"
+        "desktop keeps a pointer path to reorder, not only the drag"
       );
   });
 
   test(`${REORDER_TEST_PREFIX} desktop arrow buttons reorder the enabled list`, async function (assert) {
     await openModal(this);
 
-    await click(
-      `${rowSelector("core_report:topics")} .d-reorder-buttons__button:first-child`
-    );
+    await moveVia("core_report:topics", "up");
 
     assert.deepEqual(
       enabledKeys(),
@@ -155,9 +151,7 @@ acceptance("Manage reports drag and drop", function (needs) {
     const a11y = getOwner(this).lookup("service:a11y");
     await openModal(this);
 
-    await click(
-      `${rowSelector("core_report:topics")} .d-reorder-buttons__button:first-child`
-    );
+    await moveVia("core_report:topics", "up");
 
     assert.strictEqual(
       a11y.politeMessage,
@@ -249,13 +243,16 @@ acceptance("Manage reports drag and drop", function (needs) {
       .dom(".manage-reports__row.--enabled[data-drop-target]")
       .exists({ count: 2 }, "every enabled reorderable row is a drop target");
     assert
-      .dom(
-        ".manage-reports__row.--enabled .d-reorderable-list__handle[data-drag-source]"
-      )
+      .dom(".manage-reports__row.--enabled[data-drag-source]")
       .exists(
         { count: 2 },
-        "every enabled row's grip carries the drag registration"
+        "every enabled row carries the drag registration, so a drag shows the row"
       );
+    assert
+      .dom(
+        '.manage-reports__row.--enabled .d-reorderable-list__handle[draggable="true"]'
+      )
+      .exists({ count: 2 }, "and its grip is where the drag begins");
   });
 
   test(`${REORDER_TEST_PREFIX} uses the shared drag state classes`, async function (assert) {
@@ -395,9 +392,7 @@ acceptance(
         "the filter shows the two matching rows, with one hidden between them"
       );
 
-      await click(
-        `${rowSelector("core_report:signups")} .d-reorder-buttons__button:last-child`
-      );
+      await moveVia("core_report:signups", "down");
 
       assert.deepEqual(
         enabledKeys(),
@@ -451,9 +446,7 @@ acceptance(
       await openModal(this);
       await fillIn(".manage-reports__search-wrapper .filter-input", "Matching");
 
-      await click(
-        `${rowSelector("core_report:signups")} .d-reorder-buttons__button:last-child`
-      );
+      await moveVia("core_report:signups", "down");
 
       await fillIn(".manage-reports__search-wrapper .filter-input", "");
 

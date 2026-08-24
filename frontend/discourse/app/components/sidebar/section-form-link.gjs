@@ -18,12 +18,8 @@ const SectionFormLink = <template>
   {{! Every viewport, because a touch screen can drag from a grip and had no
       way to reorder at all while this was desktop-only. The drag starts at the
       grip rather than anywhere on the row, so a press that was meant to
-      scroll still scrolls. }}
-  <@row.handle class="draggable" data-link-name={{@link.name}} />
-
-  {{! The arrows are the keyboard path, which a touch screen does not have
-      either, so they render everywhere the grip does. }}
-  <@row.arrows role="cell" class="sidebar-section-form-link__arrows" />
+      scroll still scrolls, and its menu carries the paths a drag cannot. }}
+  <@row.handle role="cell" class="draggable" data-link-name={{@link.name}} />
 
   <div class="input-group link-icon" role="cell">
     <DIconGridPicker

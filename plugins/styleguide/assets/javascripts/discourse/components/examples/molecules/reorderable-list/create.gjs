@@ -29,9 +29,10 @@ export default class ReorderableListCreateExample extends Component {
       @onCreate={{this.addValue}}
       @onMove={{this.applyMove}}
       class="styleguide-reorderable-list"
-      as |value|
     >
-      <span>{{value}}</span>
+      <:row as |value|>
+        <span>{{value}}</span>
+      </:row>
     </DReorderableList>
   </template>
 }
