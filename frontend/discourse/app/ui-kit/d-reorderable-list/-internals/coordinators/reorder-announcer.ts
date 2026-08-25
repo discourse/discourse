@@ -47,8 +47,10 @@ export default class ReorderAnnouncer<T> {
   #rows: () => Row<T>[];
 
   /**
-   * The chord run in flight, if any. Untracked: nothing rendered reads it, and
-   * it is written from a timer that fires after the render that scheduled it.
+   * The run of consecutive chord moves in flight, if any. A held Alt+arrow
+   * would otherwise speak a full sentence per step into a live region that
+   * re-announces even an unchanged string, so a run says only where the row
+   * now is and the full sentence waits for the run to settle.
    */
   #run: { key: string; timer: Timer } | null = null;
 
