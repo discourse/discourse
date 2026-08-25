@@ -33,6 +33,10 @@ class RenameEditCategoryToolToMoveTopic < ActiveRecord::Migration[8.0]
           id: row.id,
         )
       end
+
+    # Pending approval actions replay by tool name; their stored parameters
+    # (topic_id/category_id/reason) are the move_topic signature.
+    execute "UPDATE ai_tool_actions SET tool_name = 'move_topic' WHERE tool_name = 'edit_category'"
   end
 
   def down
