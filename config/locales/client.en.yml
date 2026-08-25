@@ -572,7 +572,7 @@ en:
       dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose colors, fonts, and a homepage."
+        description: "Choose colors, fonts, and how your site is laid out."
         action: "See options"
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
@@ -609,7 +609,7 @@ en:
 
     design_wizard:
       title: "Customize your site"
-      subtitle: "Choose colors, fonts, and a homepage."
+      subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
       save: "Save and finish"
       back: "Back"
@@ -619,8 +619,11 @@ en:
         colors: "Default color"
         fonts: "Fonts"
         homepage: "Homepage"
+        welcome_banner: "Welcome banner"
+        search: "Search"
       theme:
         selected: "Selected"
+        applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
         light: "Light"
@@ -645,6 +648,21 @@ en:
           boxes: "Boxes"
           with_topics: "Categories with topics"
           only: "Categories only"
+      welcome_banner:
+        enable: "Show a welcome banner"
+        enable_description: "Greet visitors with your site name and a search box"
+        location: "Banner location"
+        locations:
+          below_site_header: "Below the site header"
+          above_topic_content: "Above the topic list"
+      search:
+        experiences:
+          search_icon:
+            title: "Search icon"
+            description: "A magnifying glass in the header that opens search."
+          search_field:
+            title: "Search field"
+            description: "A full search field in the header, always visible."
 
     about:
       edit: "Edit this page"

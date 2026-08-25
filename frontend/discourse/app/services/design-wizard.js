@@ -20,6 +20,14 @@ import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 
 const STATE_KEY = "design_wizard_panel_state";
+// site settings the wizard mutates locally to preview a selection, and which
+// have to be put back when the wizard is closed without saving
+const PREVIEWED_SITE_SETTINGS = [
+  "desktop_category_page_style",
+  "enable_welcome_banner",
+  "welcome_banner_location",
+  "search_experience",
+];
 const SELECT_THEME_STEP = "select_theme";
 // mirrors the onboarding step's own completion key so a wizard finished
 // after its caller was torn down still marks the step complete
@@ -44,7 +52,12 @@ export default class DesignWizardService extends Service {
   @tracked headingFont;
   @tracked homepage;
   @tracked categoryPageStyle;
+  @tracked welcomeBanner;
+  @tracked welcomeBannerLocation;
+  @tracked searchExperience;
   @tracked saving = false;
+  // a theme preview replaces the whole page, so the panel stays busy until it does
+  @tracked applyingTheme = false;
   @tracked selectedPairKeys = new Map();
   @tracked stepIndex = 0;
   // resuming an in-progress wizard (e.g. after a theme-preview reload)
@@ -52,13 +65,40 @@ export default class DesignWizardService extends Service {
   @tracked animateEntrance = true;
 
   #onComplete;
-  #originalCategoryPageStyle;
+  #originalSiteSettings;
   #originalColorSchemeLinks;
+  #prefetched = false;
+
+  // warms the browser cache for the theme screenshots, which dominate the
+  // panel's first paint on a slow connection
+  async prefetch() {
+    if (this.#prefetched || this.active || isTesting()) {
+      return;
+    }
+    this.#prefetched = true;
+
+    try {
+      const data = await ajax("/admin/config/design-wizard.json");
+      for (const theme of data.themes) {
+        for (const url of [
+          theme.screenshot_light_url,
+          theme.screenshot_dark_url,
+        ]) {
+          if (url) {
+            new Image().src = url;
+          }
+        }
+      }
+    } catch {
+      // a failed warm-up is not worth surfacing, `start` reports its own errors
+    }
+  }
 
   async start({ onComplete } = {}) {
     this.#onComplete = onComplete;
-    this.#originalCategoryPageStyle ??=
-      this.siteSettings.desktop_category_page_style;
+    this.#originalSiteSettings ??= Object.fromEntries(
+      PREVIEWED_SITE_SETTINGS.map((name) => [name, this.siteSettings[name]])
+    );
 
     // always fetch fresh: progress saves change the settings this payload
     // reflects, so a cached copy would preview stale selections
@@ -80,10 +120,7 @@ export default class DesignWizardService extends Service {
     this.active = true;
     this.#originalColorSchemeLinks = captureColorSchemeLinks();
 
-    if (stored && this.homepage === "categories") {
-      this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
-    }
-
+    this.#previewSiteSettings();
     await this.#previewSelections();
   }
 
@@ -142,11 +179,16 @@ export default class DesignWizardService extends Service {
   }
 
   selectTheme(themeId) {
-    if (themeId === this.themeId) {
+    if (themeId === this.themeId || this.applyingTheme) {
       return;
     }
 
+    this.applyingTheme = true;
     this.themeId = themeId;
+    // these are resolved per theme, so let the reloaded page re-seed them from
+    // the theme being previewed rather than carrying the old theme's values
+    this.welcomeBanner = undefined;
+    this.searchExperience = undefined;
     this.#persistState();
 
     // a different theme is a different asset build, so previewing it means
@@ -222,15 +264,34 @@ export default class DesignWizardService extends Service {
     this.#refreshCategoriesPage();
   }
 
+  selectWelcomeBanner(enabled) {
+    this.welcomeBanner = enabled;
+    this.siteSettings.enable_welcome_banner = enabled;
+    this.#persistState();
+  }
+
+  selectWelcomeBannerLocation(location) {
+    this.welcomeBannerLocation = location;
+    this.siteSettings.welcome_banner_location = location;
+    this.#persistState();
+  }
+
+  selectSearchExperience(experience) {
+    this.searchExperience = experience;
+    this.siteSettings.search_experience = experience;
+    this.#persistState();
+  }
+
   stop() {
     this.active = false;
     this.#onComplete = undefined;
     this.keyValueStore.remove(STATE_KEY);
     clearPreview(document);
 
-    if (this.#originalCategoryPageStyle) {
-      this.siteSettings.desktop_category_page_style =
-        this.#originalCategoryPageStyle;
+    if (this.#originalSiteSettings) {
+      for (const [name, value] of Object.entries(this.#originalSiteSettings)) {
+        this.siteSettings[name] = value;
+      }
       this.#refreshCategoriesPage();
     }
     restoreColorSchemeLinks(this.#originalColorSchemeLinks);
@@ -319,6 +380,9 @@ export default class DesignWizardService extends Service {
       homepage: this.homepage,
       category_page_style:
         this.homepage === "categories" ? this.categoryPageStyle : null,
+      enable_welcome_banner: this.welcomeBanner,
+      welcome_banner_location: this.welcomeBannerLocation,
+      search_experience: this.searchExperience,
     };
   }
 
@@ -357,6 +421,9 @@ export default class DesignWizardService extends Service {
     this.colorMode = renderedColorMode();
     this.homepage = this.#supportedHomepage(this.data.homepage);
     this.categoryPageStyle = this.siteSettings.desktop_category_page_style;
+    this.welcomeBanner = this.siteSettings.enable_welcome_banner;
+    this.welcomeBannerLocation = this.siteSettings.welcome_banner_location;
+    this.searchExperience = this.siteSettings.search_experience;
     this.stepIndex = 0;
   }
 
@@ -371,6 +438,12 @@ export default class DesignWizardService extends Service {
       stored.homepage ?? this.#supportedHomepage(this.data.homepage);
     this.categoryPageStyle =
       stored.categoryPageStyle ?? this.siteSettings.desktop_category_page_style;
+    this.welcomeBanner =
+      stored.welcomeBanner ?? this.siteSettings.enable_welcome_banner;
+    this.welcomeBannerLocation =
+      stored.welcomeBannerLocation ?? this.siteSettings.welcome_banner_location;
+    this.searchExperience =
+      stored.searchExperience ?? this.siteSettings.search_experience;
     // selections are restored but the flow always restarts from the first
     // step, so a resumed wizard walks the same path as a fresh one
     this.stepIndex = 0;
@@ -388,8 +461,22 @@ export default class DesignWizardService extends Service {
         headingFont: this.headingFont,
         homepage: this.homepage,
         categoryPageStyle: this.categoryPageStyle,
+        welcomeBanner: this.welcomeBanner,
+        welcomeBannerLocation: this.welcomeBannerLocation,
+        searchExperience: this.searchExperience,
       }),
     });
+  }
+
+  // the page behind the sheet renders from the client copy of these settings,
+  // so assigning them previews the restored selections live
+  #previewSiteSettings() {
+    if (this.homepage === "categories") {
+      this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
+    }
+    this.siteSettings.enable_welcome_banner = this.welcomeBanner;
+    this.siteSettings.welcome_banner_location = this.welcomeBannerLocation;
+    this.siteSettings.search_experience = this.searchExperience;
   }
 
   #refreshCategoriesPage() {
