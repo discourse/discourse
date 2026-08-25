@@ -937,8 +937,7 @@ SQL
         unless post.raw == new_raw
           post.raw = new_raw
           post.cooked = post.cook(new_raw)
-          cpp = CookedPostProcessor.new(post)
-          cpp.link_post_uploads
+          post.link_post_uploads
           post.custom_fields["import_post_process"] = true
           post.save
         end
