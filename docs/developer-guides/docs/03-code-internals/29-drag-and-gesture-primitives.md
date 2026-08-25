@@ -444,6 +444,14 @@ the press, leaves the capture on the pressed node until the gesture moves, and
 refuses native drag-and-drop. On either path, the click that would trail a
 completed drag is swallowed — a tap clicks, a drag never does.
 
+`touchAction` names the pans the browser may still perform, and it is arbitrated
+only as far as the nearest scroll container: a value on an ancestor never reaches
+inside one, and a pan that starts inside one is claimed by the browser —
+cancelling the gesture — even when there is nothing to scroll that way. A surface
+wrapping a scroller therefore declares the split on the scroller itself, and can
+hold an axis the scroller would otherwise take only while it has nothing to
+scroll.
+
 # DResizeSeparator
 
 The default for resizing between two regions. `dResizeEdge` underneath keeps the
