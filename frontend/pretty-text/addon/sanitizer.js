@@ -146,7 +146,7 @@ export function sanitize(text, allowLister) {
                   const regex = i
                     // escape regex, keeping *
                     .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
-                    .replace(/\*/g, "[^/]+");
+                    .replace(/\*/g, "[^/?#\\\\]+");
                   const allowedIframe = new RegExp(`^${regex}.*$`, "i");
                   return iframeUrls.every((iframeUrl) =>
                     allowedIframe.test(iframeUrl)
