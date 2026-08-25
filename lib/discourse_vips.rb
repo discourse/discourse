@@ -48,7 +48,8 @@ module DiscourseVips
     def socket_path
       return ENV["DISCOURSE_VIPS_SOCKET_PATH"] if ENV["DISCOURSE_VIPS_SOCKET_PATH"]
 
-      socket_name = Rails.env.test? ? "discourse-vips-#{Process.pid}.sock" : "discourse-vips.sock"
+      socket_name =
+        Rails.env.production? ? "discourse-vips.sock" : "discourse-vips-#{Rails.env}.sock"
       File.expand_path("../tmp/#{socket_name}", __dir__)
     end
 

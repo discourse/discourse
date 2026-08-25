@@ -34,7 +34,7 @@ RSpec.describe TopicOgImageGenerator do
     end
   end
 
-  describe "#generate_bytes", :with_vips_broker do
+  describe "#generate_bytes" do
     it "renders the topic OG image as a 1200x630 PNG" do
       png_bytes = described_class.new(topic).generate_bytes
 
