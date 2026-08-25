@@ -926,7 +926,7 @@ RSpec.describe Upload do
     end
   end
 
-  describe "#dominant_color", :with_vips_broker do
+  describe "#dominant_color" do
     let(:white_image) { Fabricate(:image_upload, color: "white") }
     let(:red_image) { Fabricate(:image_upload, color: "red") }
     let(:high_color_image) { Fabricate(:image_upload, color: "#000A00F00", color_depth: 16) }

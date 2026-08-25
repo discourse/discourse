@@ -2,7 +2,7 @@
 
 require "letter_avatar"
 
-RSpec.describe LetterAvatar, :with_vips_broker do
+RSpec.describe LetterAvatar do
   describe ".cleanup_old" do
     it "removes stale cache directories" do
       cache_path = LetterAvatar.cache_path

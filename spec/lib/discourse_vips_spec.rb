@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseVips, :with_vips_broker do
+RSpec.describe DiscourseVips do
   describe ".version" do
     it "returns the interface and libvips versions" do
       expect(described_class.version).to match(/\A1-8\.\d+\.\d+\z/)
