@@ -104,7 +104,7 @@ module Chat
 
       channels =
         Chat::Channel.includes(
-          :last_message,
+          last_message: [:uploads],
           chatable: %i[
             topic_only_relative_url
             uploaded_background
