@@ -35,7 +35,7 @@ module DiscourseVips
 
   class << self
     def version
-      "#{MiniVips::VERSION}-#{run(command: "version", operation: :letter_avatar_version).strip}"
+      "#{MiniVips::VERSION}-#{run(command: "version", operation: :vips_version).strip}"
     end
 
     def generate_letter_avatar(letter:, background_color:, output_path:)

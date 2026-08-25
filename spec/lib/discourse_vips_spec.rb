@@ -13,10 +13,7 @@ RSpec.describe DiscourseVips do
 
       expect(events.size).to eq(1)
       payload = events.first[:params].first
-      expect(payload.except(:duration_seconds)).to eq(
-        operation: "letter_avatar_version",
-        success: true,
-      )
+      expect(payload.except(:duration_seconds)).to eq(operation: "vips_version", success: true)
       expect(payload[:duration_seconds]).to be >= 0
     end
   end
