@@ -836,6 +836,45 @@ RSpec.describe UploadsController do
   end
 
   describe "#lookup_urls" do
+    it "does not resolve private uploads from SQL LIKE wildcards" do
+      setup_s3
+      SiteSetting.authorized_extensions = "pdf"
+      SiteSetting.secure_uploads = true
+
+      owner = Fabricate(:user)
+      private_post = Fabricate(:post, user: owner)
+      private_post.topic.change_category_to_id(
+        Fabricate(:private_category, group: Fabricate(:group)).id,
+      )
+      private_upload =
+        Fabricate(
+          :upload_s3,
+          user: owner,
+          sha1: "a#{"1" * 39}",
+          original_filename: "confidential-attachment.pdf",
+          extension: "pdf",
+          secure: true,
+          access_control_post: private_post,
+        )
+
+      sign_in(user)
+
+      post "/uploads/lookup-metadata.json",
+           params: {
+             url: private_upload.url.sub(private_upload.sha1, "a#{"_" * 39}"),
+           }
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(private_upload.original_filename)
+
+      post "/uploads/lookup-urls.json", params: { short_urls: ["%"] }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(
+        Upload.secure_uploads_url_from_upload_url(private_upload.url),
+      )
+    end
+
     it "can look up long urls" do
       sign_in(user)
       upload = Fabricate(:upload)

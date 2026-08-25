@@ -463,7 +463,8 @@ module PrettyText
         video_src = video["data-video-src"]
         next if video_src == "/404" || video_src.nil?
         video_sha1 = File.basename(video_src, File.extname(video_src))
-        thumbnail = Upload.where("original_filename LIKE ?", "#{video_sha1}.%").last
+        thumbnail =
+          Upload.where("original_filename LIKE ?", "#{Upload.sanitize_sql_like(video_sha1)}.%").last
         if thumbnail
           video["data-thumbnail-src"] = UrlHelper.absolute(
             GlobalPath.upload_cdn_path(thumbnail.url),
