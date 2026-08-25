@@ -534,8 +534,23 @@ export async function inCodeBlock(text, pos) {
   return CODE_TOKEN_TYPES.includes(type);
 }
 
-export function translateModKey(string, separator = " ") {
+export function translateModKey(string, separator) {
   const { isApple } = capabilities;
+
+  // Apple keyboards run their glyphs together; every other platform names its
+  // modifiers and needs the gap between them. Derived from the same fact the
+  // glyphs are, so a caller does not have to re-derive it to look native.
+  separator ??= isApple ? "" : " ";
+
+  // Arrow keys are drawn on every platform: their event names are not what
+  // anyone calls them, and unlike the modifiers they are named the same way
+  // whatever the keyboard.
+  string = string
+    .replace(/arrowup/i, "↑")
+    .replace(/arrowdown/i, "↓")
+    .replace(/arrowleft/i, "←")
+    .replace(/arrowright/i, "→");
+
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
     string = string

@@ -119,13 +119,11 @@ export default class ToolbarPopupMenuOptions extends Component {
 
     let htmlLabel = `<span class="d-button-label__text">${label}</span>`;
     if (content.shortcut) {
-      const separator = this.capabilities.isApple ? "" : " ";
       const platformClass = this.capabilities.isApple ? "--apple" : "";
       htmlLabel += ` <kbd class="shortcut ${platformClass} ${
         content.alwaysShowShortcut ? "--always-visible" : ""
       }">${translateModKey(
-        PLATFORM_KEY_MODIFIER + "+" + content.shortcut,
-        separator
+        PLATFORM_KEY_MODIFIER + "+" + content.shortcut
       )}</kbd>`;
     }
 

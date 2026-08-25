@@ -1982,14 +1982,14 @@ acceptance(`composer buttons API`, function (needs) {
       .hasAttribute(
         "title",
         i18n("some_title") +
-          ` (${translateModKey(PLATFORM_KEY_MODIFIER + " alt b")})`,
+          ` (${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")})`,
         "shows the title with shortcut"
       );
     assert
       .dom(row)
       .hasText(
         i18n("some_label") +
-          ` ${translateModKey(PLATFORM_KEY_MODIFIER + " alt b")}`,
+          ` ${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")}`,
         "shows the label with shortcut"
       );
   });

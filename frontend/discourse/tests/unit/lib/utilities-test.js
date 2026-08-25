@@ -22,6 +22,7 @@ import {
   setDefaultHomepage,
   slugify,
   toAsciiPrintable,
+  translateModKey,
   unicodeSlugify,
 } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
@@ -687,6 +688,44 @@ Random extras
       ignoreUploads.match(findTableRegex()).length,
       1,
       "finds on table, ignoring upload markup"
+    );
+  });
+});
+
+module("Unit | Utilities | translateModKey", function () {
+  test("renders arrow keys as their glyphs", function (assert) {
+    assert.strictEqual(
+      translateModKey("ArrowUp"),
+      "\u2191",
+      "an arrow key has no readable name of its own"
+    );
+    assert.strictEqual(translateModKey("ArrowDown"), "\u2193");
+    assert.strictEqual(translateModKey("ArrowLeft"), "\u2190");
+    assert.strictEqual(translateModKey("ArrowRight"), "\u2192");
+  });
+
+  test("renders a modifier and an arrow together", function (assert) {
+    // The modifier's spelling is the platform's business and is covered by the
+    // branches above; what matters here is that the arrow survives beside it.
+    const rendered = translateModKey("Alt+ArrowUp", "+");
+
+    assert.true(rendered.endsWith("\u2191"), "the arrow is drawn");
+    assert.false(
+      rendered.includes("Arrow"),
+      "and its event name does not reach the reader"
+    );
+    assert.notStrictEqual(
+      rendered,
+      "\u2191",
+      "the modifier is still rendered in front of it"
+    );
+  });
+
+  test("leaves a shortcut with no arrow in it alone", function (assert) {
+    assert.strictEqual(
+      translateModKey("Alt+B", "+").replace(/^.*\+/, ""),
+      "B",
+      "a key that is not an arrow is passed through untouched"
     );
   });
 });
