@@ -145,6 +145,10 @@ class Topic < ActiveRecord::Base
     @featured_users ||= TopicFeaturedUsers.new(self)
   end
 
+  def first_post_with_deleted
+    posts.with_deleted.find_by(post_number: 1)
+  end
+
   def trash!(trashed_by = nil)
     trigger_event = false
 

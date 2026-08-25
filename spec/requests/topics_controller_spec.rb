@@ -1992,6 +1992,16 @@ RSpec.describe TopicsController do
           put "/t/#{topic.id}/recover.json"
           expect(response).to be_forbidden
         end
+
+        it "raises an exception when only the user's own deleted reply survives" do
+          Fabricate(:post, topic: topic, user: user, post_number: 2, user_deleted: true)
+          sign_in(user)
+
+          put "/t/#{topic.id}/recover.json"
+
+          expect(response).to be_forbidden
+          expect(topic.reload).to be_trashed
+        end
       end
 
       context "with permission" do
