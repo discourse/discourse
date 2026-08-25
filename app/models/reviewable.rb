@@ -111,11 +111,15 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.custom_filter_type_options
-    @reviewable_filter_type_options ||= []
+    (@reviewable_filter_type_options || []) | DiscoursePluginRegistry.reviewable_filter_type_options
   end
 
   def self.custom_reason_filter_options
-    (@reviewable_reason_filter_options || []).flat_map do |registration|
+    registrations =
+      (@reviewable_reason_filter_options || []) |
+        DiscoursePluginRegistry.reviewable_filter_reason_registrations
+
+    registrations.flat_map do |registration|
       options = registration[:options]
       options = options.call if options.respond_to?(:call)
 
@@ -125,7 +129,9 @@ class Reviewable < ActiveRecord::Base
 
   def self.add_custom_filter(new_filter, type_filter: nil, reason_filters: nil)
     custom_filters << new_filter
-    custom_filter_type_options << type_filter.merge(filter: new_filter.first) if type_filter
+    if type_filter
+      (@reviewable_filter_type_options ||= []) << type_filter.merge(filter: new_filter.first)
+    end
     if reason_filters
       (@reviewable_reason_filter_options ||= []) << {
         filter: new_filter.first,

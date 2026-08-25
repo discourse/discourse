@@ -77,6 +77,21 @@ RSpec.describe ReviewablesController do
       )
     end
 
+    it "hides AI triage filters when the plugin is disabled on the current site" do
+      SiteSetting.discourse_ai_enabled = false
+      sign_in(admin)
+
+      get "/review.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("meta", "reviewable_types")).not_to include(
+        "discourse_ai:triage",
+      )
+      expect(response.parsed_body.dig("meta", "score_types")).not_to include(
+        { "id" => "ai_triage_automation:#{automation.id}", "name" => automation.name },
+      )
+    end
+
     it "filters by AI triage Type and automation Reason" do
       sign_in(admin)
 

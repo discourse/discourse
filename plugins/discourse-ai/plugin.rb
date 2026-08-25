@@ -261,39 +261,22 @@ after_initialize do
     [
       :ai_triage_automation_id,
       Proc.new do |results, value|
-        if value == :all
-          next(
-            results.where(
-              <<~SQL,
-                   EXISTS (
-                     SELECT 1
-                     FROM reviewable_scores
-                     WHERE reviewable_scores.reviewable_id = reviewables.id
-                     AND reviewable_scores.context LIKE :context
-                   )
-                 SQL
-              context: "#{DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}%",
-            )
-          )
+        context = "#{DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}%"
+        if value != :all
+          automation_id = value.is_a?(Integer) ? value : value.to_s[/\A\d+\z/]&.to_i
+          next results if !automation_id || automation_id <= 0
+
+          context = DiscourseAi::Automation.triage_automation_score_context(automation_id)
         end
 
-        automation_id = value.is_a?(Integer) ? value : value.to_s[/\A\d+\z/]&.to_i
-
-        if automation_id && automation_id > 0
-          results.where(
-            <<~SQL,
+        results.where(<<~SQL, context:)
             EXISTS (
               SELECT 1
               FROM reviewable_scores
               WHERE reviewable_scores.reviewable_id = reviewables.id
-              AND reviewable_scores.context = :context
+              AND reviewable_scores.context LIKE :context
             )
           SQL
-            context: DiscourseAi::Automation.triage_automation_score_context(automation_id),
-          )
-        else
-          results
-        end
       end,
     ],
     type_filter: {

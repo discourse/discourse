@@ -1013,7 +1013,21 @@ class Plugin::Instance
   # type_filter accepts an id and filter value for the Type control. reason_filters accepts an
   # array or callable returning ids, names, and filter values for the Reason control.
   def add_custom_reviewable_filter(filter, type_filter: nil, reason_filters: nil)
-    reloadable_patch { Reviewable.add_custom_filter(filter, type_filter:, reason_filters:) }
+    reloadable_patch { Reviewable.add_custom_filter(filter) }
+
+    if type_filter
+      DiscoursePluginRegistry.register_reviewable_filter_type_option(
+        type_filter.merge(filter: filter.first),
+        self,
+      )
+    end
+
+    if reason_filters
+      DiscoursePluginRegistry.register_reviewable_filter_reason_registration(
+        { filter: filter.first, options: reason_filters },
+        self,
+      )
+    end
   end
 
   # Register a new API key scope.
