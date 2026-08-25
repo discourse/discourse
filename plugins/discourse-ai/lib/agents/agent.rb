@@ -153,7 +153,7 @@ module DiscourseAi
             tools << Tools::ListTags
             tools << Tools::CreateTag
             tools << Tools::EditTag
-            tools << Tools::EditTopicTags
+            tools << Tools::ChangeTopicTags
           end
 
           # Image generation tools - use custom UI-configured tools

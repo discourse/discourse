@@ -3,7 +3,7 @@
 module DiscourseAi
   module Agents
     module Tools
-      class EditTopicTags < Tool
+      class ChangeTopicTags < Tool
         def self.signature
           {
             name: name,
@@ -46,7 +46,7 @@ module DiscourseAi
         end
 
         def self.name
-          "edit_topic_tags"
+          "change_topic_tags"
         end
 
         def self.requires_approval?
@@ -56,21 +56,25 @@ module DiscourseAi
         def invoke
           if !SiteSetting.tagging_enabled
             return(
-              error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.tagging_disabled"))
+              error_response(
+                I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.tagging_disabled"),
+              )
             )
           end
 
           topic = Topic.find_by(id: parameters[:topic_id])
           if !topic
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.not_found"))
+            return error_response(I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.not_found"))
           end
 
           if !guardian.can_edit_tags?(topic)
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.not_allowed"))
+            return(
+              error_response(I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.not_allowed"))
+            )
           end
 
           if reason.blank?
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.no_reason"))
+            return error_response(I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.no_reason"))
           end
 
           tag_names = parameters[:tags] || []
@@ -81,14 +85,14 @@ module DiscourseAi
 
           first_post = topic.first_post
           if !first_post
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_topic_tags.errors.not_found"))
+            return error_response(I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.not_found"))
           end
 
           revisor = PostRevisor.new(first_post, topic)
           result = revisor.revise!(acting_user, fields)
 
           if result
-            { status: "success", message: I18n.t("discourse_ai.ai_bot.edit_topic_tags.success") }
+            { status: "success", message: I18n.t("discourse_ai.ai_bot.change_topic_tags.success") }
           else
             error_response(topic.errors.full_messages.join(", "))
           end

@@ -48,7 +48,7 @@ class ReviewableAiToolAction < Reviewable
     context.user = performed_by if tool_class.attribute_to_approver?
 
     # Suppress automation re-triggers caused by the tool's side effects
-    # (e.g. edit_topic_tags → topic_tags_changed → automation fires again → loop).
+    # (e.g. change_topic_tags → topic_tags_changed → automation fires again → loop).
     result =
       if defined?(DiscourseAutomation)
         DiscourseAutomation.suppress_triggers { tool.invoke }

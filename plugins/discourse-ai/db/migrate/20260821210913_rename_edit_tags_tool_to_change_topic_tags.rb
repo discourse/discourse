@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class RenameEditTagsToolToEditTopicTags < ActiveRecord::Migration[8.0]
-  # The tool that tags a topic was renamed from EditTags to EditTopicTags to
+class RenameEditTagsToolToChangeTopicTags < ActiveRecord::Migration[8.0]
+  # The tool that tags a topic was renamed from EditTags to ChangeTopicTags to
   # distinguish it from the new EditTag tool that edits a tag itself. Rename
   # the stored entry so existing agents keep the tool.
   def up
@@ -12,14 +12,14 @@ class RenameEditTagsToolToEditTopicTags < ActiveRecord::Migration[8.0]
         next if !tools.is_a?(Array)
 
         names = tools.map { |tool| tool.is_a?(Array) ? tool.first : tool }
-        next if names.include?("EditTopicTags")
+        next if names.include?("ChangeTopicTags")
 
         renamed =
           tools.map do |tool|
             if tool.is_a?(Array) && tool.first == "EditTags"
-              ["EditTopicTags", *tool.drop(1)]
+              ["ChangeTopicTags", *tool.drop(1)]
             elsif tool == "EditTags"
-              "EditTopicTags"
+              "ChangeTopicTags"
             else
               tool
             end
@@ -35,7 +35,7 @@ class RenameEditTagsToolToEditTopicTags < ActiveRecord::Migration[8.0]
 
     # Pending approval actions replay by tool name; the parameters are
     # unchanged by the rename.
-    execute "UPDATE ai_tool_actions SET tool_name = 'edit_topic_tags' WHERE tool_name = 'edit_tags'"
+    execute "UPDATE ai_tool_actions SET tool_name = 'change_topic_tags' WHERE tool_name = 'edit_tags'"
   end
 
   def down

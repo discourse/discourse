@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require Rails.root.join(
-          "plugins/discourse-ai/db/migrate/20260821210913_rename_edit_tags_tool_to_edit_topic_tags.rb",
+          "plugins/discourse-ai/db/migrate/20260821210913_rename_edit_tags_tool_to_change_topic_tags.rb",
         )
 
-RSpec.describe RenameEditTagsToolToEditTopicTags do
+RSpec.describe RenameEditTagsToolToChangeTopicTags do
   fab!(:agent, :ai_agent)
 
   before do
@@ -30,7 +30,7 @@ RSpec.describe RenameEditTagsToolToEditTopicTags do
     described_class.new.up
 
     expect(stored_tools(agent.id)).to eq(
-      [["EditTopicTags", { "option" => "x" }, true], ["CloseTopic", nil, false]],
+      [["ChangeTopicTags", { "option" => "x" }, true], ["CloseTopic", nil, false]],
     )
   end
 
@@ -43,7 +43,7 @@ RSpec.describe RenameEditTagsToolToEditTopicTags do
 
     described_class.new.up
 
-    expect(stored_tools(agent.id)).to eq(%w[EditTopicTags CloseTopic])
+    expect(stored_tools(agent.id)).to eq(%w[ChangeTopicTags CloseTopic])
   end
 
   it "renames pending tool approval actions so they stay replayable" do
@@ -58,11 +58,11 @@ RSpec.describe RenameEditTagsToolToEditTopicTags do
 
     expect(
       DB.query_single("SELECT tool_name FROM ai_tool_actions WHERE id = ?", action_id).first,
-    ).to eq("edit_topic_tags")
+    ).to eq("change_topic_tags")
   end
 
-  it "leaves agents that already have EditTopicTags untouched" do
-    tools = [["EditTags", nil, false], ["EditTopicTags", nil, false]]
+  it "leaves agents that already have ChangeTopicTags untouched" do
+    tools = [["EditTags", nil, false], ["ChangeTopicTags", nil, false]]
     DB.exec(
       "UPDATE ai_agents SET tools = :tools WHERE id = :id",
       tools: tools.to_json,
