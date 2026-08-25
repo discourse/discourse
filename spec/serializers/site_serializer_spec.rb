@@ -23,6 +23,17 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "#anonymous_list_filters" do
+    it "exposes the filters an anonymous visitor can request" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:anonymous_list_filters]).to include("latest", "top", "hot")
+      expect(serialized[:anonymous_list_filters]).not_to include("unread")
+      # an anonymous menu item, but not a list filter
+      expect(serialized[:anonymous_list_filters]).not_to include("categories")
+    end
+  end
+
   describe "#user_tips" do
     it "is included if enable_user_tips" do
       SiteSetting.enable_user_tips = true
