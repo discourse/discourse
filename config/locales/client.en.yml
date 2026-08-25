@@ -1010,6 +1010,7 @@ en:
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
       user:
+        avatar: "Avatar when flagged"
         bio: "Bio"
         website: "Website"
         username: "Username"
