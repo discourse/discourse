@@ -9,6 +9,7 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
+import DMenus from "discourse/float-kit/components/d-menus";
 import {
   disableClearA11yAnnouncementsInTests,
   enableClearA11yAnnouncementsInTests,
@@ -138,6 +139,7 @@ async function dragLink(sourceName, targetName, position) {
 async function renderForm(context) {
   await render(
     <template>
+      <DMenus />
       <SidebarSectionForm
         @closeModal={{context.closeModal}}
         @inline={{true}}

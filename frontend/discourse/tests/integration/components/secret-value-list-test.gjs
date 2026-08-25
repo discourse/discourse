@@ -1,6 +1,7 @@
 import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SecretValueList from "discourse/admin/components/secret-value-list";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
@@ -13,6 +14,7 @@ module("Integration | Component | SecretValueList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
@@ -68,6 +70,7 @@ module("Integration | Component | SecretValueList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
@@ -103,6 +106,7 @@ module("Integration | Component | SecretValueList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
@@ -145,6 +149,7 @@ module("Integration | Component | SecretValueList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}

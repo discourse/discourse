@@ -12,7 +12,7 @@ import type Owner from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DHeadlessMenu from "discourse/float-kit/components/d-headless-menu";
+import type MenuService from "discourse/float-kit/services/menu";
 import type A11yService from "discourse/services/a11y";
 import { and, eq } from "discourse/truth-helpers";
 import {
@@ -108,6 +108,7 @@ export default class DReorderableList<T> extends Component<
   DReorderableListSignature<T>
 > {
   @service declare a11y: A11yService;
+  @service declare menu: MenuService;
 
   rowClassFor = (row: Row<T>): string | undefined => {
     const { rowClass } = this.args;
@@ -379,7 +380,7 @@ export default class DReorderableList<T> extends Component<
     });
 
     this.menuCoordinator = new MoveMenuCoordinator({
-      owner,
+      menu: this.menu,
       args: () => this.args,
       listId: () => this.listIdOrDefault,
       handleFor: (key: string) => this.handleFor(key),
@@ -388,6 +389,9 @@ export default class DReorderableList<T> extends Component<
       move: (key: string, target: MoveTarget) =>
         this.#engine.move(key, target, "menu"),
     });
+    // Without this the coordinator is never destroyed, so a menu left open at
+    // teardown stays registered with the service for the app's lifetime.
+    associateDestroyableChild(this, this.menuCoordinator);
 
     const { group } = this.args;
     if (group && !this.args.listId) {
@@ -721,9 +725,6 @@ export default class DReorderableList<T> extends Component<
         {{this.moveKeys}}
         ...attributes
       >
-        {{#if this.menuCoordinator.menu}}
-          <DHeadlessMenu @menu={{this.menuCoordinator.menu}} />
-        {{/if}}
         {{yield to="hint"}}
         {{yield to="header"}}
         {{#if this.rows.length}}

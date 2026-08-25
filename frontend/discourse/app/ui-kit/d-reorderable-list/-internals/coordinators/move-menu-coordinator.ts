@@ -1,7 +1,8 @@
 import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
-import type Owner from "@ember/owner";
-import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import type MenuService from "discourse/float-kit/services/menu";
 import {
   MENU_CONTENT_SELECTOR,
   MENU_IDENTIFIER,
@@ -19,7 +20,8 @@ interface MoveMenuArgs {
 }
 
 interface MoveMenuCoordinatorOptions {
-  owner: Owner;
+  /** The service that owns every menu's lifecycle and renders its content. */
+  menu: MenuService;
 
   /** The list's current arguments; never a snapshot. */
   args: () => MoveMenuArgs;
@@ -44,20 +46,16 @@ interface MoveMenuCoordinatorOptions {
 }
 
 /**
- * The list's one move menu, re-anchored per row rather than built per row.
+ * The list's move menu, shown through the `menu` service against whichever
+ * row's handle was activated.
  *
- * A list is arbitrarily long, so one instance and one set of listeners is a
- * cost that scales with the wrong thing. The menu therefore belongs here and
- * not to the handle, and the handle carries only the ARIA that says which row
- * is open.
+ * The menu belongs here rather than to the handle: a list is arbitrarily long,
+ * and a menu per row is a cost that scales with the wrong thing. The handle
+ * carries only the ARIA saying which row is open. The service owns the
+ * instance's lifecycle and renders its content at the app root, so this holds
+ * no instance of its own beyond the one needed to close on its own terms.
  */
 export default class MoveMenuCoordinator {
-  /**
-   * The list's one menu, created on first use and re-anchored per row. Tracked
-   * because the template renders it, and it does not exist until a row asks.
-   */
-  @tracked menu: DMenuInstance | null = null;
-
   /**
    * The row whose menu is open, and the list's only record of it. One menu
    * means one answer: with an instance per row there were as many claims about
@@ -66,7 +64,7 @@ export default class MoveMenuCoordinator {
    */
   @tracked openKey: string | null = null;
 
-  #owner: Owner;
+  #menuService: MenuService;
   #args: () => MoveMenuArgs;
   #listId: () => string;
   #handleFor: (key: string) => HTMLElement | undefined;
@@ -74,8 +72,15 @@ export default class MoveMenuCoordinator {
   #siblings: () => { listId: string; listLabel: string }[];
   #move: (key: string, target: MoveTarget) => void;
 
+  /**
+   * The menu the service last opened for this list, held only so a close can
+   * ask for the trigger not to be refocused. The service's own `close` takes
+   * no such option.
+   */
+  #instance: DMenuInstance | null = null;
+
   constructor({
-    owner,
+    menu,
     args,
     listId,
     handleFor,
@@ -83,20 +88,26 @@ export default class MoveMenuCoordinator {
     siblings,
     move,
   }: MoveMenuCoordinatorOptions) {
-    this.#owner = owner;
+    this.#menuService = menu;
     this.#args = args;
     this.#listId = listId;
     this.#handleFor = handleFor;
     this.#rowFor = rowFor;
     this.#siblings = siblings;
     this.#move = move;
+
+    // The content is rendered by the app-root host, not by this list, so a
+    // list torn down while open would otherwise leave a menu anchored to a
+    // removed trigger and registered with the service for the app's lifetime.
+    registerDestructor(this, () => this.#instance?.destroy());
   }
 
   /**
-   * Opens the list's one menu against a row's handle, creating it on first use.
+   * Opens the move menu against a row's handle.
    *
-   * The instance is re-anchored rather than replaced, so a long list costs one
-   * menu and one set of listeners no matter how many rows it has.
+   * Every row shares one identifier, which is what makes opening a second row's
+   * menu close the first: the service enforces one open menu per identifier,
+   * across sibling lists as well as within one.
    *
    * @param key - The row whose handle was activated.
    */
@@ -112,19 +123,21 @@ export default class MoveMenuCoordinator {
       return;
     }
 
-    const instance = this.#menuInstance();
-    // Listeners are off, so the trigger is only an anchor and reassigning it
-    // is how one menu serves every row. The teardown is still required: the
-    // base binds a pointer guard to whatever trigger it is given.
-    instance.tearDownListeners();
-    instance.trigger = trigger;
-    instance.options = {
-      ...instance.options,
-      data: { list: this.#menuData(), key },
-    };
-
     this.openKey = key;
-    await instance.show();
+    this.#instance =
+      (await this.#menuService.show(trigger, {
+        identifier: MENU_IDENTIFIER,
+        placement: "bottom-start",
+        component: MoveMenu,
+        autoUpdate: true,
+        // The panel holds a list of buttons and nothing else — no filter, no
+        // controller of its own — so the float element steps out of the way
+        // rather than announcing itself as a dialog wrapped around them.
+        contentRole: "none",
+        data: { list: this.#menuData(), key },
+        onClose: () => (this.openKey = null),
+      })) ?? null;
+
     this.#focusFirstDestination();
   }
 
@@ -132,6 +145,11 @@ export default class MoveMenuCoordinator {
    * Puts focus on the first destination the reader can actually choose, or on
    * the first one of any kind when every destination is refused, so the menu
    * never opens with focus nowhere.
+   *
+   * By hand rather than through the menu's own autofocus, which takes the first
+   * focusable element: a destination marked unavailable is still focusable, so
+   * a row at either boundary would open on a dead item, and a list with one row
+   * has nothing but dead items above the cross-list entries.
    */
   #focusFirstDestination() {
     const content = document.querySelector(MENU_CONTENT_SELECTOR);
@@ -158,40 +176,11 @@ export default class MoveMenuCoordinator {
   @action
   async closeMenu(focusTrigger = true) {
     this.openKey = null;
-    if (this.menu?.expanded) {
-      await this.menu.close({ focusTrigger });
+    if (this.#instance?.expanded) {
+      // Closed through the instance rather than the service, which offers no
+      // say over the trigger refocus.
+      await this.#instance.close({ focusTrigger });
     }
-  }
-
-  /**
-   * The list's one menu, built on first open.
-   *
-   * Built rather than obtained from the `menu` service so that it keeps an
-   * attached trigger: a service-created menu is rendered by the app-root
-   * `DMenus`, which a component rendering in isolation has no access to. This
-   * list renders its own, and `DFloatPortal` still teleports the content out
-   * of the row's stacking context.
-   */
-  #menuInstance(): DMenuInstance {
-    this.menu ??= new DMenuInstance(this.#owner, {
-      identifier: MENU_IDENTIFIER,
-      placement: "bottom-start",
-      component: MoveMenu,
-      listeners: false,
-      autoUpdate: true,
-      // The panel holds a list of buttons and nothing else — no filter, no
-      // controller of its own — so the float element steps out of the way
-      // rather than announcing itself as a dialog wrapped around them.
-      contentRole: "none",
-      // Focus is placed by hand after opening, not by the tab trap: the trap
-      // takes the first focusable, and a destination marked unavailable is
-      // still focusable. A row at either boundary would open on a dead item,
-      // and a list with one row has nothing but dead items above the
-      // cross-list entries.
-      autofocus: false,
-      onClose: () => (this.openKey = null),
-    });
-    return this.menu;
   }
 
   /**

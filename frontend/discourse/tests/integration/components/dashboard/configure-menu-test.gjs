@@ -3,6 +3,7 @@ import { getOwner } from "@ember/owner";
 import { click, find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { forceMobile } from "discourse/lib/mobile";
 import {
   disableClearA11yAnnouncementsInTests,
@@ -130,6 +131,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{noop}}
@@ -153,6 +155,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{noop}}
@@ -175,6 +178,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{onReorder}}
@@ -201,6 +205,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{FOUR_SECTIONS}}
           @onReorder={{noop}}
@@ -234,6 +239,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{FOUR_SECTIONS}}
           @onReorder={{noop}}
@@ -285,6 +291,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{FOUR_SECTIONS}}
           @onReorder={{noop}}
@@ -358,6 +365,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{noop}}
@@ -393,6 +401,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{state.sections}}
           @onReorder={{onReorder}}
@@ -425,6 +434,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{onReorder}}
@@ -456,6 +466,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{onReorder}}
@@ -480,6 +491,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{FOUR_SECTIONS}}
           @onReorder={{noop}}
@@ -512,6 +524,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{FOUR_SECTIONS}}
           @onReorder={{noop}}
@@ -553,6 +566,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <div style="--d-drag-indicator-color: rgb(1, 2, 3)">
           <ConfigureMenu
             @sections={{FOUR_SECTIONS}}
@@ -583,6 +597,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{noop}}
@@ -613,6 +628,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{noop}}
@@ -636,6 +652,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{noop}}
@@ -669,6 +686,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ConfigureMenu
           @sections={{sections}}
           @onReorder={{noop}}
@@ -718,6 +736,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <ConfigureMenu
             @sections={{sections}}
             @onReorder={{noop}}
@@ -737,6 +756,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <ConfigureMenu
             @sections={{FOUR_SECTIONS}}
             @onReorder={{noop}}
@@ -774,6 +794,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <ConfigureMenu
             @sections={{sections}}
             @onReorder={{onReorder}}
@@ -795,6 +816,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <ConfigureMenu
             @sections={{sections}}
             @onReorder={{noop}}

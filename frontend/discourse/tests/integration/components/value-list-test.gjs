@@ -1,6 +1,7 @@
 import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ValueList from "discourse/admin/components/value-list";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -10,7 +11,9 @@ module("Integration | Component | ValueList", function (hooks) {
   test("adding a value", async function (assert) {
     this.set("values", "vinkas\nosama");
 
-    await render(<template><ValueList @values={{this.values}} /></template>);
+    await render(
+      <template><DMenus /><ValueList @values={{this.values}} /></template>
+    );
 
     await selectKit().expand();
     await selectKit().fillInFilter("eviltrout");
@@ -30,7 +33,9 @@ module("Integration | Component | ValueList", function (hooks) {
   test("changing a value", async function (assert) {
     this.set("values", "vinkas\nosama");
 
-    await render(<template><ValueList @values={{this.values}} /></template>);
+    await render(
+      <template><DMenus /><ValueList @values={{this.values}} /></template>
+    );
 
     await fillIn(
       ".values .value[data-reorderable-key='1'] .value-input",
@@ -47,7 +52,9 @@ module("Integration | Component | ValueList", function (hooks) {
   test("removing a value", async function (assert) {
     this.set("values", "vinkas\nosama");
 
-    await render(<template><ValueList @values={{this.values}} /></template>);
+    await render(
+      <template><DMenus /><ValueList @values={{this.values}} /></template>
+    );
 
     await click(
       ".values .value[data-reorderable-key='0'] .d-reorderable-list__remove"
@@ -74,6 +81,7 @@ module("Integration | Component | ValueList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ValueList @values={{this.values}} @choices={{this.choices}} />
       </template>
     );
@@ -97,6 +105,7 @@ module("Integration | Component | ValueList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ValueList @values={{this.values}} @inputType="array" />
       </template>
     );
@@ -123,6 +132,7 @@ module("Integration | Component | ValueList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <ValueList @values={{this.values}} @inputDelimiter="|" />
       </template>
     );

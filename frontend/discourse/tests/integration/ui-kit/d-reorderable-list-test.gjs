@@ -15,6 +15,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import DMenus from "discourse/float-kit/components/d-menus";
 import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -126,6 +127,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="identity.value"
@@ -231,6 +233,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -260,6 +263,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList @items={{items}} @label={{label}} @onMove={{noop}}>
           <:header><li data-slot="header">Header</li></:header>
           <:row as |item|><span data-test-item={{item}}>{{item}}</span></:row>
@@ -286,6 +290,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -334,6 +339,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -386,6 +392,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -419,6 +426,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -460,6 +468,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -554,6 +563,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -601,6 +611,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -652,6 +663,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -685,6 +697,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -756,6 +769,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -804,6 +818,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -841,6 +856,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -882,6 +898,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -923,6 +940,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -995,6 +1013,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -1035,6 +1054,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key="id"
@@ -1083,6 +1103,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{state.items}}
           @key="id"
@@ -1187,6 +1208,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{firstItems}}
           @key="id"
@@ -1249,6 +1271,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     try {
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1277,6 +1300,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{items}}
           @key={{indexKey}}
@@ -1312,6 +1336,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableList
           @items={{state.items}}
           @label={{label}}
@@ -1373,6 +1398,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1409,6 +1435,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1473,6 +1500,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1573,6 +1601,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1639,6 +1668,7 @@ module(
       try {
         await render(
           <template>
+            <DMenus />
             <DReorderableList
               @items={{items}}
               @key="id"
@@ -1713,6 +1743,7 @@ module(
       try {
         await render(
           <template>
+            <DMenus />
             <DReorderableList
               @items={{items}}
               @key="id"
@@ -1745,6 +1776,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1807,6 +1839,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1858,6 +1891,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1907,6 +1941,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1934,6 +1969,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -1975,6 +2011,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @label={{label}}
@@ -2012,6 +2049,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{state.items}}
             @key="id"
@@ -2069,6 +2107,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
   test("DReorderableListGroup renders no wrapper around its block", async function (assert) {
     await render(
       <template>
+        <DMenus />
         <div id="group-placement">
           <span data-placement="before">Before</span>
           <DReorderableListGroup @onMove={{noop}} as |group|>
@@ -2105,6 +2144,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableListGroup @onMove={{groupMove}} as |group|>
           <DReorderableList
             @group={{group}}
@@ -2143,6 +2183,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     try {
       await render(
         <template>
+          <DMenus />
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <DReorderableList
               @group={{group}}
@@ -2189,6 +2230,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     try {
       await render(
         <template>
+          <DMenus />
           <DReorderableListGroup @onMove={{onMove}} as |group|>
             <DReorderableList
               @group={{group}}
@@ -2295,6 +2337,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     try {
       await render(
         <template>
+          <DMenus />
           <DReorderableListGroup @onMove={{onMove}} as |group|>
             <DReorderableList
               @group={{group}}
@@ -2407,6 +2450,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
             @group={{group}}
@@ -2511,6 +2555,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
             @group={{group}}
@@ -2571,6 +2616,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
             @group={{group}}
@@ -2657,6 +2703,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableListGroup @onMove={{noop}} as |group|>
           <DReorderableList
             @group={{group}}
@@ -2717,6 +2764,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
             @group={{group}}
@@ -2787,6 +2835,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableListGroup @onMove={{groupOnMove}} as |group|>
           <DReorderableList
             @group={{group}}
@@ -2859,6 +2908,61 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     );
   });
 
+  test("a list torn down with its menu open leaves nothing registered", async function (assert) {
+    // The menu's content is rendered by the app-root host and its lifecycle is
+    // the service's, so neither ends when the list does. Without the list
+    // cascading destruction into the coordinator, the instance stays in the
+    // service's registry for the life of the app, holding the trigger element
+    // and, through the menu data, the list itself.
+    const items = objectItems();
+    const state = new (class {
+      @tracked showList = true;
+    })();
+    const menu = this.owner.lookup("service:menu");
+
+    await render(
+      <template>
+        <DMenus />
+        {{#if state.showList}}
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            id="teardown-menu-list"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        {{/if}}
+      </template>
+    );
+
+    await openMoveMenu("alpha", "#teardown-menu-list");
+    assert.dom(".d-reorderable-list__move-item").exists("the menu is open");
+    assert.strictEqual(
+      menu.registeredMenus.size,
+      1,
+      "and the service is holding it"
+    );
+
+    state.showList = false;
+    await settled();
+
+    assert
+      .dom("#teardown-menu-list")
+      .doesNotExist("the list is fully unrendered with its menu still open");
+    assert
+      .dom(".d-reorderable-list__move-item")
+      .doesNotExist("no menu content outlives the list that opened it");
+    assert.strictEqual(
+      menu.registeredMenus.size,
+      0,
+      "and nothing is left registered with the service"
+    );
+  });
+
   test("DReorderableList refuses a drop after the source member is torn down", async function (assert) {
     const primaryItems = [{ id: "primary-alpha", name: "Primary Alpha" }];
     const secondaryItems = [{ id: "secondary-alpha", name: "Secondary Alpha" }];
@@ -2870,6 +2974,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
 
     await render(
       <template>
+        <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           {{#if state.showPrimary}}
             <DReorderableList
@@ -2959,6 +3064,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     try {
       await render(
         <template>
+          <DMenus />
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <DReorderableList
               @group={{group}}
@@ -3022,6 +3128,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3064,6 +3171,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3102,6 +3210,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3146,6 +3255,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3186,6 +3296,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{state.items}}
             @key="id"
@@ -3225,6 +3336,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3255,6 +3367,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3282,6 +3395,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3323,6 +3437,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3364,6 +3479,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3395,6 +3511,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3439,6 +3556,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3474,6 +3592,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3505,6 +3624,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3553,6 +3673,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3585,6 +3706,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3632,6 +3754,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3660,6 +3783,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3691,6 +3815,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3740,6 +3865,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           {{#if state.show}}
             <DReorderableList
               @items={{items}}
@@ -3785,6 +3911,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3817,6 +3944,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3845,6 +3973,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3874,6 +4003,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key="id"
@@ -3902,6 +4032,7 @@ module(
 
       await render(
         <template>
+          <DMenus />
           <DReorderableList
             @items={{items}}
             @key={{INDEX_KEY}}
