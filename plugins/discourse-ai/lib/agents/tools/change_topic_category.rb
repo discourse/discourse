@@ -49,21 +49,20 @@ module DiscourseAi
         end
 
         def invoke
-          topic = Topic.find_by(id: parameters[:topic_id])
-          if !topic
+          if (error = validation_error)
+            return error
+          end
+          perform_move
+        end
+
+        def validation_error
+          if topic.blank? || topic.first_post.blank?
             return(
               error_response(I18n.t("discourse_ai.ai_bot.change_topic_category.errors.not_found"))
             )
           end
 
-          if !guardian.can_edit_topic?(topic)
-            return(
-              error_response(I18n.t("discourse_ai.ai_bot.change_topic_category.errors.not_allowed"))
-            )
-          end
-
-          category = Category.find_by(id: parameters[:category_id])
-          if !category
+          if category.blank?
             return(
               error_response(
                 I18n.t("discourse_ai.ai_bot.change_topic_category.errors.category_not_found"),
@@ -77,17 +76,34 @@ module DiscourseAi
             )
           end
 
-          first_post = topic.first_post
-          if !first_post
+          nil
+        end
+
+        def description_args
+          { topic_id: parameters[:topic_id], category_id: parameters[:category_id] }
+        end
+
+        private
+
+        def topic
+          @topic ||= Topic.find_by(id: parameters[:topic_id])
+        end
+
+        def category
+          @category ||= Category.find_by(id: parameters[:category_id])
+        end
+
+        def perform_move
+          if !guardian.can_edit_topic?(topic)
             return(
-              error_response(I18n.t("discourse_ai.ai_bot.change_topic_category.errors.not_found"))
+              error_response(I18n.t("discourse_ai.ai_bot.change_topic_category.errors.not_allowed"))
             )
           end
 
-          revisor = PostRevisor.new(first_post, topic)
+          revisor = PostRevisor.new(topic.first_post, topic)
           result =
             revisor.revise!(
-              acting_user,
+              guardian.user,
               { category_id: category.id }.tap do |f|
                 f[:edit_reason] = reason if !!parameters[:public_edit_reason]
               end,
@@ -103,10 +119,6 @@ module DiscourseAi
               I18n.t("discourse_ai.ai_bot.change_topic_category.errors.revision_failed"),
             )
           end
-        end
-
-        def description_args
-          { topic_id: parameters[:topic_id], category_id: parameters[:category_id] }
         end
       end
     end

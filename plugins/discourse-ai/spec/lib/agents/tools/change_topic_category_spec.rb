@@ -53,6 +53,21 @@ RSpec.describe DiscourseAi::Agents::Tools::ChangeTopicCategory do
     expect(result[:status]).to eq("error")
   end
 
+  it "rejects missing topics, categories, and reasons before queueing for approval" do
+    expect(
+      tool(topic_id: -1, category_id: target_category.id, reason: "Test").validation_error,
+    ).to be_present
+    expect(
+      tool(topic_id: post.topic_id, category_id: -1, reason: "Test").validation_error,
+    ).to be_present
+    expect(
+      tool(topic_id: post.topic_id, category_id: target_category.id, reason: " ").validation_error,
+    ).to be_present
+    expect(
+      tool(topic_id: post.topic_id, category_id: target_category.id, reason: "Ok").validation_error,
+    ).to be_nil
+  end
+
   it "returns an error when category is not found" do
     result = tool(topic_id: post.topic_id, category_id: -1, reason: "Test").invoke
 

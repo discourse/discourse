@@ -52,6 +52,28 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
     expect(category_with_definition.topic.first_post.reload.raw).to eq("A brand new description")
   end
 
+  it "clears the description when an empty string is provided" do
+    category_with_definition = Fabricate(:category_with_definition)
+    tool(
+      category_id: category_with_definition.id,
+      description: "Something old",
+      reason: "Setup",
+    ).invoke
+
+    result = tool(category_id: category_with_definition.id, description: "", reason: "Clean").invoke
+
+    expect(result[:status]).to eq("success")
+    expect(category_with_definition.reload.description).to be_blank
+  end
+
+  it "rejects invalid changes before they can be queued for approval" do
+    error = tool(category_id: category.id, color: "not-a-color", reason: "Test").validation_error
+
+    expect(error).to be_present
+    expect(error[:status]).to eq("error")
+    expect(category.reload.color).not_to eq("not-a-color")
+  end
+
   it "logs a staff action attributed to the context user" do
     expect {
       tool(category_id: category.id, name: "Audited name", reason: "Audit trail").invoke
