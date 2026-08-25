@@ -25,7 +25,8 @@ module DiscourseAi
               },
               {
                 name: "description",
-                description: "The new description for the category",
+                description:
+                  "The new description for the category. Pass an empty string to clear the existing description.",
                 type: "string",
               },
               {
@@ -82,6 +83,10 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.edit_category.errors.no_reason"))
           end
 
+          if (error = invalid_changes_error)
+            return error
+          end
+
           nil
         end
 
@@ -100,11 +105,26 @@ module DiscourseAi
             EDITABLE_PARAMS
               .filter_map do |param|
                 value = parameters[param]
-                next if value.blank?
+                if param == :description
+                  # An explicitly provided empty description clears it.
+                  next if value.nil?
+                else
+                  next if value.blank?
+                end
                 value = value.to_s.delete_prefix("#") if %i[color text_color].include?(param)
                 [param, value]
               end
               .to_h
+        end
+
+        # Runs the model validations against the unsaved changes so an invalid
+        # request is rejected before it is queued for approval, instead of
+        # producing a review item that could only fail.
+        def invalid_changes_error
+          category.assign_attributes(changes)
+          error = error_response(category.errors.full_messages.to_sentence) if !category.valid?
+          category.restore_attributes
+          error
         end
 
         def perform_edit

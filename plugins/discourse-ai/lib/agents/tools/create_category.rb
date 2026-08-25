@@ -93,6 +93,12 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.no_reason"))
           end
 
+          # Model validations (duplicate name, name length, color format) run
+          # against the unsaved candidate so an invalid request is rejected
+          # before it is queued for approval.
+          candidate = Category.new(category_attributes)
+          return error_response(candidate.errors.full_messages.to_sentence) if !candidate.valid?
+
           nil
         end
 
@@ -106,11 +112,7 @@ module DiscourseAi
           @parent_category ||= Category.find_by(id: parameters[:parent_category_id])
         end
 
-        def perform_create
-          if !guardian.can_create_category?
-            return error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.not_allowed"))
-          end
-
+        def category_attributes
           attributes = {
             name: parameters[:name],
             description: parameters[:description].presence,
@@ -121,8 +123,15 @@ module DiscourseAi
             value = parameters[param]
             attributes[param] = value.to_s.delete_prefix("#") if value.present?
           end
+          attributes
+        end
 
-          category = Category.new(attributes)
+        def perform_create
+          if !guardian.can_create_category?
+            return error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.not_allowed"))
+          end
+
+          category = Category.new(category_attributes)
 
           if category.save
             StaffActionLogger.new(guardian.user).log_category_creation(category)

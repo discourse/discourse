@@ -85,12 +85,20 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateCategory do
     expect(result[:status]).to eq("error")
   end
 
-  it "returns an error when a category with the same name already exists" do
+  it "rejects a duplicate name before it can be queued for approval" do
     Fabricate(:category, name: "Duplicate")
 
-    result = tool(name: "Duplicate", reason: "Test").invoke
+    tool_instance = tool(name: "Duplicate", reason: "Test")
 
-    expect(result[:status]).to eq("error")
+    expect(tool_instance.validation_error).to be_present
+    expect(tool_instance.invoke[:status]).to eq("error")
+  end
+
+  it "rejects an invalid color before it can be queued for approval" do
+    error = tool(name: "Bad color", color: "nope", reason: "Test").validation_error
+
+    expect(error).to be_present
+    expect(Category.exists?(name: "Bad color")).to eq(false)
   end
 
   it "returns an error when context user lacks permission" do
