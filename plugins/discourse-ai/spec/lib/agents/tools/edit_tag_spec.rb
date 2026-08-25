@@ -36,6 +36,23 @@ RSpec.describe DiscourseAi::Agents::Tools::EditTag do
     expect(UserHistory.where(custom_type: "renamed_tag").count).to eq(0)
   end
 
+  it "clears the description when an empty string is provided" do
+    tag.update!(description: "Something old")
+
+    result = tool(name: "old-name", description: "", reason: "Cleanup").invoke
+
+    expect(result[:status]).to eq("success")
+    expect(tag.reload.description).to be_nil
+  end
+
+  it "rejects a new name that normalizes to nothing" do
+    result = tool(name: "old-name", new_name: "!!!", reason: "Test").invoke
+
+    expect(result[:status]).to eq("error")
+    expect(result[:error]).to include("not a valid tag name")
+    expect(tag.reload.name).to eq("old-name")
+  end
+
   it "finds the tag case-insensitively" do
     result = tool(name: "OLD-NAME", description: "Found it", reason: "Test").invoke
 

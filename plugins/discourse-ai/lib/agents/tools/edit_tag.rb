@@ -19,7 +19,8 @@ module DiscourseAi
               { name: "new_name", description: "The new name for the tag", type: "string" },
               {
                 name: "description",
-                description: "The new description for the tag",
+                description:
+                  "The new description for the tag. Pass an empty string to clear the existing description.",
                 type: "string",
               },
               {
@@ -61,8 +62,19 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.edit_tag.errors.not_found"))
           end
 
-          if parameters[:new_name].blank? && parameters[:description].blank?
+          if parameters[:new_name].blank? && !description_provided?
             return error_response(I18n.t("discourse_ai.ai_bot.edit_tag.errors.nothing_to_edit"))
+          end
+
+          if parameters[:new_name].present? && clean_new_name.blank?
+            return(
+              error_response(
+                I18n.t(
+                  "discourse_ai.ai_bot.edit_tag.errors.invalid_new_name",
+                  name: parameters[:new_name],
+                ),
+              )
+            )
           end
 
           if reason.blank?
@@ -86,10 +98,14 @@ module DiscourseAi
           @clean_new_name ||= DiscourseTagging.clean_tag(parameters[:new_name].to_s)
         end
 
+        def description_provided?
+          !parameters[:description].nil?
+        end
+
         def changed_fields
           fields = []
           fields << "name → #{clean_new_name}" if parameters[:new_name].present?
-          fields << "description" if parameters[:description].present?
+          fields << "description" if description_provided?
           fields
         end
 
@@ -100,7 +116,7 @@ module DiscourseAi
 
           previous_name = tag.name
           tag.name = clean_new_name if parameters[:new_name].present?
-          tag.description = parameters[:description] if parameters[:description].present?
+          tag.description = parameters[:description].presence if description_provided?
 
           if tag.save
             if tag.name != previous_name

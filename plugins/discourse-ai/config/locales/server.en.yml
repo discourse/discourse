@@ -973,6 +973,7 @@ en:
           not_found: "Tag not found."
           not_allowed: "You are not allowed to edit this tag."
           nothing_to_edit: "Either new_name or description must be provided."
+          invalid_new_name: "'%{name}' is not a valid tag name."
           no_reason: "A reason is required to edit a tag."
         success: "Tag '%{name}' updated successfully."
 
