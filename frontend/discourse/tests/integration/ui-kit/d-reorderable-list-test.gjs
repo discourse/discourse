@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { trackedArray } from "@ember/reactive/collections";
 import {
   click,
@@ -131,14 +132,14 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           @label={{label}}
           @onMove={{noop}}
         >
-          <:row as |item row|>
+          <:row as |item controls|>
             <span
               class="row-content"
               data-test-item={{item.id}}
-              data-index={{row.index}}
-              data-first={{if row.isFirst "true" "false"}}
-              data-last={{if row.isLast "true" "false"}}
-              data-movable={{if row.movable "true" "false"}}
+              data-index={{controls.index}}
+              data-first={{if controls.isFirst "true" "false"}}
+              data-last={{if controls.isLast "true" "false"}}
+              data-movable={{if controls.movable "true" "false"}}
             >{{item.name}}</span>
           </:row>
         </DReorderableList>
@@ -225,7 +226,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     assert.dom(firstRowChildren[1]).hasClass("row-content");
   });
 
-  test("renders header and static blocks around the rows", async function (assert) {
+  test("renders the header block before every row", async function (assert) {
     const items = objectItems().slice(0, 2);
 
     await render(
@@ -240,7 +241,6 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           <:row as |item|><span
               data-test-item={{item.id}}
             >{{item.name}}</span></:row>
-          <:static><li data-slot="static">Static</li></:static>
         </DReorderableList>
       </template>
     );
@@ -250,12 +250,9 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       Array.from(find(".d-reorderable-list").children).map(
         (element) => element.dataset.slot ?? element.dataset.reorderableKey
       ),
-      ["header", ...items.map((item) => item.id), "static"],
-      "the header precedes every row and the static block follows every row"
+      ["header", ...items.map((item) => item.id)],
+      "the header precedes every row"
     );
-    assert
-      .dom("[data-slot='static'] .d-reorderable-list__handle")
-      .doesNotExist("static content receives no reorder controls");
   });
 
   test("renders the empty block in the rows position", async function (assert) {
@@ -267,7 +264,6 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           <:header><li data-slot="header">Header</li></:header>
           <:row as |item|><span data-test-item={{item}}>{{item}}</span></:row>
           <:empty><li data-slot="empty">Nothing here</li></:empty>
-          <:static><li data-slot="static">Static</li></:static>
         </DReorderableList>
       </template>
     );
@@ -280,8 +276,8 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       Array.from(find(".d-reorderable-list").children).map(
         (element) => element.dataset.slot
       ),
-      ["header", "empty", "static"],
-      "the empty block replaces the rows between header and static content"
+      ["header", "empty"],
+      "the empty block replaces the rows after the header"
     );
   });
 
@@ -397,11 +393,11 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           @onMove={{noop}}
           @controls="manual"
         >
-          <:row as |item row|>
+          <:row as |item controls|>
             <span class="row-content" data-test-item={{item.id}}>
               {{item.name}}
             </span>
-            <row.handle />
+            <controls.handle />
           </:row>
         </DReorderableList>
       </template>
@@ -471,10 +467,10 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           @onMove={{onMove}}
           @movable={{movable}}
         >
-          <:row as |item row|>
+          <:row as |item controls|>
             <span
               data-test-item={{item.id}}
-              data-movable={{if row.movable "true" "false"}}
+              data-movable={{if controls.movable "true" "false"}}
             >{{item.name}}</span>
           </:row>
         </DReorderableList>
@@ -1326,12 +1322,12 @@ module(
             @onMove={{noop}}
             @controls="manual"
           >
-            <:row as |item row|>
+            <:row as |item controls|>
               <span class="row-content" data-test-item={{item.id}}>
                 {{item.name}}
               </span>
-              {{#if row.handle}}
-                <div class="consumer-control-cell"><row.handle /></div>
+              {{#if controls.handle}}
+                <div class="consumer-control-cell"><controls.handle /></div>
               {{/if}}
             </:row>
           </DReorderableList>
@@ -1364,12 +1360,12 @@ module(
             @movable={{movable}}
             id="manual-api"
           >
-            <:row as |item row|>
+            <:row as |item controls|>
               <span
                 data-test-item={{item.id}}
-                data-handle={{if row.handle "true" "false"}}
+                data-handle={{if controls.handle "true" "false"}}
               >{{item.name}}</span>
-              {{#if row.handle}}<row.handle />{{/if}}
+              {{#if controls.handle}}<controls.handle />{{/if}}
             </:row>
           </DReorderableList>
 
@@ -1380,9 +1376,9 @@ module(
             @onMove={{noop}}
             id="auto-api"
           >
-            <:row as |item row|><span
+            <:row as |item controls|><span
                 data-test-item={{item.id}}
-                data-handle={{if row.handle "true" "false"}}
+                data-handle={{if controls.handle "true" "false"}}
               >{{item.name}}</span></:row>
           </DReorderableList>
         </template>
@@ -1426,9 +1422,9 @@ module(
             @onMove={{noop}}
             @controls="manual"
           >
-            <:row as |item row|>
+            <:row as |item controls|>
               <div class="consumer-cell" data-test-item={{item.id}}>
-                <row.handle
+                <controls.handle
                   class="consumer-handle"
                   data-consumer-handle={{item.id}}
                 />
@@ -1526,9 +1522,9 @@ module(
             @onMove={{onMove}}
             @controls="manual"
           >
-            <:row as |item row|>
+            <:row as |item controls|>
               <div data-test-item={{item.id}}>
-                <span class="consumer-handle-cell"><row.handle /></span>
+                <span class="consumer-handle-cell"><controls.handle /></span>
               </div>
             </:row>
           </DReorderableList>
@@ -1593,8 +1589,8 @@ module(
               @onMove={{onMove}}
               @controls="manual"
             >
-              <:row as |item row|>
-                <div data-test-item={{item.id}}><row.handle /></div>
+              <:row as |item controls|>
+                <div data-test-item={{item.id}}><controls.handle /></div>
               </:row>
             </DReorderableList>
           </template>
@@ -1703,7 +1699,6 @@ module(
             <:row as |item|><span
                 data-test-item={{item.id}}
               >{{item.name}}</span></:row>
-            <:static><li data-slot="static">Static</li></:static>
           </DReorderableList>
         </template>
       );
@@ -1715,7 +1710,7 @@ module(
           }
           return element.dataset.reorderableKey ?? element.dataset.slot;
         }),
-        [...items.map((item) => item.id), "create", "static"],
+        [...items.map((item) => item.id), "create"],
         "the create row follows every item and precedes static content"
       );
       assert
@@ -1894,7 +1889,6 @@ module(
                 data-test-item={{item.id}}
               >{{item.name}}</span></:row>
             <:create><li data-slot="create">Consumer create</li></:create>
-            <:static><li data-slot="static">Static</li></:static>
           </DReorderableList>
         </template>
       );
@@ -1903,7 +1897,7 @@ module(
         Array.from(find(".d-reorderable-list").children).map(
           (element) => element.dataset.reorderableKey ?? element.dataset.slot
         ),
-        [items[0].id, "create", "static"],
+        [items[0].id, "create"],
         "the custom create block occupies the default create position"
       );
       assert
@@ -1933,7 +1927,6 @@ module(
           >
             <:row as |item|><span data-test-item={{item}}>{{item}}</span></:row>
             <:empty><li data-slot="empty">Nothing here</li></:empty>
-            <:static><li data-slot="static">Static</li></:static>
           </DReorderableList>
         </template>
       );
@@ -1945,7 +1938,7 @@ module(
           }
           return element.dataset.slot;
         }),
-        ["empty", "create", "static"],
+        ["empty", "create"],
         "the empty block and create row both render before static content"
       );
       assert
@@ -2964,7 +2957,7 @@ module(
         assert
           .dom(`#${describedBy}`)
           .hasText(
-            "Drag to reorder, or press Enter for move options",
+            "Use the arrow keys to move between rows. Press Enter for move options.",
             `${key}'s handle is described by the interaction hint`
           );
         assert.true(
@@ -3012,7 +3005,7 @@ module(
         );
     });
 
-    test("the list is one tab stop whose cursor the arrows move", async function (assert) {
+    test("every handle is a tab stop, and arrows walk between them", async function (assert) {
       const items = objectItems();
 
       await render(
@@ -3035,8 +3028,8 @@ module(
       );
       assert.strictEqual(
         tabbable.length,
-        1,
-        "a long list costs one tab stop, not one per row"
+        items.length,
+        "every row's handle is reachable by Tab, in DOM order with the row's own controls"
       );
 
       await focus(handleSelector("alpha"));
@@ -3044,12 +3037,152 @@ module(
 
       assert
         .dom(handleSelector("bravo"))
-        .isFocused("an unmodified arrow moves the cursor, not the row");
+        .isFocused(
+          "a plain arrow is an accelerator that moves focus, not the row"
+        );
       assert.deepEqual(
         renderedItemOrder(),
         ["alpha", "bravo", "charlie"],
         "and nothing reordered"
       );
+    });
+
+    test("the remove control names what it removes and reports the item", async function (assert) {
+      const items = objectItems();
+      const removed = [];
+      const onRemove = (item) => removed.push(item.id);
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{onRemove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      assert
+        .dom(`${rowSelector("bravo")} .d-reorderable-list__remove`)
+        .hasAria(
+          "label",
+          "Remove Bravo",
+          "an icon-only control still says what it removes"
+        );
+
+      await click(`${rowSelector("bravo")} .d-reorderable-list__remove`);
+
+      assert.deepEqual(removed, ["bravo"], "the item itself is reported");
+    });
+
+    test("removal is announced and leaves focus on the row that took its place", async function (assert) {
+      const state = new (class {
+        @tracked items = objectItems();
+      })();
+      const onRemove = (item) => {
+        state.items = state.items.filter((candidate) => candidate !== item);
+      };
+      // Spied rather than read back off the service: an announcement schedules
+      // its own clear, and `settled()` waits that timer out.
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{state.items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{onRemove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await click(`${rowSelector("bravo")} .d-reorderable-list__remove`);
+
+      assert.strictEqual(
+        announce.callCount,
+        1,
+        "one announcement per removal, not one per rerender"
+      );
+      assert.strictEqual(
+        announce.firstCall.args[0],
+        "Removed Bravo",
+        "a row leaving under the reader is not a silent no-op"
+      );
+      assert
+        .dom(`${rowSelector("charlie")} .d-reorderable-list__remove`)
+        .isFocused(
+          "focus lands on the row that moved up, so a second removal needs no re-entry"
+        );
+    });
+
+    test("a row refused by @removable renders no remove control", async function (assert) {
+      const items = objectItems();
+      const removable = (item) => item.id !== "bravo";
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{noop}}
+            @removable={{removable}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      assert
+        .dom(`${rowSelector("bravo")} .d-reorderable-list__remove`)
+        .doesNotExist(
+          "a protected row carries no dead control, exactly as a frozen row carries no handle"
+        );
+      assert
+        .dom(`${rowSelector("alpha")} .d-reorderable-list__remove`)
+        .exists("while the rows that can go still offer it");
+    });
+
+    test("opening the menu hands focus to its first destination", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await openMoveMenu("bravo");
+
+      assert
+        .dom(moveItemSelector("top"))
+        .isFocused(
+          "focus moves into the menu rather than staying on the trigger it was opened from"
+        );
     });
 
     test("moving the cursor closes a menu it would otherwise leave behind", async function (assert) {
@@ -3090,7 +3223,10 @@ module(
         .hasAria("expanded", "false", "the trigger reports itself closed");
     });
 
-    test("the roving cursor is mirrored onto the focused row", async function (assert) {
+    test("tab order runs in DOM order through each row and its controls", async function (assert) {
+      // The defect this replaced: a roving cursor over the handles interleaved
+      // with the rows' own tab order, so a handle could not be reached from the
+      // control sitting beside it.
       const items = objectItems();
 
       await render(
@@ -3103,20 +3239,32 @@ module(
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
+              <button type="button" class={{concat "extra-" item.id}}>x</button>
             </:row>
           </DReorderableList>
         </template>
       );
 
-      await focus(handleSelector("bravo"));
+      const order = findAll(
+        ".d-reorderable-list__handle, [class^='extra-']"
+      ).map((element) =>
+        element.classList.contains("d-reorderable-list__handle")
+          ? `handle-${element.closest("[data-reorderable-key]").dataset.reorderableKey}`
+          : element.className
+      );
 
-      assert
-        .dom(rowSelector("bravo"))
-        .hasClass(
-          "--focused",
-          "the cursor reads at row level, not on the small button"
-        );
-      assert.dom(rowSelector("alpha")).doesNotHaveClass("--focused");
+      assert.deepEqual(
+        order,
+        [
+          "handle-alpha",
+          "extra-alpha",
+          "handle-bravo",
+          "extra-bravo",
+          "handle-charlie",
+          "extra-charlie",
+        ],
+        "each row's handle precedes its own controls and nothing interleaves"
+      );
     });
 
     test("clicking a row's non-interactive area moves the cursor there", async function (assert) {
@@ -3225,6 +3373,36 @@ module(
 
       assert.deepEqual(renderedItemOrder(), ["alpha", "bravo", "charlie"]);
       assert.strictEqual(moves.length, 2);
+    });
+
+    test("opening skips destinations the row cannot use", async function (assert) {
+      // The first row can go nowhere but down, so a menu that opened on its
+      // own first item would put focus on something Enter cannot action.
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await openMoveMenu("alpha");
+
+      assert
+        .dom(moveItemSelector("top"))
+        .hasAria("disabled", "true", "the first row cannot go to the top");
+      assert
+        .dom(moveItemSelector("down"))
+        .isFocused("so focus lands on the first destination it can use");
     });
 
     test("boundary destinations stay in the menu, marked and refusing", async function (assert) {

@@ -221,10 +221,11 @@ module PageObjects
         page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("Enter") }
       end
 
-      # The accessible name of whatever currently holds focus, for asserting the
-      # reorder control is reachable by tabbing rather than only clickable.
-      def focused_label
-        page.evaluate_script("document.activeElement?.getAttribute('aria-label')")
+      # The link whose row currently holds focus. The row is the cursor's item,
+      # so this is what says focus survived a move; the handle inside it is a
+      # pointer affordance and never takes focus from the keyboard.
+      def focused_link_name
+        page.evaluate_script("document.activeElement?.dataset?.linkName")
       end
 
       def link_handle(name)

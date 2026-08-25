@@ -3,7 +3,6 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
-import DButton from "discourse/ui-kit/d-button";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 
 export default class ReorderableListEditableExample extends Component {
@@ -26,8 +25,8 @@ export default class ReorderableListEditableExample extends Component {
   }
 
   @action
-  remove(item) {
-    this.items.splice(this.items.indexOf(item), 1);
+  remove(item, index) {
+    this.items.splice(index, 1);
   }
 
   <template>
@@ -36,6 +35,7 @@ export default class ReorderableListEditableExample extends Component {
       @key="id"
       @label={{this.itemLabel}}
       @onMove={{this.applyMove}}
+      @onRemove={{this.remove}}
       class="styleguide-reorderable-list"
     >
       <:row as |item|>
@@ -44,11 +44,6 @@ export default class ReorderableListEditableExample extends Component {
           value={{item.value}}
           type="text"
           class="styleguide-reorderable-list__input"
-        />
-        <DButton
-          @icon="xmark"
-          @action={{fn this.remove item}}
-          class="btn-flat btn-small"
         />
       </:row>
     </DReorderableList>

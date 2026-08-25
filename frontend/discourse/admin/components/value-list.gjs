@@ -14,7 +14,6 @@ import {
 import { makeArray } from "discourse/lib/helpers";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import DButton from "discourse/ui-kit/d-button";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 
 const INDEX_KEY = "@index";
@@ -172,23 +171,18 @@ export default class ValueList extends Component {
         @key={{INDEX_KEY}}
         @label={{this.valueLabel}}
         @onMove={{this.handleMove}}
+        @onRemove={{this.removeValue}}
         @tag="div"
         @itemTag="div"
         @rowClass="value"
         class="values"
       >
-        <:row as |value row|>
-          <DButton
-            @action={{fn this.removeValue value}}
-            @icon="xmark"
-            class="btn-default remove-value-btn btn-small"
-          />
-
+        <:row as |value controls|>
           <Input
             title={{value}}
             @value={{value}}
             class="value-input"
-            {{on "focusout" (fn this.changeValue row.index)}}
+            {{on "focusout" (fn this.changeValue controls.index)}}
           />
         </:row>
       </DReorderableList>

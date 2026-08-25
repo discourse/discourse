@@ -45,7 +45,7 @@ export default class AdminUserFieldItem extends Component {
 
   <template>
     <td class="d-table__cell --reorder">
-      <@row.handle />
+      <@controls.handle />
     </td>
     <td class="d-table__cell --overview">
       <LinkTo

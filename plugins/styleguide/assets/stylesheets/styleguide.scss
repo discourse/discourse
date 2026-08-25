@@ -970,11 +970,25 @@
     min-width: 0;
   }
 
+  &__note {
+    flex: 0 0 auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
   .d-reorderable-list__row {
     padding: 0.35em 0.75em;
 
     &:hover {
       background: var(--d-hover);
+    }
+
+    /* Inputs carry a default bottom margin, which pushes the box above the
+       row's centre line and leaves it out of step with the controls. Scoped to
+       the row so it outranks the attribute selector that sets it. */
+
+    input {
+      margin-bottom: 0;
     }
   }
 

@@ -5,59 +5,58 @@ import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ReorderableListTogglesExample extends Component {
-  enabled = trackedArray([
-    { id: "summary", name: "Summary" },
-    { id: "activity", name: "Activity" },
-    { id: "storage", name: "Storage" },
+  items = trackedArray([
+    { id: "summary", name: "Summary", enabled: true },
+    { id: "activity", name: "Activity", enabled: true },
+    { id: "storage", name: "Storage", enabled: true },
+    { id: "backups", name: "Backups", enabled: false },
+    { id: "security", name: "Security", enabled: false },
   ]);
 
-  disabled = trackedArray([
-    { id: "backups", name: "Backups" },
-    { id: "security", name: "Security" },
-  ]);
-
+  isEnabled = (item) => item.enabled;
   itemLabel = (item) => item.name;
 
   @action
   applyMove({ proposedToItems }) {
-    this.enabled.splice(0, this.enabled.length, ...proposedToItems);
+    this.items.splice(0, this.items.length, ...proposedToItems);
   }
 
   @action
   toggle(item) {
-    const from = this.enabled.includes(item) ? this.enabled : this.disabled;
-    const to = from === this.enabled ? this.disabled : this.enabled;
-    from.splice(from.indexOf(item), 1);
-    to.push(item);
+    const next = { ...item, enabled: !item.enabled };
+    const rest = this.items.filter((candidate) => candidate !== item);
+    const enabled = rest.filter((candidate) => candidate.enabled);
+    const disabled = rest.filter((candidate) => !candidate.enabled);
+    const reordered = next.enabled
+      ? [...enabled, next, ...disabled]
+      : [...enabled, ...disabled, next];
+    this.items.splice(0, this.items.length, ...reordered);
   }
 
   <template>
     <DReorderableList
-      @items={{this.enabled}}
+      @items={{this.items}}
       @key="id"
       @label={{this.itemLabel}}
+      @movable={{this.isEnabled}}
       @onMove={{this.applyMove}}
       class="styleguide-reorderable-list"
     >
       <:row as |item|>
-        <span class="styleguide-reorderable-list__label">{{item.name}}</span>
-        <DToggleSwitch @state={{true}} {{on "click" (fn this.toggle item)}} />
+        <span
+          class={{dConcatClass
+            "styleguide-reorderable-list__label"
+            (unless item.enabled "--static")
+          }}
+        >{{item.name}}</span>
+        <DToggleSwitch
+          @state={{item.enabled}}
+          {{on "click" (fn this.toggle item)}}
+        />
       </:row>
-      <:static>
-        {{#each this.disabled key="id" as |item|}}
-          <li class="d-reorderable-list__row" data-reorderable-key={{item.id}}>
-            <span
-              class="styleguide-reorderable-list__label --static"
-            >{{item.name}}</span>
-            <DToggleSwitch
-              @state={{false}}
-              {{on "click" (fn this.toggle item)}}
-            />
-          </li>
-        {{/each}}
-      </:static>
     </DReorderableList>
   </template>
 }

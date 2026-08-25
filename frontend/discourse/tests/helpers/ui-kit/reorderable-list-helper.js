@@ -9,10 +9,15 @@ import { click, find, triggerKeyEvent } from "@ember/test-helpers";
  * group adds cross-list entries and the menu's positions shift.
  */
 
-/** The handle for one row: its drag source, cursor item, and menu trigger. */
-export function handleSelector(key, root = "") {
+/** One row: the cursor's item, and what a move commits against. */
+export function rowSelector(key, root = "") {
   const prefix = root ? `${root} ` : "";
-  return `${prefix}[data-reorderable-key="${key}"] .d-reorderable-list__handle`;
+  return `${prefix}[data-reorderable-key="${key}"]`;
+}
+
+/** The handle inside one row: its drag source and its pointer menu trigger. */
+export function handleSelector(key, root = "") {
+  return `${rowSelector(key, root)} .d-reorderable-list__handle`;
 }
 
 /**
@@ -52,16 +57,18 @@ const CHORD_KEYS = {
 
 /**
  * Moves a row the way the keyboard accelerator does: Alt with an arrow or
- * Home/End on the focused handle.
+ * Home/End on the focused row.
  *
  * @param key - The row's reorderable key.
  * @param target - The destination to move to.
  * @param root - Optional scope, for a page holding several lists.
  */
 export async function moveViaChord(key, target, root = "") {
-  const handle = find(handleSelector(key, root));
-  handle.focus();
-  await triggerKeyEvent(handle, "keydown", CHORD_KEYS[target], {
+  // Pressed on the row, which is the cursor's item. The chord is refused
+  // anywhere else so a caret shortcut inside a row's own field stays its own.
+  const row = find(rowSelector(key, root));
+  row.focus();
+  await triggerKeyEvent(row, "keydown", CHORD_KEYS[target], {
     altKey: true,
   });
 }

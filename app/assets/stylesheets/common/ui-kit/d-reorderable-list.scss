@@ -21,6 +21,24 @@
     padding-block: 0.25em;
   }
 
+  /* An emptied group member still accepts drops, and a list with no rows has
+     no height to drop onto. The dashed border is the affordance and the
+     min-height is what makes the target hittable — without it the list is a
+     live drop target a pointer cannot reach. Only ever applied while the root
+     is genuinely accepting drops. */
+
+  &.--empty-drop-target {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4em;
+    padding: 0.5em;
+    border: 1px dashed var(--primary-low);
+    border-radius: var(--d-border-radius);
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
   /* The handle is a real button carrying an icon, sized to the grip rather
      than to a button: it sits in dense rows and must not drive their height.
      Chained with `.btn` to outrank the base button rules it would otherwise
@@ -52,11 +70,39 @@
     }
   }
 
-  /* The roving cursor is drawn on the whole row rather than on the handle it
-     technically rests on; the flat-button focus background alone is
-     indistinguishable at that size. */
+  /* The list's other control, sized to match the handle rather than to a
+     button. Both belong to the list, and a full-size button beside a 24px grip
+     reads as the heavier action of the two when it is the lighter one. A
+     consumer wanting a different weight overrides it at its own specificity. */
 
-  &__row.--focused {
+  &__remove.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: inherit;
+    line-height: inherit;
+    color: var(--primary-low-mid);
+
+    .d-icon {
+      margin: 0;
+      color: var(--primary-low-mid);
+    }
+
+    &:hover .d-icon,
+    &:focus-visible .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  /* Drawn on the row rather than the handle: the handle's own focus ring is
+     indistinguishable at that size, and the row is what a move acts on. */
+
+  &__row:focus-within {
     outline: 2px solid var(--d-input-focused-color);
     outline-offset: -2px;
   }

@@ -19,7 +19,11 @@ const SectionFormLink = <template>
       way to reorder at all while this was desktop-only. The drag starts at the
       grip rather than anywhere on the row, so a press that was meant to
       scroll still scrolls, and its menu carries the paths a drag cannot. }}
-  <@row.handle role="cell" class="draggable" data-link-name={{@link.name}} />
+  <@controls.handle
+    role="cell"
+    class="draggable"
+    data-link-name={{@link.name}}
+  />
 
   <div class="input-group link-icon" role="cell">
     <DIconGridPicker

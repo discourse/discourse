@@ -49,7 +49,9 @@ module("Integration | Component | ValueList", function (hooks) {
 
     await render(<template><ValueList @values={{this.values}} /></template>);
 
-    await click(".values .value[data-reorderable-key='0'] .remove-value-btn");
+    await click(
+      ".values .value[data-reorderable-key='0'] .d-reorderable-list__remove"
+    );
 
     assert
       .dom(".values .value")

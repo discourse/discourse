@@ -93,7 +93,9 @@ module("Integration | Component | SimpleList", function (hooks) {
     const values = "vinkas\nosama";
     await render(<template><SimpleList @values={{values}} /></template>);
 
-    await click(".values .value[data-reorderable-key='0'] .remove-value-btn");
+    await click(
+      ".values .value[data-reorderable-key='0'] .d-reorderable-list__remove"
+    );
 
     assert
       .dom(".values .value")
@@ -144,5 +146,63 @@ module("Integration | Component | SimpleList", function (hooks) {
     assert
       .dom(".values .value[data-reorderable-key='0'] .value-input")
       .hasValue("kris");
+  });
+
+  test("a closed set offers no editable field", async function (assert) {
+    const choices = ["latest", "new", "unread"];
+    const values = "latest|new";
+
+    await render(
+      <template>
+        <SimpleList
+          @values={{values}}
+          @inputDelimiter="|"
+          @choices={{choices}}
+          @allowAny={{false}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".values input.value-input")
+      .doesNotExist(
+        "a value drawn from a fixed set has nothing to type into it"
+      );
+    assert
+      .dom(".values .value-input.--readonly")
+      .exists({ count: 2 }, "each value still reads as its own row");
+  });
+
+  test("a free-text list keeps its editable field", async function (assert) {
+    const values = "vinkas|osama";
+
+    await render(
+      <template><SimpleList @values={{values}} @inputDelimiter="|" /></template>
+    );
+
+    assert
+      .dom(".values input.value-input")
+      .exists(
+        { count: 2 },
+        "an open list is still edited in place, not only added to"
+      );
+  });
+
+  test("removing a value names what it removes", async function (assert) {
+    const values = "vinkas|osama";
+
+    await render(
+      <template><SimpleList @values={{values}} @inputDelimiter="|" /></template>
+    );
+
+    assert
+      .dom(
+        ".values .value[data-reorderable-key='0'] .d-reorderable-list__remove"
+      )
+      .hasAria(
+        "label",
+        "Remove vinkas",
+        "the standard control says which value it drops"
+      );
   });
 });

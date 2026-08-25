@@ -113,9 +113,9 @@ export default class AdminConfigAreasFlags extends Component {
           @rowClass={{this.rowClass}}
           class="d-table__body"
         >
-          <:row as |flag row|>
+          <:row as |flag controls|>
             <AdminFlagItem
-              @row={{row}}
+              @controls={{controls}}
               @flag={{flag}}
               @deleteFlagCallback={{this.deleteFlagCallback}}
               @setPending={{this.setPending}}

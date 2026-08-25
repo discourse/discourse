@@ -155,8 +155,8 @@ acceptance("Manage reports drag and drop", function (needs) {
 
     assert.strictEqual(
       a11y.politeMessage,
-      "Moved Matching topics to position 1 of 2",
-      "an arrow press announces exactly like the equivalent drag"
+      "Moved Matching topics to position 1 of 3",
+      "an arrow press announces exactly like the equivalent drag, counting the disabled row the reader can also see"
     );
   });
 
@@ -168,7 +168,7 @@ acceptance("Manage reports drag and drop", function (needs) {
 
     assert.strictEqual(
       a11y.politeMessage,
-      "Moved Matching topics to position 1 of 2",
+      "Moved Matching topics to position 1 of 3",
       "a completed drag announces the report and its resulting position"
     );
   });

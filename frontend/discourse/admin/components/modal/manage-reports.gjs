@@ -68,6 +68,11 @@ export default class ManageReports extends Component {
   itemsByKey = new Map();
 
   isEnabled = (row) => this.enabledKeys.has(row.key);
+  rowClass = (row) =>
+    dConcatClass(
+      "manage-reports__row",
+      this.isEnabled(row) ? "--enabled" : null
+    );
   toggleDisabled = (row) => this.atCap && !this.isEnabled(row);
   rowTitle = (row) => row.title;
 
@@ -114,8 +119,18 @@ export default class ManageReports extends Component {
     return this.enabledOrder.length > 1;
   }
 
+  /**
+   * Every row the list renders: the enabled ones the reader can reorder, then
+   * the disabled ones frozen below them. One collection rather than two, so the
+   * list owns the whole set and can speak a row's position against what is
+   * actually on screen.
+   */
+  get rows() {
+    return [...this.filteredEnabledRows, ...this.disabledRows];
+  }
+
   get visibleRowCount() {
-    return this.filteredEnabledRows.length + this.disabledRows.length;
+    return this.rows.length;
   }
 
   cacheItems(items) {
@@ -219,8 +234,12 @@ export default class ManageReports extends Component {
    */
   @action
   handleMove(move) {
+    // The proposal carries the frozen rows too; only the enabled ones have a
+    // stored order to rebuild.
     this.enabledOrder = this.#storedOrderFrom(
-      move.proposedToItems.map((row) => row.key)
+      move.proposedToItems
+        .filter((row) => this.isEnabled(row))
+        .map((row) => row.key)
     );
   }
 
@@ -298,11 +317,12 @@ export default class ManageReports extends Component {
 
         {{#if this.visibleRowCount}}
           <DReorderableList
-            @items={{this.filteredEnabledRows}}
+            @items={{this.rows}}
             @key="key"
             @label={{this.rowTitle}}
+            @movable={{this.isEnabled}}
             @onMove={{this.handleMove}}
-            @rowClass="manage-reports__row --enabled"
+            @rowClass={{this.rowClass}}
             class={{dConcatClass
               "manage-reports__list"
               (if this.reorderable "--reorderable")
@@ -311,26 +331,11 @@ export default class ManageReports extends Component {
             <:row as |row|>
               <ReportRowContent
                 @row={{row}}
-                @enabled={{true}}
+                @enabled={{this.isEnabled row}}
                 @toggleDisabled={{this.toggleDisabled row}}
                 @onToggle={{this.toggle}}
               />
             </:row>
-            <:static>
-              {{#each this.disabledRows key="key" as |row|}}
-                <li
-                  class="manage-reports__row"
-                  data-reorderable-key={{row.key}}
-                >
-                  <ReportRowContent
-                    @row={{row}}
-                    @enabled={{false}}
-                    @toggleDisabled={{this.toggleDisabled row}}
-                    @onToggle={{this.toggle}}
-                  />
-                </li>
-              {{/each}}
-            </:static>
           </DReorderableList>
           <DLoadMore
             @action={{this.loadMore}}

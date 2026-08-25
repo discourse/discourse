@@ -61,7 +61,7 @@ export default class SimpleList extends Component {
   }
 
   @action
-  removeItem(index) {
+  removeValue(value, index) {
     this.collection.splice(index, 1);
     this.args.onChange?.(this.collection);
   }
@@ -85,25 +85,29 @@ export default class SimpleList extends Component {
         @key={{INDEX_KEY}}
         @label={{this.valueLabel}}
         @onMove={{this.handleMove}}
+        @onRemove={{this.removeValue}}
         @tag="div"
         @itemTag="div"
         @rowClass="value"
         class="values"
       >
-        <:row as |value row|>
-          <DButton
-            @action={{fn this.removeItem row.index}}
-            @icon="xmark"
-            class="btn-default remove-value-btn btn-small"
-          />
-
-          <input
-            {{on "focusout" (fn this.changeValue row.index)}}
-            value={{value}}
-            title={{value}}
-            type="text"
-            class="value-input"
-          />
+        <:row as |value controls|>
+          {{#if this.isPredefinedList}}
+            {{! A closed set has nothing to type: the value came from the
+              choices and can only be reordered or removed. }}
+            <span
+              class="value-input --readonly"
+              title={{value}}
+            >{{value}}</span>
+          {{else}}
+            <input
+              {{on "focusout" (fn this.changeValue controls.index)}}
+              value={{value}}
+              title={{value}}
+              type="text"
+              class="value-input"
+            />
+          {{/if}}
         </:row>
       </DReorderableList>
 
@@ -116,7 +120,14 @@ export default class SimpleList extends Component {
               @onChange={{this.addValue}}
               @valueProperty={{@setting.computedValueProperty}}
               @nameProperty={{@setting.computedNameProperty}}
-              @options={{hash castInteger=true allowAny=false}}
+              {{! Without a `none` label the closed-set picker renders as an
+                empty box under the list. The free-text branch below shows the
+                same string as its placeholder. }}
+              @options={{hash
+                castInteger=true
+                allowAny=false
+                none="admin.site_settings.simple_list.add_item"
+              }}
               class="add-value-input"
             />
           {{/if}}

@@ -16,7 +16,6 @@ import {
   simulateDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import {
-  handleSelector,
   moveItemSelector,
   moveVia,
   openMoveMenu,
@@ -415,7 +414,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     // one move and cannot make a second, which defeats the keyboard path.
     assert.strictEqual(
       document.activeElement,
-      find(handleSelector("highlights")),
+      find(gripSelector("highlights")),
       "focus follows the row rather than falling back to the body"
     );
   });
@@ -639,7 +638,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
   });
 
-  test(`${REORDER_TEST_PREFIX} desktop keyboard path is one roving stop with destinations bound at the ends`, async function (assert) {
+  test(`${REORDER_TEST_PREFIX} desktop keyboard path reaches every handle with destinations bound at the ends`, async function (assert) {
     const sections = FOUR_SECTIONS;
     const noop = () => {};
 
@@ -654,8 +653,11 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     assert
-      .dom('.d-reorderable-list__handle[tabindex="0"]')
-      .exists({ count: 1 }, "exactly one handle carries the list's tab stop");
+      .dom(".d-reorderable-list__handle")
+      .exists({ count: 4 }, "every section's handle is reachable");
+    assert
+      .dom('.d-reorderable-list__handle[tabindex="-1"]')
+      .doesNotExist("and none is held out of the tab sequence");
 
     await openMoveMenu("highlights");
     assert

@@ -105,9 +105,9 @@ export default class AdminConfigAreasUserFieldsList extends Component {
             @rowClass="d-table__row admin-user_field-item"
             class="d-table__body"
           >
-            <:row as |field row|>
+            <:row as |field controls|>
               <AdminUserFieldItem
-                @row={{row}}
+                @controls={{controls}}
                 @userField={{field}}
                 @fieldTypes={{this.fieldTypes}}
                 @destroyAction={{this.destroyField}}

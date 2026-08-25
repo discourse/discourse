@@ -36,35 +36,46 @@ module(
       );
     });
 
-    test("the policies example freezes its pinned row", async function (assert) {
+    test("the policies example subtracts the control each policy refuses", async function (assert) {
       await render(<template><ReorderableListPoliciesExample /></template>);
 
       assert
-        .dom("[data-reorderable-key='pinned'] .d-reorderable-list__handle")
-        .doesNotExist("the pinned row renders no controls");
-      assert
         .dom(
-          "[data-reorderable-key='pinned-bottom'] .d-reorderable-list__handle"
+          "[data-reorderable-key='announcements'] .d-reorderable-list__handle"
         )
-        .doesNotExist("the bottom-pinned row renders no controls either");
+        .doesNotExist("a pinned row renders no handle");
+      assert
+        .dom("[data-reorderable-key='bookmarks'] .d-reorderable-list__handle")
+        .doesNotExist("at either end of the list");
+      assert
+        .dom("[data-reorderable-key='categories'] .d-reorderable-list__remove")
+        .doesNotExist(
+          "and a protected row renders no remove control rather than a dead one"
+        );
+      assert
+        .dom("[data-reorderable-key='categories'] .d-reorderable-list__handle")
+        .exists("while still being movable, since the policies are separate");
       assert
         .dom(".d-reorderable-list__row:last-child")
         .hasAttribute(
           "data-reorderable-key",
-          "pinned-bottom",
+          "bookmarks",
           "the bottom-pinned row keeps the last slot"
         );
     });
 
-    test("the basic example is one composite tab stop", async function (assert) {
+    test("the basic example gives every row a reachable handle", async function (assert) {
       await render(<template><ReorderableListBasicExample /></template>);
 
       assert
         .dom("button.d-reorderable-list__handle")
         .exists({ count: 4 }, "every row renders a real handle button");
       assert
-        .dom("button.d-reorderable-list__handle[tabindex='0']")
-        .exists({ count: 1 }, "the handles form one roving tab stop");
+        .dom("button.d-reorderable-list__handle[tabindex='-1']")
+        .doesNotExist("none is held out of the tab sequence");
+      assert
+        .dom(".d-reorderable-list__row[tabindex]")
+        .doesNotExist("and the row itself is not a focus target");
     });
 
     test("the cross-list example renders both grouped members", async function (assert) {
@@ -111,7 +122,7 @@ module(
         .dom("[data-reorderable-key='rules'] input")
         .hasValue("Read the guidelines", "typing lands in the row's input");
 
-      await click("[data-reorderable-key='rules'] .btn-flat.btn-small");
+      await click("[data-reorderable-key='rules'] .d-reorderable-list__remove");
       assert
         .dom("[data-reorderable-key='rules']")
         .doesNotExist("the remove button deletes the row");

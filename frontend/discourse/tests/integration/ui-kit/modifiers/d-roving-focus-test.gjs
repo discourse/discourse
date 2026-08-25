@@ -241,6 +241,44 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .isFocused("Home from an embedded input does not jump to the first item");
   });
 
+  test("focus mode: arrows from a control outside any item are left alone", async function (assert) {
+    // A container may hold focusable controls that are neither items nor inside
+    // one: a row's own switch sitting beside the handle that is the cursor's
+    // item. An arrow pressed there belongs to nothing this group owns, so the
+    // cursor must stay put and focus must not be pulled onto an item.
+    await render(
+      <template>
+        <ul {{dRovingFocus orientation="vertical" itemSelector=".handle"}}>
+          <li>
+            <button class="handle a" type="button">A</button>
+            <button
+              class="switch-a"
+              type="button"
+              role="switch"
+              aria-checked="false"
+            ></button>
+          </li>
+          <li>
+            <button class="handle b" type="button">B</button>
+            <input class="check-b" type="checkbox" />
+          </li>
+        </ul>
+      </template>
+    );
+
+    await focus(".switch-a");
+    await triggerKeyEvent(".switch-a", "keydown", "ArrowDown");
+    assert
+      .dom(".switch-a")
+      .isFocused("ArrowDown from a switch beside an item does not navigate");
+
+    await focus(".check-b");
+    await triggerKeyEvent(".check-b", "keydown", "ArrowUp");
+    assert
+      .dom(".check-b")
+      .isFocused("ArrowUp from a checkbox beside an item does not navigate");
+  });
+
   test("Enter and Space activate; other keys do not", async function (assert) {
     let activated = [];
     const onActivate = (el) => activated.push(el.className);

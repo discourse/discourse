@@ -1058,15 +1058,29 @@ table#user-badges {
       }
     }
 
-    .remove-value-btn {
-      margin-right: 0.25em;
+    .d-reorderable-list__remove {
+      margin-left: 0.25em;
       flex: 0 0 auto;
 
       @include value-btn;
     }
 
-    .d-reorderable-list__arrows {
-      margin-inline: 0.25em;
+    /* A closed set is reordered and removed, never typed into. It keeps the
+       field's footprint so rows line up with the free-text variant, but reads
+       as filled rather than editable. */
+
+    .value-input.--readonly {
+      display: flex;
+      align-items: center;
+      min-height: 2em;
+      padding: 0 0.5em;
+      background: var(--primary-very-low);
+      border: 1px solid var(--primary-low);
+      color: var(--primary);
+      cursor: default;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 

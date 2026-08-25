@@ -51,6 +51,9 @@ export default class ReorderableListCrossListExample extends Component {
             <:row as |item|>
               <span>{{item.name}}</span>
             </:row>
+            <:empty>
+              {{i18n "styleguide.sections.reorderable_list.cross_list_empty"}}
+            </:empty>
           </DReorderableList>
         </div>
         <div class="styleguide-reorderable-list-group__panel">
@@ -71,6 +74,9 @@ export default class ReorderableListCrossListExample extends Component {
             <:row as |item|>
               <span>{{item.name}}</span>
             </:row>
+            <:empty>
+              {{i18n "styleguide.sections.reorderable_list.cross_list_empty"}}
+            </:empty>
           </DReorderableList>
         </div>
       </div>

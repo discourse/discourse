@@ -399,7 +399,9 @@ en:
 
     reorder:
       handle: "Reorder %{label}"
-      handle_description: "Drag to reorder, or press Enter for move options"
+      handle_description: "Use the arrow keys to move between rows. Press Enter for move options."
+      remove: "Remove %{label}"
+      removed: "Removed %{label}"
       move_up: "Move up"
       move_down: "Move down"
       move_to_top: "Move to top"

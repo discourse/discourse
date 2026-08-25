@@ -20,7 +20,7 @@ import DHeadlessMenu from "discourse/float-kit/components/d-headless-menu";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import discourseLater from "discourse/lib/later";
 import type A11yService from "discourse/services/a11y";
-import { eq } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -30,7 +30,6 @@ import dDragAndDropTarget, {
   DropTargetEvent,
   registerDragAndDropTarget,
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
-import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -89,7 +88,12 @@ export interface ReorderableMove<T = unknown> {
   proposedToItems: readonly T[];
 }
 
-/** The per-row state yielded to the default block beside the item. */
+/**
+ * The row's own position and its pre-wired controls, yielded to `<:row>`
+ * beside the item. Conventionally bound as `controls`, matching the
+ * `@controls` argument that decides whether the list places them or the
+ * consumer does.
+ */
 export interface ReorderableRowApi {
   /** The row's index in the visible list. */
   index: number;
@@ -111,6 +115,13 @@ export interface ReorderableRowApi {
    * not.
    */
   handle?: ComponentLike<{ Element: HTMLElement }>;
+
+  /**
+   * The pre-wired remove control, present only under `@controls="manual"` on a
+   * removable row when `@onRemove` is set. Carries its own accessible name;
+   * everything visual passes through.
+   */
+  remove?: ComponentLike<{ Element: HTMLElement }>;
 }
 
 /** The context handed to a `@rowClass` function. */
@@ -203,9 +214,19 @@ interface Row<T> {
   isLast: boolean;
   disableUp: boolean;
   disableDown: boolean;
+  /** The row's own accessible name: what the reader is moving. */
+  label: string;
   handleLabel: string;
+
+  /** Shared by the row's `aria-describedby` and its handle's description. */
+  descriptionId: string;
+
+  /** Whether this row may be removed at all. */
+  removable: boolean;
+
+  /** The remove control's accessible name. */
+  removeLabel: string;
   yieldControls: boolean;
-  isFocused: boolean;
 }
 
 interface DReorderableListSignature<T> {
@@ -341,6 +362,38 @@ interface DReorderableListSignature<T> {
     allowCreate?: boolean;
 
     /**
+     * Reports that the reader asked to remove an item. Supplying it is what
+     * renders the remove control: trailing the row's own content by default,
+     * or wherever `controls.remove` is placed under `@controls="manual"`.
+     *
+     * The visible index comes with it, because an index-keyed list may hold
+     * the same value twice and the item alone would not say which row went.
+     *
+     * The list announces the removal and puts focus somewhere sensible
+     * afterwards; the handler's only job is to drop the item from its store.
+     */
+    onRemove?: (item: T, index: number) => void;
+
+    /**
+     * Whether an item may be removed, defaulting to all of them.
+     *
+     * Mirrors `@movable`, which renders no handle on a row that cannot move:
+     * a row that cannot be removed renders no remove control either. A
+     * permanently protected row would otherwise carry a dead tab stop that
+     * announces itself as unavailable on every pass. This is deliberately
+     * unlike the menu's boundary destinations, which stay marked because
+     * reaching an end is temporary and the row will move again.
+     */
+    removable?: (item: T) => boolean;
+
+    /**
+     * The remove control's icon. One list-level argument rather than a
+     * per-row one, because the control is placed by the list in every mode
+     * except manual.
+     */
+    removeIcon?: string;
+
+    /**
      * Called with the trimmed value when the default create affordance is
      * submitted. Never called for an empty or whitespace-only value.
      */
@@ -369,18 +422,12 @@ interface DReorderableListSignature<T> {
      */
     hint: [];
 
-    /**
-     * Rendered inside the list element, after every row — for content that
-     * shares the container but sits outside the reorderable set.
-     */
-    static: [];
-
     /** Rendered in the rows' position when `@items` is empty. */
     empty: [];
 
     /**
      * Replaces the default create affordance when `@allowCreate` is set,
-     * rendered between the rows and the static content.
+     * rendered after the rows.
      */
     create: [];
   };
@@ -446,7 +493,7 @@ interface MoveMenuData {
   list: {
     rowFor: (key: string) => Row<unknown> | undefined;
     siblings: () => { listId: string; listLabel: string }[];
-    onMenuMove: (key: string, target: MoveTarget, close: () => void) => void;
+    onMenuMove: (key: string, target: MoveTarget) => void;
     onMenuMoveToList: (key: string, listId: string, close: () => void) => void;
   };
 
@@ -469,9 +516,10 @@ interface MoveMenuSignature {
  * live state. Boundary marks therefore reflect the list as it stands while the
  * menu is open, not as it stood when the row last rendered.
  *
- * A disclosure of ordinary buttons rather than `role="menu"`, matching every
- * other Discourse menu, which keeps the reader in the same browse mode they
- * navigate the rest of the page with.
+ * A disclosure of ordinary buttons rather than `role="menu"`, which keeps the
+ * reader in the same browse mode they navigate the rest of the page with. No
+ * float-kit float is a menu: the role lands on the float's outer wrapper, two
+ * levels above the list of buttons, where it could never own menu items.
  */
 class MoveMenu extends Component<MoveMenuSignature> {
   get row(): Row<unknown> | undefined {
@@ -484,8 +532,8 @@ class MoveMenu extends Component<MoveMenuSignature> {
 
   @action
   move(target: MoveTarget) {
-    const { data, close } = this.args;
-    data?.list.onMenuMove(data.key, target, close ?? (() => {}));
+    const { data } = this.args;
+    data?.list.onMenuMove(data.key, target);
   }
 
   @action
@@ -538,7 +586,10 @@ class MoveMenu extends Component<MoveMenuSignature> {
           <dropdown.item>
             <MoveItem
               @target="list"
-              @icon="arrow-right"
+              {{! Deliberately not a directional arrow: the list has no idea
+                where a sibling sits on the page, so an arrow would point the
+                wrong way as often as not. }}
+              @icon="right-left"
               @label={{i18n "reorder.move_to_list" list=sibling.listLabel}}
               @move={{fn this.moveToList sibling.listId}}
             />
@@ -570,16 +621,6 @@ class MoveMenu extends Component<MoveMenuSignature> {
  * registers instead and names this button as its `dragHandle`.
  */
 class HandlePart extends Component<HandlePartSignature> {
-  /**
-   * The id of this handle's own description. Per handle rather than one
-   * shared node, because the list root cannot legally hold a `span` — its
-   * children are `li`, or the rows of whatever table shell a consumer chose —
-   * and the description belongs to the control either way.
-   */
-  get descriptionId(): string {
-    return `${guidFor(this)}-move-description`;
-  }
-
   @action
   open() {
     this.args.onOpen(this.args.row.key);
@@ -593,17 +634,52 @@ class HandlePart extends Component<HandlePartSignature> {
       @translatedAriaLabel={{@row.handleLabel}}
       @translatedTitle={{@row.handleLabel}}
       @ariaExpanded={{@isOpen}}
-      aria-haspopup="menu"
-      aria-describedby={{this.descriptionId}}
+      aria-describedby={{@row.descriptionId}}
       class="btn-flat d-reorderable-list__handle"
       ...attributes
     >
-      <span id={{this.descriptionId}} class="sr-only">
+      <span id={{@row.descriptionId}} class="sr-only">
         {{i18n "reorder.handle_description"}}
       </span>
     </DButton>
   </template>
 }
+
+interface RemovePartSignature {
+  Args: {
+    row: Row<unknown>;
+
+    /** The icon to render, from the list's `@removeIcon`. */
+    icon: string;
+
+    /** Reports the row the reader asked to remove. */
+    onRemove: (key: string) => void;
+  };
+  Element: HTMLElement;
+}
+
+/**
+ * The standard remove control for one row.
+ *
+ * Only its contract is fixed: an accessible name built from the row's own
+ * label, and the disabled state the list computed. Everything visual is the
+ * consumer's — `@icon` and any attribute pass straight through — because a
+ * settings row and an admin table want different weights for the same action.
+ *
+ * The name is the part worth centralising. Every surface that hand-rolled this
+ * rendered an icon-only button with no name at all, so a ten-row list offered a
+ * reader ten identical "button"s and no way to tell what each one removed.
+ */
+const RemovePart: TOC<RemovePartSignature> = <template>
+  <DButton
+    @icon={{@icon}}
+    @action={{fn @onRemove @row.key}}
+    @translatedAriaLabel={{@row.removeLabel}}
+    @translatedTitle={{@row.removeLabel}}
+    class="btn-flat d-reorderable-list__remove"
+    ...attributes
+  />
+</template>;
 
 interface CreateRowSignature {
   Args: {
@@ -692,18 +768,21 @@ class CreateRow extends Component<CreateRowSignature> {
  * announcement per real move, and neither for a move that lands where it
  * started.
  *
- * Each movable row renders exactly one control, the handle, which is three
- * things at once: the drag source, the roving cursor's item, and the trigger
- * for a menu of move destinations. Fusing them is what lets a dense row carry
- * a single affordance while still satisfying the three ways a reorder has to
- * be operable.
+ * The row is the cursor's item, and the handle inside it is the pointer
+ * affordance: the drag source and the menu's trigger, never a tab stop of its
+ * own. Splitting them is what lets a row carry its own controls without two
+ * focus models fighting over the tab sequence.
  *
  * - **Pointer**: drag the handle, or click it and choose a destination. The
  *   menu is the single-pointer path WCAG 2.5.1 and 2.5.7 require, since a
  *   drag alone leaves anyone who cannot perform one with nothing.
- * - **Keyboard**: the list is one composite widget with one tab stop. Arrows
- *   and Home/End move the cursor between handles; Enter or Space opens the
- *   menu; Escape closes it. There is no mode to enter or leave.
+ * - **Keyboard**: the list is one tab stop, and it owns the tab sequence for
+ *   the row the cursor is on. Arrows and Home/End move between rows; Tab
+ *   descends into the current row's own controls and out the other side;
+ *   Escape returns to the row; Enter or Space opens the move menu. Controls in
+ *   every other row are held out of the tab sequence until the cursor reaches
+ *   them, which is what makes the single tab stop true rather than merely
+ *   claimed. There is no mode to enter or leave.
  * - **Accelerator**: Alt with an arrow moves the row one step, and Alt with
  *   Home/End sends it to an end. Deliberately never the only path, so
  *   assistive software that swallows the chord costs speed rather than
@@ -840,12 +919,30 @@ export default class DReorderableList<T> extends Component<
     const onKeydown = (event: Event) => {
       const { key, altKey, target } = event as KeyboardEvent;
       if (
-        !altKey ||
         !(target instanceof Element) ||
-        !target.closest(".d-reorderable-list__handle")
+        !target.matches(".d-reorderable-list__handle")
       ) {
         return;
       }
+      // A plain arrow walks between handles. An accelerator over Tab and never
+      // the only path, so software that swallows it costs speed, not access.
+      if (!altKey) {
+        const step = key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
+        if (!step) {
+          return;
+        }
+        const handles = Array.from(
+          element.querySelectorAll<HTMLElement>(".d-reorderable-list__handle")
+        );
+        const next = handles[handles.indexOf(target as HTMLElement) + step];
+        if (next) {
+          event.preventDefault();
+          next.focus();
+        }
+        return;
+      }
+      // An Alt chord pressed in a row's own control belongs to that control,
+      // and Alt+Arrow is a live shortcut in a text field on several platforms.
       const destination = CHORD_TARGETS[key];
       if (!destination) {
         return;
@@ -871,15 +968,16 @@ export default class DReorderableList<T> extends Component<
       if (event.target.closest(MENU_CONTENT_SELECTOR)) {
         return;
       }
-      const grip = event.target.closest(".d-reorderable-list__handle");
-      const key = grip
-        ?.closest("[data-reorderable-key]")
+      // Any focus inside the row counts as the cursor being there: the row is
+      // the cursor's item, and its own controls are part of it.
+      const key = event.target
+        .closest("[data-reorderable-key]")
         ?.getAttribute("data-reorderable-key");
-      if (this._focusedKey !== (key ?? null)) {
-        this._focusedKey = key ?? null;
+      if (this.#focusedKey !== (key ?? null)) {
+        this.#focusedKey = key ?? null;
         // The menu is anchored to one row, so a cursor that has moved on would
         // otherwise leave it floating over a row it no longer describes.
-        if (this.openKey && this.openKey !== this._focusedKey) {
+        if (this.openKey && this.openKey !== this.#focusedKey) {
           this.closeMenu(false);
         }
       }
@@ -898,7 +996,7 @@ export default class DReorderableList<T> extends Component<
         ) {
           return;
         }
-        this._focusedKey = null;
+        this.#focusedKey = null;
       });
     };
 
@@ -971,11 +1069,15 @@ export default class DReorderableList<T> extends Component<
   #run: { key: string; timer: Timer } | null = null;
 
   /**
-   * The key of the row whose handle holds the roving cursor, mirrored onto the
-   * row as a class so the cursor reads at row level rather than on the small
-   * button it technically rests on.
+   * The row the cursor is in, read only by the focus handler that decides
+   * whether an open menu has been left behind.
+   *
+   * Deliberately untracked: the focus indicator is CSS on the real focus now,
+   * so nothing rendered consumes this. Tracking it meant a `focusin` fired by
+   * the after-render refocus wrote a value the same computation had already
+   * read, which is a backtracking-rerender assertion.
    */
-  @tracked _focusedKey: string | null = null;
+  #focusedKey: string | null = null;
 
   constructor(owner: Owner, args: DReorderableListSignature<T>["Args"]) {
     super(owner, args);
@@ -1068,6 +1170,21 @@ export default class DReorderableList<T> extends Component<
     return this.args.itemTag ?? "li";
   }
 
+  /** The remove control's icon, defaulting to the list family's own. */
+  get removeIcon(): string {
+    return this.args.removeIcon ?? "xmark";
+  }
+
+  /** Whether the list places the remove control itself. */
+  get rendersRemove(): boolean {
+    return !!this.args.onRemove && !this.isManual;
+  }
+
+  /** Whether the remove control is the consumer's to place. */
+  get rendersRemoveManually(): boolean {
+    return !!this.args.onRemove && this.isManual;
+  }
+
   get isManual(): boolean {
     return this.args.controls === "manual";
   }
@@ -1110,7 +1227,7 @@ export default class DReorderableList<T> extends Component<
    * event handlers read one consistent projection of `@items`.
    */
   get rows(): Row<T>[] {
-    const { disabled, items, label, movable } = this.args;
+    const { disabled, items, label, movable, removable } = this.args;
     const seen = new Set<string>();
 
     const rows = items.map((item, index) => {
@@ -1132,9 +1249,16 @@ export default class DReorderableList<T> extends Component<
         isLast: false,
         disableUp: false,
         disableDown: false,
+        label: itemLabel,
         handleLabel: i18n("reorder.handle", { label: itemLabel }),
+        // The row is the cursor's item, so the description belongs to it — but
+        // the element carrying the text has to live inside the handle's button:
+        // a list element's children are `li`, or the rows of whatever table
+        // shell a consumer chose, and a bare `span` is legal in neither.
+        descriptionId: `${guidFor(this)}-move-${index}`,
+        removable: !disabled && (removable ? removable(item) : true),
+        removeLabel: i18n("reorder.remove", { label: itemLabel }),
         yieldControls: rowMovable && this.isManual,
-        isFocused: key === this._focusedKey,
       };
     });
 
@@ -1183,6 +1307,26 @@ export default class DReorderableList<T> extends Component<
 
     this.openKey = key;
     await instance.show();
+    this.#focusFirstDestination();
+  }
+
+  /**
+   * Puts focus on the first destination the reader can actually choose, or on
+   * the first one of any kind when every destination is refused, so the menu
+   * never opens with focus nowhere.
+   */
+  #focusFirstDestination() {
+    const content = document.querySelector(MENU_CONTENT_SELECTOR);
+    if (!content) {
+      return;
+    }
+    const items = Array.from(
+      content.querySelectorAll<HTMLElement>(".d-reorderable-list__move-item")
+    );
+    const target =
+      items.find((item) => item.getAttribute("aria-disabled") !== "true") ??
+      items[0];
+    target?.focus();
   }
 
   /**
@@ -1217,9 +1361,55 @@ export default class DReorderableList<T> extends Component<
       component: MoveMenu,
       listeners: false,
       autoUpdate: true,
+      // The panel holds a list of buttons and nothing else — no filter, no
+      // controller of its own — so the float element steps out of the way
+      // rather than announcing itself as a dialog wrapped around them.
+      contentRole: "none",
+      // Focus is placed by hand after opening, not by the tab trap: the trap
+      // takes the first focusable, and a destination marked unavailable is
+      // still focusable. A row at either boundary would open on a dead item,
+      // and a list with one row has nothing but dead items above the
+      // cross-list entries.
+      autofocus: false,
       onClose: () => (this.openKey = null),
     });
     return this.menu;
+  }
+
+  /**
+   * Removes a row on the reader's behalf: hand the item to the consumer, say
+   * so, and leave focus somewhere it can act again.
+   *
+   * Focus is the part a consumer cannot reasonably get right on its own. The
+   * control that was just pressed is gone with its row, so focus would fall to
+   * the document without help, and a reader clearing several entries would be
+   * thrown to the top of the page after each one.
+   *
+   * @param key - The row to remove.
+   */
+  @action
+  onRemove(key: string) {
+    const row = this.rows.find((candidate) => candidate.key === key);
+    if (!row?.removable) {
+      return;
+    }
+    const index = row.index;
+    this.args.onRemove?.(row.item, index);
+    this.a11y.announce(i18n("reorder.removed", { label: row.label }));
+    schedule("afterRender", () => {
+      if (isDestroying(this) || isDestroyed(this)) {
+        return;
+      }
+      const controls = Array.from(
+        this.#listElement?.querySelectorAll<HTMLElement>(
+          ".d-reorderable-list__remove"
+        ) ?? []
+      );
+      // The slot the removed row occupied, which now holds the row that
+      // followed it; at the end of the list, the one before it instead.
+      const next = controls[index] ?? controls.at(-1);
+      next?.focus();
+    });
   }
 
   /**
@@ -1241,8 +1431,11 @@ export default class DReorderableList<T> extends Component<
    * @param close - Closes the menu the item was chosen from.
    */
   @action
-  onMenuMove(key: string, target: MoveTarget, close: () => void) {
-    close();
+  onMenuMove(key: string, target: MoveTarget) {
+    // Closed without returning focus to the trigger: the trigger is the handle,
+    // and the cursor's item is the row. The move's own refocus is what puts
+    // focus back, on the row that actually moved.
+    this.closeMenu(false);
     this.#move(key, target, "menu");
   }
 
@@ -1695,14 +1888,12 @@ export default class DReorderableList<T> extends Component<
   <template>
     {{#let (dElement this.listTag) as |List|}}
       <List
-        class="d-reorderable-list"
+        class={{dConcatClass
+          "d-reorderable-list"
+          (if this.acceptsRootDrops "--empty-drop-target")
+        }}
         role={{@role}}
         {{this.rootDropTarget}}
-        {{dRovingFocus
-          itemSelector=".d-reorderable-list__handle"
-          orientation="vertical"
-          itemsKey=this.rows
-        }}
         {{this.moveKeys}}
         ...attributes
       >
@@ -1723,7 +1914,6 @@ export default class DReorderableList<T> extends Component<
                 <Item
                   class={{dConcatClass
                     "d-reorderable-list__row"
-                    (if row.isFocused "--focused")
                     (this.rowClassFor row)
                   }}
                   role={{@itemRole}}
@@ -1765,9 +1955,25 @@ export default class DReorderableList<T> extends Component<
                           register=this.registerHandle
                         )
                       )
+                      remove=(if
+                        (and this.rendersRemoveManually row.removable)
+                        (component
+                          RemovePart
+                          row=row
+                          icon=this.removeIcon
+                          onRemove=this.onRemove
+                        )
+                      )
                     )
                     to="row"
                   }}
+                  {{#if (and this.rendersRemove row.removable)}}
+                    <RemovePart
+                      @row={{row}}
+                      @icon={{this.removeIcon}}
+                      @onRemove={{this.onRemove}}
+                    />
+                  {{/if}}
                 </Item>
               {{else}}
                 <Item
@@ -1802,7 +2008,6 @@ export default class DReorderableList<T> extends Component<
             <CreateRow @itemTag={{this.itemTag}} @onCreate={{@onCreate}} />
           {{/if}}
         {{/if}}
-        {{yield to="static"}}
       </List>
     {{/let}}
   </template>

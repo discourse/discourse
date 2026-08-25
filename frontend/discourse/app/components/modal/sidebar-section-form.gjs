@@ -1418,9 +1418,9 @@ export default class SidebarSectionForm extends Component {
                     </div>
                   </div>
                 </:header>
-                <:row as |link row|>
+                <:row as |link controls|>
                   <SectionFormLink
-                    @row={{row}}
+                    @controls={{controls}}
                     @link={{link}}
                     @focusNameInput={{eq
                       link.objectId
@@ -1467,9 +1467,9 @@ export default class SidebarSectionForm extends Component {
                   aria-rowcount={{this.activeSecondaryLinks.length}}
                   class="sidebar-section-form__links-wrapper --secondary"
                 >
-                  <:row as |link row|>
+                  <:row as |link controls|>
                     <SectionFormLink
-                      @row={{row}}
+                      @controls={{controls}}
                       @link={{link}}
                       @duplicateValue={{has
                         this.duplicateLinkObjectIds

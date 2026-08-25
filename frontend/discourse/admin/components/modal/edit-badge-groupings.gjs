@@ -20,6 +20,7 @@ export default class EditBadgeGroupings extends Component {
   );
 
   groupingLabel = (grouping) => grouping.displayName || grouping.name;
+  canDelete = (grouping) => !grouping.system;
 
   /**
    * Applies a committed move onto the staged working copy.
@@ -86,10 +87,14 @@ export default class EditBadgeGroupings extends Component {
             @items={{this.workingCopy}}
             @label={{this.groupingLabel}}
             @onMove={{this.handleMove}}
+            @onRemove={{this.delete}}
+            @removable={{this.canDelete}}
+            @controls="manual"
             @rowClass="badge-grouping-item"
             class="badge-groupings-list"
           >
-            <:row as |wc|>
+            <:row as |wc controls|>
+              <controls.handle />
               <div class="badge-grouping">
                 {{#if wc.editing}}
                   <Input @value={{wc.name}} class="badge-grouping-name-input" />
@@ -112,12 +117,9 @@ export default class EditBadgeGroupings extends Component {
                     class="btn-default"
                   />
                 {{/if}}
-                <DButton
-                  @action={{fn this.delete wc}}
-                  @disabled={{wc.system}}
-                  @icon="xmark"
-                  class="btn-default"
-                />
+                {{#if controls.remove}}
+                  <controls.remove class="btn-default" />
+                {{/if}}
               </div>
             </:row>
           </DReorderableList>

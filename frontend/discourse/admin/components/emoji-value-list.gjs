@@ -8,8 +8,6 @@ import EmojiPicker from "discourse/components/emoji-picker";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { emojiUrlFor } from "discourse/lib/text";
-import { not } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
 
@@ -17,6 +15,8 @@ export default class EmojiValueList extends Component {
   @service menu;
 
   emojiLabel = (data) => data.value;
+
+  isEditable = (item) => item.isEditable;
 
   @cached
   get collection() {
@@ -142,22 +142,17 @@ export default class EmojiValueList extends Component {
           @key="value"
           @label={{this.emojiLabel}}
           @onMove={{this.handleMove}}
+          @onRemove={{this.removeValue}}
+          @removable={{this.isEditable}}
           @rowClass="value"
           class="values emoji-value-list"
         >
-          <:row as |data row|>
-            <DButton
-              @action={{fn this.removeValue data}}
-              @icon="xmark"
-              @disabled={{not data.isEditable}}
-              class="btn-default remove-value-btn btn-small"
-            />
-
+          <:row as |data controls|>
             <div
               class="value-input emoji-details
                 {{if data.isEditable 'can-edit'}}
                 {{if data.isEditing 'd-editor-textarea-wrapper'}}"
-              {{on "click" (fn this.editValue row.index)}}
+              {{on "click" (fn this.editValue controls.index)}}
               role="button"
             >
               <img

@@ -5,20 +5,26 @@ import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 
 export default class ReorderableListPoliciesExample extends Component {
   items = trackedArray([
-    { id: "pinned", name: "Pinned (cannot move)", pinned: true },
-    { id: "first", name: "First movable" },
-    { id: "second", name: "Second movable" },
-    { id: "third", name: "Third movable" },
-    { id: "pinned-bottom", name: "Pinned at the bottom", pinned: true },
+    { id: "announcements", name: "Announcements", pinned: true },
+    { id: "latest", name: "Latest" },
+    { id: "categories", name: "Categories", required: true },
+    { id: "top", name: "Top" },
+    { id: "bookmarks", name: "Bookmarks", pinned: true },
   ]);
 
   itemLabel = (item) => item.name;
 
   movable = (item) => !item.pinned;
+  removable = (item) => !item.required;
 
   @action
   applyMove({ proposedToItems }) {
     this.items.splice(0, this.items.length, ...proposedToItems);
+  }
+
+  @action
+  remove(item, index) {
+    this.items.splice(index, 1);
   }
 
   <template>
@@ -28,10 +34,17 @@ export default class ReorderableListPoliciesExample extends Component {
       @label={{this.itemLabel}}
       @movable={{this.movable}}
       @onMove={{this.applyMove}}
+      @onRemove={{this.remove}}
+      @removable={{this.removable}}
       class="styleguide-reorderable-list"
     >
       <:row as |item|>
-        <span>{{item.name}}</span>
+        <span class="styleguide-reorderable-list__label">{{item.name}}</span>
+        {{#if item.pinned}}
+          <span class="styleguide-reorderable-list__note">Pinned</span>
+        {{else if item.required}}
+          <span class="styleguide-reorderable-list__note">Required</span>
+        {{/if}}
       </:row>
     </DReorderableList>
   </template>

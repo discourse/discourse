@@ -363,7 +363,7 @@ describe "Custom sidebar sections" do
     # Focus is where the keyboard path lives or dies: the row moves in the DOM
     # under the pressed control, and a lost focus makes a second press
     # impossible.
-    expect(section_modal.focused_label).to eq("Reorder Sidebar Tags")
+    expect(section_modal.focused_link_name).to eq("Sidebar Tags")
 
     # So the second press goes through whatever holds focus, not through another
     # lookup by name, which would pass even if focus had been dropped.
