@@ -138,6 +138,8 @@ export function sanitize(text, allowLister) {
               } catch {
                 return false;
               }
+              const iframeUrls = [decoded];
+              iframeUrls.push(value);
               return (
                 !decoded.match(/\/\.+\//) &&
                 allowedIframes.some((i) => {
@@ -145,7 +147,10 @@ export function sanitize(text, allowLister) {
                     // escape regex, keeping *
                     .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
                     .replace(/\*/g, "[^/]+");
-                  return new RegExp(`^${regex}.*$`, "i").test(decoded);
+                  const allowedIframe = new RegExp(`^${regex}.*$`, "i");
+                  return iframeUrls.every((iframeUrl) =>
+                    allowedIframe.test(iframeUrl)
+                  );
                 })
               );
             })())
