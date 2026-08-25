@@ -125,10 +125,9 @@ jobs:
 
       - name: RSpec (Rails integration)
         env:
-          LD_PRELOAD: /usr/lib/libjemalloc.so
           MIGRATIONS_RAILS: "1"
         run: |
           for gem in core tooling converters importer; do
             echo "== migrations-$gem (Rails integration) =="
-            (cd "migrations/$gem" && BUNDLE_GEMFILE="$GITHUB_WORKSPACE/Gemfile" bundle exec rspec --tag rails)
+            (cd "migrations/$gem" && LD_PRELOAD=/usr/lib/libjemalloc.so BUNDLE_GEMFILE="$GITHUB_WORKSPACE/Gemfile" bundle exec rspec --tag rails)
           done
