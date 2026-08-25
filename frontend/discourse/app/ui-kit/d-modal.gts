@@ -75,7 +75,6 @@ const UNAVAILABLE_PRIMARY = '[disabled], :disabled, [aria-disabled="true"]';
 
 const BODY_NOT_SCROLLABLE_CLASS = "is-not-scrollable";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
-const SWIPE_VELOCITY_EXPIRY_MS = 100;
 const SWIPE_CLOSE_DISTANCE_RATIO = 0.25;
 const SWIPE_SETTLE_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
 
@@ -257,12 +256,7 @@ export default class DModal extends Component<DModalSignature> {
   });
   #modalContainer: HTMLElement;
   #lockedScrollY?: number;
-  #drag: {
-    pointerId: number;
-    lastY: number;
-    lastTime: number;
-    velocityY: number;
-  } | null = null;
+  #dragPointerId: number | null = null;
   @tracked _wrapperElement?: HTMLElement;
 
   get autofocus() {
@@ -336,28 +330,21 @@ export default class DModal extends Component<DModalSignature> {
 
   @action
   handleDragStart(event: PointerEvent) {
-    if (!this.mobileDismissable || this.animating || this.#drag) {
+    if (
+      !this.mobileDismissable ||
+      this.animating ||
+      this.#dragPointerId !== null
+    ) {
       return false;
     }
-    this.#drag = {
-      pointerId: event.pointerId,
-      lastY: event.clientY,
-      lastTime: event.timeStamp,
-      velocityY: 0,
-    };
+    this.#dragPointerId = event.pointerId;
   }
 
   @action
   async handleDrag(event: PointerEvent, info: DPointerDragInfo) {
-    const drag = this.#drag;
-    if (!drag || drag.pointerId !== event.pointerId || this.animating) {
+    if (this.#dragPointerId !== event.pointerId || this.animating) {
       return;
     }
-
-    const elapsed = event.timeStamp - drag.lastTime;
-    drag.velocityY = elapsed > 0 ? (event.clientY - drag.lastY) / elapsed : 0;
-    drag.lastY = event.clientY;
-    drag.lastTime = event.timeStamp;
 
     // applied instantly so the modal tracks the finger 1:1; easing only
     // happens when the gesture ends
@@ -369,11 +356,10 @@ export default class DModal extends Component<DModalSignature> {
 
   @action
   async handleDragEnd(event: PointerEvent, info: DPointerDragInfo) {
-    const drag = this.#drag;
-    if (!drag || drag.pointerId !== event.pointerId) {
+    if (this.#dragPointerId !== event.pointerId) {
       return;
     }
-    this.#drag = null;
+    this.#dragPointerId = null;
 
     if (!info.moved || this.animating) {
       return;
@@ -381,12 +367,11 @@ export default class DModal extends Component<DModalSignature> {
 
     const closeDistance =
       this.#modalContainer.clientHeight * SWIPE_CLOSE_DISTANCE_RATIO;
-    const idleMs = event.timeStamp - drag.lastTime;
-    const velocityY = idleMs > SWIPE_VELOCITY_EXPIRY_MS ? 0 : drag.velocityY;
 
     if (
       info.delta.y <= 0 ||
-      (velocityY < SWIPE_VELOCITY_THRESHOLD && info.delta.y < closeDistance)
+      (info.velocity.y < SWIPE_VELOCITY_THRESHOLD &&
+        info.delta.y < closeDistance)
     ) {
       return await this.#animateWrapperPosition(0, getMaxAnimationTimeMs());
     }
@@ -396,11 +381,10 @@ export default class DModal extends Component<DModalSignature> {
 
   @action
   async handleDragCancel(event: PointerEvent, info: DPointerDragInfo) {
-    const drag = this.#drag;
-    if (!drag || drag.pointerId !== event.pointerId) {
+    if (this.#dragPointerId !== event.pointerId) {
       return;
     }
-    this.#drag = null;
+    this.#dragPointerId = null;
 
     if (info.moved && !this.animating) {
       await this.#animateWrapperPosition(0, getMaxAnimationTimeMs());
