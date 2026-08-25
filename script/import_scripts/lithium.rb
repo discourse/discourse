@@ -272,7 +272,7 @@ class ImportScripts::Lithium < ImportScripts::Base
       nil
     end
     begin
-      file.unlind
+      file.unlink
     rescue StandardError
       nil
     end
