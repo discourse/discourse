@@ -12,8 +12,8 @@ import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import scrollLock from "discourse/lib/scroll-lock";
 import {
+  dampenedOverdrag,
   getMaxAnimationTimeMs,
-  shouldCloseMenu,
 } from "discourse/lib/swipe-events";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -22,8 +22,13 @@ import Header from "./header";
 import ImpersonationNotice from "./impersonation-notice";
 
 let _menuPanelClassesToForceDropdown = [];
-const PANEL_WIDTH = 340;
+const PANEL_WIDTH_FALLBACK = 340;
 const DEBOUNCE_HEADER_DELAY = 10;
+const DRAWER_SETTLE_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
+const DRAWER_CLOSE_DISTANCE_RATIO = 0.25;
+const DRAWER_CLOSE_VELOCITY_THRESHOLD = 0.4;
+const HAMBURGER_BUTTON_ID = "toggle-hamburger-menu";
+const USER_BUTTON_ID = "toggle-current-user";
 
 export default class GlimmerSiteHeader extends Component {
   @service appEvents;
@@ -31,13 +36,16 @@ export default class GlimmerSiteHeader extends Component {
   @service site;
   @service header;
 
-  pxClosed;
   headerElement;
 
   _animate = false;
   _headerWrap;
   _mainOutletWrapper;
-  _swipeMenuOrigin;
+  _drawerOrigin;
+  _drawerPress;
+  _drawerSwipe;
+  _drawerAnimations = [];
+  _drawerTransitionId = 0;
   _applicationElement;
   _resizeObserver;
 
@@ -67,8 +75,14 @@ export default class GlimmerSiteHeader extends Component {
     this._itsatrap = null;
 
     window.removeEventListener("scroll", this.debouncedRecalculateHeaderOffset);
+    this._headerWrap?.removeEventListener(
+      "pointerdown",
+      this.onDrawerPointerDown
+    );
     this._resizeObserver.disconnect();
     cancel(this.recalculationTimer);
+    this.#resetDrawerSwipe();
+    this.#freezeDrawerAnimations();
   }
 
   get dropDownHeaderEnabled() {
@@ -190,6 +204,10 @@ export default class GlimmerSiteHeader extends Component {
     this._headerWrap = document.querySelector(".d-header-wrap");
     this._mainOutletWrapper = document.querySelector("#main-outlet-wrapper");
     if (this._headerWrap) {
+      this._headerWrap.addEventListener(
+        "pointerdown",
+        this.onDrawerPointerDown
+      );
       schedule("afterRender", () => {
         this.headerElement = this._headerWrap.querySelector("header.d-header");
       });
@@ -245,6 +263,8 @@ export default class GlimmerSiteHeader extends Component {
     const menuPanels = document.querySelectorAll(".menu-panel");
 
     if (menuPanels.length === 0) {
+      this.#resetDrawerSwipe();
+      this.#freezeDrawerAnimations();
       this._animate = this.slideInMode;
       return;
     }
@@ -264,37 +284,21 @@ export default class GlimmerSiteHeader extends Component {
       panel.classList.add(viewMode);
 
       if (this._animate) {
-        let animationFinished;
-        let finalPosition = PANEL_WIDTH;
-        this._swipeMenuOrigin = "right";
-        if (
-          this.slideInMode &&
-          panel.parentElement.classList.contains(this.leftMenuClass)
-        ) {
-          this._swipeMenuOrigin = "left";
-          finalPosition = -PANEL_WIDTH;
-        }
-        animationFinished = panel.animate(
-          [{ transform: `translate3d(${finalPosition}px, 0, 0)` }],
-          {
-            fill: "forwards",
-          }
-        ).finished;
-
-        waitForPromise(animationFinished);
+        this._drawerOrigin = this.#isLeftMenu(panel) ? "left" : "right";
+        const finalPosition =
+          this.#drawerWidth(panel) * this.#closingDirection();
+        panel.style.transform = `translate3d(${finalPosition}px, 0, 0)`;
 
         if (cloakElement) {
-          cloakElement.animate([{ opacity: 0 }], { fill: "forwards" });
+          cloakElement.style.opacity = 0;
           cloakElement.style.display = "block";
         }
 
-        animationFinished.then(() => {
-          if (isTesting()) {
-            this._animateOpening(panel);
-          } else {
-            discourseLater(() => this._animateOpening(panel));
-          }
-        });
+        if (isTesting()) {
+          this._animateOpening(panel);
+        } else {
+          discourseLater(() => this._animateOpening(panel));
+        }
       }
 
       this._animate = false;
@@ -302,132 +306,311 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  _animateOpening(panel, event = null) {
-    const cloakElement = document.querySelector(".header-cloak");
-    let durationMs = getMaxAnimationTimeMs();
-    if (event && this.pxClosed > 0) {
-      durationMs = getMaxAnimationTimeMs(
-        this.pxClosed / Math.abs(event.velocityX)
-      );
-    }
-    const timing = {
-      duration: durationMs > 0 ? durationMs : 0,
-      fill: "forwards",
-      easing: "ease-out",
-    };
-    panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
-    cloakElement?.animate?.([{ opacity: 1 }], timing);
-    this.pxClosed = null;
+  _animateOpening(panel) {
+    this._drawerTransitionId++;
+    waitForPromise(this.#settleDrawer(panel, false).finished);
   }
 
   @bind
-  _animateClosing(event, panel, menuOrigin) {
+  _animateClosing(panel, menuOrigin) {
     this._animate = true;
-    const cloakElement = document.querySelector(".header-cloak");
-    let durationMs = getMaxAnimationTimeMs();
-    if (event && this.pxClosed > 0) {
-      const distancePx = PANEL_WIDTH - this.pxClosed;
-      durationMs = getMaxAnimationTimeMs(
-        distancePx / Math.abs(event.velocityX)
-      );
-    }
-    const timing = {
-      duration: durationMs > 0 ? durationMs : 0,
-      fill: "forwards",
-    };
+    const transitionId = ++this._drawerTransitionId;
+    const { cloak, finished } = this.#settleDrawer(panel, true, menuOrigin);
+    const closingFinished = finished.then(() => {
+      if (
+        transitionId !== this._drawerTransitionId ||
+        !panel.isConnected ||
+        this.isDestroying ||
+        this.isDestroyed
+      ) {
+        return;
+      }
 
-    let endPosition = -PANEL_WIDTH; //origin left
-    if (menuOrigin === "right") {
-      endPosition = PANEL_WIDTH;
-    }
-    panel.animate(
-      [{ transform: `translate3d(${endPosition}px, 0, 0)` }],
-      timing
-    );
-    if (cloakElement) {
-      cloakElement.animate([{ opacity: 0 }], timing);
-      cloakElement.style.display = "none";
+      this.#resetDrawerSwipe();
+      this.#freezeDrawerAnimations();
+      if (cloak) {
+        cloak.style.display = "none";
+      }
+      scrollLock(false);
 
-      // to ensure that the cloak is cleared after animation we need to toggle any active menus
       if (this.header.hamburgerVisible || this.header.userVisible) {
+        const toggleId = this.header.hamburgerVisible
+          ? HAMBURGER_BUTTON_ID
+          : USER_BUTTON_ID;
         this.header.hamburgerVisible = false;
         this.header.userVisible = false;
+        document.getElementById(toggleId)?.focus();
+      }
+    });
+
+    waitForPromise(closingFinished);
+  }
+
+  @bind
+  onSwipePress(event) {
+    this.#beginDrawerPress(event.target);
+  }
+
+  @bind
+  onSwipeRelease() {
+    const press = this._drawerPress;
+    if (!press) {
+      return;
+    }
+
+    this._drawerPress = null;
+    if (press.startedOnCloak) {
+      this._animateClosing(press.panel, this._drawerOrigin);
+    } else if (press.startClosed > 0) {
+      this._animateOpening(press.panel);
+    }
+  }
+
+  @bind
+  onDrawerPointerDown(event) {
+    if (
+      !this.slideInMode ||
+      !(event.target instanceof Element) ||
+      !event.target.closest(".header-cloak")
+    ) {
+      return;
+    }
+
+    event.stopPropagation();
+    if (event.pointerType !== "touch") {
+      const press = this.#beginDrawerPress(event.target);
+      if (press) {
+        this._drawerPress = null;
+        this._animateClosing(press.panel, this._drawerOrigin);
       }
     }
-    this.pxClosed = null;
   }
 
   @bind
   onSwipeStart(swipeEvent, fullEvent) {
-    const center = swipeEvent.center;
-    const swipeOverValidElement = document
-      .elementsFromPoint(center.x, center.y)
-      .some(
-        (ele) =>
-          ele.classList.contains("panel-body") ||
-          ele.classList.contains("header-cloak")
-      );
+    const press = this._drawerPress;
+    const horizontal =
+      swipeEvent.direction === "left" || swipeEvent.direction === "right";
 
-    if (
-      swipeOverValidElement &&
-      (swipeEvent.direction === "left" || swipeEvent.direction === "right")
-    ) {
-      scrollLock(true, document.querySelector(".panel-body"));
-    } else {
+    if (!press || (!press.startedOnCloak && !horizontal)) {
       fullEvent.preventDefault();
+      return;
+    }
+
+    swipeEvent.originalEvent.preventDefault();
+
+    const scroller = press.panel.querySelector(".panel-body");
+    this._drawerSwipe = {
+      ...press,
+      horizontal,
+      scroller,
+      scrollerLocked: false,
+    };
+    this._drawerPress = null;
+
+    if (horizontal && scroller) {
+      scrollLock(true, scroller);
+      this._drawerSwipe.scrollerLocked = true;
+    }
+    if (horizontal) {
+      this.onSwipe(swipeEvent);
     }
   }
 
   @bind
   onSwipeEnd(swipeEvent) {
-    const menuPanels = document.querySelectorAll(".menu-panel");
-    scrollLock(false, document.querySelector(".panel-body"));
-    menuPanels.forEach((panel) => {
-      if (shouldCloseMenu(swipeEvent, this._swipeMenuOrigin)) {
-        this._animateClosing(swipeEvent, panel, this._swipeMenuOrigin);
-        scrollLock(false);
-      } else {
-        this._animateOpening(panel, swipeEvent);
-      }
-    });
+    const swipe = this._drawerSwipe;
+    if (!swipe) {
+      return;
+    }
+
+    const closes = this.#shouldCloseDrawer(
+      swipe,
+      swipeEvent.deltaX,
+      swipeEvent.velocityX
+    );
+    this.#resetDrawerSwipe();
+
+    if (closes) {
+      this._animateClosing(swipe.panel, this._drawerOrigin);
+    } else {
+      this._animateOpening(swipe.panel);
+    }
   }
 
   @bind
   onSwipeCancel() {
-    const menuPanels = document.querySelectorAll(".menu-panel");
-    scrollLock(false, document.querySelector(".panel-body"));
-    menuPanels.forEach((panel) => {
-      this._animateOpening(panel);
-    });
+    const swipe = this._drawerSwipe;
+    const press = this._drawerPress;
+    this.#resetDrawerSwipe();
+
+    if (swipe?.startedOnCloak || press?.startedOnCloak) {
+      this._animateClosing((swipe ?? press).panel, this._drawerOrigin);
+    } else if (swipe || press?.startClosed > 0) {
+      this._animateOpening((swipe ?? press).panel);
+    }
   }
 
   @bind
   onSwipe(swipeEvent) {
-    const movingElement = document.querySelector(".menu-panel");
-    const cloakElement = document.querySelector(".header-cloak");
-
-    //origin left
-    this.pxClosed = Math.max(0, -swipeEvent.deltaX);
-    let translation = -this.pxClosed;
-    if (this._swipeMenuOrigin === "right") {
-      this.pxClosed = Math.max(0, swipeEvent.deltaX);
-      translation = this.pxClosed;
+    const swipe = this._drawerSwipe;
+    if (!swipe?.horizontal) {
+      return;
     }
 
-    movingElement.animate(
-      [{ transform: `translate3d(${translation}px, 0, 0)` }],
-      {
-        fill: "forwards",
+    const closingTravel =
+      swipe.startClosed + swipeEvent.deltaX * this.#closingDirection();
+    const closed = Math.min(swipe.width, Math.max(0, closingTravel));
+    const position =
+      closingTravel >= 0 ? closed : -dampenedOverdrag(-closingTravel);
+    const translation = position * this.#closingDirection();
+
+    swipe.panel.style.transform = `translate3d(${translation}px, 0, 0)`;
+    if (swipe.cloak) {
+      swipe.cloak.style.opacity = (swipe.width - closed) / swipe.width;
+    }
+  }
+
+  #beginDrawerPress(target) {
+    if (!this.slideInMode || !(target instanceof Element)) {
+      return;
+    }
+
+    const panelAtPointer = target.closest(".menu-panel.slide-in");
+    const cloakAtPointer = target.closest(".header-cloak");
+    if (!panelAtPointer && !cloakAtPointer) {
+      return;
+    }
+    if (target.closest("input, textarea, select, [contenteditable='true']")) {
+      return;
+    }
+
+    const panel =
+      panelAtPointer ?? document.querySelector(".menu-panel.slide-in");
+    if (!panel) {
+      return;
+    }
+
+    this._drawerTransitionId++;
+    this._animate = false;
+    this._drawerOrigin = this.#isLeftMenu(panel) ? "left" : "right";
+    const press = {
+      cloak: document.querySelector(".header-cloak"),
+      panel,
+      startClosed: this.#catchDrawer(panel),
+      startedOnCloak: Boolean(cloakAtPointer),
+      width: this.#drawerWidth(panel),
+    };
+    this._drawerPress = press;
+    return press;
+  }
+
+  #shouldCloseDrawer(swipe, deltaX, velocityX) {
+    const closingDistance =
+      swipe.startClosed + deltaX * this.#closingDirection();
+
+    if (swipe.startedOnCloak) {
+      return closingDistance > -swipe.width * DRAWER_CLOSE_DISTANCE_RATIO;
+    }
+    if (!swipe.horizontal) {
+      return false;
+    }
+
+    const flickedClosed =
+      closingDistance > 0 &&
+      velocityX * this.#closingDirection() >= DRAWER_CLOSE_VELOCITY_THRESHOLD;
+    return (
+      flickedClosed ||
+      closingDistance >= swipe.width * DRAWER_CLOSE_DISTANCE_RATIO
+    );
+  }
+
+  #settleDrawer(panel, closes, origin = this._drawerOrigin) {
+    this.#freezeDrawerAnimations();
+    const cloak = document.querySelector(".header-cloak");
+    const timing = {
+      duration: getMaxAnimationTimeMs(),
+      fill: "forwards",
+      easing: DRAWER_SETTLE_EASING,
+    };
+    const position = closes
+      ? this.#drawerWidth(panel) * (origin === "right" ? 1 : -1)
+      : 0;
+    const animations = [
+      this.#animateDrawer(
+        panel,
+        "transform",
+        [{ transform: `translate3d(${position}px, 0, 0)` }],
+        timing
+      ),
+    ];
+
+    if (cloak) {
+      cloak.style.display = "block";
+      animations.push(
+        this.#animateDrawer(
+          cloak,
+          "opacity",
+          [{ opacity: closes ? 0 : 1 }],
+          timing
+        )
+      );
+    }
+
+    return {
+      cloak,
+      finished: Promise.allSettled(
+        animations.map((animation) => animation.finished)
+      ),
+    };
+  }
+
+  #animateDrawer(element, property, keyframes, timing) {
+    const animation = element.animate(keyframes, timing);
+    this._drawerAnimations.push({ animation, property });
+    return animation;
+  }
+
+  #catchDrawer(panel) {
+    this.#freezeDrawerAnimations();
+    const { transform } = window.getComputedStyle(panel);
+    const translateX =
+      transform === "none" ? 0 : new DOMMatrixReadOnly(transform).m41;
+    return Math.max(
+      0,
+      Math.min(translateX * this.#closingDirection(), this.#drawerWidth(panel))
+    );
+  }
+
+  #freezeDrawerAnimations() {
+    for (const { animation, property } of this._drawerAnimations) {
+      const target = animation.effect?.target;
+      if (target?.isConnected) {
+        target.style[property] = window.getComputedStyle(target)[property];
       }
-    );
-    cloakElement?.animate?.(
-      [
-        {
-          opacity: (PANEL_WIDTH - this.pxClosed) / PANEL_WIDTH,
-        },
-      ],
-      { fill: "forwards" }
-    );
+      animation.cancel();
+    }
+    this._drawerAnimations = [];
+  }
+
+  #drawerWidth(panel) {
+    return panel.offsetWidth || PANEL_WIDTH_FALLBACK;
+  }
+
+  #isLeftMenu(panel) {
+    return Boolean(panel.closest(`.${this.leftMenuClass}`));
+  }
+
+  #closingDirection() {
+    return this._drawerOrigin === "right" ? 1 : -1;
+  }
+
+  #resetDrawerSwipe() {
+    if (this._drawerSwipe?.scrollerLocked) {
+      scrollLock(false, this._drawerSwipe.scroller);
+    }
+    this._drawerPress = null;
+    this._drawerSwipe = null;
   }
 
   <template>
@@ -438,6 +621,8 @@ export default class GlimmerSiteHeader extends Component {
       }}
       {{didInsert this.setupHeader}}
       {{dSwipe
+        onDidPress=this.onSwipePress
+        onDidRelease=this.onSwipeRelease
         onDidStartSwipe=this.onSwipeStart
         onDidEndSwipe=this.onSwipeEnd
         onDidCancelSwipe=this.onSwipeCancel

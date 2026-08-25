@@ -33,7 +33,7 @@ export interface SwipeState {
   /** Whether this is the first state of the gesture. */
   start: boolean;
 
-  /** When this state was produced, as an epoch timestamp in milliseconds. */
+  /** The event timestamp for this state, in milliseconds. */
   timestamp: number;
 
   /** The dominant direction of the gesture, fixed once first determined. */
@@ -79,6 +79,12 @@ interface DSwipeSignature {
       /** Called when the gesture is cancelled, e.g. by a second touch. */
       onDidCancelSwipe?: (detail: SwipeCancelDetail) => void;
 
+      /** Called when the first touch lands, before it becomes a swipe. */
+      onDidPress?: (event: TouchEvent) => void;
+
+      /** Called when that touch is released without starting a swipe. */
+      onDidRelease?: (event: TouchEvent) => void;
+
       /** Whether swipe handling is enabled. Defaults to `true`; always off on desktop. */
       enabled?: boolean;
 
@@ -89,38 +95,10 @@ interface DSwipeSignature {
   };
 }
 
-/**
- * A modifier for handling swipe gestures on an element.
- *
- * This Ember modifier is designed to attach swipe gesture listeners to the provided
- * element and execute callback functions based on the swipe direction and movement.
- * It utilizes touch events to determine the swipe direction and magnitude.
- * Callbacks for swipe start, move, and end can be passed as arguments and will be called
- * with the current state of the swipe, including its direction, orientation, and delta values.
- *
- * @example
- * ```hbs
- * <div {{swipe
- *        onDidStartSwipe=this.onDidStartSwipe
- *        onDidSwipe=this.onDidSwipe
- *        onDidEndSwipe=this.onDidEndSwipe
- *        onDidCancelSwipe=this.onDidCancelSwipe
- *      }}
- * >
- *   Swipe here
- * </div>
- * ```
- *
- * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
- *
- * @see The `dPointerDrag` modifier for a value that tracks the pointer continuously. This
- *   reports a discrete directional flick, not a continuous transform.
- */
+/** Recognizes directional touch gestures and reports their lifecycle. */
 export default class DSwipeModifier extends Modifier<DSwipeSignature> {
   @service declare site: Site;
 
-  #enabled = false;
   #lockBody = false;
   #bodyLocked = false;
   #element?: HTMLElement;
@@ -129,19 +107,16 @@ export default class DSwipeModifier extends Modifier<DSwipeSignature> {
   #onDidSwipeCallback?: (state: SwipeState) => void;
   #onDidEndSwipeCallback?: (state: SwipeState) => void;
   #onDidCancelSwipeCallback?: (detail: SwipeCancelDetail) => void;
+  #onDidPressCallback?: (event: TouchEvent) => void;
+  #onDidReleaseCallback?: (event: TouchEvent) => void;
+  #pressActive = false;
+  #swiping = false;
 
   constructor(owner: Owner, args: ArgsFor<DSwipeSignature>) {
     super(owner, args);
     registerDestructor(this, () => this.#cleanup());
   }
 
-  /**
-   * Modifies the element for swipe functionality.
-   *
-   * @param element - The element to modify.
-   * @param _positional - Unused positional arguments.
-   * @param named - Options for modifying the swipe behavior.
-   */
   modify(
     element: HTMLElement,
     _positional: [],
@@ -150,22 +125,26 @@ export default class DSwipeModifier extends Modifier<DSwipeSignature> {
       onDidSwipe,
       onDidEndSwipe,
       onDidCancelSwipe,
+      onDidPress,
+      onDidRelease,
       enabled,
       lockBody,
     }: DSwipeSignature["Args"]["Named"]
   ) {
+    this.#cleanup();
+
     if (enabled === false || this.site.desktopView) {
-      this.#enabled = false;
       return;
     }
 
-    this.#enabled = true;
     this.#lockBody = lockBody ?? true;
     this.#element = element;
     this.#onDidSwipeCallback = onDidSwipe;
     this.#onDidStartSwipeCallback = onDidStartSwipe;
     this.#onDidCancelSwipeCallback = onDidCancelSwipe;
     this.#onDidEndSwipeCallback = onDidEndSwipe;
+    this.#onDidPressCallback = onDidPress;
+    this.#onDidReleaseCallback = onDidRelease;
 
     this.#swipeEvents = new SwipeEvents(this.#element);
     this.#swipeEvents.addTouchListeners();
@@ -174,13 +153,11 @@ export default class DSwipeModifier extends Modifier<DSwipeSignature> {
     this.#element.addEventListener("swipecancel", this.onDidCancelSwipe);
     this.#element.addEventListener("swipe", this.onDidSwipe);
     this.#element.addEventListener("scroll", this.onScroll);
+    this.#element.addEventListener("touchstart", this.onPress);
+    this.#element.addEventListener("touchend", this.onRelease);
+    this.#element.addEventListener("touchcancel", this.onPressCancel);
   }
 
-  /**
-   * Handler for the swipe start event. The callback can cancel the gesture by
-   * calling `preventDefault()` on the event, in which case the body is not
-   * locked and no further swipe events are fired for this gesture.
-   */
   @bind
   onDidStartSwipe(event: Event) {
     const { detail } = event as CustomEvent<SwipeState>;
@@ -190,6 +167,8 @@ export default class DSwipeModifier extends Modifier<DSwipeSignature> {
       return;
     }
 
+    this.#swiping = true;
+
     if (this.#lockBody) {
       // `body-scroll-lock` is a vendored bundle whose optional `options` argument is
       // typed as required; passing `undefined` keeps the original single-argument call.
@@ -198,9 +177,6 @@ export default class DSwipeModifier extends Modifier<DSwipeSignature> {
     }
   }
 
-  /**
-   * Handler for the swipe end event.
-   */
   @bind
   onDidEndSwipe(event: Event) {
     const { detail } = event as CustomEvent<SwipeState>;
@@ -208,18 +184,12 @@ export default class DSwipeModifier extends Modifier<DSwipeSignature> {
     this.#onDidEndSwipeCallback?.(detail);
   }
 
-  /**
-   * Handler for the swipe event.
-   */
   @bind
   onDidSwipe(event: Event) {
     const { detail } = event as CustomEvent<SwipeState>;
     this.#onDidSwipeCallback?.(detail);
   }
 
-  /**
-   * Handler for the swipe cancel event.
-   */
   @bind
   onDidCancelSwipe(event: Event) {
     const { detail } = event as CustomEvent<SwipeCancelDetail>;
@@ -227,16 +197,37 @@ export default class DSwipeModifier extends Modifier<DSwipeSignature> {
     this.#onDidCancelSwipeCallback?.(detail);
   }
 
-  /**
-   * Handler for the scroll event. Prevents scrolling while swiping.
-   */
+  @bind
+  onPress(event: TouchEvent) {
+    if (event.touches.length !== 1) {
+      return;
+    }
+    this.#pressActive = true;
+    this.#onDidPressCallback?.(event);
+  }
+
+  @bind
+  onRelease(event: TouchEvent) {
+    if (this.#pressActive && !this.#swiping) {
+      this.#onDidReleaseCallback?.(event);
+    }
+    this.#pressActive = false;
+    this.#swiping = false;
+  }
+
+  @bind
+  onPressCancel() {
+    this.#pressActive = false;
+    this.#swiping = false;
+  }
+
   @bind
   onScroll(event: Event) {
     event.preventDefault();
   }
 
   #cleanup() {
-    if (!this.#enabled || !this.#element || !this.#swipeEvents) {
+    if (!this.#element || !this.#swipeEvents) {
       return;
     }
 
@@ -245,8 +236,15 @@ export default class DSwipeModifier extends Modifier<DSwipeSignature> {
     this.#element.removeEventListener("swipecancel", this.onDidCancelSwipe);
     this.#element.removeEventListener("swipe", this.onDidSwipe);
     this.#element.removeEventListener("scroll", this.onScroll);
+    this.#element.removeEventListener("touchstart", this.onPress);
+    this.#element.removeEventListener("touchend", this.onRelease);
+    this.#element.removeEventListener("touchcancel", this.onPressCancel);
     this.#swipeEvents.removeTouchListeners();
     this.#unlockBody();
+    this.#element = undefined;
+    this.#swipeEvents = undefined;
+    this.#pressActive = false;
+    this.#swiping = false;
   }
 
   #unlockBody() {

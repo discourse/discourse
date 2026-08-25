@@ -1,6 +1,12 @@
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 
+let animationTimeOverride = null;
+
+export function overrideAnimationTimeForTesting(durationMs = null) {
+  animationTimeOverride = durationMs;
+}
+
 // common max animation time in ms for swipe events for swipe end
 // prefers reduced motion and tests return 0
 export function getMaxAnimationTimeMs(durationMs = MAX_ANIMATION_TIME) {
@@ -8,7 +14,7 @@ export function getMaxAnimationTimeMs(durationMs = MAX_ANIMATION_TIME) {
     isTesting() ||
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   ) {
-    return 0;
+    return animationTimeOverride ?? 0;
   }
   return Math.min(durationMs, MAX_ANIMATION_TIME);
 }
@@ -90,20 +96,13 @@ export function shouldDeferSwipeToContent(swipeState, container) {
   return false;
 }
 
-/**
-   Swipe events is a class that allows components to detect and respond to swipe gestures
-   It sets up custom events for swipestart, swipeend, and swipe for beginning swipe, end swipe, and during swipe. Event returns detail.state with swipe state, and the original event.
-
-   Calling preventDefault() on the swipestart event stops swipe and swipeend events for the current gesture. it is re-enabled on future swipe events.
-**/
 export const SWIPE_DISTANCE_THRESHOLD = 50;
 export const SWIPE_VELOCITY_THRESHOLD = 0.12;
 export const MINIMUM_SWIPE_DISTANCE = 5;
 export const MAX_ANIMATION_TIME = 200;
+const SWIPE_VELOCITY_EXPIRY_MS = 100;
 
 export default class SwipeEvents {
-  //velocity is pixels per ms
-
   swipeState = null;
   animationPending = false;
 
@@ -113,19 +112,20 @@ export default class SwipeEvents {
 
   @bind
   touchStart(e) {
-    // multitouch cancels current swipe event
     if (e.touches.length > 1) {
       if (this.cancelled) {
         return;
       }
       this.cancelled = true;
+      this.swiping = false;
+      this.swipeState = null;
       const event = new CustomEvent("swipecancel", {
         detail: { originalEvent: e },
       });
       this.element.dispatchEvent(event);
       return;
     }
-    this.swipeState = this.#swipeStart(e.touches[0]);
+    this.swipeState = this.#swipeStart(e.touches[0], e.timeStamp);
   }
 
   @bind
@@ -137,16 +137,30 @@ export default class SwipeEvents {
 
   @bind
   touchEnd(e) {
-    this.#swipeMove({ type: "pointerup" }, e);
-    // only reset when no touches remain
+    const touch = e.changedTouches[0] ?? this.swipeState?.center;
+    if (touch) {
+      this.#swipeMove(
+        { clientX: touch.clientX, clientY: touch.clientY, type: "pointerup" },
+        e
+      );
+    }
     if (e.touches.length === 0) {
       this.cancelled = false;
+      this.swipeState = null;
     }
   }
 
   @bind
   touchCancel(e) {
-    this.#swipeMove({ type: "pointercancel" }, e);
+    if (this.swipeState) {
+      this.element.dispatchEvent(
+        new CustomEvent("swipecancel", {
+          detail: { originalEvent: e },
+        })
+      );
+    }
+    this.swiping = false;
+    this.swipeState = null;
     if (e.touches.length === 0) {
       this.cancelled = false;
     }
@@ -161,7 +175,6 @@ export default class SwipeEvents {
     this.element.addEventListener("touchcancel", this.touchCancel, opts);
   }
 
-  // Remove touch listeners to be called by client on destroy
   removeTouchListeners() {
     this.element.removeEventListener("touchstart", this.touchStart);
     this.element.removeEventListener("touchmove", this.touchMove);
@@ -180,24 +193,36 @@ export default class SwipeEvents {
     return oldState.direction;
   }
 
-  #calculateNewSwipeState(oldState, e) {
-    if (e.type === "pointerup" || e.type === "pointercancel") {
-      return oldState;
-    }
-    const newTimestamp = Date.now();
-    const timeDiffSeconds = newTimestamp - oldState.timestamp;
-    if (timeDiffSeconds === 0) {
-      return oldState;
-    }
-    //calculate delta x, y from START location
+  #calculateNewSwipeState(oldState, e, timestamp) {
     const deltaX = e.clientX - oldState.startLocation.x;
     const deltaY = e.clientY - oldState.startLocation.y;
-
-    //calculate velocity from previous event center location
-    const eventDeltaX = e.clientX - oldState.center.x;
-    const eventDeltaY = e.clientY - oldState.center.y;
-    const velocityX = eventDeltaX / timeDiffSeconds;
-    const velocityY = eventDeltaY / timeDiffSeconds;
+    const elapsed = timestamp - oldState.timestamp;
+    const movedX = e.clientX - oldState.center.x;
+    const movedY = e.clientY - oldState.center.y;
+    let velocityX = elapsed > 0 ? movedX / elapsed : 0;
+    let velocityY = elapsed > 0 ? movedY / elapsed : 0;
+    if (
+      e.type === "pointerup" &&
+      movedX === 0 &&
+      movedY === 0 &&
+      elapsed >= 0 &&
+      elapsed <= SWIPE_VELOCITY_EXPIRY_MS
+    ) {
+      velocityX = oldState.velocityX;
+      velocityY = oldState.velocityY;
+    }
+    if (e.type === "pointerup") {
+      return {
+        ...oldState,
+        center: { x: e.clientX, y: e.clientY },
+        deltaX,
+        deltaY,
+        start: false,
+        velocityX,
+        velocityY,
+        timestamp,
+      };
+    }
     const direction = this.#calculateDirection(oldState, deltaX, deltaY);
 
     return {
@@ -208,7 +233,7 @@ export default class SwipeEvents {
       deltaX,
       deltaY,
       start: false,
-      timestamp: newTimestamp,
+      timestamp,
       direction,
       element: this.element,
       goingUp: () => direction === "up",
@@ -216,7 +241,7 @@ export default class SwipeEvents {
     };
   }
 
-  #swipeStart(e) {
+  #swipeStart(e, timestamp) {
     return {
       center: { x: e.clientX, y: e.clientY },
       startLocation: { x: e.clientX, y: e.clientY },
@@ -225,7 +250,7 @@ export default class SwipeEvents {
       deltaX: 0,
       deltaY: 0,
       start: true,
-      timestamp: Date.now(),
+      timestamp,
       direction: null,
       element: this.element,
       goingUp: () => false,
@@ -238,13 +263,17 @@ export default class SwipeEvents {
       return;
     }
     if (!this.swipeState) {
-      this.swipeState = this.#swipeStart(e);
+      this.swipeState = this.#swipeStart(e, originalEvent.timeStamp);
       return;
     }
 
     originalEvent.stopPropagation();
     const previousState = this.swipeState;
-    const newState = this.#calculateNewSwipeState(previousState, e);
+    const newState = this.#calculateNewSwipeState(
+      previousState,
+      e,
+      originalEvent.timeStamp
+    );
     if (
       previousState.start &&
       Math.abs(newState.deltaX) < MINIMUM_SWIPE_DISTANCE &&

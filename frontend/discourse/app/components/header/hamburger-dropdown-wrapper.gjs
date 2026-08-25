@@ -3,12 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { waitForPromise } from "@ember/test-waiters";
-import { isTesting } from "discourse/lib/environment";
-import discourseLater from "discourse/lib/later";
-import { isDocumentRTL } from "discourse/lib/text-direction";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { prefersReducedMotion } from "discourse/lib/utilities";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
 
@@ -46,36 +41,11 @@ export default class HamburgerDropdownWrapper extends Component {
       return;
     }
 
-    if (
-      e.target.classList.contains("header-cloak") &&
-      !prefersReducedMotion()
-    ) {
-      const panel = document.querySelector(".menu-panel");
-      const headerCloak = document.querySelector(".header-cloak");
-      const finishPosition = isDocumentRTL() ? "340px" : "-340px";
-      const panelAnimatePromise = panel
-        .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
-          duration: isTesting() ? 0 : 200,
-          fill: "forwards",
-          easing: "ease-in",
-        })
-        .finished.then(() => {
-          if (isTesting()) {
-            this.toggleNavigation();
-          } else {
-            discourseLater(() => this.toggleNavigation());
-          }
-        });
-      const cloakAnimatePromise = headerCloak.animate([{ opacity: 0 }], {
-        duration: isTesting() ? 0 : 200,
-        fill: "forwards",
-        easing: "ease-in",
-      }).finished;
-      waitForPromise(panelAnimatePromise);
-      waitForPromise(cloakAnimatePromise);
-    } else {
-      this.toggleNavigation();
+    if (e.target.classList.contains("header-cloak")) {
+      return;
     }
+
+    this.toggleNavigation();
   }
 
   get forceMainSidebarPanel() {
