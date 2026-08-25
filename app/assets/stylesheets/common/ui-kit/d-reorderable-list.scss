@@ -115,11 +115,10 @@
 }
 
 /* A destination that is unavailable from this row — the top two items on the
-   first row, the bottom two on the last — stays in the menu and stays
-   focusable, so reaching an end is something the reader is told rather than a
-   press that silently does nothing. */
+   first row, the bottom two on the last — keeps its slot in the menu, so the
+   destinations never move under the reader between one row and the next. */
 
-.d-reorderable-list__move-item[aria-disabled="true"] {
+.d-reorderable-list__move-item:disabled {
   opacity: 0.5;
   cursor: default;
 }

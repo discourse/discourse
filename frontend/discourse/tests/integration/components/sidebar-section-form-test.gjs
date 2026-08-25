@@ -577,37 +577,22 @@ module(
       await openLinkMenu("Primary 1");
       assert
         .dom(moveItemSelector("up"))
-        .hasAttribute(
-          "aria-disabled",
-          "true",
-          "the first link has nothing above it"
-        );
+        .isDisabled("the first link has nothing above it");
       assert
         .dom(moveItemSelector("down"))
-        .doesNotHaveAttribute(
-          "aria-disabled",
-          "a link with a row below it can still move down"
-        );
+        .isNotDisabled("a link with a row below it can still move down");
       await triggerKeyEvent(document.activeElement, "keydown", "Escape");
 
       await openLinkMenu("Primary 2");
       assert
         .dom(moveItemSelector("down"))
-        .hasAttribute(
-          "aria-disabled",
-          "true",
-          "the last primary link has nothing below it"
-        );
+        .isDisabled("the last primary link has nothing below it");
       await triggerKeyEvent(document.activeElement, "keydown", "Escape");
 
       await openLinkMenu("Secondary 1");
       assert
         .dom(moveItemSelector("up"))
-        .hasAttribute(
-          "aria-disabled",
-          "true",
-          "each list boundary is counted within that list"
-        );
+        .isDisabled("each list boundary is counted within that list");
     });
 
     test(`${REORDER_TEST}: steps over a link awaiting deletion`, async function (assert) {

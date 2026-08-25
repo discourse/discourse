@@ -47,15 +47,14 @@ module PageObjects
       end
 
       def destination_selector(target, disabled: nil)
-        # `aria-disabled`, not the real attribute: a destination at the end of
-        # the list stays focusable so a reader who lands on it is told it is
-        # unavailable rather than finding it missing.
+        # A destination the row cannot take is disabled outright: it keeps its
+        # slot so the menu holds its shape, but declines the press itself.
         state =
           case disabled
           when true
-            "[aria-disabled='true']"
+            "[disabled]"
           when false
-            ":not([aria-disabled])"
+            ":not([disabled])"
           else
             ""
           end

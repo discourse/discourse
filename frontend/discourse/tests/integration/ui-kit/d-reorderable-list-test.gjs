@@ -629,33 +629,19 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await openMoveMenu(items[0].id);
     assert
       .dom(moveItemSelector("up"))
-      .hasAttribute(
-        "aria-disabled",
-        "true",
-        "the first movable item cannot move up"
-      );
+      .isDisabled("the first movable item cannot move up");
     assert
       .dom(moveItemSelector("down"))
-      .doesNotHaveAttribute(
-        "aria-disabled",
-        "the first movable item can move down"
-      );
+      .isNotDisabled("the first movable item can move down");
     await click(moveItemSelector("down"));
 
     await openMoveMenu(items[2].id);
     assert
       .dom(moveItemSelector("up"))
-      .doesNotHaveAttribute(
-        "aria-disabled",
-        "the last movable item can move up"
-      );
+      .isNotDisabled("the last movable item can move up");
     assert
       .dom(moveItemSelector("down"))
-      .hasAttribute(
-        "aria-disabled",
-        "true",
-        "the last movable item cannot move down"
-      );
+      .isDisabled("the last movable item cannot move down");
   });
 
   test("disables both arrows for a single movable item", async function (assert) {
@@ -681,11 +667,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     for (const target of ["top", "up", "down", "bottom"]) {
       assert
         .dom(moveItemSelector(target))
-        .hasAttribute(
-          "aria-disabled",
-          "true",
-          `the sole movable item cannot move ${target}`
-        );
+        .isDisabled(`the sole movable item cannot move ${target}`);
     }
   });
 
@@ -1567,16 +1549,13 @@ module(
           if (disabled) {
             assert
               .dom(moveItemSelector(target))
-              .hasAttribute(
-                "aria-disabled",
-                "true",
+              .isDisabled(
                 `${itemLabel}'s manual menu marks ${target} at the boundary`
               );
           } else {
             assert
               .dom(moveItemSelector(target))
-              .doesNotHaveAttribute(
-                "aria-disabled",
+              .isNotDisabled(
                 `${itemLabel}'s manual menu leaves ${target} available`
               );
           }
@@ -2588,13 +2567,13 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     await openMoveMenu(secondaryItems[0].id, "#boundary-secondary-list");
     assert
       .dom(moveItemSelector("up"))
-      .hasAttribute(
-        "aria-disabled",
-        "true",
+      .isDisabled(
         "the first row of the second member cannot step into the preceding member"
       );
 
-    await click(moveItemSelector("up"));
+    // A member's boundary is spoken by the accelerator, the one path that still
+    // reaches it now the destination declines the press itself.
+    await moveViaChord(secondaryItems[0].id, "up", "#boundary-secondary-list");
 
     assert.strictEqual(
       onMove.callCount,
@@ -3610,13 +3589,13 @@ module(
 
       assert
         .dom(moveItemSelector("top"))
-        .hasAria("disabled", "true", "the first row cannot go to the top");
+        .isDisabled("the first row cannot go to the top");
       assert
         .dom(moveItemSelector("down"))
         .isFocused("so focus lands on the first destination it can use");
     });
 
-    test("boundary destinations stay in the menu, marked and refusing", async function (assert) {
+    test("boundary destinations stay in the menu, disabled and refusing", async function (assert) {
       const items = trackedArray(objectItems());
       const moves = [];
       const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
@@ -3649,16 +3628,17 @@ module(
       for (const target of ["top", "up"]) {
         assert
           .dom(moveItemSelector(target))
-          .hasAria("disabled", "true", `${target} is marked unavailable`)
-          .isNotDisabled("but stays focusable, so it can be reached and read");
+          .isDisabled(`${target} is refused, and inert rather than marked`);
       }
       for (const target of ["down", "bottom"]) {
         assert
           .dom(moveItemSelector(target))
-          .doesNotHaveAria("disabled", `${target} is available`);
+          .isNotDisabled(`${target} is available`);
       }
 
-      await click(moveItemSelector("up"));
+      // The accelerator is the path that still reaches a boundary, the menu's
+      // own destination having declined the press before anything ran.
+      await moveViaChord("alpha", "up");
 
       assert.deepEqual(moves, [], "a refused move commits nothing");
       assert.deepEqual(renderedItemOrder(), ["alpha", "bravo", "charlie"]);
@@ -3692,8 +3672,14 @@ module(
       for (const target of ["top", "up", "down", "bottom"]) {
         assert
           .dom(moveItemSelector(target))
-          .hasAria("disabled", "true", `${target} leads nowhere`);
+          .isDisabled(`${target} leads nowhere`);
       }
+
+      assert
+        .dom(handleSelector("alpha"))
+        .isFocused(
+          "and with nothing to focus, focus stays on the handle rather than being stranded on the document"
+        );
     });
 
     test("Alt with an arrow moves the row and keeps focus on its handle", async function (assert) {

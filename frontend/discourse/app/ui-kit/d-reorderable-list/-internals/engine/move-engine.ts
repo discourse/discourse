@@ -76,9 +76,10 @@ export default class MoveEngine<T> {
    * captured, because a move commits against the list as it stands now.
    *
    * A move that would leave the list past either end is refused, and the
-   * refusal is announced. Reaching an end is information — it is why the
-   * boundary items are marked rather than removed — and a silent no-op is the
-   * failure this component exists to stop repeating.
+   * refusal is announced. Reaching an end is information, and a silent no-op is
+   * the failure this component exists to stop repeating. Only the accelerator
+   * arrives here at a boundary; the menu's own destination is disabled, so it
+   * declines the press before this is reached.
    *
    * @param key - The row to move.
    * @param target - Where to move it.

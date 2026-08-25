@@ -705,19 +705,19 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     await openMoveMenu("highlights");
     assert
       .dom(moveItemSelector("up"))
-      .hasAttribute("aria-disabled", "true", "the first row cannot move up");
+      .isDisabled("the first row cannot move up");
     await click(moveItemSelector("down"));
 
     await openMoveMenu("engagement");
     assert
       .dom(moveItemSelector("down"))
-      .hasAttribute("aria-disabled", "true", "the last row cannot move down");
+      .isDisabled("the last row cannot move down");
     await click(moveItemSelector("up"));
 
     await openMoveMenu("reports");
     assert
       .dom(moveItemSelector("up"))
-      .doesNotHaveAttribute("aria-disabled", "a middle row can move up");
+      .isNotDisabled("a middle row can move up");
   });
 });
 
@@ -828,19 +828,19 @@ module(
       await openMoveMenu("highlights");
       assert
         .dom(moveItemSelector("up"))
-        .hasAttribute("aria-disabled", "true", "the first row cannot move up");
+        .isDisabled("the first row cannot move up");
       await click(moveItemSelector("down"));
 
       await openMoveMenu("engagement");
       assert
         .dom(moveItemSelector("down"))
-        .hasAttribute("aria-disabled", "true", "the last row cannot move down");
+        .isDisabled("the last row cannot move down");
       await click(moveItemSelector("up"));
 
       await openMoveMenu("reports");
       assert
         .dom(moveItemSelector("up"))
-        .doesNotHaveAttribute("aria-disabled", "a middle row can move up");
+        .isNotDisabled("a middle row can move up");
     });
   }
 );

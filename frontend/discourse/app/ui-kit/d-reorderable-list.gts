@@ -79,11 +79,11 @@ export type {
  *   keeps its arrows and its chords, and none of them is ever the only path:
  *   assistive software that swallows one costs speed rather than access.
  *
- * A move at either end is refused and the refusal is announced, and the
- * destination stays in the menu marked unavailable rather than disappearing:
- * reaching an end is something the reader should be told, and the silent
- * boundary no-op is one of the failures this component exists to stop
- * surfaces from reinventing.
+ * A move at either end is refused, and the accelerator announces the refusal
+ * rather than doing nothing: reaching an end is something the reader should be
+ * told, and the silent boundary no-op is one of the failures this component
+ * exists to stop surfaces from reinventing. The destination itself stays in
+ * the menu, disabled, so the menu holds its shape from one row to the next.
  *
  * The list and row elements stay stylable and semantically flexible through
  * `@tag` / `@itemTag` / `@role` / `@itemRole`, which is what lets one
@@ -536,8 +536,8 @@ export default class DReorderableList<T> extends Component<
 
     const movableRows = rows.filter((row) => row.movable);
     // With a single movable item every direction is a no-op, so the whole
-    // menu is marked unavailable rather than offering four destinations that
-    // all lead nowhere.
+    // menu is disabled rather than offering four destinations that all lead
+    // nowhere.
     const alone = movableRows.length < 2;
     for (const [seqIndex, row] of movableRows.entries()) {
       row.isFirst = seqIndex === 0;

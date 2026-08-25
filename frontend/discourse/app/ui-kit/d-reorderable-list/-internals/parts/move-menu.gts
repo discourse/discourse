@@ -24,11 +24,12 @@ interface MoveItemSignature {
 /**
  * One destination in the move menu.
  *
- * Unavailable directions are marked rather than removed, and marked with
- * `aria-disabled` rather than the `disabled` attribute, so the menu presents
- * the same destinations on every row and a reader who lands on one at a
- * boundary is told it is unavailable instead of finding it missing. The guard
- * lives in the handler for the same reason.
+ * An unavailable direction is disabled rather than removed, so the menu keeps
+ * the same shape on every row and a destination never changes position under
+ * the reader. Disabled outright rather than with `aria-disabled`: the practice
+ * page reserves the ARIA spelling for state a reader cannot infer, and being at
+ * the end of a list is not that — the list conveys the position, and pressing
+ * the accelerator into the boundary says so out loud.
  *
  * Each destination carries its own modifier class, which is what lets a test
  * or a page object name the destination it wants rather than counting menu
@@ -39,7 +40,7 @@ const MoveItem: TOC<MoveItemSignature> = <template>
     @icon={{@icon}}
     @translatedLabel={{@label}}
     @action={{@move}}
-    aria-disabled={{if @disabled "true"}}
+    @disabled={{@disabled}}
     class={{dConcatClass
       "btn-transparent d-reorderable-list__move-item"
       (concat "--" @target)

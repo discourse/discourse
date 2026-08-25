@@ -142,27 +142,24 @@ export default class MoveMenuCoordinator {
   }
 
   /**
-   * Puts focus on the first destination the reader can actually choose, or on
-   * the first one of any kind when every destination is refused, so the menu
-   * never opens with focus nowhere.
+   * Puts focus on the first destination the reader can actually choose.
    *
-   * By hand rather than through the menu's own autofocus, which takes the first
-   * focusable element: a destination marked unavailable is still focusable, so
-   * a row at either boundary would open on a dead item, and a list with one row
-   * has nothing but dead items above the cross-list entries.
+   * A refused direction is disabled, which the platform will not focus, so
+   * targeting one would strand focus on the document rather than move it. A row
+   * at either boundary therefore opens on the first direction it can still take,
+   * and a list whose every direction is refused opens on its first cross-list
+   * entry — or, having none, leaves focus on the handle.
    */
   #focusFirstDestination() {
     const content = document.querySelector(MENU_CONTENT_SELECTOR);
     if (!content) {
       return;
     }
-    const items = Array.from(
-      content.querySelectorAll<HTMLElement>(".d-reorderable-list__move-item")
-    );
-    const target =
-      items.find((item) => item.getAttribute("aria-disabled") !== "true") ??
-      items[0];
-    target?.focus();
+    content
+      .querySelector<HTMLElement>(
+        ".d-reorderable-list__move-item:not(:disabled)"
+      )
+      ?.focus();
   }
 
   /**
