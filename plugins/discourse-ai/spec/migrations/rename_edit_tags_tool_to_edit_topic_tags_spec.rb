@@ -46,6 +46,21 @@ RSpec.describe RenameEditTagsToolToEditTopicTags do
     expect(stored_tools(agent.id)).to eq(%w[EditTopicTags CloseTopic])
   end
 
+  it "renames pending tool approval actions so they stay replayable" do
+    action_id =
+      DB.query_single(
+        "INSERT INTO ai_tool_actions (tool_name, tool_parameters, ai_agent_id, bot_user_id, created_at, updated_at)
+         VALUES ('edit_tags', '{}', :agent_id, -1, NOW(), NOW()) RETURNING id",
+        agent_id: agent.id,
+      ).first
+
+    described_class.new.up
+
+    expect(
+      DB.query_single("SELECT tool_name FROM ai_tool_actions WHERE id = ?", action_id).first,
+    ).to eq("edit_topic_tags")
+  end
+
   it "leaves agents that already have EditTopicTags untouched" do
     tools = [["EditTags", nil, false], ["EditTopicTags", nil, false]]
     DB.exec(

@@ -826,7 +826,7 @@ en:
         edit_post: "Editing post %{post_id}"
         edit_topic_tags: "Editing tags on topic %{topic_id}: %{tags}"
         create_tag: "Creating tag '%{name}'"
-        edit_tag: "Editing tag '%{name}'"
+        edit_tag: "Editing tag '%{name}' (%{fields})"
         create_category: "Creating category '%{name}'"
         edit_category: "Editing category %{category_id} (%{fields})"
         move_topic: "Moving topic %{topic_id} to category %{category_id}"

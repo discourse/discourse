@@ -32,6 +32,10 @@ class RenameEditTagsToolToEditTopicTags < ActiveRecord::Migration[8.0]
           id: row.id,
         )
       end
+
+    # Pending approval actions replay by tool name; the parameters are
+    # unchanged by the rename.
+    execute "UPDATE ai_tool_actions SET tool_name = 'edit_topic_tags' WHERE tool_name = 'edit_tags'"
   end
 
   def down

@@ -71,6 +71,25 @@ RSpec.describe DiscourseAi::Agents::Tools::EditTag do
     expect(tag.reload.name).to eq("old-name")
   end
 
+  it "reports invisible tags as not found" do
+    hidden_tag = Fabricate(:tag, name: "staff-only")
+    Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+    regular_user = Fabricate(:user, trust_level: TrustLevel[0])
+    ctx = DiscourseAi::Agents::BotContext.new(user: regular_user)
+    t =
+      described_class.new(
+        { name: hidden_tag.name, new_name: "found-you", reason: "test" },
+        bot_user: bot_user,
+        llm: llm,
+        context: ctx,
+      )
+    result = t.invoke
+
+    expect(result[:status]).to eq("error")
+    expect(result[:error]).to include("not found")
+    expect(hidden_tag.reload.name).to eq("staff-only")
+  end
+
   it "returns an error when context user lacks permission" do
     regular_user = Fabricate(:user, trust_level: TrustLevel[0])
     ctx = DiscourseAi::Agents::BotContext.new(user: regular_user)

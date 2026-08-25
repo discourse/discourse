@@ -59,6 +59,12 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.create_tag.errors.no_name"))
           end
 
+          # Before the existence check, so unauthorized users cannot probe
+          # hidden tag names.
+          if !guardian.can_admin_tags?
+            return error_response(I18n.t("discourse_ai.ai_bot.create_tag.errors.not_allowed"))
+          end
+
           if Tag.where_name(clean_name).exists?
             return(
               error_response(
@@ -75,7 +81,7 @@ module DiscourseAi
         end
 
         def description_args
-          { name: parameters[:name] }
+          { name: clean_name.presence || parameters[:name] }
         end
 
         private

@@ -56,7 +56,8 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.edit_tag.errors.tagging_disabled"))
           end
 
-          if tag.blank?
+          # Invisible tags report not-found so their names cannot be probed.
+          if tag.blank? || !guardian.can_see_tag?(tag)
             return error_response(I18n.t("discourse_ai.ai_bot.edit_tag.errors.not_found"))
           end
 
@@ -72,7 +73,7 @@ module DiscourseAi
         end
 
         def description_args
-          { name: parameters[:name] }
+          { name: parameters[:name], fields: changed_fields.join(", ") }
         end
 
         private
@@ -81,15 +82,24 @@ module DiscourseAi
           @tag ||= Tag.where_name(parameters[:name].to_s).first
         end
 
+        def clean_new_name
+          @clean_new_name ||= DiscourseTagging.clean_tag(parameters[:new_name].to_s)
+        end
+
+        def changed_fields
+          fields = []
+          fields << "name → #{clean_new_name}" if parameters[:new_name].present?
+          fields << "description" if parameters[:description].present?
+          fields
+        end
+
         def perform_edit
           if !guardian.can_edit_tag?(tag)
             return error_response(I18n.t("discourse_ai.ai_bot.edit_tag.errors.not_allowed"))
           end
 
           previous_name = tag.name
-          tag.name = DiscourseTagging.clean_tag(parameters[:new_name]) if parameters[
-            :new_name
-          ].present?
+          tag.name = clean_new_name if parameters[:new_name].present?
           tag.description = parameters[:description] if parameters[:description].present?
 
           if tag.save
