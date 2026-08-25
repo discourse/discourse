@@ -134,6 +134,11 @@ export default class MoveMenuCoordinator {
         // controller of its own — so the float element steps out of the way
         // rather than announcing itself as a dialog wrapped around them.
         contentRole: "none",
+        // Not the tab trap: containment belongs to a surface that owns the
+        // screen until dismissed, and this one shows nothing to say that Tab
+        // has stopped meaning "move on". Tab instead dismisses the menu and
+        // resumes the page's sequence from the handle it was opened at.
+        inlineTabOrder: true,
         data: { list: this.#menuData(), key },
         onClose: () => (this.openKey = null),
       })) ?? null;

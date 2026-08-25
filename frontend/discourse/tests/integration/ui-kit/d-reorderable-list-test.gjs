@@ -48,6 +48,9 @@ function handleSelector(key, root = "") {
   return `${rowSelector(key, root)} .d-reorderable-list__handle`;
 }
 
+const MENU_SELECTOR =
+  '[data-identifier="reorderable-list-move"] .dropdown-menu';
+
 function moveItemSelector(target) {
   return `.d-reorderable-list__move-item.--${target}`;
 }
@@ -3593,6 +3596,203 @@ module(
       assert
         .dom(moveItemSelector("down"))
         .isFocused("so focus lands on the first destination it can use");
+    });
+
+    test("the menu is a menu, and its destinations are its items", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      assert
+        .dom(handleSelector("alpha"))
+        .hasAttribute(
+          "aria-haspopup",
+          "menu",
+          "the handle says what it opens before it is opened"
+        );
+
+      await openMoveMenu("alpha");
+
+      assert
+        .dom(MENU_SELECTOR)
+        .hasAttribute("role", "menu")
+        .hasAttribute(
+          "aria-label",
+          "Reorder Alpha",
+          "and the menu carries its trigger's name, so it is announced with the row it acts on"
+        );
+      assert
+        .dom(moveItemSelector("down"))
+        .hasAttribute("role", "menuitem", "each destination is an item of it");
+    });
+
+    test("arrows move between destinations, wrapping and skipping the refused", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await openMoveMenu("bravo");
+      assert
+        .dom(moveItemSelector("top"))
+        .isFocused("opening lands on the first");
+
+      await triggerKeyEvent(moveItemSelector("top"), "keydown", "ArrowDown");
+      assert.dom(moveItemSelector("up")).isFocused("ArrowDown steps forward");
+
+      await triggerKeyEvent(moveItemSelector("up"), "keydown", "ArrowUp");
+      assert.dom(moveItemSelector("top")).isFocused("ArrowUp steps back");
+
+      await triggerKeyEvent(moveItemSelector("top"), "keydown", "End");
+      assert.dom(moveItemSelector("bottom")).isFocused("End reaches the last");
+
+      await triggerKeyEvent(moveItemSelector("bottom"), "keydown", "Home");
+      assert
+        .dom(moveItemSelector("top"))
+        .isFocused("Home returns to the first");
+
+      await triggerKeyEvent(moveItemSelector("top"), "keydown", "ArrowUp");
+      assert
+        .dom(moveItemSelector("bottom"))
+        .isFocused("and the ends wrap rather than dead-ending");
+    });
+
+    test("the cursor steps over a destination the row cannot take", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      // The first row refuses both upward destinations, so wrapping backwards
+      // from the first it can take has to clear them in one step.
+      await openMoveMenu("alpha");
+      assert.dom(moveItemSelector("down")).isFocused();
+
+      await triggerKeyEvent(moveItemSelector("down"), "keydown", "ArrowUp");
+
+      assert
+        .dom(moveItemSelector("bottom"))
+        .isFocused("the refused destinations are stepped over, not landed on");
+    });
+
+    test("an arrow inside the menu does not move the row cursor", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await openMoveMenu("bravo");
+      await triggerKeyEvent(moveItemSelector("top"), "keydown", "ArrowDown");
+
+      assert
+        .dom(moveItemSelector("up"))
+        .isFocused("the arrow belongs to the menu it was pressed in");
+      assert
+        .dom(handleSelector("charlie"))
+        .isNotFocused("and never reaches the row beneath");
+    });
+
+    test("Tab leaves the menu rather than cycling inside it", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await openMoveMenu("bravo");
+      assert.dom(moveItemSelector("top")).isFocused();
+
+      await triggerKeyEvent(moveItemSelector("top"), "keydown", "Tab");
+
+      // A non-modal float shows nothing to say that Tab has stopped meaning
+      // "move on", so it dismisses and hands the sequence back where the reader
+      // would have been had the menu never opened, rather than trapping them
+      // with Escape as their only way out.
+      assert
+        .dom(".d-reorderable-list__move-item")
+        .doesNotExist("Tab dismisses the menu");
+      assert
+        .dom(handleSelector("charlie"))
+        .isFocused("and continues from the stop after the handle it opened at");
+
+      await openMoveMenu("bravo");
+      await triggerKeyEvent(moveItemSelector("top"), "keydown", "Tab", {
+        shiftKey: true,
+      });
+
+      assert
+        .dom(".d-reorderable-list__move-item")
+        .doesNotExist("Shift+Tab dismisses it too");
+      assert
+        .dom(handleSelector("bravo"))
+        .isFocused(
+          "landing back on the handle, which is where the reader came in"
+        );
     });
 
     test("boundary destinations stay in the menu, disabled and refusing", async function (assert) {

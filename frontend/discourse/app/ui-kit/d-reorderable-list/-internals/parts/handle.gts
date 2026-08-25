@@ -53,6 +53,7 @@ export default class HandlePart extends Component<HandlePartSignature> {
       @translatedAriaLabel={{@row.handleLabel}}
       @translatedTitle={{@row.handleLabel}}
       @ariaExpanded={{@isOpen}}
+      aria-haspopup="menu"
       aria-describedby={{@row.descriptionId}}
       class="btn-flat d-reorderable-list__handle"
       ...attributes

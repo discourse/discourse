@@ -9,6 +9,7 @@ import type {
   Row,
 } from "discourse/ui-kit/d-reorderable-list/types";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 
 interface MoveItemSignature {
@@ -37,14 +38,15 @@ interface MoveItemSignature {
  */
 const MoveItem: TOC<MoveItemSignature> = <template>
   <DButton
-    @icon={{@icon}}
-    @translatedLabel={{@label}}
-    @action={{@move}}
-    @disabled={{@disabled}}
+    role="menuitem"
     class={{dConcatClass
       "btn-transparent d-reorderable-list__move-item"
       (concat "--" @target)
     }}
+    @icon={{@icon}}
+    @translatedLabel={{@label}}
+    @action={{@move}}
+    @disabled={{@disabled}}
   />
 </template>;
 
@@ -77,10 +79,11 @@ interface MoveMenuSignature {
  * live state. Boundary marks therefore reflect the list as it stands while the
  * menu is open, not as it stood when the row last rendered.
  *
- * A disclosure of ordinary buttons rather than `role="menu"`, which keeps the
- * reader in the same browse mode they navigate the rest of the page with. No
- * float-kit float is a menu: the role lands on the float's outer wrapper, two
- * levels above the list of buttons, where it could never own menu items.
+ * A real menu, so the arrows that move between destinations are a pattern
+ * assistive software already names rather than one this list invented. The role
+ * goes on the list element here, not through the float's `contentRole`, which
+ * only reaches the wrapper two levels above these buttons — far enough out that
+ * it could never own them as items.
  */
 export default class MoveMenu extends Component<MoveMenuSignature> {
   get row(): Row<unknown> | undefined {
@@ -104,8 +107,19 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
   }
 
   <template>
-    <DDropdownMenu as |dropdown|>
-      <dropdown.item>
+    <DDropdownMenu
+      role="menu"
+      aria-label={{this.row.handleLabel}}
+      {{dRovingFocus
+        orientation="vertical"
+        itemSelector=".d-reorderable-list__move-item"
+        wrap=true
+        tabStop=false
+        itemsKey=this.siblings.length
+      }}
+      as |dropdown|
+    >
+      <dropdown.item role="none">
         <MoveItem
           @target="top"
           @icon="angles-up"
@@ -114,7 +128,7 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
           @move={{fn this.move "top"}}
         />
       </dropdown.item>
-      <dropdown.item>
+      <dropdown.item role="none">
         <MoveItem
           @target="up"
           @icon="arrow-up"
@@ -123,7 +137,7 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
           @move={{fn this.move "up"}}
         />
       </dropdown.item>
-      <dropdown.item>
+      <dropdown.item role="none">
         <MoveItem
           @target="down"
           @icon="arrow-down"
@@ -132,7 +146,7 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
           @move={{fn this.move "down"}}
         />
       </dropdown.item>
-      <dropdown.item>
+      <dropdown.item role="none">
         <MoveItem
           @target="bottom"
           @icon="angles-down"
@@ -142,9 +156,12 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
         />
       </dropdown.item>
       {{#if this.siblings.length}}
-        <dropdown.divider />
+        {{! Not a separator: the attribute lands on the list item, and the rule
+            it wraps is already one. Naming it here would nest a separator
+            inside a separator instead of giving the menu a single one. }}
+        <dropdown.divider role="none" />
         {{#each this.siblings key="listId" as |sibling|}}
-          <dropdown.item>
+          <dropdown.item role="none">
             <MoveItem
               @target="list"
               {{! Deliberately not a directional arrow: the list has no idea
