@@ -9146,6 +9146,7 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            removed_avatar: "removed avatar"
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"
             web_hook_destroy: "webhook destroy"

@@ -193,6 +193,41 @@ RSpec.describe ReviewableUser, type: :model do
   describe "#perform" do
     fab!(:reviewable)
 
+    context "when removing an avatar" do
+      fab!(:avatar, :upload)
+
+      before do
+        reviewable.target.update!(uploaded_avatar_id: avatar.id)
+        reviewable.target.user_avatar.update!(custom_upload_id: avatar.id)
+      end
+
+      it "resets the avatar and leaves the reviewable pending" do
+        result = reviewable.perform(moderator, :remove_avatar)
+
+        expect(result.success?).to eq(true)
+        expect(reviewable.reload).to be_pending
+        expect(reviewable.target.reload.uploaded_avatar_id).to be_nil
+        expect(reviewable.target.user_avatar.reload.custom_upload_id).to be_nil
+      end
+
+      it "logs a staff action" do
+        expect { reviewable.perform(moderator, :remove_avatar) }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:removed_avatar],
+            target_user_id: reviewable.target_id,
+          ).count
+        }.by(1)
+      end
+
+      it "is offered only while the user still has an avatar" do
+        expect(reviewable.actions_for(Guardian.new(moderator)).has?(:remove_avatar)).to eq(true)
+
+        reviewable.target.remove_avatar!(moderator)
+
+        expect(reviewable.actions_for(Guardian.new(moderator)).has?(:remove_avatar)).to eq(false)
+      end
+    end
+
     context "when approving" do
       it "allows us to approve a user" do
         result = reviewable.perform(moderator, :approve_user)
