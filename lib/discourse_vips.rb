@@ -3,8 +3,11 @@
 require "mini_vips"
 require "tmpdir"
 
+# Runs mini_vips through Discourse::SafeExec so Landlock-supported systems
+# confine decoder bugs to an explicit filesystem allowlist with no network,
+# rather than the full rights of the calling process.
 module DiscourseVips
-  DEFAULT_TIMEOUT_SECONDS = 5
+  DEFAULT_TIMEOUT_SECONDS = 30
   private_constant :DEFAULT_TIMEOUT_SECONDS
 
   FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
@@ -13,8 +16,11 @@ module DiscourseVips
   DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
   private_constant :DYNAMIC_LINKER_CACHE_PATH
 
+  # memory_bytes allows large image decodes; MALLOC_ARENA_MAX bounds per-thread
+  # arenas that would otherwise inflate address space against it. cpu_seconds is
+  # a runaway backstop above the wall-clock timeout.
   RLIMITS = {
-    cpu_seconds: 5,
+    cpu_seconds: 300,
     memory_bytes: 4 * 1024 * 1024 * 1024,
     file_size_bytes: 10 * 1024 * 1024 * 1024,
     open_files: 1024,
@@ -95,6 +101,8 @@ module DiscourseVips
     end
 
     def run(command:, arguments: [], read: [], write: [])
+      # A private scratch dir keeps libvips temporary files inside the write
+      # allowlist, so operations that spill to disk still succeed.
       Dir.mktmpdir("discourse-vips-helper-") do |scratch|
         argv = ["nice", "-n", "10", executable, command, *arguments]
 
