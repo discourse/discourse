@@ -217,11 +217,11 @@ export default class ManageReports extends Component {
     <DModal
       @title={{i18n "admin.dashboard.reports_section.modal.title"}}
       @closeModal={{@closeModal}}
-      class="manage-reports has-search"
+      class="manage-reports has-search manageable-row-list"
     >
 
       <:belowModalTitle>
-        <span class="manage-reports__counter">
+        <span class="manageable-row-list__counter">
           {{i18n
             "admin.dashboard.reports_section.modal.counter"
             count=this.list.enabledOrder.length
@@ -231,7 +231,7 @@ export default class ManageReports extends Component {
       </:belowModalTitle>
 
       <:belowHeader>
-        <div class="manage-reports__search-wrapper">
+        <div class="manageable-row-list__search-wrapper">
           <DFilterInput
             @icons={{hash left="magnifying-glass"}}
             @value={{this.search}}
@@ -248,14 +248,13 @@ export default class ManageReports extends Component {
         {{#if this.visibleRows.length}}
           <ul
             class={{dConcatClass
-              "manage-reports__list"
+              "manageable-row-list__list"
               (if this.list.draggedId "--dragging")
               (if this.list.reorderable "--reorderable")
             }}
           >
             {{#each this.visibleRows key="key" as |row index|}}
               <ManageableRowListItem
-                @blockName="manage-reports"
                 @ariaLabelPrefix={{ARIA_LABEL_PREFIX}}
                 @row={{row}}
                 @index={{index}}
@@ -291,7 +290,7 @@ export default class ManageReports extends Component {
       </:aboveFooter>
 
       <:footer>
-        <p class="manage-reports__footer-note">
+        <p class="manageable-row-list__footer-note">
           {{i18n "admin.dashboard.reports_section.modal.footer_note"}}
         </p>
         <div class="manage-reports__footer-actions">

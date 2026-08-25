@@ -82,7 +82,7 @@ export default class ManageableRowListItem extends Component {
   <template>
     <li
       class={{dConcatClass
-        (concat @blockName "__row")
+        "manageable-row-list__row"
         (if @row.enabled "--enabled")
         this.dragCssClass
       }}
@@ -97,13 +97,13 @@ export default class ManageableRowListItem extends Component {
     >
 
       {{#unless this.site.mobileView}}
-        <span class={{concat @blockName "__grip"}}>
+        <span class="manageable-row-list__grip">
           {{dIcon "grip-vertical"}}
         </span>
       {{/unless}}
 
       {{#if this.site.mobileView}}
-        <div class={{concat @blockName "__order-mobile"}}>
+        <div class="manageable-row-list__order-mobile">
           <DButton
             @icon="arrow-up"
             @action={{fn @onMoveUp @row}}
@@ -112,7 +112,7 @@ export default class ManageableRowListItem extends Component {
               (concat @ariaLabelPrefix ".move_up")
               title=@row.title
             }}
-            class={{concat @blockName "__arrow btn-transparent"}}
+            class="manageable-row-list__arrow btn-transparent"
           />
           <DButton
             @icon="arrow-down"
@@ -122,14 +122,14 @@ export default class ManageableRowListItem extends Component {
               (concat @ariaLabelPrefix ".move_down")
               title=@row.title
             }}
-            class={{concat @blockName "__arrow btn-transparent"}}
+            class="manageable-row-list__arrow btn-transparent"
           />
         </div>
       {{/if}}
 
-      <div class={{concat @blockName "__row-text"}}>
-        <div class={{concat @blockName "__row-heading"}}>
-          <span class={{concat @blockName "__title"}}>{{@row.title}}</span>
+      <div class="manageable-row-list__row-text">
+        <div class="manageable-row-list__row-heading">
+          <span class="manageable-row-list__title">{{@row.title}}</span>
           {{#if @row.label}}
             <span class="db-report__label">
               {{@row.label}}
@@ -137,9 +137,7 @@ export default class ManageableRowListItem extends Component {
           {{/if}}
         </div>
         {{#if @row.description}}
-          <p
-            class={{concat @blockName "__description"}}
-          >{{@row.description}}</p>
+          <p class="manageable-row-list__description">{{@row.description}}</p>
         {{/if}}
       </div>
 

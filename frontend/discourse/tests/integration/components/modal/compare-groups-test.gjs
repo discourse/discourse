@@ -35,15 +35,17 @@ module("Integration | Component | Modal | compare-groups", function (hooks) {
       </template>
     );
 
-    assert.dom(".compare-groups__counter").hasText("3 of 10 groups selected");
     assert
-      .dom("[data-identifier='new_members'].compare-groups__row.--enabled")
+      .dom(".manageable-row-list__counter")
+      .hasText("3 of 10 groups selected");
+    assert
+      .dom("[data-identifier='new_members'].manageable-row-list__row.--enabled")
       .exists();
     assert
-      .dom("[data-identifier='returning'].compare-groups__row.--enabled")
+      .dom("[data-identifier='returning'].manageable-row-list__row.--enabled")
       .exists();
     assert
-      .dom("[data-identifier='staff'].compare-groups__row.--enabled")
+      .dom("[data-identifier='staff'].manageable-row-list__row.--enabled")
       .exists();
   });
 
@@ -96,10 +98,14 @@ module("Integration | Component | Modal | compare-groups", function (hooks) {
     );
 
     await click("[data-identifier='group:10'] .d-toggle-switch__checkbox");
-    assert.dom(".compare-groups__counter").hasText("2 of 10 groups selected");
+    assert
+      .dom(".manageable-row-list__counter")
+      .hasText("2 of 10 groups selected");
 
     await click("[data-identifier='staff'] .d-toggle-switch__checkbox");
-    assert.dom(".compare-groups__counter").hasText("1 of 10 groups selected");
+    assert
+      .dom(".manageable-row-list__counter")
+      .hasText("1 of 10 groups selected");
   });
 
   test("prevents disabling the last remaining selected row", async function (assert) {
@@ -116,9 +122,11 @@ module("Integration | Component | Modal | compare-groups", function (hooks) {
     assert
       .dom("[data-identifier='staff'] .d-toggle-switch__checkbox")
       .isDisabled();
-    assert.dom(".compare-groups__counter").hasText("1 of 10 groups selected");
     assert
-      .dom("[data-identifier='staff'].compare-groups__row.--enabled")
+      .dom(".manageable-row-list__counter")
+      .hasText("1 of 10 groups selected");
+    assert
+      .dom("[data-identifier='staff'].manageable-row-list__row.--enabled")
       .exists();
   });
 
@@ -151,7 +159,9 @@ module("Integration | Component | Modal | compare-groups", function (hooks) {
       </template>
     );
 
-    assert.dom(".compare-groups__counter").hasText("10 of 10 groups selected");
+    assert
+      .dom(".manageable-row-list__counter")
+      .hasText("10 of 10 groups selected");
     assert
       .dom("[data-identifier='group:110'] .d-toggle-switch__checkbox")
       .isDisabled();

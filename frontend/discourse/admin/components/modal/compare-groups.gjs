@@ -143,11 +143,11 @@ export default class CompareGroups extends Component {
       }}
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="compare-groups has-search"
+      class="compare-groups has-search manageable-row-list"
     >
 
       <:belowModalTitle>
-        <span class="compare-groups__counter">
+        <span class="manageable-row-list__counter">
           {{i18n
             "admin.dashboard.sections.engagement.whos_posting.modal.counter"
             count=this.list.enabledOrder.length
@@ -157,7 +157,7 @@ export default class CompareGroups extends Component {
       </:belowModalTitle>
 
       <:belowHeader>
-        <div class="compare-groups__search-wrapper">
+        <div class="manageable-row-list__search-wrapper">
           <DFilterInput
             @icons={{hash left="magnifying-glass"}}
             @value={{this.search}}
@@ -172,14 +172,13 @@ export default class CompareGroups extends Component {
       <:body>
         <ul
           class={{dConcatClass
-            "compare-groups__list"
+            "manageable-row-list__list"
             (if this.list.draggedId "--dragging")
             (if this.list.reorderable "--reorderable")
           }}
         >
           {{#each this.visibleRows key="key" as |row index|}}
             <ManageableRowListItem
-              @blockName="compare-groups"
               @ariaLabelPrefix={{ARIA_LABEL_PREFIX}}
               @row={{row}}
               @index={{index}}
@@ -199,7 +198,7 @@ export default class CompareGroups extends Component {
 
       <:footer>
         {{#if @model.footerNote}}
-          <p class="compare-groups__footer-note">{{@model.footerNote}}</p>
+          <p class="manageable-row-list__footer-note">{{@model.footerNote}}</p>
         {{/if}}
         <div class="compare-groups__footer-actions">
           <DButton

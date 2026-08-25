@@ -1,6 +1,6 @@
 @use "lib/viewport";
 
-.compare-groups {
+.manageable-row-list {
   .d-modal__body {
     padding-inline: 0;
     padding-block: var(--space-3);
@@ -34,7 +34,7 @@
       inset 0 2px 0 0 transparent,
       inset 0 -2px 0 0 transparent;
 
-    .compare-groups__list.--dragging & {
+    .manageable-row-list__list.--dragging & {
       transition: box-shadow 0.1s ease;
     }
 
@@ -51,14 +51,14 @@
     }
 
     &.drag-below,
-    &:not(.dragging):has(+ .compare-groups__row.drag-above) {
+    &:not(.dragging):has(+ .manageable-row-list__row.drag-above) {
       box-shadow:
         inset 0 2px 0 0 transparent,
         inset 0 -2px 0 0 var(--tertiary);
     }
 
     &:first-child.drag-above,
-    .compare-groups__row.dragging + &.drag-above {
+    .manageable-row-list__row.dragging + &.drag-above {
       box-shadow:
         inset 0 2px 0 0 var(--tertiary),
         inset 0 -2px 0 0 transparent;
@@ -74,7 +74,9 @@
     color: var(--primary-low-mid);
     visibility: hidden;
 
-    .compare-groups__list.--reorderable .compare-groups__row.--enabled & {
+    .manageable-row-list__list.--reorderable
+      .manageable-row-list__row.--enabled
+      & {
       visibility: visible;
     }
   }
@@ -85,7 +87,9 @@
     gap: var(--space-2);
     visibility: hidden;
 
-    .compare-groups__list.--reorderable .compare-groups__row.--enabled & {
+    .manageable-row-list__list.--reorderable
+      .manageable-row-list__row.--enabled
+      & {
       visibility: visible;
     }
   }
@@ -95,6 +99,13 @@
     flex-direction: column;
     gap: var(--space-half);
     flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__row-heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
     min-width: 0;
   }
 
