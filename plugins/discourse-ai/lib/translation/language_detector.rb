@@ -53,6 +53,7 @@ module DiscourseAi
           result << partial
         end
 
+        result = result.strip.delete_suffix("\\")
         result.match?(LANGUAGE_TAG_REGEXP) ? result : nil
       end
     end
