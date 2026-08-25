@@ -1,19 +1,13 @@
 # frozen_string_literal: true
 
 require "json"
-require "tmpdir"
+require "landlock"
+require "discourse_fonts"
 
-require_relative "../freedom_patches/landlock_capture_fork"
 require_relative "operations"
 
 module DiscourseVips
   class Worker
-    DEFAULT_TIMEOUT_SECONDS = 5
-    private_constant :DEFAULT_TIMEOUT_SECONDS
-
-    SVG_TO_PNG_TIMEOUT_SECONDS = 20
-    private_constant :SVG_TO_PNG_TIMEOUT_SECONDS
-
     DEFAULT_READ_PATHS = %w[/bin /lib /lib64 /usr].freeze
     private_constant :DEFAULT_READ_PATHS
 
@@ -23,32 +17,35 @@ module DiscourseVips
     DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
     private_constant :DYNAMIC_LINKER_CACHE_PATH
 
+    FONT_PATHS = [
+      "/System/Library/Fonts/Helvetica.ttc",
+      File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2"),
+    ].freeze
+    private_constant :FONT_PATHS
+
     ALLOW_UNSUPPORTED = %w[development test].include?(
       ENV["RAILS_ENV"] || ENV["RACK_ENV"] || "development",
     )
     private_constant :ALLOW_UNSUPPORTED
 
-    RLIMITS = {
-      cpu_seconds: 5,
-      memory_bytes: 4 * 1024 * 1024 * 1024,
-      file_size_bytes: 10 * 1024 * 1024 * 1024,
-      open_files: 1024,
-    }.freeze
-    private_constant :RLIMITS
+    MEMORY_BYTES_LIMIT = 4 * 1024 * 1024 * 1024
+    private_constant :MEMORY_BYTES_LIMIT
 
-    MAX_OUTPUT_BYTES = 64 * 1024
-    private_constant :MAX_OUTPUT_BYTES
+    FILE_SIZE_BYTES_LIMIT = 10 * 1024 * 1024 * 1024
+    private_constant :FILE_SIZE_BYTES_LIMIT
 
-    OPERATIONS = {
-      "version" => :version,
-      "generate_letter_avatar" => :generate_letter_avatar,
-      "resize_letter_avatar" => :resize_letter_avatar,
-      "dominant_color" => :dominant_color,
-      "svg_to_png" => :svg_to_png,
-    }.freeze
-    private_constant :OPERATIONS
+    OPEN_FILES_LIMIT = 1024
+    private_constant :OPEN_FILES_LIMIT
 
-    def initialize(input: $stdin, output: $stdout, allow_unsupported: ALLOW_UNSUPPORTED)
+    def initialize(
+      exchange_dir:,
+      scratch_dir:,
+      input: $stdin,
+      output: $stdout,
+      allow_unsupported: ALLOW_UNSUPPORTED
+    )
+      @exchange_dir = File.expand_path(exchange_dir)
+      @scratch_dir = File.expand_path(scratch_dir)
       @input = input
       @output = output
       @allow_unsupported = allow_unsupported
@@ -56,6 +53,13 @@ module DiscourseVips
 
     def run
       @output.sync = true
+      Process.setpriority(Process::PRIO_PROCESS, 0, 10)
+      ENV["TMPDIR"] = @scratch_dir
+      ENV["HOME"] = @scratch_dir
+      ENV["XDG_CACHE_HOME"] = @scratch_dir
+      Vips.cache_set_max(0)
+      warm_up
+      restrict!
 
       while (line = @input.gets)
         @output.puts(JSON.generate(respond(line)))
@@ -65,85 +69,97 @@ module DiscourseVips
     private
 
     def respond(line)
-      execute(JSON.parse(line))
+      { status: "ok", value: execute(JSON.parse(line)) }
     rescue StandardError => error
       { status: "error", message: error.message }
     end
 
     def execute(request)
-      operation = request.fetch("operation")
-      arguments = request.fetch("arguments", {}).transform_keys(&:to_sym)
-      method_name = OPERATIONS.fetch(operation)
+      arguments = request.fetch("arguments", {})
 
-      Dir.mktmpdir("discourse-vips-") do |scratch|
-        result =
-          Landlock.capture_fork(
-            read: read_paths(operation, arguments),
-            write: [scratch, *write_paths(operation, arguments)],
-            execute: [],
-            timeout:
-              operation == "svg_to_png" ? SVG_TO_PNG_TIMEOUT_SECONDS : DEFAULT_TIMEOUT_SECONDS,
-            env: environment(scratch),
-            unsetenv_others: true,
-            rlimits: rlimits,
-            seccomp_deny_network: true,
-            max_output_bytes: MAX_OUTPUT_BYTES,
-            allow_unsupported: @allow_unsupported,
-          ) do
-            Process.setpriority(Process::PRIO_PROCESS, 0, 10)
-            value = Operations.public_send(method_name, **arguments)
-            STDOUT.write(JSON.generate(value:))
-          end
-
-        return { status: "timeout" } if result.timed_out?
-        return { status: "error", message: result.stderr.strip } if !result.status&.success?
-
-        { status: "ok", **JSON.parse(result.stdout) }
-      end
-    end
-
-    def rlimits
-      Landlock.supported? ? RLIMITS : RLIMITS.except(:memory_bytes)
-    end
-
-    def read_paths(operation, arguments)
-      operation_paths =
-        case operation
-        when "generate_letter_avatar"
-          [arguments.fetch(:font_path), *FONTCONFIG_READ_PATHS]
-        when "resize_letter_avatar"
-          [arguments.fetch(:input_path)]
-        when "dominant_color"
-          [arguments.fetch(:input_path)]
-        when "svg_to_png"
-          [File.dirname(arguments.fetch(:input_path)), *FONTCONFIG_READ_PATHS]
-        else
-          []
-        end
-
-      [*DEFAULT_READ_PATHS, DYNAMIC_LINKER_CACHE_PATH, *operation_paths].filter do |path|
-          path.to_s != "" && File.exist?(path)
-        end
-        .uniq
-    end
-
-    def write_paths(operation, arguments)
-      case operation
-      when "generate_letter_avatar", "resize_letter_avatar", "svg_to_png"
-        [File.dirname(arguments.fetch(:output_path))]
+      case request.fetch("operation")
+      when "version"
+        Operations.version
+      when "generate_letter_avatar"
+        Operations.generate_letter_avatar(
+          markup: arguments.fetch("markup"),
+          font: arguments.fetch("font"),
+          font_path: font_path(arguments.fetch("font_path")),
+          background_color: arguments.fetch("background_color"),
+          output_path: exchange_path(arguments.fetch("output")),
+        )
+      when "resize_letter_avatar"
+        Operations.resize_letter_avatar(
+          input_path: exchange_path(arguments.fetch("input")),
+          output_path: exchange_path(arguments.fetch("output")),
+          size: arguments.fetch("size"),
+        )
+      when "dominant_color"
+        Operations.dominant_color(input_path: exchange_path(arguments.fetch("input")))
+      when "svg_to_png"
+        Operations.svg_to_png(
+          input_path: exchange_path(arguments.fetch("input")),
+          output_path: exchange_path(arguments.fetch("output")),
+        )
       else
-        []
+        raise ArgumentError, "unknown operation"
       end
     end
 
-    def environment(scratch)
-      {
-        **ENV.to_h.slice("PATH", "LANG", "LC_ALL"),
-        "TMPDIR" => scratch,
-        "HOME" => scratch,
-        "XDG_CACHE_HOME" => scratch,
-        "MALLOC_ARENA_MAX" => "2",
-      }
+    def exchange_path(name)
+      if !name.is_a?(String) || name.empty? || name != File.basename(name) || name.start_with?(".")
+        raise ArgumentError, "image names must be plain file names"
+      end
+
+      File.join(@exchange_dir, name)
+    end
+
+    def font_path(path)
+      if !FONT_PATHS.include?(path)
+        raise ArgumentError, "font_path must reference a supported font file"
+      end
+      path
+    end
+
+    # Pay libvips' lazy per-operation initialization once, with trusted data.
+    def warm_up
+      png = File.join(@scratch_dir, "warmup.png")
+      Vips::Image.black(8, 8).pngsave(png, compression: 6)
+      Vips::Image.thumbnail(png, 4, height: 4, size: :both).sharpen(sigma: 0.5, m1: 0.7).avg
+      Vips::Image
+        .text("A", dpi: 72, rgba: true)
+        .gravity(:centre, 16, 16, extend: :background, background: [0, 0, 0, 255])
+        .flatten(background: [0, 0, 0])
+        .avg
+
+      svg = File.join(@scratch_dir, "warmup.svg")
+      File.write(svg, %(<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"/>))
+      Vips::Image.svgload(svg).flatten.avg
+    end
+
+    def restrict!
+      if !Landlock.supported?
+        raise Landlock::UnsupportedError, "Linux Landlock is unavailable" if !@allow_unsupported
+        return
+      end
+
+      Process.setrlimit(:AS, MEMORY_BYTES_LIMIT)
+      Process.setrlimit(:FSIZE, FILE_SIZE_BYTES_LIMIT)
+      Process.setrlimit(:NOFILE, OPEN_FILES_LIMIT)
+      Landlock.restrict!(read: read_paths, write: [@exchange_dir, @scratch_dir], execute: [])
+      Landlock.seccomp_deny_network!
+    end
+
+    def read_paths
+      [
+        *DEFAULT_READ_PATHS,
+        DYNAMIC_LINKER_CACHE_PATH,
+        *FONTCONFIG_READ_PATHS,
+        *FONT_PATHS,
+        *Gem.path,
+        @exchange_dir,
+        @scratch_dir,
+      ].filter { |path| File.exist?(path) }.uniq
     end
   end
 end

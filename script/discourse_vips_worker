@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+base_dir = ARGV[0]
+
 discourse_root = File.expand_path("..", __dir__)
 ENV["BUNDLE_GEMFILE"] ||= File.join(discourse_root, "Gemfile")
 
@@ -15,4 +17,9 @@ Process.setproctitle("discourse discourse_vips")
 # Keep the protocol channel exclusive; stray library output goes to stderr.
 protocol = $stdout.dup
 $stdout.reopen($stderr)
-DiscourseVips::Worker.new(output: protocol).run
+
+DiscourseVips::Worker.new(
+  exchange_dir: File.join(base_dir, "exchange"),
+  scratch_dir: File.join(base_dir, "scratch"),
+  output: protocol,
+).run
