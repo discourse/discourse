@@ -49,6 +49,15 @@ describe Chat::MessageSerializer do
 
       expect(serializer.as_json[:excerpt]).to eq("ok ■■■■■")
     end
+
+    it "escapes persisted upload filenames" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      message.update!(excerpt: upload.original_filename)
+      serializer = described_class.new(message, scope: guardian, root: nil)
+
+      expect(serializer.as_json[:excerpt]).to eq("&lt;svg onload=alert(1)&gt;.png")
+    end
   end
 
   describe "#user" do

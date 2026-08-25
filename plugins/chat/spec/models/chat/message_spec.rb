@@ -577,6 +577,33 @@ describe Chat::Message do
       expect(message.build_excerpt).to eq "cat.gif"
     end
 
+    it "escapes upload filenames in excerpts" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", uploads: [upload])
+
+      expect(message.build_excerpt).to eq "&lt;svg onload=alert(1)&gt;.png"
+    end
+
+    it "bounds escaped upload filenames before saving excerpts" do
+      upload = Fabricate(:upload, original_filename: "#{"&" * 250}.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      excerpt = message.build_excerpt
+
+      message.update!(excerpt:)
+
+      expect(excerpt.length).to be <= 1000
+      expect(excerpt).to eq("&amp;" * described_class::EXCERPT_LENGTH)
+      expect(message.reload.excerpt).to eq(excerpt)
+    end
+
+    it "escapes persisted upload filenames for display" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      message.update!(excerpt: upload.original_filename)
+
+      expect(message.excerpt_for_display).to eq "&lt;svg onload=alert(1)&gt;.png"
+    end
+
     it "supports autolink with <>" do
       cooked = described_class.cook("<https://github.com/discourse/discourse-chat/pull/468>")
 
