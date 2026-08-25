@@ -875,7 +875,7 @@ DEPENDENCIES
   mini_scheduler
   mini_sql
   mini_suffix
-  mini_vips (= 0.1.0)
+  mini_vips
   minio_runner
   mocha
   multi_json
