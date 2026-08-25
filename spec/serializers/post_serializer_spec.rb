@@ -192,6 +192,41 @@ RSpec.describe PostSerializer do
     end
   end
 
+  describe "#user_locale" do
+    fab!(:admin)
+    fab!(:moderator)
+
+    before { post.user.update!(locale: "ja") }
+
+    it "includes the author's locale for admins only when user locale is enabled" do
+      SiteSetting.allow_user_locale = true
+
+      expect(described_class.new(post, scope: Guardian.new(admin), root: false).as_json).to include(
+        user_locale: "ja",
+      )
+
+      expect(
+        described_class.new(post, scope: Guardian.new(moderator), root: false).as_json,
+      ).not_to have_key(:user_locale)
+
+      expect(described_class.new(post, scope: Guardian.new(post.user), root: false).as_json).not_to(
+        have_key(:user_locale),
+      )
+
+      expect(described_class.new(post, scope: Guardian.new, root: false).as_json).not_to have_key(
+        :user_locale,
+      )
+    end
+
+    it "omits the author's locale when user locale is disabled" do
+      SiteSetting.allow_user_locale = false
+
+      expect(described_class.new(post, scope: Guardian.new(admin), root: false).as_json).not_to(
+        have_key(:user_locale),
+      )
+    end
+  end
+
   describe "#display_username" do
     let(:user) { post.user }
     let(:serializer) { PostSerializer.new(post, scope: Guardian.new, root: false) }
