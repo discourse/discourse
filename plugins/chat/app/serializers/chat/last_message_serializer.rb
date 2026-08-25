@@ -11,5 +11,9 @@ module Chat
     def created_at
       object.created_at.iso8601
     end
+
+    def excerpt
+      object.excerpt_for_display
+    end
   end
 end
