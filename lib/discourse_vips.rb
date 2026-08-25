@@ -6,18 +6,21 @@ require "tmpdir"
 module DiscourseVips
   VERSION = 1
   DEFAULT_TIMEOUT_SECONDS = 5
+  private_constant :DEFAULT_TIMEOUT_SECONDS
+
   FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
+  private_constant :FONTCONFIG_READ_PATHS
+
   DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
+  private_constant :DYNAMIC_LINKER_CACHE_PATH
+
   RLIMITS = {
     cpu_seconds: 5,
     memory_bytes: 4 * 1024 * 1024 * 1024,
     file_size_bytes: 10 * 1024 * 1024 * 1024,
     open_files: 1024,
   }.freeze
-  private_constant :DEFAULT_TIMEOUT_SECONDS,
-                   :FONTCONFIG_READ_PATHS,
-                   :DYNAMIC_LINKER_CACHE_PATH,
-                   :RLIMITS
+  private_constant :RLIMITS
 
   class Error < RuntimeError
   end
