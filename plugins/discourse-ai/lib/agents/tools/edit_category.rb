@@ -115,7 +115,7 @@ module DiscourseAi
           if category.update(changes)
             StaffActionLogger.new(guardian.user).log_category_settings_change(
               category,
-              changes.except(:description).stringify_keys,
+              changes.stringify_keys,
               old_permissions: {
               },
             )

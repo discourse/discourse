@@ -77,6 +77,18 @@ module DiscourseAi
             )
           end
 
+          if parameters[:description].present? &&
+               parameters[:description].size > CategoriesController::MAX_DESCRIPTION_PARAM_LENGTH
+            return(
+              error_response(
+                I18n.t(
+                  "category.errors.description_too_long",
+                  count: CategoriesController::MAX_DESCRIPTION_PARAM_LENGTH,
+                ),
+              )
+            )
+          end
+
           if reason.blank?
             return error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.no_reason"))
           end

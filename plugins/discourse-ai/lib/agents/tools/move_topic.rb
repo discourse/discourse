@@ -44,6 +44,10 @@ module DiscourseAi
           true
         end
 
+        def self.attribute_to_approver?
+          true
+        end
+
         def invoke
           topic = Topic.find_by(id: parameters[:topic_id])
           return error_response(I18n.t("discourse_ai.ai_bot.move_topic.errors.not_found")) if !topic

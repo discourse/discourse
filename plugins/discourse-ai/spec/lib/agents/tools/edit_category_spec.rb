@@ -63,6 +63,18 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
     }.by(1)
   end
 
+  it "logs a staff action for a description-only edit" do
+    expect {
+      tool(category_id: category.id, description: "Audited description", reason: "Audit").invoke
+    }.to change {
+      UserHistory.where(
+        acting_user_id: admin.id,
+        action: UserHistory.actions[:change_category_settings],
+        subject: "description",
+      ).count
+    }.by(1)
+  end
+
   it "returns an error when the category is not found" do
     result = tool(category_id: -1, name: "New name", reason: "Test").invoke
 

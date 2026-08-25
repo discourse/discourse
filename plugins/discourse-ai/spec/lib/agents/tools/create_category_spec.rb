@@ -59,6 +59,13 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateCategory do
     }.by(1)
   end
 
+  it "returns an error when the description is too long" do
+    result = tool(name: "Long desc", description: "a" * 1001, reason: "Test").invoke
+
+    expect(result[:status]).to eq("error")
+    expect(Category.exists?(name: "Long desc")).to eq(false)
+  end
+
   it "returns an error when name is blank" do
     result = tool(name: " ", reason: "Test").invoke
 
