@@ -156,7 +156,7 @@ module DiscourseVips
         DYNAMIC_LINKER_CACHE_PATH,
         *FONTCONFIG_READ_PATHS,
         *FONT_PATHS,
-        *Gem.path,
+        *$LOAD_PATH,
         @exchange_dir,
         @scratch_dir,
       ].filter { |path| File.exist?(path) }.uniq

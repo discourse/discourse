@@ -263,7 +263,19 @@ module DiscourseVips
       @worker ||= spawn_worker
     end
 
+    # The worker boots without rubygems or bundler; resolving its gems here,
+    # where the bundle is loaded, keeps it on the locked versions.
+    def worker_load_paths
+      @worker_load_paths ||=
+        %w[ffi ruby-vips landlock discourse-fonts logger].flat_map do |name|
+          Gem::Specification.find_by_name(name).full_require_paths
+        end
+    rescue Gem::LoadError => error
+      raise Error, "unable to locate gems for the libvips worker: #{error.message}"
+    end
+
     def spawn_worker
+      load_paths = worker_load_paths
       base_dir = Dir.mktmpdir("discourse-vips-")
       FileUtils.mkdir(File.join(base_dir, "exchange"))
       FileUtils.mkdir(File.join(base_dir, "scratch"))
@@ -273,12 +285,10 @@ module DiscourseVips
 
       pid =
         Process.spawn(
-          {
-            "BUNDLE_GEMFILE" => Rails.root.join("Gemfile").to_s,
-            "RUBYOPT" => nil,
-            "MALLOC_ARENA_MAX" => "2",
-          },
+          { "RUBYOPT" => nil, "MALLOC_ARENA_MAX" => "2" },
           RbConfig.ruby,
+          "--disable-gems",
+          *load_paths.flat_map { |path| ["-I", path] },
           Rails.root.join("script/discourse_vips_worker").to_s,
           base_dir,
           in: request_read,
