@@ -118,7 +118,7 @@ module DiscourseAi
             Tools::EditPost,
             Tools::CreateCategory,
             Tools::EditCategory,
-            Tools::MoveTopic,
+            Tools::ChangeTopicCategory,
             Tools::SetTopicTimer,
             Tools::SetSlowMode,
             Tools::MovePosts,

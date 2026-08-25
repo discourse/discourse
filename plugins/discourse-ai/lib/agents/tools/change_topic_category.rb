@@ -3,7 +3,7 @@
 module DiscourseAi
   module Agents
     module Tools
-      class MoveTopic < Tool
+      class ChangeTopicCategory < Tool
         def self.signature
           {
             name: name,
@@ -37,7 +37,7 @@ module DiscourseAi
         end
 
         def self.name
-          "move_topic"
+          "change_topic_category"
         end
 
         def self.requires_approval?
@@ -50,26 +50,38 @@ module DiscourseAi
 
         def invoke
           topic = Topic.find_by(id: parameters[:topic_id])
-          return error_response(I18n.t("discourse_ai.ai_bot.move_topic.errors.not_found")) if !topic
+          if !topic
+            return(
+              error_response(I18n.t("discourse_ai.ai_bot.change_topic_category.errors.not_found"))
+            )
+          end
 
           if !guardian.can_edit_topic?(topic)
-            return error_response(I18n.t("discourse_ai.ai_bot.move_topic.errors.not_allowed"))
+            return(
+              error_response(I18n.t("discourse_ai.ai_bot.change_topic_category.errors.not_allowed"))
+            )
           end
 
           category = Category.find_by(id: parameters[:category_id])
           if !category
             return(
-              error_response(I18n.t("discourse_ai.ai_bot.move_topic.errors.category_not_found"))
+              error_response(
+                I18n.t("discourse_ai.ai_bot.change_topic_category.errors.category_not_found"),
+              )
             )
           end
 
           if reason.blank?
-            return error_response(I18n.t("discourse_ai.ai_bot.move_topic.errors.no_reason"))
+            return(
+              error_response(I18n.t("discourse_ai.ai_bot.change_topic_category.errors.no_reason"))
+            )
           end
 
           first_post = topic.first_post
           if !first_post
-            return error_response(I18n.t("discourse_ai.ai_bot.move_topic.errors.not_found"))
+            return(
+              error_response(I18n.t("discourse_ai.ai_bot.change_topic_category.errors.not_found"))
+            )
           end
 
           revisor = PostRevisor.new(first_post, topic)
@@ -82,9 +94,14 @@ module DiscourseAi
             )
 
           if result
-            { status: "success", message: I18n.t("discourse_ai.ai_bot.move_topic.success") }
+            {
+              status: "success",
+              message: I18n.t("discourse_ai.ai_bot.change_topic_category.success"),
+            }
           else
-            error_response(I18n.t("discourse_ai.ai_bot.move_topic.errors.revision_failed"))
+            error_response(
+              I18n.t("discourse_ai.ai_bot.change_topic_category.errors.revision_failed"),
+            )
           end
         end
 
