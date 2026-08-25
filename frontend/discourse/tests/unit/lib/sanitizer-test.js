@@ -282,6 +282,32 @@ module("Unit | Utility | sanitizer", function (hooks) {
     );
   });
 
+  test("wildcard iframe origins stop at URL authority boundaries", function (assert) {
+    const engine = build({
+      siteSettings: { allowed_iframes: "https://*.example.com/" },
+    });
+    const iframe = (url) => `<iframe src="${url}"></iframe>`;
+
+    assert.strictEqual(
+      engine.sanitize(iframe("https://deep.embed.example.com/player")),
+      iframe("https://deep.embed.example.com/player"),
+      "allows legitimate deep subdomains"
+    );
+
+    [
+      "https://attacker.example/@embed.example.com/player",
+      "https://attacker.example?@embed.example.com/player",
+      "https://attacker.example#@embed.example.com/player",
+      "https://attacker.example\\@embed.example.com/player",
+    ].forEach((url) => {
+      assert.strictEqual(
+        engine.sanitize(iframe(url)),
+        "",
+        `rejects an iframe whose authority ends at ${url.match(/[/?#\\]/)[0]}`
+      );
+    });
+  });
+
   test("autoplay videos must be muted", function (assert) {
     let engine = build({ siteSettings: {} });
     assert.true(
