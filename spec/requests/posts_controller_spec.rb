@@ -2271,6 +2271,25 @@ RSpec.describe PostsController do
         end
       end
 
+      it "does not persist an iframe whose encoded userinfo points to an unallowlisted host" do
+        iframe_source = "https://www.instagram.com%2f@attacker.example/"
+
+        post "/posts.json",
+             params: {
+               raw: %(User content <iframe src="#{iframe_source}"></iframe>),
+               title: "Iframe allowlist bypass",
+             }
+
+        created_post = Post.find(response.parsed_body["id"])
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(response.body).to include(%("id":#{created_post.id}))
+          expect(created_post.cooked).not_to include(iframe_source)
+          expect(Nokogiri::HTML5.fragment(created_post.cooked).at_css("iframe")).to be_nil
+        end
+      end
+
       it "does not persist HTML from an untrusted oEmbed provider" do
         Jobs.run_immediately!
         url = "https://attacker.example.com/onebox"
