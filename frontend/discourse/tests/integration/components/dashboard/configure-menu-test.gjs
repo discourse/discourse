@@ -18,6 +18,7 @@ import {
 import {
   moveItemSelector,
   moveVia,
+  moveViaChord,
   openMoveMenu,
 } from "discourse/tests/helpers/ui-kit/reorderable-list-helper";
 
@@ -448,6 +449,33 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       [0, 1],
       "the down arrow moves the row later"
     );
+  });
+
+  test(`${REORDER_TEST_PREFIX} the Alt chord fires @onReorder`, async function (assert) {
+    const sections = FOUR_SECTIONS;
+    const calls = [];
+    const onReorder = (from, to) => calls.push([from, to]);
+    const noop = () => {};
+
+    await render(
+      <template>
+        <ConfigureMenu
+          @sections={{sections}}
+          @onReorder={{onReorder}}
+          @onToggleVisibility={{noop}}
+        />
+      </template>
+    );
+
+    await moveViaChord("reports", "up");
+    assert.deepEqual(
+      calls.at(-1),
+      [1, 0],
+      "the accelerator moves the row without opening the menu"
+    );
+
+    await moveViaChord("highlights", "bottom");
+    assert.deepEqual(calls.at(-1), [0, 3], "and sends it to the far end");
   });
 
   test(`${REORDER_TEST_PREFIX} adjacent rows leave no dead space between drop zones`, async function (assert) {

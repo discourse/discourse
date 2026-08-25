@@ -109,10 +109,9 @@ export interface ReorderableRowApi {
 
   /**
    * The pre-wired handle for this row, present only under
-   * `@controls="manual"` on a movable row. It is the drag source, the roving
-   * cursor's item, and the move menu's trigger all at once, so a movable
-   * manual row must place it; a development assertion fires when one does
-   * not.
+   * `@controls="manual"` on a movable row. It is the drag source and the move
+   * menu's trigger at once, so a movable manual row must place it; a
+   * development assertion fires when one does not.
    */
   handle?: ComponentLike<{ Element: HTMLElement }>;
 
@@ -332,10 +331,10 @@ interface DReorderableListSignature<T> {
      * pre-wired `handle` component on the row API, for layouts where it must
      * occupy a specific cell, grid track, or position.
      *
-     * There is deliberately no automatic "at the end": a handle is focusable
-     * and is the roving cursor's item, so where it sits in the DOM is its
-     * position in the reading and focus order, not decoration. A row that
-     * wants it last says so by placing it last.
+     * There is deliberately no automatic "at the end": a handle is focusable,
+     * so where it sits in the DOM is its position in the reading and focus
+     * order, not decoration. A row that wants it last says so by placing it
+     * last.
      */
     controls?: "auto" | "manual";
 
@@ -602,12 +601,12 @@ class MoveMenu extends Component<MoveMenuSignature> {
 
 /**
  * The one control a movable row renders: a real button that is the drag
- * source, the roving cursor's item, and the move menu's trigger at once.
+ * source and the move menu's trigger at once.
  *
- * Fusing the three is what lets the row carry a single affordance. A pointer
- * user drags it or clicks it for the menu; a keyboard user arrows onto it and
- * presses Enter for the same menu, because a plain button's native activation
- * is the click the roving modifier declines to intercept.
+ * Fusing the two is what lets the row carry a single affordance. A pointer
+ * user drags it or clicks it for the menu; a keyboard user tabs or arrows onto
+ * it and presses Enter for the same menu, because nothing intercepts a plain
+ * button's native activation.
  *
  * The menu itself belongs to the list, not to this button: a list is arbitrarily
  * long, and one instance and one set of listeners per row is a cost that scales
@@ -768,25 +767,25 @@ class CreateRow extends Component<CreateRowSignature> {
  * announcement per real move, and neither for a move that lands where it
  * started.
  *
- * The row is the cursor's item, and the handle inside it is the pointer
- * affordance: the drag source and the menu's trigger, never a tab stop of its
- * own. Splitting them is what lets a row carry its own controls without two
- * focus models fighting over the tab sequence.
+ * The handle inside each row is the pointer affordance: the drag source and
+ * the move menu's trigger at once. It is also an ordinary tab stop. The list
+ * is not a composite widget, since its rows are content carrying their own
+ * controls rather than alternatives to choose between, so nothing here manages
+ * the tab sequence and every focusable thing in a row is reached in document
+ * order.
  *
  * - **Pointer**: drag the handle, or click it and choose a destination. The
  *   menu is the single-pointer path WCAG 2.5.1 and 2.5.7 require, since a
  *   drag alone leaves anyone who cannot perform one with nothing.
- * - **Keyboard**: the list is one tab stop, and it owns the tab sequence for
- *   the row the cursor is on. Arrows and Home/End move between rows; Tab
- *   descends into the current row's own controls and out the other side;
- *   Escape returns to the row; Enter or Space opens the move menu. Controls in
- *   every other row are held out of the tab sequence until the cursor reaches
- *   them, which is what makes the single tab stop true rather than merely
- *   claimed. There is no mode to enter or leave.
- * - **Accelerator**: Alt with an arrow moves the row one step, and Alt with
- *   Home/End sends it to an end. Deliberately never the only path, so
- *   assistive software that swallows the chord costs speed rather than
- *   access.
+ * - **Keyboard**: Tab reaches every handle and every control a row renders.
+ *   Enter or Space on a handle opens its move menu through ordinary button
+ *   activation, and Escape closes it. There is no mode to enter or leave.
+ * - **Accelerators**: on a focused handle, a bare arrow moves focus to the
+ *   neighbouring handle, stepping over the rows' own controls. Alt with an
+ *   arrow moves the row one step, and Alt with Home/End sends it to an end.
+ *   Every accelerator is refused anywhere but a handle, so a row's own field
+ *   keeps its arrows and its chords, and none of them is ever the only path:
+ *   assistive software that swallows one costs speed rather than access.
  *
  * A move at either end is refused and the refusal is announced, and the
  * destination stays in the menu marked unavailable rather than disappearing:
@@ -904,14 +903,13 @@ export default class DReorderableList<T> extends Component<
   });
 
   /**
-   * The chord accelerator, plus the cursor bookkeeping the roving modifier
-   * does not own.
+   * The keyboard accelerators, plus the focus bookkeeping the menu needs.
    *
-   * The chord can be a plain listener because the roving modifier declines
-   * every keydown carrying a modifier, so the two never contend for the same
-   * press. It is deliberately an accelerator and never the only path — the
-   * menu behind Enter is what a reader whose software swallows the chord uses
-   * instead. Consumes nothing reactive: the row is resolved at event time.
+   * Every branch is refused unless the press landed on a handle, so a row's
+   * own field keeps the arrows and the Alt chords a caret needs. Neither
+   * accelerator is ever the only path — the menu behind Enter is what a reader
+   * whose software swallows one uses instead. Consumes nothing reactive: the
+   * row is resolved at event time.
    */
   moveKeys = modifier((element: Element) => {
     this.#listElement = element;
@@ -963,19 +961,19 @@ export default class DReorderableList<T> extends Component<
         return;
       }
       // The menu renders inside the list when it is not portaled, so its own
-      // focus must not read as the cursor leaving the row it belongs to —
-      // that would close the menu before a destination could be chosen.
+      // focus must not read as focus leaving the row it belongs to, which
+      // would close the menu before a destination could be chosen.
       if (event.target.closest(MENU_CONTENT_SELECTOR)) {
         return;
       }
-      // Any focus inside the row counts as the cursor being there: the row is
-      // the cursor's item, and its own controls are part of it.
+      // Any focus inside the row counts as being on the row, since its own
+      // controls are part of it.
       const key = event.target
         .closest("[data-reorderable-key]")
         ?.getAttribute("data-reorderable-key");
       if (this.#focusedKey !== (key ?? null)) {
         this.#focusedKey = key ?? null;
-        // The menu is anchored to one row, so a cursor that has moved on would
+        // The menu is anchored to one row, so focus that has moved on would
         // otherwise leave it floating over a row it no longer describes.
         if (this.openKey && this.openKey !== this.#focusedKey) {
           this.closeMenu(false);
@@ -986,7 +984,7 @@ export default class DReorderableList<T> extends Component<
     const onFocusOut = () => {
       // Deferred past the render that may be moving the row: a move blurs its
       // handle until the after-render refocus lands, so only focus that has
-      // settled outside the list clears the cursor.
+      // settled outside the list clears the record.
       next(() => {
         if (
           isDestroying(this) ||
@@ -1004,8 +1002,8 @@ export default class DReorderableList<T> extends Component<
       if (!(event.target instanceof Element)) {
         return;
       }
-      // Interactive content owns its clicks; the handle itself is the menu
-      // trigger and already carries a roving tabindex.
+      // Interactive content owns its clicks, and the handle is already the
+      // menu trigger, so only the row's dead space reaches the focus below.
       if (
         event.target.closest(
           "button, a, input, select, textarea, [tabindex], [contenteditable='true']"
@@ -1013,7 +1011,7 @@ export default class DReorderableList<T> extends Component<
       ) {
         return;
       }
-      // A drag-select of row text is not a request to move the cursor.
+      // A drag-select of row text is not a request to move focus.
       const selection = window.getSelection();
       if (selection && !selection.isCollapsed) {
         return;
@@ -1069,13 +1067,13 @@ export default class DReorderableList<T> extends Component<
   #run: { key: string; timer: Timer } | null = null;
 
   /**
-   * The row the cursor is in, read only by the focus handler that decides
-   * whether an open menu has been left behind.
+   * The row focus is in, read only by the focus handler that decides whether
+   * an open menu has been left behind.
    *
-   * Deliberately untracked: the focus indicator is CSS on the real focus now,
-   * so nothing rendered consumes this. Tracking it meant a `focusin` fired by
-   * the after-render refocus wrote a value the same computation had already
-   * read, which is a backtracking-rerender assertion.
+   * Deliberately untracked: the focus indicator is CSS on real DOM focus, so
+   * nothing rendered consumes this. Tracking it means a `focusin` fired by the
+   * after-render refocus writes a value the same computation has already read,
+   * which is a backtracking-rerender assertion.
    */
   #focusedKey: string | null = null;
 
@@ -1104,7 +1102,7 @@ export default class DReorderableList<T> extends Component<
           this.#commitCrossMove(sourceListId, key, toIndex, "menu");
           // Focus follows the item across: the row is destroyed in the source
           // list's iteration and rebuilt in this one, so only the destination
-          // can put the cursor back on it.
+          // can put focus back on it.
           this.#refocusRow(key);
         },
         removalProjection: (key: string) => {
@@ -1251,10 +1249,10 @@ export default class DReorderableList<T> extends Component<
         disableDown: false,
         label: itemLabel,
         handleLabel: i18n("reorder.handle", { label: itemLabel }),
-        // The row is the cursor's item, so the description belongs to it — but
-        // the element carrying the text has to live inside the handle's button:
-        // a list element's children are `li`, or the rows of whatever table
-        // shell a consumer chose, and a bare `span` is legal in neither.
+        // The description belongs to the row, but the element carrying the
+        // text has to live inside the handle's button: a list element's
+        // children are `li`, or the rows of whatever table shell a consumer
+        // chose, and a bare `span` is legal in neither.
         descriptionId: `${guidFor(this)}-move-${index}`,
         removable: !disabled && (removable ? removable(item) : true),
         removeLabel: i18n("reorder.remove", { label: itemLabel }),
@@ -1333,9 +1331,9 @@ export default class DReorderableList<T> extends Component<
    * Closes the list's menu, if it is open.
    *
    * @param focusTrigger - Whether to hand focus back to the handle the menu
-   *   was opened from. False when the cursor has already moved elsewhere: the
-   *   menu's own habit of refocusing its trigger would otherwise drag the
-   *   cursor back to the row the reader just left.
+   *   was opened from. False when focus has already moved elsewhere: the
+   *   menu's own habit of refocusing its trigger would otherwise drag focus
+   *   back to the row the reader just left.
    */
   @action
   async closeMenu(focusTrigger = true) {
@@ -1432,9 +1430,8 @@ export default class DReorderableList<T> extends Component<
    */
   @action
   onMenuMove(key: string, target: MoveTarget) {
-    // Closed without returning focus to the trigger: the trigger is the handle,
-    // and the cursor's item is the row. The move's own refocus is what puts
-    // focus back, on the row that actually moved.
+    // Closed without returning focus to the trigger: the move's own refocus
+    // is what puts focus back, on the row that actually moved.
     this.closeMenu(false);
     this.#move(key, target, "menu");
   }
