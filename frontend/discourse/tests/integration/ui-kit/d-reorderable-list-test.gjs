@@ -3636,6 +3636,54 @@ module(
       );
     });
 
+    test("a run cut short by teardown does not speak for a list that is gone", async function (assert) {
+      const items = trackedArray(objectItems());
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+      const state = new (class {
+        @tracked show = true;
+      })();
+      const handleMove = (move) => {
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+
+      await render(
+        <template>
+          {{#if state.show}}
+            <DReorderableList
+              @items={{items}}
+              @key="id"
+              @label={{label}}
+              @onMove={{handleMove}}
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          {{/if}}
+        </template>
+      );
+
+      // Dispatched directly rather than through `triggerKeyEvent`, which awaits
+      // `settled()` and would drain the settle timer before the teardown.
+      find(handleSelector("alpha")).focus();
+      document.activeElement.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "ArrowDown",
+          altKey: true,
+          bubbles: true,
+        })
+      );
+
+      state.show = false;
+      await settled();
+
+      assert.deepEqual(
+        announce.getCalls().map((call) => call.args[0]),
+        ["2 of 3"],
+        "the in-run position stands, and the settle timer speaks nothing after teardown"
+      );
+    });
+
     test("a menu move always speaks the full sentence", async function (assert) {
       const items = trackedArray(objectItems());
       const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");

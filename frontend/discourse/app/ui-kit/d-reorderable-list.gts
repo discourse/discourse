@@ -1080,6 +1080,13 @@ export default class DReorderableList<T> extends Component<
   constructor(owner: Owner, args: DReorderableListSignature<T>["Args"]) {
     super(owner, args);
 
+    registerDestructor(this, () => {
+      if (this.#run) {
+        cancel(this.#run.timer);
+        this.#run = null;
+      }
+    });
+
     const { group } = this.args;
     if (group && !this.args.listId) {
       // Reported after render rather than thrown here: an exception unwinding
@@ -1819,6 +1826,9 @@ export default class DReorderableList<T> extends Component<
     this.#run = {
       key,
       timer: discourseLater(() => {
+        if (isDestroying(this)) {
+          return;
+        }
         const run = this.#run;
         this.#run = null;
         const row = this.rows.find((candidate) => candidate.key === run?.key);
