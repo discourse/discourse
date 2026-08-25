@@ -151,7 +151,10 @@ module TopicGuardian
     if is_category_group_moderator?(topic.category) || can_delete_all_posts_and_topics?
       topic.deleted_at?
     else
-      can_recover_post?(topic.ordered_posts.first)
+      original_post = topic.first_post_with_deleted
+      return false if original_post&.trashed? && !can_see_deleted_post?(original_post)
+
+      can_recover_post?(original_post)
     end
   end
 

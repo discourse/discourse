@@ -121,7 +121,9 @@ class PostDestroyer
     user_recovered if user_recovery
 
     @topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@topic.user_id
-    @topic.recover!(@user) if (staff_recovery || user_recovery) && @post.is_first_post?
+    if (staff_recovery || user_recovery) && @post.is_first_post? && @post.deleted_at.nil?
+      @topic.recover!(@user)
+    end
     @topic.update_statistics!
     Topic.publish_stats_to_clients!(@topic.id, :recovered)
 

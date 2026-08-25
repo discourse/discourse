@@ -1633,4 +1633,13 @@ RSpec.describe PostDestroyer do
     expect(post.reload.deleted_at).to be_present
     expect(Topic.with_deleted.find(post.topic_id).deleted_at).to be_present
   end
+
+  it "leaves the topic deleted when its author recovers a first post staff trashed" do
+    PostDestroyer.new(moderator, post).destroy
+
+    PostDestroyer.new(post.user, post.reload).recover
+
+    expect(post.reload.deleted_at).to be_present
+    expect(Topic.with_deleted.find(post.topic_id).deleted_at).to be_present
+  end
 end
