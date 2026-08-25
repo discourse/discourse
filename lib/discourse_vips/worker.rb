@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require "fileutils"
 require "json"
-require "socket"
 require "tmpdir"
 
 require_relative "../freedom_patches/landlock_capture_fork"
 require_relative "operations"
 
 module DiscourseVips
-  class Broker
+  class Worker
     DEFAULT_TIMEOUT_SECONDS = 5
     private_constant :DEFAULT_TIMEOUT_SECONDS
 
@@ -41,12 +39,6 @@ module DiscourseVips
     MAX_OUTPUT_BYTES = 64 * 1024
     private_constant :MAX_OUTPUT_BYTES
 
-    MAX_REQUEST_BYTES = 64 * 1024
-    private_constant :MAX_REQUEST_BYTES
-
-    REQUEST_TIMEOUT_SECONDS = 1
-    private_constant :REQUEST_TIMEOUT_SECONDS
-
     OPERATIONS = {
       "version" => :version,
       "generate_letter_avatar" => :generate_letter_avatar,
@@ -56,132 +48,34 @@ module DiscourseVips
     }.freeze
     private_constant :OPERATIONS
 
-    def initialize(socket_path:, owner_pid:, allow_unsupported: ALLOW_UNSUPPORTED)
-      @socket_path = socket_path
-      @owner_pid = owner_pid
+    def initialize(input: $stdin, output: $stdout, allow_unsupported: ALLOW_UNSUPPORTED)
+      @input = input
+      @output = output
       @allow_unsupported = allow_unsupported
-      @children = []
-      @stopping = false
     end
 
     def run
-      @broker_pid = Process.pid
-      FileUtils.mkdir_p(File.dirname(@socket_path))
-      FileUtils.rm_f(@socket_path)
-      @server = UNIXServer.new(@socket_path)
-      socket_stat = File.stat(@socket_path)
-      @socket_identity = [socket_stat.dev, socket_stat.ino]
-      File.chmod(0o600, @socket_path)
-      trap_signals
+      @output.sync = true
 
-      until @stopping || !owner_alive?
-        reap_children
-        next if !IO.select([@server], nil, nil, 1)
-
-        connection = @server.accept_nonblock(exception: false)
-        spawn_connection(connection) if connection != :wait_readable
+      while (line = @input.gets)
+        @output.puts(JSON.generate(respond(line)))
       end
-    rescue IOError, Errno::EBADF
-    ensure
-      @server&.close
-      wait_for_children
-      remove_socket
     end
 
     private
 
-    def trap_signals
-      %w[HUP INT TERM].each do |signal|
-        Signal.trap(signal) do
-          @stopping = true
-          @server.close
-        end
-      end
-    end
-
-    def remove_socket
-      socket_stat = File.stat(@socket_path)
-      FileUtils.rm_f(@socket_path) if [socket_stat.dev, socket_stat.ino] == @socket_identity
-    rescue Errno::ENOENT
-    end
-
-    def owner_alive?
-      Process.kill(0, @owner_pid)
-      true
-    rescue Errno::ESRCH
-      false
-    end
-
-    def reap_children
-      loop do
-        pid = Process.waitpid(-1, Process::WNOHANG)
-        break if !pid
-
-        @children.delete(pid)
-      end
-    rescue Errno::ECHILD
-      @children.clear
-    end
-
-    def wait_for_children
-      @children.each { |pid| Process.waitpid(pid) }
-    rescue Errno::ECHILD
-    end
-
-    def spawn_connection(connection)
-      pid =
-        fork do
-          @server.close
-          %w[INT TERM HUP].each { |signal| Signal.trap(signal, "DEFAULT") }
-          handle_connection(connection)
-          exit! 0
-        end
-      @children << pid
-    ensure
-      connection&.close
-    end
-
-    def handle_connection(connection)
-      request = JSON.parse(read_request(connection))
-      response = execute(request).merge(broker_pid: @broker_pid)
-      connection.puts(JSON.generate(response))
+    def respond(line)
+      execute(JSON.parse(line))
     rescue StandardError => error
-      begin
-        connection.puts(JSON.generate(status: "error", message: error.message))
-      rescue IOError, SystemCallError
-      end
-    ensure
-      connection.close
-    end
-
-    def read_request(connection)
-      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + REQUEST_TIMEOUT_SECONDS
-      request = +""
-
-      loop do
-        timeout = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        raise ArgumentError, "request timed out" if timeout <= 0
-        raise ArgumentError, "request timed out" if !IO.select([connection], nil, nil, timeout)
-
-        remaining = MAX_REQUEST_BYTES + 1 - request.bytesize
-        chunk = connection.read_nonblock([remaining, 4096].min, exception: false)
-        next if chunk == :wait_readable
-        raise ArgumentError, "request ended before a newline" if chunk.nil?
-
-        request << chunk
-        newline = request.index("\n")
-        return request.byteslice(0, newline) if newline
-
-        raise ArgumentError, "request is too large" if request.bytesize > MAX_REQUEST_BYTES
-      end
+      { status: "error", message: error.message }
     end
 
     def execute(request)
       operation = request.fetch("operation")
-      arguments = request.fetch("arguments").transform_keys(&:to_sym)
+      arguments = request.fetch("arguments", {}).transform_keys(&:to_sym)
       method_name = OPERATIONS.fetch(operation)
 
-      Dir.mktmpdir("discourse-vips-broker-") do |scratch|
+      Dir.mktmpdir("discourse-vips-") do |scratch|
         result =
           Landlock.capture_fork(
             read: read_paths(operation, arguments),

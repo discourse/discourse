@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+discourse_root = File.expand_path("..", __dir__)
+ENV["BUNDLE_GEMFILE"] ||= File.join(discourse_root, "Gemfile")
+
+require "rubygems"
+require "bundler/setup"
+
+$LOAD_PATH.unshift(File.join(discourse_root, "lib"))
+require "discourse_vips/worker"
+
+Process.setproctitle("discourse discourse_vips")
+
+# Keep the protocol channel exclusive; stray library output goes to stderr.
+protocol = $stdout.dup
+$stdout.reopen($stderr)
+DiscourseVips::Worker.new(output: protocol).run

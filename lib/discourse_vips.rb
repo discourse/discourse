@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 require "erb"
-require "fileutils"
 require "image_processing/instrumentation"
 require "json"
 require "rbconfig"
-require "socket"
 
 require_relative "freedom_patches/landlock_capture_fork"
 
@@ -16,12 +14,6 @@ module DiscourseVips
 
   TOPIC_OG_CLIENT_TIMEOUT_SECONDS = 22
   private_constant :TOPIC_OG_CLIENT_TIMEOUT_SECONDS
-
-  BROKER_CHECK_TIMEOUT_SECONDS = 1
-  private_constant :BROKER_CHECK_TIMEOUT_SECONDS
-
-  BROKER_START_TIMEOUT_SECONDS = 5
-  private_constant :BROKER_START_TIMEOUT_SECONDS
 
   INSTRUMENTED_OPERATIONS = {
     "generate_letter_avatar" => :letter_avatar_render,
@@ -40,19 +32,18 @@ module DiscourseVips
   class Error < RuntimeError
   end
 
-  class BrokerUnavailable < Error
+  class WorkerFailed < Error
   end
-  private_constant :BrokerUnavailable
+  private_constant :WorkerFailed
+
+  class WorkerTimedOut < Error
+  end
+  private_constant :WorkerTimedOut
+
+  WorkerHandle = Struct.new(:pid, :stdin, :stdout)
+  private_constant :WorkerHandle
 
   class << self
-    def socket_path
-      return ENV["DISCOURSE_VIPS_SOCKET_PATH"] if ENV["DISCOURSE_VIPS_SOCKET_PATH"]
-
-      socket_name =
-        Rails.env.production? ? "discourse-vips.sock" : "discourse-vips-#{Rails.env}.sock"
-      File.expand_path("../tmp/#{socket_name}", __dir__)
-    end
-
     def version
       "#{VERSION}-#{request(operation: "version")}"
     end
@@ -108,22 +99,6 @@ module DiscourseVips
 
     private
 
-    def start
-      ensure_sandbox_available!
-      FileUtils.mkdir_p(File.dirname(socket_path))
-
-      File.open(startup_lock_path, File::CREAT | File::RDWR, 0o600) do |lock|
-        lock.flock(File::LOCK_EX)
-        broker_pid = running_broker_pid
-        return broker_pid if broker_pid
-
-        FileUtils.rm_f(socket_path)
-        broker_pid = spawn_broker
-        wait_until_ready(broker_pid)
-        broker_pid
-      end
-    end
-
     def validate_background_color(background_color)
       channels = Array(background_color)
       if channels.length != 3 ||
@@ -135,107 +110,137 @@ module DiscourseVips
 
     def request(operation:, arguments: {}, timeout: DEFAULT_CLIENT_TIMEOUT_SECONDS)
       instrumentation_operation = INSTRUMENTED_OPERATIONS[operation]
-      return request_with_broker(operation:, arguments:, timeout:) if !instrumentation_operation
+      return request_with_worker(operation:, arguments:, timeout:) if !instrumentation_operation
 
       ImageProcessing::Instrumentation.instrument(operation: instrumentation_operation) do
-        request_with_broker(operation:, arguments:, timeout:)
+        request_with_worker(operation:, arguments:, timeout:)
       end
     end
 
-    def request_with_broker(operation:, arguments:, timeout:)
-      perform_request(operation:, arguments:, timeout:)
-    rescue BrokerUnavailable
-      start
-      perform_request(operation:, arguments:, timeout:)
-    end
-
-    def perform_request(operation:, arguments:, timeout:)
+    def request_with_worker(operation:, arguments:, timeout:)
       ensure_sandbox_available!
-      response = exchange_request(operation:, arguments:, timeout:)
 
-      return response["value"] if response["status"] == "ok"
-      raise Error, "libvips operation timed out" if response["status"] == "timeout"
+      lock.synchronize do
+        attempts = 0
+        begin
+          attempts += 1
+          response = exchange_request(worker, operation:, arguments:, timeout:)
 
-      raise Error, response["message"].presence || "libvips operation failed"
-    end
+          return response["value"] if response["status"] == "ok"
+          raise Error, "libvips operation timed out" if response["status"] == "timeout"
 
-    def exchange_request(operation:, arguments:, timeout:)
-      UNIXSocket.open(socket_path) do |socket|
-        socket.puts(JSON.generate(operation:, arguments:))
-        socket.close_write
-        readable, = IO.select([socket], nil, nil, timeout)
-        raise Error, "libvips broker did not respond" if !readable
-
-        payload = socket.gets
-        raise BrokerUnavailable, "libvips broker closed the connection" if !payload
-
-        JSON.parse(payload)
+          raise Error, response["message"].presence || "libvips operation failed"
+        rescue WorkerTimedOut => error
+          discard_worker
+          raise Error, error.message
+        rescue WorkerFailed => error
+          discard_worker
+          retry if attempts == 1
+          raise Error, error.message
+        end
       end
-    rescue IOError, SystemCallError => error
-      raise BrokerUnavailable, "libvips broker request failed: #{error.message}"
+    end
+
+    def exchange_request(worker, operation:, arguments:, timeout:)
+      worker.stdin.puts(JSON.generate(operation:, arguments:))
+      JSON.parse(read_response(worker.stdout, timeout))
+    rescue Errno::EPIPE, IOError, SystemCallError => error
+      raise WorkerFailed, "libvips worker request failed: #{error.message}"
     rescue JSON::ParserError => error
-      raise Error, "libvips broker returned an invalid response: #{error.message}"
+      raise Error, "libvips worker returned an invalid response: #{error.message}"
     end
 
-    def startup_lock_path
-      "#{socket_path}.lock"
+    def read_response(io, timeout)
+      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+      response = +""
+
+      loop do
+        remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        if remaining <= 0 || !IO.select([io], nil, nil, remaining)
+          raise WorkerTimedOut, "libvips worker did not respond"
+        end
+
+        chunk = io.read_nonblock(65_536, exception: false)
+        next if chunk == :wait_readable
+        raise WorkerFailed, "libvips worker exited" if chunk.nil?
+
+        response << chunk
+        newline = response.index("\n")
+        return response.byteslice(0, newline) if newline
+      end
     end
 
-    def running_broker_pid
-      response =
-        exchange_request(operation: "version", arguments: {}, timeout: BROKER_CHECK_TIMEOUT_SECONDS)
-      response["broker_pid"] if response["status"] == "ok"
-    rescue Error
-      nil
+    # A forked process inherits the parent's worker pipes; they belong to the
+    # parent, so drop them without signalling or waiting on the worker.
+    def lock
+      if @owner_pid != Process.pid
+        stale = @worker
+        @worker = nil
+        @lock = Mutex.new
+        @owner_pid = Process.pid
+        close_quietly(stale)
+      end
+      @lock
     end
 
-    def spawn_broker
-      environment = { "BUNDLE_GEMFILE" => nil, "RUBYOPT" => nil }
-      broker_pid =
+    def worker
+      @worker ||= spawn_worker
+    end
+
+    def spawn_worker
+      request_read, request_write = IO.pipe
+      response_read, response_write = IO.pipe
+
+      pid =
         Process.spawn(
-          environment,
+          { "BUNDLE_GEMFILE" => Rails.root.join("Gemfile").to_s, "RUBYOPT" => nil },
           RbConfig.ruby,
-          Rails.root.join("script/discourse_vips_broker").to_s,
-          socket_path,
-          Process.pid.to_s,
-          Rails.root.join("Gemfile").to_s,
-          in: File::NULL,
+          Rails.root.join("script/discourse_vips_worker").to_s,
+          in: request_read,
+          out: response_write,
           close_others: true,
           pgroup: true,
         )
-      register_broker_cleanup(broker_pid)
-      broker_pid
+
+      register_worker_cleanup
+      request_write.sync = true
+      WorkerHandle.new(pid, request_write, response_read)
+    ensure
+      request_read&.close
+      response_write&.close
     end
 
-    def register_broker_cleanup(broker_pid)
-      owner_pid = Process.pid
-      at_exit do
-        next if Process.pid != owner_pid
+    def register_worker_cleanup
+      return if @cleanup_pid == Process.pid
 
-        terminate_broker(broker_pid)
-        Process.waitpid(broker_pid)
+      @cleanup_pid = Process.pid
+      owner = Process.pid
+      at_exit { discard_worker if Process.pid == owner && @owner_pid == owner }
+    end
+
+    def discard_worker
+      worker = @worker
+      @worker = nil
+      return if !worker
+
+      begin
+        Process.kill("TERM", worker.pid)
+      rescue Errno::ESRCH
+      end
+      close_quietly(worker)
+      begin
+        Process.waitpid(worker.pid)
       rescue Errno::ECHILD
       end
     end
 
-    def wait_until_ready(expected_broker_pid)
-      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + BROKER_START_TIMEOUT_SECONDS
+    def close_quietly(worker)
+      return if !worker
 
-      loop do
-        return if running_broker_pid == expected_broker_pid
-
-        if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
-          terminate_broker(expected_broker_pid)
-          raise Error, "libvips broker did not start"
-        end
-
-        sleep 0.01
+      [worker.stdin, worker.stdout].each do |io|
+        io.close if !io.closed?
+      rescue IOError
       end
-    end
-
-    def terminate_broker(broker_pid)
-      Process.kill("TERM", broker_pid)
-    rescue Errno::ESRCH
     end
 
     def ensure_sandbox_available!

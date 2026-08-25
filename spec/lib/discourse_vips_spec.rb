@@ -17,6 +17,19 @@ RSpec.describe DiscourseVips do
     end
   end
 
+  describe "worker lifecycle" do
+    it "recovers when the worker process dies" do
+      input_path = file_from_fixtures("cropped.png").path
+      expect(described_class.dominant_color(input_path:)).to eq("3A3730")
+
+      worker = described_class.instance_variable_get(:@worker)
+      Process.kill("KILL", worker.pid)
+      Process.waitpid(worker.pid)
+
+      expect(described_class.dominant_color(input_path:)).to eq("3A3730")
+    end
+  end
+
   describe ".generate_letter_avatar" do
     it "requires a supported font file" do
       expect {
