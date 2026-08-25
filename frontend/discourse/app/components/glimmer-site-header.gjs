@@ -31,7 +31,6 @@ const DRAWER_DRAG_THRESHOLD = 5;
 const HAMBURGER_BUTTON_ID = "toggle-hamburger-menu";
 const USER_BUTTON_ID = "toggle-current-user";
 const DRAWER_TAP_SLOP = 10;
-const DRAWER_VELOCITY_EXPIRY_MS = 100;
 
 export default class GlimmerSiteHeader extends Component {
   @service appEvents;
@@ -472,8 +471,6 @@ export default class GlimmerSiteHeader extends Component {
 
     this._drawerDrag = {
       axis: null,
-      lastTime: event.timeStamp,
-      lastX: event.clientX,
       panel,
       pointerId: event.pointerId,
       cloak: document.querySelector(".header-cloak"),
@@ -481,7 +478,6 @@ export default class GlimmerSiteHeader extends Component {
       scrollerLocked: false,
       startClosed,
       startedOnCloak: Boolean(cloakAtPointer),
-      velocityX: 0,
       width: this.#drawerWidth(panel),
     };
     this.pxClosed = startClosed;
@@ -546,8 +542,6 @@ export default class GlimmerSiteHeader extends Component {
       return;
     }
 
-    this.#updateDrawerVelocity(event);
-
     const closingDelta = this.#closingTravel(dragInfo.delta.x);
     this.pxClosed = Math.min(drawerDrag.width, Math.max(0, closingDelta));
     const dragPosition =
@@ -571,7 +565,7 @@ export default class GlimmerSiteHeader extends Component {
 
     const animationEvent = {
       deltaX: dragInfo.delta.x,
-      velocityX: this.#releaseVelocity(event),
+      velocityX: dragInfo.velocity.x,
     };
 
     if (this.#shouldCloseDrawer(animationEvent)) {
@@ -611,21 +605,6 @@ export default class GlimmerSiteHeader extends Component {
     }
 
     this.#resetDrawerDrag();
-  }
-
-  #updateDrawerVelocity(event) {
-    const drawerDrag = this._drawerDrag;
-    const elapsed = event.timeStamp - drawerDrag.lastTime;
-    drawerDrag.velocityX =
-      elapsed > 0 ? (event.clientX - drawerDrag.lastX) / elapsed : 0;
-    drawerDrag.lastX = event.clientX;
-    drawerDrag.lastTime = event.timeStamp;
-  }
-
-  #releaseVelocity(event) {
-    const drawerDrag = this._drawerDrag;
-    const idleMs = event.timeStamp - drawerDrag.lastTime;
-    return idleMs > DRAWER_VELOCITY_EXPIRY_MS ? 0 : drawerDrag.velocityX;
   }
 
   #isLeftMenu(panel) {
