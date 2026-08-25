@@ -819,6 +819,7 @@ DEPENDENCIES
   colored2
   cose
   cppjieba_rb
+  crass
   css_parser
   csv
   debug (>= 1.0.0)

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "crass"
+
 class TopicOgImageGenerator
   OG_WIDTH = 1200
   OG_HEIGHT = 630
@@ -52,6 +54,7 @@ class TopicOgImageGenerator
     colors = fetch_colors
     logo_upload = SiteSetting.logo.presence || SiteSetting.logo_small
     logo_data_uri = fetch_as_data_uri(logo_upload&.url)
+    logo_data_uri = nil if unsafe_svg_data_uri?(logo_data_uri)
     logo_path = logo_data_uri
 
     title_lines = word_wrap(title, TITLE_LINE_CHARS)
@@ -303,6 +306,41 @@ class TopicOgImageGenerator
   ensure
     tmp&.close
     tmp&.unlink if tmp.respond_to?(:unlink)
+  end
+
+  def unsafe_svg_data_uri?(data_uri)
+    return false if !data_uri&.start_with?("data:image/svg+xml;base64,")
+
+    document =
+      Nokogiri.XML(Base64.strict_decode64(data_uri.split(",", 2).last)) do |config|
+        config.strict.nonet
+      end
+    if document.xpath(
+         "//*[local-name()='filter' or starts-with(local-name(), 'fe')] | " \
+           "//@*[local-name()='filter']",
+       ).any?
+      return true
+    end
+
+    styles = document.xpath("//@style").map { |attribute| "* { #{attribute.value} }" }
+    styles.concat(document.xpath("//*[local-name()='style']").map(&:text))
+    styles.any? { |style| css_contains_filter_or_error?(Crass.parse(style)) }
+  rescue ArgumentError, Nokogiri::XML::SyntaxError
+    true
+  end
+
+  def css_contains_filter_or_error?(value)
+    case value
+    when Array
+      value.any? { |child| css_contains_filter_or_error?(child) }
+    when Hash
+      return true if value[:node] == :error
+      return true if value[:node] == :property && value[:name].casecmp?("filter")
+
+      value.values.any? { |child| css_contains_filter_or_error?(child) }
+    else
+      false
+    end
   end
 
   def get_absolute_url(url)
