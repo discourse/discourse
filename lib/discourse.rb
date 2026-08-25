@@ -1305,6 +1305,10 @@ module Discourse
         require "actionview_precompiler"
         ActionviewPrecompiler.precompile
       end,
+      Thread.new do
+        LetterAvatar.vips_version
+        LetterAvatar.cleanup_old
+      end,
       Thread.new { SvgSprite.core_svgs },
       Thread.new { EmberAssets.script_chunks(exception: false) },
       Thread.new do
