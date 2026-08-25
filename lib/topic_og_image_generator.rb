@@ -337,6 +337,7 @@ class TopicOgImageGenerator
         operation: :topic_og_render,
         read: [dir],
         write: [dir],
+        timeout: 10,
       )
 
       return nil unless File.exist?(png_path)
