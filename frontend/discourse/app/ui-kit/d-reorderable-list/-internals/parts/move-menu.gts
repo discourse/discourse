@@ -1,9 +1,15 @@
 import Component from "@glimmer/component";
 import type { TOC } from "@ember/component/template-only";
 import { concat, fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { translateModKey } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import {
+  CHORD_TARGETS,
+  TARGET_CHORDS,
+} from "discourse/ui-kit/d-reorderable-list/-internals/constants";
 import type {
   MoveTarget,
   Row,
@@ -23,6 +29,27 @@ interface MoveItemSignature {
 }
 
 /**
+ * The accelerator a destination answers to, in the two forms it is published
+ * in. Both name the key the platform names, as every other shortcut in core
+ * does: a reader on a Mac presses one labelled Option, and would not recognize
+ * the modifier's canonical name. They differ only in the separator, which the
+ * announced form always carries. Absent for a destination with no accelerator,
+ * which is what the item reads to decide whether to advertise one at all.
+ *
+ * @param target - The destination, as its own argument names it.
+ */
+function chordFor(target: string) {
+  const key = TARGET_CHORDS[target as MoveTarget];
+  if (!key) {
+    return undefined;
+  }
+  return {
+    keys: translateModKey(`Alt+${key}`, "+"),
+    label: translateModKey(`Alt+${key}`),
+  };
+}
+
+/**
  * One destination in the move menu.
  *
  * An unavailable direction is disabled rather than removed, so the menu keeps
@@ -37,17 +64,29 @@ interface MoveItemSignature {
  * positions that shift as soon as a group adds a cross-list entry.
  */
 const MoveItem: TOC<MoveItemSignature> = <template>
-  <DButton
-    role="menuitem"
-    class={{dConcatClass
-      "btn-transparent d-reorderable-list__move-item"
-      (concat "--" @target)
-    }}
-    @icon={{@icon}}
-    @translatedLabel={{@label}}
-    @action={{@move}}
-    @disabled={{@disabled}}
-  />
+  {{#let (chordFor @target) as |chord|}}
+    <DButton
+      role="menuitem"
+      class={{dConcatClass
+        "btn-transparent d-reorderable-list__move-item"
+        (concat "--" @target)
+      }}
+      aria-keyshortcuts={{chord.keys}}
+      @icon={{@icon}}
+      @translatedLabel={{@label}}
+      @action={{@move}}
+      @disabled={{@disabled}}
+    >
+      {{#if chord.label}}
+        {{! Hidden from the accessible name, which the keyshortcuts attribute
+            already carries: left visible it is read a second time, in a
+            spelling that does not match the first. }}
+        <kbd aria-hidden="true" class="d-reorderable-list__move-shortcut">
+          {{~chord.label~}}
+        </kbd>
+      {{/if}}
+    </DButton>
+  {{/let}}
 </template>;
 
 /** What the shared move menu is told to act on. */
@@ -94,6 +133,31 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
     return this.args.data?.list.siblings() ?? [];
   }
 
+  /**
+   * An accelerator pressed inside the menu, which is where it is advertised.
+   *
+   * Routed to the same place choosing the destination goes, so the hint means
+   * what it says. The keydown handler on the list element rather than on each
+   * destination, because a disabled one receives no key events at all and the
+   * refusal still has to be spoken.
+   *
+   * @param event - The keydown that may carry a chord.
+   */
+  @action
+  onKeydown(event: KeyboardEvent) {
+    if (!event.altKey) {
+      return;
+    }
+    const target = CHORD_TARGETS[event.key];
+    const { data } = this.args;
+    if (!target || !data) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    data.list.onMenuMove(data.key, target);
+  }
+
   @action
   move(target: MoveTarget) {
     const { data } = this.args;
@@ -110,6 +174,7 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
     <DDropdownMenu
       role="menu"
       aria-label={{this.row.handleLabel}}
+      {{on "keydown" this.onKeydown}}
       {{dRovingFocus
         orientation="vertical"
         itemSelector=".d-reorderable-list__move-item"

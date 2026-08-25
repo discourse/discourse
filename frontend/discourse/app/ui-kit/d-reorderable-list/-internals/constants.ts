@@ -18,3 +18,13 @@ export const CHORD_TARGETS: Record<string, MoveTarget | undefined> = {
   Home: "top",
   End: "bottom",
 };
+
+/**
+ * The accelerator each destination answers to, derived rather than restated so
+ * a chord added above appears in the menu without a second table to keep in
+ * step. A destination absent here has no accelerator, which is what the menu
+ * reads to decide whether to advertise one.
+ */
+export const TARGET_CHORDS = Object.fromEntries(
+  Object.entries(CHORD_TARGETS).map(([key, target]) => [target, key])
+) as Partial<Record<MoveTarget, string>>;

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 /* The reorderable-list shell. The interaction pieces carry their own styles
    (d-drag-handle, d-drag-and-drop); what lives here is only what the list
    itself owns. */
@@ -121,6 +123,26 @@
 .d-reorderable-list__move-item:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+/* The accelerator each destination answers to, pushed to the trailing edge so
+   the labels stay in one column. Hidden where there is no keyboard to press
+   it with. */
+
+.d-reorderable-list__move-item {
+  justify-content: start;
+}
+
+.d-reorderable-list__move-shortcut {
+  margin-inline-start: auto;
+  padding-inline-start: var(--space-4);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1-rem);
+  line-height: 1;
+
+  @include viewport.until(sm) {
+    display: none;
+  }
 }
 
 /* Reorderable lists are routinely hosted inside a modal — the sidebar section

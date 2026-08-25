@@ -3795,6 +3795,120 @@ module(
         );
     });
 
+    test("the accelerator works from inside the menu it is advertised in", async function (assert) {
+      const items = trackedArray(objectItems());
+      const moves = [];
+      const handleMove = (move) => {
+        moves.push(move);
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{handleMove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await openMoveMenu("alpha");
+      await triggerKeyEvent(moveItemSelector("down"), "keydown", "ArrowDown", {
+        altKey: true,
+      });
+
+      assert.strictEqual(moves.length, 1, "the chord commits the same move");
+      assert.deepEqual(renderedItemOrder(), ["bravo", "alpha", "charlie"]);
+      assert
+        .dom(".d-reorderable-list__move-item")
+        .doesNotExist("and closes the menu, as choosing the destination would");
+    });
+
+    test("each destination shows and announces the accelerator it answers to", async function (assert) {
+      const items = objectItems();
+      const emptyItems = [];
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{noop}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="primary"
+              @listLabel="Primary"
+              @items={{items}}
+              @key="id"
+              @label={{label}}
+              id="hint-primary"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="secondary"
+              @listLabel="Secondary"
+              @items={{emptyItems}}
+              @key="id"
+              @label={{label}}
+              id="hint-secondary"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      await openMoveMenu("bravo", "#hint-primary");
+
+      // Spelled for the platform, as every other shortcut in core is, so only
+      // the key half is assertable here; the modifier half differs by keyboard.
+      for (const [target, key] of [
+        ["top", /\+Home$/],
+        ["up", /\+↑$/],
+        ["down", /\+↓$/],
+        ["bottom", /\+End$/],
+      ]) {
+        assert
+          .dom(moveItemSelector(target))
+          .hasAttribute(
+            "aria-keyshortcuts",
+            key,
+            `${target} announces its accelerator`
+          );
+        assert
+          .dom(`${moveItemSelector(target)} kbd`)
+          .exists(`${target} shows it as well as saying it`);
+      }
+
+      // The modifier is spelled for the platform, but an arrow is drawn the
+      // same way everywhere, so it is the half worth pinning: raw event names
+      // reaching the reader would pass every assertion above.
+      assert
+        .dom(`${moveItemSelector("up")} kbd`)
+        .hasText(/↑$/, "and shows it drawn, not named as the event that fires");
+
+      assert
+        .dom(moveItemSelector("list"))
+        .doesNotHaveAttribute(
+          "aria-keyshortcuts",
+          "a cross-list destination has no accelerator to advertise"
+        );
+      assert
+        .dom(`${moveItemSelector("list")} kbd`)
+        .doesNotExist("so it shows nothing either");
+    });
+
     test("boundary destinations stay in the menu, disabled and refusing", async function (assert) {
       const items = trackedArray(objectItems());
       const moves = [];
