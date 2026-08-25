@@ -237,6 +237,45 @@ RSpec.describe TopicUser do
       end
     end
 
+    context "with trailing small actions and whispers" do
+      it "lets last_read_post_number advance onto a trailing small action" do
+        Fabricate(:post, topic: topic, post_number: 1)
+        Fabricate(:post, topic: topic, post_number: 2)
+        small_action =
+          Fabricate(:post, topic: topic, post_type: Post.types[:small_action], post_number: 3)
+
+        TopicUser.update_last_read(user, topic.id, 2, 1, 0)
+        TopicUser.update_last_read(user, topic.id, small_action.post_number, 1, 0)
+
+        expect(topic_user.last_read_post_number).to eq(3)
+      end
+
+      it "does not let a non-whisperer's last_read advance onto a trailing whisper" do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        Fabricate(:post, topic: topic, post_number: 1)
+        Fabricate(:post, topic: topic, post_number: 2)
+        whisper = Fabricate(:post, topic: topic, post_type: Post.types[:whisper], post_number: 3)
+
+        TopicUser.update_last_read(user, topic.id, 2, 1, 0)
+        TopicUser.update_last_read(user, topic.id, whisper.post_number, 1, 0)
+
+        expect(topic_user.last_read_post_number).to eq(2)
+      end
+
+      it "lets a whisperer's last_read advance onto a trailing whisper" do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        whisperer = Fabricate(:admin)
+        Fabricate(:post, topic: topic, post_number: 1)
+        Fabricate(:post, topic: topic, post_number: 2)
+        whisper = Fabricate(:post, topic: topic, post_type: Post.types[:whisper], post_number: 3)
+
+        TopicUser.update_last_read(whisperer, topic.id, 2, 1, 0)
+        TopicUser.update_last_read(whisperer, topic.id, whisper.post_number, 1, 0)
+
+        expect(TopicUser.get(topic, whisperer).last_read_post_number).to eq(3)
+      end
+    end
+
     context "with private messages" do
       fab!(:target_user) { Fabricate(:user, refresh_auto_groups: true) }
 
