@@ -203,6 +203,20 @@ describe Chat::ChannelFetcher do
       ).to match_array([category_channel.id])
     end
 
+    it "preloads last-message uploads" do
+      another_channel = Fabricate(:category_channel)
+      first_message = Fabricate(:chat_message, chat_channel: category_channel, user: user2)
+      second_message = Fabricate(:chat_message, chat_channel: another_channel, user: user2)
+      category_channel.update!(last_message: first_message)
+      another_channel.update!(last_message: second_message)
+
+      channels = described_class.secured_public_channels(guardian, following: following)
+
+      expect(channels.map { |channel| channel.last_message.association(:uploads).loaded? }).to all(
+        eq(true),
+      )
+    end
+
     it "returns an empty array when public channels are disabled" do
       SiteSetting.enable_public_channels = false
 
