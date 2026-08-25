@@ -629,9 +629,21 @@ class UsersController < ApplicationController
   end
 
   def generate_random_username
+    raise Discourse::NotFound if !SiteSetting.enable_random_usernames
+
     RateLimiter.new(nil, "random-username-#{request.remote_ip}", 20, 1.minute).performed!
 
-    render json: { username: RandomUsernameGenerator.generate }
+    username = RandomUsernameGenerator.generate
+    # The word lists are admin-editable, so they can end up unusable (e.g. once
+    # unicode usernames are turned back off) while the feature is still on.
+    if username.blank?
+      return(
+        render json: failed_json.merge(errors: [I18n.t("random_username.unavailable")]),
+               status: :unprocessable_entity
+      )
+    end
+
+    render json: { username: }
   end
 
   def check_email

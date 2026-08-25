@@ -883,6 +883,26 @@ RSpec.describe SessionController do
         expect(new_user.username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
       end
 
+      it "falls back to the generic username when random usernames are disabled" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        SiteSetting.enable_random_usernames = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to match(/\Auser\d*\z/)
+        # A generic placeholder isn't worth prefilling, so the client makes the
+        # user pick a username instead.
+        expect(response.parsed_body["prefill_username"]).to eq(false)
+      end
+
+      it "flags a randomly generated username for prefill" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.parsed_body["prefill_username"]).to eq(true)
+      end
+
       it "derives the username from the email when email-based suggestions are on" do
         SiteSetting.use_email_for_username_and_name_suggestions = true
 

@@ -38,6 +38,7 @@ const RESEND_COOLDOWN_SECONDS = 30;
 export default class CodeLoginForm extends Component {
   @service login;
   @service site;
+  @service siteSettings;
   @service modal;
 
   @tracked email = this.args.initialEmail ?? "";
@@ -367,7 +368,7 @@ export default class CodeLoginForm extends Component {
       can_upload_avatar: result.can_upload_avatar,
     });
     this.usernameEditable = result.can_edit_username;
-    this.username = user.username;
+    this.username = result.prefill_username ? user.username : "";
     this.avatarTemplate = user.avatar_template;
     // Set when the server held back a DiscourseConnect provider handoff so this
     // step could run; continuing resumes it.
@@ -789,15 +790,17 @@ export default class CodeLoginForm extends Component {
                     aria-invalid={{if this.usernameError "true"}}
                     aria-describedby="code-login-username-error"
                   />
-                  <DButton
-                    @action={{this.regenerateUsername}}
-                    @icon="dice"
-                    @title="code_login.regenerate_username"
-                    @ariaLabel="code_login.regenerate_username"
-                    aria-busy={{if this.regenerating "true"}}
-                    class="btn-transparent code-login-form__username-regen
-                      {{if this.regenerating '--rolling'}}"
-                  />
+                  {{#if this.siteSettings.enable_random_usernames}}
+                    <DButton
+                      @action={{this.regenerateUsername}}
+                      @icon="dice"
+                      @title="code_login.regenerate_username"
+                      @ariaLabel="code_login.regenerate_username"
+                      aria-busy={{if this.regenerating "true"}}
+                      class="btn-default code-login-form__username-regen
+                        {{if this.regenerating '--rolling'}}"
+                    />
+                  {{/if}}
                 </div>
                 <div
                   id="code-login-username-error"

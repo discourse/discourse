@@ -129,18 +129,19 @@
   }
 
   &__username-input {
-    position: relative;
+    // The regenerate button sits beside the input rather than inside it, so it
+    // doesn't compete with password managers for the field's trailing edge.
+    display: flex;
     align-self: stretch;
+    gap: 0.5em;
 
-    // Outweigh the base input[type="text"] margin-bottom, which would make
-    // this wrapper taller than the input and push the vertically centered
-    // regenerate button off-center.
+    // Outweigh the base input[type="text"] margin-bottom so the input and the
+    // regenerate button beside it stay the same height.
     input[type="text"] {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: auto;
       margin: 0;
-
-      // Leave room for the regenerate button that overlays the input's edge.
-      // Scoped here so the non-editable username display stays centered.
-      padding-right: 2.75em;
     }
   }
 
@@ -159,13 +160,10 @@
   }
 
   &__username-regen {
-    position: absolute;
-    top: 50%;
-    right: 0.25em;
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    transform: translateY(-50%);
 
     // The dice glyph is wider than it is tall, so at the default 1em it
     // renders visually smaller than square icons.

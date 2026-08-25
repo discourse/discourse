@@ -9,9 +9,10 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   def call
     # A random name beats the generic "userN" fallback here: there is no
     # signup form where the user could pick one before the account exists.
+    # Sites that turn random names off fall through to that generic name.
     username =
       UserNameSuggester.suggest(email, allow_generic_fallback: false) ||
-        RandomUsernameGenerator.generate
+        RandomUsernameGenerator.generate || UserNameSuggester.suggest(email)
 
     user = User.where(staged: true).with_email(email).first
     user&.unstage!

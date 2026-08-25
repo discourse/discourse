@@ -2318,6 +2318,30 @@ RSpec.describe UsersController do
 
       expect(response.status).to eq(429)
     end
+
+    it "404s when random usernames are disabled" do
+      SiteSetting.enable_random_usernames = false
+
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "reports an error when the word lists can no longer produce a username" do
+      # Unicode words pass validation while unicode usernames are on, then stop
+      # being usable once the site turns them off.
+      SiteSetting.unicode_usernames = true
+      SiteSetting.random_username_adjectives = "静か"
+      SiteSetting.random_username_nouns = "隼"
+      SiteSetting.unicode_usernames = false
+
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("random_username.unavailable"),
+      )
+    end
   end
 
   describe "#check_email" do

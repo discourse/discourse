@@ -1,141 +1,34 @@
 # frozen_string_literal: true
 
-# Builds random human-friendly usernames (e.g. "QuietFalcon") for accounts
+# Builds random human-friendly usernames (e.g. "QuietFalcon42") for accounts
 # created without user input, where no signup data can (or may) be used to
-# derive one. Word lists are English but always produce valid ASCII
-# usernames, so they work regardless of the site's locale settings.
+# derive one. The word lists are site settings so communities can tailor them
+# to their tone or language.
 module RandomUsernameGenerator
-  ADJECTIVES = %w[
-    agile
-    amber
-    azure
-    bold
-    brave
-    breezy
-    bright
-    calm
-    candid
-    cheery
-    civic
-    clever
-    cosmic
-    crisp
-    curious
-    daring
-    deft
-    eager
-    earnest
-    fabled
-    gentle
-    golden
-    happy
-    hardy
-    hearty
-    humble
-    jolly
-    keen
-    kind
-    lively
-    lucid
-    lunar
-    mellow
-    merry
-    mighty
-    nimble
-    noble
-    plucky
-    proud
-    quick
-    quiet
-    rapid
-    rustic
-    silent
-    silver
-    smart
-    snappy
-    solar
-    stellar
-    sunny
-    swift
-    tidy
-    upbeat
-    valiant
-    vivid
-    warm
-    witty
-    zesty
-  ].freeze
-
-  NOUNS = %w[
-    acorn
-    badger
-    beacon
-    bison
-    breeze
-    brook
-    canyon
-    cedar
-    comet
-    condor
-    coral
-    cougar
-    coyote
-    crane
-    cricket
-    dolphin
-    ember
-    falcon
-    fern
-    finch
-    fjord
-    fox
-    gecko
-    glacier
-    harbor
-    heron
-    hawk
-    ibis
-    jaguar
-    lagoon
-    lark
-    lemur
-    lynx
-    maple
-    marmot
-    meadow
-    meteor
-    nebula
-    newt
-    orca
-    osprey
-    otter
-    owl
-    panda
-    pebble
-    penguin
-    pine
-    prairie
-    puffin
-    quokka
-    raven
-    reef
-    river
-    sequoia
-    sparrow
-    summit
-    tundra
-    walrus
-    willow
-    wren
-    zephyr
-  ].freeze
-
+  # Returns nil when the site has opted out, or when the configured word lists
+  # can't produce a usable name, so callers fall back to their own suggestion.
   def self.generate
+    return nil if !SiteSetting.enable_random_usernames
+
+    adjective = pick(SiteSetting.random_username_adjectives_map)
+    noun = pick(SiteSetting.random_username_nouns_map)
+    return nil if adjective.blank? || noun.blank?
+
     # A numeric suffix widens the namespace well beyond the word-pair count,
     # so very large sites don't exhaust it.
-    candidate = "#{ADJECTIVES.sample.capitalize}#{NOUNS.sample.capitalize}#{rand(10..99)}"
+    candidate = "#{adjective}#{noun}#{rand(10..99)}"
     UserNameSuggester.find_available_username_based_on(
       UserNameSuggester.rightsize_username(candidate),
     )
   end
+
+  # Words are admin-supplied, so skip any that sanitization would rewrite (a
+  # non-Latin word once unicode usernames are turned back off, say) rather than
+  # letting the replacement character leak into generated names.
+  def self.pick(words)
+    word = words.shuffle.find { |w| UserNameSuggester.sanitize_username(w) == w }
+    # Only the leading letter, so a word like "McFly" keeps its shape.
+    word&.sub(/\A./) { |first| first.upcase }
+  end
+  private_class_method :pick
 end
