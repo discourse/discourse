@@ -328,17 +328,22 @@ class TopicOgImageGenerator
 
       File.write(svg_path, build_svg)
 
-      DiscourseVips.generate_topic_og_image(
-        svg_path:,
-        output_path: png_path,
-        max_pixels: OG_WIDTH * OG_HEIGHT,
+      DiscourseVips.vips(
+        "convert",
+        svg_path,
+        png_path,
+        "--max-pixels",
+        (OG_WIDTH * OG_HEIGHT).to_s,
+        operation: :topic_og_render,
+        read: [dir],
+        write: [dir],
       )
 
       return nil unless File.exist?(png_path)
       FileHelper.optimize_image!(png_path)
       File.binread(png_path)
     end
-  rescue DiscourseVips::Error => e
+  rescue Discourse::Utils::CommandError => e
     Discourse.warn("Failed to render topic OG image", topic_id: @topic.id, error: e.message)
     nil
   end

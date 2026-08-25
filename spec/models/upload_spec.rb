@@ -967,9 +967,9 @@ RSpec.describe Upload do
     it "stores an empty string when the dominant color cannot be calculated" do
       local_path = Discourse.store.path_for(image)
       DiscourseVips
-        .expects(:dominant_color)
-        .with(input_path: local_path)
-        .raises(DiscourseVips::Error, "invalid image")
+        .expects(:vips)
+        .with("dominant-color", local_path, operation: :upload_dominant_color, read: [local_path])
+        .raises(Discourse::Utils::CommandError, "invalid image")
 
       expect(image.dominant_color(calculate_if_missing: true)).to eq("")
       expect(image.dominant_color).to eq("")

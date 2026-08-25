@@ -395,8 +395,13 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          DiscourseVips.dominant_color(input_path: local_path)
-        rescue DiscourseVips::Error
+          DiscourseVips.vips(
+            "dominant-color",
+            local_path,
+            operation: :upload_dominant_color,
+            read: [local_path],
+          ).strip
+        rescue Discourse::Utils::CommandError
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation

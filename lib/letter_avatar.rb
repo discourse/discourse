@@ -67,10 +67,14 @@ class LetterAvatar
 
     def generate_fullsize(identity)
       filename = fullsize_path(identity)
-      DiscourseVips.generate_letter_avatar(
-        letter: identity.letter,
-        background_color: identity.color,
-        output_path: filename,
+      DiscourseVips.vips(
+        "letter-avatar",
+        identity.letter,
+        filename,
+        "--background-color",
+        format("%02X%02X%02X", *identity.color),
+        operation: :letter_avatar_render,
+        write: [File.dirname(filename)],
       )
       filename
     end
@@ -78,7 +82,8 @@ class LetterAvatar
     def vips_version
       return @vips_version if @vips_version
 
-      @vips_version = DiscourseVips.version
+      libvips_version = DiscourseVips.vips("version", operation: :vips_version).strip
+      @vips_version = "#{MiniVips::VERSION}-#{libvips_version}"
     end
 
     def cleanup_old
