@@ -2104,6 +2104,24 @@ RSpec.describe TopicsController do
         end
       end
 
+      describe "with a member of delete_all_posts_and_topics_allowed_groups" do
+        fab!(:group)
+        fab!(:group_member, :user)
+
+        before do
+          group.add(group_member)
+          SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+          sign_in(group_member)
+        end
+
+        it "deletes the topic" do
+          delete "/t/#{topic.id}.json"
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.trashed?).to eq(true)
+        end
+      end
+
       context "when logged in as a category group moderator who cannot see the topic" do
         fab!(:mod_group, :group)
         fab!(:cat_mod_user, :user)
@@ -5206,6 +5224,25 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(400)
         expect(response.parsed_body["errors"]).to be_present
+      end
+
+      it "deletes topics for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        target_topic = Fabricate(:post).topic
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [target_topic.id],
+              operation: {
+                type: "delete",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"]).to contain_exactly(target_topic.id)
+        expect(target_topic.reload.trashed?).to eq(true)
       end
 
       it "can dismiss sub-categories posts as read" do
