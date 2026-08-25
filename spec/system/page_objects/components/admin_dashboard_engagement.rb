@@ -9,7 +9,6 @@ module PageObjects
       ACTIVITY_CATEGORY_CELL = "#{SECTION} .db-activity-table__cell-category"
       ADD_GROUP_BUTTON = "#{SECTION} .db-whos-posting__add-group"
       WHOS_POSTING_BAR_LABEL = "#{SECTION} .db-whos-posting__bar-label"
-      COMPARE_GROUPS_MODAL = ".compare-groups"
 
       def activity_category_filter
         PageObjects::Components::SelectKit.new(ACTIVITY_CATEGORY_FILTER)
@@ -72,22 +71,28 @@ module PageObjects
         has_no_css?("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
       end
 
+      def compare_groups_modal
+        @compare_groups_modal ||=
+          PageObjects::Components::ManageableRowListModal.new(
+            ".compare-groups",
+            "admin_js.admin.dashboard.sections.engagement.whos_posting.modal.counter",
+          )
+      end
+
       def open_compare_groups_modal
         find(ADD_GROUP_BUTTON).click
-        has_css?(COMPARE_GROUPS_MODAL)
+        compare_groups_modal.has_open?
         self
       end
 
       def toggle_compare_groups_row(identifier)
-        find(
-          "#{COMPARE_GROUPS_MODAL} [data-identifier='#{identifier}'] .d-toggle-switch__label",
-        ).click
+        compare_groups_modal.toggle(identifier)
         self
       end
 
       def apply_compare_groups
-        find("#{COMPARE_GROUPS_MODAL} .compare-groups__apply").click
-        has_no_css?(COMPARE_GROUPS_MODAL)
+        compare_groups_modal.apply
+        compare_groups_modal.has_closed?
         self
       end
 
