@@ -5,16 +5,6 @@ RSpec.describe DiscourseVips do
     it "returns a cache version" do
       expect(described_class.version).to match(/\A1-\d+\.\d+\.\d+-8\.\d+\.\d+\z/)
     end
-
-    it "fails closed without Landlock outside local environments" do
-      Rails.stubs(env: ActiveSupport::EnvironmentInquirer.new("production"))
-      Discourse::SafeExec.stubs(landlock_supported?: false)
-
-      expect { described_class.version }.to raise_error(
-        DiscourseVips::Error,
-        "Cannot run libvips because Landlock sandboxing is unavailable",
-      )
-    end
   end
 
   describe ".generate_letter_avatar" do

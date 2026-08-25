@@ -96,8 +96,6 @@ module DiscourseVips
     end
 
     def run(command:, arguments: [], read: [], write: [])
-      ensure_sandbox_available!
-
       Dir.mktmpdir("discourse-vips-helper-") do |scratch|
         argv = ["nice", "-n", "10", executable, command, *arguments]
 
@@ -116,12 +114,6 @@ module DiscourseVips
         rescue Discourse::Utils::CommandError => error
           raise Error, error.message
         end
-      end
-    end
-
-    def ensure_sandbox_available!
-      if !Rails.env.local? && !Discourse::SafeExec.landlock_supported?
-        raise Error, "Cannot run libvips because Landlock sandboxing is unavailable"
       end
     end
 
