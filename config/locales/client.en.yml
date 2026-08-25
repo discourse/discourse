@@ -7431,8 +7431,6 @@ en:
               empty: "No posts in the selected period."
               save_error: "Couldn't save your selection for next time."
               add_group: "Add group"
-              members_title: "%{name} — %{users} users · %{posts} posts"
-              members_fetch_error: "Couldn't load users for this group."
               modal:
                 title: "Compare groups"
                 search_placeholder: "Search groups..."
@@ -7764,6 +7762,16 @@ en:
           average_for_sample: "Average for sample"
           total: "All time total"
           no_data: "No data to display."
+          posters_by_member_type_members:
+            title: "%{name} — %{users} · %{posts}"
+            users_count:
+              one: "%{count} user"
+              other: "%{count} users"
+            posts_count:
+              one: "%{count} post"
+              other: "%{count} posts"
+            deselect: "Deselect %{name}"
+            fetch_error: "Couldn't load users for this group."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'

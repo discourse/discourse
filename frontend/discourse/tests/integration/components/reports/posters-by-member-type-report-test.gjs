@@ -50,7 +50,7 @@ module(
 
       assert.dom(".posters-by-member-type-report__row").exists({ count: 3 });
       assert.dom(".total-row").exists();
-      assert.dom(".total-row td:nth-child(2)").hasText("25");
+      assert.dom(".total-row + tr td:nth-child(2)").hasText("25");
     });
 
     test("selects the first group by default", async function (assert) {
@@ -80,6 +80,32 @@ module(
       assert
         .dom(".posters-by-member-type-report__row:nth-child(2)")
         .hasClass("--selected");
+    });
+
+    test("shows the selected group's name and a way to deselect it", async function (assert) {
+      await render(
+        <template><PostersByMemberTypeReport @model={{model}} /></template>
+      );
+
+      assert
+        .dom(".posters-by-member-type-report__members-name")
+        .hasText("New members");
+      assert
+        .dom(".posters-by-member-type-report__members-stats")
+        .doesNotExist("doesn't show a stale count before the drill-down loads");
+
+      await click(".posters-by-member-type-report__row:nth-child(2)");
+
+      assert
+        .dom(".posters-by-member-type-report__members-name")
+        .hasText("Returning");
+
+      await click(".posters-by-member-type-report__members-close");
+
+      assert.dom(".posters-by-member-type-report__members").doesNotExist();
+      assert
+        .dom(".posters-by-member-type-report__row.--selected")
+        .doesNotExist();
     });
 
     test("shows no members panel when there are no groups", async function (assert) {

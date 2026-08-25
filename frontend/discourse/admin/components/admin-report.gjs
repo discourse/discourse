@@ -483,6 +483,7 @@ export default class AdminReport extends Component {
     this.model = report;
     this.currentMode = currentMode;
     this.options = this._buildOptions(currentMode, report);
+    this.args.onDataLoaded?.(report);
   }
 
   @bind
