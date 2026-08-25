@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { assert } from "@ember/debug";
 import {
   associateDestroyableChild,
-  isDestroyed,
   isDestroying,
   registerDestructor,
 } from "@ember/destroyable";
@@ -148,7 +147,7 @@ export default class DReorderableList<T> extends Component<
     }
     const key = element.getAttribute("data-reorderable-key") ?? "";
     schedule("afterRender", () => {
-      if (isDestroying(this) || isDestroyed(this)) {
+      if (isDestroying(this)) {
         return;
       }
       assert(
@@ -266,7 +265,6 @@ export default class DReorderableList<T> extends Component<
       next(() => {
         if (
           isDestroying(this) ||
-          isDestroyed(this) ||
           this.#listElement?.contains(document.activeElement) ||
           document.activeElement?.closest(MENU_CONTENT_SELECTOR)
         ) {
@@ -396,7 +394,7 @@ export default class DReorderableList<T> extends Component<
       // Reported after render rather than thrown here: an exception unwinding
       // a half-built render corrupts it. The list simply stays unregistered.
       schedule("afterRender", () => {
-        if (isDestroying(this) || isDestroyed(this)) {
+        if (isDestroying(this)) {
           return;
         }
         assert(
@@ -568,7 +566,7 @@ export default class DReorderableList<T> extends Component<
     this.args.onRemove?.(row.item, index);
     this.a11y.announce(i18n("reorder.removed", { label: row.label }));
     schedule("afterRender", () => {
-      if (isDestroying(this) || isDestroyed(this)) {
+      if (isDestroying(this)) {
         return;
       }
       const controls = Array.from(
@@ -699,7 +697,7 @@ export default class DReorderableList<T> extends Component<
    */
   #refocusRow(key: string) {
     schedule("afterRender", () => {
-      if (isDestroying(this) || isDestroyed(this)) {
+      if (isDestroying(this)) {
         return;
       }
       const root = this.#listElement ?? document;

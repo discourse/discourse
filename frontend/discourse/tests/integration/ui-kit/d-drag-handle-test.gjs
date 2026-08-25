@@ -11,7 +11,7 @@ module("Integration | ui-kit | DDragHandle", function (hooks) {
 
     // The point of the component: a drag cannot be performed by keyboard, so
     // exposing the handle would offer a control that cannot be operated. The
-    // keyboard path is DReorderButtons beside it.
+    // keyboard path is a separate, operable control beside it.
     assert
       .dom(".d-drag-handle")
       .hasAttribute("aria-hidden", "true", "it is hidden from the a11y tree")

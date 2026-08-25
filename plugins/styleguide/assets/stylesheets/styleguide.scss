@@ -1017,14 +1017,13 @@
   max-width: 30em;
   border-collapse: collapse;
 
-  /* Keeps the cell a real table cell: the arrow pair is block-level flex,
-     so inside a td it would stack under the grip instead of beside it. */
+  /* Keeps the cell a real table cell: the handle is block-level flex, so
+     inside a td it would stack under the row content instead of beside it. */
 
   &__reorder {
     white-space: nowrap;
 
-    .d-reorderable-list__handle,
-    .d-reorderable-list__arrows {
+    .d-reorderable-list__handle {
       display: inline-flex;
       vertical-align: middle;
     }
