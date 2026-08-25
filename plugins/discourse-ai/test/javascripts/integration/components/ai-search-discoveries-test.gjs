@@ -230,6 +230,52 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     );
   });
 
+  test("omits zero reply counts from discussion cards", async function (assert) {
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        streamedText = "A useful answer.";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+        sources = [
+          {
+            title: "A discussion without replies",
+            url: "/t/without-replies/101/1",
+            category: "Studio Ghibli",
+            topic_replies: 0,
+          },
+          {
+            title: "A discussion with replies",
+            url: "/t/with-replies/102/1",
+            category: "Support",
+            topic_replies: 4,
+          },
+        ];
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    await render(
+      <template>
+        <AiSearchDiscoveries @searchTerm="miyazaki" @showSources={{true}} />
+      </template>
+    );
+
+    assert
+      .dom(
+        ".ai-discovery-sources__item:nth-child(1) .ai-discovery-source__metadata"
+      )
+      .hasText("Studio Ghibli", "zero replies and their separator are omitted");
+    assert
+      .dom(
+        ".ai-discovery-sources__item:nth-child(2) .ai-discovery-source__metadata"
+      )
+      .hasText("Support · 4 replies", "non-zero reply counts remain visible");
+  });
+
   test("does not show result preferences in the Discoveries result", async function (assert) {
     this.owner.register(
       "service:discobot-discoveries",

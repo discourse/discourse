@@ -448,15 +448,19 @@ export default class AiSearchDiscoveries extends Component {
                       <span class="ai-discovery-source__metadata">
                         {{#if source.category}}
                           <span>{{source.category}}</span>
-                          <span aria-hidden="true">·</span>
+                          {{#if source.topic_replies}}
+                            <span aria-hidden="true">·</span>
+                          {{/if}}
                         {{/if}}
-                        <span>
-                          {{source.topic_replies}}
-                          {{i18n
-                            "replies_lowercase"
-                            count=source.topic_replies
-                          }}
-                        </span>
+                        {{#if source.topic_replies}}
+                          <span>
+                            {{source.topic_replies}}
+                            {{i18n
+                              "replies_lowercase"
+                              count=source.topic_replies
+                            }}
+                          </span>
+                        {{/if}}
                       </span>
                     </span>
                   </a>
