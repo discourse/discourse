@@ -20,9 +20,6 @@ class LetterAvatar
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
-  FONT_FILENAME = "NotoSans-Regular.woff2"
-  MACOS_FONT_PATH = "/System/Library/Fonts/Helvetica.ttc"
-  private_constant :FONT_FILENAME, :MACOS_FONT_PATH
 
   class << self
     def version
@@ -70,7 +67,6 @@ class LetterAvatar
       DiscourseVips.generate_letter_avatar(
         letter: identity.letter,
         background_color: identity.color,
-        font_path:,
         output_path: filename,
       )
       filename
@@ -79,8 +75,7 @@ class LetterAvatar
     def vips_version
       return @vips_version if @vips_version
 
-      @vips_version =
-        Digest::MD5.hexdigest([VERSION.to_s, DiscourseVips.version, font_version].join("\0"))
+      @vips_version = DiscourseVips.version
     end
 
     def cleanup_old
@@ -98,27 +93,8 @@ class LetterAvatar
     private
 
     def resize(from, to, size)
-      profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
-      DiscourseVips.resize_letter_avatar(
-        input_path: from,
-        output_path: to,
-        size:,
-        profile_path: profile,
-      )
+      DiscourseVips.resize_letter_avatar(input_path: from, output_path: to, size:)
       FileHelper.optimize_image!(to)
-    end
-
-    def font_path
-      @font_path ||=
-        macos? ? MACOS_FONT_PATH : File.join(DiscourseFonts.path_for_fonts, FONT_FILENAME)
-    end
-
-    def font_version
-      Digest::MD5.file(font_path).hexdigest
-    end
-
-    def macos?
-      RbConfig::CONFIG["host_os"].match?(/darwin/i)
     end
   end
 

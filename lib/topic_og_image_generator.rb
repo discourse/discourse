@@ -328,7 +328,11 @@ class TopicOgImageGenerator
 
       File.write(svg_path, build_svg)
 
-      DiscourseVips.generate_topic_og_image(svg_path:, output_path: png_path)
+      DiscourseVips.generate_topic_og_image(
+        svg_path:,
+        output_path: png_path,
+        max_pixels: OG_WIDTH * OG_HEIGHT,
+      )
 
       return nil unless File.exist?(png_path)
       FileHelper.optimize_image!(png_path)

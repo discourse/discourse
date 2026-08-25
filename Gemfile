@@ -28,6 +28,7 @@ gem "discourse-seed-fu"
 gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
+gem "mini_vips", "0.1.0"
 
 # NOTE: hiredis-client is recommended for high performance use of Redis
 # however a recent attempt at an upgrade lead to https://meta.discourse.org/t/rebuild-error/375387

@@ -240,11 +240,9 @@ GEM
     fast_blank (1.0.1)
     fastimage (2.4.1)
     ffi (1.17.4-aarch64-linux-gnu)
-    ffi (1.17.4-aarch64-linux-musl)
     ffi (1.17.4-arm64-darwin)
     ffi (1.17.4-x86_64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
-    ffi (1.17.4-x86_64-linux-musl)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
@@ -258,9 +256,6 @@ GEM
     google-protobuf (4.35.0-aarch64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.35.0-aarch64-linux-musl)
-      bigdecimal
-      rake (~> 13.3)
     google-protobuf (4.35.0-arm64-darwin)
       bigdecimal
       rake (~> 13.3)
@@ -268,9 +263,6 @@ GEM
       bigdecimal
       rake (~> 13.3)
     google-protobuf (4.35.0-x86_64-linux-gnu)
-      bigdecimal
-      rake (~> 13.3)
-    google-protobuf (4.35.0-x86_64-linux-musl)
       bigdecimal
       rake (~> 13.3)
     guess_html_encoding (0.0.11)
@@ -317,11 +309,9 @@ GEM
     landlock (0.4.1)
     language_server-protocol (3.17.0.5)
     libv8-node (24.12.0.1-aarch64-linux)
-    libv8-node (24.12.0.1-aarch64-linux-musl)
     libv8-node (24.12.0.1-arm64-darwin)
     libv8-node (24.12.0.1-x86_64-darwin)
     libv8-node (24.12.0.1-x86_64-linux)
-    libv8-node (24.12.0.1-x86_64-linux-musl)
     lint_roller (1.1.0)
     liquid (5.12.0)
       bigdecimal
@@ -371,6 +361,10 @@ GEM
     mini_sql (1.6.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
+    mini_vips (0.1.0-aarch64-linux-gnu)
+    mini_vips (0.1.0-arm64-darwin)
+    mini_vips (0.1.0-x86_64-darwin)
+    mini_vips (0.1.0-x86_64-linux-gnu)
     minio_runner (1.1.0)
     minitest (6.0.6)
       drb (~> 2.0)
@@ -397,15 +391,11 @@ GEM
     nio4r (2.7.5)
     nokogiri (1.19.3-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.3-aarch64-linux-musl)
-      racc (~> 1.4)
     nokogiri (1.19.3-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.19.3-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.19.3-x86_64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.19.3-x86_64-linux-musl)
       racc (~> 1.4)
     oauth (1.1.5)
       auth-sanitizer (~> 0.1, >= 0.1.3)
@@ -475,11 +465,9 @@ GEM
       ruby-rc4
       ttfunk
     pg (1.6.3-aarch64-linux)
-    pg (1.6.3-aarch64-linux-musl)
     pg (1.6.3-arm64-darwin)
     pg (1.6.3-x86_64-darwin)
     pg (1.6.3-x86_64-linux)
-    pg (1.6.3-x86_64-linux-musl)
     pitchfork (0.18.2)
       logger
       rack (>= 2.0)
@@ -692,15 +680,11 @@ GEM
       nokogiri (>= 1.16.8)
     sass-embedded (1.100.0-aarch64-linux-gnu)
       google-protobuf (~> 4.31)
-    sass-embedded (1.100.0-aarch64-linux-musl)
-      google-protobuf (~> 4.31)
     sass-embedded (1.100.0-arm64-darwin)
       google-protobuf (~> 4.31)
     sass-embedded (1.100.0-x86_64-darwin)
       google-protobuf (~> 4.31)
     sass-embedded (1.100.0-x86_64-linux-gnu)
-      google-protobuf (~> 4.31)
-    sass-embedded (1.100.0-x86_64-linux-musl)
       google-protobuf (~> 4.31)
     sassc-embedded (1.80.8)
       sass-embedded (~> 1.80)
@@ -729,11 +713,9 @@ GEM
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
     sqlite3 (2.9.5-aarch64-linux-gnu)
-    sqlite3 (2.9.5-aarch64-linux-musl)
     sqlite3 (2.9.5-arm64-darwin)
     sqlite3 (2.9.5-x86_64-darwin)
     sqlite3 (2.9.5-x86_64-linux-gnu)
-    sqlite3 (2.9.5-x86_64-linux-musl)
     sshkey (3.0.0)
     ssrf_filter (1.5.0)
     stackprof (0.2.28)
@@ -745,18 +727,14 @@ GEM
     test-prof (1.6.1)
     thor (1.5.0)
     tiktoken_ruby (0.0.16-aarch64-linux)
-    tiktoken_ruby (0.0.16-aarch64-linux-musl)
     tiktoken_ruby (0.0.16-arm64-darwin)
     tiktoken_ruby (0.0.16-x86_64-darwin)
     tiktoken_ruby (0.0.16-x86_64-linux)
-    tiktoken_ruby (0.0.16-x86_64-linux-musl)
     timeout (0.6.1)
     tokenizers (0.6.4-aarch64-linux)
-    tokenizers (0.6.4-aarch64-linux-musl)
     tokenizers (0.6.4-arm64-darwin)
     tokenizers (0.6.4-x86_64-darwin)
     tokenizers (0.6.4-x86_64-linux)
-    tokenizers (0.6.4-x86_64-linux-musl)
     tsort (0.2.0)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
@@ -807,12 +785,10 @@ GEM
 PLATFORMS
   aarch64-linux
   aarch64-linux-gnu
-  aarch64-linux-musl
   arm64-darwin
   x86_64-darwin
   x86_64-linux
   x86_64-linux-gnu
-  x86_64-linux-musl
 
 DEPENDENCIES
   Ascii85
@@ -899,6 +875,7 @@ DEPENDENCIES
   mini_scheduler
   mini_sql
   mini_suffix
+  mini_vips (= 0.1.0)
   minio_runner
   mocha
   multi_json
@@ -1066,11 +1043,9 @@ CHECKSUMS
   fast_blank (1.0.1) sha256=269fc30414fed4e6403bc4a49081e1ea539f8b9226e59276ed1efaefabaa17ea
   fastimage (2.4.1) sha256=c64bebd46b6fd8943ab70c1e6e85ff728f970f2e48f92ecd249b6bc3a540ad20
   ffi (1.17.4-aarch64-linux-gnu) sha256=b208f06f91ffd8f5e1193da3cae3d2ccfc27fc36fba577baf698d26d91c080df
-  ffi (1.17.4-aarch64-linux-musl) sha256=9286b7a615f2676245283aef0a0a3b475ae3aae2bb5448baace630bb77b91f39
   ffi (1.17.4-arm64-darwin) sha256=19071aaf1419251b0a46852abf960e77330a3b334d13a4ab51d58b31a937001b
   ffi (1.17.4-x86_64-darwin) sha256=aa70390523cf3235096cf64962b709b4cfbd5c082a2cb2ae714eb0fe2ccda496
   ffi (1.17.4-x86_64-linux-gnu) sha256=9d3db14c2eae074b382fa9c083fe95aec6e0a1451da249eab096c34002bc752d
-  ffi (1.17.4-x86_64-linux-musl) sha256=3fdf9888483de005f8ef8d1cf2d3b20d86626af206cbf780f6a6a12439a9c49e
   fiber-annotation (0.2.0) sha256=7abfadf1d119f508867d4103bf231c0354d019cc39a5738945dec2edadaf6c03
   fiber-local (1.1.0) sha256=c885f94f210fb9b05737de65d511136ea602e00c5105953748aa0f8793489f06
   fiber-storage (1.0.1) sha256=f48e5b6d8b0be96dac486332b55cee82240057065dc761c1ea692b2e719240e1
@@ -1078,11 +1053,9 @@ CHECKSUMS
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
   goldiloader (6.0.0) sha256=613db1b28e9964291255a67a521f04d481b6afd6b9ca56ea1a612fd86e9a89c7
   google-protobuf (4.35.0-aarch64-linux-gnu) sha256=2cabd61b420918aec1564f9f7414e455bf922d20c5f8139d62783df5558a7aea
-  google-protobuf (4.35.0-aarch64-linux-musl) sha256=f6b11f3420a4564f68e8233c95eac6924f6a727dfc2f81a56af2e09add551501
   google-protobuf (4.35.0-arm64-darwin) sha256=66ab26d3fc82b8950702e53ab16c198e3c0ea3f2a38aaaf1f32152da45593ac5
   google-protobuf (4.35.0-x86_64-darwin) sha256=05eb5c8bc9899135befff496fc0a3642e7ff3d0943f043841dcc456f5654fea0
   google-protobuf (4.35.0-x86_64-linux-gnu) sha256=999226f3b00cd9fddb1b26851d16060212fa1d90c406aaad47e574682b716059
-  google-protobuf (4.35.0-x86_64-linux-musl) sha256=be0218520d77b2aee898b363514b03819f6f63f9c041ae0d0d79b4ce5247bffd
   guess_html_encoding (0.0.11) sha256=cab6468b945f38673fc41ad147fbbc89693b3c6c34b03b071e2ed669a603e098
   hana (1.3.7) sha256=5425db42d651fea08859811c29d20446f16af196308162894db208cac5ce9b0d
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
@@ -1108,11 +1081,9 @@ CHECKSUMS
   landlock (0.4.1) sha256=95c9b119ff831fae35756ddcd5e9d5f99b9705be71f37a0972f86c825b78b14f
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   libv8-node (24.12.0.1-aarch64-linux) sha256=22bd0246cde85d70c88cf772727ac3677a20ac1d169105f82efe5f1f7c39f755
-  libv8-node (24.12.0.1-aarch64-linux-musl) sha256=791b5960f79525e87d1bd1e5f2bf3715ef2a38bac6c97f297853e98a8411ba89
   libv8-node (24.12.0.1-arm64-darwin) sha256=124904a46b4a15c01ac024b4cf537dcf199cfb49a309cc59f66315e156e48339
   libv8-node (24.12.0.1-x86_64-darwin) sha256=5eee594393e7a27dc230a7fca5f9f72fc11ed58bce655624a683f4d027bf2d16
   libv8-node (24.12.0.1-x86_64-linux) sha256=e1236be4765edc109bd6ecef2989cf781bdcbac6f6e2cb3236ec9568540a9cfa
-  libv8-node (24.12.0.1-x86_64-linux-musl) sha256=7563175534c40893815bfd28e8fe27e12ff1656700c7208f53de06d14001712b
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   liquid (5.12.0) sha256=5a3c2c2430cd925d21c53e4ed9abea52cd0a9da53b541422f81dee79aca2a673
   listen (3.10.0) sha256=c6e182db62143aeccc2e1960033bebe7445309c7272061979bb098d03760c9d2
@@ -1143,6 +1114,10 @@ CHECKSUMS
   mini_scheduler (0.20.0) sha256=bd8948228bf4a48a603a8e20de850d16b68295413d8651c8c05288f4c6997b05
   mini_sql (1.6.0) sha256=5296637f6a4af5bb43e06788037e9a2968ff9c8eb65928befcba8cb41f42d6ee
   mini_suffix (0.3.3) sha256=8d1d33f92f69a2247c9b7d27173235da90479d955cdb863b63a7f53843b722e7
+  mini_vips (0.1.0-aarch64-linux-gnu) sha256=4dadf80d566041d9ce8f6f8dfb70395a65856bac4caa91f268cfab9cc329eeb3
+  mini_vips (0.1.0-arm64-darwin) sha256=be9ca612744b39bd5ab68f09bc8fa0c69d584352ef6057cf58f01a5242f0e684
+  mini_vips (0.1.0-x86_64-darwin) sha256=b4278b68c989ad1715b15b1e2b26d69d86234fd987f7e3a86c1c818c227a61cd
+  mini_vips (0.1.0-x86_64-linux-gnu) sha256=4350c3dcdd08e1b481fcaf66ed76dddcf53efe1e50e8b4b4fd9db69d5d857382
   minio_runner (1.1.0) sha256=ebb2bedea253011fcd34ed3229706c9b453f0f363601dee7ce065e0163bdcf2f
   minitest (6.0.6) sha256=153ea36d1d987a62942382b61075745042a2b3123b1cd48f4c3675af9cc7d6f1
   mocha (3.1.0) sha256=75f42d69ebfb1f10b32489dff8f8431d37a418120ecdfc07afe3bc183d4e1d56
@@ -1158,11 +1133,9 @@ CHECKSUMS
   net-smtp (0.5.1) sha256=ed96a0af63c524fceb4b29b0d352195c30d82dd916a42f03c62a3a70e5b70736
   nio4r (2.7.5) sha256=6c90168e48fb5f8e768419c93abb94ba2b892a1d0602cb06eef16d8b7df1dca1
   nokogiri (1.19.3-aarch64-linux-gnu) sha256=46b89e5d7b9e844c2ee360794240c6ea2a4e6fa0c5892a4ed487db621224b639
-  nokogiri (1.19.3-aarch64-linux-musl) sha256=8392dfdcd21be7a94dbbe9ccc138dea01b97b24cb2dc02a114ca98bfb1d9a0b7
   nokogiri (1.19.3-arm64-darwin) sha256=71b9bd424b1b7abc18b05052a1a3cfd3627abdca62be280854cc411791357e42
   nokogiri (1.19.3-x86_64-darwin) sha256=77f3fba57d46c53ab31e62fc6c28f705109d1bf6264356c76f132b2be5728d4d
   nokogiri (1.19.3-x86_64-linux-gnu) sha256=2f5078620fe12e83669b5b17311b32532a8153d02eee7ad06948b926d6080976
-  nokogiri (1.19.3-x86_64-linux-musl) sha256=248c906d2166eca5efb56d52fdee5f9a1f51d69a72e2b64fdac647b4ce39ea3f
   oauth (1.1.5) sha256=0ec467908f5819a54d1659d33e8bb520e8475cc87a452d6ecfaa5db351999cca
   oauth-tty (1.0.8) sha256=d9a63b67af17c22517f868c59f12178e4ee19a367536d1a6dcb74d9d07a41e07
   oauth2 (1.4.11) sha256=6739fcc8872bc94f476b0cae3e8bd78a56d8364b1b79b0757794c25e152d5c10
@@ -1185,11 +1158,9 @@ CHECKSUMS
   pastel (0.8.0) sha256=481da9fb7d2f6e6b1a08faf11fa10363172dc40fd47848f096ae21209f805a75
   pdf-reader (2.15.1) sha256=18c6a986a84a3117fa49f4279fc2de51f5d2399b71833df5d2bccd595c7068ce
   pg (1.6.3-aarch64-linux) sha256=0698ad563e02383c27510b76bf7d4cd2de19cd1d16a5013f375dd473e4be72ea
-  pg (1.6.3-aarch64-linux-musl) sha256=06a75f4ea04b05140146f2a10550b8e0d9f006a79cdaf8b5b130cde40e3ecc2c
   pg (1.6.3-arm64-darwin) sha256=7240330b572e6355d7c75a7de535edb5dfcbd6295d9c7777df4d9dddfb8c0e5f
   pg (1.6.3-x86_64-darwin) sha256=ee2e04a17c0627225054ffeb43e31a95be9d7e93abda2737ea3ce4a62f2729d6
   pg (1.6.3-x86_64-linux) sha256=5d9e188c8f7a0295d162b7b88a768d8452a899977d44f3274d1946d67920ae8d
-  pg (1.6.3-x86_64-linux-musl) sha256=9c9c90d98c72f78eb04c0f55e9618fe55d1512128e411035fe229ff427864009
   pitchfork (0.18.2) sha256=95d0b5a25792ebc94d627abd8a206652ff22acff1cc32ecd42c71669ead4ab94
   playwright-ruby-client (1.60.0) sha256=942242d6130e797b21213d9c49dc09d31235cab429a9edae73401ed112c94853
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
@@ -1270,11 +1241,9 @@ CHECKSUMS
   samovar (2.5.1) sha256=8a9fc41eb8868084f0321eb41678c485cfbc7d282fb306c0be67c3284b1d2394
   sanitize (7.0.0) sha256=269d1b9d7326e69307723af5643ec032ff86ad616e72a3b36d301ac75a273984
   sass-embedded (1.100.0-aarch64-linux-gnu) sha256=c13187f8eaae7e7e64246b18eb896534a84465a17198829ef65730db4662860e
-  sass-embedded (1.100.0-aarch64-linux-musl) sha256=1b0945a66cd4e40f505db73b1e790e2561e07e6d9fd04ef6ebbf279835666b3f
   sass-embedded (1.100.0-arm64-darwin) sha256=d294b32c3b7bed293ad39bd392713c07f1df5454e65fa0f8d80dadbdba8a0cf4
   sass-embedded (1.100.0-x86_64-darwin) sha256=3db80c837a60712de3461d5aa1be43c7056a0584d7182a8ae7a8996d64ab46d3
   sass-embedded (1.100.0-x86_64-linux-gnu) sha256=58dd0a8a4f0dd78881b90d8b0e4d0eed042d54865b19b71384d91091ade93e18
-  sass-embedded (1.100.0-x86_64-linux-musl) sha256=03dbee81bf93e770c725caf0c895e04c7b049ebef56b8a7002fcf21e6bedf7c5
   sassc-embedded (1.80.8) sha256=ea62825e4031cc8267e6befd492bcf8e29f11ccc18500f4e8ee9adb7feb6d563
   sawyer (0.9.3) sha256=0d0f19298408047037638639fe62f4794483fb04320269169bd41af2bdcf5e41
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
@@ -1287,11 +1256,9 @@ CHECKSUMS
   smarter_json (1.2.6) sha256=6638a2d23954e26d268212b4c8f5b9871d31b72f3d169371cca1082c1a722b45
   snaky_hash (2.0.4) sha256=2b12758c57defa6796341a1620f84b1a23737421d8d7e2575d0550b53cc4fece
   sqlite3 (2.9.5-aarch64-linux-gnu) sha256=78075b6337d3d182c6d2b4691049ed45cd220826160c9ea18946bf6a1de200dc
-  sqlite3 (2.9.5-aarch64-linux-musl) sha256=18c801185deb4adc01ddb281e8f672a39e3d1729979ca91e39439cd3eac0402d
   sqlite3 (2.9.5-arm64-darwin) sha256=d0cf444a70fc9395d513cfbcc1e6719e224aa645314e3824cb0474c721425aa2
   sqlite3 (2.9.5-x86_64-darwin) sha256=8e9caae38bd7ebb29cbeee3e7ab1d12dc2327d9a1b92c7fcf0dda05589627a81
   sqlite3 (2.9.5-x86_64-linux-gnu) sha256=233dbcb6714148dd23bc5aeb33e8efd6eac974969564ddd5794c23d5f52b231e
-  sqlite3 (2.9.5-x86_64-linux-musl) sha256=e7d3a7474e8af0f96150c21abc203fbab5437206bfcdf11deab7741c0ca516f2
   sshkey (3.0.0) sha256=655ba351d6e01a48dfe59d65530af8975c777b8cc57a061770de3228ff2d11cd
   ssrf_filter (1.5.0) sha256=e03dcdb9d1730d7f6710532a606b3543df2a448a0293ce04a2d995523c5a97f6
   stackprof (0.2.28) sha256=4ec2ace02f386012b40ca20ef80c030ad711831f59511da12e83b34efb0f9a04
@@ -1302,18 +1269,14 @@ CHECKSUMS
   test-prof (1.6.1) sha256=0332d9c39a7c118ed942b2db582f055d9f24964d150004ec6b964d2fa262499e
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
   tiktoken_ruby (0.0.16-aarch64-linux) sha256=014e5ba44b99158916ff57db61d2cb3fdbc6d176644d3f6bbf36a7d36ef9467d
-  tiktoken_ruby (0.0.16-aarch64-linux-musl) sha256=0519bb7eed1ebe0202c302103e9edf8754e4ea3029f63573c0d0a24649f701aa
   tiktoken_ruby (0.0.16-arm64-darwin) sha256=3da6fe850bf920d08c7eb736673f50bc9d08e8f2e17d34904ad3185a73fc9da7
   tiktoken_ruby (0.0.16-x86_64-darwin) sha256=4776d9f6d2f00ec4386260f3ef379347fd2dc375361c750fef7e96b57364c5be
   tiktoken_ruby (0.0.16-x86_64-linux) sha256=4d970b8e68a86972ec81799306116480b33a558c06bb4fe0092852280a4b76b2
-  tiktoken_ruby (0.0.16-x86_64-linux-musl) sha256=6a0400a7aba9da6146b30af5d7e4375167c5e5a291853ce47768985916c4d183
   timeout (0.6.1) sha256=78f57368a7e7bbadec56971f78a3f5ecbcfb59b7fcbb0a3ed6ddc08a5094accb
   tokenizers (0.6.4-aarch64-linux) sha256=4898a86c726106967a929a318ffaacb7fa99a6cba5b50e3957f80151c0d7789a
-  tokenizers (0.6.4-aarch64-linux-musl) sha256=351428bcf096c931666ee148d23b875b0e519749a57a5d2984e319af11ea791f
   tokenizers (0.6.4-arm64-darwin) sha256=ab123cb46e8df7e118bee0833d0bc21d4004a0d39816c0def56503be59de26c3
   tokenizers (0.6.4-x86_64-darwin) sha256=102b143e71e59bc7ff29e5920f356ad74bbc941ae2d4e3a495ee92311ace7394
   tokenizers (0.6.4-x86_64-linux) sha256=cdec6e5b007d73de094cdc7e097e4ab9a545f37f9c30e376a53800c3a552a447
-  tokenizers (0.6.4-x86_64-linux-musl) sha256=588031377e3f586b66687fc9dc59f901dea47d863733d871bf6801657e312c72
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   ttfunk (1.8.0) sha256=a7cbc7e489cc46e979dde04d34b5b9e4f5c8f1ee5fc6b1a7be39b829919d20ca
   tty-color (0.6.0) sha256=6f9c37ca3a4e2367fb2e6d09722762647d6f455c111f05b59f35730eeb24332a

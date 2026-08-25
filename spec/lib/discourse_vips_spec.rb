@@ -3,7 +3,7 @@
 RSpec.describe DiscourseVips do
   describe ".version" do
     it "returns the helper and libvips version" do
-      expect(described_class.version).to match(/\A1-8\.\d+\.\d+\z/)
+      expect(described_class.version).to match(/\A1-0\.1\.0-8\.\d+\.\d+\z/)
     end
 
     it "fails closed without Landlock outside local environments" do
@@ -18,42 +18,13 @@ RSpec.describe DiscourseVips do
   end
 
   describe ".generate_letter_avatar" do
-    it "requires a supported font file" do
-      expect {
-        described_class.generate_letter_avatar(
-          letter: "A",
-          background_color: [198, 125, 40],
-          font_path: nil,
-          output_path: "/tmp/avatar.png",
-        )
-      }.to raise_error(ArgumentError, "font_path must reference a supported font file")
-    end
-
-    it "rejects an unapproved font file" do
-      Dir.mktmpdir("discourse-vips-font") do |directory|
-        font_path = File.join(directory, "NotoSans-Regular.woff2")
-        File.write(font_path, "not a font")
-
-        expect {
-          described_class.generate_letter_avatar(
-            letter: "A",
-            background_color: [198, 125, 40],
-            font_path:,
-            output_path: "/tmp/avatar.png",
-          )
-        }.to raise_error(ArgumentError, "font_path must reference a supported font file")
-      end
-    end
-
     it "renders an opaque 360 by 360 RGB PNG" do
       Dir.mktmpdir("discourse-vips-spec") do |directory|
         output_path = File.join(directory, "avatar.png")
-        font_path = File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2")
 
         described_class.generate_letter_avatar(
           letter: "<",
           background_color: [198, 125, 40],
-          font_path:,
           output_path:,
         )
 
@@ -70,7 +41,7 @@ RSpec.describe DiscourseVips do
     it "returns an uppercase RGB hex color" do
       input_path = file_from_fixtures("cropped.png").path
 
-      expect(described_class.dominant_color(input_path:)).to eq("524F40")
+      expect(described_class.dominant_color(input_path:)).to eq("171613")
     end
 
     it "accepts a supported image with a nonstandard file extension" do
@@ -78,7 +49,7 @@ RSpec.describe DiscourseVips do
         file.write(File.binread(file_from_fixtures("cropped.png").path))
         file.flush
 
-        expect(described_class.dominant_color(input_path: file.path)).to eq("524F40")
+        expect(described_class.dominant_color(input_path: file.path)).to eq("171613")
       end
     end
 
@@ -98,7 +69,7 @@ RSpec.describe DiscourseVips do
         output_path = File.join(directory, "topic.png")
         svg_path = file_from_fixtures("image.svg").path
 
-        described_class.generate_topic_og_image(svg_path:, output_path:)
+        described_class.generate_topic_og_image(svg_path:, output_path:, max_pixels: 40_000_000)
 
         expect(FastImage.type(output_path)).to eq(:png)
       end
@@ -110,6 +81,7 @@ RSpec.describe DiscourseVips do
           described_class.generate_topic_og_image(
             svg_path: file_from_fixtures("logo.png").path,
             output_path: File.join(directory, "topic.png"),
+            max_pixels: 40_000_000,
           )
         }.to raise_error(DiscourseVips::Error)
       end

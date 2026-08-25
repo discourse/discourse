@@ -1,16 +1,11 @@
 # frozen_string_literal: true
 
-require "erb"
-require "rbconfig"
+require "mini_vips"
 require "tmpdir"
 
 module DiscourseVips
   VERSION = 1
   DEFAULT_TIMEOUT_SECONDS = 5
-  FONT_FAMILIES = {
-    "/System/Library/Fonts/Helvetica.ttc" => "Helvetica",
-    File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2") => "Noto Sans",
-  }.freeze
   FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
   DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
   RLIMITS = {
@@ -20,7 +15,6 @@ module DiscourseVips
     open_files: 1024,
   }.freeze
   private_constant :DEFAULT_TIMEOUT_SECONDS,
-                   :FONT_FAMILIES,
                    :FONTCONFIG_READ_PATHS,
                    :DYNAMIC_LINKER_CACHE_PATH,
                    :RLIMITS
@@ -30,62 +24,57 @@ module DiscourseVips
 
   class << self
     def version
-      "#{VERSION}-#{run(command: "version").strip}"
+      "#{VERSION}-#{MiniVips::VERSION}-#{run(command: "version").strip}"
     end
 
-    def generate_letter_avatar(letter:, background_color:, font_path:, output_path:)
-      font_path = File.expand_path(font_path.to_s)
-      font_family = FONT_FAMILIES[font_path]
-      if !File.file?(font_path.to_s) || !font_family
-        raise ArgumentError, "font_path must reference a supported font file"
-      end
-
+    def generate_letter_avatar(letter:, background_color:, output_path:)
       red, green, blue = validate_background_color(background_color)
-      options = {
-        output: output_path,
-        red:,
-        green:,
-        blue:,
-        markup:
-          %(<span foreground="#ffffff" alpha="80%">#{ERB::Util.html_escape(letter.to_s)}</span>),
-        font: "#{font_family} 280",
-        fontfile: font_path,
-      }
       run(
         command: "letter-avatar",
-        options:,
-        read: [font_path, *FONTCONFIG_READ_PATHS],
+        arguments: [
+          letter.to_s,
+          output_path,
+          "--background-color",
+          format("%02X%02X%02X", red, green, blue),
+        ],
+        read: [bundled_font_path, *FONTCONFIG_READ_PATHS],
         write: [File.dirname(output_path)],
       )
       nil
     end
 
-    def resize_letter_avatar(input_path:, output_path:, size:, profile_path:)
+    def resize_letter_avatar(input_path:, output_path:, size:)
       run(
-        command: "resize-letter-avatar",
-        options: {
-          input: input_path,
-          output: output_path,
-          size:,
-          profile: profile_path,
-        },
-        read: [input_path, profile_path],
+        command: "resize",
+        arguments: [
+          input_path,
+          output_path,
+          "--width",
+          size.to_s,
+          "--height",
+          size.to_s,
+          "--fit",
+          "cover",
+          "--quality",
+          "100",
+          "--colors",
+          "256",
+          "--strip-metadata",
+        ],
+        read: [input_path],
         write: [File.dirname(output_path)],
       )
       nil
     end
 
     def dominant_color(input_path:)
-      run(command: "dominant-color", options: { input: input_path }, read: [input_path]).strip
+      run(command: "dominant-color", arguments: [input_path], read: [input_path]).strip
     end
 
-    def generate_topic_og_image(svg_path:, output_path:)
+    def generate_topic_og_image(svg_path:, output_path:, max_pixels:)
       run(
-        command: "topic-og",
-        options: {
-          input: svg_path,
-          output: output_path,
-        },
+        command: "convert",
+        arguments: [svg_path, output_path, "--max-pixels", max_pixels.to_s],
         read: [File.dirname(svg_path), *FONTCONFIG_READ_PATHS],
         write: [File.dirname(output_path)],
       )
@@ -103,15 +92,11 @@ module DiscourseVips
       channels
     end
 
-    def run(command:, options: {}, read: [], write: [])
+    def run(command:, arguments: [], read: [], write: [])
       ensure_sandbox_available!
 
       Dir.mktmpdir("discourse-vips-helper-") do |scratch|
-        argv = ["nice", "-n", "10", executable, command]
-        options.each do |key, value|
-          next if value.nil?
-          argv << "--#{key.to_s.tr("_", "-")}" << value.to_s
-        end
+        argv = ["nice", "-n", "10", executable, command, *arguments]
 
         begin
           Discourse::SafeExec.capture(
@@ -138,18 +123,11 @@ module DiscourseVips
     end
 
     def executable
-      return @executable if @executable
+      @executable ||= MiniVips.executable
+    end
 
-      path =
-        Rails
-          .root
-          .join("vendor", "discourse-vips", RbConfig::CONFIG.fetch("arch"), "discourse_vips_helper")
-          .to_s
-      if !File.executable?(path)
-        raise Error, "discourse-vips is not compiled; run bin/rake discourse_vips:compile"
-      end
-
-      @executable = path
+    def bundled_font_path
+      File.join(File.dirname(File.dirname(executable)), "lib/mini_vips/fonts/NotoSans-Regular.ttf")
     end
 
     def environment(scratch)
