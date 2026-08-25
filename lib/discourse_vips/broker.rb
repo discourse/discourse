@@ -56,8 +56,9 @@ module DiscourseVips
     }.freeze
     private_constant :OPERATIONS
 
-    def initialize(socket_path:, allow_unsupported: ALLOW_UNSUPPORTED)
+    def initialize(socket_path:, owner_pid:, allow_unsupported: ALLOW_UNSUPPORTED)
       @socket_path = socket_path
+      @owner_pid = owner_pid
       @allow_unsupported = allow_unsupported
       @children = []
       @stopping = false
@@ -73,7 +74,7 @@ module DiscourseVips
       File.chmod(0o600, @socket_path)
       trap_signals
 
-      until @stopping
+      until @stopping || !owner_alive?
         reap_children
         next if !IO.select([@server], nil, nil, 1)
 
@@ -102,6 +103,13 @@ module DiscourseVips
       socket_stat = File.stat(@socket_path)
       FileUtils.rm_f(@socket_path) if [socket_stat.dev, socket_stat.ino] == @socket_identity
     rescue Errno::ENOENT
+    end
+
+    def owner_alive?
+      Process.kill(0, @owner_pid)
+      true
+    rescue Errno::ESRCH
+      false
     end
 
     def reap_children
