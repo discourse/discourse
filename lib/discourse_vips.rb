@@ -38,7 +38,7 @@ module DiscourseVips
     end
 
     def generate_letter_avatar(letter:, background_color:, output_path:)
-      red, green, blue = validate_background_color(background_color)
+      red, green, blue = background_color
       run(
         command: "letter-avatar",
         arguments: [
@@ -92,15 +92,6 @@ module DiscourseVips
     end
 
     private
-
-    def validate_background_color(background_color)
-      channels = Array(background_color)
-      if channels.length != 3 ||
-           channels.any? { |channel| !channel.is_a?(Integer) || !(0..255).cover?(channel) }
-        raise ArgumentError, "background_color must contain three channels in 0..255"
-      end
-      channels
-    end
 
     def run(command:, arguments: [], read: [], write: [])
       # A private scratch dir keeps libvips temporary files inside the write
