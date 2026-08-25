@@ -571,28 +571,28 @@ module(
       );
     });
 
-    test(`${REORDER_TEST}: marks the destinations at each list's boundaries`, async function (assert) {
+    test(`${REORDER_TEST}: offers only the reachable destinations at each list's boundaries`, async function (assert) {
       await renderForm(this);
 
       await openLinkMenu("Primary 1");
       assert
         .dom(moveItemSelector("up"))
-        .isDisabled("the first link has nothing above it");
+        .doesNotExist("the first link has nothing above it");
       assert
         .dom(moveItemSelector("down"))
-        .isNotDisabled("a link with a row below it can still move down");
+        .exists("a link with a row below it can still move down");
       await triggerKeyEvent(document.activeElement, "keydown", "Escape");
 
       await openLinkMenu("Primary 2");
       assert
         .dom(moveItemSelector("down"))
-        .isDisabled("the last primary link has nothing below it");
+        .doesNotExist("the last primary link has nothing below it");
       await triggerKeyEvent(document.activeElement, "keydown", "Escape");
 
       await openLinkMenu("Secondary 1");
       assert
         .dom(moveItemSelector("up"))
-        .isDisabled("each list boundary is counted within that list");
+        .doesNotExist("each list boundary is counted within that list");
     });
 
     test(`${REORDER_TEST}: steps over a link awaiting deletion`, async function (assert) {

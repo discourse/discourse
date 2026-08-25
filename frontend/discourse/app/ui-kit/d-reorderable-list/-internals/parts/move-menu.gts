@@ -23,7 +23,6 @@ interface MoveItemSignature {
     target: string;
     icon: string;
     label: string;
-    disabled?: boolean;
     move: () => void;
   };
 }
@@ -52,12 +51,11 @@ function chordFor(target: string) {
 /**
  * One destination in the move menu.
  *
- * An unavailable direction is disabled rather than removed, so the menu keeps
- * the same shape on every row and a destination never changes position under
- * the reader. Disabled outright rather than with `aria-disabled`: the practice
- * page reserves the ARIA spelling for state a reader cannot infer, and being at
- * the end of a list is not that — the list conveys the position, and pressing
- * the accelerator into the boundary says so out loud.
+ * Only reachable destinations are rendered. A menu holding an unavailable one
+ * counts it in the set it publishes, so a reader is told the menu has four
+ * items while the cursor can land on two. The accelerator still reaches the
+ * boundary and still speaks the refusal, which is where "already first" is
+ * conveyed now that nothing stands in the menu to convey it.
  *
  * Each destination carries its own modifier class, which is what lets a test
  * or a page object name the destination it wants rather than counting menu
@@ -75,7 +73,6 @@ const MoveItem: TOC<MoveItemSignature> = <template>
       @icon={{@icon}}
       @translatedLabel={{@label}}
       @action={{@move}}
-      @disabled={{@disabled}}
     >
       {{#if chord.label}}
         {{! Hidden from the accessible name, which the keyshortcuts attribute
@@ -129,6 +126,11 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
     return this.args.data?.list.rowFor(this.args.data.key);
   }
 
+  /** Whether any in-list direction survived, which is what a divider divides. */
+  get hasDirections(): boolean {
+    return !!(this.row?.canMoveUp || this.row?.canMoveDown);
+  }
+
   get siblings(): { listId: string; listLabel: string }[] {
     return this.args.data?.list.siblings() ?? [];
   }
@@ -138,8 +140,8 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
    *
    * Routed to the same place choosing the destination goes, so the hint means
    * what it says. The keydown handler on the list element rather than on each
-   * destination, because a disabled one receives no key events at all and the
-   * refusal still has to be spoken.
+   * destination, because a chord aimed at a boundary has no destination in the
+   * menu to receive it and the refusal still has to be spoken.
    *
    * @param event - The keydown that may carry a chord.
    */
@@ -184,47 +186,51 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
       }}
       as |dropdown|
     >
-      <dropdown.item role="none">
-        <MoveItem
-          @target="top"
-          @icon="angles-up"
-          @label={{i18n "reorder.move_to_top"}}
-          @disabled={{this.row.disableUp}}
-          @move={{fn this.move "top"}}
-        />
-      </dropdown.item>
-      <dropdown.item role="none">
-        <MoveItem
-          @target="up"
-          @icon="arrow-up"
-          @label={{i18n "reorder.move_up"}}
-          @disabled={{this.row.disableUp}}
-          @move={{fn this.move "up"}}
-        />
-      </dropdown.item>
-      <dropdown.item role="none">
-        <MoveItem
-          @target="down"
-          @icon="arrow-down"
-          @label={{i18n "reorder.move_down"}}
-          @disabled={{this.row.disableDown}}
-          @move={{fn this.move "down"}}
-        />
-      </dropdown.item>
-      <dropdown.item role="none">
-        <MoveItem
-          @target="bottom"
-          @icon="angles-down"
-          @label={{i18n "reorder.move_to_bottom"}}
-          @disabled={{this.row.disableDown}}
-          @move={{fn this.move "bottom"}}
-        />
-      </dropdown.item>
+      {{#if this.row.canMoveUp}}
+        <dropdown.item role="none">
+          <MoveItem
+            @target="top"
+            @icon="angles-up"
+            @label={{i18n "reorder.move_to_top"}}
+            @move={{fn this.move "top"}}
+          />
+        </dropdown.item>
+        <dropdown.item role="none">
+          <MoveItem
+            @target="up"
+            @icon="arrow-up"
+            @label={{i18n "reorder.move_up"}}
+            @move={{fn this.move "up"}}
+          />
+        </dropdown.item>
+      {{/if}}
+      {{#if this.row.canMoveDown}}
+        <dropdown.item role="none">
+          <MoveItem
+            @target="down"
+            @icon="arrow-down"
+            @label={{i18n "reorder.move_down"}}
+            @move={{fn this.move "down"}}
+          />
+        </dropdown.item>
+        <dropdown.item role="none">
+          <MoveItem
+            @target="bottom"
+            @icon="angles-down"
+            @label={{i18n "reorder.move_to_bottom"}}
+            @move={{fn this.move "bottom"}}
+          />
+        </dropdown.item>
+      {{/if}}
       {{#if this.siblings.length}}
-        {{! Not a separator: the attribute lands on the list item, and the rule
-            it wraps is already one. Naming it here would nest a separator
-            inside a separator instead of giving the menu a single one. }}
-        <dropdown.divider role="none" />
+        {{#if this.hasDirections}}
+          {{! Not a separator: the attribute lands on the list item, and the
+              rule it wraps is already one. Naming it here would nest a
+              separator inside a separator instead of giving the menu a single
+              one. Absent when no direction survives, since a rule below
+              nothing divides nothing. }}
+          <dropdown.divider role="none" />
+        {{/if}}
         {{#each this.siblings key="listId" as |sibling|}}
           <dropdown.item role="none">
             <MoveItem

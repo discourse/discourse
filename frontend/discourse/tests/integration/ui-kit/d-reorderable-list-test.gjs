@@ -391,7 +391,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
   });
 
   test("a manual row places its own handle wherever it belongs", async function (assert) {
-    const items = objectItems().slice(0, 1);
+    const items = objectItems().slice(0, 2);
 
     await render(
       <template>
@@ -608,7 +608,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     );
   });
 
-  test("disables only the boundary directions in the movable subsequence", async function (assert) {
+  test("offers only the reachable directions in the movable subsequence", async function (assert) {
     const items = objectItems();
     const movable = (item) => item !== items[1];
 
@@ -632,46 +632,19 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     await openMoveMenu(items[0].id);
     assert
       .dom(moveItemSelector("up"))
-      .isDisabled("the first movable item cannot move up");
+      .doesNotExist("the first movable item cannot move up");
     assert
       .dom(moveItemSelector("down"))
-      .isNotDisabled("the first movable item can move down");
+      .exists("the first movable item can move down");
     await click(moveItemSelector("down"));
 
     await openMoveMenu(items[2].id);
     assert
       .dom(moveItemSelector("up"))
-      .isNotDisabled("the last movable item can move up");
+      .exists("the last movable item can move up");
     assert
       .dom(moveItemSelector("down"))
-      .isDisabled("the last movable item cannot move down");
-  });
-
-  test("disables both arrows for a single movable item", async function (assert) {
-    const items = objectItems().slice(0, 1);
-
-    await render(
-      <template>
-        <DMenus />
-        <DReorderableList
-          @items={{items}}
-          @key="id"
-          @label={{label}}
-          @onMove={{noop}}
-        >
-          <:row as |item|>
-            <span data-test-item={{item.id}}>{{item.name}}</span>
-          </:row>
-        </DReorderableList>
-      </template>
-    );
-
-    await openMoveMenu(items[0].id);
-    for (const target of ["top", "up", "down", "bottom"]) {
-      assert
-        .dom(moveItemSelector(target))
-        .isDisabled(`the sole movable item cannot move ${target}`);
-    }
+      .doesNotExist("the last movable item cannot move down");
   });
 
   test("menu moves emit the exact move payload and one default announcement", async function (assert) {
@@ -1415,8 +1388,8 @@ module(
     });
 
     test("manual row API exposes controls only for movable manual rows", async function (assert) {
-      const items = objectItems().slice(0, 2);
-      const movable = (item) => item === items[0];
+      const items = objectItems();
+      const movable = (item) => item !== items[1];
 
       await render(
         <template>
@@ -1544,23 +1517,21 @@ module(
 
         await openMoveMenu(item.id);
 
-        const expectDisabled = {
+        const expectAbsent = {
           up: index === 0,
           down: index === items.length - 1,
         };
-        for (const [target, disabled] of Object.entries(expectDisabled)) {
-          if (disabled) {
+        for (const [target, absent] of Object.entries(expectAbsent)) {
+          if (absent) {
             assert
               .dom(moveItemSelector(target))
-              .isDisabled(
-                `${itemLabel}'s manual menu marks ${target} at the boundary`
+              .doesNotExist(
+                `${itemLabel}'s manual menu omits ${target} at the boundary`
               );
           } else {
             assert
               .dom(moveItemSelector(target))
-              .isNotDisabled(
-                `${itemLabel}'s manual menu leaves ${target} available`
-              );
+              .exists(`${itemLabel}'s manual menu leaves ${target} available`);
           }
         }
 
@@ -1715,7 +1686,7 @@ module(
     });
 
     test("manual mode asserts when a movable row omits its handle", async function (assert) {
-      const items = objectItems().slice(0, 1);
+      const items = objectItems().slice(0, 2);
       let raised;
 
       setupOnerror((error) => {
@@ -2570,7 +2541,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     await openMoveMenu(secondaryItems[0].id, "#boundary-secondary-list");
     assert
       .dom(moveItemSelector("up"))
-      .isDisabled(
+      .doesNotExist(
         "the first row of the second member cannot step into the preceding member"
       );
 
@@ -3567,9 +3538,9 @@ module(
       assert.strictEqual(moves.length, 2);
     });
 
-    test("opening skips destinations the row cannot use", async function (assert) {
-      // The first row can go nowhere but down, so a menu that opened on its
-      // own first item would put focus on something Enter cannot action.
+    test("opening focuses the first destination the row can use", async function (assert) {
+      // The first row can go nowhere but down, and the destinations it cannot
+      // use are not in the menu to be focused in the first place.
       const items = objectItems();
 
       await render(
@@ -3592,7 +3563,7 @@ module(
 
       assert
         .dom(moveItemSelector("top"))
-        .isDisabled("the first row cannot go to the top");
+        .doesNotExist("the first row cannot go to the top");
       assert
         .dom(moveItemSelector("down"))
         .isFocused("so focus lands on the first destination it can use");
@@ -3909,7 +3880,7 @@ module(
         .doesNotExist("so it shows nothing either");
     });
 
-    test("boundary destinations stay in the menu, disabled and refusing", async function (assert) {
+    test("a boundary row offers only the destinations that work", async function (assert) {
       const items = trackedArray(objectItems());
       const moves = [];
       const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
@@ -3936,22 +3907,41 @@ module(
       assert
         .dom(".d-reorderable-list__move-item")
         .exists(
-          { count: 4 },
-          "the menu keeps its shape on the first row rather than shrinking"
+          { count: 2 },
+          "the first row is announced as holding only what it can reach"
         );
       for (const target of ["top", "up"]) {
         assert
           .dom(moveItemSelector(target))
-          .isDisabled(`${target} is refused, and inert rather than marked`);
+          .doesNotExist(`${target} leads nowhere from the first row`);
       }
+      for (const target of ["down", "bottom"]) {
+        assert.dom(moveItemSelector(target)).exists(`${target} is available`);
+      }
+
+      await openMoveMenu("alpha");
+      await openMoveMenu("bravo");
+
+      assert
+        .dom(".d-reorderable-list__move-item")
+        .exists({ count: 4 }, "a row with room on both sides offers all four");
+
+      await openMoveMenu("bravo");
+      await openMoveMenu("charlie");
+
+      assert
+        .dom(".d-reorderable-list__move-item")
+        .exists({ count: 2 }, "and the last row mirrors the first");
       for (const target of ["down", "bottom"]) {
         assert
           .dom(moveItemSelector(target))
-          .isNotDisabled(`${target} is available`);
+          .doesNotExist(`${target} leads nowhere from the last row`);
       }
 
-      // The accelerator is the path that still reaches a boundary, the menu's
-      // own destination having declined the press before anything ran.
+      await openMoveMenu("charlie");
+
+      // The accelerator still reaches a boundary the menu no longer shows, so
+      // the refusal is the only thing left to say it happened.
       await moveViaChord("alpha", "up");
 
       assert.deepEqual(moves, [], "a refused move commits nothing");
@@ -3962,7 +3952,7 @@ module(
       );
     });
 
-    test("a single movable item has no destination at all", async function (assert) {
+    test("a row with nowhere to go renders no handle at all", async function (assert) {
       const items = [{ id: "alpha", name: "Alpha" }];
 
       await render(
@@ -3981,19 +3971,66 @@ module(
         </template>
       );
 
-      await openMoveMenu("alpha");
-
-      for (const target of ["top", "up", "down", "bottom"]) {
-        assert
-          .dom(moveItemSelector(target))
-          .isDisabled(`${target} leads nowhere`);
-      }
-
+      assert
+        .dom(rowSelector("alpha"))
+        .exists("the row is still rendered, it simply cannot be reordered");
       assert
         .dom(handleSelector("alpha"))
-        .isFocused(
-          "and with nothing to focus, focus stays on the handle rather than being stranded on the document"
+        .doesNotExist(
+          "a lone row in a standalone list can be neither dragged nor moved, so it offers no control that would open onto nothing"
         );
+    });
+
+    test("a lone row keeps its handle where a sibling list is somewhere to go", async function (assert) {
+      const items = [{ id: "alpha", name: "Alpha" }];
+      const emptyItems = [];
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{noop}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="primary"
+              @listLabel="Primary"
+              @items={{items}}
+              @key="id"
+              @label={{label}}
+              id="lone-primary"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="secondary"
+              @listLabel="Secondary"
+              @items={{emptyItems}}
+              @key="id"
+              @label={{label}}
+              id="lone-secondary"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      assert
+        .dom(handleSelector("alpha", "#lone-primary"))
+        .exists("the sibling is a destination, so the handle has work to do");
+
+      await openMoveMenu("alpha", "#lone-primary");
+
+      assert
+        .dom(".d-reorderable-list__move-item")
+        .exists({ count: 1 }, "and the menu holds only that destination");
+      assert
+        .dom(moveItemSelector("list"))
+        .exists("which is the sibling list, not a direction");
     });
 
     test("Alt with an arrow moves the row and keeps focus on its handle", async function (assert) {

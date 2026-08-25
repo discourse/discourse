@@ -127,7 +127,7 @@ acceptance("Manage reports drag and drop", function (needs) {
     assert
       .dom(".d-reorderable-list__move-item")
       .exists(
-        { count: 4 },
+        { count: 2 },
         "desktop keeps a pointer path to reorder, not only the drag"
       );
   });

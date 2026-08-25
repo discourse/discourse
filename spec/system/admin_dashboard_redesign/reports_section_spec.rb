@@ -41,10 +41,10 @@ describe "Admin Dashboard Redesign | Reports section" do
     dashboard.open_manage_reports_via_cog
     expect(modal).to have_open
 
-    expect(modal).to have_disabled_move_up("core_report:signups")
-    expect(modal).to have_enabled_move_down("core_report:signups")
-    expect(modal).to have_enabled_move_up("core_report:topics")
-    expect(modal).to have_disabled_move_down("core_report:topics")
+    expect(modal).to have_no_move_up("core_report:signups")
+    expect(modal).to have_move_down("core_report:signups")
+    expect(modal).to have_move_up("core_report:topics")
+    expect(modal).to have_no_move_down("core_report:topics")
   end
 
   it "lets the admin select a report's text" do

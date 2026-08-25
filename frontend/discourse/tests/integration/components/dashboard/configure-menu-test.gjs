@@ -680,7 +680,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
   });
 
-  test(`${REORDER_TEST_PREFIX} desktop keyboard path reaches every handle with destinations bound at the ends`, async function (assert) {
+  test(`${REORDER_TEST_PREFIX} desktop keyboard path reaches every handle and offers only reachable destinations`, async function (assert) {
     const sections = FOUR_SECTIONS;
     const noop = () => {};
 
@@ -705,19 +705,17 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     await openMoveMenu("highlights");
     assert
       .dom(moveItemSelector("up"))
-      .isDisabled("the first row cannot move up");
+      .doesNotExist("the first row cannot move up");
     await click(moveItemSelector("down"));
 
     await openMoveMenu("engagement");
     assert
       .dom(moveItemSelector("down"))
-      .isDisabled("the last row cannot move down");
+      .doesNotExist("the last row cannot move down");
     await click(moveItemSelector("up"));
 
     await openMoveMenu("reports");
-    assert
-      .dom(moveItemSelector("up"))
-      .isNotDisabled("a middle row can move up");
+    assert.dom(moveItemSelector("up")).exists("a middle row can move up");
   });
 });
 
@@ -810,7 +808,7 @@ module(
       assert.deepEqual(calls.at(-1), [0, 1]);
     });
 
-    test(`${REORDER_TEST_PREFIX} marks unavailable mobile destinations`, async function (assert) {
+    test(`${REORDER_TEST_PREFIX} omits unavailable mobile destinations`, async function (assert) {
       const sections = FOUR_SECTIONS;
       const noop = () => {};
 
@@ -828,19 +826,17 @@ module(
       await openMoveMenu("highlights");
       assert
         .dom(moveItemSelector("up"))
-        .isDisabled("the first row cannot move up");
+        .doesNotExist("the first row cannot move up");
       await click(moveItemSelector("down"));
 
       await openMoveMenu("engagement");
       assert
         .dom(moveItemSelector("down"))
-        .isDisabled("the last row cannot move down");
+        .doesNotExist("the last row cannot move down");
       await click(moveItemSelector("up"));
 
       await openMoveMenu("reports");
-      assert
-        .dom(moveItemSelector("up"))
-        .isNotDisabled("a middle row can move up");
+      assert.dom(moveItemSelector("up")).exists("a middle row can move up");
     });
   }
 );

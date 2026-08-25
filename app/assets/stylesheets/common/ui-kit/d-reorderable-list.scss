@@ -116,15 +116,6 @@
   }
 }
 
-/* A destination that is unavailable from this row — the top two items on the
-   first row, the bottom two on the last — keeps its slot in the menu, so the
-   destinations never move under the reader between one row and the next. */
-
-.d-reorderable-list__move-item:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
 /* The accelerator each destination answers to, pushed to the trailing edge so
    the labels stay in one column. Hidden where there is no keyboard to press
    it with. */

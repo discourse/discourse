@@ -160,8 +160,17 @@ export interface Row<T> {
   movable: boolean;
   isFirst: boolean;
   isLast: boolean;
-  disableUp: boolean;
-  disableDown: boolean;
+  /** Whether stepping in this direction lands anywhere the row is not already. */
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+
+  /**
+   * Whether the row has anywhere to go: a direction that is not a no-op, or a
+   * sibling list to cross into. A row with none renders no handle, since its
+   * only control would open a menu holding nothing.
+   */
+  hasDestinations: boolean;
+
   /** The row's own accessible name: what the reader is moving. */
   label: string;
   handleLabel: string;

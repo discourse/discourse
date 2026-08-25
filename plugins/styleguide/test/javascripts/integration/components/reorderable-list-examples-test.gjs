@@ -1,5 +1,6 @@
 import { click, fillIn, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ReorderableListBasicExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/reorderable-list/basic";
 import ReorderableListCreateExample from "discourse/plugins/styleguide/discourse/components/examples/molecules/reorderable-list/create";
@@ -15,7 +16,9 @@ module(
     setupRenderingTest(hooks);
 
     test("the basic example renders and commits a menu move", async function (assert) {
-      await render(<template><ReorderableListBasicExample /></template>);
+      await render(
+        <template><DMenus /><ReorderableListBasicExample /></template>
+      );
 
       assert
         .dom(".d-reorderable-list__row")
@@ -24,7 +27,10 @@ module(
       await click("[data-reorderable-key='inbox'] .d-reorderable-list__handle");
       assert
         .dom(".d-reorderable-list__move-item")
-        .exists({ count: 4 }, "the handle opens its move menu");
+        .exists(
+          { count: 2 },
+          "the handle opens its move menu, holding what the first row can reach"
+        );
 
       await click(".d-reorderable-list__move-item.--down");
       assert.deepEqual(
@@ -37,7 +43,9 @@ module(
     });
 
     test("the policies example subtracts the control each policy refuses", async function (assert) {
-      await render(<template><ReorderableListPoliciesExample /></template>);
+      await render(
+        <template><DMenus /><ReorderableListPoliciesExample /></template>
+      );
 
       assert
         .dom(
@@ -65,7 +73,9 @@ module(
     });
 
     test("the basic example gives every row a reachable handle", async function (assert) {
-      await render(<template><ReorderableListBasicExample /></template>);
+      await render(
+        <template><DMenus /><ReorderableListBasicExample /></template>
+      );
 
       assert
         .dom("button.d-reorderable-list__handle")
@@ -79,7 +89,9 @@ module(
     });
 
     test("the cross-list example renders both grouped members", async function (assert) {
-      await render(<template><ReorderableListCrossListExample /></template>);
+      await render(
+        <template><DMenus /><ReorderableListCrossListExample /></template>
+      );
 
       assert
         .dom(".d-reorderable-list")
@@ -87,7 +99,9 @@ module(
     });
 
     test("the toggles example moves rows between the order and the static block", async function (assert) {
-      await render(<template><ReorderableListTogglesExample /></template>);
+      await render(
+        <template><DMenus /><ReorderableListTogglesExample /></template>
+      );
 
       assert
         .dom(".d-reorderable-list__row .d-reorderable-list__handle")
@@ -112,7 +126,9 @@ module(
     });
 
     test("the editable example keeps typing in the input and removes rows", async function (assert) {
-      await render(<template><ReorderableListEditableExample /></template>);
+      await render(
+        <template><DMenus /><ReorderableListEditableExample /></template>
+      );
 
       await fillIn(
         "[data-reorderable-key='rules'] input",
@@ -132,7 +148,9 @@ module(
     });
 
     test("the table example reorders native rows with manual cell controls", async function (assert) {
-      await render(<template><ReorderableListTableExample /></template>);
+      await render(
+        <template><DMenus /><ReorderableListTableExample /></template>
+      );
 
       assert
         .dom("tbody.d-reorderable-list tr.d-reorderable-list__row")
@@ -157,7 +175,9 @@ module(
     });
 
     test("the create example renders the create affordance", async function (assert) {
-      await render(<template><ReorderableListCreateExample /></template>);
+      await render(
+        <template><DMenus /><ReorderableListCreateExample /></template>
+      );
 
       assert
         .dom(".d-reorderable-list__create-input")

@@ -62,20 +62,20 @@ module PageObjects
         self
       end
 
-      def has_disabled_move_up?(identifier)
-        reorderable(identifier).has_destination?(:up, disabled: true)
+      def has_no_move_up?(identifier)
+        reorderable(identifier).has_no_destination?(:up)
       end
 
-      def has_disabled_move_down?(identifier)
-        reorderable(identifier).has_destination?(:down, disabled: true)
+      def has_no_move_down?(identifier)
+        reorderable(identifier).has_no_destination?(:down)
       end
 
-      def has_enabled_move_up?(identifier)
-        reorderable(identifier).has_destination?(:up, disabled: false)
+      def has_move_up?(identifier)
+        reorderable(identifier).has_destination?(:up)
       end
 
-      def has_enabled_move_down?(identifier)
-        reorderable(identifier).has_destination?(:down, disabled: false)
+      def has_move_down?(identifier)
+        reorderable(identifier).has_destination?(:down)
       end
 
       def move_report_up(identifier)

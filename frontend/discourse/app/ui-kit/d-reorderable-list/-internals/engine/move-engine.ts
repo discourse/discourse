@@ -78,8 +78,8 @@ export default class MoveEngine<T> {
    * A move that would leave the list past either end is refused, and the
    * refusal is announced. Reaching an end is information, and a silent no-op is
    * the failure this component exists to stop repeating. Only the accelerator
-   * arrives here at a boundary; the menu's own destination is disabled, so it
-   * declines the press before this is reached.
+   * arrives here at a boundary, the menu having omitted that destination
+   * entirely, which is what makes the spoken refusal the only account of it.
    *
    * @param key - The row to move.
    * @param target - Where to move it.

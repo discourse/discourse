@@ -14,7 +14,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import type MenuService from "discourse/float-kit/services/menu";
 import type A11yService from "discourse/services/a11y";
-import { and, eq } from "discourse/truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 import {
   CHORD_TARGETS,
   MENU_CONTENT_SELECTOR,
@@ -82,8 +82,10 @@ export type {
  * A move at either end is refused, and the accelerator announces the refusal
  * rather than doing nothing: reaching an end is something the reader should be
  * told, and the silent boundary no-op is one of the failures this component
- * exists to stop surfaces from reinventing. The destination itself stays in
- * the menu, disabled, so the menu holds its shape from one row to the next.
+ * exists to stop surfaces from reinventing. The menu holds only the
+ * destinations the row can reach, so the set it publishes to assistive
+ * software is the set the cursor can land on. A row that can reach none of
+ * them renders no handle rather than one that opens onto nothing.
  *
  * The list and row elements stay stylable and semantically flexible through
  * `@tag` / `@itemTag` / `@role` / `@itemRole`, which is what lets one
@@ -149,6 +151,11 @@ export default class DReorderableList<T> extends Component<
     const key = element.getAttribute("data-reorderable-key") ?? "";
     schedule("afterRender", () => {
       if (isDestroying(this)) {
+        return;
+      }
+      // A row with nowhere to go is yielded no handle to place, so it has
+      // none to be missing.
+      if (!this.rowFor(key)?.hasDestinations) {
         return;
       }
       assert(
@@ -519,8 +526,9 @@ export default class DReorderableList<T> extends Component<
         movable: rowMovable,
         isFirst: false,
         isLast: false,
-        disableUp: false,
-        disableDown: false,
+        canMoveUp: false,
+        canMoveDown: false,
+        hasDestinations: false,
         label: itemLabel,
         handleLabel: i18n("reorder.handle", { label: itemLabel }),
         // The description belongs to the row, but the element carrying the
@@ -535,15 +543,20 @@ export default class DReorderableList<T> extends Component<
     });
 
     const movableRows = rows.filter((row) => row.movable);
-    // With a single movable item every direction is a no-op, so the whole
-    // menu is disabled rather than offering four destinations that all lead
-    // nowhere.
+    // With a single movable item every direction is a no-op. A member list
+    // still has its siblings to offer; a standalone one has nothing, and its
+    // row drops the handle rather than opening onto an empty menu. Group
+    // membership rather than the sibling count, because members are still
+    // registering while the rows first project.
     const alone = movableRows.length < 2;
+    const inGroup = !!this.args.group;
     for (const [seqIndex, row] of movableRows.entries()) {
       row.isFirst = seqIndex === 0;
       row.isLast = seqIndex === movableRows.length - 1;
-      row.disableUp = alone || row.isFirst;
-      row.disableDown = alone || row.isLast;
+      row.canMoveUp = !alone && !row.isFirst;
+      row.canMoveDown = !alone && !row.isLast;
+      row.hasDestinations = row.canMoveUp || row.canMoveDown || inGroup;
+      row.yieldControls &&= row.hasDestinations;
     }
 
     return rows;
@@ -755,14 +768,14 @@ export default class DReorderableList<T> extends Component<
                   }}
                   {{this.verifyKeyboardPath}}
                 >
-                  {{#unless this.isManual}}
+                  {{#if (and (not this.isManual) row.hasDestinations)}}
                     <HandlePart
                       @row={{row}}
                       @onOpen={{this.menuCoordinator.openMenu}}
                       @isOpen={{eq this.menuCoordinator.openKey row.key}}
                       @register={{this.registerHandle}}
                     />
-                  {{/unless}}
+                  {{/if}}
                   {{yield
                     row.item
                     (hash

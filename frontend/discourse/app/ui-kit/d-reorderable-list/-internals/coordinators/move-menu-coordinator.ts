@@ -147,13 +147,12 @@ export default class MoveMenuCoordinator {
   }
 
   /**
-   * Puts focus on the first destination the reader can actually choose.
+   * Puts focus on the first destination.
    *
-   * A refused direction is disabled, which the platform will not focus, so
-   * targeting one would strand focus on the document rather than move it. A row
-   * at either boundary therefore opens on the first direction it can still take,
-   * and a list whose every direction is refused opens on its first cross-list
-   * entry — or, having none, leaves focus on the handle.
+   * Every destination the menu renders is one the row can take, so the first
+   * of them is always a legitimate landing spot. A row left with only
+   * cross-list entries opens on the first of those, and one with nothing at
+   * all leaves focus on the handle rather than stranding it on the document.
    */
   #focusFirstDestination() {
     const content = document.querySelector(MENU_CONTENT_SELECTOR);
@@ -161,9 +160,7 @@ export default class MoveMenuCoordinator {
       return;
     }
     content
-      .querySelector<HTMLElement>(
-        ".d-reorderable-list__move-item:not(:disabled)"
-      )
+      .querySelector<HTMLElement>(".d-reorderable-list__move-item")
       ?.focus();
   }
 

@@ -29,9 +29,18 @@ module PageObjects
         self
       end
 
-      def has_destination?(target, disabled:)
+      # A destination the row cannot take is not rendered, so the menu holds
+      # only what it can reach and the set it publishes matches it.
+      def has_destination?(target)
         open_menu
-        result = has_css?(destination_selector(target, disabled:))
+        result = has_css?(destination_selector(target))
+        close_menu
+        result
+      end
+
+      def has_no_destination?(target)
+        open_menu
+        result = has_no_css?(destination_selector(target))
         close_menu
         result
       end
@@ -46,20 +55,8 @@ module PageObjects
         send_keys(:escape)
       end
 
-      def destination_selector(target, disabled: nil)
-        # A destination the row cannot take is disabled outright: it keeps its
-        # slot so the menu holds its shape, but declines the press itself.
-        state =
-          case disabled
-          when true
-            "[disabled]"
-          when false
-            ":not([disabled])"
-          else
-            ""
-          end
-
-        ".d-reorderable-list__move-item.--#{target}#{state}"
+      def destination_selector(target)
+        ".d-reorderable-list__move-item.--#{target}"
       end
     end
   end
