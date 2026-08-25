@@ -218,6 +218,38 @@ module("Unit | Utility | sanitizer", function (hooks) {
     );
   });
 
+  test("sanitize disallows iframe src with path traversal segments", function (assert) {
+    const engine = build({
+      siteSettings: {
+        allowed_iframes: "https://www.example.com/*/preview/",
+      },
+    });
+    const blocked = (src, description) => {
+      assert.strictEqual(
+        engine.cook(`<iframe src="${src}"></iframe>`),
+        "",
+        description
+      );
+    };
+
+    blocked(
+      "https://www.example.com/wild/preview/%2e%2e",
+      "disallows iframe with trailing URL-encoded path traversal"
+    );
+    blocked(
+      "https://www.example.com/wild/preview/%2e%2e?foo=bar",
+      "disallows iframe with URL-encoded path traversal before query string"
+    );
+    blocked(
+      "https://www.example.com/wild/preview/%2e%2e#fragment",
+      "disallows iframe with URL-encoded path traversal before fragment"
+    );
+    blocked(
+      "https://www.example.com/wild/preview/..\\outside",
+      "disallows iframe with literal backslash path traversal"
+    );
+  });
+
   test("ids on headings", function (assert) {
     const engine = build({ siteSettings: {} });
     assert.strictEqual(

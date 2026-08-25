@@ -296,6 +296,26 @@ RSpec.describe EmbedController do
           expect(document.css("img[onerror]")).to be_empty
         end
       end
+
+      it "does not publish an iframe that traverses an allowlist path boundary" do
+        iframe_source = "https://www.example.com/wild/preview/..\\outside"
+        SiteSetting.allowed_iframes = "https://www.example.com/*/preview/"
+        sign_in(attacker)
+
+        post "/posts.json",
+             params: {
+               raw: %(<iframe src="#{iframe_source}"></iframe>),
+               topic_id: topic.id,
+             }
+
+        created_post = Post.find(response.parsed_body["id"])
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["id"]).to eq(created_post.id)
+          expect(created_post.cooked).not_to include(iframe_source)
+        end
+      end
     end
 
     describe "full_app redirect" do
