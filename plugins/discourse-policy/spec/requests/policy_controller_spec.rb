@@ -399,6 +399,31 @@ describe DiscoursePolicy::PolicyController do
       end
     end
 
+    it "does not grant wiki editors access through a blockquoted policy" do
+      sign_in(editor)
+      put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
+                [quote="someone, post:1, topic:1"]
+                [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
+                Accept this policy
+                [/policy]
+                [/quote]
+              MD
+
+      expect(response.status).to eq(200)
+
+      put "/policy/accept.json", params: { post_id: policy_post.id }
+      accept_status = response.status
+
+      get "/posts/#{private_post.id}.json"
+      restricted_status = response.status
+
+      aggregate_failures do
+        expect(target_group.user_ids).not_to include(editor.id)
+        expect(accept_status).not_to eq(200)
+        expect(restricted_status).to eq(403)
+      end
+    end
+
     it "allows wiki editors to modify policy text without changing an inaccessible target group" do
       policy_post_with_target_group.update!(wiki: true)
       sign_in(editor)
