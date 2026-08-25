@@ -25,6 +25,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
     assert
       .dom("input[name='invite-role']")
       .doesNotExist("role toggle is not shown");
+    await click(".advanced-mode-btn");
     assert.true(formKit().hasField("domain"), "defaults to member link mode");
   });
 
@@ -62,6 +63,12 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       .isChecked("defaults to link delivery");
     assert
       .dom("[data-name='domain']")
+      .doesNotExist("hides the domain field until advanced mode is on");
+
+    await click(".advanced-mode-btn");
+
+    assert
+      .dom("[data-name='domain']")
       .isVisible("shows the domain field in link mode");
     assert
       .dom("[data-name='email']")
@@ -89,6 +96,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       </template>
     );
 
+    await click(".advanced-mode-btn");
     assert.true(formKit().hasField("domain"), "stays in member mode");
   });
 
@@ -231,6 +239,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       </template>
     );
 
+    await click(".advanced-mode-btn");
     await formKit().field("domain").fillIn("example.com");
     await click(".save-invite");
 
@@ -431,6 +440,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       </template>
     );
 
+    await click(".advanced-mode-btn");
     await formKit().field("domain").fillIn("");
     await click(".save-invite");
 
@@ -478,6 +488,8 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
         <CreateInviteWithRoles @inline={{true}} @model={{model}} />
       </template>
     );
+
+    await click(".advanced-mode-btn");
 
     assert
       .form()
