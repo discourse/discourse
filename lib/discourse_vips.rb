@@ -13,6 +13,8 @@ module DiscourseVips
   FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
   private_constant :FONTCONFIG_READ_PATHS
 
+  # The dynamic linker reads this cache to locate libvips and the executable's
+  # other shared libraries inside the filesystem sandbox.
   DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
   private_constant :DYNAMIC_LINKER_CACHE_PATH
 
