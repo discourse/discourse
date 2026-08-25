@@ -945,12 +945,9 @@ RSpec.describe Upload do
     end
 
     it "calculates and stores a missing dominant color" do
-      local_path = Discourse.store.path_for(image)
-      DiscourseVips.expects(:dominant_color).with(input_path: local_path).returns("ABCDEF")
-
       expect(image.dominant_color).to eq(nil)
-      expect(image.dominant_color(calculate_if_missing: true)).to eq("ABCDEF")
-      expect(image.dominant_color).to eq("ABCDEF")
+      expect(image.dominant_color(calculate_if_missing: true)).to eq("171613")
+      expect(image.dominant_color).to eq("171613")
     end
 
     it "stores an empty string for non-image uploads" do
