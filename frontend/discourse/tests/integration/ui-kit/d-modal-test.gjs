@@ -827,7 +827,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
       assert
         .dom(body)
         .hasClass(
-          "--no-scroll",
+          "is-not-scrollable",
           "a body with nothing to scroll leaves vertical to the swipe"
         );
 
@@ -841,7 +841,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
       assert
         .dom(body)
         .doesNotHaveClass(
-          "--no-scroll",
+          "is-not-scrollable",
           "and hands it back to the browser once there is"
         );
 
@@ -854,7 +854,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
       assert
         .dom(body)
         .doesNotHaveClass(
-          "--no-scroll",
+          "is-not-scrollable",
           "content that grows in place is seen too"
         );
     });

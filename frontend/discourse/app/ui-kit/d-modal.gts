@@ -73,7 +73,7 @@ const ENTER_HANDLING_CONTROLS = [
  */
 const UNAVAILABLE_PRIMARY = '[disabled], :disabled, [aria-disabled="true"]';
 
-const BODY_NO_SCROLL_CLASS = "--no-scroll";
+const BODY_NOT_SCROLLABLE_CLASS = "is-not-scrollable";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 const SWIPE_VELOCITY_EXPIRY_MS = 100;
 const SWIPE_CLOSE_DISTANCE_RATIO = 0.25;
@@ -218,7 +218,7 @@ export default class DModal extends Component<DModalSignature> {
     const watched = new WeakSet<Element>();
     const syncPannableAxis = () => {
       el.classList.toggle(
-        BODY_NO_SCROLL_CLASS,
+        BODY_NOT_SCROLLABLE_CLASS,
         el.scrollHeight <= el.clientHeight
       );
 

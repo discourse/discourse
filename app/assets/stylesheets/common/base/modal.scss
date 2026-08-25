@@ -165,7 +165,7 @@ html:not(.keyboard-visible).mobile-device {
     padding: 1rem 1.5rem;
     box-sizing: border-box;
 
-    &.--no-scroll {
+    &.is-not-scrollable {
       touch-action: pan-x pinch-zoom;
     }
 
