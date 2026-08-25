@@ -4291,7 +4291,7 @@ en:
           missing_to: "A replacement tag is required"
       delete_topics:
         name: "Delete"
-        description: "Permanently delete the selected topics. This action cannot be undone."
+        description: "Delete the selected topics. Deleted topics can be restored."
       update_category:
         name: "Update Category"
         description: "Move all selected topics to the following category:"

@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
+import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
@@ -257,7 +258,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     assert.verifySteps(["custom-action"]);
   });
 
-  test("allows overriding built-in delete label with extra buttons", async function (assert) {
+  test("an extra button reusing a built-in id overrides the label, not the action", async function (assert) {
     this.currentUser.admin = true;
     this.bulkSelectHelper = createBulkSelectHelper(this);
     this.extraButtons = [
@@ -284,5 +285,39 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
       .hasTextContaining("Delete Topics (override)");
+
+    await click(
+      ".fk-d-menu__inner-content .dropdown-menu__item .delete-topics"
+    );
+    assert.strictEqual(
+      getOwner(this).lookup("service:modal").activeModal.component,
+      BulkTopicActions,
+      "the built-in delete action still runs"
+    );
+  });
+
+  test("the delete description does not claim the deletion is permanent", async function (assert) {
+    this.currentUser.admin = true;
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{this.bulkSelectHelper}} />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    await click(
+      ".fk-d-menu__inner-content .dropdown-menu__item .delete-topics"
+    );
+
+    const { description } =
+      getOwner(this).lookup("service:modal").activeModal.opts.model;
+
+    assert.strictEqual(typeof description, "string", "a description is shown");
+    assert.false(
+      /permanent|cannot be undone/i.test(description),
+      `bulk delete is recoverable, but the copy reads "${description}"`
+    );
   });
 });

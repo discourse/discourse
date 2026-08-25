@@ -473,11 +473,29 @@ RSpec.describe TopicsBulkAction do
     fab!(:topic) { Fabricate(:post).topic }
     fab!(:moderator)
 
-    it "deletes the topic" do
+    it "deletes the topic and returns its id" do
       tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")
-      tba.perform!
-      topic.reload
-      expect(topic).to be_trashed
+
+      expect(tba.perform!).to contain_exactly(topic.id)
+      expect(topic.reload).to be_trashed
+    end
+
+    it "skips topics the user can't delete" do
+      tba = TopicsBulkAction.new(user, [topic.id], type: "delete")
+
+      expect(tba.perform!).to be_empty
+      expect(topic.reload).not_to be_trashed
+    end
+
+    it "deletes the topic when its first post was already deleted" do
+      reply = Fabricate(:post, topic: topic)
+      topic.first_post.trash!(moderator)
+
+      tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")
+
+      expect(tba.perform!).to contain_exactly(topic.id)
+      expect(topic.reload).to be_trashed
+      expect(reply.reload).not_to be_trashed
     end
   end
 

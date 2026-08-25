@@ -450,6 +450,19 @@ describe "Topic bulk select" do
     end
   end
 
+  context "when deleting" do
+    it "removes the deleted topics from the list" do
+      sign_in(admin)
+      visit("/latest")
+
+      open_bulk_actions_modal([topics.first, topics.second], "delete-topics")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+
+      expect(topic_list).to have_no_topic(topics.first)
+      expect(topic_list).to have_no_topic(topics.second)
+    end
+  end
+
   context "when working with private messages" do
     fab!(:private_message_1) do
       Fabricate(:private_message_topic, user: admin, recipient: user, participant_count: 2)
