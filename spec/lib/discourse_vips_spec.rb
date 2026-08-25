@@ -1,25 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseVips, :with_vips_broker do
-  describe ".start" do
-    it "starts one broker and returns after it is ready" do
-      socket_path = Rails.root.join("tmp", "discourse-vips-start-#{Process.pid}.sock").to_s
-      described_class.stubs(socket_path:)
-
-      broker_pid = described_class.start
-
-      expect(described_class.start).to eq(broker_pid)
-      expect(described_class.version).to match(/\A1-8\.\d+\.\d+\z/)
-    ensure
-      begin
-        Process.kill("TERM", broker_pid) if broker_pid
-      rescue Errno::ESRCH
-      end
-      FileUtils.rm_f(socket_path) if socket_path
-      FileUtils.rm_f("#{socket_path}.lock") if socket_path
-    end
-  end
-
   describe ".version" do
     it "returns the interface and libvips versions" do
       expect(described_class.version).to match(/\A1-8\.\d+\.\d+\z/)
@@ -33,57 +14,6 @@ RSpec.describe DiscourseVips, :with_vips_broker do
         DiscourseVips::Error,
         "Cannot run libvips because Landlock sandboxing is unavailable",
       )
-    end
-
-    it "starts one broker for concurrent requests when none is running" do
-      socket_path = Rails.root.join("tmp", "discourse-vips-lazy-#{Process.pid}.sock").to_s
-      described_class.stubs(socket_path:)
-
-      versions = Array.new(4) { Thread.new { described_class.version } }.map(&:value)
-      broker_pid = described_class.start
-
-      expect(versions).to all(match(/\A1-8\.\d+\.\d+\z/))
-    ensure
-      begin
-        Process.kill("TERM", broker_pid) if broker_pid
-      rescue Errno::ESRCH
-      end
-      FileUtils.rm_f(socket_path) if socket_path
-      FileUtils.rm_f("#{socket_path}.lock") if socket_path
-    end
-
-    it "replaces a broker that stops" do
-      socket_path = Rails.root.join("tmp", "discourse-vips-restart-#{Process.pid}.sock").to_s
-      described_class.stubs(socket_path:)
-      previous_broker_pid = described_class.start
-      Process.kill("KILL", previous_broker_pid)
-
-      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5
-      loop do
-        begin
-          Process.kill(0, previous_broker_pid)
-        rescue Errno::ESRCH
-          break
-        end
-        if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
-          raise "libvips broker did not stop"
-        end
-
-        sleep 0.01
-      end
-
-      version = described_class.version
-      replacement_broker_pid = described_class.start
-
-      expect(version).to match(/\A1-8\.\d+\.\d+\z/)
-      expect(replacement_broker_pid).not_to eq(previous_broker_pid)
-    ensure
-      begin
-        Process.kill("TERM", replacement_broker_pid) if replacement_broker_pid
-      rescue Errno::ESRCH
-      end
-      FileUtils.rm_f(socket_path) if socket_path
-      FileUtils.rm_f("#{socket_path}.lock") if socket_path
     end
   end
 

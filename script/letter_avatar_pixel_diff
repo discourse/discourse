@@ -231,18 +231,4 @@ module LetterAvatarPixelDiff
   end
 end
 
-socket_path = Rails.root.join("tmp", "discourse-vips-pixel-diff-#{Process.pid}.sock").to_s
-ENV["DISCOURSE_VIPS_SOCKET_PATH"] = socket_path
-broker_pid = DiscourseVips.start
-begin
-  result = LetterAvatarPixelDiff.run(ARGV)
-ensure
-  begin
-    Process.kill("TERM", broker_pid)
-  rescue Errno::ESRCH
-  end
-  FileUtils.rm_f(socket_path)
-  FileUtils.rm_f("#{socket_path}.lock")
-  ENV.delete("DISCOURSE_VIPS_SOCKET_PATH")
-end
-exit result
+exit LetterAvatarPixelDiff.run(ARGV)

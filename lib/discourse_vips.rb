@@ -49,22 +49,6 @@ module DiscourseVips
       ENV["DISCOURSE_VIPS_SOCKET_PATH"] || File.expand_path("../tmp/discourse-vips.sock", __dir__)
     end
 
-    def start
-      ensure_sandbox_available!
-      FileUtils.mkdir_p(File.dirname(socket_path))
-
-      File.open(startup_lock_path, File::CREAT | File::RDWR, 0o600) do |lock|
-        lock.flock(File::LOCK_EX)
-        broker_pid = running_broker_pid
-        return broker_pid if broker_pid
-
-        FileUtils.rm_f(socket_path)
-        broker_pid = spawn_broker
-        wait_until_ready(broker_pid)
-        broker_pid
-      end
-    end
-
     def version
       "#{VERSION}-#{request(operation: "version")}"
     end
@@ -119,6 +103,22 @@ module DiscourseVips
     end
 
     private
+
+    def start
+      ensure_sandbox_available!
+      FileUtils.mkdir_p(File.dirname(socket_path))
+
+      File.open(startup_lock_path, File::CREAT | File::RDWR, 0o600) do |lock|
+        lock.flock(File::LOCK_EX)
+        broker_pid = running_broker_pid
+        return broker_pid if broker_pid
+
+        FileUtils.rm_f(socket_path)
+        broker_pid = spawn_broker
+        wait_until_ready(broker_pid)
+        broker_pid
+      end
+    end
 
     def validate_background_color(background_color)
       channels = Array(background_color)
@@ -198,8 +198,19 @@ module DiscourseVips
           close_others: true,
           pgroup: true,
         )
-      Process.detach(broker_pid)
+      register_broker_cleanup(broker_pid)
       broker_pid
+    end
+
+    def register_broker_cleanup(broker_pid)
+      owner_pid = Process.pid
+      at_exit do
+        next if Process.pid != owner_pid
+
+        terminate_broker(broker_pid)
+        Process.waitpid(broker_pid)
+      rescue Errno::ECHILD
+      end
     end
 
     def wait_until_ready(expected_broker_pid)

@@ -102,9 +102,6 @@ end
 before_service_worker_ready do |server, service_worker|
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
-  DiscourseVips.start if Rails.env.production?
-  LetterAvatar.cleanup_old
-
   if sidekiqs > 0
     server.logger.info "starting #{sidekiqs} supervised sidekiqs"
 

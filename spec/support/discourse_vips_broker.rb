@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.configure do |config|
-  broker_pid = nil
-  socket_path = nil
-
   config.before do |example|
     LetterAvatar.stubs(vips_version: "test") if !example.metadata[:with_vips_broker]
   end
@@ -17,16 +14,11 @@ RSpec.configure do |config|
 
     socket_path = Rails.root.join("tmp", "discourse-vips-#{Process.pid}.sock").to_s
     ENV["DISCOURSE_VIPS_SOCKET_PATH"] = socket_path
-    broker_pid = DiscourseVips.start
+    at_exit do
+      FileUtils.rm_f(socket_path)
+      FileUtils.rm_f("#{socket_path}.lock")
+    end
   end
 
-  config.after(:suite) do
-    begin
-      Process.kill("TERM", broker_pid) if broker_pid
-    rescue Errno::ESRCH
-    end
-    FileUtils.rm_f(socket_path) if socket_path
-    FileUtils.rm_f("#{socket_path}.lock") if socket_path
-    ENV.delete("DISCOURSE_VIPS_SOCKET_PATH")
-  end
+  config.after(:suite) { ENV.delete("DISCOURSE_VIPS_SOCKET_PATH") }
 end
