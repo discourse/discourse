@@ -78,6 +78,19 @@ RSpec.describe Onebox::Engine::VimeoOnebox do
       expect(Onebox.preview("https://vimeo.com/786646692").to_s).to match(/lazy-video-container/)
     end
 
+    it "escapes quotes and angle brackets in provider titles" do
+      video_title = 'Video ">'
+      Oneboxer.invalidate("https://vimeo.com/786646692")
+      stub_request(:get, "https://vimeo.com/786646692").to_return(
+        status: 200,
+        body: %(<meta property="og:title" content="Video &quot;&gt;">),
+      )
+
+      fragment = Nokogiri::HTML5.fragment(Onebox.preview("https://vimeo.com/786646692").to_s)
+
+      expect(fragment.at_css(".lazy-video-container")["data-video-title"]).to eq(video_title)
+    end
+
     it "uses the correct ids" do
       expect(Onebox.preview("https://vimeo.com/786646692").to_s).to include(
         'data-video-id="786646692"',
