@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import {
   associateDestroyableChild,
@@ -10,24 +9,22 @@ import {
 import { fn, hash } from "@ember/helper";
 import { action, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { type default as Owner, getOwner } from "@ember/owner";
+import type Owner from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DHeadlessMenu from "discourse/float-kit/components/d-headless-menu";
-import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type A11yService from "discourse/services/a11y";
 import { and, eq } from "discourse/truth-helpers";
 import {
   CHORD_TARGETS,
   MENU_CONTENT_SELECTOR,
-  MENU_IDENTIFIER,
 } from "discourse/ui-kit/d-reorderable-list/-internals/constants";
+import MoveMenuCoordinator from "discourse/ui-kit/d-reorderable-list/-internals/coordinators/move-menu-coordinator";
 import ReorderAnnouncer from "discourse/ui-kit/d-reorderable-list/-internals/coordinators/reorder-announcer";
 import MoveEngine from "discourse/ui-kit/d-reorderable-list/-internals/engine/move-engine";
 import CreateRow from "discourse/ui-kit/d-reorderable-list/-internals/parts/create-row";
 import HandlePart from "discourse/ui-kit/d-reorderable-list/-internals/parts/handle";
-import MoveMenu from "discourse/ui-kit/d-reorderable-list/-internals/parts/move-menu";
 import RemovePart from "discourse/ui-kit/d-reorderable-list/-internals/parts/remove";
 import type {
   DReorderableListSignature,
@@ -113,18 +110,6 @@ export default class DReorderableList<T> extends Component<
 > {
   @service declare a11y: A11yService;
 
-  /**
-   * The list's one menu, created on first use and re-anchored per row. Tracked
-   * because the template renders it, and it does not exist until a row asks.
-   */
-  @tracked menu: DMenuInstance | null = null;
-  /**
-   * The row whose menu is open, and the list's only record of it. One menu
-   * means one answer: with an instance per row there were as many claims about
-   * what was open as there were rows, and keeping them agreeing was work the
-   * design should not have needed.
-   */
-  @tracked openKey: string | null = null;
   rowClassFor = (row: Row<T>): string | undefined => {
     const { rowClass } = this.args;
     if (typeof rowClass === "function") {
@@ -265,8 +250,11 @@ export default class DReorderableList<T> extends Component<
         this.#focusedKey = key ?? null;
         // The menu is anchored to one row, so focus that has moved on would
         // otherwise leave it floating over a row it no longer describes.
-        if (this.openKey && this.openKey !== this.#focusedKey) {
-          this.closeMenu(false);
+        if (
+          this.menuCoordinator.openKey &&
+          this.menuCoordinator.openKey !== this.#focusedKey
+        ) {
+          this.menuCoordinator.closeMenu(false);
         }
       }
     };
@@ -336,6 +324,8 @@ export default class DReorderableList<T> extends Component<
    * @param key - The row key.
    */
   handleFor = (key: string): HTMLElement | undefined => this.#handles.get(key);
+  /** The list's one move menu. Public: the template reads its state. */
+  menuCoordinator: MoveMenuCoordinator;
   /** The list's root element, held for post-move focus restoration. */
   #listElement: Element | null = null;
   /** The private drag discriminator used when the list stands alone. */
@@ -388,6 +378,17 @@ export default class DReorderableList<T> extends Component<
       // Stays on the component: it resolves against the list element the
       // keyboard modifier installs on, which does not exist yet here.
       refocusRow: (key: string) => this.#refocusRow(key),
+    });
+
+    this.menuCoordinator = new MoveMenuCoordinator({
+      owner,
+      args: () => this.args,
+      listId: () => this.listIdOrDefault,
+      handleFor: (key: string) => this.handleFor(key),
+      rowFor: (key: string) => this.rowFor(key),
+      siblings: () => this.siblings(),
+      move: (key: string, target: MoveTarget) =>
+        this.#engine.move(key, target, "menu"),
     });
 
     const { group } = this.args;
@@ -586,105 +587,6 @@ export default class DReorderableList<T> extends Component<
   }
 
   /**
-   * Opens the list's one menu against a row's handle, creating it on first use.
-   *
-   * The instance is re-anchored rather than replaced, so a long list costs one
-   * menu and one set of listeners no matter how many rows it has.
-   *
-   * @param key - The row whose handle was activated.
-   */
-  @action
-  async openMenu(key: string) {
-    const trigger = this.#handles.get(key);
-    if (!trigger) {
-      return;
-    }
-
-    if (this.openKey === key) {
-      await this.closeMenu();
-      return;
-    }
-
-    const instance = this.#menuInstance();
-    // Listeners are off, so the trigger is only an anchor and reassigning it
-    // is how one menu serves every row. The teardown is still required: the
-    // base binds a pointer guard to whatever trigger it is given.
-    instance.tearDownListeners();
-    instance.trigger = trigger;
-    instance.options = { ...instance.options, data: { list: this, key } };
-
-    this.openKey = key;
-    await instance.show();
-    this.#focusFirstDestination();
-  }
-
-  /**
-   * Puts focus on the first destination the reader can actually choose, or on
-   * the first one of any kind when every destination is refused, so the menu
-   * never opens with focus nowhere.
-   */
-  #focusFirstDestination() {
-    const content = document.querySelector(MENU_CONTENT_SELECTOR);
-    if (!content) {
-      return;
-    }
-    const items = Array.from(
-      content.querySelectorAll<HTMLElement>(".d-reorderable-list__move-item")
-    );
-    const target =
-      items.find((item) => item.getAttribute("aria-disabled") !== "true") ??
-      items[0];
-    target?.focus();
-  }
-
-  /**
-   * Closes the list's menu, if it is open.
-   *
-   * @param focusTrigger - Whether to hand focus back to the handle the menu
-   *   was opened from. False when focus has already moved elsewhere: the
-   *   menu's own habit of refocusing its trigger would otherwise drag focus
-   *   back to the row the reader just left.
-   */
-  @action
-  async closeMenu(focusTrigger = true) {
-    this.openKey = null;
-    if (this.menu?.expanded) {
-      await this.menu.close({ focusTrigger });
-    }
-  }
-
-  /**
-   * The list's one menu, built on first open.
-   *
-   * Built rather than obtained from the `menu` service so that it keeps an
-   * attached trigger: a service-created menu is rendered by the app-root
-   * `DMenus`, which a component rendering in isolation has no access to. This
-   * list renders its own, and `DFloatPortal` still teleports the content out
-   * of the row's stacking context.
-   */
-  #menuInstance(): DMenuInstance {
-    this.menu ??= new DMenuInstance(getOwner(this)!, {
-      identifier: MENU_IDENTIFIER,
-      placement: "bottom-start",
-      component: MoveMenu,
-      listeners: false,
-      autoUpdate: true,
-      // The panel holds a list of buttons and nothing else — no filter, no
-      // controller of its own — so the float element steps out of the way
-      // rather than announcing itself as a dialog wrapped around them.
-      contentRole: "none",
-      // Focus is placed by hand after opening, not by the tab trap: the trap
-      // takes the first focusable, and a destination marked unavailable is
-      // still focusable. A row at either boundary would open on a dead item,
-      // and a list with one row has nothing but dead items above the
-      // cross-list entries.
-      autofocus: false,
-      onClose: () => (this.openKey = null),
-    });
-    return this.menu;
-  }
-
-  /**
    * Removes a row on the reader's behalf: hand the item to the consumer, say
    * so, and leave focus somewhere it can act again.
    *
@@ -727,43 +629,6 @@ export default class DReorderableList<T> extends Component<
    */
   rowFor(key: string): Row<T> | undefined {
     return this.rows.find((row) => row.key === key);
-  }
-
-  /**
-   * A move chosen from the menu: commit, then close and hand focus back to the
-   * handle, which the closing float would otherwise return to its pre-open
-   * position.
-   *
-   * @param key - The row to move.
-   * @param target - Where to move it.
-   * @param close - Closes the menu the item was chosen from.
-   */
-  @action
-  onMenuMove(key: string, target: MoveTarget) {
-    // Closed without returning focus to the trigger: the move's own refocus
-    // is what puts focus back, on the row that actually moved.
-    this.closeMenu(false);
-    this.#engine.move(key, target, "menu");
-  }
-
-  /**
-   * A cross-list move chosen from the menu, which is the only way to reach
-   * another member without a pointer.
-   *
-   * @param key - The row to move.
-   * @param listId - The destination member.
-   * @param close - Closes the menu the item was chosen from.
-   */
-  @action
-  onMenuMoveToList(key: string, listId: string, close: () => void) {
-    close();
-    const member = this.args.group?.lookupMember(listId);
-    if (!member) {
-      return;
-    }
-    // The destination lands the item, exactly as it does for a drop, because
-    // the projections it needs are its own. This list only supplies the key.
-    member.acceptMove(this.listIdOrDefault, key, member.getItems().length);
   }
 
   /**
@@ -897,8 +762,8 @@ export default class DReorderableList<T> extends Component<
         {{this.moveKeys}}
         ...attributes
       >
-        {{#if this.menu}}
-          <DHeadlessMenu @menu={{this.menu}} />
+        {{#if this.menuCoordinator.menu}}
+          <DHeadlessMenu @menu={{this.menuCoordinator.menu}} />
         {{/if}}
         {{yield to="hint"}}
         {{yield to="header"}}
@@ -933,8 +798,8 @@ export default class DReorderableList<T> extends Component<
                   {{#unless this.isManual}}
                     <HandlePart
                       @row={{row}}
-                      @onOpen={{this.openMenu}}
-                      @isOpen={{eq this.openKey row.key}}
+                      @onOpen={{this.menuCoordinator.openMenu}}
+                      @isOpen={{eq this.menuCoordinator.openKey row.key}}
                       @register={{this.registerHandle}}
                     />
                   {{/unless}}
@@ -950,8 +815,8 @@ export default class DReorderableList<T> extends Component<
                         (component
                           HandlePart
                           row=row
-                          onOpen=this.openMenu
-                          isOpen=(eq this.openKey row.key)
+                          onOpen=this.menuCoordinator.openMenu
+                          isOpen=(eq this.menuCoordinator.openKey row.key)
                           register=this.registerHandle
                         )
                       )
