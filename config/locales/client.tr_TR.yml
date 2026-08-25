@@ -3748,7 +3748,6 @@ tr_TR:
           from_placeholder: "Değiştirilecek etiket"
       delete_topics:
         name: "Sil"
-        description: "Seçilen konuları kalıcı olarak sil. Bu işlem geri alınamaz."
       update_category:
         name: "Kategoriyi Güncelle"
         description: "Seçili tüm konuları aşağıdaki kategoriye taşı:"

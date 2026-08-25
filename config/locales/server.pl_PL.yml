@@ -2814,7 +2814,6 @@ pl_PL:
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
     dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
-    enable_site_traffic_explorer: "Połącz działanie panelu administracyjnego ze szczegółami ruchu w witrynie przeglądarki ruchu."
     site_traffic_explorer_event_limit: "Kontroluje maksymalną liczbę ostatnich odsłon stron przetwarzanych przez Site Traffic Explorer. Wyższe limity obejmują większy ruch, ale mogą wymagać dłuższego ładowania lub przekroczenia limitu czasu na serwerach baz danych o niższych zasobach."
     gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Wyłączenie tej opcji uniemożliwi użytkownikom przełączanie się na Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
