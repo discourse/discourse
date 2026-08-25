@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import {
+  associateDestroyableChild,
   isDestroyed,
   isDestroying,
   registerDestructor,
@@ -10,20 +11,19 @@ import { fn, hash } from "@ember/helper";
 import { action, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { type default as Owner, getOwner } from "@ember/owner";
-import { cancel, next, schedule, type Timer } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DHeadlessMenu from "discourse/float-kit/components/d-headless-menu";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
-import discourseLater from "discourse/lib/later";
 import type A11yService from "discourse/services/a11y";
 import { and, eq } from "discourse/truth-helpers";
 import {
   CHORD_TARGETS,
   MENU_CONTENT_SELECTOR,
   MENU_IDENTIFIER,
-  RUN_SETTLE_MS,
 } from "discourse/ui-kit/d-reorderable-list/-internals/constants";
+import ReorderAnnouncer from "discourse/ui-kit/d-reorderable-list/-internals/coordinators/reorder-announcer";
 import CreateRow from "discourse/ui-kit/d-reorderable-list/-internals/parts/create-row";
 import HandlePart from "discourse/ui-kit/d-reorderable-list/-internals/parts/handle";
 import MoveMenu from "discourse/ui-kit/d-reorderable-list/-internals/parts/move-menu";
@@ -221,10 +221,11 @@ export default class DReorderableList<T> extends Component<
         const handles = Array.from(
           element.querySelectorAll<HTMLElement>(".d-reorderable-list__handle")
         );
-        const next = handles[handles.indexOf(target as HTMLElement) + step];
-        if (next) {
+        const neighbour =
+          handles[handles.indexOf(target as HTMLElement) + step];
+        if (neighbour) {
           event.preventDefault();
-          next.focus();
+          neighbour.focus();
         }
         return;
       }
@@ -348,14 +349,6 @@ export default class DReorderableList<T> extends Component<
   #handles = new Map<string, HTMLElement>();
 
   /**
-   * The run of consecutive chord moves in flight, if any. A held Alt+arrow
-   * would otherwise speak a full sentence per step into a live region that
-   * re-announces even an unchanged string, so a run says only where the row
-   * now is and the full sentence waits for the run to settle.
-   */
-  #run: { key: string; timer: Timer } | null = null;
-
-  /**
    * The row focus is in, read only by the focus handler that decides whether
    * an open menu has been left behind.
    *
@@ -366,15 +359,23 @@ export default class DReorderableList<T> extends Component<
    */
   #focusedKey: string | null = null;
 
+  /**
+   * Everything this list says out loud. Holds the chord-run state, so it also
+   * holds the timer that state needs, and cancels it from its own destructor.
+   */
+  #announcer: ReorderAnnouncer<T>;
+
   constructor(owner: Owner, args: DReorderableListSignature<T>["Args"]) {
     super(owner, args);
 
-    registerDestructor(this, () => {
-      if (this.#run) {
-        cancel(this.#run.timer);
-        this.#run = null;
-      }
+    this.#announcer = new ReorderAnnouncer<T>({
+      a11y: this.a11y,
+      getArgs: () => this.args,
+      rows: () => this.rows,
     });
+    // Without this the announcer is never destroyed, so its destructor never
+    // runs and `isDestroying` inside it stays false for the process's life.
+    associateDestroyableChild(this, this.#announcer);
 
     const { group } = this.args;
     if (group && !this.args.listId) {
@@ -701,8 +702,8 @@ export default class DReorderableList<T> extends Component<
       );
       // The slot the removed row occupied, which now holds the row that
       // followed it; at the end of the list, the one before it instead.
-      const next = controls[index] ?? controls.at(-1);
-      next?.focus();
+      const successor = controls[index] ?? controls.at(-1);
+      successor?.focus();
     });
   }
 
@@ -786,11 +787,11 @@ export default class DReorderableList<T> extends Component<
     }[target];
 
     if (to < 0 || to >= seq.length || to === from) {
-      this.#announceBoundary(row, target);
+      this.#announcer.announceBoundary(row, target);
       return;
     }
 
-    this.#noteRun(key, method);
+    this.#announcer.noteRun(key, method);
     this.#commitSeqMove(method, rows, seq, from, to);
     this.#refocusRow(key);
   }
@@ -1048,40 +1049,7 @@ export default class DReorderableList<T> extends Component<
     if (!this.#dispatch(move)) {
       return;
     }
-
-    if (this.args.announceMove) {
-      const custom = this.args.announceMove(move);
-      if (custom !== false) {
-        this.a11y.announce(custom);
-      }
-      return;
-    }
-
-    const label = this.args.label(move.item);
-    const position = move.toIndex + 1;
-    const total = move.proposedToItems.length;
-
-    // Mid-run, only where the row now is: the live region re-speaks even an
-    // unchanged string, so a held key would otherwise read the same sentence
-    // once per step. The full one lands when the run settles.
-    if (this.#run) {
-      this.a11y.announce(i18n("reorder.position", { position, total }));
-      return;
-    }
-
-    if (move.fromList !== move.toList && this.args.listLabel) {
-      this.a11y.announce(
-        i18n("reorder_announcement_cross_list", {
-          label,
-          list: this.args.listLabel,
-          position,
-          total,
-        })
-      );
-      return;
-    }
-
-    this.#announceMoved(move.item, move.toIndex, total);
+    this.#announcer.announceMove(move);
   }
 
   /**
@@ -1094,70 +1062,6 @@ export default class DReorderableList<T> extends Component<
   #dispatch(move: ReorderableMove<T>): boolean {
     const handler = this.args.group?.onMove ?? this.args.onMove;
     return handler?.(move) !== false;
-  }
-
-  /**
-   * Marks a chord move as part of a run, so a held key speaks position only
-   * and the full sentence lands once the key is released. A menu move is
-   * always deliberate and single, so it ends any run rather than joining one.
-   *
-   * @param key - The row being moved.
-   * @param method - Which input method asked.
-   */
-  #noteRun(key: string, method: "menu" | "keyboard") {
-    if (this.#run) {
-      cancel(this.#run.timer);
-      this.#run = null;
-    }
-    if (method !== "keyboard") {
-      return;
-    }
-    this.#run = {
-      key,
-      timer: discourseLater(() => {
-        if (isDestroying(this)) {
-          return;
-        }
-        const run = this.#run;
-        this.#run = null;
-        const row = this.rows.find((candidate) => candidate.key === run?.key);
-        if (row) {
-          this.#announceMoved(row.item, row.index, this.rows.length);
-        }
-      }, RUN_SETTLE_MS),
-    };
-  }
-
-  /**
-   * Speaks a refused move at either end of the list. The refusal is
-   * information rather than an error: it is how a reader learns they have
-   * arrived, which a silent no-op never tells them.
-   *
-   * @param row - The row that could not move.
-   * @param target - The direction that was refused.
-   */
-  #announceBoundary(row: Row<T>, target: MoveTarget) {
-    const key = target === "up" || target === "top" ? "at_start" : "at_end";
-    this.a11y.announce(
-      i18n(`reorder.${key}`, { label: this.args.label(row.item) })
-    );
-  }
-
-  /**
-   * Speaks a committed move in the standard form.
-   *
-   * @param item - The item that moved.
-   * @param index - Its visible index afterwards.
-   * @param total - The visible list length afterwards.
-   */
-  #announceMoved(item: T, index: number, total: number) {
-    this.a11y.announce(
-      i18n("reorder_announcement", {
-        label: this.args.label(item),
-        position: index + 1,
-        total,
-      })
-    );
   }
 
   /**

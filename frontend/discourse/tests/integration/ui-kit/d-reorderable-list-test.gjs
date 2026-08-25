@@ -533,6 +533,61 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     );
   });
 
+  test("argument changes after the first render are picked up", async function (assert) {
+    // Every one of these is read lazily today. A collaborator that captured
+    // one at construction would still pass every other test in this file,
+    // because nothing else swaps an argument after the first render.
+    const items = trackedArray(objectItems());
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+    const state = new (class {
+      @tracked movable = () => true;
+      @tracked removable = () => true;
+      @tracked itemLabel = label;
+    })();
+
+    await render(
+      <template>
+        <DReorderableList
+          @items={{items}}
+          @key="id"
+          @label={{state.itemLabel}}
+          @movable={{state.movable}}
+          @removable={{state.removable}}
+          @onMove={{noop}}
+          @onRemove={{noop}}
+        >
+          <:row as |item|>
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </:row>
+        </DReorderableList>
+      </template>
+    );
+
+    assert.dom(".d-reorderable-list__handle").exists({ count: 3 });
+    assert.dom(".d-reorderable-list__remove").exists({ count: 3 });
+
+    state.movable = (item) => item.id !== "bravo";
+    await settled();
+    assert
+      .dom(handleSelector("bravo"))
+      .doesNotExist("a swapped @movable re-freezes the row");
+    assert.dom(".d-reorderable-list__handle").exists({ count: 2 });
+
+    state.removable = (item) => item.id !== "charlie";
+    await settled();
+    assert
+      .dom(`${rowSelector("charlie")} .d-reorderable-list__remove`)
+      .doesNotExist("a swapped @removable withdraws the control");
+
+    state.itemLabel = (item) => `Renamed ${item.name}`;
+    await settled();
+    await moveVia("alpha", "down");
+    assert.true(
+      announce.lastCall.args[0].includes("Renamed Alpha"),
+      "the announcement reads through the swapped @label rather than a captured one"
+    );
+  });
+
   test("disables only the boundary directions in the movable subsequence", async function (assert) {
     const items = objectItems();
     const movable = (item) => item !== items[1];
@@ -2032,6 +2087,46 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       ),
       ["before", "first", "last", "after"],
       "the group inserts no element between its parent and block content"
+    );
+  });
+
+  test("a group onMove false return vetoes the announcement", async function (assert) {
+    const items = trackedArray(objectItems());
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+    const moves = [];
+    // The group's callback wins over any member's own, so this is the veto the
+    // member never sees.
+    const groupMove = (move) => {
+      moves.push(move);
+      return false;
+    };
+
+    await render(
+      <template>
+        <DReorderableListGroup @onMove={{groupMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="primary"
+            @listLabel="Primary"
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    await moveVia("alpha", "down");
+
+    assert.strictEqual(moves.length, 1, "the group callback still receives it");
+    assert.strictEqual(
+      announce.callCount,
+      0,
+      "a move the group vetoed is not announced"
     );
   });
 
