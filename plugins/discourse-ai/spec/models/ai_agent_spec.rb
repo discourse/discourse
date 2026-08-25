@@ -267,7 +267,89 @@ RSpec.describe AiAgent do
     expect(user.username).to eq("test_bot")
     expect(user.name).to eq("Test")
     expect(user.bot?).to be(true)
-    expect(user.id).to be <= AiAgent::FIRST_AGENT_USER_ID
+    expect(user.id).to be < DiscourseAi::BotUser::FIRST_ID
+  end
+
+  it "does not recycle an id another agent still points at" do
+    other = Fabricate(:ai_agent, name: "other")
+    stale_user = other.create_user!
+    stale_user.destroy!
+    other.update_columns(user_id: stale_user.id)
+    PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
+
+    user = basic_agent.create_user!
+
+    expect(user.id).to be < stale_user.id
+  end
+
+  it "does not recycle an id an llm model still points at" do
+    llm_model.update!(user_id: -5000)
+    PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
+
+    user = basic_agent.create_user!
+
+    expect(user.id).to eq(-5001)
+  end
+
+  it "does not recycle the id of a bot user that was deleted" do
+    agent = Fabricate(:ai_agent, name: "deleted")
+    deleted_id = agent.create_user!.id
+    UserDestroyer.new(Discourse.system_user).destroy(agent.reload.user)
+
+    user = basic_agent.create_user!
+
+    expect(user.id).to be < deleted_id
+  end
+
+  it "clears the reference when the bot user is destroyed" do
+    agent = Fabricate(:ai_agent, name: "destroyed")
+    user = agent.create_user!
+
+    UserDestroyer.new(Discourse.system_user).destroy(user)
+
+    expect(agent.reload.user_id).to eq(nil)
+  end
+
+  describe "#can_have_bot_user?" do
+    def system_agent(klass)
+      AiAgent.find(DiscourseAi::Agents::Agent.system_agents[klass])
+    end
+
+    it "is true for custom agents" do
+      expect(Fabricate(:ai_agent).can_have_bot_user?).to eq(true)
+    end
+
+    it "is true for an internal agent that already owns one" do
+      agent = system_agent(DiscourseAi::Agents::LocaleDetector)
+      agent.update_columns(user_id: Fabricate(:user).id)
+
+      expect(agent.can_have_bot_user?).to eq(true)
+      expect(agent.supports_bot_user?).to eq(false)
+    end
+
+    it "is false when the reference dangles, so the UI matches the endpoint" do
+      agent = system_agent(DiscourseAi::Agents::LocaleDetector)
+      agent.update_columns(user_id: -123_456)
+
+      expect(agent.can_have_bot_user?).to eq(false)
+    end
+
+    it "refuses to assign a bot user to an agent that has no use for one" do
+      agent = system_agent(DiscourseAi::Agents::LocaleDetector)
+      agent.user_id = Fabricate(:user).id
+
+      expect(agent).not_to be_valid
+    end
+
+    it "is true for agents users talk to" do
+      expect(system_agent(DiscourseAi::Agents::General).can_have_bot_user?).to eq(true)
+      expect(system_agent(DiscourseAi::Agents::Discover).can_have_bot_user?).to eq(true)
+    end
+
+    it "is false for agents a feature invokes internally" do
+      expect(system_agent(DiscourseAi::Agents::LocaleDetector).can_have_bot_user?).to eq(false)
+      expect(system_agent(DiscourseAi::Agents::Summarizer).can_have_bot_user?).to eq(false)
+    end
   end
 
   it "removes all rag embeddings when rag params change" do

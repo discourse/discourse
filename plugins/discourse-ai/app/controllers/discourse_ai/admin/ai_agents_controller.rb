@@ -99,6 +99,8 @@ module DiscourseAi
       end
 
       def create_user
+        raise Discourse::InvalidAccess if !@ai_agent.supports_bot_user?
+
         user = @ai_agent.create_user!
         render json: BasicUserSerializer.new(user, root: "user")
       end

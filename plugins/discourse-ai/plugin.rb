@@ -133,8 +133,6 @@ after_initialize do
   register_problem_check ProblemCheck::AiLlmStatus
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
-  #register_problem_check ProblemCheck::AiCreditSoftLimit
-  #register_problem_check ProblemCheck::AiCreditHardLimit
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
@@ -148,18 +146,15 @@ after_initialize do
     end
   end
 
-  # when an account is removed, clear the user's own logs and the logs tied to
-  # the content being deleted with the account. the content callback runs before
-  # discourse reassigns/soft-deletes the user's posts, so ownership is still intact.
-  on(:user_destroyed) { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id) }
+  on(:user_destroyed) do |user|
+    DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id)
+    AiAgent.detach_user!(user.id)
+  end
 
   register_user_destroyer_on_content_deletion_callback(
     Proc.new { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user_content(user) },
   )
 
-  # outside account deletion, only purge logs once the content is permanently
-  # gone; a soft-deleted (trashed) post or topic is still recoverable, so its
-  # audit log must remain
   on(:post_destroyed) do |post|
     if !Post.with_deleted.exists?(post.id)
       DiscourseAi::AiApiAuditLogCleaner.delete_for_post(post.id)

@@ -42,6 +42,10 @@ module DiscourseAi
           false
         end
 
+        def supports_bot_user?
+          agents_supporting_bot_user.any? { |klass| self <= klass }
+        end
+
         def allow_chat_channel_mentions
           false
         end
@@ -213,6 +217,24 @@ module DiscourseAi
             .each do |config|
               config[:agent_id] ||= external_agent_id(config[:agent_klass]) if config[:agent_klass]
             end
+        end
+
+        def agents_supporting_bot_user
+          @agents_supporting_bot_user ||= [
+            General,
+            SqlHelper,
+            Artist,
+            SettingsExplorer,
+            Researcher,
+            Creative,
+            DiscourseHelper,
+            GithubHelper,
+            WebArtifactCreator,
+            Designer,
+            ForumResearcher,
+            Discover,
+            DiscourseAdminAssistant,
+          ].freeze
         end
 
         def builtin_system_agents

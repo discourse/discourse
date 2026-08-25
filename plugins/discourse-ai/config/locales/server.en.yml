@@ -472,6 +472,7 @@ en:
         unexpected_error: "an unexpected error occurred"
       agents:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
+        bot_user_unsupported: "This agent is used internally by a feature and cannot have a bot user"
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
         cannot_edit_system_agent: "System agents can only be renamed, you may not edit tools or system prompt, instead disable and make a copy"
         cannot_have_duplicate_tools: "Can not have duplicate tools"
