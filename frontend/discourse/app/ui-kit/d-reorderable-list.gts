@@ -1,28 +1,39 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import type { TOC } from "@ember/component/template-only";
 import { assert } from "@ember/debug";
 import {
   isDestroyed,
   isDestroying,
   registerDestructor,
 } from "@ember/destroyable";
-import { concat, fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { fn, hash } from "@ember/helper";
 import { action, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { type default as Owner, getOwner } from "@ember/owner";
 import { cancel, next, schedule, type Timer } from "@ember/runloop";
 import { service } from "@ember/service";
-import type { ComponentLike, ModifierLike } from "@glint/template";
 import { modifier } from "ember-modifier";
 import DHeadlessMenu from "discourse/float-kit/components/d-headless-menu";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import discourseLater from "discourse/lib/later";
 import type A11yService from "discourse/services/a11y";
 import { and, eq } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
-import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import {
+  CHORD_TARGETS,
+  MENU_CONTENT_SELECTOR,
+  MENU_IDENTIFIER,
+  RUN_SETTLE_MS,
+} from "discourse/ui-kit/d-reorderable-list/-internals/constants";
+import CreateRow from "discourse/ui-kit/d-reorderable-list/-internals/parts/create-row";
+import HandlePart from "discourse/ui-kit/d-reorderable-list/-internals/parts/handle";
+import MoveMenu from "discourse/ui-kit/d-reorderable-list/-internals/parts/move-menu";
+import RemovePart from "discourse/ui-kit/d-reorderable-list/-internals/parts/remove";
+import type {
+  DReorderableListSignature,
+  MoveTarget,
+  ReorderableMove,
+  Row,
+} from "discourse/ui-kit/d-reorderable-list/types";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
@@ -32,727 +43,12 @@ import dDragAndDropTarget, {
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
-/**
- * How long after the last chord move the full announcement lands. Long enough
- * that a held key reads as one run rather than a stream of sentences, short
- * enough that a deliberate single press still speaks it as a single press.
- */
-const RUN_SETTLE_MS = 400;
-
-/** The list's move menu, identified by the attribute float-kit stamps on it. */
-const MENU_IDENTIFIER = "reorderable-list-move";
-const MENU_CONTENT_SELECTOR = `[data-identifier="${MENU_IDENTIFIER}"]`;
-
-/** The destination each accelerator chord asks for. */
-const CHORD_TARGETS: Record<string, MoveTarget | undefined> = {
-  ArrowUp: "up",
-  ArrowDown: "down",
-  Home: "top",
-  End: "bottom",
-};
-
-/**
- * One normalized move, as both input methods report it. The indices and item
- * arrays all describe the VISIBLE list — the `items` the consumer passed —
- * never a backing store the consumer may keep behind it.
- */
-export interface ReorderableMove<T = unknown> {
-  /** How the user asked for the move. */
-  method: "drag" | "menu" | "keyboard";
-
-  /** The item that moved, resolved against the current items at commit time. */
-  item: T;
-
-  /** The list the item left. Always `"default"` for a standalone list. */
-  fromList: string;
-
-  /** The list the item entered. Always `"default"` for a standalone list. */
-  toList: string;
-
-  /** The item's visible index before the move. */
-  fromIndex: number;
-
-  /** The item's visible index after the move. */
-  toIndex: number;
-
-  /** The visible items before the move, exactly as passed in `@items`. */
-  fromItems: readonly T[];
-
-  /** The visible items before the move; the same array for a single list. */
-  toItems: readonly T[];
-
-  /** The proposed visible order after the move. */
-  proposedFromItems: readonly T[];
-
-  /** The proposed visible order; the same array for a single list. */
-  proposedToItems: readonly T[];
-}
-
-/**
- * The row's own position and its pre-wired controls, yielded to `<:row>`
- * beside the item. Conventionally bound as `controls`, matching the
- * `@controls` argument that decides whether the list places them or the
- * consumer does.
- */
-export interface ReorderableRowApi {
-  /** The row's index in the visible list. */
-  index: number;
-
-  /** Whether the row occupies the first movable slot. */
-  isFirst: boolean;
-
-  /** Whether the row occupies the last movable slot. */
-  isLast: boolean;
-
-  /** Whether the row can be reordered at all. */
-  movable: boolean;
-
-  /**
-   * The pre-wired handle for this row, present only under
-   * `@controls="manual"` on a movable row. It is the drag source and the move
-   * menu's trigger at once, so a movable manual row must place it; a
-   * development assertion fires when one does not.
-   */
-  handle?: ComponentLike<{ Element: HTMLElement }>;
-
-  /**
-   * The pre-wired remove control, present only under `@controls="manual"` on a
-   * removable row when `@onRemove` is set. Carries its own accessible name;
-   * everything visual passes through.
-   */
-  remove?: ComponentLike<{ Element: HTMLElement }>;
-}
-
-/** The context handed to a `@rowClass` function. */
-interface RowClassContext {
-  index: number;
-  movable: boolean;
-}
-
-/**
- * What a member list registers with its group: identity, the optional
- * translated list name for cross-list announcements, and closures reading the
- * member's live state — closures rather than snapshots, so a drop resolves
- * against the source list as it stands at drop time.
- */
-export interface ReorderableGroupMember {
-  listId: string;
-  listLabel?: string;
-
-  /** The member's current visible items. */
-  getItems: () => readonly unknown[];
-
-  /**
-   * The source half of a cross-list move: resolves the dragged key against
-   * the member's current rows and returns the item, its visible index, and
-   * the member's proposed order without it — or `undefined` when the key no
-   * longer resolves to a movable row.
-   */
-  removalProjection: (key: string) =>
-    | {
-        item: unknown;
-        fromIndex: number;
-        proposedFromItems: readonly unknown[];
-      }
-    | undefined;
-
-  /**
-   * The destination half of a cross-list move, as the menu path calls it. A
-   * drop already runs on the destination, but a menu item runs on the source,
-   * so the source reaches across to the member that owns the projections and
-   * the announcement for where the item is landing.
-   *
-   * @param sourceListId - The member the item is leaving.
-   * @param key - The moved row's key in that member.
-   * @param toIndex - The visible landing index in this member.
-   */
-  acceptMove: (sourceListId: string, key: string, toIndex: number) => void;
-}
-
-/**
- * The API a `DReorderableListGroup` yields to its block. Member lists receive
- * it as `@group`; everything on it is wiring between the group and its
- * members rather than a consumer surface.
- */
-export interface ReorderableGroupApi {
-  /**
-   * The shared drag discriminator. Members adopt it in place of their own, so
-   * drags travel freely inside the group and nowhere else.
-   */
-  token: string;
-
-  /** Adds a member; returns its deregistration. Duplicate listIds assert. */
-  registerMember: (member: ReorderableGroupMember) => () => void;
-
-  /** The member registered under a listId, if it still exists. */
-  lookupMember: (listId: string) => ReorderableGroupMember | undefined;
-
-  /**
-   * The other members registered right now, in registration order, as the
-   * move menu's cross-list destinations. Only members carrying a `listLabel`
-   * are returned: an unnamed destination has nothing to put in the menu item,
-   * so it stays pointer-only rather than offering "Move to undefined".
-   */
-  siblings: (listId: string) => { listId: string; listLabel: string }[];
-
-  /** The group's single move callback, shared by every member. */
-  onMove: (move: ReorderableMove) => void | false;
-}
-
-/**
- * The internal per-row view model the component renders from. Rows are
- * recomputed from `@items` on every relevant change, so anything an event
- * handler needs later is re-resolved by `key` rather than captured.
- */
-interface Row<T> {
-  item: T;
-  key: string;
-  index: number;
-  movable: boolean;
-  isFirst: boolean;
-  isLast: boolean;
-  disableUp: boolean;
-  disableDown: boolean;
-  /** The row's own accessible name: what the reader is moving. */
-  label: string;
-  handleLabel: string;
-
-  /** Shared by the row's `aria-describedby` and its handle's description. */
-  descriptionId: string;
-
-  /** Whether this row may be removed at all. */
-  removable: boolean;
-
-  /** The remove control's accessible name. */
-  removeLabel: string;
-  yieldControls: boolean;
-}
-
-interface DReorderableListSignature<T> {
-  Args: {
-    /**
-     * The visible items in display order. The component reasons, indexes, and
-     * announces only in this list; projecting a reorder onto hidden backing
-     * storage stays with the consumer. Never mutated by the component.
-     */
-    items: readonly T[];
-
-    /**
-     * Property path resolving each item's stable identity, used for keyed
-     * rendering and for resolving drag payloads at drop time. The literal
-     * value `"@index"` opts into index-based identity for primitive
-     * collections whose values may repeat. Omitted, object identity is used,
-     * which is only safe when the same objects are passed on every render.
-     *
-     * Index identity is positional by definition: after a move, rows keep
-     * their positions while items flow through them, so focus and drag state
-     * stay with a position rather than following the moved item. That is how
-     * position-addressed value lists already behave, and is the trade-off
-     * accepted when items carry no identity of their own.
-     */
-    key?: string;
-
-    /**
-     * Translated display name for an item. It names the drag handle, both
-     * arrow buttons, and the post-move announcement, so every control stays
-     * distinguishable when read out of context.
-     */
-    label: (item: T) => string;
-
-    /**
-     * The single move callback. Pointer drops and arrow presses both arrive
-     * here, already normalized and no-op-suppressed. Return `false` to veto
-     * the announcement; the consumer then owns whatever feedback replaces it.
-     * Required for a standalone list; a grouped member omits it — the group's
-     * own callback receives every member move instead.
-     */
-    onMove?: (move: ReorderableMove<T>) => void | false;
-
-    /**
-     * The API yielded by a surrounding `DReorderableListGroup`. Joining a
-     * group makes cross-list moves between members possible and routes every
-     * move through the group's callback. Requires `@listId`. Fixed at
-     * construction: a list that must change groups is re-created, not
-     * re-pointed. Every member carrying a `@listLabel` also becomes a
-     * destination in the other members' move menus, which is how a cross-list
-     * move is reachable without a pointer.
-     */
-    group?: ReorderableGroupApi;
-
-    /**
-     * This member's identity inside its group. Required with `@group`, and
-     * fixed at construction like the group itself.
-     */
-    listId?: string;
-
-    /**
-     * Translated name for this list, spoken in cross-list announcements when
-     * an item lands here from another member, and shown as this list's
-     * "Move to …" entry in every other member's move menu. Without it the
-     * standard announcement is used and the list stays a pointer-only
-     * destination.
-     */
-    listLabel?: string;
-
-    /**
-     * Rows failing this predicate are frozen: they render no controls, are
-     * not drag sources, refuse drops, and keep their exact visible index in
-     * every proposed order. Arrow moves hop over them. Defaults to every row
-     * being movable.
-     */
-    movable?: (item: T) => boolean;
-
-    /** Tag name for the list element. Defaults to `"ul"`. */
-    tag?: string;
-
-    /** Tag name for each row element. Defaults to `"li"`. */
-    itemTag?: string;
-
-    /** Optional ARIA role for the list element. */
-    role?: string;
-
-    /**
-     * Optional ARIA role for each row element. Use roles that permit
-     * interactive descendants (such as `row`): a role whose children are
-     * presentational (`option`, `menuitem`, `tab`) flattens the rendered
-     * controls out of the accessibility tree.
-     */
-    itemRole?: string;
-
-    /**
-     * Extra class(es) for the row element: a static string, or a function of
-     * the item and its `{ index, movable }` state.
-     */
-    rowClass?: string | ((item: T, context: RowClassContext) => string);
-
-    /**
-     * Who places the row's handle. `"auto"` (the default) renders it ahead of
-     * the row's block content; `"manual"` renders none and instead yields a
-     * pre-wired `handle` component on the row API, for layouts where it must
-     * occupy a specific cell, grid track, or position.
-     *
-     * There is deliberately no automatic "at the end": a handle is focusable,
-     * so where it sits in the DOM is its position in the reading and focus
-     * order, not decoration. A row that wants it last says so by placing it
-     * last.
-     */
-    controls?: "auto" | "manual";
-
-    /**
-     * Read-only mode: rows render without controls and without any drag
-     * wiring, as if every row were frozen.
-     */
-    disabled?: boolean;
-
-    /**
-     * Overrides the announcement for a committed move. Return the text to
-     * announce, or `false` to suppress the announcement entirely. `onMove`
-     * has already run either way.
-     */
-    announceMove?: (move: ReorderableMove<T>) => string | false;
-
-    /**
-     * Renders a create affordance after the rows: a text input and an add
-     * button by default, or the `<:create>` block when one is given. The
-     * default row is list-shaped (it renders as one extra item element), so a
-     * table shell should supply its own `<:create>` block with valid cell
-     * markup.
-     */
-    allowCreate?: boolean;
-
-    /**
-     * Reports that the reader asked to remove an item. Supplying it is what
-     * renders the remove control: trailing the row's own content by default,
-     * or wherever `controls.remove` is placed under `@controls="manual"`.
-     *
-     * The visible index comes with it, because an index-keyed list may hold
-     * the same value twice and the item alone would not say which row went.
-     *
-     * The list announces the removal and puts focus somewhere sensible
-     * afterwards; the handler's only job is to drop the item from its store.
-     */
-    onRemove?: (item: T, index: number) => void;
-
-    /**
-     * Whether an item may be removed, defaulting to all of them.
-     *
-     * Mirrors `@movable`, which renders no handle on a row that cannot move:
-     * a row that cannot be removed renders no remove control either. A
-     * permanently protected row would otherwise carry a dead tab stop that
-     * announces itself as unavailable on every pass. This is deliberately
-     * unlike the menu's boundary destinations, which stay marked because
-     * reaching an end is temporary and the row will move again.
-     */
-    removable?: (item: T) => boolean;
-
-    /**
-     * The remove control's icon. One list-level argument rather than a
-     * per-row one, because the control is placed by the list in every mode
-     * except manual.
-     */
-    removeIcon?: string;
-
-    /**
-     * Called with the trimmed value when the default create affordance is
-     * submitted. Never called for an empty or whitespace-only value.
-     */
-    onCreate?: (value: string) => void;
-  };
-  Blocks: {
-    /**
-     * The contents of one row, rendered inside the row element the component
-     * owns. Named rather than the implicit block because what it fills is not
-     * obvious: a table shell yields `td`s into a `tr` the consumer never
-     * writes, and `<:default>` gave no way to tell that from replacing the
-     * row outright.
-     */
-    row: [item: T, row: ReorderableRowApi];
-
-    /** Rendered inside the list element, before every row. */
-    header: [];
-
-    /**
-     * Rendered before the header, for the visible sentence that teaches the
-     * interaction ("Drag the handle, or press Enter for move options"). The
-     * component never renders one of its own: a dense table wants no such
-     * paragraph, and where it belongs on the page is the surface's call. The
-     * screen-reader description on each handle is separate and always
-     * present.
-     */
-    hint: [];
-
-    /** Rendered in the rows' position when `@items` is empty. */
-    empty: [];
-
-    /**
-     * Replaces the default create affordance when `@allowCreate` is set,
-     * rendered after the rows.
-     */
-    create: [];
-  };
-  Element: HTMLElement;
-}
-
-/** Where a menu-driven move sends the row. */
-type MoveTarget = "up" | "down" | "top" | "bottom";
-
-interface MoveItemSignature {
-  Args: {
-    target: string;
-    icon: string;
-    label: string;
-    disabled?: boolean;
-    move: () => void;
-  };
-}
-
-/**
- * One destination in the move menu.
- *
- * Unavailable directions are marked rather than removed, and marked with
- * `aria-disabled` rather than the `disabled` attribute, so the menu presents
- * the same destinations on every row and a reader who lands on one at a
- * boundary is told it is unavailable instead of finding it missing. The guard
- * lives in the handler for the same reason.
- *
- * Each destination carries its own modifier class, which is what lets a test
- * or a page object name the destination it wants rather than counting menu
- * positions that shift as soon as a group adds a cross-list entry.
- */
-const MoveItem: TOC<MoveItemSignature> = <template>
-  <DButton
-    @icon={{@icon}}
-    @translatedLabel={{@label}}
-    @action={{@move}}
-    aria-disabled={{if @disabled "true"}}
-    class={{dConcatClass
-      "btn-transparent d-reorderable-list__move-item"
-      (concat "--" @target)
-    }}
-  />
-</template>;
-
-interface HandlePartSignature {
-  Args: {
-    row: Row<unknown>;
-
-    /** Opens the list's shared menu against this row. */
-    onOpen: (key: string) => void;
-
-    /** Whether the shared menu is currently open on this row. */
-    isOpen: boolean;
-    register: ModifierLike<{ Args: { Positional: [string] } }>;
-  };
-  Element: HTMLElement;
-}
-
-/** What the shared move menu is told to act on. */
-interface MoveMenuData {
-  /** The list that owns the menu, asked for live row state as it renders. */
-  list: {
-    rowFor: (key: string) => Row<unknown> | undefined;
-    siblings: () => { listId: string; listLabel: string }[];
-    onMenuMove: (key: string, target: MoveTarget) => void;
-    onMenuMoveToList: (key: string, listId: string, close: () => void) => void;
-  };
-
-  /** The row the menu was opened from. */
-  key: string;
-}
-
-interface MoveMenuSignature {
-  Args: {
-    data?: MoveMenuData;
-    close?: () => void;
-  };
-}
-
-/**
- * The destinations behind one handle.
- *
- * Rendered by the list's single menu instance rather than per row, so it reads
- * the row it was opened for out of `@data` and asks the list for that row's
- * live state. Boundary marks therefore reflect the list as it stands while the
- * menu is open, not as it stood when the row last rendered.
- *
- * A disclosure of ordinary buttons rather than `role="menu"`, which keeps the
- * reader in the same browse mode they navigate the rest of the page with. No
- * float-kit float is a menu: the role lands on the float's outer wrapper, two
- * levels above the list of buttons, where it could never own menu items.
- */
-class MoveMenu extends Component<MoveMenuSignature> {
-  get row(): Row<unknown> | undefined {
-    return this.args.data?.list.rowFor(this.args.data.key);
-  }
-
-  get siblings(): { listId: string; listLabel: string }[] {
-    return this.args.data?.list.siblings() ?? [];
-  }
-
-  @action
-  move(target: MoveTarget) {
-    const { data } = this.args;
-    data?.list.onMenuMove(data.key, target);
-  }
-
-  @action
-  moveToList(listId: string) {
-    const { data, close } = this.args;
-    data?.list.onMenuMoveToList(data.key, listId, close ?? (() => {}));
-  }
-
-  <template>
-    <DDropdownMenu as |dropdown|>
-      <dropdown.item>
-        <MoveItem
-          @target="top"
-          @icon="angles-up"
-          @label={{i18n "reorder.move_to_top"}}
-          @disabled={{this.row.disableUp}}
-          @move={{fn this.move "top"}}
-        />
-      </dropdown.item>
-      <dropdown.item>
-        <MoveItem
-          @target="up"
-          @icon="arrow-up"
-          @label={{i18n "reorder.move_up"}}
-          @disabled={{this.row.disableUp}}
-          @move={{fn this.move "up"}}
-        />
-      </dropdown.item>
-      <dropdown.item>
-        <MoveItem
-          @target="down"
-          @icon="arrow-down"
-          @label={{i18n "reorder.move_down"}}
-          @disabled={{this.row.disableDown}}
-          @move={{fn this.move "down"}}
-        />
-      </dropdown.item>
-      <dropdown.item>
-        <MoveItem
-          @target="bottom"
-          @icon="angles-down"
-          @label={{i18n "reorder.move_to_bottom"}}
-          @disabled={{this.row.disableDown}}
-          @move={{fn this.move "bottom"}}
-        />
-      </dropdown.item>
-      {{#if this.siblings.length}}
-        <dropdown.divider />
-        {{#each this.siblings key="listId" as |sibling|}}
-          <dropdown.item>
-            <MoveItem
-              @target="list"
-              {{! Deliberately not a directional arrow: the list has no idea
-                where a sibling sits on the page, so an arrow would point the
-                wrong way as often as not. }}
-              @icon="right-left"
-              @label={{i18n "reorder.move_to_list" list=sibling.listLabel}}
-              @move={{fn this.moveToList sibling.listId}}
-            />
-          </dropdown.item>
-        {{/each}}
-      {{/if}}
-    </DDropdownMenu>
-  </template>
-}
-
-/**
- * The one control a movable row renders: a real button that is the drag
- * source and the move menu's trigger at once.
- *
- * Fusing the two is what lets the row carry a single affordance. A pointer
- * user drags it or clicks it for the menu; a keyboard user tabs or arrows onto
- * it and presses Enter for the same menu, because nothing intercepts a plain
- * button's native activation.
- *
- * The menu itself belongs to the list, not to this button: a list is arbitrarily
- * long, and one instance and one set of listeners per row is a cost that scales
- * with the wrong thing. The button therefore carries the menu's ARIA itself,
- * driven by the list's single record of which row is open.
- *
- * The drag registration belongs to the row for the same reason it is not here:
- * the registered element is what a drop target receives and what the browser
- * photographs for the drag preview. Registered on this button, a drag would
- * show a picture of the grip rather than of the row being moved. The row
- * registers instead and names this button as its `dragHandle`.
- */
-class HandlePart extends Component<HandlePartSignature> {
-  @action
-  open() {
-    this.args.onOpen(this.args.row.key);
-  }
-
-  <template>
-    <DButton
-      {{@register @row.key}}
-      @icon="grip-vertical"
-      @action={{this.open}}
-      @translatedAriaLabel={{@row.handleLabel}}
-      @translatedTitle={{@row.handleLabel}}
-      @ariaExpanded={{@isOpen}}
-      aria-describedby={{@row.descriptionId}}
-      class="btn-flat d-reorderable-list__handle"
-      ...attributes
-    >
-      <span id={{@row.descriptionId}} class="sr-only">
-        {{i18n "reorder.handle_description"}}
-      </span>
-    </DButton>
-  </template>
-}
-
-interface RemovePartSignature {
-  Args: {
-    row: Row<unknown>;
-
-    /** The icon to render, from the list's `@removeIcon`. */
-    icon: string;
-
-    /** Reports the row the reader asked to remove. */
-    onRemove: (key: string) => void;
-  };
-  Element: HTMLElement;
-}
-
-/**
- * The standard remove control for one row.
- *
- * Only its contract is fixed: an accessible name built from the row's own
- * label, and the disabled state the list computed. Everything visual is the
- * consumer's — `@icon` and any attribute pass straight through — because a
- * settings row and an admin table want different weights for the same action.
- *
- * The name is the part worth centralising. Every surface that hand-rolled this
- * rendered an icon-only button with no name at all, so a ten-row list offered a
- * reader ten identical "button"s and no way to tell what each one removed.
- */
-const RemovePart: TOC<RemovePartSignature> = <template>
-  <DButton
-    @icon={{@icon}}
-    @action={{fn @onRemove @row.key}}
-    @translatedAriaLabel={{@row.removeLabel}}
-    @translatedTitle={{@row.removeLabel}}
-    class="btn-flat d-reorderable-list__remove"
-    ...attributes
-  />
-</template>;
-
-interface CreateRowSignature {
-  Args: {
-    itemTag: string;
-    onCreate?: (value: string) => void;
-  };
-}
-
-/**
- * The default create affordance: a text input and an add button rendered as
- * one extra row. Submitting via Enter or the button reports the trimmed value
- * and clears the input; an empty or whitespace-only value reports nothing.
- */
-class CreateRow extends Component<CreateRowSignature> {
-  captureInput = modifier((element: HTMLInputElement) => {
-    this.#input = element;
-    return () => (this.#input = undefined);
-  });
-  /**
-   * The live input element. Read directly at submit time instead of mirroring
-   * keystrokes into tracked state: the value only matters at that moment, and
-   * clearing must reach the element's property — resetting a bound attribute
-   * would not clear what the user typed.
-   */
-  #input?: HTMLInputElement;
-
-  @action
-  onKeydown(event: KeyboardEvent) {
-    // A keydown arriving mid-IME-composition belongs to the candidate window,
-    // not to this control.
-    if (event.key === "Enter" && !event.isComposing) {
-      event.preventDefault();
-      this.#submit();
-    }
-  }
-
-  @action
-  submit() {
-    this.#submit();
-  }
-
-  #submit() {
-    const element = this.#input;
-    const value = element?.value.trim();
-    // Without a handler the value has nowhere to go, so it stays in the input
-    // instead of being silently discarded.
-    if (!element || !value || !this.args.onCreate) {
-      return;
-    }
-    this.args.onCreate(value);
-    element.value = "";
-  }
-
-  <template>
-    {{#let (dElement @itemTag) as |Wrapper|}}
-      <Wrapper class="d-reorderable-list__create">
-        <input
-          {{this.captureInput}}
-          {{on "keydown" this.onKeydown}}
-          type="text"
-          class="d-reorderable-list__create-input"
-          aria-label={{i18n "reorder.add_item"}}
-        />
-        <DButton
-          @icon="plus"
-          @action={{this.submit}}
-          @translatedAriaLabel={{i18n "reorder.add_item"}}
-          @translatedTitle={{i18n "reorder.add_item"}}
-          class="btn-flat d-reorderable-list__create-button"
-        />
-      </Wrapper>
-    {{/let}}
-  </template>
-}
+export type {
+  ReorderableGroupApi,
+  ReorderableGroupMember,
+  ReorderableMove,
+  ReorderableRowApi,
+} from "discourse/ui-kit/d-reorderable-list/types";
 
 /**
  * A reorderable list: the standard shell for any surface where the user
@@ -876,13 +172,6 @@ export default class DReorderableList<T> extends Component<
       );
     });
   });
-  /**
-   * Clears the in-flight drag key when the dragged row is destroyed: a source
-   * torn down mid-drag may never report its `dragend`, and the stale key
-   * would otherwise mark a later row for the same item as still dragging.
-   * Deferred a tick because the teardown runs inside a render pass that has
-   * already read the key.
-   */
   /**
    * Registers the list's root element as a drop target while the list is an
    * empty group member — the one state with no rows to land on. Applied
@@ -1507,15 +796,6 @@ export default class DReorderableList<T> extends Component<
   }
 
   /**
-   * The drop path for one row target. The payload carries only the dragged
-   * row's key; the item and both indices are resolved against the current
-   * rows here, so a host that replaced its items mid-drag still lands the
-   * drop on the right thing — or refuses it when the key is gone.
-   *
-   * @param targetKey - The key of the row the drop landed on.
-   * @param event - The target modifier's drop payload.
-   */
-  /**
    * Refuses a row's own in-list drag as a drop candidate, which is what keeps
    * the drop indicator from offering a row a position relative to itself. A
    * same-valued key arriving from another group member is a different item
@@ -1534,6 +814,15 @@ export default class DReorderableList<T> extends Component<
     );
   }
 
+  /**
+   * The drop path for one row target. The payload carries only the dragged
+   * row's key; the item and both indices are resolved against the current
+   * rows here, so a host that replaced its items mid-drag still lands the
+   * drop on the right thing — or refuses it when the key is gone.
+   *
+   * @param targetKey - The key of the row the drop landed on.
+   * @param event - The target modifier's drop payload.
+   */
   @action
   onRowDrop(targetKey: string, { position, source }: DropTargetEvent) {
     const rows = this.rows;
