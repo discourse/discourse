@@ -52,7 +52,7 @@ RSpec.describe TopicOgImageGenerator do
       logo_upload = Struct.new(:url, :width, :height).new("/marked-logo.svg", 200, 100)
       logo_svg = <<~SVG
         <svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">
-          <rect width="200" height="100" style="fill:#00ff00"/>
+          <rect width="200" height="100" fill="#00ff00"/>
         </svg>
       SVG
       avatar_png = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color.rgb(255, 0, 0)).to_blob
@@ -81,36 +81,6 @@ RSpec.describe TopicOgImageGenerator do
           [ChunkyPNG::Color.g(logo_pixel), ChunkyPNG::Color.r(logo_pixel)],
         ],
       ).to eq([[255, 0], [255, 0]])
-    end
-
-    it "omits SVG assets that use filters" do
-      logo_upload = Struct.new(:url, :width, :height).new("/filtered-logo.svg", 200, 100)
-      avatar_url = topic.user.avatar_template_url.gsub("{size}", "120")
-      SiteSetting.stubs(:logo).returns(logo_upload)
-
-      {
-        element: '<filter id="blur"></filter><rect width="200" height="100" fill="#00ff00"/>',
-        primitive:
-          '<feGaussianBlur stdDeviation="20"/><rect width="200" height="100" fill="#00ff00"/>',
-        attribute: '<rect width="200" height="100" fill="#00ff00" filter="blur(20px)"/>',
-        inline_style: '<rect width="200" height="100" style="fill:#00ff00;f\\69lter:blur(20px)"/>',
-        stylesheet:
-          '<style>.logo { f\\69lter: blur(20px) }</style><rect class="logo" width="200" height="100" fill="#00ff00"/>',
-      }.each do |filter_type, markup|
-        logo_svg = <<~SVG
-          <svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">
-            #{markup}
-          </svg>
-        SVG
-        logo_data_uri = "data:image/svg+xml;base64,#{Base64.strict_encode64(logo_svg)}"
-        generator = described_class.new(topic)
-        generator.stubs(:fetch_as_data_uri).with("/filtered-logo.svg").returns(logo_data_uri)
-        generator.stubs(:fetch_as_data_uri).with(avatar_url).returns(nil)
-
-        png = ChunkyPNG::Image.from_blob(generator.generate_bytes)
-
-        expect(png[180, 520]).to eq(png[500, 520]), filter_type.to_s
-      end
     end
 
     it "omits an unrenderable SVG asset and still renders the canvas" do

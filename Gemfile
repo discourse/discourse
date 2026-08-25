@@ -78,7 +78,6 @@ gem "mustache"
 gem "liquid", "5.12.0"
 gem "nokogiri"
 gem "loofah"
-gem "crass"
 gem "css_parser", require: false
 
 gem "omniauth"
