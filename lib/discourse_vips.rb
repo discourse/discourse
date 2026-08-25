@@ -2,6 +2,7 @@
 
 require "mini_vips"
 require "tmpdir"
+require "image_processing/instrumentation"
 
 # Runs mini_vips through Discourse::SafeExec so Landlock-supported systems
 # confine decoder bugs to an explicit filesystem allowlist with no network,
@@ -34,7 +35,7 @@ module DiscourseVips
 
   class << self
     def version
-      "#{MiniVips::VERSION}-#{run(command: "version").strip}"
+      "#{MiniVips::VERSION}-#{run(command: "version", operation: :letter_avatar_version).strip}"
     end
 
     def generate_letter_avatar(letter:, background_color:, output_path:)
@@ -47,6 +48,7 @@ module DiscourseVips
           "--background-color",
           format("%02X%02X%02X", red, green, blue),
         ],
+        operation: :letter_avatar_render,
         read: [bundled_font_path, *FONTCONFIG_READ_PATHS],
         write: [File.dirname(output_path)],
       )
@@ -54,13 +56,19 @@ module DiscourseVips
     end
 
     def dominant_color(input_path:)
-      run(command: "dominant-color", arguments: [input_path], read: [input_path]).strip
+      run(
+        command: "dominant-color",
+        arguments: [input_path],
+        operation: :upload_dominant_color,
+        read: [input_path],
+      ).strip
     end
 
     def generate_topic_og_image(svg_path:, output_path:, max_pixels:)
       run(
         command: "convert",
         arguments: [svg_path, output_path, "--max-pixels", max_pixels.to_s],
+        operation: :topic_og_render,
         read: [File.dirname(svg_path), *FONTCONFIG_READ_PATHS],
         write: [File.dirname(output_path)],
       )
@@ -69,24 +77,26 @@ module DiscourseVips
 
     private
 
-    def run(command:, arguments: [], read: [], write: [])
+    def run(command:, operation:, arguments: [], read: [], write: [])
       # A private scratch dir keeps libvips temporary files inside the write
       # allowlist, so operations that spill to disk still succeed.
       Dir.mktmpdir("discourse-vips-helper-") do |scratch|
         argv = ["nice", "-n", "10", executable, command, *arguments]
 
         begin
-          Discourse::SafeExec.capture(
-            *argv,
-            env: environment(scratch),
-            unsetenv_others: true,
-            read: read_paths(read),
-            write: [scratch, *write],
-            execute: [*Discourse::SafeExec.default_execute_paths, executable],
-            timeout: DEFAULT_TIMEOUT_SECONDS,
-            rlimits: RLIMITS,
-            seccomp_deny_network: true,
-          )
+          ImageProcessing::Instrumentation.instrument(operation:) do
+            Discourse::SafeExec.capture(
+              *argv,
+              env: environment(scratch),
+              unsetenv_others: true,
+              read: read_paths(read),
+              write: [scratch, *write],
+              execute: [*Discourse::SafeExec.default_execute_paths, executable],
+              timeout: DEFAULT_TIMEOUT_SECONDS,
+              rlimits: RLIMITS,
+              seccomp_deny_network: true,
+            )
+          end
         rescue Discourse::Utils::CommandError => error
           raise Error, error.message
         end
