@@ -361,10 +361,10 @@ GEM
     mini_sql (1.6.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
-    mini_vips (0.1.0-aarch64-linux-gnu)
-    mini_vips (0.1.0-arm64-darwin)
-    mini_vips (0.1.0-x86_64-darwin)
-    mini_vips (0.1.0-x86_64-linux-gnu)
+    mini_vips (0.2.0-aarch64-linux-gnu)
+    mini_vips (0.2.0-arm64-darwin)
+    mini_vips (0.2.0-x86_64-darwin)
+    mini_vips (0.2.0-x86_64-linux-gnu)
     minio_runner (1.1.0)
     minitest (6.0.6)
       drb (~> 2.0)
@@ -1114,10 +1114,10 @@ CHECKSUMS
   mini_scheduler (0.20.0) sha256=bd8948228bf4a48a603a8e20de850d16b68295413d8651c8c05288f4c6997b05
   mini_sql (1.6.0) sha256=5296637f6a4af5bb43e06788037e9a2968ff9c8eb65928befcba8cb41f42d6ee
   mini_suffix (0.3.3) sha256=8d1d33f92f69a2247c9b7d27173235da90479d955cdb863b63a7f53843b722e7
-  mini_vips (0.1.0-aarch64-linux-gnu) sha256=4dadf80d566041d9ce8f6f8dfb70395a65856bac4caa91f268cfab9cc329eeb3
-  mini_vips (0.1.0-arm64-darwin) sha256=be9ca612744b39bd5ab68f09bc8fa0c69d584352ef6057cf58f01a5242f0e684
-  mini_vips (0.1.0-x86_64-darwin) sha256=b4278b68c989ad1715b15b1e2b26d69d86234fd987f7e3a86c1c818c227a61cd
-  mini_vips (0.1.0-x86_64-linux-gnu) sha256=4350c3dcdd08e1b481fcaf66ed76dddcf53efe1e50e8b4b4fd9db69d5d857382
+  mini_vips (0.2.0-aarch64-linux-gnu) sha256=de90569e0cf5770bcdfded558d756f737fade3e16ce515ab8a8e50f36fe95027
+  mini_vips (0.2.0-arm64-darwin) sha256=7d24290108c5ea7189b3b997af2b4bc92d4d85327cd654b2ebaa4e1c740cf5d4
+  mini_vips (0.2.0-x86_64-darwin) sha256=15f4258307af4899448d6c3e656a4a23e330753d4c515ea0afcd15b940c93f1e
+  mini_vips (0.2.0-x86_64-linux-gnu) sha256=e80d290a93d73134d12b187b26d71062555e8b005fdfbd1ee27ca25df86d71c4
   minio_runner (1.1.0) sha256=ebb2bedea253011fcd34ed3229706c9b453f0f363601dee7ce065e0163bdcf2f
   minitest (6.0.6) sha256=153ea36d1d987a62942382b61075745042a2b3123b1cd48f4c3675af9cc7d6f1
   mocha (3.1.0) sha256=75f42d69ebfb1f10b32489dff8f8431d37a418120ecdfc07afe3bc183d4e1d56

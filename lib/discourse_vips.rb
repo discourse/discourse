@@ -33,7 +33,7 @@ module DiscourseVips
   def self.asset_read_paths
     @asset_read_paths ||=
       Discourse::SafeExec.existing_paths(
-        [DYNAMIC_LINKER_CACHE_PATH, bundled_font_path, *FONTCONFIG_READ_PATHS],
+        [DYNAMIC_LINKER_CACHE_PATH, *MiniVips.asset_paths, *FONTCONFIG_READ_PATHS],
       )
   end
 
@@ -75,9 +75,4 @@ module DiscourseVips
     @executable ||= MiniVips.executable
   end
   private_class_method :executable
-
-  def self.bundled_font_path
-    File.join(File.dirname(File.dirname(executable)), "lib/mini_vips/fonts/NotoSans-Regular.ttf")
-  end
-  private_class_method :bundled_font_path
 end
