@@ -4,7 +4,6 @@ require "mini_vips"
 require "tmpdir"
 
 module DiscourseVips
-  VERSION = 1
   DEFAULT_TIMEOUT_SECONDS = 5
   private_constant :DEFAULT_TIMEOUT_SECONDS
 
@@ -27,7 +26,7 @@ module DiscourseVips
 
   class << self
     def version
-      "#{VERSION}-#{MiniVips::VERSION}-#{run(command: "version").strip}"
+      "#{MiniVips::VERSION}-#{run(command: "version").strip}"
     end
 
     def generate_letter_avatar(letter:, background_color:, output_path:)
