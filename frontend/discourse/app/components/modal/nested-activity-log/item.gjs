@@ -43,7 +43,7 @@ function mentionLinkFor(code, who) {
   ) {
     return `<a class="mention-group" href="/g/${encodeURIComponent(who)}">@${escaped}</a>`;
   }
-  return `<a class="mention" href="${userPath(who)}">@${escaped}</a>`;
+  return `<a class="mention" href="${userPath(encodeURIComponent(who))}">@${escaped}</a>`;
 }
 
 export default class NestedActivityLogItem extends Component {
