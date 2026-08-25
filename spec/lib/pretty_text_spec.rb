@@ -3135,6 +3135,18 @@ HTML
       expect(doc.to_html).to eq(html)
     end
 
+    it "does not link thumbnails from SQL LIKE wildcards" do
+      private_thumbnail = Fabricate(:upload, original_filename: "private-thumbnail.png")
+      html = <<~HTML
+        <p></p><div class="video-placeholder-container" data-video-src="/uploads/%"></div><p></p>
+      HTML
+      doc = Nokogiri::HTML5.fragment(html)
+
+      described_class.add_video_placeholder_image(doc)
+
+      expect(doc.to_html).not_to include(private_thumbnail.url)
+    end
+
     it "links to a thumbnail image if the video source is valid" do
       thumbnail =
         Fabricate(:upload, original_filename: "#{@video_upload.sha1}.png", extension: "png")
