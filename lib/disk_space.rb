@@ -5,8 +5,6 @@ class DiskSpace
     Upload.sum(:filesize).to_i + OptimizedImage.sum(:filesize).to_i
   end
 
-  # nil rather than 0 when the store is external: there is no local ceiling to
-  # report, which is not the same as having no room left.
   def self.uploads_free_bytes
     return nil if Discourse.store.external?
 

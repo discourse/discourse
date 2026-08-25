@@ -59,7 +59,13 @@ class AdminDashboardSectionConfiguration
   end
 
   def self.all_known_section_ids
-    KNOWN_SECTIONS + available_plugin_section_ids
+    builtin_section_ids + available_plugin_section_ids
+  end
+
+  def self.builtin_section_ids
+    return KNOWN_SECTIONS if SiteSetting.version_checks?
+
+    KNOWN_SECTIONS - ["system"]
   end
 
   def self.sections

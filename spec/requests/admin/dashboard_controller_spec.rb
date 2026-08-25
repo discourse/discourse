@@ -643,6 +643,32 @@ RSpec.describe Admin::DashboardController do
         expect(visible).to eq(%w[highlights reports])
       end
 
+      it "only exposes the system section when version checks are enabled" do
+        configure_dashboard_sections(["system"])
+        SiteSetting.version_checks = false
+        sign_in(admin)
+
+        get "/admin/dashboard.json"
+
+        expect(response.parsed_body["sections"].map { |section| section["id"] }).not_to include(
+          "system",
+        )
+        expect(
+          response.parsed_body.dig("configuration", "sections").map { |section| section["id"] },
+        ).not_to include("system")
+
+        SiteSetting.version_checks = true
+
+        get "/admin/dashboard.json"
+
+        expect(response.parsed_body["sections"].map { |section| section["id"] }).to include(
+          "system",
+        )
+        expect(
+          response.parsed_body.dig("configuration", "sections").map { |section| section["id"] },
+        ).to include("system")
+      end
+
       it "is omitted for moderators" do
         sign_in(moderator)
 

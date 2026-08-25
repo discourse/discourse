@@ -83,7 +83,7 @@ export default class DashboardSystem extends Component {
   }
 
   get #usedBytes() {
-    return this.#storeEntries.reduce(
+    return this.#localEntries.reduce(
       (sum, entry) => sum + (entry.stats.used_bytes ?? 0),
       0
     );
@@ -91,7 +91,7 @@ export default class DashboardSystem extends Component {
 
   get #freeBytes() {
     return (
-      this.#localEntries.find((entry) => entry.stats.free_bytes)?.stats
+      this.#localEntries.find((entry) => entry.stats.free_bytes != null)?.stats
         .free_bytes ?? null
     );
   }
@@ -165,69 +165,67 @@ export default class DashboardSystem extends Component {
           {{i18n "admin.dashboard.sections.system.fetch_error"}}
         </div>
       {{else if @data}}
-        {{#if this.versionCheck}}
-          <div class="db-section__row-block db-system__block">
-            <div class="db-section__row-block-header">
-              <h3 class="db-section__header">
-                {{dIcon "tag" class="db-system__block-icon"}}
-                {{i18n "admin.dashboard.version"}}
-              </h3>
-            </div>
+        <div class="db-section__row-block db-system__block">
+          <div class="db-section__row-block-header">
+            <h3 class="db-section__header">
+              {{dIcon "tag" class="db-system__block-icon"}}
+              {{i18n "admin.dashboard.version"}}
+            </h3>
+          </div>
 
-            <div class="db-system__headline">
+          <div class="db-system__headline">
 
-              <div class="db-group">
-                <div class="db-system__value">
-                  {{dashIfEmpty this.versionCheck.installed_version}}
-                </div>
-
-                {{#if this.versionCheck.installedCommitsAhead}}
-                  <span
-                    class="db-pill"
-                    title={{i18n
-                      "admin.dashboard.commits_ahead"
-                      count=this.versionCheck.installedCommitsAhead
-                    }}
-                  >
-                    {{i18n
-                      "admin.dashboard.sections.system.commits"
-                      count=this.versionCheck.installedCommitsAhead
-                    }}
-                  </span>
-                {{/if}}
+            <div class="db-group">
+              <div class="db-system__value">
+                {{dashIfEmpty this.versionCheck.installed_version}}
               </div>
 
-              {{#if this.versionCheck.gitLink}}
-                <a
-                  class="db-system__link"
-                  href={{this.versionCheck.gitLink}}
-                  rel="noopener noreferrer"
-                  target="_blank"
+              {{#if this.versionCheck.installedCommitsAhead}}
+                <span
+                  class="db-pill"
                   title={{i18n
-                    "admin.dashboard.commit_on_github"
-                    sha=this.versionCheck.shortSha
+                    "admin.dashboard.commits_ahead"
+                    count=this.versionCheck.installedCommitsAhead
                   }}
                 >
-                  {{i18n "admin.dashboard.sections.system.view_on_github"}}
-                  {{dIcon "up-right-from-square"}}
-                </a>
+                  {{i18n
+                    "admin.dashboard.sections.system.commits"
+                    count=this.versionCheck.installedCommitsAhead
+                  }}
+                </span>
               {{/if}}
-
             </div>
 
-            <div
-              class={{dConcatClass
-                "db-system__footer"
-                this.versionStatus.className
-              }}
-            >
-              <span class="db-system__label">
-                {{dIcon this.versionStatus.icon class="db-system__status-icon"}}
-                {{this.versionStatus.message}}
-              </span>
-            </div>
+            {{#if this.versionCheck.gitLink}}
+              <a
+                class="db-system__link"
+                href={{this.versionCheck.gitLink}}
+                rel="noopener noreferrer"
+                target="_blank"
+                title={{i18n
+                  "admin.dashboard.commit_on_github"
+                  sha=this.versionCheck.shortSha
+                }}
+              >
+                {{i18n "admin.dashboard.sections.system.view_on_github"}}
+                {{dIcon "up-right-from-square"}}
+              </a>
+            {{/if}}
+
           </div>
-        {{/if}}
+
+          <div
+            class={{dConcatClass
+              "db-system__footer"
+              this.versionStatus.className
+            }}
+          >
+            <span class="db-system__label">
+              {{dIcon this.versionStatus.icon class="db-system__status-icon"}}
+              {{this.versionStatus.message}}
+            </span>
+          </div>
+        </div>
 
         {{#if @data.storage}}
           <div class="db-section__row-block db-system__block --storage">

@@ -26,8 +26,6 @@ class AdminDashboardSystem
   attr_reader :guardian
 
   def version
-    return nil if !SiteSetting.version_checks?
-
     DiscourseUpdates.check_version.as_json
   end
 
@@ -37,8 +35,6 @@ class AdminDashboardSystem
 
     stats = stats.except(:backups) if !guardian.is_admin?
 
-    # Only a local store has a bounded amount of space, so the client needs to
-    # know which of these live on this machine before it can chart them.
     stats.each_with_object({}) do |(store, values), result|
       result[store] = values.nil? ? nil : values.merge(remote: remote?(store))
     end
