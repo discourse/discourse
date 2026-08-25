@@ -279,4 +279,53 @@ export default class MoveEngine<T> {
     const handler = this.#args().group?.onMove ?? this.#args().onMove;
     return handler?.(move) !== false;
   }
+
+  /**
+   * What this list would look like with one row taken out of it, handed to the
+   * group so a destination member can resolve a cross-list drop against the
+   * source as it stands at drop time rather than a snapshot.
+   *
+   * @param key - The row leaving this list.
+   * @returns The projection, or `undefined` when the row cannot leave.
+   */
+  removalProjection(key: string) {
+    const rows = this.#rows();
+    const moved = rows.find((candidate) => candidate.key === key);
+    if (!moved?.movable) {
+      return undefined;
+    }
+    // The same slot model as an in-list move: frozen rows keep their
+    // exact visible indices while the remaining movable items refill
+    // the movable slots in order, and the list shrinks by its last
+    // slot. A frozen row that sat on the dropped final slot has no
+    // index to keep and joins the end of the refill queue.
+    const size = rows.length - 1;
+    const empty = Symbol("empty");
+    const proposed: (T | typeof empty)[] = new Array(size).fill(empty);
+    const overflow: T[] = [];
+    for (const row of rows) {
+      if (!row.movable) {
+        if (row.index < size) {
+          proposed[row.index] = row.item;
+        } else {
+          overflow.push(row.item);
+        }
+      }
+    }
+    const queue = rows
+      .filter((row) => row.movable && row.key !== key)
+      .map((row) => row.item)
+      .concat(overflow);
+    let cursor = 0;
+    for (let index = 0; index < size; index++) {
+      if (proposed[index] === empty) {
+        proposed[index] = queue[cursor++]!;
+      }
+    }
+    return {
+      item: moved.item,
+      fromIndex: moved.index,
+      proposedFromItems: proposed as readonly T[],
+    };
+  }
 }
