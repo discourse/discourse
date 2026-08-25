@@ -13,10 +13,8 @@ export default class DiscourseAiLogsRoute extends DiscourseRoute {
     has_retries: { replace: true },
     selectedModel: { replace: true },
     feature: { replace: true },
-    username: { replace: true },
+    search: { replace: true },
     unattributed: { replace: true },
-    id_type: { replace: true },
-    id_value: { replace: true },
     details: { replace: false },
   };
 
@@ -24,9 +22,6 @@ export default class DiscourseAiLogsRoute extends DiscourseRoute {
     const period = ["hour", "day", "week", "custom"].includes(params.period)
       ? params.period
       : null;
-    const idType = ["id", "topic_id", "post_id"].includes(params.id_type)
-      ? params.id_type
-      : "id";
     const outcome = ["successful", "failed"].includes(params.outcome)
       ? params.outcome
       : null;
@@ -35,17 +30,14 @@ export default class DiscourseAiLogsRoute extends DiscourseRoute {
     const selectedModel = /^-?[1-9]\d*$/.test(params.selectedModel || "")
       ? params.selectedModel
       : null;
-    const idValue = /^[1-9]\d*$/.test(params.id_value || "")
-      ? params.id_value
-      : null;
+    const search = (params.search || "").trim().slice(0, 200);
     const filterQueryParams = {
       ...params,
       period,
       outcome,
       has_retries: hasRetries,
       unattributed,
-      id_type: idType,
-      id_value: idValue,
+      search,
       model: selectedModel,
     };
     delete filterQueryParams.selectedModel;
@@ -53,8 +45,6 @@ export default class DiscourseAiLogsRoute extends DiscourseRoute {
     const requestParams = { ...filterQueryParams };
     delete requestParams.details;
     delete requestParams.period;
-    delete requestParams.id_type;
-    delete requestParams.id_value;
     requestParams.llm_id = requestParams.model;
     delete requestParams.model;
     requestParams.include_meta = true;
@@ -70,10 +60,6 @@ export default class DiscourseAiLogsRoute extends DiscourseRoute {
           .toISOString();
         requestParams.end_date = moment().toISOString();
       }
-    }
-
-    if (idValue) {
-      requestParams[idType] = idValue;
     }
 
     return {
