@@ -13,7 +13,9 @@ module DiscourseWorkflows
                :created_at,
                :approved,
                :silenced,
-               :suspended
+               :suspended,
+               :uploaded_avatar_id,
+               :avatar_template
 
     def trust_level_name
       TrustLevel.name(object.trust_level)
