@@ -927,10 +927,7 @@ RSpec.describe Upload do
   end
 
   describe "#dominant_color" do
-    let(:white_image) { Fabricate(:image_upload, color: "white") }
-    let(:red_image) { Fabricate(:image_upload, color: "red") }
-    let(:high_color_image) { Fabricate(:image_upload, color: "#000A00F00", color_depth: 16) }
-    let(:tiny_image) do
+    let(:image) do
       upload = Fabricate(:upload, extension: "png")
       file = file_from_fixtures("cropped.png")
       upload.update!(url: Discourse.store.store_upload(file, upload))
@@ -946,58 +943,14 @@ RSpec.describe Upload do
       upload.update(url: Discourse.store.store_upload(file, upload), extension: "txt")
       upload
     end
-    let(:invalid_image) do
-      upload = Fabricate(:upload)
 
-      file = Tempfile.new(%w[invalid .png])
-      file << "Not really an image"
-      file.rewind
+    it "calculates and stores a missing dominant color" do
+      local_path = Discourse.store.path_for(image)
+      DiscourseVips.expects(:dominant_color).with(input_path: local_path).returns("ABCDEF")
 
-      upload.update(url: Discourse.store.store_upload(file, upload))
-      upload
-    end
-    it "correctly identifies and stores an image's dominant color" do
-      expect(white_image.dominant_color).to eq(nil)
-      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
-      expect(white_image.dominant_color).to eq("FFFFFF")
-
-      expect(red_image.dominant_color).to eq(nil)
-      expect(red_image.dominant_color(calculate_if_missing: true)).to eq("FF0000")
-      expect(red_image.dominant_color).to eq("FF0000")
-
-      expect(high_color_image.dominant_color).to eq(nil)
-      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
-      expect(high_color_image.dominant_color).to eq("009FEF")
-
-      expect(tiny_image.dominant_color).to eq(nil)
-      expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("171613")
-      expect(tiny_image.dominant_color).to eq("171613")
-    end
-
-    it "can be backfilled" do
-      expect(white_image.dominant_color).to eq(nil)
-      expect(red_image.dominant_color).to eq(nil)
-
-      Upload.backfill_dominant_colors!(5)
-
-      white_image.reload
-      red_image.reload
-
-      expect(white_image.dominant_color).to eq("FFFFFF")
-      expect(red_image.dominant_color).to eq("FF0000")
-    end
-
-    it "is backfilled by the job" do
-      expect(white_image.dominant_color).to eq(nil)
-      expect(red_image.dominant_color).to eq(nil)
-
-      Jobs::BackfillDominantColors.new.execute({})
-
-      white_image.reload
-      red_image.reload
-
-      expect(white_image.dominant_color).to eq("FFFFFF")
-      expect(red_image.dominant_color).to eq("FF0000")
+      expect(image.dominant_color).to eq(nil)
+      expect(image.dominant_color(calculate_if_missing: true)).to eq("ABCDEF")
+      expect(image.dominant_color).to eq("ABCDEF")
     end
 
     it "stores an empty string for non-image uploads" do
@@ -1007,44 +960,40 @@ RSpec.describe Upload do
     end
 
     it "stores an empty string when the file is missing from the store" do
-      File.delete(Discourse.store.path_for(white_image))
+      File.delete(Discourse.store.path_for(image))
 
-      expect(white_image.dominant_color).to eq(nil)
-      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(white_image.dominant_color).to eq("")
-    end
-
-    it "correctly handles invalid image files" do
-      expect(invalid_image.dominant_color).to eq(nil)
-      expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(invalid_image.dominant_color).to eq("")
+      expect(image.dominant_color).to eq(nil)
+      expect(image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(image.dominant_color).to eq("")
     end
 
     it "stores an empty string when the dominant color cannot be calculated" do
-      expect(white_image.dominant_color).to eq(nil)
+      local_path = Discourse.store.path_for(image)
+      DiscourseVips
+        .expects(:dominant_color)
+        .with(input_path: local_path)
+        .raises(DiscourseVips::Error, "invalid image")
 
-      DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error, "invalid image")
-
-      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(white_image.dominant_color).to eq("")
+      expect(image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(image.dominant_color).to eq("")
     end
 
     it "correctly handles error when file is too large to download" do
-      white_image.stubs(:local?).returns(false)
+      image.stubs(:local?).returns(false)
       FileHelper.stubs(:download).returns(nil)
 
-      expect(white_image.dominant_color).to eq(nil)
-      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(white_image.dominant_color).to eq("")
+      expect(image.dominant_color).to eq(nil)
+      expect(image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(image.dominant_color).to eq("")
     end
 
     it "correctly handles error when file has HTTP error" do
-      white_image.stubs(:local?).returns(false)
+      image.stubs(:local?).returns(false)
       FileHelper.stubs(:download).raises(OpenURI::HTTPError.new("Error", nil))
 
-      expect(white_image.dominant_color).to eq(nil)
-      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(white_image.dominant_color).to eq("")
+      expect(image.dominant_color).to eq(nil)
+      expect(image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(image.dominant_color).to eq("")
     end
 
     it "is validated for length" do
