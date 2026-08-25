@@ -193,6 +193,7 @@ module DiscourseVips
           RbConfig.ruby,
           Rails.root.join("script/discourse_vips_broker").to_s,
           socket_path,
+          Process.pid.to_s,
           Rails.root.join("Gemfile").to_s,
           in: File::NULL,
           close_others: true,
