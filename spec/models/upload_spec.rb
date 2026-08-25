@@ -1020,7 +1020,7 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq("")
     end
 
-    it "stores an empty string when the native helper rejects the image" do
+    it "stores an empty string when the dominant color cannot be calculated" do
       expect(white_image.dominant_color).to eq(nil)
 
       DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error, "invalid image")
