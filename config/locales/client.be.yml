@@ -2219,20 +2219,14 @@ be:
       search:
         title: "Пошук"
       site_traffic_explorer:
-        pageviews: "Прагляды"
+        metric_information: "Пра %{metric}"
+        apply: "Прымяніць"
         view_more: "Паказаць больш"
         cards:
           visitors: "Наведвальнікі"
-        columns:
-          top_urls: "URL-адрас"
-          browsers: "браўзэр"
-          ip_addresses: "IP-адрас"
         filters:
           browser: "браўзэр"
           ip: "IP-адрас"
-        metrics:
-          pageviews:
-            label: "Прагляды"
         series:
           anonymous_human: "ананімны"
       dashboard:

@@ -488,6 +488,11 @@ pt_BR:
         type: "Mensagem de chat"
         message_in_channel: "Canal"
       reactions:
+        add: "Reaja com %{emoji}"
+        remove: "Remova sua reação %{emoji}"
+        counted:
+          one: "Reação %{emoji}, %{count} pessoa"
+          other: "Reação %{emoji}, %{count} pessoas"
         only_you: "<span>Você reagiu com </span>:%{emoji}:"
         you_and_single_user: "<span>Você e %{username} reagiram com </span>:%{emoji}:"
         you_and_multiple_users: "<span>Você, %{commaSeparatedUsernames} e %{username} reagiram com </span>:%{emoji}:"
@@ -496,6 +501,10 @@ pt_BR:
           other: "<span>Você, %{commaSeparatedUsernames} e mais %{count} reagiram com </span>:%{emoji}:"
         single_user: "<span>%{username} reagiu com </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} e %{username} reagiram com </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reação"
+            other: "%{count} reações"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} e mais %{count} reagiram com </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} e mais %{count} reagiram com </span>:%{emoji}:"

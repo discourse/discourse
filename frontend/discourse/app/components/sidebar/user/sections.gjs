@@ -17,6 +17,7 @@ import {
   WEB_LINK_KINDS,
   webLinkPayload,
 } from "discourse/lib/sidebar/link-drop";
+import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
@@ -37,6 +38,7 @@ import TagsSection from "./tags-section";
 const ZONE_ARM_DELAY = 250;
 
 export default class SidebarUserSections extends Component {
+  @service sidebarState;
   @service currentUser;
   @service dialog;
   @service modal;
@@ -143,6 +145,10 @@ export default class SidebarUserSections extends Component {
     });
   }
 
+  get mainPanel() {
+    return this.sidebarState.panels.find((panel) => panel.key === MAIN_PANEL);
+  }
+
   /**
    * Splits a dragged row out into a section of its own: the create form opens
    * prefilled from the row, and only a saved creation removes the original
@@ -237,6 +243,8 @@ export default class SidebarUserSections extends Component {
         @collapsable={{@collapsableSections}}
         @enableLinkDrop={{@enableLinkDrop}}
         @toggleNavigationMenu={{@toggleNavigationMenu}}
+        @expandActiveSection={{this.mainPanel.expandActiveSection}}
+        @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
       />
 
       {{#if this.zoneRevealed}}
@@ -280,14 +288,24 @@ export default class SidebarUserSections extends Component {
       <CategoriesSection
         @collapsable={{@collapsableSections}}
         @toggleNavigationMenu={{@toggleNavigationMenu}}
+        @expandActiveSection={{this.mainPanel.expandActiveSection}}
+        @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
       />
 
       {{#if this.currentUser.display_sidebar_tags}}
-        <TagsSection @collapsable={{@collapsableSections}} />
+        <TagsSection
+          @collapsable={{@collapsableSections}}
+          @expandActiveSection={{this.mainPanel.expandActiveSection}}
+          @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        />
       {{/if}}
 
       {{#unless @hideApiSections}}
-        <ApiSections @collapsable={{@collapsableSections}} />
+        <ApiSections
+          @collapsable={{@collapsableSections}}
+          @expandActiveSection={{this.mainPanel.expandActiveSection}}
+          @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        />
       {{/unless}}
     </div>
   </template>

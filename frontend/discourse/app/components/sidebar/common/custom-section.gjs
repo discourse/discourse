@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import Section from "discourse/lib/sidebar/section";
 import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/admin-section";
@@ -42,6 +44,14 @@ export default class SidebarCustomSection extends Component {
     }
   }
 
+  @cached
+  get activeLink() {
+    return findActiveLink(
+      [...this.section.links, ...(this.section.moreLinks || [])],
+      this.router
+    );
+  }
+
   /**
    * Rows drag only where a drop may land, and never on touch-first devices,
    * where the press stays reserved for scrolling and the long-press link
@@ -64,6 +74,8 @@ export default class SidebarCustomSection extends Component {
   <template>
     <SectionComponent
       @sectionName={{this.section.slug}}
+      @activeLink={{this.activeLink}}
+      @expandWhenActive={{@expandActiveSection}}
       @headerLinkText={{this.section.decoratedTitle}}
       @indicatePublic={{this.section.indicatePublic}}
       @collapsable={{@collapsable}}
@@ -91,6 +103,10 @@ export default class SidebarCustomSection extends Component {
           @prefixValue={{link.prefixValue}}
           @query={{link.query}}
           @route={{link.route}}
+          @scrollIntoView={{and
+            @scrollActiveLinkIntoView
+            (eq link.name this.activeLink.name)
+          }}
           @shouldDisplay={{link.shouldDisplay}}
           @suffixCSSClass={{link.suffixCSSClass}}
           @suffixType={{link.suffixType}}

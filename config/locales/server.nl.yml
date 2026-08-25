@@ -2137,7 +2137,6 @@ nl:
     user_profile_view_duration_hours: "Elke N uur één keer per IP/Gebruiker een nieuw-gebruikersprofielweergave tellen."
     levenshtein_distance_spammer_emails: "Bij het vergelijken van spam-e-mails, het aantal verschillende tekens waarbij nog steeds een wazige overeenkomst kan bestaan."
     max_new_accounts_per_registration_ip: "Als er al (n) accounts met vertrouwensniveau 0 zijn van een bepaald IP-adres (en geen daarvan medewerker is of vertrouwensniveau 2 of hoger heeft), wordt het accepteren van nieuwe registraties vanaf dat IP-adres gestopt."
-    min_ban_entries_for_roll_up: "Bij het klikken op de knop Samenvoegen, een nieuwe subnet-banvermelding maken als er minstens (N) vermeldingen zijn."
     max_age_unmatched_emails: "Niet-overeenkomende gecontroleerde e-mailadresvermeldingen na (N) dagen verwijderen."
     max_age_unmatched_ips: "Niet-overeenkomende gecontroleerde IP-adresvermeldingen na (N) dagen verwijderen."
     num_flaggers_to_close_topic: "Minimale aantal unieke melders dat nodig is om automatisch een topic te pauzeren voor interventie."

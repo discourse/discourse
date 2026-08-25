@@ -3,78 +3,108 @@
 .ai-logs {
   padding: var(--space-4);
 
-  &__filters {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+  > .d-filter-controls {
     margin-bottom: var(--space-4);
-
-    .d-filter-controls {
-      align-self: stretch;
-      margin-block: 0;
-    }
-
-    .d-filter-controls__dropdowns {
-      grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
-    }
   }
 
-  &__filter-panel {
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
+  &__filters-title {
+    margin-block: var(--space-4) var(--space-2);
+    font-size: var(--font-up-1);
   }
 
-  &__periods,
-  &__date-range {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2);
+  .d-filter-controls__dropdowns {
+    grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
   }
 
-  &__specialized-filters {
+  .d-filter-controls__additional-filters {
     display: grid;
-    grid-template-columns: minmax(15rem, 1fr) repeat(2, auto);
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+
+    @include viewport.from(md) {
+      grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    }
+  }
+
+  &__date-range-filter,
+  &__feature-filter,
+  &__user-filter {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  &__date-range-filter {
+    display: flex;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
     align-items: end;
     gap: var(--space-2);
 
-    > * {
-      min-width: 0;
+    legend {
+      flex-basis: 100%;
     }
   }
 
-  &__user-filter .select-kit {
-    width: 100%;
-    max-width: var(--form-kit-medium-input);
-  }
+  &__feature-filter,
+  &__user-filter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
 
-  &__toggle {
-    align-self: end;
-    padding-bottom: var(--space-2);
+    // a rendered legend sits outside flex layout, so gap does not apply to it
+    legend {
+      margin-bottom: var(--space-1);
+    }
+
+    .select-kit {
+      width: 100%;
+    }
   }
 
   &__id-filter {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
     align-items: end;
     gap: var(--space-2);
+    margin: 0;
+  }
 
-    > .form-kit__field {
-      min-width: min(10rem, 100%);
+  &__id-type,
+  &__id-value {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+    margin: 0;
+
+    select,
+    input {
+      width: 100%;
+      min-height: 2.375rem;
+      margin: 0;
     }
   }
 
+  &__toggles {
+    display: flex;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
   @include viewport.until(sm) {
-    &__specialized-filters {
-      grid-template-columns: 1fr;
+    &__date-range-filter .d-date-time-input-range {
+      flex-basis: 100%;
     }
 
-    &__user-filter .select-kit {
-      max-width: 100%;
+    &__id-filter {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    &__find {
+      justify-self: start;
     }
   }
 
@@ -122,12 +152,16 @@
   }
 
   &__col-outcome {
-    width: 5rem;
+    width: 2rem;
     text-align: center;
   }
 
   &__col-user {
-    width: 10rem;
+    width: 7rem;
+  }
+
+  &__col-request {
+    width: 15rem;
   }
 
   &__col-duration {

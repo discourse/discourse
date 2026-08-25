@@ -5777,19 +5777,17 @@ vi:
         title: "Có gì mới?"
         check_for_updates: "Kiểm tra cập nhật"
       site_traffic_explorer:
-        pageviews: "Số lượt xem"
+        metric_information: "Giới thiệu về %{metric}"
+        remove_filter_value: "Xóa %{value}"
+        clear_all: "Xóa hết"
+        apply: "Áp dụng"
         view_more: "Mở rộng"
         cards:
           pages: "Trang"
           visitors: "Khách ghé thăm"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "Địa chỉ IP"
         filters:
           ip: "Địa chỉ IP"
         metrics:
-          pageviews:
-            label: "Số lượt xem"
           bounce_rate:
             label: "Tỷ lệ thoát (Bounce rate)"
         series:

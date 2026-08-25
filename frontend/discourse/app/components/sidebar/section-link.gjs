@@ -177,14 +177,13 @@ export default class SectionLink extends Component {
     }
 
     schedule("afterRender", () => {
-      const rect = element.getBoundingClientRect();
-      const alreadyVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
-      if (alreadyVisible) {
+      if (isFullyScrolledIntoView(element)) {
         return;
       }
 
       element.scrollIntoView({
-        block: "center",
+        block: "nearest",
+        inline: "nearest",
       });
     });
   }
@@ -340,4 +339,34 @@ export default class SectionLink extends Component {
       </li>
     {{/if}}
   </template>
+}
+
+function isFullyScrolledIntoView(element) {
+  const rect = element.getBoundingClientRect();
+  let node = element.parentElement;
+  let scrolled = false;
+
+  while (node && node !== document.body) {
+    const { overflowY } = getComputedStyle(node);
+
+    if (
+      (overflowY === "auto" || overflowY === "scroll") &&
+      node.scrollHeight > node.clientHeight
+    ) {
+      scrolled = true;
+      const bounds = node.getBoundingClientRect();
+
+      if (rect.top < bounds.top || rect.bottom > bounds.bottom) {
+        return false;
+      }
+    }
+
+    node = node.parentElement;
+  }
+
+  if (scrolled) {
+    return true;
+  }
+
+  return rect.top >= 0 && rect.bottom <= window.innerHeight;
 }

@@ -2284,7 +2284,6 @@ fr:
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Une adresse e-mail sera attribuée à un spammeur connu même si elle diffère par ce nombre de caractères."
     max_new_accounts_per_registration_ip: "S'il y a déjà (n) comptes avec un niveau de confiance de 0 utilisant cette adresse IP (et si aucun n'est un responsable ni un utilisateur avec un niveau de confiance de 2 ou plus), ne plus accepter de nouvelles inscriptions en provenance de cette adresse IP. Le réglage de cette valeur à 0 désactive cette limite."
-    min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
     max_age_unmatched_emails: "Effacer les adresses e-mail sous surveillance sans correspondance après (N) jours"
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillance sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimal de signalements uniques requis pour suspendre automatiquement un sujet pour intervention"

@@ -3934,12 +3934,8 @@ sl:
       search:
         title: "Išči"
       site_traffic_explorer:
-        pageviews: "Ogledov strani"
-        columns:
-          top_urls: "URL"
-        metrics:
-          pageviews:
-            label: "Ogledov strani"
+        metric_information: "O %{metric}"
+        apply: "Uporabi"
         series:
           anonymous_human: "Anonimni"
       dashboard:

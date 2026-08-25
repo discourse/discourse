@@ -977,7 +977,7 @@ class SessionController < ApplicationController
       render json: login_not_approved
     elsif payload = login_error_check(user)
       render json: payload
-    elsif created_account && !cookies[:sso_payload]
+    elsif created_account
       # Same tail as `login`, except the response tells the client a new
       # account was created so it can show the "account ready" step before
       # following the usual post-login redirect.
@@ -1001,10 +1001,25 @@ class SessionController < ApplicationController
                  # the avatar picker needs the upload permission passed through.
                  can_upload_avatar:
                    user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map),
+                 # Only set when a DiscourseConnect provider handoff is pending.
+                 redirect_url: deferred_sso_provider_url,
                )
     else
       login(user)
     end
+  end
+
+  # A pending provider handoff would redirect as soon as the session exists,
+  # skipping the account-ready step, so the URL is handed to the client to
+  # follow once signup is finished (as account activation does). Consumes the
+  # payload so a later login isn't sent through a handoff it didn't start.
+  def deferred_sso_provider_url
+    return if !SiteSetting.enable_discourse_connect_provider
+
+    payload = cookies.delete(:sso_payload)
+    return if payload.blank?
+
+    "#{session_sso_provider_url}?#{payload}"
   end
 
   def invalid_login_code

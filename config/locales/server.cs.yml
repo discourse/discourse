@@ -2244,7 +2244,6 @@ cs:
     user_profile_view_duration_hours: "Počítat nová zobrazení uživatelského profilu jednou za IP/uživatele každých N hodin"
     levenshtein_distance_spammer_emails: "Rozdíl v počtu znaků, které stále umožňují přibližnou shodu při testování e-mailu na spam"
     max_new_accounts_per_registration_ip: "Přestat přijímat nové registrace z dané IP adresy, pokud z této IP adresy již existuje (n) účtů s úrovní důvěry 0 (a žádný z nich není členem redakce ani na úrovni TL2 či vyšší). Nastavením na 0 limit deaktivujete."
-    min_ban_entries_for_roll_up: "Po kliknutí na tlačítko Sloučit se vytvoří nová položka zákazu, která sloučí jednotlivé blokované IP adresy do záznamu subnet, pokud existuje alespoň (N) položek."
     max_age_unmatched_emails: "Smazat neshodující se blokované e-maily po (N) dnech."
     max_age_unmatched_ips: "Smazat neshodné záznamy o filtrovaných IP adresách po (N) dnech."
     num_flaggers_to_close_topic: "Minimální počet unikátních nahlašovatelů potřebný k automatickému pozastavení tématu za účelem intervence"

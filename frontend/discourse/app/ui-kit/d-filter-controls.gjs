@@ -58,6 +58,7 @@ const ResetButton = <template>
  *                                              For multiple dropdowns: receives (key, value)
  * @param {Function} [onDropdownChange] - Callback for dropdown selection changes
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
+ * @param {Boolean} [additionalFiltersActive=false] - Whether filters rendered in the additionalFilters block are active
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
  * @param {Boolean} [showCustomEmptyState] - Whether to show a custom empty state when no results found,
  *                                           if minItemsForFilter is set and the array is empty
@@ -176,8 +177,7 @@ export default class DFilterControls extends Component {
   get showFilterResetButton() {
     return (
       this.showResetButton &&
-      !this.hasMultipleDropdowns &&
-      !this.args.forceShowDropdownFilterToggle &&
+      !this.showDropdownFilterToggle &&
       this.hasActiveFilters
     );
   }
@@ -209,6 +209,10 @@ export default class DFilterControls extends Component {
   }
 
   get hasActiveFilters() {
+    if (this.args.additionalFiltersActive) {
+      return true;
+    }
+
     if (this.textFilter.length > 0) {
       return true;
     }
@@ -416,7 +420,7 @@ export default class DFilterControls extends Component {
   }
 
   @action
-  resetFilters() {
+  async resetFilters() {
     this.textFilter = "";
 
     if (this.hasMultipleDropdowns) {
@@ -441,9 +445,7 @@ export default class DFilterControls extends Component {
       );
     }
 
-    if (this.args.onResetFilters) {
-      this.args.onResetFilters();
-    }
+    await this.args.onResetFilters?.();
 
     schedule("afterRender", () => {
       (
@@ -559,6 +561,12 @@ export default class DFilterControls extends Component {
                 {{/each}}
               </DSelect>
             {{/if}}
+          </div>
+        {{/if}}
+
+        {{#if (has-block "additionalFilters")}}
+          <div class="d-filter-controls__additional-filters">
+            {{yield to="additionalFilters"}}
           </div>
         {{/if}}
 
