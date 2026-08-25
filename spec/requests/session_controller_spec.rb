@@ -693,6 +693,19 @@ RSpec.describe SessionController do
 
     before { SiteSetting.enable_local_logins_via_code = true }
 
+    def begin_discourse_connect_provider_handoff
+      sso = DiscourseConnectBase.new
+      sso.nonce = "handoffnonce"
+      sso.sso_secret = "topsecret"
+      sso.return_sso_url = "http://ask.example.com/sso"
+
+      SiteSetting.enable_discourse_connect_provider = true
+      SiteSetting.discourse_connect_provider_secrets = "ask.example.com|#{sso.sso_secret}"
+      cookies[:sso_payload] = sso.payload
+
+      sso.payload
+    end
+
     it "returns a 404 when login via code is disabled" do
       SiteSetting.enable_local_logins_via_code = false
 
@@ -776,6 +789,15 @@ RSpec.describe SessionController do
       expect(EmailLoginCode.active.for_email(user.email)).to be_empty
     end
 
+    it "follows a pending DiscourseConnect provider handoff for an existing user" do
+      begin_discourse_connect_provider_handoff
+
+      post "/session/login-code/verify.json", params: { email: user.email, code: }
+
+      expect(response.status).to eq(302)
+      expect(response.location).to start_with("http://ask.example.com/sso")
+    end
+
     it "does not log in with a code issued for a normalized email alias" do
       SiteSetting.normalize_emails = true
       user.update!(email: "foobar@example.com")
@@ -840,6 +862,18 @@ RSpec.describe SessionController do
         # Off by default, so the client makes the user pick rather than
         # prefilling a generic username.
         expect(body["prefill_username"]).to eq(false)
+      end
+
+      it "defers a pending DiscourseConnect provider handoff to the account-ready step" do
+        payload = begin_discourse_connect_provider_handoff
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        body = response.parsed_body
+        expect(body["account_created"]).to eq(true)
+        expect(body["redirect_url"]).to end_with("/session/sso_provider?#{payload}")
+        # Consumed, so a later login isn't sent through this handoff.
+        expect(cookies[:sso_payload]).to be_blank
       end
 
       it "flags the username for prefill when email-based suggestions are on" do

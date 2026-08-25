@@ -6216,23 +6216,18 @@ pt_BR:
         title: "Novidades?"
         check_for_updates: "Verificar atualizações"
       site_traffic_explorer:
-        pageviews: "Visualizações de página"
+        metric_information: "Sobre %{metric}"
+        remove_filter_value: "Remover %{value}"
+        clear_all: "Limpar tudo"
+        apply: "Aplicar"
         view_more: "Ver mais"
         cards:
           pages: "Páginas"
           visitors: "Visitantes"
-        columns:
-          countries: "País"
-          top_urls: "URL"
-          browsers: "Navegador"
-          ip_addresses: "Endereço IP"
         filters:
           country: "País"
           browser: "Navegador"
           ip: "Endereço IP"
-        metrics:
-          pageviews:
-            label: "Visualizações de página"
         series:
           anonymous_human: "Anônimo(a)"
       dashboard:

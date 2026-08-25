@@ -2216,7 +2216,6 @@ zh_CN:
     user_profile_view_duration_hours: "每个 IP/用户每 N 小时计算一次新用户个人资料浏览"
     levenshtein_distance_spammer_emails: "在匹配垃圾信息发布者电子邮件时，仍然允许模糊匹配的字符数差异。"
     max_new_accounts_per_registration_ip: "如果已经有 (n) 个来自此 IP 的信任级别 0 帐户（并且没有一个是管理人员或者是 TL2 或更高级别），则停止接受来自该 IP 的新注册。设为 0 将禁用限制。"
-    min_ban_entries_for_roll_up: "点击“汇总”按钮时，如果至少有 (N) 个条目，将创建一个子网禁止条目"
     max_age_unmatched_emails: "在 (N) 天后删除不匹配的已屏蔽电子邮件条目。"
     max_age_unmatched_ips: "在 (N) 天后删除不匹配的已屏蔽 IP 条目。"
     num_flaggers_to_close_topic: "自动暂停话题以进行干预所需的最小唯一举报次数"

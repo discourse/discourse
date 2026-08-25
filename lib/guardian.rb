@@ -256,6 +256,10 @@ class Guardian
   end
   alias can_see_flags? can_moderate?
 
+  def can_delete_all_posts_and_topics?
+    @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+  end
+
   def can_tag?(topic)
     return false if topic.blank?
 

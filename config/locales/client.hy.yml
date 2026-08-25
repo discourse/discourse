@@ -4014,20 +4014,14 @@ hy:
       search:
         title: "Որոնում"
       site_traffic_explorer:
-        pageviews: "Էջադիտումներ"
+        metric_information: " %{metric}-ի մասին"
+        apply: "Կիրառել"
         view_more: "Դիտել ավելին"
         cards:
           visitors: "Այցելուներ"
-        columns:
-          top_urls: "URL"
-          browsers: "Բրաուզեր"
-          ip_addresses: "IP հասցե"
         filters:
           browser: "Բրաուզեր"
           ip: "IP հասցե"
-        metrics:
-          pageviews:
-            label: "Էջադիտումներ"
         series:
           anonymous_human: "Անանուն"
       dashboard:

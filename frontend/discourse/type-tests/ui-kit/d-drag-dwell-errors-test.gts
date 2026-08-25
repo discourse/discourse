@@ -10,8 +10,11 @@ const Negatives = <template>
   {{! @glint-expect-error - onDwell is required }}
   <div {{dDragDwell types="card"}}></div>
 
-  {{! @glint-expect-error - delay is a number of milliseconds }}
+  {{! @glint-expect-error - delay is a boolean or a number of milliseconds }}
   <div {{dDragDwell types="card" delay="500" onDwell=open}}></div>
+
+  {{! @glint-expect-error - leaveDelay is a boolean or a number of milliseconds }}
+  <div {{dDragDwell types="card" leaveDelay="250" onDwell=open}}></div>
 
   {{! @glint-expect-error - externalKinds is the closed external-kind vocabulary }}
   <div {{dDragDwell externalKinds="images" onDwell=open}}></div>

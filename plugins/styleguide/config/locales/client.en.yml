@@ -114,7 +114,7 @@ en:
           disabled_try_this: "Switch it off, try to drag, then switch it back on."
           draggable: "Draggable"
           effect_title: "Declaring the effect"
-          effect_description: "`dDragAndDropTarget` names the operation it would perform through getDropEffect, and the drag carries that effect on its record of the target."
+          effect_description: "`dDragAndDropTarget` names the operation it would perform through dropEffect, and the drag carries that effect on its record of the target."
           effect_try_this: "Drop on each zone and compare the recorded effect."
           effect_note: "The source's effectAllowed declares what it permits, but nothing here enforces the pair: a target may ask for an effect the source never permitted and no refusal follows. Keep the two consistent yourself."
           asks_for_copy: "Asks for copy"

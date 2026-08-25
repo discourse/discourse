@@ -3645,9 +3645,8 @@ bg:
       search:
         title: "Търсене"
       site_traffic_explorer:
-        columns:
-          top_urls: "URL"
-          ip_addresses: "IP адрес"
+        metric_information: "За %{metric}"
+        apply: "Приложи"
         filters:
           ip: "IP адрес"
         series:

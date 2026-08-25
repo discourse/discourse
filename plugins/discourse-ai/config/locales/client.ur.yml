@@ -60,6 +60,7 @@ ur:
               label: "موضوع چھپائیں"
     discourse_ai:
       copied: "کاپی کر لیا"
+      view_raw: "خام دیکھیں"
       ai_decoded_transcript:
         arguments: "دلائل"
         type: "قِسم"
@@ -363,6 +364,7 @@ ur:
           close: "خلاصہ پینل بند کریں"
       discobot_discoveries:
         regular_results: "موضوعات"
+        continue_convo: "گفتگو جاری رکھیں..."
         collapse: "بند کریں"
         tooltip:
           header: "AI سے چلنے والی تلاش"

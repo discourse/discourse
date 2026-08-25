@@ -4171,12 +4171,11 @@ sq:
       search:
         title: "Kërko"
       site_traffic_explorer:
+        metric_information: "Rreth %{metric}"
+        apply: "Apliko"
         view_more: "Shiko më shumë"
         cards:
           visitors: "Vizitorët"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "Adresa IP"
         filters:
           ip: "Adresa IP"
         series:

@@ -51,6 +51,36 @@ RSpec.describe "Chat pinned messages" do
     expect(page).to have_no_css(".chat-pinned-bar")
   end
 
+  it "escapes upload filenames in the pinned message bar" do
+    SiteSetting.content_security_policy = false
+    attacker = Fabricate(:user)
+    victim = Fabricate(:user)
+    upload =
+      Fabricate(
+        :upload,
+        user: attacker,
+        original_filename: %q(<svg onload="this.dataset.pinnedFilenameXss='true'"></svg>.png),
+      )
+    message.update!(
+      user: attacker,
+      message: "",
+      cooked: "",
+      excerpt: upload.original_filename,
+      uploads: [upload],
+    )
+    channel.add(attacker)
+    channel.add(victim)
+    Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
+
+    sign_in(victim)
+    chat_page.visit_channel(channel)
+
+    expect(page).to have_css(".chat-pinned-bar__excerpt")
+    expect(page).to have_no_css(".chat-pinned-bar__excerpt svg[data-pinned-filename-xss='true']")
+    expect(page).to have_no_css(".chat-pinned-bar__excerpt svg[onload]")
+    expect(find(".chat-pinned-bar__excerpt").native.inner_html).to include("&lt;svg")
+  end
+
   it "shows unread indicator for unseen pins" do
     pin_another_message # a self-pin is never unseen, and it brings out the list icon
 

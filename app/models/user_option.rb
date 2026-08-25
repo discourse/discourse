@@ -23,6 +23,13 @@ class UserOption < ActiveRecord::Base
     "chat_send_shortcut", # TODO(2027-01): replaced by send_shortcut; drop the column in a follow-up PR once this has shipped
     "enable_defer", # TODO(2027-02): the preference was removed; drop the column in a follow-up PR once this has shipped
   ]
+  # TODO: remove after 20260824051214_drop_ai_search_discovery_preferences_from_user_options has been promoted
+  self.ignored_columns += %w[
+    ai_search_discoveries_mode
+    ai_search_discoveries_show_summary
+    ai_search_discoveries_summary_detail
+    ai_search_discoveries_related_count
+  ]
 
   self.primary_key = :user_id
   belongs_to :user
@@ -277,10 +284,6 @@ end
 # Table name: user_options
 #
 #  ai_search_discoveries                          :boolean          default(TRUE), not null
-#  ai_search_discoveries_mode                     :integer          default(1), not null
-#  ai_search_discoveries_related_count            :integer          default(2), not null
-#  ai_search_discoveries_show_summary             :boolean          default(TRUE), not null
-#  ai_search_discoveries_summary_detail           :integer          default(1), not null
 #  allow_private_messages                         :boolean          default(TRUE), not null
 #  auto_image_caption                             :boolean          default(FALSE), not null
 #  auto_track_topics_after_msecs                  :integer

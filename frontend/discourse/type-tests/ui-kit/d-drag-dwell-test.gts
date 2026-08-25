@@ -53,11 +53,17 @@ const Positives = <template>
       types="card"
       externalKinds="text"
       delay=700
+      leaveDelay=250
       canDwell=gate
       acceptsSelf=false
       onDwell=open
       onDwellEnd=close
     }}
+  ></div>
+
+  {{! Boolean shorthands for both delays. }}
+  <div
+    {{dDragDwell types="card" delay=false leaveDelay=true onDwell=open}}
   ></div>
 
   {{! Arrays for both filters. }}

@@ -812,7 +812,7 @@ class Reviewable < ActiveRecord::Base
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(
-        "reject_user",
+        "#{id}-reject_user",
         icon: "user-xmark",
         label: "reviewables.actions.reject_user.title",
       )

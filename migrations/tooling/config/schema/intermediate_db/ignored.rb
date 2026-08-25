@@ -152,6 +152,7 @@ Migrations::Tooling::Schema.ignored do
   tables :admin_dashboard_reports,
          :admin_dashboard_sections,
          :browser_pageview_country_daily_rollups,
+         :browser_pageview_entry_url_daily_rollups,
          :browser_pageview_referrer_daily_rollups,
          :category_activity_daily_rollups,
          :user_visit_daily_rollups
