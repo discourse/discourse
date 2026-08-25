@@ -3722,7 +3722,6 @@ nl:
           title: "Tags vervangen"
       delete_topics:
         name: "Verwijderen"
-        description: "Verwijder de geselecteerde topics permanent. Deze actie kan niet ongedaan worden gemaakt."
       update_category:
         name: "Categorie bijwerken"
         description: "Verplaats alle geselecteerde topics naar de volgende categorie:"

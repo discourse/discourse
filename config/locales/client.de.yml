@@ -3972,7 +3972,6 @@ de:
           missing_to: "Ein Ersatzschlagwort ist erforderlich"
       delete_topics:
         name: "Löschen"
-        description: "Lösche die ausgewählten Themen endgültig. Diese Aktion kann nicht rückgängig gemacht werden."
       update_category:
         name: "Kategorie aktualisieren"
         description: "Verschiebe alle ausgewählten Themen in die folgende Kategorie:"
