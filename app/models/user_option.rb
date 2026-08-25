@@ -22,6 +22,7 @@ class UserOption < ActiveRecord::Base
     "only_chat_push_notifications", # TODO(2027-01): replaced by push_notification_level; drop the column in a follow-up PR once this has shipped
     "chat_send_shortcut", # TODO(2027-01): replaced by send_shortcut; drop the column in a follow-up PR once this has shipped
     "enable_defer", # TODO(2027-02): the preference was removed; drop the column in a follow-up PR once this has shipped
+    "topics_unread_when_closed", # TODO(2027-02): the preference was removed; drop the column in a follow-up PR once this has shipped
   ]
   # TODO: remove after 20260824051214_drop_ai_search_discovery_preferences_from_user_options has been promoted
   self.ignored_columns += %w[
@@ -350,7 +351,6 @@ end
 #  theme_key_seq                                  :integer          default(0), not null
 #  timezone                                       :string
 #  title_count_mode_key                           :integer          default(0), not null
-#  topics_unread_when_closed                      :boolean          default(TRUE), not null
 #  understood_languages                           :string           default([]), not null, is an Array
 #  watched_precedence_over_muted                  :boolean          default(FALSE), not null
 #  color_scheme_id                                :integer

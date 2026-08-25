@@ -238,12 +238,7 @@ class TopicsBulkAction
   def close
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status(
-          "closed",
-          true,
-          @user,
-          { message: @operation[:message], silent_tracking: @operation[:silent] },
-        )
+        t.update_status("closed", true, @user, { message: @operation[:message] })
         @changed_ids << t.id
       end
     end

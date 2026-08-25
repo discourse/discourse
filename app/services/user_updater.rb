@@ -60,7 +60,6 @@ class UserUpdater
     sidebar_link_to_filtered_list
     sidebar_show_count_of_new_items
     watched_precedence_over_muted
-    topics_unread_when_closed
     composition_mode
     send_shortcut
     automatically_translate
