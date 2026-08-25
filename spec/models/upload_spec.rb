@@ -968,7 +968,13 @@ RSpec.describe Upload do
       local_path = Discourse.store.path_for(image)
       DiscourseVips
         .expects(:vips)
-        .with("dominant-color", local_path, operation: :upload_dominant_color, read: [local_path])
+        .with(
+          "dominant-color",
+          local_path,
+          operation: :upload_dominant_color,
+          read: [local_path],
+          timeout: 5,
+        )
         .raises(Discourse::Utils::CommandError, "invalid image")
 
       expect(image.dominant_color(calculate_if_missing: true)).to eq("")

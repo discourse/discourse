@@ -10,6 +10,7 @@ class Upload < ActiveRecord::Base
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX = %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
+  DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
   # the maximum length of a base62 encoded sha1
   MAX_BASE62_SHA1_LENGTH = 27
 
@@ -400,6 +401,7 @@ class Upload < ActiveRecord::Base
             local_path,
             operation: :upload_dominant_color,
             read: [local_path],
+            timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
           ).strip
         rescue Discourse::Utils::CommandError
           # Timeout or unable to parse image

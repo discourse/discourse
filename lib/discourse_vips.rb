@@ -69,6 +69,7 @@ module DiscourseVips
       end
     end
   end
+  private_class_method :run
 
   def self.executable
     @executable ||= MiniVips.executable
@@ -79,6 +80,4 @@ module DiscourseVips
     File.join(File.dirname(File.dirname(executable)), "lib/mini_vips/fonts/NotoSans-Regular.ttf")
   end
   private_class_method :bundled_font_path
-
-  private_class_method :run
 end
