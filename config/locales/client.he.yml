@@ -6692,25 +6692,19 @@ he:
         title: "מה חדש?"
         check_for_updates: "חיפוש עדכונים"
       site_traffic_explorer:
-        pageviews: "צפיות-דף"
+        metric_information: "על %{metric}"
+        remove_filter_value: "הסרת %{value}"
+        clear_all: "לפנות הכול"
+        apply: "החלה"
         view_more: "להציג עוד"
         cards:
           pages: "עמודים"
           visitors: "מבקרים"
-        columns:
-          referrers: "מקור ההפניה"
-          countries: "ארץ"
-          top_urls: "כתובת"
-          browsers: "דפדפן"
-          ip_addresses: "כתובת IP"
         filters:
           referrer: "מקור ההפניה"
           country: "ארץ"
           browser: "דפדפן"
           ip: "כתובת IP"
-        metrics:
-          pageviews:
-            label: "צפיות-דף"
         series:
           anonymous_human: "אלמוני"
       dashboard:

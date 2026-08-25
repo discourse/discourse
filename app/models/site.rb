@@ -247,6 +247,7 @@ class Site
         {
           periods: TopTopic.periods.map(&:to_s),
           filters: Discourse.filters.map(&:to_s),
+          anonymous_list_filters: Discourse.anonymous_list_filters.map(&:to_s),
           user_fields:
             UserField
               .includes(:user_field_options)

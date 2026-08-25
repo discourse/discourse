@@ -9,11 +9,18 @@ export default <template>
     @startDate={{@controller.startDate}}
     @endDate={{@controller.endDate}}
     @activeFilters={{@controller.activeFilters}}
+    @hasPendingFilters={{@controller.hasPendingFilters}}
+    @pendingFilterCount={{@controller.pendingFilterCount}}
     @trafficTypes={{@controller.selectedTrafficTypes}}
     @setPeriod={{@controller.setPeriod}}
     @setCustomDateRange={{@controller.setCustomDateRange}}
-    @setFilter={{@controller.setFilter}}
+    @toggleFilter={{@controller.toggleFilter}}
+    @isFilterSelected={{@controller.isFilterSelected}}
     @toggleTrafficType={{@controller.toggleTrafficType}}
-    @removeFilter={{@controller.removeFilter}}
+    @removeFilterValue={{@controller.removeFilterValue}}
+    @clearFilter={{@controller.clearFilter}}
+    @clearAllFilters={{@controller.clearAllFilters}}
+    @applyFilters={{@controller.applyFilters}}
+    @applyModalFilters={{@controller.applyModalFilters}}
   />
 </template>

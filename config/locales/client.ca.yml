@@ -3304,17 +3304,11 @@ ca:
       search:
         title: "Cerca"
       site_traffic_explorer:
-        pageviews: "Pàgines vistes"
-        columns:
-          top_urls: "URL"
-          browsers: "Navegador"
-          ip_addresses: "Adreça IP"
+        metric_information: "Quant a %{metric}"
+        apply: "Aplica"
         filters:
           browser: "Navegador"
           ip: "Adreça IP"
-        metrics:
-          pageviews:
-            label: "Pàgines vistes"
         series:
           anonymous_human: "Anònim"
       dashboard:

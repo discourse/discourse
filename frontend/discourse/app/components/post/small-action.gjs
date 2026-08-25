@@ -114,7 +114,7 @@ export default class PostSmallAction extends Component {
       if (this.isGroupAction) {
         who = `<a class="mention-group" href="${groupPath(encodeURIComponent(this.who))}">@${escapedWho}</a>`;
       } else {
-        who = `<a class="mention" href="${userPath(this.who)}">@${escapedWho}</a>`;
+        who = `<a class="mention" href="${userPath(encodeURIComponent(this.who))}">@${escapedWho}</a>`;
       }
     }
 

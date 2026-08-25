@@ -146,6 +146,42 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert.dom(".results").hasText("3", "still renders yielded content");
   });
 
+  test("supports additional filters and includes them in reset state", async function (assert) {
+    this.set("additionalFiltersActive", false);
+    this.set("resetCount", 0);
+    this.set("onReset", () => this.set("resetCount", this.resetCount + 1));
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{SAMPLE_DATA}}
+          @additionalFiltersActive={{this.additionalFiltersActive}}
+          @showTextFilter={{false}}
+          @onResetFilters={{this.onReset}}
+        >
+          <:additionalFilters>
+            <input class="custom-filter" aria-label="Custom filter" />
+          </:additionalFilters>
+        </DFilterControls>
+      </template>
+    );
+
+    assert.dom(".custom-filter").exists("renders the additional filter");
+    assert
+      .dom(".d-filter-controls__reset")
+      .doesNotExist("hides reset while the additional filter is inactive");
+
+    this.set("additionalFiltersActive", true);
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .exists("shows reset while the additional filter is active");
+
+    await click(".d-filter-controls__reset");
+
+    assert.strictEqual(this.resetCount, 1, "calls the reset callback once");
+  });
+
   test("filters data by text (client-side)", async function (assert) {
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name", "description"]);
@@ -267,6 +303,12 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert
       .dom(".d-filter-controls__dropdown")
       .exists({ count: 2 }, "keeps the dropdowns expanded");
+
+    await select(".d-filter-controls__dropdown--category", "feature");
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .exists({ count: 1 }, "shows reset when an expanded filter is active");
   });
 
   test("shows one reset button with a forced single-dropdown toggle", async function (assert) {
@@ -1207,5 +1249,35 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert
       .dom(".custom-empty-state")
       .exists("renders the custom empty state when array is empty");
+  });
+
+  test("reports the drawer state when the filter toggle is used", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", {
+      category: SAMPLE_DROPDOWN_OPTIONS,
+    });
+    const states = [];
+    this.set("onToggle", (expanded) => states.push(expanded));
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @filterDropdownsExpanded={{false}}
+          @forceShowDropdownFilterToggle={{true}}
+          @onFilterDropdownsToggle={{this.onToggle}}
+        />
+      </template>
+    );
+
+    await click(".d-filter-controls__toggle-filters");
+    await click(".d-filter-controls__toggle-filters");
+
+    assert.deepEqual(
+      states,
+      [true, false],
+      "each toggle reports the resulting expanded state"
+    );
   });
 });

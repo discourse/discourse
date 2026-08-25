@@ -138,7 +138,6 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
   end
 
   it "takes an admin to the traffic explorer with the selected period when they click See details" do
-    SiteSetting.enable_site_traffic_explorer = true
     Fabricate(:logged_in_browser_application_request, date: "2026-05-05", count: 10)
 
     dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
@@ -154,19 +153,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     )
   end
 
-  it "links to the aggregate traffic report by default" do
-    Fabricate(:logged_in_browser_application_request, date: "2026-05-05", count: 10)
-
-    dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
-    dashboard.site_traffic.click_see_details
-
-    expect(page).to have_current_path(
-      "/admin/reports/site_traffic?end_date=2026-05-12&start_date=2026-05-01",
-    )
-  end
-
   it "keeps the aggregate traffic report available to moderators" do
-    SiteSetting.enable_site_traffic_explorer = true
     sign_in(moderator)
 
     dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")

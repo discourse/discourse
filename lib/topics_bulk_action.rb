@@ -168,18 +168,27 @@ class TopicsBulkAction
 
   def destroy_post_timing
     topics.each do |t|
+      next unless guardian.can_see?(t)
+
       PostTiming.destroy_last_for(@user, topic: t)
       @changed_ids << t.id
     end
   end
 
   def change_category
-    updatable_topics = topics.where.not(category_id: @operation[:category_id])
+    category_id = @operation[:category_id]
+    updatable_topics = topics.where.not(category_id: category_id)
+
+    # mirrors the PostRevisor gate, which skips the check when moving to uncategorized
+    if category_id.to_i > 0 && !guardian.can_move_topic_to_category?(category_id)
+      @errors[I18n.t("category.errors.move_topic_to_category_disallowed")] += updatable_topics.count
+      return
+    end
 
     updatable_topics.each do |t|
       next unless guardian.can_edit?(t) && t.first_post
 
-      changes = { category_id: @operation[:category_id] }
+      changes = { category_id: category_id }
       if t.first_post.revise(@user, changes, bulk_revision_opts)
         @changed_ids << t.id
       else
@@ -271,6 +280,8 @@ class TopicsBulkAction
   def reset_bump_dates
     if guardian.can_update_bumped_at?
       topics.each do |t|
+        next unless guardian.can_see?(t)
+
         t.reset_bumped_at
         @changed_ids << t.id
       end
@@ -308,10 +319,13 @@ class TopicsBulkAction
 
   def delete
     topics.each do |t|
-      if guardian.can_delete?(t)
-        post = t.ordered_posts.first
-        PostDestroyer.new(@user, post).destroy if post
-      end
+      next if !guardian.can_delete?(t)
+
+      post = t.ordered_posts.with_deleted.first
+      next if !post
+
+      PostDestroyer.new(@user, post).destroy
+      @changed_ids << t.id
     end
   end
 
@@ -380,7 +394,10 @@ class TopicsBulkAction
   end
 
   def apply_tag_revision(topic, tag_names)
-    return false unless guardian.can_edit?(topic)
+    unless guardian.can_edit_tags?(topic)
+      @errors[I18n.t("tags.user_not_permitted")] += 1
+      return false
+    end
     return false unless topic.first_post
 
     if topic.first_post.revise(@user, { tags: tag_names }, bulk_revision_opts)
@@ -439,7 +456,7 @@ class TopicsBulkAction
   end
 
   def topics
-    @topics ||= Topic.where(id: @topic_ids)
+    @topics ||= Topic.where(id: @topic_ids).includes(:category)
   end
 
   def topics_with_tags

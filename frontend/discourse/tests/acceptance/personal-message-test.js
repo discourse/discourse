@@ -116,3 +116,29 @@ acceptance("Personal Message - invite", function (needs) {
     assert.dom(".d-modal.add-pm-participants .alert-error").exists();
   });
 });
+
+acceptance("Personal Message - email invite", function (needs) {
+  needs.user({ admin: true });
+  needs.pretender((server, helper) => {
+    server.get("/u/search/users", () => helper.response({ users: [] }));
+    server.post("/t/12/invite", () => helper.response({ success: "OK" }));
+  });
+
+  test("closes the modal after a generic email success response", async function (assert) {
+    await visit("/t/pm-for-testing/12");
+    getOwner(this)
+      .lookup("controller:topic")
+      .model.set("details.can_invite_via_email", true);
+    await click(".topic-map__private-message-map .add-participant-btn");
+
+    const input = selectKit(".invite-user-input");
+    await input.expand();
+    await input.fillInFilter("existing@example.com");
+    await input.selectRowByValue("existing@example.com");
+    await click(".send-invite");
+
+    assert
+      .dom(".d-modal.add-pm-participants")
+      .doesNotExist("the invite modal closes instead of showing an empty body");
+  });
+});

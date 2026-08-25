@@ -20,12 +20,7 @@ class Jobs::CreateUserReviewable < ::Jobs::Base
           target: user,
           created_by: Discourse.system_user,
           reviewable_by_moderator: true,
-          payload: {
-            username: user.username,
-            name: user.name,
-            email: user.email,
-            website: user.user_profile&.website,
-          },
+          payload: ReviewableUser.payload_for(user),
         )
 
       if @reviewable.created_new

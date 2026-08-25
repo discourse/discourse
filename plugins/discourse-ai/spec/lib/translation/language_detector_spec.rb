@@ -62,6 +62,22 @@ describe DiscourseAi::Translation::LanguageDetector do
       end
     end
 
+    it "returns the language when the streamed response has a trailing backslash" do
+      bot = instance_double(DiscourseAi::Agents::Bot)
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
+      allow(bot).to receive(:reply) { |_, &blk| blk.call("nl\\") }
+
+      expect(locale_detector.detect).to eq("nl")
+    end
+
+    it "returns the language when the streamed response has surrounding whitespace" do
+      bot = instance_double(DiscourseAi::Agents::Bot)
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
+      allow(bot).to receive(:reply) { |_, &blk| blk.call(" nl\n") }
+
+      expect(locale_detector.detect).to eq("nl")
+    end
+
     it "skips detection when provided blank text" do
       blank_detector = described_class.new("    ")
       allow(AiAgent).to receive(:find_by).and_call_original

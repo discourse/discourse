@@ -21,8 +21,12 @@ module("Integration | Component | AiLogRow", function (hooks) {
     );
 
     assert
-      .dom('.ai-logs__status-dot[title="Successful"]')
-      .hasAttribute("aria-label", "Successful", "success dot is labelled");
+      .dom(".ai-logs__status-icon.d-icon-circle-check")
+      .hasAttribute(
+        "aria-label",
+        "Successful",
+        "success uses a labelled check icon"
+      );
   });
 
   test("renders operational metadata and opens details", async function (assert) {
@@ -54,12 +58,19 @@ module("Integration | Component | AiLogRow", function (hooks) {
     );
 
     assert
-      .dom('.ai-logs__status-dot[title="Failed"]')
-      .hasAttribute("aria-label", "Failed", "failure dot is labelled");
+      .dom(".ai-logs__status-icon.d-icon-circle-xmark")
+      .hasAttribute(
+        "aria-label",
+        "Failed",
+        "failure uses a labelled xmark icon"
+      );
     assert.dom(".ai-logs__flag").exists({ count: 1 }, "retry uses an icon");
     assert
-      .dom('.ai-logs__flag[title="Retried"]')
+      .dom('.ai-logs__flag[aria-label="Retried"]')
       .exists("retry state is available to assistive technology");
+    assert
+      .dom(".ai-logs__row .fk-d-tooltip__trigger")
+      .exists({ count: 2 }, "status and retry icons surface tooltips");
     assert.dom(".ai-logs__id").doesNotExist("log ID is omitted");
     assert.dom(".ai-logs__feature").hasText("summarize");
     assert.dom(".ai-logs__model").hasText("Test model");
@@ -81,11 +92,18 @@ module("Integration | Component | AiLogRow", function (hooks) {
         "assistive text retains exact token counts"
       );
     assert
-      .dom('.ai-logs__row .btn[aria-label="View details"]')
-      .exists("details action is labelled");
+      .dom(".ai-logs__row .btn .d-icon-far-file-lines")
+      .exists("details is an icon-only button");
     assert
-      .dom(".ai-logs__row .d-icon-ellipsis")
-      .exists("details use a compact ellipsis icon");
+      .dom(".ai-logs__row .btn")
+      .hasAttribute(
+        "aria-label",
+        "Details",
+        "details icon has an accessible name"
+      );
+    assert
+      .dom(".ai-logs__row .btn")
+      .hasAttribute("title", "Details", "details icon has a tooltip");
 
     await click(".ai-logs__row .btn");
     assert.strictEqual(this.openedId, 42, "details open for the selected log");
