@@ -77,6 +77,10 @@ $dw-button-default-border: #d3d3d3;
   --d-button-transparent-text-color--hover: #{$dw-tertiary-hover};
   --d-button-transparent-icon-color: #{$dw-primary-high};
   --d-button-transparent-icon-color--hover: #{$dw-tertiary-hover};
+
+  // rem-based, so the previewed theme's root font size would otherwise rescale
+  // the tool's spacing despite the pinned font-size below
+  --space: 4px;
   color: var(--primary);
   color-scheme: light;
   font-family:
@@ -115,7 +119,7 @@ $dw-button-default-border: #d3d3d3;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  width: min(24em, 100vw);
+  width: min(27em, 100vw);
   background: var(--secondary);
   border: 1px solid var(--content-border-color);
   border-inline-end: none;
@@ -147,6 +151,12 @@ $dw-button-default-border: #d3d3d3;
     animation: none;
   }
 
+  // a theme preview replaces the page; the panel is waiting for that to land
+  &.--busy .design-wizard__sections {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
   &__close {
     position: absolute;
     inset-block-start: var(--space-2);
@@ -156,12 +166,22 @@ $dw-button-default-border: #d3d3d3;
   &__content {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-5);
     height: 100%;
 
     // so the sections scroll rather than pushing the footer actions out
     min-height: 0;
-    padding: var(--space-4);
+    padding: var(--space-5);
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+
+    h2 {
+      margin: 0;
+    }
   }
 
   &__subtitle {
@@ -171,16 +191,24 @@ $dw-button-default-border: #d3d3d3;
 
   &__sections {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
-    align-items: center;
-    gap: var(--space-4);
+    gap: var(--space-6);
     min-height: 0;
+
+    // so a selected control's box-shadow isn't clipped by the scroll container
+    padding: 2px;
+    margin: -2px;
     overflow-y: auto;
     overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-low-mid) transparent;
   }
 
   &__section {
-    width: calc(100% - 2px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
   }
 
   &__section-title {
@@ -191,7 +219,7 @@ $dw-button-default-border: #d3d3d3;
   &__section-body {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
   &__custom-theme-notice {
@@ -206,7 +234,7 @@ $dw-button-default-border: #d3d3d3;
   &__theme-cards {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
     min-width: 0;
     padding: 0;
     margin: 0;
@@ -243,9 +271,32 @@ $dw-button-default-border: #d3d3d3;
     position: relative;
     display: flex;
     align-items: center;
+
+    // matches the serialized screenshot size, so the box is reserved at the
+    // right shape before the image lands and the card never reflows
+    aspect-ratio: 16 / 9;
     overflow: hidden;
+    background: var(--primary-very-low);
     border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius);
+
+    &.--loading::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      background: linear-gradient(
+        90deg,
+        var(--primary-very-low) 25%,
+        var(--primary-low) 37%,
+        var(--primary-very-low) 63%
+      );
+      background-size: 400% 100%;
+      animation: design-wizard-shimmer 1.4s ease infinite;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
   }
 
   &__theme-screenshot-image {
@@ -268,6 +319,13 @@ $dw-button-default-border: #d3d3d3;
     display: block;
     margin: 0;
     font-weight: normal;
+  }
+
+  &__theme-spinner.spinner {
+    margin: 0;
+    border-width: 2px;
+    border-color: currentcolor;
+    border-right-color: transparent;
   }
 
   &__theme-enabled-badge {
@@ -302,7 +360,7 @@ $dw-button-default-border: #d3d3d3;
   }
 
   &__color-mode {
-    padding: var(--space-1) var(--space-2);
+    padding: var(--space-2);
     font-size: var(--font-down-2);
     font-weight: 600;
     background: none;
@@ -359,13 +417,13 @@ $dw-button-default-border: #d3d3d3;
   }
 
   &__swatch {
-    padding: var(--space-1);
+    padding: var(--space-2);
     text-align: center;
   }
 
   &__swatch-preview {
     display: block;
-    height: 1.25em;
+    height: 2.5em;
     border-radius: var(--token-radius-small);
   }
 
@@ -373,8 +431,8 @@ $dw-button-default-border: #d3d3d3;
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    margin-block-start: var(--space-1);
-    font-size: var(--font-down-2);
+    margin-block-start: var(--space-2);
+    font-size: var(--font-down-1);
 
     .d-icon {
       font-size: var(--font-down-3);
@@ -388,21 +446,22 @@ $dw-button-default-border: #d3d3d3;
     color: var(--primary-medium);
   }
 
-  &__user-selectable {
+  &__switch-row {
     display: flex;
-    gap: var(--space-2);
-    padding: var(--space-2);
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-3);
     border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius);
   }
 
-  &__user-selectable-title {
+  &__switch-row-title {
     display: block;
     font-size: var(--font-down-1);
     font-weight: 600;
   }
 
-  &__user-selectable-description {
+  &__switch-row-description {
     display: block;
     font-size: var(--font-down-2);
     color: var(--primary-medium);
@@ -416,7 +475,7 @@ $dw-button-default-border: #d3d3d3;
 
   &__label {
     display: block;
-    font-size: var(--font-down-1-rem);
+    font-size: var(--font-down-1);
     font-weight: 600;
     color: var(--primary);
   }
@@ -424,6 +483,7 @@ $dw-button-default-border: #d3d3d3;
   &__font-select.btn-default.btn {
     justify-content: space-between;
     width: 100%;
+    padding-block: var(--space-2);
     border-radius: var(--d-border-radius);
     background: var(--content-background);
 
@@ -440,7 +500,7 @@ $dw-button-default-border: #d3d3d3;
   &__homepage-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
   &__homepage-card {
@@ -456,7 +516,7 @@ $dw-button-default-border: #d3d3d3;
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    height: 4.5em;
+    height: 5.5em;
     padding: var(--space-1);
     overflow: hidden;
     background: var(--secondary);
@@ -474,14 +534,14 @@ $dw-button-default-border: #d3d3d3;
     }
   }
 
-  &__homepage-detail {
+  &__detail-group {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
   }
 
   &__style-blocks,
-  &__topic-page-options {
+  &__option-rows {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -500,7 +560,7 @@ $dw-button-default-border: #d3d3d3;
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    height: 4.5em;
+    height: 5.5em;
     padding: var(--space-2);
     overflow: hidden;
     background: var(--secondary);
@@ -669,7 +729,7 @@ $dw-button-default-border: #d3d3d3;
   }
 
   // Rendered inline like the notification tracking menu's selectable rows.
-  &__topic-page-option {
+  &__option-row {
     display: flex;
     box-sizing: border-box;
     align-items: center;
@@ -691,7 +751,7 @@ $dw-button-default-border: #d3d3d3;
     }
   }
 
-  &__topic-page-option-texts {
+  &__option-row-texts {
     display: flex;
     flex: 1 1 0%;
     flex-direction: column;
@@ -700,7 +760,7 @@ $dw-button-default-border: #d3d3d3;
     line-height: var(--line-height-medium);
   }
 
-  &__topic-page-option-label {
+  &__option-row-label {
     flex: 1 1 auto;
     max-width: 100%;
     font-size: var(--font-0);
@@ -710,7 +770,7 @@ $dw-button-default-border: #d3d3d3;
     @include ellipsis;
   }
 
-  &__topic-page-option-description {
+  &__option-row-description {
     flex: 1 1 auto;
     font-size: var(--font-down-1);
     color: var(--primary-medium);
@@ -722,7 +782,8 @@ $dw-button-default-border: #d3d3d3;
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    margin-block-start: auto;
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid var(--content-border-color);
   }
 
   &__step-dots {
@@ -766,6 +827,16 @@ $dw-button-default-border: #d3d3d3;
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--primary-low-mid) transparent;
+}
+
+@keyframes design-wizard-shimmer {
+  from {
+    background-position: 100% 50%;
+  }
+
+  to {
+    background-position: 0 50%;
+  }
 }
 
 @keyframes design-wizard-slide-in {
