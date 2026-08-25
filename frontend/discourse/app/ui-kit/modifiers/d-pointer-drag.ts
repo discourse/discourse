@@ -20,6 +20,14 @@ export type TouchActionToken =
  */
 const DEFAULT_TOUCH_ACTION: TouchActionToken = "none";
 
+/**
+ * How much recent pointer history velocity is measured over. A release trails
+ * the last movement by a frame or two, so measuring only the final interval
+ * would report every gesture as still; measuring a window keeps a flick's speed
+ * while a pointer held still for longer than this decays to nothing.
+ */
+const VELOCITY_WINDOW_MS = 100;
+
 /** A point in client coordinates. */
 type Point = Readonly<{ x: number; y: number }>;
 
@@ -38,6 +46,14 @@ export interface DPointerDragInfo {
 
   /** How far the pointer has travelled since the press. */
   readonly delta: Point;
+
+  /**
+   * Pixels per millisecond, signed per axis, measured over the pointer's recent
+   * history rather than the last interval alone: a flick still reads fast when
+   * the release trails it by a frame, and a pointer held still reads as still,
+   * so a consumer deciding a flick needs no expiry of its own.
+   */
+  readonly velocity: Point;
 
   /**
    * Whether `onDrag` has fired at least once for THIS gesture. It separates a
@@ -261,15 +277,42 @@ export function registerPointerDrag(
   let bodyClassLease: ElementClassLease | null = null;
   let capturedNode: Element = element;
   let pressPreserved = false;
+  let samples: { x: number; y: number; time: number }[] = [];
+  let velocity: Point = { x: 0, y: 0 };
   let watchingDocumentLoss = false;
   // Set by the cleanup below. A consumer can destroy its own registration from
   // inside `onDragStart`, and the rest of that dispatch still runs.
   let tornDown = false;
 
+  // Sampled from the events themselves, never from building a report: a report is
+  // only built for a callback the consumer actually registered.
+  const sample = (event: PointerEvent) => {
+    samples.push({
+      x: event.clientX,
+      y: event.clientY,
+      time: event.timeStamp,
+    });
+
+    const cutoff = event.timeStamp - VELOCITY_WINDOW_MS;
+    samples = samples.filter(({ time }) => time >= cutoff);
+
+    const oldest = samples[0];
+    const newest = samples[samples.length - 1];
+    const elapsed = newest.time - oldest.time;
+    velocity =
+      elapsed > 0
+        ? {
+            x: (newest.x - oldest.x) / elapsed,
+            y: (newest.y - oldest.y) / elapsed,
+          }
+        : { x: 0, y: 0 };
+  };
+
   const dragInfo = (event: PointerEvent): DPointerDragInfo => ({
     origin: { x: originX, y: originY },
     current: { x: event.clientX, y: event.clientY },
     delta: { x: event.clientX - originX, y: event.clientY - originY },
+    velocity,
     moved,
   });
 
@@ -284,6 +327,8 @@ export function registerPointerDrag(
     engaged = false;
     moved = false;
     pressPreserved = false;
+    samples = [];
+    velocity = { x: 0, y: 0 };
     appliedClass = null;
     bodyClassLease = null;
 
@@ -363,6 +408,7 @@ export function registerPointerDrag(
    * @param event - The event ending the gesture.
    */
   const cancelGesture = (args: DPointerDragArgs, event: PointerEvent) => {
+    sample(event);
     const info = dragInfo(event);
     try {
       if (args.cancelCommits) {
@@ -448,6 +494,7 @@ export function registerPointerDrag(
     originX = event.clientX;
     originY = event.clientY;
     moved = false;
+    sample(event);
 
     let vetoed;
     try {
@@ -525,6 +572,7 @@ export function registerPointerDrag(
       return;
     }
     const args = getArgsRef();
+    sample(event);
     if (!engaged) {
       const threshold = args.threshold ?? 0;
       if (
@@ -567,6 +615,7 @@ export function registerPointerDrag(
     if (pointerId === null || event.pointerId !== pointerId) {
       return;
     }
+    sample(event);
     if (moved) {
       suppressDragClick(event.pointerId);
     }

@@ -101,6 +101,47 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
     );
   });
 
+  test("reports velocity over the last interval, and a parked release as still", async function (assert) {
+    const seen = [];
+    const record = (event, info) =>
+      seen.push(Math.round(info.velocity.y * 100) / 100);
+
+    await render(
+      <template>
+        <div
+          class="dpd-target"
+          {{dPointerDrag onDrag=record onDragEnd=record}}
+        ></div>
+      </template>
+    );
+
+    stubPointerCapture(".dpd-target");
+    const target = find(".dpd-target");
+    // synthetic events share a timestamp, which would read as an infinite flick
+    const dispatch = (type, { y, time }) => {
+      const event = new PointerEvent(type, {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+        pointerId: 1,
+        clientY: y,
+      });
+      Object.defineProperty(event, "timeStamp", { value: time });
+      target.dispatchEvent(event);
+    };
+
+    dispatch("pointerdown", { y: 0, time: 1000 });
+    dispatch("pointermove", { y: 40, time: 1010 });
+    dispatch("pointerup", { y: 40, time: 1260 });
+    await settled();
+
+    assert.deepEqual(
+      seen,
+      [4, 0],
+      "a 40px flick over 10ms reads 4px/ms, and parking 250ms before release reads still"
+    );
+  });
+
   test("a release that never moved says so, so a click is not a drag", async function (assert) {
     const ends = [];
     const onDragEnd = (event, info) => ends.push(info.moved);

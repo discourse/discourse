@@ -434,6 +434,12 @@ It transfers nothing and has no targets.
 | `preservePress`   | `boolean`                          | Keep descendants interactive through a press.    |
 | `touchAction`     | `TouchActionToken`                 | The `touch-action` to apply for the gesture.     |
 
+Every callback's `info` carries `origin`, `current`, `delta`, `velocity` in
+pixels per millisecond, and `moved`. Velocity is measured over the interval
+since the previous report and the release is itself a report, so a gesture parked
+before release reads as still: a consumer deciding a flick needs no expiry of its
+own.
+
 Always handle `onDragCancel`. A gesture interrupted by the browser otherwise
 leaves whatever `onDragStart` opened still open.
 
