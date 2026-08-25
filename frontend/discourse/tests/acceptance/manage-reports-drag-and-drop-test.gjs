@@ -8,7 +8,6 @@ import {
 } from "discourse/services/a11y";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import {
-  assertDragRegistered,
   centerOf,
   dragEvent,
   simulateDrag,
@@ -70,8 +69,6 @@ async function openModal(context) {
 async function dragReport(sourceKey, targetKey, position) {
   const source = rowSelector(sourceKey);
   const target = rowSelector(targetKey);
-
-  assertDragRegistered(rowSelector(sourceKey), target);
 
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {

@@ -18,10 +18,10 @@ import sinon from "sinon";
 import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
-  assertDragRegistered,
   centerOf,
   dragEvent,
   simulateDrag,
+  simulateUntargetedDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import DReorderableListGroup from "discourse/ui-kit/d-reorderable-list-group";
@@ -516,11 +516,18 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
         "",
         "a movable row remains registered as a drag source"
       );
-    assertDragRegistered(source, source);
-    await simulateDrag(source, frozenRow, {
+    assert
+      .dom(source)
+      .hasAttribute(
+        "data-drop-target",
+        "",
+        "and as a drop target, so a drag between two movable rows is wired"
+      );
+    await simulateUntargetedDrag(source, frozenRow, {
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(frozenRow, "before"),
     });
+
     assert.strictEqual(
       moves.length,
       1,
@@ -932,7 +939,6 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     const source = rowSelector(items[0].id);
     const target = rowSelector(items[2].id);
     assertDragReady(assert, source, target);
-    assertDragRegistered(source, target);
     await simulateDrag(source, target, {
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(target, "before"),
@@ -1005,7 +1011,6 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     const source = rowSelector(items[2].id);
     const target = rowSelector(items[0].id);
     assertDragReady(assert, source, target);
-    assertDragRegistered(source, target);
     await simulateDrag(source, target, {
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(target, "after"),
@@ -1046,7 +1051,6 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     const source = rowSelector(items[0].id);
     const target = rowSelector(items[1].id);
     assertDragReady(assert, source, target);
-    assertDragRegistered(source, target);
     await simulateDrag(source, target, {
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(target, "before"),
@@ -1211,7 +1215,6 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     const source = rowSelector(firstItems[0].id, "#first-list");
     const target = rowSelector(secondItems[1].id, "#second-list");
     assertDragReady(assert, source, target);
-    assertDragRegistered(source, target);
     await simulateDrag(source, target, {
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(target, "before"),
@@ -1588,7 +1591,6 @@ module(
 
       const source = rowSelector(sourceItem.id);
       const target = rowSelector(targetItem.id);
-      assertDragRegistered(source, target);
       await simulateDrag(source, target, {
         dataTransfer: new DataTransfer(),
         targetCoordinates: dropCoordinates(target, "before"),
@@ -2325,7 +2327,6 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       const source = rowSelector(movedItem.id, "#drag-primary-list");
       const target = rowSelector(targetItem.id, "#drag-primary-list");
       assertDragReady(assert, source, target);
-      assertDragRegistered(source, target);
       await simulateDrag(source, target, {
         dataTransfer: new DataTransfer(),
         targetCoordinates: dropCoordinates(target, "after"),
@@ -2441,7 +2442,6 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     const source = rowSelector(movedItem.id, "#cross-primary-list");
     const target = rowSelector(targetItem.id, "#cross-secondary-list");
     assertDragReady(assert, source, target);
-    assertDragRegistered(source, target);
     await simulateDrag(source, target, {
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(target, "after"),
@@ -2614,7 +2614,6 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         "",
         "an empty grouped member registers its root as a drop target"
       );
-    assertDragRegistered(source, target);
     await simulateDrag(source, target, {
       dataTransfer: new DataTransfer(),
     });
@@ -2751,7 +2750,6 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     const source = rowSelector(movedItem.id, "#unlabelled-primary-list");
     const target = rowSelector(targetItem.id, "#unlabelled-secondary-list");
     assertDragReady(assert, source, target);
-    assertDragRegistered(source, target);
     await simulateDrag(source, target, {
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(target, "before"),
@@ -2834,13 +2832,11 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       "#isolated-standalone-list"
     );
 
-    assertDragRegistered(groupedSource, standaloneTarget);
     await simulateDrag(groupedSource, standaloneTarget, {
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(standaloneTarget, "before"),
     });
 
-    assertDragRegistered(standaloneSource, groupedTarget);
     await simulateDrag(standaloneSource, groupedTarget, {
       dataTransfer: new DataTransfer(),
       targetCoordinates: dropCoordinates(groupedTarget, "before"),
@@ -2912,7 +2908,8 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       "#teardown-secondary-list"
     );
     const dataTransfer = new DataTransfer();
-    assertDragRegistered(source, target);
+    assert.dom(source).hasAttribute("data-drag-source", "");
+    assert.dom(target).hasAttribute("data-drop-target", "");
     await dragEvent(sourceHandle, "dragstart", {
       dataTransfer,
       ...centerOf(sourceHandle),

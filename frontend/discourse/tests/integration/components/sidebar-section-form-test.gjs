@@ -16,7 +16,6 @@ import {
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
-  assertDragRegistered,
   centerOf,
   dragEvent,
   simulateDrag,
@@ -123,8 +122,6 @@ async function moveLink(name, target) {
 async function dragLink(sourceName, targetName, position) {
   const source = rowSelector(sourceName);
   const target = rowSelector(targetName);
-
-  assertDragRegistered(source, target);
 
   const targetRect = find(target).getBoundingClientRect();
   const targetCoordinates = {

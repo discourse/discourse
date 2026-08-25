@@ -10,7 +10,6 @@ import {
 } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
-  assertDragRegistered,
   centerOf,
   dragEvent,
   simulateDrag,
@@ -45,8 +44,6 @@ function gripSelector(id) {
 async function dragSection(sourceId, targetId, position) {
   const source = rowSelector(sourceId);
   const target = rowSelector(targetId);
-
-  assertDragRegistered(rowSelector(sourceId), target);
 
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {
