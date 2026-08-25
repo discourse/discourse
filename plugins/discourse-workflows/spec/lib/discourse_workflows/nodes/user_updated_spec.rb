@@ -76,6 +76,36 @@ RSpec.describe DiscourseWorkflows::Nodes::UserUpdated::V1 do
     end
   end
 
+  describe "changed fields" do
+    it "folds raw columns into the names admins filter on" do
+      output = described_class.new(user, %w[bio_raw bio_cooked uploaded_avatar_id]).output
+
+      expect(output[:changed]).to contain_exactly("avatar", "bio")
+    end
+
+    it "ignores columns with no filterable equivalent" do
+      expect(described_class.new(user, %w[trust_level]).output[:changed]).to eq([])
+    end
+
+    it "reports nil when the event did not say what changed" do
+      expect(described_class.new(user).output[:changed]).to be_nil
+    end
+
+    it "matches only the selected fields" do
+      avatar_change = described_class.new(user, %w[uploaded_avatar_id])
+
+      expect(avatar_change.matches?(trigger_context("changed_fields" => ["avatar"]))).to eq(true)
+      expect(avatar_change.matches?(trigger_context("changed_fields" => ["bio"]))).to eq(false)
+      expect(avatar_change.matches?(trigger_context("changed_fields" => []))).to eq(true)
+    end
+
+    it "matches everything when the event did not say what changed" do
+      expect(
+        described_class.new(user).matches?(trigger_context("changed_fields" => ["avatar"])),
+      ).to eq(true)
+    end
+  end
+
   describe "#matches?" do
     it "matches regular and staged users by default" do
       staged_user = Fabricate(:user, staged: true)

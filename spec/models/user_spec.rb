@@ -1970,6 +1970,21 @@ RSpec.describe User do
     end
   end
 
+  describe ":user_updated" do
+    fab!(:avatar, :upload)
+
+    it "reports the avatar when one is picked" do
+      user = Fabricate(:user)
+
+      event =
+        DiscourseEvent
+          .track_events(:user_updated) { user.update!(uploaded_avatar_id: avatar.id) }
+          .first
+
+      expect(event[:params]).to eq([user, %w[uploaded_avatar_id]])
+    end
+  end
+
   describe "#remove_avatar!" do
     fab!(:avatar, :upload)
     fab!(:gravatar, :upload)

@@ -46,6 +46,17 @@ RSpec.describe UserUpdater do
       expect(user.reload.name).to eq "Jim Tom"
     end
 
+    it "reports what changed on :user_updated, across the user and its profile" do
+      updater = UserUpdater.new(user, user)
+
+      bio = DiscourseEvent.track_events(:user_updated) { updater.update(bio_raw: "New bio") }.first
+      name = DiscourseEvent.track_events(:user_updated) { updater.update(name: "Jim Tom") }.first
+
+      expect(bio[:params].last).to include("bio_raw")
+      expect(bio[:params].last).not_to include("updated_at")
+      expect(name[:params].last).to contain_exactly("name")
+    end
+
     it "preserves explicitly submitted understood languages when the interface locale changes" do
       user.update!(locale: "en")
 
