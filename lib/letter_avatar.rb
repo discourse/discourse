@@ -46,7 +46,10 @@ class LetterAvatar
         fullsize = fullsize_path(identity)
         generate_fullsize(identity) if !cache || !File.exist?(fullsize)
 
-        resize(fullsize, filename, size)
+        # Optimizing here is dubious, it can save up to 2x for large images (eg 359px)
+        # BUT... we are talking 2400 bytes down to 1200 bytes, both fit in one packet
+        # The cost of this is huge, its a 40% perf hit
+        OptimizedImage.resize(fullsize, filename, size, size)
 
         filename
       end
@@ -88,13 +91,6 @@ class LetterAvatar
         end
     rescue Errno::ENOENT
       # no worries, folder doesn't exists
-    end
-
-    private
-
-    def resize(from, to, size)
-      DiscourseVips.resize_letter_avatar(input_path: from, output_path: to, size:)
-      FileHelper.optimize_image!(to)
     end
   end
 

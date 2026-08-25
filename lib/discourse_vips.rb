@@ -53,30 +53,6 @@ module DiscourseVips
       nil
     end
 
-    def resize_letter_avatar(input_path:, output_path:, size:)
-      run(
-        command: "resize",
-        arguments: [
-          input_path,
-          output_path,
-          "--width",
-          size.to_s,
-          "--height",
-          size.to_s,
-          "--fit",
-          "cover",
-          "--quality",
-          "100",
-          "--colors",
-          "256",
-          "--strip-metadata",
-        ],
-        read: [input_path],
-        write: [File.dirname(output_path)],
-      )
-      nil
-    end
-
     def dominant_color(input_path:)
       run(command: "dominant-color", arguments: [input_path], read: [input_path]).strip
     end
