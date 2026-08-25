@@ -46,6 +46,7 @@ export default class BulkSelectTopicsDropdown extends Component {
   @service router;
   @service modal;
   @service currentUser;
+  @service site;
   @service siteSettings;
   @service toasts;
 
@@ -95,8 +96,10 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "manage-tags",
         icon: "tag",
         name: i18n("topic_bulk_actions.manage_tags.name"),
-        visible: ({ currentUser, siteSettings }) =>
-          siteSettings.tagging_enabled && currentUser.canManageTopic,
+        visible: ({ currentUser, siteSettings, site }) =>
+          siteSettings.tagging_enabled &&
+          site.can_tag_topics &&
+          currentUser.canManageTopic,
       },
       {
         id: "pin-topics",
@@ -201,6 +204,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         return visible({
           topics: this.args.bulkSelectHelper.selected,
           currentUser: this.currentUser,
+          site: this.site,
           siteSettings: this.siteSettings,
           router: this.router,
         });
