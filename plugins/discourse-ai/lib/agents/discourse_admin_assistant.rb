@@ -32,7 +32,7 @@ module DiscourseAi
           Tools::EditPost,
           Tools::CreateCategory,
           Tools::EditCategory,
-          Tools::MoveTopic,
+          Tools::ChangeTopicCategory,
           Tools::EditTags,
           Tools::MovePosts,
           Tools::SuspendUser,

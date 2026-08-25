@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class RenameEditCategoryToolToMoveTopic < ActiveRecord::Migration[8.0]
+class RenameEditCategoryToolToChangeTopicCategory < ActiveRecord::Migration[8.0]
   # The EditCategory tool used to move a topic to a different category; that
-  # behavior now lives in MoveTopic while EditCategory edits the category
+  # behavior now lives in ChangeTopicCategory while EditCategory edits the category
   # itself. Renaming the stored entry keeps existing agents doing what they
   # were configured to do.
   def up
@@ -13,14 +13,14 @@ class RenameEditCategoryToolToMoveTopic < ActiveRecord::Migration[8.0]
         next if !tools.is_a?(Array)
 
         names = tools.map { |tool| tool.is_a?(Array) ? tool.first : tool }
-        next if names.include?("MoveTopic")
+        next if names.include?("ChangeTopicCategory")
 
         renamed =
           tools.map do |tool|
             if tool.is_a?(Array) && tool.first == "EditCategory"
-              ["MoveTopic", *tool.drop(1)]
+              ["ChangeTopicCategory", *tool.drop(1)]
             elsif tool == "EditCategory"
-              "MoveTopic"
+              "ChangeTopicCategory"
             else
               tool
             end
@@ -35,8 +35,8 @@ class RenameEditCategoryToolToMoveTopic < ActiveRecord::Migration[8.0]
       end
 
     # Pending approval actions replay by tool name; their stored parameters
-    # (topic_id/category_id/reason) are the move_topic signature.
-    execute "UPDATE ai_tool_actions SET tool_name = 'move_topic' WHERE tool_name = 'edit_category'"
+    # (topic_id/category_id/reason) are the change_topic_category signature.
+    execute "UPDATE ai_tool_actions SET tool_name = 'change_topic_category' WHERE tool_name = 'edit_category'"
   end
 
   def down
