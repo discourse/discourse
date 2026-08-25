@@ -18,6 +18,25 @@ RSpec.describe DiscourseVips do
   end
 
   describe "worker lifecycle" do
+    it "reaps a worker that has been idle past the timeout" do
+      input_path = file_from_fixtures("cropped.png").path
+      described_class.dominant_color(input_path:)
+
+      worker = described_class.instance_variable_get(:@worker)
+      worker.last_used -= 3600
+      expect(described_class.send(:reap_if_idle)).to eq(true)
+      expect(described_class.instance_variable_get(:@worker)).to be_nil
+
+      expect(described_class.dominant_color(input_path:)).to eq("3A3730")
+    end
+
+    it "keeps a recently used worker" do
+      described_class.dominant_color(input_path: file_from_fixtures("cropped.png").path)
+
+      expect(described_class.send(:reap_if_idle)).to eq(false)
+      expect(described_class.instance_variable_get(:@worker)).not_to be_nil
+    end
+
     it "recovers when the worker process dies" do
       input_path = file_from_fixtures("cropped.png").path
       expect(described_class.dominant_color(input_path:)).to eq("3A3730")

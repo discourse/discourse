@@ -19,6 +19,11 @@ module DiscourseVips
   MAX_WORKER_REQUESTS = 500
   private_constant :MAX_WORKER_REQUESTS
 
+  # These operations are rare, so an idle worker is reaped rather than kept
+  # resident; respawning costs about 45ms.
+  IDLE_TIMEOUT_SECONDS = 60
+  private_constant :IDLE_TIMEOUT_SECONDS
+
   INPUT_NAME = "input"
   private_constant :INPUT_NAME
 
@@ -50,7 +55,7 @@ module DiscourseVips
   end
   private_constant :WorkerTimedOut
 
-  WorkerHandle = Struct.new(:pid, :stdin, :stdout, :base_dir, :requests)
+  WorkerHandle = Struct.new(:pid, :stdin, :stdout, :base_dir, :requests, :last_used)
   private_constant :WorkerHandle
 
   class << self
@@ -167,6 +172,7 @@ module DiscourseVips
 
             raise Error, response["message"].presence || "libvips operation failed"
           ensure
+            current.last_used = Process.clock_gettime(Process::CLOCK_MONOTONIC)
             clear_exchange(current)
             discard_worker if current.requests >= MAX_WORKER_REQUESTS
           end
@@ -298,11 +304,47 @@ module DiscourseVips
         )
 
       register_worker_cleanup
+      arm_reaper
       request_write.sync = true
-      WorkerHandle.new(pid, request_write, response_read, base_dir, 0)
+      WorkerHandle.new(
+        pid,
+        request_write,
+        response_read,
+        base_dir,
+        0,
+        Process.clock_gettime(Process::CLOCK_MONOTONIC),
+      )
     ensure
       request_read&.close
       response_write&.close
+    end
+
+    # The reaper exits once no worker remains, so an idle process carries
+    # neither a worker nor a watcher thread. Threads do not survive a fork;
+    # the next spawn in the child arms a fresh one.
+    def arm_reaper
+      return if @reaper&.alive?
+
+      @reaper =
+        Thread.new do
+          loop do
+            sleep(IDLE_TIMEOUT_SECONDS / 2.0)
+            break if reap_if_idle
+          end
+        end
+    end
+
+    def reap_if_idle
+      @lock.synchronize do
+        worker = @worker
+        return true if !worker
+
+        idle = Process.clock_gettime(Process::CLOCK_MONOTONIC) - worker.last_used
+        return false if idle < IDLE_TIMEOUT_SECONDS
+
+        discard_worker
+        true
+      end
     end
 
     def register_worker_cleanup
