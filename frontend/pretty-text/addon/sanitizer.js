@@ -141,7 +141,7 @@ export function sanitize(text, allowLister) {
               const iframeUrls = [decoded];
               iframeUrls.push(value);
               return (
-                !decoded.match(/\/\.+\//) &&
+                !decoded.match(/\/\.+(?:[\/\\?#]|$)/) &&
                 allowedIframes.some((i) => {
                   const regex = i
                     // escape regex, keeping *
