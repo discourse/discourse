@@ -41,7 +41,8 @@ export default class DesignWizardPanel extends Component {
     {{#if this.designWizard.active}}
       <aside
         class="design-wizard
-          {{unless this.designWizard.animateEntrance '--no-entrance'}}"
+          {{unless this.designWizard.animateEntrance '--no-entrance'}}
+          {{if this.designWizard.applyingTheme '--busy'}}"
         aria-labelledby="design-wizard-title"
         {{didInsert this.registerElement}}
         ...attributes

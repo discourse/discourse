@@ -408,6 +408,7 @@ RSpec.describe Admin::DashboardController do
           "traffic",
           "engagement",
           "search",
+          "system",
         )
         expect(section_payloads.dig("highlights", "data")).to be_present
         expect(section_payloads.dig("traffic", "data")).to be_present
@@ -538,7 +539,6 @@ RSpec.describe Admin::DashboardController do
 
       it "omits version_check when enabled for the admin" do
         SiteSetting.version_checks = true
-        DiscourseUpdates.expects(:check_version).never
 
         get "/admin/dashboard.json"
 
@@ -637,10 +637,36 @@ RSpec.describe Admin::DashboardController do
         expect(configuration).to be_present
 
         ids = configuration["sections"].map { |s| s["id"] }
-        expect(ids).to match_array(%w[highlights reports traffic engagement search])
+        expect(ids).to match_array(%w[highlights reports traffic engagement search system])
 
         visible = configuration["sections"].select { |s| s["visible"] }.map { |s| s["id"] }
         expect(visible).to eq(%w[highlights reports])
+      end
+
+      it "only exposes the system section when version checks are enabled" do
+        configure_dashboard_sections(["system"])
+        SiteSetting.version_checks = false
+        sign_in(admin)
+
+        get "/admin/dashboard.json"
+
+        expect(response.parsed_body["sections"].map { |section| section["id"] }).not_to include(
+          "system",
+        )
+        expect(
+          response.parsed_body.dig("configuration", "sections").map { |section| section["id"] },
+        ).not_to include("system")
+
+        SiteSetting.version_checks = true
+
+        get "/admin/dashboard.json"
+
+        expect(response.parsed_body["sections"].map { |section| section["id"] }).to include(
+          "system",
+        )
+        expect(
+          response.parsed_body.dig("configuration", "sections").map { |section| section["id"] },
+        ).to include("system")
       end
 
       it "is omitted for moderators" do
@@ -682,7 +708,9 @@ RSpec.describe Admin::DashboardController do
           }
 
       expect(response.status).to eq(204)
-      expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(%w[reports highlights])
+      expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(
+        %w[reports highlights system],
+      )
     end
 
     it "keeps a section's position when it is toggled off" do
@@ -714,7 +742,7 @@ RSpec.describe Admin::DashboardController do
 
       expect(response.status).to eq(204)
       expect(AdminDashboardSectionConfiguration.sections.map { |s| s[:id] }).to match_array(
-        %w[highlights reports traffic engagement search],
+        %w[highlights reports traffic engagement search system],
       )
     end
 
@@ -733,7 +761,7 @@ RSpec.describe Admin::DashboardController do
           }
 
       expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(
-        %w[highlights engagement],
+        %w[highlights engagement system],
       )
     end
 
@@ -776,7 +804,7 @@ RSpec.describe Admin::DashboardController do
       get "/admin/dashboard.json"
 
       ids = response.parsed_body["sections"].map { |s| s["id"] }
-      expect(ids).to eq(["highlights"])
+      expect(ids).to eq(%w[highlights system])
     end
   end
 
@@ -1597,14 +1625,15 @@ RSpec.describe Admin::DashboardController do
             { "key" => "country", "value" => "US", "label" => "United States" },
           ],
         )
-        expect(response.parsed_body.dig("dimensions", "referrers")).to eq(
-          [
+        expect(response.parsed_body.fetch("dimensions").slice("referrers", "countries")).to eq(
+          "referrers" => [
             {
               "value" => "search.example/results?q=discourse",
               "label" => "search.example/results?q=discourse",
               "pageviews" => 1,
             },
           ],
+          "countries" => [{ "value" => "US", "label" => "United States", "pageviews" => 1 }],
         )
       end
 

@@ -6,9 +6,9 @@ describe "Post event" do
   fab!(:group)
 
   let(:composer) { PageObjects::Components::Composer.new }
-  let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
-  let(:post_event_form_page) { PageObjects::Pages::DiscourseCalendar::PostEventForm.new }
-  let(:bulk_invite_modal_page) { PageObjects::Pages::DiscourseCalendar::BulkInviteModal.new }
+  let(:post_event_page) { PageObjects::Pages::DiscourseEvents::PostEvent.new }
+  let(:post_event_form_page) { PageObjects::Pages::DiscourseEvents::PostEventForm.new }
+  let(:bulk_invite_modal_page) { PageObjects::Pages::DiscourseEvents::BulkInviteModal.new }
 
   before do
     SiteSetting.discourse_events_enabled = true
@@ -292,8 +292,8 @@ describe "Post event" do
 
       expect(post_event_page).to have_going_status
       expect(post_event_page).to have_selected_status(:going)
-      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
-      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      invitee = DiscourseEvents::Events::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(true)
     end
 
@@ -306,8 +306,8 @@ describe "Post event" do
 
       expect(post_event_page).to have_going_status
       expect(post_event_page).to have_selected_status(:going)
-      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
-      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      invitee = DiscourseEvents::Events::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(false)
     end
 
@@ -393,7 +393,7 @@ describe "Post event" do
         MD
         post = PostCreator.create!(admin, title:, raw:)
 
-        event = DiscoursePostEvent::Event.find_by(post:)
+        event = DiscourseEvents::Events::Event.find_by(post:)
         event.set_next_date
 
         sign_in(viewer)

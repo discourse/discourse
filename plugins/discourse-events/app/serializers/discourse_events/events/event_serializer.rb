@@ -1,0 +1,227 @@
+# frozen_string_literal: true
+
+module DiscourseEvents
+  module Events
+    class EventSerializer < BasicEventSerializer
+      attributes :can_act_on_discourse_post_event
+      attributes :can_update_attendance
+      attributes :creator
+      attributes :is_closed
+      attributes :is_expired
+      attributes :is_ongoing
+      attributes :is_private
+      attributes :is_public
+      attributes :is_standalone
+      attributes :minimal
+      attributes :name
+      attributes :post
+      attributes :raw_invitees
+      attributes :recurrence
+      attributes :recurrence_until
+      attributes :reminders
+      attributes :sample_invitees
+      attributes :should_display_invitees
+      attributes :stats
+      attributes :status
+      attributes :url
+      attributes :description
+      attributes :description_html
+      attributes :location
+      attributes :location_html
+      attributes :url_restates_location
+      attributes :watching_invitee
+      attributes :chat_enabled
+      attributes :livestream
+      attributes :livestream_onebox
+      attributes :livestream_url
+      # TODO (martin) We need to merge this and the event channel ID which
+      # comes from chat_enabled on the event, we dont need 2 channels per event
+      attributes :livestream_chat_channel_id
+      attributes :is_zoom_livestream
+      attributes :channel
+      attributes :rrule
+      attributes :max_attendees
+      attributes :at_capacity
+
+      has_one :image_upload, embed: :object, serializer: UploadSerializer
+
+      def livestream_enabled
+        object.livestream? && object.livestream_url.present?
+      end
+
+      def include_livestream_onebox?
+        livestream_enabled && !object.is_zoom_livestream?
+      end
+
+      def include_livestream_chat_channel_id?
+        livestream_enabled
+      end
+
+      def include_livestream_url?
+        livestream_enabled
+      end
+
+      def is_zoom_livestream
+        object.is_zoom_livestream?
+      end
+
+      # Only ever reads the cache. Fetching here would put a blocking outbound
+      # request in the middle of serialization, once per event in a list. The
+      # `warm_livestream_onebox` job fills the cache and republishes the post.
+      def livestream_onebox
+        Oneboxer.cached_onebox(object.livestream_url).presence
+      end
+
+      def livestream_chat_channel_id
+        object.post.topic.topic_chat_channel&.id
+      end
+
+      def channel
+        ::Chat::ChannelSerializer.new(
+          object.chat_channel,
+          root: false,
+          scope:,
+          membership: object.chat_channel.membership_for(scope.current_user),
+        )
+      end
+
+      def include_channel?
+        object.chat_enabled && defined?(::Chat::ChannelSerializer) &&
+          object.chat_channel.present? && scope.can_chat? &&
+          scope.can_preview_chat_channel?(object.chat_channel)
+      end
+
+      def at_capacity
+        object.at_capacity?
+      end
+
+      def can_act_on_discourse_post_event
+        scope.can_act_on_discourse_post_event?(object)
+      end
+
+      def reminders
+        (object.reminders || "")
+          .split(",")
+          .map do |reminder|
+            unit, value, type = reminder.split(".").reverse
+            type ||= "notification"
+
+            value = value.to_i
+            {
+              value: value.to_i.abs,
+              unit: unit,
+              period: value > 0 ? "before" : "after",
+              type: type,
+            }
+          end
+      end
+
+      def is_expired
+        object.expired?
+      end
+
+      def is_ongoing
+        object.ongoing?
+      end
+
+      def is_public
+        object.public?
+      end
+
+      def is_private
+        object.private?
+      end
+
+      def is_standalone
+        object.standalone?
+      end
+
+      def is_closed
+        object.closed
+      end
+
+      def status
+        Event.statuses[object.status]
+      end
+
+      def can_update_attendance
+        scope.current_user && object.can_user_update_attendance?(scope.current_user)
+      end
+
+      def creator
+        BasicUserSerializer.new(object.post.user, embed: :objects, root: false)
+      end
+
+      def stats
+        EventStatsSerializer.new(object, root: false).as_json
+      end
+
+      def watching_invitee
+        user = scope.current_user
+        if user && can_display_current_user_invitee?(user)
+          watching_invitee = Invitee.find_by(user_id: user.id, post_id: object.id)
+        end
+
+        InviteeSerializer.new(watching_invitee, root: false, scope:) if watching_invitee
+      end
+
+      def include_raw_invitees?
+        can_display_invitee_details?
+      end
+
+      def sample_invitees
+        invitees = object.most_likely_going
+        ActiveModel::ArraySerializer.new(invitees, each_serializer: InviteeSerializer, scope:)
+      end
+
+      def include_sample_invitees?
+        can_display_invitee_details?
+      end
+
+      def include_stats?
+        can_display_invitee_details?
+      end
+
+      def can_display_current_user_invitee?(user)
+        !object.private? || scope.can_act_on_discourse_post_event?(object) ||
+          object.user_in_invited_group?(user)
+      end
+
+      def can_display_invitee_details?
+        return @can_display_invitee_details if defined?(@can_display_invitee_details)
+        @can_display_invitee_details = scope.can_display_invitee_details?(object)
+      end
+
+      def should_display_invitees
+        (object.public? && object.invitees.count > 0) ||
+          (object.private? && can_display_invitee_details? && Array(object.raw_invitees).count > 0)
+      end
+
+      def include_url?
+        object.url.present?
+      end
+
+      def include_description_html?
+        object.description.present?
+      end
+
+      def description_html
+        Parser.cook_inline(object.description, post: object.post)
+      end
+
+      def include_location_html?
+        object.location.present?
+      end
+
+      def location_html
+        @location_html ||= Parser.cook_location(object.location, post: object.post)
+      end
+
+      def url_restates_location
+        return false if object.location.blank?
+
+        Parser.url_restates_location?(object.url, object.location, cooked_location: location_html)
+      end
+    end
+  end
+end

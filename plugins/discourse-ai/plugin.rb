@@ -251,4 +251,39 @@ after_initialize do
   add_model_callback(DiscourseAutomation::Automation, :after_save) do
     DiscourseAi::Configuration::Feature.feature_cache.flush!
   end
+
+  add_custom_reviewable_filter(
+    [
+      :ai_triage_automation_id,
+      Proc.new do |results, value|
+        context = "#{DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}%"
+        if value != :all
+          automation_id = value.is_a?(Integer) ? value : value.to_s[/\A\d+\z/]&.to_i
+          next results if !automation_id || automation_id <= 0
+
+          context = DiscourseAi::Automation.triage_automation_score_context(automation_id)
+        end
+
+        results.where(<<~SQL, context:)
+            EXISTS (
+              SELECT 1
+              FROM reviewable_scores
+              WHERE reviewable_scores.reviewable_id = reviewables.id
+              AND reviewable_scores.context LIKE :context
+            )
+          SQL
+      end,
+    ],
+    type_filter: {
+      id: "discourse_ai:triage",
+      value: :all,
+    },
+    reason_filters: -> do
+      DiscourseAutomation::Automation
+        .where(script: %w[llm_triage llm_agent_triage])
+        .order(:name)
+        .pluck(:id, :name)
+        .map { |id, name| { id: "ai_triage_automation:#{id}", name:, value: id } }
+    end,
+  )
 end

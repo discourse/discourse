@@ -2,8 +2,14 @@
 
 module DiscourseAi
   module Automation
+    TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX = "discourse_ai:triage_automation:"
+
     def self.spam_based_flag_types
       %w[spam spam_silence]
+    end
+
+    def self.triage_automation_score_context(automation_id)
+      "#{TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}#{automation_id}" if automation_id.present?
     end
 
     def self.flag_post_reason(

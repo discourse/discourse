@@ -9,15 +9,17 @@ module Jobs
       raise Discourse::InvalidParameters.new(:reminder) if args[:reminder].blank?
 
       event =
-        DiscoursePostEvent::Event.includes(post: [:topic], invitees: [:user]).find(args[:event_id])
+        DiscourseEvents::Events::Event.includes(post: [:topic], invitees: [:user]).find(
+          args[:event_id],
+        )
 
       return unless event.post
 
       invitees =
         event.invitees.where(
           status: [
-            DiscoursePostEvent::Invitee.statuses[:going],
-            DiscoursePostEvent::Invitee.statuses[:interested],
+            DiscourseEvents::Events::Invitee.statuses[:going],
+            DiscourseEvents::Events::Invitee.statuses[:interested],
           ],
         )
 

@@ -14,11 +14,11 @@ export default class LivestreamRsvpPreviewCard extends LivestreamRsvp {
     // when the chat renders within the livestream topic, there is no point
     // linking to the topic the user is already on
     if (this.isOnTopic) {
-      return i18n("discourse_calendar.livestream.chat.rsvp_to_event");
+      return i18n("discourse_events.livestream.chat.rsvp_to_event");
     }
 
     return trustHTML(
-      i18n("discourse_calendar.livestream.chat.rsvp_to_event_with_link", {
+      i18n("discourse_events.livestream.chat.rsvp_to_event_with_link", {
         url: this.livestreamTopic.url,
       })
     );
@@ -35,7 +35,7 @@ export default class LivestreamRsvpPreviewCard extends LivestreamRsvp {
       </div>
 
       <div class="chat-channel-preview-card__body">
-        {{i18n "discourse_calendar.livestream.chat.rsvp_body"}}
+        {{i18n "discourse_events.livestream.chat.rsvp_body"}}
       </div>
 
       <div class="chat-channel-preview-card__actions">

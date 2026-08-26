@@ -3184,6 +3184,8 @@ en:
       order: "Sort topics by a specific field"
       category: "Show topics in a specific category"
       category_any: "Show topics in any of the specified categories (comma-separated)"
+      topic: "Show specific topics by ID"
+      topic_any: "Show topics in the specified order (comma-separated IDs)"
       exclude_category: "Exclude topics from a specific category"
       category_without_subcategories: "Show topics only in the parent category, excluding subcategories"
       exclude_category_without_subcategories: "Exclude topics only from the parent category, not subcategories"

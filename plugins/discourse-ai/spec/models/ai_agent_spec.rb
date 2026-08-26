@@ -504,51 +504,33 @@ RSpec.describe AiAgent do
     agent.class_instance
   end
 
-  it "does not allow setting allowing chat without a default_llm" do
-    agent =
-      AiAgent.create(
-        name: "test",
-        description: "test",
-        system_prompt: "test",
-        allowed_group_ids: [],
-        default_llm: nil,
-        allow_chat_channel_mentions: true,
-      )
+  it "allows mention modalities without a per-agent LLM" do
+    assign_fake_provider_to(:ai_default_llm_model)
 
-    expect(agent.valid?).to eq(false)
+    %i[
+      allow_chat_channel_mentions
+      allow_chat_direct_messages
+      allow_topic_mentions
+    ].each do |modality|
+      agent = Fabricate.build(:ai_agent, name: "test_#{modality}", default_llm: nil)
+      agent.public_send("#{modality}=", true)
+
+      expect(agent).to be_valid,
+      "expected #{modality} to be valid without a per-agent language model"
+    end
+  end
+
+  it "requires a per-agent default LLM when it is forced" do
+    agent = Fabricate.build(:ai_agent, default_llm: nil, force_default_llm: true)
+
+    expect(agent).not_to be_valid
     expect(agent.errors[:base]).to include(
-      I18n.t("discourse_ai.ai_bot.agents.default_llm_required"),
+      I18n.t("discourse_ai.ai_bot.agents.forced_default_llm_required"),
     )
 
-    agent =
-      AiAgent.create(
-        name: "test",
-        description: "test",
-        system_prompt: "test",
-        allowed_group_ids: [],
-        default_llm: nil,
-        allow_chat_direct_messages: true,
-      )
+    agent.default_llm = llm_model
 
-    expect(agent.valid?).to eq(false)
-    expect(agent.errors[:base]).to include(
-      I18n.t("discourse_ai.ai_bot.agents.default_llm_required"),
-    )
-
-    agent =
-      AiAgent.create(
-        name: "test",
-        description: "test",
-        system_prompt: "test",
-        allowed_group_ids: [],
-        default_llm: nil,
-        allow_topic_mentions: true,
-      )
-
-    expect(agent.valid?).to eq(false)
-    expect(agent.errors[:base]).to include(
-      I18n.t("discourse_ai.ai_bot.agents.default_llm_required"),
-    )
+    expect(agent).to be_valid
   end
 
   it "does not leak caches between sites" do

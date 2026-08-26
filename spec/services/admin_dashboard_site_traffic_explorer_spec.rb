@@ -91,7 +91,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
 
-      it "groups stored browser values and displays rows awaiting backfill as unknown" do
+      it "orders browser dimensions by pageviews" do
         browser_dimensions = result.traffic.dig(:dimensions, "browsers")
 
         expect(browser_dimensions).to eq(
@@ -101,6 +101,61 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             { value: "safari", label: "Safari", pageviews: 2 },
             { value: "edge", label: "Microsoft Edge", pageviews: 1 },
             { value: "firefox", label: "Firefox", pageviews: 1 },
+          ],
+        )
+      end
+
+      it "applies all filters to every dimension" do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/other",
+          country_code: "GB",
+          asn: 64_500,
+          ip_address: "198.51.100.1",
+          normalized_referrer: "other.example",
+          normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+          session_id: "other",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          browser: :chrome,
+          created_at: Time.zone.local(2026, 5, 10, 11),
+        )
+        DiscourseIpInfo
+          .stubs(:get)
+          .with do |ip, **options|
+            ip.to_s.start_with?("192.0.2.") &&
+              options == { locale: I18n.locale, resolve_hostname: false }
+          end
+          .returns(
+            country_code: "US",
+            country: "United States",
+            asn: 64_496,
+            organization: "Example Network",
+          )
+
+        dimensions =
+          described_class.call(params: params.merge(country: "US", browser: "chrome")).traffic[
+            :dimensions
+          ]
+
+        expect(dimensions).to eq(
+          "top_urls" => [
+            { value: "/browser-4", label: "/browser-4", pageviews: 1 },
+            { value: "/browser-5", label: "/browser-5", pageviews: 1 },
+            { value: "/browser-6", label: "/browser-6", pageviews: 1 },
+          ],
+          "entry_urls" => [
+            { value: "/browser-4", label: "/browser-4", pageviews: 1 },
+            { value: "/browser-5", label: "/browser-5", pageviews: 1 },
+            { value: "/browser-6", label: "/browser-6", pageviews: 1 },
+          ],
+          "referrers" => [{ value: "", label: "Direct / unknown", pageviews: 3 }],
+          "countries" => [{ value: "US", label: "United States", pageviews: 3 }],
+          "networks" => [{ value: "AS64496", label: "Example Network (AS64496)", pageviews: 3 }],
+          "browsers" => [{ value: "chrome", label: "Google Chrome", pageviews: 3 }],
+          "ip_addresses" => [
+            { value: "192.0.2.5", label: "192.0.2.5", pageviews: 1 },
+            { value: "192.0.2.6", label: "192.0.2.6", pageviews: 1 },
+            { value: "192.0.2.7", label: "192.0.2.7", pageviews: 1 },
           ],
         )
       end

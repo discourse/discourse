@@ -431,11 +431,20 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__homepage-card.--selected")
       .hasAttribute("data-homepage", "topics", "defaults to a topics homepage");
     assert
-      .dom(".design-wizard__topic-page-option")
+      .dom(".design-wizard__option-row[data-topic-page]")
       .exists({ count: 3 }, "a topics homepage offers the topic page types");
     assert
-      .dom(".design-wizard__topic-page-option.--selected")
+      .dom(".design-wizard__option-row[data-topic-page].--selected")
       .hasAttribute("data-topic-page", "latest", "defaults to latest");
+    assert
+      .dom(".design-wizard__switch-row [role='switch']")
+      .exists(
+        { count: 1 },
+        "the homepage step offers the welcome banner switch"
+      );
+    assert
+      .dom(".design-wizard__option-row[data-search-experience]")
+      .exists({ count: 2 }, "the homepage step offers the search experiences");
 
     await click(".design-wizard__homepage-card[data-homepage='categories']");
     assert
@@ -449,7 +458,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         "defaults to boxes with subcategories"
       );
     assert
-      .dom(".design-wizard__topic-page-option")
+      .dom(".design-wizard__option-row[data-topic-page]")
       .doesNotExist("the topic page types are hidden for categories");
 
     assert.dom(".design-wizard__next").doesNotExist("no next on the last step");

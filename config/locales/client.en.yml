@@ -572,7 +572,7 @@ en:
       dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose colors, fonts, and a homepage."
+        description: "Choose colors, fonts, and how your site is laid out."
         action: "See options"
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
@@ -609,7 +609,7 @@ en:
 
     design_wizard:
       title: "Customize your site"
-      subtitle: "Choose colors, fonts, and a homepage."
+      subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
       save: "Save and finish"
       back: "Back"
@@ -619,8 +619,11 @@ en:
         colors: "Default color"
         fonts: "Fonts"
         homepage: "Homepage"
+        welcome_banner: "Welcome banner"
+        search: "Search"
       theme:
         selected: "Selected"
+        applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
         light: "Light"
@@ -645,6 +648,21 @@ en:
           boxes: "Boxes"
           with_topics: "Categories with topics"
           only: "Categories only"
+      welcome_banner:
+        enable: "Show a welcome banner"
+        enable_description: "Greet visitors with your site name and a search box"
+        location: "Banner location"
+        locations:
+          below_site_header: "Below the site header"
+          above_topic_content: "Above the topic list"
+      search:
+        experiences:
+          search_icon:
+            title: "Search icon"
+            description: "A magnifying glass in the header that opens search."
+          search_field:
+            title: "Search field"
+            description: "A full search field in the header, always visible."
 
     about:
       edit: "Edit this page"
@@ -2466,7 +2484,6 @@ en:
         watch_topic: "Watch topic"
         track_topic: "Track topic"
         do_nothing: "Do nothing"
-      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
@@ -7616,6 +7633,26 @@ en:
                 no_match_tooltip: "Search terms with a 0% click-through rate (CTR)."
                 poor_match: "Poor match"
                 poor_match_tooltip: "Search terms with a click-through rate (CTR) between 1-20%."
+          system:
+            title: "System"
+            storage: "Storage"
+            status: "Status"
+            fetch_error: "Couldn't load system information. Try refreshing the page."
+            commits:
+              one: "+%{count} commit"
+              other: "+%{count} commits"
+            view_on_github: "View on GitHub"
+            update_check_failed: "Update check failed — ensure Sidekiq is running."
+            update_available: "Update available: %{version}"
+            space_free: "%{size} free"
+            backups_size:
+              one: "%{size} backup (%{count})"
+              other: "%{size} backups (%{count})"
+            uploads_size: "%{size} uploads"
+            latest_backup: "Latest backup %{date}"
+            manage_backups: "Manage backups"
+            discourse_updated: "Discourse updated"
+            dashboard_updated: "Dashboard updated"
         reports_section:
           header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."

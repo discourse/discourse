@@ -14,6 +14,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
           { id: "search", visible: true },
+          { id: "system", visible: true },
         ],
       )
     end
@@ -36,6 +37,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
           { id: "search", visible: true },
+          { id: "system", visible: true },
         ],
       )
     end
@@ -54,7 +56,7 @@ describe AdminDashboardSectionConfiguration do
         actor: admin,
       )
 
-      expect(described_class.visible_section_ids).to eq(%w[reports engagement])
+      expect(described_class.visible_section_ids).to eq(%w[reports engagement system])
     end
   end
 
@@ -77,6 +79,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
           { id: "search", visible: true },
+          { id: "system", visible: true },
         ],
       )
     end
@@ -95,6 +98,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
           { id: "search", visible: true },
+          { id: "system", visible: true },
         ],
       )
     end
@@ -111,7 +115,7 @@ describe AdminDashboardSectionConfiguration do
         actor: admin,
       )
 
-      expect(described_class.visible_section_ids).to eq(%w[highlights engagement])
+      expect(described_class.visible_section_ids).to eq(%w[highlights engagement system])
     end
 
     it "drops unknown section ids" do
