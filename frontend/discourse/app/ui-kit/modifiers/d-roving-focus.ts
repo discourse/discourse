@@ -3,7 +3,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { guidFor } from "@ember/object/internals";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
-import ItemScope from "discourse/ui-kit/-internals/focus-navigation/item-scope";
+import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
 import { createRovingFocusApi } from "./d-roving-focus/api";
 import { apiStep } from "./d-roving-focus/api-navigation";
 import {

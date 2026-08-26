@@ -1,10 +1,10 @@
-import type ItemScope from "discourse/ui-kit/-internals/focus-navigation/item-scope";
+import type ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
 import {
   scan,
   step,
   type StepOutcome,
   stepRow,
-} from "discourse/ui-kit/-internals/focus-navigation/navigation";
+} from "discourse/ui-kit/-internals/cursor/navigation";
 import type { DRovingFocusConfig } from "./config";
 import type RovingFocusDiagnostics from "./diagnostics";
 import TypeAhead from "./type-ahead";

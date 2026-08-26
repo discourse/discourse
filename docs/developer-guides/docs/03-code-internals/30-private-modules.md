@@ -35,10 +35,10 @@ lib/blocks/-internals/                    owned by the blocks module
 smallest namespace that contains every consumer, under a folder named for the mechanism:
 
 ```
-ui-kit/-internals/focus-navigation/       consumed by dRovingFocus and DReorderableList,
-                                          both ui-kit members
-lib/-internals/drag-and-drop/             consumed by ui-kit modifiers and a service, so no
-                                          namespace narrower than the app contains them
+ui-kit/-internals/cursor/         consumed by dRovingFocus and DReorderableList,
+                                  both ui-kit members
+lib/-internals/drag-and-drop/     consumed by ui-kit modifiers and a service, so no
+                                  namespace narrower than the app contains them
 ```
 
 `lib/` is the app-wide root, which is why a mechanism whose consumers span several namespaces
@@ -61,7 +61,7 @@ so the extra level adds nothing.
 When a second consumer appears for something living inside one owner's `-internals`, move the
 shared part up rather than importing across. Keep the move behaviour-neutral and let the
 existing suite prove it: `ItemScope` and the stepping helpers were lifted out of
-`ui-kit/modifiers/d-roving-focus/` into `ui-kit/-internals/focus-navigation/` this way, with
+`ui-kit/modifiers/d-roving-focus/` into `ui-kit/-internals/cursor/` this way, with
 the modifier's own tests as the gate.
 
 Leave the types with the code that uses them. A shared `types.ts` earns its place when several

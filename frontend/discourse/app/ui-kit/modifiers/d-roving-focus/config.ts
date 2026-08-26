@@ -1,5 +1,5 @@
-import type { DisabledItems } from "discourse/ui-kit/-internals/focus-navigation/item-scope";
-import type { Orientation } from "discourse/ui-kit/-internals/focus-navigation/navigation";
+import type { DisabledItems } from "discourse/ui-kit/-internals/cursor/item-scope";
+import type { Orientation } from "discourse/ui-kit/-internals/cursor/navigation";
 import type {
   DRovingFocusArgs,
   DRovingFocusEntry,

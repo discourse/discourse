@@ -1,4 +1,4 @@
-import ItemScope from "discourse/ui-kit/-internals/focus-navigation/item-scope";
+import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
 import type { DRovingFocusConfig } from "../config";
 import {
   fallsBackToFirst,
