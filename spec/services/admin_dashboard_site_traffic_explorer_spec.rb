@@ -105,7 +105,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         )
       end
 
-      it "applies each filter to its own dimension" do
+      it "applies all filters to every dimension" do
         Fabricate(
           :browser_pageview_event,
           url: "/other",
@@ -116,7 +116,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
           session_id: "other",
           source: BrowserPageviewEvent::SOURCE_BEACON,
-          browser: :firefox,
+          browser: :chrome,
           created_at: Time.zone.local(2026, 5, 10, 11),
         )
         DiscourseIpInfo
@@ -132,27 +132,32 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             organization: "Example Network",
           )
 
-        top_url_traffic = described_class.call(params: params.merge(top_url: "/browser-4")).traffic
-        expect(top_url_traffic.dig(:dimensions, "top_urls").pluck(:value)).to eq(["/browser-4"])
+        dimensions =
+          described_class.call(params: params.merge(country: "US", browser: "chrome")).traffic[
+            :dimensions
+          ]
 
-        entry_url_traffic =
-          described_class.call(params: params.merge(entry_url: "/browser-4")).traffic
-        expect(entry_url_traffic.dig(:dimensions, "entry_urls").pluck(:value)).to eq(["/browser-4"])
-
-        referrer_traffic = described_class.call(params: params.merge(referrer: [""])).traffic
-        expect(referrer_traffic.dig(:dimensions, "referrers").pluck(:value)).to eq([""])
-
-        country_traffic = described_class.call(params: params.merge(country: "US")).traffic
-        expect(country_traffic.dig(:dimensions, "countries").pluck(:value)).to eq(["US"])
-
-        network_traffic = described_class.call(params: params.merge(network: "AS64496")).traffic
-        expect(network_traffic.dig(:dimensions, "networks").pluck(:value)).to eq(["AS64496"])
-
-        browser_traffic = described_class.call(params: params.merge(browser: "chrome")).traffic
-        expect(browser_traffic.dig(:dimensions, "browsers").pluck(:value)).to eq(["chrome"])
-
-        ip_traffic = described_class.call(params: params.merge(ip: "192.0.2.5")).traffic
-        expect(ip_traffic.dig(:dimensions, "ip_addresses").pluck(:value)).to eq(["192.0.2.5"])
+        expect(dimensions).to eq(
+          "top_urls" => [
+            { value: "/browser-4", label: "/browser-4", pageviews: 1 },
+            { value: "/browser-5", label: "/browser-5", pageviews: 1 },
+            { value: "/browser-6", label: "/browser-6", pageviews: 1 },
+          ],
+          "entry_urls" => [
+            { value: "/browser-4", label: "/browser-4", pageviews: 1 },
+            { value: "/browser-5", label: "/browser-5", pageviews: 1 },
+            { value: "/browser-6", label: "/browser-6", pageviews: 1 },
+          ],
+          "referrers" => [{ value: "", label: "Direct / unknown", pageviews: 3 }],
+          "countries" => [{ value: "US", label: "United States", pageviews: 3 }],
+          "networks" => [{ value: "AS64496", label: "Example Network (AS64496)", pageviews: 3 }],
+          "browsers" => [{ value: "chrome", label: "Google Chrome", pageviews: 3 }],
+          "ip_addresses" => [
+            { value: "192.0.2.5", label: "192.0.2.5", pageviews: 1 },
+            { value: "192.0.2.6", label: "192.0.2.6", pageviews: 1 },
+            { value: "192.0.2.7", label: "192.0.2.7", pageviews: 1 },
+          ],
+        )
       end
 
       it "uses only local IP data to produce country and network labels" do
