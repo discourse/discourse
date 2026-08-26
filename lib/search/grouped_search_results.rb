@@ -41,7 +41,8 @@ class Search
       blurb_term: nil,
       is_header_search: false,
       use_pg_headlines_for_excerpt: SiteSetting.use_pg_headlines_for_excerpt,
-      can_lazy_load_categories: false
+      can_lazy_load_categories: false,
+      per_page: nil
     )
       @type_filter = type_filter
       @term = term
@@ -58,6 +59,12 @@ class Search
       @is_header_search = is_header_search
       @use_pg_headlines_for_excerpt = use_pg_headlines_for_excerpt
       @can_lazy_load_categories = can_lazy_load_categories
+      @per_page = per_page
+    end
+
+    # callers may request a smaller page than the site setting, never a larger one
+    def per_page
+      [@per_page || Search.per_filter, Search.per_filter].min
     end
 
     def error=(error)
@@ -109,7 +116,7 @@ class Search
 
     def add(object)
       type = object.class.to_s.downcase.pluralize
-      if !@is_header_search && public_send(type).length == Search.per_filter
+      if !@is_header_search && public_send(type).length == per_page
         @more_full_page_results = true
       elsif @is_header_search && public_send(type).length == Search.per_facet
         instance_variable_set(:"@more_#{type}", true)
