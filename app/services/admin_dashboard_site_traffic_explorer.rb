@@ -175,7 +175,7 @@ class AdminDashboardSiteTrafficExplorer
     }
   end
 
-  def filter_predicate(except: nil)
+  def filter_predicate
     predicates = {
       top_url: "(NOT :top_url_filtered OR normalized_url IN (:top_urls))",
       entry_url: "(NOT :entry_url_filtered OR entry_url IN (:entry_urls))",
@@ -194,7 +194,7 @@ class AdminDashboardSiteTrafficExplorer
         SQL
     }
 
-    predicates.except(except).values.join("\n          AND ")
+    predicates.values.join("\n          AND ")
   end
 
   def query(start_date:, end_date:)
@@ -426,7 +426,7 @@ class AdminDashboardSiteTrafficExplorer
                 normalized_url AS value,
                 COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :top_url)}
+              WHERE #{filter_predicate}
                 AND normalized_url IS NOT NULL
               GROUP BY normalized_url
               ORDER BY pageviews DESC, value
@@ -446,7 +446,7 @@ class AdminDashboardSiteTrafficExplorer
                 entry_url AS value,
                 COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :entry_url)}
+              WHERE #{filter_predicate}
                 AND entry_url IS NOT NULL
               GROUP BY entry_url
               ORDER BY pageviews DESC, value
@@ -466,7 +466,7 @@ class AdminDashboardSiteTrafficExplorer
                 referrer AS value,
                 COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :referrer)}
+              WHERE #{filter_predicate}
                 AND referrer IS NOT NULL
               GROUP BY referrer
               ORDER BY pageviews DESC, value
@@ -491,7 +491,7 @@ class AdminDashboardSiteTrafficExplorer
                 COUNT(*)::integer AS pageviews,
                 host(MIN(ip_address)) AS representative_ip
               FROM dimensioned
-              WHERE #{filter_predicate(except: :country)}
+              WHERE #{filter_predicate}
                 AND country_code IS NOT NULL
               GROUP BY country_code
               ORDER BY pageviews DESC, value
@@ -516,7 +516,7 @@ class AdminDashboardSiteTrafficExplorer
                 COUNT(*)::integer AS pageviews,
                 host(MIN(ip_address)) AS representative_ip
               FROM dimensioned
-              WHERE #{filter_predicate(except: :network)}
+              WHERE #{filter_predicate}
                 AND asn IS NOT NULL
               GROUP BY asn
               ORDER BY pageviews DESC, value
@@ -536,7 +536,7 @@ class AdminDashboardSiteTrafficExplorer
                 browser AS value,
                 COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :browser)}
+              WHERE #{filter_predicate}
               GROUP BY browser
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
@@ -555,7 +555,7 @@ class AdminDashboardSiteTrafficExplorer
                 host(ip_address) AS value,
                 COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :ip)}
+              WHERE #{filter_predicate}
               GROUP BY ip_address
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit

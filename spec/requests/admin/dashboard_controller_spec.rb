@@ -1597,14 +1597,15 @@ RSpec.describe Admin::DashboardController do
             { "key" => "country", "value" => "US", "label" => "United States" },
           ],
         )
-        expect(response.parsed_body.dig("dimensions", "referrers")).to eq(
-          [
+        expect(response.parsed_body.fetch("dimensions").slice("referrers", "countries")).to eq(
+          "referrers" => [
             {
               "value" => "search.example/results?q=discourse",
               "label" => "search.example/results?q=discourse",
               "pageviews" => 1,
             },
           ],
+          "countries" => [{ "value" => "US", "label" => "United States", "pageviews" => 1 }],
         )
       end
 

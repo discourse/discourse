@@ -91,12 +91,8 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
 
-      it "orders browser dimensions by pageviews without promoting selected values" do
-        browser_dimensions =
-          described_class
-            .call(params: params.merge(browser: %w[firefox]))
-            .traffic
-            .dig(:dimensions, "browsers")
+      it "orders browser dimensions by pageviews" do
+        browser_dimensions = result.traffic.dig(:dimensions, "browsers")
 
         expect(browser_dimensions).to eq(
           [
