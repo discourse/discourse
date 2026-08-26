@@ -206,11 +206,13 @@ plugins:
       - discourse_workflows_execution_data
       - discourse_workflows_execution_stats
       - discourse_workflows_executions
+      - discourse_workflows_tags
       - discourse_workflows_variables
       - discourse_workflows_webhooks
       - discourse_workflows_workflow_call_runs
       - discourse_workflows_workflow_dependencies
       - discourse_workflows_workflow_publish_history
+      - discourse_workflows_workflow_tags
       - discourse_workflows_workflow_versions
       - discourse_workflows_workflows
     columns: {}
@@ -225,10 +227,10 @@ plugin_checksums:
   chat: 43ee047298d56af4fad013d534155812
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: 4ff4f60e8c1744603f7f8590f8f99447
+  discourse-ai: f3e0c451ef373568a8624f16c3dc9281
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
-  discourse-calendar: 6a305b06fa9121f17245cefbc726ce20
+  discourse-calendar: 748c5adeb1bd85ee316a044e306cb28d
   discourse-captcha: fd538c1338062354276ccfda4cbafd55
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
   discourse-data-explorer: fb71ab79dbe07af481ba147ea526406f
@@ -251,7 +253,7 @@ plugin_checksums:
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 5464e186402b9589d71f338c704a7d21
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
-  discourse-workflows: 46b2e6fd1e8668786b498f0c06846f70
+  discourse-workflows: 61c0d4b94a17ad401490893981b23dd4
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
   poll: e481f2cfa0e7c22778dee12a1e9c33c6
   styleguide: 0fd92e5ef0c99ee047f206961a587544
