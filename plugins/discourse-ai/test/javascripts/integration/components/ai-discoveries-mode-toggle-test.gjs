@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import HeaderSearch from "discourse/components/header/header-search";
 import SearchMenu from "discourse/components/search-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AiDiscoveriesModeToggle from "discourse/plugins/discourse-ai/discourse/components/ai-discoveries-mode-toggle";
@@ -122,6 +123,37 @@ module("Integration | Component | AiDiscoveriesModeToggle", function (hooks) {
       .isVisible("the indexed search tip remains available in Search mode");
   });
 
+  test("controls native actions in the persistent header search", async function (assert) {
+    this.siteSettings.ai_discover_agent = 1;
+    this.siteSettings.ai_discover_enabled = true;
+    this.currentUser.can_use_ai_discover_agent = true;
+    this.currentUser.user_option.ai_search_discoveries = true;
+
+    await render(<template><HeaderSearch /></template>);
+
+    assert
+      .dom(".floating-search-input .search-menu > .search-icon")
+      .isNotVisible("the duplicate advanced search button is hidden");
+    assert
+      .dom(".show-advanced-search")
+      .isNotVisible("advanced search is hidden in Ask mode");
+    assert
+      .dom(".clear-search")
+      .isNotVisible("the clear button is hidden in Ask mode");
+
+    await click(".ai-discoveries-mode__option.--search");
+
+    assert
+      .dom(".show-advanced-search")
+      .isVisible("advanced search is available in Search mode");
+    assert
+      .dom(".floating-search-input .search-menu > .search-icon")
+      .isNotVisible("the duplicate advanced search button stays hidden");
+    assert
+      .dom(".clear-search")
+      .isNotVisible("the clear button remains hidden in Search mode");
+  });
+
   test("renders beside the native welcome banner search input", async function (assert) {
     this.siteSettings.ai_discover_agent = 1;
     this.siteSettings.ai_discover_enabled = true;
@@ -142,7 +174,7 @@ module("Integration | Component | AiDiscoveriesModeToggle", function (hooks) {
       .exists("the mode and submit controls do not replace the native input");
   });
 
-  test("only renders in the welcome banner search", function (assert) {
+  test("renders in global search menus", function (assert) {
     const context = {
       currentUser: {
         can_use_ai_discover_agent: true,
@@ -158,12 +190,12 @@ module("Integration | Component | AiDiscoveriesModeToggle", function (hooks) {
       AiDiscoveriesModeToggleConnector.shouldRender(undefined, context),
       "missing outlet arguments are safe"
     );
-    assert.false(
+    assert.true(
       AiDiscoveriesModeToggleConnector.shouldRender(
         { location: "header" },
         context
       ),
-      "the compact header keeps its existing experience"
+      "the control renders in the header search"
     );
     assert.true(
       AiDiscoveriesModeToggleConnector.shouldRender(

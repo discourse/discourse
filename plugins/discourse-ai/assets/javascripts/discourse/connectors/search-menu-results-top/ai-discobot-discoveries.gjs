@@ -8,7 +8,7 @@ import AiSearchDiscoveries from "../../components/ai-search-discoveries";
 export default class AiDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
     return (
-      args?.location === "welcome-banner" &&
+      ["header", "welcome-banner"].includes(args?.location) &&
       siteSettings.ai_discover_enabled &&
       siteSettings.ai_discover_agent &&
       currentUser?.can_use_ai_discover_agent &&

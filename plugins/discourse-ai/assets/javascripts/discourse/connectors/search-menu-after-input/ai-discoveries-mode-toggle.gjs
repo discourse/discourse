@@ -4,7 +4,7 @@ import AiDiscoveriesModeToggle from "../../components/ai-discoveries-mode-toggle
 export default class AiDiscoveriesModeToggleConnector extends Component {
   static shouldRender(args, { currentUser, siteSettings }) {
     return (
-      args?.location === "welcome-banner" &&
+      ["header", "welcome-banner"].includes(args?.location) &&
       siteSettings.ai_discover_enabled &&
       siteSettings.ai_discover_agent &&
       currentUser?.can_use_ai_discover_agent &&

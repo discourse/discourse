@@ -238,8 +238,7 @@
     padding-inline-start: 0;
   }
 
-  .clear-search,
-  .show-advanced-search {
+  .clear-search {
     display: none;
   }
 }
@@ -248,6 +247,22 @@
   max-width: 720px;
 
   > .search-icon {
+    display: none;
+  }
+}
+
+.header-search--enabled
+  .floating-search-input
+  .search-banner-inner.wrap
+  .search-menu:has(.ai-discoveries-mode) {
+  > .search-icon,
+  .searching .clear-search {
+    display: none;
+  }
+
+  &:has(.ai-discoveries-mode__option.--ask input:checked)
+    .searching
+    .show-advanced-search {
     display: none;
   }
 }
@@ -261,7 +276,8 @@
 }
 
 .search-menu-container:has(.ai-discoveries-mode__option.--ask input:checked) {
-  .search-random-quick-tip {
+  .search-random-quick-tip,
+  .show-advanced-search {
     display: none;
   }
 }
