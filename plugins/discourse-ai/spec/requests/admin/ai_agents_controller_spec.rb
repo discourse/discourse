@@ -1466,12 +1466,13 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       # trust level 0
       SiteSetting.ai_bot_allowed_groups = "10"
 
+      SiteSetting.ai_default_llm_model = llm.id
       fake_endpoint.fake_content = ["This is a test! Testing!", "An amazing title"]
 
       ai_agent.create_user!
       ai_agent.update!(
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-        default_llm_id: llm.id,
+        default_llm: nil,
         allow_personal_messages: true,
         system_prompt: "you are a helpful bot",
       )

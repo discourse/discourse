@@ -471,7 +471,7 @@ en:
         failed: "Could not complete the action: %{error}"
         unexpected_error: "an unexpected error occurred"
       agents:
-        default_llm_required: "Default LLM model is required prior to enabling Chat"
+        forced_default_llm_required: "Select a default language model before requiring this agent to always use it."
         bot_user_unsupported: "This agent is used internally by a feature and cannot have a bot user"
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
         cannot_edit_system_agent: "System agents can only be renamed, you may not edit tools or system prompt, instead disable and make a copy"
@@ -1176,7 +1176,7 @@ en:
       no_user_specified: The username or the user_unique_id parameter is required, please specify it.
       user_not_found: The user specified does not exist. Check the username param.
       agent_disabled: "The agent specified is disabled. Check the agent_name or agent_id params (legacy: persona_name or persona_id)."
-      no_default_llm: The agent must have a default_llm defined.
+      no_default_llm: No default language model is available. Configure a model for the agent or site.
       user_not_allowed: The user is not allowed to participate in the topic.
       invalid_stream_resume_token: The resume_token is invalid or has expired.
       no_tool_results_specified: The tool_results parameter is required when resuming a stream.

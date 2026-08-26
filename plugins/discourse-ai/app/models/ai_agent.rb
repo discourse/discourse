@@ -27,7 +27,7 @@ class AiAgent < ActiveRecord::Base
   validates :description, presence: true, length: { maximum: 2000 }
   validates :system_prompt, presence: true, length: { maximum: 10_000_000 }
   validate :system_agent_unchangeable, on: :update, if: :system
-  validate :chat_preconditions
+  validate :forced_default_llm_preconditions
   validate :well_formated_examples
   validates :max_turn_tokens,
             numericality: {
@@ -576,12 +576,9 @@ class AiAgent < ActiveRecord::Base
     errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.bot_user_unsupported"))
   end
 
-  def chat_preconditions
-    if (
-         allow_chat_channel_mentions || allow_chat_direct_messages || allow_topic_mentions ||
-           force_default_llm
-       ) && !default_llm_id
-      errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.default_llm_required"))
+  def forced_default_llm_preconditions
+    if force_default_llm && default_llm_id.blank?
+      errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.forced_default_llm_required"))
     end
   end
 
