@@ -90,6 +90,17 @@
     }
   }
 
+  // a section whose action is how its feature is reached, rather than a control
+  // for a section you are already using, cannot wait for a hover to be found
+  &.sidebar-section--persistent-actions {
+    .sidebar-section-header-wrapper {
+      .btn.sidebar-section-header-dropdown,
+      .sidebar-section-header-button {
+        opacity: 1;
+      }
+    }
+  }
+
   .sidebar-section-header {
     flex: 1 1 auto;
     align-items: center;

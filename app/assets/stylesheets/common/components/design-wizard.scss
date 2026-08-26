@@ -189,6 +189,31 @@ $dw-button-default-border: #d3d3d3;
     color: var(--primary-medium);
   }
 
+  &__intro {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: flex-start;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  &__intro-description,
+  &__intro-note {
+    margin: 0;
+  }
+
+  &__intro-note {
+    display: flex;
+    gap: var(--space-1);
+    padding: var(--space-2);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    background: var(--primary-100);
+    border-radius: var(--d-border-radius);
+  }
+
   &__sections {
     display: flex;
     flex: 1 1 auto;

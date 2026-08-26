@@ -14,6 +14,8 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasThemes extends Component {
+  @service currentUser;
+  @service designWizard;
   @service modal;
   @service router;
   @service toasts;
@@ -74,6 +76,11 @@ export default class AdminConfigAreasThemes extends Component {
   }
 
   @action
+  launchDesignWizard() {
+    this.designWizard.launch({ returnUrl: this.router.currentURL });
+  }
+
+  @action
   clearParams() {
     this.router.transitionTo(this.router.currentRouteName, {
       queryParams: { repoUrl: null, repoName: null },
@@ -102,6 +109,13 @@ export default class AdminConfigAreasThemes extends Component {
             @action={{this.installModal}}
           />
         </PluginOutlet>
+        {{#if this.currentUser.admin}}
+          <actions.Default
+            @label="design_wizard.launch"
+            @icon="wand-magic"
+            @action={{this.launchDesignWizard}}
+          />
+        {{/if}}
       </:actions>
     </DPageSubheader>
     <ThemesGrid @themes={{@themes}} @openInstallModal={{this.installModal}} />

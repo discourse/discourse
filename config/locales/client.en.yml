@@ -614,6 +614,19 @@ en:
       save: "Save and finish"
       back: "Back"
       next: "Next"
+      launch: "Customize site wizard"
+      intro:
+        description: "This wizard walks you through your site's theme, colors, fonts, homepage layout, welcome banner, and search style."
+        autosave: "Each step is saved as you go, so members see the changes right away."
+        revert_available: "You can put everything back when you close."
+        revert_unavailable: "Your site's current theme is not one this wizard offers, so it cannot be restored afterwards."
+        start: "Get started"
+      close:
+        message: "You have already saved some changes to your site's design. Do you want to keep them?"
+        message_without_revert: "You have already saved some changes to your site's design. They cannot be undone from here."
+        keep: "Keep changes"
+        revert: "Revert changes"
+        continue_editing: "Continue editing"
       sections:
         theme: "Theme"
         colors: "Default color"
