@@ -31,6 +31,18 @@ const noop = () => {};
 const INDEX_KEY = "@index";
 const label = (item) => item.name ?? String(item);
 
+/** Two movable rows above two that are frozen, as a grouped catalogue renders. */
+function mixedItems() {
+  return [
+    { id: "alpha", name: "Alpha" },
+    { id: "bravo", name: "Bravo" },
+    { id: "charlie", name: "Charlie" },
+    { id: "delta", name: "Delta" },
+  ];
+}
+
+const isMovable = (item) => item.id === "alpha" || item.id === "bravo";
+
 function objectItems() {
   return [
     { id: "alpha", identity: { value: "alpha-key" }, name: "Alpha" },
@@ -4031,6 +4043,191 @@ module(
       assert
         .dom(moveItemSelector("list"))
         .exists("which is the sibling list, not a direction");
+    });
+
+    test("the arrow cursor reaches the rows a move cannot", async function (assert) {
+      const items = trackedArray(mixedItems());
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @movable={{isMovable}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      find(handleSelector("bravo")).focus();
+      await triggerKeyEvent(handleSelector("bravo"), "keydown", "ArrowDown");
+
+      assert
+        .dom(rowSelector("charlie"))
+        .isFocused("the cursor carries on into a row that cannot be moved");
+
+      await triggerKeyEvent(rowSelector("charlie"), "keydown", "ArrowDown");
+
+      assert.dom(rowSelector("delta")).isFocused("and keeps going");
+
+      await triggerKeyEvent(rowSelector("delta"), "keydown", "ArrowDown");
+
+      assert
+        .dom(rowSelector("delta"))
+        .isFocused("clamping at the last row rather than wrapping");
+
+      await triggerKeyEvent(rowSelector("delta"), "keydown", "ArrowUp");
+      await triggerKeyEvent(rowSelector("charlie"), "keydown", "ArrowUp");
+
+      assert
+        .dom(handleSelector("bravo"))
+        .isFocused("and hands back to the handle where a row renders one");
+    });
+
+    test("only a row with no handle becomes an arrow target", async function (assert) {
+      const items = trackedArray(mixedItems());
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @movable={{isMovable}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      assert
+        .dom(rowSelector("alpha"))
+        .doesNotHaveAttribute(
+          "tabindex",
+          "a row whose handle is the cursor target stays out of the tab sequence itself"
+        );
+      assert
+        .dom(rowSelector("charlie"))
+        .hasAttribute(
+          "tabindex",
+          "-1",
+          "a row with no handle is reachable by the cursor but never by Tab"
+        );
+    });
+
+    test("a row's own field keeps the arrows its caret needs", async function (assert) {
+      const items = trackedArray(mixedItems());
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @movable={{isMovable}}
+          >
+            <:row as |item|>
+              <input id="field-{{item.id}}" value={{item.name}} />
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      find("#field-alpha").focus();
+      await triggerKeyEvent("#field-alpha", "keydown", "ArrowDown");
+
+      assert
+        .dom("#field-alpha")
+        .isFocused(
+          "a field is neither a handle nor a cursor row, so the list never claims its arrows"
+        );
+    });
+
+    test("an accelerator is refused on a row that cannot move", async function (assert) {
+      const items = trackedArray(mixedItems());
+      const moves = [];
+      const handleMove = (move) => moves.push(move);
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{handleMove}}
+            @movable={{isMovable}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      find(rowSelector("charlie")).focus();
+      await triggerKeyEvent(rowSelector("charlie"), "keydown", "ArrowUp", {
+        altKey: true,
+      });
+
+      assert.deepEqual(
+        moves,
+        [],
+        "the chord belongs to the handle, and a frozen row has none"
+      );
+      assert.deepEqual(renderedItemOrder(), [
+        "alpha",
+        "bravo",
+        "charlie",
+        "delta",
+      ]);
+    });
+
+    test("the arrow cursor steps over a target it cannot land on", async function (assert) {
+      const items = trackedArray(mixedItems());
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @movable={{isMovable}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      // Taken out of layout rather than out of the list, so the row is still a
+      // selector match: exactly the case a raw querySelectorAll walk would hand
+      // focus to.
+      find(rowSelector("charlie")).style.display = "none";
+
+      find(handleSelector("bravo")).focus();
+      await triggerKeyEvent(handleSelector("bravo"), "keydown", "ArrowDown");
+
+      assert
+        .dom(rowSelector("delta"))
+        .isFocused(
+          "a row removed from layout is nowhere focus can be put, so the cursor passes it"
+        );
     });
 
     test("Alt with an arrow moves the row and keeps focus on its handle", async function (assert) {

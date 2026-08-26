@@ -171,6 +171,12 @@ export interface Row<T> {
    */
   hasDestinations: boolean;
 
+  /**
+   * Whether the row renders a handle. What the arrow cursor lands on: the
+   * handle where this is true, the row element itself where it is not.
+   */
+  rendersHandle: boolean;
+
   /** The row's own accessible name: what the reader is moving. */
   label: string;
   handleLabel: string;

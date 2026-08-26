@@ -15,6 +15,8 @@ import { modifier } from "ember-modifier";
 import type MenuService from "discourse/float-kit/services/menu";
 import type A11yService from "discourse/services/a11y";
 import { and, eq, not } from "discourse/truth-helpers";
+import ItemScope from "discourse/ui-kit/-internals/focus-navigation/item-scope";
+import { step } from "discourse/ui-kit/-internals/focus-navigation/navigation";
 import {
   CHORD_TARGETS,
   MENU_CONTENT_SELECTOR,
@@ -106,6 +108,14 @@ export type {
  * </DReorderableList>
  * ```
  */
+/**
+ * What the arrow cursor may land on: one per row, its handle where it renders
+ * one and the row itself where it does not. A frozen row still belongs to the
+ * list the reader is walking, so leaving it out would make the cursor cover a
+ * fraction of what is on screen.
+ */
+const CURSOR_TARGET = ".d-reorderable-list__handle, [data-reorderable-cursor]";
+
 export default class DReorderableList<T> extends Component<
   DReorderableListSignature<T>
 > {
@@ -155,7 +165,7 @@ export default class DReorderableList<T> extends Component<
       }
       // A row with nowhere to go is yielded no handle to place, so it has
       // none to be missing.
-      if (!this.rowFor(key)?.hasDestinations) {
+      if (!this.rowFor(key)?.rendersHandle) {
         return;
       }
       assert(
@@ -186,39 +196,65 @@ export default class DReorderableList<T> extends Component<
   /**
    * The keyboard accelerators, plus the focus bookkeeping the menu needs.
    *
-   * Every branch is refused unless the press landed on a handle, so a row's
-   * own field keeps the arrows and the Alt chords a caret needs. Neither
-   * accelerator is ever the only path — the menu behind Enter is what a reader
-   * whose software swallows one uses instead. Consumes nothing reactive: the
-   * row is resolved at event time.
+   * Deliberately not `dRovingFocus`. That modifier implements the practice
+   * page's composite pattern, where the group owns a single tab stop and the
+   * arrows are the only way between items; its strategy stamps `tabindex="-1"`
+   * on every item it manages. This list was built that way and it was reverted
+   * after screen-reader testing: there is no ARIA role for one tab stop that
+   * Tab descends into, so nothing told a reader that the arrows navigate or
+   * that a row holds its own controls. A row is content carrying controls, not
+   * one alternative among a set. So every handle stays an ordinary tab stop,
+   * document order is the tab order, and the arrows are a redundant
+   * accelerator over it — never the only path, so software that swallows one
+   * costs speed rather than access.
+   *
+   * What is shared with that modifier is the part underneath the strategy:
+   * `ItemScope` decides which candidates the cursor may land on and `step`
+   * walks them. Only the tab-sequence ownership differs, and that is the whole
+   * of the disagreement.
+   *
+   * Consumes nothing reactive: the row is resolved at event time.
    */
   moveKeys = modifier((element: Element) => {
     this.#listElement = element;
 
     const onKeydown = (event: Event) => {
       const { key, altKey, target } = event as KeyboardEvent;
-      if (
-        !(target instanceof Element) ||
-        !target.matches(".d-reorderable-list__handle")
-      ) {
+      // A row's own field is neither a handle nor a cursor row, so a caret
+      // keeps its arrows and its chords by construction rather than by the
+      // list guessing which controls want them.
+      if (!(target instanceof HTMLElement) || !target.matches(CURSOR_TARGET)) {
         return;
       }
-      // A plain arrow walks between handles. An accelerator over Tab and never
-      // the only path, so software that swallows it costs speed, not access.
       if (!altKey) {
-        const step = key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
-        if (!step) {
+        const delta = key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
+        if (!delta) {
           return;
         }
-        const handles = Array.from(
-          element.querySelectorAll<HTMLElement>(".d-reorderable-list__handle")
+        const scope = new ItemScope(
+          element as HTMLElement,
+          CURSOR_TARGET,
+          "skip"
         );
-        const neighbour =
-          handles[handles.indexOf(target as HTMLElement) + step];
-        if (neighbour) {
+        const targets = scope.all();
+        const outcome = step(
+          targets.indexOf(target),
+          delta,
+          targets,
+          1,
+          "vertical",
+          false,
+          (item) => scope.isNavigable(item)
+        );
+        if (outcome.kind === "move") {
           event.preventDefault();
-          neighbour.focus();
+          targets[outcome.index].focus();
         }
+        return;
+      }
+      // The chord moves a row, so it belongs to the handle. A cursor row that
+      // renders none has nothing to move.
+      if (!target.matches(".d-reorderable-list__handle")) {
         return;
       }
       // An Alt chord pressed in a row's own control belongs to that control,
@@ -529,6 +565,7 @@ export default class DReorderableList<T> extends Component<
         canMoveUp: false,
         canMoveDown: false,
         hasDestinations: false,
+        rendersHandle: false,
         label: itemLabel,
         handleLabel: i18n("reorder.handle", { label: itemLabel }),
         // The description belongs to the row, but the element carrying the
@@ -556,7 +593,8 @@ export default class DReorderableList<T> extends Component<
       row.canMoveUp = !alone && !row.isFirst;
       row.canMoveDown = !alone && !row.isLast;
       row.hasDestinations = row.canMoveUp || row.canMoveDown || inGroup;
-      row.yieldControls &&= row.hasDestinations;
+      row.rendersHandle = row.hasDestinations;
+      row.yieldControls &&= row.rendersHandle;
     }
 
     return rows;
@@ -756,6 +794,8 @@ export default class DReorderableList<T> extends Component<
                   }}
                   role={{@itemRole}}
                   data-reorderable-key={{row.key}}
+                  data-reorderable-cursor={{unless row.rendersHandle "true"}}
+                  tabindex={{unless row.rendersHandle "-1"}}
                   {{dDragAndDropSource
                     type=this.dragType
                     data=(hash key=row.key listId=this.listIdOrDefault)
@@ -768,7 +808,7 @@ export default class DReorderableList<T> extends Component<
                   }}
                   {{this.verifyKeyboardPath}}
                 >
-                  {{#if (and (not this.isManual) row.hasDestinations)}}
+                  {{#if (and (not this.isManual) row.rendersHandle)}}
                     <HandlePart
                       @row={{row}}
                       @onOpen={{this.menuCoordinator.openMenu}}
@@ -814,6 +854,9 @@ export default class DReorderableList<T> extends Component<
                   {{/if}}
                 </Item>
               {{else}}
+                {{! A frozen row renders no handle, so the row itself is what the
+                    arrow cursor lands on. Out of the tab sequence: Tab reaches
+                    the controls the row renders, not the row. }}
                 <Item
                   class={{dConcatClass
                     "d-reorderable-list__row"
@@ -821,6 +864,8 @@ export default class DReorderableList<T> extends Component<
                   }}
                   role={{@itemRole}}
                   data-reorderable-key={{row.key}}
+                  data-reorderable-cursor="true"
+                  tabindex="-1"
                 >
                   {{yield
                     row.item
