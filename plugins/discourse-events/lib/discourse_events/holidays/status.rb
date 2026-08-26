@@ -8,7 +8,7 @@ module DiscourseEvents
         if status.blank? || status.expired? ||
              (is_holiday_status?(status) && status.ends_at != ends_at)
           user.set_status!(
-            I18n.t("discourse_calendar.holiday_status.description"),
+            I18n.t("discourse_events.holiday_status.description"),
             emoji_name,
             ends_at,
           )
@@ -23,7 +23,7 @@ module DiscourseEvents
 
       def self.is_holiday_status?(status)
         status.emoji == emoji_name &&
-          status.description == I18n.t("discourse_calendar.holiday_status.description")
+          status.description == I18n.t("discourse_events.holiday_status.description")
       end
 
       def self.emoji_name

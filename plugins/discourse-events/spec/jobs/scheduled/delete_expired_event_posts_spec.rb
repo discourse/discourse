@@ -40,7 +40,7 @@ describe Jobs::DiscourseCalendar::DeleteExpiredEventPosts do
     expect(DiscourseEvents::Calendar::Event.exists?(post: post_in_the_future)).to eq(true)
 
     expect(UserHistory.find_by(post_id: post_with_one_date.id).context).to eq(
-      I18n.t("discourse_calendar.event_expired"),
+      I18n.t("discourse_events.event_expired"),
     )
   end
 

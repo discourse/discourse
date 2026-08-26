@@ -102,28 +102,28 @@ module DiscourseEvents
                   required: true,
                   choices: [
                     {
-                      name: I18n.t("discourse_calendar.category_type.default_calendar_view.day"),
+                      name: I18n.t("discourse_events.category_type.default_calendar_view.day"),
                       value: "day",
                     },
                     {
-                      name: I18n.t("discourse_calendar.category_type.default_calendar_view.week"),
+                      name: I18n.t("discourse_events.category_type.default_calendar_view.week"),
                       value: "week",
                     },
                     {
-                      name: I18n.t("discourse_calendar.category_type.default_calendar_view.month"),
+                      name: I18n.t("discourse_events.category_type.default_calendar_view.month"),
                       value: "month",
                     },
                     {
-                      name: I18n.t("discourse_calendar.category_type.default_calendar_view.year"),
+                      name: I18n.t("discourse_events.category_type.default_calendar_view.year"),
                       value: "year",
                     },
                   ],
-                  label: I18n.t("discourse_calendar.category_type.default_calendar_view.label"),
+                  label: I18n.t("discourse_events.category_type.default_calendar_view.label"),
                 },
                 events_calendar_display_weekends: {
                   default: true,
                   type: :bool,
-                  label: I18n.t("discourse_calendar.category_type.display_weekends.label"),
+                  label: I18n.t("discourse_events.category_type.display_weekends.label"),
                 },
               },
               site_settings: {
@@ -132,7 +132,7 @@ module DiscourseEvents
                   type: :group_list,
                   label:
                     I18n.t(
-                      "discourse_calendar.category_type.discourse_post_event_allowed_on_groups.label",
+                      "discourse_events.category_type.discourse_post_event_allowed_on_groups.label",
                     ),
                 },
                 use_local_event_date: {
@@ -141,16 +141,15 @@ module DiscourseEvents
                   required: true,
                   choices: [
                     {
-                      name: I18n.t("discourse_calendar.category_type.use_local_event_date.local"),
+                      name: I18n.t("discourse_events.category_type.use_local_event_date.local"),
                       value: true,
                     },
                     {
-                      name:
-                        I18n.t("discourse_calendar.category_type.use_local_event_date.relative"),
+                      name: I18n.t("discourse_events.category_type.use_local_event_date.relative"),
                       value: false,
                     },
                   ],
-                  label: I18n.t("discourse_calendar.category_type.use_local_event_date.label"),
+                  label: I18n.t("discourse_events.category_type.use_local_event_date.label"),
                 },
                 sort_categories_by_event_start_date_enabled: {
                   default: true,
@@ -160,28 +159,28 @@ module DiscourseEvents
                     {
                       name:
                         I18n.t(
-                          "discourse_calendar.category_type.sort_categories_by_event_start_date_enabled.event_date",
+                          "discourse_events.category_type.sort_categories_by_event_start_date_enabled.event_date",
                         ),
                       value: true,
                     },
                     {
                       name:
                         I18n.t(
-                          "discourse_calendar.category_type.sort_categories_by_event_start_date_enabled.latest_post",
+                          "discourse_events.category_type.sort_categories_by_event_start_date_enabled.latest_post",
                         ),
                       value: false,
                     },
                   ],
                   label:
                     I18n.t(
-                      "discourse_calendar.category_type.sort_categories_by_event_start_date_enabled.label",
+                      "discourse_events.category_type.sort_categories_by_event_start_date_enabled.label",
                     ),
                 },
                 sidebar_show_upcoming_events: {
                   default: true,
                   type: :bool,
                   label:
-                    I18n.t("discourse_calendar.category_type.sidebar_show_upcoming_events.label"),
+                    I18n.t("discourse_events.category_type.sidebar_show_upcoming_events.label"),
                 },
               },
             }

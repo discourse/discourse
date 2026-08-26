@@ -40,7 +40,7 @@ module Admin::DiscourseEvents
 
             expect(response.status).to eq(422)
             expect(response.parsed_body["errors"]).to include(
-              I18n.t("system_messages.discourse_calendar_holiday_region_invalid"),
+              I18n.t("system_messages.discourse_events_holiday_region_invalid"),
             )
           end
         end

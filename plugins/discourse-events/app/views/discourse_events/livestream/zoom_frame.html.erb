@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="robots" content="noindex">
-    <title><%= t("discourse_calendar.livestream.zoom.frame_title") %></title>
+    <title><%= t("discourse_events.livestream.zoom.frame_title") %></title>
     <style>
       html,
       body {
@@ -80,13 +80,13 @@
     <button id="join" type="button">
       <span>
         <svg viewBox="0 0 576 512" aria-hidden="true"><path d="M336 64H48C21.5 64 0 85.5 0 112v288c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm212.2 25.7L416 181.8v148.4l132.2 92.1c15.9 11 37.8-.2 37.8-19.7V109.4c0-19.5-21.9-30.7-37.8-19.7z"/></svg>
-        <%= t("discourse_calendar.livestream.zoom.frame_join") %>
+        <%= t("discourse_events.livestream.zoom.frame_join") %>
       </span>
     </button>
 
     <script nonce="<%= csp_nonce_placeholder %>">
       window.zoomFrameConfig = <%= raw @config.to_json %>;
-      window.zoomFrameConfig.joiningLabel = "<%= j t("discourse_calendar.livestream.zoom.frame_joining") %>";
+      window.zoomFrameConfig.joiningLabel = "<%= j t("discourse_events.livestream.zoom.frame_joining") %>";
     </script>
     <script nonce="<%= csp_nonce_placeholder %>">
       (function () {

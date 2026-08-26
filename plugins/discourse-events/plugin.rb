@@ -108,7 +108,7 @@ module ::DiscourseEvents
           chat_channel_id: channel.id,
           message:
             I18n.t(
-              "discourse_calendar.livestream.chat.topic_reference_message",
+              "discourse_events.livestream.chat.topic_reference_message",
               title: topic.markdown_link_title,
               url: topic.relative_url,
             ),
@@ -318,7 +318,7 @@ after_initialize do
   register_calendar_subscription_feed(
     name: "all_events",
     scope: DiscourseEvents::EVENTS_CALENDAR_SCOPE,
-    description_key: "discourse_calendar.preferences.all_events_description",
+    description_key: "discourse_events.preferences.all_events_description",
     url: ->(base_url, _user, key) do
       "#{base_url}/discourse-post-event/events.ics?user_api_key=#{key}"
     end,
@@ -327,7 +327,7 @@ after_initialize do
   register_calendar_subscription_feed(
     name: "my_events",
     scope: DiscourseEvents::EVENTS_CALENDAR_SCOPE,
-    description_key: "discourse_calendar.preferences.my_events_description",
+    description_key: "discourse_events.preferences.my_events_description",
     url: ->(base_url, user, key) do
       "#{base_url}/discourse-post-event/events.ics?attending_user=#{user.username_lower}&include_interested=true&user_api_key=#{key}"
     end,
