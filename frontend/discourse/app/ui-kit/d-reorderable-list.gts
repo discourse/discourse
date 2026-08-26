@@ -116,6 +116,19 @@ export type {
  */
 const CURSOR_TARGET = ".d-reorderable-list__handle, [data-reorderable-cursor]";
 
+/**
+ * Controls that demonstrably do nothing with Up and Down, so a press on one
+ * can step the cursor from the row it sits in rather than dying there.
+ *
+ * An allow-list rather than a list of controls to avoid, so the failure
+ * direction is safe: a caret, a radio in its group, a slider, a listbox, and
+ * anything this does not recognise all keep their keys. A button that opens a
+ * popup is excluded because the arrows may open it, which is also what keeps
+ * the row's own handle out.
+ */
+const ARROW_INERT =
+  '[role="switch"], [role="checkbox"], button:not([role]):not([aria-haspopup])';
+
 export default class DReorderableList<T> extends Component<
   DReorderableListSignature<T>
 > {
@@ -220,10 +233,15 @@ export default class DReorderableList<T> extends Component<
 
     const onKeydown = (event: Event) => {
       const { key, altKey, target } = event as KeyboardEvent;
-      // A row's own field is neither a handle nor a cursor row, so a caret
-      // keeps its arrows and its chords by construction rather than by the
-      // list guessing which controls want them.
-      if (!(target instanceof HTMLElement) || !target.matches(CURSOR_TARGET)) {
+      if (!(target instanceof HTMLElement)) {
+        return;
+      }
+      const onCursorTarget = target.matches(CURSOR_TARGET);
+      // A control the row renders answers for the arrows only when it has no
+      // use for them itself. Everything else keeps its keys, so a caret is
+      // safe by construction rather than by the list guessing at types.
+      const onInertControl = !onCursorTarget && target.matches(ARROW_INERT);
+      if (!onCursorTarget && !onInertControl) {
         return;
       }
       if (!altKey) {
@@ -237,8 +255,18 @@ export default class DReorderableList<T> extends Component<
           "skip"
         );
         const targets = scope.all();
+        // Resolved through the owning row rather than by querying it for a
+        // handle, so a manual placement nested anywhere in the row still
+        // resolves, and a nested list's target can never be mistaken for this
+        // row's.
+        const row = target.closest("[data-reorderable-key]");
+        const from = onCursorTarget
+          ? targets.indexOf(target)
+          : targets.findIndex(
+              (candidate) => candidate.closest("[data-reorderable-key]") === row
+            );
         const outcome = step(
-          targets.indexOf(target),
+          from,
           delta,
           targets,
           1,

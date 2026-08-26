@@ -4155,6 +4155,82 @@ module(
         );
     });
 
+    test("a control that cannot use an arrow lets the cursor step from its row", async function (assert) {
+      const items = trackedArray(mixedItems());
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @movable={{isMovable}}
+          >
+            <:row as |item|>
+              <button
+                type="button"
+                role="switch"
+                aria-checked="false"
+                id="switch-{{item.id}}"
+              >{{item.name}}</button>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      find("#switch-charlie").focus();
+      await triggerKeyEvent("#switch-charlie", "keydown", "ArrowDown");
+
+      assert
+        .dom(rowSelector("delta"))
+        .isFocused(
+          "a switch has no use for Up and Down, so the row it sits in answers for them"
+        );
+
+      await triggerKeyEvent(rowSelector("delta"), "keydown", "ArrowUp");
+
+      assert
+        .dom(rowSelector("charlie"))
+        .isFocused("and the cursor is back on the row, not on the switch");
+    });
+
+    test("a control that does use the arrows keeps them", async function (assert) {
+      const items = trackedArray(mixedItems());
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @movable={{isMovable}}
+          >
+            <:row as |item|>
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                id="radio-{{item.id}}"
+              >{{item.name}}</button>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      find("#radio-charlie").focus();
+      await triggerKeyEvent("#radio-charlie", "keydown", "ArrowDown");
+
+      assert
+        .dom("#radio-charlie")
+        .isFocused(
+          "the arrows move between radios in a group, so the list never claims them"
+        );
+    });
+
     test("an accelerator is refused on a row that cannot move", async function (assert) {
       const items = trackedArray(mixedItems());
       const moves = [];
