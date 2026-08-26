@@ -663,6 +663,10 @@ login:
     client: true
     default: false
     area: "login"
+  allow_login_in_readonly_mode:
+    client: true
+    default: false
+    area: "login"
   must_approve_users:
     client: true
     default: false
