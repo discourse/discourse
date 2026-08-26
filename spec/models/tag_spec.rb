@@ -775,4 +775,30 @@ RSpec.describe Tag do
       end
     end
   end
+
+  describe "tag hashtag remapping" do
+    it "enqueues a remap job when the name changes" do
+      tag = Fabricate(:tag, name: "support")
+
+      expect_enqueued_with(
+        job: :remap_hashtag,
+        args: {
+          remaps: [{ type: "tag", id: tag.id, old_ref: "support" }],
+        },
+      ) { tag.update!(name: "help") }
+    end
+
+    it "does not enqueue a remap job when only the casing changes" do
+      SiteSetting.force_lowercase_tags = false
+      tag = Fabricate(:tag, name: "Support")
+
+      expect_not_enqueued_with(job: :remap_hashtag) { tag.update!(name: "support") }
+    end
+
+    it "does not enqueue a remap job for unrelated changes" do
+      tag = Fabricate(:tag, name: "support")
+
+      expect_not_enqueued_with(job: :remap_hashtag) { tag.update!(description: "a description") }
+    end
+  end
 end
