@@ -132,19 +132,27 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             organization: "Example Network",
           )
 
-        {
-          top_url: %w[top_urls /browser-4 /browser-4],
-          entry_url: %w[entry_urls /browser-4 /browser-4],
-          referrer: ["referrers", [""], ""],
-          country: %w[countries US US],
-          network: %w[networks AS64496 AS64496],
-          browser: %w[browsers chrome chrome],
-          ip: %w[ip_addresses 192.0.2.5 192.0.2.5],
-        }.each do |filter, (dimension, filter_value, expected_value)|
-          traffic = described_class.call(params: params.merge(filter => filter_value)).traffic
+        top_url_traffic = described_class.call(params: params.merge(top_url: "/browser-4")).traffic
+        expect(top_url_traffic.dig(:dimensions, "top_urls").pluck(:value)).to eq(["/browser-4"])
 
-          expect(traffic.dig(:dimensions, dimension).pluck(:value)).to eq([expected_value])
-        end
+        entry_url_traffic =
+          described_class.call(params: params.merge(entry_url: "/browser-4")).traffic
+        expect(entry_url_traffic.dig(:dimensions, "entry_urls").pluck(:value)).to eq(["/browser-4"])
+
+        referrer_traffic = described_class.call(params: params.merge(referrer: [""])).traffic
+        expect(referrer_traffic.dig(:dimensions, "referrers").pluck(:value)).to eq([""])
+
+        country_traffic = described_class.call(params: params.merge(country: "US")).traffic
+        expect(country_traffic.dig(:dimensions, "countries").pluck(:value)).to eq(["US"])
+
+        network_traffic = described_class.call(params: params.merge(network: "AS64496")).traffic
+        expect(network_traffic.dig(:dimensions, "networks").pluck(:value)).to eq(["AS64496"])
+
+        browser_traffic = described_class.call(params: params.merge(browser: "chrome")).traffic
+        expect(browser_traffic.dig(:dimensions, "browsers").pluck(:value)).to eq(["chrome"])
+
+        ip_traffic = described_class.call(params: params.merge(ip: "192.0.2.5")).traffic
+        expect(ip_traffic.dig(:dimensions, "ip_addresses").pluck(:value)).to eq(["192.0.2.5"])
       end
 
       it "uses only local IP data to produce country and network labels" do
