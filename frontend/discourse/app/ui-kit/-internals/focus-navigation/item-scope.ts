@@ -1,11 +1,15 @@
-import type { DRovingFocusDisabledItems } from "./types";
+/**
+ * Whether an `aria-disabled` item is a cursor target. Named for the two behaviours rather than
+ * spelled as a boolean, because the call site should say which one it wants.
+ */
+export type DisabledItems = "skip" | "focusable";
 
 /** Queries an item group and applies its navigation eligibility rules. */
 export default class ItemScope {
   constructor(
     readonly container: HTMLElement,
     readonly selector: string,
-    readonly disabledItems: DRovingFocusDisabledItems
+    readonly disabledItems: DisabledItems
   ) {}
 
   /** Returns every selector-matched item in DOM order. */

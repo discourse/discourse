@@ -1,3 +1,6 @@
+import type { DisabledItems } from "discourse/ui-kit/-internals/focus-navigation/item-scope";
+import type { Orientation } from "discourse/ui-kit/-internals/focus-navigation/navigation";
+
 /**
  * Which of the practice page's two focus-management strategies the group uses:
  * a roving tabindex that moves DOM focus, or `aria-activedescendant` on a controller that keeps
@@ -5,13 +8,6 @@
  * different concept.
  */
 export type DRovingFocusStrategy = "roving-tabindex" | "active-descendant";
-
-/**
- * Whether an `aria-disabled` item is a cursor target. Named for the two behaviours rather than
- * spelled as a boolean, because the call site should say which one it wants.
- */
-export type DRovingFocusDisabledItems = "skip" | "focusable";
-export type Orientation = "grid" | "horizontal" | "vertical";
 
 /**
  * Controls for moving the cursor to a live item in the roving-focus group.
@@ -353,7 +349,7 @@ export interface DRovingFocusArgs {
    *
    * Shape dictated by: Focusability of disabled controls.
    */
-  disabledItems?: DRovingFocusDisabledItems;
+  disabledItems?: DisabledItems;
   /**
    * Called for an arrow press on the axis this group does NOT navigate, so the keys a
    * single-axis composite leaves unused become available without every consumer re-deriving
