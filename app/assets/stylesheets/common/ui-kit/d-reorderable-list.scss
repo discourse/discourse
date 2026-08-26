@@ -124,6 +124,17 @@
   justify-content: start;
 }
 
+/* Inside a menu, focus is the cursor rather than a by-product of tabbing, and
+   the menu puts it on a destination as it opens. A pointer press does not set
+   `:focus-visible`, so a highlight keyed on that alone opens onto an invisible
+   cursor and says nothing about what Enter will do. Same declaration the
+   dropdown gives `:hover` and `:focus-visible`, so the three agree. */
+
+.d-reorderable-list__move-item:focus:not(:focus-visible) {
+  background: var(--d-hover);
+  color: var(--primary);
+}
+
 .d-reorderable-list__move-shortcut {
   margin-inline-start: auto;
   padding-inline-start: var(--space-4);

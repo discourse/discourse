@@ -37,5 +37,48 @@ describe "Admin Site Setting Value Lists" do
         expect(settings_page).to have_reorder_handle("default_emoji_reactions")
       end
     end
+
+    # The menu is portaled and positioned asynchronously, so focusing a
+    # destination before it has been placed asks the browser to scroll to
+    # wherever the float still sits, which throws the reader to the top of the
+    # settings page they were working in.
+    it "does not scroll the page when the move menu opens" do
+      # Short enough that the settings page has somewhere to scroll from, which
+      # is the whole of what this measures.
+      resize_window(height: 700) do
+        settings_page.visit_category("basic")
+        expect(settings_page).to have_reorder_handle("top_menu")
+
+        page.execute_script(<<~JS)
+          document
+            .querySelector("[data-setting='top_menu'] .d-reorderable-list__handle")
+            .scrollIntoView({ block: "center" });
+        JS
+        before = page.evaluate_script("Math.round(window.scrollY)")
+        expect(before).to be > 0
+
+        settings_page.open_reorder_menu("top_menu")
+
+        expect(page).to have_css(".d-reorderable-list__move-item:focus")
+        expect(page.evaluate_script("Math.round(window.scrollY)")).to eq(before)
+      end
+    end
+
+    # A pointer press does not set `:focus-visible`, and the menu places focus
+    # on a destination as it opens, so a highlight keyed on that alone leaves a
+    # mouse user with a focused item and no way to see which one it is.
+    it "highlights the focused destination when the menu is opened by pointer" do
+      settings_page.visit_category("basic")
+      expect(settings_page).to have_reorder_handle("top_menu")
+
+      settings_page.open_reorder_menu("top_menu")
+
+      expect(page).to have_css(".d-reorderable-list__move-item:focus")
+      background = page.evaluate_script(<<~JS)
+          getComputedStyle(document.querySelector(".d-reorderable-list__move-item:focus"))
+            .backgroundColor
+        JS
+      expect(background).not_to eq("rgba(0, 0, 0, 0)")
+    end
   end
 end

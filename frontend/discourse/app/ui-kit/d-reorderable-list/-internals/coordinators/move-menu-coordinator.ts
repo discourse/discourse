@@ -153,6 +153,12 @@ export default class MoveMenuCoordinator {
    * of them is always a legitimate landing spot. A row left with only
    * cross-list entries opens on the first of those, and one with nothing at
    * all leaves focus on the handle rather than stranding it on the document.
+   *
+   * Focused without scrolling: the float is placed asynchronously, so at this
+   * point it can still be sitting at the document origin, and asking the
+   * browser to reveal it throws the reader to the top of the page they were
+   * working in. The menu is opened from a handle that is on screen already, so
+   * there is nothing to reveal.
    */
   #focusFirstDestination() {
     const content = document.querySelector(MENU_CONTENT_SELECTOR);
@@ -161,7 +167,7 @@ export default class MoveMenuCoordinator {
     }
     content
       .querySelector<HTMLElement>(".d-reorderable-list__move-item")
-      ?.focus();
+      ?.focus({ preventScroll: true });
   }
 
   /**

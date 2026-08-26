@@ -199,6 +199,15 @@ module PageObjects
         has_css?("#{setting_row_selector(setting_name)} .d-reorderable-list__handle")
       end
 
+      def open_reorder_menu(setting_name)
+        find(
+          "#{setting_row_selector(setting_name)} .d-reorderable-list__handle",
+          match: :first,
+        ).click
+        has_css?(".d-reorderable-list__move-item")
+        self
+      end
+
       def category_setting(setting_name)
         PageObjects::Components::SelectKit.new(
           "#{setting_row_selector(setting_name)} .category-chooser",
