@@ -341,6 +341,18 @@ en:
     group_timezones:
       search: "Search..."
       group_availability: "%{group} availability"
+    discourse_workflows:
+      nodes:
+        "action:event": "Event"
+      node_descriptions:
+        "action:event": "Close or open an event"
+      event:
+        operation: "Operation"
+        operations:
+          close: "Close event"
+          open: "Open event"
+        topic_id: "Topic ID"
+        actor_username: "Performed by user"
     discourse_post_event:
       new_event: "New Event"
       notifications:

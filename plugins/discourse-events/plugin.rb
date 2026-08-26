@@ -232,6 +232,14 @@ Dir
   .each { |f| require(f) }
 
 after_initialize do
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/event/v1"
+
+      [DiscourseWorkflows::Nodes::Event::V1]
+    end
+  end
+
   reloadable_patch do
     register_category_type(DiscourseEvents::Categories::Types::Events)
     Category.register_custom_field_type("sort_topics_by_event_start_date", :boolean)
