@@ -35,7 +35,14 @@ module Migrations
             # Case-insensitive because core's bbcode rules are: `[QUOTE=bob]` renders
             # the same block, and missing it leaves the header's source numbering in
             # the imported raw.
-            OPENING = /\G\[quote=(?<header>[^\]]*)\]/i
+            #
+            # The header class excludes the newline (core parses the tag within its
+            # line) and is capped: a real header holds a username of at most 60
+            # characters plus short coordinates, so nothing meaningful comes close
+            # to the cap — while an uncapped class would let a body full of
+            # unclosed `[quote=` openers re-scan its whole tail per opener,
+            # quadratically.
+            OPENING = /\G\[quote=(?<header>[^\]\n]{0,512})\]/i
             private_constant :OPENING
 
             def detect(input, pos, _byte)
@@ -45,6 +52,24 @@ module Migrations
               end_pos = match.byteoffset(0).last
               return nil unless trailing_space_only?(input, end_pos)
 
+              build_match(pos, end_pos, match)
+            end
+
+            # For the engine tier, which calls with block context already
+            # certified by a parsed quote token: the forward spaces-only
+            # heuristic below stands in for block context in the line-oriented
+            # walks and would wrongly reject the single-line
+            # `[quote=…]body[/quote]` form here.
+            def detect_block_opener(input, pos)
+              match = match_at(OPENING, input, pos)
+              return nil unless match
+
+              build_match(pos, match.byteoffset(0).last, match)
+            end
+
+            private
+
+            def build_match(pos, end_pos, match)
               username, name, post_number, topic_id =
                 parse_header(strip_quote_marks(match[:header]))
               return nil if username.nil?
@@ -55,8 +80,6 @@ module Migrations
                 node: QuoteReference.new(username:, name:, post_number:, topic_id:),
               )
             end
-
-            private
 
             # Core renders the quote block only when the opening tag is followed by
             # nothing but spaces or tabs to the end of its line. `pos` is the byte

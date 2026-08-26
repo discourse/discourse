@@ -48,7 +48,19 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context do
   it "collects linkified bare domains and explicit links" do
     result = scan_one("see meta.example.com/t/topic/123 and [x](https://example.com/page)")
     expect(result["blocks"].first["links"]).to eq(
-      %w[http://meta.example.com/t/topic/123 https://example.com/page],
+      [
+        # A linkified bare domain is its own label but exists once in the raw,
+        # so it contributes no label occurrences.
+        { "href" => "http://meta.example.com/t/topic/123", "labelHits" => 0 },
+        { "href" => "https://example.com/page", "labelHits" => 0 },
+      ],
+    )
+  end
+
+  it "counts a self-link's destination appearing in its label" do
+    result = scan_one("[https://example.com/page](https://example.com/page)")
+    expect(result["blocks"].first["links"]).to eq(
+      [{ "href" => "https://example.com/page", "labelHits" => 1 }],
     )
   end
 

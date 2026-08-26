@@ -62,10 +62,15 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
       "a space-then-tab indent" => "Intro\n\n \tx\n@alice",
       "link syntax" => "[here](/t/5) @alice",
       "a reference-style link" => "[here][1] @alice",
+      "a single-line quote" => %{[quote="alice, post:2, topic:5"]inline[/quote]},
     }.each do |label, raw|
       it "routes a real candidate next to #{label} to :engine" do
         expect(gate.classify(raw)).to eq(:engine)
       end
+    end
+
+    it "does not read a quote opener with only trailing spaces as single-line" do
+      expect(gate.classify(%{[quote="alice, post:2, topic:5"]  \nbody\n[/quote]})).to eq(:prose)
     end
 
     it "classifies dangers with no real candidate as :none" do

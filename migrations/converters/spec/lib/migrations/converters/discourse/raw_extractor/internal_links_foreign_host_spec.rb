@@ -31,8 +31,15 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(foreign_hosts).to eq(["old-forum.example.com"])
     end
 
-    it "drops the port before reporting the host" do
+    it "reports a non-default port as part of the host" do
       extract("https://old-forum.example.com:8080/t/slug/99")
+
+      expect(foreign_hosts).to eq(["old-forum.example.com:8080"])
+    end
+
+    it "reports each host once, however often it appears" do
+      extract("https://old-forum.example.com/t/slug/99")
+      extract("https://old-forum.example.com/t/other/100")
 
       expect(foreign_hosts).to eq(["old-forum.example.com"])
     end

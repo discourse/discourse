@@ -24,8 +24,12 @@ module Migrations
             # trade-off: an alt with a lone unmatched `[` no longer matches, so
             # that upload stays a literal URL — nested-image safety wins over that
             # rarer shape.
+            # The alt cap is CommonMark's own 999-character link-label limit; the
+            # URL and dimensions classes exclude the newline (a destination cannot
+            # contain an unescaped line end) and are capped, so a body full of
+            # unclosed openers cannot make every `!` re-scan the whole tail.
             IMAGE_PATTERN =
-              %r{\G!\[(?<alt>[^|\[\]]*)(?:\|(?<dimensions>[^\[\]]*))?\]\(upload://(?<url>[^)]+)\)}
+              %r{\G!\[(?<alt>[^|\[\]]{0,999})(?:\|(?<dimensions>[^\[\]\n]{0,99}))?\]\(upload://(?<url>[^)\n]{1,512})\)}
 
             # The marker folds case but the scheme does not, which is core's own
             # split: `[r.pdf|ATTACHMENT](upload://…)` still cooks a link carrying
@@ -40,15 +44,15 @@ module Migrations
               # `[` earlier on the line must not start the match, or the literal
               # text before the real `[file|attachment]` would be swallowed into
               # the filename and dropped at re-render.
-              \[(?<filename>[^|\[\]]*)\|attachment\]
-              \((?-i:upload)://(?<url>[^)]+)\)
+              \[(?<filename>[^|\[\]]{0,999})\|attachment\]
+              \((?-i:upload)://(?<url>[^)\n]{1,512})\)
               # Discourse writes the size right after the link, on the same line.
               # `\s*` here would let the group cross a line end — even a blank one —
               # and swallow a following parenthesized line into the match. Only the
               # sha1 is recorded, so the importer re-renders the attachment from the
               # destination's metadata and everything else the match covered is
               # dropped from the post.
-              (?:[^\S\n]*\((?<size>[^)]+)\))?
+              (?:[^\S\n]*\((?<size>[^)\n]{1,99})\))?
             }xi
             private_constant :IMAGE_PATTERN, :ATTACHMENT_PATTERN
 

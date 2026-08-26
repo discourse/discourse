@@ -30,23 +30,34 @@ module Migrations
             # `Base::URL_TERMINATORS`). The trailing `\w` keeps a sentence's `.`/`,`
             # after a bare URL out of the match. The scheme is case-insensitive
             # because linkify-it reads it that way, so core links `HTTPS://…` too.
+            # Every repeated group is atomic with a lookahead deciding where it
+            # stops, so a failing candidate is scanned once and never
+            # backtracked into — the lazy loops this replaces made a body full
+            # of malformed upload prefixes re-try every segment split,
+            # quadratically. The lookaheads keep the lazy semantics: the first
+            # `/uploads/`, the first `original|optimized/`, the first
+            # sha1-shaped basename win. The segment-count and length caps bound
+            # a single candidate; real upload paths use a handful of short
+            # segments, so the caps are far above anything the file store
+            # writes.
             URL =
               %r{
-                (?: (?i:https?:)? // [^/#{Base::URL_TERMINATORS}]+ )?  # optional scheme + host
-                (?: / [^/#{Base::URL_TERMINATORS}]+ )*?                # optional leading path (subfolder installs)
+                (?: (?i:https?:)? // [^/#{Base::URL_TERMINATORS}]{1,255} )?             # optional scheme + host
+                (?> (?: / (?! (?:secure-)?uploads/ ) [^/#{Base::URL_TERMINATORS}]{1,255} ){0,16} )
                 / (?:secure-)? uploads /
-                (?: [^/#{Base::URL_TERMINATORS}]+ / )*?                # site name and any segments before original/
+                (?> (?: (?! (?:original|optimized)/ ) [^/#{Base::URL_TERMINATORS}]{1,255} / ){0,16} )
                 (?: original | optimized ) /
-                (?: [^/#{Base::URL_TERMINATORS}]+ / )*                 # depth/partition segments (2X/a/ab/ …)
-                (?<sha1> \h{40} ) (?=[._])                             # sha1, then the extension or `_WxH` suffix
-                [^#{Base::URL_TERMINATORS}]* \w
+                (?> (?: (?! \h{40}[._] ) [^/#{Base::URL_TERMINATORS}]{1,255} / ){0,16} )  # depth/partition segments
+                (?<sha1> \h{40} ) (?=[._])                                              # sha1, then the extension or `_WxH` suffix
+                [^#{Base::URL_TERMINATORS}]{0,255} \w
               }x
             private_constant :URL
 
             # `\G` anchors each match at `pos` so scanning stays linear. The alt
             # class excludes `[` for the same reason as `LINK` below: a nested image
             # `![![…](…)](…)` must not match from the outer `!`.
-            IMAGE = /\G!\[[^\[\]]*\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
+            # The label caps are CommonMark's own 999-character link-label limit.
+            IMAGE = /\G!\[[^\[\]]{0,999}\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
             private_constant :IMAGE
 
             # The text class excludes `[` so the `[` of a nested image
@@ -55,7 +66,7 @@ module Migrations
             # the inner `)`, swallowing the image and leaving a dangling `](…)`. With
             # `[` excluded the outer bracket fails here and the inner image is deferred
             # on its own at the `!` trigger.
-            LINK = /\G\[[^\[\]]*\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
+            LINK = /\G\[[^\[\]]{0,999}\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
             private_constant :LINK
 
             BARE = /\G#{URL}/

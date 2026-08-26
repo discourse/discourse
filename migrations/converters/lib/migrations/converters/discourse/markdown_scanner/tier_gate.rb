@@ -193,12 +193,40 @@ module Migrations
             real_candidates?(raw) ? :engine : :none
           end
 
+          # Whether `text` holds a character reference that can decode into a
+          # construct-relevant character. Public because the engine tier's
+          # count certification has the same blind spot as the regex tier:
+          # entities decode before the engine's text rules run, so a token's
+          # value no longer has to exist as literal bytes.
+          def construct_capable_entity?(text)
+            return false unless text.include?("&")
+
+            text.scan(NUMERIC_ENTITY) do
+              code = Regexp.last_match(1)
+              return true if construct_codepoint?(code)
+            end
+
+            text.scan(NAMED_ENTITY) do
+              return true unless IRRELEVANT_NAMED_ENTITIES.include?(Regexp.last_match(1))
+            end
+
+            false
+          end
+
           private
+
+          # `[quote=…]` with anything but trailing whitespace on its line is
+          # core's single-line quote form, which the line-oriented detectors
+          # deliberately do not take — only the engine tier remaps its
+          # coordinates, so it is context-sensitive by definition.
+          INLINE_QUOTE = /\[quote=[^\]\n]{0,512}\][^\S\n]*\S/i
+          private_constant :INLINE_QUOTE
 
           def danger?(raw)
             raw.include?("`") || raw.include?("\\") || raw.include?("<") || raw.include?("\r") ||
               raw.include?("~~~") || raw.include?("](") || raw.include?("]:") ||
-              raw.include?("][") || INDENTED_LINE.match?(raw) || BBCODE_CODE.match?(raw)
+              raw.include?("][") || INDENTED_LINE.match?(raw) || BBCODE_CODE.match?(raw) ||
+              INLINE_QUOTE.match?(raw)
           end
 
           def real_candidates?(raw)
@@ -225,21 +253,6 @@ module Migrations
               end
               pos = index + 1
             end
-            false
-          end
-
-          def construct_capable_entity?(raw)
-            return false unless raw.include?("&")
-
-            raw.scan(NUMERIC_ENTITY) do
-              code = Regexp.last_match(1)
-              return true if construct_codepoint?(code)
-            end
-
-            raw.scan(NAMED_ENTITY) do
-              return true unless IRRELEVANT_NAMED_ENTITIES.include?(Regexp.last_match(1))
-            end
-
             false
           end
 

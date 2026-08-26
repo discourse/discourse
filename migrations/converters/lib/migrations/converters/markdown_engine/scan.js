@@ -5,10 +5,36 @@
 // the V8 boundary. Ported from the benchmark walk that was debugged against a
 // real corpus (see migrations/docs/markdown-engine-context.md).
 
+function __scanCountOccurrences(haystack, needle) {
+  let count = 0;
+  let index = haystack.indexOf(needle);
+  while (index !== -1) {
+    count += 1;
+    index = haystack.indexOf(needle, index + needle.length);
+  }
+  return count;
+}
+
+// How often the link's destination also appears in its label text — a
+// `[URL](same URL)` self-link writes the value twice in the raw, so count
+// certification must expect both occurrences. The schemeless reading covers
+// a label spelling the bare domain of a linkified destination.
+function __scanLabelHits(label, href) {
+  if (label.includes(href)) {
+    return __scanCountOccurrences(label, href);
+  }
+  const bare = href.replace(/^https?:\/\//, "");
+  if (bare !== href && label.includes(bare)) {
+    return __scanCountOccurrences(label, bare);
+  }
+  return 0;
+}
+
 function __scanWalk(children, block) {
   if (!children) {
     return;
   }
+  const linkStack = [];
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
     if (child.type === "mention_open") {
@@ -29,10 +55,25 @@ function __scanWalk(children, block) {
           type: hashtagType,
           slug: child.attrGet("data-ref") || child.attrGet("data-slug") || "",
         });
+        linkStack.push(null);
       } else if (href !== null && href[0] !== "#") {
         // Fragment-only hrefs are intra-post anchors — some synthesized from
         // headings, none in need of remapping — so they are not constructs.
-        block.links.push(href);
+        // A linkified or autolinked URL is its own label but exists once in
+        // the raw, so only an explicit `[label](dest)` link can contribute
+        // label occurrences.
+        const explicit = child.markup !== "linkify" && child.info !== "auto";
+        linkStack.push({ href, label: "", explicit });
+      } else {
+        linkStack.push(null);
+      }
+    } else if (child.type === "link_close") {
+      const open = linkStack.pop();
+      if (open) {
+        block.links.push({
+          href: open.href,
+          labelHits: open.explicit ? __scanLabelHits(open.label, open.href) : 0,
+        });
       }
     } else if (child.type === "image") {
       const src = child.attrGet("data-orig-src") || child.attrGet("src");
@@ -47,8 +88,16 @@ function __scanWalk(children, block) {
       }
     } else if (child.type === "code_inline") {
       block.code += 1;
-    } else if (child.children) {
-      __scanWalk(child.children, block);
+    } else {
+      if (child.type === "text" && linkStack.length > 0) {
+        const open = linkStack[linkStack.length - 1];
+        if (open) {
+          open.label += child.content;
+        }
+      }
+      if (child.children) {
+        __scanWalk(child.children, block);
+      }
     }
   }
 }

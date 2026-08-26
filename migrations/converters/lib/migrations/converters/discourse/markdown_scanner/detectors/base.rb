@@ -99,7 +99,14 @@ module Migrations
             # would swallow the inner construct unrecorded (see `UploadUrl::LINK`).
             # Failing there matches core too: links don't nest, so the inner
             # `[…](…)` wins and the outer bracket stays literal.
-            LINK_TEXT = /[^\[\]]*(?:\[[^\[\]]*\](?!\()[^\[\]]*)*/
+            #
+            # Every quantifier is capped (CommonMark's own label limit is 999
+            # characters) and the whole run is atomic: nested unbounded stars made
+            # a bracket-dense body without a closing `](` backtrack across every
+            # bracket split, quadratically. On this grammar the greedy reading is
+            # the only useful one — the run ends at the first `](` either way — so
+            # atomicity changes cost, not matches.
+            LINK_TEXT = /(?>[^\[\]]{0,999}(?:\[[^\[\]]{0,999}\](?!\()[^\[\]]{0,999}){0,32})/
 
             # The padding CommonMark allows inside a link's parentheses. The
             # destination and the title may sit on separate lines, but not across a

@@ -93,13 +93,38 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       "a query with no path" => %w[https://forum.example.com?ref=x&a=1 ?ref=x&a=1],
       "a fragment with no path" => %w[https://forum.example.com#top #top],
       "a protocol-relative front page" => ["//forum.example.com", nil],
-      "a front page with a port" => ["https://forum.example.com:3000", nil],
+      "a front page with a default port" => ["https://forum.example.com:443", nil],
     }.each do |label, (raw, suffix)|
       it "records #{label} as a SITE link" do
         link, = link_for(raw)
 
         expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: suffix)
       end
+    end
+
+    # `forum.example.com:3000` can be a different application than the forum
+    # on `forum.example.com`, so a non-default port is part of the host
+    # identity: it matches only a host configured with that port.
+    it "leaves a front page on a non-default port literal" do
+      link, result = link_for("https://forum.example.com:3000")
+
+      expect(link).to be_nil
+      expect(result).to eq("https://forum.example.com:3000")
+    end
+
+    it "records a front page on a non-default port when the host is configured with it" do
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          internal_link_hosts: {
+            "forum.example.com:3000" => nil,
+          },
+        )
+      extractor.extract("https://forum.example.com:3000")
+
+      expect(buffer.links.first).to include(target_type: enums::LinkTarget::SITE)
     end
 
     # The host stops at `?`, so the query is the path here and not part of a host

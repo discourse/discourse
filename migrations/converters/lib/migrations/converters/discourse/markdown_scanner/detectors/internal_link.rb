@@ -84,7 +84,7 @@ module Migrations
             # source site. The `<…>` alternative repeats the `url` group name, which
             # Ruby allows: whichever branch matches is the one `match[:url]` reads.
             LINK =
-              /\G\[(?<text>#{Base::LINK_TEXT})\]\(#{Base::LINK_GAP}(?:<(?<url>[^<>\n]+)>|(?<url>#{URL_BODY}+))#{Base::LINK_TAIL}/
+              /\G\[(?<text>#{Base::LINK_TEXT})\]\(#{Base::LINK_GAP}(?:<(?<url>[^<>\n]{1,2048})>|(?<url>#{URL_BODY}{1,2048}))#{Base::LINK_TAIL}/
             private_constant :LINK
 
             # The bare form fires at every whitespace-preceded `h` and `/` the scanner
@@ -111,7 +111,7 @@ module Migrations
             # site being retired unless their origin is rewritten. So the host and
             # everything after it are one run, ending on a word character — which
             # keeps a sentence's `.` outside the URL — or on a `/`, for the root path.
-            ABSOLUTE = %r{(?:(?i:https?:)?//#{URL_BODY}*[\w/])}
+            ABSOLUTE = %r{(?:(?i:https?:)?//#{URL_BODY}{0,2048}[\w/])}
             private_constant :ABSOLUTE
 
             # A relative URL has no host to reject on, and the walk stops at every `/`
@@ -119,7 +119,8 @@ module Migrations
             # link apart from a slash. The lazy `(?:/…)*?` admits a subfolder install's
             # leading segments before it, and demands a real route segment after, so a
             # plain `/` still fails without the group ever expanding.
-            RELATIVE = %r{(?:/[^/#{Base::URL_TERMINATORS}]+)*?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w}
+            RELATIVE =
+              %r{(?:/[^/#{Base::URL_TERMINATORS}]{1,255}){0,16}?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}{0,2048}\w}
             private_constant :RELATIVE
 
             BARE = /\G(?<url>#{ABSOLUTE}|#{RELATIVE})/
@@ -158,6 +159,7 @@ module Migrations
             def initialize(hosts: {}, base_prefix: nil, on_foreign_host: nil)
               @hosts = hosts
               @base_prefix = base_prefix
+              @reported_foreign_hosts = Set.new
               @on_foreign_host = on_foreign_host
               @presence_pattern = build_presence_pattern
             end
@@ -321,21 +323,27 @@ module Migrations
             # A foreign host is rejected before routing (the cheap check). Only when
             # a caller asked for the signal do we route-parse it, to tell an
             # internal-looking self-link on an unconfigured host from an ordinary
-            # external link, and report the former.
+            # external link, and report the former — once per host: a forgotten
+            # former domain can appear in millions of posts, and the signal's
+            # value is the host name, not its frequency.
             def note_foreign_host(host, rest)
-              return unless @on_foreign_host
+              return if @on_foreign_host.nil? || @reported_foreign_hosts.include?(host)
+              return unless RouteParser.parse(rest)
 
-              @on_foreign_host.call(host) if RouteParser.parse(rest)
+              @reported_foreign_hosts << host
+              @on_foreign_host.call(host)
             end
 
             # @return [Array(String, String), nil] `[host, rest]` for an internal URL
-            #   shape, else nil. `host` is nil for a relative URL; any port is dropped
-            #   so it can be compared against the derived host set.
+            #   shape, else nil. `host` is nil for a relative URL. Only a default
+            #   port is dropped: `example.com:8443` can be a different application
+            #   than `example.com`, so a non-default port stays part of the host
+            #   identity and must appear in the configured host set to match.
             def split_host(url)
               match = SPLIT.match(url)
               return nil unless match
 
-              host = match[:host]&.sub(/:\d+\z/, "")&.downcase
+              host = match[:host]&.sub(/:(?:80|443)\z/, "")&.downcase
               rest = match[:rest]
               # A host with no path at all is the site's front page, and its origin
               # needs rewriting like any other. Without a host there is nothing to

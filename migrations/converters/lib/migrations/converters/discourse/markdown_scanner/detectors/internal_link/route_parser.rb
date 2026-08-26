@@ -37,7 +37,13 @@ module Migrations
               POST = %r{\A/p/(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
               private_constant :POST
 
-              USER = %r{\A/u(?:sers)?/(?<name>#{WORD})}
+              # The boundary keeps a username-prefixed junk segment (`/u/bob!!!`)
+              # from reading as user `bob` — such a URL is not a route on the
+              # destination either, so rewriting it would launder an invalid
+              # link. A dotted suffix (`/u/bob.json`) folds into the name, since
+              # the name grammar allows interior dots; resolution then decides,
+              # and an unresolved link restores its verbatim source.
+              USER = %r{\A/u(?:sers)?/(?<name>#{WORD})(?=[/?#]|\z)}
               private_constant :USER
 
               # The list filters a category's tabs are addressed by (core's

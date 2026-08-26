@@ -29,8 +29,10 @@ module Migrations
             private_constant :URL_BODY
 
             # The destination, plain or wrapped in angle brackets (`<…>`, which is how
-            # CommonMark carries a destination containing spaces).
-            DESTINATION = /(?:<[^<>\n]*>|#{URL_BODY}*)/
+            # CommonMark carries a destination containing spaces). Both runs are
+            # capped: an uncapped run on a `)`-free body is re-scanned from every
+            # opener, quadratically, and no real destination comes near the cap.
+            DESTINATION = /(?:<[^<>\n]{0,2048}>|#{URL_BODY}{0,2048})/
             private_constant :DESTINATION
 
             # A markdown link or image, `[text](dest)`, with the optional title and
@@ -49,7 +51,7 @@ module Migrations
             # punctuation with a closing `\w`: the span is passed through unchanged
             # either way, so where it ends only decides where the walk resumes, and
             # anything trailing is punctuation that holds no construct.
-            BARE = %r{\G(?:(?i:https?:)?//#{URL_BODY}+)}
+            BARE = %r{\G(?:(?i:https?:)?//#{URL_BODY}{1,2048})}
             private_constant :BARE
 
             # What the walk reaches right after a `](`: the destination of a link
@@ -58,7 +60,7 @@ module Migrations
             # destination is detected, and when it doesn't, skipping a path
             # nobody's placeholder gets spliced into is the safe reading (see the
             # class comment for the corruption this avoids).
-            DESTINATION_RUN = /\G#{URL_BODY}+/
+            DESTINATION_RUN = /\G#{URL_BODY}{1,2048}/
             private_constant :DESTINATION_RUN
 
             def detect(input, pos, byte)

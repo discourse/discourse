@@ -88,8 +88,20 @@ module Migrations
         #   before the route is parsed. `nil` (the default) for a root install.
         # @param on_foreign_host [#call, nil] called with the host of an absolute,
         #   internal-looking link whose host is not in `internal_link_hosts` — a hint
-        #   that a former domain may be missing from the source_site settings. Nil (the
-        #   default) skips the signal.
+        #   that a former domain may be missing from the source_site settings. Each
+        #   host is reported once per extractor. Nil (the default) skips the signal.
+        # @param markdown_engine [MarkdownEngine::Context, nil] the engine context
+        #   for `:engine`-classified bodies. With it, extraction from
+        #   context-sensitive bodies is certified against the real
+        #   discourse-markdown-it parse and a body whose constructs cannot be
+        #   certified stays verbatim (see {MarkdownScanner::EngineScanner}); without
+        #   it those bodies take the line-oriented {MarkdownScanner::Scanner} with
+        #   its documented divergences. Build it after the worker forks — V8
+        #   contexts do not survive forking.
+        # @param on_engine_refusal [#call, nil] called with the refusal cause
+        #   (a Symbol) whenever an `:engine` body stays verbatim; the tallies are
+        #   also kept on {#engine_refusals}. The caller knows which post it is
+        #   extracting, so post identity stays on its side of the callback.
         def initialize(
           embeds:,
           mention_names:,
@@ -98,10 +110,14 @@ module Migrations
           custom_emoji_names: nil,
           internal_link_hosts: {},
           internal_link_base_prefix: nil,
-          on_foreign_host: nil
+          on_foreign_host: nil,
+          markdown_engine: nil,
+          on_engine_refusal: nil
         )
           @embeds = embeds
           @mention_classifier = mention_classifier
+          @on_engine_refusal = on_engine_refusal
+          @engine_refusals = Hash.new(0)
 
           detectors = [Detectors::Upload.new, Detectors::UploadUrl.new, Detectors::Quote.new]
           # After UploadUrl, so an upload URL still wins over a bare internal link that
@@ -121,16 +137,35 @@ module Migrations
             detectors << Detectors::Emoji.new(names: custom_emoji_names)
           end
 
-          # The detectors are stateless (the emoji one only reads a frozen name set)
-          # and the scanner resets its state on each `scan`, so build them once and
-          # reuse them for every post. `extract` swaps `@topic_id` per call, so one
-          # extractor must not run in two threads at once — each worker holds its own
-          # (the posts step builds it in per-worker `setup`).
+          # The detectors carry no per-post state (the internal-link one only
+          # accumulates its report-once host set) and the scanners reset their
+          # state on each `scan`, so build them once and reuse them for every
+          # post. `extract` swaps `@topic_id` per call, so one extractor must not
+          # run in two threads at once — each worker holds its own (the posts
+          # step builds it in per-worker `setup`).
           on_node = ->(node, source) { defer(node, source) }
           @gate = MarkdownScanner::TierGate.new(detectors:)
           @prose_scanner = MarkdownScanner::ProseScanner.new(detectors:, &on_node)
           @scanner = MarkdownScanner::Scanner.new(detectors:, &on_node)
+          if markdown_engine
+            @engine_scanner =
+              MarkdownScanner::EngineScanner.new(
+                engine: markdown_engine,
+                detectors:,
+                gate: @gate,
+                mention_names:,
+                hashtag_names:,
+                custom_emoji_names:,
+                internal_link_hosts:,
+                internal_link_base_prefix:,
+                &on_node
+              )
+          end
         end
+
+        # Refusal-cause tallies (`cause => count`) for `:engine` bodies that
+        # stayed verbatim. Left at zero without an engine context.
+        attr_reader :engine_refusals
 
         # @param raw [String, nil] the source post body (Discourse Markdown).
         # @param topic_id [Integer, nil] the source topic id of the containing post,
@@ -148,11 +183,29 @@ module Migrations
           when :prose
             @prose_scanner.scan(raw)
           else
-            @scanner.scan(raw)
+            extract_engine(raw)
           end
         end
 
         private
+
+        # A refused body stays verbatim — count certification can prove itself
+        # unable to place a construct, and a wrong placement would corrupt the
+        # post while verbatim only leaves its references stale. The refusal is
+        # counted and reported so a conversion surfaces how many posts (and
+        # why) still need the exact path.
+        def extract_engine(raw)
+          return @scanner.scan(raw) if @engine_scanner.nil?
+
+          result = @engine_scanner.scan(raw)
+          if result.refused?
+            @engine_refusals[result.cause] += 1
+            @on_engine_refusal&.call(result.cause)
+            raw
+          else
+            result.output
+          end
+        end
 
         # Records the detected embed on the collector and returns the placeholder
         # token. `source` is the verbatim matched slice; it rides on every row so
