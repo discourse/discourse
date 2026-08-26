@@ -22,7 +22,7 @@ class UserOption < ActiveRecord::Base
     "only_chat_push_notifications", # TODO(2027-01): replaced by push_notification_level; drop the column in a follow-up PR once this has shipped
     "chat_send_shortcut", # TODO(2027-01): replaced by send_shortcut; drop the column in a follow-up PR once this has shipped
     "enable_defer", # TODO(2027-02): the preference was removed; drop the column in a follow-up PR once this has shipped
-    "topics_unread_when_closed", # TODO(2027-02): the preference was removed; drop the column in a follow-up PR once this has shipped
+    "topics_unread_when_closed", # TODO: Remove when 20260826124054_drop_topics_unread_when_closed_from_user_options has been promoted to pre-deploy
   ]
   # TODO: remove after 20260824051214_drop_ai_search_discovery_preferences_from_user_options has been promoted
   self.ignored_columns += %w[

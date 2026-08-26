@@ -9,7 +9,6 @@ describe "Topic bulk select" do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_bulk_actions_modal) { PageObjects::Modals::TopicBulkActions.new }
-  let(:topic_view) { PageObjects::Components::TopicView.new }
 
   def open_bulk_actions_modal(topics_to_select = nil, action)
     topic_list_header.click_bulk_select_button
