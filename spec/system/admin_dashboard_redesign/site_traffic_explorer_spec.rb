@@ -127,17 +127,17 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
     expect(traffic).to have_selected_legend_item(label: "Likely crawlers")
 
-    traffic.click_legend(label: "Likely crawlers")
+    traffic.toggle_chart_legend(label: "Likely crawlers")
 
     expect(traffic).to have_deselected_legend_item(label: "Likely crawlers")
     expect(traffic).to have_apply_filters(count: 2)
 
-    traffic.click_legend(label: "Likely crawlers")
+    traffic.toggle_chart_legend(label: "Likely crawlers")
 
     expect(traffic).to have_selected_legend_item(label: "Likely crawlers")
     expect(traffic).to have_no_apply_filters
 
-    traffic.click_legend(label: "Likely crawlers")
+    traffic.toggle_chart_legend(label: "Likely crawlers")
     traffic.apply_filters
 
     expect(traffic).to have_deselected_legend_item(label: "Likely crawlers")
