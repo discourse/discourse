@@ -16,7 +16,7 @@ module(
       total: 100,
       rows: [
         {
-          category_id: 1,
+          category_id: 3,
           name: "Support & Help",
           color: "0088CC",
           topics: 412,
@@ -28,7 +28,7 @@ module(
           share_change_formatted: "+12%",
         },
         {
-          category_id: 2,
+          category_id: 6,
           name: "General",
           color: "009C00",
           topics: 231,
@@ -40,7 +40,7 @@ module(
           share_change_formatted: "+5%",
         },
         {
-          category_id: 3,
+          category_id: 7,
           name: "Bug Reports",
           color: "E45735",
           topics: 61,
@@ -99,6 +99,43 @@ module(
       assert.dom(".db-delta.--pos").exists({ count: 2 });
       assert.dom(".db-delta.--neg").exists({ count: 1 });
       assert.dom(".db-delta.--neg").hasText("-8%");
+    });
+
+    test("links topic and post counts to the category's filtered topic list", async function (assert) {
+      await render(
+        <template>
+          <ActivityByCategory
+            @activity={{activity}}
+            @startDate={{start}}
+            @endDate={{end}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".db-activity-table tbody td:nth-child(2) a")
+        .exists({ count: 3 }, "every topic count is linked");
+      assert
+        .dom(".db-activity-table tbody td:nth-child(3) a")
+        .exists({ count: 3 }, "every post count is linked");
+      assert
+        .dom(".db-activity-table tbody tr:nth-child(1) td:nth-child(2) a")
+        .hasAttribute(
+          "href",
+          `/filter?q=${encodeURIComponent(
+            "created-after:2026-04-01 created-before:2026-05-01 =category:meta"
+          )}`,
+          "the topic count filters new topics by category and date range"
+        );
+      assert
+        .dom(".db-activity-table tbody tr:nth-child(1) td:nth-child(3) a")
+        .hasAttribute(
+          "href",
+          `/filter?q=${encodeURIComponent(
+            "activity-after:2026-04-01 activity-before:2026-05-01 =category:meta"
+          )}`,
+          "the post count filters activity by category and date range"
+        );
     });
 
     test("formats page views with k suffix when over 1000", async function (assert) {
@@ -164,7 +201,7 @@ module(
 
       assert.strictEqual(
         selectKit(".multiple-categories-selector").header().value(),
-        "1,2,3"
+        "3,6,7"
       );
     });
 
