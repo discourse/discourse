@@ -1842,6 +1842,17 @@ RSpec.describe ListController do
       end
     end
 
+    it "allows users to filter on a set of topic ids" do
+      topic_2 = Fabricate(:topic)
+
+      get "/filter.json", params: { topic_ids: topic_2.id.to_s }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }).to eq(
+        [topic_2.id],
+      )
+    end
+
     it "keeps query params encoded in more_topics_url when unicode usernames are enabled" do
       SiteSetting.unicode_usernames = true
 

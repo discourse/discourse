@@ -132,13 +132,15 @@ class ListController < ApplicationController
   def filter
     topic_query_opts = { no_definitions: !SiteSetting.show_category_definitions_in_topic_lists }
 
-    %i[page q].each do |key|
+    %i[page q topic_ids].each do |key|
       if params.key?(key.to_s)
         value = params[key]
         raise Discourse::InvalidParameters.new(key) if !TopicQuery.validate?(key, value)
         topic_query_opts[key] = value
       end
     end
+
+    topic_query_opts[:topic_ids] = param_to_integer_list(:topic_ids) if params.key?(:topic_ids)
 
     user = current_user
     list = TopicQuery.new(user, topic_query_opts).list_filter
