@@ -1307,28 +1307,26 @@ class Category < ActiveRecord::Base
         parent_category_id
       end
 
-    enqueue_category_hashtag_remap_job(
-      category_id: id,
-      old_ref:
-        Category.hashtag_ref_from(slug: old_slug, parent_category_id: old_parent_category_id),
-      new_ref: slug_ref,
-    )
+    type = CategoryHashtagDataSource.type
+    remaps = [
+      {
+        type:,
+        id:,
+        old_ref:
+          Category.hashtag_ref_from(slug: old_slug, parent_category_id: old_parent_category_id),
+      },
+    ]
 
     if saved_change_to_slug?
-      subcategories.find_each do |subcategory|
-        enqueue_category_hashtag_remap_job(
-          category_id: subcategory.id,
-          old_ref: [old_slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
-          new_ref: [slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
-        )
-      end
+      remaps +=
+        subcategories
+          .pluck(:id, :slug)
+          .map do |sub_id, sub_slug|
+            { type:, id: sub_id, old_ref: [old_slug, sub_slug].join(Category::SLUG_REF_SEPARATOR) }
+          end
     end
-  end
 
-  def enqueue_category_hashtag_remap_job(category_id:, old_ref:, new_ref:)
-    return if old_ref.blank? || new_ref.blank? || old_ref == new_ref
-
-    DB.after_commit { Jobs.enqueue(:remap_category_hashtag, category_id:, old_ref:, new_ref:) }
+    HashtagRemapper.enqueue(remaps)
   end
 
   def cannot_delete_reason
