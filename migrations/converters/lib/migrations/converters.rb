@@ -6,7 +6,7 @@ module Migrations
   module Converters
     # Directories under the gem's converters root that are framework
     # infrastructure rather than converter implementations.
-    NON_CONVERTER_DIRS = %w[adapter cli].freeze
+    NON_CONVERTER_DIRS = %w[adapter cli markdown_engine].freeze
 
     def self.root_path
       @root_path ||= File.expand_path("../..", __dir__)
