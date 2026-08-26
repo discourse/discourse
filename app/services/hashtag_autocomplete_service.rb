@@ -48,6 +48,10 @@ class HashtagAutocompleteService
     enabled_data_sources.find { |ds| ds.type == type }
   end
 
+  def self.ref_for(type, record_id)
+    data_sources.find { |ds| ds.type == type }.try(:ref_for, record_id).presence
+  end
+
   def self.find_priorities_for_context(context)
     contextual_type_priorities.select { |ctp| ctp[:context] == context }
   end
