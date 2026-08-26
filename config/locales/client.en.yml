@@ -3244,6 +3244,13 @@ en:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      command: "Command"
+      option: "Option"
+      control: "Control"
+      arrow_up: "Up arrow"
+      arrow_down: "Down arrow"
+      arrow_left: "Left arrow"
+      arrow_right: "Right arrow"
 
     conditional_loading_section:
       loading: Loading…
@@ -3539,7 +3546,7 @@ en:
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
-      title: "Or press %{modifier}Enter"
+      submit_shortcut_title: "Or press %{shortcut}"
       save_and_close: "Save and close"
       discard: "Discard"
       cancel_edit: "Cancel edit"
@@ -3962,7 +3969,6 @@ en:
         in: "filters by metadata (e.g. in:title, in:personal, in:pinned)"
         status: "filters by topic status"
         full_search: "launches full page search"
-        full_search_key: "%{modifier} + Enter"
         me: "shows only your posts"
 
       advanced:

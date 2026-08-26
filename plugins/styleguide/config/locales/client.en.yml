@@ -276,6 +276,8 @@ en:
           title: "Spinners"
         otp:
           title: "OTP"
+        shortcut:
+          title: "Shortcut"
         empty_state:
           title: "Empty State"
         tooltips:

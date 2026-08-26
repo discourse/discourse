@@ -1,10 +1,9 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { service } from "@ember/service";
-import { translateModKey } from "discourse/lib/utilities";
-import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DShortcut from "discourse/ui-kit/d-shortcut";
 import AiHelperCustomPrompt from "../components/ai-helper-custom-prompt";
 
 export default class AiHelperOptionsList extends Component {
@@ -12,10 +11,6 @@ export default class AiHelperOptionsList extends Component {
 
   get showShortcut() {
     return this.site.desktopView && this.args.shortcutVisible;
-  }
-
-  get shortcut() {
-    return translateModKey(`${PLATFORM_KEY_MODIFIER} alt p`);
   }
 
   <template>
@@ -27,6 +22,21 @@ export default class AiHelperOptionsList extends Component {
             @promptArgs={{option}}
             @submit={{@performAction}}
           />
+        {{else if (and (eq option.name "proofread") this.showShortcut)}}
+          <li data-name={{option.translated_name}} data-value={{option.name}}>
+            <DShortcut @keys="mod+alt+p" as |shortcut|>
+              <DButton
+                class="ai-helper-options__button"
+                data-name={{option.name}}
+                aria-keyshortcuts={{shortcut.aria}}
+                @action={{fn @performAction option}}
+                @icon={{option.icon}}
+                @translatedLabel={{option.translated_name}}
+              >
+                <shortcut.Kbd class="shortcut" />
+              </DButton>
+            </DShortcut>
+          </li>
         {{else}}
           <li data-name={{option.translated_name}} data-value={{option.name}}>
             <DButton
@@ -35,11 +45,7 @@ export default class AiHelperOptionsList extends Component {
               @action={{fn @performAction option}}
               data-name={{option.name}}
               class="ai-helper-options__button"
-            >
-              {{#if (and (eq option.name "proofread") this.showShortcut)}}
-                <kbd class="shortcut">{{this.shortcut}}</kbd>
-              {{/if}}
-            </DButton>
+            />
           </li>
         {{/if}}
       {{/each}}

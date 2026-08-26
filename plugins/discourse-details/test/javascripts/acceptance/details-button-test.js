@@ -6,8 +6,7 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
-import { translateModKey } from "discourse/lib/utilities";
-import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import {
   acceptance,
   metaModifier,
@@ -156,13 +155,20 @@ acceptance("Details Button", function (needs) {
 
     await click(".toolbar-menu__options-trigger");
 
-    const separator = PLATFORM_KEY_MODIFIER === "meta" ? "" : " ";
+    const shortcut = formatShortcut("mod+shift+d");
     assert
-      .dom("[data-name='details'] kbd")
+      .dom("[data-name='details'] .d-shortcut")
       .hasText(
-        translateModKey(`${PLATFORM_KEY_MODIFIER}+Shift+D`, separator),
+        shortcut.keys
+          .map((key) =>
+            key.name === key.label ? key.label : `${key.label} ${key.name}`
+          )
+          .join(" "),
         "shows the platform-specific shortcut"
       );
+    assert
+      .dom("[data-name='details']")
+      .hasAttribute("aria-keyshortcuts", shortcut.aria);
   });
 
   test("keyboard shortcut inserts a details block in the rich text editor", async function (assert) {

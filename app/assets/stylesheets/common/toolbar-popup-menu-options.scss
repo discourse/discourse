@@ -55,14 +55,6 @@
   }
 
   .shortcut {
-    line-height: 1;
-    vertical-align: middle;
-
-    &.--apple {
-      letter-spacing: 0.25em;
-      padding-right: 0.35em;
-    }
-
     @include viewport.until(sm) {
       display: none;
     }
@@ -110,6 +102,12 @@
 .toolbar-menu__list-content {
   .dropdown-menu {
     .btn {
+      // The label is block content, so the button counts as icon-only and
+      // drops the gap after its icon; restore the labelled-button gap.
+      &.no-text .d-icon {
+        margin-right: 0.45em;
+      }
+
       &:hover,
       &:focus,
       &:focus-visible {
@@ -144,8 +142,6 @@
         top: 50%;
         transform: translateY(-50%);
         display: none;
-        margin: 0;
-        font-size: var(--font-down-1-rem);
       }
     }
   }

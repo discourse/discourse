@@ -6,7 +6,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { translateModKey } from "discourse/lib/utilities";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import DButton from "discourse/ui-kit/d-button";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
@@ -16,8 +16,9 @@ export default class FastEdit extends Component {
   @tracked isSaving = false;
   @tracked value = this.args.newValue || this.args.initialValue;
 
-  buttonTitle = i18n("composer.title", {
-    modifier: translateModKey("Meta+"),
+  shortcut = formatShortcut("mod+enter");
+  buttonTitle = i18n("composer.submit_shortcut_title", {
+    shortcut: this.shortcut.label,
   });
 
   get disabled() {
@@ -83,12 +84,13 @@ export default class FastEdit extends Component {
       <div class="fast-edit-container__footer">
         <DButton
           class="btn-small btn-primary save-fast-edit"
+          aria-keyshortcuts={{this.shortcut.aria}}
           @action={{this.save}}
+          @disabled={{this.disabled}}
           @icon="pencil"
+          @isLoading={{this.isSaving}}
           @label="composer.save_edit"
           @translatedTitle={{this.buttonTitle}}
-          @isLoading={{this.isSaving}}
-          @disabled={{this.disabled}}
         />
 
         <PluginOutlet

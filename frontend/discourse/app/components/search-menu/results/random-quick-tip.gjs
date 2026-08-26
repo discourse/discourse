@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -27,7 +28,7 @@ const DEFAULT_QUICK_TIPS = [
     clickable: true,
   },
   {
-    label: i18n("search.tips.full_search_key", { modifier: "Ctrl" }),
+    shortcut: "mod+enter",
     description: i18n("search.tips.full_search"),
   },
   {
@@ -83,7 +84,11 @@ export default class RandomQuickTip extends Component {
         {{on "click" this.tipSelected}}
         aria-describedby="tip-description"
       >
-        {{this.randomTip.label}}
+        {{#if this.randomTip.shortcut}}
+          <DShortcut @keys={{this.randomTip.shortcut}} />
+        {{else}}
+          {{this.randomTip.label}}
+        {{/if}}
       </button>
 
       <span id="tip-description">

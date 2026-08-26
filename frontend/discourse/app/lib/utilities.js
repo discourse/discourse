@@ -534,6 +534,12 @@ export async function inCodeBlock(text, pos) {
   return CODE_TOKEN_TYPES.includes(type);
 }
 
+/**
+ * Replaces modifier names in a shortcut string with their platform spelling.
+ *
+ * @deprecated Use `formatShortcut` from `discourse/lib/shortcut-format`, which
+ * produces the drawn form and the `aria-keyshortcuts` value from one spelling.
+ */
 export function translateModKey(string, separator = " ") {
   const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys

@@ -45,11 +45,13 @@ export function clearExtraKeyboardShortcutHelp() {
 
 export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
 
-export const PLATFORM_KEY_MODIFIER = /Mac|iPod|iPhone|iPad/.test(
-  navigator.platform
-)
-  ? "meta"
-  : "ctrl";
+/**
+ * The binding name of the platform's primary modifier key, as used in key
+ * combos such as `${PLATFORM_KEY_MODIFIER}+k`. Derived from the same platform
+ * test that drives shortcut display, so a binding and its drawn form cannot
+ * disagree on which key is primary.
+ */
+export const PLATFORM_KEY_MODIFIER = capabilities.isApple ? "meta" : "ctrl";
 
 const NESTED_POST_CONTENT_SELECTOR = [
   ":scope > .nested-post__main > .nested-post__article",

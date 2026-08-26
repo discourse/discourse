@@ -18,10 +18,9 @@ import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { translateModKey } from "discourse/lib/utilities";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import Composer, { CREATE_TOPIC } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
-import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
@@ -1976,21 +1975,37 @@ acceptance(`composer buttons API`, function (needs) {
 
     await click(".toolbar-menu__options-trigger");
 
+    const shortcut = formatShortcut("mod+alt+b");
     const row = find("[data-name='bold']");
     assert
       .dom(row)
       .hasAttribute(
         "title",
-        i18n("some_title") +
-          ` (${translateModKey(PLATFORM_KEY_MODIFIER + " alt b")})`,
+        `${i18n("some_title")} (${shortcut.label})`,
         "shows the title with shortcut"
       );
     assert
       .dom(row)
+      .hasAttribute(
+        "aria-keyshortcuts",
+        shortcut.aria,
+        "announces the shortcut in its canonical form"
+      );
+    assert
+      .dom(".d-button-label__text", row)
+      .hasText(i18n("some_label"), "shows the label");
+    assert
+      .dom(".d-shortcut__key", row)
+      .exists({ count: shortcut.keys.length }, "draws one keycap per key");
+    assert
+      .dom(".d-shortcut", row)
       .hasText(
-        i18n("some_label") +
-          ` ${translateModKey(PLATFORM_KEY_MODIFIER + " alt b")}`,
-        "shows the label with shortcut"
+        shortcut.keys
+          .map((key) =>
+            key.name === key.label ? key.label : `${key.label} ${key.name}`
+          )
+          .join(" "),
+        "draws each key with its spoken name"
       );
   });
 

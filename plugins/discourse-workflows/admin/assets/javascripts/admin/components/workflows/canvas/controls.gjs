@@ -1,15 +1,15 @@
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { translateModKey } from "discourse/lib/utilities";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 function undoTitle() {
-  return `${i18n("discourse_workflows.canvas.undo")} [${translateModKey("Meta+Z")}]`;
+  return `${i18n("discourse_workflows.canvas.undo")} [${formatShortcut("mod+z").label}]`;
 }
 
 function redoTitle() {
-  return `${i18n("discourse_workflows.canvas.redo")} [${translateModKey("Meta+Y")}]`;
+  return `${i18n("discourse_workflows.canvas.redo")} [${formatShortcut("mod+y").label}]`;
 }
 
 export default <template>
