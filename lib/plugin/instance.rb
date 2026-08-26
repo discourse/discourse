@@ -1425,6 +1425,14 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_hashtag_autocomplete_data_source(klass, self)
   end
 
+  def register_hashtag_content_store(klass)
+    if !(klass < HashtagRemapper::Store)
+      raise ArgumentError.new("Hashtag content stores must inherit from HashtagRemapper::Store")
+    end
+
+    DiscoursePluginRegistry.register_hashtag_content_store(klass, self)
+  end
+
   ##
   # Used to set up the priority ordering of hashtag autocomplete results by
   # type using HashtagAutocompleteService.
