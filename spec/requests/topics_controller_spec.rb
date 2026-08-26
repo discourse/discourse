@@ -3139,6 +3139,39 @@ RSpec.describe TopicsController do
       expect(response.parsed_body).not_to have_key("tags_descriptions")
     end
 
+    it "does not expose tags restricted to inaccessible categories" do
+      SiteSetting.tagging_enabled = true
+      public_tag = Fabricate(:tag, name: "public-tag", description: "public tag description")
+      restricted_tag =
+        Fabricate(:tag, name: "restricted-tag", description: "restricted tag description")
+      topic.tags = [public_tag, restricted_tag]
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      private_category.tags = [restricted_tag]
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tags"].map { |tag| tag["name"] }).to contain_exactly(
+        public_tag.name,
+      )
+      expect(response.parsed_body["tags_descriptions"]).to eq(
+        { public_tag.name => public_tag.description },
+      )
+
+      sign_in(admin)
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tags"].map { |tag| tag["name"] }).to contain_exactly(
+        public_tag.name,
+        restricted_tag.name,
+      )
+      expect(response.parsed_body["tags_descriptions"]).to eq(
+        public_tag.name => public_tag.description,
+        restricted_tag.name => restricted_tag.description,
+      )
+    end
+
     it "does not expose links from hidden posts in topic details to non-staff viewers" do
       test_topic = Fabricate(:topic, user: post_author1)
       visible_post = Fabricate(:post, topic: test_topic, user: post_author1)
