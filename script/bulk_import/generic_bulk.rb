@@ -55,6 +55,8 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def preflight
+    configure_unicode_usernames!
+
     return unless delta_import?
 
     puts "Running delta import preflight..."
@@ -111,6 +113,59 @@ class BulkImport::Generic < BulkImport::Base
         end
       )
     raise "Delta import preflight failed:\n  #{shown_errors.join("\n  ")}#{suffix}"
+  end
+
+  # non-ASCII source names require unicode_usernames before any name is
+  # sanitized; the final value must be live before both the fresh import
+  # and the delta preflight run
+  def configure_unicode_usernames!
+    if (allowlist = source_site_setting_value("allowed_unicode_username_characters"))
+      SiteSetting.set_and_log(:allowed_unicode_username_characters, allowlist)
+    end
+
+    if (explicit = source_site_setting_value("unicode_usernames"))
+      desired = %w[t true 1].include?(explicit.to_s.downcase)
+      enable_unicode_usernames! if desired && !SiteSetting.unicode_usernames
+      return
+    end
+
+    return if SiteSetting.unicode_usernames
+    return unless source_has_non_ascii_names?
+
+    enable_unicode_usernames!
+    log_import_issue(
+      "unicode_usernames auto-enabled",
+      "source contains non-ASCII usernames or group names",
+    )
+  end
+
+  def enable_unicode_usernames!
+    raise <<~MSG if SiteSetting.external_system_avatars_url.blank?
+        The source contains non-ASCII usernames, which requires enabling the
+        'unicode_usernames' site setting, but its validator requires
+        'external_system_avatars_url' to be set. Configure
+        external_system_avatars_url on the destination site and re-run the import.
+      MSG
+
+    SiteSetting.set_and_log(:unicode_usernames, true)
+    puts "Enabled unicode_usernames (non-ASCII names detected in source)"
+  end
+
+  def source_site_setting_value(name)
+    query(
+      "SELECT value FROM site_settings WHERE name = ? AND action = 'update' ORDER BY ROWID DESC LIMIT 1",
+      name,
+    ) { |rows| rows.first&.fetch("value", nil) }
+  end
+
+  def source_has_non_ascii_names?
+    non_ascii = ->(value) { value.present? && !value.ascii_only? }
+    user_columns = %w[username original_username] & table_column_names("users").to_a
+
+    query("SELECT #{user_columns.join(", ")} FROM users") do |rows|
+      rows.any? { |row| user_columns.any? { |column| non_ascii.call(row[column]) } }
+    end ||
+      query("SELECT name FROM groups") { |rows| rows.any? { |row| non_ascii.call(row["name"]) } }
   end
 
   def load_imported_ids
@@ -267,8 +322,15 @@ class BulkImport::Generic < BulkImport::Base
   # destination may hold a deduplicated variant of it that must be kept
   def delta_username_unchanged?(row, discourse_id, destination_username_lower)
     source_username = row["original_username"].presence || row["username"]
-    return true if imported_usernames_by_user_id[discourse_id] == source_username
+    if User.normalize_username(imported_usernames_by_user_id[discourse_id]) ==
+         User.normalize_username(source_username)
+      return true
+    end
     return false if destination_username_lower.blank?
+
+    # the destination still carries the source username verbatim: the base
+    # import kept it, so a stricter sanitizer must not rename it now
+    return true if User.normalize_username(source_username) == destination_username_lower
 
     # suffix-deduplicated names are recorded nowhere when fix_name left the
     # name itself unchanged, so recognize the suffix pattern directly
@@ -289,10 +351,11 @@ class BulkImport::Generic < BulkImport::Base
       next if row["existing_id"].present?
       next if (name = fix_name(row["name"])).blank?
 
-      if (previous_source_id = seen_names[name.downcase])
+      name_lower = User.normalize_username(name)
+      if (previous_source_id = seen_names[name_lower])
         errors << "group #{row["id"]} duplicates name of source group #{previous_source_id}"
       else
-        seen_names[name.downcase] = row["id"]
+        seen_names[name_lower] = row["id"]
       end
     end
   ensure
@@ -1212,7 +1275,18 @@ class BulkImport::Generic < BulkImport::Base
 
         update = { id: discourse_id }
         columns.each { |column| update[column] = row[column.to_s] }
-        update[:name] = fix_name(update[:name]) if update[:name].present?
+        if update[:name].present?
+          fixed_name = fix_name(update[:name])
+          if fixed_name.present?
+            update[:name] = fixed_name
+          else
+            update.delete(:name)
+            log_import_issue(
+              "group name sanitized to blank, name kept",
+              "group #{row["id"]} #{row["name"].inspect}",
+            )
+          end
+        end
         update[:bio_raw] = row["description"] unless row["description"].nil?
         update[:bio_cooked] = pre_cook(update[:bio_raw]) unless update[:bio_raw].nil?
         update
@@ -1222,7 +1296,7 @@ class BulkImport::Generic < BulkImport::Base
     Group
       .where(id: updates.map { |update| update[:id] })
       .pluck(:name)
-      .each { |name| @group_names_lower << name.downcase }
+      .each { |name| @group_names_lower << User.normalize_username(name) }
   ensure
     rows&.close
   end
