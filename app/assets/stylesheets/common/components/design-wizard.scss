@@ -878,7 +878,9 @@ $dw-button-default-border: #d3d3d3;
   display: flex;
   gap: var(--space-3);
   align-items: center;
+  padding-block: var(--space-4);
   margin-top: var(--space-4);
+  border-block: 1px solid var(--content-border-color);
 }
 
 .admin-config-area-themes__design-wizard-description {
