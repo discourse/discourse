@@ -9,6 +9,8 @@ module JsonApiKit
         @schema = schema
       end
 
+      def names = attributes.map(&:name)
+
       def values_for(record) = readable(record).to_h { [it.name, it.value_for(record)] }
 
       def columns = Columns.for(attributes.map { it.column_for(schema) })

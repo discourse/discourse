@@ -31,6 +31,10 @@ module JsonApiKit
 
         def has_many(name, **options) = relate(Declarations::Relationship::ToMany, name, **options)
 
+        def attribute_names = declared_attributes.map(&:name)
+
+        def relationships = Declarations::Relationships.new(declared_relationships)
+
         def fields(names = nil, guardian:)
           Declarations::Fields.for(
             names,
@@ -42,8 +46,6 @@ module JsonApiKit
         end
 
         private
-
-        def relationships = Declarations::Relationships.new(declared_relationships)
 
         def relate(kind, name, resource: nil, **options)
           self.declared_relationships =
