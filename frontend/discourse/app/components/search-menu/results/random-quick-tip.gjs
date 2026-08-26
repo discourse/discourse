@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { capabilities } from "discourse/services/capabilities";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -60,7 +61,11 @@ export default class RandomQuickTip extends Component {
 
   constructor() {
     super(...arguments);
-    this.randomTip = QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)];
+    // A tip about a key combination is no help without a keyboard to press it.
+    const tips = QUICK_TIPS.filter(
+      (tip) => !tip.shortcut || capabilities.hasKeyboard
+    );
+    this.randomTip = tips[Math.floor(Math.random() * tips.length)];
   }
 
   @action

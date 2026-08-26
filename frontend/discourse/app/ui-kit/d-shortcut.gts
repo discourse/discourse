@@ -9,6 +9,7 @@ import {
   type FormattedShortcut,
   type ShortcutKey,
 } from "discourse/lib/shortcut-format";
+import { capabilities } from "discourse/services/capabilities";
 import { notEq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
@@ -73,6 +74,13 @@ interface DShortcutSignature {
      * renders nothing, so a wrapper can be unconditional.
      */
     keys?: string | null;
+    /**
+     * Show the shortcut even where no physical keyboard is detected. For
+     * surfaces whose purpose is the keys themselves, such as the shortcuts
+     * help modal; everywhere else a device without a keyboard gets neither the
+     * drawn nor the announced form.
+     */
+    always?: boolean;
   };
   Blocks: {
     default: [DShortcutParts];
@@ -102,6 +110,11 @@ interface DShortcutSignature {
  * </DShortcut>
  * ```
  *
+ * Where no physical keyboard is detected (`capabilities.hasKeyboard`) both
+ * modes produce nothing: no chip, and `aria` undefined so the activator
+ * announces no shortcut. `@always` opts out of that for surfaces that document
+ * the keys.
+ *
  * `aria-keyshortcuts` is never set by the component itself: it belongs on the
  * element that reacts to the keys, which only the caller knows. The yielded
  * `Kbd` is hidden from assistive technology for the same reason: the activator
@@ -110,10 +123,14 @@ interface DShortcutSignature {
  * dropped, since nothing is rendered to carry them; put them on `shortcut.Kbd`.
  */
 export default class DShortcut extends Component<DShortcutSignature> {
-  /** Both forms of the shortcut, recomputed only when `@keys` changes. */
+  /**
+   * Both forms of the shortcut, or the empty result where the device has no
+   * keyboard to press them on. Recomputed when `@keys` or that changes.
+   */
   @cached
   get formatted(): FormattedShortcut {
-    return formatShortcut(this.args.keys);
+    const shown = this.args.always || capabilities.hasKeyboard;
+    return formatShortcut(shown ? this.args.keys : undefined);
   }
 
   /**

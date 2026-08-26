@@ -54,6 +54,28 @@ module("Integration | ui-kit | DShortcut", function (hooks) {
     assert.dom("kbd.d-shortcut.my-hint").hasAttribute("data-test-hint", "yes");
   });
 
+  test("shows nothing without a physical keyboard, unless told to always", async function (assert) {
+    sinon.stub(capabilities, "hasKeyboard").get(() => false);
+
+    await render(
+      <template>
+        <DShortcut @keys="mod+k" class="gated" />
+        <DShortcut @keys="mod+k" @always={{true}} class="documented" />
+        <DShortcut @keys="mod+enter" as |shortcut|>
+          <button type="button" aria-keyshortcuts={{shortcut.aria}}>
+            Save
+            <shortcut.Kbd />
+          </button>
+        </DShortcut>
+      </template>
+    );
+
+    assert.dom("kbd.gated").doesNotExist();
+    assert.dom("kbd.documented .d-shortcut__key").exists({ count: 2 });
+    assert.dom("button").doesNotHaveAttribute("aria-keyshortcuts");
+    assert.dom("button kbd").doesNotExist();
+  });
+
   test("renders nothing without keys", async function (assert) {
     await render(<template><DShortcut /></template>);
 

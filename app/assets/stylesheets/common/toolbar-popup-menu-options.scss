@@ -53,12 +53,6 @@
   .discourse-touch & {
     z-index: z("mobile-composer");
   }
-
-  .shortcut {
-    @include viewport.until(sm) {
-      display: none;
-    }
-  }
 }
 
 .fk-d-menu[class*="toolbar-menu"] .dropdown-menu__header {

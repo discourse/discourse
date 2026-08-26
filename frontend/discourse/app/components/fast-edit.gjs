@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -13,6 +14,8 @@ import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class FastEdit extends Component {
+  @service capabilities;
+
   @tracked isSaving = false;
   @tracked value = this.args.newValue || this.args.initialValue;
 
@@ -84,7 +87,10 @@ export default class FastEdit extends Component {
       <div class="fast-edit-container__footer">
         <DButton
           class="btn-small btn-primary save-fast-edit"
-          aria-keyshortcuts={{this.shortcut.aria}}
+          aria-keyshortcuts={{if
+            this.capabilities.hasKeyboard
+            this.shortcut.aria
+          }}
           @action={{this.save}}
           @disabled={{this.disabled}}
           @icon="pencil"

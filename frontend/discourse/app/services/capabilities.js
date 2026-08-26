@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -10,6 +11,23 @@ const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 const ua = navigator.userAgent;
 
 const anyPointerCoarseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
+const anyPointerFineQuery = new TrackedMediaQuery("(any-pointer: fine)");
+
+/**
+ * Keys an on-screen keyboard never sends: a keydown for one of them proves a
+ * physical keyboard.
+ */
+const PHYSICAL_KEYBOARD_KEYS = new Set(["Meta", "Control", "Alt", "Tab"]);
+
+/**
+ * Tracked state lives here rather than on the capabilities class, which mixes
+ * private members with what would otherwise be a decorated field.
+ */
+class KeyboardEvidence {
+  @tracked seen = false;
+}
+
+const keyboardEvidence = new KeyboardEvidence();
 
 let siteInitialized = false;
 
@@ -121,6 +139,27 @@ class _Capabilities {
 
   #isMobileDevice =
     Mobile.mobileForced || (ua.includes("Mobile") && !ua.includes("iPad"));
+  #noteKeyboardEvent = (event) => {
+    if (keyboardEvidence.seen || event.isComposing) {
+      return;
+    }
+
+    if (
+      PHYSICAL_KEYBOARD_KEYS.has(event.key) ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.altKey
+    ) {
+      keyboardEvidence.seen = true;
+    }
+  };
+
+  constructor() {
+    document.addEventListener("keydown", this.#noteKeyboardEvent, {
+      capture: true,
+      passive: true,
+    });
+  }
 
   get isMobileDevice() {
     return this.#isMobileDevice;
@@ -128,6 +167,17 @@ class _Capabilities {
 
   get touch() {
     return anyPointerCoarseQuery.matches;
+  }
+
+  /**
+   * Whether the device is likely to have a physical keyboard, so keyboard
+   * shortcuts are worth showing. There is no direct signal for this, so it is
+   * inferred: a fine pointer (mouse or trackpad) implies a desktop-class
+   * setup, and a keydown for a key on-screen keyboards never send proves one
+   * for the rest of the session.
+   */
+  get hasKeyboard() {
+    return anyPointerFineQuery.matches || keyboardEvidence.seen;
   }
 
   get userHasBeenActive() {

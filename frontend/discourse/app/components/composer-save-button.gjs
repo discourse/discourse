@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { formatShortcut } from "discourse/lib/shortcut-format";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
@@ -6,6 +7,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerSaveButton extends Component {
+  @service capabilities;
+
   shortcut = formatShortcut("mod+enter");
 
   get translatedTitle() {
@@ -21,7 +24,7 @@ export default class ComposerSaveButton extends Component {
   <template>
     <DButton
       class={{dConcatClass "btn-primary create" (if @disableSubmit "disabled")}}
-      aria-keyshortcuts={{this.shortcut.aria}}
+      aria-keyshortcuts={{if this.capabilities.hasKeyboard this.shortcut.aria}}
       ...attributes
       @action={{@action}}
       @forwardEvent={{@forwardEvent}}

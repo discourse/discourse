@@ -487,14 +487,26 @@ export default class KeyboardShortcutsHelp extends Component {
                           {{#if pair.keys2}}
                             {{#if (eq pair.delimiter "space")}}
                               <span class="delimiter-space" dir="ltr">
-                                <DShortcut @keys={{pair.keys1}} />
-                                <DShortcut @keys={{pair.keys2}} />
+                                <DShortcut
+                                  @always={{true}}
+                                  @keys={{pair.keys1}}
+                                />
+                                <DShortcut
+                                  @always={{true}}
+                                  @keys={{pair.keys2}}
+                                />
                               </span>
                             {{else if (eq pair.delimiter "newline")}}
                               <span class="delimiter-newline" dir="ltr">
-                                <DShortcut @keys={{pair.keys1}} />
+                                <DShortcut
+                                  @always={{true}}
+                                  @keys={{pair.keys1}}
+                                />
                                 <br />
-                                <DShortcut @keys={{pair.keys2}} />
+                                <DShortcut
+                                  @always={{true}}
+                                  @keys={{pair.keys2}}
+                                />
                               </span>
                             {{else}}
                               <DInterpolatedTranslation
@@ -505,15 +517,21 @@ export default class KeyboardShortcutsHelp extends Component {
                                 as |Placeholder|
                               >
                                 <Placeholder @name="shortcut1">
-                                  <DShortcut @keys={{pair.keys1}} />
+                                  <DShortcut
+                                    @always={{true}}
+                                    @keys={{pair.keys1}}
+                                  />
                                 </Placeholder>
                                 <Placeholder @name="shortcut2">
-                                  <DShortcut @keys={{pair.keys2}} />
+                                  <DShortcut
+                                    @always={{true}}
+                                    @keys={{pair.keys2}}
+                                  />
                                 </Placeholder>
                               </DInterpolatedTranslation>
                             {{/if}}
                           {{else}}
-                            <DShortcut @keys={{pair.keys1}} />
+                            <DShortcut @always={{true}} @keys={{pair.keys1}} />
                           {{/if}}
                         </td>
                       </tr>

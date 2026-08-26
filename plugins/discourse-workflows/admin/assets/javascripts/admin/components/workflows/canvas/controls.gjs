@@ -1,44 +1,48 @@
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { formatShortcut } from "discourse/lib/shortcut-format";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DShortcut from "discourse/ui-kit/d-shortcut";
 import { i18n } from "discourse-i18n";
 
-const UNDO = formatShortcut("mod+z");
-const REDO = formatShortcut("mod+y");
-
-function undoTitle() {
-  return `${i18n("discourse_workflows.canvas.undo")} [${UNDO.label}]`;
-}
-
-function redoTitle() {
-  return `${i18n("discourse_workflows.canvas.redo")} [${REDO.label}]`;
+function titleWithShortcut(key, label) {
+  const title = i18n(`discourse_workflows.canvas.${key}`);
+  return label ? `${title} [${label}]` : title;
 }
 
 export default <template>
   <div class="workflows-canvas__controls">
-    <DTooltip @identifier="workflow-canvas-undo" @content={{(undoTitle)}}>
-      <:trigger>
-        <DButton
-          class="btn-flat btn-small"
-          aria-keyshortcuts={{UNDO.aria}}
-          @action={{@onUndo}}
-          @disabled={{not @canUndo}}
-          @icon="arrow-rotate-left"
-        />
-      </:trigger>
-    </DTooltip>
-    <DTooltip @identifier="workflow-canvas-redo" @content={{(redoTitle)}}>
-      <:trigger>
-        <DButton
-          class="btn-flat btn-small"
-          aria-keyshortcuts={{REDO.aria}}
-          @action={{@onRedo}}
-          @disabled={{not @canRedo}}
-          @icon="arrow-rotate-right"
-        />
-      </:trigger>
-    </DTooltip>
+    <DShortcut @keys="mod+z" as |shortcut|>
+      <DTooltip
+        @identifier="workflow-canvas-undo"
+        @content={{titleWithShortcut "undo" shortcut.label}}
+      >
+        <:trigger>
+          <DButton
+            class="btn-flat btn-small"
+            aria-keyshortcuts={{shortcut.aria}}
+            @action={{@onUndo}}
+            @disabled={{not @canUndo}}
+            @icon="arrow-rotate-left"
+          />
+        </:trigger>
+      </DTooltip>
+    </DShortcut>
+    <DShortcut @keys="mod+y" as |shortcut|>
+      <DTooltip
+        @identifier="workflow-canvas-redo"
+        @content={{titleWithShortcut "redo" shortcut.label}}
+      >
+        <:trigger>
+          <DButton
+            class="btn-flat btn-small"
+            aria-keyshortcuts={{shortcut.aria}}
+            @action={{@onRedo}}
+            @disabled={{not @canRedo}}
+            @icon="arrow-rotate-right"
+          />
+        </:trigger>
+      </DTooltip>
+    </DShortcut>
     <DTooltip
       @identifier="workflow-canvas-zoom-out"
       @content={{i18n "discourse_workflows.canvas.zoom_out"}}
