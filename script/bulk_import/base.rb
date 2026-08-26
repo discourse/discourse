@@ -16,6 +16,7 @@ end
 require "pg"
 require "redcarpet"
 require "htmlentities"
+require "tmpdir"
 
 puts "Loading application..."
 require_relative "../../config/environment"
@@ -92,6 +93,7 @@ class BulkImport::Base
     puts "Starting..."
     Rails.logger.level = 3 # :error, so that we don't create log files that are many GB
     preload_i18n
+    preflight
     create_migration_mappings_table
     fix_highest_post_numbers
     load_imported_ids
@@ -99,8 +101,43 @@ class BulkImport::Base
     execute
     fix_primary_keys
     execute_after
+    report_import_issues
     puts "Done! (#{((Time.now - start_time) / 60).to_i} minutes)"
     puts "Now run the 'import:ensure_consistency' rake task."
+  end
+
+  # counts data issues per category for the final summary and streams the
+  # details to a log file, keeping them out of the inline progress output
+  def log_import_issue(category, detail)
+    @import_issue_counts ||= Hash.new(0)
+    @import_issue_counts[category] += 1
+    import_issue_log.puts("[#{category}] #{detail}")
+  end
+
+  def import_issue_log_path
+    @import_issue_log_path ||=
+      File.join(Dir.tmpdir, "generic_bulk_import_issues_#{Time.now.strftime("%Y%m%d_%H%M%S")}.log")
+  end
+
+  def import_issue_log
+    @import_issue_log ||= File.open(import_issue_log_path, "a").tap { |file| file.sync = true }
+  end
+
+  def report_import_issues
+    return if @import_issue_counts.blank?
+
+    puts "", "Import issues (details in #{import_issue_log_path}):"
+    @import_issue_counts
+      .sort_by { |_, count| -count }
+      .each { |category, count| puts "  #{category}: #{count}" }
+    @import_issue_log&.close
+  end
+
+  def preflight
+  end
+
+  def delta_import?
+    false
   end
 
   def preload_i18n
@@ -163,7 +200,13 @@ class BulkImport::Base
     @raw_connection.set_single_row_mode
 
     @raw_connection.get_result.stream_each do |row|
-      id = row["value"].to_i
+      value = row["value"]
+      if delta_import?
+        next unless value&.match?(/\A\d+\z/)
+        id = Integer(value, 10)
+      else
+        id = value.to_i
+      end
       ids << id
       map[id] = row["#{name}_id"].to_i
     end
@@ -1679,14 +1722,14 @@ class BulkImport::Base
     post[:updated_at] ||= post[:created_at]
 
     if post[:raw].bytes.include?(0)
-      STDERR.puts "Skipping post with original ID #{post[:imported_id]} because `raw` contains null bytes"
+      log_import_issue("post skipped (raw contains null bytes)", "post #{post[:imported_id]}")
       post[:skip] = true
     end
 
     post[:reply_to_post_number] = nil if post[:reply_to_post_number] == 1
 
     if post[:cooked].bytes.include?(0)
-      STDERR.puts "Skipping post with original ID #{post[:imported_id]} because `cooked` contains null bytes"
+      log_import_issue("post skipped (cooked contains null bytes)", "post #{post[:imported_id]}")
       post[:skip] = true
     end
 
@@ -2158,12 +2201,18 @@ class BulkImport::Base
     @chat_message_mapping[message[:original_id].to_s] = message[:id]
 
     if message[:message].bytes.include?(0)
-      STDERR.puts "Skipping chat message with original ID #{message[:original_id]} because `message` contains null bytes"
+      log_import_issue(
+        "chat message skipped (message contains null bytes)",
+        "chat message #{message[:original_id]}",
+      )
       message[:skip] = true
     end
 
     if message[:cooked].bytes.include?(0)
-      STDERR.puts "Skipping chat message with original ID #{message[:original_id]} because `cooked` contains null bytes"
+      log_import_issue(
+        "chat message skipped (cooked contains null bytes)",
+        "chat message #{message[:original_id]}",
+      )
       message[:skip] = true
     end
 
@@ -2249,6 +2298,9 @@ class BulkImport::Base
     end
     true
   rescue => e
+    # a swallowed batch failure would silently lose records against live data
+    raise if delta_import?
+
     # FIXME: errors catched here stop the rest of the COPY
     puts e.message
     puts e.backtrace.join("\n")
@@ -2260,6 +2312,102 @@ class BulkImport::Base
     if create_records(all_rows, name, columns, &block)
       store_mappings(MAPPING_TYPES[name.to_sym], @imported_records)
     end
+  end
+
+  # Updates batches through a temporary table so a failed batch cannot leave a
+  # partially-applied entity update behind.
+  def update_records(rows, name, columns, keys: [:id])
+    table_name = name.to_s.pluralize
+    staging_table = "bulk_import_delta_#{table_name}"
+    quoted_table = @raw_connection.quote_ident(table_name)
+    quoted_staging = @raw_connection.quote_ident(staging_table)
+    quoted_columns = (keys + columns).map { |column| @raw_connection.quote_ident(column.to_s) }
+    updated_count = 0
+    updated_keys = []
+    total_count = 0
+    changed_counts = columns.to_h { |column| [column, 0] }
+
+    rows.each_slice(1_000) do |batch|
+      next if batch.empty?
+
+      @raw_connection.exec("BEGIN")
+      begin
+        @raw_connection.exec(<<~SQL)
+          CREATE TEMP TABLE #{quoted_staging} ON COMMIT DROP AS
+          SELECT #{quoted_columns.join(",")}
+            FROM #{quoted_table}
+           WITH NO DATA
+        SQL
+
+        copy_sql = "COPY #{quoted_staging} (#{quoted_columns.join(",")}) FROM STDIN"
+        @raw_connection.copy_data(copy_sql, @encoder) do
+          batch.each do |row|
+            @raw_connection.put_copy_data((keys + columns).map { |column| row[column] })
+          end
+        end
+
+        assignments =
+          columns.map do |column|
+            quoted_column = @raw_connection.quote_ident(column.to_s)
+            "#{quoted_column} = COALESCE(source.#{quoted_column}, target.#{quoted_column})"
+          end
+        join =
+          keys.map do |key|
+            quoted_key = @raw_connection.quote_ident(key.to_s)
+            "target.#{quoted_key} = source.#{quoted_key}"
+          end
+        differences =
+          columns.map do |column|
+            quoted_column = @raw_connection.quote_ident(column.to_s)
+            "(source.#{quoted_column} IS NOT NULL AND " \
+              "target.#{quoted_column} IS DISTINCT FROM source.#{quoted_column})"
+          end
+
+        count_expressions =
+          columns.map do |column|
+            quoted_column = @raw_connection.quote_ident(column.to_s)
+            "COUNT(*) FILTER (WHERE source.#{quoted_column} IS NOT NULL AND " \
+              "target.#{quoted_column} IS DISTINCT FROM source.#{quoted_column}) " \
+              "AS #{quoted_column}"
+          end
+        counts_row = @raw_connection.exec(<<~SQL).first
+          SELECT #{count_expressions.join(", ")}
+            FROM #{quoted_table} AS target
+                 JOIN #{quoted_staging} AS source ON #{join.join(" AND ")}
+        SQL
+        columns.each { |column| changed_counts[column] += counts_row[column.to_s].to_i }
+
+        returning = keys.map { |key| "target.#{@raw_connection.quote_ident(key.to_s)}" }.join(", ")
+        result = @raw_connection.exec(<<~SQL)
+          UPDATE #{quoted_table} AS target
+             SET #{assignments.join(", ")}
+            FROM #{quoted_staging} AS source
+           WHERE #{join.join(" AND ")}
+             AND (#{differences.join(" OR ")})
+        RETURNING #{returning}
+        SQL
+        updated_count += result.cmd_tuples
+        updated_keys.concat(
+          result.map do |result_row|
+            values = keys.map { |key| result_row[key.to_s] }
+            keys.one? ? values.first.to_i : values
+          end,
+        )
+        total_count += batch.length
+        @raw_connection.exec("COMMIT")
+      rescue StandardError
+        @raw_connection.exec("ROLLBACK")
+        raise
+      end
+    end
+
+    {
+      total: total_count,
+      updated: updated_count,
+      unchanged: total_count - updated_count,
+      updated_keys: updated_keys,
+      changed_counts: changed_counts,
+    }
   end
 
   def create_custom_fields(table, name, rows)
