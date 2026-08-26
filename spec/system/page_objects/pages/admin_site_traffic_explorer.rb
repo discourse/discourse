@@ -104,9 +104,19 @@ module PageObjects
         end
       end
 
-      def has_no_row?(card:, label:)
+      def has_rows?(card:, rows:)
         within("[data-test-site-traffic-card='#{card}']") do
-          has_no_css?("[data-test-site-traffic-row]", text: label)
+          return false unless has_css?("[data-test-site-traffic-row]", count: rows.size)
+
+          actual_rows =
+            all("[data-test-site-traffic-row]").map do |row|
+              {
+                label: row.find(".site-traffic-explorer__dimension-text").text,
+                count: row.find(".site-traffic-explorer__row-count").text,
+              }
+            end
+
+          actual_rows == rows
         end
       end
 
