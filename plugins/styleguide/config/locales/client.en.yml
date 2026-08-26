@@ -274,6 +274,8 @@ en:
           title: "Header Icons"
         spinners:
           title: "Spinners"
+        thinking:
+          title: "Thinking"
         otp:
           title: "OTP"
         empty_state:
