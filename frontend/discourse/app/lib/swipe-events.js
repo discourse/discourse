@@ -7,8 +7,8 @@ export function overrideAnimationTimeForTesting(durationMs = null) {
   animationTimeOverride = durationMs;
 }
 
-// common max animation time in ms for swipe events for swipe end
-// prefers reduced motion and tests return 0
+// Common max animation time in ms for a swipe's release. Reduced motion and
+// tests collapse it to 0, or to whatever a test asked for.
 export function getMaxAnimationTimeMs(durationMs = MAX_ANIMATION_TIME) {
   if (
     isTesting() ||
@@ -102,6 +102,15 @@ export const MINIMUM_SWIPE_DISTANCE = 5;
 export const MAX_ANIMATION_TIME = 200;
 const SWIPE_VELOCITY_EXPIRY_MS = 100;
 
+/**
+ * Turns touch events on an element into `swipestart`, `swipe`, `swipeend` and
+ * `swipecancel`, each carrying the gesture's state as `detail`.
+ *
+ * `swipestart` is cancelable: `preventDefault()` on it refuses the gesture, and
+ * nothing further is dispatched until the next one. `swipecancel` fires when the
+ * gesture is taken away — a second touch, or the browser claiming it — so a
+ * consumer that painted anything has to undo it there rather than in `swipeend`.
+ */
 export default class SwipeEvents {
   swipeState = null;
   animationPending = false;

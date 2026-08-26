@@ -98,7 +98,21 @@ interface DSwipeSignature {
   };
 }
 
-/** Recognizes directional touch gestures and reports their lifecycle. */
+/**
+ * Recognizes directional touch gestures and reports their lifecycle. Touch only:
+ * it does nothing on desktop.
+ *
+ * Calling `preventDefault()` on the event passed to `onDidStartSwipe` refuses
+ * that gesture, so nothing further is reported for it and the browser keeps the
+ * touch. The next gesture starts fresh. A consumer that only wants one axis, or
+ * that has to leave a scroll to the content, vetoes here.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see The `dPointerDrag` modifier, for any pointer rather than touch alone, and
+ *   for a value tracked continuously rather than a directional flick.
+ */
 export default class DSwipeModifier extends Modifier<DSwipeSignature> {
   @service declare site: Site;
 
