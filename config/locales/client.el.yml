@@ -4268,7 +4268,6 @@ el:
       reply_as_new_private_message: "Απάντηση ως νέο μήνυμα στον ίδιο παραλήπτη"
       continue_discussion: "Συνέχιση της συζήτησης από το %{postLink}:"
       follow_quote: "πήγαινε στην παρατεθειμένη ανάρτηση"
-      show_full: "Δείξε Πλήρη Ανάρτηση "
       show_hidden: "Προβολή αγνοημένου περιεχομένου."
       deleted_by_author_simple: "(η ανάρτηση διαγράφηκε από τον συντάκτη)"
       collapse: "σύμπτυξη"

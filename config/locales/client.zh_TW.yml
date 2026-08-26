@@ -3478,7 +3478,6 @@ zh_TW:
       reply_as_new_private_message: "回覆作為新訊息給同一收件人"
       continue_discussion: "繼續 %{postLink} 的討論:"
       follow_quote: "跳到引用的貼文"
-      show_full: "顯示所有貼文"
       show_hidden: "查看忽略內容"
       deleted_by_author_simple: "（貼文已被作者刪除）"
       collapse: "收起"

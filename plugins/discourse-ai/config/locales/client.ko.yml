@@ -142,8 +142,6 @@ ko:
         successful: "성공"
         failed: "실패"
         unknown: "알수없음"
-        topic_id: "글 ID"
-        post_id: "글 ID"
         time: "시간"
         when: "언제"
         request: "요청"
@@ -155,8 +153,7 @@ ko:
         post_short: "%{id}번째 글"
         duration: "기간"
         actions: "작업"
-        filters:
-          title: "필터"
+        view_details: "세부 정보"
         periods:
           day: "지난 24시간"
           week: "지난 7일"

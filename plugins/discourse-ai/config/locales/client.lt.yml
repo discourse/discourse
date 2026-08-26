@@ -319,8 +319,6 @@ lt:
         successful: "Sėkmingas"
         failed: "Nepavyko"
         unknown: "Nežinoma"
-        topic_id: "Temos ID"
-        post_id: "Įrašo ID"
         time: "Laikas"
         when: "Kada"
         model: "Modelis"
@@ -332,8 +330,7 @@ lt:
         post_short: "Įrašas %{id}"
         duration: "Trukmė"
         actions: "Veiksmai"
-        filters:
-          title: "Filtrai"
+        view_details: "Detalės"
         periods:
           day: "Paskutinės 24 valandos"
           week: "Paskutinės 7 dienos"

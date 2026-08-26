@@ -3310,7 +3310,6 @@ da:
       reply_as_new_private_message: "Svar med ny besked til de samme modtagere"
       continue_discussion: "Fortsætter debatten fra %{postLink}:"
       follow_quote: "gå til det citerede indlæg"
-      show_full: "Vis hele emnet"
       show_hidden: "Vis ignoreret indhold."
       deleted_by_author_simple: "(indlæg slettet af forfatteren)"
       collapse: "fold sammen"

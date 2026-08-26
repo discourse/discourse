@@ -644,8 +644,6 @@ fr:
         successful: "Succès"
         failed: "Échec"
         unknown: "Inconnu"
-        topic_id: "ID du sujet"
-        post_id: "ID du message"
         time: "Heure"
         when: "Date"
         outcome: "Résultat"
@@ -661,9 +659,7 @@ fr:
         duration: "Durée "
         cost: "Coût"
         actions: "Actions"
-        filters:
-          title: "Filtres"
-          period: "Période"
+        view_details: "Détails"
         periods:
           hour: "Dernière heure"
           day: "Ces dernières 24 heures"
@@ -1089,6 +1085,7 @@ fr:
           anthropic-claude-opus-4-7: "Le modèle le plus intelligent d'Anthropic"
           anthropic-claude-sonnet-4-6: "Équilibre optimal entre vitesse et coût"
           anthropic-claude-haiku-4-5: "Rapide et économique"
+          google-gemini-3-1-pro-preview: "Le modèle le plus intelligent de Google"
           open_ai-gpt-5-6-sol: "Le modèle de pointe d'OpenAI pour les travaux professionnels complexes"
           open_ai-gpt-5-6-terra: "Concilie intelligence et coût pour les charges de travail exigeantes"
           open_ai-gpt-5-6-luna: "Optimisé pour les charges de travail à volume élevé et sensibles aux coûts"

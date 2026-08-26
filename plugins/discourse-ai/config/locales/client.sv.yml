@@ -129,8 +129,6 @@ sv:
         successful: "Lyckad"
         failed: "Misslyckad"
         unknown: "Okänd"
-        topic_id: "Ämnes-ID"
-        post_id: "Inläggs-ID"
         time: "Tid"
         when: "När"
         request: "Förfrågning"
@@ -142,8 +140,7 @@ sv:
         post_short: "Inlägg %{id}"
         duration: "Varaktighet"
         actions: "Åtgärder"
-        filters:
-          title: "Filter"
+        view_details: "Detaljer"
         periods:
           hour: "Senaste timmen"
           day: "Senaste 24 timmarna"

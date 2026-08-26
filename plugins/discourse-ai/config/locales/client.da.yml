@@ -140,8 +140,6 @@ da:
         successful: "Gennemført"
         failed: "Fejlet"
         unknown: "Ukendt"
-        topic_id: "Emne ID"
-        post_id: "Indlæg ID"
         time: "Tidspunkt"
         when: "Hvorår"
         model: "Model"
@@ -154,6 +152,7 @@ da:
         post_short: "Indlæg %{id}"
         duration: "Varighed"
         actions: "Handlinger"
+        view_details: "Detaljer"
         periods:
           day: "Seneste 24 timer"
           week: "Seneste 7 dage"

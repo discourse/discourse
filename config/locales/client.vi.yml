@@ -3833,7 +3833,6 @@ vi:
       reply_as_new_private_message: "Trả lời dưới dạng tin nhắn mới cho cùng người nhận"
       continue_discussion: "Tiếp tục thảo luận từ %{postLink}:"
       follow_quote: "Đến tút trích dẫn"
-      show_full: "Xem bài đăng gốc"
       show_hidden: "Xem nội dung bị bỏ qua."
       deleted_by_author_simple: "(tút bị xóa bởi tác giả)"
       collapse: "Thu nhỏ"

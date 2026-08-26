@@ -3205,7 +3205,6 @@ te:
       reply_as_new_private_message: "అదే గ్రహీతలకు కొత్త సందేశం వలె ప్రత్యుత్తరం ఇవ్వండి"
       continue_discussion: "%{postLink} నుండి చర్చ కొనసాగుతుంది;"
       follow_quote: "కోట్ చేసిన పోస్ట్‌కి వెళ్లండి"
-      show_full: "పూర్తి పోస్ట్‌ను చూపండి"
       show_hidden: "విస్మరించబడిన కంటెంట్‌ను వీక్షించండి."
       deleted_by_author_simple: "(రచయిత ద్వారా పోస్ట్ తొలగించబడింది)"
       collapse: "కుదించండి"

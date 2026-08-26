@@ -121,8 +121,6 @@ ca:
         successful: "Amb èxit"
         failed: "Fallits"
         unknown: "Desconegut"
-        topic_id: "ID de tema"
-        post_id: "ID de publicació"
         time: "Hora"
         when: "Quan"
         request: "Sol·licita"
@@ -134,8 +132,7 @@ ca:
         post_short: "Publicació %{id}"
         duration: "Duració"
         actions: "Accions"
-        filters:
-          title: "Filtres"
+        view_details: "Detalls"
         periods:
           day: "Últimes 24 hores"
           week: "Els darrers 7 dies"

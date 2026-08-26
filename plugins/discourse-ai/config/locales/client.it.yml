@@ -385,8 +385,6 @@ it:
         successful: "Completato"
         failed: "Non riuscito"
         unknown: "Sconosciuto"
-        topic_id: "ID dell'argomento"
-        post_id: "ID del messaggio"
         time: "Ora"
         when: "Quando"
         outcome: "Esito"
@@ -401,8 +399,7 @@ it:
         post_short: "Messaggio %{id}"
         duration: "Durata"
         actions: "Azioni"
-        filters:
-          title: "Filtri"
+        view_details: "Dettagli"
         periods:
           hour: "Ultima ora"
           day: "Ultime 24 ore"

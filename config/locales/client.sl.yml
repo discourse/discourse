@@ -2843,7 +2843,6 @@ sl:
       reply_as_new_private_message: "Odgovori kot zasebno sporočilo z enakimi naslovniki"
       continue_discussion: "Nadaljevanje pogovora iz %{postLink}:"
       follow_quote: "pojdi na citiran prispevek"
-      show_full: "Prikaži cel prispevek"
       show_hidden: "Prikaži prezrto vsebino."
       collapse: "skrči"
       expand_collapse: "razširi/skrči"

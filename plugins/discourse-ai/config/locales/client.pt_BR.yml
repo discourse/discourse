@@ -503,8 +503,6 @@ pt_BR:
         successful: "Realizado(a)"
         failed: "Falha"
         unknown: "Desconhecido"
-        topic_id: "ID do tópico"
-        post_id: "ID da postagem"
         time: "Hora"
         when: "Quando"
         outcome: "Resultado"
@@ -520,9 +518,7 @@ pt_BR:
         duration: "Duração"
         cost: "Custo"
         actions: "Ações"
-        filters:
-          title: "Filtros"
-          period: "Período"
+        view_details: "Detalhes"
         periods:
           hour: "Última hora"
           day: "Últimas 24 horas"

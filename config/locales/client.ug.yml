@@ -4100,7 +4100,6 @@ ug:
       reply_as_new_private_message: "ئوخشاش تاپشۇرۇۋالغۇچىغا يېڭى ئۇچۇر سۈپىتىدە جاۋاب قايتۇرىدۇ"
       continue_discussion: "%{postLink} دىن سۆھبەتنى داۋاملاشتۇرىدۇ:"
       follow_quote: "نەقىل يازمىغا يۆتكەل"
-      show_full: "ھەممە يازمىنى كۆرسەت"
       show_hidden: "پەرۋا قىلمىغان مەزمۇننى كۆرسىتىدۇ."
       deleted_by_author_simple: "(يازمىنى يازغۇچى ئۆچۈردى)"
       collapse: "يىغ"

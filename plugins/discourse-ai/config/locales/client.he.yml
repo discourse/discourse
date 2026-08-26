@@ -452,8 +452,6 @@ he:
         successful: "הצליח"
         failed: "נכשל"
         unknown: "לא ידוע"
-        topic_id: "מזהה נושא"
-        post_id: "מזהה פוסט"
         time: "מועד"
         when: "מתי"
         outcome: "תוצאה"
@@ -469,8 +467,7 @@ he:
         duration: "משך"
         cost: "עלות"
         actions: "פעולות"
-        filters:
-          title: "מסננים"
+        view_details: "פרטים"
         periods:
           hour: "השעה האחרונה"
           day: "24 השעות האחרונות"

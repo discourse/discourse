@@ -4204,7 +4204,6 @@ es:
       reply_as_new_private_message: "Responder como mensaje nuevo a los mismos destinatarios"
       continue_discussion: "Continuando la discusión desde %{postLink}:"
       follow_quote: "ir a la publicación citada"
-      show_full: "Mostrar la publicación completa"
       show_hidden: "Ver contenido ignorado."
       deleted_by_author_simple: "(publicación eliminada por su autor/a)"
       collapse: "contraer"

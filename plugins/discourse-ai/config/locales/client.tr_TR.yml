@@ -547,8 +547,6 @@ tr_TR:
         successful: "Başarılı"
         failed: "Başarısız"
         unknown: "Bilinmeyen"
-        topic_id: "Konu kimliği"
-        post_id: "Gönderi kimliği"
         time: "Saat"
         when: "Ne zaman"
         outcome: "Sonuç"
@@ -564,9 +562,7 @@ tr_TR:
         duration: "Süre"
         cost: "Maliyet"
         actions: "Eylemler"
-        filters:
-          title: "Filtreler"
-          period: "Zaman aralığı"
+        view_details: "Detaylar"
         periods:
           hour: "Son bir saat"
           day: "Son 24 saat"

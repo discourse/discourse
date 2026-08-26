@@ -6075,6 +6075,10 @@ pl_PL:
       reject_post:
         title: "Odrzuć post"
         complete: "Post odrzucony."
+      remove_avatar:
+        title: "Usuń awatar"
+        description: "Przywróć domyślne zdjęcie profilowe tego użytkownika"
+        complete: "Awatar został usunięty."
       approve_user:
         title: "Tak"
         complete: "Użytkownik zatwierdzony."

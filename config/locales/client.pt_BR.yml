@@ -4179,7 +4179,6 @@ pt_BR:
       reply_as_new_private_message: "Responder como nova mensagem aos mesmos destinatários"
       continue_discussion: "Continuando a discussão de %{postLink}:"
       follow_quote: "ir para a resposta citada"
-      show_full: "Exibir postagem completa"
       show_hidden: "Ver o conteúdo ignorado."
       deleted_by_author_simple: "(postagem excluída pelo(a) autor(a))"
       collapse: "recolher"

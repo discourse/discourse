@@ -3600,7 +3600,6 @@ fa_IR:
       reply_as_new_private_message: "پاسخ به عنوان پیام جدید به همین دریافت کنندگان"
       continue_discussion: "ادامه دادن بحث از %{postLink}:"
       follow_quote: "برو به نوشته ای که نقل‌قول شده"
-      show_full: "نمایش کامل نوشته"
       show_hidden: "دیدن محتوای نادیده گرفته‌شد"
       deleted_by_author_simple: "(پست توسط نویسنده حذف شد)"
       collapse: "جمع کردن"

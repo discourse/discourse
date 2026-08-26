@@ -170,8 +170,6 @@ ur:
         successful: "کامیابی"
         failed: "ناکامی"
         unknown: "نامعلوم"
-        topic_id: "ٹاپک ID"
-        post_id: "پوسٹ ID"
         time: "وقت"
         when: "کب"
         outcome: "نتیجہ"
@@ -184,9 +182,7 @@ ur:
         post_short: "پوسٹ %{id}"
         duration: "دورانیہ"
         actions: "عمل"
-        filters:
-          title: "فِلٹر"
-          period: "دورانیہ"
+        view_details: "تفصیلات"
         periods:
           day: "پچھلے 24 گھنٹے"
           week: "پچھلے 7 دن"

@@ -110,8 +110,6 @@ sw:
         successful: "Fanikiwa"
         failed: "Kushindwa"
         unknown: "Haijulikani"
-        topic_id: "Utambulisho wa Mada"
-        post_id: "Utambulisho wa Ujumbe"
         time: "Muda"
         when: "Lini"
         request: "Ombi"
@@ -121,8 +119,7 @@ sw:
         topic: "Mada"
         post: "Ujumbe"
         actions: "Vitendo"
-        filters:
-          title: "Inachujwa"
+        view_details: "Taarifa"
         periods:
           custom: "Binafsi"
         detail:

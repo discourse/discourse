@@ -2387,7 +2387,6 @@ ca:
       reply_as_new_private_message: "Respon amb un missatge nou als mateixos destinataris."
       continue_discussion: "Continuant la discussió de %{postLink}:"
       follow_quote: "vés a la publicació citada"
-      show_full: "Mostra la publicació sencera"
       show_hidden: "Mira el contingut ignorat"
       collapse: "redueix"
       expand_collapse: "expandeix/contrau"

@@ -622,8 +622,6 @@ zh_CN:
         all_features: "所有功能"
         successful: "成功"
         failed: "失败"
-        topic_id: "话题 ID"
-        post_id: "帖子 ID"
         time: "时间"
         when: "时间"
         outcome: "成果"
@@ -639,9 +637,7 @@ zh_CN:
         duration: "持续时间"
         cost: "成本"
         actions: "操作"
-        filters:
-          title: "筛选器"
-          period: "时间段"
+        view_details: "详细信息"
         periods:
           day: "过去 24 小时"
           week: "过去 7 天"

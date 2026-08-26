@@ -383,8 +383,6 @@ sk:
         successful: "Úspešné"
         failed: "Nepodarilo sa"
         unknown: "Neznáma"
-        topic_id: "ID témy"
-        post_id: "ID príspevku"
         time: "Čas"
         when: "Kedy"
         outcome: "Výsledok"
@@ -399,8 +397,7 @@ sk:
         post_short: "Príspevok %{id}"
         duration: "Trvanie"
         actions: "Akcie"
-        filters:
-          title: "Filtre"
+        view_details: "Detaily"
         periods:
           hour: "Posledná hodina"
           day: "Posledných 24 hodín"

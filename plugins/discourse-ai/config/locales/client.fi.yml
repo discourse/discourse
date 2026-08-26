@@ -385,8 +385,6 @@ fi:
         successful: "Onnistui"
         failed: "Epäonnistui"
         unknown: "Tuntematon"
-        topic_id: "Ketjun tunnus"
-        post_id: "Viestin tunnus"
         time: "Aika"
         when: "Ajankohta"
         outcome: "Tulos"
@@ -401,8 +399,7 @@ fi:
         post_short: "Viesti %{id}"
         duration: "Kesto"
         actions: "Toiminnot"
-        filters:
-          title: "Suodattimet"
+        view_details: "Tiedot"
         periods:
           hour: "Viimeinen tunti"
           day: "Viimeiset 24 tuntia"

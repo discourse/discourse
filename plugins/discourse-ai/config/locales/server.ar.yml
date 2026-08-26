@@ -49,6 +49,7 @@ ar:
         flagged_post: |
           %{score_reason}
           %{response}
+        flagged_post_response: "الاستجابة من النموذج: %{llm_response}"
         notify_author_pm:
           subject: "تمت إزالة منشورك مؤقتًا للمراجعة."
           body: |

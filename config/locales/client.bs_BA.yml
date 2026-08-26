@@ -2398,7 +2398,6 @@ bs_BA:
       reply_as_new_private_message: "Odgovori kao nova poruka istim primaocima"
       continue_discussion: "Nastavak diskusije od teme %{postLink}:"
       follow_quote: "idi na citiran post"
-      show_full: "Prikaži cijelu objavu"
       show_hidden: "Prikaz zanemarenog sadržaja."
       collapse: "spusti"
       expand_collapse: "digni/spusti"

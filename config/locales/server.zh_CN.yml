@@ -954,6 +954,7 @@ zh_CN:
       windows: "Microsoft Windows"
       unknown: "未知操作系统"
   admin_site_traffic_explorer:
+    direct_or_unknown: "直接 / 未知"
     traffic_types:
       logged_in: "登录成员"
       anonymous: "匿名"
@@ -1469,6 +1470,7 @@ zh_CN:
         count: "访问量"
     top_entry_urls:
       labels:
+        entry_url: "入口网址"
         count: "访问量"
     top_referrers_by_browser_pageviews:
       title: "热门推荐人"

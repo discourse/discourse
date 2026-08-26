@@ -3416,7 +3416,6 @@ nb_NO:
       reply_as_new_private_message: "Svar som ny melding til de samme mottakerne"
       continue_discussion: "Fortsetter diskusjonen fra %{postLink}:"
       follow_quote: "gå til det siterte innlegget"
-      show_full: "Vis hele innlegget"
       show_hidden: "Vis ignorert innhold."
       deleted_by_author_simple: "(innlegg slettet av forfatter)"
       collapse: "fold sammen"

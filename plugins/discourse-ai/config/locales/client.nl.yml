@@ -547,8 +547,6 @@ nl:
         successful: "Gelukt"
         failed: "Mislukt"
         unknown: "Onbekend"
-        topic_id: "Topic-ID"
-        post_id: "Bericht-ID"
         time: "Tijd"
         when: "Wanneer"
         outcome: "Resultaat"
@@ -564,9 +562,7 @@ nl:
         duration: "Duur"
         cost: "Kosten"
         actions: "Acties"
-        filters:
-          title: "Filters"
-          period: "Tijdsperiode"
+        view_details: "Details"
         periods:
           hour: "Afgelopen uur"
           day: "Afgelopen 24 uur"

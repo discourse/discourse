@@ -160,8 +160,6 @@ fa_IR:
         successful: "موفق"
         failed: "ناموفق"
         unknown: "ناشناس"
-        topic_id: "شناسه موضوع"
-        post_id: "شناسه نوشته"
         time: "زمان"
         when: "وقتی‌که"
         model: "مدل"
@@ -174,8 +172,7 @@ fa_IR:
         post_short: "نوشته %{id}"
         duration: "مدت زمان"
         actions: "عملیات"
-        filters:
-          title: "فیلترها"
+        view_details: "جزئیات"
         periods:
           day: "۲۴ ساعت گذشته"
           week: "۷ روز گذشته"

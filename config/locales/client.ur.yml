@@ -4340,7 +4340,6 @@ ur:
       reply_as_new_private_message: "اُنہی وصول کنندگان کو نئے پیغام کے طور پر جواب دیں"
       continue_discussion: "%{postLink} سے بحث جاری:"
       follow_quote: "اقتباس کی گئی پوسٹ پر جائیں"
-      show_full: "مکمل پوسٹ دکھائیں"
       show_hidden: "نظر انداز کردہ مواد دکھایں۔"
       deleted_by_author_simple: "(پوسٹ مصنف نے مٹایا ہے)"
       collapse: "بند کریں"

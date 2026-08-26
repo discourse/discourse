@@ -118,8 +118,6 @@ bs_BA:
         successful: "Uspješan"
         failed: "Neuspješno"
         unknown: "Unknown"
-        topic_id: "ID teme"
-        post_id: "ID objave"
         time: "Vrijeme"
         when: "When"
         request: "Zatraži"
@@ -130,6 +128,7 @@ bs_BA:
         post_short: "Post %{id}"
         duration: "Trajanje"
         actions: "Akcije"
+        view_details: "Details"
         periods:
           custom: "Custom"
         detail:

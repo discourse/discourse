@@ -740,8 +740,6 @@ ar:
         successful: "نجح"
         failed: "فشل"
         unknown: "غير معروف"
-        topic_id: "معرِّف الموضوع"
-        post_id: "معرِّف المنشور"
         time: "الوقت"
         when: "التوقيت"
         outcome: "النتيجة"
@@ -757,9 +755,7 @@ ar:
         duration: "المدة"
         cost: "التكلفة"
         actions: "الإجراءات"
-        filters:
-          title: "المرشحات"
-          period: "الفترة الزمنية"
+        view_details: "التفاصيل"
         periods:
           hour: "آخر ساعة"
           day: "آخر 24 ساعة"

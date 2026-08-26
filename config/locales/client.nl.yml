@@ -4248,7 +4248,6 @@ nl:
       reply_as_new_private_message: "Antwoorden als nieuw bericht aan dezelfde ontvangers"
       continue_discussion: "Doorgaan met de discussie van %{postLink}:"
       follow_quote: "naar het geciteerde bericht"
-      show_full: "Volledige bericht weergeven"
       show_hidden: "Genegeerde inhoud weergeven."
       deleted_by_author_simple: "(bericht verwijderd door auteur)"
       collapse: "samenvouwen"

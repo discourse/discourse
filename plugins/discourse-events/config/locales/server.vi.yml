@@ -20,6 +20,9 @@ vi:
         week: "Tuần"
         month: "Tháng"
         year: "Năm"
+    livestream:
+      zoom:
+        frame_title: "Zoom webinar"
   discourse_post_event:
     errors:
       bulk_invite:

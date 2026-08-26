@@ -3247,7 +3247,6 @@ sv:
       reply_as_new_private_message: "Svara som nytt meddelande till samma mottagare"
       continue_discussion: "Fortsätter diskussionen från %{postLink}:"
       follow_quote: "gå till det citerade inlägget"
-      show_full: "Visa hela inlägget"
       show_hidden: "Visa ignorerat innehåll"
       deleted_by_author_simple: "(inlägg raderat av författaren)"
       collapse: "förminska"
