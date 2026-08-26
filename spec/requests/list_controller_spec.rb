@@ -1842,14 +1842,16 @@ RSpec.describe ListController do
       end
     end
 
-    it "allows users to filter on a set of topic ids" do
-      topic_2 = Fabricate(:topic)
+    it "returns topic_ids in the order when specified" do
+      topic_1 = Fabricate(:topic, bumped_at: 3.days.ago)
+      topic_2 = Fabricate(:topic, bumped_at: 2.days.ago)
+      topic_3 = Fabricate(:topic, bumped_at: 1.day.ago)
 
-      get "/filter.json", params: { topic_ids: topic_2.id.to_s }
+      get "/filter.json", params: { topic_ids: [topic_3.id, topic_1.id, topic_2.id].join(",") }
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }).to eq(
-        [topic_2.id],
+        [topic_3.id, topic_1.id, topic_2.id],
       )
     end
 

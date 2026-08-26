@@ -318,7 +318,14 @@ class TopicQuery
       results = remove_muted_topics(results, @user)
     end
 
-    results = apply_ordering(results) if results.order_values.empty?
+    if (topic_ids = @options[:topic_ids].presence)
+      results =
+        results.reorder(
+          DB.sql_fragment("array_position(ARRAY[?]::integer[], topics.id)", topic_ids.uniq),
+        )
+    elsif results.order_values.empty?
+      results = apply_ordering(results)
+    end
 
     create_list(
       :filter,
