@@ -180,8 +180,17 @@ export default class AiSearchDiscoveries extends Component {
     return this.sources.slice(0, this.relatedCount);
   }
 
+  get candidateTopicIds() {
+    return this.discobotDiscoveries.candidateTopicIds || [];
+  }
+
+  get hasMatchingTopics() {
+    return this.candidateTopicIds.length > 0;
+  }
+
   get fullSearchUrl() {
-    return getURL(`/search?q=${encodeURIComponent(this.query)}`);
+    const topicFilter = `topic:${this.candidateTopicIds.join(",")}`;
+    return getURL(`/filter?q=${encodeURIComponent(topicFilter)}`);
   }
 
   get canContinueConversation() {
@@ -412,16 +421,18 @@ export default class AiSearchDiscoveries extends Component {
                   "discourse_ai.discobot_discoveries.sources.related_discussions"
                 }}
               </h4>
-              <a
-                class="ai-discovery-sources__all-results"
-                href={{this.fullSearchUrl}}
-                {{on "click" this.handleDiscoveryClick}}
-              >
-                {{i18n
-                  "discourse_ai.discobot_discoveries.sources.show_all_matching"
-                }}
-                {{dIcon "arrow-right"}}
-              </a>
+              {{#if this.hasMatchingTopics}}
+                <a
+                  class="ai-discovery-sources__all-results"
+                  href={{this.fullSearchUrl}}
+                  {{on "click" this.handleDiscoveryClick}}
+                >
+                  {{i18n
+                    "discourse_ai.discobot_discoveries.sources.show_all_matching"
+                  }}
+                  {{dIcon "arrow-right"}}
+                </a>
+              {{/if}}
             </header>
 
             <ul

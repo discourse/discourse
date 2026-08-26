@@ -1659,7 +1659,7 @@ en:
           ask_submit: "Ask with Discoveries"
         sources:
           related_discussions: "Related discussions"
-          show_all_matching: "Show all matching posts"
+          show_all_matching: "Show all matching topics"
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:

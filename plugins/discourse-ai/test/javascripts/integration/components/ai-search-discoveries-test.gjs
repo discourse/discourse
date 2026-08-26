@@ -136,7 +136,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       );
   });
 
-  test("shows the requested discussions and links to all matching posts", async function (assert) {
+  test("shows the requested discussions and links to all matching topics", async function (assert) {
     this.siteSettings.ai_discover_related_count = 3;
     const sources = [
       {
@@ -183,6 +183,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         isStreaming = false;
         discoveryTimedOut = false;
         sources = sources;
+        candidateTopicIds = [101, 102, 103, 104];
 
         triggerDiscovery() {}
         onDiscoveryUpdate() {}
@@ -210,7 +211,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     assert
       .dom(".ai-discovery-sources__header .ai-discovery-sources__all-results")
       .hasText(
-        "Show all matching posts",
+        "Show all matching topics",
         "full search replaces the expansion control"
       );
     assert
@@ -220,14 +221,38 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .dom(".ai-discovery-sources__all-results")
       .hasAttribute(
         "href",
-        "/search?q=miyazaki",
-        "full search keeps the active query"
+        "/filter?q=topic%3A101%2C102%2C103%2C104",
+        "the full topic list contains every retrieval candidate"
       );
     assert.strictEqual(
       getComputedStyle(find(".ai-discovery-source__title")).color,
       getComputedStyle(find(".ai-discovery-sources__all-results")).color,
       "discussion titles use the standard link color"
     );
+  });
+
+  test("does not link to matching topics before candidates arrive", async function (assert) {
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        streamedText = "A useful answer.";
+        sources = [{ title: "A discussion", url: "/t/a-discussion/101/1" }];
+        candidateTopicIds = [];
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    await render(
+      <template>
+        <AiSearchDiscoveries @searchTerm="miyazaki" @showSources={{true}} />
+      </template>
+    );
+
+    assert
+      .dom(".ai-discovery-sources__all-results")
+      .doesNotExist("the matching-topic link waits for candidate topic IDs");
   });
 
   test("omits zero reply counts from discussion cards", async function (assert) {

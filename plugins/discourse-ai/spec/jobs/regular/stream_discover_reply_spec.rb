@@ -140,6 +140,52 @@ describe Jobs::StreamDiscoverReply do
     )
   end
 
+  it "publishes the complete candidate topic list independently of selected sources" do
+    other_post = Fabricate(:post)
+    other_candidate =
+      candidate.merge(
+        "source_ref" => "source_2",
+        "topic_id" => other_post.topic_id,
+        "post_id" => other_post.id,
+      )
+    duplicate_candidate = other_candidate.merge("source_ref" => "source_3")
+    result =
+      DiscourseAi::Discoveries::Retrieval::Result.new(
+        candidates: [candidate, other_candidate, duplicate_candidate],
+      )
+    allow(retrieval).to receive(:call).and_return(result)
+    allow(retrieval).to receive(:validated_sources).with(result, %w[source_1]).and_return(
+      [candidate],
+    )
+    allow(synthesis).to receive(:call) do |**_, &stream|
+      stream.call(
+        answerable: true,
+        source_refs: %w[source_1],
+        title: "Plugin guide",
+        answer: "Use the plugin skeleton.",
+      )
+      DiscourseAi::Discoveries::Synthesis::Result.new(
+        answerable: true,
+        source_refs: %w[source_1],
+        title: "Plugin guide",
+        answer: "Use the plugin skeleton.",
+      )
+    end
+
+    messages =
+      MessageBus
+        .track_publish("/discourse-ai/discoveries") do
+          job.execute(user_id: user.id, query:, request_id:)
+        end
+        .map(&:data)
+
+    candidate_topic_ids = [source_post.topic_id, other_post.topic_id]
+    expect(messages.find { |message| message[:phase] == "sources" }).to include(
+      candidate_topic_ids:,
+    )
+    expect(messages.last).to include(candidate_topic_ids:)
+  end
+
   it "uses the configured rewrite agent's queries for retrieval" do
     allow(query_rewriter).to receive(:call).with(query).and_return(
       DiscourseAi::Discoveries::QueryRewriter::Result.new(

@@ -113,18 +113,25 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
   test("stores source updates without completing the streamed answer", async function (assert) {
     const service = getOwner(this).lookup("service:discobot-discoveries");
     const sources = [{ title: "A useful topic", url: "/t/a-useful-topic/123" }];
+    const candidateTopicIds = [123, 456];
     service.activeRequestId = "active-request";
     service.loadingDiscoveries = true;
 
     await service.onDiscoveryUpdate({
       request_id: "active-request",
       sources,
+      candidate_topic_ids: candidateTopicIds,
     });
 
     assert.deepEqual(
       service.sources,
       sources,
       "the source models are retained"
+    );
+    assert.deepEqual(
+      service.candidateTopicIds,
+      candidateTopicIds,
+      "the complete candidate list is retained"
     );
     assert.true(
       service.loadingDiscoveries,
@@ -134,6 +141,11 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
     service.resetDiscovery();
 
     assert.deepEqual(service.sources, [], "sources reset with the discovery");
+    assert.deepEqual(
+      service.candidateTopicIds,
+      [],
+      "candidate topics reset with the discovery"
+    );
   });
 
   test("stores and resets the structured answer title", async function (assert) {

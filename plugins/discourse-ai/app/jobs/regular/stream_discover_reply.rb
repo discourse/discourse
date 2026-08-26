@@ -64,6 +64,7 @@ module Jobs
         publish_no_answer(user, base)
         return
       end
+      candidate_topic_ids = retrieval_result.candidates.pluck("topic_id").uniq
 
       result_settings = request_result_settings(args)
       synthesis =
@@ -106,6 +107,7 @@ module Jobs
                     phase: "sources",
                     ai_discover_title: discovery_title,
                     sources: serialize_sources(selected_sources),
+                    candidate_topic_ids:,
                   ),
                 )
               end
@@ -167,6 +169,7 @@ module Jobs
             ai_discover_title: result.title,
             ai_discover_reply: result.answer,
             sources: serialize_sources(selected_sources),
+            candidate_topic_ids:,
           ),
         )
       else
