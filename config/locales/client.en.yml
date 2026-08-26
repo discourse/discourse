@@ -2484,7 +2484,6 @@ en:
         watch_topic: "Watch topic"
         track_topic: "Track topic"
         do_nothing: "Do nothing"
-      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
