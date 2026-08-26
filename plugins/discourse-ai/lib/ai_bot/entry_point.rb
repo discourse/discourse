@@ -246,7 +246,9 @@ module DiscourseAi
                 {
                   "id" => agent_user[:user_id],
                   "username" => agent_user[:username],
-                  "has_default_llm" => agent_user[:default_llm_id].present?,
+                  "has_default_llm" =>
+                    agent_user[:default_llm_id].present? ||
+                      SiteSetting.ai_default_llm_model.present?,
                   "force_default_llm" => agent_user[:force_default_llm],
                   "is_agent" => true,
                 }
