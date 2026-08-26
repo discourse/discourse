@@ -9157,6 +9157,7 @@ en:
             deleted_tag: "deleted tag"
             update_directory_columns: "update directory columns"
             deleted_unused_tags: "deleted unused tags"
+            created_tag: "created tag"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
             lock_trust_level: "lock trust level"
