@@ -40,6 +40,7 @@ RSpec.describe "Keyboard shortcut display" do
     visit "/admin"
 
     expect(page).to have_css(".sidebar-search__shortcut-hint.d-shortcut .d-shortcut__key", count: 2)
+    expect(find(".sidebar-search__input")["aria-keyshortcuts"]).to match(/(Command|Ctrl)\+/)
 
     screenshot_marker(label: "shortcut-sidebar-hint", only: :desktop)
   end

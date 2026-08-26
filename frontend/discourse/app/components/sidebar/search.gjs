@@ -28,15 +28,18 @@ export default class Search extends Component {
             @icon="magnifying-glass"
             class="btn-transparent sidebar-search__icon"
           />
-          {{! eslint-disable ember/template-no-pointer-down-event-binding }}
-          <input
-            {{on "mousedown" this.onClick}}
-            placeholder={{i18n "sidebar.search"}}
-            type="text"
-            enterkeyhint="done"
-            class="sidebar-search__input"
-          />
-          <DShortcut class="sidebar-search__shortcut-hint" @keys="mod+/" />
+          <DShortcut @keys="mod+/" as |shortcut|>
+            {{! eslint-disable ember/template-no-pointer-down-event-binding }}
+            <input
+              placeholder={{i18n "sidebar.search"}}
+              type="text"
+              enterkeyhint="done"
+              class="sidebar-search__input"
+              aria-keyshortcuts={{shortcut.aria}}
+              {{on "mousedown" this.onClick}}
+            />
+            <shortcut.Kbd class="sidebar-search__shortcut-hint" />
+          </DShortcut>
         </div>
       </div>
     {{/if}}
