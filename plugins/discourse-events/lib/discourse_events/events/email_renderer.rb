@@ -204,10 +204,10 @@ module DiscourseEvents
       end
 
       def recurrence_ordinal(ref)
-        day_of_month = ref.mday
-        days_in_month = Date.new(ref.year, ref.month, -1).day
-        is_last = day_of_month + 7 > days_in_month
-        key = is_last ? "last" : RECURRENCE_ORDINALS[(day_of_month / 7.0).ceil - 1]
+        # Mirrors RRuleConfigurator: a fifth occurrence is expressed as "last",
+        # since not every month has one.
+        nth = (ref.mday / 7.0).ceil
+        key = nth == 5 ? "last" : RECURRENCE_ORDINALS[nth - 1]
         card_t("builder_modal.recurrence.ordinals.#{key}")
       end
 

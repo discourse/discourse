@@ -48,7 +48,11 @@ describe DiscourseEvents::Events::RRuleConfigurator do
       it "uses BYDAY=4 when the fourth occurrence is also the last in the month" do
         # February 2026 has only 4 Mondays (2, 9, 16, 23)
         last_monday = Time.utc(2026, 2, 23, 12, 0)
-        rule = RRuleConfigurator.rule(recurrence: "every_month", starts_at: last_monday)
+        rule =
+          DiscourseEvents::Events::RRuleConfigurator.rule(
+            recurrence: "every_month",
+            starts_at: last_monday,
+          )
         expect(rule).to eq("FREQ=MONTHLY;BYDAY=4MO")
       end
 
@@ -66,7 +70,11 @@ describe DiscourseEvents::Events::RRuleConfigurator do
       it "keeps a fourth-weekday series on the fourth weekday in months with five" do
         # Feb 26 2026 is both the 4th and the last Thursday of the month
         fourth_thursday = Time.utc(2026, 2, 26, 17, 0)
-        rule = RRuleConfigurator.rule(recurrence: "every_month", starts_at: fourth_thursday)
+        rule =
+          DiscourseEvents::Events::RRuleConfigurator.rule(
+            recurrence: "every_month",
+            starts_at: fourth_thursday,
+          )
 
         occurrences = RRule::Rule.new(rule, dtstart: fourth_thursday).all(limit: 3).map(&:to_date)
 
