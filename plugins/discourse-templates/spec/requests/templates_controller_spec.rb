@@ -92,7 +92,8 @@ describe DiscourseTemplates::TemplatesController do
         expect(response.status).to eq(200)
 
         parsed = response.parsed_body
-        expected_response = serialize_topics([template_item6, template_item7].sort_by(&:title))
+        expected_response =
+          serialize_topics([template_item6, template_item7].sort_by(&:title), user)
 
         expect(parsed["templates"]).to eq(expected_response)
       end
@@ -128,6 +129,7 @@ describe DiscourseTemplates::TemplatesController do
         expected_response =
           serialize_topics(
             [template_item6, template_item7, template_item_from_other_parent].sort_by(&:title),
+            user,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -149,6 +151,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item6,
               template_item7,
             ].sort_by(&:title),
+            user,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -199,6 +202,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            moderator,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -229,6 +233,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            user_in_group1,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -250,6 +255,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            user_in_group2,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -285,6 +291,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            admin,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -315,6 +322,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            admin,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -387,7 +395,7 @@ describe DiscourseTemplates::TemplatesController do
         expect(response.status).to eq(200)
 
         parsed = response.parsed_body
-        expected_response = serialize_topics([template_item3])
+        expected_response = serialize_topics([template_item3], moderator)
 
         expect(parsed["templates"]).to eq(expected_response)
         expect(parsed["templates"][0]["usages"]).to eq(0)
@@ -401,7 +409,7 @@ describe DiscourseTemplates::TemplatesController do
         parsed = response.parsed_body
 
         template_item3.reload
-        expected_response = serialize_topics([template_item3])
+        expected_response = serialize_topics([template_item3], moderator)
 
         expect(parsed["templates"]).to eq(expected_response)
         expect(parsed["templates"][0]["usages"]).to eq(1)
