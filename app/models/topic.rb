@@ -2266,7 +2266,10 @@ class Topic < ActiveRecord::Base
   end
 
   def visible_tags(guardian)
-    tags.reject { |tag| guardian.hidden_tag_names.include?(tag[:name]) }
+    guardian ||= Guardian.new
+    return tags if guardian.is_admin?
+
+    tags.select { |tag| guardian.visible_tag_ids.include?(tag.id) }
   end
 
   def self.editable_custom_fields(guardian)
