@@ -68,7 +68,10 @@ async function moveSwipe(swipe, { x = 0, y = 0, afterMs = 16 }) {
   return event;
 }
 
-function releaseSwipe(swipe, { afterMs = 16 } = {}) {
+function releaseSwipe(swipe, { x = 0, y = 0, afterMs = 16 } = {}) {
+  // a real release reports where the finger left, which is rarely the last move
+  swipe.x += x;
+  swipe.y += y;
   swipe.time += afterMs;
   return dispatchTouch(swipe.target, "touchend", swipe);
 }
@@ -143,6 +146,43 @@ acceptance("Mobile - menu drawer swipes", function (needs) {
       .exists("the outside handler does not close on press");
     await endSwipe(swipe);
     assert.dom(".panel-body").doesNotExist("a cloak tap closes the drawer");
+  });
+
+  test("dragging the cloak toward the edge carries the drawer with it", async function (assert) {
+    await openHamburgerDrawer();
+
+    const width = drawerWidth();
+    const swipe = await startSwipe(".header-cloak");
+    await moveSwipe(swipe, { x: -width / 4, afterMs: 400 });
+
+    assert.strictEqual(
+      drawerTranslateX(),
+      Math.round(-width / 4),
+      "the drawer tracks a finger that started outside it"
+    );
+
+    await moveSwipe(swipe, { x: -width / 4, afterMs: 400 });
+    await endSwipe(swipe, { afterMs: PARKED_RELEASE_MS });
+
+    assert
+      .dom(".panel-body")
+      .doesNotExist("and half the width closes it from the cloak");
+  });
+
+  test("a smear on release is not a swipe", async function (assert) {
+    await openHamburgerDrawer();
+
+    // under the minimum on every move, over it only on the release: the lift
+    // must not open a gesture, or nothing is left to end it
+    const swipe = await startSwipe(".header-cloak");
+    await moveSwipe(swipe, { x: -4, afterMs: 400 });
+    await moveSwipe(swipe, { x: 0, afterMs: 400 });
+    await endSwipe(swipe, { x: -6 });
+
+    assert.dom(".panel-body").doesNotExist("the cloak press still closes it");
+    assert
+      .dom(document.documentElement)
+      .doesNotHaveClass(/scroll-lock/, "and the body is not left locked");
   });
 
   test("cloak jitter closes through the drawer path", async function (assert) {

@@ -319,6 +319,13 @@ export default class DModal extends Component<DModalSignature> {
   }
 
   @action
+  async handleSwipeCancel() {
+    if (!this.animating) {
+      await this.#animateWrapperPosition(0, getMaxAnimationTimeMs());
+    }
+  }
+
+  @action
   async handleSwipeEnded(swipeEvent: SwipeState) {
     if (this.animating) {
       // if the modal is animating we don't want to risk resetting the position
@@ -570,6 +577,7 @@ export default class DModal extends Component<DModalSignature> {
             onDidStartSwipe=this.handleSwipeStart
             onDidSwipe=this.handleSwipe
             onDidEndSwipe=this.handleSwipeEnded
+            onDidCancelSwipe=this.handleSwipeCancel
             enabled=this.dismissable
           }}
         >
@@ -685,6 +693,7 @@ export default class DModal extends Component<DModalSignature> {
           {{dSwipe
             onDidSwipe=this.handleSwipe
             onDidEndSwipe=this.handleSwipeEnded
+            onDidCancelSwipe=this.handleSwipeCancel
             enabled=this.dismissable
           }}
           {{on "click" this.handleWrapperClick}}

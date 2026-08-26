@@ -56,6 +56,9 @@ export interface SwipeState {
 export interface SwipeCancelDetail {
   /** The underlying DOM event that triggered the cancellation. */
   originalEvent: Event;
+
+  /** The element the gesture was reading, so a consumer can undo what it painted. */
+  element: HTMLElement;
 }
 
 interface DSwipeSignature {

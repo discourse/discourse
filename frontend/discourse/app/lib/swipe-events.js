@@ -120,7 +120,7 @@ export default class SwipeEvents {
       this.swiping = false;
       this.swipeState = null;
       const event = new CustomEvent("swipecancel", {
-        detail: { originalEvent: e },
+        detail: { originalEvent: e, element: this.element },
       });
       this.element.dispatchEvent(event);
       return;
@@ -155,7 +155,7 @@ export default class SwipeEvents {
     if (this.swipeState) {
       this.element.dispatchEvent(
         new CustomEvent("swipecancel", {
-          detail: { originalEvent: e },
+          detail: { originalEvent: e, element: this.element },
         })
       );
     }
@@ -274,11 +274,13 @@ export default class SwipeEvents {
       e,
       originalEvent.timeStamp
     );
-    if (
-      previousState.start &&
+    const belowMinimum =
       Math.abs(newState.deltaX) < MINIMUM_SWIPE_DISTANCE &&
-      Math.abs(newState.deltaY) < MINIMUM_SWIPE_DISTANCE
-    ) {
+      Math.abs(newState.deltaY) < MINIMUM_SWIPE_DISTANCE;
+    // A release now reports where the finger left, so its own delta can cross
+    // the minimum. Only a move may open a gesture; otherwise a smear on lift
+    // starts a swipe that nothing ever ends.
+    if (previousState.start && (belowMinimum || e.type !== "pointermove")) {
       return;
     }
     this.swipeState = newState;

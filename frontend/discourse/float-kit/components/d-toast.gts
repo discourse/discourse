@@ -7,7 +7,10 @@ import deprecated from "discourse/lib/deprecated";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dSwipe, { type SwipeState } from "discourse/ui-kit/modifiers/d-swipe";
+import dSwipe, {
+  type SwipeCancelDetail,
+  type SwipeState,
+} from "discourse/ui-kit/modifiers/d-swipe";
 
 const VELOCITY_THRESHOLD = -1.2;
 
@@ -45,6 +48,11 @@ export default class DToast extends Component<DToastSignature> {
     } else {
       await this.#animateWrapperPosition(state.element, state.deltaY);
     }
+  }
+
+  @action
+  async didCancelSwipe(detail: SwipeCancelDetail) {
+    await this.#animateWrapperPosition(detail.element, 0);
   }
 
   @action
@@ -101,7 +109,11 @@ export default class DToast extends Component<DToastSignature> {
         progressBar=this.progressBar
         enabled=@toast.options.autoClose
       }}
-      {{dSwipe onDidSwipe=this.didSwipe onDidEndSwipe=this.didEndSwipe}}
+      {{dSwipe
+        onDidSwipe=this.didSwipe
+        onDidEndSwipe=this.didEndSwipe
+        onDidCancelSwipe=this.didCancelSwipe
+      }}
       data-test-duration={{this.duration}}
     >
       <@toast.options.component

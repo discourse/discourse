@@ -7,6 +7,7 @@ import {
   focus,
   render,
   settled,
+  triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -716,5 +717,48 @@ module("Integration | ui-kit | DModal", function (hooks) {
       event.defaultPrevented,
       "the underlying modal does not preventDefault keystrokes aimed at the modal stacked above it"
     );
+  });
+
+  test("a cancelled swipe settles the mobile sheet back", async function (assert) {
+    forceMobile();
+
+    await render(
+      <template><DModal @inline={{true}} @closeModal={{noop}} /></template>
+    );
+
+    const container = find(".d-modal__container");
+    const touchAt = (y) => [{ clientX: 0, clientY: y }];
+
+    await triggerEvent(container, "touchstart", {
+      touches: touchAt(0),
+      changedTouches: touchAt(0),
+    });
+    // the first move only starts the gesture; the second is the one that paints
+    await triggerEvent(container, "touchmove", {
+      touches: touchAt(20),
+      changedTouches: touchAt(20),
+    });
+    await triggerEvent(container, "touchmove", {
+      touches: touchAt(40),
+      changedTouches: touchAt(40),
+    });
+    // and it paints inside a frame, so the move has to be given one
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await settled();
+
+    const offsetOf = () => {
+      const { transform } = window.getComputedStyle(container);
+      return transform === "none" ? 0 : new DOMMatrixReadOnly(transform).m42;
+    };
+    assert.true(offsetOf() > 0, "the drag carried the sheet down");
+
+    // the browser takes the touch away mid-drag: without a cancel handler the
+    // sheet stays where the finger left it, since the drag paints fill-forwards
+    await triggerEvent(container, "touchcancel", {
+      touches: [],
+      changedTouches: touchAt(40),
+    });
+
+    assert.strictEqual(offsetOf(), 0, "the sheet returns to rest");
   });
 });

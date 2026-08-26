@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { render, triggerEvent } from "@ember/test-helpers";
+import { find, render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DToast from "discourse/float-kit/components/d-toast";
 import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
@@ -53,6 +53,52 @@ module("Integration | Component | FloatKit | DToast", function (hooks) {
     });
 
     assert.true(closing);
+  });
+
+  test("a cancelled swipe settles the toast back", async function (assert) {
+    forceMobile();
+    // a long duration keeps the auto-close timer out of this test
+    const toast = createCustomToastInstance(
+      getOwner(this),
+      { duration: "long" },
+      () => {}
+    );
+
+    await render(<template><DToast @toast={{toast}} /></template>);
+
+    const wrapper = find(".fk-d-toast");
+    let time = 1000;
+    // synthetic events land milliseconds apart, which reads as a flick fast
+    // enough for the drag itself to dismiss; spacing them keeps it a drag
+    const touch = (type, y, afterMs = 400) => {
+      time += afterMs;
+      const point = [{ clientX: 0, clientY: y }];
+      const event = new Event(type, { bubbles: true, cancelable: true });
+      Object.defineProperty(event, "timeStamp", { value: time });
+      event.touches = type === "touchcancel" ? [] : point;
+      event.changedTouches = point;
+      wrapper.dispatchEvent(event);
+    };
+    const offsetOf = () => {
+      const { transform } = window.getComputedStyle(wrapper);
+      return transform === "none" ? 0 : new DOMMatrixReadOnly(transform).m42;
+    };
+
+    touch("touchstart", 0);
+    // the first move only starts the gesture; the second is the one that paints
+    touch("touchmove", -20);
+    touch("touchmove", -40);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await settled();
+
+    assert.true(offsetOf() < 0, "the drag carried the toast up");
+
+    // the drag paints fill-forwards, so a gesture the browser takes away has to
+    // be undone or the toast stays where the finger left it
+    touch("touchcancel", -40);
+    await settled();
+
+    assert.strictEqual(offsetOf(), 0, "the toast returns to rest");
   });
 
   test("duration", async function (assert) {
