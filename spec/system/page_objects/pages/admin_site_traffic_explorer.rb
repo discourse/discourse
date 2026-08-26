@@ -72,6 +72,57 @@ module PageObjects
         has_no_css?("[data-test-traffic-series='#{label}']", visible: :all)
       end
 
+      def click_legend(label:)
+        legend_item = nil
+        try_until_success do
+          legend_item = legend_item(label)
+          expect(legend_item.fetch("available")).to eq(true)
+        end
+
+        page.driver.with_playwright_page do |pw_page|
+          canvas = pw_page.locator(".admin-report-stacked-chart canvas")
+          canvas.scroll_into_view_if_needed
+          bounds = canvas.bounding_box
+          scale_x = bounds["width"] / legend_item.fetch("chart_width")
+          scale_y = bounds["height"] / legend_item.fetch("chart_height")
+          x = bounds["x"] + legend_item.fetch("left") * scale_x
+          y = bounds["y"] + legend_item.fetch("top") * scale_y
+
+          pw_page.mouse.click(x, y)
+        end
+
+        self
+      end
+
+      def has_visible_legend_item?(label:)
+        has_css?(".admin-report-stacked-chart canvas") do
+          item = legend_item(label)
+          item.fetch("available") && item.fetch("visible")
+        end
+      end
+
+      def has_hidden_legend_item?(label:)
+        has_css?(".admin-report-stacked-chart canvas") do
+          item = legend_item(label)
+          item.fetch("available") && !item.fetch("visible")
+        end
+      end
+
+      def track_traffic_requests
+        requests = []
+        handler =
+          lambda do |request|
+            if request.url.include?("/admin/dashboard/site-traffic-explorer.json")
+              requests << request
+            end
+          end
+
+        page.driver.with_playwright_page { |pw_page| pw_page.on("request", handler) }
+        yield -> { requests.length }
+      ensure
+        page.driver.with_playwright_page { |pw_page| pw_page.off("request", handler) } if handler
+      end
+
       def has_partial_data_warning?(reason:)
         selector = "[data-test-site-traffic-partial-warning]"
 
@@ -291,6 +342,40 @@ module PageObjects
       end
 
       private
+
+      def legend_item(label)
+        page.evaluate_async_script(<<~JAVASCRIPT, label)
+          const label = arguments[0];
+          const done = arguments[1];
+
+          require("discourse/lib/load-chart-js").default().then((Chart) => {
+            const canvas = document.querySelector(".admin-report-stacked-chart canvas");
+            const chart = Chart.getChart(canvas);
+            if (!chart?.legend) {
+              done({ available: false });
+              return;
+            }
+            const legendItemIndex = chart.legend.legendItems.findIndex(
+              (item) => item.text === label
+            );
+            const legendItem = chart.legend.legendItems[legendItemIndex];
+            const hitBox = chart.legend.legendHitBoxes[legendItemIndex];
+            if (!legendItem || !hitBox) {
+              done({ available: false });
+              return;
+            }
+
+            done({
+              available: true,
+              chart_width: chart.width,
+              chart_height: chart.height,
+              left: hitBox.left + hitBox.width / 2,
+              top: hitBox.top + hitBox.height / 2,
+              visible: chart.isDatasetVisible(legendItem.datasetIndex),
+            });
+          });
+        JAVASCRIPT
+      end
 
       def open_date_range
         find(".db-date-range__trigger").click

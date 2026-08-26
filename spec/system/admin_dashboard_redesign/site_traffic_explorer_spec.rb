@@ -99,6 +99,73 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_metric(label: "Average session duration", value: "10s")
   end
 
+  it "lets an admin preview traffic type filters before applying them",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+    sign_in(admin)
+
+    Fabricate(
+      :browser_pageview_event,
+      user_id: admin.id,
+      session_id: "logged-in-session",
+      source: BrowserPageviewEvent::SOURCE_BEACON,
+      created_at: "2026-05-10 10:00:00",
+    )
+    Fabricate(
+      :browser_pageview_event,
+      session_id: "anonymous-session",
+      source: BrowserPageviewEvent::SOURCE_BEACON,
+      created_at: "2026-05-11 10:00:00",
+    )
+    Fabricate(
+      :browser_pageview_event,
+      session_id: "crawler-session",
+      score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1,
+      source: BrowserPageviewEvent::SOURCE_BEACON,
+      created_at: "2026-05-12 10:00:00",
+    )
+
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
+    initial_path =
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01"
+
+    traffic.track_traffic_requests do |request_count|
+      ["Logged in", "Anonymous"].each do |label|
+        expect(traffic).to have_visible_legend_item(label:)
+
+        traffic.click_legend(label:)
+
+        expect(traffic).to have_hidden_legend_item(label:)
+        expect(traffic).to have_apply_filters(count: 2)
+        expect(request_count.call).to eq(0)
+        expect(page).to have_current_path(initial_path)
+
+        traffic.click_legend(label:)
+
+        expect(traffic).to have_visible_legend_item(label:)
+        expect(traffic).to have_no_apply_filters
+      end
+
+      expect(traffic).to have_visible_legend_item(label: "Likely crawlers")
+
+      traffic.click_legend(label: "Likely crawlers")
+
+      expect(traffic).to have_hidden_legend_item(label: "Likely crawlers")
+      expect(traffic).to have_series_total(label: "logged-in-human", value: "1")
+      expect(traffic).to have_series_total(label: "anonymous-human", value: "1")
+      expect(traffic).to have_series_total(label: "likely-crawler", value: "1")
+      expect(request_count.call).to eq(0)
+      expect(page).to have_current_path(initial_path)
+
+      traffic.apply_filters
+
+      expect(traffic).to have_series_total(label: "likely-crawler", value: "0")
+      expect(request_count.call).to eq(1)
+      expect(page).to have_current_path(
+        "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01&traffic_type=%5B%22logged_in%22%2C%22anonymous%22%5D",
+      )
+    end
+  end
+
   it "lets an admin investigate traffic with dates and filters",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     sign_in(admin)
