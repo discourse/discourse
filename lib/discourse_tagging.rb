@@ -646,7 +646,8 @@ module DiscourseTagging
   end
 
   def self.filter_visible_in_accessible_categories(query, guardian = nil)
-    return query if guardian.nil? || guardian.is_staff?
+    guardian ||= Guardian.new
+    return query if guardian.is_staff?
 
     query.where(<<~SQL, ids: guardian.allowed_category_ids)
       tags.id NOT IN (

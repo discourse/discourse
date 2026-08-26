@@ -41,6 +41,10 @@ module TagGuardian
     is_staff? && SiteSetting.tagging_enabled
   end
 
+  def visible_tag_ids
+    @visible_tag_ids ||= DiscourseTagging.visible_tags(self).pluck(:id).to_set
+  end
+
   def hidden_tag_names
     @hidden_tag_names ||=
       begin
