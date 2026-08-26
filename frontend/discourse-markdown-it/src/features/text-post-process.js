@@ -1,3 +1,4 @@
+import { isPunctChar, isWhiteSpace } from "markdown-it/lib/common/utils.mjs";
 import { applyDataAttributes, parseBBCodeTag } from "./bbcode-block";
 
 export class TextPostProcessRuler {
@@ -76,11 +77,21 @@ export class TextPostProcessRuler {
   }
 }
 
-function allowedBoundary(content, index, utils) {
+function allowedBoundary(content, index) {
   let code = content.charCodeAt(index);
-  return (
-    utils.isWhiteSpace(code) || utils.isPunctChar(String.fromCharCode(code))
-  );
+  return isWhiteSpace(code) || isPunctChar(String.fromCharCode(code));
+}
+
+export function hasAllowedBoundaries(content, start, end) {
+  if (start > 0 && !allowedBoundary(content, start - 1)) {
+    return false;
+  }
+
+  if (end < content.length && !allowedBoundary(content, end)) {
+    return false;
+  }
+
+  return true;
 }
 
 function textPostProcess(content, state, ruler) {
@@ -96,20 +107,10 @@ function textPostProcess(content, state, ruler) {
       break;
     }
 
-    // check boundary
-    if (match.index > 0) {
-      if (!allowedBoundary(content, match.index - 1, state.md.utils)) {
-        continue;
-      }
-    }
-
-    // check forward boundary as well
-    if (match.index + match[0].length < content.length) {
-      if (
-        !allowedBoundary(content, match.index + match[0].length, state.md.utils)
-      ) {
-        continue;
-      }
+    if (
+      !hasAllowedBoundaries(content, match.index, match.index + match[0].length)
+    ) {
+      continue;
     }
 
     result = result || [];
