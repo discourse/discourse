@@ -1725,11 +1725,9 @@ RSpec.describe Category do
       category = Fabricate(:category, slug: "support")
 
       expect_enqueued_with(
-        job: :remap_category_hashtag,
+        job: :remap_hashtag,
         args: {
-          category_id: category.id,
-          old_ref: "support",
-          new_ref: "help",
+          remaps: [{ type: "category", id: category.id, old_ref: "support" }],
         },
       ) { category.update!(slug: "help") }
     end
@@ -1739,25 +1737,24 @@ RSpec.describe Category do
       parent_category = Fabricate(:category, slug: "support")
 
       expect_enqueued_with(
-        job: :remap_category_hashtag,
+        job: :remap_hashtag,
         args: {
-          category_id: category.id,
-          old_ref: "bucks",
-          new_ref: "support:bucks",
+          remaps: [{ type: "category", id: category.id, old_ref: "bucks" }],
         },
       ) { category.update!(parent_category: parent_category) }
     end
 
-    it "enqueues child remap jobs when the slug changes" do
+    it "enqueues subcategories in the same job when the slug changes" do
       parent_category = Fabricate(:category, slug: "support")
       category = Fabricate(:category, slug: "bucks", parent_category: parent_category)
 
       expect_enqueued_with(
-        job: :remap_category_hashtag,
+        job: :remap_hashtag,
         args: {
-          category_id: category.id,
-          old_ref: "support:bucks",
-          new_ref: "help:bucks",
+          remaps: [
+            { type: "category", id: parent_category.id, old_ref: "support" },
+            { type: "category", id: category.id, old_ref: "support:bucks" },
+          ],
         },
       ) { parent_category.update!(slug: "help") }
     end
@@ -1765,7 +1762,7 @@ RSpec.describe Category do
     it "does not enqueue a remap job for unrelated changes" do
       category = Fabricate(:category, slug: "support")
 
-      expect_not_enqueued_with(job: :remap_category_hashtag) { category.update!(color: "ABCDEF") }
+      expect_not_enqueued_with(job: :remap_hashtag) { category.update!(color: "ABCDEF") }
     end
   end
 
