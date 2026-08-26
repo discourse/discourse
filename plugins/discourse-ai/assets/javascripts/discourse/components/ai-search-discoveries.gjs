@@ -18,6 +18,7 @@ import DCookText from "discourse/ui-kit/d-cook-text";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import { tagNames, tagSuggestionParams } from "../lib/ai-helper-suggestions";
 import { showComposerAiHelper } from "../lib/show-ai-helper";
@@ -453,17 +454,23 @@ export default class AiSearchDiscoveries extends Component {
                       >{{source.title}}</h5>
                       {{#if source.excerpt}}
                         <span class="ai-discovery-source__excerpt">
-                          {{source.excerpt}}
+                          {{dReplaceEmoji source.excerpt}}
                         </span>
                       {{/if}}
                       <span class="ai-discovery-source__metadata">
                         {{#if source.category}}
-                          <span>{{source.category}}</span>
-                          {{#if source.topic_replies}}
-                            <span aria-hidden="true">·</span>
-                          {{/if}}
-                        {{/if}}
-                        {{#if source.topic_replies}}
+                          <span>
+                            {{source.category}}
+                            {{#if source.topic_replies}}
+                              <span aria-hidden="true">·</span>
+                              {{source.topic_replies}}
+                              {{i18n
+                                "replies_lowercase"
+                                count=source.topic_replies
+                              }}
+                            {{/if}}
+                          </span>
+                        {{else if source.topic_replies}}
                           <span>
                             {{source.topic_replies}}
                             {{i18n

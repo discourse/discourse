@@ -142,7 +142,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       {
         title: "Recurring ideas across Hayao Miyazaki’s films",
         url: "/t/hayao-miyazaki/101/1",
-        excerpt: "Flight, nature, work, and resilient protagonists.",
+        excerpt:
+          ":waving_hand: Flight, nature, work, and resilient protagonists.",
         category: "Studio Ghibli",
         topic_replies: 12,
         username: "hayao",
@@ -205,6 +206,15 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     assert
       .dom(".ai-discovery-source__avatar .avatar")
       .exists({ count: 2 }, "discussion cards show their source authors");
+    assert
+      .dom(".ai-discovery-source__excerpt .emoji")
+      .exists({ count: 1 }, "emoji shortcodes in excerpts are rendered");
+    assert
+      .dom(".ai-discovery-source__excerpt")
+      .doesNotIncludeText(
+        ":waving_hand:",
+        "the raw emoji shortcode is not displayed"
+      );
     assert
       .dom(".ai-discovery-sources__toggle")
       .doesNotExist("there is no local source expansion control");
@@ -299,6 +309,14 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         ".ai-discovery-sources__item:nth-child(2) .ai-discovery-source__metadata"
       )
       .hasText("Support · 4 replies", "non-zero reply counts remain visible");
+    assert
+      .dom(
+        ".ai-discovery-sources__item:nth-child(2) .ai-discovery-source__metadata > span"
+      )
+      .exists(
+        { count: 1 },
+        "the category and reply count wrap as one metadata item"
+      );
   });
 
   test("does not show result preferences in the Discoveries result", async function (assert) {
