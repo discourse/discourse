@@ -1593,10 +1593,10 @@ User.reopenClass({
     args = args || {};
     this.deleteStatusTrackingFields(args);
 
-    // Calling user.groups is deprecated, see discourse.user.groups,
-    // it is replaced by visibleGroups
-    args.visibleGroups = args.groups;
-    delete args.groups;
+    if (Object.hasOwn(args, "groups")) {
+      args.visibleGroups = args.groups;
+      delete args.groups;
+    }
 
     return this._super(args);
   },
