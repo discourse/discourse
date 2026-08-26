@@ -22,7 +22,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           },
         ],
         label: "⌘",
-        aria: "Meta",
+        aria: "Command",
       },
       "mod uses the Apple platform modifier"
     );
@@ -59,7 +59,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
             },
           ],
           label: "⌘",
-          aria: "Meta",
+          aria: "Command",
         },
         `${alias} resolves to Command`
       );
@@ -151,7 +151,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           { key: "M", label: "M", name: "M" },
         ],
         label: "⌘ M",
-        aria: "Meta+M",
+        aria: "Command+M",
       },
       "mod+m uses Meta"
     );
@@ -181,7 +181,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           },
         ],
         label: "⌥ ⌥ ⇧",
-        aria: "Alt+Alt+Shift",
+        aria: "Option+Option+Shift",
       },
       "Apple modifiers use glyph labels and localized spoken names"
     );
@@ -227,7 +227,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           },
         ],
         label: `⌘ ${i18n("shortcut_modifier_key.enter")}`,
-        aria: "Meta+Enter",
+        aria: "Command+Enter",
       },
       "tokens are normalized before formatting"
     );
@@ -386,7 +386,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           { key: ".", label: ".", name: "." },
         ],
         label: "⌘ ⇧ .",
-        aria: "Meta+Shift+.",
+        aria: "Command+Shift+.",
       },
       "all three keys retain their input order"
     );

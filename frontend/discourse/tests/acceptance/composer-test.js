@@ -1981,8 +1981,8 @@ acceptance(`composer buttons API`, function (needs) {
       .dom(row)
       .hasAttribute(
         "title",
-        `${i18n("some_title")} (${shortcut.label})`,
-        "shows the title with shortcut"
+        i18n("some_title"),
+        "keeps the shortcut out of the title, since the row draws and announces it"
       );
     assert
       .dom(row)

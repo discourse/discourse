@@ -24,9 +24,10 @@ export interface FormattedShortcut {
   /** The drawn labels joined with a space: `⌘ Enter` / `Ctrl Enter`. */
   label: string;
   /**
-   * The canonical names joined with `+`, valid as an `aria-keyshortcuts` value:
-   * `Meta+Enter` / `Control+Enter`. Undefined when there are no keys, so a
-   * template binding omits the attribute rather than emitting an empty one.
+   * The `aria-keyshortcuts` value: key names joined with `+`, as a screen
+   * reader will speak them. `Command+Enter` on Apple platforms and
+   * `Control+Enter` elsewhere. Undefined when there are no keys, so a template
+   * binding omits the attribute rather than emitting an empty one.
    */
   aria: string | undefined;
 }
@@ -93,6 +94,16 @@ const APPLE_GLYPHS: Record<string, { label: string; name: string }> = {
   Shift: { label: "⇧", name: "shortcut_modifier_key.shift" },
 };
 
+/**
+ * How Apple platforms name modifiers in `aria-keyshortcuts`. WAI-ARIA lists
+ * `Meta` and `Alt`, but a screen reader speaks the value verbatim, and no Mac
+ * user knows those keys by those names.
+ */
+const APPLE_ANNOUNCED_NAMES: Record<string, string> = {
+  Meta: "Command",
+  Alt: "Option",
+};
+
 /** Keys drawn as a localized word rather than their canonical name. */
 const WORD_KEYS: Record<string, string> = {
   Control: "shortcut_modifier_key.ctrl",
@@ -148,7 +159,7 @@ function describeKey(key: string, isApple: boolean): ShortcutKey {
  * @example
  * ```js
  * const { label, aria } = formatShortcut("mod+b");
- * // Apple:  label "⌘ B",   aria "Meta+B"
+ * // Apple:  label "⌘ B",   aria "Command+B"
  * // Others: label "Ctrl B", aria "Control+B"
  * ```
  */
@@ -160,9 +171,13 @@ export function formatShortcut(keys?: string | null): FormattedShortcut {
     .filter(Boolean)
     .map((token) => describeKey(canonicalKey(token, isApple), isApple));
 
+  const announced = parsed.map((key) =>
+    isApple ? (APPLE_ANNOUNCED_NAMES[key.key] ?? key.key) : key.key
+  );
+
   return {
     keys: parsed,
     label: parsed.map((key) => key.label).join(" "),
-    aria: parsed.length ? parsed.map((key) => key.key).join("+") : undefined,
+    aria: parsed.length ? announced.join("+") : undefined,
   };
 }

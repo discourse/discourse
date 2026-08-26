@@ -15,6 +15,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 interface KbdSignature {
   Args: {
     keys: ShortcutKey[];
+    /** Hide from assistive technology, for a chip beside an element that announces the shortcut itself. */
+    hidden?: boolean;
   };
   Element: HTMLElement;
 }
@@ -27,7 +29,12 @@ interface KbdSignature {
  */
 const Kbd: TOC<KbdSignature> = <template>
   {{#if @keys.length}}
-    <kbd class="d-shortcut" dir="ltr" ...attributes>
+    <kbd
+      class="d-shortcut"
+      dir="ltr"
+      aria-hidden={{if @hidden "true"}}
+      ...attributes
+    >
       {{#each @keys key="key" as |key|}}
         <kbd
           class={{dConcatClass
@@ -49,8 +56,12 @@ const Kbd: TOC<KbdSignature> = <template>
 
 /** What the block form yields: both forms of the shortcut, from one spelling. */
 export interface DShortcutParts extends FormattedShortcut {
-  /** The drawn form, pre-bound to the same keys. Accepts `...attributes`. */
-  Kbd: WithBoundArgs<typeof Kbd, "keys">;
+  /**
+   * The drawn form, pre-bound to the same keys and hidden from assistive
+   * technology, since the element carrying `aria` announces the shortcut.
+   * Accepts `...attributes`.
+   */
+  Kbd: WithBoundArgs<typeof Kbd, "keys" | "hidden">;
 }
 
 interface DShortcutSignature {
@@ -92,9 +103,11 @@ interface DShortcutSignature {
  * ```
  *
  * `aria-keyshortcuts` is never set by the component itself: it belongs on the
- * element that reacts to the keys, which only the caller knows. Attributes on
- * the block-form invocation are dropped, since nothing is rendered to carry
- * them; put them on `shortcut.Kbd`.
+ * element that reacts to the keys, which only the caller knows. The yielded
+ * `Kbd` is hidden from assistive technology for the same reason: the activator
+ * announces the shortcut, and a readable chip inside it would fold the key
+ * names into its accessible name. Attributes on the block-form invocation are
+ * dropped, since nothing is rendered to carry them; put them on `shortcut.Kbd`.
  */
 export default class DShortcut extends Component<DShortcutSignature> {
   /** Both forms of the shortcut, recomputed only when `@keys` changes. */
@@ -114,7 +127,11 @@ export default class DShortcut extends Component<DShortcutSignature> {
 
     return {
       ...formatted,
-      Kbd: curryComponent(Kbd, { keys: formatted.keys }, getOwner(this)!),
+      Kbd: curryComponent(
+        Kbd,
+        { keys: formatted.keys, hidden: true },
+        getOwner(this)!
+      ),
     };
   }
 

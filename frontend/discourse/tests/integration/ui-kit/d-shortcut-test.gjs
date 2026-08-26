@@ -17,7 +17,8 @@ module("Integration | ui-kit | DShortcut", function (hooks) {
     assert
       .dom("kbd.d-shortcut")
       .exists({ count: 1 })
-      .hasAttribute("dir", "ltr");
+      .hasAttribute("dir", "ltr")
+      .doesNotHaveAttribute("aria-hidden", "readable when it is the content");
     assert.dom(".d-shortcut > kbd.d-shortcut__key").exists({ count: 3 });
     assert
       .dom(".d-shortcut__key:nth-child(1)")
@@ -77,7 +78,10 @@ module("Integration | ui-kit | DShortcut", function (hooks) {
       </template>
     );
 
-    assert.dom("button").hasAttribute("aria-keyshortcuts", "Meta+Enter");
+    assert.dom("button").hasAttribute("aria-keyshortcuts", "Command+Enter");
+    assert
+      .dom("button > kbd.d-shortcut")
+      .hasAttribute("aria-hidden", "true", "the activator announces it");
     assert
       .dom("button")
       .hasAttribute("data-label", `⌘ ${i18n("shortcut_modifier_key.enter")}`);

@@ -3,7 +3,6 @@ import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { formatShortcut } from "discourse/lib/shortcut-format";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DShortcut from "discourse/ui-kit/d-shortcut";
@@ -89,22 +88,13 @@ export default class ToolbarPopupMenuOptions extends Component {
       : i18n(content.label);
   }
 
+  /** The row draws its shortcut and announces it, so the title carries none. */
   #calculateTitle(content, labelText) {
-    const title = content.translatedTitle
-      ? content.translatedTitle
-      : content.title
-        ? i18n(content.title)
-        : labelText;
-
-    if (!title) {
-      return;
+    if (content.translatedTitle) {
+      return content.translatedTitle;
     }
 
-    if (content.shortcut) {
-      return `${title} (${formatShortcut(`mod+${content.shortcut}`).label})`;
-    }
-
-    return title;
+    return content.title ? i18n(content.title) : labelText;
   }
 
   get convertedContent() {
