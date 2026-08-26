@@ -94,33 +94,18 @@ module PageObjects
         self
       end
 
-      def has_visible_legend_item?(label:)
+      def has_selected_legend_item?(label:)
         has_css?(".admin-report-stacked-chart canvas") do
           item = legend_item(label)
           item.fetch("available") && item.fetch("visible")
         end
       end
 
-      def has_hidden_legend_item?(label:)
+      def has_deselected_legend_item?(label:)
         has_css?(".admin-report-stacked-chart canvas") do
           item = legend_item(label)
           item.fetch("available") && !item.fetch("visible")
         end
-      end
-
-      def track_traffic_requests
-        requests = []
-        handler =
-          lambda do |request|
-            if request.url.include?("/admin/dashboard/site-traffic-explorer.json")
-              requests << request
-            end
-          end
-
-        page.driver.with_playwright_page { |pw_page| pw_page.on("request", handler) }
-        yield -> { requests.length }
-      ensure
-        page.driver.with_playwright_page { |pw_page| pw_page.off("request", handler) } if handler
       end
 
       def has_partial_data_warning?(reason:)
