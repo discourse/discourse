@@ -95,13 +95,12 @@ export default class SiteTrafficExplorer extends Component {
 
   @cached
   get chartOptions() {
-    const trafficTypes =
-      this.args.traffic?.chart_traffic_types ?? this.args.trafficTypes;
-
     return {
       hideYAxisGridLines: true,
       hiddenLabels: Object.entries(TRAFFIC_TYPE_BY_SERIES)
-        .filter(([, trafficType]) => !trafficTypes.includes(trafficType))
+        .filter(
+          ([, trafficType]) => !this.args.trafficTypes.includes(trafficType)
+        )
         .map(([series]) => series),
       onLegendClick: this.toggleTrafficType,
     };

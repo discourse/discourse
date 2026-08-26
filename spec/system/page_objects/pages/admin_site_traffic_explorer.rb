@@ -72,6 +72,35 @@ module PageObjects
         has_no_css?("[data-test-traffic-series='#{label}']", visible: :all)
       end
 
+      def toggle_chart_legend(label:)
+        page.evaluate_async_script(<<~JAVASCRIPT, label)
+          const label = arguments[0];
+          const done = arguments[1];
+
+          require("discourse/lib/load-chart-js").default().then((Chart) => {
+            const chart = Chart.getChart(
+              document.querySelector(".admin-report-stacked-chart canvas")
+            );
+            const legendItem = chart.legend.legendItems.find(
+              (item) => item.text === label
+            );
+
+            chart.options.plugins.legend.onClick(null, legendItem, chart.legend);
+            done();
+          });
+        JAVASCRIPT
+
+        self
+      end
+
+      def has_selected_legend_item?(label:)
+        has_css?(".admin-report-stacked-chart canvas") { legend_item_selected?(label:) }
+      end
+
+      def has_deselected_legend_item?(label:)
+        has_css?(".admin-report-stacked-chart canvas") { legend_item_selected?(label:) == false }
+      end
+
       def has_partial_data_warning?(reason:)
         selector = "[data-test-site-traffic-partial-warning]"
 
@@ -291,6 +320,28 @@ module PageObjects
       end
 
       private
+
+      def legend_item_selected?(label:)
+        page.evaluate_async_script(<<~JAVASCRIPT, label)
+          const label = arguments[0];
+          const done = arguments[1];
+
+          require("discourse/lib/load-chart-js").default().then((Chart) => {
+            const chart = Chart.getChart(
+              document.querySelector(".admin-report-stacked-chart canvas")
+            );
+            const legendItem = chart?.legend?.legendItems.find(
+              (item) => item.text === label
+            );
+
+            done(
+              legendItem
+                ? chart.isDatasetVisible(legendItem.datasetIndex)
+                : null
+            );
+          });
+        JAVASCRIPT
+      end
 
       def open_date_range
         find(".db-date-range__trigger").click
