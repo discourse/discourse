@@ -70,6 +70,15 @@ describe DiscourseAi::Translation::LanguageDetector do
       expect(locale_detector.detect).to eq("nl")
     end
 
+    it "returns the language when the streamed response includes thinking" do
+      thinking =
+        DiscourseAi::Completions::Thinking.new(message: "Determining Dutch context", partial: false)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([[thinking, "nl"]]) do
+        expect(locale_detector.detect).to eq("nl")
+      end
+    end
+
     it "returns the language when the streamed response has surrounding whitespace" do
       bot = instance_double(DiscourseAi::Agents::Bot)
       allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
