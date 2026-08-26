@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { cancel, later } from "@ember/runloop";
 
 const DEFAULT_TYPING_DELAY = 15;
+const COMPLETION_CATCH_UP_STEPS = 12;
 
 /**
  * SmoothStreamer provides a typing animation effect for streamed text updates.
@@ -16,11 +17,13 @@ export default class SmoothStreamer {
    * @param {() => string} getRealtimeText - Function to retrieve the latest realtime text
    * @param {(value: string) => void} setRealtimeText - Function to update the realtime text
    * @param {number} [typingDelay] - Delay (in ms) between each character reveal
+   * @param {{ smoothCompletion?: boolean }} [options] - Completion behavior
    */
-  constructor(getRealtimeText, setRealtimeText, typingDelay) {
+  constructor(getRealtimeText, setRealtimeText, typingDelay, options = {}) {
     this.getRealtimeText = getRealtimeText;
     this.setRealtimeText = setRealtimeText;
     this.typingDelay = typingDelay || DEFAULT_TYPING_DELAY;
+    this.smoothCompletion = options.smoothCompletion || false;
   }
 
   /**
@@ -55,6 +58,8 @@ export default class SmoothStreamer {
     this.isStreaming = false;
     this.streamedText = "";
     this.streamedTextLength = 0;
+    this.completionReceived = false;
+    this.completionChunkSize = 1;
   }
 
   /**
@@ -67,6 +72,21 @@ export default class SmoothStreamer {
     const newText = result[newTextKey];
 
     if (result?.done) {
+      if (this.smoothCompletion && newText.length > this.streamedTextLength) {
+        this.realtimeText = newText;
+        this.completionReceived = true;
+        this.completionChunkSize = Math.max(
+          1,
+          Math.ceil(
+            (newText.length - this.streamedTextLength) /
+              COMPLETION_CATCH_UP_STEPS
+          )
+        );
+        this.isStreaming = true;
+        await this.#onTextUpdate();
+        return;
+      }
+
       this.streamedText = newText;
       this.realtimeText = newText;
       this.isStreaming = false;
@@ -86,12 +106,23 @@ export default class SmoothStreamer {
    */
   #typeCharacter() {
     if (this.streamedTextLength < this.realtimeText.length) {
-      this.streamedText += this.realtimeText.charAt(this.streamedTextLength);
-      this.streamedTextLength++;
+      const remaining = this.realtimeText.length - this.streamedTextLength;
+      const chunkSize = this.completionReceived
+        ? Math.min(remaining, this.completionChunkSize)
+        : 1;
+      const end = this.streamedTextLength + chunkSize;
+      this.streamedText += this.realtimeText.slice(
+        this.streamedTextLength,
+        end
+      );
+      this.streamedTextLength = end;
 
       this.typingTimer = later(this, this.#typeCharacter, this.typingDelay);
     } else {
       this.typingTimer = null;
+      if (this.completionReceived) {
+        this.isStreaming = false;
+      }
     }
   }
 

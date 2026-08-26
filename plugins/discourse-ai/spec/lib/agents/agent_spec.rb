@@ -305,6 +305,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
+        DiscourseAi::Agents::DiscoverQueryRewriter,
         DiscourseAi::Agents::GithubHelper,
         DiscourseAi::Agents::Researcher,
         DiscourseAi::Agents::SettingsExplorer,
@@ -323,6 +324,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
+        DiscourseAi::Agents::DiscoverQueryRewriter,
         DiscourseAi::Agents::GithubHelper,
         DiscourseAi::Agents::Researcher,
         DiscourseAi::Agents::SettingsExplorer,
@@ -350,6 +352,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
+        DiscourseAi::Agents::DiscoverQueryRewriter,
         DiscourseAi::Agents::GithubHelper,
       )
 
@@ -370,6 +373,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
+        DiscourseAi::Agents::DiscoverQueryRewriter,
         DiscourseAi::Agents::GithubHelper,
       )
     end

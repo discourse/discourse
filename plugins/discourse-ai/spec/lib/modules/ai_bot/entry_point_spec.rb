@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAi::AiBot::EntryPoint do
+describe DiscourseAi::AiBot::EntryPoint do
   before { enable_current_plugin }
 
   describe "#inject_into" do
@@ -187,14 +187,20 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
     end
 
     it "will include ai_search_discoveries field in the user_option if discover agent is enabled" do
-      SiteSetting.ai_discover_enabled = true
-      SiteSetting.ai_discover_agent = Fabricate(:ai_agent).id
-
       user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(user)
+      llm_model = Fabricate(:llm_model)
+      agent = Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
+      SiteSetting.ai_discover_enabled = true
+      SiteSetting.ai_discover_agent = agent.id
+      SiteSetting.ai_discover_allowed_groups = group.id.to_s
+      SiteSetting.ai_embeddings_enabled = true
+      SiteSetting.ai_embeddings_semantic_search_enabled = true
       user.user_option.update!(ai_search_discoveries: true)
       serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user))
       serializer = serializer.as_json
-      expect(serializer[:current_user][:user_option][:ai_search_discoveries]).to eq(true)
+      expect(serializer[:current_user][:user_option]).to include(ai_search_discoveries: true)
     end
   end
 end

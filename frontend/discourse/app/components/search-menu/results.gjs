@@ -67,6 +67,7 @@ export default class Results extends Component {
             @name="search-menu-results-top"
             @outletArgs={{lazyHash
               closeSearchMenu=@closeSearchMenu
+              location=@location
               searchTerm=this.search.activeGlobalSearchTerm
               inTopicContext=this.search.inTopicContext
               searchTopics=@searchTopics

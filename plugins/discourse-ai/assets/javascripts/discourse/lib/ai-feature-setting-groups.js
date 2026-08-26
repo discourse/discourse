@@ -166,7 +166,26 @@ export const AI_FEATURE_SETTING_GROUPS = {
     {
       key: "settings",
       titleKey: "discourse_ai.features.search.setting_groups.settings",
-      settings: ["ai_discover_enabled", "ai_discover_agent"],
+      settings: [
+        "ai_discover_enabled",
+        "ai_discover_default_mode",
+        "ai_discover_summary_detail",
+        "ai_discover_related_count",
+      ],
+    },
+    {
+      key: "agents",
+      titleKey: "discourse_ai.features.search.setting_groups.agents",
+      settings: [
+        "ai_discover_agent",
+        "ai_discover_query_rewrite_agent",
+        "ai_discover_follow_up_agent",
+      ],
+    },
+    {
+      key: "access_control",
+      titleKey: "discourse_ai.features.search.setting_groups.access_control",
+      settings: ["ai_discover_allowed_groups"],
     },
   ],
 

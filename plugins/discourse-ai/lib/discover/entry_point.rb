@@ -3,53 +3,36 @@
 module DiscourseAi
   module Discover
     class EntryPoint
+      USER_OPTION_ATTRIBUTES = %i[ai_search_discoveries].freeze
+
       def inject_into(plugin)
         plugin.add_to_serializer(
           :current_user,
           :can_use_ai_discover_agent,
-          include_condition: -> do
-            SiteSetting.ai_discover_enabled && scope.authenticated? &&
-              SiteSetting.ai_discover_agent.present?
-          end,
-        ) do
-          agent_allowed_groups =
-            AiAgent.find_by(id: SiteSetting.ai_discover_agent)&.allowed_group_ids.to_a
+          include_condition: -> { scope.authenticated? },
+        ) { DiscourseAi::Discoveries.eligible_for_user?(scope.user) }
 
-          scope.user.in_any_groups?(agent_allowed_groups)
+        UserUpdater::OPTION_ATTR.concat(USER_OPTION_ATTRIBUTES).uniq!
+        eligible_for_discoveries =
+          lambda do
+            cache_key = :@ai_search_discoveries_eligible_for_user
+            if !instance_variable_defined?(cache_key)
+              instance_variable_set(
+                cache_key,
+                scope.authenticated? && DiscourseAi::Discoveries.eligible_for_user?(scope.user),
+              )
+            end
+            instance_variable_get(cache_key)
+          end
+        USER_OPTION_ATTRIBUTES.each do |attribute|
+          %i[user_option current_user_option].each do |serializer|
+            plugin.add_to_serializer(
+              serializer,
+              attribute,
+              include_condition: eligible_for_discoveries,
+            ) { object.public_send(attribute) }
+          end
         end
-
-        plugin.add_to_serializer(
-          :current_user,
-          :can_use_ai_discover_agent,
-          include_condition: -> do
-            SiteSetting.ai_discover_enabled && scope.authenticated? &&
-              SiteSetting.ai_discover_agent.present?
-          end,
-        ) do
-          agent_allowed_groups =
-            AiAgent.find_by(id: SiteSetting.ai_discover_agent)&.allowed_group_ids.to_a
-
-          scope.user.in_any_groups?(agent_allowed_groups)
-        end
-
-        UserUpdater::OPTION_ATTR.push(:ai_search_discoveries)
-        plugin.add_to_serializer(
-          :user_option,
-          :ai_search_discoveries,
-          include_condition: -> do
-            SiteSetting.ai_discover_enabled && SiteSetting.ai_discover_agent.present? &&
-              scope.authenticated?
-          end,
-        ) { object.ai_search_discoveries }
-
-        plugin.add_to_serializer(
-          :current_user_option,
-          :ai_search_discoveries,
-          include_condition: -> do
-            SiteSetting.ai_discover_enabled && SiteSetting.ai_discover_agent.present? &&
-              scope.authenticated?
-          end,
-        ) { object.ai_search_discoveries }
       end
     end
   end

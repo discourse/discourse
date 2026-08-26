@@ -225,6 +225,25 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     end
   end
 
+  describe ".search_features" do
+    fab!(:follow_up_agent) do
+      Fabricate(:ai_agent, allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]])
+    end
+    fab!(:query_rewrite_agent, :ai_agent)
+
+    it "includes the discovery, query rewrite, and follow-up agents" do
+      SiteSetting.ai_discover_agent = ai_agent.id
+      SiteSetting.ai_discover_query_rewrite_agent = query_rewrite_agent.id
+      SiteSetting.ai_discover_follow_up_agent = follow_up_agent.id
+
+      expect(described_class.search_features.first.agent_ids).to contain_exactly(
+        ai_agent.id,
+        query_rewrite_agent.id,
+        follow_up_agent.id,
+      )
+    end
+  end
+
   describe "#agent_ids" do
     it "returns the agent id from site settings" do
       ai_feature =
