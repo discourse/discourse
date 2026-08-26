@@ -105,6 +105,48 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         )
       end
 
+      it "applies each filter to its own dimension" do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/other",
+          country_code: "GB",
+          asn: 64_500,
+          ip_address: "198.51.100.1",
+          normalized_referrer: "other.example",
+          normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+          session_id: "other",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          browser: :firefox,
+          created_at: Time.zone.local(2026, 5, 10, 11),
+        )
+        DiscourseIpInfo
+          .stubs(:get)
+          .with do |ip, **options|
+            ip.to_s.start_with?("192.0.2.") &&
+              options == { locale: I18n.locale, resolve_hostname: false }
+          end
+          .returns(
+            country_code: "US",
+            country: "United States",
+            asn: 64_496,
+            organization: "Example Network",
+          )
+
+        {
+          top_url: %w[top_urls /browser-4 /browser-4],
+          entry_url: %w[entry_urls /browser-4 /browser-4],
+          referrer: ["referrers", [""], ""],
+          country: %w[countries US US],
+          network: %w[networks AS64496 AS64496],
+          browser: %w[browsers chrome chrome],
+          ip: %w[ip_addresses 192.0.2.5 192.0.2.5],
+        }.each do |filter, (dimension, filter_value, expected_value)|
+          traffic = described_class.call(params: params.merge(filter => filter_value)).traffic
+
+          expect(traffic.dig(:dimensions, dimension).pluck(:value)).to eq([expected_value])
+        end
+      end
+
       it "uses only local IP data to produce country and network labels" do
         DiscourseIpInfo
           .expects(:get)

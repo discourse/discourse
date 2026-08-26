@@ -104,6 +104,12 @@ module PageObjects
         end
       end
 
+      def has_no_row?(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_no_css?("[data-test-site-traffic-row]", text: label)
+        end
+      end
+
       def has_url_link?(card:, label:, href:)
         within("[data-test-site-traffic-card='#{card}']") do
           has_css?("a[href='#{href}']", exact_text: label)
