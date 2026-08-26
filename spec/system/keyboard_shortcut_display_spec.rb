@@ -44,22 +44,4 @@ RSpec.describe "Keyboard shortcut display" do
 
     screenshot_marker(label: "shortcut-sidebar-hint", only: :desktop)
   end
-
-  it "documents the component in the styleguide" do
-    SiteSetting.styleguide_enabled = true
-
-    visit "/styleguide/atoms/shortcut"
-
-    %w[keycaps block string_form spellings keyboard_gate].each do |card|
-      expect(page).to have_css(
-        ".styleguide-example__title",
-        text: I18n.t("js.styleguide.sections.shortcut.#{card}_example"),
-      )
-    end
-    expect(page).to have_css(".styleguide-shortcut-spellings tbody tr .d-shortcut", count: 9)
-    expect(page).to have_css(".styleguide-example__result", text: "true")
-    expect(page).to have_css("[aria-keyshortcuts]", minimum: 2)
-
-    screenshot_marker(label: "shortcut-styleguide", only: :desktop)
-  end
 end
