@@ -58,7 +58,7 @@ and breaks the day a consumer passes a getter-produced closure.
 `#keyFor` and the `rows` projection stay on the component: the engine is not
 their caller, and `rows` carries no `@cached`.
 
-`#refocusRow` stays on the component because it resolves against the element the
+`#refocusIndex` stays on the component because it resolves against the element the
 keyboard modifier installs on. An engine holding that element would have
 captured `null` at construction and fallen back to a document-wide query, which
 lands on the wrong list as soon as two index-keyed members share a key.

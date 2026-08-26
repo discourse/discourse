@@ -41,7 +41,7 @@ module("Unit | ui-kit | DReorderableList | MoveEngine", function (hooks) {
         announceBoundary() {},
         noteRun() {},
       },
-      refocusRow() {},
+      refocusIndex() {},
     });
     return { engine, rows, moves };
   }
@@ -120,7 +120,7 @@ module("Unit | ui-kit | DReorderableList | MoveEngine", function (hooks) {
         announceBoundary() {},
         noteRun() {},
       },
-      refocusRow() {},
+      refocusIndex() {},
     });
 
     engine.move("a", "down", "menu");

@@ -447,7 +447,7 @@ export default class DReorderableList<T> extends Component<
       announcer: this.#announcer,
       // Stays on the component: it resolves against the list element the
       // keyboard modifier installs on, which does not exist yet here.
-      refocusRow: (key: string) => this.#refocusRow(key),
+      refocusIndex: (index: number) => this.#refocusIndex(index),
     });
 
     this.menuCoordinator = new MoveMenuCoordinator({
@@ -486,8 +486,9 @@ export default class DReorderableList<T> extends Component<
           this.#engine.commitCrossMove(sourceListId, key, toIndex, "menu");
           // Focus follows the item across: the row is destroyed in the source
           // list's iteration and rebuilt in this one, so only the destination
-          // can put focus back on it.
-          this.#refocusRow(key);
+          // can put focus back on it. By landing slot, since the source's key
+          // means nothing here on a list keyed by position.
+          this.#refocusIndex(toIndex);
         },
         removalProjection: (key: string) => this.#engine.removalProjection(key),
       });
@@ -776,17 +777,26 @@ export default class DReorderableList<T> extends Component<
    * blurs it. Without this a keyboard user lands on the body after one move
    * and cannot make a second.
    *
-   * @param key - The row key to refocus.
+   * Addressed by visible index rather than by key, and resolved against the
+   * projection as it stands after the render. A list keyed by position hands
+   * the vacated key to whichever row filled the slot, so a key captured before
+   * the move names the wrong row by the time this runs.
+   *
+   * @param index - The moved row's visible index after the move.
    */
-  #refocusRow(key: string) {
+  #refocusIndex(index: number) {
     schedule("afterRender", () => {
       if (isDestroying(this)) {
+        return;
+      }
+      const row = this.rows[index];
+      if (!row) {
         return;
       }
       const root = this.#listElement ?? document;
       root
         .querySelector<HTMLElement>(
-          `[data-reorderable-key="${CSS.escape(key)}"] .d-reorderable-list__handle`
+          `[data-reorderable-key="${CSS.escape(row.key)}"] .d-reorderable-list__handle`
         )
         ?.focus();
     });

@@ -36,7 +36,7 @@ interface MoveEngineOptions<T> {
    * to a document-wide query, which lands on the wrong list as soon as two
    * index-keyed members share a key.
    */
-  refocusRow: (key: string) => void;
+  refocusIndex: (index: number) => void;
 }
 
 /**
@@ -51,20 +51,20 @@ export default class MoveEngine<T> {
   #rows: () => Row<T>[];
   #listId: () => string;
   #announcer: ReorderAnnouncer<T>;
-  #refocusRow: (key: string) => void;
+  #refocusIndex: (index: number) => void;
 
   constructor({
     args,
     rows,
     listId,
     announcer,
-    refocusRow,
+    refocusIndex,
   }: MoveEngineOptions<T>) {
     this.#args = args;
     this.#rows = rows;
     this.#listId = listId;
     this.#announcer = announcer;
-    this.#refocusRow = refocusRow;
+    this.#refocusIndex = refocusIndex;
   }
 
   /**
@@ -107,15 +107,22 @@ export default class MoveEngine<T> {
     }
 
     this.#announcer.noteRun(key, method);
-    this.commitSeqMove(method, rows, seq, from, to);
-    this.#refocusRow(key);
+    const committed = this.commitSeqMove(method, rows, seq, from, to);
+    // Addressed by where the row landed, not by the key it had. On a list keyed
+    // by position that key now belongs to whichever row took the vacated slot,
+    // so refocusing by it hands the next press a different row and the two
+    // trade places for as long as the reader holds the chord.
+    if (committed) {
+      this.#refocusIndex(committed.toIndex);
+    }
   }
 
   /**
    * The single commit both input methods funnel into: splices the move within
    * the movable subsequence, re-interleaves it with the frozen rows (which
    * keep their exact visible indices), suppresses no-ops, calls `@onMove`
-   * once, and announces once.
+   * once, and announces once. Returns the committed move, or `null` for a
+   * no-op, so a caller can address the row by where it landed.
    *
    * @param method - Which input method asked for the move.
    * @param rows - The current row projection.
@@ -129,11 +136,12 @@ export default class MoveEngine<T> {
     seq: Row<T>[],
     from: number,
     to: number
-  ) {
+  ): ReorderableMove<T> | null {
     const move = this.#buildSeqMove(method, rows, seq, from, to);
     if (move) {
       this.#finalize(move);
     }
+    return move;
   }
 
   /**

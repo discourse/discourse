@@ -4306,6 +4306,51 @@ module(
         );
     });
 
+    test("a repeated chord carries the same row down an index-keyed list", async function (assert) {
+      // Where the key is the position, refocusing by the key the row had before
+      // the move lands on whichever row took that slot — so the next press
+      // moves the wrong item and the two swap back and forth forever.
+      const items = trackedArray(["Alpha", "Bravo", "Charlie"]);
+      const indexKey = "@index";
+      const handleMove = (move) => {
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key={{indexKey}}
+            @label={{label}}
+            @onMove={{handleMove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item}}>{{item}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await moveViaChord("0", "down");
+
+      assert.deepEqual(renderedItemOrder(), ["Bravo", "Alpha", "Charlie"]);
+      assert
+        .dom(handleSelector("1"))
+        .isFocused("focus follows the row that moved, not the slot it left");
+
+      await triggerKeyEvent(handleSelector("1"), "keydown", "ArrowDown", {
+        altKey: true,
+      });
+
+      assert.deepEqual(
+        renderedItemOrder(),
+        ["Bravo", "Charlie", "Alpha"],
+        "so pressing again carries the same row further rather than swapping it back"
+      );
+      assert.dom(handleSelector("2")).isFocused();
+    });
+
     test("Alt with an arrow moves the row and keeps focus on its handle", async function (assert) {
       const items = trackedArray(objectItems());
       const moves = [];
