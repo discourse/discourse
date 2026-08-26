@@ -4,6 +4,8 @@ class ExportCsvController < ApplicationController
   requires_login
   skip_before_action :preload_json, :check_xhr, only: [:show]
 
+  MAX_ARG_VALUE_LENGTH = 300
+
   def export_entity
     entity = export_params[:entity]
     entity_id = params.dig(:args, :export_user_id)&.to_i if entity == "user_archive"
@@ -11,14 +13,9 @@ class ExportCsvController < ApplicationController
     raise Discourse::InvalidParameters.new(:entity) unless entity.is_a?(String) && entity.size < 100
 
     (export_params[:args] || {}).each do |key, value|
-      valid =
-        if value.is_a?(Array)
-          value.all? { |v| (v.is_a?(String) || v.is_a?(Integer)) && v.to_s.size < 100 }
-        else
-          value.is_a?(String) && value.size < 100
-        end
-
-      raise Discourse::InvalidParameters.new("args.#{key}") unless valid
+      unless value.is_a?(String) && value.size < MAX_ARG_VALUE_LENGTH
+        raise Discourse::InvalidParameters.new("args.#{key}")
+      end
     end
 
     if entity == "user_archive"
@@ -97,7 +94,7 @@ class ExportCsvController < ApplicationController
         params.require(:entity)
         params.permit(
           :entity,
-          args: [*Report::FILTERS, *UserHistory.staff_filters, category_ids: [], groups: []],
+          args: [*Report::FILTERS, *UserHistory.staff_filters, :category_ids, :groups],
         ).to_h
       end
   end

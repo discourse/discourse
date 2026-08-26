@@ -168,34 +168,34 @@ RSpec.describe ExportCsvController do
       end
 
       it "fails requests where the name arg is too long" do
-        post "/export_csv/export_entity.json", params: { entity: "foo", args: { name: "x" * 200 } }
+        post "/export_csv/export_entity.json", params: { entity: "foo", args: { name: "x" * 300 } }
         expect(response.status).to eq(400)
       end
 
-      it "accepts array-shaped filter args like category_ids and groups" do
+      it "accepts comma-separated filter args like category_ids and groups" do
         post "/export_csv/export_entity.json",
              params: {
                entity: "report",
                args: {
                  name: "posters_by_member_type",
-                 category_ids: %w[1 2],
-                 groups: %w[new_members staff],
+                 category_ids: "1,2",
+                 groups: "new_members,staff",
                },
              }
         expect(response.status).to eq(200)
 
         job_data = Jobs::ExportCsvFile.jobs.last["args"].first
-        expect(job_data["args"]["category_ids"]).to eq(%w[1 2])
-        expect(job_data["args"]["groups"]).to eq(%w[new_members staff])
+        expect(job_data["args"]["category_ids"]).to eq("1,2")
+        expect(job_data["args"]["groups"]).to eq("new_members,staff")
       end
 
-      it "fails requests where an array filter arg contains an oversized value" do
+      it "fails requests where a filter arg is too long" do
         post "/export_csv/export_entity.json",
              params: {
                entity: "report",
                args: {
                  name: "posters_by_member_type",
-                 groups: ["x" * 200],
+                 groups: "x" * 300,
                },
              }
         expect(response.status).to eq(400)

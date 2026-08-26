@@ -274,7 +274,7 @@ RSpec.describe Jobs::ExportCsvFile do
       expect(report.second).to contain_exactly("2010-01-03", "1", "")
     end
 
-    it "threads array-shaped category_ids and groups filters through for posters_by_member_type" do
+    it "threads comma-separated category_ids and groups filters through for posters_by_member_type" do
       target_category = Fabricate(:category)
       other_category = Fabricate(:category)
       group = Fabricate(:group)
@@ -294,8 +294,8 @@ RSpec.describe Jobs::ExportCsvFile do
       )
 
       exporter.extra["name"] = "posters_by_member_type"
-      exporter.extra["category_ids"] = [target_category.id]
-      exporter.extra["groups"] = [Report.group_token(group.id)]
+      exporter.extra["category_ids"] = target_category.id.to_s
+      exporter.extra["groups"] = Report.group_token(group.id)
 
       report = export_report
 

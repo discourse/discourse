@@ -12,7 +12,7 @@ export default class Groups extends FilterComponent {
     this.modal.show(CompareGroups, {
       model: {
         currentTokens: this.filter?.default ?? [],
-        onApply: (tokens) => this.applyFilter(this.filter.id, tokens),
+        onApply: (tokens) => this.applyFilter(this.filter.id, tokens.join(",")),
       },
     });
   }
