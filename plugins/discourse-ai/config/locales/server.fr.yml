@@ -45,6 +45,7 @@ fr:
         flagged_post: |
           %{score_reason}
           %{response}
+        flagged_post_response: "Réponse du modèle : %{llm_response}"
         notify_author_pm:
           subject: "Votre publication a été temporairement retirée pour vérification"
           body: |

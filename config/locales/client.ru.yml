@@ -4545,7 +4545,6 @@ ru:
       reply_as_new_private_message: "Ответить в новом сообщении тем же адресатам"
       continue_discussion: "Продолжая обсуждение из темы %{postLink}:"
       follow_quote: "перейти к цитируемому сообщению"
-      show_full: "Показать полный текст"
       show_hidden: "Просмотр игнорируемого контента."
       deleted_by_author_simple: "(сообщение удалено автором)"
       collapse: "свернуть"

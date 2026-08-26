@@ -44,6 +44,7 @@ uk:
   site_settings:
     map_events_to_color: "Призначити колір для кожного тегу або категорії."
     map_events_title: "Перезаписує «Події» у заголовку бічної панелі «Майбутні події» для кожної категорії."
+    discourse_events_enabled: "Увімкніть плагін Discourse Events. Це додасть підтримку тегу [calendar][/calendar] у першому дописі теми."
     discourse_post_event_enabled: "Увімкнути функції подій. Примітка: також потрібно увімкнути {{setting:discourse_events_enabled}}."
     displayed_invitees_limit: "Обмежує кількість запрошених, що відображаються в події."
     display_post_event_date_on_topic_title: "Відображає дату події після назви теми."
@@ -110,6 +111,10 @@ uk:
     livestream:
       chat:
         topic_reference_message: "Цей канал призначений для події [%{title}] (%{url}) - відвідайте тему для подробиць та відповідайте."
+      zoom:
+        frame_title: "Вебінар у Zoom"
+        frame_join: "Приєднатися до вебінару"
+        frame_joining: "Підключення…"
     calendar_must_be_in_first_post: "Тег календаря можна використовувати лише в першому дописі теми."
     more_than_one_calendar: "Ви не можете мати більше одного календаря в публікації."
     more_than_two_dates: "Повідомлення календаря теми не може містити більше двох дат."
@@ -146,6 +151,7 @@ uk:
           end_must_be_a_valid_date: "Дата закінчення повинна бути дійсною датою."
           invalid_recurrence: "Періодичність повинна бути однією з наступних: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Часовий пояс не розпізнано."
+          invalid_url: "URL-адреса має бути дійсною веб-адресою."
           acting_user_not_allowed_to_create_event: "Поточний користувач не може створювати події."
           acting_user_not_allowed_to_act_on_this_event: "Поточний користувач не має права впливати на цю подію."
           invalid_allowed_groups: "Неправильні дозволені групи."

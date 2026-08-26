@@ -644,8 +644,6 @@ de:
         successful: "Erfolgreich"
         failed: "Fehlgeschlagen"
         unknown: "Unbekannt"
-        topic_id: "Themen-ID"
-        post_id: "Beitrags-ID"
         time: "Zeit"
         when: "Wann"
         outcome: "Ergebnis"
@@ -661,9 +659,7 @@ de:
         duration: "Dauer"
         cost: "Kosten"
         actions: "Aktionen"
-        filters:
-          title: "Filter"
-          period: "Zeitraum"
+        view_details: "Details"
         periods:
           hour: "Letzte Stunde"
           day: "Letzte 24 Stunden"

@@ -4365,7 +4365,6 @@ zh_CN:
       reply_as_new_private_message: "作为新消息回复给相同的收件人"
       continue_discussion: "从%{postLink}继续讨论："
       follow_quote: "转到引用的帖子"
-      show_full: "显示完整帖子"
       show_hidden: "查看已忽略的内容。"
       deleted_by_author_simple: "（帖子已被作者删除）"
       collapse: "收起"

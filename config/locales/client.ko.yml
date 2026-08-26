@@ -2926,7 +2926,6 @@ ko:
       reply_as_new_private_message: "같은 수신자에게 새 메시지로 댓글 달기"
       continue_discussion: "%{postLink}에서 토론 계속하기:"
       follow_quote: "인용한 게시물로 이동"
-      show_full: "전체 게시물 표시"
       show_hidden: "무시된 콘텐츠를 봅니다."
       deleted_by_author_simple: "(작성자가 삭제한 게시물)"
       collapse: "접기"

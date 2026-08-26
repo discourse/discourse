@@ -543,8 +543,6 @@ es:
         successful: "Exitoso"
         failed: "Falló"
         unknown: "Desconocido"
-        topic_id: "ID del tema"
-        post_id: "ID de la publicación"
         time: "Hora"
         when: "Cuándo"
         outcome: "Resultado"
@@ -560,8 +558,7 @@ es:
         duration: "Duración"
         cost: "Coste"
         actions: "Acciones"
-        filters:
-          title: "Filtros"
+        view_details: "Detalles"
         periods:
           hour: "Última hora"
           day: "Últimas 24 horas"

@@ -123,8 +123,6 @@ nb_NO:
         successful: "Vellykket"
         failed: "Feilet"
         unknown: "Ukjent"
-        topic_id: "Emne-ID"
-        post_id: "Innleggs-ID"
         time: "Tid"
         when: "Når"
         request: "Forespørsel"
@@ -136,8 +134,7 @@ nb_NO:
         post_short: "Innlegg %{id}"
         duration: "Varighet"
         actions: "Handlinger"
-        filters:
-          title: "Filter"
+        view_details: "Detaljer"
         periods:
           day: "Siste 24 timer"
           week: "Siste 7 dager"

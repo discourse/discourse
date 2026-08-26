@@ -3031,7 +3031,6 @@ ro:
       reply_as_new_private_message: "Răspunde cu un mesaj nou aceluiași destinatar"
       continue_discussion: "În continuarea discuției de la %{postLink}:"
       follow_quote: "mergi la postarea citată"
-      show_full: "Arată postarea în întregime"
       collapse: "restrânge"
       load_more_replies: "încarcă mai multe răspunsuri"
       sr_load_more_replies: "Încarcă mai multe răspunsuri încorporate"

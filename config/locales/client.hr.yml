@@ -4032,7 +4032,6 @@ hr:
       reply_as_new_private_message: "Odgovorite novom porukom istim primateljima."
       continue_discussion: "Nastavak rasprave iz %{postLink}:"
       follow_quote: "idi na citiranu objavu"
-      show_full: "Prikaži cijelu objavu"
       show_hidden: "Pogledajte zanemareni sadržaj."
       deleted_by_author_simple: "(post izbrisao autor)"
       collapse: "sakrij"

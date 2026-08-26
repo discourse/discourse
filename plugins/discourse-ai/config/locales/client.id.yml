@@ -165,7 +165,6 @@ id:
         apply: "menerapkan"
         failed: "Gagal"
         unknown: "Tidak diketahui"
-        topic_id: "ID Topik"
         time: "Waktu"
         when: "Ketika"
         model: "Model"
@@ -175,6 +174,7 @@ id:
         post: "Postingan"
         duration: "Durasi"
         actions: "Aksi"
+        view_details: "Detil"
         periods:
           day: "24 jam terakhir"
           week: "7 hari terakhir"

@@ -2605,7 +2605,6 @@ gl:
       reply_as_new_private_message: "Responderlles como nova mensaxe aos mesmos destinatarios"
       continue_discussion: "Continuar a discusión de %{postLink}:"
       follow_quote: "ir á publicación citada"
-      show_full: "Amosar a publicación completa"
       show_hidden: "Ver o contido ignorado."
       collapse: "reducir"
       expand_collapse: "ampliar/reducir"

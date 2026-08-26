@@ -4107,7 +4107,6 @@ sk:
       reply_as_new_private_message: "Odpovedzte ako novú správu tým istým príjemcom"
       continue_discussion: "Pokračovanie diskusie z %{postLink}:"
       follow_quote: "prejsť na citovaný príspevok"
-      show_full: "Zobraziť celý príspevok"
       show_hidden: "Zobraziť ignorovaný obsah."
       deleted_by_author_simple: "(príspevok vymazaný autorom)"
       collapse: "zbaliť"

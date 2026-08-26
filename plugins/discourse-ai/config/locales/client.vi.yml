@@ -240,8 +240,6 @@ vi:
         successful: "Thành công"
         failed: "Thất bại"
         unknown: "Không biết"
-        topic_id: "ID Chủ đề"
-        post_id: "ID Tút"
         time: "Thời gian"
         when: "Khi"
         outcome: "Kết quả"
@@ -255,9 +253,7 @@ vi:
         post_short: "Tút %{id}"
         duration: "Thời hạn"
         actions: "Hành động"
-        filters:
-          title: "Bộ lọc"
-          period: "Khoảng thời gian"
+        view_details: "Chi tiết"
         periods:
           day: "24 giờ qua"
           week: "7 ngày qua"

@@ -4553,7 +4553,6 @@ fr:
       reply_as_new_private_message: "Répondre par un nouveau message direct adressé aux mêmes destinataires"
       continue_discussion: "Suite du sujet %{postLink} :"
       follow_quote: "accéder au message cité"
-      show_full: "Afficher le message complet"
       show_hidden: "Afficher le contenu ignoré."
       deleted_by_author_simple: "(message supprimé par son auteur)"
       collapse: "réduire"

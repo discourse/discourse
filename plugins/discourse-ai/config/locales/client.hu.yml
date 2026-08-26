@@ -144,8 +144,6 @@ hu:
         successful: "Sikeres"
         failed: "Sikertelen"
         unknown: "Ismeretlen"
-        topic_id: "Témaazonosító"
-        post_id: "Hozzászólás-azonosító"
         time: "Idő"
         when: "Mikor"
         outcome: "Eredmény"
@@ -159,8 +157,7 @@ hu:
         post_short: "%{id}. Bejegyzés"
         duration: "Időtartam"
         actions: "Műveletek"
-        filters:
-          title: "Szűrők"
+        view_details: "Részletek"
         periods:
           day: "Elmúlt 24 óra"
           week: "Elmúlt 7 nap"

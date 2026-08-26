@@ -4418,7 +4418,6 @@ cs:
       reply_as_new_private_message: "Odpověď poslat jako zprávu stejným příjemcům."
       continue_discussion: "Pokračování diskuze z %{postLink}:"
       follow_quote: "přejít na citovaný příspěvek"
-      show_full: "Zobrazit celý příspěvek"
       show_hidden: "Zobrazit ignorovaný obsah."
       deleted_by_author_simple: "(příspěvek smazán autorem)"
       collapse: "sbalit"

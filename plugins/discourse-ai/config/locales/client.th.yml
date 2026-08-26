@@ -106,8 +106,6 @@ th:
         successful: "สำเร็จ"
         failed: "ล้มเหลว"
         unknown: "ไม่ทราบ"
-        topic_id: "หมายเลขกระทู้"
-        post_id: "หมายเลขโพสต์"
         time: "เวลา"
         when: "เมื่อ"
         request: "ร้องขอ"
@@ -117,6 +115,7 @@ th:
         post_short: "โพสต์ %{id}"
         duration: "ช่วงเวลา"
         actions: "การกระทำ"
+        view_details: "รายละเอียด"
         periods:
           day: "24 ชั่วโมงที่ผ่านมา"
           week: "7 วันที่ผ่านมา"

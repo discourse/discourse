@@ -4101,7 +4101,6 @@ hu:
       reply_as_new_private_message: "Válasz új üzenetként ugyanazoknak a címzetteknek"
       continue_discussion: "A beszélgetés folytatása a(z) %{postLink} oldalról:"
       follow_quote: "ugrás az idézett bejegyzéshez"
-      show_full: "Teljes bejegyzés megtekintése"
       show_hidden: "Letiltott tartalom megtekintése"
       deleted_by_author_simple: "(szerző által törölve)"
       collapse: "összecsukás"

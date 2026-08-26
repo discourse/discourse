@@ -5469,7 +5469,6 @@ ar:
       reply_as_new_private_message: "الرد في رسالة جديدة إلى المستلمين أنفسهم"
       continue_discussion: "متابعة المناقشة من %{postLink}:"
       follow_quote: "انتقل إلى المنشور الذي تم اقتباسه"
-      show_full: "عرض المنشور الكامل"
       show_hidden: "عرض المحتوى الذي تم تجاهله"
       deleted_by_author_simple: "(تم حذف المنشور بواسطة الكاتب)"
       collapse: "طي"

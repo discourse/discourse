@@ -117,8 +117,6 @@ et:
         successful: "Edukas"
         failed: "Ebaõnnestunud"
         unknown: "Teadmata"
-        topic_id: "Teema ID"
-        post_id: "Postituse ID"
         time: "Aeg"
         when: "Millal"
         request: "Taotle"
@@ -129,8 +127,7 @@ et:
         post: "Postitus"
         post_short: "Postitus %{id}"
         actions: "Tegevused"
-        filters:
-          title: "Filtrid"
+        view_details: "Üksikasjad"
         periods:
           custom: "Individuaalne"
         detail:

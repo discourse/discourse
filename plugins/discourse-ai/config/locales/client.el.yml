@@ -213,8 +213,6 @@ el:
         successful: "Επιτυχής"
         failed: "Απέτυχε"
         unknown: "Άγνωστο"
-        topic_id: "ID Θέματος"
-        post_id: "Post ID"
         time: "Ώρα"
         when: "Πότε"
         outcome: "Αποτέλεσμα"
@@ -229,9 +227,7 @@ el:
         post_short: "Ανάρτηση %{id}"
         duration: "Διάρκεια"
         actions: "Ενέργειες"
-        filters:
-          title: "Φίλτρα"
-          period: "Χρονική περίοδος"
+        view_details: "Λεπτομέρειες"
         periods:
           day: "Τελευταίες 24 ώρες"
           week: "Τελευταίες 7 ημέρες"

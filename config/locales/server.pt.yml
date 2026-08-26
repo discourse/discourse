@@ -409,7 +409,7 @@ pt:
         name: "Nome da Categoria"
       topic:
         title: "Título"
-        featured_link: "Ligação em Destaque"
+        featured_link: "Hiperligação em Destaque"
         category_id: "Categoria"
       post:
         raw: "Corpo"

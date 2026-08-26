@@ -488,8 +488,6 @@ ja:
         successful: "成功"
         failed: "失敗しました"
         unknown: "不明"
-        topic_id: "トピック ID"
-        post_id: "投稿 ID"
         time: "時刻"
         when: "日時"
         outcome: "結果"
@@ -505,8 +503,7 @@ ja:
         duration: "期間"
         cost: "料金"
         actions: "アクション"
-        filters:
-          title: "フィルター"
+        view_details: "詳細"
         periods:
           day: "過去 24 時間"
           week: "過去 7 日間"

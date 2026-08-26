@@ -135,8 +135,6 @@ hr:
         successful: "Uspješno"
         failed: "Neuspješno"
         unknown: "Nepoznato"
-        topic_id: "ID teme"
-        post_id: "ID objave"
         time: "Vrijeme"
         when: "Kada"
         request: "Zahtjev"
@@ -148,8 +146,7 @@ hr:
         post_short: "Objava %{id}"
         duration: "Trajanje"
         actions: "Akcije"
-        filters:
-          title: "Filteri"
+        view_details: "Detalji"
         periods:
           hour: "Posljednji sat"
           day: "Posljednja 24 sata"

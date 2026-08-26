@@ -121,8 +121,6 @@ zh_TW:
         apply: "套用"
         successful: "成功"
         failed: "失敗"
-        topic_id: "話題 ID"
-        post_id: "貼文 ID"
         time: "時間"
         when: "時間"
         request: "請求"
@@ -133,8 +131,7 @@ zh_TW:
         post_short: "貼文 %{id}"
         duration: "持續時間"
         actions: "動作"
-        filters:
-          title: "過濾器"
+        view_details: "詳細訊息"
         periods:
           day: "過去 24 小時"
           week: "過去 7 天"

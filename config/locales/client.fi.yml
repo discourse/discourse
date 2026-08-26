@@ -3829,7 +3829,6 @@ fi:
       reply_as_new_private_message: "Vastaa samoille vastaanottajille uudessa viestissä"
       continue_discussion: "Jatkoa ketjulle %{postLink}:"
       follow_quote: "siirry lainattuun viestiin"
-      show_full: "Näytä koko viesti"
       show_hidden: "Katso sivuutettu sisältö."
       deleted_by_author_simple: "(kirjoittajan poistama viesti)"
       collapse: "kutista"

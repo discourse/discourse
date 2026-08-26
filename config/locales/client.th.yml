@@ -2076,7 +2076,6 @@ th:
       reply_as_new_topic: "ตอบด้วยหัวข้อที่ลิงค์ไว้"
       reply_as_new_private_message: "ตอบกลับด้วยข้อความใหม่ไปยังผู้รับคนเดียวกัน"
       follow_quote: "ไปยังโพสต์ที่ถูกกล่าวถึง"
-      show_full: "แสดงโพสต์ทั้งหมด"
       collapse: "ย่อ"
       expand_collapse: "ขยาย/ย่อ"
       locked: "ทีมงานได้ปิดโพสต์นี้จากการแก้ไข"

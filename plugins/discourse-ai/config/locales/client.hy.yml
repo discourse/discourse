@@ -117,8 +117,6 @@ hy:
         successful: "Հաջողված"
         failed: "Ձախողված"
         unknown: "Անհայտ"
-        topic_id: "Թեմայի ID"
-        post_id: "Գրառման ID"
         time: "Ժամ"
         when: "Երբ"
         request: "Հարցում"
@@ -129,8 +127,7 @@ hy:
         post: "Գրառում"
         post_short: "Գրառում %{id}"
         actions: "Գործողություններ"
-        filters:
-          title: "Ֆիլտրներ"
+        view_details: "Մանրամասներ"
         periods:
           custom: "Մասնավոր"
         detail:

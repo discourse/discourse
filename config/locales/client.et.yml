@@ -2100,7 +2100,6 @@ et:
       reply_as_new_private_message: "Vasta uue sõnumina samadele adressaatidele"
       continue_discussion: "Jätkates vestlust viitelt %{postLink}:"
       follow_quote: "mine tsiteeritud postituse juurde"
-      show_full: "Näita kogu postitust"
       show_hidden: "Vaata eiratud sisu."
       collapse: "ahenda"
       expand_collapse: "laienda/ahenda"

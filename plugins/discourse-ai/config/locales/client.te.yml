@@ -115,8 +115,6 @@ te:
         apply: "దరఖాస్తు చేసుకోండి"
         successful: "విజయవంతమైంది"
         failed: "విఫలం"
-        topic_id: "విషయపు ఐడీ"
-        post_id: "పోస్ట్ ఐడీ"
         time: "కాలం"
         when: "ఎప్పుడు"
         request: "అభ్యర్థన"
@@ -127,6 +125,7 @@ te:
         post_short: "పోస్ట్ %{id}"
         duration: "వ్యవధి"
         actions: "చర్యలు"
+        view_details: "వివరాలు"
         periods:
           custom: "అనురూప"
         detail:
