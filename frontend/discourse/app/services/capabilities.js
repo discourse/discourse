@@ -11,7 +11,11 @@ const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 const ua = navigator.userAgent;
 
 const anyPointerCoarseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
-const anyPointerFineQuery = new TrackedMediaQuery("(any-pointer: fine)");
+/**
+ * The primary pointer, not `any-pointer`: a phone with stylus support reports
+ * a fine pointer among its inputs while its primary pointer stays coarse.
+ */
+const finePointerQuery = new TrackedMediaQuery("(pointer: fine)");
 
 /**
  * Keys an on-screen keyboard never sends: a keydown for one of them proves a
@@ -172,12 +176,12 @@ class _Capabilities {
   /**
    * Whether the device is likely to have a physical keyboard, so keyboard
    * shortcuts are worth showing. There is no direct signal for this, so it is
-   * inferred: a fine pointer (mouse or trackpad) implies a desktop-class
+   * inferred: a fine primary pointer (mouse or trackpad) implies a desktop-class
    * setup, and a keydown for a key on-screen keyboards never send proves one
    * for the rest of the session.
    */
   get hasKeyboard() {
-    return anyPointerFineQuery.matches || keyboardEvidence.seen;
+    return finePointerQuery.matches || keyboardEvidence.seen;
   }
 
   get userHasBeenActive() {
