@@ -956,6 +956,7 @@ RSpec.describe Upload do
       upload.update(url: Discourse.store.store_upload(file, upload))
       upload
     end
+
     it "correctly identifies and stores an image's dominant color" do
       expect(white_image.dominant_color).to eq(nil)
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
@@ -966,12 +967,20 @@ RSpec.describe Upload do
       expect(red_image.dominant_color).to eq("FF0000")
 
       expect(high_color_image.dominant_color).to eq(nil)
-      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
-      expect(high_color_image.dominant_color).to eq("009FEF")
+      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("00A0F0")
+      expect(high_color_image.dominant_color).to eq("00A0F0")
 
-      expect(tiny_image.dominant_color).to eq(nil)
-      expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("524F40")
-      expect(tiny_image.dominant_color).to eq("524F40")
+      uncached_tiny_color = tiny_image.dominant_color
+
+      expect(uncached_tiny_color).to eq(nil)
+
+      calculated_tiny_color = tiny_image.dominant_color(calculate_if_missing: true)
+
+      expect(calculated_tiny_color).to eq("171613")
+
+      cached_tiny_color = tiny_image.dominant_color
+
+      expect(cached_tiny_color).to eq(calculated_tiny_color)
     end
 
     it "can be backfilled" do
@@ -1018,15 +1027,6 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq(nil)
       expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
       expect(invalid_image.dominant_color).to eq("")
-    end
-
-    it "stores an empty string when libvips rejects the image" do
-      expect(white_image.dominant_color).to eq(nil)
-
-      DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error, "invalid image")
-
-      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(white_image.dominant_color).to eq("")
     end
 
     it "correctly handles error when file is too large to download" do

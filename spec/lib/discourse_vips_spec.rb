@@ -1,141 +1,271 @@
 # frozen_string_literal: true
 
+fork_test_skip = "requires Linux fork isolation" if RUBY_PLATFORM.match?(/darwin/)
+
 RSpec.describe DiscourseVips do
-  describe ".version" do
-    it "returns the interface and libvips versions" do
-      expect(described_class.version).to match(/\A1-8\.\d+\.\d+\z/)
+  TEST_WORKER_PATH = Rails.root.join("spec/fixtures/discourse_vips/test_worker.rb").to_s
+
+  after { described_class.before_fork }
+
+  def use_test_worker
+    described_class.before_fork
+    command = described_class.send(:worker_command).dup
+    command[-3] = TEST_WORKER_PATH
+    described_class.stubs(:worker_command).returns(command)
+  end
+
+  def runtime_state
+    JSON.parse(described_class.vips("test-runtime", operation: :test))
+  end
+
+  def wait_until(timeout: 5)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+    until yield
+      raise "condition was not met" if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+
+      sleep 0.01
     end
+  end
 
-    it "fails closed without Landlock outside local environments" do
-      Rails.stubs(env: ActiveSupport::EnvironmentInquirer.new("production"))
-      Discourse::SafeExec.stubs(landlock_supported?: false)
+  def process_alive?(pid)
+    Process.kill(0, pid)
+    !File.read("/proc/#{pid}/stat").split.fetch(2).eql?("Z")
+  rescue Errno::ESRCH
+    false
+  rescue Errno::ENOENT
+    true
+  end
 
-      expect { described_class.version }.to raise_error(
-        DiscourseVips::Error,
-        "Cannot run libvips because Landlock sandboxing is unavailable",
+  def blocked_request(directory, name, timeout: 5)
+    marker_path = File.join(directory, "#{name}.started")
+    release_path = File.join(directory, "#{name}.release")
+    thread =
+      Thread.new do
+        described_class.vips(
+          "test-block",
+          marker_path,
+          release_path,
+          name,
+          operation: :test,
+          read: [directory],
+          write: [directory],
+          timeout:,
+        )
+      end
+    wait_until { File.exist?(marker_path) }
+    [thread, marker_path, release_path]
+  end
+
+  def raw_worker_response(payload)
+    request_reader, request_writer = IO.pipe
+    response_reader, response_writer = IO.pipe
+    pid =
+      Process.spawn(
+        described_class.send(:worker_environment),
+        *described_class.send(:worker_command),
+        3 => request_reader,
+        4 => response_writer,
+        :in => File::NULL,
+        :out => File::NULL,
+        :close_others => true,
+        :pgroup => true,
+        :unsetenv_others => true,
       )
+    request_reader.close
+    response_writer.close
+    request_writer.write(payload)
+    request_writer.close
+    response = Timeout.timeout(5) { response_reader.read }
+    Process.waitpid(pid)
+    response
+  ensure
+    [request_reader, request_writer, response_reader, response_writer].each do |io|
+      io&.close unless io&.closed?
+    end
+    if pid && process_alive?(pid)
+      Process.kill("KILL", -pid)
+      Process.waitpid(pid)
     end
   end
 
-  describe ".generate_letter_avatar" do
-    it "requires a supported font file" do
-      expect {
-        described_class.generate_letter_avatar(
-          letter: "A",
-          background_color: [198, 125, 40],
-          font_path: nil,
-          output_path: "/tmp/avatar.png",
-        )
-      }.to raise_error(ArgumentError, "font_path must reference a supported font file")
-    end
+  it "starts a minimal worker lazily and records image-processing instrumentation",
+     skip: fork_test_skip do
+    use_test_worker
+    SiteSetting.instrument_image_processing = true
 
-    it "rejects an unapproved font file" do
-      Dir.mktmpdir("discourse-vips-font") do |directory|
-        font_path = File.join(directory, "NotoSans-Regular.woff2")
-        File.write(font_path, "not a font")
-
-        expect {
-          described_class.generate_letter_avatar(
-            letter: "A",
-            background_color: [198, 125, 40],
-            font_path:,
-            output_path: "/tmp/avatar.png",
-          )
-        }.to raise_error(ArgumentError, "font_path must reference a supported font file")
+    events =
+      DiscourseEvent.track_events(:image_processing_finished) do
+        state = runtime_state
+        expect(state.slice("rails", "bundler", "rubygems").values).to all(eq(false))
+        expect(state["landlock"]).to eq(true)
+        expect(state["ruby_threads"]).to eq(1)
+        expect(state["native_tasks_after"]).to eq(state["native_tasks_before"])
+        expect(state["operation_pid"]).not_to eq(state["worker_pid"])
       end
-    end
 
-    it "renders an opaque 360 by 360 RGB PNG" do
-      Dir.mktmpdir("discourse-vips-spec") do |directory|
-        output_path = File.join(directory, "avatar.png")
-        font_path = File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2")
-
-        described_class.generate_letter_avatar(
-          letter: "<",
-          background_color: [198, 125, 40],
-          font_path:,
-          output_path:,
-        )
-
-        image = ChunkyPNG::Image.from_file(output_path)
-        expect([image.width, image.height]).to eq([360, 360])
-        expect(image.pixels.all? { |pixel| ChunkyPNG::Color.a(pixel) == 255 }).to eq(true)
-        expect(image[0, 0]).to eq(ChunkyPNG::Color.rgb(198, 125, 40))
-        expect(image.pixels.uniq.length).to be > 2
-      end
-    end
+    expect(events.first[:params].first.except(:duration_seconds)).to eq(
+      operation: "test",
+      success: true,
+    )
   end
 
-  describe ".dominant_color" do
-    it "returns an uppercase RGB hex color" do
-      input_path = file_from_fixtures("cropped.png").path
+  it "routes concurrent responses to the right callers without head-of-line blocking",
+     skip: fork_test_skip do
+    use_test_worker
 
-      expect(described_class.dominant_color(input_path:)).to eq("3A3730")
-    end
+    Dir.mktmpdir("discourse-vips-spec") do |directory|
+      completions = Queue.new
+      blocked, _, release_path = blocked_request(directory, "blocked")
+      blocked.report_on_exception = false
 
-    it "accepts a supported image with a nonstandard file extension" do
-      Tempfile.create(%w[dominant-color .bin], binmode: true) do |file|
-        file.write(File.binread(file_from_fixtures("cropped.png").path))
-        file.flush
-
-        expect(described_class.dominant_color(input_path: file.path)).to eq("3A3730")
-      end
-    end
-
-    it "rejects unsupported image content" do
-      input_path = file_from_fixtures("image.svg").path
-
-      expect { described_class.dominant_color(input_path:) }.to raise_error(DiscourseVips::Error)
-    end
-
-    it "handles concurrent image operations" do
-      input_path = file_from_fixtures("cropped.png").path
-
-      colors =
-        Array.new(4) { Thread.new { described_class.dominant_color(input_path:) } }.map(&:value)
-
-      expect(colors).to eq(%w[3A3730 3A3730 3A3730 3A3730])
-    end
-
-    it "records image-processing instrumentation" do
-      SiteSetting.instrument_image_processing = true
-      input_path = file_from_fixtures("cropped.png").path
-
-      events =
-        DiscourseEvent.track_events(:image_processing_finished) do
-          described_class.dominant_color(input_path:)
+      fast_threads =
+        4.times.map do |index|
+          Thread.new do
+            5.times do |iteration|
+              expected = "#{index}-#{iteration}"
+              value = described_class.vips("test-return", expected, operation: :test)
+              completions << [:fast, expected, value]
+            end
+          end
         end
 
-      payload = events.first[:params].first
-      expect(payload.except(:duration_seconds)).to eq(
-        operation: "upload_dominant_color",
-        success: true,
+      fast_results = 20.times.map { completions.pop(timeout: 5) }
+      expect(fast_results).to all(
+        satisfy { |result| result[0] == :fast && result[1].to_s == result[2] },
       )
-      expect(payload[:duration_seconds]).to be >= 0
+      expect(blocked).to be_alive
+
+      FileUtils.touch(release_path)
+      expect(blocked.value).to eq("blocked")
+      fast_threads.each(&:join)
     end
   end
 
-  describe ".generate_topic_og_image" do
-    it "rasterizes SVG" do
-      Dir.mktmpdir("discourse-vips-spec") do |directory|
-        output_path = File.join(directory, "topic.png")
-        svg_path = file_from_fixtures("image.svg").path
+  it "isolates operation errors, crashes, and timeouts", skip: fork_test_skip do
+    use_test_worker
+    worker_pid = runtime_state.fetch("worker_pid")
 
-        described_class.generate_topic_og_image(svg_path:, output_path:)
-
-        expect(FastImage.type(output_path)).to eq(:png)
+    SiteSetting.instrument_image_processing = true
+    events =
+      DiscourseEvent.track_events(:image_processing_finished) do
+        expect { described_class.vips("unsupported", operation: :test) }.to raise_error(
+          DiscourseVips::Error,
+          "unsupported libvips operation",
+        )
       end
+    expect(events.first[:params].first.except(:duration_seconds)).to eq(
+      operation: "test",
+      success: false,
+    )
+    expect { described_class.vips("test-crash", operation: :test) }.to raise_error(
+      DiscourseVips::Error,
+      "libvips operation failed",
+    )
+    expect {
+      described_class.vips("test-read", Rails.root.join("Gemfile"), operation: :test)
+    }.to raise_error(DiscourseVips::Error, /Permission denied/)
+    expect { described_class.vips("test-network", operation: :test) }.to raise_error(
+      DiscourseVips::Error,
+      /Operation not permitted/,
+    )
+
+    Dir.mktmpdir("discourse-vips-spec") do |directory|
+      request, = blocked_request(directory, "timeout", timeout: 0.05)
+      request.report_on_exception = false
+      expect { request.value }.to raise_error(DiscourseVips::Error, "libvips operation timed out")
     end
 
-    it "rejects raster input" do
-      Dir.mktmpdir("discourse-vips-spec") do |directory|
-        expect {
-          described_class.generate_topic_og_image(
-            svg_path: file_from_fixtures("logo.png").path,
-            output_path: File.join(directory, "topic.png"),
+    expect(runtime_state.fetch("worker_pid")).to eq(worker_pid)
+  end
+
+  it "fails pending requests, removes children, and restarts lazily after the worker crashes",
+     skip: fork_test_skip do
+    use_test_worker
+    worker_pid = runtime_state.fetch("worker_pid")
+
+    Dir.mktmpdir("discourse-vips-spec") do |directory|
+      requests =
+        2.times.map do |index|
+          thread, marker_path, = blocked_request(directory, "crash-#{index}")
+          thread.report_on_exception = false
+          [thread, Integer(File.read(marker_path))]
+        end
+
+      Process.kill("KILL", worker_pid)
+      requests.each { |thread, _| expect { thread.value }.to raise_error(DiscourseVips::Error) }
+      requests.each { |_, child_pid| wait_until { !process_alive?(child_pid) } }
+
+      expect(runtime_state.fetch("worker_pid")).not_to eq(worker_pid)
+    end
+  end
+
+  it "owns a separate worker after a fork and cleans it up when that process exits",
+     skip: fork_test_skip do
+    use_test_worker
+    parent_worker_pid = runtime_state.fetch("worker_pid")
+
+    Dir.mktmpdir("discourse-vips-spec") do |directory|
+      reader, writer = IO.pipe
+      application_pid =
+        fork do
+          reader.close
+          _, marker_path, = blocked_request(directory, "application-exit")
+          writer.write(
+            JSON.generate(
+              worker_pid: runtime_state.fetch("worker_pid"),
+              operation_pid: Integer(File.read(marker_path)),
+            ),
           )
-        }.to raise_error(DiscourseVips::Error)
-      end
+          writer.close
+          exit! 0
+        end
+      writer.close
+      child_processes = JSON.parse(reader.read)
+      Process.waitpid(application_pid)
+
+      expect(child_processes.fetch("worker_pid")).not_to eq(parent_worker_pid)
+      child_processes.each_value { |pid| wait_until { !process_alive?(pid) } }
+      expect(runtime_state.fetch("worker_pid")).to eq(parent_worker_pid)
+    ensure
+      reader&.close
+      writer&.close
     end
+  end
+
+  it "rejects malformed protocol frames" do
+    request = {
+      id: 1,
+      command: ["version"],
+      read: [],
+      write: [Dir.tmpdir],
+      scratch: Dir.tmpdir,
+      timeout: 1,
+      nice: 10,
+    }
+    payloads = [
+      "{\n",
+      JSON.generate(request.merge(id: 0)) << "\n",
+      (JSON.generate(request) << "\n") * 2,
+      ("x" * (65 * 1024)) << "\n",
+      JSON.generate(request),
+    ]
+
+    payloads.each do |payload|
+      responses = raw_worker_response(payload).lines.map { |line| JSON.parse(line) }
+      expect(responses).to include(a_hash_including("status" => "error"))
+    end
+  end
+
+  it "runs supported operations through the image worker" do
+    input_path = file_from_fixtures("cropped.png").path
+
+    expect(
+      described_class.vips(
+        "dominant-color",
+        input_path,
+        operation: :upload_dominant_color,
+        read: [input_path],
+      ),
+    ).to eq("171613")
   end
 end

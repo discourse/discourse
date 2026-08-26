@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "discourse_vips/worker"
+
+if ARGV.first == "operation"
+  request_fd, response_fd = ARGV.drop(1).map { |argument| Integer(argument) }
+  DiscourseVips::Worker.run_operation(
+    request_reader: IO.for_fd(request_fd),
+    result_writer: IO.for_fd(response_fd),
+  )
+else
+  request_fd, response_fd = ARGV.map { |argument| Integer(argument) }
+  Process.setproctitle("discourse vips worker")
+  DiscourseVips::Worker.new(
+    request_reader: IO.for_fd(request_fd),
+    response_writer: IO.for_fd(response_fd),
+  ).run
+end

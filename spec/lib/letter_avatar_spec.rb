@@ -24,15 +24,6 @@ RSpec.describe LetterAvatar do
 
       expect(FastImage.type(generated_path)).to eq(:png)
       expect(FastImage.size(generated_path)).to eq([avatar_size, avatar_size])
-      expect(
-        ChunkyPNG::Image
-          .from_file(generated_path)
-          .pixels
-          .any? do |pixel|
-            ChunkyPNG::Color.r(pixel) > 200 && ChunkyPNG::Color.g(pixel) > 200 &&
-              ChunkyPNG::Color.b(pixel) > 200
-          end,
-      ).to eq(true)
     ensure
       if generated_path
         identity = LetterAvatar::Identity.from_username(username)

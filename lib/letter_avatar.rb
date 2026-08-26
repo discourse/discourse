@@ -20,9 +20,12 @@ class LetterAvatar
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
+  POINTSIZE = 280
   FONT_FILENAME = "NotoSans-Regular.woff2"
+  private_constant :FONT_FILENAME
+
   MACOS_FONT_PATH = "/System/Library/Fonts/Helvetica.ttc"
-  private_constant :FONT_FILENAME, :MACOS_FONT_PATH
+  private_constant :MACOS_FONT_PATH
 
   class << self
     def version
@@ -49,7 +52,10 @@ class LetterAvatar
         fullsize = fullsize_path(identity)
         generate_fullsize(identity) if !cache || !File.exist?(fullsize)
 
-        resize(fullsize, filename, size)
+        # Optimizing here is dubious, it can save up to 2x for large images (eg 359px)
+        # BUT... we are talking 2400 bytes down to 1200 bytes, both fit in one packet
+        # The cost of this is huge, its a 40% perf hit
+        OptimizedImage.resize(fullsize, filename, size, size)
 
         filename
       end
@@ -67,11 +73,16 @@ class LetterAvatar
 
     def generate_fullsize(identity)
       filename = fullsize_path(identity)
-      DiscourseVips.generate_letter_avatar(
-        letter: identity.letter,
-        background_color: identity.color,
-        font_path:,
-        output_path: filename,
+      DiscourseVips.vips(
+        "letter-avatar",
+        ERB::Util.html_escape(identity.letter),
+        filename,
+        format("%02X%02X%02X", *identity.color),
+        "#{font_family} #{POINTSIZE}",
+        font_path,
+        operation: :letter_avatar_render,
+        read: [font_path],
+        write: [File.dirname(filename)],
       )
       filename
     end
@@ -80,7 +91,9 @@ class LetterAvatar
       return @vips_version if @vips_version
 
       @vips_version =
-        Digest::MD5.hexdigest([VERSION.to_s, DiscourseVips.version, font_version].join("\0"))
+        Digest::MD5.hexdigest(
+          [DiscourseVips.vips("version", operation: :vips_version).strip, font_version].join("\0"),
+        )
     end
 
     def cleanup_old
@@ -97,11 +110,6 @@ class LetterAvatar
 
     private
 
-    def resize(from, to, size)
-      DiscourseVips.resize_letter_avatar(input_path: from, output_path: to, size:)
-      FileHelper.optimize_image!(to)
-    end
-
     def font_path
       @font_path ||=
         macos? ? MACOS_FONT_PATH : File.join(DiscourseFonts.path_for_fonts, FONT_FILENAME)
@@ -113,6 +121,10 @@ class LetterAvatar
 
     def macos?
       RbConfig::CONFIG["host_os"].match?(/darwin/i)
+    end
+
+    def font_family
+      macos? ? "Helvetica" : "Noto Sans"
     end
   end
 

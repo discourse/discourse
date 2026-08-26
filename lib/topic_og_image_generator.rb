@@ -42,7 +42,7 @@ class TopicOgImageGenerator
 
   private
 
-  def build_svg
+  def build_svg(asset_directory: nil)
     title = truncated_title
     category_name = @topic.category&.name || ""
     category_color = @topic.category&.color || "888888"
@@ -52,7 +52,7 @@ class TopicOgImageGenerator
     colors = fetch_colors
     logo_upload = SiteSetting.logo.presence || SiteSetting.logo_small
     logo_data_uri = fetch_as_data_uri(logo_upload&.url)
-    logo_path = logo_data_uri
+    logo_path = materialize_asset(logo_data_uri, directory: asset_directory, basename: "logo")
 
     title_lines = word_wrap(title, TITLE_LINE_CHARS)
     truncated = title_lines.length > MAX_TITLE_LINES
@@ -75,7 +75,7 @@ class TopicOgImageGenerator
     author = @topic.user
     avatar_data_uri =
       author ? fetch_as_data_uri(author.avatar_template_url.gsub("{size}", "120")) : nil
-    avatar_path = avatar_data_uri
+    avatar_path = materialize_asset(avatar_data_uri, directory: asset_directory, basename: "avatar")
     username = author&.username
     created_at = @topic.created_at&.strftime("%b %-d, %Y")
 
@@ -311,6 +311,51 @@ class TopicOgImageGenerator
     "#{Discourse.base_url_no_prefix}#{url}"
   end
 
+  def materialize_asset(data_uri, directory:, basename:)
+    return data_uri if directory.nil? || data_uri.blank?
+
+    match = data_uri.match(%r{\Adata:(image/[a-z0-9.+-]+);base64,(.+)\z}m)
+    return nil if match.nil?
+
+    content_type = match[1]
+    bytes = Base64.strict_decode64(match[2])
+
+    if content_type == "image/svg+xml"
+      svg_path = File.join(directory, "#{basename}.svg")
+      png_path = File.join(directory, "#{basename}.png")
+      File.binwrite(svg_path, bytes)
+      ImageMagick.magick(
+        "MSVG:#{svg_path}",
+        png_path,
+        operation: :topic_og_asset_render,
+        read: [svg_path],
+        write: [directory],
+        timeout: 10,
+      )
+      return png_path if File.exist?(png_path)
+
+      return nil
+    end
+
+    extension =
+      { "image/gif" => "gif", "image/jpeg" => "jpg", "image/png" => "png", "image/webp" => "webp" }[
+        content_type
+      ]
+    return nil if extension.nil?
+
+    path = File.join(directory, "#{basename}.#{extension}")
+    File.binwrite(path, bytes)
+    path
+  rescue ArgumentError, Discourse::Utils::CommandError => error
+    Discourse.warn(
+      "Failed to materialize topic OG image asset",
+      topic_id: @topic.id,
+      asset: basename,
+      error: error.message,
+    )
+    nil
+  end
+
   def escape_xml(text)
     text
       .to_s
@@ -326,15 +371,31 @@ class TopicOgImageGenerator
       svg_path = File.join(dir, "og.svg")
       png_path = File.join(dir, "og.png")
 
-      File.write(svg_path, build_svg)
+      File.write(svg_path, build_svg(asset_directory: dir))
 
-      DiscourseVips.generate_topic_og_image(svg_path:, output_path: png_path)
+      ImageMagick.magick(
+        "-background",
+        "none",
+        "-size",
+        "#{OG_WIDTH}x#{OG_HEIGHT}",
+        "MSVG:#{svg_path}",
+        "-depth",
+        "8",
+        "-define",
+        "png:compression-level=9",
+        png_path,
+        operation: :topic_og_render,
+        read: [dir],
+        write: [dir],
+        nice: 10,
+        timeout: 20,
+      )
 
       return nil unless File.exist?(png_path)
       FileHelper.optimize_image!(png_path)
       File.binread(png_path)
     end
-  rescue DiscourseVips::Error => e
+  rescue Discourse::Utils::CommandError => e
     Discourse.warn("Failed to render topic OG image", topic_id: @topic.id, error: e.message)
     nil
   end

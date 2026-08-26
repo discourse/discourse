@@ -4,7 +4,7 @@ require "discourse_vips"
 
 if !Rails.env.production?
   begin
-    DiscourseVips.version
+    DiscourseVips.vips("version", operation: nil)
   rescue DiscourseVips::Error => error
     raise LoadError, <<~MESSAGE, error.backtrace
             Discourse requires libvips for image processing, but it could not be loaded.

@@ -1,247 +1,270 @@
 # frozen_string_literal: true
 
-require "erb"
-require "fileutils"
 require "image_processing/instrumentation"
 require "json"
 require "rbconfig"
-require "socket"
-
-require_relative "freedom_patches/landlock_capture_fork"
+require "tmpdir"
 
 module DiscourseVips
-  VERSION = 1
-  DEFAULT_CLIENT_TIMEOUT_SECONDS = 7
-  private_constant :DEFAULT_CLIENT_TIMEOUT_SECONDS
+  DEFAULT_TIMEOUT_SECONDS = 30
+  private_constant :DEFAULT_TIMEOUT_SECONDS
 
-  TOPIC_OG_CLIENT_TIMEOUT_SECONDS = 22
-  private_constant :TOPIC_OG_CLIENT_TIMEOUT_SECONDS
+  WORKER_GRACE_SECONDS = 2
+  private_constant :WORKER_GRACE_SECONDS
 
-  BROKER_CHECK_TIMEOUT_SECONDS = 1
-  private_constant :BROKER_CHECK_TIMEOUT_SECONDS
+  DEFAULT_READ_PATHS = %w[/bin /lib /lib64 /usr].freeze
+  private_constant :DEFAULT_READ_PATHS
 
-  BROKER_START_TIMEOUT_SECONDS = 5
-  private_constant :BROKER_START_TIMEOUT_SECONDS
+  FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
+  private_constant :FONTCONFIG_READ_PATHS
 
-  INSTRUMENTED_OPERATIONS = {
-    "generate_letter_avatar" => :letter_avatar_render,
-    "resize_letter_avatar" => :optimized_image_resize,
-    "dominant_color" => :upload_dominant_color,
-    "svg_to_png" => :topic_og_render,
-  }.freeze
-  private_constant :INSTRUMENTED_OPERATIONS
-
-  FONT_FAMILIES = {
-    "/System/Library/Fonts/Helvetica.ttc" => "Helvetica",
-    File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2") => "Noto Sans",
-  }.freeze
-  private_constant :FONT_FAMILIES
+  # Dynamically loaded libvips modules use this cache to locate their shared libraries.
+  DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
+  private_constant :DYNAMIC_LINKER_CACHE_PATH
 
   class Error < RuntimeError
   end
 
-  class BrokerUnavailable < Error
+  class WorkerUnavailable < Error
   end
-  private_constant :BrokerUnavailable
+  private_constant :WorkerUnavailable
 
-  class << self
-    def socket_path
-      return ENV["DISCOURSE_VIPS_SOCKET_PATH"] if ENV["DISCOURSE_VIPS_SOCKET_PATH"]
-
-      socket_name =
-        Rails.env.production? ? "discourse-vips.sock" : "discourse-vips-#{Rails.env}.sock"
-      File.expand_path("../tmp/#{socket_name}", __dir__)
+  class Connection
+    def initialize(command:, environment:)
+      @pending = {}
+      @state_mutex = Mutex.new
+      @write_mutex = Mutex.new
+      @next_request_id = 0
+      start(command, environment)
     end
 
-    def version
-      "#{VERSION}-#{request(operation: "version")}"
+    def alive?
+      @state_mutex.synchronize { @alive }
     end
 
-    def generate_letter_avatar(letter:, background_color:, font_path:, output_path:)
-      font_path = File.expand_path(font_path.to_s)
-      font_family = FONT_FAMILIES[font_path]
-      if !File.file?(font_path) || !font_family
-        raise ArgumentError, "font_path must reference a supported font file"
+    def call(request, timeout:)
+      response_queue = Queue.new
+
+      @write_mutex.synchronize do
+        request_id = register(response_queue)
+        @request_writer.write(JSON.generate(request.merge(id: request_id)) << "\n")
       end
 
-      request(
-        operation: "generate_letter_avatar",
-        arguments: {
-          markup:
-            %(<span foreground="#ffffff" alpha="80%">#{ERB::Util.html_escape(letter.to_s)}</span>),
-          font: "#{font_family} 280",
-          font_path:,
-          background_color: validate_background_color(background_color),
-          output_path: File.expand_path(output_path),
-        },
-      )
-      nil
+      response = response_queue.pop(timeout: timeout + WORKER_GRACE_SECONDS)
+      if !response
+        remove(request_id)
+        close
+        raise WorkerUnavailable, "libvips worker did not respond"
+      end
+
+      response
+    rescue IOError, SystemCallError => error
+      remove(request_id) if request_id
+      close
+      raise WorkerUnavailable, "libvips worker request failed: #{error.message}"
     end
 
-    def resize_letter_avatar(input_path:, output_path:, size:)
-      request(
-        operation: "resize_letter_avatar",
-        arguments: {
-          input_path: File.expand_path(input_path),
-          output_path: File.expand_path(output_path),
-          size:,
-        },
-      )
-      nil
+    def close
+      @request_writer&.close unless @request_writer&.closed?
+      signal_worker("TERM")
+      if @response_thread && !@response_thread.join(WORKER_GRACE_SECONDS)
+        signal_worker("KILL", group: true)
+        @response_thread.join
+      end
+      fail_pending("libvips worker stopped")
+    rescue IOError, Errno::ECHILD
+    ensure
+      @response_reader&.close unless @response_reader&.closed?
     end
 
-    def dominant_color(input_path:)
-      request(operation: "dominant_color", arguments: { input_path: File.expand_path(input_path) })
-    end
-
-    def generate_topic_og_image(svg_path:, output_path:)
-      request(
-        operation: "svg_to_png",
-        arguments: {
-          input_path: File.expand_path(svg_path),
-          output_path: File.expand_path(output_path),
-        },
-        timeout: TOPIC_OG_CLIENT_TIMEOUT_SECONDS,
-      )
-      nil
+    def discard
+      @request_writer&.close unless @request_writer&.closed?
+      @response_reader&.close unless @response_reader&.closed?
+    rescue IOError
     end
 
     private
 
-    def start
-      ensure_sandbox_available!
-      FileUtils.mkdir_p(File.dirname(socket_path))
+    def start(command, environment)
+      request_reader, @request_writer = IO.pipe
+      @response_reader, response_writer = IO.pipe
+      @request_writer.sync = true
 
-      File.open(startup_lock_path, File::CREAT | File::RDWR, 0o600) do |lock|
-        lock.flock(File::LOCK_EX)
-        broker_pid = running_broker_pid
-        return broker_pid if broker_pid
-
-        FileUtils.rm_f(socket_path)
-        broker_pid = spawn_broker
-        wait_until_ready(broker_pid)
-        broker_pid
-      end
-    end
-
-    def validate_background_color(background_color)
-      channels = Array(background_color)
-      if channels.length != 3 ||
-           channels.any? { |channel| !channel.is_a?(Integer) || !(0..255).cover?(channel) }
-        raise ArgumentError, "background_color must contain three channels in 0..255"
-      end
-      channels
-    end
-
-    def request(operation:, arguments: {}, timeout: DEFAULT_CLIENT_TIMEOUT_SECONDS)
-      instrumentation_operation = INSTRUMENTED_OPERATIONS[operation]
-      return request_with_broker(operation:, arguments:, timeout:) if !instrumentation_operation
-
-      ImageProcessing::Instrumentation.instrument(operation: instrumentation_operation) do
-        request_with_broker(operation:, arguments:, timeout:)
-      end
-    end
-
-    def request_with_broker(operation:, arguments:, timeout:)
-      perform_request(operation:, arguments:, timeout:)
-    rescue BrokerUnavailable
-      start
-      perform_request(operation:, arguments:, timeout:)
-    end
-
-    def perform_request(operation:, arguments:, timeout:)
-      ensure_sandbox_available!
-      response = exchange_request(operation:, arguments:, timeout:)
-
-      return response["value"] if response["status"] == "ok"
-      raise Error, "libvips operation timed out" if response["status"] == "timeout"
-
-      raise Error, response["message"].presence || "libvips operation failed"
-    end
-
-    def exchange_request(operation:, arguments:, timeout:)
-      UNIXSocket.open(socket_path) do |socket|
-        socket.puts(JSON.generate(operation:, arguments:))
-        socket.close_write
-        readable, = IO.select([socket], nil, nil, timeout)
-        raise Error, "libvips broker did not respond" if !readable
-
-        payload = socket.gets
-        raise BrokerUnavailable, "libvips broker closed the connection" if !payload
-
-        JSON.parse(payload)
-      end
-    rescue IOError, SystemCallError => error
-      raise BrokerUnavailable, "libvips broker request failed: #{error.message}"
-    rescue JSON::ParserError => error
-      raise Error, "libvips broker returned an invalid response: #{error.message}"
-    end
-
-    def startup_lock_path
-      "#{socket_path}.lock"
-    end
-
-    def running_broker_pid
-      response =
-        exchange_request(operation: "version", arguments: {}, timeout: BROKER_CHECK_TIMEOUT_SECONDS)
-      response["broker_pid"] if response["status"] == "ok"
-    rescue Error
-      nil
-    end
-
-    def spawn_broker
-      environment = { "BUNDLE_GEMFILE" => nil, "RUBYOPT" => nil }
-      broker_pid =
+      @worker_pid =
         Process.spawn(
           environment,
-          RbConfig.ruby,
-          Rails.root.join("script/discourse_vips_broker").to_s,
-          socket_path,
-          Process.pid.to_s,
-          Rails.root.join("Gemfile").to_s,
-          in: File::NULL,
-          close_others: true,
-          pgroup: true,
+          *command,
+          3 => request_reader,
+          4 => response_writer,
+          :in => File::NULL,
+          :out => File::NULL,
+          :close_others => true,
+          :pgroup => true,
+          :unsetenv_others => true,
         )
-      register_broker_cleanup(broker_pid)
-      broker_pid
+      @alive = true
+      @response_thread = Thread.new { read_responses }
+    rescue Exception
+      @request_writer&.close
+      @response_reader&.close
+      raise
+    ensure
+      request_reader&.close
+      response_writer&.close
     end
 
-    def register_broker_cleanup(broker_pid)
-      owner_pid = Process.pid
-      at_exit do
-        next if Process.pid != owner_pid
+    def register(response_queue)
+      @state_mutex.synchronize do
+        raise WorkerUnavailable, "libvips worker is unavailable" if !@alive
 
-        terminate_broker(broker_pid)
-        Process.waitpid(broker_pid)
+        @next_request_id += 1
+        @pending[@next_request_id] = response_queue
+        @next_request_id
+      end
+    end
+
+    def remove(request_id)
+      @state_mutex.synchronize { @pending.delete(request_id) }
+    end
+
+    def read_responses
+      Thread.current.report_on_exception = false
+      while (line = @response_reader.gets)
+        response = JSON.parse(line)
+        response_queue = remove(response.fetch("id"))
+        response_queue&.push(response)
+      end
+    rescue IOError, SystemCallError, JSON::ParserError, KeyError => error
+      fail_pending("libvips worker response failed: #{error.message}")
+    ensure
+      fail_pending("libvips worker exited")
+      @request_writer.close unless @request_writer.closed?
+      signal_worker("TERM")
+      begin
+        Process.waitpid(@worker_pid)
       rescue Errno::ECHILD
       end
+      signal_worker("KILL", group: true)
     end
 
-    def wait_until_ready(expected_broker_pid)
-      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + BROKER_START_TIMEOUT_SECONDS
-
-      loop do
-        return if running_broker_pid == expected_broker_pid
-
-        if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
-          terminate_broker(expected_broker_pid)
-          raise Error, "libvips broker did not start"
-        end
-
-        sleep 0.01
-      end
-    end
-
-    def terminate_broker(broker_pid)
-      Process.kill("TERM", broker_pid)
+    def signal_worker(signal, group: false)
+      Process.kill(signal, group ? -@worker_pid : @worker_pid)
     rescue Errno::ESRCH
     end
 
-    def ensure_sandbox_available!
-      if !Rails.env.local? && !Discourse::SafeExec.landlock_supported?
-        raise Error, "Cannot run libvips because Landlock sandboxing is unavailable"
+    def fail_pending(message)
+      pending =
+        @state_mutex.synchronize do
+          @alive = false
+          current = @pending.values
+          @pending = {}
+          current
+        end
+      pending.each do |response_queue|
+        response_queue.push({ "status" => "unavailable", "message" => message })
       end
     end
   end
+  private_constant :Connection
+
+  class << self
+    def vips(*command, operation:, read: [], write: [], timeout: nil, nice: 10, failure_message: "")
+      timeout ||= DEFAULT_TIMEOUT_SECONDS
+
+      Dir.mktmpdir("discourse-vips-") do |scratch|
+        request = {
+          command: command.map(&:to_s),
+          read: existing_paths([*asset_read_paths, *read]),
+          write: existing_paths([scratch, *write]),
+          scratch:,
+          timeout:,
+          nice:,
+        }
+        execute =
+          lambda do
+            response = connection.call(request, timeout:)
+            return response["value"].to_s if response["status"] == "ok"
+            raise Error, "libvips operation timed out" if response["status"] == "timeout"
+
+            message = response["message"].presence || "libvips operation failed"
+            raise Error, [failure_message, message].compact_blank.join("\n")
+          end
+
+        operation ? ImageProcessing::Instrumentation.instrument(operation:, &execute) : execute.call
+      end
+    end
+
+    def before_fork
+      reset_connection
+    end
+
+    private
+
+    def connection
+      reset_after_fork if @owner_pid != Process.pid
+
+      @connection_mutex.synchronize do
+        @connection = nil if @connection && !@connection.alive?
+        @connection ||= Connection.new(command: worker_command, environment: worker_environment)
+      end
+    rescue SystemCallError => error
+      raise WorkerUnavailable, "libvips worker could not start: #{error.message}"
+    end
+
+    def reset_after_fork
+      @connection&.discard
+      @owner_pid = Process.pid
+      @connection = nil
+      @connection_mutex = Mutex.new
+    end
+
+    def reset_connection
+      reset_after_fork if @owner_pid != Process.pid
+      connection = @connection_mutex.synchronize { @connection.tap { @connection = nil } }
+      connection&.close
+    end
+
+    def worker_command
+      load_paths = [Rails.root.join("lib").to_s]
+      %w[ffi json landlock logger ruby-vips].each do |gem_name|
+        load_paths.concat(Gem.loaded_specs.fetch(gem_name).full_require_paths)
+      end
+
+      [
+        RbConfig.ruby,
+        "--disable-gems",
+        *load_paths.uniq.flat_map { |path| ["-I", path] },
+        Rails.root.join("script/discourse_vips_worker").to_s,
+        "3",
+        "4",
+      ]
+    end
+
+    def worker_environment
+      {
+        **ENV.to_h.slice("PATH", "LANG", "LC_ALL"),
+        "HOME" => "/tmp",
+        "MALLOC_ARENA_MAX" => "2",
+        "TMPDIR" => "/tmp",
+        "XDG_CACHE_HOME" => "/tmp",
+      }
+    end
+
+    def asset_read_paths
+      @asset_read_paths ||=
+        existing_paths([*DEFAULT_READ_PATHS, DYNAMIC_LINKER_CACHE_PATH, *FONTCONFIG_READ_PATHS])
+    end
+
+    def existing_paths(paths)
+      paths
+        .filter { |path| path.to_s != "" && File.exist?(path) }
+        .map { |path| File.expand_path(path) }
+        .uniq
+    end
+  end
+
+  @owner_pid = Process.pid
+  @connection_mutex = Mutex.new
+
+  at_exit { before_fork if @owner_pid == Process.pid }
 end

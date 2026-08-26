@@ -10,6 +10,7 @@ class Upload < ActiveRecord::Base
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX = %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
+  DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
   # the maximum length of a base62 encoded sha1
   MAX_BASE62_SHA1_LENGTH = 27
 
@@ -395,7 +396,19 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          DiscourseVips.dominant_color(input_path: local_path)
+          color =
+            DiscourseVips.vips(
+              "dominant-color",
+              local_path,
+              operation: :upload_dominant_color,
+              read: [local_path],
+              timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
+            ).strip
+          if color !~ /\A[0-9A-F]{6}\z/
+            raise "Calculated dominant color but unable to parse output: #{color}"
+          end
+
+          color
         rescue DiscourseVips::Error
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
