@@ -46,6 +46,7 @@ module Chat
     validates :emoji, length: { maximum: 100 }
     validate :ensure_slug_ok, if: :slug_changed?
     before_validation :generate_auto_slug
+    after_update :enqueue_channel_hashtag_remap, if: :saved_change_to_slug?
 
     scope :with_categories,
           -> do
@@ -110,6 +111,13 @@ module Chat
     ].each { |name| define_method(name) { false } }
 
     %i[allowed_user_ids allowed_group_ids chatable_url].each { |name| define_method(name) { nil } }
+
+    def enqueue_channel_hashtag_remap
+      old_ref = slug_before_last_save
+      return if old_ref.blank? || old_ref.casecmp?(slug.to_s)
+
+      HashtagRemapper.enqueue([{ type: Chat::ChannelHashtagDataSource.type, id:, old_ref: }])
+    end
 
     def ensure_slug_ok
       if self.slug.present?
