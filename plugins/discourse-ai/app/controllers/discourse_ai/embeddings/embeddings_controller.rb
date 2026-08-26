@@ -33,7 +33,8 @@ module DiscourseAi
 
         page = positive_integer_param(:page) || 1
         raise Discourse::InvalidParameters.new(:page) if page > MAX_PAGE
-        per_page = positive_integer_param(:per_page)
+        per_page =
+          DiscourseAi::Embeddings::SemanticSearch.page_size(positive_integer_param(:per_page))
 
         grouped_results =
           Search::GroupedSearchResults.new(

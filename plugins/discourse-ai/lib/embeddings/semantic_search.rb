@@ -65,9 +65,15 @@ module DiscourseAi
 
       MAX_RESULTS_PER_PAGE = 100
 
+      # callers share this so that the page size used to query and the page size used to
+      # collect results cannot drift apart
+      def self.page_size(per_page = nil)
+        max = [Search.per_filter, MAX_RESULTS_PER_PAGE].min
+        per_page ? per_page.clamp(1, max) : max
+      end
+
       def search_for_topics(query, page = 1, hyde: true, per_page: nil)
-        page_size = [Search.per_filter, MAX_RESULTS_PER_PAGE].min
-        page_size = per_page.clamp(1, page_size) if per_page
+        page_size = self.class.page_size(per_page)
         limit = page_size + 1
         offset = (page - 1) * page_size
         search = Search.new(query, { guardian: guardian })
