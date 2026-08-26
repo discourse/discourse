@@ -134,7 +134,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
     show_site_owner_onboarding: true,
   });
 
@@ -576,7 +576,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 acceptance("Admin - Onboarding Banner - admin invites", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
     show_site_owner_onboarding: true,
     can_create_admin_invite: true,
   });
@@ -655,7 +655,7 @@ acceptance("Admin - Onboarding Banner - non admin user", function (needs) {
 acceptance("Admin - Onboarding Banner - setting disabled", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
   });
   needs.settings({
     enable_site_owner_onboarding: false,
