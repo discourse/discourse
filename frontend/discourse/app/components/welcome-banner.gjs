@@ -141,11 +141,12 @@ export default class WelcomeBanner extends Component {
     );
   }
 
-  get searchInputPlaceholder() {
-    return applyValueTransformer(
-      "welcome-banner-search-placeholder",
-      "welcome_banner.search_placeholder"
-    );
+  // The icon is a shortcut to advanced search; a consumer that has made the
+  // input mean more than searching can drop it.
+  get showAdvancedSearchIcon() {
+    return applyValueTransformer("search-advanced-icon-enabled", true, {
+      location: "welcome-banner",
+    });
   }
 
   #shouldDisplayForRoute(
@@ -281,16 +282,18 @@ export default class WelcomeBanner extends Component {
           </div>
           <PluginOutlet @name="welcome-banner-below-headline" />
           <div class="search-menu welcome-banner__search-menu">
-            <DButton
-              @icon="magnifying-glass"
-              @title="search.open_advanced"
-              @href={{getURL "/search?expanded=true"}}
-              class="search-icon"
-            />
+            {{#if this.showAdvancedSearchIcon}}
+              <DButton
+                @icon="magnifying-glass"
+                @title="search.open_advanced"
+                @href={{getURL "/search?expanded=true"}}
+                class="search-icon"
+              />
+            {{/if}}
             <SearchMenu
               @location="welcome-banner"
               @searchInputId="welcome-banner-search-input"
-              @searchInputPlaceholder={{this.searchInputPlaceholder}}
+              @searchInputPlaceholder="welcome_banner.search_placeholder"
               @hideResults={{not this.search.welcomeBannerSearchInViewport}}
             />
           </div>

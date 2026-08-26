@@ -1638,7 +1638,7 @@ en:
             expanded_description: "with AI summaries"
 
       discobot_discoveries:
-        main_title: "Discoveries"
+        main_title: "Ask AI"
         loading_convo: "Loading conversation"
         follow_up:
           label: "Ask a follow-up"
@@ -1646,17 +1646,16 @@ en:
           submit: "Ask"
         timed_out: "Discoveries took too long to complete this search. Try again or use Search."
         request_failed: "Discoveries could not start this search. Try again or use Search."
-        no_answer: "We couldn’t find a clear answer. Ask the community."
+        no_answer: "We couldn’t find a clear answer with AI. Ask the community."
         create_topic: "Create topic"
         answer_ready: "Discoveries answer ready."
         user_setting: "Enable AI search discoveries"
-        mode:
-          label: "Search mode"
-          search: "Search"
-          ask: "Ask"
-          ask_placeholder: "Ask a question"
-          search_submit: "Search"
-          ask_submit: "Ask with Discoveries"
+        search_placeholder: "Search or ask AI"
+        search_all_topics: "All topics"
+        search_this_topic: "This topic"
+        search_user_posts: "Posts by %{username}"
+        search_messages: "Messages"
+        ask_ai: "Ask AI"
         sources:
           related_discussions: "Related discussions"
           show_all_matching: "Show all matching topics"

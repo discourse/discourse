@@ -321,6 +321,7 @@ module Jobs
           url: source["url"],
           excerpt: source["excerpt"],
           category: source["category"].presence,
+          category_id: source["category_id"],
           topic_replies: source["topic_replies"].to_i,
           username: source["username"],
           name: source["name"],

@@ -11,11 +11,13 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
@@ -102,6 +104,7 @@ export default class AiSearchDiscoveries extends Component {
   @service discobotDiscoveries;
   @service appEvents;
   @service currentUser;
+  @service site;
   @service siteSettings;
   @service composer;
 
@@ -157,6 +160,12 @@ export default class AiSearchDiscoveries extends Component {
     ).trim();
   }
 
+  // Off unless a theme has room for it: the list is dense and the avatar is
+  // decoration rather than a way to tell the sources apart.
+  get showSourceAvatars() {
+    return applyValueTransformer("ai-discovery-source-avatar", false);
+  }
+
   get sources() {
     return this.discobotDiscoveries.sources || [];
   }
@@ -178,7 +187,14 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   get visibleSources() {
-    return this.sources.slice(0, this.relatedCount);
+    return this.sources.slice(0, this.relatedCount).map((source) => ({
+      ...source,
+      // the payload carries a breadcrumb string for the model; the badge needs
+      // the real category so it picks up its colour, style and parent
+      categoryModel: this.site.categories?.find(
+        (category) => category.id === source.category_id
+      ),
+    }));
   }
 
   get candidateTopicIds() {
@@ -349,16 +365,6 @@ export default class AiSearchDiscoveries extends Component {
       {{didInsert this.triggerDiscoveryOnInsert this.query}}
       {{willDestroy this.unsubscribe}}
     >
-      {{#if @showHeading}}
-        {{#if this.discobotDiscoveries.showDiscoveryTitle}}
-          <header class="ai-search-discoveries__header">
-            <h3 class="ai-search-discoveries__title">
-              {{dIcon "far-circle"}}
-              {{i18n "discourse_ai.discobot_discoveries.main_title"}}
-            </h3>
-          </header>
-        {{/if}}
-      {{/if}}
 
       {{#if (and this.showAnswerTitle this.discobotDiscoveries.discoveryTitle)}}
         <h4 class="ai-search-discoveries__answer-title">
@@ -443,35 +449,27 @@ export default class AiSearchDiscoveries extends Component {
               {{#each this.visibleSources as |source|}}
                 <li class="ai-discovery-sources__item">
                   <a class="ai-discovery-source" href={{source.url}}>
-                    {{#if source.avatar_template}}
+                    {{#if (and this.showSourceAvatars source.avatar_template)}}
                       <span class="ai-discovery-source__avatar">
                         {{dAvatar source imageSize="medium"}}
                       </span>
                     {{/if}}
                     <span class="ai-discovery-source__content">
-                      <h5
-                        class="ai-discovery-source__title"
-                      >{{source.title}}</h5>
+                      <h5 class="ai-discovery-source__title">{{dReplaceEmoji
+                          source.title
+                        }}</h5>
                       {{#if source.excerpt}}
                         <span class="ai-discovery-source__excerpt">
                           {{dReplaceEmoji source.excerpt}}
                         </span>
                       {{/if}}
                       <span class="ai-discovery-source__metadata">
-                        {{#if source.category}}
-                          <span>
-                            {{source.category}}
-                            {{#if source.topic_replies}}
-                              <span aria-hidden="true">·</span>
-                              {{source.topic_replies}}
-                              {{i18n
-                                "replies_lowercase"
-                                count=source.topic_replies
-                              }}
-                            {{/if}}
-                          </span>
-                        {{else if source.topic_replies}}
-                          <span>
+                        {{#if source.categoryModel}}
+                          {{dCategoryLink source.categoryModel link=false}}
+                        {{/if}}
+                        {{#if source.topic_replies}}
+                          <span class="ai-discovery-source__metadata-replies">
+                            {{dIcon "reply"}}
                             {{source.topic_replies}}
                             {{i18n
                               "replies_lowercase"

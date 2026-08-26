@@ -66,16 +66,15 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
     );
   });
 
-  test("hides indexed results for a submitted Discoveries search", async function (assert) {
+  // Whether the indexed list renders is decided by the search-menu transformers,
+  // covered in acceptance/ai-search-discoveries-test.js. This holds the states
+  // the connector reports for it.
+  test("reports its progress for a submitted Discoveries search", async function (assert) {
     this.discobotDiscoveries.lastQuery = "miyazaki";
 
     await render(
       <template>
         <AiDiscobotDiscoveries @outletArgs={{this.outletArgs}} />
-        <ul class="search-menu-initial-options">
-          <li>Search in all topics and posts</li>
-        </ul>
-        <div class="search-result-topic">Indexed result</div>
         <div class="no-results">No results found</div>
       </template>
     );
@@ -83,12 +82,6 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
     assert
       .dom(".ai-discobot-discoveries")
       .hasClass("is-generating", "the connector exposes its generating state");
-    assert
-      .dom(".search-result-topic")
-      .isNotVisible("indexed results are hidden during the AI call");
-    assert
-      .dom(".search-menu-initial-options")
-      .isNotVisible("the redundant indexed-search action is hidden");
     assert.deepEqual(
       this.triggeredQueries,
       [],
@@ -100,13 +93,8 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
     await settled();
 
     assert
-      .dom(".search-result-topic")
-      .isVisible("indexed results return when Discoveries cannot answer");
-    assert
-      .dom(".search-menu-initial-options")
-      .isVisible(
-        "the indexed-search action returns when Discoveries cannot answer"
-      );
+      .dom(".ai-discobot-discoveries")
+      .hasClass("has-no-answer", "the connector reports it cannot answer");
     assert
       .dom(".no-results")
       .isNotVisible("the redundant native no-results message stays hidden");
@@ -114,7 +102,6 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
     this.discobotDiscoveries.sources = [
       { title: "A selected source", url: "/t/source/1" },
     ];
-    this.discobotDiscoveries.isStreaming = false;
     await settled();
 
     assert
@@ -124,8 +111,8 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
         "the generating state ends with the AI call"
       );
     assert
-      .dom(".search-result-topic")
-      .isNotVisible("selected source cards replace indexed results");
+      .dom(".ai-discobot-discoveries")
+      .hasClass("has-sources", "the connector reports its selected sources");
   });
 
   test("uses the native welcome search results surface", async function (assert) {

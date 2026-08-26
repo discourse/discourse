@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import AiDiscoveriesSearchOptions from "../../components/ai-discoveries-search-options";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
 
 export default class AiDiscobotDiscoveries extends Component {
@@ -41,7 +42,6 @@ export default class AiDiscobotDiscoveries extends Component {
     return (
       this.creditCheckComplete &&
       this.creditsAvailable &&
-      this.discobotDiscoveries.mode === "ask" &&
       this.args.outletArgs.searchTerm &&
       this.discobotDiscoveries.lastQuery ===
         this.args.outletArgs.searchTerm.trim()
@@ -56,6 +56,19 @@ export default class AiDiscobotDiscoveries extends Component {
   }
 
   <template>
+    {{! rendered from here rather than its own connector so the options always
+        lead the answer, whatever order connectors resolve in }}
+    <AiDiscoveriesSearchOptions
+      @triggerSearch={{@outletArgs.triggerSearch}}
+      @updateTypeFilter={{@outletArgs.updateTypeFilter}}
+      @searchTermChanged={{@outletArgs.searchTermChanged}}
+      @clearTopicContext={{@outletArgs.clearTopicContext}}
+      @searchTopics={{@outletArgs.searchTopics}}
+      @openAdvancedSearch={{@outletArgs.openAdvancedSearch}}
+      @inPMInboxContext={{@outletArgs.inPMInboxContext}}
+      @clearPMInboxContext={{@outletArgs.clearPMInboxContext}}
+    />
+
     {{#if this.shouldShow}}
       <div
         class={{dConcatClass

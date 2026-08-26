@@ -26,8 +26,10 @@ import {
   searchTermScopesToPMs,
   updateRecentSearches,
 } from "discourse/lib/search";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
+import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
@@ -67,7 +69,11 @@ export default class SearchMenu extends Component {
   }
 
   get searchInputPlaceholder() {
-    return this.args.searchInputPlaceholder || "search.title";
+    return applyValueTransformer(
+      "search-menu-input-placeholder",
+      this.args.searchInputPlaceholder || "search.title",
+      { location: this.args.location }
+    );
   }
 
   @bind
@@ -103,6 +109,22 @@ export default class SearchMenu extends Component {
     }
 
     return classes.join(" ");
+  }
+
+  // The chip both shows and clears topic scoping; a consumer that offers scope
+  // as a choice of its own says so there instead.
+  // The shortcut into advanced search; a consumer that offers it somewhere of
+  // its own can drop it from the input.
+  get showAdvancedButton() {
+    return applyValueTransformer("search-menu-advanced-button-enabled", true, {
+      location: this.args.location,
+    });
+  }
+
+  get showSearchContext() {
+    return applyValueTransformer("search-menu-search-context-enabled", true, {
+      location: this.args.location,
+    });
   }
 
   get includesTopics() {
@@ -425,7 +447,7 @@ export default class SearchMenu extends Component {
             (concat "search-input--" @location)
           }}
         >
-          {{#if this.search.inTopicContext}}
+          {{#if (and this.search.inTopicContext this.showSearchContext)}}
             <DButton
               @icon="xmark"
               @label="search.in_this_topic"
@@ -433,7 +455,7 @@ export default class SearchMenu extends Component {
               @action={{this.clearTopicContext}}
               class="btn-default btn-small search-context"
             />
-          {{else if this.inPMInboxContext}}
+          {{else if (and this.inPMInboxContext this.showSearchContext)}}
             <DButton
               @icon="xmark"
               @label="search.in_messages"
@@ -473,18 +495,14 @@ export default class SearchMenu extends Component {
               {{#if this.search.activeGlobalSearchTerm}}
                 <ClearButton @clearSearch={{this.clearSearch}} />
               {{/if}}
-              <AdvancedButton @openAdvancedSearch={{this.openAdvancedSearch}} />
+              {{#if this.showAdvancedButton}}
+                <AdvancedButton
+                  @openAdvancedSearch={{this.openAdvancedSearch}}
+                />
+              {{/if}}
             </div>
           {{/if}}
         </div>
-
-        <PluginOutlet
-          @name="search-menu-after-input"
-          @outletArgs={{lazyHash
-            location=@location
-            triggerSearch=this.triggerSearch
-          }}
-        />
       </div>
 
       {{#if @inlineResults}}
@@ -497,11 +515,14 @@ export default class SearchMenu extends Component {
           @suggestionResults={{this.suggestionResults}}
           @searchTopics={{this.includesTopics}}
           @inPMInboxContext={{this.inPMInboxContext}}
+          @clearPMInboxContext={{this.clearPMInboxContext}}
           @isPMOnly={{this.isPMOnly}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
           @closeSearchMenu={{this.close}}
           @searchTermChanged={{this.searchTermChanged}}
+          @clearTopicContext={{this.clearTopicContext}}
+          @openAdvancedSearch={{this.openAdvancedSearch}}
           @clearSearch={{this.clearSearch}}
         />
       {{else if this.displayMenuPanelResults}}
@@ -515,11 +536,14 @@ export default class SearchMenu extends Component {
             @suggestionResults={{this.suggestionResults}}
             @searchTopics={{this.includesTopics}}
             @inPMInboxContext={{this.inPMInboxContext}}
+            @clearPMInboxContext={{this.clearPMInboxContext}}
             @isPMOnly={{this.isPMOnly}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
             @closeSearchMenu={{this.close}}
             @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+            @openAdvancedSearch={{this.openAdvancedSearch}}
             @clearSearch={{this.clearSearch}}
           />
         </MenuPanel>

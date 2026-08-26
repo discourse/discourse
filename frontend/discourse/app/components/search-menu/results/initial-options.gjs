@@ -6,6 +6,7 @@ import AssistantItem from "discourse/components/search-menu/results/assistant-it
 import RandomQuickTip from "discourse/components/search-menu/results/random-quick-tip";
 import RecentSearches from "discourse/components/search-menu/results/recent-searches";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import Assistant from "./assistant";
@@ -44,6 +45,14 @@ export default class InitialOptions extends Component {
         this.setAttributesForSearchContextType(this.search.searchContext.type);
       }
     }
+  }
+
+  // These shortcuts promise the term will be run against the index, scoped or
+  // not, so a consumer that offers those choices itself can drop them.
+  get showSearchShortcuts() {
+    return applyValueTransformer("search-menu-search-shortcuts-enabled", true, {
+      location: this.args.location,
+    });
   }
 
   get termMatchesContextTypeKeyword() {
@@ -176,7 +185,9 @@ export default class InitialOptions extends Component {
           {{#if
             (or this.search.activeGlobalSearchTerm this.search.searchContext)
           }}
-            {{#if this.search.activeGlobalSearchTerm}}
+            {{#if
+              (and this.search.activeGlobalSearchTerm this.showSearchShortcuts)
+            }}
               <AssistantItem
                 @suffix={{i18n "search.in_topics_posts"}}
                 @closeSearchMenu={{@closeSearchMenu}}
@@ -187,7 +198,7 @@ export default class InitialOptions extends Component {
               />
             {{/if}}
 
-            {{#if this.search.searchContext}}
+            {{#if (and this.search.searchContext this.showSearchShortcuts)}}
               <this.contextTypeComponent
                 @slug={{this.slug}}
                 @suggestionKeyword={{this.contextTypeKeyword}}
@@ -207,6 +218,7 @@ export default class InitialOptions extends Component {
                 )
               }}
                 <RecentSearches
+                  @location={{@location}}
                   @closeSearchMenu={{@closeSearchMenu}}
                   @searchTermChanged={{@searchTermChanged}}
                 />
@@ -219,6 +231,7 @@ export default class InitialOptions extends Component {
             />
             {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
               <RecentSearches
+                @location={{@location}}
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
               />
@@ -226,6 +239,7 @@ export default class InitialOptions extends Component {
           {{/if}}
         {{/if}}
       </PluginOutlet>
+
     </ul>
   </template>
 }

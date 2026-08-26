@@ -6,6 +6,8 @@ module DiscourseAi
     SITE_CONCURRENCY_LIMIT = 4
     WORK_LEASE_TTL = 25.seconds.to_i
     SUMMARY_DETAILS = %i[quiet balanced detailed].freeze
+    MAX_RECENT_ASKS = 5
+    RECENT_ASKS_TTL = 90.days.to_i
     MIN_RELATED_DISCUSSIONS = 2
     MAX_RELATED_DISCUSSIONS = 6
     REQUEST_ID_PATTERN =
@@ -68,6 +70,37 @@ module DiscourseAi
 
       def private_message_query?(query)
         query.to_s.match?(PRIVATE_MESSAGE_FILTER)
+      end
+
+      # Asked terms are kept apart from SearchLog rather than logged into it:
+      # its `search_type` records where a search happened, and the reports group
+      # by it. The two lists are merged for display instead.
+      def record_recent_ask(user_id:, query:)
+        normalized = query.to_s.squish
+        return if normalized.blank?
+
+        key = recent_asks_key(user_id)
+        # scored by time so the two histories can be ordered against each other
+        Discourse.redis.zadd(key, Time.now.to_f, normalized)
+        Discourse.redis.zremrangebyrank(key, 0, -(MAX_RECENT_ASKS + 1))
+        Discourse.redis.expire(key, RECENT_ASKS_TTL)
+      end
+
+      def recent_asks(user_id:)
+        Discourse
+          .redis
+          .zrevrange(recent_asks_key(user_id), 0, MAX_RECENT_ASKS - 1, with_scores: true)
+          .map { |term, score| { term: term, at: Time.at(score).utc.iso8601 } }
+      end
+
+      def clear_recent_asks(user_id:)
+        Discourse.redis.del(recent_asks_key(user_id))
+      end
+
+      def recent_asks_key(user_id)
+        # versioned: the first cut stored these as a list, and a sorted-set write
+        # against a leftover list key raises WRONGTYPE rather than replacing it
+        "discourse-ai:discoveries:recent-asks:2:#{user_id}"
       end
 
       def result_settings

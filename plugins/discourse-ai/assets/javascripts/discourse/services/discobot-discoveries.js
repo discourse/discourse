@@ -42,6 +42,7 @@ export default class DiscobotDiscoveries extends Service {
   @tracked answerable = null;
   @tracked errorMessage = "";
   @tracked discoveryTitle = "";
+  @tracked recentAsks = [];
 
   @tracked
   smoothStreamer = new SmoothStreamer(
@@ -50,8 +51,8 @@ export default class DiscobotDiscoveries extends Service {
     undefined,
     { smoothCompletion: true }
   );
-
   discoveryTimeout = null;
+  #recentAsksLoaded = false;
 
   constructor() {
     super(...arguments);
@@ -131,6 +132,50 @@ export default class DiscobotDiscoveries extends Service {
     this.smoothStreamer.resetStreaming();
   }
 
+  async loadRecentAsks() {
+    if (this.#recentAsksLoaded) {
+      return;
+    }
+    this.#recentAsksLoaded = true;
+
+    try {
+      const result = await ajax("/discourse-ai/discoveries/recent");
+      this.recentAsks = result.recent_asks || [];
+    } catch {
+      this.recentAsks = [];
+    }
+  }
+
+  rememberAsk(query) {
+    const normalized = query?.trim();
+    if (!normalized) {
+      return;
+    }
+
+    this.recentAsks = [
+      { term: normalized, at: new Date().toISOString() },
+      ...this.recentAsks.filter((ask) => ask.term !== normalized),
+    ].slice(0, 5);
+  }
+
+  @action
+  async clearRecentAsks() {
+    this.recentAsks = [];
+    try {
+      await ajax("/discourse-ai/discoveries/recent", { type: "DELETE" });
+    } catch {
+      // the list is already gone from view; leaving the stored copy is harmless
+    }
+  }
+
+  // `resetDiscovery` keeps the claimed query so a new request can replace it in
+  // place; dismissing releases the term so the answer stops standing in for it.
+  @action
+  dismissDiscovery() {
+    this.resetDiscovery();
+    this.lastQuery = "";
+  }
+
   get showDiscoveryTitle() {
     return Boolean(
       this.discovery.length > 0 ||
@@ -184,6 +229,7 @@ export default class DiscobotDiscoveries extends Service {
 
     try {
       this.lastQuery = normalizedQuery;
+      this.rememberAsk(normalizedQuery);
 
       const response = await ajax("/discourse-ai/discoveries/reply", {
         type: "POST",

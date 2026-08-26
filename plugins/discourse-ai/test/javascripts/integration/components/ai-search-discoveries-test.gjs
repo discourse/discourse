@@ -3,6 +3,7 @@ import Service from "@ember/service";
 import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -52,12 +53,6 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       </template>
     );
 
-    assert
-      .dom(".ai-search-discoveries__title")
-      .hasText("Discoveries", "the result has the agreed heading");
-    assert
-      .dom(".ai-search-discoveries__title .d-icon-far-circle")
-      .exists("the result label uses the agreed status marker");
     assert
       .dom(".ai-search-discoveries__answer-title")
       .hasText(
@@ -136,6 +131,46 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       );
   });
 
+  test("a theme can opt into showing source authors", async function (assert) {
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        streamedText = "A useful answer.";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+        sources = [
+          {
+            title: "Recurring ideas across Hayao Miyazaki’s films",
+            url: "/t/hayao-miyazaki/101/1",
+            username: "hayao",
+            name: "Hayao Miyazaki",
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/h/9de053/{size}.png",
+          },
+        ];
+        candidateTopicIds = [101];
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    withPluginApi((api) => {
+      api.registerValueTransformer("ai-discovery-source-avatar", () => true);
+    });
+
+    await render(
+      <template>
+        <AiSearchDiscoveries @searchTerm="miyazaki" @showSources={{true}} />
+      </template>
+    );
+
+    assert
+      .dom(".ai-discovery-source__avatar .avatar")
+      .exists({ count: 1 }, "the opted-in theme gets the source author");
+  });
+
   test("shows the requested discussions and links to all matching topics", async function (assert) {
     this.siteSettings.ai_discover_related_count = 3;
     const sources = [
@@ -145,6 +180,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         excerpt:
           ":waving_hand: Flight, nature, work, and resilient protagonists.",
         category: "Studio Ghibli",
+        category_id: 1,
         topic_replies: 12,
         username: "hayao",
         name: "Hayao Miyazaki",
@@ -155,6 +191,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         url: "/t/goro-miyazaki/102/1",
         excerpt: "Architecture, inheritance, and a different visual voice.",
         category: "Studio Ghibli",
+        category_id: 1,
         topic_replies: 8,
         username: "goro",
         name: "Gorō Miyazaki",
@@ -165,6 +202,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         url: "/t/the-boy-and-the-heron/103/1",
         excerpt: "Grief, sound, and worldbuilding.",
         category: "Studio Ghibli",
+        category_id: 1,
         topic_replies: 6,
       },
       {
@@ -172,6 +210,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         url: "/t/flight/104/1",
         excerpt: "Machines, escape, and the cost of flight.",
         category: "Studio Ghibli",
+        category_id: 1,
         topic_replies: 9,
       },
     ];
@@ -204,8 +243,16 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .dom(".ai-discovery-sources__item")
       .exists({ count: 3 }, "the configured number of discussions is shown");
     assert
-      .dom(".ai-discovery-source__avatar .avatar")
-      .exists({ count: 2 }, "discussion cards show their source authors");
+      .dom(".ai-discovery-source__metadata .badge-category")
+      .exists(
+        { count: 3 },
+        "categories render as real badges, not breadcrumb text"
+      );
+    assert
+      .dom(".ai-discovery-source__avatar")
+      .doesNotExist(
+        "source authors are not shown unless a theme asks for them"
+      );
     assert
       .dom(".ai-discovery-source__excerpt .emoji")
       .exists({ count: 1 }, "emoji shortcodes in excerpts are rendered");
@@ -278,6 +325,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
             title: "A discussion without replies",
             url: "/t/without-replies/101/1",
             category: "Studio Ghibli",
+            category_id: 1,
             topic_replies: 0,
           },
           {
@@ -303,20 +351,17 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .dom(
         ".ai-discovery-sources__item:nth-child(1) .ai-discovery-source__metadata"
       )
-      .hasText("Studio Ghibli", "zero replies and their separator are omitted");
+      .doesNotIncludeText("replies", "zero replies are omitted");
+    assert
+      .dom(
+        ".ai-discovery-sources__item:nth-child(1) .ai-discovery-source__metadata .badge-category"
+      )
+      .exists("the category badge still stands alone");
     assert
       .dom(
         ".ai-discovery-sources__item:nth-child(2) .ai-discovery-source__metadata"
       )
-      .hasText("Support · 4 replies", "non-zero reply counts remain visible");
-    assert
-      .dom(
-        ".ai-discovery-sources__item:nth-child(2) .ai-discovery-source__metadata > span"
-      )
-      .exists(
-        { count: 1 },
-        "the category and reply count wrap as one metadata item"
-      );
+      .includesText("4 replies", "non-zero reply counts remain visible");
   });
 
   test("clicking a link in discovery text closes search menu", async function (assert) {
@@ -685,9 +730,6 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       </template>
     );
 
-    assert
-      .dom(".ai-search-discoveries__title")
-      .hasText(i18n("discourse_ai.discobot_discoveries.main_title"));
     assert
       .dom(".ai-search-discoveries__no-answer-message")
       .hasText(i18n("discourse_ai.discobot_discoveries.no_answer"));

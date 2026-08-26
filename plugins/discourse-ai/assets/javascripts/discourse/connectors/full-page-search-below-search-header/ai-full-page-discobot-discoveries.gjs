@@ -6,13 +6,13 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
 
 export default class AiFullPageDiscobotDiscoveries extends Component {
-  static shouldRender(args, { siteSettings, currentUser }) {
-    return (
-      siteSettings.ai_discover_enabled &&
-      siteSettings.ai_discover_agent &&
-      currentUser?.can_use_ai_discover_agent &&
-      currentUser?.user_option?.ai_search_discoveries
-    );
+  // Parked: the search menu offers asking as one of several options now, and
+  // full-page search has no equivalent yet. Its only gate was the mode the
+  // toggle used to set, so leaving it on would mean asking on every full-page
+  // search with no way to decline. Returning false here keeps the component
+  // unmounted, so neither the credit check nor the discovery request is sent.
+  static shouldRender() {
+    return false;
   }
 
   @service aiCredits;

@@ -1,10 +1,14 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
+import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
+import { MAX_RECENT_SEARCHES } from "discourse/lib/search";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import User from "discourse/models/user";
 import DButton from "discourse/ui-kit/d-button";
-import { i18n } from "discourse-i18n";
 
 export default class RecentSearches extends Component {
   @service currentUser;
@@ -22,12 +26,42 @@ export default class RecentSearches extends Component {
     }
   }
 
+  // Entries rather than bare terms so a consumer can merge in history of its
+  // own, and each row can say which kind of search it repeats.
+  get entries() {
+    // `get` rather than a native read: recent searches are set on the classic
+    // user object, and a native read would not re-render when they arrive.
+    const detailed = get(this.currentUser, "recent_searches_detailed");
+    const terms = get(this.currentUser, "recent_searches") || [];
+    const searches = (detailed || terms.map((term) => ({ term }))).map(
+      (entry) => ({ ...entry, icon: "magnifying-glass" })
+    );
+
+    const merged = applyValueTransformer(
+      "search-menu-recent-searches",
+      searches,
+      { location: this.args.location }
+    );
+
+    // one history, so entries order by when they happened rather than by which
+    // list they came from; entries without a time keep to the back
+    return [...merged]
+      .sort((a, b) => (b.at || "").localeCompare(a.at || ""))
+      .slice(0, MAX_RECENT_SEARCHES);
+  }
+
   @action
   async clearRecent() {
-    const result = await User.resetRecentSearches();
-    if (result.success) {
-      this.currentUser.set("recent_searches", []);
-    }
+    await applyBehaviorTransformer(
+      "search-menu-clear-recent-searches",
+      async () => {
+        const result = await User.resetRecentSearches();
+        if (result.success) {
+          this.currentUser.set("recent_searches", []);
+        }
+      },
+      { location: this.args.location }
+    );
   }
 
   @action
@@ -45,33 +79,33 @@ export default class RecentSearches extends Component {
     const result = await User.loadRecentSearches();
     if (result.success && result.recent_searches?.length) {
       this.currentUser.set("recent_searches", result.recent_searches);
+      this.currentUser.set(
+        "recent_searches_detailed",
+        result.recent_searches_detailed
+      );
     }
   }
 
   <template>
-    {{#if this.currentUser.recent_searches}}
+    {{#if this.entries}}
       <div class="search-menu-recent">
-        <div class="heading">
-          <h4>{{i18n "search.recent"}}</h4>
-          <DButton
-            @title="search.clear_recent"
-            @icon="xmark"
-            @action={{this.clearRecent}}
-            class="btn-flat clear-recent-searches"
-          />
-        </div>
-
-        {{#each this.currentUser.recent_searches as |slug|}}
+        {{#each this.entries as |entry|}}
           <AssistantItem
-            @icon="clock-rotate-left"
-            @label={{slug}}
-            @slug={{slug}}
+            @icon={{entry.icon}}
+            @label={{entry.term}}
+            @slug={{entry.term}}
             @closeSearchMenu={{@closeSearchMenu}}
             @searchTermChanged={{@searchTermChanged}}
-            @usage="recent-search"
+            @usage={{if entry.usage entry.usage "recent-search"}}
             @concatSlug={{true}}
           />
         {{/each}}
+
+        <DButton
+          @label="search.clear_recent"
+          @action={{this.clearRecent}}
+          class="btn-transparent btn-small clear-recent-searches"
+        />
       </div>
     {{/if}}
   </template>

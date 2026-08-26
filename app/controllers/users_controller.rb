@@ -1537,10 +1537,20 @@ class UsersController < ApplicationController
       query = query.where("created_at > ?", current_user.user_option.oldest_search_log_date)
     end
 
-    results =
-      query.group(:term).order("max(created_at) DESC").limit(MAX_RECENT_SEARCHES).pluck(:term)
+    rows =
+      query
+        .group(:term)
+        .order("max(created_at) DESC")
+        .limit(MAX_RECENT_SEARCHES)
+        .pluck(Arel.sql("term, MAX(created_at)"))
 
-    render json: success_json.merge(recent_searches: results)
+    render json:
+             success_json.merge(
+               recent_searches: rows.map(&:first),
+               # sent alongside the bare terms, which stay for existing callers,
+               # so a consumer can order these against a history of its own
+               recent_searches_detailed: rows.map { |term, at| { term: term, at: at&.iso8601 } },
+             )
   end
 
   def reset_recent_searches

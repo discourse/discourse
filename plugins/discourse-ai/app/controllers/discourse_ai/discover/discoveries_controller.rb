@@ -39,12 +39,26 @@ module DiscourseAi
           )
         end
 
+        DiscourseAi::Discoveries.record_recent_ask(user_id: current_user.id, query:)
+
         render json: { request_id: }, status: :ok
       rescue DiscourseAi::Discoveries::RequestConflict
         render_json_error(
           I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),
           status: :conflict,
         )
+      end
+
+      def recent
+        render json:
+                 success_json.merge(
+                   recent_asks: DiscourseAi::Discoveries.recent_asks(user_id: current_user.id),
+                 )
+      end
+
+      def clear_recent
+        DiscourseAi::Discoveries.clear_recent_asks(user_id: current_user.id)
+        head :no_content
       end
 
       def continue_convo

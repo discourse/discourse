@@ -251,6 +251,7 @@ module DiscourseAi
 
             candidate.merge(
               search_metadata,
+              "category_id" => topic.category_id,
               "username" => post.user&.username,
               "name" => post.user&.name,
               "avatar_template" => post.user&.avatar_template,
