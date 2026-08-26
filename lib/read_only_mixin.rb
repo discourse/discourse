@@ -57,6 +57,10 @@ module ReadOnlyMixin
     if @staff_writes_only_mode && (allowed_in_staff_writes_only_mode? || current_user&.staff?)
       return
     end
+    if @readonly_mode && SiteSetting.allow_login_in_readonly_mode &&
+         allowed_in_staff_writes_only_mode?
+      return
+    end
     return if !@readonly_mode || allowed_in_readonly_mode?
     raise Discourse::ReadOnly
   end
