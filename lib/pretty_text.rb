@@ -470,6 +470,21 @@ module PrettyText
       end
   end
 
+  def self.extract_hashtags(html)
+    return [] if html.blank?
+
+    Nokogiri::HTML5
+      .fragment(html)
+      .css("a.hashtag-cooked")
+      .map do |anchor|
+        {
+          type: anchor["data-type"],
+          id: anchor["data-id"],
+          ref: anchor["data-ref"] || anchor["data-slug"],
+        }
+      end
+  end
+
   def self.extract_mentions(cooked)
     mentions =
       cooked
