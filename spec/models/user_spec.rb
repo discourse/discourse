@@ -3038,6 +3038,16 @@ RSpec.describe User do
       inactive.activate
       expect(inactive.active).to eq(true)
     end
+
+    it "keeps the bounce score, since activating proves nothing about deliverability" do
+      inactive.user_stat.update!(bounce_score: 3.0)
+      EmailBounceScore.record_bounce!(inactive.email, 3.0)
+
+      inactive.activate
+
+      expect(inactive.user_stat.reload.bounce_score).to eq(3.0)
+      expect(EmailBounceScore.score_for(inactive.email)).to eq(3.0)
+    end
   end
 
   def filter_by(method)

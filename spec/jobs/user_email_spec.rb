@@ -753,6 +753,7 @@ RSpec.describe Jobs::UserEmail do
         SiteSetting.bounce_score_erode_on_send = 0.2
 
         user.user_stat.update(bounce_score: 2.7)
+        EmailBounceScore.record_bounce!(user.email, 2.7)
 
         Jobs::UserEmail.new.execute(
           type: :user_mentioned,
@@ -763,6 +764,7 @@ RSpec.describe Jobs::UserEmail do
 
         user.user_stat.reload
         expect(user.user_stat.bounce_score).to eq(2.5)
+        expect(EmailBounceScore.score_for(user.email)).to eq(2.5)
 
         user.user_stat.update(bounce_score: 0)
 

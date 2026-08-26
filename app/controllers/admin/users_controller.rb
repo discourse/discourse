@@ -578,6 +578,7 @@ class Admin::UsersController < Admin::StaffController
   def reset_bounce_score
     guardian.ensure_can_reset_bounce_score!(@user)
     @user.user_stat&.reset_bounce_score!
+    EmailBounceScore.for_user(@user).delete_all
     StaffActionLogger.new(current_user).log_reset_bounce_score(@user)
     render json: success_json
   end

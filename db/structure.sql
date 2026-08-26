@@ -5285,6 +5285,39 @@ ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
 
 
 --
+-- Name: email_bounce_scores; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_bounce_scores (
+    id bigint NOT NULL,
+    email character varying(513) NOT NULL,
+    bounce_score double precision DEFAULT 0.0 NOT NULL,
+    reset_bounce_score_after timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: email_bounce_scores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_bounce_scores_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_bounce_scores_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_bounce_scores_id_seq OWNED BY public.email_bounce_scores.id;
+
+
+--
 -- Name: email_change_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -13539,6 +13572,13 @@ ALTER TABLE ONLY public.drafts ALTER COLUMN id SET DEFAULT nextval('public.draft
 
 
 --
+-- Name: email_bounce_scores id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_bounce_scores ALTER COLUMN id SET DEFAULT nextval('public.email_bounce_scores_id_seq'::regclass);
+
+
+--
 -- Name: email_change_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15967,6 +16007,14 @@ ALTER TABLE ONLY public.draft_sequences
 
 ALTER TABLE ONLY public.drafts
     ADD CONSTRAINT drafts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_bounce_scores email_bounce_scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_bounce_scores
+    ADD CONSTRAINT email_bounce_scores_pkey PRIMARY KEY (id);
 
 
 --
@@ -19816,6 +19864,13 @@ CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING
 
 
 --
+-- Name: index_email_bounce_scores_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_email_bounce_scores_on_email ON public.email_bounce_scores USING btree (email);
+
+
+--
 -- Name: index_email_change_requests_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23373,6 +23428,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260818045311'),
 ('20260818045308'),
 ('20260818045305'),
+('20260817214148'),
 ('20260817092359'),
 ('20260817054353'),
 ('20260817054044'),

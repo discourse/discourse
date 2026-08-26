@@ -3377,6 +3377,18 @@ RSpec.describe Admin::UsersController do
         expect(user.reload.user_stat.bounce_score).to eq(0)
         expect(UserHistory.last.action).to eq(UserHistory.actions[:reset_bounce_score])
       end
+
+      it "will reset the score of every address the user owns" do
+        secondary = Fabricate(:secondary_email, user: user).email
+        EmailBounceScore.record_bounce!(user.email, 4)
+        EmailBounceScore.record_bounce!(secondary, 4)
+
+        post "/admin/users/#{user.id}/reset-bounce-score.json"
+
+        expect(response.status).to eq(200)
+        expect(EmailBounceScore.score_for(user.email)).to eq(0)
+        expect(EmailBounceScore.score_for(secondary)).to eq(0)
+      end
     end
 
     context "when logged in as a non-staff user" do
