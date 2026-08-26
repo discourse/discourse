@@ -4,9 +4,27 @@ require "mail"
 
 module Email
   # See https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml#smtp-enhanced-status-codes-1
-  SMTP_STATUS_SUCCESS = "2."
-  SMTP_STATUS_TRANSIENT_FAILURE = "4."
-  SMTP_STATUS_PERMANENT_FAILURE = "5."
+  # both enhanced ("4.X.X") and basic ("4XX") statuses start with the class digit
+  def self.smtp_transient_failure?(status)
+    status.to_s.start_with?("4")
+  end
+
+  # A relay IP, a port, a date and a version string all look like a status, so
+  # one is only read where SMTP would put it: leading the diagnostic (after the
+  # optional "smtp;" the DSN Diagnostic-Code field carries), or introducing an
+  # enhanced status. Anything looser scores bounces off software version numbers.
+  SMTP_STATUS_IN_TEXT_REGEXP =
+    /
+    (?: \A (?:[\w-]+;\s*)? \K [245] (?: \.\d{1,3}\.\d{1,3} | \d\d ) (?![.\d])
+      | (?<![.\w]) [245]\d\d (?= [ -]\s? [245]\.\d{1,3}\.\d{1,3} (?![.\d]) )
+    )
+  /x
+
+  # nil when the text holds no status, so a report that can't be classified is
+  # left alone rather than guessed at
+  def self.extract_smtp_status(text)
+    text.to_s[SMTP_STATUS_IN_TEXT_REGEXP]
+  end
 
   def self.is_valid?(email)
     return false unless String === email

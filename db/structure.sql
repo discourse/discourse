@@ -5379,7 +5379,8 @@ CREATE TABLE public.email_logs (
     topic_id integer,
     bounce_error_code character varying,
     smtp_transaction_response character varying(500),
-    bcc_addresses text
+    bcc_addresses text,
+    bounce_permanent boolean
 );
 
 
@@ -23364,6 +23365,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260821164114'),
 ('20260820171539'),
 ('20260820143851'),
+('20260818162304'),
 ('20260818143417'),
 ('20260818081537'),
 ('20260818045317'),

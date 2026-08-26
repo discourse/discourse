@@ -140,6 +140,16 @@ RSpec.describe Email::Receiver do
 
       expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
     end
+
+    it "sends a system message when a score eroded by sending crosses the threshold" do
+      # every send erodes the score, so it is rarely a whole number by the time
+      # it crosses
+      user.user_stat.update!(bounce_score: SiteSetting.bounce_score_threshold - 0.1)
+
+      SystemMessage.expects(:create_from_system_user).with(user, :email_revoked)
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+    end
   end
 
   shared_examples "creates topic with forwarded message as quote" do |destination, address|
