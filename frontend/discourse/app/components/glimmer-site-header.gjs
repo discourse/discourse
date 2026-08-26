@@ -377,7 +377,9 @@ export default class GlimmerSiteHeader extends Component {
     }
 
     event.stopPropagation();
-    if (event.pointerType !== "touch") {
+    // Touch belongs to the swipe gesture, but only where it runs: on a narrow
+    // desktop it stands down, and nothing else would dismiss the drawer.
+    if (event.pointerType !== "touch" || this.site.desktopView) {
       const press = this.#beginDrawerPress(event.target);
       if (press) {
         this._drawerPress = null;

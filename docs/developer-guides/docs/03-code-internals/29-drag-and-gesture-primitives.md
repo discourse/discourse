@@ -526,12 +526,18 @@ or dismiss something.
 
 | Argument           | Type                     | Purpose                                   |
 | ------------------ | ------------------------ | ----------------------------------------- |
+| `onDidPress`       | `(event) => void`        | A single touch landed, before any swipe.  |
+| `onDidRelease`     | `(event) => void`        | That touch lifted without swiping.        |
 | `onDidStartSwipe`  | `(state, event) => void` | The gesture began.                        |
 | `onDidSwipe`       | `(state) => void`        | It progressed.                            |
 | `onDidEndSwipe`    | `(state) => void`        | It completed.                             |
 | `onDidCancelSwipe` | `(detail) => void`       | It was interrupted.                       |
 | `enabled`          | `boolean`                | Whether the gesture is active.            |
 | `lockBody`         | `boolean`                | Whether to lock body scrolling during it. |
+
+`onDidPress` and `onDidRelease` bracket a touch that never became a swipe, which
+is how a surface tells a tap from a drag without a click listener.
+`preventDefault()` on the event given to `onDidStartSwipe` refuses that gesture.
 
 Use `dPointerDrag` instead when a value must track the pointer continuously.
 `dSwipe` answers "which way did they flick", not "where is the pointer now".

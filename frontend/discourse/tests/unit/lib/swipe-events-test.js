@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import SwipeEvents, {
   shouldDeferSwipeToContent,
+  SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/lib/swipe-events";
 
 function dispatchTouch(
@@ -104,6 +105,35 @@ module("Unit | Lib | swipe-events | lifecycle", function (hooks) {
     dispatchTouch(element, "touchend", { x: 20, time: 40 });
 
     assert.strictEqual(ended.velocityX, 0);
+  });
+
+  test("a sub-pixel smear on release is not a flick", function (assert) {
+    let ended;
+    element.addEventListener("swipeend", (event) => (ended = event.detail));
+
+    // parked long enough for the flick to expire, then lifted with a smear
+    dispatchTouch(element, "touchstart", { time: 0 });
+    dispatchTouch(element, "touchmove", { x: 20, time: 20 });
+    dispatchTouch(element, "touchend", { x: 21, time: 200 });
+
+    assert.true(
+      Math.abs(ended.velocityX) < SWIPE_VELOCITY_THRESHOLD,
+      "a pixel across a sliver of time does not read as a flick"
+    );
+  });
+
+  test("a flick released with a smear keeps its velocity", function (assert) {
+    let ended;
+    element.addEventListener("swipeend", (event) => (ended = event.detail));
+
+    dispatchTouch(element, "touchstart", { time: 0 });
+    dispatchTouch(element, "touchmove", { x: 20, time: 20 });
+    dispatchTouch(element, "touchend", { x: 21, time: 24 });
+
+    assert.true(
+      ended.velocityX >= SWIPE_VELOCITY_THRESHOLD,
+      "the lift does not discard the flick that came before it"
+    );
   });
 
   test("touch cancellation cancels rather than ending the swipe", function (assert) {

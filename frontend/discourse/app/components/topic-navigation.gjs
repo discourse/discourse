@@ -256,6 +256,16 @@ export default class TopicNavigation extends Component {
     });
   }
 
+  // A pointer held still reports no velocity, and no distance over it is not a
+  // number at all; a duration of NaN throws inside `animate`.
+  #settleDurationMs(distancePx, velocity) {
+    const perMs = Math.abs(velocity);
+    const durationMs = perMs ? distancePx / perMs : NaN;
+    return Number.isFinite(durationMs)
+      ? getMaxAnimationTimeMs(durationMs)
+      : getMaxAnimationTimeMs();
+  }
+
   @bind
   onSwipeEnd(event) {
     const e = event.detail;
@@ -265,7 +275,7 @@ export default class TopicNavigation extends Component {
     let durationMs;
     if (shouldCloseMenu(e, "bottom")) {
       const distancePx = maxOffset - this.pxClosed;
-      durationMs = getMaxAnimationTimeMs(distancePx / Math.abs(e.velocityY));
+      durationMs = this.#settleDurationMs(distancePx, e.velocityY);
       timelineContainer
         .animate([{ transform: `translate3d(0, ${maxOffset}px, 0)` }], {
           duration: durationMs,
@@ -274,7 +284,7 @@ export default class TopicNavigation extends Component {
         .finished.then(() => this.collapseFullscreen(null, 0));
     } else {
       const distancePx = this.pxClosed;
-      durationMs = getMaxAnimationTimeMs(distancePx / Math.abs(e.velocityY));
+      durationMs = this.#settleDurationMs(distancePx, e.velocityY);
       timelineContainer.animate([{ transform: `translate3d(0, 0, 0)` }], {
         duration: durationMs,
         fill: "forwards",

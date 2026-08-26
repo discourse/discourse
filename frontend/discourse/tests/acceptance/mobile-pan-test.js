@@ -1,5 +1,9 @@
 import { click, find, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import NarrowDesktop, {
+  forceNarrowDesktop,
+  resetNarrowDesktop,
+} from "discourse/lib/narrow-desktop";
 import { overrideAnimationTimeForTesting } from "discourse/lib/swipe-events";
 import { resetSiteDirForTesting } from "discourse/lib/text-direction";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -314,5 +318,43 @@ acceptance("Mobile - menu drawer swipes", function (needs) {
       document.documentElement.classList.remove("rtl");
       resetSiteDirForTesting();
     }
+  });
+});
+
+acceptance("Narrow desktop - menu drawer cloak", function (needs) {
+  needs.user();
+  needs.settings({ navigation_menu: "sidebar" });
+
+  needs.hooks.afterEach(function () {
+    resetNarrowDesktop();
+  });
+
+  test("a touch on the cloak still dismisses the drawer", async function (assert) {
+    await visit("/");
+    forceNarrowDesktop();
+    NarrowDesktop.init();
+    NarrowDesktop.update(this.owner, true);
+    await settled();
+
+    await click(".btn-sidebar-toggle");
+    assert.dom(".sidebar-hamburger-dropdown").exists("the drawer is open");
+
+    // the swipe modifier stands down on a desktop view, so without the pointer
+    // path a touch on the cloak would leave the drawer open
+    find(".header-cloak").dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        clientX: 200,
+        clientY: 200,
+        pointerId: 99,
+        pointerType: "touch",
+      })
+    );
+    await settled();
+
+    assert
+      .dom(".sidebar-hamburger-dropdown")
+      .doesNotExist("the cloak dismissed it");
   });
 });
