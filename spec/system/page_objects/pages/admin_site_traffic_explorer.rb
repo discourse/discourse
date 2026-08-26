@@ -104,6 +104,22 @@ module PageObjects
         end
       end
 
+      def has_rows?(card:, rows:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          return false unless has_css?("[data-test-site-traffic-row]", count: rows.size)
+
+          actual_rows =
+            all("[data-test-site-traffic-row]").map do |row|
+              {
+                label: row.find(".site-traffic-explorer__dimension-text").text,
+                count: row.find(".site-traffic-explorer__row-count").text,
+              }
+            end
+
+          actual_rows == rows
+        end
+      end
+
       def has_url_link?(card:, label:, href:)
         within("[data-test-site-traffic-card='#{card}']") do
           has_css?("a[href='#{href}']", exact_text: label)

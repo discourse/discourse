@@ -474,6 +474,21 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?country=US&end_date=2026-05-12&range=custom&referrer=%5B%22one.example%22%2C%22two.example%22%2C%22three.example%22%5D&start_date=2026-05-01",
     )
+    expect(traffic).to have_rows(
+      card: "acquisition",
+      rows: [
+        { label: "one.example", count: "1" },
+        { label: "two.example", count: "1" },
+        { label: "three.example", count: "1" },
+      ],
+    )
+
+    traffic.select_tab(card: "acquisition", tab: "Countries")
+
+    expect(traffic).to have_rows(
+      card: "acquisition",
+      rows: [{ label: "United States", count: "3" }],
+    )
 
     page.refresh
 
