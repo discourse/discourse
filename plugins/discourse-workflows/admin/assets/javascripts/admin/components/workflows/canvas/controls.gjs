@@ -4,12 +4,15 @@ import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
+const UNDO = formatShortcut("mod+z");
+const REDO = formatShortcut("mod+y");
+
 function undoTitle() {
-  return `${i18n("discourse_workflows.canvas.undo")} [${formatShortcut("mod+z").label}]`;
+  return `${i18n("discourse_workflows.canvas.undo")} [${UNDO.label}]`;
 }
 
 function redoTitle() {
-  return `${i18n("discourse_workflows.canvas.redo")} [${formatShortcut("mod+y").label}]`;
+  return `${i18n("discourse_workflows.canvas.redo")} [${REDO.label}]`;
 }
 
 export default <template>
@@ -17,20 +20,22 @@ export default <template>
     <DTooltip @identifier="workflow-canvas-undo" @content={{(undoTitle)}}>
       <:trigger>
         <DButton
-          @action={{@onUndo}}
-          @icon="arrow-rotate-left"
-          @disabled={{not @canUndo}}
           class="btn-flat btn-small"
+          aria-keyshortcuts={{UNDO.aria}}
+          @action={{@onUndo}}
+          @disabled={{not @canUndo}}
+          @icon="arrow-rotate-left"
         />
       </:trigger>
     </DTooltip>
     <DTooltip @identifier="workflow-canvas-redo" @content={{(redoTitle)}}>
       <:trigger>
         <DButton
-          @action={{@onRedo}}
-          @icon="arrow-rotate-right"
-          @disabled={{not @canRedo}}
           class="btn-flat btn-small"
+          aria-keyshortcuts={{REDO.aria}}
+          @action={{@onRedo}}
+          @disabled={{not @canRedo}}
+          @icon="arrow-rotate-right"
         />
       </:trigger>
     </DTooltip>
