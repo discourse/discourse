@@ -20,10 +20,10 @@
 # `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   let(:mention_names) do
-    Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("alice")])
+    Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("alice")])
   end
 
-  let(:hashtag_names) { Migrations::SortedStringSet.new([]) }
+  let(:hashtag_names) { Migrations::CompactStringSet.new([]) }
 
   # Constructs whose content core treats as code: the sentinel mention must
   # survive cooking as plain text, and we must leave the body alone.

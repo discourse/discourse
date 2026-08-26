@@ -36,7 +36,7 @@ module Migrations
           class Mention < Base
             TRIGGERS = ["@"].freeze
 
-            # @param names [Migrations::SortedStringSet] the source's mention names,
+            # @param names [Migrations::CompactStringSet] the source's mention names,
             #   already normalized. A mention is deferred only if its (normalized)
             #   name is in the set.
             def initialize(names:)

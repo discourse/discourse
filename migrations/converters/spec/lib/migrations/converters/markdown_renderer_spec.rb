@@ -399,6 +399,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
           mention_type: Migrations::Database::IntermediateDB::Enums::MentionType::USER,
           target_id: nil,
           name: "gerhard",
+          original_markdown: nil,
         },
       )
     end

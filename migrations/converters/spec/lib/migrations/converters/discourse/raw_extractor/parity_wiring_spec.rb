@@ -33,7 +33,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
           name_set_helpers.filter_map do |helper|
             value = instance.public_send(helper)
-            "#{file}: #{helper} is a #{value.class}" unless value.is_a?(Migrations::SortedStringSet)
+            unless value.is_a?(Migrations::CompactStringSet)
+              "#{file}: #{helper} is a #{value.class}"
+            end
           rescue NoMethodError => e
             "#{file}: #{e.message}"
           end

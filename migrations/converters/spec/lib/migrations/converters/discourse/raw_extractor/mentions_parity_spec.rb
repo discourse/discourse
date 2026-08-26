@@ -26,11 +26,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # mention that names something real — the same condition under which core cooks a
   # link (a name that resolves to nothing cooks an inert `<span class="mention">`).
   let(:mention_names) do
-    Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("someuser")])
+    Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("someuser")])
   end
 
   # This spec is not about hashtags; the extractor requires the set anyway.
-  let(:hashtag_names) { Migrations::SortedStringSet.new([]) }
+  let(:hashtag_names) { Migrations::CompactStringSet.new([]) }
 
   # The 32 ASCII punctuation characters (CommonMark), which already include the
   # ASCII symbols `$ + < = > ^ \` | ~`, plus letters, whitespace, and Unicode
@@ -117,7 +117,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
         Migrations::Converters::EmbedBuffer.new(
           owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
         )
-      names = Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize(name)])
+      names = Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize(name)])
       described_class.new(embeds: buffer, mention_names: names, hashtag_names:).extract(raw)
       buffer.mentions.first&.[](:name)
     end
@@ -151,7 +151,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # simpler capless detector.
   it "extracts an over-long name the gate would never admit, unlike core" do
     long = "u#{"a" * 60}" # 61 characters
-    names = Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize(long)])
+    names = Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize(long)])
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,

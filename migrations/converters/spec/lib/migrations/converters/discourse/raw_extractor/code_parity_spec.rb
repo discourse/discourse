@@ -20,11 +20,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # The extractor requires both name sets; the mention sentinel needs its name in
   # one of them.
   def mention_names
-    Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("alice")])
+    Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("alice")])
   end
 
   def hashtag_names
-    Migrations::SortedStringSet.new([])
+    Migrations::CompactStringSet.new([])
   end
 
   # The sentinels the rows plant. A mention is the cheap one; an upload is

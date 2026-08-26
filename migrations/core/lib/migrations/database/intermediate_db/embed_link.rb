@@ -10,6 +10,7 @@ module Migrations
       module EmbedLink
         SQL = <<~SQL
           INSERT INTO embed_links (
+            original_markdown,
             owner_id,
             owner_type,
             placeholder,
@@ -23,13 +24,14 @@ module Migrations
             url
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `embed_links` record in the IntermediateDB.
         #
+        # @param original_markdown    [String, nil]
         # @param owner_id             [Integer, String]
         # @param owner_type           [Integer]
         #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
@@ -49,6 +51,7 @@ module Migrations
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
         # @see Migrations::Database::IntermediateDB::Enums::LinkTarget
         def self.create(
+          original_markdown: nil,
           owner_id:,
           owner_type:,
           placeholder:,
@@ -63,6 +66,7 @@ module Migrations
         )
           Migrations::Database::IntermediateDB.insert(
             SQL,
+            original_markdown,
             owner_id,
             owner_type,
             placeholder,

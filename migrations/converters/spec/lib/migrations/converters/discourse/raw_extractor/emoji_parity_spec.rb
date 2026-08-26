@@ -22,11 +22,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # This spec is about neither mentions nor hashtags; the extractor requires
   # both name sets anyway, and an empty one defers nothing.
   def mention_names
-    Migrations::SortedStringSet.new([])
+    Migrations::CompactStringSet.new([])
   end
 
   def hashtag_names
-    Migrations::SortedStringSet.new([])
+    Migrations::CompactStringSet.new([])
   end
   before do
     SiteSetting.enable_emoji = true

@@ -71,7 +71,7 @@ module Migrations
               /\G#(?<name>#{SEGMENT}(?::#{SEGMENT})?)(?:::(?<type>tag|category))?(?!#{CONTINUATION}|\.#{CONTINUATION}|::)/i
             private_constant :PATTERN
 
-            # @param names [Migrations::SortedStringSet] the source's category slug
+            # @param names [Migrations::CompactStringSet] the source's category slug
             #   paths and tag names, already normalized. A hashtag is deferred only
             #   if its (normalized) name is in the set.
             def initialize(names:)

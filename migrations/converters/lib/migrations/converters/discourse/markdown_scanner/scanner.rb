@@ -41,9 +41,10 @@ module Migrations
           #   order; each declares the characters it can match at (`#triggers`) and,
           #   when needed, its own skip-check alternative (`#presence_pattern`) — so a
           #   pattern only widens the check for runs that actually wire its detector.
-          # @yieldparam node the detected AST node. The block returns the node's
-          #   replacement, or nil to decline the match and pass the matched text
-          #   through unchanged (see {#handle_match}).
+          # @yieldparam node the detected AST node.
+          # @yieldparam source [String] the verbatim matched slice. The block
+          #   returns the node's replacement, or nil to decline the match and pass
+          #   the matched text through unchanged (see {#handle_match}).
           def initialize(detectors:, &on_node)
             @on_node = on_node
             @gate = Regexp.union(MAYBE_EMBED, *detectors.filter_map(&:presence_pattern))
@@ -182,19 +183,16 @@ module Migrations
           end
 
           def handle_match(match)
+            source = @input.byteslice(match.start_pos...match.end_pos)
             # A node-less match consumes its span without producing anything, so the
-            # caller is never asked about it (see {Detectors::Match}).
-            replacement = match.node.nil? ? nil : @on_node.call(match.node)
+            # caller is never asked about it (see {Detectors::Match}). The matched
+            # slice rides along with the node so the caller can record the verbatim
+            # source next to the descriptor it defers.
+            replacement = match.node.nil? ? nil : @on_node.call(match.node, source)
             # A block declines a match by returning nil: the matched span passes
-            # through unchanged (the byte slice, since positions are byte offsets)
-            # instead of being replaced. Anything else is stringified and spliced in.
-            @result << (
-              if replacement.nil?
-                @input.byteslice(match.start_pos...match.end_pos)
-              else
-                replacement.to_s
-              end
-            )
+            # through unchanged instead of being replaced. Anything else is
+            # stringified and spliced in.
+            @result << (replacement.nil? ? source : replacement.to_s)
             @pos = match.end_pos
             @line_start = false
           end

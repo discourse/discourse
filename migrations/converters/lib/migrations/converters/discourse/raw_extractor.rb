@@ -14,6 +14,11 @@ module Migrations
       # record the embed on the collector and return the placeholder token the
       # scanner splices into the output.
       #
+      # A {MarkdownScanner::TierGate} classifies every body first: most have
+      # nothing extractable and pass through untouched, danger-free bodies take
+      # the {MarkdownScanner::ProseScanner}, and only a body whose syntax makes
+      # context matter pays for the full scanner walk.
+      #
       # We detect uploads, quote references, internal links, mentions, hashtags and
       # custom emoji. Polls and events are self-contained (no id remapping needed), so
       # they're left in `raw` verbatim.
@@ -52,12 +57,12 @@ module Migrations
         #   (a `MentionType` enum value for `here` / `all` / `group` / `user`).
         #   Defaults to a classifier with no group knowledge (so only `@here` / `@all`
         #   are special-cased).
-        # @param mention_names [Migrations::SortedStringSet] the source's mention
+        # @param mention_names [Migrations::CompactStringSet] the source's mention
         #   names (usernames, group names, the `here_mention` value and `all`,
         #   normalized). Only a mention naming one of them is deferred; anything else
         #   stays literal text. Required: without the names every `@word` that parses
         #   is rewritten, including the ones that name nobody.
-        # @param hashtag_names [Migrations::SortedStringSet] the source's category
+        # @param hashtag_names [Migrations::CompactStringSet] the source's category
         #   slug paths and tag names (normalized). Only a hashtag naming one of them
         #   is extracted; anything else stays literal text. Required for the same
         #   reason as `mention_names`.
@@ -121,7 +126,10 @@ module Migrations
           # reuse them for every post. `extract` swaps `@topic_id` per call, so one
           # extractor must not run in two threads at once — each worker holds its own
           # (the posts step builds it in per-worker `setup`).
-          @scanner = MarkdownScanner::Scanner.new(detectors:) { |node| defer(node) }
+          on_node = ->(node, source) { defer(node, source) }
+          @gate = MarkdownScanner::TierGate.new(detectors:)
+          @prose_scanner = MarkdownScanner::ProseScanner.new(detectors:, &on_node)
+          @scanner = MarkdownScanner::Scanner.new(detectors:, &on_node)
         end
 
         # @param raw [String, nil] the source post body (Discourse Markdown).
@@ -133,20 +141,35 @@ module Migrations
           return raw if raw.nil?
 
           @topic_id = topic_id
-          @scanner.scan(raw)
+
+          case @gate.classify(raw)
+          when :none
+            raw
+          when :prose
+            @prose_scanner.scan(raw)
+          else
+            @scanner.scan(raw)
+          end
         end
 
         private
 
-        # Records the detected embed on the collector and returns the placeholder token.
-        def defer(node)
+        # Records the detected embed on the collector and returns the placeholder
+        # token. `source` is the verbatim matched slice; it rides on every row so
+        # the importer can restore the exact source text when the embed can't be
+        # mapped, instead of rebuilding a canonical form.
+        def defer(node, source)
           case node
           when Markbridge::AST::Upload
-            @embeds.upload(upload_id: node.sha1)
+            @embeds.upload(upload_id: node.sha1, original_markdown: source)
           when MarkdownScanner::UploadUrlReference
-            @embeds.upload(upload_id: node.sha1, original_markdown: node.original_markdown)
+            @embeds.upload(upload_id: node.sha1, original_markdown: source)
           when Markbridge::AST::Mention
-            @embeds.mention(mention_type: @mention_classifier.call(node.name), name: node.name)
+            @embeds.mention(
+              mention_type: @mention_classifier.call(node.name),
+              name: node.name,
+              original_markdown: source,
+            )
           when MarkdownScanner::InternalLinkReference
             @embeds.link(
               url: node.url,
@@ -157,13 +180,18 @@ module Migrations
               target_topic_id: node.target_topic_id,
               target_post_number: node.target_post_number,
               target_suffix: node.target_suffix,
+              original_markdown: source,
             )
           when MarkdownScanner::HashtagReference
-            @embeds.hashtag(hashtag_type: FORCED_HASHTAG_TYPES[node.forced_type], name: node.name)
+            @embeds.hashtag(
+              hashtag_type: FORCED_HASHTAG_TYPES[node.forced_type],
+              name: node.name,
+              original_markdown: source,
+            )
           when MarkdownScanner::EmojiReference
-            @embeds.emoji(name: node.name)
+            @embeds.emoji(name: node.name, original_markdown: source)
           when MarkdownScanner::QuoteReference
-            defer_quote(node)
+            defer_quote(node, source)
           else
             raise NotImplementedError, "no defer handler for #{node.class}"
           end
@@ -175,7 +203,7 @@ module Migrations
         # points into its own topic. A `topic:` with no `post:` drops both coordinates,
         # because the importer can only resolve them as a pair. A quote with neither is
         # username-only.
-        def defer_quote(node)
+        def defer_quote(node, source)
           post_number = node.post_number
           topic_id = post_number ? (node.topic_id || @topic_id) : nil
 
@@ -184,6 +212,7 @@ module Migrations
             quoted_name: node.name,
             quoted_topic_id: topic_id,
             quoted_post_number: post_number,
+            original_markdown: source,
           )
         end
       end

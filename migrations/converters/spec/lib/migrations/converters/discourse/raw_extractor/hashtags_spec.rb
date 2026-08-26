@@ -105,7 +105,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   describe "the hashtag name gate" do
-    let(:hashtag_names) { Migrations::SortedStringSet.new(%w[announcements support:billing]) }
+    let(:hashtag_names) { Migrations::CompactStringSet.new(%w[announcements support:billing]) }
 
     it "requires the names, so no caller can defer every hashtag by accident" do
       expect { described_class.new(embeds: buffer, mention_names:) }.to raise_error(
@@ -161,7 +161,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         described_class.new(
           embeds: buffer,
           mention_names:,
-          hashtag_names: Migrations::SortedStringSet.new(%w[v2.0]),
+          hashtag_names: Migrations::CompactStringSet.new(%w[v2.0]),
         )
       dotted.extract("ship #v2.0 today")
 
@@ -173,7 +173,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         described_class.new(
           embeds: buffer,
           mention_names:,
-          hashtag_names: Migrations::SortedStringSet.new(%w[v2]),
+          hashtag_names: Migrations::CompactStringSet.new(%w[v2]),
         )
       raw = "ship #v2.0 today"
 

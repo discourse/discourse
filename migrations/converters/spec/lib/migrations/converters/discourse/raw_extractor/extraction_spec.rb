@@ -267,7 +267,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   # username. Every expectation here was checked against PrettyText.
   describe "links" do
     let(:hashtag_names) do
-      Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("general")])
+      Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("general")])
     end
     let(:link_extractor) do
       described_class.new(
@@ -391,7 +391,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   # against PrettyText.
   describe "inline code spans" do
     let(:hashtag_names) do
-      Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("general")])
+      Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("general")])
     end
     let(:hashtag_extractor) { described_class.new(embeds: buffer, mention_names:, hashtag_names:) }
     let(:emoji_extractor) do
@@ -467,7 +467,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         .new(described_class) { public :defer }
         .new(embeds: buffer, mention_names:, hashtag_names:)
 
-    expect { seam.defer(Object.new) }.to raise_error(NotImplementedError, /Object/)
+    expect { seam.defer(Object.new, "@x") }.to raise_error(NotImplementedError, /Object/)
   end
 
   # The contract: every token spliced into the result maps to exactly one recorded
@@ -480,6 +480,26 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
 
     expect(Migrations::Placeholder.scan(result)).to match_array(buffer.placeholders)
+  end
+
+  describe "verbatim originals" do
+    # Every deferred row carries the exact matched source slice, so the
+    # importer can restore it unchanged when the embed cannot be mapped —
+    # rebuilding a canonical form loses titles, spacing and casing.
+    it "records the matched slice on every kind of row" do
+      extract(<<~RAW, topic_id: 7)
+        [quote="alice, post:2"]
+        hi @bob, see #support
+        [/quote]
+        [text](/t/topic/5) and ![p](upload://abc.png)
+      RAW
+
+      expect(buffer.quotes.first[:original_markdown]).to eq(%q{[quote="alice, post:2"]})
+      expect(buffer.mentions.first[:original_markdown]).to eq("@bob")
+      expect(buffer.hashtags.first[:original_markdown]).to eq("#support")
+      expect(buffer.links.first[:original_markdown]).to eq("[text](/t/topic/5)")
+      expect(buffer.uploads.first[:original_markdown]).to eq("![p](upload://abc.png)")
+    end
   end
 
   describe "Unicode raw" do

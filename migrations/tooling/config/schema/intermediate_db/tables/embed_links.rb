@@ -53,6 +53,9 @@ Migrations::Tooling::Schema.table :embed_links do
   add_column :target_topic_id, :numeric
   add_column :target_post_number, :integer
   add_column :target_suffix, :text
+  # The verbatim source snippet, restored unchanged when the importer cannot
+  # map the embed to a destination record (the round-trip fallback).
+  add_column :original_markdown, :text
 
   index :owner_type, :owner_id
 end

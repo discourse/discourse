@@ -189,8 +189,8 @@ EmbedOwner = Migrations::Database::IntermediateDB::Enums::EmbedOwner
 extractor =
   Migrations::Converters::Discourse::RawExtractor.new(
     embeds: Migrations::Converters::EmbedBuffer.new(owner_type: EmbedOwner::POST),
-    mention_names: Migrations::SortedStringSet.new(normalize.call(mention_names)),
-    hashtag_names: Migrations::SortedStringSet.new(normalize.call(hashtag_names)),
+    mention_names: Migrations::CompactStringSet.new(normalize.call(mention_names)),
+    hashtag_names: Migrations::CompactStringSet.new(normalize.call(hashtag_names)),
     custom_emoji_names: custom_emoji_names.empty? ? nil : custom_emoji_names,
     internal_link_hosts:,
   )

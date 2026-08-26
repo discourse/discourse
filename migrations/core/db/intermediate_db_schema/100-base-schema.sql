@@ -119,10 +119,11 @@ CREATE TABLE category_users
 
 CREATE TABLE embed_emojis
 (
-    name        TEXT         NOT NULL,
-    owner_id    NUMERIC      NOT NULL,
-    owner_type  ENUM_INTEGER NOT NULL,
-    placeholder TEXT         NOT NULL
+    name              TEXT         NOT NULL,
+    original_markdown TEXT,
+    owner_id          NUMERIC      NOT NULL,
+    owner_type        ENUM_INTEGER NOT NULL,
+    placeholder       TEXT         NOT NULL
 );
 
 CREATE INDEX idx_embed_emojis_owner_type_owner_id ON embed_emojis (owner_type, owner_id);
@@ -139,18 +140,20 @@ CREATE INDEX idx_embed_events_owner_type_owner_id ON embed_events (owner_type, o
 
 CREATE TABLE embed_hashtags
 (
-    hashtag_type ENUM_INTEGER,
-    name         TEXT         NOT NULL,
-    owner_id     NUMERIC      NOT NULL,
-    owner_type   ENUM_INTEGER NOT NULL,
-    placeholder  TEXT         NOT NULL,
-    target_id    NUMERIC
+    hashtag_type      ENUM_INTEGER,
+    name              TEXT         NOT NULL,
+    original_markdown TEXT,
+    owner_id          NUMERIC      NOT NULL,
+    owner_type        ENUM_INTEGER NOT NULL,
+    placeholder       TEXT         NOT NULL,
+    target_id         NUMERIC
 );
 
 CREATE INDEX idx_embed_hashtags_owner_type_owner_id ON embed_hashtags (owner_type, owner_id);
 
 CREATE TABLE embed_links
 (
+    original_markdown  TEXT,
     owner_id           NUMERIC      NOT NULL,
     owner_type         ENUM_INTEGER NOT NULL,
     placeholder        TEXT         NOT NULL,
@@ -168,12 +171,13 @@ CREATE INDEX idx_embed_links_owner_type_owner_id ON embed_links (owner_type, own
 
 CREATE TABLE embed_mentions
 (
-    mention_type ENUM_INTEGER,
-    name         TEXT,
-    owner_id     NUMERIC      NOT NULL,
-    owner_type   ENUM_INTEGER NOT NULL,
-    placeholder  TEXT         NOT NULL,
-    target_id    NUMERIC
+    mention_type      ENUM_INTEGER,
+    name              TEXT,
+    original_markdown TEXT,
+    owner_id          NUMERIC      NOT NULL,
+    owner_type        ENUM_INTEGER NOT NULL,
+    placeholder       TEXT         NOT NULL,
+    target_id         NUMERIC
 );
 
 CREATE INDEX idx_embed_mentions_owner_type_owner_id ON embed_mentions (owner_type, owner_id);
@@ -190,6 +194,7 @@ CREATE INDEX idx_embed_polls_owner_type_owner_id ON embed_polls (owner_type, own
 
 CREATE TABLE embed_quotes
 (
+    original_markdown  TEXT,
     owner_id           NUMERIC      NOT NULL,
     owner_type         ENUM_INTEGER NOT NULL,
     placeholder        TEXT         NOT NULL,

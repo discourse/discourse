@@ -2,7 +2,7 @@
 
 RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::Scanner do
   let(:mention_names) do
-    Migrations::SortedStringSet.new(
+    Migrations::CompactStringSet.new(
       %w[alice bob café].map { |name| Migrations::NameNormalizer.normalize(name) },
     )
   end

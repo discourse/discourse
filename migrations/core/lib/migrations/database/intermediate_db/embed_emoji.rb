@@ -11,29 +11,38 @@ module Migrations
         SQL = <<~SQL
           INSERT INTO embed_emojis (
             name,
+            original_markdown,
             owner_id,
             owner_type,
             placeholder
           )
           VALUES (
-            ?, ?, ?, ?
+            ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `embed_emojis` record in the IntermediateDB.
         #
-        # @param name          [String]
-        # @param owner_id      [Integer, String]
-        # @param owner_type    [Integer]
+        # @param name                [String]
+        # @param original_markdown   [String, nil]
+        # @param owner_id            [Integer, String]
+        # @param owner_type          [Integer]
         #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder   [String]
+        # @param placeholder         [String]
         #
         # @return [void]
         #
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
-        def self.create(name:, owner_id:, owner_type:, placeholder:)
-          Migrations::Database::IntermediateDB.insert(SQL, name, owner_id, owner_type, placeholder)
+        def self.create(name:, original_markdown: nil, owner_id:, owner_type:, placeholder:)
+          Migrations::Database::IntermediateDB.insert(
+            SQL,
+            name,
+            original_markdown,
+            owner_id,
+            owner_type,
+            placeholder,
+          )
         end
       end
     end

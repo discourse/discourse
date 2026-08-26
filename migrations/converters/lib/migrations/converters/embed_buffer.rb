@@ -65,6 +65,8 @@ module Migrations
       #   `quoted_user_id` is nil, the importer also resolves it to the user.
       # @param quoted_name [String, nil] like `quoted_username`, for sources that
       #   name the quoted user by full name.
+      # @param original_markdown [String, nil] the verbatim source snippet,
+      #   restored unchanged when the importer cannot map the embed.
       # @return [String] the token for the opening tag.
       def quote(
         quoted_post_id: nil,
@@ -72,7 +74,8 @@ module Migrations
         quoted_post_number: nil,
         quoted_user_id: nil,
         quoted_username: nil,
-        quoted_name: nil
+        quoted_name: nil,
+        original_markdown: nil
       )
         record(
           @quotes,
@@ -83,6 +86,7 @@ module Migrations
           quoted_user_id:,
           quoted_username:,
           quoted_name:,
+          original_markdown:,
         )
       end
 
@@ -111,6 +115,8 @@ module Migrations
       # @param target_suffix [String, nil] everything after the matched route
       #   (further path, query string, fragment), reattached verbatim when the URL
       #   is rebuilt.
+      # @param original_markdown [String, nil] the verbatim source snippet,
+      #   restored unchanged when the importer cannot map the embed.
       def link(
         url: nil,
         text: nil,
@@ -119,7 +125,8 @@ module Migrations
         target_name: nil,
         target_topic_id: nil,
         target_post_number: nil,
-        target_suffix: nil
+        target_suffix: nil,
+        original_markdown: nil
       )
         record(
           @links,
@@ -132,6 +139,7 @@ module Migrations
           target_topic_id:,
           target_post_number:,
           target_suffix:,
+          original_markdown:,
         )
       end
 
@@ -143,10 +151,12 @@ module Migrations
       #   known — the importer then resolves `name` to it.
       # @param name [String, nil] the mention as written, without the leading `@`;
       #   the lookup key and the fallback text when the target can't be mapped.
+      # @param original_markdown [String, nil] the verbatim source snippet,
+      #   restored unchanged when the importer cannot map the embed.
       # @raise [ArgumentError] if `mention_type` is neither nil nor a known type.
-      def mention(mention_type: nil, target_id: nil, name: nil)
+      def mention(mention_type: nil, target_id: nil, name: nil, original_markdown: nil)
         validate_mention_type!(mention_type)
-        record(@mentions, :mention, mention_type:, target_id:, name:)
+        record(@mentions, :mention, mention_type:, target_id:, name:, original_markdown:)
       end
 
       # @param hashtag_type [Integer, nil] an `IntermediateDB::Enums::HashtagType`
@@ -162,18 +172,22 @@ module Migrations
       #   and any `::tag`/`::category` suffix; may hold one `:` as the
       #   `parent:child` category separator. Required even when `target_id` is
       #   set — it's the fallback text when the target can't be mapped at import.
+      # @param original_markdown [String, nil] the verbatim source snippet,
+      #   restored unchanged when the importer cannot map the embed.
       # @raise [ArgumentError] if `hashtag_type` is neither nil nor a known type.
-      def hashtag(hashtag_type: nil, target_id: nil, name: nil)
+      def hashtag(hashtag_type: nil, target_id: nil, name: nil, original_markdown: nil)
         validate_hashtag_type!(hashtag_type)
-        record(@hashtags, :hashtag, hashtag_type:, target_id:, name:)
+        record(@hashtags, :hashtag, hashtag_type:, target_id:, name:, original_markdown:)
       end
 
       # Only the source's own custom emoji reach here; a standard shortcode stays
       # plain text.
       #
       # @param name [String, nil] the shortcode without the surrounding colons.
-      def emoji(name: nil)
-        record(@emojis, :emoji, name:)
+      # @param original_markdown [String, nil] the verbatim source snippet,
+      #   restored unchanged when the importer cannot map the embed.
+      def emoji(name: nil, original_markdown: nil)
+        record(@emojis, :emoji, name:, original_markdown:)
       end
 
       # @param poll_id [Integer, String, nil] the poll's source `original_id` (a

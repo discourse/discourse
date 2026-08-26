@@ -101,7 +101,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
   describe "the mention name gate" do
     let(:mention_names) do
-      Migrations::SortedStringSet.new(
+      Migrations::CompactStringSet.new(
         %w[alice bob john.doe staff here all café_team].map do |name|
           Migrations::NameNormalizer.normalize(name)
         end,

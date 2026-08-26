@@ -42,10 +42,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
     end
 
-    it "records no original_markdown for an upload:// reference" do
+    it "records the verbatim source as original_markdown for an upload:// reference" do
       extract("![alt](upload://abc123.png)")
 
-      expect(buffer.uploads.first[:original_markdown]).to be_nil
+      expect(buffer.uploads.first[:original_markdown]).to eq("![alt](upload://abc123.png)")
     end
 
     # Core's link parse fails at the unmatched outer `[` and renders the

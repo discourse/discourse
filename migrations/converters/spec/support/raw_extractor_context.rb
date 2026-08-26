@@ -7,7 +7,7 @@ RSpec.shared_context "with raw extractor" do
   # names a spec mentions have to exist. Override for a spec about the gate
   # itself.
   let(:mention_names) do
-    Migrations::SortedStringSet.new(
+    Migrations::CompactStringSet.new(
       %w[
         admins
         alice
@@ -35,7 +35,7 @@ RSpec.shared_context "with raw extractor" do
   # Same for hashtags: the source has to have the category or tag. `unknown` is
   # deliberately absent — specs use it for the name that resolves to nothing.
   let(:hashtag_names) do
-    Migrations::SortedStringSet.new(
+    Migrations::CompactStringSet.new(
       %w[announcements general news release reply support support:billing team v2.0].map do |name|
         Migrations::NameNormalizer.normalize(name)
       end,

@@ -9,7 +9,7 @@
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # This spec is not about mentions; the extractor needs the set anyway.
   def mention_names
-    Migrations::SortedStringSet.new([])
+    Migrations::CompactStringSet.new([])
   end
   # The category the battery looks up. A hashtag whose name resolves to a real
   # category is what core cooks into a `hashtag-cooked` link.
@@ -22,7 +22,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # Extraction is gated on the source's names, so the detector defers only a
   # hashtag that names something real — the same condition under which core cooks.
   let(:hashtag_names) do
-    Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("general")])
+    Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("general")])
   end
 
   # The 32 ASCII punctuation characters (CommonMark), which already include the
