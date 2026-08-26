@@ -903,6 +903,21 @@ RSpec.describe SessionController do
         expect(response.parsed_body["prefill_username"]).to eq(true)
       end
 
+      it "does not flag the fallback for prefill when generation is on but yields nothing" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        # Unicode words pass validation while unicode usernames are on, then
+        # stop being usable once the site turns them off.
+        SiteSetting.unicode_usernames = true
+        SiteSetting.random_username_adjectives = "静か"
+        SiteSetting.random_username_nouns = "隼"
+        SiteSetting.unicode_usernames = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to match(/\Auser\d*\z/)
+        expect(response.parsed_body["prefill_username"]).to eq(false)
+      end
+
       it "derives the username from the email when email-based suggestions are on" do
         SiteSetting.use_email_for_username_and_name_suggestions = true
 

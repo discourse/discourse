@@ -988,12 +988,12 @@ class SessionController < ApplicationController
                success_json.merge(
                  account_created: true,
                  user: serialize_data(user, UserSerializer, root: false),
-                 # The username is only worth prefilling when it was derived
-                 # from the email or randomly generated. The generic "userN"
-                 # fallback is a placeholder, so the client makes the user pick.
-                 prefill_username:
-                   SiteSetting.use_email_for_username_and_name_suggestions ||
-                     SiteSetting.enable_random_usernames,
+                 # The generic "userN" fallback is a placeholder rather than a
+                 # suggestion, so the client leaves the field empty and makes
+                 # the user pick. Checked against the name actually assigned,
+                 # since generation can fall back for reasons beyond the
+                 # settings (e.g. unusable word lists).
+                 prefill_username: !UserNameSuggester.generic_username?(user.username),
                  # Sites that lock usernames (e.g. username_change_period: 0)
                  # can't offer an inline pick, so the client keeps the generated
                  # name instead of dead-ending on a forbidden change.
