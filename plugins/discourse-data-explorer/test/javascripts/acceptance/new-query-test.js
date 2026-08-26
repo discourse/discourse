@@ -5,6 +5,7 @@ import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("New Query", function (needs) {
   needs.user();
@@ -14,6 +15,11 @@ acceptance("New Query", function (needs) {
   });
 
   const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
+  let createParams;
+
+  needs.hooks.beforeEach(() => {
+    createParams = null;
+  });
 
   needs.hooks.afterEach(() => {
     dataExplorerStore.remove("hide_schema");
@@ -37,7 +43,10 @@ acceptance("New Query", function (needs) {
     });
 
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
-      return helper.response([]);
+      return helper.response([
+        { id: 0, name: "everyone" },
+        { id: 41, name: "support" },
+      ]);
     });
 
     server.get("/admin/plugins/discourse-data-explorer/schema.json", () => {
@@ -58,7 +67,8 @@ acceptance("New Query", function (needs) {
       });
     });
 
-    server.post("/admin/plugins/discourse-data-explorer/queries", () => {
+    server.post("/admin/plugins/discourse-data-explorer/queries", (request) => {
+      createParams = new URLSearchParams(request.requestBody);
       return helper.response({
         query: {
           id: -15,
@@ -68,7 +78,7 @@ acceptance("New Query", function (needs) {
           param_info: [],
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
-          group_ids: [],
+          group_ids: [41],
           last_run_at: "2021-02-08T15:37:49.188Z",
           hidden: false,
           user_id: -1,
@@ -134,6 +144,53 @@ acceptance("New Query", function (needs) {
       .exists("schema hidden state persists across Data Explorer pages");
   });
 
+  test("group access can be granted while creating the query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    const groups = selectKit(
+      ".query-new__manual-form [data-name='groupIds'] .query-group-select"
+    );
+    await groups.expand();
+
+    assert.deepEqual(
+      groups.displayedContent().map((row) => row.name),
+      ["support"],
+      "the everyone group is not offered"
+    );
+
+    await groups.selectRowByValue(41);
+    await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
+    await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[group_ids][]"),
+      ["41"],
+      "the selected groups are sent with the new query"
+    );
+  });
+
+  test("group access survives creating a query with no SQL", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    document
+      .querySelector(".query-new__manual-form .editor-panel .ace_editor")
+      .env.editor.setValue("", 1);
+
+    const groups = selectKit(
+      ".query-new__manual-form [data-name='groupIds'] .query-group-select"
+    );
+    await groups.expand();
+    await groups.selectRowByValue(41);
+    await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
+    await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[group_ids][]"),
+      ["41"],
+      "the selected groups are sent even when there is no SQL to save"
+    );
+  });
+
   test("starts with the schema hidden when the preference is stored", async function (assert) {
     dataExplorerStore.set({ key: "hide_schema", value: "true" });
 
@@ -160,6 +217,11 @@ acceptance("New Query - AI", function (needs) {
   });
 
   const GENERATION_ID = "test-generation";
+  let createParams;
+
+  needs.hooks.beforeEach(() => {
+    createParams = null;
+  });
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/discourse-data-explorer.json", () => {
@@ -179,7 +241,10 @@ acceptance("New Query - AI", function (needs) {
     });
 
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () =>
-      helper.response([])
+      helper.response([
+        { id: 0, name: "everyone" },
+        { id: 41, name: "support" },
+      ])
     );
     server.get("/admin/plugins/discourse-data-explorer/schema.json", () =>
       helper.response({ topics: [] })
@@ -209,8 +274,9 @@ acceptance("New Query - AI", function (needs) {
         })
     );
 
-    server.post("/admin/plugins/discourse-data-explorer/queries", () =>
-      helper.response({
+    server.post("/admin/plugins/discourse-data-explorer/queries", (request) => {
+      createParams = new URLSearchParams(request.requestBody);
+      return helper.response({
         query: {
           id: -15,
           sql: "SELECT 23 AS my_value",
@@ -221,8 +287,8 @@ acceptance("New Query - AI", function (needs) {
           hidden: false,
           user_id: -1,
         },
-      })
-    );
+      });
+    });
 
     server.get("/admin/plugins/discourse-data-explorer/queries/-15", () =>
       helper.response({
@@ -313,6 +379,21 @@ acceptance("New Query - AI", function (needs) {
     assert
       .dom(".query-new__sql-editor .ace-wrapper")
       .exists("the SQL is available behind its own tab");
+  });
+
+  test("group access can be granted before saving a generated query", async function (assert) {
+    await generate("show me a value");
+
+    const groups = selectKit(".query-new__fields .query-group-select");
+    await groups.expand();
+    await groups.selectRowByValue(41);
+    await click(".query-new__save-btn");
+
+    assert.deepEqual(
+      createParams.getAll("query[group_ids][]"),
+      ["41"],
+      "the selected groups are sent with the new query"
+    );
   });
 
   test("saving transitions to the edit page without running the query", async function (assert) {

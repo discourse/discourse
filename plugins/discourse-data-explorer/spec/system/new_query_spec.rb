@@ -17,13 +17,16 @@ describe "Data explorer new query" do
     expect(page).to have_current_path("/admin/plugins/discourse-data-explorer/queries/new")
   end
 
-  it "creates a query with name, description, and SQL" do
+  it "creates a query with name, description, SQL, and group access" do
+    Fabricate(:group, name: "support")
+
     query_runner.visit_new_query
     expect(page).to have_css(".query-new__manual-form .right-panel .schema", text: "topics")
 
     query_runner
       .fill_new_query_name("Test Query")
       .fill_new_query_description("A test description")
+      .select_new_query_groups("support")
       .fill_new_query_sql("SELECT 1")
       .submit_new_query
 
@@ -35,6 +38,11 @@ describe "Data explorer new query" do
     expect(page).to have_current_path("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
     expect(query_runner).to have_query_name("Test Query")
     expect(query_runner).to have_query_description("A test description")
+    expect(query_runner).to have_query_groups("support")
+
+    page.refresh
+
+    expect(query_runner).to have_query_groups("support")
   end
 
   it "creates a query with name only" do
