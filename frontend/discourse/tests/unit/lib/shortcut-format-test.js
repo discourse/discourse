@@ -38,7 +38,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
       {
         keys: [{ key: "Control", label: ctrl, name: ctrl }],
         label: ctrl,
-        aria: "Control",
+        aria: ctrl,
       },
       "mod uses the non-Apple platform modifier"
     );
@@ -77,7 +77,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
         {
           keys: [{ key: "Control", label: ctrl, name: ctrl }],
           label: ctrl,
-          aria: "Control",
+          aria: ctrl,
         },
         `${alias} resolves to Control`
       );
@@ -114,7 +114,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
       {
         keys: [{ key: "Control", label: ctrl, name: ctrl }],
         label: ctrl,
-        aria: "Control",
+        aria: ctrl,
       },
       "the non-glyph Control name exactly matches its label"
     );
@@ -202,7 +202,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           { key: "Shift", label: shift, name: shift },
         ],
         label: `${alt} ${alt} ${shift}`,
-        aria: "Alt+Alt+Shift",
+        aria: `${alt}+${alt}+${shift}`,
       },
       "non-Apple modifiers are all words"
     );
@@ -260,7 +260,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           { key: "PageDown", label: "PageDown", name: "PageDown" },
         ],
         label: `${enter} ${enter} ${esc} ${esc} Space Tab Backspace Delete Delete Home End PageUp PageDown`,
-        aria: "Enter+Enter+Escape+Escape+Space+Tab+Backspace+Delete+Delete+Home+End+PageUp+PageDown",
+        aria: `${enter}+${enter}+${esc}+${esc}+Space+Tab+Backspace+Delete+Delete+Home+End+PageUp+PageDown`,
       },
       "named aliases use canonical key names in input order"
     );
@@ -295,7 +295,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           },
         ],
         label: "↑ ↓ ← →",
-        aria: "ArrowUp+ArrowDown+ArrowLeft+ArrowRight",
+        aria: `${i18n("shortcut_modifier_key.arrow_up")}+${i18n("shortcut_modifier_key.arrow_down")}+${i18n("shortcut_modifier_key.arrow_left")}+${i18n("shortcut_modifier_key.arrow_right")}`,
       },
       "arrow glyph labels differ from their localized spoken names"
     );
@@ -330,7 +330,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           },
         ],
         label: "↑ ↓ ← →",
-        aria: "ArrowUp+ArrowDown+ArrowLeft+ArrowRight",
+        aria: `${i18n("shortcut_modifier_key.arrow_up")}+${i18n("shortcut_modifier_key.arrow_down")}+${i18n("shortcut_modifier_key.arrow_left")}+${i18n("shortcut_modifier_key.arrow_right")}`,
       },
       "HTML entities map to canonical arrow keys"
     );
@@ -360,7 +360,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           { key: "Media", label: "Media", name: "Media" },
         ],
         label: "B / Media",
-        aria: "B+Slash+Media",
+        aria: `B+${i18n("shortcut_modifier_key.slash")}+Media`,
       },
       "non-glyph names exactly match their normalized labels"
     );
@@ -386,7 +386,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           { key: ".", label: ".", name: "." },
         ],
         label: "⇧ ⌘ .",
-        aria: "Shift+Command+Period",
+        aria: `${i18n("shortcut_modifier_key.shift")}+${i18n("shortcut_modifier_key.command")}+${i18n("shortcut_modifier_key.period")}`,
       },
       "Shift precedes Command, and the announced form names the period"
     );
@@ -395,7 +395,7 @@ module("Unit | Lib | shortcut-format", function (hooks) {
 
     assert.strictEqual(
       formatShortcut("shift+alt+mod+/").aria,
-      "Control+Alt+Shift+Slash",
+      `${i18n("shortcut_modifier_key.ctrl")}+${i18n("shortcut_modifier_key.alt")}+${i18n("shortcut_modifier_key.shift")}+${i18n("shortcut_modifier_key.slash")}`,
       "non-Apple order is Control, Alt, Shift"
     );
   });

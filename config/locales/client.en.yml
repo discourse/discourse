@@ -3251,6 +3251,21 @@ en:
       arrow_down: "Down arrow"
       arrow_left: "Left arrow"
       arrow_right: "Right arrow"
+      period: "Period"
+      comma: "Comma"
+      slash: "Slash"
+      backslash: "Backslash"
+      question_mark: "Question mark"
+      exclamation_mark: "Exclamation mark"
+      hash: "Hash"
+      equals: "Equals"
+      minus: "Minus"
+      plus: "Plus"
+      semicolon: "Semicolon"
+      apostrophe: "Apostrophe"
+      backquote: "Backquote"
+      left_bracket: "Left bracket"
+      right_bracket: "Right bracket"
 
     conditional_loading_section:
       loading: Loading…

@@ -24,9 +24,11 @@ export interface FormattedShortcut {
   /** The drawn labels joined with a space: `⌘ Enter` / `Ctrl Enter`. */
   label: string;
   /**
-   * The `aria-keyshortcuts` value: key names joined with `+`, as a screen
-   * reader will speak them. `Command+Enter` on Apple platforms and
-   * `Control+Enter` elsewhere. Undefined when there are no keys, so a template
+   * The `aria-keyshortcuts` value: the keys' spoken names joined with `+`, in
+   * the user's language, since readers speak the attribute verbatim and the
+   * operating system's own menus are read that way (`Command+Shift+Ponto` in
+   * Brazilian Portuguese). `Command+Enter` on Apple platforms and `Ctrl+Enter`
+   * elsewhere in English. Undefined when there are no keys, so a template
    * binding omits the attribute rather than emitting an empty one.
    */
   aria: string | undefined;
@@ -95,36 +97,27 @@ const APPLE_GLYPHS: Record<string, { label: string; name: string }> = {
 };
 
 /**
- * How Apple platforms name modifiers in `aria-keyshortcuts`. WAI-ARIA lists
- * `Meta` and `Alt`, but a screen reader speaks the value verbatim, and no Mac
- * user knows those keys by those names.
+ * The i18n key of each punctuation key's spoken name. Screen readers apply
+ * their punctuation verbosity to `aria-keyshortcuts` and drop a lone `.` or `,`
+ * at the default level, so the announced form names the key, in the user's
+ * language, the way the operating system's own menus are read.
  */
-const APPLE_ANNOUNCED_NAMES: Record<string, string> = {
-  Meta: "Command",
-  Alt: "Option",
-};
-
-/**
- * Punctuation keys as a screen reader will speak them in `aria-keyshortcuts`.
- * Readers apply their punctuation verbosity to the attribute and drop a lone
- * `.` or `,` at the default level, so the announced form names the key.
- */
-const ANNOUNCED_PUNCTUATION: Record<string, string> = {
-  ".": "Period",
-  ",": "Comma",
-  "/": "Slash",
-  "\\": "Backslash",
-  "?": "Question",
-  "!": "Exclamation",
-  "#": "Hash",
-  "=": "Equals",
-  "-": "Minus",
-  "+": "Plus",
-  ";": "Semicolon",
-  "'": "Apostrophe",
-  "`": "Backquote",
-  "[": "LeftBracket",
-  "]": "RightBracket",
+const SPOKEN_PUNCTUATION: Record<string, string> = {
+  ".": "shortcut_modifier_key.period",
+  ",": "shortcut_modifier_key.comma",
+  "/": "shortcut_modifier_key.slash",
+  "\\": "shortcut_modifier_key.backslash",
+  "?": "shortcut_modifier_key.question_mark",
+  "!": "shortcut_modifier_key.exclamation_mark",
+  "#": "shortcut_modifier_key.hash",
+  "=": "shortcut_modifier_key.equals",
+  "-": "shortcut_modifier_key.minus",
+  "+": "shortcut_modifier_key.plus",
+  ";": "shortcut_modifier_key.semicolon",
+  "'": "shortcut_modifier_key.apostrophe",
+  "`": "shortcut_modifier_key.backquote",
+  "[": "shortcut_modifier_key.left_bracket",
+  "]": "shortcut_modifier_key.right_bracket",
 };
 
 /**
@@ -192,7 +185,7 @@ function describeKey(key: string, isApple: boolean): ShortcutKey {
  * ```js
  * const { label, aria } = formatShortcut("mod+b");
  * // Apple:  label "⌘ B",   aria "Command+B"
- * // Others: label "Ctrl B", aria "Control+B"
+ * // Others: label "Ctrl B", aria "Ctrl+B"
  * ```
  */
 export function formatShortcut(keys?: string | null): FormattedShortcut {
@@ -211,12 +204,10 @@ export function formatShortcut(keys?: string | null): FormattedShortcut {
     describeKey(key, isApple)
   );
 
-  const announced = parsed.map(
-    ({ key }) =>
-      (isApple ? APPLE_ANNOUNCED_NAMES[key] : undefined) ??
-      ANNOUNCED_PUNCTUATION[key] ??
-      key
-  );
+  const announced = parsed.map(({ key, name }) => {
+    const punctuation = SPOKEN_PUNCTUATION[key];
+    return punctuation ? i18n(punctuation) : name;
+  });
 
   return {
     keys: parsed,
