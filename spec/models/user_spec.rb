@@ -3040,7 +3040,6 @@ RSpec.describe User do
     end
 
     it "keeps the bounce score, since activating proves nothing about deliverability" do
-      inactive.user_stat.update!(bounce_score: 3.0)
       EmailBounceScore.record_bounce!(inactive.email, 3.0)
 
       inactive.activate

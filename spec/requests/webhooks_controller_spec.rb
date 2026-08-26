@@ -584,12 +584,16 @@ RSpec.describe WebhooksController do
       expect(user.user_stat.reload.bounce_score).to eq(0)
     end
 
-    it "does not increase the bounce score of another user who now owns the recipient address" do
+    it "charges the recipient address rather than whoever used to own it" do
       SiteSetting.mailjet_webhook_token = "foo"
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
       user.primary_email.update!(email: "fixed@email.com")
+      # the address is what bounced, so its new owner inherits its standing —
+      # but they are never accused of it, and it expires on its own
       other_user = Fabricate(:user, email: email)
+
+      SystemMessage.expects(:create_from_system_user).never
 
       post "/webhooks/mailjet.json?t=foo",
            params: {
@@ -602,7 +606,9 @@ RSpec.describe WebhooksController do
       expect(response.status).to eq(200)
       expect(email_log.reload.bounced).to eq(true)
       expect(user.user_stat.reload.bounce_score).to eq(0)
-      expect(other_user.user_stat.reload.bounce_score).to eq(0)
+      expect(EmailBounceScore.score_for("fixed@email.com")).to eq(0)
+      expect(EmailBounceScore.score_for(email)).to eq(SiteSetting.hard_bounce_score)
+      expect(other_user.user_stat.reload.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
 
     it "verifies signatures" do
@@ -1250,7 +1256,7 @@ RSpec.describe WebhooksController do
 
     it "applies the hard bounce score to permanent bounces regardless of the current bounce score" do
       user = Fabricate(:user, email: email)
-      user.user_stat.update!(bounce_score: 4.2)
+      EmailBounceScore.record_bounce!(email, 4.2)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }

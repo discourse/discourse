@@ -4,7 +4,6 @@ class UserStat < ActiveRecord::Base
   after_save :trigger_badges
 
   def self.ensure_consistency!(last_seen = 1.hour.ago)
-    reset_bounce_scores
     update_distinct_badge_count
     update_view_counts(last_seen)
     update_first_unread(last_seen)
@@ -140,20 +139,83 @@ class UserStat < ActiveRecord::Base
     SQL
   end
 
-  def self.reset_bounce_scores
-    UserStat
-      .where("reset_bounce_score_after < now()")
-      .where("bounce_score > 0")
-      .update_all(bounce_score: 0)
+  # `bounce_score` / `reset_bounce_score_after` mirror the `email_bounce_scores`
+  # row for the user's current primary address — 0 / NULL when there is none.
+  # Best effort, and deferred out of the caller's transaction: the columns are
+  # derived, so refreshing them must never roll back, or fail, the write that
+  # changed the underlying score. `refresh_bounce_scores!` repairs the rest.
+  def self.refresh_bounce_score(user_id)
+    DB.after_commit do
+      refresh_bounce_score!(user_id)
+    rescue => e
+      Discourse.warn_exception(e, message: "Failed to refresh the bounce score of ##{user_id}")
+    end
   end
 
-  def self.erode_bounce_score!(user_id, amount)
-    return if amount <= 0
+  # The two `LEFT JOIN`s are what make "no ledger row" and "no primary address"
+  # both mean clean, rather than leaving a stale mirror behind. The
+  # `IS DISTINCT FROM` guard is what lets `UserEmail` call this on every save:
+  # a refresh that changes nothing writes nothing, so it dirties no page.
+  def self.refresh_bounce_score!(user_id)
+    return if user_id.blank?
 
-    UserStat
-      .where(user_id: user_id)
-      .where("bounce_score > 0")
-      .update_all(["bounce_score = GREATEST(bounce_score - ?, 0)", amount])
+    DB.exec(<<~SQL, user_id:)
+      UPDATE user_stats
+      SET bounce_score = COALESCE(email_bounce_scores.bounce_score, 0),
+          reset_bounce_score_after = email_bounce_scores.reset_bounce_score_after
+      FROM (VALUES (:user_id::bigint)) AS seed(user_id)
+      LEFT JOIN user_emails
+        ON user_emails.user_id = seed.user_id AND user_emails.primary
+      LEFT JOIN email_bounce_scores
+        ON email_bounce_scores.email = lower(user_emails.email)
+      WHERE user_stats.user_id = seed.user_id
+        AND (
+          user_stats.bounce_score
+            IS DISTINCT FROM COALESCE(email_bounce_scores.bounce_score, 0) OR
+          user_stats.reset_bounce_score_after
+            IS DISTINCT FROM email_bounce_scores.reset_bounce_score_after
+        )
+    SQL
+  end
+
+  # Repairs mirrors whose ledger row was just swept away, plus any that drifted
+  # because a primary address changed without the callback reaching them. This
+  # is what makes `refresh_bounce_score` safe to swallow its own failures.
+  def self.refresh_bounce_scores!
+    # Driven from the ledger, which only holds addresses in bad standing
+    DB.exec(<<~SQL)
+      UPDATE user_stats
+      SET bounce_score = email_bounce_scores.bounce_score,
+          reset_bounce_score_after = email_bounce_scores.reset_bounce_score_after
+      FROM email_bounce_scores
+      INNER JOIN user_emails
+        ON user_emails.primary AND lower(user_emails.email) = email_bounce_scores.email
+      WHERE user_emails.user_id = user_stats.user_id
+        AND (
+          user_stats.bounce_score IS DISTINCT FROM email_bounce_scores.bounce_score OR
+          user_stats.reset_bounce_score_after
+            IS DISTINCT FROM email_bounce_scores.reset_bounce_score_after
+        )
+    SQL
+
+    # A full scan of `user_stats`, like the expiry sweep it replaces. Keyed on
+    # the score alone because that sweep zeroed the score but left the timestamp
+    # behind, so every user who has ever bounced carries an orphaned one; those
+    # render as nothing, and rewriting them all would make the first run after
+    # an upgrade a site-wide UPDATE.
+    DB.exec(<<~SQL)
+      UPDATE user_stats
+      SET bounce_score = 0, reset_bounce_score_after = NULL
+      WHERE bounce_score <> 0
+        AND NOT EXISTS (
+          SELECT 1
+          FROM user_emails
+          INNER JOIN email_bounce_scores
+            ON email_bounce_scores.email = lower(user_emails.email)
+          WHERE user_emails.user_id = user_stats.user_id
+            AND user_emails.primary
+        )
+    SQL
   end
 
   # Updates the denormalized view counts for all users
@@ -291,12 +353,6 @@ class UserStat < ActiveRecord::Base
 
   def update_time_read!
     UserStat.update_time_read!(id)
-  end
-
-  def reset_bounce_score!
-    return if bounce_score == 0 && reset_bounce_score_after.nil?
-
-    update_columns(reset_bounce_score_after: nil, bounce_score: 0)
   end
 
   def self.last_seen_key(id)

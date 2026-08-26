@@ -60,6 +60,40 @@ RSpec.describe Jobs::UserEmail do
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
+    context "when the primary email is above the bounce score threshold" do
+      before { EmailBounceScore.record_bounce!(user.email, SiteSetting.bounce_score_threshold + 1) }
+
+      it "doesn't call the mailer" do
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+        expect(ActionMailer::Base.deliveries).to eq([])
+      end
+
+      # unlike every other email type, a suppressed digest is not worth a row of
+      # its own — the enqueue job filters them out in bulk
+      it "doesn't log a skipped email" do
+        expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.not_to change {
+          SkippedEmailLog.count
+        }
+      end
+
+      it "still records the attempt so the next one is not brought forward" do
+        freeze_time
+
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+
+        expect(user.user_stat.reload.digest_attempted_at).to eq_time(Time.zone.now)
+      end
+    end
+
+    it "still calls the mailer when only a secondary email is above the threshold" do
+      secondary = Fabricate(:secondary_email, user: user)
+      EmailBounceScore.record_bounce!(secondary.email, SiteSetting.bounce_score_threshold + 1)
+
+      Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+
+      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(user.email)
+    end
+
     it "doesn't call the mailer when the user has disabled email digests" do
       user.user_option.update!(email_digests: false)
       Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
@@ -124,7 +158,7 @@ RSpec.describe Jobs::UserEmail do
   context "with bounce score" do
     it "always sends critical emails when bounce score threshold has been reached" do
       email_token = Fabricate(:email_token)
-      user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold + 1)
+      EmailBounceScore.record_bounce!(user.email, SiteSetting.bounce_score_threshold + 1)
 
       Jobs::CriticalUserEmail.new.execute(
         type: "signup",
@@ -751,8 +785,6 @@ RSpec.describe Jobs::UserEmail do
 
       it "erodes bounce score each time an email is sent" do
         SiteSetting.bounce_score_erode_on_send = 0.2
-
-        user.user_stat.update(bounce_score: 2.7)
         EmailBounceScore.record_bounce!(user.email, 2.7)
 
         Jobs::UserEmail.new.execute(
@@ -762,11 +794,12 @@ RSpec.describe Jobs::UserEmail do
           post_id: post.id,
         )
 
-        user.user_stat.reload
-        expect(user.user_stat.bounce_score).to eq(2.5)
         expect(EmailBounceScore.score_for(user.email)).to eq(2.5)
+        expect(user.user_stat.reload.bounce_score).to eq(2.5)
+      end
 
-        user.user_stat.update(bounce_score: 0)
+      it "leaves a score that is already zero alone" do
+        SiteSetting.bounce_score_erode_on_send = 0.2
 
         Jobs::UserEmail.new.execute(
           type: :user_mentioned,
@@ -775,12 +808,12 @@ RSpec.describe Jobs::UserEmail do
           post_id: post.id,
         )
 
-        user.user_stat.reload
-        expect(user.user_stat.bounce_score).to eq(0)
+        expect(EmailBounceScore.score_for(user.email)).to eq(0)
+        expect(user.user_stat.reload.bounce_score).to eq(0)
       end
 
       it "does not send notification if bounce threshold is reached" do
-        user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold)
+        EmailBounceScore.record_bounce!(user.email, SiteSetting.bounce_score_threshold)
 
         expect do
           Jobs::UserEmail.new.execute(
@@ -800,6 +833,36 @@ RSpec.describe Jobs::UserEmail do
             reason_type: SkippedEmailLog.reason_types[:exceeded_bounces_limit],
           ),
         ).to eq(true)
+      end
+
+      it "gates on the address it is about to send to, not on the user" do
+        EmailBounceScore.record_bounce!("bouncing@example.com", SiteSetting.bounce_score_threshold)
+
+        expect do
+          Jobs::UserEmail.new.execute(
+            type: :user_mentioned,
+            user_id: user.id,
+            notification_id: notification.id,
+            post_id: post.id,
+            to_address: "bouncing@example.com",
+          )
+        end.to change { SkippedEmailLog.count }.by(1)
+
+        expect(ActionMailer::Base.deliveries).to eq([])
+      end
+
+      it "still sends to a clean address when the user's own address bounced" do
+        EmailBounceScore.record_bounce!(user.email, SiteSetting.bounce_score_threshold)
+
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
+          user_id: user.id,
+          notification_id: notification.id,
+          post_id: post.id,
+          to_address: "clean@example.com",
+        )
+
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly("clean@example.com")
       end
 
       it "doesn't send the mail if the user is using individual mailing list mode" do

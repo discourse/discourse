@@ -109,7 +109,7 @@ module Jobs
             next
           end
 
-          if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+          if !EmailBounceScore.deliverable?(user.email)
             skip(
               user.email,
               user.id,
