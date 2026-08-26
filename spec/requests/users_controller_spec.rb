@@ -4404,6 +4404,29 @@ RSpec.describe UsersController do
         expect(json["unconfirmed_emails"]).to eq(inactive_user.unconfirmed_emails)
         expect(json["associated_accounts"]).to eq([])
       end
+
+      it "returns the bounce score of every address in bad standing" do
+        Fabricate(:secondary_email, user: user, email: "Spare@Email.com")
+        EmailBounceScore.record_bounce!(user.email, 2)
+        sign_in_admin
+
+        get "/u/#{user.username}/emails.json"
+
+        expect(response.status).to eq(200)
+        # keyed by the canonical address, and clean addresses are simply absent
+        expect(response.parsed_body["bounce_scores"].keys).to eq([user.email])
+        expect(response.parsed_body["bounce_scores"][user.email]["bounce_score"]).to eq(2.0)
+      end
+
+      it "does not return bounce scores to a user looking at their own addresses" do
+        EmailBounceScore.record_bounce!(user.email, 2)
+        sign_in(user)
+
+        get "/u/#{user.username}/emails.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("bounce_scores")
+      end
     end
   end
 

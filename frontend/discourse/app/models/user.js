@@ -1245,6 +1245,8 @@ export default class User extends RestModel.extend(Evented) {
           secondary_emails: result.secondary_emails,
           unconfirmed_emails: result.unconfirmed_emails,
           associated_accounts: result.associated_accounts,
+          // only present for staff looking at someone else's addresses
+          bounce_scores: result.bounce_scores,
         });
       }
     });

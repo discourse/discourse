@@ -63,7 +63,13 @@ class UserDestroyer
         user.user_emails.pluck(:email) |
           UserAssociatedAccount.where(user_id: user.id).pluck(Arel.sql("info->>'email'")).compact
 
+      # the ledger is keyed by address, so the addresses have to be read while
+      # the user still owns them, and cleared only once the destroy has stuck
+      bounced_emails = EmailBounceScore.for_user(user).pluck(:email)
+
       if result = user.destroy
+        EmailBounceScore.where(email: bounced_emails).delete_all
+
         if opts[:block_email]
           emails.each do |email|
             ScreenedEmail.block(email, ip_address: result.ip_address)&.record_match!

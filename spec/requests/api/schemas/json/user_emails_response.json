@@ -15,6 +15,21 @@
     "associated_accounts": {
       "type": "array",
       "items": {}
+    },
+    "bounce_scores": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "bounce_score": {
+            "type": "number"
+          },
+          "reset_bounce_score_after": {
+            "type": "string"
+          }
+        },
+        "required": ["bounce_score", "reset_bounce_score_after"]
+      }
     }
   },
   "required": [
