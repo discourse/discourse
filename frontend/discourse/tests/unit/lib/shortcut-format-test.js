@@ -360,13 +360,13 @@ module("Unit | Lib | shortcut-format", function (hooks) {
           { key: "Media", label: "Media", name: "Media" },
         ],
         label: "B / Media",
-        aria: "B+/+Media",
+        aria: "B+Slash+Media",
       },
       "non-glyph names exactly match their normalized labels"
     );
   });
 
-  test("formats a three-key chord in input order", function (assert) {
+  test("orders modifiers by platform convention and spells punctuation when announcing", function (assert) {
     sinon.stub(capabilities, "isApple").value(true);
 
     assert.deepEqual(
@@ -374,21 +374,29 @@ module("Unit | Lib | shortcut-format", function (hooks) {
       {
         keys: [
           {
-            key: "Meta",
-            label: "⌘",
-            name: i18n("shortcut_modifier_key.command"),
-          },
-          {
             key: "Shift",
             label: "⇧",
             name: i18n("shortcut_modifier_key.shift"),
           },
+          {
+            key: "Meta",
+            label: "⌘",
+            name: i18n("shortcut_modifier_key.command"),
+          },
           { key: ".", label: ".", name: "." },
         ],
-        label: "⌘ ⇧ .",
-        aria: "Command+Shift+.",
+        label: "⇧ ⌘ .",
+        aria: "Shift+Command+Period",
       },
-      "all three keys retain their input order"
+      "Shift precedes Command, and the announced form names the period"
+    );
+
+    sinon.stub(capabilities, "isApple").value(false);
+
+    assert.strictEqual(
+      formatShortcut("shift+alt+mod+/").aria,
+      "Control+Alt+Shift+Slash",
+      "non-Apple order is Control, Alt, Shift"
     );
   });
 });

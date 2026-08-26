@@ -104,6 +104,36 @@ const APPLE_ANNOUNCED_NAMES: Record<string, string> = {
   Alt: "Option",
 };
 
+/**
+ * Punctuation keys as a screen reader will speak them in `aria-keyshortcuts`.
+ * Readers apply their punctuation verbosity to the attribute and drop a lone
+ * `.` or `,` at the default level, so the announced form names the key.
+ */
+const ANNOUNCED_PUNCTUATION: Record<string, string> = {
+  ".": "Period",
+  ",": "Comma",
+  "/": "Slash",
+  "\\": "Backslash",
+  "?": "Question",
+  "!": "Exclamation",
+  "#": "Hash",
+  "=": "Equals",
+  "-": "Minus",
+  "+": "Plus",
+  ";": "Semicolon",
+  "'": "Apostrophe",
+  "`": "Backquote",
+  "[": "LeftBracket",
+  "]": "RightBracket",
+};
+
+/**
+ * The order modifiers are listed in, whatever order the binding spells them:
+ * Apple's guidelines fix Control, Option, Shift, Command, and the same order
+ * matches the usual Ctrl, Alt, Shift elsewhere.
+ */
+const MODIFIER_ORDER = ["Control", "Alt", "Shift", "Meta"];
+
 /** Keys drawn as a localized word rather than their canonical name. */
 const WORD_KEYS: Record<string, string> = {
   Control: "shortcut_modifier_key.ctrl",
@@ -154,7 +184,9 @@ function describeKey(key: string, isApple: boolean): ShortcutKey {
  * The input uses the same spelling as key bindings: `+`-joined, case-insensitive,
  * with `mod` for the platform's primary modifier (`mod+enter`, `ctrl+alt+f`,
  * `shift+b`, `up`). Both outputs derive from it, so a call site cannot draw one
- * shortcut and announce another.
+ * shortcut and announce another. Modifiers come out in the platform's
+ * conventional order, so `mod+shift+d` draws `⇧⌘ D` on Apple platforms and
+ * `Ctrl Shift D` elsewhere.
  *
  * @example
  * ```js
@@ -165,14 +197,25 @@ function describeKey(key: string, isApple: boolean): ShortcutKey {
  */
 export function formatShortcut(keys?: string | null): FormattedShortcut {
   const { isApple } = capabilities;
-  const parsed = (keys ?? "")
+  const canonical = (keys ?? "")
     .split("+")
     .map((token) => token.trim().toLowerCase())
     .filter(Boolean)
-    .map((token) => describeKey(canonicalKey(token, isApple), isApple));
+    .map((token) => canonicalKey(token, isApple));
 
-  const announced = parsed.map((key) =>
-    isApple ? (APPLE_ANNOUNCED_NAMES[key.key] ?? key.key) : key.key
+  const modifiers = canonical
+    .filter((key) => MODIFIER_ORDER.includes(key))
+    .sort((a, b) => MODIFIER_ORDER.indexOf(a) - MODIFIER_ORDER.indexOf(b));
+  const others = canonical.filter((key) => !MODIFIER_ORDER.includes(key));
+  const parsed = [...modifiers, ...others].map((key) =>
+    describeKey(key, isApple)
+  );
+
+  const announced = parsed.map(
+    ({ key }) =>
+      (isApple ? APPLE_ANNOUNCED_NAMES[key] : undefined) ??
+      ANNOUNCED_PUNCTUATION[key] ??
+      key
   );
 
   return {

@@ -31,7 +31,7 @@ RSpec.describe "Keyboard shortcut display" do
     row.hover
 
     expect(row).to have_css(".d-shortcut__key", visible: :all)
-    expect(row["aria-keyshortcuts"]).to match(/\A(Command|Control)\+/)
+    expect(row["aria-keyshortcuts"]).to match(/(Command|Control)\+/)
 
     screenshot_marker(label: "shortcut-composer-menu", only: :desktop)
   end
