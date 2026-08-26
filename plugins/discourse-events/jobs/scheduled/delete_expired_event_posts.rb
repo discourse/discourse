@@ -46,7 +46,7 @@ module Jobs
         PostDestroyer.new(
           Discourse.system_user,
           post,
-          context: I18n.t("discourse_calendar.event_expired"),
+          context: I18n.t("discourse_events.event_expired"),
         ).destroy
       end
 

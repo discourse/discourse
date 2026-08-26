@@ -1,4 +1,4 @@
-discourse_calendar:
+discourse_events:
   discourse_events_enabled:
     default: false
     client: true

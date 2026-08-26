@@ -11,10 +11,10 @@ module DiscourseEvents
 
       def self.values
         @values ||= [
-          { name: "discourse_calendar.toolbar_button.day", value: "day" },
-          { name: "discourse_calendar.toolbar_button.week", value: "week" },
-          { name: "discourse_calendar.toolbar_button.month", value: "month" },
-          { name: "discourse_calendar.toolbar_button.year", value: "year" },
+          { name: "discourse_events.toolbar_button.day", value: "day" },
+          { name: "discourse_events.toolbar_button.week", value: "week" },
+          { name: "discourse_events.toolbar_button.month", value: "month" },
+          { name: "discourse_events.toolbar_button.year", value: "year" },
         ]
       end
 

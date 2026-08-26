@@ -1078,8 +1078,8 @@ class Plugin::Instance
   # Example:
   #   register_calendar_subscription_feed(
   #     name: "all_events",
-  #     scope: "discourse-calendar:events_calendar",
-  #     description_key: "discourse_calendar.preferences.all_events_description",
+  #     scope: "my-plugin:events_calendar",
+  #     description_key: "my_plugin.preferences.all_events_description",
   #     url: ->(base_url, user, key) { "#{base_url}/events.ics?user_api_key=#{key}" }
   #   )
   def register_calendar_subscription_feed(name:, scope:, description_key:, url:)

@@ -228,7 +228,7 @@ module DiscourseEvents
         end
 
       I18n.t(
-        "discourse_calendar.calendar_subscriptions.#{translation_key}",
+        "discourse_events.calendar_subscriptions.#{translation_key}",
         site_title: SiteSetting.title,
       )
     end

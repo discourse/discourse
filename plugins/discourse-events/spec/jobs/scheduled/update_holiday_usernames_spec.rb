@@ -75,7 +75,7 @@ describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
     post.user.reload
     status = post.user.user_status
     expect(status).to be_present
-    expect(status.description).to eq(I18n.t("discourse_calendar.holiday_status.description"))
+    expect(status.description).to eq(I18n.t("discourse_events.holiday_status.description"))
     expect(status.emoji).to eq(SiteSetting.holiday_status_emoji)
     expect(status.ends_at).to eq_time(Time.utc(2018, 6, 6, 10, 20))
   end
@@ -138,7 +138,7 @@ describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
     post.user.reload
     status = post.user.user_status
     expect(status).to be_present
-    expect(status.description).to eq(I18n.t("discourse_calendar.holiday_status.description"))
+    expect(status.description).to eq(I18n.t("discourse_events.holiday_status.description"))
     expect(status.emoji).to eq(SiteSetting.holiday_status_emoji)
     expect(status.ends_at).to eq_time(Time.utc(2018, 6, 8, 10, 20))
   end

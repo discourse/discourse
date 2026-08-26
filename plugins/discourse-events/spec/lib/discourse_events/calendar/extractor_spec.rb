@@ -60,20 +60,20 @@ describe DiscourseEvents::Calendar::Extractor do
         topic: calendar_post.topic,
         raw: 'Rome [date="2018-06-05"] → [date="2018-06-08"] [date="2018-06-09"]',
       )
-    }.to raise_error(StandardError, I18n.t("discourse_calendar.more_than_two_dates"))
+    }.to raise_error(StandardError, I18n.t("discourse_events.more_than_two_dates"))
   end
 
   it "raises an error when the calendar is not in first post" do
     expect { create_post(topic: calendar_post.topic, raw: raw) }.to raise_error(
       StandardError,
-      I18n.t("discourse_calendar.calendar_must_be_in_first_post"),
+      I18n.t("discourse_events.calendar_must_be_in_first_post"),
     )
   end
 
   it "raises an error when there are more than 1 calendar" do
     expect { create_post(raw: "#{raw}\n#{raw}") }.to raise_error(
       StandardError,
-      I18n.t("discourse_calendar.more_than_one_calendar"),
+      I18n.t("discourse_events.more_than_one_calendar"),
     )
   end
 
