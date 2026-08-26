@@ -117,6 +117,7 @@ class DiscoursePluginRegistry
   define_filtered_register :user_destroyer_on_content_deletion_callbacks
 
   define_filtered_register :hashtag_autocomplete_data_sources
+  define_filtered_register :hashtag_content_stores
   define_filtered_register :hashtag_autocomplete_contextual_type_priorities
 
   define_filtered_register :search_groups_set_query_callbacks
