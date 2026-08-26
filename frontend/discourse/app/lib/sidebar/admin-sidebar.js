@@ -22,8 +22,11 @@ let additionalAdminSidebarSectionLinks = {};
 // Section headers can only render links, so anything that is an action rather
 // than a destination is resolved here by the id the nav map declares.
 const SECTION_HEADER_ACTIONS = {
-  design_wizard: ({ designWizard, router }) =>
-    designWizard.launch({ returnUrl: router.currentURL }),
+  design_wizard: {
+    available: ({ currentUser }) => currentUser?.can_run_design_wizard,
+    action: ({ designWizard, router }) =>
+      designWizard.launch({ returnUrl: router.currentURL }),
+  },
 };
 
 // For testing.
@@ -221,7 +224,7 @@ function defineAdminSection(
         id: headerAction.id,
         title: i18n(headerAction.label),
         action: () =>
-          SECTION_HEADER_ACTIONS[headerAction.id](headerActionContext),
+          SECTION_HEADER_ACTIONS[headerAction.id].action(headerActionContext),
       }));
     }
 
@@ -233,7 +236,10 @@ function defineAdminSection(
 
     get #headerActions() {
       return (this.adminNavSectionData.headerActions ?? []).filter(
-        (headerAction) => SECTION_HEADER_ACTIONS[headerAction.id]
+        (headerAction) =>
+          SECTION_HEADER_ACTIONS[headerAction.id]?.available(
+            headerActionContext
+          )
       );
     }
   };
@@ -503,7 +509,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         this.adminSidebarStateManager,
         router,
         currentUser,
-        { designWizard, router }
+        { currentUser, designWizard, router }
       );
     });
   }

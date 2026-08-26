@@ -18,6 +18,10 @@ export default {
     const params = new URLSearchParams(window.location.search);
 
     if (params.get(DESIGN_WIZARD_PARAM)) {
+      if (!currentUser.can_run_design_wizard) {
+        return;
+      }
+
       // the sheet previews the page behind it, so the link is meant for a forum
       // page; the parameter is dropped so a refresh does not reopen the wizard.
       // The history API rather than the router, which has not booted yet

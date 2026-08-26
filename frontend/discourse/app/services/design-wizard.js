@@ -236,12 +236,10 @@ export default class DesignWizardService extends Service {
 
   // the endpoint only accepts core themes, so a site whose default theme the
   // wizard cannot express is not offered a way back to it
-  get revertable() {
-    return this.source === SOURCE_ADMIN && !!this.#snapshot;
-  }
-
   get canRevert() {
-    return this.revertable && this.progressSaved;
+    return (
+      this.source === SOURCE_ADMIN && this.progressSaved && !!this.#snapshot
+    );
   }
 
   // closing a run that changed the live site is a decision, even when the
@@ -378,8 +376,8 @@ export default class DesignWizardService extends Service {
     this.#reset();
 
     // a saved step or a previewed theme means the page is rendering something
-    // other than what the site is now, so leaving needs a full load
-    if (previewingTheme || progressSaved) {
+    // other than what the site is now, so returning to admin needs a full load
+    if (previewingTheme || (returnsToAdmin && progressSaved)) {
       DiscourseURL.redirectTo(returnsToAdmin ? returnUrl : "/");
     } else if (returnsToAdmin) {
       this.router.transitionTo(returnUrl);

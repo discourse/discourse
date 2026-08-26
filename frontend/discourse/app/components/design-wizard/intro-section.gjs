@@ -9,14 +9,7 @@ const DesignWizardIntroSection = <template>
     </p>
     <p class="design-wizard__intro-note">
       {{dIcon "circle-info" class="design-wizard__intro-note-icon"}}
-      <span>
-        {{i18n "design_wizard.intro.autosave"}}
-        {{if
-          @revertable
-          (i18n "design_wizard.intro.revert_available")
-          (i18n "design_wizard.intro.revert_unavailable")
-        }}
-      </span>
+      <span>{{i18n "design_wizard.intro.autosave"}}</span>
     </p>
     <DButton
       @action={{@onStart}}

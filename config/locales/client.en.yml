@@ -614,12 +614,11 @@ en:
       save: "Save and finish"
       back: "Back"
       next: "Next"
-      launch: "Customize site wizard"
+      launch: "Design wizard"
+      launch_description: "Walk through your site's theme, colors, fonts, and layout again."
       intro:
         description: "This wizard walks you through your site's theme, colors, fonts, homepage layout, welcome banner, and search style."
-        autosave: "Each step is saved as you go, so members see the changes right away."
-        revert_available: "You can put everything back when you close."
-        revert_unavailable: "Your site's current theme is not one this wizard offers, so it cannot be restored afterwards."
+        autosave: "Each step is saved as you go, so members see the changes right away. You can put everything back when you close."
         start: "Get started"
       close:
         message: "You have already saved some changes to your site's design. Do you want to keep them?"

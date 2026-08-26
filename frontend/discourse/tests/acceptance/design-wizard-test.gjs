@@ -53,7 +53,11 @@ const designWizardData = () => ({
 acceptance("Design wizard - admin launch", function (needs) {
   let savedPayloads = [];
 
-  needs.user({ admin: true, groups: [AUTO_GROUPS.admins] });
+  needs.user({
+    admin: true,
+    groups: [AUTO_GROUPS.admins],
+    can_run_design_wizard: true,
+  });
 
   needs.hooks.beforeEach(function () {
     savedPayloads = [];
@@ -209,5 +213,32 @@ acceptance("Design wizard - moderators", function (needs) {
     assert
       .dom(APPEARANCE_LAUNCH_BUTTON)
       .doesNotExist("so the launcher cannot be reached");
+  });
+});
+
+acceptance("Design wizard - customized site", function (needs) {
+  // a site that has installed a theme or moved off the core themes has grown
+  // past what the wizard can express
+  needs.user({
+    admin: true,
+    groups: [AUTO_GROUPS.admins],
+    can_run_design_wizard: false,
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/admin/config/site_settings.json", () =>
+      helper.response(200, { site_settings: [] })
+    );
+  });
+
+  test("the launcher is not offered", async function (assert) {
+    await visit("/admin");
+
+    assert
+      .dom(".sidebar-section[data-section-name='admin-appearance']")
+      .exists("the appearance section is still there");
+    assert
+      .dom(APPEARANCE_LAUNCH_BUTTON)
+      .doesNotExist("but the wizard is not offered any more");
   });
 });

@@ -90,8 +90,8 @@
     }
   }
 
-  // a section whose action is how its feature is reached, rather than a control
-  // for a section you are already using, cannot wait for a hover to be found
+  // opt out of the hover reveal above, for actions that have to be found rather
+  // than reached for
   &.sidebar-section--persistent-actions {
     .sidebar-section-header-wrapper {
       .btn.sidebar-section-header-dropdown,

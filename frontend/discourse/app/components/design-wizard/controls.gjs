@@ -167,10 +167,7 @@ export default class DesignWizardControls extends Component {
       </header>
 
       {{#if this.designWizard.showIntro}}
-        <IntroSection
-          @revertable={{this.designWizard.revertable}}
-          @onStart={{this.startFlow}}
-        />
+        <IntroSection @onStart={{this.startFlow}} />
       {{else}}
         <div class="design-wizard__sections">
           {{#if (eq this.currentStep "theme")}}
