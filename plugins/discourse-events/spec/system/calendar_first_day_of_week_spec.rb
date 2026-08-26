@@ -3,7 +3,7 @@
 describe "Calendar first day of week" do
   fab!(:admin)
 
-  let(:upcoming_events) { PageObjects::Pages::DiscourseCalendar::UpcomingEvents.new }
+  let(:upcoming_events) { PageObjects::Pages::DiscourseEvents::UpcomingEvents.new }
 
   before do
     SiteSetting.discourse_events_enabled = true
