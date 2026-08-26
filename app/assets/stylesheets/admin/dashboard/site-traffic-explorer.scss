@@ -218,6 +218,13 @@
     }
   }
 
+  .db-section__metric-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 1.625em;
+  }
+
   .db-section__row-block {
     display: flex;
     flex-direction: column;
