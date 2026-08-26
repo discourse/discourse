@@ -238,10 +238,12 @@ after_initialize do
       require_relative "lib/discourse_workflows/nodes/post_event_scoping"
       require_relative "lib/discourse_workflows/nodes/event_ended/v1"
       require_relative "lib/discourse_workflows/nodes/event_participation_changed/v1"
+      require_relative "lib/discourse_workflows/nodes/event/v1"
 
       [
         DiscourseWorkflows::Nodes::EventEnded::V1,
         DiscourseWorkflows::Nodes::EventParticipationChanged::V1,
+        DiscourseWorkflows::Nodes::Event::V1,
       ]
     end
   end
