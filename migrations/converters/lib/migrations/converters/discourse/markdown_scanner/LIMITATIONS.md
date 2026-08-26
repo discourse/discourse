@@ -1,5 +1,7 @@
 # Known limitations
 
+## Code detection
+
 Edge cases where the scanner knowingly diverges from what core renders. Every
 entry falls back toward NOT code: the affected embed is still extracted and
 rewritten, which at worst edits text inside something core shows as code —
@@ -22,3 +24,11 @@ pinned as a spec in `code_parity_spec.rb`'s "deliberate divergences" section.
   inline spans. A table interrupting a paragraph leaves the paragraph open, so
   an indented line directly below the table reads as prose where core reads
   indented code.
+
+## Internal link routes
+
+- **Percent-encoded usernames** — `/u/j%C3%B8rn` is what a browser copies for
+  the profile of a unicode user `jørn`. The route parser does not decode
+  percent escapes, so the path is not read as a user route: an absolute URL
+  falls back to a site reference (origin rewritten, path kept verbatim) and a
+  relative one stays literal, instead of resolving to the user.

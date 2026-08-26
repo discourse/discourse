@@ -37,7 +37,10 @@ module Migrations
               POST = %r{\A/p/(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
               private_constant :POST
 
-              USER = %r{\A/u(?:sers)?/(?<name>#{WORD})}
+              # The lookahead keeps the name from backtracking to a shorter prefix
+              # on a character the word class rejects — without it `/u/j%C3%B8rn`
+              # (a percent-encoded unicode username) reads as user `j`.
+              USER = %r{\A/u(?:sers)?/(?<name>#{WORD})(?=[/?#]|\z)}
               private_constant :USER
 
               # The list filters a category's tabs are addressed by (core's

@@ -167,6 +167,34 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
+    it "defers a unicode username link" do
+      link, = link_for("[x](/u/jørn)")
+
+      expect(link).to include(target_type: enums::LinkTarget::USER, target_name: "jørn")
+    end
+
+    # The username grammar rejects a trailing `_`, so the name must not
+    # backtrack to `bob` and re-point the link at a different user.
+    it "leaves a user path with an invalid trailing character literal" do
+      raw = "[x](/u/bob_) and [y](/u/bob_/summary)"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    # The parser doesn't decode percent escapes (see LIMITATIONS.md), and `%`
+    # is not a name character — the whole segment has to fail rather than
+    # read `/u/j%C3%B8rn` (the copied URL of `jørn`'s profile) as user `j`.
+    it "records a percent-encoded username URL as a SITE link, not a truncated name" do
+      link, = link_for("https://forum.example.com/u/j%C3%B8rn")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::SITE,
+        target_name: nil,
+        target_suffix: "/u/j%C3%B8rn",
+      )
+    end
+
     it "defers a category link by id when the path ends in a number" do
       link, = link_for("[x](/c/support/billing/6)")
 
