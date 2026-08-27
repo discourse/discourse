@@ -37,6 +37,52 @@ en:
           title: "Menus"
         multi_select:
           title: "Multi select"
+        reorderable_list:
+          title: "Reorderable list"
+          groups:
+            aria_label: "Reorderable list example groups"
+            start:
+              title: "Start here"
+              description: "The default shell: one handle per row that drags, opens the move menu, and takes the keyboard."
+            policies:
+              title: "Row policies"
+              description: "Which rows may move and which may go: pinned rows that keep their slot, and protected rows that offer no way out."
+            content:
+              title: "Interactive row content"
+              description: "Rows carrying their own live controls — toggles and inputs. They keep their normal focus and clicks; the list only claims the handle."
+            layouts:
+              title: "Cell layouts"
+              description: "Manual placement for table-shaped rows: the list renders the rows, and the pre-wired controls go wherever a cell needs them."
+            groups:
+              title: "Multiple lists"
+              description: "Lists registered under one group accept each other's rows, by drag or from the move menu."
+          description: "Interactive examples of DReorderableList: dragging, the move menu behind each handle, the keyboard accelerators, pinned rows, cross-list groups, removal, and inline creation."
+          basic_example: "Default list"
+          basic_description: "The out-of-the-box shell. Each row has one control, the handle: it is the drag grip, and it opens a menu of move destinations. Tab reaches every handle in document order alongside the rows' own controls, and the arrow keys walk between handles as a shortcut. Every real move announces the new position, and a move refused at either end says so rather than doing nothing."
+          basic_try_this: "Tab to a handle and press Enter for the move menu, or press the arrow keys to walk the list. Alt with an arrow moves the row itself; Alt with Home or End sends it to an end."
+          policies_example: "Pinned and required rows"
+          policies_description: "Two predicates, two policies, both subtractive. A row the movable predicate excludes renders no handle and keeps its exact slot, wherever it sits — this list pins its first and last rows, and the rows around them move within the slots that are left. A row the removable predicate excludes renders no remove control, so a protected row offers nothing that cannot be acted on."
+          policies_try_this: "Send the first movable row to the bottom from its menu: neither pinned row shifts. The required row has no remove control at all."
+          toggles_example: "Rows with toggles"
+          toggles_description: "The admin-dashboard pattern: rows carry their own interactive controls, which keep their normal focus and clicks. Rows toggled off stay in the list but stop being movable — they keep their slot and lose their handle, rather than disappearing into a separate block."
+          toggles_try_this: "Turn a toggle off and the row keeps its place but can no longer be moved. Reorder the rows around it and watch it stay put."
+          editable_example: "Editable rows"
+          editable_description: "The settings value-list pattern with stable identity: an input per row, the handle leading and the list's own remove control trailing. Typing stays in the input, and Tab moves through the row's own controls the way it does anywhere else."
+          editable_try_this: "Edit a value, then remove a row — the removal is announced and focus lands on the row that took its place."
+          table_example: "Native table rows, manual placement"
+          table_description: "Manual placement for cell layouts: the list renders the table body and its rows, and yields pre-wired controls for the row to place — here the handle occupies the first column."
+          table_try_this: "Drag a handle, or press Enter on one: the reorder control lives in the first cell and the whole row moves."
+          table_field: "Field"
+          table_type: "Type"
+          cross_list_example: "Cross-list moves"
+          cross_list_description: "Lists registered under one group accept each other's rows. Dragging carries a row across, and each handle's menu lists the sibling lists by name, so the move is reachable without a pointer. An emptied list keeps accepting drops."
+          cross_list_try_this: "Drag a row from Primary into Secondary, or open a row's menu and choose the other list by name."
+          cross_list_empty: "Drop a row here"
+          cross_list_primary: "Primary"
+          cross_list_secondary: "Secondary"
+          create_example: "Create affordance"
+          create_description: "With create enabled the list renders an input after the rows, so appending belongs to the same component that reorders."
+          create_try_this: "Type a fruit name and press Enter."
         toasts:
           title: "Toasts"
         font_scale:

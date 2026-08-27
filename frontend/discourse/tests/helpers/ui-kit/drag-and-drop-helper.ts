@@ -313,6 +313,59 @@ export async function simulateUnsourcedDrag(
 }
 
 /**
+ * Drives a registered drag and releases it over an element that is NOT a drop
+ * target, the mirror of {@link simulateUnsourcedDrag}.
+ *
+ * The event sequence is {@link simulateDrag}'s, whose guard refuses this case
+ * outright. A caller here is asserting a refusal, and a refusal looks exactly
+ * like a drag that never reached anything. So the guards run the other way
+ * round: the source must be registered and the destination must not be. A
+ * destination that quietly becomes a drop target then fails here, rather than
+ * passing as the no-op the test was trying to prove.
+ *
+ * @param sourceSelector - CSS selector for the registered element to drag.
+ * @param targetSelector - CSS selector for the non-target to release over.
+ * @param options - The shared payload and any coordinate overrides.
+ */
+export async function simulateUntargetedDrag(
+  sourceSelector: string,
+  targetSelector: string,
+  {
+    dataTransfer,
+    sourceCoordinates,
+    targetCoordinates,
+  }: {
+    dataTransfer: DataTransfer;
+    sourceCoordinates?: Partial<ClientPoint>;
+    targetCoordinates?: Partial<ClientPoint>;
+  }
+) {
+  const sourceElement = document.querySelector(sourceSelector);
+  if (!sourceElement?.hasAttribute("data-drag-source")) {
+    throw new Error(
+      `${sourceSelector} is not a registered drag source, so this drag would prove nothing about the destination`
+    );
+  }
+
+  const targetElement = document.querySelector(targetSelector);
+  if (targetElement?.hasAttribute("data-drop-target")) {
+    throw new Error(
+      `${targetSelector} IS a registered drop target, so this would exercise the ordinary drop path — use simulateDrag`
+    );
+  }
+
+  const source = { ...centerOf(sourceSelector), ...sourceCoordinates };
+  const target = { ...centerOf(targetSelector), ...targetCoordinates };
+  await startDrag(sourceSelector, { dataTransfer, coordinates: source });
+  await dragOver(targetSelector, { dataTransfer, coordinates: target });
+  await dragEvent(targetSelector, "drop", { dataTransfer, ...target });
+  await dragEvent(registeredElementFor(sourceSelector), "dragend", {
+    dataTransfer,
+    ...source,
+  });
+}
+
+/**
  * Brings an external drag over a target and leaves it hovering there, without
  * dropping.
  *
