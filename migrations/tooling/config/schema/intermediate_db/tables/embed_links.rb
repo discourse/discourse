@@ -9,8 +9,8 @@
 # `Migrations::Placeholder`. `owner_type`/`owner_id` name that owning record.
 #
 # `target_type` is the kind of Discourse entity the link points at, a `link_target`
-# value (`topic`, `post`, `user`, `category`, `tag`, `group` or `badge`); nil for an
-# external link. The entity is identified in one of three forms, and only one is set
+# value (`topic`, `post`, `user`, `category`, `tag`, `group`, `badge`, or the
+# multi-coordinate `category_tag` / `tag_intersection`); nil for an external link. The entity is identified in one of three forms, and only one is set
 # per row: by id (`target_id`, the source `original_id`), by name (`target_name`),
 # or by coordinates (`target_topic_id` + `target_post_number`). Which form a row
 # uses follows from what the URL carries — with a Discourse source:
@@ -35,6 +35,22 @@
 # resolution maps so the importer reuses them verbatim. Post coordinates mirror
 # `embed_quotes`: post numbers are recomputed at import, so the importer resolves
 # them to a post rather than preserving them.
+# The multi-tag routes name several records, so they carry a second coordinate in
+# `target_tag_path` (tag names come from URL path segments, so `/` can't occur
+# inside one):
+#
+#   * category+tag  `/tags/c/plugin/22/official`   -> target_id: 22,
+#                                                     target_tag_path: "official"
+#   * category+tag  `/tags/c/howto/devs/import`    -> target_name: "howto:devs",
+#                                                     target_tag_path: "import"
+#   * category+tag  `/tags/c/theme/61/none/extra`  -> target_id: 61,
+#                                                     target_tag_path: "none/extra"
+#                                                     (`none`/`all` is core's
+#                                                     subcategory filter, kept so
+#                                                     the rebuilt route filters
+#                                                     the same way)
+#   * intersection  `/tags/intersection/wine/food` -> target_tag_path: "wine/food"
+#
 # `target_suffix` is everything after the matched route (further path, query string,
 # fragment), reattached verbatim when the URL is rebuilt: `/u/sam/summary` yields
 # target_name: "sam" plus target_suffix: "/summary", and `/t/a-topic/123?page=2`
@@ -52,6 +68,7 @@ Migrations::Tooling::Schema.table :embed_links do
   add_column :target_name, :text
   add_column :target_topic_id, :numeric
   add_column :target_post_number, :integer
+  add_column :target_tag_path, :text
   add_column :target_suffix, :text
   # The verbatim source snippet, restored unchanged when the importer cannot
   # map the embed to a destination record (the round-trip fallback).

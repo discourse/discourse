@@ -22,6 +22,14 @@ module Migrations
         # whatever trailed the matched route (further path, query string, fragment),
         # reattached verbatim at render.
         #
+        # The multi-coordinate tag routes carry a second coordinate in
+        # `target_tag_path`: a `:category_tag` link names its category through
+        # `target_id`/`target_name` as above, plus the tag as
+        # `[none/|all/]<tag-name>` (the optional prefix is core's subcategory
+        # filter, preserved so the rebuilt route filters the same way); a
+        # `:tag_intersection` link names only tags, `<t1>/<t2>[/<t3>…]`. Tag names
+        # come from URL path segments, so `/` can't occur inside one.
+        #
         # A `:site` target names no record — an absolute internal URL that parses no
         # route (a real page like `/faq`, or junk). None of the addressing fields are
         # filled; `target_suffix` carries the whole path/query/fragment (after any host
@@ -42,6 +50,7 @@ module Migrations
             :target_name,
             :target_topic_id,
             :target_post_number,
+            :target_tag_path,
             :target_suffix,
             :url_offset,
             :label_url_offset,

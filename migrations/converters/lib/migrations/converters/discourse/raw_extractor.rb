@@ -46,6 +46,8 @@ module Migrations
           group: LinkTarget::GROUP,
           badge: LinkTarget::BADGE,
           site: LinkTarget::SITE,
+          category_tag: LinkTarget::CATEGORY_TAG,
+          tag_intersection: LinkTarget::TAG_INTERSECTION,
         }.freeze
         private_constant :LINK_TARGET_TYPES
 
@@ -287,6 +289,7 @@ module Migrations
               target_name: node.target_name,
               target_topic_id: node.target_topic_id,
               target_post_number: node.target_post_number,
+              target_tag_path: node.target_tag_path,
               target_suffix: node.target_suffix,
               original_markdown: source,
               url_offset: node.url_offset,

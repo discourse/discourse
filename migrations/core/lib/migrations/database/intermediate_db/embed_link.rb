@@ -19,6 +19,7 @@ module Migrations
             target_name,
             target_post_number,
             target_suffix,
+            target_tag_path,
             target_topic_id,
             target_type,
             text,
@@ -26,7 +27,7 @@ module Migrations
             url_offset
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -43,6 +44,7 @@ module Migrations
         # @param target_name          [String, nil]
         # @param target_post_number   [Integer, nil]
         # @param target_suffix        [String, nil]
+        # @param target_tag_path      [String, nil]
         # @param target_topic_id      [Integer, String, nil]
         # @param target_type          [Integer, nil]
         #   Any constant from LinkTarget (e.g. LinkTarget::TOPIC)
@@ -64,6 +66,7 @@ module Migrations
           target_name: nil,
           target_post_number: nil,
           target_suffix: nil,
+          target_tag_path: nil,
           target_topic_id: nil,
           target_type: nil,
           text: nil,
@@ -81,6 +84,7 @@ module Migrations
             target_name,
             target_post_number,
             target_suffix,
+            target_tag_path,
             target_topic_id,
             target_type,
             text,

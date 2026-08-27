@@ -280,6 +280,45 @@ module Migrations
           number: :target_post_number,
         )
         resolve_link_names(link_rows)
+        resolve_link_tag_paths(link_rows)
+      end
+
+      # Resolves every tag name a multi-tag route carries to its source
+      # original_id, into a derived (non-column) row key the render phase maps to
+      # destination names. All-or-nothing on purpose: a route naming several
+      # records is only rebuilt when every one of them maps, so one unknown tag
+      # sends the whole construct to the verbatim fallback instead of a link that
+      # filters differently than the author's.
+      def resolve_link_tag_paths(link_rows)
+        link_rows.each do |row|
+          next unless multi_tag_link?(row)
+
+          ids = tag_path_tags(row).map { |name| @names.tag_id(name) }
+          row[:resolved_tag_ids] = ids.any? && ids.all? ? ids : nil
+        end
+      end
+
+      def multi_tag_link?(row)
+        row[:target_type] == Enums::LinkTarget::CATEGORY_TAG ||
+          row[:target_type] == Enums::LinkTarget::TAG_INTERSECTION
+      end
+
+      TAG_SUBCATEGORY_FILTERS = %w[none all]
+      private_constant :TAG_SUBCATEGORY_FILTERS
+
+      # The `none`/`all` subcategory filter a category+tag path may open with; the
+      # intersection form has no filter position.
+      def tag_path_filter(row)
+        return nil unless row[:target_type] == Enums::LinkTarget::CATEGORY_TAG
+
+        first = row[:target_tag_path].to_s.split("/").first
+        TAG_SUBCATEGORY_FILTERS.include?(first) ? first : nil
+      end
+
+      def tag_path_tags(row)
+        segments = row[:target_tag_path].to_s.split("/")
+        segments.shift if tag_path_filter(row)
+        segments
       end
 
       # A link that named its target (a username, group/tag name, or category slug
@@ -302,7 +341,7 @@ module Migrations
           @names.group_id(name)
         when Enums::LinkTarget::TAG
           @names.tag_id(name)
-        when Enums::LinkTarget::CATEGORY
+        when Enums::LinkTarget::CATEGORY, Enums::LinkTarget::CATEGORY_TAG
           @names.category_id(name)
         end
       end
@@ -474,7 +513,12 @@ module Migrations
         return render_link_markup(row, row[:url]) unless row[:target_type]
         return render_site_link(row) if row[:target_type] == Enums::LinkTarget::SITE
 
-        url = row[:target_id] && rebuild_internal_link(row)
+        url =
+          if multi_tag_link?(row)
+            rebuild_multi_tag_link(row)
+          else
+            row[:target_id] && rebuild_internal_link(row)
+          end
         return render_link_markup(row, url) if url
 
         report_unresolved_link(row)
@@ -574,9 +618,40 @@ module Migrations
       # `/c/<slug path>/<id>`, with the slug path's `:` separators turned back into
       # `/`. Both the id and the path come from the destination category.
       def category_link_url(target_id)
+        parts = category_route_parts(target_id)
+        parts && "#{@maps.base_url}/c/#{parts}"
+      end
+
+      # `<slug path>/<id>` for the destination category, the shared middle of the
+      # `/c/…` and `/tags/c/…` routes; nil when the category isn't mapped.
+      def category_route_parts(target_id)
+        return nil unless target_id
+
         new_id = @maps.category_id(target_id)
         path = @maps.category_slug_path(target_id)
-        new_id && path && "#{@maps.base_url}/c/#{path.tr(":", "/")}/#{new_id}"
+        new_id && path && "#{path.tr(":", "/")}/#{new_id}"
+      end
+
+      # The destination URL for a multi-tag route, or nil when any coordinate —
+      # the category, or any tag — didn't map: a route naming several records is
+      # only rebuilt whole.
+      def rebuild_multi_tag_link(row)
+        tag_ids = row[:resolved_tag_ids]
+        return nil unless tag_ids
+
+        names = tag_ids.map { |id| @maps.tag_name(id) }
+        return nil unless names.all?
+
+        base =
+          case row[:target_type]
+          when Enums::LinkTarget::TAG_INTERSECTION
+            "#{@maps.base_url}/tags/intersection/#{names.join("/")}"
+          when Enums::LinkTarget::CATEGORY_TAG
+            parts = category_route_parts(row[:target_id])
+            tag_path = [tag_path_filter(row), names.first].compact.join("/")
+            parts && "#{@maps.base_url}/tags/c/#{parts}/#{tag_path}"
+          end
+        base && "#{base}#{row[:target_suffix]}"
       end
 
       def badge_link_url(target_id)

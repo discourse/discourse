@@ -30,10 +30,17 @@ fail-closed:
   (`:unanchored`); other constructs in the same body are still extracted. A destination that is its own syntax —
   a bare schemeless domain linkify links, a reference definition's URL — is
   rewritten in place, not refused. An internal URL whose path opens a
-  coordinate route but parses none (`/t//209`, `/u/bob!!!`, the reserved
-  multi-tag `/tags/c/…` forms) also refuses: an origin-only rewrite would
-  carry its stale-looking ids onto the new host, which is worse than a
-  reported verbatim link.
+  coordinate route but parses none (`/t//209`, `/u/bob!!!`, a slug-only
+  `/t/<slug>` topic link — the intermediate DB carries no topic slugs to
+  resolve one against) also refuses: an origin-only rewrite would carry its
+  stale-looking ids onto the new host, which is worse than a reported
+  verbatim link.
+- **Multi-tag routes map whole or not at all.** `/tags/c/…` (category + tag,
+  with an optional `none`/`all` subcategory filter) and
+  `/tags/intersection/…` name several records; the importer rebuilds the
+  route only when the category and every tag map, and any miss restores the
+  verbatim source (reported). A trailing all-numeric segment is core's
+  canonical tag-id ambiguity and refuses instead of guessing a reading.
 - **A quote header the grammar cannot parse** (beyond the header cap,
   malformed) counts as a refusal too; a header that parses but carries no
   username has nothing to remap and is skipped exactly.

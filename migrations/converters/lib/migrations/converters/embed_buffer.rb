@@ -112,6 +112,10 @@ module Migrations
       #   `target_post_number` it forms the source coordinates; post numbers are
       #   recomputed at import, so the importer resolves the pair.
       # @param target_post_number [Integer, nil] see `target_topic_id`.
+      # @param target_tag_path [String, nil] the tag coordinate(s) of a multi-tag
+      #   route: `[none/|all/]<tag>` for a `CATEGORY_TAG` link (the category rides
+      #   in `target_id`/`target_name` as above), `<t1>/<t2>[/…]` for a
+      #   `TAG_INTERSECTION` link.
       # @param target_suffix [String, nil] everything after the matched route
       #   (further path, query string, fragment), reattached verbatim when the URL
       #   is rebuilt.
@@ -131,6 +135,7 @@ module Migrations
         target_name: nil,
         target_topic_id: nil,
         target_post_number: nil,
+        target_tag_path: nil,
         target_suffix: nil,
         original_markdown: nil,
         url_offset: nil,
@@ -146,6 +151,7 @@ module Migrations
           target_name:,
           target_topic_id:,
           target_post_number:,
+          target_tag_path:,
           target_suffix:,
           original_markdown:,
           url_offset:,

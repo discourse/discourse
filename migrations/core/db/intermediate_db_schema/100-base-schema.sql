@@ -162,6 +162,7 @@ CREATE TABLE embed_links
     target_name        TEXT,
     target_post_number INTEGER,
     target_suffix      TEXT,
+    target_tag_path    TEXT,
     target_topic_id    NUMERIC,
     target_type        ENUM_INTEGER,
     text               TEXT,

@@ -330,21 +330,66 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
-    it "leaves the `/tags/c/...` intersection form undetected" do
-      raw = "browse [tags](/tags/c/food/wine) here"
+    # The multi-tag routes name several records at once, so the reference
+    # carries the category the way plain category links do plus the tag path in
+    # `target_tag_path` — the importer rebuilds the route only when every
+    # coordinate maps.
+    describe "multi-tag routes" do
+      it "defers a category+tag link with the category addressed by id" do
+        link, = link_for("[x](/tags/c/plugin/22/official)")
 
-      expect(extract(raw)).to eq(raw)
-      expect(buffer.links).to be_empty
-    end
+        expect(link).to include(
+          target_type: enums::LinkTarget::CATEGORY_TAG,
+          target_id: 22,
+          target_name: nil,
+          target_tag_path: "official",
+          target_suffix: nil,
+        )
+      end
 
-    it "leaves the `/tags/intersection/...` form undetected" do
-      # `/tags/intersection/<t1>/<t2>` is a reserved route, not the page of a
-      # tag named `intersection` — reading it as one would rewrite the link to
-      # a single tag's page.
-      raw = "browse [tags](/tags/intersection/food/wine) here"
+      it "defers the legacy id-less form with the joined slug path" do
+        link, = link_for("[x](/tags/c/food/wine)")
 
-      expect(extract(raw)).to eq(raw)
-      expect(buffer.links).to be_empty
+        expect(link).to include(
+          target_type: enums::LinkTarget::CATEGORY_TAG,
+          target_id: nil,
+          target_name: "food",
+          target_tag_path: "wine",
+        )
+      end
+
+      it "reads a multi-level slug path the way category links do" do
+        link, = link_for("[x](/tags/c/howto/devs/import)")
+
+        expect(link).to include(target_name: "howto:devs", target_tag_path: "import")
+      end
+
+      it "keeps the `none`/`all` subcategory filter in the tag path" do
+        link, = link_for("[x](/tags/c/theme/61/none/extra)")
+
+        expect(link).to include(target_id: 61, target_tag_path: "none/extra")
+      end
+
+      it "leaves a list-filter tab and the query in the suffix" do
+        link, = link_for("[x](/tags/c/plugin/22/official/l/top?period=yearly)")
+
+        expect(link).to include(
+          target_id: 22,
+          target_tag_path: "official",
+          target_suffix: "/l/top?period=yearly",
+        )
+      end
+
+      it "defers an intersection link with every tag in the path" do
+        link, = link_for("[x](/tags/intersection/food/wine/cheese)")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::TAG_INTERSECTION,
+          target_id: nil,
+          target_name: nil,
+          target_tag_path: "food/wine/cheese",
+        )
+      end
     end
 
     it "still reads a bare /tags/intersection as a tag with that name" do

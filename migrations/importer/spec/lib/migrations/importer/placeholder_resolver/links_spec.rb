@@ -182,6 +182,159 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved).to eq("x https://dest.example.com/c/support/billing/20/l/latest y")
     end
 
+    # A multi-tag route names several records; it is rebuilt only when the
+    # category and every tag map, and any miss restores the source URL.
+    describe "multi-tag routes" do
+      let(:category_tag_maps) do
+        FakePlaceholderMaps.new(
+          category_id: {
+            2 => 20,
+          },
+          category_slug_path: {
+            2 => "addons:plugin",
+          },
+          tag_name: {
+            3 => "official-stuff",
+          },
+        )
+      end
+
+      before { create_tag(3, "official") }
+
+      it "renders a category+tag target from the mapped coordinates" do
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/official",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "official",
+            },
+            maps: category_tag_maps,
+          )
+
+        expect(resolved).to eq(
+          "x https://dest.example.com/tags/c/addons/plugin/20/official-stuff y",
+        )
+      end
+
+      it "keeps the subcategory filter and the suffix around the mapped parts" do
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/none/official/l/top?period=yearly",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "none/official",
+              target_suffix: "/l/top?period=yearly",
+            },
+            maps: category_tag_maps,
+          )
+
+        expect(resolved).to eq(
+          "x https://dest.example.com/tags/c/addons/plugin/20/none/official-stuff/l/top?period=yearly y",
+        )
+      end
+
+      it "resolves a legacy slug-path category the way category links do" do
+        create_category(7, "howto")
+        create_category(8, "devs", parent_category_id: 7)
+        maps =
+          FakePlaceholderMaps.new(
+            category_id: {
+              8 => 80,
+            },
+            category_slug_path: {
+              8 => "guides:devs",
+            },
+            tag_name: {
+              3 => "official",
+            },
+          )
+
+        resolved =
+          render(
+            {
+              url: "/tags/c/howto/devs/official",
+              target_type: link_target::CATEGORY_TAG,
+              target_name: "howto:devs",
+              target_tag_path: "official",
+            },
+            maps:,
+          )
+
+        expect(resolved).to eq("x https://dest.example.com/tags/c/guides/devs/80/official y")
+      end
+
+      it "renders an intersection target with every tag mapped" do
+        create_tag(4, "wine")
+        maps = FakePlaceholderMaps.new(tag_name: { 3 => "official", 4 => "vino" })
+
+        resolved =
+          render(
+            {
+              url: "/tags/intersection/official/wine",
+              target_type: link_target::TAG_INTERSECTION,
+              target_tag_path: "official/wine",
+            },
+            maps:,
+          )
+
+        expect(resolved).to eq("x https://dest.example.com/tags/intersection/official/vino y")
+      end
+
+      it "falls back to the source URL when the category does not map" do
+        maps = FakePlaceholderMaps.new(tag_name: { 3 => "official" })
+
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/official",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "official",
+            },
+            maps:,
+          )
+
+        # The report itself flows through the shared unresolved-link branch,
+        # covered below with the other miss cases.
+        expect(resolved).to eq("x /tags/c/plugin/2/official y")
+      end
+
+      it "falls back whole when one of the intersection tags does not map" do
+        create_tag(4, "wine")
+        maps = FakePlaceholderMaps.new(tag_name: { 3 => "official" })
+
+        resolved =
+          render(
+            {
+              url: "/tags/intersection/official/wine",
+              target_type: link_target::TAG_INTERSECTION,
+              target_tag_path: "official/wine",
+            },
+            maps:,
+          )
+
+        expect(resolved).to eq("x /tags/intersection/official/wine y")
+      end
+
+      it "falls back when a tag name is not a source tag at all" do
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/mystery",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "mystery",
+            },
+            maps: category_tag_maps,
+          )
+
+        expect(resolved).to eq("x /tags/c/plugin/2/mystery y")
+      end
+    end
+
     it "renders a badge target with the destination id and slug" do
       maps = FakePlaceholderMaps.new(badge: { 9 => { id: 90, slug: "great-work" } })
 

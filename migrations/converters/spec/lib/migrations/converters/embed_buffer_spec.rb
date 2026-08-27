@@ -64,6 +64,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           target_name: nil,
           target_topic_id: nil,
           target_post_number: nil,
+          target_tag_path: nil,
           target_suffix: nil,
           original_markdown: "[here](https://example.com)",
           url_offset: 7,

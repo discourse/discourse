@@ -19,6 +19,44 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       )
     end
 
+    # A multi-tag route names several records; with nothing mapped the whole
+    # construct restores byte-exact, filter and suffix included.
+    it "restores a category+tag link byte-exact when nothing is mapped" do
+      token = placeholder.mint(:link)
+      original =
+        %{[official plugins](https://old.example.com/tags/c/plugin/22/none/official/l/top "tabs")}
+      create_link(
+        token,
+        original:,
+        url: "https://old.example.com/tags/c/plugin/22/none/official/l/top",
+        text: "official plugins",
+        target_type: link_target::CATEGORY_TAG,
+        target_id: 22,
+        target_tag_path: "none/official",
+        target_suffix: "/l/top",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{token} y" }])
+
+      expect(resolved[1]).to eq("x #{original} y")
+    end
+
+    it "restores an intersection link byte-exact when a tag is unmapped" do
+      token = placeholder.mint(:link)
+      original = "see https://old.example.com/tags/intersection/food/wine there"
+      create_link(
+        token,
+        original: "https://old.example.com/tags/intersection/food/wine",
+        url: "https://old.example.com/tags/intersection/food/wine",
+        target_type: link_target::TAG_INTERSECTION,
+        target_tag_path: "food/wine",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "see #{token} there" }])
+
+      expect(resolved[1]).to eq(original)
+    end
+
     it "restores a titled link byte-exact when the target is unmapped" do
       token = placeholder.mint(:link)
       original = %{[See](https://old.example.com/t/x/300 "why this matters")}

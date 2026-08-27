@@ -32,7 +32,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       "an empty topic slug" => "https://forum.example.com/t//209",
       "a junk topic id" => "https://forum.example.com/t/slug/5a",
       "an invalid user segment" => "https://forum.example.com/u/bob!!!",
-      "a reserved multi-tag form" => "https://forum.example.com/tags/c/support/feature",
+      # Core's canonical route order would read the trailing number as a tag id,
+      # the legacy order as more slug path — the parser refuses the ambiguity
+      # instead of guessing a reading.
+      "a multi-tag form with a trailing numeric segment" =>
+        "https://forum.example.com/tags/c/support/feature/12",
+      "a slug-only topic link" => "https://forum.example.com/t/a-topic-slug",
     }.each do |label, url|
       it "refuses #{label} instead of recording a SITE link" do
         raw = "This topic you've named [>>>>>](#{url}) doesn't load"

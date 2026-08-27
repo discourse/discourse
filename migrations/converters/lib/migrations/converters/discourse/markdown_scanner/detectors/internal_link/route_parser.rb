@@ -90,14 +90,52 @@ module Migrations
               CATEGORY_SLUG = %r{\A/c/(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*)(?=[/?#]|\z)}
               private_constant :CATEGORY_SLUG
 
-              # `/tag/<name>` / `/tags/<name>`. The guard leaves the two reserved
-              # multi-tag forms undetected (out of scope; see LIMITATIONS.md):
-              # `/tags/c/<category>/<tag>` and `/tags/intersection/<t1>/<t2>` name
-              # several records, not a tag called `c` or `intersection`. The guard
-              # needs the trailing `/` because a bare `/tags/intersection` IS the
-              # page of a tag with that name.
+              # `/tag/<name>` / `/tags/<name>`. The guard routes the two reserved
+              # multi-tag forms to their own grammars below: `/tags/c/…` and
+              # `/tags/intersection/…` name several records, not a tag called `c`
+              # or `intersection`. The guard needs the trailing `/` because a bare
+              # `/tags/intersection` IS the page of a tag with that name.
               TAG = %r{\A/tags?/(?!(?:c|intersection)/)(?<name>#{SEGMENT})}
               private_constant :TAG
+
+              # Where a category+tag route may continue after the tag name: a list
+              # filter tab, the query/fragment, or the end. Anything else after the
+              # tag — most importantly a trailing numeric segment, which core's
+              # canonical route order would read as a tag id rather than more path —
+              # leaves the route unparsed, so the ambiguity refuses instead of
+              # silently picking a reading.
+              TAG_ROUTE_END = %r{(?=/l/(?:#{CATEGORY_FILTER})(?=[/?#]|\z)|[?#]|\z)}
+              private_constant :TAG_ROUTE_END
+
+              # The tag segment of a category+tag route. All-numeric is the
+              # canonical-route tag-id ambiguity described above, and `none`/`all`
+              # are the subcategory filters core reserves — neither can be a tag
+              # name here.
+              TAG_NAME_SEGMENT = %r{(?!(?:\d+|none|all)(?=[/?#]|\z))#{SEGMENT}}
+              private_constant :TAG_NAME_SEGMENT
+
+              # `/tags/c/<category-path>/<id>/<tag>` — topics carrying a tag within a
+              # category, the category part read exactly like CATEGORY_ID (lazy slug
+              # path, first id-shaped segment ends it). An optional `none`/`all`
+              # between category and tag is core's subcategory filter, kept as part
+              # of the tag path so the rebuilt route filters the same way.
+              TAG_CATEGORY_ID =
+                %r{\A/tags/c/(?:(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*?)/)?(?<id>#{Base::ID_PATTERN})/(?:(?<filter>none|all)/)?(?<tag>#{TAG_NAME_SEGMENT})#{TAG_ROUTE_END}}
+              private_constant :TAG_CATEGORY_ID
+
+              # The legacy id-less form, `/tags/c/<slug-path>/<tag>`, segments
+              # joining into a slug path like CATEGORY_SLUG. The path is lazy so the
+              # last eligible segment is the tag, not more slug.
+              TAG_CATEGORY_SLUG =
+                %r{\A/tags/c/(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*?)/(?:(?<filter>none|all)/)?(?<tag>#{TAG_NAME_SEGMENT})#{TAG_ROUTE_END}}
+              private_constant :TAG_CATEGORY_SLUG
+
+              # `/tags/intersection/<t1>/<t2>[/<t3>…]` — topics carrying every listed
+              # tag. Two names minimum: core routes a single-segment form as the page
+              # of that one tag, which the TAG route already reads.
+              TAG_INTERSECTION =
+                %r{\A/tags/intersection/(?<tags>#{SEGMENT}(?:/#{SEGMENT})+)(?=[?#]|\z)}
+              private_constant :TAG_INTERSECTION
 
               GROUP = %r{\A/g/(?<name>#{SEGMENT})}
               private_constant :GROUP
@@ -122,7 +160,8 @@ module Migrations
                 # path.
                 def parse(rest)
                   topic_or_post(rest) || post_by_id(rest) || user(rest) || category(rest) ||
-                    tag(rest) || group(rest) || badge(rest)
+                    tag_category(rest) || tag_intersection(rest) || tag(rest) || group(rest) ||
+                    badge(rest)
                 end
 
                 # Whether an UNPARSED path still opened a coordinate-bearing
@@ -177,6 +216,38 @@ module Migrations
                   match && target(match, :tag, target_name: match[:name])
                 end
 
+                # The category is addressed the way the plain category routes
+                # address it (id when present, else the joined slug path); the tag
+                # path keeps the optional `none`/`all` filter in front of the tag
+                # name, so rebuilding preserves the filter without a column of its
+                # own.
+                def tag_category(rest)
+                  match = TAG_CATEGORY_ID.match(rest) || TAG_CATEGORY_SLUG.match(rest)
+                  return nil unless match
+
+                  tag_path = [match[:filter], match[:tag]].compact.join("/")
+                  if match.names.include?("id") && match[:id]
+                    target(
+                      match,
+                      :category_tag,
+                      target_id: match[:id].to_i,
+                      target_tag_path: tag_path,
+                    )
+                  else
+                    target(
+                      match,
+                      :category_tag,
+                      target_name: match[:path].tr("/", ":"),
+                      target_tag_path: tag_path,
+                    )
+                  end
+                end
+
+                def tag_intersection(rest)
+                  match = TAG_INTERSECTION.match(rest)
+                  match && target(match, :tag_intersection, target_tag_path: match[:tags])
+                end
+
                 def group(rest)
                   match = GROUP.match(rest)
                   match && target(match, :group, target_name: match[:name])
@@ -193,7 +264,8 @@ module Migrations
                   target_id: nil,
                   target_name: nil,
                   target_topic_id: nil,
-                  target_post_number: nil
+                  target_post_number: nil,
+                  target_tag_path: nil
                 )
                   {
                     target_type:,
@@ -201,6 +273,7 @@ module Migrations
                     target_name:,
                     target_topic_id:,
                     target_post_number:,
+                    target_tag_path:,
                     route_length: match[0].length,
                   }
                 end
