@@ -176,7 +176,7 @@ module UserGuardian
     !profile_hidden
   end
 
-  def can_see_user_actions?(user, action_types)
+  def can_see_user_actions?(user, action_types = [])
     return true if !@user.anonymous? && (is_me?(user) || is_admin?)
     return false if SiteSetting.hide_user_activity_tab?
     (action_types & UserAction.private_types).empty?
