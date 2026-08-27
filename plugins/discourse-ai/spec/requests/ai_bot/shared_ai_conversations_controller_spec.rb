@@ -12,6 +12,7 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
   fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2") }
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:attacker) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic)
   fab!(:pm, :private_message_topic)
   fab!(:user_pm) { Fabricate(:private_message_topic, recipient: user) }
@@ -382,6 +383,21 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
         get "#{path}/preview/#{user_pm_share.id}.json"
         expect(response).not_to have_http_status(:success)
       end
+    end
+  end
+
+  describe "GET /onebox" do
+    it "does not expose a trashed conversation through a local onebox preview" do
+      source_post = user_pm_share.posts.last
+      source_post.update!(raw: "private transcript excerpt")
+      conversation = SharedAiConversation.share_conversation(user, user_pm_share)
+      user_pm_share.trash!
+
+      sign_in(attacker)
+      get "/onebox.json", params: { url: conversation.url }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).not_to include(source_post.raw)
     end
   end
 
