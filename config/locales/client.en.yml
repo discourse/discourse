@@ -614,6 +614,18 @@ en:
       save: "Save and finish"
       back: "Back"
       next: "Next"
+      launch: "Design wizard"
+      launch_description: "Walk through your site's theme, colors, fonts, and layout again."
+      intro:
+        description: "This wizard walks you through your site's theme, colors, fonts, homepage layout, welcome banner, and search style."
+        autosave: "Each step is saved as you go, so members see the changes right away. You can put everything back when you close."
+        start: "Get started"
+      close:
+        message: "You have already saved some changes to your site's design. Do you want to keep them?"
+        message_without_revert: "You have already saved some changes to your site's design. They cannot be undone from here."
+        keep: "Keep changes"
+        revert: "Revert changes"
+        continue_editing: "Continue editing"
       sections:
         theme: "Theme"
         colors: "Default color"
