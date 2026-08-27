@@ -39,12 +39,12 @@ module PageObjects
         find("input.full-page-search")
       end
 
-      def has_heading_text?(text)
-        has_selector?("h1.search-page-heading", text: text)
+      def has_result_count?
+        has_selector?("#search-result-count")
       end
 
-      def has_no_heading_text?(text)
-        has_no_selector?("h1.search-page-heading", text: text)
+      def has_no_result_count?
+        has_no_selector?("#search-result-count")
       end
 
       def click_search_button
