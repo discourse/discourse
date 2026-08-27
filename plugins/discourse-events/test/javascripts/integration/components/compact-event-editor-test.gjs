@@ -1,4 +1,4 @@
-import { fillIn, render } from "@ember/test-helpers";
+import { fillIn, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import CompactEventEditor from "discourse/plugins/discourse-events/discourse/components/compact-event-editor";
@@ -171,5 +171,59 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
         "Add location",
         "location stops advertising URLs once url is a separate row"
       );
+  });
+
+  test("clamps end an hour after start when the picked end time is not after start", async function (assert) {
+    const initialState = stateWith({
+      endsAt: moment("2026-07-01T12:00:00Z"),
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await fillIn(findAll(".composer-event__time-input")[1], "10:00");
+
+    assert.strictEqual(
+      lastState.endsAt.toISOString(),
+      "2026-07-01T11:00:00.000Z",
+      "an end time at or before start is pushed an hour past start"
+    );
+  });
+
+  test("the end date picker is bounded by the start date", async function (assert) {
+    const initialState = stateWith({
+      allDay: true,
+      startsAt: moment("2026-07-01"),
+      endsAt: null,
+    });
+    await renderEditor(initialState);
+
+    assert
+      .dom(findAll(".composer-event__date-input")[1])
+      .hasAttribute(
+        "min",
+        "2026-07-01",
+        "days before the start are greyed out"
+      );
+  });
+
+  test("picking the start day as the end day keeps a one-day all-day event", async function (assert) {
+    const initialState = stateWith({
+      allDay: true,
+      startsAt: moment("2026-07-01"),
+      endsAt: null,
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await fillIn(findAll(".composer-event__date-input")[1], "2026-07-01");
+
+    assert.strictEqual(
+      lastState.endsAt.format("YYYY-MM-DD"),
+      "2026-07-01",
+      "an equal boundary is a valid one-day range"
+    );
+    assert
+      .dom(findAll(".composer-event__date-input")[1])
+      .hasValue("2026-07-01", "the picked day stays in the field");
   });
 });

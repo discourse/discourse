@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
+  allDayTransition,
   attendanceTransition,
   buildEventBlock,
   buildParams,
@@ -225,6 +226,30 @@ module("Unit | Lib | raw-event-helper", function (hooks) {
     );
   });
 
+  test("parseReminders defaults the type for legacy reminders without one", function (assert) {
+    assert.deepEqual(parseReminders("15.minutes"), [
+      { type: "notification", value: 15, unit: "minutes", period: "before" },
+    ]);
+  });
+
+  test("parseReminders tolerates spaces after commas", function (assert) {
+    assert.deepEqual(
+      parseReminders("notification.15.minutes, bumpTopic.1.days"),
+      [
+        { type: "notification", value: 15, unit: "minutes", period: "before" },
+        { type: "bumpTopic", value: 1, unit: "days", period: "before" },
+      ]
+    );
+  });
+
+  test("parseReminders drops entries without a numeric value and a unit", function (assert) {
+    assert.deepEqual(parseReminders("notification.15"), []);
+    assert.deepEqual(parseReminders("15"), []);
+    assert.deepEqual(parseReminders("notification.abc.minutes,10.minutes"), [
+      { type: "notification", value: 10, unit: "minutes", period: "before" },
+    ]);
+  });
+
   test("defaultReminderFor", function (assert) {
     assert.deepEqual(
       defaultReminderFor({
@@ -348,6 +373,17 @@ module("Unit | Lib | raw-event-helper", function (hooks) {
       "bumpTopic.-30.minutes",
       "serializes an after reminder with negative value"
     );
+
+    assert.strictEqual(
+      reminderToBBCode({
+        type: "notification",
+        value: null,
+        unit: "minutes",
+        period: "before",
+      }),
+      "notification.NaN.minutes",
+      "keeps a cleared value unparseable rather than serializing it as zero"
+    );
   });
 
   test("attendanceTransition: none captures status + max and flips notifications to bumpTopic", function (assert) {
@@ -426,6 +462,63 @@ module("Unit | Lib | raw-event-helper", function (hooks) {
 
     assert.strictEqual(result.maxAttendees, null);
     assert.strictEqual(result.previousMaxAttendees, 25);
+  });
+
+  test("attendanceTransition: upTo with an explicit value applies and remembers it", function (assert) {
+    const result = attendanceTransition({
+      mode: "upTo",
+      status: "public",
+      maxAttendees: 10,
+      reminders: [],
+      previousRsvpStatus: "public",
+      previousMaxAttendees: 10,
+      value: 25,
+    });
+
+    assert.strictEqual(result.maxAttendees, 25);
+    assert.strictEqual(result.previousMaxAttendees, 25);
+  });
+
+  test("allDayTransition: on snaps to day boundaries and drops a same-day end", function (assert) {
+    const result = allDayTransition({
+      startsAt: moment.tz("2024-06-15 10:00", "UTC"),
+      endsAt: moment.tz("2024-06-15 11:00", "UTC"),
+      timezone: "UTC",
+      allDay: true,
+    });
+
+    assert.strictEqual(
+      result.startsAt.format("YYYY-MM-DD HH:mm"),
+      "2024-06-15 00:00"
+    );
+    assert.strictEqual(result.endsAt, null);
+  });
+
+  test("allDayTransition: on keeps a multi-day end as a day", function (assert) {
+    const result = allDayTransition({
+      startsAt: moment.tz("2024-06-15 10:00", "UTC"),
+      endsAt: moment.tz("2024-06-17 11:00", "UTC"),
+      timezone: "UTC",
+      allDay: true,
+    });
+
+    assert.strictEqual(
+      result.endsAt.format("YYYY-MM-DD HH:mm"),
+      "2024-06-17 00:00"
+    );
+  });
+
+  test("allDayTransition: off restores the current wall clock and a one-hour span", function (assert) {
+    const result = allDayTransition({
+      startsAt: moment.tz("2024-06-15", "UTC"),
+      endsAt: null,
+      timezone: "UTC",
+      allDay: false,
+    });
+
+    assert.strictEqual(result.startsAt.format("YYYY-MM-DD"), "2024-06-15");
+    assert.strictEqual(result.startsAt.seconds(), 0);
+    assert.strictEqual(result.endsAt.diff(result.startsAt, "hours"), 1);
   });
 
   test("attendanceTransition: does not mutate the input reminders array", function (assert) {
