@@ -419,6 +419,15 @@ export default class SignupPageController extends Controller {
     return findAll().length > 0;
   }
 
+  @computed("hasAtLeastOneLoginButton", "canCreateLocal", "hasAuthOptions")
+  get hasNoLoginOptions() {
+    return (
+      !this.hasAtLeastOneLoginButton &&
+      !this.canCreateLocal &&
+      !this.hasAuthOptions
+    );
+  }
+
   @computed(
     "authOptions",
     "hasAtLeastOneLoginButton",
