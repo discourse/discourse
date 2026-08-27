@@ -377,11 +377,11 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
     message = { post_id: post.id, reactions: [reaction, previous_reaction].compact.uniq }
 
-    opts = {}
-    secure_audience = topic.secure_audience_publish_messages
-    opts = secure_audience if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
+    opts = topic.secure_audience_publish_messages
 
-    MessageBus.publish("/topic/#{topic.id}/reactions", message, opts)
+    if opts[:user_ids] != [] && opts[:group_ids] != []
+      MessageBus.publish("/topic/#{topic.id}/reactions", message, opts)
+    end
   end
 
   def secure_reaction_users!(reaction_users)
