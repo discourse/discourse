@@ -992,16 +992,12 @@ export default class User extends RestModel.extend(Evented) {
         );
       }
 
-      if (!isEmpty(json.user.groups) && !isEmpty(json.user.group_users)) {
-        const groups = [];
-
-        for (let i = 0; i < json.user.groups.length; i++) {
-          const group = Group.create(json.user.groups[i]);
-          group.group_user = json.user.group_users[i];
-          groups.push(group);
-        }
-
-        json.user.visibleGroups = groups;
+      if (Object.hasOwn(json.user, "groups")) {
+        json.user.visibleGroups = json.user.groups.map((groupJson, index) => {
+          const group = Group.create(groupJson);
+          group.group_user = json.user.group_users?.[index];
+          return group;
+        });
         delete json.user.groups;
       }
 

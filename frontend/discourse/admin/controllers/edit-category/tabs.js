@@ -375,7 +375,9 @@ export default class EditCategoryTabsController extends Controller {
       return false;
     }
 
-    const userGroupIds = new Set(this.currentUser.groups.map((g) => g.id));
+    const userGroupIds = new Set(
+      this.currentUser.visibleGroups.map((g) => g.id)
+    );
 
     return !permissions.some(
       (p) =>
