@@ -475,5 +475,42 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to include(buffer.mentions.first[:placeholder])
     end
+
+    it "scans a batch in one call, keyed by post id" do
+      data = extractor.scan_batch([{ id: 7, raw: body }, { id: 9, raw: "plain @alice" }])
+
+      expect(data.keys).to contain_exactly(7, 9)
+      output = extractor.extract(body, scan_data: data[7])
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to include(buffer.mentions.first[:placeholder])
+    end
+
+    it "returns no data when the batched call is terminated, and per-body extraction recovers" do
+      # One pathological body terminates the whole batched V8 call; the
+      # contract is that the batch yields nothing and every body falls back to
+      # the normal per-body ladder — which must find a healthy engine.
+      flaky_engine = instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
+      allow(flaky_engine).to receive(:scan) do |posts, timeout_ms: nil|
+        raise MiniRacer::ScriptTerminatedError if posts.size > 1
+        engine.scan(posts, timeout_ms:)
+      end
+      batching_extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          custom_emoji_names:,
+          internal_link_hosts:,
+          markdown_engine: flaky_engine,
+        )
+
+      data = batching_extractor.scan_batch([{ id: 7, raw: body }, { id: 9, raw: "hi @alice" }])
+
+      expect(data).to eq({})
+      expect(flaky_engine).to have_received(:reset!)
+      output = batching_extractor.extract(body, scan_data: data[7])
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to include(buffer.mentions.first[:placeholder])
+    end
   end
 end

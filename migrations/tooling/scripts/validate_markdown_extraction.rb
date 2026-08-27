@@ -50,7 +50,10 @@
 # interesting beyond migration accounting. A body whose parse outruns the fast
 # ceiling is retried once at `--slow-timeout` seconds (default 60, 0 disables)
 # before it refuses; recovered bodies are reported with sampled ids and their
-# V8 wall-time share.
+# V8 wall-time share. `--skip-posts id,id,...` and `--skip-posts-file PATH`
+# (one id per line, `#` comments allowed) exclude known-pathological posts
+# before extraction — they are counted and reported, and enter neither tier
+# stats nor the round-trip.
 
 require "fileutils"
 require "optparse"
@@ -70,6 +73,8 @@ options = {
   log_refusals: 0,
   dump_refusals: nil,
   slow_timeout: 60,
+  skip_posts: [],
+  skip_posts_file: nil,
 }
 
 # Bounds what --dump-refusals writes: enough bodies per cause to see the
@@ -121,10 +126,35 @@ OptionParser
       Integer,
       "Retry ceiling for a body whose parse outruns the fast timeout (default 60; 0 disables)",
     ) { |v| options[:slow_timeout] = v }
+    parser.on("--skip-posts IDS", "Comma-separated post ids to exclude from the run") do |v|
+      options[:skip_posts].concat(v.split(","))
+    end
+    parser.on("--skip-posts-file PATH", "File with one post id per line (# comments)") do |v|
+      options[:skip_posts_file] = v
+    end
   end
   .parse!
 
 abort("--dbname is required") if options[:dbname].nil?
+
+skip_entries = options[:skip_posts]
+if options[:skip_posts_file]
+  begin
+    file_entries =
+      File
+        .readlines(options[:skip_posts_file])
+        .map { |line| line.sub(/#.*/, "").strip }
+        .reject(&:empty?)
+  rescue Errno::ENOENT, Errno::EACCES => error
+    abort("--skip-posts-file: #{error.message}")
+  end
+  skip_entries += file_entries
+end
+begin
+  options[:skip_ids] = skip_entries.map { |entry| Integer(entry) }.to_set
+rescue ArgumentError => error
+  abort("--skip-posts: #{error.message}")
+end
 
 require "delegate"
 require "fileutils"
@@ -500,6 +530,8 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
     "written_posts" => 0,
     "live_scans" => 0,
     "batch_scans" => 0,
+    "batch_failures" => 0,
+    "skipped" => 0,
     "violations" => 0,
     "expected_rewrites" => 0,
     "site_rewrites" => 0,
@@ -614,7 +646,6 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
         options,
         stats,
         extractor,
-        engine,
         buffer,
         resolver,
         hosts: config_inputs[:internal_link_hosts],
@@ -677,13 +708,18 @@ def process_batch(
   options,
   stats,
   extractor,
-  engine,
   buffer,
   resolver,
   hosts:,
   resolve_base:,
   tracking:
 )
+  unless options[:skip_ids].empty?
+    kept = rows.reject { |row| options[:skip_ids].include?(row["id"].to_i) }
+    stats["skipped"] += rows.ntuples - kept.size
+    rows = kept
+  end
+
   scan_data_by_id = {}
   if options[:batch]
     engine_bound =
@@ -694,7 +730,11 @@ def process_batch(
     engine_bound.each_slice(options[:batch]) do |slice|
       payload = slice.map { |row| { id: row["id"], raw: row["raw"] } }
       stats["batch_scans"] += 1
-      engine.scan(payload).each { |data| scan_data_by_id[data["id"]] = data }
+      # A terminated batch call yields nothing; its bodies fall back to the
+      # per-post ladder through `extract(scan_data: nil)`.
+      data = extractor.scan_batch(payload)
+      stats["batch_failures"] += 1 if data.empty?
+      scan_data_by_id.merge!(data)
     end
   end
 
@@ -878,6 +918,7 @@ puts format(
        number((sum.call("posts") / elapsed).round),
        sum.call("bytes") / 1024.0 / 1024 / elapsed,
      )
+puts "#{number(sum.call("skipped"))} posts skipped by request" unless options[:skip_ids].empty?
 puts format(
        "Engine tier: %s posts (%.1f%%), %.1f MiB (%.1f%%); scan calls %s " \
          "(%s live, %s batched), %.1fs in V8; trials %s",
@@ -908,6 +949,13 @@ if options[:slow_timeout] > 0
     ids = Array(result["slow_parse_ids"])
     puts "  worker #{result["worker"]} slow: posts #{ids.join(", ")}" if ids.any?
   end
+end
+if options[:batch]
+  puts format(
+         "Batch calls: %s, %s terminated and fell back to per-post extraction",
+         number(sum.call("batch_scans")),
+         number(sum.call("batch_failures")),
+       )
 end
 puts format(
        "Embeds: %s rows across %s posts; resolve %.1fs",

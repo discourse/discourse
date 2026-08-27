@@ -128,6 +128,7 @@ module Migrations
         )
           @embeds = embeds
           @mention_classifier = mention_classifier
+          @markdown_engine = markdown_engine
           @on_engine_refusal = on_engine_refusal
           @on_slow_parse = on_slow_parse
           @engine_refusals = Hash.new(0)
@@ -212,6 +213,21 @@ module Migrations
           return false if raw.nil?
 
           @gate.classify(normalize_input(raw)) == :engine
+        end
+
+        # One V8 call for several engine-bound bodies (`{ id:, raw: }` each),
+        # returning scan data keyed by id for `extract(..., scan_data:)`. One
+        # pathological body terminates the whole batched call, so a failed
+        # batch returns no data at all — each of its bodies then takes the
+        # normal per-body ladder (fast attempt, slow retry, refusal) — and the
+        # engine is reset so the next call gets a healthy context.
+        # Process/resource failures are deliberately not rescued, mirroring
+        # the per-body policy.
+        def scan_batch(posts)
+          @markdown_engine.scan(posts).index_by { |data| data["id"] }
+        rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError
+          @markdown_engine.reset!
+          {}
         end
 
         private
