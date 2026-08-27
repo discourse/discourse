@@ -14,8 +14,13 @@ module Migrations
       # reported construct through count certification (escalating to
       # per-occurrence trial substitution). The {Detectors} carry the construct
       # grammars — the gate probes candidacy with them, the engine scanner
-      # anchors and parses certified occurrences with them. What extraction
-      # knowingly leaves undone is listed in `markdown_scanner/LIMITATIONS.md`.
+      # anchors and parses certified occurrences with them.
+      #
+      # The contract throughout is fail-closed: extraction can refuse a
+      # construct it cannot prove, but it cannot corrupt one. Anything
+      # unproven stays verbatim, and the body is counted with its cause on
+      # `RawExtractor#engine_refusals` — the conversion's must-resolve list.
+      # Each class's docs carry the specific gap it accepts and why.
       module MarkdownScanner
       end
     end

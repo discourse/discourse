@@ -3,7 +3,7 @@
 // recognized plus the block's line map; separately, the line maps of
 // code/html/quote blocks. Compact data only — the token tree never crosses
 // the V8 boundary. Ported from the benchmark walk that was debugged against a
-// real corpus (see migrations/docs/markdown-engine-context.md).
+// real corpus.
 
 function __scanCountOccurrences(haystack, needle) {
   // An empty needle would match at every position without ever advancing

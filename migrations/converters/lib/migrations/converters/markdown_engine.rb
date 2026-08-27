@@ -5,7 +5,8 @@ module Migrations
     # A self-contained discourse-markdown-it engine for scanning post markdown
     # during a conversion: the same parser, features, and options the target
     # site will use, but without a booted Rails application or a local site
-    # database. See migrations/docs/markdown-engine-context.md.
+    # database. Parse-only — it never renders, sanitizes, or resolves
+    # render-time data.
     #
     # `Bundle` prepares all checkout-derived JavaScript once, in the parent
     # process; `Context` is the per-worker V8 wrapper built from a bundle and a

@@ -36,8 +36,9 @@ module Migrations
           # relative URL bare in prose is left alone, because it stays plain text when
           # the post is cooked, so rewriting it would turn text into a link. A bare
           # URL with no scheme at all (`forum.example.com/t/5`), which core's linkify
-          # also links, is never detected: the walk has nothing to trigger on there
-          # (see LIMITATIONS.md).
+          # also links, is never detected here: the walk has nothing to trigger on.
+          # The engine tier rewrites that form in place once the parse proves it
+          # (see {EngineScanner}).
           #
           # An absolute internal URL whose path parses no known route — a real site
           # page (`/faq`, `/search?q=…`) — is still recorded, as a `:site` target:
@@ -141,7 +142,10 @@ module Migrations
             # @param on_foreign_host [#call, nil] called with the host (a String)
             #   when an absolute URL is rejected for a foreign host but its path
             #   still parses as an internal route — the "did the operator forget a
-            #   former domain?" signal. Nil skips the extra route parse of a foreign
+            #   former domain?" signal. Each host is reported once per detector
+            #   instance, and the foreign path is parsed as-is: a forgotten domain
+            #   that served the forum under a subdirectory parses no route and
+            #   stays unreported. Nil skips the extra route parse of a foreign
             #   host, so a run that doesn't want the signal pays nothing beyond the
             #   cheap host rejection.
             def initialize(hosts: {}, base_prefix: nil, on_foreign_host: nil)

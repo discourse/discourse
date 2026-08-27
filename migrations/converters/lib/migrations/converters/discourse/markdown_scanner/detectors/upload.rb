@@ -64,7 +64,11 @@ module Migrations
             # other form. The suffix class matches the image dimensions class
             # (pipes allowed, so `[a|b|c]` matches whole); an exact
             # `|attachment` marker is not taken here — that form belongs to
-            # ATTACHMENT_PATTERN above, with its trailing size.
+            # ATTACHMENT_PATTERN above, with its trailing size. A pipe-less
+            # `[label](upload://…)` link — which core links just the same — is
+            # deliberately not taken: the shape is absent from measured
+            # corpora, and widening the label grammar is where label-corruption
+            # risk lives, so it stays verbatim and reports instead.
             LINK_PATTERN =
               %r{
               \G

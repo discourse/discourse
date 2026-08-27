@@ -70,7 +70,11 @@ module Migrations
 
         # The plugins bundled with the host application that ship markdown
         # features. A dev checkout can contain many additional plugins; the
-        # target site cooks with exactly these, so the scan does too.
+        # target site cooks with exactly these, so the scan does too — their
+        # constructs must tokenize the way the destination will see them, or
+        # text inside e.g. a `[poll]` would be scanned as ordinary prose. This
+        # is also an accuracy boundary: a source that relied on some other
+        # plugin's markdown feature is scanned without it.
         CORE_MARKDOWN_PLUGINS = %w[
           chat
           checklist

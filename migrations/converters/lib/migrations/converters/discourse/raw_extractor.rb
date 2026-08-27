@@ -224,6 +224,11 @@ module Migrations
         # engine is reset so the next call gets a healthy context.
         # Process/resource failures are deliberately not rescued, mirroring
         # the per-body policy.
+        #
+        # A posts step should batch: the per-call V8 overhead (~0.5ms) is
+        # comparable to an average parse itself. On a real 1.5M-post corpus at
+        # 18 workers, batches of 32 measured 45.2s wall / 360.4s V8 against
+        # 70.9s / 684.4s unbatched, with identical extraction results.
         def scan_batch(posts)
           @markdown_engine.scan(posts).index_by { |data| data["id"] }
         rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError

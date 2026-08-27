@@ -15,6 +15,13 @@ module Migrations
     # while substituting. Turning a recorded name into a source id is delegated to
     # {NameResolver}.
     #
+    # The contract on a miss is verbatim restore: every row carries the exact
+    # source substring it replaced, and an unresolved reference renders those
+    # bytes unchanged. A hit rewrites as little as the row allows — links splice
+    # only their recorded destination (and self-link label) spans, so titles,
+    # angle brackets and padding survive; a canonical rebuild happens only when
+    # something actually resolved, or for rows without a verbatim source.
+    #
     # ## The `maps` object
     #
     # Rendering needs the built import maps. They are passed in as one object so the
