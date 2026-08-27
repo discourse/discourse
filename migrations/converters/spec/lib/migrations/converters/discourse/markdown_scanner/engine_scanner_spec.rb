@@ -344,7 +344,104 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(extractor.extract(raw)).to eq(raw)
       expect(refusals).to eq(%i[engine_error])
       expect(details).to eq(%w[MiniRacer::ScriptTerminatedError])
-      expect(failing_engine).to have_received(:reset!)
+      # The failed fast attempt plus the failed slow retry, each followed by a
+      # context reset so the next body gets a healthy engine.
+      expect(failing_engine).to have_received(:scan).twice
+      expect(failing_engine).to have_received(:reset!).twice
+      expect(extractor.slow_parses).to eq(0)
+    end
+
+    it "recovers a body whose parse only succeeds on the slow retry" do
+      ceilings = []
+      retrying_engine =
+        instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
+      allow(retrying_engine).to receive(:scan) do |posts, timeout_ms: nil|
+        ceilings << timeout_ms
+        raise MiniRacer::ScriptTerminatedError, "terminated" if ceilings.size == 1
+        engine.scan(posts)
+      end
+      slow_parses_seen = 0
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          markdown_engine: retrying_engine,
+          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+          on_slow_parse: -> { slow_parses_seen += 1 },
+        )
+
+      output = extractor.extract("@alice `x`")
+
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to include(buffer.mentions.first[:placeholder])
+      expect(refusals).to be_empty
+      # The fast attempt carries no override; the retry carries the ceiling.
+      expect(ceilings).to eq(
+        [nil, Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::SLOW_TIMEOUT_MS],
+      )
+      expect(retrying_engine).to have_received(:reset!).once
+      expect(extractor.slow_parses).to eq(1)
+      expect(slow_parses_seen).to eq(1)
+    end
+
+    it "refuses directly when the slow retry is disabled" do
+      failing_engine = instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
+      allow(failing_engine).to receive(:scan).and_raise(
+        MiniRacer::ScriptTerminatedError,
+        "terminated",
+      )
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          markdown_engine: failing_engine,
+          slow_timeout_ms: nil,
+          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+        )
+
+      expect(extractor.extract("@alice `x`")).to eq("@alice `x`")
+      expect(refusals).to eq(%i[engine_error])
+      expect(failing_engine).to have_received(:scan).once
+    end
+
+    it "runs a slow-path body's trials under the scaled budget" do
+      engine_scanner = Migrations::Converters::Discourse::MarkdownScanner::EngineScanner
+      allow(engine_scanner::TrialPass).to receive(:new).and_call_original
+      calls = 0
+      retrying_engine =
+        instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
+      allow(retrying_engine).to receive(:scan) do |posts, timeout_ms: nil|
+        calls += 1
+        raise MiniRacer::ScriptTerminatedError, "terminated" if calls == 1
+        engine.scan(posts)
+      end
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          markdown_engine: retrying_engine,
+          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+        )
+
+      # Certification cannot split this pair, so the body needs its trial —
+      # which must run with the slow ceiling's budget: the default budget is
+      # smaller than what a single legitimate slow parse may already take.
+      output = extractor.extract("`@alice` and @alice")
+
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to eq("`@alice` and #{buffer.mentions.first[:placeholder]}")
+      expect(refusals).to be_empty
+      expect(extractor.slow_parses).to eq(1)
+      expect(engine_scanner::TrialPass).to have_received(:new).with(
+        anything,
+        anything,
+        anything,
+        anything,
+        seconds_budget: 60.0,
+      )
     end
   end
 

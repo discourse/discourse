@@ -101,6 +101,17 @@ module Migrations
         #   {#engine_refusals}. The caller knows which
         #   post it is extracting, so post identity stays on its side of the
         #   callback.
+        # @param slow_timeout_ms [Integer, nil] the retry ceiling for a body
+        #   whose parse the engine terminated at the fast default: the body is
+        #   parsed once more under this ceiling before `:engine_error` is
+        #   recorded — a conversion runs once, so a patient minute beats stale
+        #   references. `nil` disables the retry.
+        # @param on_slow_parse [#call, nil] called (with no arguments, like
+        #   `on_engine_refusal` the post identity stays on the caller's side)
+        #   whenever a body's parse only succeeded on the slow retry; the count
+        #   is also kept on {#slow_parses}. Such bodies are recovered, not
+        #   refused — but they will cook just as pathologically on the
+        #   destination site, so a conversion may want their ids.
         def initialize(
           embeds:,
           mention_names:,
@@ -111,12 +122,16 @@ module Migrations
           internal_link_hosts: {},
           internal_link_base_prefix: nil,
           on_foreign_host: nil,
-          on_engine_refusal: nil
+          on_engine_refusal: nil,
+          slow_timeout_ms: MarkdownScanner::EngineScanner::SLOW_TIMEOUT_MS,
+          on_slow_parse: nil
         )
           @embeds = embeds
           @mention_classifier = mention_classifier
           @on_engine_refusal = on_engine_refusal
+          @on_slow_parse = on_slow_parse
           @engine_refusals = Hash.new(0)
+          @slow_parses = 0
 
           detectors = [Detectors::Upload.new, Detectors::UploadUrl.new, Detectors::Quote.new]
           # After UploadUrl, so an upload URL still wins over a bare internal link that
@@ -150,6 +165,7 @@ module Migrations
               custom_emoji_names:,
               internal_link_hosts:,
               internal_link_base_prefix:,
+              slow_timeout_ms:,
               &on_node
             )
         end
@@ -159,6 +175,10 @@ module Migrations
         # their references are stale until someone resolves them — this tally
         # is the conversion's must-resolve list.
         attr_reader :engine_refusals
+
+        # How many bodies parsed only on the slow retry. They extracted fine —
+        # this is a heads-up count, not part of the must-resolve list.
+        attr_reader :slow_parses
 
         # @param raw [String, nil] the source post body (Discourse Markdown).
         # @param topic_id [Integer, nil] the source topic id of the containing post,
@@ -212,6 +232,10 @@ module Migrations
         # surfaces how many posts (and why) still need resolution.
         def extract_engine(raw, scan_data)
           result = @engine_scanner.scan(raw, scan_data:)
+          if result.slow_parse
+            @slow_parses += 1
+            @on_slow_parse&.call
+          end
           if result.cause
             @engine_refusals[result.cause] += 1
             @on_engine_refusal&.call(result.cause, result.detail)

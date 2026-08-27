@@ -33,10 +33,13 @@ module Migrations
           # construct stayed unproven with a stale reference (nil when
           # everything was placed); `detail` is the diagnostic a cause needs to
           # be actionable — today the exception class name behind an
-          # `:engine_error` — and nil otherwise.
+          # `:engine_error` — and nil otherwise. `slow_parse` marks a body
+          # whose parse only succeeded on the retry under the slow ceiling —
+          # recovered, not refused, but worth tallying: those bodies will also
+          # cook pathologically on the destination site.
           Result =
-            Data.define(:output, :cause, :detail) do
-              def initialize(output:, cause:, detail: nil)
+            Data.define(:output, :cause, :detail, :slow_parse) do
+              def initialize(output:, cause:, detail: nil, slow_parse: false)
                 super
               end
 
@@ -45,11 +48,21 @@ module Migrations
               end
             end
 
+          # A conversion runs once, so a body whose parse outruns the fast
+          # ceiling deserves a patient second attempt before its references are
+          # left stale: one retry under this ceiling, then `:engine_error`. The
+          # fast ceiling still protects throughput for everything else.
+          SLOW_TIMEOUT_MS = 60_000
+
           # One engine parse per body keeps the extraction flow simple. The
           # engine call amortizes ~30% better when several posts share one V8
           # round-trip; `MarkdownEngine::Context#scan` already takes a list, so
           # a posts step that wants that batches ahead of extraction instead of
           # this class growing look-ahead state.
+          #
+          # @param slow_timeout_ms [Integer, nil] the retry ceiling for a body
+          #   whose parse the engine terminated; nil disables the retry and a
+          #   terminated body refuses directly.
           def initialize(
             engine:,
             detectors:,
@@ -59,9 +72,12 @@ module Migrations
             custom_emoji_names: nil,
             internal_link_hosts: {},
             internal_link_base_prefix: nil,
+            slow_timeout_ms: SLOW_TIMEOUT_MS,
             &on_node
           )
             @engine = engine
+            @slow_timeout_ms = slow_timeout_ms
+            @scan_timeout_ms = nil
             @gate = gate
             @mention_names = mention_names
             @hashtag_names = hashtag_names
@@ -99,7 +115,44 @@ module Migrations
           #   call and handing each result in here; trial substitution still
           #   parses live either way.
           def scan(input, scan_data: nil)
-            data = scan_data || @engine.scan([{ id: nil, raw: input }]).first
+            @scan_timeout_ms = nil
+            begin
+              attempt(input, scan_data)
+            rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError
+              raise if @slow_timeout_ms.nil?
+
+              # One patient retry: a conversion runs once, so a minute spent
+              # correctly remapping a pathological body beats leaving its
+              # references stale. The whole body — trial parses included —
+              # re-runs under the slow ceiling; a deterministic JS exception
+              # will just fail again, which the single retry keeps cheap.
+              @engine.reset!
+              @scan_timeout_ms = @slow_timeout_ms
+              attempt(input, scan_data).with(slow_parse: true)
+            end
+          rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError => error
+            # A per-input engine failure that survived the retry (or had none)
+            # must cost that body, not the conversion: the body stays verbatim
+            # on the tally and the context is rebuilt so the next body gets a
+            # healthy engine. Process/resource failures are deliberately not
+            # rescued.
+            @engine.reset!
+            Result.new(output: input, cause: :engine_error, detail: error.class.name)
+          ensure
+            @scan_timeout_ms = nil
+          end
+
+          # Every engine parse for the body in flight — the initial scan and
+          # each trial — goes through here, so a body on the slow path carries
+          # its ceiling into the trial parses too.
+          def engine_scan(posts)
+            @engine.scan(posts, timeout_ms: @scan_timeout_ms)
+          end
+
+          # One full extraction attempt; `scan` runs it fast first and once
+          # more under the slow ceiling when the engine cut it off.
+          def attempt(input, scan_data)
+            data = scan_data || engine_scan([{ id: nil, raw: input }]).first
 
             # Count certification indexes the body by the engine's line maps,
             # which refer to lines after markdown-it normalized CR endings
@@ -111,20 +164,22 @@ module Migrations
               cause = result.cause
             end
 
-            TrialPass.new(self, input, data, cause).result
-          rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError => error
-            # A per-input engine failure (a parse timeout, a JS exception some
-            # body triggers) must cost that body, not the conversion: the body
-            # stays verbatim on the tally and the context is rebuilt so the
-            # next body gets a healthy engine. Process/resource failures are
-            # deliberately not rescued.
-            @engine.reset!
-            Result.new(output: input, cause: :engine_error, detail: error.class.name)
+            TrialPass.new(self, input, data, cause, seconds_budget: trial_seconds_budget).result
+          end
+
+          # On the slow path a single parse may legitimately take tens of
+          # seconds, so the default trial budget would forbid even one trial
+          # and make the retry pointless for a trial-eligible body — the
+          # budget follows the ceiling instead (the trial count cap still
+          # bounds the tail).
+          def trial_seconds_budget
+            return TrialPass::TRIAL_SECONDS_BUDGET if @scan_timeout_ms.nil?
+
+            @scan_timeout_ms / 1000.0
           end
 
           # The pieces a {Pass} or {TrialPass} shares with its scanner.
-          attr_reader :engine,
-                      :mention_detector,
+          attr_reader :mention_detector,
                       :hashtag_detector,
                       :emoji_detector,
                       :quote_detector,

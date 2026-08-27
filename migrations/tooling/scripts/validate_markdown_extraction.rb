@@ -47,7 +47,10 @@
 # writes refusing bodies to DIR/<cause>-<post_id>.md (capped per cause and
 # worker) for offline inspection — the timeout bodies are the same ones a
 # target site would cook pathologically, so they are operationally
-# interesting beyond migration accounting.
+# interesting beyond migration accounting. A body whose parse outruns the fast
+# ceiling is retried once at `--slow-timeout` seconds (default 60, 0 disables)
+# before it refuses; recovered bodies are reported with sampled ids and their
+# V8 wall-time share.
 
 require "fileutils"
 require "optparse"
@@ -66,11 +69,15 @@ options = {
   cold_bundle: false,
   log_refusals: 0,
   dump_refusals: nil,
+  slow_timeout: 60,
 }
 
 # Bounds what --dump-refusals writes: enough bodies per cause to see the
 # pattern, without letting a pathological corpus fill the disk.
 DUMP_REFUSALS_CAP = 50
+
+# Sampled post ids per worker for bodies that only parsed on the slow retry.
+SLOW_PARSE_ID_SAMPLES = 10
 
 OptionParser
   .new do |parser|
@@ -109,6 +116,11 @@ OptionParser
       "Write each refusing post's body to DIR/<cause>-<post_id>.md " \
         "(up to #{DUMP_REFUSALS_CAP} per cause and worker)",
     ) { |v| options[:dump_refusals] = v }
+    parser.on(
+      "--slow-timeout SECONDS",
+      Integer,
+      "Retry ceiling for a body whose parse outruns the fast timeout (default 60; 0 disables)",
+    ) { |v| options[:slow_timeout] = v }
   end
   .parse!
 
@@ -244,20 +256,27 @@ end
 # V8, without touching production code: RawExtractor sees this wrapper as its
 # engine context.
 class CountingContext < SimpleDelegator
-  attr_reader :calls, :seconds
+  attr_reader :calls, :seconds, :slow_calls, :slow_seconds
 
   def initialize(context)
     super
     @calls = 0
     @seconds = 0.0
+    @slow_calls = 0
+    @slow_seconds = 0.0
   end
 
-  def scan(posts)
+  # Only a body on its slow retry passes an explicit ceiling, so that keyword
+  # is also the marker separating slow-path V8 time from the fast baseline.
+  def scan(posts, timeout_ms: nil)
     @calls += 1
+    @slow_calls += 1 if timeout_ms
     started_at = monotonic_time
-    __getobj__.scan(posts)
+    __getobj__.scan(posts, timeout_ms:)
   ensure
-    @seconds += monotonic_time - started_at
+    elapsed = monotonic_time - started_at
+    @seconds += elapsed
+    @slow_seconds += elapsed if timeout_ms
   end
 
   private
@@ -529,29 +548,35 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
     stats["rss_after_context"] = rss_mib
 
     buffer = Migrations::Converters::EmbedBuffer.new(owner_type: EmbedOwner::POST)
-    refusal_log = nil
+    # The extractor callbacks carry no post identity, so the batch loop keeps
+    # the id of the post in flight here for the samplers to read.
+    tracking = { current_id: nil, current_raw: nil, samples: {}, dumped: Hash.new(0) }
     on_refusal = nil
     if options[:log_refusals] > 0 || options[:dump_refusals]
-      refusal_log = { current_id: nil, current_raw: nil, samples: {}, dumped: Hash.new(0) }
       on_refusal =
         lambda do |cause, detail|
-          id = refusal_log[:current_id]
-          samples = (refusal_log[:samples][cause.to_s] ||= [])
+          id = tracking[:current_id]
+          samples = (tracking[:samples][cause.to_s] ||= [])
           if samples.size < options[:log_refusals]
             samples << (detail ? "#{id} (#{detail})" : id.to_s)
           end
 
           # Post ids are corpus-unique, so concurrent workers never collide on
           # a file name.
-          if options[:dump_refusals] && refusal_log[:dumped][cause] < DUMP_REFUSALS_CAP
-            refusal_log[:dumped][cause] += 1
+          if options[:dump_refusals] && tracking[:dumped][cause] < DUMP_REFUSALS_CAP
+            tracking[:dumped][cause] += 1
             File.write(
               File.join(options[:dump_refusals], "#{cause}-#{id}.md"),
-              refusal_log[:current_raw],
+              tracking[:current_raw],
             )
           end
         end
     end
+    slow_parse_ids = []
+    on_slow_parse =
+      lambda do
+        slow_parse_ids << tracking[:current_id] if slow_parse_ids.size < SLOW_PARSE_ID_SAMPLES
+      end
     extractor =
       Migrations::Converters::Discourse::RawExtractor.new(
         embeds: buffer,
@@ -561,6 +586,8 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
         internal_link_hosts: config_inputs[:internal_link_hosts],
         markdown_engine: engine,
         on_engine_refusal: on_refusal,
+        slow_timeout_ms: options[:slow_timeout] > 0 ? options[:slow_timeout] * 1000 : nil,
+        on_slow_parse:,
       )
 
     maps =
@@ -592,13 +619,17 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
         resolver,
         hosts: config_inputs[:internal_link_hosts],
         resolve_base: maps.base_url,
-        refusal_log:,
+        tracking:,
       )
     end
     stats["extract_seconds"] = monotonic_time - started_at
 
     stats["refusals"] = extractor.engine_refusals
-    stats["refusal_samples"] = refusal_log[:samples] if refusal_log
+    stats["refusal_samples"] = tracking[:samples]
+    stats["slow_parses"] = extractor.slow_parses
+    stats["slow_parse_ids"] = slow_parse_ids
+    stats["slow_scan_calls"] = engine.slow_calls
+    stats["slow_scan_seconds"] = engine.slow_seconds
     stats["unresolved"] = unresolved.counts
     stats["orphans"] = orphans.total
     stats["scan_calls"] = engine.calls
@@ -651,7 +682,7 @@ def process_batch(
   resolver,
   hosts:,
   resolve_base:,
-  refusal_log:
+  tracking:
 )
   scan_data_by_id = {}
   if options[:batch]
@@ -689,10 +720,8 @@ def process_batch(
     end
 
     buffer.clear
-    if refusal_log
-      refusal_log[:current_id] = row["id"]
-      refusal_log[:current_raw] = raw
-    end
+    tracking[:current_id] = row["id"]
+    tracking[:current_raw] = raw
     output = extractor.extract(raw, topic_id: row["topic_id"], scan_data:)
 
     unless buffer.empty?
@@ -862,6 +891,24 @@ puts format(
        sum.call("scan_seconds"),
        number(sum.call("scan_calls") - sum.call("live_scans") - sum.call("batch_scans")),
      )
+if options[:slow_timeout] > 0
+  slow_parses = sum.call("slow_parses")
+  slow_seconds = ok.sum { |result| result["slow_scan_seconds"] || 0.0 }
+  total_seconds = ok.sum { |result| result["scan_seconds"] || 0.0 }
+  share = total_seconds > 0 ? 100.0 * slow_seconds / total_seconds : 0.0
+  puts format(
+         "Slow parses: %s recovered at the %ds ceiling (%s V8 calls, %.1fs, %.1f%% of V8 time)",
+         number(slow_parses),
+         options[:slow_timeout],
+         number(sum.call("slow_scan_calls")),
+         slow_seconds,
+         share,
+       )
+  ok.each do |result|
+    ids = Array(result["slow_parse_ids"])
+    puts "  worker #{result["worker"]} slow: posts #{ids.join(", ")}" if ids.any?
+  end
+end
 puts format(
        "Embeds: %s rows across %s posts; resolve %.1fs",
        number(sum.call("embed_rows")),

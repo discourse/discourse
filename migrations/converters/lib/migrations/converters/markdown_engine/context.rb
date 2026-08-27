@@ -17,8 +17,9 @@ module Migrations
         # slowest legitimate parse observed on a 1.5M-post corpus was 435ms,
         # while the 104 runaway bodies that hit a 10s ceiling burned ~1,040s
         # of the run's ~1,295s total V8 time before refusing anyway. A ceiling
-        # with ~7x headroom over the observed maximum turns a runaway into a
-        # cheap refusal instead of the dominant V8 cost.
+        # with ~7x headroom over the observed maximum keeps a runaway from
+        # dominating V8 cost; a body it cuts off gets one patient retry (see
+        # `EngineScanner`) instead of a refusal.
         EVAL_TIMEOUT_MS = 3_000
 
         def initialize(bundle:, config:, timeout_ms: EVAL_TIMEOUT_MS)
@@ -27,15 +28,24 @@ module Migrations
           @timeout_ms = timeout_ms
           @needs_rebuild = false
           @fork_hook = ForkManager.after_fork_child { discard! }
-          build_context
+          build_context(timeout_ms)
         end
 
         # @param posts [Array<Hash>] `{ id:, raw: }` per post
+        # @param timeout_ms [Integer, nil] a one-off ceiling for this scan (a
+        #   caller retrying a body that outran the default). MiniRacer fixes
+        #   the timeout at construction, so switching ceilings rebuilds the
+        #   isolate (~0.15s measured) — cheap at the rarity a retry has — and
+        #   the next default-ceiling scan rebuilds back the same way.
         # @return [Array<Hash>] per-post block/construct data from scan.js
-        def scan(posts)
+        def scan(posts, timeout_ms: nil)
+          wanted = timeout_ms || @timeout_ms
           if @context.nil?
             raise DiscardedError unless @needs_rebuild
-            build_context
+            build_context(wanted)
+          elsif @current_timeout_ms != wanted
+            @context.dispose
+            build_context(wanted)
           end
 
           payload =
@@ -80,8 +90,9 @@ module Migrations
 
         private
 
-        def build_context
-          @context = MiniRacer::Context.new(timeout: @timeout_ms, ensure_gc_after_idle: 2000)
+        def build_context(timeout_ms)
+          @context = MiniRacer::Context.new(timeout: timeout_ms, ensure_gc_after_idle: 2000)
+          @current_timeout_ms = timeout_ms
           @needs_rebuild = false
           evaluate_all(@bundle, @config)
         end

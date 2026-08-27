@@ -33,21 +33,25 @@ module Migrations
             # keeps its tail unproven rather than buying hundreds of parses.
             MAX_TRIALS = 48
 
-            # Elapsed ceiling across a body's trials. The parse count alone
-            # does not bound work — one adversarial body can drive every parse
-            # toward the context timeout — so the wall clock cuts in first and
-            # the tail stays unproven. A normal trial parses in well under a
-            # millisecond; only a body that is already pathological gets here.
+            # Default elapsed ceiling across a body's trials. The parse count
+            # alone does not bound work — one adversarial body can drive every
+            # parse toward the context timeout — so the wall clock cuts in
+            # first and the tail stays unproven. A normal trial parses in well
+            # under a millisecond; only a body that is already pathological
+            # gets here. A scanner on its slow retry passes a larger budget —
+            # there a single legitimate parse can take longer than this whole
+            # default.
             TRIAL_SECONDS_BUDGET = 10.0
 
             Candidate = Data.define(:kind, :key, :text, :occurrence)
             private_constant :Candidate
 
-            def initialize(scanner, input, data, cause)
+            def initialize(scanner, input, data, cause, seconds_budget: TRIAL_SECONDS_BUDGET)
               @scanner = scanner
               @input = input
               @data = data
               @cause = cause
+              @seconds_budget = seconds_budget
               @trials = 0
               @started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
               @limit_hit = nil
@@ -163,7 +167,7 @@ module Migrations
             # unproven constructs without counting shielded look-alikes.
             def prove(base, candidate, marker)
               elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started_at
-              if elapsed > TRIAL_SECONDS_BUDGET
+              if elapsed > @seconds_budget
                 @limit_hit = :trial_budget
                 return :budget
               end
@@ -176,7 +180,7 @@ module Migrations
               trial_body =
                 "#{@input.byteslice(0, occurrence.offset)}#{marker}" \
                   "#{@input.byteslice((occurrence.offset + occurrence.length)..)}"
-              trial = construct_multiset(@scanner.engine.scan([{ id: nil, raw: trial_body }]).first)
+              trial = construct_multiset(@scanner.engine_scan([{ id: nil, raw: trial_body }]).first)
 
               removed = diff(base, trial)
               added = diff(trial, base)
