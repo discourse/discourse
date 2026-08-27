@@ -1839,7 +1839,11 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing topics..."
 
     start_delta_entity(:topics, "topics", :topics, @last_topic_id)
-    update_delta_topics if delta_import?
+    if delta_import?
+      update_delta_topics
+    else
+      close_existing_topics
+    end
 
     topics = query(<<~SQL)
       SELECT *
@@ -1879,6 +1883,23 @@ class BulkImport::Generic < BulkImport::Base
 
     topics.close
     finish_delta_entity(:topics, :topics)
+  end
+
+  # Under MERGE_IMPORT the imported-id maps are cleared to avoid cross-source
+  # collisions, so this pass maps nothing and is a deliberate no-op there.
+  def close_existing_topics
+    closed_topics = query(<<~SQL)
+      SELECT id
+      FROM topics
+      WHERE closed = 1
+      ORDER BY id
+    SQL
+    mapped_topic_ids = closed_topics.filter_map { |row| topic_id_from_imported_id(row["id"]) }.uniq
+    closed_topics.close
+
+    mapped_topic_ids.each_slice(1_000) do |topic_ids|
+      Topic.where(id: topic_ids, closed: false).update_all(closed: true)
+    end
   end
 
   def update_delta_topics
@@ -1924,11 +1945,12 @@ class BulkImport::Generic < BulkImport::Base
         if row["category_id"].present?
           update[:category_id] = category_id_from_imported_id(row["category_id"])
         end
-        %i[closed archived pinned_globally].each do |column|
+        %i[archived pinned_globally].each do |column|
           if source_columns.include?(column.to_s)
             update[column] = to_nullable_boolean(row[column.to_s])
           end
         end
+        update[:closed] = true if source_columns.include?("closed") && to_boolean(row["closed"])
         update[:subtype] = row["subtype"] if source_columns.include?("subtype")
         %i[pinned_at pinned_until].each do |column|
           if source_columns.include?(column.to_s) && row[column.to_s].present?

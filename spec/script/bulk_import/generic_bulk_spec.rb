@@ -62,6 +62,125 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#close_existing_topics" do
+      before { allow(Topic).to receive(:fancy_title) { |title| title } }
+
+      def create_topic(closed: false)
+        Fabricate.build(:topic, closed:).tap { |topic| topic.save!(validate: false) }
+      end
+
+      let!(:open_topic) { create_topic }
+      let!(:closed_topic) { create_topic(closed: true) }
+      let!(:unchanged_topic) { create_topic }
+
+      it "closes only mapped existing topics requested as closed" do
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE topics (id INTEGER PRIMARY KEY, closed INTEGER)")
+        source_db.execute(
+          "INSERT INTO topics (id, closed) VALUES " \
+            "(10, 1), (20, 1), (30, 0), (40, NULL), (50, 1)",
+        )
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(
+          :@topics,
+          {
+            10 => open_topic.id,
+            20 => closed_topic.id,
+            30 => unchanged_topic.id,
+            40 => unchanged_topic.id,
+            50 => Topic.maximum(:id) + 10_000,
+          },
+        )
+
+        expect { importer.close_existing_topics }.not_to change { Post.count }
+
+        expect(
+          [open_topic.reload.closed, closed_topic.reload.closed, unchanged_topic.reload.closed],
+        ).to(eq([true, true, false]))
+      ensure
+        source_db&.close
+      end
+
+      it "updates every mapped topic across batches" do
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE topics (id INTEGER PRIMARY KEY, closed INTEGER)")
+        topics = Array.new(1_001) { create_topic }
+        source_db.transaction do
+          topics.each_with_index do |_topic, index|
+            source_db.execute("INSERT INTO topics (id, closed) VALUES (?, 1)", index + 1)
+          end
+        end
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(
+          :@topics,
+          topics.each_with_index.to_h { |topic, index| [index + 1, topic.id] },
+        )
+
+        importer.close_existing_topics
+
+        expect(Topic.where(id: topics.map(&:id), closed: true).count).to eq(1_001)
+      ensure
+        source_db&.close
+      end
+    end
+
+    describe "#import_topics" do
+      it "runs the close pass for full imports and the delta updater for deltas" do
+        importer = described_class.allocate
+        result =
+          Class
+            .new do
+              def close
+              end
+            end
+            .new
+        allow(importer).to receive_messages(
+          puts: nil,
+          start_delta_entity: nil,
+          finish_delta_entity: nil,
+          query: result,
+          create_topics: nil,
+          close_existing_topics: nil,
+          update_delta_topics: nil,
+        )
+
+        allow(importer).to receive(:delta_import?).and_return(false)
+        importer.import_topics
+        expect(importer).to have_received(:close_existing_topics)
+        expect(importer).not_to have_received(:update_delta_topics)
+
+        allow(importer).to receive(:delta_import?).and_return(true)
+        importer.import_topics
+        expect(importer).to have_received(:update_delta_topics)
+        expect(importer).to have_received(:close_existing_topics).once
+      end
+    end
+
+    describe "#update_delta_topics" do
+      it "treats closed as close-only while retaining other delta updates" do
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE topics (id INTEGER PRIMARY KEY, closed INTEGER)")
+        source_db.execute("INSERT INTO topics (id, closed) VALUES (10, 0), (20, 1)")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(:@delta_update_mappings, topics: { 10 => 100, 20 => 200 })
+
+        allow(importer).to receive(:update_records).and_return(updated_keys: [])
+
+        importer.update_delta_topics
+
+        expect(importer).to have_received(:update_records) do |updates, name, columns|
+          expect(name).to eq("topic")
+          expect(columns).to include(:closed)
+          expect(updates).to contain_exactly({ id: 100 }, { id: 200, closed: true })
+        end
+      ensure
+        source_db&.close
+      end
+    end
+
     describe "delta preflight" do
       fab!(:mapped_user) do
         Fabricate(
