@@ -102,6 +102,14 @@ module Migrations
               GROUP = %r{\A/g/(?<name>#{SEGMENT})}
               private_constant :GROUP
 
+              # A path that steps INTO a coordinate-bearing route family — the
+              # family segment followed by `/`, so there was an attempt at
+              # coordinates after it. A bare family segment (`/u`, `/badges`,
+              # `/tags`) is that family's index page: coordinate-free, and not
+              # matched here.
+              COORDINATE_OPENER = %r{\A/(?:t|p|u|users|c|g|tags?|badges)/}
+              private_constant :COORDINATE_OPENER
+
               # `/badges/<id>` or `/badges/<id>/<slug>`; the slug is regenerated at
               # import, so it's consumed by the route rather than kept as suffix.
               BADGE = %r{\A/badges/(?<id>#{Base::ID_PATTERN})(?:/#{SEGMENT})?(?=[/?#]|\z)}
@@ -115,6 +123,17 @@ module Migrations
                 def parse(rest)
                   topic_or_post(rest) || post_by_id(rest) || user(rest) || category(rest) ||
                     tag(rest) || group(rest) || badge(rest)
+                end
+
+                # Whether an UNPARSED path still opened a coordinate-bearing
+                # route family (`/t//209` with its empty slug, `/u/bob!!!`, the
+                # reserved multi-tag `/tags/c/…` forms). Such a tail plausibly
+                # carries the OLD site's ids and slugs, so rewriting just the
+                # origin under it would point the new host at stale coordinates
+                # — worse than leaving the link verbatim. Callers use this to
+                # keep those paths out of the origin-only `:site` rewrite.
+                def coordinate_shaped?(path)
+                  COORDINATE_OPENER.match?(path)
                 end
 
                 private

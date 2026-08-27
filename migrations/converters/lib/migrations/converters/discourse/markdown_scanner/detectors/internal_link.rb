@@ -40,14 +40,18 @@ module Migrations
           # (see LIMITATIONS.md).
           #
           # An absolute internal URL whose path parses no known route — a real site
-          # page (`/faq`, `/search?q=…`) or junk (`/t/slug/5a`) — is still recorded, as
-          # a `:site` target: only its origin is rewritten to the destination, and the
+          # page (`/faq`, `/search?q=…`) — is still recorded, as a `:site` target:
+          # only its origin is rewritten to the destination, and the
           # path/query/fragment ride along in the suffix. That holds in either syntax,
           # bare or bracketed, and down to a URL with no path at all: `https://host`
           # is the forum's front page and `https://host?ref=x` the same with a query,
           # both of which point at a site being retired unless their origin is
           # rewritten. A relative route-less URL stays literal: it is domain-free and
-          # already correct on the destination.
+          # already correct on the destination. An unparsed path that OPENS a
+          # coordinate route (`/t//209`, `/u/bob!!!`) is neither: its tail
+          # plausibly carries the old site's ids, so an origin-only rewrite would
+          # carry them onto the new host — no node, and the engine tier reports
+          # the construct instead (see `RouteParser.coordinate_shaped?`).
           #
           # The full original URL is kept (`url`) as the importer's fallback; the
           # route reveals the target, and everything after the route (further path,
@@ -307,7 +311,10 @@ module Migrations
             # A resolved route builds a typed target; an absolute internal URL with no
             # route builds a `:site` target (origin-only rewrite). A relative route-less
             # URL is domain-free and already correct on the destination, so it stays
-            # literal (nil node).
+            # literal (nil node) — and so does a coordinate-shaped path that failed to
+            # parse: swapping its origin would carry the old site's ids onto the new
+            # host, which is worse than the stale-but-honest verbatim link the engine
+            # tier reports.
             def route_or_site_node(url:, text:, path:, host:, url_offset:, label_url_offset:)
               if (target = RouteParser.parse(path))
                 # `path` is the extracted URL's own string (character domain), so the
@@ -321,7 +328,7 @@ module Migrations
                   url_offset:,
                   label_url_offset:,
                 )
-              elsif host
+              elsif host && !RouteParser.coordinate_shaped?(path)
                 site_reference(url:, text:, suffix: path, url_offset:, label_url_offset:)
               end
             end

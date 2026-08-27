@@ -31,9 +31,15 @@ module Migrations
           # `output` is the body with every proven construct replaced (equal to
           # the input when nothing was); `cause` names why at least one
           # construct stayed unproven with a stale reference (nil when
-          # everything was placed).
+          # everything was placed); `detail` is the diagnostic a cause needs to
+          # be actionable — today the exception class name behind an
+          # `:engine_error` — and nil otherwise.
           Result =
-            Data.define(:output, :cause) do
+            Data.define(:output, :cause, :detail) do
+              def initialize(output:, cause:, detail: nil)
+                super
+              end
+
               def refused?
                 !cause.nil?
               end
@@ -106,14 +112,14 @@ module Migrations
             end
 
             TrialPass.new(self, input, data, cause).result
-          rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError
+          rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError => error
             # A per-input engine failure (a parse timeout, a JS exception some
             # body triggers) must cost that body, not the conversion: the body
             # stays verbatim on the tally and the context is rebuilt so the
             # next body gets a healthy engine. Process/resource failures are
             # deliberately not rescued.
             @engine.reset!
-            Result.new(output: input, cause: :engine_error)
+            Result.new(output: input, cause: :engine_error, detail: error.class.name)
           end
 
           # The pieces a {Pass} or {TrialPass} shares with its scanner.

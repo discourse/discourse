@@ -24,15 +24,37 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       [buffer.links.first, result]
     end
 
-    it "records a route-shaped junk path as a SITE link, keeping the whole path in the suffix" do
-      link, = link_for("read https://forum.example.com/t/slug/5a here")
+    # A coordinate-shaped path that parses no route plausibly carries the OLD
+    # site's ids — `/t//209` is an empty-slug spelling of topic 209 — so an
+    # origin-only rewrite would point the new host at stale coordinates. Worse
+    # than verbatim: the construct stays untouched and the body is reported.
+    {
+      "an empty topic slug" => "https://forum.example.com/t//209",
+      "a junk topic id" => "https://forum.example.com/t/slug/5a",
+      "an invalid user segment" => "https://forum.example.com/u/bob!!!",
+      "a reserved multi-tag form" => "https://forum.example.com/tags/c/support/feature",
+    }.each do |label, url|
+      it "refuses #{label} instead of recording a SITE link" do
+        raw = "This topic you've named [>>>>>](#{url}) doesn't load"
 
-      expect(link).to include(
-        url: "https://forum.example.com/t/slug/5a",
-        target_type: enums::LinkTarget::SITE,
-        target_id: nil,
-        target_suffix: "/t/slug/5a",
-      )
+        expect(extract(raw)).to eq(raw)
+        expect(buffer.links).to be_empty
+        expect(extractor.engine_refusals).to eq(unanchored: 1)
+      end
+    end
+
+    # The bare family segment is that family's index page — coordinate-free,
+    # so it keeps the origin rewrite like any other site page.
+    it "records a bare route-family index page as a SITE link" do
+      link, = link_for("the user directory https://forum.example.com/u lists everyone")
+
+      expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/u")
+    end
+
+    it "does not read a family segment inside a longer word" do
+      link, = link_for("[the team](https://forum.example.com/team)")
+
+      expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/team")
     end
 
     it "records a real route-less page as a SITE link" do

@@ -27,7 +27,11 @@ fail-closed:
   text and puts the body on the tally (`:unanchored`); other constructs in
   the same body are still extracted. A destination that is its own syntax —
   a bare schemeless domain linkify links, a reference definition's URL — is
-  rewritten in place, not refused.
+  rewritten in place, not refused. An internal URL whose path opens a
+  coordinate route but parses none (`/t//209`, `/u/bob!!!`, the reserved
+  multi-tag `/tags/c/…` forms) also refuses: an origin-only rewrite would
+  carry its stale-looking ids onto the new host, which is worse than a
+  reported verbatim link.
 - **A quote header the grammar cannot parse** (beyond the header cap,
   malformed) counts as a refusal too; a header that parses but carries no
   username has nothing to remap and is skipped exactly.

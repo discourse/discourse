@@ -25,23 +25,17 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # stored in — and names no real record: it's a numeric topic title, a shape a
     # real forum turned out to have, which crashed the insert.
     context "with a digit run too long to be an id" do
-      # A route-less numeric-title URL on the source's own host parses no id, so it
-      # becomes a SITE link (origin rewrite). SITE stores no id, so the overflowing
-      # digit run never reaches an integer bind — it rides along in the suffix.
-      #
-      # The trailing `/` belongs to the URL — core linkifies it into the href — so
-      # it goes in the suffix too, rather than being left dangling after the
-      # rewritten link.
-      it "records a numeric-title topic URL as a SITE link, not an overflowing id" do
+      # A route-less numeric-title URL parses no id, and nothing can tell a
+      # slug-only title apart from malformed coordinates without guessing — a
+      # `/t/…` path that parses no route refuses rather than host-swapping
+      # (see `RouteParser.coordinate_shaped?`). No row is created, so the
+      # overflowing digit run still never reaches an integer bind.
+      it "refuses a numeric-title topic URL rather than guessing at its shape" do
         raw = "this one - https://forum.example.com/t/77777777777777777789999/ fails"
-        link, result = link_for(raw)
 
-        expect(link).to include(
-          target_type: enums::LinkTarget::SITE,
-          target_id: nil,
-          target_suffix: "/t/77777777777777777789999/",
-        )
-        expect(result).to eq("this one - #{link[:placeholder]} fails")
+        expect(extract(raw)).to eq(raw)
+        expect(buffer.links).to be_empty
+        expect(extractor.engine_refusals).to eq(unanchored: 1)
       end
 
       it "leaves an oversized /p/ id as literal text" do

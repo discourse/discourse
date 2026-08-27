@@ -5,9 +5,13 @@
 # Discourse corpus, and proves two things at scale:
 #
 #   correctness  every extracted body is resolved back in "all-miss" mode (no
-#                reference resolves) and must come out byte-identical to the
-#                input: the verbatim-fallback contract, checked against every
-#                post in the corpus. Any diff is a bug and fails the run.
+#                reference resolves) and must match the computed expectation
+#                byte for byte: the input, except that each SITE link — an
+#                origin-only rewrite with no entity to miss — is rewritten to
+#                precisely the base URL plus the path derived from the row's
+#                own URL spelling. Everything else is the verbatim-fallback
+#                contract, checked against every post in the corpus. Any diff
+#                beyond the expectation is a bug and fails the run.
 #   viability    end-to-end throughput, per-worker RSS, refusal/trial tallies,
 #                and per-post vs batched engine calls — the numbers a posts
 #                step must reproduce.
@@ -37,6 +41,9 @@
 # only mention/emoji/upload embeds still fails. `--batch N` scans N
 # engine-bound bodies per V8 call instead of one, through the same production
 # `extract(..., scan_data:)` seam a batching posts step would use.
+# `--log-refusals N` samples up to N refusing post ids per cause and worker
+# (with the exception class behind an :engine_error), so a corpus run's refusal
+# tally is diagnosable without a rerun.
 
 require "optparse"
 
@@ -52,6 +59,7 @@ options = {
   batch: nil,
   round_trip: "all-miss",
   cold_bundle: false,
+  log_refusals: 0,
 }
 
 OptionParser
@@ -81,6 +89,11 @@ OptionParser
     parser.on("--cold-bundle", "Delete the bundle cache first to time a cold build") do
       options[:cold_bundle] = true
     end
+    parser.on(
+      "--log-refusals N",
+      Integer,
+      "Sample up to N refusing post ids per cause, per worker",
+    ) { |v| options[:log_refusals] = v }
   end
   .parse!
 
@@ -96,6 +109,8 @@ require "pg"
 
 MarkdownEngine = Migrations::Converters::MarkdownEngine
 EmbedOwner = Migrations::Database::IntermediateDB::Enums::EmbedOwner
+LinkTarget = Migrations::Database::IntermediateDB::Enums::LinkTarget
+UrlOrigin = Migrations::Converters::Discourse::MarkdownScanner::UrlOrigin
 
 def monotonic_time
   Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -121,6 +136,79 @@ def normalize_body(raw)
   else
     raw.encode(Encoding::UTF_8, invalid: :replace, undef: :replace)
   end
+end
+
+# A SITE link resolves deterministically in every mode — only its origin moves
+# to the destination base — so the all-miss expectation must rewrite it too.
+# The path is derived from the row's own URL spelling rather than the row's
+# recorded suffix, so a wrongly recorded suffix still surfaces as a violation;
+# only a schemeless bare-domain spelling (which the origin reading can't split)
+# falls back to the recorded suffix.
+def expected_site_url(row, hosts, base_url)
+  host, rest = UrlOrigin.split(row[:url])
+  path =
+    if host && hosts.key?(host)
+      UrlOrigin.path_within_prefix(rest, hosts[host])
+    else
+      row[:target_suffix]
+    end
+  "#{base_url}#{path}"
+end
+
+# The harness's own splice of the rewritten destination into the verbatim
+# snippet — independent arithmetic over the same row fields the resolver uses,
+# so a resolver splicing bug shows up as a byte diff. A row without a usable
+# span returns nil, the caller then leaves the placeholder in the expectation,
+# and the comparison fails loudly — which is the point.
+def expected_site_markup(row, hosts, base_url)
+  url = expected_site_url(row, hosts, base_url)
+  original = row[:original_markdown]
+  offset = row[:url_offset]
+  return nil if original.nil? || offset.nil?
+
+  length = row[:url].bytesize
+  return nil if offset < 0 || offset + length > original.bytesize
+
+  spans = [offset]
+  label = row[:label_url_offset]
+  spans << label if label && label != offset && label >= 0 && label + length <= original.bytesize
+  expected = original.dup
+  spans.sort.reverse_each { |span| expected.bytesplice(span, length, url) }
+  expected
+end
+
+def each_embed_row(buffer)
+  {
+    quote: buffer.quotes,
+    link: buffer.links,
+    mention: buffer.mentions,
+    hashtag: buffer.hashtags,
+    emoji: buffer.emojis,
+    poll: buffer.polls,
+    event: buffer.events,
+    upload: buffer.uploads,
+  }.each { |kind, rows| rows.each { |row| yield kind, row } }
+end
+
+# The exact byte expectation for a post in all-miss mode: every placeholder
+# substituted back with its verbatim source — except a SITE link, whose
+# deterministic origin rewrite is computed here. Placeholder tokens are
+# delimiter-wrapped and unique, so plain literal substitution is unambiguous;
+# the block form keeps `\`-sequences in a snippet from being read as
+# backreferences.
+def expected_all_miss_body(output, buffer, hosts, base_url, stats)
+  expected = output
+  each_embed_row(buffer) do |kind, row|
+    replacement =
+      if kind == :link && row[:target_type] == LinkTarget::SITE
+        stats["site_rewrites"] += 1
+        expected_site_markup(row, hosts, base_url)
+      else
+        row[:original_markdown]
+      end
+    expected = expected.sub(row[:placeholder]) { replacement } if replacement
+  end
+  expected
 end
 
 def connect_corpus(options)
@@ -377,6 +465,7 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
     "batch_scans" => 0,
     "violations" => 0,
     "expected_rewrites" => 0,
+    "site_rewrites" => 0,
     "violation_samples" => [],
     "resolve_seconds" => 0.0,
   }
@@ -422,6 +511,19 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
     stats["rss_after_context"] = rss_mib
 
     buffer = Migrations::Converters::EmbedBuffer.new(owner_type: EmbedOwner::POST)
+    refusal_log = nil
+    on_refusal = nil
+    if options[:log_refusals] > 0
+      refusal_log = { current_id: nil, samples: {} }
+      on_refusal =
+        lambda do |cause, detail|
+          samples = (refusal_log[:samples][cause.to_s] ||= [])
+          if samples.size < options[:log_refusals]
+            id = refusal_log[:current_id]
+            samples << (detail ? "#{id} (#{detail})" : id.to_s)
+          end
+        end
+    end
     extractor =
       Migrations::Converters::Discourse::RawExtractor.new(
         embeds: buffer,
@@ -430,6 +532,7 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
         custom_emoji_names: config_inputs[:custom_emoji_names].presence,
         internal_link_hosts: config_inputs[:internal_link_hosts],
         markdown_engine: engine,
+        on_engine_refusal: on_refusal,
       )
 
     maps =
@@ -451,11 +554,23 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
 
     started_at = monotonic_time
     each_partition_batch(corpus, partition, options[:read_batch]) do |rows|
-      process_batch(rows, options, stats, extractor, engine, buffer, resolver)
+      process_batch(
+        rows,
+        options,
+        stats,
+        extractor,
+        engine,
+        buffer,
+        resolver,
+        hosts: config_inputs[:internal_link_hosts],
+        resolve_base: maps.base_url,
+        refusal_log:,
+      )
     end
     stats["extract_seconds"] = monotonic_time - started_at
 
     stats["refusals"] = extractor.engine_refusals
+    stats["refusal_samples"] = refusal_log[:samples] if refusal_log
     stats["unresolved"] = unresolved.counts
     stats["orphans"] = orphans.total
     stats["scan_calls"] = engine.calls
@@ -498,7 +613,18 @@ def each_partition_batch(corpus, partition, read_batch)
   end
 end
 
-def process_batch(rows, options, stats, extractor, engine, buffer, resolver)
+def process_batch(
+  rows,
+  options,
+  stats,
+  extractor,
+  engine,
+  buffer,
+  resolver,
+  hosts:,
+  resolve_base:,
+  refusal_log:
+)
   scan_data_by_id = {}
   if options[:batch]
     engine_bound =
@@ -514,8 +640,9 @@ def process_batch(rows, options, stats, extractor, engine, buffer, resolver)
   end
 
   items = []
-  originals = {}
+  expected_bodies = {}
   rewrite_expected = {}
+  all_miss = options[:round_trip] == "all-miss"
 
   rows.each do |row|
     raw = row["raw"]
@@ -534,6 +661,7 @@ def process_batch(rows, options, stats, extractor, engine, buffer, resolver)
     end
 
     buffer.clear
+    refusal_log[:current_id] = row["id"] if refusal_log
     output = extractor.extract(raw, topic_id: row["topic_id"], scan_data:)
 
     unless buffer.empty?
@@ -545,7 +673,11 @@ def process_batch(rows, options, stats, extractor, engine, buffer, resolver)
     end
 
     items << { id: row["id"], raw: output }
-    originals[row["id"]] = normalized
+    expected_bodies[row["id"]] = if all_miss && !buffer.empty?
+      expected_all_miss_body(output, buffer, hosts, resolve_base, stats)
+    else
+      normalized
+    end
   end
 
   resolve_started_at = monotonic_time
@@ -553,19 +685,19 @@ def process_batch(rows, options, stats, extractor, engine, buffer, resolver)
   stats["resolve_seconds"] += monotonic_time - resolve_started_at
 
   resolved.each do |id, body|
-    next if body == originals[id]
+    next if body == expected_bodies[id]
 
     # Identity hits legitimately rewrite quote headers, link destinations,
     # hashtag slug case and mention username case; only a diff on a post
     # without any such embed can prove a bug in that mode.
-    if options[:round_trip] == "identity-hit" && rewrite_expected[id]
+    if !all_miss && rewrite_expected[id]
       stats["expected_rewrites"] += 1
       next
     end
 
     stats["violations"] += 1
     if stats["violation_samples"].size < 5
-      stats["violation_samples"] << diff_sample(id, originals[id], body)
+      stats["violation_samples"] << diff_sample(id, expected_bodies[id], body)
     end
   end
 end
@@ -713,6 +845,13 @@ ok.each do |result|
   (result["unresolved"] || {}).each { |kind, count| unresolved[kind] += count }
 end
 puts "Refusals: #{refusals.empty? ? "none" : refusals.map { |cause, count| "#{cause} #{number(count)}" }.join(", ")}"
+if options[:log_refusals] > 0
+  ok.each do |result|
+    (result["refusal_samples"] || {}).each do |cause, ids|
+      puts "  worker #{result["worker"]} #{cause}: posts #{ids.join(", ")}"
+    end
+  end
+end
 puts "Unresolved embeds (#{options[:round_trip]}): " +
        (
          if unresolved.empty?
@@ -746,11 +885,16 @@ if options[:round_trip] == "identity-hit"
          number(violations),
        )
 else
-  puts format("\nAll-miss round-trip: %s violations", number(violations))
+  puts format(
+         "\nAll-miss round-trip: %s violations " \
+           "(%s deterministic site-link origin rewrites verified byte-exactly)",
+         number(violations),
+         number(sum.call("site_rewrites")),
+       )
 end
 
 if violations > 0
-  puts "VIOLATIONS — the verbatim round-trip contract is broken; samples:"
+  puts "VIOLATIONS — the round-trip contract is broken; samples:"
   ok.each do |result|
     Array(result["violation_samples"]).each do |sample|
       puts "  post #{sample["id"]} first diff at byte #{sample["byte"]}"

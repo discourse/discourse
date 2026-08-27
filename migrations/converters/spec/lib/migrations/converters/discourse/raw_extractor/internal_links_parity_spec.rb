@@ -73,21 +73,29 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     }.merge(ascii_punctuation)
   end
 
+  # Whether the extractor treated the URL core linkifies as an internal link:
+  # a recorded row, or a deliberate refusal — a trailing character can extend
+  # the id into a coordinate-shaped junk path (`…/5a`), which refuses rather
+  # than origin-rewriting stale coordinates. What the boundary suite proves is
+  # that the URL's EXTENT matches linkify; what becomes of the extended URL is
+  # the coordinate rule's own specs' concern.
   def detector_extracts?(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(
-      embeds: buffer,
-      markdown_engine:,
-      mention_names:,
-      hashtag_names:,
-      internal_link_hosts: {
-        host => nil,
-      },
-    ).extract(raw)
-    buffer.links.any?
+    extractor =
+      described_class.new(
+        embeds: buffer,
+        markdown_engine:,
+        mention_names:,
+        hashtag_names:,
+        internal_link_hosts: {
+          host => nil,
+        },
+      )
+    extractor.extract(raw)
+    buffer.links.any? || extractor.engine_refusals[:unanchored] > 0
   end
 
   # Core linkifies a bare URL into an anchor whose href is the URL (a trailing
@@ -129,28 +137,31 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   end
 
   # A trailing ASCII letter or `_` extends the URL's `/t/slug/5` id into `5a` / `5_`,
-  # which names no topic — so no route parses. On the source's own host the detector
-  # still records it, now as a SITE link (origin rewrite), matching core, which
-  # linkifies the longer URL all the same.
-  it "records a route-less trailing-word URL as a SITE link, matching core's linkify" do
+  # which names no topic — so no route parses. Core linkifies the longer URL
+  # all the same, and the extractor sees it whole; but a coordinate-shaped
+  # path that parses no route refuses rather than carrying its stale-looking
+  # tail onto a new origin, so the body stays verbatim and lands on the
+  # refusal tally.
+  it "refuses a coordinate-shaped trailing-word URL that core linkifies whole" do
     raw = "a #{url}a b"
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(
-      embeds: buffer,
-      markdown_engine:,
-      mention_names:,
-      hashtag_names:,
-      internal_link_hosts: {
-        host => nil,
-      },
-    ).extract(raw)
+    extractor =
+      described_class.new(
+        embeds: buffer,
+        markdown_engine:,
+        mention_names:,
+        hashtag_names:,
+        internal_link_hosts: {
+          host => nil,
+        },
+      )
 
-    expect(buffer.links.first).to include(
-      target_type: Migrations::Database::IntermediateDB::Enums::LinkTarget::SITE,
-    )
+    expect(extractor.extract(raw)).to eq(raw)
+    expect(buffer.links).to be_empty
+    expect(extractor.engine_refusals).to eq(unanchored: 1)
     expect(core_links?(raw)).to be(true)
   end
 

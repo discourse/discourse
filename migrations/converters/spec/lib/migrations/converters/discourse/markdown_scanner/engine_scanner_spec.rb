@@ -32,7 +32,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       custom_emoji_names:,
       internal_link_hosts:,
       markdown_engine: engine,
-      on_engine_refusal: ->(cause) { refusals << cause },
+      on_engine_refusal: ->(cause, _detail) { refusals << cause },
     )
   end
 
@@ -326,18 +326,24 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         MiniRacer::ScriptTerminatedError,
         "JavaScript was terminated",
       )
+      details = []
       extractor =
         described_class.new(
           embeds: buffer,
           mention_names:,
           hashtag_names:,
           markdown_engine: failing_engine,
-          on_engine_refusal: ->(cause) { refusals << cause },
+          on_engine_refusal:
+            lambda do |cause, detail|
+              refusals << cause
+              details << detail
+            end,
         )
 
       raw = "@alice `x`"
       expect(extractor.extract(raw)).to eq(raw)
       expect(refusals).to eq(%i[engine_error])
+      expect(details).to eq(%w[MiniRacer::ScriptTerminatedError])
       expect(failing_engine).to have_received(:reset!)
     end
   end

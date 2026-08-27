@@ -95,8 +95,10 @@ module Migrations
         #   left verbatim (see {MarkdownScanner::EngineScanner}). Build it after
         #   the worker forks — V8 contexts do not survive forking.
         # @param on_engine_refusal [#call, nil] called with the cause (a Symbol)
-        #   whenever an `:engine` body keeps at least one unproven construct; the
-        #   tallies are also kept on {#engine_refusals}. The caller knows which
+        #   and its diagnostic detail (the exception class name for
+        #   `:engine_error`, else nil) whenever an `:engine` body keeps at least
+        #   one unproven construct; the tallies are also kept on
+        #   {#engine_refusals}. The caller knows which
         #   post it is extracting, so post identity stays on its side of the
         #   callback.
         def initialize(
@@ -212,7 +214,7 @@ module Migrations
           result = @engine_scanner.scan(raw, scan_data:)
           if result.cause
             @engine_refusals[result.cause] += 1
-            @on_engine_refusal&.call(result.cause)
+            @on_engine_refusal&.call(result.cause, result.detail)
           end
           result.output
         end
