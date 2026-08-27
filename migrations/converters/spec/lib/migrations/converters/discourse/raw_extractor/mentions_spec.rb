@@ -98,6 +98,28 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         ],
       )
     end
+
+    it "records a broadcast mention's name as written, with its verbatim source" do
+      # The importer restores that spelling whenever the destination gives it
+      # no different here-mention name to remap to.
+      classifier = Migrations::Converters::Discourse::MentionClassifier.new(here_mention: "here")
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          markdown_engine:,
+          mention_names:,
+          hashtag_names:,
+          mention_classifier: classifier,
+        )
+
+      extractor.extract("cc @Here and @ALL")
+
+      expect(
+        buffer.mentions.map { |m| m.values_at(:name, :mention_type, :original_markdown) },
+      ).to eq(
+        [["Here", enums::MentionType::HERE, "@Here"], ["ALL", enums::MentionType::ALL, "@ALL"]],
+      )
+    end
   end
 
   describe "the mention name gate" do

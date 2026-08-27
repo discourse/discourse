@@ -161,6 +161,57 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
   end
 
+  describe "broadcast mentions" do
+    def create_mention(placeholder_token, **attributes)
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: placeholder_token,
+        **attributes,
+      )
+    end
+
+    it "keeps the author's spelling when the destination names nothing" do
+      here = placeholder.mint(:mention)
+      all = placeholder.mint(:mention)
+      create_mention(here, mention_type: mention_type::HERE, name: "Here")
+      create_mention(all, mention_type: mention_type::ALL, name: "ALL")
+
+      maps = FakePlaceholderMaps.new(here_mention: nil)
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "#{here} and #{all}" }],
+        )
+
+      expect(resolved[1]).to eq("@Here and @ALL")
+    end
+
+    it "keeps the author's spelling when the destination's here-mention is the same name" do
+      # Here-matching is case-insensitive at cook time, so `@Here` works on a
+      # destination configured with "here"; canonicalizing it would change
+      # bytes for nothing.
+      token = placeholder.mint(:mention)
+      create_mention(token, mention_type: mention_type::HERE, name: "Here")
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "cc #{token}" }])
+
+      expect(resolved[1]).to eq("cc @Here")
+    end
+
+    it "remaps a here-mention that the destination names differently" do
+      token = placeholder.mint(:mention)
+      create_mention(token, mention_type: mention_type::HERE, name: "Here")
+
+      maps = FakePlaceholderMaps.new(here_mention: "hier")
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "cc #{token}" }],
+        )
+
+      expect(resolved[1]).to eq("cc @hier")
+    end
+  end
+
   describe "hashtags with a verbatim source" do
     def create_hashtag(placeholder_token, original:, **attributes)
       Migrations::Database::IntermediateDB::EmbedHashtag.create(

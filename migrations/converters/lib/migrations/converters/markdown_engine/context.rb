@@ -13,10 +13,13 @@ module Migrations
         class DiscardedError < StandardError
         end
 
-        # PrettyText allows 25s because it renders; a scan only parses, which
-        # the benchmarks put ~40x cheaper, so a body still running after this
-        # long is a runaway that should cost a refusal, not a half-minute.
-        EVAL_TIMEOUT_MS = 10_000
+        # PrettyText allows 25s because it renders; a scan only parses. The
+        # slowest legitimate parse observed on a 1.5M-post corpus was 435ms,
+        # while the 104 runaway bodies that hit a 10s ceiling burned ~1,040s
+        # of the run's ~1,295s total V8 time before refusing anyway. A ceiling
+        # with ~7x headroom over the observed maximum turns a runaway into a
+        # cheap refusal instead of the dominant V8 cost.
+        EVAL_TIMEOUT_MS = 3_000
 
         def initialize(bundle:, config:, timeout_ms: EVAL_TIMEOUT_MS)
           @bundle = bundle

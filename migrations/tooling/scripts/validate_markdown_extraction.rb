@@ -43,8 +43,13 @@
 # `extract(..., scan_data:)` seam a batching posts step would use.
 # `--log-refusals N` samples up to N refusing post ids per cause and worker
 # (with the exception class behind an :engine_error), so a corpus run's refusal
-# tally is diagnosable without a rerun.
+# tally is diagnosable without a rerun. `--dump-refusals DIR` additionally
+# writes refusing bodies to DIR/<cause>-<post_id>.md (capped per cause and
+# worker) for offline inspection — the timeout bodies are the same ones a
+# target site would cook pathologically, so they are operationally
+# interesting beyond migration accounting.
 
+require "fileutils"
 require "optparse"
 
 options = {
@@ -60,7 +65,12 @@ options = {
   round_trip: "all-miss",
   cold_bundle: false,
   log_refusals: 0,
+  dump_refusals: nil,
 }
+
+# Bounds what --dump-refusals writes: enough bodies per cause to see the
+# pattern, without letting a pathological corpus fill the disk.
+DUMP_REFUSALS_CAP = 50
 
 OptionParser
   .new do |parser|
@@ -94,6 +104,11 @@ OptionParser
       Integer,
       "Sample up to N refusing post ids per cause, per worker",
     ) { |v| options[:log_refusals] = v }
+    parser.on(
+      "--dump-refusals DIR",
+      "Write each refusing post's body to DIR/<cause>-<post_id>.md " \
+        "(up to #{DUMP_REFUSALS_CAP} per cause and worker)",
+    ) { |v| options[:dump_refusals] = v }
   end
   .parse!
 
@@ -444,6 +459,9 @@ partitions =
     { lo:, hi:, cap: }
   end
 
+# Created before the fork so no two workers race the mkdir.
+FileUtils.mkdir_p(options[:dump_refusals]) if options[:dump_refusals]
+
 # Workers open their own connections; the inherited descriptor must not be
 # shared with children.
 corpus.close
@@ -513,14 +531,24 @@ def run_worker(options, partition, bundle, config_inputs, identity_data, pipe)
     buffer = Migrations::Converters::EmbedBuffer.new(owner_type: EmbedOwner::POST)
     refusal_log = nil
     on_refusal = nil
-    if options[:log_refusals] > 0
-      refusal_log = { current_id: nil, samples: {} }
+    if options[:log_refusals] > 0 || options[:dump_refusals]
+      refusal_log = { current_id: nil, current_raw: nil, samples: {}, dumped: Hash.new(0) }
       on_refusal =
         lambda do |cause, detail|
+          id = refusal_log[:current_id]
           samples = (refusal_log[:samples][cause.to_s] ||= [])
           if samples.size < options[:log_refusals]
-            id = refusal_log[:current_id]
             samples << (detail ? "#{id} (#{detail})" : id.to_s)
+          end
+
+          # Post ids are corpus-unique, so concurrent workers never collide on
+          # a file name.
+          if options[:dump_refusals] && refusal_log[:dumped][cause] < DUMP_REFUSALS_CAP
+            refusal_log[:dumped][cause] += 1
+            File.write(
+              File.join(options[:dump_refusals], "#{cause}-#{id}.md"),
+              refusal_log[:current_raw],
+            )
           end
         end
     end
@@ -661,7 +689,10 @@ def process_batch(
     end
 
     buffer.clear
-    refusal_log[:current_id] = row["id"] if refusal_log
+    if refusal_log
+      refusal_log[:current_id] = row["id"]
+      refusal_log[:current_raw] = raw
+    end
     output = extractor.extract(raw, topic_id: row["topic_id"], scan_data:)
 
     unless buffer.empty?
@@ -851,6 +882,10 @@ if options[:log_refusals] > 0
       puts "  worker #{result["worker"]} #{cause}: posts #{ids.join(", ")}"
     end
   end
+end
+if options[:dump_refusals]
+  dumped = Dir[File.join(options[:dump_refusals], "*.md")].size
+  puts "  #{dumped} refusing #{dumped == 1 ? "body" : "bodies"} dumped to #{options[:dump_refusals]}"
 end
 puts "Unresolved embeds (#{options[:round_trip]}): " +
        (

@@ -579,10 +579,21 @@ module Migrations
         name =
           case row[:mention_type]
           when Enums::MentionType::HERE
-            # The destination decides which name acts as the here-mention.
-            @maps.here_mention.presence || "here"
+            # The destination decides which name acts as the here-mention, but
+            # only an actually different name is a remap. Here-matching is
+            # case-insensitive at cook time, so the author's own spelling
+            # (`@Here`) works on the destination as-is — canonicalizing it
+            # would change bytes for nothing.
+            here = @maps.here_mention.presence
+            if here && (row[:name].blank? || !here.casecmp?(row[:name]))
+              here
+            else
+              row[:name].presence || "here"
+            end
           when Enums::MentionType::ALL
-            "all"
+            # `@all` is not a configurable name; with nothing to remap to, the
+            # author's spelling survives.
+            row[:name].presence || "all"
           when Enums::MentionType::GROUP
             @maps.group_name(row[:target_id]) || row[:name]
           else # USER, or an unspecified (nil) mention
