@@ -6,6 +6,11 @@
 // real corpus (see migrations/docs/markdown-engine-context.md).
 
 function __scanCountOccurrences(haystack, needle) {
+  // An empty needle would match at every position without ever advancing
+  // the cursor (indexOf("") is always the current index).
+  if (needle.length === 0) {
+    return 0;
+  }
   let count = 0;
   let index = haystack.indexOf(needle);
   while (index !== -1) {
@@ -18,13 +23,18 @@ function __scanCountOccurrences(haystack, needle) {
 // How often the link's destination also appears in its label text — a
 // `[URL](same URL)` self-link writes the value twice in the raw, so count
 // certification must expect both occurrences. The schemeless reading covers
-// a label spelling the bare domain of a linkified destination.
+// a label spelling the bare domain of a linkified destination. Empty-
+// destination links (`[text]()`, `[](https://)` whose schemeless reading is
+// empty) can never be self-links.
 function __scanLabelHits(label, href) {
+  if (href.length === 0) {
+    return 0;
+  }
   if (label.includes(href)) {
     return __scanCountOccurrences(label, href);
   }
   const bare = href.replace(/^https?:\/\//, "");
-  if (bare !== href && label.includes(bare)) {
+  if (bare.length > 0 && bare !== href && label.includes(bare)) {
     return __scanCountOccurrences(label, bare);
   }
   return 0;

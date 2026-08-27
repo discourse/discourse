@@ -27,6 +27,17 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context do
     expect(scan_one("hi @sam").dig("blocks", 0, "mentions")).to eq(["@sam"])
   end
 
+  # Empty-destination links once looped the label-hit counter forever
+  # (indexOf with an empty needle never advances), burning the full parse
+  # timeout on bodies as small as four bytes.
+  it "scans empty-destination and empty-label links in ordinary time" do
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    ["[]()", "[a]()", "[](https://)", "[Uploading: t.jpg...]()", "sure i will ;[]())"].each do |raw|
+      expect { scan_one(raw) }.not_to raise_error
+    end
+    expect(Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).to be < 2
+  end
+
   it "extracts mentions with the block's line map" do
     result = scan_one("a paragraph\n\nwith @sam here")
     expect(result["blocks"]).to contain_exactly(
