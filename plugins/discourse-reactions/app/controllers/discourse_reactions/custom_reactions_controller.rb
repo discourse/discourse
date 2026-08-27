@@ -52,6 +52,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts),
       )
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
+    raise Discourse::NotFound unless guardian.can_see_user_actions?(user)
 
     reaction_users =
       DiscourseReactions::ReactionUser
