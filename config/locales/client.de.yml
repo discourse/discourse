@@ -3972,7 +3972,6 @@ de:
           missing_to: "Ein Ersatzschlagwort ist erforderlich"
       delete_topics:
         name: "Löschen"
-        description: "Lösche die ausgewählten Themen endgültig. Diese Aktion kann nicht rückgängig gemacht werden."
       update_category:
         name: "Kategorie aktualisieren"
         description: "Verschiebe alle ausgewählten Themen in die folgende Kategorie:"
@@ -6768,25 +6767,20 @@ de:
         title: "Was ist neu?"
         check_for_updates: "Nach Aktualisierungen suchen"
       site_traffic_explorer:
-        pageviews: "Seitenaufrufe"
+        metric_information: "Über %{metric}"
+        remove_filter_value: "%{value} entfernen"
+        clear_all: "Alle löschen"
+        apply: "Anwenden"
         view_more: "Mehr anzeigen"
         cards:
           pages: "Seiten"
           visitors: "Besucher"
-        columns:
-          referrers: "Referrer"
-          countries: "Land"
-          top_urls: "URL"
-          browsers: "Browser"
-          ip_addresses: "IP-Adresse"
         filters:
           referrer: "Referrer"
           country: "Land"
           browser: "Browser"
           ip: "IP-Adresse"
         metrics:
-          pageviews:
-            label: "Seitenaufrufe"
           logged_in_share:
             label: "Anteil angemeldeter Mitglieder"
           bounce_rate:

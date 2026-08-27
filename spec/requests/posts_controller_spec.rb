@@ -416,6 +416,19 @@ RSpec.describe PostsController do
         expect(response).to be_forbidden
       end
 
+      it "deletes another user's post for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        post = Fabricate(:post, topic: topic, post_number: 3)
+        sign_in(user)
+
+        delete "/posts/#{post.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(post.reload.deleted_at).to be_present
+      end
+
       it "uses a PostDestroyer" do
         post = Fabricate(:post, topic_id: topic.id, post_number: 3)
         sign_in(moderator)
@@ -553,6 +566,19 @@ RSpec.describe PostsController do
         PostDestroyer.any_instance.expects(:destroy).twice
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
         expect(response.status).to eq(200)
+      end
+
+      it "deletes the posts for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        sign_in(user)
+
+        delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
+
+        expect(response.status).to eq(200)
+        expect(post1.reload.deleted_at).to be_present
+        expect(post2.reload.deleted_at).to be_present
       end
 
       # bookmark
@@ -2245,6 +2271,25 @@ RSpec.describe PostsController do
         end
       end
 
+      it "does not persist an iframe whose encoded userinfo points to an unallowlisted host" do
+        iframe_source = "https://www.instagram.com%2f@attacker.example/"
+
+        post "/posts.json",
+             params: {
+               raw: %(User content <iframe src="#{iframe_source}"></iframe>),
+               title: "Iframe allowlist bypass",
+             }
+
+        created_post = Post.find(response.parsed_body["id"])
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(response.body).to include(%("id":#{created_post.id}))
+          expect(created_post.cooked).not_to include(iframe_source)
+          expect(Nokogiri::HTML5.fragment(created_post.cooked).at_css("iframe")).to be_nil
+        end
+      end
+
       it "does not persist HTML from an untrusted oEmbed provider" do
         Jobs.run_immediately!
         url = "https://attacker.example.com/onebox"
@@ -2272,6 +2317,35 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
         cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
         expect(cooked.at_css(".onebox-attack")).to be_nil
+      end
+
+      it "does not persist a backslash-bypassed wildcard iframe origin from oEmbed" do
+        Jobs.run_immediately!
+        url = "https://attacker.example.com/onebox"
+        iframe_origin = "https://evil.example\\@sub.typeform.com/to/abc"
+
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(
+          status: 200,
+          body:
+            '<html><head><link type="application/json+oembed" href="https://attacker.example.com/oembed"></head></html>',
+        )
+        stub_request(:get, "https://attacker.example.com/oembed").to_return(
+          status: 200,
+          body: {
+            title: "Attacker onebox",
+            type: "rich",
+            html: "<iframe src=\"#{iframe_origin}\"></iframe>",
+          }.to_json,
+        )
+
+        post "/posts.json", params: { raw: url, title: "Backslash iframe origin" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["id"]).to be_present
+
+        cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
+        expect(cooked.at_css("iframe")).to be_nil
       end
 
       it "creates the topic and post with the right attributes" do

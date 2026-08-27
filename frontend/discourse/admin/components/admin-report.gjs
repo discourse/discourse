@@ -44,6 +44,18 @@ const TABLE_OPTIONS = {
 
 const CHART_OPTIONS = {};
 
+export function updateReportFilters(filters, id, value) {
+  const customFilters = { ...filters };
+
+  if (value === null || typeof value === "undefined") {
+    delete customFilters[id];
+  } else {
+    customFilters[id] = value;
+  }
+
+  return customFilters;
+}
+
 export default class AdminReport extends Component {
   @service siteSettings;
 
@@ -352,15 +364,9 @@ export default class AdminReport extends Component {
 
   @action
   applyFilter(id, value) {
-    let customFilters = this.args.filters?.customFilters || {};
-
-    if (typeof value === "undefined") {
-      delete customFilters[id];
-    } else {
-      customFilters[id] = value;
-    }
-
-    this.refreshReport({ filters: customFilters });
+    this.refreshReport({
+      filters: updateReportFilters(this.args.filters?.customFilters, id, value),
+    });
   }
 
   @action

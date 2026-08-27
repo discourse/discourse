@@ -60,7 +60,7 @@ module Chat
     end
 
     def excerpt
-      object.excerpt || object.build_excerpt
+      object.excerpt_for_display
     end
 
     def is_action

@@ -15,6 +15,7 @@ const SidebarMoreSectionLink = <template>
     @prefixValue={{@sectionLink.prefixValue}}
     @query={{@sectionLink.query}}
     @route={{@sectionLink.route}}
+    @scrollIntoView={{@scrollIntoView}}
     @shouldDisplay={{@sectionLink.shouldDisplay}}
     @suffixCSSClass={{@sectionLink.suffixCSSClass}}
     @suffixType={{@sectionLink.suffixType}}

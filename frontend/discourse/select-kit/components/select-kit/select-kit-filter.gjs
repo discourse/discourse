@@ -141,8 +141,8 @@ export default class SelectKitFilter extends Component {
       (!this.selectKit.highlighted || this.selectKit.enterDisabled)
     ) {
       this.element.querySelector("input").focus();
+      event.preventDefault();
       if (this.selectKit.enterDisabled) {
-        event.preventDefault();
         event.stopImmediatePropagation();
       }
       return false;

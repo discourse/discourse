@@ -145,6 +145,10 @@ class Topic < ActiveRecord::Base
     @featured_users ||= TopicFeaturedUsers.new(self)
   end
 
+  def first_post_with_deleted
+    posts.with_deleted.find_by(post_number: 1)
+  end
+
   def trash!(trashed_by = nil)
     trigger_event = false
 
@@ -1845,7 +1849,13 @@ class Topic < ActiveRecord::Base
   end
 
   def expandable_first_post?
-    SiteSetting.embed_truncate? && has_topic_embed?
+    embed = topic_embed
+    return false if embed.nil?
+
+    # A nil state preserves site-wide behavior for embeds without recorded state.
+    return SiteSetting.embed_truncate? if embed.content_truncated.nil?
+
+    embed.content_truncated?
   end
 
   def message_archived?(user)

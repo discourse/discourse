@@ -5636,23 +5636,17 @@ it:
         title: "Cosa c'è di nuovo?"
         check_for_updates: "Controlla gli aggiornamenti"
       site_traffic_explorer:
-        pageviews: "Pagine viste"
+        metric_information: "Informazioni su %{metric}"
+        clear_all: "Deseleziona tutto"
+        apply: "Applica"
         view_more: "Mostra altro"
         cards:
           pages: "Pagine"
           visitors: "Visitatori"
-        columns:
-          countries: "Paese"
-          top_urls: "URL"
-          browsers: "Browser"
-          ip_addresses: "Indirizzo IP"
         filters:
           country: "Paese"
           browser: "Browser"
           ip: "Indirizzo IP"
-        metrics:
-          pageviews:
-            label: "Pagine viste"
         series:
           anonymous_human: "Anonimo"
       dashboard:

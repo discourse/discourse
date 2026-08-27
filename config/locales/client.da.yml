@@ -4640,21 +4640,16 @@ da:
         title: "Hvad er nyt?"
         check_for_updates: "Se efter opdateringer"
       site_traffic_explorer:
-        pageviews: "Sidevisninger"
+        metric_information: "Om %{metric}"
+        clear_all: "Ryd alle"
+        apply: "Anvend"
         view_more: "Se mere"
         cards:
           pages: "Sider"
           visitors: "Besøgende"
-        columns:
-          top_urls: "URL"
-          browsers: "Browser"
-          ip_addresses: "IP-adresse"
         filters:
           browser: "Browser"
           ip: "IP-adresse"
-        metrics:
-          pageviews:
-            label: "Sidevisninger"
         series:
           anonymous_human: "Anonym"
       dashboard:

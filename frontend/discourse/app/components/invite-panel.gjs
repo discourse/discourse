@@ -382,12 +382,14 @@ export default class InvitePanel extends Component {
         .createInvite(this.invitee.trim(), groupIds, this.customMessage)
         .then((result) => {
           model.setProperties({ saving: false, finished: true });
-          if (this.isPM && result && result.user) {
-            this.get("inviteModel.details.allowed_users").push(
-              EmberObject.create(result.user)
-            );
+          if (this.isPM) {
+            if (result && result.user) {
+              this.get("inviteModel.details.allowed_users").push(
+                EmberObject.create(result.user)
+              );
+            }
             this.toasts.success({
-              data: { message: this.successMessage(result) },
+              data: { message: this.successMessage(this.invitee) },
             });
             this.closeModal();
           } else if (

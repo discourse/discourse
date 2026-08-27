@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
@@ -40,6 +41,11 @@ export default class OnboardingStep extends Component {
   performAction() {
     throw new Error("performAction is required for OnboardingStep");
   }
+
+  // Steps whose action needs slow-to-arrive data can warm it up here, so the
+  // work overlaps with the admin reaching for the button.
+  @action
+  prefetch() {}
 
   // Awaits the audit write so callers that reload the page on completion can't
   // cancel it in flight.
@@ -88,6 +94,8 @@ export default class OnboardingStep extends Component {
             "btn-transparent btn-small btn-link"
             (if this.completed "--completed")
           }}
+          {{on "pointerenter" this.prefetch}}
+          {{on "focus" this.prefetch}}
         />
 
       </div>

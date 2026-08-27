@@ -28,7 +28,7 @@ module Chat
     end
 
     def last_reply_excerpt
-      object.last_message.excerpt || object.last_message.build_excerpt
+      object.last_message.excerpt_for_display
     end
 
     def last_reply_user

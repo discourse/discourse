@@ -4450,7 +4450,6 @@ uk:
           missing_to: "Потрібна заміна етикетки"
       delete_topics:
         name: "Видалити"
-        description: "Видалити вибрані теми назавжди. Цю дію не можна скасувати."
       update_category:
         name: "Оновити категорію"
         description: "Перемістити всі вибрані теми до наступної категорії:"
@@ -7484,19 +7483,17 @@ uk:
           timeout: "Цей запит щодо трафіку оброблявся занадто довго. Виберіть коротший діапазон дат і повторіть спробу."
           unexpected: "Не вдалося завантажити трафік сайту. Спробуйте ще раз."
         empty: "Немає відповідних переглядів сторінок"
-        summary: "Зведення про трафік"
-        traffic_over_time: "Трафік з плином часу"
-        pageviews: "Переглядів"
-        metric_information: "Про цей показник"
+        metric_information: "Інформація про %{metric}"
         active_filters: "Активні фільтри трафіку"
-        filter_description: "%{filter} це <strong>%{value}</strong>"
+        remove_filter_value: "Видалити %{value}"
+        clear_all: "Очистити все"
+        apply: "Застосувати"
         filter_by:
           one: "Фільтрувати за %{label}, %{count} переглядом сторінки"
           few: "Фільтрувати за %{label}, %{count} перегляди сторінки"
           many: "Фільтрувати за %{label}, %{count} переглядів сторінки"
           other: "Фільтрувати за %{label}, %{count} переглядів сторінок"
         remove_filter: "Видалити фільтр %{filter}"
-        remove_traffic_type_filter: "Видалити фільтр трафіку %{value}"
         view_more: "Переглянути більше"
         no_dimension_data: "Немає даних для цього розподілу."
         direct_or_unknown: "Прямий / невідомий"
@@ -7512,14 +7509,6 @@ uk:
           entry_urls: "URL-адреси записів"
           browsers: "Браузери"
           ip_addresses: "IP-адреси"
-        columns:
-          referrers: "Реферер"
-          countries: "Країна"
-          networks: "Мережа"
-          top_urls: "Посилання"
-          entry_urls: "URL-адреса запису"
-          browsers: "Оглядач"
-          ip_addresses: "IP-адреса"
         filters:
           traffic_type: "Тип трафіку"
           top_url: "Найпопулярніша URL-адреса"
@@ -7530,8 +7519,6 @@ uk:
           browser: "Оглядач"
           ip: "IP-адреса"
         metrics:
-          pageviews:
-            label: "Переглядів"
           distinct_sessions:
             label: "Окремі сесії"
           logged_in_share:

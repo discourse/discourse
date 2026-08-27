@@ -1250,4 +1250,34 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .dom(".custom-empty-state")
       .exists("renders the custom empty state when array is empty");
   });
+
+  test("reports the drawer state when the filter toggle is used", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", {
+      category: SAMPLE_DROPDOWN_OPTIONS,
+    });
+    const states = [];
+    this.set("onToggle", (expanded) => states.push(expanded));
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @filterDropdownsExpanded={{false}}
+          @forceShowDropdownFilterToggle={{true}}
+          @onFilterDropdownsToggle={{this.onToggle}}
+        />
+      </template>
+    );
+
+    await click(".d-filter-controls__toggle-filters");
+    await click(".d-filter-controls__toggle-filters");
+
+    assert.deepEqual(
+      states,
+      [true, false],
+      "each toggle reports the resulting expanded state"
+    );
+  });
 });

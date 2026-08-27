@@ -6,8 +6,10 @@ import { service } from "@ember/service";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
 import FontsSection from "discourse/components/design-wizard/fonts-section";
 import HomepageSection from "discourse/components/design-wizard/homepage-section";
+import SearchSection from "discourse/components/design-wizard/search-section";
 import Section from "discourse/components/design-wizard/section";
 import ThemeSection from "discourse/components/design-wizard/theme-section";
+import WelcomeBannerSection from "discourse/components/design-wizard/welcome-banner-section";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -39,9 +41,15 @@ export default class DesignWizardControls extends Component {
     return this.currentStep === "theme" && !this.designWizard.themeId;
   }
 
+  // a theme preview replaces the page, so anything else clicked in the meantime
+  // would either be lost or save selections the reload is about to discard
+  get busy() {
+    return this.designWizard.applyingTheme;
+  }
+
   @action
   async goToStep(index) {
-    if (index === this.designWizard.stepIndex) {
+    if (index === this.designWizard.stepIndex || this.busy) {
       return;
     }
 
@@ -59,6 +67,10 @@ export default class DesignWizardControls extends Component {
 
   @action
   back() {
+    if (this.busy) {
+      return;
+    }
+
     this.designWizard.setStepIndex(
       Math.max(this.designWizard.stepIndex - 1, 0)
     );
@@ -66,6 +78,10 @@ export default class DesignWizardControls extends Component {
 
   @action
   async next() {
+    if (this.busy) {
+      return;
+    }
+
     if (await this.designWizard.saveProgress()) {
       this.designWizard.setStepIndex(
         Math.min(this.designWizard.stepIndex + 1, STEPS.length - 1)
@@ -114,6 +130,21 @@ export default class DesignWizardControls extends Component {
   }
 
   @action
+  toggleWelcomeBanner() {
+    this.designWizard.selectWelcomeBanner(!this.designWizard.welcomeBanner);
+  }
+
+  @action
+  selectWelcomeBannerLocation(location) {
+    this.designWizard.selectWelcomeBannerLocation(location);
+  }
+
+  @action
+  selectSearchExperience(experience) {
+    this.designWizard.selectSearchExperience(experience);
+  }
+
+  @action
   save() {
     this.designWizard.save();
   }
@@ -136,6 +167,7 @@ export default class DesignWizardControls extends Component {
               @themes={{this.designWizard.data.themes}}
               @currentTheme={{this.designWizard.data.current_theme}}
               @selectedThemeId={{this.designWizard.themeId}}
+              @applying={{this.busy}}
               @onSelect={{this.selectTheme}}
             />
           </Section>
@@ -172,6 +204,22 @@ export default class DesignWizardControls extends Component {
               @onSelectCategoryPageStyle={{this.selectCategoryPageStyle}}
             />
           </Section>
+
+          <Section @title={{i18n "design_wizard.sections.welcome_banner"}}>
+            <WelcomeBannerSection
+              @enabled={{this.designWizard.welcomeBanner}}
+              @location={{this.designWizard.welcomeBannerLocation}}
+              @onToggle={{this.toggleWelcomeBanner}}
+              @onSelectLocation={{this.selectWelcomeBannerLocation}}
+            />
+          </Section>
+
+          <Section @title={{i18n "design_wizard.sections.search"}}>
+            <SearchSection
+              @searchExperience={{this.designWizard.searchExperience}}
+              @onSelect={{this.selectSearchExperience}}
+            />
+          </Section>
         {{/if}}
       </div>
 
@@ -184,6 +232,7 @@ export default class DesignWizardControls extends Component {
                 {{if (eq step this.currentStep) '--active'}}"
               aria-label={{this.goToStepLabel index}}
               aria-current={{if (eq step this.currentStep) "true"}}
+              disabled={{this.busy}}
               {{on "click" (fn this.goToStep index)}}
             ></button>
           {{/each}}
@@ -191,7 +240,7 @@ export default class DesignWizardControls extends Component {
         <DButton
           @action={{this.back}}
           @label="design_wizard.back"
-          @disabled={{this.isFirstStep}}
+          @disabled={{if this.busy true this.isFirstStep}}
           class="btn-flat design-wizard__back"
         />
         {{#if this.isLastStep}}
@@ -199,6 +248,7 @@ export default class DesignWizardControls extends Component {
             @action={{this.save}}
             @label="design_wizard.save"
             @isLoading={{this.designWizard.saving}}
+            @disabled={{this.busy}}
             class="btn-primary design-wizard__save"
           />
         {{else}}
@@ -206,7 +256,7 @@ export default class DesignWizardControls extends Component {
             @action={{this.next}}
             @label="design_wizard.next"
             @isLoading={{this.designWizard.saving}}
-            @disabled={{this.needsThemeChoice}}
+            @disabled={{if this.busy true this.needsThemeChoice}}
             class="btn-primary design-wizard__next"
           />
         {{/if}}

@@ -20,7 +20,15 @@ const DEFAULT_REMINDER = {
 const EARLY_ACCESS_MINUTES = 30;
 const GRACE_PERIOD_MINUTES = 10;
 
-export function isPastEventTimeframe(endsAt) {
+export function isPastEventTimeframe(allDay, startsAt, endsAt) {
+  if (allDay) {
+    if (!startsAt && !endsAt) {
+      return false;
+    }
+
+    return moment().isAfter(moment(endsAt || startsAt).endOf("day"));
+  }
+
   if (!endsAt) {
     return false;
   }
@@ -211,7 +219,7 @@ export default class DiscoursePostEventEvent {
   }
 
   get pastEventTimeframe() {
-    return isPastEventTimeframe(this.endsAt);
+    return isPastEventTimeframe(this.allDay, this.startsAt, this.endsAt);
   }
 
   updateFromEvent(event) {

@@ -641,29 +641,31 @@ export default class CreateInviteWithRoles extends Component {
 
                 <conditional.Contents as |Content|>
                   <Content @name="link">
-                    <form.Field
-                      @name="domain"
-                      @type="input"
-                      @title={{i18n
-                        "user.invited.invite_roles.restrict_domain"
-                      }}
-                      @description={{i18n
-                        "user.invited.invite_roles.restrict_domain_help"
-                      }}
-                      @validate={{if
-                        (eq this.delivery "link")
-                        this.validateDomain
-                      }}
-                      @format="full"
-                      as |field|
-                    >
-                      <field.Control
-                        autofocus="autofocus"
-                        placeholder={{i18n
-                          "user.invited.invite_roles.domain_placeholder"
+                    {{#if this.showAdvanced}}
+                      <form.Field
+                        @name="domain"
+                        @type="input"
+                        @title={{i18n
+                          "user.invited.invite_roles.restrict_domain"
                         }}
-                      />
-                    </form.Field>
+                        @description={{i18n
+                          "user.invited.invite_roles.restrict_domain_help"
+                        }}
+                        @validate={{if
+                          (eq this.delivery "link")
+                          this.validateDomain
+                        }}
+                        @format="full"
+                        as |field|
+                      >
+                        <field.Control
+                          autofocus="autofocus"
+                          placeholder={{i18n
+                            "user.invited.invite_roles.domain_placeholder"
+                          }}
+                        />
+                      </form.Field>
+                    {{/if}}
                   </Content>
 
                   <Content @name="email">
@@ -767,29 +769,31 @@ export default class CreateInviteWithRoles extends Component {
 
                 <conditional.Contents as |Content|>
                   <Content @name="link">
-                    <form.Field
-                      @name="domain"
-                      @type="input"
-                      @title={{i18n
-                        "user.invited.invite_roles.restrict_domain"
-                      }}
-                      @description={{i18n
-                        "user.invited.invite_roles.restrict_domain_help"
-                      }}
-                      @validate={{if
-                        (eq this.delivery "link")
-                        this.validateDomain
-                      }}
-                      @format="full"
-                      as |field|
-                    >
-                      <field.Control
-                        autofocus="autofocus"
-                        placeholder={{i18n
-                          "user.invited.invite_roles.domain_placeholder"
+                    {{#if this.showAdvanced}}
+                      <form.Field
+                        @name="domain"
+                        @type="input"
+                        @title={{i18n
+                          "user.invited.invite_roles.restrict_domain"
                         }}
-                      />
-                    </form.Field>
+                        @description={{i18n
+                          "user.invited.invite_roles.restrict_domain_help"
+                        }}
+                        @validate={{if
+                          (eq this.delivery "link")
+                          this.validateDomain
+                        }}
+                        @format="full"
+                        as |field|
+                      >
+                        <field.Control
+                          autofocus="autofocus"
+                          placeholder={{i18n
+                            "user.invited.invite_roles.domain_placeholder"
+                          }}
+                        />
+                      </form.Field>
+                    {{/if}}
                   </Content>
 
                   <Content @name="email">

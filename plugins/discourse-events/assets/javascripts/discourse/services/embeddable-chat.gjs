@@ -97,7 +97,10 @@ export default class EmbeddableChat extends Service {
       (post) => post.post_number === 1
     )?.event;
 
-    return !!event?.is_zoom_livestream && !isPastEventTimeframe(event.ends_at);
+    return (
+      !!event?.is_zoom_livestream &&
+      !isPastEventTimeframe(event.all_day, event.starts_at, event.ends_at)
+    );
   }
 
   get topicController() {

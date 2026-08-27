@@ -27,7 +27,7 @@ class AiAgent < ActiveRecord::Base
   validates :description, presence: true, length: { maximum: 2000 }
   validates :system_prompt, presence: true, length: { maximum: 10_000_000 }
   validate :system_agent_unchangeable, on: :update, if: :system
-  validate :chat_preconditions
+  validate :forced_default_llm_preconditions
   validate :well_formated_examples
   validates :max_turn_tokens,
             numericality: {
@@ -60,6 +60,7 @@ class AiAgent < ActiveRecord::Base
   validate :subagent_ids_are_valid
   validate :subagents_can_not_use_spawn_agent
   validate :rag_document_sources_count_within_limit
+  validate :bot_user_supported, if: :user_id_changed?
 
   has_many :rag_document_fragments, dependent: :destroy, as: :target
   has_many :rag_document_sources, dependent: :destroy, as: :target
@@ -418,27 +419,25 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
-  FIRST_AGENT_USER_ID = -1200
+  def self.detach_user!(user_id)
+    return if where(user_id: user_id).update_all(user_id: nil) == 0
+
+    agent_cache.flush!
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+  end
+
+  def supports_bot_user?
+    return true if !system
+
+    !!DiscourseAi::Agents::Agent.system_agents_by_id[id]&.supports_bot_user?
+  end
+
+  def can_have_bot_user?
+    user.present? || supports_bot_user?
+  end
 
   def create_user!
     raise "User already exists" if user_id && User.exists?(user_id)
-
-    # find the first id smaller than FIRST_USER_ID that is not taken
-    id = nil
-
-    id = DB.query_single(<<~SQL, FIRST_AGENT_USER_ID, FIRST_AGENT_USER_ID - 200).first
-        WITH seq AS (
-          SELECT generate_series(?, ?, -1) AS id
-          )
-        SELECT seq.id FROM seq
-        LEFT JOIN users ON users.id = seq.id
-        WHERE users.id IS NULL
-        ORDER BY seq.id DESC
-      SQL
-
-    id = DB.query_single(<<~SQL).first if id.nil?
-        SELECT min(id) - 1 FROM users
-      SQL
 
     # note .invalid is a reserved TLD which will route nowhere
     user =
@@ -449,7 +448,7 @@ class AiAgent < ActiveRecord::Base
         active: true,
         approved: true,
         trust_level: TrustLevel[4],
-        id: id,
+        id: DiscourseAi::BotUser.next_id,
       )
     user.save!(validate: false)
 
@@ -571,12 +570,15 @@ class AiAgent < ActiveRecord::Base
     )
   end
 
-  def chat_preconditions
-    if (
-         allow_chat_channel_mentions || allow_chat_direct_messages || allow_topic_mentions ||
-           force_default_llm
-       ) && !default_llm_id
-      errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.default_llm_required"))
+  def bot_user_supported
+    return if user_id.blank? || supports_bot_user?
+
+    errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.bot_user_unsupported"))
+  end
+
+  def forced_default_llm_preconditions
+    if force_default_llm && default_llm_id.blank?
+      errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.forced_default_llm_required"))
     end
   end
 

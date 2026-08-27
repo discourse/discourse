@@ -4013,7 +4013,6 @@ ru:
           title: "Заменить теги"
       delete_topics:
         name: "Удалить"
-        description: "Удалить выбранные темы безвозвратно. Это действие необратимо."
       update_category:
         name: "Обновить категорию"
         description: "Переместить все выбранные темы в следующую категорию:"
@@ -6697,23 +6696,18 @@ ru:
         title: "Что нового?"
         check_for_updates: "Проверить обновления"
       site_traffic_explorer:
-        pageviews: "Просмотры"
+        metric_information: "Информация о %{metric}"
+        remove_filter_value: "Убрать %{value}"
+        clear_all: "Сбросить все"
+        apply: "Применить"
         view_more: "Показать больше"
         cards:
           pages: "страниц"
           visitors: "Посетители"
-        columns:
-          countries: "Страна"
-          top_urls: "URL-адрес"
-          browsers: "Браузер"
-          ip_addresses: "IP-адрес"
         filters:
           country: "Страна"
           browser: "Браузер"
           ip: "IP-адрес"
-        metrics:
-          pageviews:
-            label: "Просмотры"
         series:
           anonymous_human: "Анонимные просмотры"
       dashboard:

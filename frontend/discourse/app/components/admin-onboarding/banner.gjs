@@ -41,6 +41,11 @@ const STEPS = [
     }
 
     @action
+    prefetch() {
+      this.designWizard.prefetch();
+    }
+
+    @action
     performAction() {
       this.designWizard.start({ onComplete: this.#onComplete });
     }
