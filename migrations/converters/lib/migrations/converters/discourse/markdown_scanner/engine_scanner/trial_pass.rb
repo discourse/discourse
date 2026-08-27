@@ -8,11 +8,12 @@ module Migrations
           # The escalation for a body count certification refused: prove each
           # candidate occurrence individually by substitution. One occurrence's
           # bytes are replaced with an inert marker word and the body is
-          # re-parsed; if exactly one instance of that construct disappears
-          # from the parse — and nothing appears that isn't the marker's own
-          # doing — the occurrence provably was that construct, at that
-          # position. The proof is a token-multiset delta, so it needs no line
-          # maps: bodies count certification cannot even index (CR line
+          # re-parsed; if only instances of that construct disappear from the
+          # parse — normally exactly one, several for a reference definition
+          # that serves several links — and nothing appears that isn't the
+          # marker's own doing, the occurrence provably was that construct, at
+          # that position. The proof is a token-multiset delta, so it needs no
+          # line maps: bodies count certification cannot even index (CR line
           # endings) or cannot trust literally (entity spellings) are just as
           # eligible.
           #
@@ -55,6 +56,7 @@ module Migrations
               @trials = 0
               @started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
               @limit_hit = nil
+              @unplaced_cause = nil
               build_line_index
             end
 
@@ -63,12 +65,23 @@ module Migrations
               expected = tracked_expected(base)
               marker = build_marker
 
+              url_values = expected.count { |entry| entry[:kind] == :url }
+              if url_values > MAX_URL_VALUES
+                # Locating occurrences costs one body scan per URL value; see
+                # `EngineScanner::MAX_URL_VALUES`.
+                return Result.new(output: @input, cause: :url_volume)
+              end
+
               spans = {}
               proven = 0
               expected.each do |entry|
                 candidates_for(entry).each do |candidate|
-                  next unless prove(base, candidate, marker) == :proven
-                  proven += 1 if place(candidate, spans)
+                  outcome, covered = prove(base, candidate, marker)
+                  next unless outcome == :proven
+                  # A reference definition's destination serves every link
+                  # that uses its label, so one proven occurrence can cover
+                  # several tokens.
+                  proven += covered if place(candidate, spans)
                 end
               end
               unproven_quotes = prove_quotes(base, marker, spans)
@@ -79,7 +92,7 @@ module Migrations
 
               Result.new(
                 output: ordered.empty? ? @input : splice(ordered),
-                cause: unproven > 0 ? (@limit_hit || @cause) : nil,
+                cause: unproven > 0 ? (@limit_hit || @unplaced_cause || @cause) : nil,
               )
             end
 
@@ -151,28 +164,34 @@ module Migrations
               end
             end
 
-            # The delta rule: replacing the occurrence must remove exactly one
-            # instance of the target construct and may only add constructs the
-            # marker itself spells (a link whose destination became the marker
-            # word). Anything else — a block appearing or vanishing, a
+            # The delta rule: replacing the occurrence must remove only
+            # instances of the target construct and may only add constructs
+            # the marker itself spells (a link whose destination became the
+            # marker word). Anything else — a block appearing or vanishing, a
             # previously suppressed construct surfacing, the code-span count
-            # moving — fails the proof.
+            # moving — fails the proof. Normally exactly one instance must
+            # disappear. A URL occurrence on a reference-definition line may
+            # remove several: one definition serves every `[text][label]`
+            # link that uses its label, and replacing the one destination
+            # rewrites them all.
             #
-            # The outcome distinguishes why: `:not_construct` (the delta was
-            # empty — the occurrence provably is not a live construct here, so
-            # skipping it is exact, not a failure), `:mismatch` (the delta was
-            # wrong in some other way), and `:limit`/`:budget` when no trial
-            # ran at all. The distinction is what lets a caller count real
-            # unproven constructs without counting shielded look-alikes.
+            # Returns `[outcome, covered]`; `covered` is how many of the
+            # target's tokens the proven occurrence accounts for. The outcome
+            # distinguishes why a trial did not prove: `:not_construct` (the
+            # delta was empty — the occurrence is not a live construct here,
+            # so skipping it is exact, not a failure), `:mismatch` (the delta
+            # was wrong in some other way), and `:limit`/`:budget` when no
+            # trial ran at all. The distinction is what lets a caller count
+            # real unproven constructs without counting shielded look-alikes.
             def prove(base, candidate, marker)
               elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started_at
               if elapsed > @seconds_budget
                 @limit_hit = :trial_budget
-                return :budget
+                return :budget, 0
               end
               if (@trials += 1) > MAX_TRIALS
                 @limit_hit ||= :trial_limit
-                return :limit
+                return :limit, 0
               end
 
               occurrence = candidate.occurrence
@@ -183,13 +202,25 @@ module Migrations
 
               removed = diff(base, trial)
               added = diff(trial, base)
-              return :not_construct if removed.empty? && added.empty?
-              return :mismatch if removed != { candidate.key => 1 }
+              return :not_construct, 0 if removed.empty? && added.empty?
+              return :mismatch, 0 if removed.keys != [candidate.key]
+
+              covered = removed[candidate.key]
+              if covered != 1
+                unless candidate.kind == :url && definition_occurrence?(candidate)
+                  return :mismatch, 0
+                end
+              end
 
               added.each_key do |key|
-                return :mismatch unless key.is_a?(Array) && key[1].to_s.include?(marker)
+                return :mismatch, 0 unless key.is_a?(Array) && key[1].to_s.include?(marker)
               end
-              :proven
+              [:proven, covered]
+            end
+
+            def definition_occurrence?(candidate)
+              occurrence = candidate.occurrence
+              definition_offsets(candidate.text).include?([occurrence.offset, occurrence.length])
             end
 
             def diff(left, right)
@@ -211,8 +242,17 @@ module Migrations
               # Position proven but nothing can take the construct whole (an
               # escaped-bracket label, a form beyond the pattern caps): it
               # stays verbatim AND unproven — a stale reference the caller
-              # must hear about, not a silent success.
-              return false if match.nil?
+              # must hear about, not a silent success. The recorded cause
+              # says which class it was.
+              if match.nil?
+                @unplaced_cause ||=
+                  if candidate.kind == :url
+                    @scanner.unplaced_url_cause(candidate.key[1])
+                  else
+                    :unanchored
+                  end
+                return false
+              end
 
               spans[[match.start_pos, match.end_pos]] ||= match
               true
@@ -250,7 +290,7 @@ module Migrations
                       ),
                   )
 
-                outcome = prove(base, candidate, marker)
+                outcome, = prove(base, candidate, marker)
                 if outcome == :proven
                   spans[[match.start_pos, match.end_pos]] ||= match
                 elsif outcome != :not_construct

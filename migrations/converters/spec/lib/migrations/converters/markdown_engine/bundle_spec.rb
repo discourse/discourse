@@ -60,6 +60,12 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
       File.write(cache_files.first, "{\"entries\": [[\"x\",")
       rebuilt = described_class.load_or_build(cache_dir: dir)
       expect(rebuilt.entries.size).to eq(bundle.entries.size)
+
+      # Valid JSON with the wrong shape is a miss too; trusting it would
+      # raise a NoMethodError later, in the context.
+      File.write(cache_files.first, "{\"entries\": \"corrupt\"}")
+      reshaped = described_class.load_or_build(cache_dir: dir)
+      expect(reshaped.entries.size).to eq(bundle.entries.size)
     end
   end
 

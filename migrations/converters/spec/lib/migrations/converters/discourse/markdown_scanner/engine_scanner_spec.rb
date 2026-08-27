@@ -273,6 +273,58 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(refusals).to be_empty
     end
 
+    it "rewrites one reference definition that several links share" do
+      # Two link tokens, one raw destination: replacing the definition
+      # rewrites both links, so one row is enough.
+      raw =
+        "see [profile][prefs] and [settings][prefs] `x`\n\n" \
+          "[prefs]: https://forum.example.com/t/slug/5\n"
+      output = extract(raw)
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first).to include(url: "https://forum.example.com/t/slug/5", target_id: 5)
+      expect(output).to include("[prefs]: #{buffer.links.first[:placeholder]}")
+      expect(refusals).to be_empty
+    end
+
+    it "rewrites several distinct shared definitions in one body" do
+      raw =
+        "see [a][1], [b][1], [c][2] and [d][2] `x`\n\n" \
+          "[1]: https://forum.example.com/t/slug/5\n[2]: https://forum.example.com/t/slug/7\n"
+      output = extract(raw)
+
+      expect(buffer.links.map { |row| row[:target_id] }).to contain_exactly(5, 7)
+      buffer.links.each { |row| expect(output).to include(row[:placeholder]) }
+      expect(refusals).to be_empty
+    end
+
+    it "rewrites a shared definition but not a copy of its URL inside code" do
+      # The code-span copy makes the raw count two against two link tokens —
+      # a bare count equality would attribute the code span to the
+      # definition's reuse. The definition rule refuses that, and the trials
+      # prove the definition (both tokens vanish) and skip the code copy
+      # (nothing changes).
+      raw =
+        "see [a][1] and [b][1] and `https://forum.example.com/t/slug/5`\n\n" \
+          "[1]: https://forum.example.com/t/slug/5\n"
+      output = extract(raw)
+
+      expect(buffer.links.size).to eq(1)
+      expect(output).to include("`https://forum.example.com/t/slug/5`")
+      expect(output).to include("[1]: #{buffer.links.first[:placeholder]}")
+      expect(refusals).to be_empty
+    end
+
+    it "refuses a body with more distinct tracked URLs than the value cap" do
+      count = Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::MAX_URL_VALUES + 1
+      raw = (1..count).map { |i| "https://forum.example.com/t/s/#{i}" }.join(" ")
+      output = extract(raw)
+
+      expect(output).to eq(raw)
+      expect(buffer.links).to be_empty
+      expect(refusals).to eq(%i[url_volume])
+    end
+
     it "reports quote headers beyond the trial budget instead of calling them handled" do
       # CR endings force every quote onto the trial path; two more quotes
       # than MAX_TRIALS leaves two headers stale, which must show up on the
@@ -470,7 +522,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         anything,
         anything,
         anything,
-        seconds_budget: 60.0,
+        seconds_budget: engine_scanner::SLOW_TIMEOUT_MS / 1000.0,
       )
     end
   end

@@ -226,9 +226,12 @@ module Migrations
           # certification and trial passes search openers with exactly this
           # shape. The `upload://` scheme is not case-insensitive, because
           # core's upload rewriting is case-sensitive there and an `UPLOAD://`
-          # link carries nothing an importer could resolve.
+          # link carries nothing an importer could resolve. Full upload URLs
+          # go through the detector's own check, so an unrelated `/uploads/`
+          # path (WordPress and friends) makes no candidate.
           def unconditional_candidate?(raw)
-            raw.match?(/\[quote=/i) || raw.include?("upload://") || raw.include?("uploads/") ||
+            raw.match?(/\[quote=/i) || raw.include?("upload://") ||
+              Detectors::UploadUrl.candidate?(raw) ||
               @unconditional_patterns.any? { |pattern| raw.match?(pattern) }
           end
 

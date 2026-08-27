@@ -141,19 +141,35 @@ module Migrations
             entries = build_entries(root)
             FileUtils.mkdir_p(File.dirname(cache_file))
             temp_file = "#{cache_file}.#{Process.pid}.tmp"
-            File.write(temp_file, JSON.generate({ "entries" => entries }))
-            File.rename(temp_file, cache_file)
+            begin
+              File.write(temp_file, JSON.generate({ "entries" => entries }))
+              File.rename(temp_file, cache_file)
+            ensure
+              # A failed write or rename must not leave the temporary file
+              # behind.
+              File.delete(temp_file) if File.exist?(temp_file)
+            end
           end
           # rubocop:enable Discourse/NoChdir
         end
 
-        # A missing file and a truncated/corrupt one (a writer killed before
-        # the atomic-rename discipline existed, a partial copy) are both just
-        # cache misses.
+        # A missing file, a truncated/corrupt one (a writer killed before the
+        # atomic-rename discipline existed, a partial copy) and valid JSON
+        # with the wrong shape are all just cache misses. Without the shape
+        # check, `{"entries":"corrupt"}` would reach the context and raise a
+        # NoMethodError there instead of rebuilding.
         def self.read_cache(cache_file)
-          JSON.parse(File.read(cache_file))["entries"]
+          entries = JSON.parse(File.read(cache_file))["entries"]
+          return nil unless entries.is_a?(Array)
+          return nil unless entries.all? { |entry| entry_pair?(entry) }
+
+          entries
         rescue Errno::ENOENT, JSON::ParserError
           nil
+        end
+
+        def self.entry_pair?(entry)
+          entry.is_a?(Array) && entry.size == 2 && entry.all?(String)
         end
 
         def self.build_in_subprocess(root, cache_file)
@@ -298,6 +314,7 @@ module Migrations
                              :core_bundle_mirror,
                              :build_entries,
                              :transpiled_entry,
+                             :entry_pair?,
                              :cleanup_stale_caches,
                              :read_cache,
                              :build_in_subprocess,

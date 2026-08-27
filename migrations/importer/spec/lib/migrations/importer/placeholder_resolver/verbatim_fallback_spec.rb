@@ -189,6 +189,46 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved).to eq("[See](https://dest.example.com/t/12)")
     end
 
+    it "rebuilds canonically on a hit when the recorded span holds other bytes" do
+      token =
+        create_embed(
+          :link,
+          original_markdown: %{[See](https://old.example.com/t/x/300 "why this matters")},
+          url: "https://old.example.com/t/x/300",
+          # In bounds, but pointing at the label instead of the destination. A
+          # splice there would write the new URL into the author's prose.
+          url_offset: 1,
+          text: "See",
+          target_type: link_target::TOPIC,
+          target_id: 300,
+        )
+
+      resolved = resolve(token.to_s, maps: FakePlaceholderMaps.new(topic_id: { 300 => 12 }))
+
+      expect(resolved).to eq("[See](https://dest.example.com/t/12)")
+    end
+
+    it "splices only the destination when the label span holds other bytes" do
+      url = "https://old.example.com/t/x/300"
+      token =
+        create_embed(
+          :link,
+          original_markdown: "[docs](#{url})",
+          url:,
+          url_offset: "[docs](".bytesize,
+          # In bounds, wrong position: the label span is dropped, the
+          # destination span still applies.
+          label_url_offset: 1,
+          text: "docs",
+          target_type: link_target::TOPIC,
+          target_id: 300,
+        )
+
+      resolved = resolve(token.to_s, maps: FakePlaceholderMaps.new(topic_id: { 300 => 12 }))
+
+      expect(resolved).to eq("[docs](https://dest.example.com/t/12)")
+    end
+
     it "restores an external link byte-exact" do
       original = %{[docs](https://elsewhere.example.org/page "docs")}
       token =

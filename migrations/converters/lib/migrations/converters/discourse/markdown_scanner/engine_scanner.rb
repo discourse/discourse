@@ -49,10 +49,21 @@ module Migrations
             end
 
           # A conversion runs once, so a body whose parse outruns the fast
-          # ceiling deserves a patient second attempt before its references are
-          # left stale: one retry under this ceiling, then `:engine_error`. The
-          # fast ceiling still protects throughput for everything else.
-          SLOW_TIMEOUT_MS = 60_000
+          # ceiling gets one retry under this ceiling before `:engine_error`.
+          # The fast ceiling still protects throughput for everything else.
+          # Core's own PrettyText context allows 25 seconds for a full cook;
+          # 30 seconds for a parse is far above any observed legitimate body
+          # (slowest measured: 435 ms), and a corpus run at a 60-second
+          # ceiling recovered zero additional bodies.
+          SLOW_TIMEOUT_MS = 30_000
+
+          # The most distinct tracked URL values one body may carry. Locating
+          # URL occurrences scans per value, so a generated body with thousands
+          # of distinct links costs value-count times body-size work in Ruby,
+          # outside any V8 timeout. Past this count the body refuses with
+          # `:url_volume` instead. Real posts stay far below it; a link index
+          # this large is generated content.
+          MAX_URL_VALUES = 256
 
           # One engine parse per body keeps the extraction flow simple. The
           # engine call amortizes ~30% better when several posts share one V8
@@ -175,6 +186,9 @@ module Migrations
             unless input.include?("\r")
               result = Pass.new(self, input, data).result
               return result unless result.refused?
+              # Trials would pay the same per-value location cost the cap
+              # exists to avoid, so an over-the-cap body refuses directly.
+              return result if result.cause == :url_volume
               cause = result.cause
             end
 
@@ -233,16 +247,18 @@ module Migrations
           end
 
           # A link/image value the migration remaps: an `upload://` short URL,
-          # a full upload URL, an absolute URL on one of the source's own
-          # hosts (inside that host's configured path prefix), or a
-          # site-relative path inside the base prefix that parses as a route.
-          # External links are not constructs — they can never refuse a body.
-          # The host/port/prefix reading is {UrlOrigin}, the same one the
-          # detector grammar applies, so this filter and the anchoring
-          # detectors cannot disagree about what is internal.
+          # a full URL with a supported upload shape (the detector's own
+          # check, so an unrelated `/uploads/` path is not tracked), an
+          # absolute URL on one of the source's own hosts (inside that host's
+          # configured path prefix), or a site-relative path inside the base
+          # prefix that parses as a route. External links are not constructs —
+          # they can never refuse a body. The host/port/prefix reading is
+          # {UrlOrigin}, the same one the detector grammar applies, so this
+          # filter and the anchoring detectors cannot disagree about what is
+          # internal.
           def url_tracked?(value)
             return true if value.start_with?("upload://")
-            return true if value.include?("/uploads/") || value.include?("/secure-uploads/")
+            return true if Detectors::UploadUrl.tracked_value?(value)
 
             host, rest = UrlOrigin.split(value)
             return false if rest.nil?
@@ -262,6 +278,30 @@ module Migrations
             return false if path.nil?
 
             Detectors::InternalLink::RouteParser.parse(path) ? true : false
+          end
+
+          # The refusal cause for a tracked URL no grammar could place. A path
+          # that steps into a coordinate route family but parses no route
+          # (`/t//209`, `/u/bob!!!`) is a known class: the source data holds a
+          # broken link, and rewriting only its origin would carry the stale
+          # coordinates onto the new host. Everything else is `:unanchored` —
+          # the engine proved a tracked occurrence and the detector grammar
+          # has a real gap.
+          def unplaced_url_cause(value)
+            host, rest = UrlOrigin.split(value)
+            path =
+              if host
+                @hosts.key?(host) ? UrlOrigin.path_within_prefix(rest, @hosts[host]) : nil
+              elsif rest&.start_with?("/")
+                UrlOrigin.path_within_prefix(rest, @base_prefix)
+              end
+
+            parser = Detectors::InternalLink::RouteParser
+            if path && parser.coordinate_shaped?(path) && parser.parse(path).nil?
+              :invalid_internal_route
+            else
+              :unanchored
+            end
           end
 
           # A whole-construct reference for a proven URL occurrence that is its
@@ -366,6 +406,9 @@ module Migrations
                 regions_with_constructs << range if had
               end
 
+              url_values = @expected.count { |(kind, _), _| kind == :url }
+              return :url_volume if url_values > MAX_URL_VALUES
+
               # Entities decode before the engine's text rules run, so inside a
               # construct-bearing region a token value may not exist as literal
               # raw bytes — counting cannot see through that.
@@ -385,6 +428,16 @@ module Migrations
             # code fence elsewhere stays put); a globally certified value
             # replaces every occurrence, at the price of the entity
             # precondition widening to the whole body.
+            #
+            # A value with a reference-definition line takes its own rule
+            # instead of the global count: one definition can serve several
+            # `[text][label]` links, so the engine's token count may be larger
+            # than the raw occurrence count. When every raw occurrence lies on
+            # a definition line, replacing them rewrites all those links, and
+            # certification accepts that. When occurrences sit elsewhere too, a
+            # bare count equality could attribute a copy inside code to a
+            # definition's reuse — so the value refuses and the trial pass
+            # proves each occurrence on its own.
             def certify_all
               whole = 0...@input.bytesize
               @certified = {}
@@ -399,19 +452,32 @@ module Migrations
 
                 return :entity if entity_offsets.any?
 
-                global = certify_in(kind, value, whole, entry[:total])
-                if global
-                  @certified[[kind, value]] = global
-                elsif kind == :url && reference_definition?(value)
-                  # Real, but the destination lives on a definition line whose
-                  # syntax no detector rewrites — refuse rather than guess.
-                  return :reference_definition
-                else
-                  return :count_mismatch
+                if kind == :url && definition_offsets(value).any?
+                  definitions = definition_only_spans(value, entry[:total])
+                  return :reference_definition if definitions.nil?
+
+                  @certified[[kind, value]] = definitions
+                  next
                 end
+
+                global = certify_in(kind, value, whole, entry[:total])
+                return :count_mismatch if global.nil?
+
+                @certified[[kind, value]] = global
               end
 
               nil
+            end
+
+            # Every whole-body occurrence of the value, when each one lies on
+            # a reference-definition line and the engine saw at least as many
+            # tokens — nil otherwise.
+            def definition_only_spans(value, expected)
+              spans, overlapping = url_spans(value, 0...@input.bytesize)
+              return nil if overlapping || spans.empty? || expected < spans.size
+
+              definitions = definition_offsets(value)
+              spans if spans.all? { |span| definitions.include?([span.offset, span.length]) }
             end
 
             # Every region certified, concatenated — nil when any region's
@@ -440,12 +506,6 @@ module Migrations
               spans if spans.size == expected
             end
 
-            def reference_definition?(value)
-              url_readings(value).any? do |reading|
-                @input.match?(/^ {0,3}\[[^\]\n]*\]:[^\S\n]*<?#{Regexp.escape(reading)}>?(?:\s|\z)/)
-              end
-            end
-
             # Turns certified URL occurrences into whole-construct detector
             # matches. A destination inside `[text](…)` must be replaced
             # together with its syntax; the detectors match from the `[`/`!`
@@ -462,7 +522,7 @@ module Migrations
 
                 occurrences.each do |occurrence|
                   match = anchor_match(occurrence) || bare_value_match(value, occurrence)
-                  return :unanchored if match.nil?
+                  return @scanner.unplaced_url_cause(value) if match.nil?
                   spans[[match.start_pos, match.end_pos]] ||= match
                 end
               end

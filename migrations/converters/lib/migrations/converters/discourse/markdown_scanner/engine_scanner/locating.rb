@@ -97,11 +97,11 @@ module Migrations
             # the code span — the union counts 2 against the engine's 1 and
             # refuses, so the trial pass can prove which span is live.
             #
-            # Memoized per (value, range): the search stays scoped to the
-            # region under certification — the adaptive property that keeps a
-            # many-values body from paying a whole-body walk per value — while
-            # a mapless block, the global fallback and the trial pass (which
-            # all ask for the same whole-body range) share one walk.
+            # Memoized per (value, range): a mapless block, the global
+            # fallback and the trial pass all ask for the same whole-body
+            # range and share one walk. The search itself is still one scan
+            # per value — `EngineScanner::MAX_URL_VALUES` bounds how many
+            # distinct URL values a body may bring here.
             #
             # @return [Array(Array<Occurrence>, Boolean)] the sorted spans and
             #   whether two distinct spans overlap — overlapping spellings
@@ -136,6 +136,28 @@ module Migrations
 
                 spans << Occurrence.new(offset: index, length:) if url_occurrence?(index, length)
                 pos = index + 1
+              end
+            end
+
+            # The `[offset, length]` pairs of every spelling of `value` that
+            # sits in destination position on a reference-definition line
+            # (`[label]: <url>`). Memoized per value; both passes ask for it —
+            # certification to accept a definition serving several links, a
+            # trial to accept the matching token delta.
+            def definition_offsets(value)
+              @definition_offsets ||= {}
+              @definition_offsets[value] ||= begin
+                offsets = Set.new
+                url_readings_for(value).each do |reading|
+                  pattern =
+                    /^ {0,3}\[[^\]\n]*\]:[^\S\n]*<?(?<dest>#{Regexp.escape(reading)})>?(?=\s|\z)/
+                  pos = 0
+                  while (match = pattern.match(@input, pos))
+                    offsets << [match.byteoffset(:dest).first, reading.bytesize]
+                    pos = match.end(0)
+                  end
+                end
+                offsets.freeze
               end
             end
 

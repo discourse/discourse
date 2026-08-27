@@ -66,6 +66,17 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
       expect(gate.classify("![p](upload://abc.png)")).to eq(:engine)
     end
 
+    it "treats supported full upload URLs as candidates, but not generic uploads paths" do
+      sha1 = "0123456789abcdef0123456789abcdef01234567"
+      expect(gate.classify("/uploads/default/original/2X/#{sha1}.png")).to eq(:engine)
+      expect(gate.classify("/uploads/short-url/aZ9.png")).to eq(:engine)
+      # A WordPress-style path has neither supported shape. Without the
+      # detector check, every such body would pay an engine parse.
+      expect(gate.classify("https://blog.example.net/wp-content/uploads/2009/12/a.jpg")).to eq(
+        :none,
+      )
+    end
+
     it "treats an internal route as a candidate" do
       expect(gate.classify("see /t/some-topic/123")).to eq(:engine)
     end

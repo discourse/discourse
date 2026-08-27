@@ -132,6 +132,7 @@ module Migrations
           @mention_classifier = mention_classifier
           @markdown_engine = markdown_engine
           @internal_link_hosts = internal_link_hosts
+          @internal_link_base_prefix = internal_link_base_prefix
           @on_engine_refusal = on_engine_refusal
           @on_slow_parse = on_slow_parse
           @engine_refusals = Hash.new(0)
@@ -174,8 +175,22 @@ module Migrations
 
         # Cause tallies (`cause => count`) for `:engine` bodies that kept at
         # least one unproven construct. Those constructs stayed verbatim, so
-        # their references are stale until someone resolves them — this tally
-        # is the conversion's must-resolve list.
+        # their references are stale until someone resolves them. The causes
+        # fall into four groups, and only the first should read as a problem
+        # with the extraction itself:
+        #
+        #   * unexpected failure — `:unanchored` (the engine proved a tracked
+        #     occurrence, but no detector grammar could place it),
+        #     `:engine_error`, `:overlap`, `:probe_desync`;
+        #   * known unsupported source content — `:invalid_internal_route` (a
+        #     coordinate-shaped path that parses no route, usually a link that
+        #     was already broken on the source), `:reference_definition`,
+        #     `:count_mismatch`, `:entity`, `:cr_line_endings` (genuinely
+        #     ambiguous spellings the passes refuse rather than guess);
+        #   * budget — `:trial_limit`, `:trial_budget`, `:url_volume`
+        #     (bounded work on pathological bodies);
+        #   * the rest of a partially extracted body (the proven constructs
+        #     were still replaced).
         attr_reader :engine_refusals
 
         # How many bodies parsed only on the slow retry. They extracted fine —
@@ -274,10 +289,16 @@ module Migrations
           when Markbridge::AST::Upload
             @embeds.upload(upload_id: node.sha1, original_markdown: source)
           when MarkdownScanner::UploadUrlReference
+            ownership = upload_ownership(node)
+            # A relative path outside the base prefix belongs to another
+            # application on the same server. There is no host to allowlist,
+            # so it is not recorded at all and the source text stays.
+            return nil if ownership == :sibling_path
+
             @embeds.upload(
               upload_id: node.sha1,
               original_markdown: source,
-              external_host: external_upload_host(node.host),
+              external_host: ownership,
             )
           when Markbridge::AST::Mention
             @embeds.mention(
@@ -321,12 +342,26 @@ module Migrations
         # points into its own topic. A `topic:` with no `post:` drops both coordinates,
         # because the importer can only resolve them as a pair. A quote with neither is
         # username-only.
-        # A full-URL upload on a host the conversion does not recognize as the
-        # source's own. The importer maps such a row's sha1 only against an
-        # explicit allowlist: a foreign basename that happens to collide with
-        # a source upload sha1 must not be rewritten to the imported file.
-        def external_upload_host(host)
-          host if host && !@internal_link_hosts.key?(host)
+        # Whether a full-URL upload is the source's own. Returns nil when it
+        # is; the host string when it is not (the importer maps such a row's
+        # sha1 only against an explicit allowlist — a foreign basename that
+        # collides with a source upload sha1 must not be rewritten to the
+        # imported file); `:sibling_path` for a relative URL outside the base
+        # prefix. The path prefix matters on a subdirectory install:
+        # `https://example.com/other/uploads/…` shares the forum's host but
+        # belongs to a different application, so its sha1 is not the source's.
+        def upload_ownership(node)
+          if node.host
+            return node.host unless @internal_link_hosts.key?(node.host)
+
+            prefix = @internal_link_hosts[node.host]
+            MarkdownScanner::UrlOrigin.path_within_prefix(node.rest, prefix).nil? ? node.host : nil
+          elsif MarkdownScanner::UrlOrigin.path_within_prefix(
+                node.rest,
+                @internal_link_base_prefix,
+              ).nil?
+            :sibling_path
+          end
         end
 
         def defer_quote(node, source)

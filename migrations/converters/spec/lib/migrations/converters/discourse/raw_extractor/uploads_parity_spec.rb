@@ -30,35 +30,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
   end
 
-  # The same representative set as the internal-link battery: ASCII punctuation
-  # plus letters, whitespace, and the Unicode characters that split core's linkify
-  # boundary from a plain "not a word character" one.
-  def boundary_chars
-    ascii_punctuation =
-      [0x21..0x2f, 0x3a..0x40, 0x5b..0x60, 0x7b..0x7e].flat_map(&:to_a)
-        .to_h { |cp| [format("U+%04X", cp), cp.chr(Encoding::UTF_8)] }
-
-    {
-      "letter a" => "a",
-      "digit 9" => "9",
-      "e-acute" => "é",
-      "han" => "漢",
-      "space" => " ",
-      "tab" => "\t",
-      "newline" => "\n",
-      "no-break space" => " ",
-      "ideographic space" => "　",
-      "em dash" => "—",
-      "low double quote" => "„",
-      "left guillemet" => "«",
-      "ellipsis" => "…",
-      "euro sign" => "€",
-      "superscript two" => "²",
-      "vulgar half" => "½",
-      "soft hyphen" => "­",
-    }.merge(ascii_punctuation)
-  end
-
   def detector_extracts?(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
@@ -75,19 +46,15 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     hrefs.any? { |href| href.start_with?(url) }
   end
 
-  def describe_char(char)
-    codepoints = char.each_codepoint.map { |cp| format("U+%04X", cp) }.join(" ")
-    "#{char.inspect} (#{codepoints})"
-  end
-
   def deviations_for(direction)
-    boundary_chars.filter_map do |label, char|
+    LinkifyBoundaryCorpus.chars.filter_map do |label, char|
       raw = direction == :before ? "a#{char}#{url} b" : "a #{url}#{char} b"
       extracted = detector_extracts?(raw)
       linkified = core_links?(raw)
       next if extracted == linkified
 
-      "#{direction} #{label} #{describe_char(char)}: detector=#{extracted} core=#{linkified}"
+      "#{direction} #{label} #{LinkifyBoundaryCorpus.describe(char)}: " \
+        "detector=#{extracted} core=#{linkified}"
     end
   end
 
@@ -107,5 +74,20 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   it "defers at the very start of the input, matching core" do
     raw = "#{url} b"
     expect(detector_extracts?(raw)).to eq(core_links?(raw))
+  end
+
+  # The converter decodes `/uploads/short-url/<token>` without core on the
+  # load path, so it carries its own base62 decoder. This pins it to core's;
+  # a drift here means short-URL rows stop matching their upload rows.
+  it "decodes short-URL tokens the way core does" do
+    tokens = %w[21 aZ9 Zm9vYmFy 2Yjf3WE4KOQ88YUb4fUMubKB9My zzzzzzzzzzzzzzzzzzzzzzzzzzz 0]
+    tokens.each do |token|
+      expect(
+        Migrations::Converters::Discourse::MarkdownScanner::Detectors::UploadUrl.sha1_from_short_token(
+          token,
+        ),
+      ).to eq(Upload.sha1_from_base62_encoded(token)),
+      "token #{token.inspect} decoded differently"
+    end
   end
 end

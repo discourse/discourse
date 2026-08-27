@@ -29,7 +29,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
         expect(extract(raw)).to eq(raw)
         expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(unanchored: 1)
+        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
       end
     end
 

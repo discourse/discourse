@@ -7,43 +7,59 @@ module Migrations
         module Detectors
           # Detects uploads referenced by a full URL instead of a short `upload://`
           # one — markdown images `![alt](url)`, markdown links `[text](url)` and
-          # bare whitespace-delimited URLs. The URL must carry an `/uploads/` or
-          # `/secure-uploads/` segment with an `original/` or `optimized/` path below
-          # it, and its basename must start with the upload's 40-hex sha1 (Discourse's
-          # filename convention; see core's `Upload` and `FileStore`). Both relative
-          # and absolute (http/https and protocol-relative) forms are recognized in
-          # image and link syntax. A bare URL follows the same rule as an internal
-          # link: an absolute bare URL is recognized in prose, a relative one only at
-          # a `](…)` link target — a relative path bare in prose stays plain text once
-          # cooked, so rewriting it would turn text into a link.
+          # bare whitespace-delimited URLs. Two URL shapes are supported, matching
+          # what core's file store writes (see core's `Upload` and `FileStore`):
           #
-          # Recognition is deliberately permissive and does no host allowlisting: a URL
-          # that looks like an upload but points at some other forum still resolves to
-          # nothing at import and comes back verbatim (see `UploadUrlReference`), so
-          # there's no risk in matching it here.
+          #   * a long URL: an `/uploads/` or `/secure-uploads/` segment with an
+          #     `original/` or `optimized/` path below it, and a basename that
+          #     starts with the upload's 40-hex sha1;
+          #   * a short-URL path: `/uploads/short-url/<token>[.ext]`, where the
+          #     token is the base62-encoded sha1 (core's `Upload#short_path`).
+          #     It is decoded here, so the row carries the same 40-hex sha1 as a
+          #     long URL and resolves the same way at import.
+          #
+          # Any other `/uploads/` path (a WordPress `wp-content/uploads/…` URL,
+          # some unrelated site's file) is not an upload reference: it matches
+          # neither shape and is left alone.
+          #
+          # Recognition does no host allowlisting: a URL that has a supported
+          # shape but points at some other site still resolves to nothing at
+          # import and comes back verbatim (see `UploadUrlReference`), so
+          # matching it is safe. Both relative and absolute (http/https and
+          # protocol-relative) forms are recognized in image and link syntax. A
+          # bare URL follows the same rule as an internal link: an absolute bare
+          # URL is recognized in prose, a relative one only at a `](…)` link
+          # target — a relative path bare in prose stays plain text once cooked,
+          # so rewriting it would turn text into a link.
           class UploadUrl < Base
             TRIGGERS = ["!", "[", "h", "H", "/"].freeze
 
-            # A full upload URL, from an optional scheme/host down to the sha1 at the
-            # start of the basename. `[^/#{Base::URL_TERMINATORS}]` is a path-segment
-            # character (a URL-body character minus the slash; see
-            # `Base::URL_TERMINATORS`). The trailing `\w` keeps a sentence's `.`/`,`
-            # after a bare URL out of the match. The scheme is case-insensitive
-            # because linkify-it reads it that way, so core links `HTTPS://…` too.
-            # Every repeated group is atomic with a lookahead deciding where it
+            # The sha1 is 160 bits; base62 needs at most 27 characters for that.
+            MAX_SHORT_TOKEN_LENGTH = 27
+
+            # The optional scheme/host and the path segments before the
+            # `/uploads/` segment. `[^/#{Base::URL_TERMINATORS}]` is a
+            # path-segment character (a URL-body character minus the slash; see
+            # `Base::URL_TERMINATORS`). The scheme is case-insensitive because
+            # linkify-it reads it that way, so core links `HTTPS://…` too.
+            # The repeated group is atomic with a lookahead deciding where it
             # stops, so a failing candidate is scanned once and never
-            # backtracked into — the lazy loops this replaces made a body full
-            # of malformed upload prefixes re-try every segment split,
-            # quadratically. The lookaheads keep the lazy semantics: the first
-            # `/uploads/`, the first `original|optimized/`, the first
-            # sha1-shaped basename win. The segment-count and length caps bound
-            # a single candidate; real upload paths use a handful of short
-            # segments, so the caps are far above anything the file store
-            # writes.
-            URL =
+            # backtracked into. The segment-count and length caps bound a
+            # single candidate.
+            ORIGIN_AND_PREFIX =
               %r{
                 (?<origin> (?i:https?:)? // [^/#{Base::URL_TERMINATORS}]{1,255} )?      # optional scheme + host
                 (?> (?: / (?! (?:secure-)?uploads/ ) [^/#{Base::URL_TERMINATORS}]{1,255} ){0,16} )
+              }x
+            private_constant :ORIGIN_AND_PREFIX
+
+            # The long shape, from `/uploads/` down to the sha1 at the start of
+            # the basename. The trailing `\w` keeps a sentence's `.`/`,` after a
+            # bare URL out of the match. The lookaheads keep lazy semantics
+            # without lazy quantifiers: the first `original|optimized/` and the
+            # first sha1-shaped basename win.
+            LONG_TAIL =
+              %r{
                 / (?:secure-)? uploads /
                 (?> (?: (?! (?:original|optimized)/ ) [^/#{Base::URL_TERMINATORS}]{1,255} / ){0,16} )
                 (?: original | optimized ) /
@@ -51,6 +67,17 @@ module Migrations
                 (?<sha1> \h{40} ) (?=[._])                                              # sha1, then the extension or `_WxH` suffix
                 [^#{Base::URL_TERMINATORS}]{0,255} \w
               }x
+            private_constant :LONG_TAIL
+
+            # The short-URL shape. The token is base62, the extension optional
+            # (core routes both spellings). `(?![\w/-])` stops the match when
+            # more path follows — core's short-URL route has exactly one
+            # segment after `short-url/`.
+            SHORT_TAIL =
+              %r{/uploads/short-url/(?<short_token>[0-9a-zA-Z]{1,#{MAX_SHORT_TOKEN_LENGTH}})(?:\.\w{1,15})?(?![\w/-])}x
+            private_constant :SHORT_TAIL
+
+            URL = /(?<upload_url>#{ORIGIN_AND_PREFIX}(?:#{LONG_TAIL}|#{SHORT_TAIL}))/
             private_constant :URL
 
             # `\G` anchors each match at `pos` so scanning stays linear. The alt
@@ -71,6 +98,46 @@ module Migrations
 
             BARE = /\G#{URL}/
             private_constant :BARE
+
+            # Mirrors core's `Base62::KEYS`. A drift spec decodes sample tokens
+            # through core's `Upload.sha1_from_base62_encoded` and compares.
+            BASE62_KEYS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            private_constant :BASE62_KEYS
+
+            # Whether `raw` can contain a supported upload URL at all. This is
+            # the cheap presence check for the {TierGate}: a body with only
+            # unrelated `/uploads/` paths (WordPress and friends) does not
+            # become a candidate.
+            def self.candidate?(raw)
+              return false unless raw.include?("uploads/")
+
+              raw.include?("short-url/") || raw.include?("original/") || raw.include?("optimized/")
+            end
+
+            # Whether an engine href/src value has a supported upload shape.
+            # The {EngineScanner} tracks upload values with this, so the filter
+            # and the grammar that later anchors the construct cannot disagree.
+            def self.tracked_value?(value)
+              return false unless value.include?("uploads/")
+
+              URL.match?(value)
+            end
+
+            # The 40-hex sha1 for a short-URL token, or nil when the token is
+            # not a valid base62 sha1. Mirrors core's
+            # `Upload.sha1_from_base62_encoded`.
+            def self.sha1_from_short_token(token)
+              value = 0
+              token.each_char do |char|
+                digit = BASE62_KEYS.index(char)
+                return nil if digit.nil?
+
+                value = value * 62 + digit
+              end
+
+              hex = value.to_s(16)
+              hex.length > 40 ? nil : hex.rjust(40, "0")
+            end
 
             def detect(input, pos, byte)
               case byte
@@ -113,12 +180,20 @@ module Migrations
             end
 
             def build_match(pos, match)
+              sha1 = match[:sha1] || self.class.sha1_from_short_token(match[:short_token])
+              return nil if sha1.nil?
+
               origin = match[:origin]
               host = origin && UrlOrigin.split(origin)&.first
+              url = match[:upload_url]
+              # The path part of the matched URL, for the ownership check
+              # against a configured path prefix (see `UploadUrlReference`).
+              rest = origin ? url.byteslice(origin.bytesize..) : url
+
               Match.new(
                 start_pos: pos,
                 end_pos: match.byteoffset(0).last,
-                node: UploadUrlReference.new(sha1: match[:sha1], host:),
+                node: UploadUrlReference.new(sha1:, host:, rest:),
               )
             end
 

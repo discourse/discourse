@@ -54,9 +54,11 @@ module Migrations
     #
     # ## Reporting
     #
-    # A missing lookup falls back to the source value. Uploads, polls and events
-    # have no source value to fall back to: when the map can't resolve one, the
-    # embed disappears. Each is sent to {#unresolved_embeds}.
+    # A missing lookup falls back to the source value. Polls and events have no
+    # source value to fall back to: when the map can't resolve one, the embed
+    # disappears. An upload keeps its verbatim source snippet (both `upload://`
+    # and full-URL forms record one), so a miss restores it unchanged. Each
+    # miss is sent to {#unresolved_embeds}.
     #
     # An internal link that can't be resolved does have a fallback (its source URL),
     # but it is still reported: a stale internal link points at the wrong record
@@ -67,9 +69,10 @@ module Migrations
     # the owner's markdown) and sent to {#orphan_placeholders}. The unresolved reporting
     # can't see this case, because there is no row behind it.
     class PlaceholderResolver
-      # An embed whose entity the maps couldn't resolve. Its token becomes an empty
-      # string, so this record is the only trace left. `owner_url` is the owning
-      # record's URL, or `nil` if it is not mapped.
+      # An embed whose entity the maps couldn't resolve. A poll's or event's
+      # token becomes an empty string, so this record is its only trace; an
+      # upload's token becomes the verbatim source snippet again. `owner_url`
+      # is the owning record's URL, or `nil` if it is not mapped.
       UnresolvedEmbed = Data.define(:kind, :entity_id, :owner_id, :owner_url)
 
       # A token with no linkage row. `kind` is parsed from the token, so a report can
@@ -109,7 +112,10 @@ module Migrations
       #   old CDN or S3 bucket the conversion vouches for. A full-URL upload
       #   row marked with any other `external_host` is restored verbatim: its
       #   40-hex basename colliding with a source upload sha1 must not rewrite
-      #   another site's file.
+      #   another site's file. Entries are `host` or `host:port`. A scheme
+      #   prefix and that scheme's own default port are removed, matching how
+      #   the extractor records hosts on the rows; a port with no scheme is
+      #   kept, because the row keeps a non-default port too.
       def initialize(
         intermediate_db,
         maps,
@@ -123,7 +129,8 @@ module Migrations
         @owner_type = owner_type
         @unresolved_embeds = unresolved_embeds
         @orphan_placeholders = orphan_placeholders
-        @external_upload_hosts = external_upload_hosts.map(&:downcase).to_set
+        @external_upload_hosts =
+          external_upload_hosts.map { |entry| normalize_allowlisted_host(entry) }.to_set
         @names = NameResolver.new(intermediate_db)
       end
 
@@ -490,10 +497,10 @@ module Migrations
           owner_url: owner_url_for(row[:owner_id]),
         )
 
-        # An upload referenced by a full URL carries the verbatim source snippet;
-        # put it back rather than dropping it, so a hotlink to another forum's upload
-        # (which maps to nothing here) survives. Polls, events and `upload://`
-        # uploads have no fallback and drop out.
+        # An upload row carries the verbatim source snippet (short `upload://`
+        # and full-URL forms alike); put it back rather than dropping it, so a
+        # hotlink to another forum's upload (which maps to nothing here)
+        # survives. Polls and events have no fallback and drop out.
         kind == :upload ? row[:original_markdown].to_s : ""
       end
 
@@ -507,6 +514,19 @@ module Migrations
         return nil if host && !@external_upload_hosts.include?(host)
 
         @maps.upload_markdown(row[:upload_id])
+      end
+
+      # Rows store hosts the way the extractor's origin reading writes them:
+      # lowercased, no scheme, a scheme's own default port removed. An
+      # operator entry like `https://cdn.example.net:443/` is reduced to the
+      # same form so it matches.
+      def normalize_allowlisted_host(entry)
+        host = entry.to_s.strip.downcase
+        scheme = host[%r{\A(https?)://}, 1]
+        host = host.sub(%r{\Ahttps?://}, "").sub(%r{/.*\z}m, "")
+        host = host.delete_suffix(":80") if scheme == "http"
+        host = host.delete_suffix(":443") if scheme == "https"
+        host
       end
 
       # Builds the opening `[quote="…"]` tag only; the quoted text and `[/quote]` are
@@ -606,21 +626,27 @@ module Migrations
 
       # The destination's recorded byte span(s) inside the verbatim snippet —
       # the span itself plus a self-link label's spelling when one was
-      # recorded — or nil when the row carries none or a span doesn't fit the
-      # snippet (defensive: a mismatched span must not splice mid-construct).
+      # recorded — or nil when the row carries none or a span is wrong. A
+      # span must fit the snippet AND the bytes there must equal the row's
+      # URL: an offset that is in bounds but points elsewhere would splice
+      # the destination into arbitrary syntax, so it falls back to the
+      # canonical rebuild instead.
       def destination_spans(row, original)
         offset = row[:url_offset]
         return nil if offset.nil? || row[:url].blank?
 
-        length = row[:url].bytesize
-        return nil if offset < 0 || offset + length > original.bytesize
+        url = row[:url]
+        length = url.bytesize
+        return nil unless span_holds_url?(original, offset, url)
 
         spans = [offset]
         label = row[:label_url_offset]
-        if label && label != offset && label >= 0 && label + length <= original.bytesize
-          spans << label
-        end
+        spans << label if label && label != offset && span_holds_url?(original, label, url)
         spans.sort.map { |span_offset| [span_offset, length] }
+      end
+
+      def span_holds_url?(original, offset, url)
+        !offset.nil? && offset >= 0 && original.byteslice(offset, url.bytesize) == url
       end
 
       def splice_url_spans(original, spans, url)

@@ -19,6 +19,90 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.uploads.map { |row| row[:external_host] }).to eq([nil, "cdn.example.com", nil])
     end
+
+    context "with a subdirectory install" do
+      let(:internal_link_hosts) { { source_host => "/forum" } }
+      let(:internal_link_base_prefix) { "/forum" }
+
+      # On a subdirectory install the host alone does not make an upload the
+      # source's own: `/other/uploads/…` on the same host belongs to a
+      # different application, and mapping its sha1 could rewrite that
+      # application's file on a hash collision.
+      it "marks an absolute sibling-application upload as external" do
+        extract(
+          "![in](https://forum.example.com/forum/uploads/default/original/2X/a/ab/#{sha1}.png) " \
+            "![out](https://forum.example.com/other/uploads/default/original/2X/a/ab/#{sha1}.png)",
+        )
+
+        expect(buffer.uploads.map { |row| row[:external_host] }).to eq([nil, source_host])
+      end
+
+      # A relative sibling path has no host an operator could allowlist, so
+      # no row is recorded at all and the source text stays.
+      it "leaves a relative sibling-application upload verbatim" do
+        raw = "![out](/other/uploads/default/original/2X/a/ab/#{sha1}.png)"
+
+        expect(extract(raw)).to eq(raw)
+        expect(buffer.uploads).to be_empty
+        expect(extractor.engine_refusals).to be_empty
+      end
+
+      it "records a relative upload inside the base prefix" do
+        extract("![in](/forum/uploads/default/original/2X/a/ab/#{sha1}.png)")
+
+        expect(buffer.uploads.map { |row| row[:external_host] }).to eq([nil])
+      end
+    end
+  end
+
+  describe "unsupported /uploads/ paths" do
+    # A generic `/uploads/` path (WordPress and similar) is not an upload
+    # reference: it has neither the `original|optimized/` shape nor the
+    # short-URL one. It must not become a candidate, a tracked value, or a
+    # refusal.
+    it "ignores an external generic uploads path" do
+      raw = "see https://blog.example.net/wp-content/uploads/2009/12/image1.jpg here"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+  end
+
+  describe "short-URL uploads" do
+    # `/uploads/short-url/<token>` carries the base62-encoded sha1 (core's
+    # `Upload#short_path`), so the row can carry the decoded 40-hex sha1 and
+    # resolve like a long URL.
+    let(:decoded) { "#{"0" * 38}7d" }
+
+    it "defers a short-URL image, decoding the token to the sha1" do
+      result = extract("![pic](https://forum.example.com/uploads/short-url/21.jpeg)")
+
+      expect(buffer.uploads.size).to eq(1)
+      expect(buffer.uploads.first[:upload_id]).to eq(decoded)
+      expect(result).to include(buffer.uploads.first[:placeholder])
+    end
+
+    it "defers a bare absolute short URL" do
+      result = extract("file at https://forum.example.com/uploads/short-url/21.jpeg here")
+
+      expect(buffer.uploads.first[:upload_id]).to eq(decoded)
+      expect(result).to include(buffer.uploads.first[:placeholder])
+    end
+
+    it "defers a relative short URL at a link target" do
+      result = extract("[file](/uploads/short-url/21.jpeg)")
+
+      expect(buffer.uploads.first[:upload_id]).to eq(decoded)
+      expect(result).to eq(buffer.uploads.first[:placeholder])
+    end
+
+    it "leaves a token that is too long for a sha1 alone" do
+      raw = "see /uploads/short-url/#{"z" * 27}.png here"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
   end
 
   describe "uploads" do
@@ -110,16 +194,27 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq(buffer.uploads.first[:placeholder])
     end
 
-    # Core links a pipe-less `[label](upload://…)` too, but that shape is
-    # unmeasured in real corpora, and widening the label grammar further is
-    # where label-corruption risks live — so it deliberately stays verbatim,
-    # reported on the must-resolve tally.
-    it "leaves a pipe-less link label verbatim and reports it" do
+    # Core links a pipe-less `[label](upload://…)` the same way, so the upload
+    # is recorded. The engine tier proves the occurrence before the replace,
+    # and a resolution miss restores the verbatim label.
+    it "defers a pipe-less link" do
       body = "[plain label](upload://Zm9vYmFy.png)"
+      result = extract(body)
 
-      expect(extract(body)).to eq(body)
-      expect(buffer.uploads).to be_empty
-      expect(extractor.engine_refusals).to eq(unanchored: 1)
+      expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
+      expect(buffer.uploads.first[:original_markdown]).to eq(body)
+      expect(result).to eq(buffer.uploads.first[:placeholder])
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "defers a label with one level of nested brackets" do
+      body = "[Juan [John] Hernandez.pdf|attachment](upload://Zm9vYmFy.pdf)"
+      result = extract(body)
+
+      expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
+      expect(buffer.uploads.first[:original_markdown]).to eq(body)
+      expect(result).to eq(buffer.uploads.first[:placeholder])
+      expect(extractor.engine_refusals).to be_empty
     end
   end
 

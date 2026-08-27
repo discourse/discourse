@@ -221,7 +221,10 @@ module Migrations
       end
 
       # @param upload_id [String, nil] the referenced `uploads` row's id — a content
-      #   hash, so text rather than numeric.
+      #   hash, so text rather than numeric. The Discourse extractor records the
+      #   40-hex sha1 for full-URL forms (`/uploads/short-url/…` tokens are
+      #   decoded to it) and the base62 short id for `upload://` references; the
+      #   importer's upload map must answer both spellings.
       # @param original_markdown [String, nil] the verbatim source snippet, so the
       #   importer can put it back when the id maps to no Discourse upload — the
       #   extractor records it for short `upload://` references and full-URL

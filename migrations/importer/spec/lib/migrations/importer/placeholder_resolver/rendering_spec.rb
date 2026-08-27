@@ -179,6 +179,33 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolver.unresolved_embeds).to be_empty
     end
 
+    it "accepts an allowlist entry spelled with a scheme and its default port" do
+      upload = placeholder.mint(:upload)
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: upload,
+        upload_id: "sha1",
+        original_markdown: "![x](https://cdn.example.net/uploads/original/2X/old.png)",
+        external_host: "cdn.example.net",
+      )
+      maps = FakePlaceholderMaps.new(upload_markdown: { "sha1" => "![x](upload://sha1.png)" })
+      resolver =
+        described_class.new(
+          intermediate_db,
+          maps,
+          owner_type: embed_owner::POST,
+          # Rows store the host bare, with a scheme's own default port
+          # removed; the entry is reduced to the same form.
+          external_upload_hosts: ["https://CDN.example.net:443/"],
+        )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{upload} y" }])
+
+      expect(resolved[1]).to eq("x ![x](upload://sha1.png) y")
+      expect(resolver.unresolved_embeds).to be_empty
+    end
+
     it "prefers the mapped upload markdown over the verbatim snippet" do
       upload = placeholder.mint(:upload)
       Migrations::Database::IntermediateDB::EmbedUpload.create(

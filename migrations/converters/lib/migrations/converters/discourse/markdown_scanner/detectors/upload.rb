@@ -9,29 +9,32 @@ module Migrations
         module Detectors
           # Detects Discourse upload references (`upload://` URLs):
           # `![alt|dims](upload://sha1.ext)` images,
-          # `[file|attachment](upload://sha1.ext) (size)` attachments, and
+          # `[file|attachment](upload://sha1.ext) (size)` attachments,
           # `[label|meta](upload://sha1.ext)` link-position labels with pipe
-          # metadata (failed image pastes).
+          # metadata (failed image pastes), and plain `[label](upload://sha1.ext)`
+          # links.
           class Upload < Base
             TRIGGERS = ["!", "["].freeze
 
+            # A label with the one level of balanced brackets CommonMark allows
+            # (`[Juan [John] Hernandez.pdf|attachment]`), like `Base::LINK_TEXT`,
+            # but with `|` and the newline kept out of the plain runs: the label
+            # ends at the pipe that starts the metadata, and upload labels stay
+            # on one line. An unmatched `[` still fails the whole group, so an
+            # opener earlier on the line cannot pull the match start left and a
+            # nested image `![![…](…)](…)` cannot be matched from the outer
+            # bracket. Every quantifier is capped (CommonMark's own label limit
+            # is 999 characters) and the run is atomic, so a body full of
+            # unclosed openers is scanned once, without backtracking.
+            LABEL = /(?>[^|\[\]\n]{0,999}(?:\[[^\[\]\n]{0,999}\](?!\()[^|\[\]\n]{0,999}){0,32})/
+            private_constant :LABEL
+
             # `\G` anchors each match at `pos` so we match in place rather than
             # slicing the tail of the input on every `!`/`[`.
-            #
-            # The alt and dimensions classes exclude `[` so a nested image
-            # `![![…](…)](…)` can't be matched from the outer `!` (see
-            # `UploadUrl::LINK` for the full why), and so an unmatched `[` before
-            # the real construct can't pull the match start left — core's label
-            # parse fails on it and renders from the inner bracket instead. The
-            # trade-off: an alt with a lone unmatched `[` no longer matches, so
-            # that upload stays a literal URL — nested-image safety wins over that
-            # rarer shape.
-            # The alt cap is CommonMark's own 999-character link-label limit; the
-            # URL and dimensions classes exclude the newline (a destination cannot
-            # contain an unescaped line end) and are capped, so a body full of
-            # unclosed openers cannot make every `!` re-scan the whole tail.
+            # The URL and dimensions classes exclude the newline (a destination
+            # cannot contain an unescaped line end) and are capped.
             IMAGE_PATTERN =
-              %r{\G!\[(?<alt>[^|\[\]]{0,999})(?:\|(?<dimensions>[^\[\]\n]{0,99}))?\]\(upload://(?<url>[^)\n]{1,512})\)}
+              %r{\G!\[(?<alt>#{LABEL})(?:\|(?<dimensions>[^\[\]\n]{0,99}))?\]\(upload://(?<url>[^)\n]{1,512})\)}
 
             # The marker folds case but the scheme does not, which is core's own
             # split: `[r.pdf|ATTACHMENT](upload://…)` still cooks a link carrying
@@ -42,11 +45,7 @@ module Migrations
             ATTACHMENT_PATTERN =
               %r{
               \G
-              # The filename class excludes `[` like the alt above: an unmatched
-              # `[` earlier on the line must not start the match, or the literal
-              # text before the real `[file|attachment]` would be swallowed into
-              # the filename and dropped at re-render.
-              \[(?<filename>[^|\[\]]{0,999})\|attachment\]
+              \[(?<filename>#{LABEL})\|attachment\]
               \((?-i:upload)://(?<url>[^)\n]{1,512})\)
               # Discourse writes the size right after the link, on the same line.
               # `\s*` here would let the group cross a line end — even a blank one —
@@ -64,25 +63,33 @@ module Migrations
             # other form. The suffix class matches the image dimensions class
             # (pipes allowed, so `[a|b|c]` matches whole); an exact
             # `|attachment` marker is not taken here — that form belongs to
-            # ATTACHMENT_PATTERN above, with its trailing size. A pipe-less
-            # `[label](upload://…)` link — which core links just the same — is
-            # deliberately not taken: the shape is absent from measured
-            # corpora, and widening the label grammar is where label-corruption
-            # risk lives, so it stays verbatim and reports instead.
+            # ATTACHMENT_PATTERN above, with its trailing size.
             LINK_PATTERN =
               %r{
               \G
-              \[(?<filename>[^|\[\]]{0,999})\|(?!attachment\])(?<label_suffix>[^\[\]\n]{0,99})\]
+              \[(?<filename>#{LABEL})\|(?!attachment\])(?<label_suffix>[^\[\]\n]{0,99})\]
               \((?-i:upload)://(?<url>[^)\n]{1,512})\)
             }xi
-            private_constant :IMAGE_PATTERN, :ATTACHMENT_PATTERN, :LINK_PATTERN
+            # A plain `[label](upload://sha1.ext)` link, which core links the
+            # same way. Only the sha1 and the verbatim source reach the embed
+            # row: a miss restores the label untouched, and the engine tier
+            # proves each occurrence before it is replaced, so taking this
+            # form cannot rewrite a look-alike inside code.
+            PLAIN_LINK_PATTERN =
+              %r{
+              \G
+              \[(?<filename>#{LABEL})\]
+              \((?-i:upload)://(?<url>[^)\n]{1,512})\)
+            }xi
+            private_constant :IMAGE_PATTERN, :ATTACHMENT_PATTERN, :LINK_PATTERN, :PLAIN_LINK_PATTERN
 
             def detect(input, pos, byte)
               case byte
               when 0x21 # `!`
                 detect_image(input, pos)
               when 0x5b # `[`
-                detect_attachment(input, pos) || detect_link(input, pos)
+                detect_attachment(input, pos) || detect_link(input, pos) ||
+                  detect_plain_link(input, pos)
               end
             end
 
@@ -131,7 +138,14 @@ module Migrations
             # hit re-renders from the destination's metadata like every other
             # upload, and a miss restores the label untouched.
             def detect_link(input, pos)
-              match = match_at(LINK_PATTERN, input, pos)
+              build_link(pos, match_at(LINK_PATTERN, input, pos))
+            end
+
+            def detect_plain_link(input, pos)
+              build_link(pos, match_at(PLAIN_LINK_PATTERN, input, pos))
+            end
+
+            def build_link(pos, match)
               return nil unless match
 
               sha1, = parse_upload_url(match[:url])

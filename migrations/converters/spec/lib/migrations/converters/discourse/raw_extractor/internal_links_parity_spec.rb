@@ -43,95 +43,78 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     "https://#{host}/t/slug/5"
   end
 
-  # The 32 ASCII punctuation characters (CommonMark), plus letters, whitespace,
-  # and the Unicode characters that split core's linkify boundary from a plain
-  # "not a word character" one: the wide spaces (NBSP, ideographic space), `²`/`½`
-  # (category No), `€` (a currency symbol, category Sc), and `­` (soft hyphen, Cf).
-  def boundary_chars
-    ascii_punctuation =
-      [0x21..0x2f, 0x3a..0x40, 0x5b..0x60, 0x7b..0x7e].flat_map(&:to_a)
-        .to_h { |cp| [format("U+%04X", cp), cp.chr(Encoding::UTF_8)] }
-
-    {
-      "letter a" => "a",
-      "digit 9" => "9",
-      "e-acute" => "é",
-      "han" => "漢",
-      "space" => " ",
-      "tab" => "\t",
-      "newline" => "\n",
-      "no-break space" => " ",
-      "ideographic space" => "　",
-      "em dash" => "—",
-      "low double quote" => "„",
-      "left guillemet" => "«",
-      "ellipsis" => "…",
-      "euro sign" => "€",
-      "superscript two" => "²",
-      "vulgar half" => "½",
-      "soft hyphen" => "­",
-    }.merge(ascii_punctuation)
+  def build_extractor(buffer)
+    described_class.new(
+      embeds: buffer,
+      markdown_engine:,
+      mention_names:,
+      hashtag_names:,
+      internal_link_hosts: {
+        host => nil,
+      },
+    )
   end
 
-  # Whether the extractor treated the URL core linkifies as an internal link:
-  # a recorded row, or a deliberate refusal — a trailing character can extend
-  # the id into a coordinate-shaped junk path (`…/5a`), which refuses rather
-  # than origin-rewriting stale coordinates. What the boundary suite proves is
-  # that the URL's EXTENT matches linkify; what becomes of the extended URL is
-  # the coordinate rule's own specs' concern.
-  def detector_extracts?(raw)
+  # What the extractor did with the URL: `:link` (a row was recorded),
+  # `:refused` (the body landed on the refusal tally), or `:none`.
+  def detector_outcome(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    extractor =
-      described_class.new(
-        embeds: buffer,
-        markdown_engine:,
-        mention_names:,
-        hashtag_names:,
-        internal_link_hosts: {
-          host => nil,
-        },
-      )
+    extractor = build_extractor(buffer)
     extractor.extract(raw)
-    buffer.links.any? || extractor.engine_refusals[:unanchored] > 0
+    return :link if buffer.links.any?
+
+    extractor.engine_refusals.values.sum > 0 ? :refused : :none
   end
 
-  # Core linkifies a bare URL into an anchor whose href is the URL (a trailing
-  # character right after the URL may extend the href, so the match is by prefix).
-  def core_links?(raw)
+  # Core linkifies a bare URL into an anchor whose href is the URL. A trailing
+  # character right after the URL may extend the href; `extended` reports that,
+  # because an extended href is the one case where the extractor may refuse
+  # instead of recording a link (the extension can turn the id into a junk
+  # coordinate path).
+  def core_reading(raw)
     hrefs = PrettyText.cook(raw).scan(/<a\b[^>]*href="([^"]*)"/).flatten
-    hrefs.any? { |href| href.start_with?(url) }
-  end
-
-  def describe_char(char)
-    codepoints = char.each_codepoint.map { |cp| format("U+%04X", cp) }.join(" ")
-    "#{char.inspect} (#{codepoints})"
+    matching = hrefs.select { |href| href.start_with?(url) }
+    { linkified: matching.any?, extended: matching.any? { |href| href.length > url.length } }
   end
 
   it "records a link exactly when core linkifies, for every character before the URL" do
     deviations =
-      boundary_chars.filter_map do |label, char|
+      LinkifyBoundaryCorpus.chars.filter_map do |label, char|
         raw = "a#{char}#{url} b"
-        extracted = detector_extracts?(raw)
-        linkified = core_links?(raw)
-        next if extracted == linkified
+        outcome = detector_outcome(raw)
+        core = core_reading(raw)
 
-        "before #{label} #{describe_char(char)}: detector=#{extracted} core=#{linkified}"
+        if (outcome != :none) != core[:linkified]
+          "before #{label} #{LinkifyBoundaryCorpus.describe(char)}: " \
+            "detector=#{outcome} core=#{core[:linkified]}"
+        elsif outcome == :refused
+          # Nothing follows the URL here, so its route is intact; a refusal
+          # would hide a regression from recording links to refusing them.
+          "before #{label} #{LinkifyBoundaryCorpus.describe(char)}: refused instead of recording"
+        end
       end
     expect(deviations).to be_empty, -> { deviations.join("\n") }
   end
 
   it "records a link exactly when core linkifies, for every character after the URL" do
     deviations =
-      boundary_chars.filter_map do |label, char|
+      LinkifyBoundaryCorpus.chars.filter_map do |label, char|
         raw = "a #{url}#{char} b"
-        extracted = detector_extracts?(raw)
-        linkified = core_links?(raw)
-        next if extracted == linkified
+        outcome = detector_outcome(raw)
+        core = core_reading(raw)
 
-        "forward #{label} #{describe_char(char)}: detector=#{extracted} core=#{linkified}"
+        if (outcome != :none) != core[:linkified]
+          "forward #{label} #{LinkifyBoundaryCorpus.describe(char)}: " \
+            "detector=#{outcome} core=#{core[:linkified]}"
+        elsif outcome == :refused && !core[:extended]
+          # A refusal is only right when core swallowed the character into the
+          # href and made the trailing id a junk coordinate path. With the
+          # href unchanged, refusing instead of recording is a regression.
+          "forward #{label} #{LinkifyBoundaryCorpus.describe(char)}: refused instead of recording"
+        end
       end
     expect(deviations).to be_empty, -> { deviations.join("\n") }
   end
@@ -148,26 +131,18 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    extractor =
-      described_class.new(
-        embeds: buffer,
-        markdown_engine:,
-        mention_names:,
-        hashtag_names:,
-        internal_link_hosts: {
-          host => nil,
-        },
-      )
+    extractor = build_extractor(buffer)
 
     expect(extractor.extract(raw)).to eq(raw)
     expect(buffer.links).to be_empty
-    expect(extractor.engine_refusals).to eq(unanchored: 1)
-    expect(core_links?(raw)).to be(true)
+    expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+    expect(core_reading(raw)[:linkified]).to be(true)
   end
 
   it "records a link at the very start of the input, matching core" do
     raw = "#{url} b"
-    expect(detector_extracts?(raw)).to eq(core_links?(raw))
+    expect(detector_outcome(raw)).to eq(:link)
+    expect(core_reading(raw)[:linkified]).to be(true)
   end
 
   # Core does not linkify a bare relative path (`/t/slug/5`) in prose — linkify
@@ -175,7 +150,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # not a divergence.
   it "leaves a bare relative path literal, matching core" do
     raw = "see /t/slug/5 here"
-    expect(detector_extracts?(raw)).to be(false)
-    expect(core_links?(raw)).to be(false)
+    expect(detector_outcome(raw)).to eq(:none)
+    expect(core_reading(raw)[:linkified]).to be(false)
   end
 end
