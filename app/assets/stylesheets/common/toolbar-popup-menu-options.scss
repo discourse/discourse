@@ -62,37 +62,6 @@
 }
 
 .toolbar-menu__options-content,
-.toolbar-menu__list-content,
-.toolbar-menu__heading-content {
-  .dropdown-menu {
-    .btn {
-      &.--active {
-        .d-button-label__active-icon {
-          visibility: visible;
-          margin-left: auto;
-        }
-      }
-    }
-
-    .d-button-label {
-      display: flex;
-      flex: 1;
-      justify-content: space-between;
-      align-items: center;
-      min-width: 0; // shrink if needed
-
-      &__active-icon {
-        visibility: hidden;
-      }
-
-      .shortcut {
-        margin-left: var(--space-4);
-      }
-    }
-  }
-}
-
-.toolbar-menu__options-content,
 .toolbar-menu__heading-content,
 .toolbar-menu__list-content {
   .dropdown-menu {
@@ -101,6 +70,13 @@
       // drops the gap after its icon; restore the labelled-button gap.
       &.no-text .d-icon {
         margin-right: 0.45em;
+      }
+
+      &.--active {
+        .d-button-label__active-icon {
+          visibility: visible;
+          margin-left: auto;
+        }
       }
 
       &:hover,
@@ -118,10 +94,11 @@
 
     .d-button-label {
       position: relative;
-      flex-grow: 1;
+      flex: 1;
       display: flex;
       align-items: center;
       gap: var(--space-4);
+      min-width: 0; // shrink if needed
 
       &__active-icon {
         visibility: hidden;
@@ -137,6 +114,10 @@
         top: 50%;
         transform: translateY(-50%);
         display: none;
+
+        &.--always-visible {
+          display: block;
+        }
       }
     }
   }

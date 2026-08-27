@@ -21,6 +21,19 @@ RSpec.describe "Keyboard shortcut display" do
     screenshot_marker(label: "shortcut-help-modal")
   end
 
+  it "keeps the gap between keys in a right-to-left locale" do
+    SiteSetting.default_locale = "ar"
+
+    visit "/"
+    page.send_keys("?")
+
+    second_key =
+      find(".keyboard-shortcuts-modal .d-shortcut__key + .d-shortcut__key", match: :first)
+    margin = page.evaluate_script("getComputedStyle(arguments[0]).marginLeft", second_key)
+
+    expect(margin).not_to eq("0px")
+  end
+
   it "draws the shortcut of a composer menu option as keycaps" do
     visit "/"
     find("#create-topic").click
