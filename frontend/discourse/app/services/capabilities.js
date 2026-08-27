@@ -11,6 +11,8 @@ const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 const ua = navigator.userAgent;
 
 const anyPointerCoarseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
+const pointerCoarseQuery = new TrackedMediaQuery("(pointer: coarse)");
+
 /**
  * The primary pointer, not `any-pointer`: a phone with stylus support reports
  * a fine pointer among its inputs while its primary pointer stays coarse.
@@ -181,6 +183,17 @@ class _Capabilities {
 
   get touch() {
     return anyPointerCoarseQuery.matches;
+  }
+
+  /**
+   * Whether the primary pointer is coarse, i.e. the device is touch-first.
+   * Unlike {@link touch}, this stays false on a mouse-driven machine that
+   * also has a touch screen.
+   *
+   * @returns {boolean}
+   */
+  get touchFirst() {
+    return pointerCoarseQuery.matches;
   }
 
   /**
