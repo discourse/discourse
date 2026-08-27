@@ -7,6 +7,7 @@ acceptance("No login methods configured", function (needs) {
     enable_local_logins: false,
     enable_local_logins_via_code: false,
   });
+  needs.site({ auth_providers: [] });
 
   test("the login page explains that no login methods are configured", async function (assert) {
     await visit("/login");
