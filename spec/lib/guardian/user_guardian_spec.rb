@@ -404,8 +404,8 @@ RSpec.describe UserGuardian do
   end
 
   describe "#can_see_user_actions?" do
-    it "is true by default" do
-      expect(Guardian.new.can_see_user_actions?(nil, [])).to eq(true)
+    it "defaults to no action types" do
+      expect(Guardian.new.can_see_user_actions?(nil)).to eq(true)
     end
 
     context "with 'hide_user_activity_tab' setting" do
