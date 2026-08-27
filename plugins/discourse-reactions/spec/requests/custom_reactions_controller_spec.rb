@@ -218,6 +218,23 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed[0]["reaction"]["id"]).to eq(laughing_reaction.id)
     end
 
+    it "hides another user's reaction activity when user activity is hidden" do
+      SiteSetting.hide_user_activity_tab = true
+      sign_in(user_1)
+
+      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+
+      aggregate_failures do
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(
+          reaction_user_1.id.to_s,
+          user_2.id.to_s,
+          post_2.id.to_s,
+          laughing_reaction.reaction_value,
+        )
+      end
+    end
+
     it "does not expose post author names when names are disabled" do
       SiteSetting.enable_names = false
       sign_in(user_1)
