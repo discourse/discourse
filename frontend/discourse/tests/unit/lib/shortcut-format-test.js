@@ -266,6 +266,20 @@ module("Unit | Lib | shortcut-format", function (hooks) {
     );
   });
 
+  test("normalizes comma to the comma key", function (assert) {
+    sinon.stub(capabilities, "isApple").value(false);
+
+    assert.deepEqual(formatShortcut("mod+comma").keys[1], {
+      key: ",",
+      label: ",",
+      name: ",",
+    });
+    assert.strictEqual(
+      formatShortcut("mod+comma").aria,
+      `${i18n("shortcut_modifier_key.ctrl")}+${i18n("shortcut_modifier_key.comma")}`
+    );
+  });
+
   test("formats word-form arrow keys as glyphs with spoken names", function (assert) {
     sinon.stub(capabilities, "isApple").value(false);
 

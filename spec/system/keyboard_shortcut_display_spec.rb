@@ -36,6 +36,18 @@ RSpec.describe "Keyboard shortcut display" do
     screenshot_marker(label: "shortcut-composer-menu", only: :desktop)
   end
 
+  it "keeps the gap between an option icon and its label" do
+    visit "/"
+    find("#create-topic").click
+    expect(composer).to be_opened
+
+    find(".toolbar-menu__options-trigger").click
+    icon = find(".toolbar-menu__options-content .dropdown-menu .btn .d-icon", match: :first)
+    margin = page.evaluate_script("getComputedStyle(arguments[0]).marginRight", icon)
+
+    expect(margin).not_to eq("0px")
+  end
+
   it "draws the admin sidebar search hint as keycaps" do
     visit "/admin"
 

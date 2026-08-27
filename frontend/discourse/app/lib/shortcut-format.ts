@@ -4,8 +4,8 @@ import { i18n } from "discourse-i18n";
 /** One key of a formatted shortcut. */
 export interface ShortcutKey {
   /**
-   * The canonical name, as used by `aria-keyshortcuts` and `KeyboardEvent.key`:
-   * `Meta`, `Control`, `Alt`, `Shift`, `Enter`, `ArrowUp`, `B`, `/`.
+   * The canonical `KeyboardEvent.key` name: `Meta`, `Control`, `Alt`, `Shift`,
+   * `Enter`, `ArrowUp`, `B`, `/`.
    */
   key: string;
   /** The drawn text: `⌘` on Apple platforms and `Ctrl` elsewhere, `↑`, `Enter`, `B`. */
@@ -30,6 +30,11 @@ export interface FormattedShortcut {
    * Brazilian Portuguese). `Command+Enter` on Apple platforms and `Ctrl+Enter`
    * elsewhere in English. Undefined when there are no keys, so a template
    * binding omits the attribute rather than emitting an empty one.
+   *
+   * This intentionally uses localized spoken names instead of the canonical
+   * key tokens: screen readers can announce `Meta` literally and omit
+   * punctuation such as `.`, while localized names are spoken correctly. Do
+   * not switch this to `ShortcutKey.key` without testing the spoken output.
    */
   aria: string | undefined;
 }
@@ -70,6 +75,7 @@ const NAMED_KEYS: Record<string, string> = {
   pageup: "PageUp",
   pagedown: "PageDown",
   plus: "+",
+  comma: ",",
   up: "ArrowUp",
   down: "ArrowDown",
   left: "ArrowLeft",
