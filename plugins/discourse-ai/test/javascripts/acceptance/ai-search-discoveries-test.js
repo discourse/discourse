@@ -110,6 +110,15 @@ acceptance("AI Discoveries - header search", function (needs) {
     submittedRequestId = undefined;
   });
 
+  test("marks the search wrapper so it can be styled", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+
+    assert
+      .dom(".search-input-wrapper")
+      .hasClass("--with-ask-ai", "the mark is there before anything is typed");
+  });
+
   test("the placeholder offers both ways to resolve a term", async function (assert) {
     await visit("/");
     await click("#search-button");

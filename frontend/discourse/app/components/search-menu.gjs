@@ -97,6 +97,16 @@ export default class SearchMenu extends Component {
     }
   }
 
+  get searchInputWrapperClasses() {
+    const extra = applyValueTransformer(
+      "search-menu-input-wrapper-classes",
+      [],
+      { location: this.args.location }
+    );
+
+    return ["search-input-wrapper", ...extra].join(" ");
+  }
+
   get classNames() {
     const classes = ["search-menu-container"];
 
@@ -440,7 +450,7 @@ export default class SearchMenu extends Component {
       {{this.closeWhenHidden @hideResults}}
       {{on "keydown" this.onKeydown}}
     >
-      <div class="search-input-wrapper">
+      <div class={{this.searchInputWrapperClasses}}>
         <div
           class={{dConcatClass
             "search-input"

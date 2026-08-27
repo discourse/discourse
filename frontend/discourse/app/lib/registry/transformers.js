@@ -136,6 +136,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "search-menu-advanced-button-enabled",
   "search-menu-indexed-results-enabled",
   "search-menu-input-placeholder",
+  "search-menu-input-wrapper-classes",
   "search-menu-recent-searches",
   "search-menu-search-context-enabled",
   "search-menu-search-shortcuts-enabled",

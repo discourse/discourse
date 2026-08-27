@@ -1,5 +1,15 @@
 @use "lib/viewport";
 
+.header-search--enabled
+  .floating-search-input
+  .search-banner-inner.wrap
+  .search-menu
+  .search-input-wrapper.--with-ask-ai
+  .search-input {
+  // 😩
+  padding: 0;
+}
+
 .ai-discobot-discoveries.has-no-answer ~ .no-results {
   display: none;
 }

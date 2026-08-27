@@ -143,6 +143,12 @@ export default apiInitializer((api) => {
     return true;
   });
 
+  api.registerValueTransformer(
+    "search-menu-input-wrapper-classes",
+    ({ value, context }) =>
+      offersDiscoveries(context?.location) ? [...value, "--with-ask-ai"] : value
+  );
+
   // scope is one of the options in the menu, and that row stays put while
   // scoped, so the input never carries a chip for it
   // advanced search is offered in the options row instead
