@@ -144,11 +144,14 @@ en:
           raw_invitees_length: "An event is limited to %{count} users/groups."
           raw_invitees:
             only_group: "An event accepts only group names."
-          ends_at_before_starts_at: "An event can't end before it starts."
+          ends_at_before_starts_at: "An event must end after it starts."
           max_attendees_reached: "This event is full."
           start_must_be_present_and_a_valid_date: "An event requires a valid start date."
           end_must_be_a_valid_date: "End date must be a valid date."
-          invalid_recurrence: "Recurrence must be one of: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          recurrence_until_must_be_a_valid_date: "Recurrence end date must be a valid date."
+          invalid_max_attendees: "Max attendees must be a number between 1 and %{maximum}."
+          invalid_reminders: "Invalid reminders: %{reminders}."
+          invalid_recurrence: "Recurrence must be one of: %{recurrences}."
           invalid_timezone: "Timezone not recognized."
           invalid_url: "URL must be a valid web address."
           acting_user_not_allowed_to_create_event: "Current user is not allowed to create events."
@@ -158,6 +161,12 @@ en:
           custom_field_is_invalid: "The custom field `%{field}` is not allowed."
           name:
             length: "Event name length must be between %{minimum} and %{maximum} characters."
+          description:
+            length: "Event description is limited to %{maximum} characters."
+          url:
+            length: "Event URL is limited to %{maximum} characters."
+          location:
+            length: "Event location is limited to %{maximum} characters."
   discourse_push_notifications:
     popup:
       event_reminder: "Event Reminder"

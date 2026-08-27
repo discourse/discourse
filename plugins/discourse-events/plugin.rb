@@ -400,19 +400,26 @@ after_initialize do
       end
   end
 
-  on(:post_created) do |post|
-    DiscourseEvents::Events::Event::SyncFromPost.call(params: { post_id: post.id })
+  sync_event_from_post = ->(post) do
+    DiscourseEvents::Events::Event::SyncFromPost.call(params: { post_id: post.id }) do |result|
+      on_failure do
+        Rails.logger.error("Failed to sync event from post #{post.id}: #{result.inspect_steps}")
+      end
+    end
     post.association(:event).reload
-    if SiteSetting.discourse_post_event_enabled && post.event
-      WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+  end
+
+  on(:post_created) do |post|
+    sync_event_from_post.call(post)
+    if SiteSetting.discourse_post_event_enabled
+      DiscourseEvents::Events::Event.handle_post_event_webhooks(post, nil)
     end
   end
 
   on(:post_edited) do |post|
     event_before = post.event
     had_image_before = event_before&.image_upload_id.present?
-    DiscourseEvents::Events::Event::SyncFromPost.call(params: { post_id: post.id })
-    post.association(:event).reload
+    sync_event_from_post.call(post)
 
     if SiteSetting.discourse_post_event_enabled
       if post.event&.image_upload_id

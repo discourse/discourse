@@ -10,7 +10,7 @@ describe Post do
     SiteSetting.discourse_post_event_enabled = true
   end
 
-  let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
 
   context "with a public event" do
     let(:post_1) { Fabricate(:post) }
@@ -240,9 +240,6 @@ describe Post do
 
             post = create_post_with_event(user, 'status="private"').reload
             expect(post.event.raw_invitees).to eq([])
-
-            post = create_post_with_event(user, 'status="private"').reload
-            expect(post.event.raw_invitees).to eq([])
           end
 
           it "works with localised automatic group names" do
@@ -283,6 +280,21 @@ describe Post do
               post = create_post_with_event(user, 'baz="3"').reload
               expect(post.event.custom_fields["baz"]).to eq(nil)
             end
+          end
+
+          it "creates a one-day all-day event with the same start and end date" do
+            date = 1.day.from_now.strftime("%Y-%m-%d")
+
+            post =
+              PostCreator.create!(
+                user,
+                title: "Sell a boat party",
+                raw: "[event allDay=\"true\" start=\"#{date}\" end=\"#{date}\"]\n[/event]",
+              )
+
+            event = post.reload.event
+            expect(event.persisted?).to eq(true)
+            expect(event.original_ends_at).to eq_time(Time.parse("#{date} 23:59:59.999999 UTC"))
           end
         end
 
@@ -356,7 +368,10 @@ describe Post do
         context "when recurrence is invalid" do
           it "raises an error" do
             expect { create_post_with_event(user, 'recurrence="foo"') }.to raise_error(
-              I18n.t("discourse_post_event.errors.models.event.invalid_recurrence"),
+              I18n.t(
+                "discourse_post_event.errors.models.event.invalid_recurrence",
+                recurrences: DiscourseEvents::Events::RRuleConfigurator::RECURRENCES.join(", "),
+              ),
             )
           end
         end
@@ -386,6 +401,185 @@ describe Post do
               ),
             )
           end
+        end
+
+        context "when end is not after start" do
+          let(:starts_at) { 1.day.from_now }
+
+          def expect_rejected_end(ends_at)
+            expect do
+              create_post_with_event(user, "end=\"#{ends_at.utc.iso8601(3)}\"", starts_at)
+            end.to(
+              raise_error(ActiveRecord::RecordNotSaved).with_message(
+                I18n.t("discourse_post_event.errors.models.event.ends_at_before_starts_at"),
+              ),
+            )
+          end
+
+          it "raises an error" do
+            expect_rejected_end(starts_at)
+            expect_rejected_end(starts_at - 1.hour)
+          end
+        end
+
+        context "when dates omit an offset" do
+          it "validates them in the event timezone" do
+            post =
+              PostCreator.create!(
+                user,
+                title: "Sell a boat party",
+                raw:
+                  "[event start=\"2026-06-10T18:00:00-04:00\" end=\"2026-06-10 19:00\" timezone=\"America/New_York\"]\n[/event]",
+              )
+
+            event = post.reload.event
+            expect(event.persisted?).to eq(true)
+            expect(event.original_ends_at).to eq_time(Time.parse("2026-06-10 23:00 UTC"))
+          end
+        end
+
+        context "when description is too long" do
+          it "raises an error" do
+            start = 1.day.from_now.utc.iso8601(3)
+            description = "a" * (DiscourseEvents::Events::Event::MAX_DESCRIPTION_LENGTH + 1)
+
+            expect do
+              PostCreator.create!(
+                user,
+                title: "Sell a boat party",
+                raw: "[event start=\"#{start}\"]\n#{description}\n[/event]",
+              )
+            end.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.description.length",
+                maximum: DiscourseEvents::Events::Event::MAX_DESCRIPTION_LENGTH,
+              ),
+            )
+          end
+        end
+
+        context "when max attendees is invalid" do
+          def expect_rejected_max_attendees(value)
+            expect { create_post_with_event(user, "maxAttendees=\"#{value}\"") }.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.invalid_max_attendees",
+                maximum: DiscourseEvents::Events::Event::MAX_ATTENDEES_LIMIT,
+              ),
+            )
+          end
+
+          it "raises an error" do
+            expect_rejected_max_attendees("0")
+            expect_rejected_max_attendees("9999999999")
+            expect_rejected_max_attendees("")
+          end
+        end
+
+        context "when a private event has too many allowed groups" do
+          fab!(:invited_groups) do
+            Fabricate.times(DiscourseEvents::Events::Event::MAX_RAW_INVITEES + 1, :group)
+          end
+
+          let(:group_names) { invited_groups.map(&:name).join(",") }
+
+          it "raises an error" do
+            expect do
+              create_post_with_event(user, "status=\"private\" allowedGroups=\"#{group_names}\"")
+            end.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.raw_invitees_length",
+                count: DiscourseEvents::Events::Event::MAX_RAW_INVITEES,
+              ),
+            )
+          end
+
+          it "creates the event when the status is public" do
+            post =
+              create_post_with_event(
+                user,
+                "status=\"public\" allowedGroups=\"#{group_names}\"",
+              ).reload
+
+            expect(post.event.persisted?).to eq(true)
+          end
+
+          it "does not count the public group toward the limit" do
+            allowed = invited_groups.take(DiscourseEvents::Events::Event::MAX_RAW_INVITEES)
+            group_names = ([DiscourseEvents::Events::Event::PUBLIC_GROUP] + allowed.map(&:name))
+
+            post =
+              create_post_with_event(
+                user,
+                "status=\"private\" allowedGroups=\"#{group_names.join(",")}\"",
+              ).reload
+
+            expect(post.event.persisted?).to eq(true)
+            expect(post.event.raw_invitees).to match_array(allowed.map(&:name))
+          end
+        end
+
+        context "when recurrence until is invalid" do
+          it "raises an error" do
+            expect do
+              create_post_with_event(user, 'recurrence="every_week" recurrenceUntil="garbage"')
+            end.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.recurrence_until_must_be_a_valid_date",
+              ),
+            )
+          end
+        end
+
+        context "when reminders are invalid" do
+          it "raises an error" do
+            expect { create_post_with_event(user, 'reminders="notification.1.fortnights"') }.to(
+              raise_error(
+                I18n.t(
+                  "discourse_post_event.errors.models.event.invalid_reminders",
+                  reminders: "notification.1.fortnights",
+                ),
+              ),
+            )
+          end
+        end
+
+        context "when url is too long" do
+          it "raises an error" do
+            url = "https://example.com/#{"a" * DiscourseEvents::Events::Event::MAX_URL_LENGTH}"
+
+            expect { create_post_with_event(user, "url=\"#{url}\"") }.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.url.length",
+                maximum: DiscourseEvents::Events::Event::MAX_URL_LENGTH,
+              ),
+            )
+          end
+        end
+
+        context "when location is too long" do
+          it "raises an error" do
+            location = "a" * (DiscourseEvents::Events::Event::MAX_LOCATION_LENGTH + 1)
+
+            expect { create_post_with_event(user, "location=\"#{location}\"") }.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.location.length",
+                maximum: DiscourseEvents::Events::Event::MAX_LOCATION_LENGTH,
+              ),
+            )
+          end
+        end
+      end
+
+      context "when the event sync fails unexpectedly" do
+        it "logs the failure" do
+          DiscourseEvents::Events::Event
+            .any_instance
+            .stubs(:update_with_params!)
+            .raises(ActiveRecord::RecordNotSaved.new("boom"))
+
+          logger = track_log_messages { create_post_with_event(user) }
+
+          expect(logger.errors).to include(match(/Failed to sync event/))
         end
       end
 
