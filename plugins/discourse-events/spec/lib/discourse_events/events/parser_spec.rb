@@ -19,6 +19,11 @@ describe DiscourseEvents::Events::Parser do
     expect(events.length).to eq(1)
   end
 
+  it "finds an event whose tag is not lowercase" do
+    events = parser.extract_events(build_post(user, '[EVENT start="2020"]\n[/EVENT]'))
+    expect(events.length).to eq(1)
+  end
+
   it "finds multiple events" do
     post_event = build_post user, <<~TXT
       [event start="2020"]
