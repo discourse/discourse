@@ -186,8 +186,8 @@ module Migrations
         def self.input_digest(root)
           digest = Digest::MD5.new
           digest.update("v#{VERSION}")
-          digest.update("compiler-v#{AssetProcessor::BASE_COMPILER_VERSION}")
-          digest_globs(digest, root, AssetProcessor::BUNDLE.dependency_globs)
+          digest.update("compiler-v#{::AssetProcessor::BASE_COMPILER_VERSION}")
+          digest_globs(digest, root, ::AssetProcessor::BUNDLE.dependency_globs)
           digest_globs(digest, root, CORE_BUNDLE_GLOBS)
 
           (input_files(root) + EmojiData.data_files).each do |path|
@@ -238,18 +238,18 @@ module Migrations
         end
 
         def self.core_bundle_mirror
-          PrecompiledBundle.new(
+          ::PrecompiledBundle.new(
             dir: "tmp/pretty-text-processor",
             filename_prefix: "pretty-text",
             dependency_globs: CORE_BUNDLE_GLOBS,
           ) do
-            Discourse::Utils.execute_command(
+            ::Discourse::Utils.execute_command(
               "pnpm",
               "-C=frontend/pretty-text-processor",
               "node",
               "build.mjs",
               "--discourse-modules=#{BUNDLED_DISCOURSE_MODULES.join(",")}",
-              chdir: Rails.root.to_s,
+              chdir: ::Rails.root.to_s,
             )
           end
         end
@@ -279,7 +279,7 @@ module Migrations
 
         def self.transpiled_entry(path, module_name)
           source = File.read(path)
-          [module_name, AssetProcessor.new.perform(source, nil, module_name)]
+          [module_name, ::AssetProcessor.new.perform(source, nil, module_name)]
         end
 
         # Runs under the build lock, so no concurrent starter can be reading a
