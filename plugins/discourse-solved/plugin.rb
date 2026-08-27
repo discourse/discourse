@@ -15,6 +15,7 @@ register_svg_icon "far-square"
 
 register_asset "stylesheets/solutions.scss"
 register_asset "stylesheets/admin/dashboard-support.scss", :admin
+register_asset "stylesheets/admin/report-related-items.scss", :admin
 
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
@@ -181,9 +182,13 @@ after_initialize do
     accepted_solutions =
       accepted_solutions.where("topics.category_id" => requested_ids) if filter_requested
 
-    accepted_solutions
-      .where("discourse_solved_solved_topics.created_at >= ?", report.start_date)
-      .where("discourse_solved_solved_topics.created_at <= ?", report.end_date)
+    current_accepted_solutions =
+      accepted_solutions.where(
+        "discourse_solved_solved_topics.created_at >= ?",
+        report.start_date,
+      ).where("discourse_solved_solved_topics.created_at <= ?", report.end_date)
+
+    current_accepted_solutions
       .group("DATE(discourse_solved_solved_topics.created_at)")
       .order("DATE(discourse_solved_solved_topics.created_at)")
       .count
@@ -202,6 +207,48 @@ after_initialize do
           .where("discourse_solved_solved_topics.created_at < ?", report.prev_end_date)
           .count
     end
+
+    solved_topics =
+      current_accepted_solutions.includes({ topic: :category }, answer_posts: :user).order(
+        created_at: :desc,
+      )
+    solved_topics = solved_topics.limit(report.limit || Report::RELATED_ITEMS_LIMIT)
+
+    report.related_items = {
+      solved_topics:
+        solved_topics.map do |solved_topic|
+          topic = solved_topic.topic
+          category = topic.category
+          solved_by_users =
+            solved_topic
+              .answer_posts
+              .sort_by { |answer_post| [answer_post.created_at, answer_post.id] }
+              .filter_map(&:user)
+              .uniq(&:id)
+              .map do |user|
+                BasicUserSerializer.new(user, scope: report.guardian, root: false).as_json
+              end
+
+          {
+            topic: {
+              title: topic.title,
+              url: topic.relative_url,
+            },
+            solved_by: solved_by_users.first,
+            solved_by_users:,
+            category:
+              if category
+                {
+                  id: category.id,
+                  name: category.name,
+                  slug: category.slug,
+                  color: category.color,
+                  textColor: category.text_color,
+                }
+              end,
+          }
+        end,
+    }
   end
 
   register_admin_dashboard_highlight_kpi(

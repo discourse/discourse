@@ -78,6 +78,19 @@ let signups = {
   higher_is_better: true,
   modes: ["table", "chart"],
   prev_period: 961,
+  related_items: {
+    users: [
+      {
+        user: {
+          id: 1,
+          username: "dana_whitfield",
+          name: "Dana Whitfield",
+          avatar_template: "/letter_avatar_proxy/v4/letter/d/3be4f0/{size}.png",
+        },
+        timestamp: "2018-06-25T15:30:00Z",
+      },
+    ],
+  },
 };
 
 let signups_fixture = JSON.parse(JSON.stringify(signups));

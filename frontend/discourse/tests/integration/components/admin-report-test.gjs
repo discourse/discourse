@@ -114,6 +114,10 @@ module("Integration | Component | AdminReport", function (hooks) {
 
     assert.dom(".admin-report-table").doesNotExist("removes the table");
     assert.dom(".admin-report-chart").exists("shows the chart");
+    assert.dom(".admin-report-related-items").exists("shows the related users");
+    assert
+      .dom(".admin-report-related-items__user-link")
+      .hasAttribute("href", "/u/dana_whitfield", "links to the user profile");
   });
 
   test("timeout", async function (assert) {

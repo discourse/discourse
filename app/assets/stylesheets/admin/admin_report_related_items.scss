@@ -1,0 +1,146 @@
+.admin-report-related-items {
+  margin-block-start: var(--space-8);
+
+  h2 {
+    margin: 0;
+    font-size: var(--font-up-2);
+  }
+
+  &__description {
+    margin-block: var(--space-1) var(--space-4);
+    color: var(--token-color-text-subtle);
+  }
+
+  &__table {
+    width: 100%;
+    margin: 0;
+    table-layout: fixed;
+  }
+
+  &__user-cell {
+    width: 70%;
+  }
+
+  &__timestamp-cell {
+    width: 30%;
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  &__user-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    max-width: 100%;
+  }
+
+  &__avatar {
+    flex: none;
+  }
+
+  &__user-identity {
+    min-width: 0;
+  }
+
+  &__username,
+  &__name {
+    overflow-wrap: anywhere;
+  }
+
+  &__username {
+    font-weight: var(--token-font-weight-semibold);
+  }
+
+  &__name {
+    margin-inline-start: var(--space-2);
+    color: var(--token-color-text-subtle);
+  }
+}
+
+.admin-report-table-summary {
+  min-height: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 0.2em;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: inherit;
+    outline: none;
+  }
+
+  &:focus-visible {
+    text-decoration-style: solid;
+    text-decoration-thickness: 2px;
+  }
+
+  &__content {
+    min-width: min(16rem, calc(100dvw - var(--space-8)));
+  }
+
+  &__body {
+    padding: var(--space-3);
+  }
+
+  &__heading {
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-up-1);
+  }
+
+  &__message {
+    margin: 0;
+    color: var(--token-color-text-subtle);
+  }
+
+  &__list {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    min-width: 0;
+  }
+
+  &__user-link {
+    overflow-wrap: anywhere;
+  }
+
+  &__user-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    max-width: 100%;
+  }
+
+  &__avatar {
+    flex: none;
+  }
+
+  &__user-identity {
+    min-width: 0;
+  }
+
+  &__username {
+    font-weight: var(--token-font-weight-semibold);
+  }
+
+  &__name {
+    margin-inline-start: var(--space-2);
+    color: var(--token-color-text-subtle);
+  }
+}

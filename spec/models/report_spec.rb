@@ -572,8 +572,8 @@ RSpec.describe Report do
 
   describe "signups report" do
     it "returns the current data and previous period count" do
-      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
-      Fabricate(:user, created_at: Time.zone.local(2026, 4, 2, 12))
+      first_signup = Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+      second_signup = Fabricate(:user, created_at: Time.zone.local(2026, 4, 2, 12))
       Fabricate(:user, created_at: Time.zone.local(2026, 3, 31, 12))
 
       report =
@@ -586,6 +586,21 @@ RSpec.describe Report do
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
       expect(report.prev_period).to eq(1)
+      expect(report.related_items[:users].map { |item| item[:user][:username] }).to eq(
+        [second_signup.username, first_signup.username],
+      )
+
+      summary_report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          limit: 1,
+        )
+
+      expect(summary_report.related_items[:users].map { |item| item[:user][:username] }).to eq(
+        [second_signup.username],
+      )
     end
   end
 
@@ -641,6 +656,9 @@ RSpec.describe Report do
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
       expect(report.prev_period).to eq(1)
+      expect(report.related_items[:users].map { |item| item[:user][:username] }).to eq(
+        [another_current_contributor.username, current_contributor.username],
+      )
     end
   end
 

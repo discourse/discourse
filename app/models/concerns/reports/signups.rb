@@ -21,6 +21,22 @@ module Reports::Signups
       else
         report_about report, User.real, :count_by_signup_date
       end
+
+      users = User.real.where(created_at: report.start_date..report.end_date)
+      users =
+        users.joins(:group_users).where(group_users: { group_id: group_filter }) if group_filter
+      users = users.order(created_at: :desc)
+      users = users.limit(report.limit || Report::RELATED_ITEMS_LIMIT)
+
+      report.related_items = {
+        users:
+          users.map do |user|
+            {
+              user: BasicUserSerializer.new(user, scope: report.guardian, root: false).as_json,
+              timestamp: user.created_at.iso8601,
+            }
+          end,
+      }
     end
   end
 end

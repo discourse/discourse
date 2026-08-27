@@ -164,6 +164,16 @@ export default class AdminReport extends Component {
     return isPresent(this.model?.data);
   }
 
+  get hasRelatedItems() {
+    return Object.values(this.model?.related_items || {}).some(
+      (items) => items.length > 0
+    );
+  }
+
+  get reportFilters() {
+    return this.args.filters?.customFilters;
+  }
+
   get disabledLabel() {
     return this.args.disabledLabel || i18n("admin.dashboard.disabled");
   }

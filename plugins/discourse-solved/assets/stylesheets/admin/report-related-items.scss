@@ -1,0 +1,33 @@
+.solved-admin-report-related-items {
+  &__topic-cell {
+    width: 50%;
+  }
+
+  &__solved-by-cell,
+  &__category-cell {
+    width: 25%;
+  }
+
+  &__solved-by-users {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__topic-link {
+    overflow-wrap: anywhere;
+  }
+}
+
+.solved-admin-report-table-summary {
+  &__topic-link {
+    overflow-wrap: anywhere;
+  }
+
+  &__topic-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-start: var(--space-1);
+  }
+}

@@ -3,10 +3,10 @@
 describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
   fab!(:author, :user)
 
-  def solved_topic_in(category)
-    topic = Fabricate(:topic, category: category, user: author, created_at: 1.day.ago)
-    answer = Fabricate(:post, topic: topic, user: author, created_at: 1.day.ago)
-    Fabricate(:solved_topic, topic: topic, answer_post: answer, created_at: 1.day.ago)
+  def solved_topic_in(category, created_at: 1.day.ago)
+    topic = Fabricate(:topic, category: category, user: author, created_at:)
+    answer = Fabricate(:post, topic: topic, user: author, created_at:)
+    Fabricate(:solved_topic, topic: topic, answer_post: answer, created_at:)
     topic
   end
 
@@ -19,6 +19,57 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     solved_topic_in(Fabricate(:category))
 
     expect(build.total).to eq(2)
+  end
+
+  it "counts accepted solutions outside the selected date range in the total" do
+    category = Fabricate(:category)
+    solved_topic_in(category)
+    solved_topic_in(category, created_at: 3.days.ago)
+
+    expect(build.total).to eq(2)
+  end
+
+  it "includes the solved topic, answer author, and category" do
+    category = Fabricate(:category)
+    topic = solved_topic_in(category)
+
+    item = build.related_items[:solved_topics].first
+
+    expect(item[:topic]).to eq(title: topic.title, url: topic.relative_url)
+    expect(item.dig(:solved_by_users, 0, :username)).to eq(author.username)
+    expect(item[:category]).to include(
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+      color: category.color,
+    )
+  end
+
+  it "includes every accepted answer author when multiple solutions are enabled" do
+    SiteSetting.solved_allow_multiple_solutions = true
+    category = Fabricate(:category)
+    topic = solved_topic_in(category)
+    second_author = Fabricate(:user)
+    second_answer = Fabricate(:post, topic:, user: second_author, created_at: 23.hours.ago)
+    Fabricate(:topic_answer, solved_topic: topic.solved, post: second_answer, accepter: author)
+
+    item = build.related_items[:solved_topics].first
+
+    expect(item[:solved_by_users].map { |user| user[:username] }).to eq(
+      [author.username, second_author.username],
+    )
+  end
+
+  it "only includes solved topics from the selected date range" do
+    category = Fabricate(:category)
+    in_range_topic = solved_topic_in(category)
+    solved_topic_in(category, created_at: 3.days.ago)
+
+    report = build
+
+    expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
+      [in_range_topic.title],
+    )
   end
 
   it "registers the category_ids filter even when no filter is given" do

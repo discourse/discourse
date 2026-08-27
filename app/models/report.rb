@@ -3,7 +3,9 @@
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 5
+  SCHEMA_VERSION = 6
+
+  RELATED_ITEMS_LIMIT = 50
 
   FILTERS = %i[
     name
@@ -179,7 +181,8 @@ class Report
                 :default_group_by,
                 :y_axis_title,
                 :current_user,
-                :guardian
+                :guardian,
+                :related_items
 
   def self.default_days
     30
@@ -315,6 +318,7 @@ class Report
       json[:limit] = limit if limit
       json[:default_group_by] = default_group_by if default_group_by
       json[:y_axis_title] = y_axis_title if y_axis_title
+      json[:related_items] = related_items if related_items
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(

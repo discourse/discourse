@@ -24,6 +24,24 @@ module Reports::NewContributors
       end
 
       data.each { |key, value| report.data << { x: key, y: value } }
+
+      users =
+        User
+          .real
+          .preload(:user_stat)
+          .with_first_post_created_between(report.start_date, report.end_date)
+          .order("user_stats.first_post_created_at DESC")
+      users = users.limit(report.limit || Report::RELATED_ITEMS_LIMIT)
+
+      report.related_items = {
+        users:
+          users.map do |user|
+            {
+              user: BasicUserSerializer.new(user, scope: report.guardian, root: false).as_json,
+              timestamp: user.user_stat.first_post_created_at.iso8601,
+            }
+          end,
+      }
     end
   end
 end
