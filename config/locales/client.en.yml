@@ -3266,6 +3266,14 @@ en:
       backquote: "Backquote"
       left_bracket: "Left bracket"
       right_bracket: "Right bracket"
+      space: "Space"
+      tab: "Tab"
+      backspace: "Backspace"
+      delete: "Delete"
+      home: "Home"
+      end: "End"
+      page_up: "Page up"
+      page_down: "Page down"
 
     conditional_loading_section:
       loading: Loading…

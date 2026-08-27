@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { capabilities } from "discourse/services/capabilities";
@@ -126,5 +126,67 @@ module("Integration | ui-kit | DShortcut", function (hooks) {
 
     assert.dom("button").doesNotHaveAttribute("aria-keyshortcuts");
     assert.dom("kbd").doesNotExist();
+  });
+
+  test("edge: renders punctuation with its spoken name", async function (assert) {
+    await render(<template><DShortcut @keys="?" /></template>);
+
+    const key = find(".d-shortcut__key");
+    assert.dom(key).exists("the punctuation key renders");
+    assert
+      .dom(key)
+      .doesNotHaveClass(
+        "d-shortcut__key--glyph",
+        "punctuation is not styled as a glyph"
+      );
+    assert
+      .dom("span[aria-hidden='true']", key)
+      .hasText("?", "the visible span contains the punctuation label");
+    assert
+      .dom(".sr-only", key)
+      .hasText(
+        i18n("shortcut_modifier_key.question_mark"),
+        "the hidden span contains the localized spoken name"
+      );
+  });
+
+  test("edge: distinguishes glyph and punctuation keycaps", async function (assert) {
+    sinon.stub(capabilities, "isApple").value(true);
+
+    await render(<template><DShortcut @keys="mod+." /></template>);
+
+    assert
+      .dom(".d-shortcut__key:nth-child(1)")
+      .hasClass(
+        "d-shortcut__key--glyph",
+        "the Apple modifier is styled as a glyph"
+      );
+    const period = find(".d-shortcut__key:nth-child(2)");
+    assert
+      .dom(period)
+      .doesNotHaveClass(
+        "d-shortcut__key--glyph",
+        "the punctuation key is not styled as a glyph"
+      );
+    assert
+      .dom(".sr-only", period)
+      .hasText(
+        i18n("shortcut_modifier_key.period"),
+        "the punctuation key retains its spoken name"
+      );
+  });
+
+  test("edge: renders a letter key as plain text", async function (assert) {
+    await render(<template><DShortcut @keys="b" /></template>);
+
+    const key = find(".d-shortcut__key");
+    assert.dom(key).hasText("B", "the keycap contains the capitalized letter");
+    assert
+      .dom(key)
+      .doesNotHaveClass(
+        "d-shortcut__key--glyph",
+        "the letter is not styled as a glyph"
+      );
+    assert.dom("span", key).doesNotExist("the letter has no nested spans");
   });
 });

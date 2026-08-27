@@ -4,18 +4,20 @@ import { i18n } from "discourse-i18n";
 /** One key of a formatted shortcut. */
 export interface ShortcutKey {
   /**
-   * The canonical `KeyboardEvent.key` name: `Meta`, `Control`, `Alt`, `Shift`,
-   * `Enter`, `ArrowUp`, `B`, `/`.
+   * A canonical key name, matching `KeyboardEvent.key` except for `Space`:
+   * `Meta`, `Control`, `Alt`, `Shift`, `Enter`, `ArrowUp`, `B`, `/`.
    */
   key: string;
   /** The drawn text: `⌘` on Apple platforms and `Ctrl` elsewhere, `↑`, `Enter`, `B`. */
   label: string;
   /**
    * The text assistive technology should read for the drawn form. Differs from
-   * `label` only when `label` is a glyph, in which case it is the localized
-   * spelled-out name (`Command`, `Up arrow`).
+   * `label` when `label` is a glyph or punctuation, in which case it is the
+   * localized spelled-out name (`Command`, `Up arrow`, `Period`).
    */
   name: string;
+  /** Whether `label` is a modifier or arrow glyph, which run together when drawn. */
+  glyph: boolean;
 }
 
 /** Both forms of one shortcut, derived from a single spelling. */
@@ -77,9 +79,13 @@ const NAMED_KEYS: Record<string, string> = {
   plus: "+",
   comma: ",",
   up: "ArrowUp",
+  arrowup: "ArrowUp",
   down: "ArrowDown",
+  arrowdown: "ArrowDown",
   left: "ArrowLeft",
+  arrowleft: "ArrowLeft",
   right: "ArrowRight",
+  arrowright: "ArrowRight",
   "&uarr;": "ArrowUp",
   "&darr;": "ArrowDown",
   "&larr;": "ArrowLeft",
@@ -140,6 +146,14 @@ const WORD_KEYS: Record<string, string> = {
   Shift: "shortcut_modifier_key.shift",
   Enter: "shortcut_modifier_key.enter",
   Escape: "shortcut_modifier_key.esc",
+  Space: "shortcut_modifier_key.space",
+  Tab: "shortcut_modifier_key.tab",
+  Backspace: "shortcut_modifier_key.backspace",
+  Delete: "shortcut_modifier_key.delete",
+  Home: "shortcut_modifier_key.home",
+  End: "shortcut_modifier_key.end",
+  PageUp: "shortcut_modifier_key.page_up",
+  PageDown: "shortcut_modifier_key.page_down",
 };
 
 function canonicalKey(token: string, isApple: boolean): string {
@@ -169,12 +183,17 @@ function canonicalKey(token: string, isApple: boolean): string {
 function describeKey(key: string, isApple: boolean): ShortcutKey {
   const glyph = UNIVERSAL_GLYPHS[key] ?? (isApple ? APPLE_GLYPHS[key] : null);
   if (glyph) {
-    return { key, label: glyph.label, name: i18n(glyph.name) };
+    return { key, label: glyph.label, name: i18n(glyph.name), glyph: true };
+  }
+
+  const punctuation = SPOKEN_PUNCTUATION[key];
+  if (punctuation) {
+    return { key, label: key, name: i18n(punctuation), glyph: false };
   }
 
   const word = WORD_KEYS[key];
   const label = word ? i18n(word) : key;
-  return { key, label, name: label };
+  return { key, label, name: label, glyph: false };
 }
 
 /**
@@ -184,7 +203,7 @@ function describeKey(key: string, isApple: boolean): ShortcutKey {
  * with `mod` for the platform's primary modifier (`mod+enter`, `ctrl+alt+f`,
  * `shift+b`, `up`). Both outputs derive from it, so a call site cannot draw one
  * shortcut and announce another. Modifiers come out in the platform's
- * conventional order, so `mod+shift+d` draws `⇧⌘ D` on Apple platforms and
+ * conventional order, so `mod+shift+d` renders as `⇧⌘ D` on Apple platforms and
  * `Ctrl Shift D` elsewhere.
  *
  * @example
@@ -196,11 +215,18 @@ function describeKey(key: string, isApple: boolean): ShortcutKey {
  */
 export function formatShortcut(keys?: string | null): FormattedShortcut {
   const { isApple } = capabilities;
-  const canonical = (keys ?? "")
-    .split("+")
-    .map((token) => token.trim().toLowerCase())
-    .filter(Boolean)
-    .map((token) => canonicalKey(token, isApple));
+  // Same rule as the key binding library: a doubled separator or a bare `+`
+  // names the plus key itself.
+  const spelling = (keys ?? "").trim().replace(/\+\+/g, "+plus");
+  const tokens = spelling === "+" ? ["plus"] : spelling.split("+");
+  const canonical = [
+    ...new Set(
+      tokens
+        .map((token) => token.trim().toLowerCase())
+        .filter(Boolean)
+        .map((token) => canonicalKey(token, isApple))
+    ),
+  ];
 
   const modifiers = canonical
     .filter((key) => MODIFIER_ORDER.includes(key))
@@ -210,14 +236,9 @@ export function formatShortcut(keys?: string | null): FormattedShortcut {
     describeKey(key, isApple)
   );
 
-  const announced = parsed.map(({ key, name }) => {
-    const punctuation = SPOKEN_PUNCTUATION[key];
-    return punctuation ? i18n(punctuation) : name;
-  });
-
   return {
     keys: parsed,
     label: parsed.map((key) => key.label).join(" "),
-    aria: parsed.length ? announced.join("+") : undefined,
+    aria: parsed.length ? parsed.map((key) => key.name).join("+") : undefined,
   };
 }

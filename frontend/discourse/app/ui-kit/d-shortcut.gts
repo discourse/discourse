@@ -24,9 +24,9 @@ interface KbdSignature {
 
 /**
  * The drawn form: one `<kbd>` per key inside a `<kbd>` for the combination.
- * A key drawn as a glyph also carries its spelled-out name for assistive
- * technology, hidden visually, so `⌘` is read as "Command" rather than as a
- * symbol name or nothing.
+ * A key drawn as a glyph or as punctuation also carries its spelled-out name
+ * for assistive technology, hidden visually, so `⌘` is read as "Command" and
+ * `.` as "Period" rather than as a symbol name or nothing.
  */
 const Kbd: TOC<KbdSignature> = <template>
   {{#if @keys.length}}
@@ -40,7 +40,7 @@ const Kbd: TOC<KbdSignature> = <template>
         <kbd
           class={{dConcatClass
             "d-shortcut__key"
-            (if (notEq key.name key.label) "d-shortcut__key--glyph")
+            (if key.glyph "d-shortcut__key--glyph")
           }}
         >
           {{#if (notEq key.name key.label)}}
