@@ -19,6 +19,26 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       )
     end
 
+    # A slug-only topic link resolves through a topic slug lookup; with no
+    # topics to look up against, the titled construct restores byte-exact.
+    it "restores a slug-only topic link byte-exact when the slug is unknown" do
+      token = placeholder.mint(:link)
+      original = %{[read this](/t/how-to-fix-it "worth it")}
+      create_link(
+        token,
+        original:,
+        url: "/t/how-to-fix-it",
+        text: "read this",
+        target_type: link_target::TOPIC,
+        target_name: "how-to-fix-it",
+        url_offset: 12,
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{token} y" }])
+
+      expect(resolved[1]).to eq("x #{original} y")
+    end
+
     # A multi-tag route names several records; with nothing mapped the whole
     # construct restores byte-exact, filter and suffix included.
     it "restores a category+tag link byte-exact when nothing is mapped" do

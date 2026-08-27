@@ -34,6 +34,14 @@ module Migrations
                 %r{\A/t/#{SEGMENT}/(?<id>#{Base::ID_PATTERN})(?:/(?<post_number>#{Base::ID_PATTERN}))?(?=[/?#]|\z)}
               private_constant :TOPIC_SLUG
 
+              # `/t/<slug>` alone — core routes it to the topic with that slug.
+              # A single segment only: a second segment that isn't an id is no
+              # route, and the id forms above are tried first. All-digit
+              # segments stay out — a short run is an id, an overlong run is
+              # the id-or-numeric-title ambiguity, refused rather than guessed.
+              TOPIC_SLUG_ONLY = %r{\A/t/(?<slug>(?!\d+(?=[/?#]|\z))#{SEGMENT})(?=[?#]|\z)}
+              private_constant :TOPIC_SLUG_ONLY
+
               POST = %r{\A/p/(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
               private_constant :POST
 
@@ -179,7 +187,12 @@ module Migrations
 
                 def topic_or_post(rest)
                   match = TOPIC_NUMERIC.match(rest) || TOPIC_SLUG.match(rest)
-                  return nil unless match
+                  if match.nil?
+                    match = TOPIC_SLUG_ONLY.match(rest)
+                    # By name, like a user route: resolution looks the slug up
+                    # and restores the source on no (or no unique) match.
+                    return match && target(match, :topic, target_name: match[:slug])
+                  end
 
                   if match[:post_number]
                     target(

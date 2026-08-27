@@ -419,6 +419,7 @@ CREATE TABLE topics
     pinned_globally      BOOLEAN,
     pinned_until         DATETIME,
     slow_mode_seconds    INTEGER,
+    slug                 TEXT,
     subtype              TEXT,
     title                TEXT     NOT NULL,
     user_id              NUMERIC,

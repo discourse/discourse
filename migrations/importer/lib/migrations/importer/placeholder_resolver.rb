@@ -280,7 +280,45 @@ module Migrations
           number: :target_post_number,
         )
         resolve_link_names(link_rows)
+        resolve_topic_slugs(link_rows)
         resolve_link_tag_paths(link_rows)
+      end
+
+      # Fills a slug-only topic link's `target_id` by looking the slug up in the
+      # source topics. Only an unambiguous slug resolves — slugs aren't unique,
+      # and rewriting a link to one of several same-slugged topics would guess.
+      # A miss or a collision leaves the id nil, so render_link restores the
+      # source URL (and reports it).
+      def resolve_topic_slugs(link_rows)
+        pending =
+          link_rows.select do |row|
+            row[:target_type] == Enums::LinkTarget::TOPIC && row[:target_id].nil? &&
+              row[:target_name].present?
+          end
+        return if pending.empty?
+
+        topic_ids = topic_ids_for_slugs(pending.map { |row| row[:target_name] })
+        pending.each { |row| row[:target_id] = topic_ids[row[:target_name]] }
+      end
+
+      # Batch-resolves slugs to topic original_ids, keeping only slugs that name
+      # exactly one topic. Slug-only links are rare enough that the occasional
+      # unindexed scan of `topics` beats carrying a slug index for every
+      # conversion; most batches have no such row and run no query at all.
+      def topic_ids_for_slugs(slugs)
+        slugs = slugs.uniq
+        placeholders = (["?"] * slugs.size).join(", ")
+        sql = <<~SQL
+          SELECT slug, MIN(original_id) AS original_id
+          FROM topics
+          WHERE slug IN (#{placeholders})
+          GROUP BY slug
+          HAVING COUNT(*) = 1
+        SQL
+
+        topic_ids = {}
+        @intermediate_db.query(sql, *slugs) { |row| topic_ids[row[:slug]] = row[:original_id] }
+        topic_ids
       end
 
       # Resolves every tag name a multi-tag route carries to its source

@@ -27,6 +27,7 @@ module Migrations
             pinned_globally,
             pinned_until,
             slow_mode_seconds,
+            slug,
             subtype,
             title,
             user_id,
@@ -35,7 +36,7 @@ module Migrations
             visible
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -59,6 +60,7 @@ module Migrations
         # @param pinned_globally        [Boolean, nil]
         # @param pinned_until           [Time, nil]
         # @param slow_mode_seconds      [Integer, nil]
+        # @param slug                   [String, nil]
         # @param subtype                [String, nil]
         # @param title                  [String]
         # @param user_id                [Integer, String, nil]
@@ -85,6 +87,7 @@ module Migrations
           pinned_globally: nil,
           pinned_until: nil,
           slow_mode_seconds: nil,
+          slug: nil,
           subtype: nil,
           title:,
           user_id: nil,
@@ -111,6 +114,7 @@ module Migrations
             Migrations::Database.format_boolean(pinned_globally),
             Migrations::Database.format_datetime(pinned_until),
             slow_mode_seconds,
+            slug,
             subtype,
             title,
             user_id,

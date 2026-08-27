@@ -16,6 +16,7 @@
 # uses follows from what the URL carries — with a Discourse source:
 #
 #   * topic     `/t/a-topic/123`, `/t/123`  -> target_id: 123
+#   * topic     `/t/a-topic` (slug only)    -> target_name: "a-topic"
 #   * post      `/p/456`                    -> target_id: 456
 #   * post      `/t/a-topic/123/7`          -> target_topic_id: 123, target_post_number: 7
 #   * user      `/u/sam`, `/users/sam`      -> target_name: "sam"
@@ -27,9 +28,10 @@
 #
 # The table shows what a Discourse source's URLs carry; the storage itself is less
 # strict. Any target type may be recorded by id — a converter that knows the
-# target's `original_id` can skip the name. The name form resolves only for user,
-# group, tag and category (a topic, post or badge has no name lookup), and
-# coordinates only for a post.
+# target's `original_id` can skip the name. The name form resolves for user,
+# group, tag and category, and for a topic by its slug when exactly one source
+# topic carries it (a post or badge has no name lookup); coordinates only for a
+# post.
 #
 # A category slug path is stored with a `:` separator, matching the hashtag
 # resolution maps so the importer reuses them verbatim. Post coordinates mirror

@@ -107,6 +107,10 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       Migrations::Database::IntermediateDB::Tag.create(original_id:, name:, slug: name)
     end
 
+    def create_topic(original_id, slug)
+      Migrations::Database::IntermediateDB::Topic.create(original_id:, title: slug, slug:)
+    end
+
     def render(attrs, maps:)
       link = placeholder.mint(:link)
       create_link(link, **attrs)
@@ -389,6 +393,55 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         render({ url: "/u/old_bob", target_type: link_target::USER, target_name: "old_bob" }, maps:)
 
       expect(resolved).to eq("x https://dest.example.com/u/new_bob y")
+    end
+
+    # A slug-only `/t/<slug>` link carries no id; the slug resolves against the
+    # source topics, and only an unambiguous one rewrites.
+
+    it "resolves a slug-only topic link when exactly one topic carries the slug" do
+      create_topic(300, "how-to-fix-it")
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 99 })
+
+      resolved =
+        render(
+          {
+            url: "/t/how-to-fix-it?page=2",
+            target_type: link_target::TOPIC,
+            target_name: "how-to-fix-it",
+            target_suffix: "?page=2",
+          },
+          maps:,
+        )
+
+      expect(resolved).to eq("x https://dest.example.com/t/99?page=2 y")
+    end
+
+    it "restores the source URL for an unknown slug" do
+      url = "https://old.example.com/t/ghost-topic"
+
+      resolved =
+        render({ url:, target_type: link_target::TOPIC, target_name: "ghost-topic" }, maps:)
+
+      expect(resolved).to eq("x #{url} y")
+    end
+
+    it "restores the source URL when several topics share the slug" do
+      create_topic(300, "dup-slug")
+      create_topic(301, "dup-slug")
+      link = placeholder.mint(:link)
+      create_link(
+        link,
+        url: "https://old.example.com/t/dup-slug",
+        target_type: link_target::TOPIC,
+        target_name: "dup-slug",
+      )
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 99, 301 => 100 })
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x https://old.example.com/t/dup-slug y")
+      expect(resolver.unresolved_embeds.map(&:kind)).to eq([:link])
     end
 
     it "resolves a category target by its parent:child slug path" do

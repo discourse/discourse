@@ -79,6 +79,28 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
+    # Core routes `/t/<slug>` to the topic carrying that slug, so the slug is
+    # the coordinate; resolution looks it up and restores the source unless
+    # exactly one topic matches.
+    context "with a slug-only topic link" do
+      it "defers the topic by its slug" do
+        link, = link_for("[topic](/t/how-to-fix-it)")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::TOPIC,
+          target_id: nil,
+          target_name: "how-to-fix-it",
+          target_suffix: nil,
+        )
+      end
+
+      it "keeps the query tail as suffix" do
+        link, = link_for("see https://forum.example.com/t/how-to-fix-it?page=2 there")
+
+        expect(link).to include(target_name: "how-to-fix-it", target_suffix: "?page=2")
+      end
+    end
+
     # A destination can carry a title, padding, or angle brackets and still be a
     # link core resolves. Missing those left such a link pointing at the source
     # site after the migration. Each of these cooks to href="/t/slug/5".

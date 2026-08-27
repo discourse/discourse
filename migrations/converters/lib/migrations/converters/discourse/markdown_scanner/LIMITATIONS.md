@@ -30,11 +30,11 @@ fail-closed:
   (`:unanchored`); other constructs in the same body are still extracted. A destination that is its own syntax —
   a bare schemeless domain linkify links, a reference definition's URL — is
   rewritten in place, not refused. An internal URL whose path opens a
-  coordinate route but parses none (`/t//209`, `/u/bob!!!`, a slug-only
-  `/t/<slug>` topic link — the intermediate DB carries no topic slugs to
-  resolve one against) also refuses: an origin-only rewrite would carry its
-  stale-looking ids onto the new host, which is worse than a reported
-  verbatim link.
+  coordinate route but parses none (`/t//209`, `/u/bob!!!`) also refuses:
+  an origin-only rewrite would carry its stale-looking ids onto the new
+  host, which is worse than a reported verbatim link. A slug-only
+  `/t/<slug>` link resolves when exactly one source topic carries the slug;
+  a collision or an unknown slug restores the source URL.
 - **Multi-tag routes map whole or not at all.** `/tags/c/…` (category + tag,
   with an optional `none`/`all` subcategory filter) and
   `/tags/intersection/…` name several records; the importer rebuilds the

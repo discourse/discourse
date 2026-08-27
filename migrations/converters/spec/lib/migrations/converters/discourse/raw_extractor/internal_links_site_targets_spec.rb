@@ -37,7 +37,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       # instead of guessing a reading.
       "a multi-tag form with a trailing numeric segment" =>
         "https://forum.example.com/tags/c/support/feature/12",
-      "a slug-only topic link" => "https://forum.example.com/t/a-topic-slug",
+      "a slug followed by a non-id segment" => "https://forum.example.com/t/a-topic-slug/extra!",
     }.each do |label, url|
       it "refuses #{label} instead of recording a SITE link" do
         raw = "This topic you've named [>>>>>](#{url}) doesn't load"
