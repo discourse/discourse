@@ -22,6 +22,13 @@
 
   &__members {
     margin-top: var(--space-4);
+
+    .admin-report-table-header.number,
+    .admin-report-table-header.share_formatted,
+    .admin-report-table-cell.number,
+    .admin-report-table-cell.share_formatted {
+      text-align: right;
+    }
   }
 
   &__members-header {
@@ -44,5 +51,20 @@
     margin: 0;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+  }
+}
+
+.rtl .posters-by-member-type-report {
+  &__numeric {
+    text-align: left;
+  }
+
+  &__members {
+    .admin-report-table-header.number,
+    .admin-report-table-header.share_formatted,
+    .admin-report-table-cell.number,
+    .admin-report-table-cell.share_formatted {
+      text-align: left;
+    }
   }
 }
