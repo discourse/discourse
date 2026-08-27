@@ -60,6 +60,7 @@ gem "message_bus"
 gem "rails_multisite"
 
 gem "fastimage"
+gem "msgpack"
 gem "ruby-vips", "~> 2.3", require: false
 
 gem "aws-sdk-s3", require: false
@@ -229,7 +230,10 @@ gem "rqrcode"
 
 gem "rubyzip", require: false
 
-gem "landlock", require: false
+gem "landlock",
+    git: "https://github.com/discourse/ruby-landlock.git",
+    branch: "tgxworld/capture-fork",
+    require: false
 
 gem "sshkey", require: false
 

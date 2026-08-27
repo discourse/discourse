@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require "fileutils"
 require "image_processing/instrumentation"
-require "json"
+require "msgpack"
 require "rbconfig"
+require "socket"
 require "tmpdir"
 
 module DiscourseVips
@@ -11,6 +13,9 @@ module DiscourseVips
 
   WORKER_GRACE_SECONDS = 2
   private_constant :WORKER_GRACE_SECONDS
+
+  MAX_RESPONSE_BYTES = 8 * 1024
+  private_constant :MAX_RESPONSE_BYTES
 
   DEFAULT_READ_PATHS = %w[/bin /lib /lib64 /usr].freeze
   private_constant :DEFAULT_READ_PATHS
@@ -31,138 +36,119 @@ module DiscourseVips
 
   class Connection
     def initialize(command:, environment:)
-      @pending = {}
       @state_mutex = Mutex.new
-      @write_mutex = Mutex.new
-      @next_request_id = 0
       start(command, environment)
     end
 
     def alive?
-      @state_mutex.synchronize { @alive }
+      @state_mutex.synchronize do
+        return false if @closed
+
+        Process.waitpid(@worker_pid, Process::WNOHANG).nil?
+      rescue Errno::ECHILD
+        false
+      end
     end
 
     def call(request, timeout:)
-      response_queue = Queue.new
+      socket = UNIXSocket.new(@socket_path)
+      socket.write(MessagePack.pack(request))
+      socket.close_write
 
-      @write_mutex.synchronize do
-        request_id = register(response_queue)
-        @request_writer.write(JSON.generate(request.merge(id: request_id)) << "\n")
-      end
-
-      response = response_queue.pop(timeout: timeout + WORKER_GRACE_SECONDS)
-      if !response
-        remove(request_id)
+      if !IO.select([socket], nil, nil, timeout + WORKER_GRACE_SECONDS)
         close
         raise WorkerUnavailable, "libvips worker did not respond"
       end
 
-      response
-    rescue IOError, SystemCallError => error
-      remove(request_id) if request_id
+      payload = socket.read(MAX_RESPONSE_BYTES + 1).to_s
+      raise WorkerUnavailable, "libvips worker returned no response" if payload.empty?
+      if payload.bytesize > MAX_RESPONSE_BYTES
+        raise WorkerUnavailable, "libvips worker response is too large"
+      end
+
+      MessagePack.unpack(payload)
+    rescue WorkerUnavailable
+      close
+      raise
+    rescue MessagePack::UnpackError, IOError, SystemCallError => error
       close
       raise WorkerUnavailable, "libvips worker request failed: #{error.message}"
+    ensure
+      socket&.close unless socket&.closed?
     end
 
     def close
-      @request_writer&.close unless @request_writer&.closed?
-      signal_worker("TERM")
-      if @response_thread && !@response_thread.join(WORKER_GRACE_SECONDS)
-        signal_worker("KILL", group: true)
-        @response_thread.join
-      end
-      fail_pending("libvips worker stopped")
+      worker_pid, owner_writer, socket_directory =
+        @state_mutex.synchronize do
+          return if @closed
+
+          @closed = true
+          [@worker_pid, @owner_writer, @socket_directory]
+        end
+
+      owner_writer.close unless owner_writer.closed?
+      wait_for_worker(worker_pid)
     rescue IOError, Errno::ECHILD
     ensure
-      @response_reader&.close unless @response_reader&.closed?
+      remove_socket_directory(socket_directory)
     end
 
     def discard
-      @request_writer&.close unless @request_writer&.closed?
-      @response_reader&.close unless @response_reader&.closed?
+      @state_mutex.synchronize do
+        return if @closed
+
+        @closed = true
+        @owner_writer.close unless @owner_writer.closed?
+      end
     rescue IOError
     end
 
     private
 
     def start(command, environment)
-      request_reader, @request_writer = IO.pipe
-      @response_reader, response_writer = IO.pipe
-      @request_writer.sync = true
+      @socket_directory = Dir.mktmpdir("discourse-vips-worker-")
+      @socket_path = File.join(@socket_directory, "socket")
+      server = UNIXServer.new(@socket_path)
+      owner_reader, @owner_writer = IO.pipe
 
       @worker_pid =
         Process.spawn(
           environment,
           *command,
-          3 => request_reader,
-          4 => response_writer,
+          3 => server,
+          4 => owner_reader,
           :in => File::NULL,
           :out => File::NULL,
           :close_others => true,
           :pgroup => true,
           :unsetenv_others => true,
         )
-      @alive = true
-      @response_thread = Thread.new { read_responses }
+      @closed = false
     rescue Exception
-      @request_writer&.close
-      @response_reader&.close
+      @owner_writer&.close
+      remove_socket_directory(@socket_directory)
       raise
     ensure
-      request_reader&.close
-      response_writer&.close
+      server&.close
+      owner_reader&.close
     end
 
-    def register(response_queue)
-      @state_mutex.synchronize do
-        raise WorkerUnavailable, "libvips worker is unavailable" if !@alive
+    def wait_for_worker(worker_pid)
+      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + WORKER_GRACE_SECONDS
+      while Process.clock_gettime(Process::CLOCK_MONOTONIC) < deadline
+        return if Process.waitpid(worker_pid, Process::WNOHANG)
 
-        @next_request_id += 1
-        @pending[@next_request_id] = response_queue
-        @next_request_id
+        sleep 0.01
       end
+
+      Process.kill("KILL", -worker_pid)
+      Process.waitpid(worker_pid)
+    rescue Errno::ECHILD, Errno::ESRCH
     end
 
-    def remove(request_id)
-      @state_mutex.synchronize { @pending.delete(request_id) }
-    end
-
-    def read_responses
-      Thread.current.report_on_exception = false
-      while (line = @response_reader.gets)
-        response = JSON.parse(line)
-        response_queue = remove(response.fetch("id"))
-        response_queue&.push(response)
-      end
-    rescue IOError, SystemCallError, JSON::ParserError, KeyError => error
-      fail_pending("libvips worker response failed: #{error.message}")
-    ensure
-      fail_pending("libvips worker exited")
-      @request_writer.close unless @request_writer.closed?
-      signal_worker("TERM")
-      begin
-        Process.waitpid(@worker_pid)
-      rescue Errno::ECHILD
-      end
-      signal_worker("KILL", group: true)
-    end
-
-    def signal_worker(signal, group: false)
-      Process.kill(signal, group ? -@worker_pid : @worker_pid)
-    rescue Errno::ESRCH
-    end
-
-    def fail_pending(message)
-      pending =
-        @state_mutex.synchronize do
-          @alive = false
-          current = @pending.values
-          @pending = {}
-          current
-        end
-      pending.each do |response_queue|
-        response_queue.push({ "status" => "unavailable", "message" => message })
-      end
+    def remove_socket_directory(directory)
+      FileUtils.remove_entry(directory) if directory && File.exist?(directory)
+    rescue SystemCallError
     end
   end
   private_constant :Connection
@@ -204,7 +190,10 @@ module DiscourseVips
       reset_after_fork if @owner_pid != Process.pid
 
       @connection_mutex.synchronize do
-        @connection = nil if @connection && !@connection.alive?
+        if @connection && !@connection.alive?
+          @connection.close
+          @connection = nil
+        end
         @connection ||= Connection.new(command: worker_command, environment: worker_environment)
       end
     rescue SystemCallError => error
@@ -226,7 +215,7 @@ module DiscourseVips
 
     def worker_command
       load_paths = [Rails.root.join("lib").to_s]
-      %w[ffi json landlock logger ruby-vips].each do |gem_name|
+      %w[ffi landlock logger msgpack ruby-vips].each do |gem_name|
         load_paths.concat(Gem.loaded_specs.fetch(gem_name).full_require_paths)
       end
 

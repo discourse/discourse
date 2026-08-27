@@ -7,15 +7,20 @@ RSpec.describe DiscourseVips do
 
   after { described_class.before_fork }
 
-  def use_test_worker
+  def use_test_worker(without_landlock: false)
     described_class.before_fork
     command = described_class.send(:worker_command).dup
     command[-3] = TEST_WORKER_PATH
     described_class.stubs(:worker_command).returns(command)
+    if without_landlock
+      environment = described_class.send(:worker_environment)
+      environment["DISCOURSE_VIPS_TEST_WITHOUT_LANDLOCK"] = "1"
+      described_class.stubs(:worker_environment).returns(environment)
+    end
   end
 
   def runtime_state
-    JSON.parse(described_class.vips("test-runtime", operation: :test))
+    MessagePack.unpack(described_class.vips("test-runtime", operation: :test))
   end
 
   def wait_until(timeout: 5)
@@ -57,35 +62,38 @@ RSpec.describe DiscourseVips do
   end
 
   def raw_worker_response(payload)
-    request_reader, request_writer = IO.pipe
-    response_reader, response_writer = IO.pipe
+    socket_directory = Dir.mktmpdir("discourse-vips-worker-spec-")
+    socket_path = File.join(socket_directory, "socket")
+    server = UNIXServer.new(socket_path)
+    owner_reader, owner_writer = IO.pipe
     pid =
       Process.spawn(
         described_class.send(:worker_environment),
         *described_class.send(:worker_command),
-        3 => request_reader,
-        4 => response_writer,
+        3 => server,
+        4 => owner_reader,
         :in => File::NULL,
         :out => File::NULL,
         :close_others => true,
         :pgroup => true,
         :unsetenv_others => true,
       )
-    request_reader.close
-    response_writer.close
-    request_writer.write(payload)
-    request_writer.close
-    response = Timeout.timeout(5) { response_reader.read }
+    server.close
+    owner_reader.close
+    socket = UNIXSocket.new(socket_path)
+    socket.write(payload)
+    socket.close_write
+    response = Timeout.timeout(5) { socket.read }
+    owner_writer.close
     Process.waitpid(pid)
     response
   ensure
-    [request_reader, request_writer, response_reader, response_writer].each do |io|
-      io&.close unless io&.closed?
-    end
+    [server, owner_reader, owner_writer, socket].each { |io| io&.close unless io&.closed? }
     if pid && process_alive?(pid)
       Process.kill("KILL", -pid)
       Process.waitpid(pid)
     end
+    FileUtils.remove_entry(socket_directory) if socket_directory && File.exist?(socket_directory)
   end
 
   it "starts a minimal worker lazily and records image-processing instrumentation",
@@ -107,6 +115,12 @@ RSpec.describe DiscourseVips do
       operation: "test",
       success: true,
     )
+  end
+
+  it "runs operations without Landlock" do
+    use_test_worker(without_landlock: true)
+
+    expect(described_class.vips("test-landlock", operation: :test)).to eq("false")
   end
 
   it "routes concurrent responses to the right callers without head-of-line blocking",
@@ -178,7 +192,7 @@ RSpec.describe DiscourseVips do
     expect(runtime_state.fetch("worker_pid")).to eq(worker_pid)
   end
 
-  it "fails pending requests, removes children, and restarts lazily after the worker crashes",
+  it "fails in-flight requests and restarts lazily after the worker crashes",
      skip: fork_test_skip do
     use_test_worker
     worker_pid = runtime_state.fetch("worker_pid")
@@ -234,7 +248,6 @@ RSpec.describe DiscourseVips do
 
   it "rejects malformed protocol frames" do
     request = {
-      id: 1,
       command: ["version"],
       read: [],
       write: [Dir.tmpdir],
@@ -242,17 +255,10 @@ RSpec.describe DiscourseVips do
       timeout: 1,
       nice: 10,
     }
-    payloads = [
-      "{\n",
-      JSON.generate(request.merge(id: 0)) << "\n",
-      (JSON.generate(request) << "\n") * 2,
-      ("x" * (65 * 1024)) << "\n",
-      JSON.generate(request),
-    ]
+    payloads = ["\xc1".b, MessagePack.pack(request.except(:command)), "x" * (65 * 1024)]
 
     payloads.each do |payload|
-      responses = raw_worker_response(payload).lines.map { |line| JSON.parse(line) }
-      expect(responses).to include(a_hash_including("status" => "error"))
+      expect(MessagePack.unpack(raw_worker_response(payload))).to include("status" => "error")
     end
   end
 

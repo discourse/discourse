@@ -3,6 +3,10 @@
 require "discourse_vips/worker"
 require "socket"
 
+if ENV["DISCOURSE_VIPS_TEST_WITHOUT_LANDLOCK"]
+  Landlock.singleton_class.define_method(:supported?) { false }
+end
+
 module TestOperations
   def warm
     tasks_before = native_task_count
@@ -22,8 +26,10 @@ module TestOperations
     operation, *arguments = command
 
     case operation
+    when "test-landlock"
+      Landlock.supported?.to_s
     when "test-runtime"
-      JSON.generate(@runtime.merge(operation_pid: Process.pid, worker_pid: Process.ppid))
+      MessagePack.pack(@runtime.merge(operation_pid: Process.pid, worker_pid: Process.ppid))
     when "test-return"
       arguments.fetch(0)
     when "test-block"
