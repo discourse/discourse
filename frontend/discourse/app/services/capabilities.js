@@ -38,6 +38,11 @@ export function resetKeyboardEvidence() {
   keyboardEvidence.seen = false;
 }
 
+/** Records that a physical keyboard has been used. */
+export function noteKeyboardEvidence() {
+  keyboardEvidence.seen = true;
+}
+
 let siteInitialized = false;
 
 /**
@@ -159,7 +164,7 @@ class _Capabilities {
       event.ctrlKey ||
       event.altKey
     ) {
-      keyboardEvidence.seen = true;
+      noteKeyboardEvidence();
     }
   };
 
