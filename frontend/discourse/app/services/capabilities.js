@@ -33,6 +33,11 @@ class KeyboardEvidence {
 
 const keyboardEvidence = new KeyboardEvidence();
 
+/** Forgets any keyboard use seen so far; for test isolation. */
+export function resetKeyboardEvidence() {
+  keyboardEvidence.seen = false;
+}
+
 let siteInitialized = false;
 
 /**
@@ -182,6 +187,11 @@ class _Capabilities {
    */
   get hasKeyboard() {
     return finePointerQuery.matches || keyboardEvidence.seen;
+  }
+
+  /** Whether a keydown only a physical keyboard sends has been seen. */
+  get hasKeyboardEvidence() {
+    return keyboardEvidence.seen;
   }
 
   get userHasBeenActive() {

@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { capabilities } from "discourse/services/capabilities";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -57,13 +56,16 @@ export function removeDefaultQuickSearchRandomTips() {
 resetQuickSearchRandomTips();
 
 export default class RandomQuickTip extends Component {
+  @service capabilities;
   @service search;
 
   constructor() {
     super(...arguments);
-    // A tip about a key combination is no help without a keyboard to press it.
+    // A tip about a key combination is no help without a keyboard to press
+    // it. The pick is made once per instance, so a keyboard noticed later
+    // shows up on the next open.
     const tips = QUICK_TIPS.filter(
-      (tip) => !tip.shortcut || capabilities.hasKeyboard
+      (tip) => !tip.shortcut || this.capabilities.hasKeyboard
     );
     this.randomTip = tips[Math.floor(Math.random() * tips.length)];
   }

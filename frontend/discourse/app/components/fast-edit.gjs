@@ -20,9 +20,15 @@ export default class FastEdit extends Component {
   @tracked value = this.args.newValue || this.args.initialValue;
 
   shortcut = formatShortcut("mod+enter");
-  buttonTitle = i18n("composer.submit_shortcut_title", {
-    shortcut: this.shortcut.label,
-  });
+
+  get buttonTitle() {
+    if (!this.capabilities.hasKeyboard) {
+      return;
+    }
+    return i18n("composer.submit_shortcut_title", {
+      shortcut: this.shortcut.label,
+    });
+  }
 
   get disabled() {
     return this.value === this.args.initialValue;

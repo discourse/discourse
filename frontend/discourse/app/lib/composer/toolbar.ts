@@ -1,5 +1,4 @@
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
-import { formatShortcut } from "discourse/lib/shortcut-format";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import type Site from "discourse/models/site";
 import type { CapabilitiesService } from "discourse/services/capabilities";
@@ -244,15 +243,13 @@ export class ToolbarBase {
     };
 
     // Main button shortcut bindings and title text.
+    // The shortcut suffix is added where the button renders, since it is
+    // shown only when a keyboard is likely.
     const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
+    createdButton.title = title;
     if (buttonAttrs.shortcut) {
       createdButton.shortcutKeys = `mod+${buttonAttrs.shortcut}`;
-
-      if (buttonAttrs.hideShortcutInTitle) {
-        createdButton.title = title;
-      } else {
-        createdButton.title = `${title} (${formatShortcut(createdButton.shortcutKeys).label})`;
-      }
+      createdButton.hideShortcutInTitle = buttonAttrs.hideShortcutInTitle;
 
       // These shortcuts are actually bound in the keymap inside
       // components/d-editor.gjs

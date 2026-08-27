@@ -12,6 +12,9 @@ export default class ComposerSaveButton extends Component {
   shortcut = formatShortcut("mod+enter");
 
   get translatedTitle() {
+    if (!this.capabilities.hasKeyboard) {
+      return;
+    }
     return i18n("composer.submit_shortcut_title", {
       shortcut: this.shortcut.label,
     });

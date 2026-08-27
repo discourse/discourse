@@ -30,15 +30,13 @@ export default class ComposerToggleSwitch extends Component {
   }
 
   get label() {
-    if (this.args.state) {
-      return i18n("composer.switch_to_markdown", {
-        keyboardShortcut: this.shortcut.label,
-      });
-    } else {
-      return i18n("composer.switch_to_rich_text", {
-        keyboardShortcut: this.shortcut.label,
-      });
+    const key = this.args.state
+      ? "composer.switch_to_markdown"
+      : "composer.switch_to_rich_text";
+    if (!this.capabilities.hasKeyboard) {
+      return i18n(`${key}_no_shortcut`);
     }
+    return i18n(key, { keyboardShortcut: this.shortcut.label });
   }
 
   <template>

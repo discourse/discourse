@@ -30,6 +30,15 @@ export default class ComposerToolbarButtons extends Component {
     return this.args.rovingButtonBar || this.args.data.rovingButtonBar;
   }
 
+  /** The title with the drawn shortcut appended, when one is shown. */
+  @action
+  titleFor(button, shortcutLabel) {
+    if (!shortcutLabel || button.hideShortcutInTitle) {
+      return button.title;
+    }
+    return `${button.title} (${shortcutLabel})`;
+  }
+
   @action
   isButtonActive(button) {
     const state = this.args.data.context?.textManipulation?.state || {};
@@ -79,7 +88,7 @@ export default class ComposerToolbarButtons extends Component {
                 @onKeyDown={{this.rovingButtonBar}}
                 @preventFocus={{button.preventFocus}}
                 @translatedLabel={{button.translatedLabel}}
-                @translatedTitle={{button.title}}
+                @translatedTitle={{this.titleFor button shortcut.label}}
               />
             </DShortcut>
           {{/if}}

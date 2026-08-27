@@ -97,6 +97,7 @@ import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
+import { resetKeyboardEvidence } from "discourse/services/capabilities";
 import {
   clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
@@ -217,6 +218,7 @@ export function testCleanup(container, app) {
 
   User.resetCurrent();
   resetMobile();
+  resetKeyboardEvidence();
   resetAdditionalReportModes();
   resetAdminDashboardReportRenderers();
   resetAdminDashboardSections();

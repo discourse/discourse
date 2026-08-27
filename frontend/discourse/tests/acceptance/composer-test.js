@@ -21,6 +21,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { formatShortcut } from "discourse/lib/shortcut-format";
 import Composer, { CREATE_TOPIC } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import { capabilities } from "discourse/services/capabilities";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
@@ -1939,6 +1940,62 @@ acceptance(`composer buttons API`, function (needs) {
     });
   });
 
+  test("gate: toolbar and save button titles carry the shortcut with a keyboard", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+
+    const bold = formatShortcut("mod+b");
+    assert
+      .dom(".toolbar__button.bold")
+      .hasAttribute("title", `${i18n("composer.bold_title")} (${bold.label})`)
+      .hasAttribute("aria-keyshortcuts", bold.aria);
+    assert.dom(".save-or-cancel .create").hasAttribute(
+      "title",
+      i18n("composer.submit_shortcut_title", {
+        shortcut: formatShortcut("mod+enter").label,
+      })
+    );
+  });
+
+  test("gate: toolbar and save button titles drop the shortcut without a keyboard", async function (assert) {
+    sinon.stub(capabilities, "hasKeyboard").get(() => false);
+
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+
+    assert
+      .dom(".toolbar__button.bold")
+      .hasAttribute("title", i18n("composer.bold_title"))
+      .doesNotHaveAttribute("aria-keyshortcuts");
+    assert
+      .dom(".save-or-cancel .create")
+      .doesNotHaveAttribute("title")
+      .doesNotHaveAttribute("aria-keyshortcuts");
+  });
+
+  test("gate: an option without a label keeps the shortcut in its title", async function (assert) {
+    withPluginApi((api) => {
+      api.addComposerToolbarPopupMenuOption({
+        action: () => {},
+        shortcut: "alt+b",
+        icon: "far-bold",
+        name: "icon-only",
+        title: "some_title",
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+    await click(".toolbar-menu__options-trigger");
+
+    const shortcut = formatShortcut("mod+alt+b");
+    assert
+      .dom("[data-name='icon-only']")
+      .hasAttribute("title", `${i18n("some_title")} (${shortcut.label})`)
+      .hasAttribute("aria-keyshortcuts", shortcut.aria);
+    assert.dom("[data-name='icon-only'] .d-shortcut").doesNotExist();
+  });
+
   test("buttons can support a shortcut", async function (assert) {
     withPluginApi((api) => {
       api.addComposerToolbarPopupMenuOption({
@@ -1989,7 +2046,7 @@ acceptance(`composer buttons API`, function (needs) {
       .hasAttribute(
         "aria-keyshortcuts",
         shortcut.aria,
-        "announces the shortcut in its canonical form"
+        "announces the shortcut in its localized spoken form"
       );
     assert
       .dom(".d-button-label__text", row)
