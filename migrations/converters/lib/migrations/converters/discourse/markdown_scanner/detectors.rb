@@ -7,10 +7,8 @@ module Migrations
         # Construct detectors, tried in priority order at each trigger
         # character. Each returns a {Match} or nil.
         module Detectors
-          # Result of a successful detection. A nil `node` consumes the span
-          # without producing anything: the walk passes it through verbatim and
-          # resumes after it — how a detector marks a span as not a place to
-          # detect in (a quote header without coordinates, for example).
+          # Result of a successful detection: the byte span the construct
+          # covers and the AST node describing it.
           Match = Data.define(:start_pos, :end_pos, :node)
         end
       end

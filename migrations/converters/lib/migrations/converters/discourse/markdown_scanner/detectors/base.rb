@@ -21,20 +21,20 @@ module Migrations
             end
 
             # `pos` is a byte offset into `input` and `byte` is `input.getbyte(pos)`,
-            # already read by the scanner's walk. Dispatch is keyed by byte, so
-            # `byte` is always the ordinal of one of {#triggers}.
+            # already read by the caller. Dispatch is keyed by byte, so `byte`
+            # is always the ordinal of one of {#triggers}.
             #
             # @return [Match, nil]
             def detect(input, pos, byte)
               raise NotImplementedError, "#{self.class} must implement #detect"
             end
 
-            # A regexp the scanner adds to its skip check (see
-            # `Scanner::MAYBE_EMBED`) when this detector is wired: a body matching
-            # neither that check nor any detector's pattern is returned without
-            # being walked. Only a detector whose constructs don't always contain
-            # a `MAYBE_EMBED` character needs one; nil (the default) means the
-            # built-in check already covers this detector.
+            # A regexp the {TierGate} adds to its presence check when this
+            # detector is wired: a body matching neither the gate's built-in
+            # check nor any detector's pattern is returned without any work.
+            # Only a detector whose constructs don't always contain one of the
+            # gate's base presence characters needs one; nil (the default)
+            # means the built-in check already covers this detector.
             #
             # @return [Regexp, nil]
             def presence_pattern

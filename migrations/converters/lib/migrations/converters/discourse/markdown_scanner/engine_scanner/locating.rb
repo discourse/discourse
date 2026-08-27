@@ -38,12 +38,19 @@ module Migrations
             end
 
             def occurrence_offsets(kind, reading, range)
+              # A hashtag token's value is the lookup's casefolded ref, while
+              # the raw spells the construct in the author's case (`#Support`),
+              # so only that kind is searched case-insensitively — the detector
+              # probe still validates every hit. Mention and emoji token
+              # content preserves the raw's own bytes, and folding those would
+              # conflate `@Bob` with `@bob`, two distinct token values.
+              needle = kind == :hashtag ? /#{Regexp.escape(reading)}/i : reading
               occurrences = []
               length = reading.bytesize
               pos = range.begin
               limit = range.end - length
 
-              while pos <= limit && (index = @input.byteindex(reading, pos))
+              while pos <= limit && (index = @input.byteindex(needle, pos))
                 break if index > limit
 
                 valid =

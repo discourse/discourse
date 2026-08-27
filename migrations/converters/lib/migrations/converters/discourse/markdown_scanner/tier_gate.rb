@@ -4,42 +4,26 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        # Classifies a post body before any extraction runs, so each body gets
-        # the cheapest treatment that is exact for it (measured on a real corpus:
-        # roughly half of all posts leave through `:none`):
+        # Classifies a post body before any extraction runs (measured on a real
+        # corpus: well over half of all posts leave through `:none`):
         #
         #   :none   - nothing extractable; the body is returned untouched.
-        #   :prose  - candidates, but no context-sensitive syntax; the
-        #             {ProseScanner} extracts with plain boundary-checked
-        #             detector matches.
-        #   :engine - candidates AND syntax that makes context matter (code,
-        #             escapes, HTML, CR endings, link syntax, construct-capable
-        #             entities); extraction must understand the full grammar.
+        #   :engine - at least one candidate construct; the {EngineScanner}
+        #             extracts it against the real discourse-markdown-it parse.
         #
-        # The gate is conservative by construction: every check that could send
-        # a body to a cheaper tier errs toward the more capable one, so a wrong
-        # guess costs time, never a wrong extraction.
+        # The gate is conservative by construction: every check errs toward
+        # `:engine`, so a wrong guess costs an engine parse, never a wrong
+        # extraction.
         class TierGate
           # A body with none of these characters can't hold any built-in
-          # construct — the same reasoning as the scanner's own skip check:
-          # `@` (mention), `[` (quote/attachment/image), `#` (hashtag), the
-          # `uploads/` segment of a full upload URL. Named character entities
+          # construct: `@` (mention), `[` (quote/attachment/image), `#`
+          # (hashtag), the `uploads/` segment of a full upload URL. Named
+          # character entities
           # get their own alternative: `&commat;bob` spells a construct while
           # containing none of the trigger characters (numeric forms all
           # contain `#`).
           BASE_PRESENCE = %r{[@\[#]|uploads/|&[a-zA-Z][a-zA-Z0-9]{1,31};}
           private_constant :BASE_PRESENCE
-
-          # Any line that could open indented code, including inside blockquote
-          # markers and with tabs mixed into the run ("` \t`" reaches column
-          # four too). Wider than the real opening rule on purpose: matching a
-          # line that core would not read as code only costs the engine trip.
-          INDENTED_LINE = /^[> ]*(?: {4}|\t)/
-          private_constant :INDENTED_LINE
-
-          # `[code]`, `[code=ruby]`, `[code lang=ruby]` all open a code block.
-          BBCODE_CODE = /\[code[\s=\]]/i
-          private_constant :BBCODE_CODE
 
           # Numeric character references, decoded and tested below — `&#64;bob`
           # can spell a mention without a literal `@` anywhere in the body.
@@ -57,8 +41,9 @@ module Migrations
           private_constant :CONSTRUCT_CHAR
 
           # Named entities that provably decode to a character no construct can
-          # contain — the common typographic and HTML-escape names, so ordinary
-          # pasted prose (`&amp;`, `&hellip;`) doesn't route to the engine. The
+          # contain — the common typographic and HTML-escape names, so an
+          # ordinary pasted `&amp;` or `&hellip;` neither makes a candidate here
+          # nor refuses count certification in the {EngineScanner}. The
           # decoder is markdown-it's, whose full name table ships only as an
           # encoded trie, so this is an explicit allowlist rather than a
           # derived one; a spec decodes each name through the real engine and
@@ -127,8 +112,9 @@ module Migrations
             zwnj
           ].to_set.freeze
 
-          # @param detectors [Array<Detectors::Base>] the same list the scanners
-          #   run — the gate derives its checks from what is actually wired.
+          # @param detectors [Array<Detectors::Base>] the same list the
+          #   {EngineScanner} anchors with — the gate derives its checks from
+          #   what is actually wired.
           def initialize(detectors:)
             @presence = Regexp.union(BASE_PRESENCE, *detectors.filter_map(&:presence_pattern))
 
@@ -148,8 +134,6 @@ module Migrations
                 # Covered by the fixed checks in `unconditional_candidate?`.
               when Detectors::InternalLink
                 @unconditional_patterns << detector.presence_pattern
-              when Detectors::LinkSpan
-                # Shield only; produces no embeds.
               else
                 # A detector this gate doesn't know: classification can't rule
                 # its constructs out, so candidacy is assumed whenever presence
@@ -177,23 +161,20 @@ module Migrations
           end
 
           # @param raw [String]
-          # @return [Symbol] `:none`, `:prose` or `:engine`
+          # @return [Symbol] `:none` or `:engine`
           def classify(raw)
             return :none unless raw.match?(@presence)
 
-            # A construct-capable entity is a candidate the regex tiers cannot
-            # even see, and context-sensitive for the same reason — so it is
-            # both a candidate and a danger.
-            entity = construct_capable_entity?(raw)
-            return :engine if entity
-            return :prose unless danger?(raw)
+            # A construct-capable entity is a candidate the byte checks cannot
+            # see: `&#64;bob` spells a mention without a literal `@` anywhere.
+            return :engine if construct_capable_entity?(raw)
 
             real_candidates?(raw) ? :engine : :none
           end
 
           # Whether `text` holds a character reference that can decode into a
           # construct-relevant character. Public because the engine tier's
-          # count certification has the same blind spot as the regex tier:
+          # count certification has the same blind spot as the presence check:
           # entities decode before the engine's text rules run, so a token's
           # value no longer has to exist as literal bytes.
           def construct_capable_entity?(text)
@@ -213,33 +194,23 @@ module Migrations
 
           private
 
-          # `[quote=…]` with anything but trailing whitespace on its line is
-          # core's single-line quote form, which the line-oriented detectors
-          # deliberately do not take — only the engine tier remaps its
-          # coordinates, so it is context-sensitive by definition.
-          INLINE_QUOTE = /\[quote=[^\]\n]{0,512}\][^\S\n]*\S/i
-          private_constant :INLINE_QUOTE
-
-          def danger?(raw)
-            raw.include?("`") || raw.include?("\\") || raw.include?("<") || raw.include?("\r") ||
-              raw.include?("~~~") || raw.include?("](") || raw.include?("]:") ||
-              raw.include?("][") || INDENTED_LINE.match?(raw) || BBCODE_CODE.match?(raw) ||
-              INLINE_QUOTE.match?(raw)
-          end
-
           def real_candidates?(raw)
             @assume_candidates || unconditional_candidate?(raw) || probe_candidate?(raw)
           end
 
+          # `[quote` is matched case-insensitively because core's bbcode tags
+          # are (`[QUOTE=bob]` renders); the `upload://` scheme is not, because
+          # core's upload rewriting is case-sensitive there and an `UPLOAD://`
+          # link carries nothing an importer could resolve.
           def unconditional_candidate?(raw)
-            raw.include?("[quote") || raw.include?("upload://") || raw.include?("uploads/") ||
+            raw.match?(/\[quote/i) || raw.include?("upload://") || raw.include?("uploads/") ||
               @unconditional_patterns.any? { |pattern| raw.match?(pattern) }
           end
 
           # Runs the name-gated detectors at each of their trigger positions —
-          # the same matches the scanners would make, minus code shielding,
-          # which only ever removes matches. First hit wins; a body with no hit
-          # extracts nothing on any path.
+          # a superset of what the engine can recognize there (code shielding
+          # and link structure only ever remove matches). First hit wins; a
+          # body with no hit extracts nothing on any path.
           def probe_candidate?(raw)
             return false unless @probe_stop
 

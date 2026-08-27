@@ -157,7 +157,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # extracts it. A name that long can't be a real source username (Discourse's own
   # limit is 60), so the gate never defers one — the cap is moot, and we keep the
   # simpler capless detector.
-  it "extracts an over-long name the gate would never admit, unlike core" do
+  it "leaves an over-long name literal, matching core's 60-character cap" do
+    # The detector grammar itself has no length cap, but the engine's mention
+    # rule does — and no token means nothing certifies, so extraction inherits
+    # core's cap without duplicating it.
     long = "u#{"a" * 60}" # 61 characters
     names = Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize(long)])
     buffer =
@@ -171,7 +174,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       markdown_engine:,
     ).extract("hi @#{long} x")
 
-    expect(buffer.mentions.first[:name]).to eq(long)
+    expect(buffer.mentions).to be_empty
     expect(core_cooks?("hi @#{long} x")).to be(false)
   end
 end

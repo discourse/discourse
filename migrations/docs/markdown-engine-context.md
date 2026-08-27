@@ -1,11 +1,12 @@
 # Markdown engine context (tiered scanner, PR 1)
 
-The tiered markdown-scanner design sends context-sensitive posts ("tier 2",
-measured at ~25% of posts / ~55% of bytes on a real corpus) through the real
-`discourse-markdown-it` engine instead of a hand-written Ruby grammar. This
-document designs the piece everything else depends on: a **self-contained
-engine context** the converter can run per worker — without a booted Rails
-application, a migrated local site database, or any ambient site state.
+The tiered markdown-scanner design sends every post holding a candidate
+construct (as built, roughly 40% of posts on a measured corpus — the rest
+skip extraction entirely) through the real `discourse-markdown-it` engine
+instead of a hand-written Ruby grammar. This document designs the piece
+everything else depends on: a **self-contained engine context** the converter
+can run per worker — without a booted Rails application, a migrated local
+site database, or any ambient site state.
 
 Benchmarks for the overall approach live in
 `migrations/tooling/scripts/benchmarks/markdown_engine_bench.rb`; that script
@@ -26,9 +27,9 @@ dependency this design removes.
 
 ## Non-goals (later PRs)
 
-- The tier gate, tier-1 regex path, bijection certification, and tier-3
-  fallback are separate PRs; this PR only delivers the context plus a `scan`
-  call returning per-post token data.
+- The tier gate, bijection certification, and trial-substitution fallback
+  are separate PRs; this PR only delivers the context plus a `scan` call
+  returning per-post token data.
 - V8 snapshot optimization. Context creation happens once per worker; the
   measured cost of full evaluation is acceptable (~hundreds of ms).
 

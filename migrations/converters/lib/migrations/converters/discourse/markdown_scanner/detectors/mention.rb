@@ -29,10 +29,9 @@ module Migrations
           # `<span class="mention">` in core, never a cooked link, so gating on the
           # source's names keeps extraction in step with what core cooks.
           #
-          # One deliberate divergence: core's name regex caps a username at 60
-          # characters and we don't. A longer name can't be a real source username
-          # (Discourse's own limit is 60), so the gate never defers one and the cap is
-          # moot.
+          # The grammar here carries no length cap, unlike core's 60-character
+          # name regex: extraction inherits the cap anyway, because an
+          # over-long name produces no engine token and nothing certifies.
           class Mention < Base
             TRIGGERS = ["@"].freeze
 

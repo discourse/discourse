@@ -24,19 +24,16 @@ module Migrations
         # verbatim, and the body is reported with its cause: certification and
         # trial can leave references stale, but they cannot corrupt.
         #
-        # Certified occurrences are turned into nodes by the same detectors the
-        # other scanners run, anchored at the certified offsets — so the embeds
-        # recorded here have exactly the shape the rest of the pipeline
-        # expects.
+        # Certified occurrences are turned into nodes by the {Detectors},
+        # anchored at the certified offsets — so the embeds recorded here have
+        # exactly the shape the rest of the pipeline expects.
         class EngineScanner
           # `output` is the body with every proven construct replaced (equal to
           # the input when nothing was); `cause` names why at least one
-          # construct stayed unproven (nil when everything was placed);
-          # `unanchored` counts proven link occurrences no detector grammar
-          # could turn into a node; `unproven` counts construct instances that
-          # remain verbatim with stale references.
+          # construct stayed unproven with a stale reference (nil when
+          # everything was placed).
           Result =
-            Data.define(:output, :cause, :unanchored, :unproven) do
+            Data.define(:output, :cause) do
               def refused?
                 !cause.nil?
               end
@@ -159,7 +156,7 @@ module Migrations
           end
 
           # The per-body count-certification pass; the scanner itself stays
-          # reusable across bodies like the other scanners.
+          # reusable across bodies.
           class Pass
             include Locating
 
@@ -167,7 +164,6 @@ module Migrations
               @scanner = scanner
               @input = input
               @data = data
-              @unanchored = 0
               build_line_index
             end
 
@@ -184,13 +180,13 @@ module Migrations
               ordered = spans.values.sort_by(&:start_pos)
               return refusal(:overlap) if overlapping?(ordered)
 
-              Result.new(output: splice(ordered), cause: nil, unanchored: @unanchored, unproven: 0)
+              Result.new(output: splice(ordered), cause: nil)
             end
 
             private
 
             def refusal(cause)
-              Result.new(output: @input, cause:, unanchored: @unanchored, unproven: 0)
+              Result.new(output: @input, cause:)
             end
 
             def region_range(map)
@@ -226,7 +222,11 @@ module Migrations
                   add_expected(:mention, content, range, 1)
                 end
                 block["hashtags"].each do |hashtag|
-                  ref = hashtag["slug"]
+                  # Core's matcher admits trailing colons into the slug and its
+                  # Ruby-side lookup drops them (`"support:".split(":")`); the
+                  # detector grammar keeps a dangling `:` outside the
+                  # construct, so the certified text must too.
+                  ref = hashtag["slug"].sub(/:+\z/, "")
                   next if ref.empty? || !@scanner.hashtag_tracked?(ref)
                   had = true
                   add_expected(:hashtag, "##{ref}", range, 1)
@@ -339,19 +339,15 @@ module Migrations
             # together with its syntax; the detectors match from the `[`/`!`
             # anchor, which also naturally covers both occurrences of a
             # `[URL](same URL)` self-link with a single node. An occurrence no
-            # detector grammar can take stays verbatim and is tallied instead
-            # of refusing the body.
+            # detector grammar can take stays verbatim without refusing the
+            # body — no pass could remap its value either way.
             def resolve_urls(spans)
               @certified.each do |(kind, _value), occurrences|
                 next unless kind == :url
 
                 occurrences.each do |occurrence|
                   match = anchor_match(occurrence)
-                  if match.nil?
-                    @unanchored += 1
-                  else
-                    spans[[match.start_pos, match.end_pos]] ||= match
-                  end
+                  spans[[match.start_pos, match.end_pos]] ||= match if match
                 end
               end
 
@@ -379,9 +375,8 @@ module Migrations
             # Quote openers come from block tokens: the engine gives the
             # quote's line range directly, so no counting is needed — the
             # header on the opening line is parsed in place. This includes the
-            # single-line `[quote=…]body[/quote]` form the line-oriented
-            # walks cannot take: block context is certified by the engine,
-            # so the forward spaces-only check does not apply.
+            # single-line `[quote=…]body[/quote]` form: block context is
+            # certified by the engine, so no forward check is needed.
             def resolve_quotes(spans)
               @data["blockTokens"].each do |token|
                 next unless token["type"] == "bbcode_open" && token["tag"] == "blockquote"

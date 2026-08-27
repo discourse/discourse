@@ -61,9 +61,9 @@ module Migrations
             ROUTE_SEGMENT = "t|p|u|users|c|g|tags?|badges"
             private_constant :ROUTE_SEGMENT
 
-            # A relative link (`/t/5`) contains no character of the scanner's
-            # built-in skip check, so route segments contribute their own (see
-            # {Base#presence_pattern}).
+            # A relative link (`/t/5`) contains no character of the gate's
+            # built-in presence check, so route segments contribute their own
+            # (see {Base#presence_pattern}).
             ROUTE_PRESENCE = %r{/(?:#{ROUTE_SEGMENT})/}
             private_constant :ROUTE_PRESENCE
 
@@ -181,11 +181,12 @@ module Migrations
             private
 
             # A route-less absolute URL (`https://host/faq`) carries none of the
-            # scanner's built-in signals and no route segment, so without an
-            # alternative here a post holding nothing else would skip the walk and
-            # keep pointing at the old origin. The hosts themselves are the gate: they
-            # are the only ones an absolute URL can be internal on, which is far more
-            # selective than gating on `//` and every URL in every post. Matched
+            # gate's built-in signals and no route segment, so without an
+            # alternative here a post holding nothing else would classify `:none`
+            # and keep pointing at the old origin. The hosts themselves do the
+            # gating: they are the only ones an absolute URL can be internal on,
+            # which is far more selective than `//` and every URL in every post.
+            # Matched
             # case-insensitively, since a host may be written in any case.
             # Each host gets its own case-insensitive alternative. Wrapping a
             # `Regexp.union` of them in one `/i` does not work: union serializes what

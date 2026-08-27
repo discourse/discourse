@@ -19,7 +19,6 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
       scanner::Detectors::Upload.new,
       scanner::Detectors::UploadUrl.new,
       scanner::Detectors::Quote.new,
-      scanner::Detectors::LinkSpan.new,
       scanner::Detectors::InternalLink.new(
         hosts: {
           "forum.example.com" => nil,
@@ -37,96 +36,68 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
     expect(gate.classify("plain prose, nothing here.")).to eq(:none)
   end
 
-  it "classifies candidates without context-sensitive syntax as :prose" do
-    expect(gate.classify("hello @alice and #support")).to eq(:prose)
+  it "classifies a body whose candidates name nothing as :none" do
+    expect(gate.classify("hello @stranger, PR #123 and :smile:")).to eq(:none)
   end
 
-  it "keeps a danger-free body :prose even when its candidates name nothing" do
-    # Cheap either way: the prose walk runs the same detectors and extracts
-    # nothing, so no probe is spent on the classification.
-    expect(gate.classify("hello @stranger")).to eq(:prose)
-  end
-
-  describe "context-sensitive syntax" do
-    {
-      "inline code" => "`code` and @alice",
-      "a backslash" => "\\* @alice",
-      "an HTML tag" => "<b>hi</b> @alice",
-      "a CR line ending" => "line\r@alice",
-      "a tilde fence" => "~~~\ntext\n~~~\n@alice",
-      "an indented line" => "    indented\n@alice",
-      "a [code] block" => "[code]x[/code] @alice",
-      "a [code=lang] block" => "[code=ruby]\nx\n[/code]\n@alice",
-      "a [code lang=x] block" => "[code lang=ruby]\nx\n[/code]\n@alice",
-      "an indented line inside a blockquote" => "> Intro\n>\n>     x\n@alice",
-      "a space-then-tab indent" => "Intro\n\n \tx\n@alice",
-      "link syntax" => "[here](/t/5) @alice",
-      "a reference-style link" => "[here][1] @alice",
-      "a single-line quote" => %{[quote="alice, post:2, topic:5"]inline[/quote]},
-    }.each do |label, raw|
-      it "routes a real candidate next to #{label} to :engine" do
-        expect(gate.classify(raw)).to eq(:engine)
-      end
+  describe "real candidates" do
+    it "routes a known mention to :engine" do
+      expect(gate.classify("hello @alice")).to eq(:engine)
     end
 
-    it "does not read a quote opener with only trailing spaces as single-line" do
-      expect(gate.classify(%{[quote="alice, post:2, topic:5"]  \nbody\n[/quote]})).to eq(:prose)
+    it "routes a known hashtag to :engine" do
+      expect(gate.classify("filed under #support")).to eq(:engine)
     end
 
-    it "classifies dangers with no real candidate as :none" do
+    it "treats a quote opener as a candidate without probing names" do
+      expect(gate.classify(%{[quote="whoever"]\nhi\n[/quote]})).to eq(:engine)
+    end
+
+    it "treats an upload reference as a candidate" do
+      expect(gate.classify("![p](upload://abc.png)")).to eq(:engine)
+    end
+
+    it "treats an internal route as a candidate" do
+      expect(gate.classify("see /t/some-topic/123")).to eq(:engine)
+    end
+
+    it "treats a configured host as a candidate" do
+      expect(gate.classify("https://forum.example.com/faq")).to eq(:engine)
+    end
+
+    it "counts a custom emoji as a candidate but not a standard one" do
+      expect(gate.classify(":parrot:")).to eq(:engine)
+      expect(gate.classify(":smile:")).to eq(:none)
+    end
+
+    it "probes candidates the same next to context-sensitive syntax" do
+      expect(gate.classify("`code` and @alice")).to eq(:engine)
       expect(gate.classify("`code` and @stranger and #nothing and :smile:")).to eq(:none)
-    end
-
-    it "treats a quote opener as a real candidate without probing names" do
-      expect(gate.classify(%{`x` [quote="whoever"]hi[/quote]})).to eq(:engine)
-    end
-
-    it "treats an upload reference as a real candidate" do
-      expect(gate.classify("`x` ![p](upload://abc.png)")).to eq(:engine)
-    end
-
-    it "treats an internal route as a real candidate" do
-      expect(gate.classify("`x` see /t/some-topic/123")).to eq(:engine)
-    end
-
-    it "treats a configured host as a real candidate" do
-      expect(gate.classify("`x` https://forum.example.com/faq")).to eq(:engine)
-    end
-
-    it "counts a custom emoji as a real candidate but not a standard one" do
-      expect(gate.classify("`x` :parrot:")).to eq(:engine)
-      expect(gate.classify("`x` :smile:")).to eq(:none)
     end
   end
 
   describe "character entities" do
     it "routes a numeric entity that decodes to a construct character to :engine" do
-      # `&#64;` is `@`: the regex tiers cannot see the mention it spells.
+      # `&#64;` is `@`: the byte checks cannot see the mention it spells.
       expect(gate.classify("&#64;bob")).to eq(:engine)
       expect(gate.classify("&#x40;bob")).to eq(:engine)
     end
 
     it "ignores a numeric entity that decodes to typography" do
-      # `&#8217;` is a right single quotation mark.
-      expect(gate.classify("it&#8217;s #support")).to eq(:prose)
+      # `&#8217;` is a right single quotation mark; its literal `#` matches
+      # the presence check, so only the decode keeps this body out.
+      expect(gate.classify("it&#8217;s fine")).to eq(:none)
     end
 
     it "ignores the allowlisted named entities" do
-      expect(gate.classify("Tom &amp; Jerry #support")).to eq(:prose)
-      expect(gate.classify("wait &hellip; #support")).to eq(:prose)
+      expect(gate.classify("Tom &amp; Jerry")).to eq(:none)
+      expect(gate.classify("wait &hellip; more")).to eq(:none)
     end
 
     it "routes an unlisted named entity to :engine" do
       # `&commat;` is `@`; unknown names are assumed construct-capable.
       expect(gate.classify("&commat;bob")).to eq(:engine)
-      expect(gate.classify("&frac12; of #support")).to eq(:engine)
-    end
-
-    it "leaves a body whose only presence signal is an irrelevant entity in :prose" do
-      # `&#8217;` carries a literal `#`, so the presence check can't rule the
-      # body out — but the prose walk then extracts nothing, which costs one
-      # cheap pass rather than an engine trip.
-      expect(gate.classify("it&#8217;s fine")).to eq(:prose)
+      expect(gate.classify("&frac12; of it")).to eq(:engine)
     end
   end
 
@@ -188,7 +159,7 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
     end
 
     it "assumes candidacy whenever presence hits, so classification stays conservative" do
-      expect(gate.classify("`x` %pct")).to eq(:engine)
+      expect(gate.classify("%pct")).to eq(:engine)
       expect(gate.classify("plain")).to eq(:none)
     end
   end

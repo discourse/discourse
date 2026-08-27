@@ -173,29 +173,26 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     expect(core_renders_quote?(raw)).to be(true)
   end
 
-  # The accepted divergences. The owner decided against block-position machinery:
-  # over-extracting a `[quote=…]` that core left as raw BBCode only renumbers text
-  # in place at import (the header is rebuilt where it stands), so it is cheaper to
-  # accept the few over-extractions than to scan the whole document for line-start,
-  # list and closing-tag context. These pin OUR behavior; core's measured result is
-  # noted so the trade-off is visible, but we don't assert core equality here.
-  describe "accepted divergences from core (no block-position rules)" do
-    it "over-extracts a mid-line tag core leaves as raw BBCode" do
-      # Not at a line start, so core renders nothing; we extract in place.
+  # Block position comes from the engine's parsed quote tokens, so a tag core
+  # leaves as raw BBCode is never extracted — the old line-oriented walk
+  # over-extracted every one of these.
+  describe "block position through the engine tier" do
+    it "leaves a mid-line tag alone, like core" do
+      # Not at a line start, so core renders nothing and neither do we.
       raw = %(some text [quote="bob"]\nx\n[/quote])
-      expect(detector_username(raw)).to eq("bob")
+      expect(detector_extracts?(raw)).to be(false)
       expect(core_renders_quote?(raw)).to be(false)
     end
 
-    it "over-extracts a tag inside a list item core leaves as raw BBCode" do
+    it "leaves a tag inside a list item alone, like core" do
       raw = %(- [quote="bob"]\nx\n[/quote])
-      expect(detector_username(raw)).to eq("bob")
+      expect(detector_extracts?(raw)).to be(false)
       expect(core_renders_quote?(raw)).to be(false)
     end
 
-    it "over-extracts an unclosed quote core never auto-closes" do
+    it "leaves an unclosed quote alone, like core" do
       raw = %([quote="bob"]\nx\nno closing tag here)
-      expect(detector_username(raw)).to eq("bob")
+      expect(detector_extracts?(raw)).to be(false)
       expect(core_renders_quote?(raw)).to be(false)
     end
 

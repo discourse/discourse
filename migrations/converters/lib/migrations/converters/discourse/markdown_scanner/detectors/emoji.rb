@@ -36,9 +36,9 @@ module Migrations
             PATTERN = /\G:(?<name>#{NAME}):(?!t[2-6]:)/
             private_constant :PATTERN
 
-            # A bare `:` is far too common for the scanner's skip check, but the
-            # `:name:` shape is selective enough to keep plain posts skipping the
-            # walk (see {Base#presence_pattern}).
+            # A bare `:` is far too common for the gate's presence check, but the
+            # `:name:` shape is selective enough to keep plain posts skipping all
+            # work (see {Base#presence_pattern}).
             PRESENCE_PATTERN = /:#{NAME}:/
             private_constant :PRESENCE_PATTERN
 

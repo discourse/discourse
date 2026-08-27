@@ -9,15 +9,13 @@ module Migrations
       # rewrites the tokens once the `original_id -> discourse_id` maps exist.
       #
       # The hard part of extracting from Markdown is *not* extracting from places
-      # that only look like embeds — inside fenced/indented/inline code. A
-      # {MarkdownScanner::TierGate} classifies every body first: most have
-      # nothing extractable and pass through untouched, danger-free bodies take
-      # the {MarkdownScanner::ProseScanner} (plain detector matches, exact by
-      # the gate's construction), and a body whose syntax makes context matter
-      # goes to the {MarkdownScanner::EngineScanner}, where the real
-      # discourse-markdown-it parse decides what is code. For each detected node
-      # we record the embed on the collector and return the placeholder token
-      # the scanner splices into the output.
+      # that only look like embeds — inside fenced/indented/inline code, or in a
+      # link's label or destination. A {MarkdownScanner::TierGate} classifies
+      # every body first: most have nothing extractable and pass through
+      # untouched, the rest go to the {MarkdownScanner::EngineScanner}, where
+      # the real discourse-markdown-it parse decides what is code and what is a
+      # link. For each detected node we record the embed on the collector and
+      # return the placeholder token the scanner splices into the output.
       #
       # We detect uploads, quote references, internal links, mentions, hashtags and
       # custom emoji. Polls and events are self-contained (no id remapping needed), so
@@ -126,12 +124,6 @@ module Migrations
             base_prefix: internal_link_base_prefix,
             on_foreign_host:,
           )
-          # Last of the detectors that share its triggers, so a link one of them
-          # wants is still theirs; it only swallows what nothing else claimed,
-          # which stops the prose walk from reaching a `@name` or `#tag` inside
-          # somebody's URL. (The engine tier needs no shield — the engine skips
-          # links itself.)
-          detectors << Detectors::LinkSpan.new
           detectors << Detectors::Mention.new(names: mention_names)
           detectors << Detectors::Hashtag.new(names: hashtag_names)
           if custom_emoji_names.present?
@@ -139,14 +131,13 @@ module Migrations
           end
 
           # The detectors carry no per-post state (the internal-link one only
-          # accumulates its report-once host set) and the scanners reset their
+          # accumulates its report-once host set) and the scanner resets its
           # state on each `scan`, so build them once and reuse them for every
           # post. `extract` swaps `@topic_id` per call, so one extractor must not
           # run in two threads at once — each worker holds its own (the posts
           # step builds it in per-worker `setup`).
           on_node = ->(node, source) { defer(node, source) }
           @gate = MarkdownScanner::TierGate.new(detectors:)
-          @prose_scanner = MarkdownScanner::ProseScanner.new(detectors:, &on_node)
           @engine_scanner =
             MarkdownScanner::EngineScanner.new(
               engine: markdown_engine,
@@ -177,14 +168,7 @@ module Migrations
 
           @topic_id = topic_id
 
-          case @gate.classify(raw)
-          when :none
-            raw
-          when :prose
-            @prose_scanner.scan(raw)
-          else
-            extract_engine(raw)
-          end
+          @gate.classify(raw) == :none ? raw : extract_engine(raw)
         end
 
         private

@@ -1,13 +1,11 @@
 # Known limitations
 
 What extraction knowingly leaves undone. Nothing listed here edits text core
-treats as code: the engine tier proves positions before rewriting and
-otherwise leaves text verbatim, and the prose walk only runs on bodies the
-gate proved free of context-sensitive syntax. The old line-oriented walk and
-its divergence list are gone — every body they applied to now takes the
-engine tier.
+treats as code: the gate only decides whether a body holds any candidate at
+all, and every body that does takes the engine tier, which proves positions
+before rewriting and otherwise leaves text verbatim.
 
-## Engine tier (context-sensitive bodies)
+## Engine tier (every body with a candidate construct)
 
 The `EngineScanner` parses with the real discourse-markdown-it engine.
 Constructs it cannot place stay verbatim with stale references, all
@@ -33,24 +31,12 @@ fail-closed:
 - **Trial budget** — a body gets at most 48 trial parses; occurrences beyond
   the budget stay unproven. Only a generated body full of duplicated tracked
   values can reach it.
-
-## Prose walk (`:prose`-classified bodies)
-
-By the gate's definition these bodies contain no code syntax, no link syntax,
-no CR endings, and no construct-capable entities, so plain detector matches
-are exact — the equivalence with the engine tier on this class is asserted by
-spec against the real engine. What remains:
-
-- **Pattern caps** — the detector and link-shield patterns cap their runs
-  (link labels at CommonMark's 999 characters, destinations and bare URLs at
-  2 KiB, quote headers at 512 bytes) so a body full of malformed openers
-  scans in linear time. A construct beyond a cap is not matched — and for the
-  bare-URL shield that means a longer URL is not skipped whole, so a
-  construct-shaped string beyond 2 KiB inside one could be extracted. Real
-  content does not approach the caps.
-
-## Both tiers
-
+- **Pattern caps** — the detector patterns that parse a proven construct's
+  syntax cap their runs (link labels at CommonMark's 999 characters,
+  destinations and bare URLs at 2 KiB, quote headers at 512 bytes) so a body
+  full of malformed openers scans in linear time. A construct beyond a cap
+  cannot be anchored and stays verbatim. Real content does not approach the
+  caps.
 - **The foreign-host signal** reports each host once per extractor, and does
   not consider a possible subdirectory prefix on the foreign host — a
   forgotten former domain that served the forum under `/forum` parses no

@@ -41,8 +41,11 @@ __helpers = {
 
     for (const type of types) {
       if (type === "category") {
-        const slugPart = name.split(":").pop();
-        if (__scanConfig.categorySlugs[slugPart]) {
+        // Ruby's split(":") drops trailing empty segments, so core resolves a
+        // dangling `#general:` to the `general` category; JS split keeps the
+        // empty tail, hence the filter.
+        const slugPart = name.split(":").filter((part) => part !== "").pop() || "";
+        if (slugPart !== "" && __scanConfig.categorySlugs[slugPart]) {
           // `text` becomes the rendered label; the scan reads slug and type,
           // so the slug is label enough.
           return {

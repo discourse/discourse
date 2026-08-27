@@ -41,7 +41,6 @@ module Migrations
               @input = input
               @data = data
               @cause = cause
-              @unanchored = 0
               @trials = 0
               build_line_index
             end
@@ -68,8 +67,6 @@ module Migrations
               Result.new(
                 output: ordered.empty? ? @input : splice(ordered),
                 cause: unproven > 0 ? @cause : nil,
-                unanchored: @unanchored,
-                unproven: [unproven, 0].max,
               )
             end
 
@@ -111,7 +108,11 @@ module Migrations
                   when :mention
                     value if @scanner.mention_tracked?(value.delete_prefix("@"))
                   when :hashtag
-                    "##{value}" if !value.empty? && @scanner.hashtag_tracked?(value)
+                    # Trailing colons stay outside the construct, as in the
+                    # certification pass; the multiset key keeps the engine's
+                    # exact value so the trial delta still matches its token.
+                    stripped = value.sub(/:+\z/, "")
+                    "##{stripped}" if !stripped.empty? && @scanner.hashtag_tracked?(stripped)
                   when :emoji
                     ":#{value}:" if @scanner.emoji_tracked?(value)
                   when :url
@@ -182,7 +183,6 @@ module Migrations
                 # whole — verbatim like the certification pass's unanchored
                 # links, and still counted as handled: its value cannot be
                 # remapped by any pass.
-                @unanchored += 1 if candidate.kind == :url
                 candidate.kind == :url
               else
                 spans[[match.start_pos, match.end_pos]] ||= match

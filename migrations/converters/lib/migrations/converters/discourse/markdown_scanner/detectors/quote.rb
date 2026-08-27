@@ -5,33 +5,23 @@ module Migrations
     module Discourse
       module MarkdownScanner
         module Detectors
-          # Detects only the opening tag of a Discourse quote (`[quote=…]`); the
-          # body and `[/quote]` stay in place, and any embeds inside the body are
-          # still scanned. Returns nil for a `[quote]` with no header.
+          # Parses the opening tag of a Discourse quote (`[quote=…]`); the body
+          # and `[/quote]` stay in place, and any embeds inside the body are
+          # still extracted. The {EngineScanner} calls this only where a parsed
+          # quote block token certifies that core actually renders the tag, so
+          # no block-position or forward checks live here.
           #
           # The header is read the way core's bbcode-block.js does: it can be
           # unquoted (`[quote=bob, post:1]`) or wrapped in any of the quotation-mark
           # pairs core recognizes (straight, curly, guillemets, …); a matching pair
           # is stripped, a mismatched or one-sided mark stays a literal character.
           #
-          # Core only renders the block when nothing but spaces or tabs follow the
-          # opening tag to the end of its line, so we make the same forward check.
-          # We deliberately skip core's block-position rules (line start, a real
-          # `[/quote]` further down, list context): matching those would need
-          # whole-document machinery, and over-extracting a `[quote=…]` that core
-          # left as raw BBCode only renumbers text in place at import — the header
-          # is rebuilt where it stands. The one thing the forward check gives up is
-          # core's single-line inline form `[quote=bob]body[/quote]`, whose body is
-          # not spaces-only; that stays literal here. Verified against PrettyText.
-          #
           # A header whose first slot is not a name — `[quote="post:5, topic:9"]` —
-          # is also left literal. That slot is the username to core, whatever it
+          # yields no node. That slot is the username to core, whatever it
           # holds: it cooks `data-username="post:5"` and no `data-post` at all, so
           # there are no coordinates there to remap. Rewriting it would mean giving
           # the header a reading core does not have.
           class Quote < Base
-            TRIGGERS = ["["].freeze
-
             # Case-insensitive because core's bbcode rules are: `[QUOTE=bob]` renders
             # the same block, and missing it leaves the header's source numbering in
             # the imported raw.
@@ -45,59 +35,22 @@ module Migrations
             OPENING = /\G\[quote=(?<header>[^\]\n]{0,512})\]/i
             private_constant :OPENING
 
-            def detect(input, pos, _byte)
-              match = match_at(OPENING, input, pos)
-              return nil unless match
-
-              end_pos = match.byteoffset(0).last
-              return nil unless trailing_space_only?(input, end_pos)
-
-              build_match(pos, end_pos, match)
-            end
-
-            # For the engine tier, which calls with block context already
-            # certified by a parsed quote token: the forward spaces-only
-            # heuristic below stands in for block context in the line-oriented
-            # walks and would wrongly reject the single-line
-            # `[quote=…]body[/quote]` form here.
             def detect_block_opener(input, pos)
               match = match_at(OPENING, input, pos)
               return nil unless match
 
-              build_match(pos, match.byteoffset(0).last, match)
-            end
-
-            private
-
-            def build_match(pos, end_pos, match)
               username, name, post_number, topic_id =
                 parse_header(strip_quote_marks(match[:header]))
               return nil if username.nil?
 
               Match.new(
                 start_pos: pos,
-                end_pos:,
+                end_pos: match.byteoffset(0).last,
                 node: QuoteReference.new(username:, name:, post_number:, topic_id:),
               )
             end
 
-            # Core renders the quote block only when the opening tag is followed by
-            # nothing but spaces or tabs to the end of its line. `pos` is the byte
-            # right after the tag; scan forward until the first line terminator (or
-            # the end of input) and reject anything that isn't a space or tab. A `\r`
-            # ends the line like `\n` because markdown-it normalizes CR/CRLF to LF
-            # before it parses, so a CRLF after the tag still renders in core.
-            # Verified against PrettyText. Byte domain, no allocations.
-            def trailing_space_only?(input, pos)
-              size = input.bytesize
-              while pos < size
-                byte = input.getbyte(pos)
-                return true if byte == 0x0a || byte == 0x0d # `\n` `\r`
-                return false unless byte == 0x20 || byte == 0x09 # space, tab
-                pos += 1
-              end
-              true
-            end
+            private
 
             # The quotation-mark pairs core strips from a quote header, mirroring
             # `QUOTATION_MARKS` in discourse-markdown-it's bbcode-block.js. Each is an
