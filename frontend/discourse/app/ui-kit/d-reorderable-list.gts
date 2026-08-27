@@ -691,8 +691,18 @@ export default class DReorderableList<T> extends Component<
     }
     const index = row.index;
     const before = this.args.items.length;
+    // Captured before the handler runs: whatever it puts in front of the
+    // reader takes focus away, and this is where they were.
+    const asked = document.activeElement as HTMLElement | null;
     await this.args.onRemove?.(row.item, index);
-    if (isDestroying(this) || this.args.items.length === before) {
+    if (isDestroying(this)) {
+      return;
+    }
+    if (this.args.items.length === before) {
+      // Declined. Nothing is announced, and the row is still there — but so is
+      // the question of where the reader now is, because a confirmation hands
+      // focus back to an element it has already detached and so to nowhere.
+      this.#restoreLostFocus(() => asked);
       return;
     }
     this.a11y.announce(i18n("reorder.removed", { label: row.label }));
@@ -700,16 +710,11 @@ export default class DReorderableList<T> extends Component<
       if (isDestroying(this)) {
         return;
       }
-      const controls = Array.from(
-        this.#listElement?.querySelectorAll<HTMLElement>(
-          ".d-reorderable-list__remove"
-        ) ?? []
-      ).filter((control) => control.closest(LIST_ROOT) === this.#listElement);
-      // The slot the removed row occupied, which now holds the row that
-      // followed it; at the end of the list, the one before it instead.
-      const successor = controls[index] ?? controls.at(-1);
-      successor?.focus();
+      this.#successorControl(index)?.focus();
     });
+    // Re-asserted once everything else has settled, in case the handler put
+    // something in front of the reader that returns focus after this.
+    this.#restoreLostFocus(() => this.#successorControl(index));
   }
 
   /**
@@ -817,6 +822,44 @@ export default class DReorderableList<T> extends Component<
       return String(get(item as object, key));
     }
     return guidFor(item);
+  }
+
+  /**
+   * This list's remove control standing where a row used to be: the slot it
+   * occupied, which now holds the row that followed it, or at the end of the
+   * list the one before it.
+   *
+   * @param index - The removed row's visible index.
+   */
+  #successorControl(index: number): HTMLElement | undefined {
+    const controls = Array.from(
+      this.#listElement?.querySelectorAll<HTMLElement>(
+        ".d-reorderable-list__remove"
+      ) ?? []
+    ).filter((control) => control.closest(LIST_ROOT) === this.#listElement);
+    return controls[index] ?? controls.at(-1);
+  }
+
+  /**
+   * Puts focus back only if it was lost, once the runloop has drained.
+   *
+   * Deferred rather than set directly, because whatever took focus away is
+   * still tearing itself down and would land after. Resolved late for the same
+   * reason: the element to focus may not exist until that teardown is over.
+   *
+   * @param candidate - Where focus should go, resolved when this runs.
+   */
+  #restoreLostFocus(candidate: () => HTMLElement | null | undefined) {
+    next(() => {
+      if (isDestroying(this)) {
+        return;
+      }
+      const active = document.activeElement;
+      if (active && active !== document.body && active.isConnected) {
+        return;
+      }
+      candidate()?.focus();
+    });
   }
 
   /**

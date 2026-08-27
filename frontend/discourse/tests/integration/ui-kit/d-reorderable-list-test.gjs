@@ -5163,6 +5163,45 @@ module(
         );
     });
 
+    test("a cancelled confirmation leaves focus on the control that asked", async function (assert) {
+      const items = trackedArray(objectItems());
+      const dialog = this.owner.lookup("service:dialog");
+      const onRemove = (item) =>
+        dialog.yesNoConfirm({
+          message: "Remove it?",
+          didConfirm: () => items.splice(items.indexOf(item), 1),
+        });
+
+      await render(
+        <template>
+          <DMenus />
+          <DialogHolder />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{onRemove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      const control = `${rowSelector("bravo")} .d-reorderable-list__remove`;
+      await click(control);
+      await click(".dialog-footer .btn-default");
+
+      assert.dom(rowSelector("bravo")).exists("the row stayed");
+      assert
+        .dom(control)
+        .isFocused(
+          "the reader is put back where they were, since the confirmation hands focus to an element it has already detached"
+        );
+    });
+
     test("a removal the consumer declines is neither announced nor refocused", async function (assert) {
       const items = objectItems();
       // A handler that takes no action, which is every cancelled confirmation
