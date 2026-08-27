@@ -54,7 +54,7 @@ RSpec.describe Service::Runner do
   class FailureWithModelService
     include Service::Base
 
-    model :fake_model, :fetch_fake_model
+    model :fake_model
 
     private
 
@@ -78,7 +78,7 @@ RSpec.describe Service::Runner do
   class FailureWithModelErrorsService
     include Service::Base
 
-    model :fake_model, :fetch_fake_model
+    model :fake_model
 
     private
 
@@ -98,7 +98,7 @@ RSpec.describe Service::Runner do
       end
     end
 
-    model :fake_model, :fetch_fake_model
+    model :fake_model
 
     private
 
@@ -107,10 +107,39 @@ RSpec.describe Service::Runner do
     end
   end
 
+  class FailureWithRaisedInvalidModelService
+    include Service::Base
+
+    class Model
+      include ActiveModel::Validations
+    end
+
+    model :fake_model
+
+    private
+
+    def fetch_fake_model
+      model = Model.new.tap { |record| record.errors.add(:base, "save failed") }
+      raise ActiveRecord::RecordInvalid.new(model)
+    end
+  end
+
+  class FailureWithRaisedBareInvalidService
+    include Service::Base
+
+    model :fake_model
+
+    private
+
+    def fetch_fake_model
+      raise ActiveRecord::RecordInvalid
+    end
+  end
+
   class SuccessWithModelService
     include Service::Base
 
-    model :fake_model, :fetch_fake_model
+    model :fake_model
 
     private
 
@@ -122,7 +151,7 @@ RSpec.describe Service::Runner do
   class SuccessWithModelErrorsService
     include Service::Base
 
-    model :fake_model, :fetch_fake_model
+    model :fake_model
 
     private
 
@@ -134,7 +163,7 @@ RSpec.describe Service::Runner do
   class FailureWithCollectionModelService
     include Service::Base
 
-    model :fake_model, :fetch_fake_model
+    model :fake_model
 
     private
 
@@ -146,7 +175,7 @@ RSpec.describe Service::Runner do
   class SuccessWithCollectionModelService
     include Service::Base
 
-    model :fake_model, :fetch_fake_model
+    model :fake_model
 
     private
 
@@ -522,6 +551,32 @@ RSpec.describe Service::Runner do
 
         it "preserves errors added by the model producer" do
           expect(runner).to eq(["operation failed"])
+        end
+      end
+
+      context "when the model producer raises an invalid record error" do
+        let(:service) { FailureWithRaisedInvalidModelService }
+        let(:actions) { <<-BLOCK }
+            proc do
+              on_model_errors(:fake_model) { |model| model.errors.full_messages }
+            end
+          BLOCK
+
+        it "runs the provided block with the invalid record" do
+          expect(runner).to eq(["save failed"])
+        end
+      end
+
+      context "when the model producer raises an invalid record error without a record" do
+        let(:service) { FailureWithRaisedBareInvalidService }
+        let(:actions) { <<-BLOCK }
+            proc do
+              on_model_not_found(:fake_model) { :no_model }
+            end
+          BLOCK
+
+        it "runs the provided block" do
+          expect(runner).to eq(:no_model)
         end
       end
 

@@ -24,6 +24,14 @@ module Service
         end
       rescue Failure, DefaultValuesNotAllowed
         raise
+      rescue ActiveRecord::RecordInvalid => exception
+        if exception.record
+          context[name] = exception.record
+          context[result_key].fail(invalid: true, exception:)
+        else
+          context[result_key].fail(not_found: true, exception:)
+        end
+        context.fail!
       rescue => exception
         context[result_key].fail(
           not_found: true,
