@@ -4,19 +4,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 
   describe "foreign-host internal-link signal" do
-    subject(:extractor) do
-      described_class.new(
-        embeds: buffer,
-        markdown_engine:,
-        mention_names:,
-        hashtag_names:,
-        internal_link_hosts: {
-          "forum.example.com" => nil,
-        },
-        on_foreign_host: ->(host) { foreign_hosts << host },
-      )
-    end
-
+    let(:internal_link_hosts) { { source_host => nil } }
+    let(:on_foreign_host) { ->(host) { foreign_hosts << host } }
     let(:foreign_hosts) { [] }
 
     it "fires the callback for an absolute route-shaped link on an unconfigured host" do

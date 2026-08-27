@@ -4,23 +4,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 
   describe "subdirectory installs" do
-    subject(:extractor) do
-      described_class.new(
-        embeds: buffer,
-        markdown_engine:,
-        mention_names:,
-        hashtag_names:,
-        internal_link_hosts: {
-          "www.example.com" => "/forum",
-        },
-        internal_link_base_prefix: "/forum",
-      )
-    end
-
-    def link_for(raw)
-      result = extract(raw)
-      [buffer.links.first, result]
-    end
+    let(:internal_link_hosts) { { "www.example.com" => "/forum" } }
+    let(:internal_link_base_prefix) { "/forum" }
 
     it "detects a subfolder absolute link, stripping the prefix before the route" do
       link, = link_for("[x](https://www.example.com/forum/t/slug/5)")

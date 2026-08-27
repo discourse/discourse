@@ -34,12 +34,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to include("not a @mention and ![x](upload://nope.png)")
     end
 
-    it "does not extract from inline code" do
-      result = extract("use `@channel` carefully, @alice")
-
-      expect(buffer.mentions.map { |m| m[:name] }).to eq(%w[alice])
-      expect(result).to include("`@channel`")
-    end
+    # Inline code spans are covered from the certification angle in
+    # engine_scanner_spec, placeholder positions included.
   end
 
   # Indented code opens wherever no paragraph is open and the line reaches four
@@ -269,17 +265,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     let(:hashtag_names) do
       Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("general")])
     end
-    let(:link_extractor) do
-      described_class.new(
-        embeds: buffer,
-        markdown_engine:,
-        mention_names:,
-        hashtag_names:,
-        internal_link_hosts: {
-          "forum.example.com" => nil,
-        },
-      )
-    end
+    let(:internal_link_hosts) { { source_host => nil } }
+    let(:link_extractor) { extractor }
 
     [
       "[link](https://external.com/@bob)",
@@ -352,7 +339,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "still defers an upload inside a link" do
-      sha1 = "0123456789abcdef0123456789abcdef01234567"
       link_extractor.extract("[f](https://cdn.example.com/uploads/default/original/1X/#{sha1}.png)")
 
       expect(buffer.uploads.size).to eq(1)

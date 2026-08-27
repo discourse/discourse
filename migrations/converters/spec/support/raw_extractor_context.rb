@@ -2,8 +2,32 @@
 
 RSpec.shared_context "with raw extractor" do
   subject(:extractor) do
-    described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:)
+    described_class.new(
+      embeds: buffer,
+      mention_names:,
+      hashtag_names:,
+      markdown_engine:,
+      custom_emoji_names:,
+      internal_link_hosts:,
+      internal_link_base_prefix:,
+      on_foreign_host:,
+      on_engine_refusal:,
+    )
   end
+
+  # Constructor knobs a spec overrides individually instead of rebuilding the
+  # whole subject; the defaults mirror the constructor's own.
+  let(:custom_emoji_names) { nil }
+  let(:internal_link_hosts) { {} }
+  let(:internal_link_base_prefix) { nil }
+  let(:on_foreign_host) { nil }
+  let(:on_engine_refusal) { nil }
+
+  # The host most link specs configure as the source's own.
+  let(:source_host) { "forum.example.com" }
+
+  # A valid 40-hex upload SHA1 for upload fixtures.
+  let(:sha1) { "0123456789abcdef0123456789abcdef01234567" }
 
   # Memoized per configuration for the whole run; specs that need different
   # engine-side names override this with another helper call.
@@ -66,5 +90,10 @@ RSpec.shared_context "with raw extractor" do
 
   def extract(raw, topic_id: nil)
     extractor.extract(raw, topic_id:)
+  end
+
+  def link_for(raw)
+    result = extract(raw)
+    [buffer.links.first, result]
   end
 end

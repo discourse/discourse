@@ -4,22 +4,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 
   describe "internal links" do
-    subject(:extractor) do
-      described_class.new(
-        embeds: buffer,
-        markdown_engine:,
-        mention_names:,
-        hashtag_names:,
-        internal_link_hosts: {
-          "forum.example.com" => nil,
-        },
-      )
-    end
-
-    def link_for(raw)
-      result = extract(raw)
-      [buffer.links.first, result]
-    end
+    let(:internal_link_hosts) { { source_host => nil } }
 
     # A digit run past 18 characters overflows the signed 64-bit integers ids are
     # stored in — and names no real record: it's a numeric topic title, a shape a
@@ -632,7 +617,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "defers the inner image and rewrites the outer topic URL of a linked image" do
-      sha1 = "0123456789abcdef0123456789abcdef01234567"
       inner = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"
       result = extract("[![alt](#{inner})](https://forum.example.com/t/some-topic/5)")
 
@@ -647,7 +631,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "rewrites the relative outer topic URL of a linked image" do
-      sha1 = "0123456789abcdef0123456789abcdef01234567"
       result = extract("[![alt](upload://#{sha1}.png)](/t/slug/5)")
 
       expect(buffer.uploads.first[:upload_id]).to eq(sha1)

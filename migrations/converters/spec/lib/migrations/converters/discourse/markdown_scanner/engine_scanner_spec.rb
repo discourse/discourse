@@ -13,7 +13,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   let(:internal_link_hosts) { { "forum.example.com" => nil } }
   let(:refusals) { [] }
 
-  let(:engine) do
+  let(:markdown_engine) do
     MarkdownEngineHelper.context_for(
       category_slugs:,
       tag_names:,
@@ -24,17 +24,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     )
   end
 
-  let(:extractor) do
-    described_class.new(
-      embeds: buffer,
-      mention_names:,
-      hashtag_names:,
-      custom_emoji_names:,
-      internal_link_hosts:,
-      markdown_engine: engine,
-      on_engine_refusal: ->(cause, _detail) { refusals << cause },
-    )
-  end
+  let(:on_engine_refusal) { ->(cause, _detail) { refusals << cause } }
 
   describe "code shielding through the real parse" do
     it "replaces the prose mention and leaves the code-span one alone" do
@@ -398,7 +388,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       allow(retrying_engine).to receive(:scan) do |posts, timeout_ms: nil|
         ceilings << timeout_ms
         raise MiniRacer::ScriptTerminatedError, "terminated" if ceilings.size == 1
-        engine.scan(posts)
+        markdown_engine.scan(posts)
       end
       slow_parses_seen = 0
       extractor =
@@ -455,7 +445,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       allow(retrying_engine).to receive(:scan) do |posts, timeout_ms: nil|
         calls += 1
         raise MiniRacer::ScriptTerminatedError, "terminated" if calls == 1
-        engine.scan(posts)
+        markdown_engine.scan(posts)
       end
       extractor =
         described_class.new(
@@ -495,7 +485,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "extracts from a precomputed engine scan like from a live one" do
-      scan_data = engine.scan([{ id: 1, raw: body }]).first
+      scan_data = markdown_engine.scan([{ id: 1, raw: body }]).first
       output = extractor.extract(body, scan_data:)
 
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
@@ -508,7 +498,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       invalid = (+"\xFF @alice").force_encoding(Encoding::UTF_8)
       # Scan data computed from any bytes; normalization rewrites the body, so
       # the extractor must scan live instead of trusting mismatched offsets.
-      scan_data = engine.scan([{ id: 1, raw: invalid }]).first
+      scan_data = markdown_engine.scan([{ id: 1, raw: invalid }]).first
 
       output = extractor.extract(invalid, scan_data:)
 
@@ -532,7 +522,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       flaky_engine = instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
       allow(flaky_engine).to receive(:scan) do |posts, timeout_ms: nil|
         raise MiniRacer::ScriptTerminatedError if posts.size > 1
-        engine.scan(posts, timeout_ms:)
+        markdown_engine.scan(posts, timeout_ms:)
       end
       batching_extractor =
         described_class.new(

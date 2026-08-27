@@ -4,18 +4,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 
   describe "external-host marking" do
-    subject(:extractor) do
-      described_class.new(
-        embeds: buffer,
-        mention_names:,
-        hashtag_names:,
-        markdown_engine:,
-        internal_link_hosts: {
-          "forum.example.com" => nil,
-        },
-      )
-    end
-
+    let(:internal_link_hosts) { { source_host => nil } }
     let(:sha1) { "a" * 40 }
 
     # The importer maps a foreign-host row's sha1 only against an explicit

@@ -4,15 +4,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 
   describe "custom emoji" do
-    subject(:extractor) do
-      described_class.new(
-        embeds: buffer,
-        markdown_engine:,
-        mention_names:,
-        hashtag_names:,
-        custom_emoji_names: %w[parrot +1],
-      )
-    end
+    let(:custom_emoji_names) { %w[parrot +1] }
 
     it "defers a shortcode that names a source custom emoji" do
       result = extract("nice :parrot: work")

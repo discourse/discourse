@@ -9,10 +9,10 @@
 # This spec only pins termination within a generous ceiling: a regression back
 # to the old quadratic detectors blows past it by orders of magnitude (it
 # measured in minutes), while the bounded patterns plus the engine parse stay
-# around half a second combined. Growth-ratio and wall-clock scaling live in
-# `migrations/tooling/scripts/benchmarks/markdown_extraction_scaling.rb`,
-# where sizes, ratios and GC state can be reported instead of asserted
-# against CI noise.
+# around half a second combined. Growth-ratio and wall-clock scaling are
+# reported by the measurement tooling on the `mt/markdown-validation-tooling`
+# branch, where sizes, ratios and GC state can be reported instead of
+# asserted against CI noise.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 

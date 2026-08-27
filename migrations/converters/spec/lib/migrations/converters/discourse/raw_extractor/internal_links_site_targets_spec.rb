@@ -7,22 +7,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   # rewritten: only its origin moves to the destination, the rest rides in the
   # suffix. A relative route-less URL stays literal (it's domain-free already).
   describe "SITE targets on a root install" do
-    subject(:extractor) do
-      described_class.new(
-        embeds: buffer,
-        markdown_engine:,
-        mention_names:,
-        hashtag_names:,
-        internal_link_hosts: {
-          "forum.example.com" => nil,
-        },
-      )
-    end
-
-    def link_for(raw)
-      result = extract(raw)
-      [buffer.links.first, result]
-    end
+    let(:internal_link_hosts) { { source_host => nil } }
 
     # A coordinate-shaped path that parses no route plausibly carries the OLD
     # site's ids — `/t//209` is an empty-slug spelling of topic 209 — so an

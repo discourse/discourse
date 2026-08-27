@@ -50,6 +50,27 @@ RSpec.shared_context "with placeholder resolver" do
   let(:maps) { FakePlaceholderMaps.new }
   let(:owner_type) { embed_owner::POST }
 
+  # Creates an embed row of `kind` for owner 1 and returns its placeholder
+  # token, so an example is only its row attributes and expectation.
+  def create_embed(kind, **attributes)
+    token = placeholder.mint(kind)
+    Migrations::Database::IntermediateDB.const_get("Embed#{kind.capitalize}").create(
+      owner_type:,
+      owner_id: 1,
+      placeholder: token,
+      **attributes,
+    )
+    token
+  end
+
+  # Resolves one owner-1 body; `maps:` builds a fresh resolver over those
+  # lookups, without it the shared subject resolves (so an example can inspect
+  # `resolver.unresolved_embeds` afterwards).
+  def resolve(raw, maps: nil)
+    instance = maps ? described_class.new(intermediate_db, maps, owner_type:) : resolver
+    instance.resolve_all([{ id: 1, raw: }])[1]
+  end
+
   around do |example|
     Dir.mktmpdir do |dir|
       db_path = File.join(dir, "intermediate.db")
