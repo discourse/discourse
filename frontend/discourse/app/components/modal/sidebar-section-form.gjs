@@ -7,7 +7,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import SectionFormLink from "discourse/components/sidebar/section-form-link";
+import SectionFormLinks from "discourse/components/sidebar/section-form-links";
+import SectionFormLinksReorderable from "discourse/components/sidebar/section-form-links-reorderable";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
@@ -21,7 +22,7 @@ import { afterRender, bind } from "discourse/lib/decorators";
 import { isSameLocale } from "discourse/lib/locale-normalizer";
 import { sanitize } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { eq, has, not } from "discourse/truth-helpers";
+import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DSelect from "discourse/ui-kit/d-select";
@@ -606,14 +607,6 @@ export default class SidebarSectionForm extends Component {
     return duplicates;
   }
 
-  get lastActiveLinkIndex() {
-    return this.activeLinks.length - 1;
-  }
-
-  get lastActiveSecondaryLinkIndex() {
-    return (this.activeSecondaryLinks?.length ?? 0) - 1;
-  }
-
   @cached
   get activeLocalizations() {
     return this.#activeLocalizations(this.transformedModel);
@@ -848,47 +841,11 @@ export default class SidebarSectionForm extends Component {
   @afterRender
   focusNewRowInput(id) {
     document
-      .querySelector(`[data-row-id="${id}"] .d-icon-grid-picker-trigger`)
+      .querySelector(
+        `[data-row-id="${id}"] .d-icon-grid-picker-trigger, ` +
+          `[data-reorderable-key="${id}"] .d-icon-grid-picker-trigger`
+      )
       .focus();
-  }
-
-  @bind
-  setDraggedLink(link) {
-    this.draggedLink = link;
-  }
-
-  @bind
-  reorder(targetLink, above) {
-    if (this.draggedLink === targetLink) {
-      return;
-    }
-
-    const source = this.draggedLink.isPrimary
-      ? this.transformedModel.links
-      : this.transformedModel.secondaryLinks;
-    const destination = targetLink.isPrimary
-      ? this.transformedModel.links
-      : this.transformedModel.secondaryLinks;
-
-    // Nothing to insert next to, so leave both arrays untouched rather than
-    // removing the link and dropping it at an arbitrary offset.
-    if (!destination.includes(targetLink)) {
-      return;
-    }
-
-    removeValueFromArray(source, this.draggedLink);
-
-    // Read after the removal: within one segment the two arrays are the same
-    // one, so a pre-removal index would be off by one when dragging downwards.
-    const toPosition = destination.indexOf(targetLink);
-
-    this.draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
-
-    destination.splice(
-      above ? toPosition : toPosition + 1,
-      0,
-      this.draggedLink
-    );
   }
 
   get canDelete() {
@@ -1362,101 +1319,33 @@ export default class SidebarSectionForm extends Component {
               {{i18n "sidebar.sections.custom.links.title"}}
             </div>
 
-            <div
-              role="table"
-              aria-labelledby="section-links-label"
-              aria-rowcount={{this.activeLinks.length}}
-              class="sidebar-section-form__links-wrapper"
-            >
-
-              <div class="row-wrapper header" role="row">
-                <div
-                  class="input-group link-icon"
-                  role="columnheader"
-                  aria-sort="none"
-                >
-                  {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-                  <label>{{i18n
-                      "sidebar.sections.custom.links.icon.label"
-                    }}</label>
-                </div>
-
-                <div
-                  class="input-group link-name"
-                  role="columnheader"
-                  aria-sort="none"
-                >
-                  {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-                  <label>{{i18n
-                      "sidebar.sections.custom.links.name.label"
-                    }}</label>
-                </div>
-
-                <div
-                  class="input-group link-url"
-                  role="columnheader"
-                  aria-sort="none"
-                >
-                  {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-                  <label>{{i18n
-                      "sidebar.sections.custom.links.value.label"
-                    }}</label>
-                </div>
-              </div>
-
-              {{#each this.activeLinks key="objectId" as |link index|}}
-                <SectionFormLink
-                  @link={{link}}
-                  @index={{index}}
-                  @lastIndex={{this.lastActiveLinkIndex}}
-                  @focusNameInput={{eq
-                    link.objectId
-                    this.initialFocusLinkObjectId
-                  }}
-                  @duplicateValue={{has
-                    this.duplicateLinkObjectIds
-                    link.objectId
-                  }}
-                  @deleteLink={{this.deleteLink}}
-                  @reorderCallback={{this.reorder}}
-                  @setDraggedLinkCallback={{this.setDraggedLink}}
-                />
-              {{/each}}
-
-            </div>
-            <DButton
-              @action={{this.addLink}}
-              @title="sidebar.sections.custom.links.add"
-              @icon="plus"
-              @label="sidebar.sections.custom.links.add"
-              @ariaLabel="sidebar.sections.custom.links.add"
-              class="btn-flat btn-text add-link"
-            />
-
-            {{#if this.transformedModel.sectionType}}
-              <hr />
-              <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
-              {{#each this.activeSecondaryLinks key="objectId" as |link index|}}
-                <SectionFormLink
-                  @link={{link}}
-                  @index={{index}}
-                  @lastIndex={{this.lastActiveSecondaryLinkIndex}}
-                  @duplicateValue={{has
-                    this.duplicateLinkObjectIds
-                    link.objectId
-                  }}
-                  @deleteLink={{this.deleteLink}}
-                  @reorderCallback={{this.reorder}}
-                  @setDraggedLinkCallback={{this.setDraggedLink}}
-                />
-              {{/each}}
-              <DButton
-                @action={{this.addSecondaryLink}}
-                @title="sidebar.sections.custom.links.add"
-                @icon="plus"
-                @label="sidebar.sections.custom.links.add"
-                @ariaLabel="sidebar.sections.custom.links.add"
-                class="btn-flat btn-text add-link"
+            {{! TODO (ui-kit-reorderable-list-cleanup) drop the branch and the
+                legacy arm once the change ships. }}
+            {{#if this.siteSettings.enable_new_reordering_controls}}
+              <SectionFormLinksReorderable
+                @activeLinks={{this.activeLinks}}
+                @activeSecondaryLinks={{this.activeSecondaryLinks}}
+                @addLink={{this.addLink}}
+                @addSecondaryLink={{this.addSecondaryLink}}
+                @deleteLink={{this.deleteLink}}
+                @duplicateLinkObjectIds={{this.duplicateLinkObjectIds}}
+                @initialFocusLinkObjectId={{this.initialFocusLinkObjectId}}
+                @links={{this.transformedModel.links}}
+                @secondaryLinks={{this.transformedModel.secondaryLinks}}
+                @sectionType={{this.transformedModel.sectionType}}
+              />
+            {{else}}
+              <SectionFormLinks
+                @activeLinks={{this.activeLinks}}
+                @activeSecondaryLinks={{this.activeSecondaryLinks}}
+                @addLink={{this.addLink}}
+                @addSecondaryLink={{this.addSecondaryLink}}
+                @deleteLink={{this.deleteLink}}
+                @duplicateLinkObjectIds={{this.duplicateLinkObjectIds}}
+                @initialFocusLinkObjectId={{this.initialFocusLinkObjectId}}
+                @links={{this.transformedModel.links}}
+                @secondaryLinks={{this.transformedModel.secondaryLinks}}
+                @sectionType={{this.transformedModel.sectionType}}
               />
             {{/if}}
 
