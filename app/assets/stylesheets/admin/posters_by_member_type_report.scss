@@ -53,18 +53,3 @@
     font-size: var(--font-down-1);
   }
 }
-
-.rtl .posters-by-member-type-report {
-  &__numeric {
-    text-align: left;
-  }
-
-  &__members {
-    .admin-report-table-header.number,
-    .admin-report-table-header.share_formatted,
-    .admin-report-table-cell.number,
-    .admin-report-table-cell.share_formatted {
-      text-align: left;
-    }
-  }
-}
