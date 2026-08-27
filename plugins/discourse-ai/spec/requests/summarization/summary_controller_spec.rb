@@ -145,6 +145,20 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         expect(response.status).to eq(403)
       end
 
+      it "does not expose a cached summary after a post is soft-deleted" do
+        sensitive_content = "Content removed by staff"
+        post_2.update!(raw: sensitive_content)
+        summary = create_cached_summary(topic)
+        summary.update!(summarized_text: sensitive_content)
+
+        PostDestroyer.new(Fabricate(:admin), post_2).destroy
+
+        get "/discourse-ai/summarization/t/#{topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(summary.summarized_text)
+      end
+
       it "returns a summary" do
         summary_text = "This is a summary"
 
