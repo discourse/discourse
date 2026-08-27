@@ -34,7 +34,9 @@ import type {
 } from "discourse/ui-kit/d-reorderable-list/types";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
-import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropSource, {
+  type DragPreviewRenderer,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget, {
   DropTargetEvent,
   registerDragAndDropTarget,
@@ -540,6 +542,45 @@ export default class DReorderableList<T> extends Component<
     return this.args.group?.token ?? this.#ownDragType;
   }
 
+  /**
+   * The drag preview for a row that cannot be photographed on its own.
+   *
+   * The browser pictures the source element as it stands, which works for a row
+   * that carries its own box. A table row does not: its cells take their widths
+   * from columns that belong to the table, so a `tr` photographed alone collapses
+   * every cell to its content and the picture is not the row the reader grabbed.
+   * Cloned back into a table of its own at the measured widths, it is.
+   *
+   * Returns undefined for every other row shape, which leaves the browser's own
+   * picture in place.
+   */
+  get rowDragPreview(): DragPreviewRenderer | undefined {
+    if (this.itemTag !== "tr") {
+      return undefined;
+    }
+    return ({ container, element }) => {
+      const width = element.getBoundingClientRect().width;
+      const cellWidths = Array.from(element.children).map(
+        (cell) => cell.getBoundingClientRect().width
+      );
+      const table = document.createElement("table");
+      // The original's classes, so the stylesheet reaches the clone the same way
+      // it reaches the row: table styling is written from the table down.
+      table.className = element.closest("table")?.className ?? "";
+      table.style.width = `${width}px`;
+      table.style.tableLayout = "fixed";
+      const body = document.createElement("tbody");
+      const clone = element.cloneNode(true) as HTMLElement;
+      Array.from(clone.children).forEach((cell, index) => {
+        (cell as HTMLElement).style.width = `${cellWidths[index]}px`;
+      });
+      body.append(clone);
+      table.append(body);
+      container.append(table);
+      return () => table.remove();
+    };
+  }
+
   get listTag(): string {
     return this.args.tag ?? "ul";
   }
@@ -945,6 +986,7 @@ export default class DReorderableList<T> extends Component<
                     type=this.dragType
                     data=(hash key=row.key listId=this.listIdOrDefault)
                     dragHandle=(this.handleFor row.key)
+                    dragPreview=this.rowDragPreview
                   }}
                   {{dDragAndDropTarget
                     accepts=this.dragType

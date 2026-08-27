@@ -1017,16 +1017,14 @@
   max-width: 30em;
   border-collapse: collapse;
 
-  /* Keeps the cell a real table cell: the handle is block-level flex, so
-     inside a td it would stack under the row content instead of beside it. */
+  /* The grip's column, sized to the grip. A table shares its free width out
+     among the columns, so without a width of its own this one takes a third of
+     the table to hold a 24px control. A width below the content's minimum is
+     raised to it, which is what makes `1px` mean "no wider than the grip". */
 
   &__reorder {
+    width: 1px;
     white-space: nowrap;
-
-    .d-reorderable-list__handle {
-      display: inline-flex;
-      vertical-align: middle;
-    }
   }
 
   th {

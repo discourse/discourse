@@ -132,6 +132,15 @@
   }
 }
 
+/* In a table the handle shares a cell with text rather than sitting in a flex
+   row, and an inline-level box there lands on the text baseline, so the grip
+   rides low against the label beside it. Only the table shape needs this: every
+   other row centres it already. */
+
+td .d-reorderable-list__handle.btn {
+  vertical-align: middle;
+}
+
 /* The accelerator each destination answers to, pushed to the trailing edge so
    the labels stay in one column. Hidden where there is no keyboard to press
    it with. */
