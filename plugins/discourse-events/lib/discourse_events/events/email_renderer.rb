@@ -180,7 +180,7 @@ module DiscourseEvents
 
       def recurrence_label
         recurrence = @event&.recurrence
-        return nil if recurrence.blank? || Validator::VALID_RECURRENCES.exclude?(recurrence)
+        return nil if recurrence.blank? || RRuleConfigurator::RECURRENCES.exclude?(recurrence)
 
         card_t("builder_modal.recurrence.#{recurrence}", **recurrence_context)
       rescue StandardError

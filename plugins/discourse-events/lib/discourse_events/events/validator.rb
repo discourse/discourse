@@ -3,180 +3,154 @@
 module DiscourseEvents
   module Events
     class Validator
-      VALID_RECURRENCES = %w[
-        every_month
-        every_week
-        every_two_weeks
-        every_four_weeks
-        every_day
-        every_weekday
-      ]
+      MAX_LENGTHS = {
+        description: Event::MAX_DESCRIPTION_LENGTH,
+        url: Event::MAX_URL_LENGTH,
+        location: Event::MAX_LOCATION_LENGTH,
+      }
 
       def initialize(post)
         @post = post
       end
 
       def validate_event
-        extracted_events = DiscourseEvents::Events::Parser.extract_events(@post)
+        extracted_events = Parser.extract_events(@post)
 
-        return false if extracted_events.count == 0
+        return if extracted_events.empty?
 
-        if extracted_events.count > 1
-          @post.errors.add(:base, I18n.t("discourse_post_event.errors.models.event.only_one_event"))
-          return false
+        if extracted_events.size > 1
+          add_error("only_one_event")
+          return
         end
 
         if !@post.is_first_post?
-          @post.errors.add(
-            :base,
-            I18n.t("discourse_post_event.errors.models.event.must_be_in_first_post"),
-          )
-          return false
+          add_error("must_be_in_first_post")
+          return
         end
 
         extracted_event = extracted_events.first
+        attributes =
+          Event::Action::AttributesFromRaw.new(
+            raw_event: extracted_event,
+            current_status: @post.event&.status || Event.statuses[:standalone],
+          )
 
-        return false unless can_invite_groups?(extracted_event)
+        group_names = attributes.raw_invitees.to_a
+        invitees = group_names - [Event::PUBLIC_GROUP]
+
+        if attributes.status == Event.statuses[:private] && invitees.size > Event::MAX_RAW_INVITEES
+          add_error("raw_invitees_length", count: Event::MAX_RAW_INVITEES)
+          return
+        end
+
+        return unless can_invite_groups?(group_names)
 
         if @post.acting_user && @post.event
           if !@post.acting_user.guardian.can_act_on_discourse_post_event?(@post.event)
-            @post.errors.add(
-              :base,
-              I18n.t(
-                "discourse_post_event.errors.models.event.acting_user_not_allowed_to_act_on_this_event",
-              ),
-            )
-            return false
+            add_error("acting_user_not_allowed_to_act_on_this_event")
+            return
           end
         else
           if !@post.acting_user.guardian.can_create_discourse_post_event?
-            @post.errors.add(
-              :base,
-              I18n.t(
-                "discourse_post_event.errors.models.event.acting_user_not_allowed_to_create_event",
-              ),
-            )
-            return false
+            add_error("acting_user_not_allowed_to_create_event")
+            return
           end
         end
 
-        if extracted_event[:start].blank? ||
-             (
-               begin
-                 DateTime.parse(extracted_event[:start])
-               rescue StandardError
-                 nil
-               end
-             ).nil?
-          @post.errors.add(
-            :base,
-            I18n.t(
-              "discourse_post_event.errors.models.event.start_must_be_present_and_a_valid_date",
-            ),
-          )
-          return false
+        if extracted_event[:timezone].present? &&
+             ActiveSupport::TimeZone[extracted_event[:timezone]].nil?
+          add_error("invalid_timezone", timezone: extracted_event[:timezone])
+          return
         end
 
-        if extracted_event[:end].present? &&
-             (
-               begin
-                 DateTime.parse(extracted_event[:end])
-               rescue StandardError
-                 nil
-               end
-             ).nil?
-          @post.errors.add(
-            :base,
-            I18n.t("discourse_post_event.errors.models.event.end_must_be_a_valid_date"),
-          )
-          return false
+        starts_at = parse_date { attributes.starts_at }
+
+        if starts_at.nil?
+          add_error("start_must_be_present_and_a_valid_date")
+          return
         end
 
-        if extracted_event[:start].present? && extracted_event[:end].present?
-          if Time.parse(extracted_event[:start]) > Time.parse(extracted_event[:end])
-            @post.errors.add(
-              :base,
-              I18n.t("discourse_post_event.errors.models.event.ends_at_before_starts_at"),
-            )
-            return false
+        ends_at = parse_date { attributes.ends_at }
+
+        if extracted_event[:end].present? && ends_at.nil?
+          add_error("end_must_be_a_valid_date")
+          return
+        end
+
+        if ends_at && ends_at <= starts_at
+          add_error("ends_at_before_starts_at")
+          return
+        end
+
+        if extracted_event[:name].present? &&
+             !(Event::MIN_NAME_LENGTH..Event::MAX_NAME_LENGTH).cover?(extracted_event[:name].length)
+          add_error("name.length", minimum: Event::MIN_NAME_LENGTH, maximum: Event::MAX_NAME_LENGTH)
+          return
+        end
+
+        MAX_LENGTHS.each do |field, maximum|
+          if extracted_event[field].present? && extracted_event[field].length > maximum
+            add_error("#{field}.length", maximum:)
           end
         end
 
-        if extracted_event[:name].present?
-          if !(Event::MIN_NAME_LENGTH..Event::MAX_NAME_LENGTH).cover?(extracted_event[:name].length)
-            @post.errors.add(
-              :base,
-              I18n.t(
-                "discourse_post_event.errors.models.event.name.length",
-                minimum: Event::MIN_NAME_LENGTH,
-                maximum: Event::MAX_NAME_LENGTH,
-              ),
-            )
-            return false
+        if extracted_event[:"max-attendees"].present? &&
+             !extracted_event[:"max-attendees"].to_i.between?(1, Event::MAX_ATTENDEES_LIMIT)
+          add_error("invalid_max_attendees", maximum: Event::MAX_ATTENDEES_LIMIT)
+        end
+
+        if extracted_event[:"recurrence-until"].present? &&
+             parse_date { attributes.recurrence_until }.nil?
+          add_error("recurrence_until_must_be_a_valid_date")
+        end
+
+        if extracted_event[:reminders].present?
+          invalid_reminders =
+            extracted_event[:reminders].split(",").reject { |r| Event.valid_reminder?(r) }
+          if invalid_reminders.any?
+            add_error("invalid_reminders", reminders: invalid_reminders.join(", "))
           end
         end
 
-        if extracted_event[:recurrence].present?
-          if !VALID_RECURRENCES.include?(extracted_event[:recurrence].to_s)
-            @post.errors.add(
-              :base,
-              I18n.t("discourse_post_event.errors.models.event.invalid_recurrence"),
-            )
-          end
+        if extracted_event[:recurrence].present? &&
+             !RRuleConfigurator::RECURRENCES.include?(extracted_event[:recurrence].to_s)
+          add_error("invalid_recurrence", recurrences: RRuleConfigurator::RECURRENCES.join(", "))
         end
 
-        if extracted_event[:timezone].present?
-          if !ActiveSupport::TimeZone[extracted_event[:timezone]].present?
-            @post.errors.add(
-              :base,
-              I18n.t(
-                "discourse_post_event.errors.models.event.invalid_timezone",
-                timezone: extracted_event[:timezone],
-              ),
-            )
-          end
-        end
-
-        if !Parser.valid_url?(extracted_event[:url])
-          @post.errors.add(:base, I18n.t("discourse_post_event.errors.models.event.invalid_url"))
-        end
-
-        true
+        add_error("invalid_url") if !Parser.valid_url?(extracted_event[:url])
       end
 
       private
 
-      def can_invite_groups?(event)
-        return true unless event[:"allowed-groups"]
+      def add_error(key, **args)
+        @post.errors.add(:base, I18n.t("discourse_post_event.errors.models.event.#{key}", **args))
+      end
 
-        event[:"allowed-groups"]
-          .split(",")
-          .each do |group_name|
-            group =
-              begin
-                Group.lookup_group(group_name.to_sym)
-              rescue ArgumentError
-                nil
-              end
+      def parse_date
+        yield
+      rescue StandardError
+        nil
+      end
 
-            if !group || !@post.acting_user.guardian.can_see_group?(group)
-              @post.errors.add(
-                :base,
-                I18n.t("discourse_post_event.errors.models.event.invalid_allowed_groups"),
-              )
-              return false
+      def can_invite_groups?(group_names)
+        group_names.each do |group_name|
+          group =
+            begin
+              Group.lookup_group(group_name.to_sym)
+            rescue ArgumentError
+              nil
             end
 
-            if !@post.acting_user.guardian.can_see_group_members?(group)
-              @post.errors.add(
-                :base,
-                I18n.t(
-                  "discourse_post_event.errors.models.event.acting_user_not_allowed_to_invite_these_groups",
-                ),
-              )
-              return false
-            end
+          if !group || !@post.acting_user.guardian.can_see_group?(group)
+            add_error("invalid_allowed_groups")
+            return false
           end
+
+          if !@post.acting_user.guardian.can_see_group_members?(group)
+            add_error("acting_user_not_allowed_to_invite_these_groups")
+            return false
+          end
+        end
 
         true
       end
