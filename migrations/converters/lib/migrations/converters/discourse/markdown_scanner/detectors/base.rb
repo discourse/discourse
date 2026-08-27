@@ -96,7 +96,7 @@ module Migrations
             # (`[see [1]](/t/5)` links with text `see [1]`). The nested bracket
             # must not itself open a link or image — the `(?!\()` — so the `[` of a
             # nested image `[![…](…)](…)` never matches at the outer bracket, which
-            # would swallow the inner construct unrecorded (see `UploadUrl::LINK`).
+            # would consume the inner construct without recording it (see `UploadUrl::LINK`).
             # Failing there matches core too: links don't nest, so the inner
             # `[…](…)` wins and the outer bracket stays literal.
             #

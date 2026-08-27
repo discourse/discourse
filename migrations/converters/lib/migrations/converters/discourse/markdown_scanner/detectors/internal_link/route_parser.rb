@@ -64,7 +64,7 @@ module Migrations
               # glob is resolved and `Category.find_by_slug_path_with_id` never sees it —
               # the tail is not slug. `/l/top/<period>` and the tag-intersection forms
               # below `/none` and `/all` open with one of these segments, so matching the
-              # opening one is enough; the rest rides along in the suffix either way.
+              # opening one is enough; the rest stays in the suffix either way.
               CATEGORY_TAIL = %r{/(?:l/(?:#{CATEGORY_FILTER})|none|all|subcategories)(?=[/?#]|\z)}
               private_constant :CATEGORY_TAIL
 
@@ -77,7 +77,7 @@ module Migrations
               # `/c/<slug-path>/<id>`, or `/c/<id>` with no slug. Anchored on the id the
               # way the topic routes are, so the route ends there and a category's
               # filter tail (`/l/latest`, the ordinary URL of a category's Latest tab)
-              # rides along in the suffix instead of being read as more slug.
+              # stays in the suffix instead of being read as more slug.
               #
               # The slug path is lazy so the id is the first numeric segment that ends a
               # path component: greedy, `/c/support/6/l/latest` would fold the tail into

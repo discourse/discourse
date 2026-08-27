@@ -20,7 +20,7 @@ __Ruby = {
   format_username(username) {
     return username;
   },
-  // Leaving every short URL unresolved makes the upload protocol stash the
+  // Leaving every short URL unresolved makes the upload protocol store the
   // original in data-orig-*, which is the value the scan extracts.
   lookup_upload_urls() {
     return {};

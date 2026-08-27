@@ -40,7 +40,8 @@ module Migrations
           unicode_usernames
         ].freeze
 
-        # Read by `shims.js` outside of `siteSettings`, so tracked separately.
+        # Read from the options directly, not through `siteSettings`, so it
+        # is tracked separately.
         AVATAR_SIZES_KEY = "avatar_sizes"
 
         attr_reader :settings, :category_slugs, :tag_names, :custom_emoji_names, :additional_options

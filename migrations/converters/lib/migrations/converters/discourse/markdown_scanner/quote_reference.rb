@@ -6,9 +6,9 @@ module Migrations
       module MarkdownScanner
         # A deferred quote reference: the opening `[quote="…"]` tag alone. That
         # tag is all the detector consumes — the body and `[/quote]` stay in the
-        # raw and are scanned like any other text — and all that carries the
-        # references needing remapping, so this is a reference, not a quote
-        # block with children.
+        # raw and are scanned like any other text. The opening tag alone carries
+        # the references that need remapping, so this is a reference, not a
+        # quote block with children.
         #
         # `name` is the quoted user's display name, kept only when the header
         # gives one that differs from the username (else `nil`); it's the fallback

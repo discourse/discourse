@@ -13,7 +13,7 @@ module Migrations
   # (names of 23 bytes or fewer are embedded, so their characters live in the
   # slot too) — on the order of 80-110 MB that every fork ends up copying.
   #
-  # Here the names are held as a handful of frozen Strings: the name bytes
+  # Here the names are held as a few frozen Strings: the name bytes
   # concatenated into one buffer, their byte offsets packed into another, and an
   # open-addressing probe table of packed 32-bit fingerprints beside them. That
   # is a fixed number of heap slots regardless of the name count; the character,

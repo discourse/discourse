@@ -5,43 +5,41 @@ module Migrations
     module Discourse
       module MarkdownScanner
         class EngineScanner
-          # The escalation for a body count certification refused: prove each
-          # candidate occurrence individually by substitution. One occurrence's
-          # bytes are replaced with an inert marker word and the body is
-          # re-parsed; if only instances of that construct disappear from the
+          # The escalation when count certification refused a body: prove each
+          # candidate occurrence on its own by substitution. One occurrence's
+          # bytes are replaced with a marker word and the body is parsed
+          # again. When only instances of that construct disappear from the
           # parse — normally exactly one, several for a reference definition
-          # that serves several links — and nothing appears that isn't the
-          # marker's own doing, the occurrence provably was that construct, at
-          # that position. The proof is a token-multiset delta, so it needs no
-          # line maps: bodies count certification cannot even index (CR line
-          # endings) or cannot trust literally (entity spellings) are just as
-          # eligible.
+          # that serves several links — and nothing appears that the marker
+          # itself does not explain, then the occurrence was that construct,
+          # at that position. The proof compares token multisets and needs no
+          # line maps, so bodies with CR line endings or entity spellings can
+          # use it too.
           #
           # An occurrence inside a code span, a link label, or any other
-          # context the engine skips changes nothing when replaced — its delta
-          # is empty and it stays unproven. Unproven constructs stay verbatim;
-          # the body still gets its proven constructs extracted. The caller's
-          # refusal tally then counts bodies that keep at least one unproven
-          # construct — the conversion's must-resolve list.
+          # context the engine skips changes nothing when replaced: its delta
+          # is empty and it stays unproven. Unproven constructs stay
+          # unchanged; the proven ones are still extracted. The caller then
+          # counts bodies that keep at least one unproven construct — the
+          # conversion's must-resolve list.
           #
-          # This costs one engine parse per candidate occurrence, bounded by
-          # {MAX_TRIALS}, on the well-under-1% of engine-tier bodies whose
-          # certification refuses — measured-rare, so clarity beats cleverness.
+          # Each candidate occurrence costs one engine parse, limited by
+          # {MAX_TRIALS}. Certification refuses well under 1% of engine-tier
+          # bodies, so this stays cheap.
           class TrialPass
             include Locating
 
-            # A runaway body (hundreds of occurrences of a tracked value)
-            # keeps its tail unproven rather than buying hundreds of parses.
+            # A body with hundreds of occurrences of a tracked value keeps
+            # its tail unproven instead of paying hundreds of parses.
             MAX_TRIALS = 48
 
-            # Default elapsed ceiling across a body's trials. The parse count
-            # alone does not bound work — one adversarial body can drive every
-            # parse toward the context timeout — so the wall clock cuts in
-            # first and the tail stays unproven. A normal trial parses in well
-            # under a millisecond; only a body that is already pathological
-            # gets here. A scanner on its slow retry passes a larger budget —
-            # there a single legitimate parse can take longer than this whole
-            # default.
+            # Default time limit across a body's trials. The parse count
+            # alone does not limit the work: one adversarial body can push
+            # every parse toward the context timeout, so the wall clock stops
+            # first and the tail stays unproven. A normal trial parses in
+            # well under a millisecond. A scanner on its slow retry passes a
+            # larger budget, because there a single legitimate parse can take
+            # longer than this whole default.
             TRIAL_SECONDS_BUDGET = 10.0
 
             Candidate = Data.define(:kind, :key, :text, :occurrence)
@@ -99,9 +97,9 @@ module Migrations
             private
 
             # The parse reduced to what a substitution may change: every
-            # construct value the scan reports, the inline-code span count, and
-            # the block-token inventory. Line maps are deliberately absent —
-            # they are what a CR body cannot provide.
+            # construct value, the inline-code span count, and the block-token
+            # inventory. Line maps are left out on purpose; they are what a
+            # CR body cannot provide.
             def construct_multiset(data)
               counts = Hash.new(0)
 
@@ -120,10 +118,10 @@ module Migrations
               counts
             end
 
-            # The tracked construct instances the body is expected to yield —
+            # The tracked construct instances the body is expected to give —
             # the denominator for `unproven`. Quotes are handled separately:
-            # a quote header may legitimately carry nothing to remap, so its
-            # extraction is best-effort there like in the certification pass.
+            # a quote header may carry nothing to remap, so its extraction is
+            # best-effort, like in the certification pass.
             def tracked_expected(base)
               base.filter_map do |key, count|
                 next unless key.is_a?(Array)
@@ -152,8 +150,8 @@ module Migrations
             def candidates_for(entry)
               occurrences =
                 if entry[:kind] == :url
-                  # Overlapping readings are exactly what trials exist to
-                  # attribute, so the spans are probed regardless.
+                  # Overlapping readings are exactly what trials can
+                  # attribute, so the spans are probed anyway.
                   url_spans(entry[:text], 0...@input.bytesize).first
                 else
                   probed_occurrences(entry[:kind], entry[:text])
@@ -165,24 +163,23 @@ module Migrations
             end
 
             # The delta rule: replacing the occurrence must remove only
-            # instances of the target construct and may only add constructs
-            # the marker itself spells (a link whose destination became the
-            # marker word). Anything else — a block appearing or vanishing, a
-            # previously suppressed construct surfacing, the code-span count
-            # moving — fails the proof. Normally exactly one instance must
-            # disappear. A URL occurrence on a reference-definition line may
-            # remove several: one definition serves every `[text][label]`
-            # link that uses its label, and replacing the one destination
-            # rewrites them all.
+            # instances of the target construct, and may only add constructs
+            # that spell the marker word (for example a link whose
+            # destination became the marker). Anything else fails the proof:
+            # a block appearing or vanishing, a suppressed construct showing
+            # up, the code-span count changing. Normally exactly one instance
+            # must disappear. A URL occurrence on a reference-definition line
+            # may remove several, because one definition serves every
+            # `[text][label]` link that uses its label.
             #
             # Returns `[outcome, covered]`; `covered` is how many of the
             # target's tokens the proven occurrence accounts for. The outcome
-            # distinguishes why a trial did not prove: `:not_construct` (the
-            # delta was empty — the occurrence is not a live construct here,
-            # so skipping it is exact, not a failure), `:mismatch` (the delta
-            # was wrong in some other way), and `:limit`/`:budget` when no
-            # trial ran at all. The distinction is what lets a caller count
-            # real unproven constructs without counting shielded look-alikes.
+            # says why a trial did not prove: `:not_construct` (the delta was
+            # empty — the occurrence is not a live construct here, so
+            # skipping it is correct), `:mismatch` (the delta was wrong in
+            # some other way), and `:limit`/`:budget` when no trial ran. The
+            # distinction lets the caller count real unproven constructs
+            # without counting shielded look-alikes.
             def prove(base, candidate, marker)
               elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started_at
               if elapsed > @seconds_budget
@@ -239,11 +236,11 @@ module Migrations
                   probe_match_at(candidate.kind, candidate.occurrence)
                 end
 
-              # Position proven but nothing can take the construct whole (an
-              # escaped-bracket label, a form beyond the pattern caps): it
-              # stays verbatim AND unproven — a stale reference the caller
-              # must hear about, not a silent success. The recorded cause
-              # says which class it was.
+              # The position is proven, but no grammar can take the construct
+              # whole (an escaped-bracket label, a form beyond the pattern
+              # caps). It stays unchanged AND counts as unproven — a stale
+              # reference the caller must hear about. The recorded cause says
+              # which class it was.
               if match.nil?
                 @unplaced_cause ||=
                   if candidate.kind == :url
@@ -258,13 +255,13 @@ module Migrations
               true
             end
 
-            # Quote openers: the target delta is one `blockquote` bbcode block
-            # disappearing. The opener's span comes from the header grammar
-            # itself. Returns how many openers stay unproven-but-remappable: a
-            # header the grammar cannot take, a failed or budgeted trial. A
-            # header that parses but carries no username has nothing to remap
-            # and a trial proving "not a live construct" (a `[quote=` inside a
-            # code fence) is an exact skip — neither counts.
+            # Quote openers: the target delta is one `blockquote` bbcode
+            # block disappearing. The opener's span comes from the header
+            # grammar. Returns how many openers stay unproven but remappable:
+            # a header the grammar cannot read, a failed or budgeted trial.
+            # Two cases do not count: a header that parses but has no
+            # username (nothing to remap), and a trial that proved "not a
+            # live construct" (a `[quote=` inside a code fence).
             def prove_quotes(base, marker, spans)
               return 0 if base.fetch([:block, "bbcode_open", "blockquote"], 0) == 0
 
@@ -301,9 +298,9 @@ module Migrations
               unproven
             end
 
-            # Distinct proven spans that overlap (two anchors claiming the same
-            # bytes) cannot both be spliced; the later one stays verbatim and
-            # is counted back as unproven so the body keeps its refusal cause.
+            # Two proven spans that overlap cannot both be spliced; the later
+            # one stays unchanged and is counted back as unproven, so the
+            # body keeps its refusal cause.
             def without_overlaps(ordered)
               kept = []
               dropped = 0

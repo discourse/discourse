@@ -14,12 +14,10 @@ module Migrations
         end
 
         # PrettyText allows 25s because it renders; a scan only parses. The
-        # slowest legitimate parse observed on a 1.5M-post corpus was 435ms,
-        # while the 104 runaway bodies that hit a 10s ceiling burned ~1,040s
-        # of the run's ~1,295s total V8 time before refusing anyway. A ceiling
-        # with ~7x headroom over the observed maximum keeps a runaway from
-        # dominating V8 cost; a body it cuts off gets one patient retry (see
-        # `EngineScanner`) instead of a refusal.
+        # slowest legitimate parse we measured on a large corpus was 435 ms,
+        # so 3 seconds has plenty of headroom while it keeps one runaway body
+        # from dominating V8 time. A body the ceiling cuts off gets one retry
+        # with a larger ceiling (see `EngineScanner`) instead of a refusal.
         EVAL_TIMEOUT_MS = 3_000
 
         def initialize(bundle:, config:, timeout_ms: EVAL_TIMEOUT_MS)
@@ -32,10 +30,10 @@ module Migrations
         end
 
         # @param posts [Array<Hash>] `{ id:, raw: }` per post
-        # @param timeout_ms [Integer, nil] a one-off ceiling for this scan (a
-        #   caller retrying a body that outran the default). MiniRacer fixes
-        #   the timeout at construction, so switching ceilings rebuilds the
-        #   isolate (~0.15s measured) — cheap at the rarity a retry has — and
+        # @param timeout_ms [Integer, nil] a one-off ceiling for this scan,
+        #   for a caller retrying a body that ran into the default. MiniRacer
+        #   fixes the timeout at construction, so switching ceilings rebuilds
+        #   the isolate (about 0.15s) — fine, because retries are rare — and
         #   the next default-ceiling scan rebuilds back the same way.
         # @return [Array<Hash>] per-post block/construct data from scan.js
         def scan(posts, timeout_ms: nil)

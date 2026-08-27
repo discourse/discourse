@@ -15,13 +15,12 @@ module Migrations
         # `:engine`, so a wrong guess costs an engine parse, never a wrong
         # extraction.
         class TierGate
-          # A body with none of these characters can't hold any built-in
+          # A body with none of these characters cannot hold any built-in
           # construct: `@` (mention), `[` (quote/attachment/image), `#`
           # (hashtag), the `uploads/` segment of a full upload URL. Named
-          # character entities
-          # get their own alternative: `&commat;bob` spells a construct while
-          # containing none of the trigger characters (numeric forms all
-          # contain `#`).
+          # character entities have their own alternative because
+          # `&commat;bob` spells a construct while containing none of the
+          # trigger characters; numeric forms all contain `#`.
           BASE_PRESENCE = %r{[@\[#]|uploads/|&[a-zA-Z][a-zA-Z0-9]{1,31};}
           private_constant :BASE_PRESENCE
 
@@ -40,16 +39,15 @@ module Migrations
           CONSTRUCT_CHAR = %r{[\p{Alnum}\p{M}_@#:./-]}
           private_constant :CONSTRUCT_CHAR
 
-          # Named entities that provably decode to a character no construct can
-          # contain — the common typographic and HTML-escape names, so an
-          # ordinary pasted `&amp;` or `&hellip;` neither makes a candidate here
-          # nor refuses count certification in the {EngineScanner}. The
-          # decoder is markdown-it's, whose full name table ships only as an
-          # encoded trie, so this is an explicit allowlist rather than a
-          # derived one; a spec decodes each name through the real engine and
-          # fails if one ever turns construct-capable. Anything not listed is
-          # treated as construct-capable — unknown names cost time, not
-          # correctness.
+          # Named entities that decode to a character no construct can
+          # contain — the common typographic and HTML-escape names. An
+          # ordinary pasted `&amp;` or `&hellip;` therefore makes no candidate
+          # here and refuses no count certification in the {EngineScanner}.
+          # markdown-it ships its full name table only as an encoded trie, so
+          # this is an explicit allowlist; a spec decodes each name through
+          # the real engine and fails if one of them can form a construct
+          # character. Anything not listed counts as construct-capable —
+          # an unknown name costs time, not correctness.
           IRRELEVANT_NAMED_ENTITIES = %w[
             amp
             AMP
@@ -219,16 +217,16 @@ module Migrations
             @assume_candidates || unconditional_candidate?(raw) || probe_candidate?(raw)
           end
 
-          # `[quote=` is matched case-insensitively because core's bbcode tags
-          # are (`[QUOTE=bob]` renders); the `=` is required because only a
-          # metadata-bearing opener holds user/post/topic fields to remap — a
-          # plain `[quote]` block extracts nothing on any path, and both the
-          # certification and trial passes search openers with exactly this
-          # shape. The `upload://` scheme is not case-insensitive, because
-          # core's upload rewriting is case-sensitive there and an `UPLOAD://`
-          # link carries nothing an importer could resolve. Full upload URLs
-          # go through the detector's own check, so an unrelated `/uploads/`
-          # path (WordPress and friends) makes no candidate.
+          # `[quote=` is matched case-insensitively because core's bbcode
+          # tags are; `[QUOTE=bob]` renders. The `=` is required because only
+          # an opener with metadata holds user/post/topic fields to remap. A
+          # plain `[quote]` block extracts nothing on any path, and both
+          # passes search openers with exactly this shape. The `upload://`
+          # scheme stays case-sensitive because core's upload rewriting is
+          # case-sensitive there; an `UPLOAD://` link carries nothing an
+          # importer could resolve. Full upload URLs go through the
+          # detector's own check, so an unrelated `/uploads/` path (WordPress
+          # for example) makes no candidate.
           def unconditional_candidate?(raw)
             raw.match?(/\[quote=/i) || raw.include?("upload://") ||
               Detectors::UploadUrl.candidate?(raw) ||

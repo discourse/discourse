@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
-# Adversarial bodies from the scanner review: repeated malformed construct
-# openers once made the detector regexes re-scan their whole tail per opener,
-# so a single generated post could pin a conversion worker for minutes. The
-# detector patterns are bounded now (line-bounded classes, atomic groups,
-# length caps), and these bodies cost a fraction of a second.
+# Adversarial bodies: repeated malformed construct openers. With unbounded
+# detector patterns, each opener re-scans the whole remaining input, and a
+# single generated post can occupy a conversion worker for minutes. The
+# detector patterns are bounded (line-bounded classes, atomic groups, length
+# caps), and these bodies cost a fraction of a second.
 #
-# This spec only pins termination within a generous ceiling: a regression back
-# to the old quadratic detectors blows past it by orders of magnitude (it
-# measured in minutes), while the bounded patterns plus the engine parse stay
-# around half a second combined. Growth-ratio and wall-clock scaling are
-# reported by the measurement tooling on the `mt/markdown-validation-tooling`
-# branch, where sizes, ratios and GC state can be reported instead of
-# asserted against CI noise.
+# This spec only asserts termination within a generous ceiling: a quadratic
+# regression exceeds it by orders of magnitude, while the bounded patterns
+# plus the engine parse stay around half a second combined. Growth ratios and
+# wall-clock scaling are reported by the measurement tooling on the
+# `mt/markdown-validation-tooling` branch, where sizes, ratios and GC state
+# can be reported instead of asserted against CI noise.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 

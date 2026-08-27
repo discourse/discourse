@@ -49,7 +49,7 @@ module Migrations
               \((?-i:upload)://(?<url>[^)\n]{1,512})\)
               # Discourse writes the size right after the link, on the same line.
               # `\s*` here would let the group cross a line end — even a blank one —
-              # and swallow a following parenthesized line into the match. Only the
+              # and pull a following parenthesized line into the match. Only the
               # sha1 is recorded, so the importer re-renders the attachment from the
               # destination's metadata and everything else the match covered is
               # dropped from the post.

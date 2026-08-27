@@ -8,19 +8,20 @@ module Migrations
       # leaving everything else untouched — including anything inside code,
       # whether fenced, indented, inline, a `[code]` block or a `<pre>` block.
       #
-      # The pieces live in `markdown_scanner/`: the {TierGate} skips the bodies
-      # with nothing extractable, and the {EngineScanner} handles the rest by
-      # parsing with the real discourse-markdown-it engine and locating every
-      # reported construct through count certification (escalating to
-      # per-occurrence trial substitution). The {Detectors} carry the construct
-      # grammars — the gate probes candidacy with them, the engine scanner
-      # anchors and parses certified occurrences with them.
+      # The division of labor: the discourse-markdown-it engine decides what
+      # the markdown means — what is code, what is a live mention or link.
+      # The {EngineScanner}'s certification and trial passes prove which raw
+      # bytes produced each engine token. The {Detectors} do not parse
+      # markdown context; they locate candidate byte spans, parse the
+      # migration-specific syntax (quote headers, upload ids, internal
+      # routes), and build the reference objects the importer resolves. The
+      # {TierGate} skips bodies with nothing extractable before any of this
+      # runs.
       #
-      # The contract throughout is fail-closed: extraction can refuse a
-      # construct it cannot prove, but it cannot corrupt one. Anything
-      # unproven stays verbatim, and the body is counted with its cause on
+      # The contract throughout: extraction can refuse a construct it cannot
+      # prove, but it cannot corrupt one. Anything unproven stays unchanged,
+      # and the body is counted with its cause on
       # `RawExtractor#engine_refusals` — the conversion's must-resolve list.
-      # Each class's docs carry the specific gap it accepts and why.
       module MarkdownScanner
       end
     end

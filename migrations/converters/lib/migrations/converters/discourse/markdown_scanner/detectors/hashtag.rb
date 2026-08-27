@@ -51,7 +51,7 @@ module Migrations
             # What core's matcher would append to the name. When one of these follows
             # our match, core read a longer — and so different — name than we did and
             # cooked nothing, so we must not extract. It is wider than our own name
-            # charset on purpose: core's coarse `Ⰰ-퟿` range swallows CJK
+            # charset on purpose: core's coarse `Ⰰ-퟿` range includes CJK
             # spaces and punctuation (e.g. the ideographic space `　`) that our
             # `\p{Alnum}` charset stops at, and a hashtag butted against one of those
             # is not a bare name to core either. An interior `.` (a `.` before another

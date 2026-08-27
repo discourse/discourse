@@ -7,9 +7,8 @@ module Migrations
         # The one URL-origin reading shared by everything that must agree on
         # what "the source's own URL" means: the {Detectors::InternalLink}
         # grammar, the {EngineScanner}'s tracked-value filter, and the
-        # foreign-host signal. Two implementations of host/port/prefix rules
-        # drifted once (one stripped default ports scheme-blind); a shared
-        # reading makes that class of divergence impossible.
+        # foreign-host signal. With one shared reading, the host, port and
+        # prefix rules cannot drift apart between those places.
         module UrlOrigin
           # Splits into scheme, `//host` and the rest (path/query/fragment,
           # starting at whichever of `/`, `?` or `#` comes first). The host

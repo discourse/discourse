@@ -123,11 +123,11 @@ module Migrations
           # rubocop:enable Discourse/NoChdir
         end
 
-        # The build itself — run this only in a throwaway process (the
-        # subprocess `load_or_build` spawns): it initializes V8 and installs
-        # the host stand-ins, both of which must never live in the forking
-        # converter parent. Writes via temp file + atomic rename so a crashed
-        # build can never leave a truncated cache another run would trust.
+        # The build itself. Run this only in the separate process that
+        # `load_or_build` spawns: it initializes V8 and installs the host
+        # stand-ins, and neither may live in the forking converter parent.
+        # Writes via temp file and atomic rename, so a crashed build cannot
+        # leave a truncated cache another run would trust.
         def self.build_and_write(root, cache_file)
           # discourse-emojis decides whether to load its railtie by checking
           # for `Rails`, so it must load before the Rails stand-in exists.
@@ -153,10 +153,9 @@ module Migrations
           # rubocop:enable Discourse/NoChdir
         end
 
-        # A missing file, a truncated/corrupt one (a writer killed before the
-        # atomic-rename discipline existed, a partial copy) and valid JSON
-        # with the wrong shape are all just cache misses. Without the shape
-        # check, `{"entries":"corrupt"}` would reach the context and raise a
+        # A missing file, a truncated or corrupt one, and valid JSON with the
+        # wrong shape are all cache misses. Without the shape check,
+        # `{"entries":"corrupt"}` would reach the context and raise a
         # NoMethodError there instead of rebuilding.
         def self.read_cache(cache_file)
           entries = JSON.parse(File.read(cache_file))["entries"]

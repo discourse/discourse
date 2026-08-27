@@ -15,8 +15,8 @@ RSpec.shared_context "with raw extractor" do
     )
   end
 
-  # Constructor knobs a spec overrides individually instead of rebuilding the
-  # whole subject; the defaults mirror the constructor's own.
+  # Constructor arguments a spec overrides individually instead of rebuilding
+  # the whole subject; the defaults mirror the constructor's own.
   let(:custom_emoji_names) { nil }
   let(:internal_link_hosts) { {} }
   let(:internal_link_base_prefix) { nil }

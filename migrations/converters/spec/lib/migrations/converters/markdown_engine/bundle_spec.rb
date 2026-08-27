@@ -55,8 +55,8 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
       cache_files = Dir[File.join(dir, "markdown-engine-bundle-*.json")]
       expect(cache_files.size).to eq(1)
 
-      # A truncated cache (a writer killed before atomic renames existed, a
-      # partial copy) is a miss that rebuilds, never a crash or trusted junk.
+      # A truncated cache (for example a partial copy) is a miss that
+      # rebuilds, never a crash or trusted junk.
       File.write(cache_files.first, "{\"entries\": [[\"x\",")
       rebuilt = described_class.load_or_build(cache_dir: dir)
       expect(rebuilt.entries.size).to eq(bundle.entries.size)
@@ -70,7 +70,7 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
   end
 
   it "supports the production fork model: bundle in the parent, context in the worker" do
-    # Run in a pristine ruby so this spec process's own V8 contexts (other
+    # Run in a fresh ruby process so this spec process's own V8 contexts (other
     # examples build them) can't mask or break the property under test: a
     # parent that only loaded the bundle forks, and the worker builds a
     # working context.

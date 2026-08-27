@@ -7,10 +7,10 @@ module Migrations
         module Detectors
           # The boundary look-arounds shared by the detectors: whether core's
           # engines let a construct open (or close) at a position, given what
-          # sits next to it. Each takes the input and a byte offset, tests the
-          # neighbouring byte on an ASCII fast path, and falls back to the
-          # recovered character for a Unicode-aware test. Mixed into {Base}, so
-          # every detector shares one reading of each boundary.
+          # sits next to it. Each takes the input and a byte offset, first
+          # tests the neighboring byte as ASCII, and falls back to the
+          # recovered character for a Unicode-aware test. Mixed into {Base},
+          # so every detector shares one reading of each boundary.
           module Boundaries
             # The boundary markdown-it's text-post-process engine enforces around a
             # whole match: whitespace or, per markdown-it's `isPunctChar`, a Unicode
@@ -206,7 +206,7 @@ module Migrations
             # punctuation or control character, or one of the three separators it lists
             # explicitly (`<`, `>`, `｜`). This is narrower than the schemed-URL
             # boundary above: the inline rule that widens that one only fires on
-            # `scheme://`, so a bare `//host` rides on this core-ruler set alone (a
+            # `scheme://`, so a bare `//host` depends on this core-ruler set alone (a
             # symbol like `²` or `€` before it does not open a link). Verified against
             # PrettyText.
             CORE_RULER_BOUNDARY = /[\p{Z}\p{P}\p{Cc}<>｜]/
@@ -229,9 +229,9 @@ module Migrations
               CORE_RULER_BOUNDARY.match?(char)
             end
 
-            # A bare match that begins `//host` is protocol-relative and rides on the
+            # A bare match that begins `//host` is protocol-relative and uses the
             # narrower {#protocol_relative_boundary_before?} set. The `/` trigger fires
-            # on every `/` the walk passes, including the `//` inside a `https://…` the
+            # on every `/` in the input, including the `//` inside a `https://…` the
             # `h` trigger already declined, so this rejects that scheme tail (and any
             # other `//` on a boundary core wouldn't linkify a protocol-relative URL
             # at). A schemed or relative match doesn't start `//`, so it's unaffected.
@@ -241,7 +241,7 @@ module Migrations
 
             # The `](…)` outer-link-target boundary: the URL sits right after a `](`
             # and a `)` closes right before the `]`, the `)](` shape. That only
-            # happens when the bracket wrapped a construct the walk already consumed —
+            # happens when the bracket wrapped a construct that was already consumed —
             # the outer link of a nested image `[![img](upload)](/t/5)` or an old
             # lightbox — so the URL here is a genuine link target. A relative URL is
             # rewritten only at this boundary, where it is a link and not prose.
@@ -266,8 +266,8 @@ module Migrations
             # Every printable ASCII punctuation or symbol character — the four ranges
             # around the digits and letters (`!`..`/`, `:`..`@`, `[`..`` ` ``,
             # `{`..`~`). These are exactly the ASCII characters markdown-it's
-            # `isPunctChar` accepts, so they mirror {PUNCTUATION_OR_SYMBOL} on the
-            # ASCII fast path. Space (0x20) is whitespace, tested separately.
+            # `isPunctChar` accepts, so they mirror {PUNCTUATION_OR_SYMBOL} for
+            # ASCII input. Space (0x20) is whitespace, tested separately.
             def ascii_punct_or_symbol_byte?(byte)
               (byte >= 0x21 && byte <= 0x2f) || (byte >= 0x3a && byte <= 0x40) ||
                 (byte >= 0x5b && byte <= 0x60) || (byte >= 0x7b && byte <= 0x7e)

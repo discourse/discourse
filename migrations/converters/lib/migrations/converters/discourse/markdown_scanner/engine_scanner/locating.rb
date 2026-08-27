@@ -12,9 +12,9 @@ module Migrations
           # Everything reads `@input`, `@line_starts` and `@scanner`, which the
           # including pass sets up.
           #
-          # Occurrence lookups answer from per-body indexes built lazily and at
-          # most once: a body with many distinct engine values used to pay one
-          # search walk per value, which multiplied out to O(values × body).
+          # Occurrence lookups answer from per-body indexes that are built
+          # lazily and at most once, so a body with many distinct engine
+          # values does not pay one search walk per value.
           module Locating
             include Detectors::Boundaries
 
@@ -83,7 +83,6 @@ module Migrations
               kind == :hashtag ? [kind, Migrations::NameNormalizer.normalize(text)] : [kind, text]
             end
 
-            # Whole-body occurrences of a probed value, from the index.
             def probed_occurrences(kind, value)
               probe_index[index_key(kind, value)] || EMPTY_OCCURRENCES
             end
@@ -274,7 +273,7 @@ module Migrations
                 end
               end
 
-              # The occurrence itself, as a bare URL. Linkify can swallow a
+              # The occurrence itself, as a bare URL. Linkify can include a
               # trailing byte no URL grammar accepts (`` ` ``, `\`) and
               # percent-encode it into the href, so the certified occurrence
               # may run past what any detector can take; a detector match over

@@ -152,11 +152,11 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context, :rails do
   end
 
   # `Bundle` still transpiles plugin markdown features per file through
-  # `AssetProcessor`, which is the only reason a cold build boots in-process
-  # V8 and therefore runs in a throwaway subprocess. The day the host
-  # precompiles plugin features itself, all of that can be deleted — this
-  # canary exists because nothing else would fail on that day: our per-file
-  # path would keep producing identical output indefinitely.
+  # `AssetProcessor`. That is the only reason a cold build boots in-process
+  # V8 and therefore runs in a separate build process. When the host one day
+  # precompiles plugin features itself, all of that can be deleted — and this
+  # example exists because nothing else would fail on that day: our per-file
+  # path would keep producing identical output forever.
   it "still has to transpile plugin markdown features itself" do
     plugin_bundles =
       PrettyText.constants.filter_map do |name|

@@ -1,9 +1,8 @@
 /* eslint-disable no-undef, no-unused-vars */
-// The token walk: per inline block, the construct values the engine
-// recognized plus the block's line map; separately, the line maps of
-// code/html/quote blocks. Compact data only — the token tree never crosses
-// the V8 boundary. Ported from the benchmark walk that was debugged against a
-// real corpus.
+// Reads the parsed token tree into compact per-post data: per inline block,
+// the construct values the engine recognized plus the block's line map, and
+// separately the line maps of code/html/quote blocks. Only this compact data
+// crosses the V8 boundary, never the token tree itself.
 
 function __scanCountOccurrences(haystack, needle) {
   // An empty needle would match at every position without ever advancing
@@ -55,7 +54,7 @@ function __scanWalk(children, block) {
     } else if (child.type === "link_open") {
       const hashtagType = child.attrGet("data-type");
       // The upload protocol rewrites unresolved short URLs into a placeholder
-      // and stashes the original in data-orig-*; the original is the
+      // and stores the original in data-orig-*; the original is the
       // construct.
       const href = child.attrGet("data-orig-href") || child.attrGet("href");
       if (hashtagType !== null) {

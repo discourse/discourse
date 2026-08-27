@@ -30,13 +30,14 @@ module Migrations
           # under `/forum`, so only a path inside that prefix belongs to the forum (the
           # host may run other apps beside it), while a root-install host (nil prefix)
           # owns every path. A relative URL (a path, no host) qualifies only where it
-          # is actually a link: in link syntax `[text](/t/5)`, or as a bare URL the
-          # walk reaches at a `](…)` link target; a subfolder site writes its relative
+          # is actually a link: in link syntax `[text](/t/5)`, or as a bare URL
+          # detected at a `](…)` link target; a subfolder site writes its relative
           # links with the prefix (`/forum/t/5`), stripped via `base_prefix`. A
           # relative URL bare in prose is left alone, because it stays plain text when
           # the post is cooked, so rewriting it would turn text into a link. A bare
           # URL with no scheme at all (`forum.example.com/t/5`), which core's linkify
-          # also links, is never detected here: the walk has nothing to trigger on.
+          # also links, is never detected here: it contains no character a detector
+          # can trigger on.
           # The engine tier rewrites that form in place once the parse proves it
           # (see {EngineScanner}).
           #
@@ -119,8 +120,8 @@ module Migrations
             ABSOLUTE = %r{(?:(?i:https?:)?//#{URL_BODY}{0,2048}[\w/])}
             private_constant :ABSOLUTE
 
-            # A relative URL has no host to reject on, and the walk stops at every `/`
-            # in prose (`and/or`, `50/50`), so here a route segment is what tells a
+            # A relative URL has no host to reject on, and detection is tried at every
+            # `/` in prose (`and/or`, `50/50`), so here a route segment is what tells a
             # link apart from a slash. The lazy `(?:/…)*?` admits a subfolder install's
             # leading segments before it, and demands a real route segment after, so a
             # plain `/` still fails without the group ever expanding.
@@ -227,8 +228,8 @@ module Migrations
 
             # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
             # right kind of `(…)`; see {Boundaries#bare_url_boundary_before?}). A normal
-            # `[text](url)` is consumed whole at its `[` trigger, so the walk reaches an
-            # inner URL only when the outer bracket wasn't a handled link — a nested
+            # `[text](url)` is consumed whole at its `[` trigger, so an inner URL is
+            # only reached when the outer bracket wasn't a handled link — a nested
             # image `[![…](…)](url)` whose outer target we do want, versus an image's
             # own `![alt](url)` src or a foreign link's target, which the paren check
             # deliberately leaves alone.

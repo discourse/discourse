@@ -90,7 +90,7 @@ module Migrations
             # The text class excludes `[` so the `[` of a nested image
             # `[![…](…)](…)` never starts a match at the outer bracket — otherwise
             # `[^\]]*` would run across the `![…]` and match from the outer `[` down to
-            # the inner `)`, swallowing the image and leaving a dangling `](…)`. With
+            # the inner `)`, consuming the image and leaving a dangling `](…)`. With
             # `[` excluded the outer bracket fails here and the inner image is deferred
             # on its own at the `!` trigger.
             LINK = /\G\[[^\[\]]{0,999}\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
@@ -155,8 +155,8 @@ module Migrations
 
             # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
             # right kind of `(…)`; see {Boundaries#bare_url_boundary_before?}). A normal
-            # `[text](url)` is consumed whole at its `[` trigger, so the walk reaches an
-            # inner URL only when the outer bracket wasn't a handled link — a nested
+            # `[text](url)` is consumed whole at its `[` trigger, so an inner URL is
+            # only reached when the outer bracket wasn't a handled link — a nested
             # image `[![…](…)](url)` or an old lightbox, where rewriting the outer URL
             # in place is what we want.
             #

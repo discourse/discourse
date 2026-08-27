@@ -105,11 +105,11 @@ module Migrations
         #   callback.
         # @param slow_timeout_ms [Integer, nil] the retry ceiling for a body
         #   whose parse the engine terminated at the fast default: the body is
-        #   parsed once more under this ceiling before `:engine_error` is
-        #   recorded — a conversion runs once, so a patient minute beats stale
-        #   references. `nil` disables the retry.
-        # @param on_slow_parse [#call, nil] called (with no arguments, like
-        #   `on_engine_refusal` the post identity stays on the caller's side)
+        #   parsed once more with this ceiling before `:engine_error` is
+        #   recorded. A conversion runs once, so the extra time is acceptable.
+        #   `nil` disables the retry.
+        # @param on_slow_parse [#call, nil] called with no arguments (as with
+        #   `on_engine_refusal`, the post identity stays on the caller's side)
         #   whenever a body's parse only succeeded on the slow retry; the count
         #   is also kept on {#slow_parses}. Such bodies are recovered, not
         #   refused — but they will cook just as pathologically on the
@@ -234,11 +234,11 @@ module Migrations
         # One V8 call for several engine-bound bodies (`{ id:, raw: }` each),
         # returning scan data keyed by id for `extract(..., scan_data:)`. One
         # pathological body terminates the whole batched call, so a failed
-        # batch returns no data at all — each of its bodies then takes the
-        # normal per-body ladder (fast attempt, slow retry, refusal) — and the
-        # engine is reset so the next call gets a healthy context.
-        # Process/resource failures are deliberately not rescued, mirroring
-        # the per-body policy.
+        # batch returns no data at all; each of its bodies then goes through
+        # the normal per-body path (fast attempt, slow retry, refusal), and
+        # the engine is reset so the next call gets a working context.
+        # Process and resource failures are not rescued, same as in the
+        # per-body path.
         #
         # A posts step should batch: the per-call V8 overhead (~0.5ms) is
         # comparable to an average parse itself. On a real 1.5M-post corpus at
@@ -281,7 +281,7 @@ module Migrations
         end
 
         # Records the detected embed on the collector and returns the placeholder
-        # token. `source` is the verbatim matched slice; it rides on every row so
+        # token. `source` is the verbatim matched slice; it is stored on every row so
         # the importer can restore the exact source text when the embed can't be
         # mapped, instead of rebuilding a canonical form.
         def defer(node, source)
