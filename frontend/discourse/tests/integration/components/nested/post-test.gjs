@@ -375,6 +375,10 @@ module("Integration | Component | Nested | Post", function (hooks) {
       hasMore: false,
       fetchedFromServer: false,
     });
+    this.expansionState.set(this.post.post_number, {
+      expanded: true,
+      collapsed: false,
+    });
 
     await renderComponent(this);
 
