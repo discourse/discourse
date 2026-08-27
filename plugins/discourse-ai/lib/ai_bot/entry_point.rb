@@ -170,7 +170,7 @@ module DiscourseAi
         ) do |url, route|
           if route[:action] == "show" && share_key = route[:share_key]
             if conversation = SharedAiConversation.find_by(share_key: share_key)
-              conversation.onebox
+              conversation.onebox if conversation.publicly_visible?
             end
           end
         end
