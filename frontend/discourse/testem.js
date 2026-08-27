@@ -46,7 +46,7 @@ class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
   deprecationCountsByOrigin = new Map();
-  deprecationDetails = [];
+  deprecationDetails = new Map();
 
   constructor() {
     super(...arguments);
@@ -76,7 +76,14 @@ class Reporter extends TapReporter {
       const originCount = originMap.get(id) || 0;
       originMap.set(id, originCount + 1);
     } else if (tag === "deprecation-details") {
-      this.deprecationDetails.push(...(metadata.details || []));
+      // Entries are reported when first seen and re-reported when their count
+      // grows, so the highest count wins.
+      for (const detail of metadata.details || []) {
+        const existing = this.deprecationDetails.get(detail.key);
+        if (!existing || detail.count > existing.count) {
+          this.deprecationDetails.set(detail.key, detail);
+        }
+      }
     } else if (tag === "summary-line") {
       this.out.write(`\n${metadata.message}\n`);
     } else {
@@ -260,7 +267,7 @@ class Reporter extends TapReporter {
    * @returns {?{path: string, document: Object}}
    */
   writeDeprecationReport() {
-    if (this.deprecationDetails.length === 0) {
+    if (this.deprecationDetails.size === 0) {
       return null;
     }
 
@@ -271,7 +278,10 @@ class Reporter extends TapReporter {
 
     let document;
     try {
-      document = buildReport({ group, entries: this.deprecationDetails });
+      document = buildReport({
+        group,
+        entries: Array.from(this.deprecationDetails.values()),
+      });
     } catch (error) {
       this.out.write(
         `\n[Deprecation Counter] Failed to build detailed report: ${error}\n`

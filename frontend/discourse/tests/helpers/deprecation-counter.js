@@ -65,7 +65,7 @@ export default class DeprecationCounter {
   details = new Map();
   #origin = null;
   #qunit = null;
-  #unflushedDetails = [];
+  #countsChanged = new Set();
 
   start(origin, qunit) {
     this.startDiscourseHandler(origin, qunit);
@@ -136,6 +136,7 @@ export default class DeprecationCounter {
     const currentTest = this.#qunit?.config?.current;
     const key = [
       id,
+      this.#origin,
       currentTest?.module?.name,
       currentTest?.testName,
       stack,
@@ -144,6 +145,7 @@ export default class DeprecationCounter {
     const existing = this.details.get(key);
     if (existing) {
       existing.count++;
+      this.#countsChanged.add(key);
       return;
     }
 
@@ -152,6 +154,7 @@ export default class DeprecationCounter {
     }
 
     const detail = {
+      key,
       id,
       origin: this.#origin,
       module: currentTest?.module?.name,
@@ -162,7 +165,13 @@ export default class DeprecationCounter {
     };
 
     this.details.set(key, detail);
-    this.#unflushedDetails.push(detail);
+
+    // Reported straight away rather than batched: a deprecation raised outside a
+    // test is followed by no `testDone`, and an end-of-run flush races the
+    // browser teardown.
+    if (window.Testem) {
+      reportDeprecationDetailsToTestem([detail]);
+    }
 
     if (isRailsTesting()) {
       // System specs identify the spec themselves, so only the JS stack is
@@ -173,16 +182,17 @@ export default class DeprecationCounter {
   }
 
   /**
-   * Hands over the details recorded since the last call. Flushing while the run
-   * is still in progress keeps the reporter socket alive; a flush deferred to
-   * `QUnit.done` races the browser teardown and gets dropped.
+   * Hands over entries whose count has grown since they were first reported, so
+   * the reporter can correct the totals it already holds.
    *
    * @returns {Object[]}
    */
-  takeDetails() {
-    const pending = this.#unflushedDetails;
-    this.#unflushedDetails = [];
-    return pending;
+  takeUpdatedCounts() {
+    const updated = Array.from(this.#countsChanged, (key) =>
+      this.details.get(key)
+    );
+    this.#countsChanged.clear();
+    return updated.filter(Boolean);
   }
 
   get hasDeprecations() {
@@ -261,17 +271,17 @@ export function setupDeprecationCounter({ QUnit, origin } = {}) {
     deprecationCounter.startDiscourseHandler(origin, QUnit);
     QUnit.begin(() => deprecationCounter.startEmberHandler());
 
-    const flushDetails = () => {
-      const pending = deprecationCounter.takeDetails();
-      if (window.Testem && pending.length > 0) {
-        reportDeprecationDetailsToTestem(pending);
+    const flushCounts = () => {
+      const updated = deprecationCounter.takeUpdatedCounts();
+      if (window.Testem && updated.length > 0) {
+        reportDeprecationDetailsToTestem(updated);
       }
     };
 
-    QUnit.testDone(flushDetails);
+    QUnit.testDone(flushCounts);
 
     QUnit.done(() => {
-      flushDetails();
+      flushCounts();
 
       if (window.Testem) {
         return;
