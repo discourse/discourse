@@ -161,6 +161,7 @@ class TemporaryDb
   def migrate
     raise "Error: the database must be started before it can be migrated." if !@started
     ActiveRecord::Base.establish_connection(connection_hash)
+    require "discourse-seed-fu" if !defined?(SeedFu)
 
     puts "Running migrations on blank database!"
 

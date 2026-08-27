@@ -1640,6 +1640,7 @@ class UsersController < ApplicationController
 
   def create_second_factor_totp
     require "rotp" if !defined?(ROTP)
+    require "rqrcode" if !defined?(RQRCode)
     totp_data = ROTP::Base32.random
     server_session["staged-totp-#{current_user.id}"] = totp_data
     qrcode_png =

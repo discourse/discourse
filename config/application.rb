@@ -56,6 +56,8 @@ if defined?(Bundler)
   Bundler.require(*bundler_groups)
 end
 
+require "discourse_dev_assets" if Rails.env.development?
+
 require_relative "../lib/require_dependency_backward_compatibility"
 
 module Discourse

@@ -23,7 +23,7 @@ gem "json"
 # allows us to precompile all our templates in the app server master
 gem "actionview_precompiler", require: false
 
-gem "discourse-seed-fu"
+gem "discourse-seed-fu", require: false
 
 gem "mail"
 gem "mini_mime"
@@ -80,13 +80,13 @@ gem "loofah"
 gem "css_parser", require: false
 
 gem "omniauth"
-gem "omniauth-facebook"
-gem "omniauth-twitter"
-gem "omniauth-github"
+gem "omniauth-facebook", require: false
+gem "omniauth-twitter", require: false
+gem "omniauth-github", require: false
 
 gem "omniauth-oauth2", require: false
 
-gem "omniauth-google-oauth2"
+gem "omniauth-google-oauth2", require: false
 
 gem "oj"
 
@@ -114,7 +114,7 @@ gem "rack-protection" # security
 gem "cbor", require: false
 gem "cose", require: false
 gem "addressable"
-gem "json_schemer"
+gem "json_schemer", require: false
 
 gem "net-smtp", require: false
 gem "net-pop", require: false
@@ -126,37 +126,37 @@ group :test do
   gem "capybara", require: false
   gem "webmock", require: false
   gem "simplecov", require: false
-  gem "test-prof"
+  gem "test-prof", require: false
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
-  gem "capybara-playwright-driver"
+  gem "capybara-playwright-driver", require: false
   gem "puma", require: false
 end
 
 group :test, :development do
-  gem "rspec"
+  gem "rspec", require: false
   gem "listen", require: false
   gem "certified", require: false
   gem "fabrication", require: false
   gem "mocha", require: false
 
-  gem "rb-fsevent", require: RUBY_PLATFORM =~ /darwin/i ? "rb-fsevent" : false
+  gem "rb-fsevent", require: false
 
-  gem "rspec-rails"
+  gem "rspec-rails", require: false
 
   gem "shoulda-matchers", require: false
-  gem "rspec-html-matchers"
+  gem "rspec-html-matchers", require: false
   gem "debug", ">= 1.0.0", require: "debug/prelude"
   gem "rubocop-discourse", require: false
-  gem "parallel_tests"
+  gem "parallel_tests", require: false
 
-  gem "rswag-specs"
+  gem "rswag-specs", require: false
 
-  gem "annotaterb"
+  gem "annotaterb", require: false
 
-  gem "syntax_tree"
+  gem "syntax_tree", require: false
 
-  gem "rspec-multi-mock"
+  gem "rspec-multi-mock", require: false
 end
 
 group :development do
@@ -175,8 +175,8 @@ if ENV["ALLOW_DEV_POPULATE"] == "1"
   gem "faker"
 else
   group :development, :test do
-    gem "discourse_dev_assets"
-    gem "faker"
+    gem "discourse_dev_assets", require: false
+    gem "faker", require: false
   end
 end
 
@@ -224,7 +224,7 @@ gem "sassc-embedded"
 
 gem "rotp", require: false
 
-gem "rqrcode"
+gem "rqrcode", require: false
 
 gem "rubyzip", require: false
 

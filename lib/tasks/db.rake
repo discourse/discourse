@@ -270,6 +270,7 @@ task "db:migrate" => %w[
 end
 
 task "db:seed" => "environment" do
+  require "discourse-seed-fu" if !defined?(SeedFu)
   SeedFu.quiet = true
 
   begin
@@ -281,6 +282,7 @@ task "db:seed" => "environment" do
 end
 
 task "test:prepare" => "environment" do
+  require "discourse-seed-fu" if !defined?(SeedFu)
   I18n.locale =
     begin
       SiteSetting.default_locale
