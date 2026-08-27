@@ -144,3 +144,24 @@
     font-size: var(--font-down-1);
   }
 }
+
+/* The reordering surface behind `enable_new_reordering_controls`.
+   TODO (ui-kit-reorderable-list-cleanup) fold back above and drop the modifier
+   once the change ships. */
+
+.manageable-row-list {
+  &__row-content {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  /* The grip carries its own cursor; promising the whole row drags would
+     misdescribe a press on the label, which selects. */
+
+  &__row.--reorderable[draggable="true"] {
+    cursor: auto;
+  }
+}

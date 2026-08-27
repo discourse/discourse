@@ -257,3 +257,34 @@
     }
   }
 }
+
+/* The reordering surface behind `enable_new_reordering_controls`.
+   TODO (ui-kit-reorderable-list-cleanup) fold back above and drop the modifier
+   once the change ships. */
+
+.badge-groupings-modal {
+  .badge-groupings-list {
+    /* The name takes the slack, so the actions stay against the row's end while
+       the grip stays against its start. */
+
+    .badge-grouping-item.--reorderable {
+      justify-content: normal;
+      gap: 0.5em;
+
+      .badge-grouping {
+        flex: 1 1 auto;
+      }
+
+      .badge-grouping-name-input {
+        margin: 0;
+      }
+
+      /* Keeps the row's buttons on one line rather than stacking them. */
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+      }
+    }
+  }
+}
