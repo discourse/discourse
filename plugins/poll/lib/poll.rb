@@ -325,6 +325,8 @@ class DiscoursePoll::Poll
       raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic")
     end
 
+    raise Discourse::InvalidParameters.new(:poll_name) if !poll.can_see_results?(user)
+
     if SiteSetting.poll_groupable_user_fields.split("|").exclude?(user_field_name)
       raise Discourse::InvalidParameters.new(:user_field_name)
     end
