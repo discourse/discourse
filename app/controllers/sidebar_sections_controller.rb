@@ -96,7 +96,7 @@ class SidebarSectionsController < ApplicationController
   def reorder
     SidebarSection::ReorderLinks.call(
       service_params.deep_merge(params: { section_id: params[:id] }),
-    ) do |result|
+    ) do
       on_success { |section:| render_serialized(section.reload, SidebarSectionSerializer) }
       on_model_not_found(:section) { raise Discourse::NotFound }
       on_failed_policy(:can_edit_section) { render json: failed_json, status: :forbidden }
@@ -113,7 +113,7 @@ class SidebarSectionsController < ApplicationController
   def move_link
     SidebarSection::MoveLink.call(
       service_params.deep_merge(params: { source_section_id: params[:id] }),
-    ) do |result|
+    ) do
       on_success do |source_section:, target_section:|
         sections = [source_section.reload, target_section.reload]
         render json: {

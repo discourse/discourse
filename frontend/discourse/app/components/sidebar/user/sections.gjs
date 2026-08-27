@@ -203,14 +203,9 @@ export default class SidebarUserSections extends Component {
         dataType: "json",
         data: JSON.stringify({
           title: origin.title,
-          links: origin.links.map((link) => ({
-            id: link.id,
-            icon: link.icon,
-            name: link.name,
-            value: link.value,
-            segment: link.segment,
-            ...(link.id === linkId ? { _destroy: "1" } : {}),
-          })),
+          links: origin.links.map((link) =>
+            link.id === linkId ? { ...link, _destroy: "1" } : link
+          ),
         }),
       });
       replaceUserSidebarSections(this.currentUser, [response.sidebar_section]);
