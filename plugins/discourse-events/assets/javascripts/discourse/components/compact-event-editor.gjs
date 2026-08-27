@@ -10,6 +10,10 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { generateLinkifyFunction } from "discourse/lib/text";
+import {
+  adjustedRangeEnd,
+  parseCustomDatetime,
+} from "discourse/lib/time-utils";
 import DButton from "discourse/ui-kit/d-button";
 import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -18,6 +22,8 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PostEventBuilder from "discourse/plugins/discourse-events/discourse/components/modal/post-event-builder";
 import {
+  allDayTransition,
+  attendanceTransition,
   defaultEventState,
   isLivestreamUrl,
   livestreamSource,
@@ -135,11 +141,11 @@ export default class CompactEventEditor extends Component {
     this.args.onChange?.(this.currentState);
   }
 
-  #configSnapshot(overrides = {}) {
+  #configSnapshot() {
     return {
-      startsAt: overrides.startsAt ?? this.startsAt,
-      endsAt: overrides.endsAt ?? this.endsAt,
-      allDay: overrides.allDay ?? this.allDay,
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      allDay: this.allDay,
     };
   }
 
@@ -290,8 +296,7 @@ export default class CompactEventEditor extends Component {
     if (!date) {
       return null;
     }
-    const time = (timeStr || "").trim();
-    return moment.tz(time ? `${date} ${time}` : date, this.timezone);
+    return parseCustomDatetime(date, timeStr, this.timezone);
   }
 
   #startTimeForDate() {
@@ -302,11 +307,11 @@ export default class CompactEventEditor extends Component {
     return this.allDay ? "" : this.formattedEndTime || "00:00";
   }
 
-  #reconcileReminders(oldConfig, newConfig) {
+  #reconcileReminders(oldConfig) {
     this.reminders = reconcileDefaultReminder(
       this.reminders,
       oldConfig,
-      newConfig
+      this.#configSnapshot()
     );
   }
 
@@ -346,6 +351,12 @@ export default class CompactEventEditor extends Component {
     this.#emitChange();
   }
 
+  #clampEndAfterStart() {
+    this.endsAt = adjustedRangeEnd(this.startsAt, this.endsAt, {
+      dateOnly: this.allDay,
+    });
+  }
+
   @action
   onStartDateChange(event) {
     const dateStr = event.target.value;
@@ -365,7 +376,8 @@ export default class CompactEventEditor extends Component {
       }
     }
 
-    this.#reconcileReminders(oldConfig, this.#configSnapshot());
+    this.#clampEndAfterStart();
+    this.#reconcileReminders(oldConfig);
     this.#emitChange();
   }
 
@@ -380,30 +392,26 @@ export default class CompactEventEditor extends Component {
     }
     const oldConfig = this.#configSnapshot();
     this.startsAt = newStart;
-    this.#reconcileReminders(oldConfig, this.#configSnapshot());
+    this.#clampEndAfterStart();
+    this.#reconcileReminders(oldConfig);
     this.#emitChange();
   }
 
   @action
   onEndDateChange(event) {
     const oldConfig = this.#configSnapshot();
+
     if (!event.target.value) {
       this.endsAt = null;
-      this.#reconcileReminders(oldConfig, this.#configSnapshot());
-      this.#emitChange();
-      return;
-    }
-    const startDateStr = this.formattedStartDate;
-    const dateStr =
-      startDateStr && event.target.value < startDateStr
-        ? startDateStr
-        : event.target.value;
-    if (this.allDay && dateStr === startDateStr) {
-      this.endsAt = null;
     } else {
-      this.endsAt = this.#combineDateTime(dateStr, this.#endTimeForDate());
+      this.endsAt = this.#combineDateTime(
+        event.target.value,
+        this.#endTimeForDate()
+      );
+      this.#clampEndAfterStart();
     }
-    this.#reconcileReminders(oldConfig, this.#configSnapshot());
+
+    this.#reconcileReminders(oldConfig);
     this.#emitChange();
   }
 
@@ -417,7 +425,8 @@ export default class CompactEventEditor extends Component {
       this.formattedEndDate,
       event.target.value || "00:00"
     );
-    this.#reconcileReminders(oldConfig, this.#configSnapshot());
+    this.#clampEndAfterStart();
+    this.#reconcileReminders(oldConfig);
     this.#emitChange();
   }
 
@@ -426,33 +435,17 @@ export default class CompactEventEditor extends Component {
     const newAllDay = !this.allDay;
     const oldConfig = this.#configSnapshot();
 
-    if (newAllDay) {
-      const startDate = (this.startsAt || moment.tz(this.timezone)).format(
-        "YYYY-MM-DD"
-      );
-      const existingEnd = this.endsAt;
-      this.startsAt = moment.tz(startDate, this.timezone);
-
-      if (existingEnd) {
-        const endDate = existingEnd.format("YYYY-MM-DD");
-        this.endsAt =
-          endDate === startDate ? null : moment.tz(endDate, this.timezone);
-      } else {
-        this.endsAt = null;
-      }
-    } else if (this.startsAt) {
-      const nowTime = moment.tz(this.timezone);
-      const newStart = this.startsAt
-        .clone()
-        .hour(nowTime.hour())
-        .minute(nowTime.minute())
-        .second(0)
-        .millisecond(0);
-      this.startsAt = newStart;
-      this.endsAt = newStart.clone().add(1, "hour");
-    }
+    const { startsAt, endsAt } = allDayTransition({
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      timezone: this.timezone,
+      allDay: newAllDay,
+    });
+    this.startsAt = startsAt;
+    this.endsAt = endsAt;
     this.allDay = newAllDay;
-    this.#reconcileReminders(oldConfig, this.#configSnapshot());
+
+    this.#reconcileReminders(oldConfig);
     this.#emitChange();
   }
 
@@ -475,24 +468,24 @@ export default class CompactEventEditor extends Component {
   }
 
   #applyMaxAttendees(value) {
-    if (value === 0) {
-      if (this.status && this.status !== "standalone") {
-        this.#previousRsvpStatus = this.status;
-      }
-      this.status = "standalone";
+    if (value === null) {
       this.maxAttendees = null;
-      this.reminders = this.reminders.map((r) =>
-        r.type === "notification" ? { ...r, type: "bumpTopic" } : r
-      );
-    } else if (this.status === "standalone" && value > 0) {
-      this.status = this.#previousRsvpStatus || "public";
-      this.maxAttendees = value;
-      this.reminders = this.reminders.map((r) =>
-        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
-      );
-    } else {
-      this.maxAttendees = value;
+      this.#emitChange();
+      return;
     }
+
+    const transition = attendanceTransition({
+      mode: value === 0 ? "none" : "upTo",
+      status: this.status,
+      maxAttendees: this.maxAttendees,
+      reminders: this.reminders,
+      previousRsvpStatus: this.#previousRsvpStatus,
+      value,
+    });
+    this.status = transition.status;
+    this.maxAttendees = transition.maxAttendees;
+    this.reminders = transition.reminders;
+    this.#previousRsvpStatus = transition.previousRsvpStatus;
     this.#emitChange();
   }
 
@@ -585,7 +578,11 @@ export default class CompactEventEditor extends Component {
 
   @action
   focusDateInput(event) {
-    next(() => event.target.showPicker?.());
+    next(() => {
+      try {
+        event.target.showPicker?.();
+      } catch {}
+    });
   }
 
   @action
@@ -775,6 +772,7 @@ export default class CompactEventEditor extends Component {
               <input
                 type="date"
                 value={{this.formattedEndDate}}
+                min={{this.formattedStartDate}}
                 class="composer-event__date-input"
                 {{on "change" this.onEndDateChange}}
                 {{on "focus" this.focusDateInput}}

@@ -1,3 +1,4 @@
+import { camelize } from "@ember/string";
 import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
 
 let lastSetting;
@@ -71,6 +72,32 @@ export function livestreamSource(location, url) {
   return location?.trim() ? location : url;
 }
 
+export function allDayTransition({ startsAt, endsAt, timezone, allDay }) {
+  if (allDay) {
+    const startDate = (startsAt ?? moment.tz(timezone)).format("YYYY-MM-DD");
+    const start = moment.tz(startDate, timezone);
+    const sameDay = endsAt?.format("YYYY-MM-DD") === startDate;
+    const end =
+      !endsAt || sameDay
+        ? null
+        : moment.tz(endsAt.format("YYYY-MM-DD"), timezone);
+    return { startsAt: start, endsAt: end };
+  }
+
+  if (!startsAt) {
+    return { startsAt, endsAt };
+  }
+
+  const now = moment.tz(timezone);
+  const start = startsAt
+    .clone()
+    .hour(now.hour())
+    .minute(now.minute())
+    .second(0)
+    .millisecond(0);
+  return { startsAt: start, endsAt: start.clone().add(1, "hour") };
+}
+
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
   const start = startsAt ? moment(startsAt) : null;
   const end = endsAt ? moment(endsAt) : null;
@@ -107,6 +134,7 @@ export function attendanceTransition({
   reminders,
   previousRsvpStatus,
   previousMaxAttendees,
+  value,
 }) {
   let nextStatus = status;
   let nextMax = maxAttendees;
@@ -139,7 +167,10 @@ export function attendanceTransition({
       }
       nextMax = null;
     } else if (mode === "upTo") {
-      nextMax = previousMaxAttendees || null;
+      nextMax = value ?? previousMaxAttendees ?? null;
+      if (value != null) {
+        nextPrevMax = value;
+      }
     }
   }
 
@@ -257,22 +288,7 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
   }
 
   if (event.reminders && event.reminders.length) {
-    params.reminders = event.reminders
-      .map((r) => {
-        // we create a new intermediate object to avoid changes in the UI while
-        // we prepare the values for request
-        const reminder = Object.assign({}, r);
-
-        if (reminder.period === "after") {
-          reminder.value = `-${Math.abs(parseInt(reminder.value, 10))}`;
-        }
-        if (reminder.period === "before") {
-          reminder.value = Math.abs(parseInt(`${reminder.value}`, 10));
-        }
-
-        return `${reminder.type}.${reminder.value}.${reminder.unit}`;
-      })
-      .join(",");
+    params.reminders = event.reminders.map(reminderToBBCode).join(",");
   }
 
   if (event.imageUpload?.short_url) {
@@ -296,10 +312,6 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
 const EVENT_CLOSE_TAG = "[/event]";
 
-function dashedToCamel(key) {
-  return key.replace(/-([a-zA-Z0-9])/g, (_, c) => c.toUpperCase());
-}
-
 export function parseEventBlock(raw) {
   if (!raw) {
     return null;
@@ -319,7 +331,7 @@ export function parseEventBlock(raw) {
       const attrs = {};
       for (const [key, value] of Object.entries(parsed.attrs || {})) {
         if (key !== "_default") {
-          attrs[dashedToCamel(key)] = value;
+          attrs[camelize(key)] = value;
         }
       }
 
@@ -457,16 +469,19 @@ export function parseReminders(reminders) {
   if (Array.isArray(reminders)) {
     return reminders;
   }
-  return reminders.split(",").map((reminderStr) => {
-    const [type, value, unit] = reminderStr.split(".");
-    const numericValue = Math.abs(parseInt(value, 10));
-    return {
-      type: type || "notification",
-      value: numericValue,
-      unit: unit || "hours",
-      period: parseInt(value, 10) < 0 ? "after" : "before",
-    };
-  });
+  return reminders
+    .split(",")
+    .map((reminderStr) => {
+      const [unit, value, type] = reminderStr.trim().split(".").reverse();
+      const numericValue = parseInt(value, 10);
+      return {
+        type: type || "notification",
+        value: Math.abs(numericValue),
+        unit,
+        period: numericValue < 0 ? "after" : "before",
+      };
+    })
+    .filter((reminder) => reminder.unit && Number.isFinite(reminder.value));
 }
 
 export function replaceRaw(params, raw) {
