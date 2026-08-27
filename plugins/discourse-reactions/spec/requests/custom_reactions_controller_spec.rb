@@ -136,7 +136,7 @@ describe DiscourseReactions::CustomReactionsController do
       expect(messages[1].data[:reactions]).to contain_exactly("cry", "angry")
     end
 
-    it "publishes MessageBus messages securely" do
+    it "publishes MessageBus messages to private-message users" do
       sign_in(user_1)
       messages =
         MessageBus.track_publish("/topic/#{private_post.topic.id}/reactions") do
@@ -146,9 +146,30 @@ describe DiscourseReactions::CustomReactionsController do
                 "HTTP_API_USERNAME" => api_key.user.username,
               }
         end
-      user_1_messages = messages.find { |m| m.user_ids.include?(user_1.id) }
+
       expect(messages.count).to eq(1)
-      expect(user_1_messages).to eq(nil)
+      expect(messages.first.user_ids).to include(user_2.id, admin.id)
+      expect(messages.first.group_ids).to be_nil
+      expect(messages.first.user_ids).not_to include(user_1.id)
+    end
+
+    it "does not publish reactions to an empty secure audience" do
+      category = Fabricate(:category, read_restricted: true)
+      topic = Fabricate(:topic, category: category)
+      post = Fabricate(:post, topic: topic)
+
+      messages =
+        MessageBus.track_publish("/topic/#{topic.id}/reactions") do
+          put "/discourse-reactions/posts/#{post.id}/custom-reactions/hugs/toggle.json",
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+        end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["reactions"]).to eq(payload_with_user)
+      expect(messages).to be_empty
     end
 
     it "does not publish MessageBus messages when the post topic is unavailable" do
