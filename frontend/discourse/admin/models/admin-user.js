@@ -32,7 +32,7 @@ export default class AdminUser extends User {
 
   adminUserView = true;
 
-  @autoTrackedArray groups;
+  @autoTrackedArray visibleGroups;
 
   @computed("active", "staged")
   get canViewProfile() {
@@ -65,11 +65,11 @@ export default class AdminUser extends User {
   }
 
   get customGroups() {
-    return this.groups?.filter((g) => !g.automatic) ?? [];
+    return this.visibleGroups?.filter((g) => !g.automatic) ?? [];
   }
 
   get automaticGroups() {
-    return this.groups?.filter((g) => g.automatic) ?? [];
+    return this.visibleGroups?.filter((g) => g.automatic) ?? [];
   }
 
   @computed("bounce_score", "reset_bounce_score_after")
@@ -116,14 +116,16 @@ export default class AdminUser extends User {
       data: { group_id: added.id },
     });
 
-    this.groups.push(added);
+    this.visibleGroups.push(added);
   }
 
   groupRemoved(groupId) {
     return ajax(`/admin/users/${this.id}/groups/${groupId}`, {
       type: "DELETE",
     }).then(() => {
-      this.groups = this.groups.filter((group) => group.id !== groupId);
+      this.visibleGroups = this.visibleGroups.filter(
+        (group) => group.id !== groupId
+      );
       if (this.primary_group_id === groupId) {
         this.set("primary_group_id", null);
       }

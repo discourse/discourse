@@ -203,8 +203,13 @@ export default class User extends RestModel.extend(Evented) {
 
       // Calling user.groups is deprecated, see discourse.user.groups,
       // it is replaced by visibleGroups
-      userJson.visibleGroups = userJson.groups;
-      delete userJson.groups;
+      if (
+        !Object.hasOwn(userJson, "visibleGroups") &&
+        Object.hasOwn(userJson, "groups")
+      ) {
+        userJson.visibleGroups = userJson.groups;
+        delete userJson.groups;
+      }
 
       if (userJson.primary_group_id) {
         const primaryGroup = userJson.visibleGroups.find(

@@ -379,6 +379,9 @@ export default class EditCategoryTabsController extends Controller {
       this.currentUser.visibleGroups.map((g) => g.id)
     );
 
+    // TODO (martin) Update this with granular_anonymous_and_logged_in_groups_permissions to
+    // do a server-side check, since this is only checking against the current user's visible
+    // groups, it should check against _all_ their groups.
     return !permissions.some(
       (p) =>
         p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
