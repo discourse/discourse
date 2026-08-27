@@ -151,10 +151,10 @@ class DiscourseVipsWorker
     @socket_path = server.local_address.unix_path
     @owner_reader = owner_reader
     @landlock_supported = Landlock.supported?
-    @operation_mutex = Mutex.new
   end
 
   def run
+    Signal.trap("CHLD") { reap_connection_processes }
     Operations.warm
 
     loop do
@@ -177,8 +177,29 @@ class DiscourseVipsWorker
       connection = @server.accept_nonblock(exception: false)
       return if connection == :wait_readable
 
-      Thread.new(connection) { |socket| handle_connection(socket) }.report_on_exception = false
+      fork_connection_process(connection)
     end
+  end
+
+  def fork_connection_process(connection)
+    parent_pid = Process.pid
+    fork do
+      Landlock::Native.set_parent_death_signal! if RUBY_PLATFORM.include?("linux")
+      exit! 1 if Process.ppid != parent_pid
+      Signal.trap("CHLD", "DEFAULT")
+      @server.close
+      @owner_reader.close
+      handle_connection(connection)
+      exit! 0
+    end
+
+    connection.close
+  end
+
+  def reap_connection_processes
+    while Process.waitpid(-1, Process::WNOHANG)
+    end
+  rescue Errno::ECHILD
   end
 
   def handle_connection(connection)
@@ -231,7 +252,7 @@ class DiscourseVipsWorker
   end
 
   def run_direct(operation)
-    @operation_mutex.synchronize { operation_response(operation) }
+    operation_response(operation)
   end
 
   def remove_socket_directory
