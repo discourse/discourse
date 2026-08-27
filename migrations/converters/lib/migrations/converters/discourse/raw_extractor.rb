@@ -162,18 +162,34 @@ module Migrations
         # @param topic_id [Integer, nil] the source topic id of the containing post,
         #   used to complete a quote reference that names a `post:` but no `topic:`
         #   (Discourse omits `topic:` when a post quotes another in the same topic).
+        # @param scan_data [Hash, nil] a precomputed `MarkdownEngine::Context#scan`
+        #   element for this body, from a caller that batched several bodies into
+        #   one engine call (see {#engine_bound?}). Used only when normalization
+        #   leaves the body byte-identical — otherwise the engine saw different
+        #   bytes than every offset here would read, so the data is ignored and
+        #   the body is scanned live.
         # @return [String, nil] the body with embeds replaced by placeholder tokens.
         #   Invalid bytes are scrubbed first (and non-UTF-8 encodings converted), and
         #   the returned body is built from that normalized string: the gate, the
         #   engine and every byte offset must all read the same bytes, so exactly one
         #   normalization happens, here at the top.
-        def extract(raw, topic_id: nil)
+        def extract(raw, topic_id: nil, scan_data: nil)
           return raw if raw.nil?
 
           @topic_id = topic_id
-          raw = normalize_input(raw)
+          normalized = normalize_input(raw)
+          scan_data = nil unless normalized.equal?(raw)
 
-          @gate.classify(raw) == :none ? raw : extract_engine(raw)
+          @gate.classify(normalized) == :none ? normalized : extract_engine(normalized, scan_data)
+        end
+
+        # Whether `raw` would take the engine path — for a caller that wants to
+        # batch several bodies into one `MarkdownEngine::Context#scan` call and
+        # pass each result back via `extract(..., scan_data:)`.
+        def engine_bound?(raw)
+          return false if raw.nil?
+
+          @gate.classify(normalize_input(raw)) == :engine
         end
 
         private
@@ -192,8 +208,8 @@ module Migrations
         # reference stale. The proven constructs in the same body are still
         # extracted; the cause is counted and reported so a conversion
         # surfaces how many posts (and why) still need resolution.
-        def extract_engine(raw)
-          result = @engine_scanner.scan(raw)
+        def extract_engine(raw, scan_data)
+          result = @engine_scanner.scan(raw, scan_data:)
           if result.cause
             @engine_refusals[result.cause] += 1
             @on_engine_refusal&.call(result.cause)

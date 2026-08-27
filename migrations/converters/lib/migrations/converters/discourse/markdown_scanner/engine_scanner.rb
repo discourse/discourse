@@ -87,8 +87,13 @@ module Migrations
 
           # @param input [String]
           # @return [Result]
-          def scan(input)
-            data = @engine.scan([{ id: nil, raw: input }]).first
+          # @param scan_data [Hash, nil] a precomputed `MarkdownEngine::Context#scan`
+          #   element for exactly this input's bytes. A batching caller amortizes
+          #   the per-body V8 round-trip by scanning many bodies in one engine
+          #   call and handing each result in here; trial substitution still
+          #   parses live either way.
+          def scan(input, scan_data: nil)
+            data = scan_data || @engine.scan([{ id: nil, raw: input }]).first
 
             # Count certification indexes the body by the engine's line maps,
             # which refer to lines after markdown-it normalized CR endings

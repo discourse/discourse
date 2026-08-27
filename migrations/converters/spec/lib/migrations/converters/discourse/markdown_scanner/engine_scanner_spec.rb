@@ -341,4 +341,36 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(failing_engine).to have_received(:reset!)
     end
   end
+
+  describe "batched scan data" do
+    let(:body) { "@alice wrote `@bob` and [docs](https://forum.example.com/t/slug/5)" }
+
+    it "classifies bodies for a batching caller" do
+      expect(extractor.engine_bound?(body)).to be(true)
+      expect(extractor.engine_bound?("plain text, nothing to find")).to be(false)
+      expect(extractor.engine_bound?(nil)).to be(false)
+    end
+
+    it "extracts from a precomputed engine scan like from a live one" do
+      scan_data = engine.scan([{ id: 1, raw: body }]).first
+      output = extractor.extract(body, scan_data:)
+
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(buffer.links.map { |row| row[:target_id] }).to eq([5])
+      expect(output).to include("`@bob`")
+      expect(output).to include(buffer.mentions.first[:placeholder])
+    end
+
+    it "ignores scan data when normalization changed the body's bytes" do
+      invalid = (+"\xFF @alice").force_encoding(Encoding::UTF_8)
+      # Scan data computed from any bytes; normalization rewrites the body, so
+      # the extractor must scan live instead of trusting mismatched offsets.
+      scan_data = engine.scan([{ id: 1, raw: invalid }]).first
+
+      output = extractor.extract(invalid, scan_data:)
+
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to include(buffer.mentions.first[:placeholder])
+    end
+  end
 end
