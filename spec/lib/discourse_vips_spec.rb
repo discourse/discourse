@@ -117,10 +117,24 @@ RSpec.describe DiscourseVips do
     )
   end
 
-  it "runs operations without Landlock" do
+  it "uses the warm worker without Landlock" do
     use_test_worker(without_landlock: true)
 
-    expect(described_class.vips("test-landlock", operation: :test)).to eq("false")
+    state = runtime_state
+    expect(state["landlock"]).to eq(false)
+    expect(state["operation_pid"]).not_to eq(state["worker_pid"])
+    expect { described_class.vips("unsupported", operation: :test) }.to raise_error(
+      DiscourseVips::Error,
+      "unsupported libvips operation",
+    )
+
+    Dir.mktmpdir("discourse-vips-spec") do |directory|
+      request, = blocked_request(directory, "timeout", timeout: 0.05)
+      request.report_on_exception = false
+      expect { request.value }.to raise_error(DiscourseVips::Error, "libvips operation timed out")
+    end
+
+    expect(runtime_state.fetch("worker_pid")).to eq(state.fetch("worker_pid"))
   end
 
   it "routes concurrent responses to the right callers without head-of-line blocking",

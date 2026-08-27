@@ -2,7 +2,6 @@
 
 require "landlock"
 require "msgpack"
-require "rbconfig"
 require "socket"
 
 require_relative "operations"
@@ -14,9 +13,6 @@ module DiscourseVips
 
     MAX_RESULT_BYTES = 8 * 1024
     private_constant :MAX_RESULT_BYTES
-
-    FALLBACK_TIMEOUT_EXIT_STATUS = 124
-    private_constant :FALLBACK_TIMEOUT_EXIT_STATUS
 
     RLIMITS = {
       cpu_seconds: 300,
@@ -38,20 +34,6 @@ module DiscourseVips
       @server = server
       @owner_reader = owner_reader
       @landlock_supported = Landlock.supported?
-    end
-
-    def self.run_operation(request_reader:, result_writer:, expected_parent_pid:)
-      if RUBY_PLATFORM.include?("linux")
-        Landlock::Native.set_parent_death_signal!
-        exit! 1 if Process.ppid != expected_parent_pid
-      end
-
-      payload = request_reader.read(MAX_REQUEST_BYTES + 1)
-      raise ArgumentError, "libvips request is too large" if payload.bytesize > MAX_REQUEST_BYTES
-
-      request = MessagePack.unpack(payload)
-      apply_process_options(request)
-      result_writer.write(MessagePack.pack(operation_response(request)))
     end
 
     def run
@@ -87,7 +69,7 @@ module DiscourseVips
       end
 
       request = MessagePack.unpack(payload)
-      response = @landlock_supported ? run_sandboxed(request) : run_fallback(request)
+      response = @landlock_supported ? run_sandboxed(request) : run_forked(request)
       write_response(connection, response)
     rescue StandardError => error
       write_response(connection, "status" => "error", "message" => error.message.byteslice(0, 4096))
@@ -123,49 +105,73 @@ module DiscourseVips
       { "status" => "error", "message" => "libvips operation failed" }
     end
 
-    def run_fallback(request)
-      request_reader, request_writer = IO.pipe
+    def run_forked(request)
       result_reader, result_writer = IO.pipe
-      pid =
-        Process.spawn(
-          { "RUBYLIB" => $LOAD_PATH.join(File::PATH_SEPARATOR) },
-          RbConfig.ruby,
-          "--disable-gems",
-          $PROGRAM_NAME,
-          "operation",
-          "5",
-          "6",
-          Process.pid.to_s,
-          5 => request_reader,
-          6 => result_writer,
-          :in => File::NULL,
-          :out => File::NULL,
-          :close_others => true,
-        )
-      request_reader.close
+      parent_pid = Process.pid
+      pid = fork { execute_forked(request, parent_pid, result_reader, result_writer) }
       result_writer.close
-      request_writer.write(MessagePack.pack(request))
-      request_writer.close
 
-      _, status = Process.waitpid2(pid)
-      pid = nil
-      return { "status" => "timeout" } if status.exitstatus == FALLBACK_TIMEOUT_EXIT_STATUS
+      if !IO.select([result_reader], nil, nil, Float(request.fetch("timeout")))
+        terminate_fork(pid)
+        pid = nil
+        return { "status" => "timeout" }
+      end
 
       payload = result_reader.read(MAX_RESULT_BYTES + 1)
-      if status.success? && payload.bytesize <= MAX_RESULT_BYTES
+      Process.waitpid(pid)
+      pid = nil
+      if payload.bytesize <= MAX_RESULT_BYTES
         MessagePack.unpack(payload)
       else
         { "status" => "error", "message" => "libvips operation failed" }
       end
+    rescue MessagePack::UnpackError
+      { "status" => "error", "message" => "libvips operation failed" }
     ensure
-      if pid
-        Process.kill("KILL", pid)
-        Process.waitpid(pid)
-      end
-      [request_reader, request_writer, result_reader, result_writer].each do |io|
+      terminate_fork(pid) if pid
+      [result_reader, result_writer].each do |io|
         io&.close unless io&.closed?
       rescue IOError
       end
+    end
+
+    def execute_forked(request, parent_pid, result_reader, result_writer)
+      result_reader.close
+      result_writer.sync = true
+      if RUBY_PLATFORM.include?("linux")
+        Landlock::Native.set_parent_death_signal!
+        exit! 1 if Process.ppid != parent_pid
+      end
+      close_inherited_ios(result_writer)
+      self.class.__send__(:apply_process_options, request)
+      result_writer.write(MessagePack.pack(self.class.__send__(:operation_response, request)))
+      exit! 0
+    rescue Exception => error
+      result_writer.write(
+        MessagePack.pack("status" => "error", "message" => error.message.byteslice(0, 4096)),
+      )
+      exit! 1
+    end
+
+    def close_inherited_ios(result_writer)
+      ObjectSpace
+        .each_object(IO)
+        .to_a
+        .each do |io|
+          next if io.closed? || io.fileno <= 2 || io.equal?(result_writer)
+
+          io.close
+        rescue IOError
+        end
+    end
+
+    def terminate_fork(pid)
+      begin
+        Process.kill("KILL", pid)
+      rescue Errno::ESRCH
+      end
+      Process.waitpid(pid)
+    rescue Errno::ECHILD
     end
 
     def child_environment(scratch)
@@ -207,10 +213,6 @@ module DiscourseVips
           next if resource == :AS && RUBY_PLATFORM.include?("darwin")
 
           Process.setrlimit(resource, limit, limit)
-        end
-        Thread.new do
-          sleep Float(request.fetch("timeout"))
-          exit! FALLBACK_TIMEOUT_EXIT_STATUS
         end
       end
     end

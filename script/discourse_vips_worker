@@ -3,18 +3,9 @@
 
 require "discourse_vips/worker"
 
-if ARGV.first == "operation"
-  request_fd, response_fd, expected_parent_pid = ARGV.drop(1).map { |argument| Integer(argument) }
-  DiscourseVips::Worker.run_operation(
-    request_reader: IO.for_fd(request_fd),
-    result_writer: IO.for_fd(response_fd),
-    expected_parent_pid:,
-  )
-else
-  server_fd, owner_fd = ARGV.map { |argument| Integer(argument) }
-  Process.setproctitle("discourse vips worker")
-  DiscourseVips::Worker.new(
-    server: UNIXServer.for_fd(server_fd),
-    owner_reader: IO.for_fd(owner_fd),
-  ).run
-end
+server_fd, owner_fd = ARGV.map { |argument| Integer(argument) }
+Process.setproctitle("discourse vips worker")
+DiscourseVips::Worker.new(
+  server: UNIXServer.for_fd(server_fd),
+  owner_reader: IO.for_fd(owner_fd),
+).run

@@ -26,8 +26,6 @@ module TestOperations
     operation, *arguments = command
 
     case operation
-    when "test-landlock"
-      Landlock.supported?.to_s
     when "test-runtime"
       MessagePack.pack(@runtime.merge(operation_pid: Process.pid, worker_pid: Process.ppid))
     when "test-return"
