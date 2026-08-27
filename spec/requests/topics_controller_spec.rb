@@ -7287,6 +7287,17 @@ RSpec.describe TopicsController do
         expect(pm.reload.topic_allowed_users.pluck(:user_id)).not_to include(user_2.id)
       end
 
+      it "does not disclose an existing user from a form-encoded array email invite" do
+        pm = Fabricate(:private_message_topic, user: user)
+
+        post "/t/#{pm.id}/invite.json", params: { email: [user_2.email, "@"] }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["failed"]).to eq("FAILED")
+        expect(response.body).not_to include(user_2.username)
+        expect(pm.reload.topic_allowed_users.pluck(:user_id)).not_to include(user_2.id)
+      end
+
       it "returns generic success without side effects when an authorized email invite matches an existing user" do
         sign_in(admin)
         pm = Fabricate(:private_message_topic, user: admin)
