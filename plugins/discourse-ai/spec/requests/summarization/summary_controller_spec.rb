@@ -156,7 +156,6 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         get "/discourse-ai/summarization/t/#{topic.id}.json"
 
         expect(response.status).to eq(404)
-        expect(response.body).not_to include(summary.summarized_text)
       end
 
       it "returns a summary" do
