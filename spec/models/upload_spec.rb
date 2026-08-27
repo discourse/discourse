@@ -1029,6 +1029,13 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq("")
     end
 
+    it "stores an empty string for an invalid dominant color response" do
+      DiscourseVips.stubs(:dominant_color).returns("invalid")
+
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color).to eq("")
+    end
+
     it "correctly handles error when file is too large to download" do
       white_image.stubs(:local?).returns(false)
       FileHelper.stubs(:download).returns(nil)

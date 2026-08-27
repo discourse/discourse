@@ -1,11 +1,267 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "discourse_vips/worker"
+require "landlock"
+require "msgpack"
+require "socket"
+require "tmpdir"
+require "vips"
 
-server_fd, owner_fd = ARGV.map { |argument| Integer(argument) }
-Process.setproctitle("discourse vips worker")
-DiscourseVips::Worker.new(
-  server: UNIXServer.for_fd(server_fd),
-  owner_reader: IO.for_fd(owner_fd),
-).run
+raise LoadError, "libvips 8.13 or newer is required" if !Vips.at_least_libvips?(8, 13)
+
+class DiscourseVipsWorker
+  class Operations
+    DEFAULT_READ_PATHS = %w[/bin /lib /lib64 /usr].freeze
+    private_constant :DEFAULT_READ_PATHS
+
+    # Dynamically loaded libvips modules use this cache to locate their shared libraries.
+    DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
+    private_constant :DYNAMIC_LINKER_CACHE_PATH
+
+    WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail].freeze
+    private_constant :WARM_OPERATIONS
+
+    def self.warm
+      WARM_OPERATIONS.each do |name|
+        operation = Vips.vips_operation_new(name)
+        raise "unable to initialize libvips operation #{name}" if operation.null?
+
+        GObject.g_object_unref(operation)
+      end
+    end
+
+    def self.build(command)
+      operation, *arguments = command
+
+      case operation
+      when "version"
+        version
+      when "letter-avatar"
+        letter_avatar(*arguments)
+      when "dominant-color"
+        dominant_color(*arguments)
+      else
+        raise ArgumentError, "unsupported libvips operation"
+      end
+    end
+
+    def initialize(read_paths: [], write_paths: [], &action)
+      @read_paths = read_paths
+      @write_paths = write_paths
+      @action = action
+    end
+
+    def call
+      @action.call
+    end
+
+    def sandbox_paths(scratch:)
+      {
+        "read" => existing_paths([*DEFAULT_READ_PATHS, DYNAMIC_LINKER_CACHE_PATH, *@read_paths]),
+        "write" => existing_paths([scratch, *@write_paths]),
+      }
+    end
+
+    def self.version
+      new { Vips.version_string }
+    end
+    private_class_method :version
+
+    def self.letter_avatar(letter, output_path, background_color, font, font_path)
+      new(
+        read_paths: ["/etc/fonts", "/var/cache/fontconfig", font_path],
+        write_paths: [File.dirname(output_path)],
+      ) do
+        if !letter || !output_path || !font_path
+          raise ArgumentError, "invalid letter avatar arguments"
+        end
+        raise ArgumentError, "font file does not exist" if !File.file?(font_path)
+        raise ArgumentError, "invalid background color" if !background_color.match?(/\A\h{6}\z/)
+
+        background = background_color.scan(/\h{2}/).map { |channel| Integer(channel, 16) }
+
+        block_loaders
+        markup = %(<span foreground="#ffffff" alpha="80%">#{letter}</span>)
+        text = Vips::Image.text(markup, font:, dpi: 72, fontfile: font_path, rgba: true)
+        canvas =
+          text.gravity(:centre, 360, 360, extend: :background, background: [*background, 255])
+        canvas.flatten(background:).pngsave(output_path, compression: 6)
+        nil
+      end
+    end
+    private_class_method :letter_avatar
+
+    def self.dominant_color(input_path)
+      new(read_paths: [input_path]) do
+        raise ArgumentError, "invalid dominant color arguments" if !input_path
+
+        block_loaders(
+          allowed: %w[
+            VipsForeignLoadJpeg
+            VipsForeignLoadPng
+            VipsForeignLoadNsgif
+            VipsForeignLoadWebp
+            VipsForeignLoadHeif
+            VipsForeignLoadJxl
+          ],
+        )
+        thumbnail = Vips::Image.thumbnail(input_path, 1, height: 1, size: :force)
+        components = thumbnail.getpoint(0, 0).map(&:round)
+        if thumbnail.has_alpha?
+          alpha = components.pop / 255.0
+          components.map! { |component| (component * alpha).round }
+        end
+        components = [components.first] * 3 if thumbnail.bands < 3
+        format("%02X%02X%02X", *components.first(3))
+      end
+    end
+    private_class_method :dominant_color
+
+    def self.block_loaders(allowed: [])
+      Vips.block_untrusted(true)
+      Vips.block("VipsForeignLoad", true)
+      allowed.each { |loader| Vips.block(loader, false) }
+    end
+    private_class_method :block_loaders
+
+    def existing_paths(paths)
+      paths
+        .filter { |path| path.to_s != "" && File.exist?(path) }
+        .map { |path| File.expand_path(path) }
+        .uniq
+    end
+    private :existing_paths
+  end
+
+  RLIMITS = {
+    cpu_seconds: 300,
+    memory_bytes: 4 * 1024 * 1024 * 1024,
+    file_size_bytes: 10 * 1024 * 1024 * 1024,
+    open_files: 1024,
+  }.freeze
+  private_constant :RLIMITS
+
+  def self.run(server_fd:, owner_fd:)
+    Process.setproctitle("discourse vips worker")
+    new(server: UNIXServer.for_fd(server_fd), owner_reader: IO.for_fd(owner_fd)).run
+  end
+
+  def initialize(server:, owner_reader:)
+    @server = server
+    @socket_path = server.local_address.unix_path
+    @owner_reader = owner_reader
+    @landlock_supported = Landlock.supported?
+    @operation_mutex = Mutex.new
+  end
+
+  def run
+    Operations.warm
+
+    loop do
+      readable, = IO.select([@server, @owner_reader])
+      break if readable.include?(@owner_reader)
+
+      accept_connections if readable.include?(@server)
+    end
+  ensure
+    @server.close unless @server.closed?
+    @owner_reader.close unless @owner_reader.closed?
+    remove_socket_directory
+    Process.kill("KILL", -Process.pid)
+  end
+
+  private
+
+  def accept_connections
+    loop do
+      connection = @server.accept_nonblock(exception: false)
+      return if connection == :wait_readable
+
+      Thread.new(connection) { |socket| handle_connection(socket) }.report_on_exception = false
+    end
+  end
+
+  def handle_connection(connection)
+    request = MessagePack.unpack(connection.read)
+    operation = Operations.build(request.fetch("command"))
+    response =
+      if @landlock_supported
+        run_sandboxed(request:, operation:)
+      else
+        run_direct(operation)
+      end
+    write_response(connection, response)
+  rescue StandardError => error
+    write_response(connection, "status" => "error", "message" => error.message.byteslice(0, 4096))
+  ensure
+    connection.close unless connection.closed?
+  end
+
+  def write_response(connection, response)
+    connection.write(MessagePack.pack(response))
+  rescue IOError, SystemCallError
+  end
+
+  def run_sandboxed(request:, operation:)
+    Dir.mktmpdir("discourse-vips-") do |scratch|
+      sandbox_paths = operation.sandbox_paths(scratch:)
+      result =
+        Landlock.fork(
+          read: sandbox_paths.fetch("read"),
+          write: sandbox_paths.fetch("write"),
+          execute: [],
+          timeout: Float(request.fetch("timeout")),
+          env: child_environment(scratch),
+          unsetenv_others: true,
+          rlimits: RLIMITS,
+          seccomp_deny_network: true,
+        ) do |stdout, _stderr|
+          apply_nice(request)
+          stdout.write(MessagePack.pack(operation_response(operation)))
+        end
+
+      if result.timed_out?
+        { "status" => "timeout" }
+      elsif result.success?
+        MessagePack.unpack(result.stdout)
+      else
+        { "status" => "error", "message" => "libvips operation failed" }
+      end
+    end
+  end
+
+  def run_direct(operation)
+    @operation_mutex.synchronize { operation_response(operation) }
+  end
+
+  def remove_socket_directory
+    File.unlink(@socket_path)
+    Dir.rmdir(File.dirname(@socket_path))
+  rescue SystemCallError
+  end
+
+  def child_environment(scratch)
+    {
+      "HOME" => scratch,
+      "TMPDIR" => scratch,
+      "XDG_CACHE_HOME" => scratch,
+      "MALLOC_ARENA_MAX" => "2",
+    }
+  end
+
+  def apply_nice(request)
+    Process.setpriority(Process::PRIO_PROCESS, 0, Integer(request.fetch("nice"))) if request["nice"]
+  end
+
+  def operation_response(operation)
+    value = operation.call
+    { "status" => "ok", "value" => value }
+  rescue StandardError => error
+    { "status" => "error", "message" => error.message.byteslice(0, 4096) }
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  server_fd, owner_fd = ARGV.map { |argument| Integer(argument) }
+  DiscourseVipsWorker.run(server_fd:, owner_fd:)
+end

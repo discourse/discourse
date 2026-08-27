@@ -397,20 +397,13 @@ class Upload < ActiveRecord::Base
       color ||=
         begin
           color =
-            DiscourseVips.vips(
-              "dominant-color",
-              local_path,
-              operation: :upload_dominant_color,
-              read: [local_path],
+            DiscourseVips.dominant_color(
+              input_path: local_path,
               timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
-            ).strip
-          if color !~ /\A[0-9A-F]{6}\z/
-            raise "Calculated dominant color but unable to parse output: #{color}"
-          end
-
+            )
+          color = "" if color !~ /\A[0-9A-F]{6}\z/
           color
         rescue DiscourseVips::Error
-          # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation
           ""
