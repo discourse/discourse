@@ -292,7 +292,7 @@ module("Integration | Component | Nested | Post", function (hooks) {
     assert.verifySteps([], "does not request children while rendering");
   });
 
-  test("flattens preloaded descendants at the nesting depth cap", async function (assert) {
+  test("renders server-flattened descendants once at the nesting depth cap", async function (assert) {
     this.siteSettings.nested_replies_cap_nesting_depth = true;
     this.siteSettings.nested_replies_max_depth = 3;
     this.depth = 2;
@@ -301,7 +301,7 @@ module("Integration | Component | Nested | Post", function (hooks) {
       total_descendant_count: 4,
     });
 
-    const child = (id, postNumber, children = []) => ({
+    const child = (id, postNumber) => ({
       post: this.store.createRecord("post", {
         id,
         post_number: postNumber,
@@ -312,17 +312,14 @@ module("Integration | Component | Nested | Post", function (hooks) {
         cooked: `<p>Post ${postNumber}</p>`,
         created_at: "2026-01-01T00:00:00.000Z",
         actions_summary: [],
-        direct_reply_count: children.length,
-        total_descendant_count: children.length,
+        direct_reply_count: 0,
+        total_descendant_count: 0,
       }),
-      children,
+      children: [],
     });
     const grandchild56 = child(56, 56);
     const grandchild51 = child(51, 51);
-    this.children = [
-      child(48, 48, [grandchild56]),
-      child(49, 49, [grandchild51]),
-    ];
+    this.children = [child(48, 48), child(49, 49), grandchild56, grandchild51];
 
     await renderComponent(this);
 

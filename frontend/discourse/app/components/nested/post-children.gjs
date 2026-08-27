@@ -87,9 +87,9 @@ export default class NestedPostChildren extends Component {
 
     const cached = this.args.fetchedChildrenCache?.get(this._activeCacheKey);
     if (cached) {
-      this.childNodes = this._normalizedChildNodes(cached.childNodes);
+      this.childNodes = cached.childNodes;
       this.page = cached.page;
-      this.hasMore = this.flattensDescendants
+      this.hasMore = this.usesFlatDescendantPagination
         ? this.expectedCount > this.childNodes.length
         : cached.hasMore;
       this.loaded = true;
@@ -98,7 +98,7 @@ export default class NestedPostChildren extends Component {
     }
 
     if (this.args.preloadedChildren?.length > 0) {
-      this.childNodes = this._normalizedChildNodes(this.args.preloadedChildren);
+      this.childNodes = this.args.preloadedChildren;
       this.loaded = true;
       this.hasMore = this.expectedCount > this.childNodes.length;
     } else if (this.args.directReplyCount > 0) {
@@ -140,7 +140,7 @@ export default class NestedPostChildren extends Component {
     return this.args.depth + 1;
   }
 
-  get flattensDescendants() {
+  get usesFlatDescendantPagination() {
     return (
       this.siteSettings.nested_replies_cap_nesting_depth &&
       this.childDepth >= this.siteSettings.nested_replies_max_depth
@@ -148,7 +148,7 @@ export default class NestedPostChildren extends Component {
   }
 
   get expectedCount() {
-    return this.flattensDescendants
+    return this.usesFlatDescendantPagination
       ? this.args.totalDescendantCount || this.args.directReplyCount || 0
       : this.args.directReplyCount || 0;
   }
@@ -279,26 +279,6 @@ export default class NestedPostChildren extends Component {
 
   _processNode(nodeData) {
     return processNode(this.store, this.args.topic, nodeData);
-  }
-
-  _normalizedChildNodes(nodes) {
-    if (!this.flattensDescendants) {
-      return nodes || [];
-    }
-
-    const flattened = [];
-    const seen = new Set();
-    const visit = (node) => {
-      const key = node.post.id ?? node.post.post_number;
-      if (!seen.has(key)) {
-        seen.add(key);
-        flattened.push({ ...node, children: [] });
-      }
-      node.children?.forEach(visit);
-    };
-
-    nodes?.forEach(visit);
-    return flattened;
   }
 
   _includesPost(nodes, post) {

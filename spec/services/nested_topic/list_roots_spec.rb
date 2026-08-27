@@ -60,6 +60,55 @@ RSpec.describe NestedTopic::ListRoots do
       end
     end
 
+    context "when nesting is capped" do
+      before do
+        SiteSetting.nested_replies_cap_nesting_depth = true
+        SiteSetting.nested_replies_max_depth = 3
+      end
+
+      it "returns deeper branches as one sorted collection at the depth boundary" do
+        root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        second_level =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        boundary_parent =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: second_level.post_number)
+        left =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: boundary_parent.post_number,
+          )
+        right =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: boundary_parent.post_number,
+          )
+        right_children =
+          2.times.map do
+            Fabricate(:post, topic: topic, user: user, reply_to_post_number: right.post_number)
+          end
+        left_children =
+          2.times.map do
+            Fabricate(:post, topic: topic, user: user, reply_to_post_number: left.post_number)
+          end
+
+        response =
+          stub_const(NestedReplies::TreeLoader, :PRELOAD_CHILDREN_PER_PARENT, 10) do
+            described_class.call(params: { sort: "old", page: 0 }, **dependencies)[:response]
+          end
+
+        boundary_json = response[:roots].first.dig(:children, 0, :children, 0)
+        expected_posts = [left, right, *right_children, *left_children]
+        expect(boundary_json[:children].map { |post_json| post_json[:id] }).to eq(
+          expected_posts.map(&:id),
+        )
+        expect(boundary_json[:children].map { |post_json| post_json[:children] }.uniq).to eq([[]])
+      end
+    end
+
     context "when staff views root posts with official notices" do
       fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
       fab!(:root_post) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1) }
