@@ -1,11 +1,21 @@
 import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import AdminReport from "discourse/admin/components/admin-report";
+import AdminReport, {
+  updateReportFilters,
+} from "discourse/admin/components/admin-report";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Integration | Component | AdminReport", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("clearing a group filter removes it", function (assert) {
+    assert.deepEqual(
+      updateReportFilters({ group: 88 }, "group", null),
+      {},
+      "omits the group filter"
+    );
+  });
 
   test("default", async function (assert) {
     await render(

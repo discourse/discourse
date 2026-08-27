@@ -94,6 +94,7 @@ DiscourseWorkflows::Engine.routes.draw do
     post "/trigger-topic-admin-button" => "topic_admin_button#create"
     post "/trigger-post-button" => "post_button#create"
     post "/modal-responses" => "modal_responses#create"
+    post "/modal-dismissals" => "modal_dismissals#create"
   end
 
   scope "/workflows", defaults: { format: :json } do

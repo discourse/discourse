@@ -15,7 +15,8 @@
 # locale_default        - A hash which overrides according to `SiteSetting.default_locale`.
 #                         The key should be as the same as possible value of default_locale.
 # mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
-#                         in the UI.
+#                         in the UI. Only applies to pipe-separated list type settings (e.g. group_list), as the values
+#                         are merged into the setting's value on both read and write.
 # disallowed_groups     - A list of group IDs (pipe-separated) that should be hidden from the group selector.
 #                         These groups cannot be selected and will be stripped if set via API.
 #                         Only applies to group_list type settings.
@@ -4686,10 +4687,6 @@ dashboard:
     client: true
 
 experimental:
-  enable_site_traffic_explorer:
-    default: false
-    client: true
-    area: "experimental"
   reporting_improvements:
     default: false
     client: true
@@ -4709,7 +4706,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
@@ -4728,7 +4725,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
@@ -4784,7 +4781,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
       body_class: true

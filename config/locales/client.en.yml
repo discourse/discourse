@@ -572,7 +572,7 @@ en:
       dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose colors, fonts, and a homepage."
+        description: "Choose colors, fonts, and how your site is laid out."
         action: "See options"
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
@@ -609,7 +609,7 @@ en:
 
     design_wizard:
       title: "Customize your site"
-      subtitle: "Choose colors, fonts, and a homepage."
+      subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
       save: "Save and finish"
       back: "Back"
@@ -619,8 +619,11 @@ en:
         colors: "Default color"
         fonts: "Fonts"
         homepage: "Homepage"
+        welcome_banner: "Welcome banner"
+        search: "Search"
       theme:
         selected: "Selected"
+        applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
         light: "Light"
@@ -645,6 +648,21 @@ en:
           boxes: "Boxes"
           with_topics: "Categories with topics"
           only: "Categories only"
+      welcome_banner:
+        enable: "Show a welcome banner"
+        enable_description: "Greet visitors with your site name and a search box"
+        location: "Banner location"
+        locations:
+          below_site_header: "Below the site header"
+          above_topic_content: "Above the topic list"
+      search:
+        experiences:
+          search_icon:
+            title: "Search icon"
+            description: "A magnifying glass in the header that opens search."
+          search_field:
+            title: "Search field"
+            description: "A full search field in the header, always visible."
 
     about:
       edit: "Edit this page"
@@ -1010,6 +1028,7 @@ en:
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
       user:
+        avatar: "Avatar when flagged"
         bio: "Bio"
         website: "Website"
         username: "Username"
@@ -2465,7 +2484,6 @@ en:
         watch_topic: "Watch topic"
         track_topic: "Track topic"
         do_nothing: "Do nothing"
-      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
@@ -4291,7 +4309,7 @@ en:
           missing_to: "A replacement tag is required"
       delete_topics:
         name: "Delete"
-        description: "Permanently delete the selected topics. This action cannot be undone."
+        description: "Delete the selected topics. Deleted topics can be restored."
       update_category:
         name: "Update Category"
         description: "Move all selected topics to the following category:"
@@ -4918,7 +4936,7 @@ en:
       reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from %{postLink}:"
       follow_quote: "go to the quoted post"
-      show_full: "Show Full Post"
+      show_more: "Show more…"
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
@@ -7264,17 +7282,42 @@ en:
           timeout: "This traffic query took too long. Choose a shorter date range and try again."
           unexpected: "Couldn't load site traffic. Try again."
         empty: "No matching pageviews"
-        summary: "Traffic summary"
-        traffic_over_time: "Traffic over time"
-        pageviews: "Pageviews"
-        metric_information: "About this metric"
+        metric_information: "About %{metric}"
         active_filters: "Active traffic filters"
-        filter_description: "%{filter} is <strong>%{value}</strong>"
+        filtering_to:
+          traffic_type:
+            one: "Filtering to %{count} traffic type"
+            other: "Filtering to %{count} traffic types"
+          top_url:
+            one: "Filtering to %{count} top URL"
+            other: "Filtering to %{count} top URLs"
+          entry_url:
+            one: "Filtering to %{count} entry URL"
+            other: "Filtering to %{count} entry URLs"
+          referrer:
+            one: "Filtering to %{count} referrer"
+            other: "Filtering to %{count} referrers"
+          country:
+            one: "Filtering to %{count} country"
+            other: "Filtering to %{count} countries"
+          network:
+            one: "Filtering to %{count} network"
+            other: "Filtering to %{count} networks"
+          browser:
+            one: "Filtering to %{count} browser"
+            other: "Filtering to %{count} browsers"
+          ip:
+            one: "Filtering to %{count} IP address"
+            other: "Filtering to %{count} IP addresses"
+        remove_filter_value: "Remove %{value}"
+        clear_all: "Clear all"
+        apply: "Apply"
+        apply_filters: "Apply filters"
         filter_by:
           one: "Filter by %{label}, %{count} pageview"
           other: "Filter by %{label}, %{count} pageviews"
         remove_filter: "Remove %{filter} filter"
-        remove_traffic_type_filter: "Remove %{value} traffic filter"
+        # remove_traffic_type_filter: "Remove %{value} traffic filter"
         view_more: "View more"
         no_dimension_data: "No data for this breakdown."
         direct_or_unknown: "Direct / unknown"
@@ -7290,14 +7333,6 @@ en:
           entry_urls: "Entry URLs"
           browsers: "Browsers"
           ip_addresses: "IP addresses"
-        columns:
-          referrers: "Referrer"
-          countries: "Country"
-          networks: "Network"
-          top_urls: "URL"
-          entry_urls: "Entry URL"
-          browsers: "Browser"
-          ip_addresses: "IP address"
         filters:
           traffic_type: "Traffic type"
           top_url: "Top URL"
@@ -7307,9 +7342,10 @@ en:
           network: "Network"
           browser: "Browser"
           ip: "IP address"
+        headline:
+          one: "%{formatted_count} pageview"
+          other: "%{formatted_count} pageviews"
         metrics:
-          pageviews:
-            label: "Pageviews"
           distinct_sessions:
             label: "Distinct sessions"
           logged_in_share:
@@ -7597,6 +7633,26 @@ en:
                 no_match_tooltip: "Search terms with a 0% click-through rate (CTR)."
                 poor_match: "Poor match"
                 poor_match_tooltip: "Search terms with a click-through rate (CTR) between 1-20%."
+          system:
+            title: "System"
+            storage: "Storage"
+            status: "Status"
+            fetch_error: "Couldn't load system information. Try refreshing the page."
+            commits:
+              one: "+%{count} commit"
+              other: "+%{count} commits"
+            view_on_github: "View on GitHub"
+            update_check_failed: "Update check failed — ensure Sidekiq is running."
+            update_available: "Update available: %{version}"
+            space_free: "%{size} free"
+            backups_size:
+              one: "%{size} backup (%{count})"
+              other: "%{size} backups (%{count})"
+            uploads_size: "%{size} uploads"
+            latest_backup: "Latest backup %{date}"
+            manage_backups: "Manage backups"
+            discourse_updated: "Discourse updated"
+            dashboard_updated: "Dashboard updated"
         reports_section:
           header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
@@ -9101,6 +9157,7 @@ en:
             deleted_tag: "deleted tag"
             update_directory_columns: "update directory columns"
             deleted_unused_tags: "deleted unused tags"
+            created_tag: "created tag"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
             lock_trust_level: "lock trust level"
@@ -9128,6 +9185,7 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            removed_avatar: "removed avatar"
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"
             web_hook_destroy: "webhook destroy"

@@ -99,6 +99,8 @@ module DiscourseAi
       end
 
       def create_user
+        raise Discourse::InvalidAccess if !@ai_agent.supports_bot_user?
+
         user = @ai_agent.create_user!
         render json: BasicUserSerializer.new(user, root: "user")
       end
@@ -230,7 +232,7 @@ module DiscourseAi
 
         return render_json_error(I18n.t("discourse_ai.errors.agent_disabled")) if !agent.enabled
 
-        if agent.default_llm.blank?
+        if agent.default_llm.blank? && SiteSetting.ai_default_llm_model.blank?
           return render_json_error(I18n.t("discourse_ai.errors.no_default_llm"))
         end
 

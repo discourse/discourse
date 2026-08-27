@@ -16,6 +16,7 @@ export default class ChatRoute extends DiscourseRoute {
   @service chatStateManager;
   @service chatDrawerRouter;
   @service currentUser;
+  @service siteSettings;
 
   titleToken() {
     return i18n("chat.title_capitalized");
@@ -92,12 +93,9 @@ export default class ChatRoute extends DiscourseRoute {
     withPluginApi((api) => {
       api.setSidebarPanel(CHAT_PANEL);
 
-      if (!this.currentUser) {
-        return;
-      }
-
       const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
-        this.currentUser
+        this.currentUser,
+        this.siteSettings
       );
 
       if (chatSeparateSidebarMode.never) {

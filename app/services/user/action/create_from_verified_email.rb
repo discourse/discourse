@@ -16,7 +16,9 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
     user.attributes = {
       email: email,
       username: username,
-      name: name.presence || username,
+      # The generated username is a placeholder, so it must never become the
+      # full name. A staged account's existing name is real and survives.
+      name: name.presence || user.name,
       active: false,
       locale: I18n.locale,
       ip_address: ip_address,

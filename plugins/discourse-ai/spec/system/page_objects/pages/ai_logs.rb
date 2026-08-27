@@ -9,6 +9,11 @@ module PageObjects
         self
       end
 
+      def select_period(label)
+        find(".ai-logs__periods .btn", text: label).click
+        self
+      end
+
       def select_outcome(label)
         select_filter(:outcome, label)
       end
@@ -18,11 +23,25 @@ module PageObjects
       end
 
       def select_feature(label)
-        select_filter(:feature, label)
+        feature_filter.expand
+        feature_filter.search(label)
+        feature_filter.select_row_by_value(label)
+        self
+      end
+
+      def feature_filter_value
+        feature_filter.value
       end
 
       def clear_filters
-        find(".ai-logs__clear").click
+        find(".d-filter-controls__reset").click
+        self
+      end
+
+      def search(value)
+        find("input[placeholder='#{I18n.t("js.discourse_ai.logs.search_placeholder")}']").fill_in(
+          with: value,
+        )
         self
       end
 
@@ -30,8 +49,33 @@ module PageObjects
         find(".d-filter-controls__dropdown--#{key}").value
       end
 
+      def has_tinted_filter_toggle?
+        page.evaluate_script(<<~JS)
+          (() => {
+            const icon = document.querySelector(
+              ".ai-logs .d-filter-controls__toggle-filters .d-icon"
+            );
+            const probe = (color) => {
+              const el = document.createElement("span");
+              el.style.color = `var(${color})`;
+              document.body.appendChild(el);
+              const result = getComputedStyle(el).color;
+              el.remove();
+              return result;
+            };
+            return [probe("--tertiary"), probe("--tertiary-hover")].includes(
+              getComputedStyle(icon).color
+            );
+          })()
+        JS
+      end
+
+      def has_no_tinted_filter_toggle?
+        !has_tinted_filter_toggle?
+      end
+
       def has_expanded_filter_dropdowns?
-        page.has_css?(".d-filter-controls__dropdown", count: 3)
+        page.has_css?(".d-filter-controls__dropdown", count: 2)
       end
 
       def open_log(log)
@@ -64,6 +108,10 @@ module PageObjects
       end
 
       private
+
+      def feature_filter
+        PageObjects::Components::SelectKit.new(".ai-logs__feature-filter")
+      end
 
       def select_filter(key, label)
         find(".d-filter-controls__dropdown--#{key}").select(label)

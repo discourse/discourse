@@ -196,6 +196,7 @@ export default class Post extends RestModel {
   @tracked user_custom_fields;
   @tracked user_deleted;
   @tracked user_id;
+  @tracked user_locale;
   @tracked user_suspended;
   @tracked user_title;
   @tracked username;
@@ -521,6 +522,7 @@ export default class Post extends RestModel {
       flair_group_id: this.flair_group_id,
       flair_name: this.flair_name,
       flair_url: this.flair_url,
+      locale: this.user_locale,
       moderator: this.moderator,
       primary_group_name: this.primary_group_name,
       status: this.user_status,
@@ -564,8 +566,13 @@ export default class Post extends RestModel {
 
   // Expands the first post's content, if embedded and shortened.
   async expand() {
-    const post = await ajax(`/posts/${this.id}/expand-embed`);
-    this.cooked = `<section class="expanded-embed">${post.cooked}</section>`;
+    try {
+      const post = await ajax(`/posts/${this.id}/expand-embed`);
+      this.cooked = `<section class="expanded-embed">${post.cooked}</section>`;
+    } catch (error) {
+      popupAjaxError.call(this, error);
+      throw error;
+    }
   }
 
   // Recover a deleted post

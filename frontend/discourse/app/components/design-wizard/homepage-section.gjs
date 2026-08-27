@@ -1,5 +1,6 @@
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import OptionRow from "discourse/components/design-wizard/option-row";
 import { HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -138,7 +139,7 @@ const DesignWizardHomepageSection = <template>
   </div>
 
   {{#if (eq @homepage "categories")}}
-    <div class="design-wizard__homepage-detail">
+    <div class="design-wizard__detail-group">
       <span class="design-wizard__label">
         {{i18n "design_wizard.homepage.category_page_style"}}
       </span>
@@ -166,29 +167,19 @@ const DesignWizardHomepageSection = <template>
       </div>
     </div>
   {{else}}
-    <div class="design-wizard__homepage-detail">
+    <div class="design-wizard__detail-group">
       <span class="design-wizard__label">
         {{i18n "design_wizard.homepage.topic_page_type"}}
       </span>
-      <div class="design-wizard__topic-page-options">
+      <div class="design-wizard__option-rows">
         {{#each TOPIC_PAGES as |page|}}
-          <button
-            type="button"
-            class="design-wizard__topic-page-option
-              {{if (eq page @homepage) '--selected'}}"
-            aria-pressed={{if (eq page @homepage) "true" "false"}}
+          <OptionRow
+            @label={{topicPageLabel page}}
+            @description={{topicPageDescription page}}
+            @selected={{eq page @homepage}}
+            @onSelect={{fn @onSelectHomepage page}}
             data-topic-page={{page}}
-            {{on "click" (fn @onSelectHomepage page)}}
-          >
-            <span class="design-wizard__topic-page-option-texts">
-              <span class="design-wizard__topic-page-option-label">
-                {{topicPageLabel page}}
-              </span>
-              <span class="design-wizard__topic-page-option-description">
-                {{topicPageDescription page}}
-              </span>
-            </span>
-          </button>
+          />
         {{/each}}
       </div>
     </div>

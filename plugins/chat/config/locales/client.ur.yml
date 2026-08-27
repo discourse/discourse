@@ -73,11 +73,13 @@ ur:
       pinned_messages:
         title: "پن کیے گئے پیغامات"
         close: "پن کیے گئے پیغامات بند کریں"
+        dismiss: "میرے لیے پن کیا گیا بینر ہٹا دیں"
+        show: "پن کیا ہوا بینر دکھائیں"
         pinned_by_you: "آپ نے پن کیا"
         pinned_by_user: "%{username} نے پن کیا"
       pinned_bar:
-        title: "پِن شدہ"
-        jump_to_pinned: "پن کردہ پیغام پر جائیں"
+        title: "پن کیا ہوا"
+        jump_to_pinned: "پن کیے ہوئے پیغام پر جائیں"
       no_pinned_messages: "اس چینل میں کوئی پن کیے گئے پیغامات نہیں ہیں۔"
       pin_message: "پن کیا پیغام"
       unpin_message: "پیغام کو ان پن کریں"
@@ -255,7 +257,11 @@ ur:
       remove_upload: "فائل حذف کریں"
       react: "ایموجی کے ساتھ ردِ عمل دیں"
       reply: "جواب"
+      message_actions: "پیغام کے اقدامات"
+      more_message_actions: "مزید پیغام کے اقدامات"
       edit: "ترمیم کریں"
+      copy_link: "رابطہ کاپی کریں"
+      copy_text: "متن کاپی کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"
       bookmark_message: "بُک مارک"
       bookmark_message_edit: "بک مارک میں ترمیم کریں"
@@ -281,6 +287,7 @@ ur:
       uploaded_files:
         one: "%{count} فائل"
         other: "%{count} فائلیں"
+      youtube: "YouTube"
       you_flagged: "آپ نے اس پیغام کو نشان زد کیا"
       exit: "گفتگو سے باہر نکلیں"
       channel_status:
@@ -348,6 +355,7 @@ ur:
       direct_message_creator:
         title: نیا پیغام
         prefix: "کے لئے:"
+        no_results: کوئی نتائج نہیں
       channel:
         no_memberships_found: کوئی اراکین نہیں ملے
         memberships_count:
@@ -387,6 +395,12 @@ ur:
       reviewable:
         type: "گفتگو کا پیغام"
         message_in_channel: "چَینل"
+      reactions:
+        add: "%{emoji} کے ساتھ رد عمل دیں"
+        remove: "اپنا %{emoji} ردِ عمل ہٹا دیں"
+        counted:
+          one: "%{emoji} ردعمل، %{count} صارف"
+          other: "%{emoji} ردعمل، %{count} صارفین"
       composer:
         italic_text: "زور دیا گیا ٹَیکسٹ"
         bold_text: "گہرا ٹَیکسٹ"
@@ -421,6 +435,8 @@ ur:
           confirm_export: "یہ تمام چینلز کے تمام پیغامات برآمد کرتا ہے اور نتیجہ آپ کو ذاتی پیغام میں بھیجتا ہے۔ کیا آپ واقعی برآمد کرنا چاہتے ہیں؟"
       search:
         short_title: تلاش کریں
+        title: گفتگو میں تلاش کریں
+        no_results: "کوئی نتائج نہیں ملے"
         sort:
           relevance: "مطابقت"
           latest: "تازہ ترین"
@@ -464,6 +480,7 @@ ur:
         activities: "سرگرمیاں"
         flags: "فلَیگز"
         symbols: "علامات"
+        no_results: "کوئی نتائج نہیں"
       thread:
         title: "عنوان"
         replies:
@@ -531,6 +548,11 @@ ur:
       chat_approval:
         message: "پیغام"
         buttons: "بٹن"
+        buttons_description: "ایک سے دس تک جوابی بٹن شامل کریں"
+        add_button: "بٹن شامل کریں"
+        label: "عنوان"
+        label_description: "بٹن پر دکھایا گیا متن۔"
+        label_placeholder: "بٹن کا لیبل"
         value: "وَیلِیو"
         style: "ظرز"
         style_default: "ڈِیفالٹ"

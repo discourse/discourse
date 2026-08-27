@@ -22,10 +22,12 @@ class BulkImport::Generic < BulkImport::Base
   AVATAR_DIRECTORY = ENV["AVATAR_DIRECTORY"]
   UPLOAD_DIRECTORY = ENV["UPLOAD_DIRECTORY"]
   MERGE_IMPORT = ENV["MERGE_IMPORT"].present?
+  DELTA_IMPORT = ENV["DELTA_IMPORT"].present?
   CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages]
   LAST_VIEWED_AT_PLACEHOLDER = "1970-01-01 00:00:00"
 
   def initialize(db_path, uploads_db_path = nil)
+    self.class.validate_modes!(merge_import: MERGE_IMPORT, delta_import: DELTA_IMPORT)
     super()
     @source_db = create_connection(db_path)
     @uploads_db = create_connection(uploads_db_path) if uploads_db_path
@@ -37,7 +39,450 @@ class BulkImport::Generic < BulkImport::Base
         raise "MERGE_IMPORT requires 'converting_from' in intermediate DB config table"
       end
       puts "MERGE_IMPORT mode enabled with source prefix: #{@import_prefix}"
+    elsif DELTA_IMPORT
+      puts "DELTA_IMPORT mode enabled"
     end
+  end
+
+  def self.validate_modes!(merge_import:, delta_import:)
+    return unless merge_import && delta_import
+
+    raise "MERGE_IMPORT and DELTA_IMPORT cannot be enabled together"
+  end
+
+  def delta_import?
+    DELTA_IMPORT
+  end
+
+  def preflight
+    configure_unicode_usernames!
+
+    return unless delta_import?
+
+    puts "Running delta import preflight..."
+
+    unless DB.query_single("SELECT to_regclass('public.migration_mappings')::TEXT").first
+      raise "DELTA_IMPORT requires migration_mappings from a completed base import"
+    end
+
+    mappings = {
+      groups: plain_import_mappings("group"),
+      users: canonical_user_import_mappings,
+      categories: plain_import_mappings("category"),
+      topics: plain_import_mappings("topic"),
+      posts: plain_import_mappings("post"),
+    }
+    if mappings.values.sum(&:size).zero?
+      raise "DELTA_IMPORT requires existing plain numeric import_id mappings from a base import"
+    end
+    unless plain_mapped_core_record_exists?
+      raise "DELTA_IMPORT requires at least one mapped core record from a base import"
+    end
+
+    errors = []
+    preflight_users(mappings[:users], errors)
+    preflight_groups(mappings[:groups], errors)
+    preflight_categories(mappings, errors)
+    preflight_topics(mappings, errors)
+    preflight_posts(mappings, errors)
+
+    report_delta_user_audit(
+      @delta_preexisting_user_source_ids,
+      "mapped users merge into pre-existing destination accounts " \
+        "(identity verified by email) and will be updated",
+    )
+    report_delta_user_audit(
+      @delta_username_conflict_source_ids,
+      "mapped users keep their current usernames because the source username is taken",
+    )
+    report_delta_user_audit(
+      @delta_unverified_user_source_ids,
+      "mapped users have creation-date mismatches the delta cannot verify " \
+        "(no email supplied) and will not be updated",
+    )
+
+    return if errors.empty?
+
+    shown_errors = errors.first(25)
+    suffix =
+      (
+        if errors.length > shown_errors.length
+          "\n  ...and #{errors.length - shown_errors.length} more"
+        else
+          ""
+        end
+      )
+    raise "Delta import preflight failed:\n  #{shown_errors.join("\n  ")}#{suffix}"
+  end
+
+  # non-ASCII source names require unicode_usernames before any name is
+  # sanitized; the final value must be live before both the fresh import
+  # and the delta preflight run
+  def configure_unicode_usernames!
+    if (allowlist = source_site_setting_value("allowed_unicode_username_characters"))
+      SiteSetting.set_and_log(:allowed_unicode_username_characters, allowlist)
+    end
+
+    if (explicit = source_site_setting_value("unicode_usernames"))
+      desired = %w[t true 1].include?(explicit.to_s.downcase)
+      enable_unicode_usernames! if desired && !SiteSetting.unicode_usernames
+      return
+    end
+
+    return if SiteSetting.unicode_usernames
+    return unless source_has_non_ascii_names?
+
+    enable_unicode_usernames!
+    log_import_issue(
+      "unicode_usernames auto-enabled",
+      "source contains non-ASCII usernames or group names",
+    )
+  end
+
+  def enable_unicode_usernames!
+    raise <<~MSG if SiteSetting.external_system_avatars_url.blank?
+        The source contains non-ASCII usernames, which requires enabling the
+        'unicode_usernames' site setting, but its validator requires
+        'external_system_avatars_url' to be set. Configure
+        external_system_avatars_url on the destination site and re-run the import.
+      MSG
+
+    SiteSetting.set_and_log(:unicode_usernames, true)
+    puts "Enabled unicode_usernames (non-ASCII names detected in source)"
+  end
+
+  def source_site_setting_value(name)
+    query(
+      "SELECT value FROM site_settings WHERE name = ? AND action = 'update' ORDER BY ROWID DESC LIMIT 1",
+      name,
+    ) { |rows| rows.first&.fetch("value", nil) }
+  end
+
+  def source_has_non_ascii_names?
+    non_ascii = ->(value) { value.present? && !value.ascii_only? }
+    user_columns = %w[username original_username] & table_column_names("users").to_a
+
+    query("SELECT #{user_columns.join(", ")} FROM users") do |rows|
+      rows.any? { |row| user_columns.any? { |column| non_ascii.call(row[column]) } }
+    end ||
+      query("SELECT name FROM groups") { |rows| rows.any? { |row| non_ascii.call(row["name"]) } }
+  end
+
+  def load_imported_ids
+    super
+    return unless delta_import?
+
+    @delta_base_mappings = {
+      groups: @groups.dup,
+      users: @users.dup,
+      categories: @categories.dup,
+      topics: @topics.dup,
+      posts: @posts.dup,
+    }
+    canonical_users = canonical_user_import_mappings
+    if @delta_unverified_user_source_ids.present?
+      canonical_users =
+        canonical_users.reject do |source_id, _|
+          @delta_unverified_user_source_ids.include?(source_id)
+        end
+    end
+    @delta_update_mappings = @delta_base_mappings.merge(users: canonical_users)
+  end
+
+  def plain_import_mappings(name)
+    DB.query(<<~SQL).to_h { |row| [Integer(row.value, 10), row.discourse_id.to_i] }
+      SELECT value, #{name}_id AS discourse_id
+        FROM #{name}_custom_fields
+       WHERE name = 'import_id'
+         AND value ~ '^[0-9]+$'
+    SQL
+  end
+
+  def plain_mapped_core_record_exists?
+    %w[group user category topic post].any? { |name| DB.query_single(<<~SQL).present? }
+        SELECT 1
+          FROM #{name}_custom_fields mapping
+               JOIN #{name.pluralize} record ON record.id = mapping.#{name}_id
+         WHERE mapping.name = 'import_id'
+           AND mapping.value ~ '^[0-9]+$'
+         LIMIT 1
+      SQL
+  end
+
+  def canonical_user_import_mappings
+    rows = DB.query(<<~SQL)
+      SELECT value, user_id AS discourse_id, created_at, id
+        FROM user_custom_fields
+       WHERE name = 'import_id'
+         AND value ~ '^[0-9]+$'
+       ORDER BY user_id, created_at, id
+    SQL
+    rows
+      .group_by(&:discourse_id)
+      .values
+      .to_h do |mapping_rows|
+        row = mapping_rows.first
+        [Integer(row.value, 10), row.discourse_id.to_i]
+      end
+  end
+
+  def delta_update_mapping(name)
+    @delta_update_mappings.fetch(name)
+  end
+
+  def preflight_users(mappings, errors)
+    @delta_preexisting_user_source_ids ||= Set.new
+    @delta_unverified_user_source_ids ||= Set.new
+    @delta_username_conflict_source_ids ||= Set.new
+    return if mappings.empty?
+
+    created_at_by_user_id = User.unscoped.pluck(:id, :created_at).to_h
+    email_owners = UserEmail.pluck(Arel.sql("LOWER(email)"), :user_id).to_h
+    username_owners = User.unscoped.pluck(:username_lower, :id).to_h
+    username_lower_by_id = User.unscoped.pluck(:id, :username_lower).to_h
+    seen_emails = {}
+    seen_usernames = {}
+
+    rows = query("SELECT * FROM users ORDER BY id")
+    rows.each do |row|
+      discourse_id = mappings[row["id"].to_i]
+      next unless discourse_id
+
+      created_at = created_at_by_user_id[discourse_id]
+      unless created_at
+        errors << "user #{row["id"]} maps to missing Discourse user #{discourse_id}"
+        next
+      end
+
+      if immutable_time_changed?(row["created_at"], created_at)
+        if row["email"].blank?
+          # without an email the delta cannot re-verify the mapping, so the
+          # account is left untouched instead of failing the run
+          @delta_unverified_user_source_ids << row["id"].to_i
+          next
+        elsif email_owners[row["email"].downcase] == discourse_id
+          # the base import merged this source user by email into an account
+          # that predates it; the email match proves the mapping, so only the
+          # creation-date check is waived and the account stays updatable
+          @delta_preexisting_user_source_ids << row["id"].to_i
+        else
+          errors << "user #{row["id"]} changes immutable created_at"
+        end
+      end
+
+      if row["email"].present?
+        email = row["email"].downcase
+        owner_id = email_owners[email]
+        if owner_id && owner_id != discourse_id
+          errors << "user #{row["id"]} email belongs to Discourse user #{owner_id}"
+        end
+
+        if (previous_source_id = seen_emails[email])
+          errors << "user #{row["id"]} duplicates email of source user #{previous_source_id}"
+        else
+          seen_emails[email] = row["id"]
+        end
+      end
+
+      if row["username"].present? &&
+           !delta_username_unchanged?(row, discourse_id, username_lower_by_id[discourse_id]) &&
+           (username = fix_name(row["username"])).present?
+        normalized_username = User.normalize_username(username)
+        owner_id = username_owners[normalized_username]
+        if owner_id && owner_id != discourse_id
+          # a taken username skips only the rename; failing the run would
+          # block deltas on conflicts the source cannot resolve
+          @delta_username_conflict_source_ids << row["id"].to_i
+        elsif (previous_source_id = seen_usernames[normalized_username])
+          errors << "user #{row["id"]} duplicates username of source user #{previous_source_id}"
+        else
+          seen_usernames[normalized_username] = row["id"]
+        end
+      end
+    end
+  ensure
+    rows&.close
+  end
+
+  def report_delta_user_audit(set, description)
+    return if set.blank?
+
+    shown_ids = set.sort.first(20)
+    hidden_count = set.size - shown_ids.size
+    suffix = hidden_count > 0 ? " +#{hidden_count} more" : ""
+    puts "Preflight: #{set.size} #{description} (source IDs: #{shown_ids.join(", ")}#{suffix})"
+  end
+
+  def imported_usernames_by_user_id
+    @imported_usernames_by_user_id ||=
+      UserCustomField.where(name: "import_username").pluck(:user_id, :value).to_h
+  end
+
+  # true when the source still carries the username the base import saw; the
+  # destination may hold a deduplicated variant of it that must be kept
+  def delta_username_unchanged?(row, discourse_id, destination_username_lower)
+    source_username = row["original_username"].presence || row["username"]
+    if User.normalize_username(imported_usernames_by_user_id[discourse_id]) ==
+         User.normalize_username(source_username)
+      return true
+    end
+    return false if destination_username_lower.blank?
+
+    # the destination still carries the source username verbatim: the base
+    # import kept it, so a stricter sanitizer must not rename it now
+    return true if User.normalize_username(source_username) == destination_username_lower
+
+    # suffix-deduplicated names are recorded nowhere when fix_name left the
+    # name itself unchanged, so recognize the suffix pattern directly
+    fixed = fix_name(row["username"])
+    return false if fixed.blank?
+
+    normalized = User.normalize_username(fixed)
+    destination_username_lower.match?(/\A#{Regexp.escape(normalized)}_\d+\z/)
+  end
+
+  def preflight_groups(mappings, errors)
+    return if mappings.empty?
+
+    seen_names = {}
+    rows = query("SELECT id, name, existing_id FROM groups ORDER BY id")
+    rows.each do |row|
+      next unless mappings.key?(row["id"].to_i)
+      next if row["existing_id"].present?
+      next if (name = fix_name(row["name"])).blank?
+
+      name_lower = User.normalize_username(name)
+      if (previous_source_id = seen_names[name_lower])
+        errors << "group #{row["id"]} duplicates name of source group #{previous_source_id}"
+      else
+        seen_names[name_lower] = row["id"]
+      end
+    end
+  ensure
+    rows&.close
+  end
+
+  def preflight_categories(mappings, errors)
+    return if mappings[:categories].empty?
+
+    seen_names = {}
+    rows = query("SELECT id, parent_category_id, name, existing_id FROM categories ORDER BY id")
+    rows.each do |row|
+      next unless mappings[:categories].key?(row["id"].to_i)
+      next if row["existing_id"].present?
+      next if row["name"].blank?
+
+      if row["parent_category_id"].present?
+        parent_id = mappings[:categories][row["parent_category_id"].to_i]
+        # parents new in this delta cannot collide with updated names yet
+        next unless parent_id
+      end
+
+      key = [parent_id, row["name"][0...50].scrub.strip]
+      if (previous_source_id = seen_names[key])
+        errors << "category #{row["id"]} duplicates name of source category #{previous_source_id}"
+      else
+        seen_names[key] = row["id"]
+      end
+    end
+  ensure
+    rows&.close
+  end
+
+  def preflight_topics(mappings, errors)
+    return if mappings[:topics].empty?
+
+    topics_by_id =
+      Topic
+        .unscoped
+        .pluck(:id, :created_at, :archetype)
+        .to_h { |id, created_at, archetype| [id, { created_at: created_at, archetype: archetype }] }
+    topic_columns = table_column_names("topics")
+    rows = query("SELECT * FROM topics ORDER BY id")
+    rows.each do |row|
+      discourse_id = mappings[:topics][row["id"].to_i]
+      next unless discourse_id
+
+      topic = topics_by_id[discourse_id]
+      unless topic
+        errors << "topic #{row["id"]} maps to missing Discourse topic #{discourse_id}"
+        next
+      end
+
+      if immutable_time_changed?(row["created_at"], topic[:created_at])
+        errors << "topic #{row["id"]} changes immutable created_at"
+      end
+
+      source_archetype =
+        if topic_columns.include?("archetype")
+          row["archetype"]
+        elsif topic_columns.include?("private_message")
+          row["private_message"].present? ? Archetype.private_message : Archetype.default
+        end
+      if source_archetype.present? && source_archetype != topic[:archetype]
+        errors << "topic #{row["id"]} changes immutable archetype"
+      end
+    end
+  ensure
+    rows&.close
+  end
+
+  def preflight_posts(mappings, errors)
+    return if mappings[:posts].empty?
+
+    posts_by_id =
+      Post
+        .unscoped
+        .pluck(:id, :created_at, :topic_id, :post_number, :reply_to_post_number)
+        .to_h do |id, created_at, topic_id, post_number, reply_to_post_number|
+          [
+            id,
+            {
+              created_at: created_at,
+              topic_id: topic_id,
+              post_number: post_number,
+              reply_to_post_number: reply_to_post_number,
+            },
+          ]
+        end
+    rows = query("SELECT * FROM posts ORDER BY id")
+    rows.each do |row|
+      discourse_id = mappings[:posts][row["id"].to_i]
+      next unless discourse_id
+
+      post = posts_by_id[discourse_id]
+      unless post
+        errors << "post #{row["id"]} maps to missing Discourse post #{discourse_id}"
+        next
+      end
+
+      if immutable_time_changed?(row["created_at"], post[:created_at])
+        errors << "post #{row["id"]} changes immutable created_at"
+      end
+
+      mapped_topic_id = mappings[:topics][row["topic_id"].to_i]
+      errors << "post #{row["id"]} changes immutable topic" if mapped_topic_id != post[:topic_id]
+
+      if row["post_number"].present? && row["post_number"].to_i != post[:post_number]
+        errors << "post #{row["id"]} changes immutable post number"
+      end
+
+      next if row["reply_to_post_id"].blank?
+
+      parent_id = mappings[:posts][row["reply_to_post_id"].to_i]
+      parent_number = posts_by_id.dig(parent_id, :post_number)
+      parent_number = nil if parent_number == 1
+      if parent_number != post[:reply_to_post_number]
+        errors << "post #{row["id"]} changes immutable reply parent"
+      end
+    end
+  ensure
+    rows&.close
+  end
+
+  def immutable_time_changed?(source_value, destination_value)
+    source_value.present? &&
+      to_datetime(source_value).to_time.to_i != destination_value.to_time.to_i
   end
 
   def start
@@ -155,6 +600,7 @@ class BulkImport::Generic < BulkImport::Base
 
   def execute_after
     import_category_about_topics
+    report_delta_stats if delta_import?
 
     @source_db.close
     @uploads_db.close if @uploads_db
@@ -175,6 +621,144 @@ class BulkImport::Generic < BulkImport::Base
     Site.clear_cache
 
     puts "  Refreshed directory items in #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def start_delta_entity(entity, table, mapping, last_destination_id)
+    return unless delta_import?
+
+    source_ids = query("SELECT id FROM #{table}") { |rows| rows.map { |row| row["id"].to_i } }
+    base_mapping = @delta_base_mappings.fetch(mapping)
+    @delta_stats ||= {}
+    @delta_stats[entity] = {
+      mapped: source_ids.count { |source_id| base_mapping.key?(source_id) },
+      unmapped_ids: source_ids.reject { |source_id| base_mapping.key?(source_id) },
+      last_destination_id: last_destination_id,
+      updated_ids: Set.new,
+    }
+  end
+
+  def finish_delta_entity(entity, mapping)
+    return unless delta_import?
+
+    stats = @delta_stats.fetch(entity)
+    destination_mapping = instance_variable_get("@#{mapping}")
+    stats[:deduplicated_ids] = stats[:unmapped_ids]
+      .select do |source_id|
+        destination_id = destination_mapping[source_id]
+        destination_id && destination_id <= stats[:last_destination_id]
+      end
+      .to_set
+    stats[:deduplicated] = stats[:deduplicated_ids].size
+    stats[:new] = stats[:unmapped_ids].count do |source_id|
+      destination_id = destination_mapping[source_id]
+      destination_id && destination_id > stats[:last_destination_id]
+    end
+    stats[:updated] = stats[:updated_ids].size
+    stats[:unchanged] = stats[:mapped] - stats[:updated]
+  end
+
+  def delta_deduplicated_source_id?(entity, source_id)
+    return false unless delta_import?
+
+    source_id = source_id.to_i
+    return true if @delta_stats.dig(entity, :deduplicated_ids)&.include?(source_id)
+
+    entity == :users && @delta_base_mappings[:users].key?(source_id) &&
+      !delta_update_mapping(:users).key?(source_id)
+  end
+
+  def record_delta_updates(entity, result)
+    return unless delta_import?
+
+    @delta_stats.fetch(entity)[:updated_ids].merge(result[:updated_keys].map(&:to_i))
+  end
+
+  def update_records(rows, name, columns, keys: [:id])
+    result = super
+    track_delta_column_changes(name, result) if delta_import?
+    result
+  end
+
+  def track_delta_column_changes(name, result)
+    @delta_column_changes ||=
+      Hash.new { |hash, key| hash[key] = { total: 0, columns: Hash.new(0) } }
+    entry = @delta_column_changes[name.to_s.pluralize]
+    entry[:total] += result[:total]
+    result[:changed_counts].each { |column, count| entry[:columns][column] += count }
+  end
+
+  def report_delta_stats
+    puts "", "Delta import summary:"
+    @delta_stats.each do |entity, stats|
+      stats[:updated] = stats[:updated_ids].size
+      stats[:unchanged] = stats[:mapped] - stats[:updated]
+      puts "  #{entity}: mapped=#{stats[:mapped]}, new=#{stats[:new]}, " \
+             "unchanged=#{stats[:unchanged]}, updated=#{stats[:updated]}, " \
+             "deduplicated=#{stats[:deduplicated]}"
+    end
+
+    report_delta_column_changes
+  end
+
+  def report_delta_column_changes
+    return if @delta_column_changes.blank?
+
+    printed_header = false
+    @delta_column_changes.sort.each do |table, entry|
+      columns = entry[:columns].select { |_, count| count > 0 }.sort_by { |_, count| -count }
+      next if columns.empty?
+
+      unless printed_header
+        puts "", "Delta column updates:"
+        printed_header = true
+      end
+      puts "  #{table} (#{entry[:total]} candidate rows):"
+      columns.each do |column, count|
+        share = entry[:total] > 0 ? (count * 100.0 / entry[:total]).round : 0
+        flag =
+          if count >= 100 && share >= 50
+            "  <-- #{share}% of rows; verify the source really changed " \
+              "(an export-side default may have changed)"
+          else
+            ""
+          end
+        puts "    #{column}: #{count}#{flag}"
+      end
+    end
+  end
+
+  def upsert_delta_custom_fields(entity, mapping_name, anonymized_filter: false)
+    foreign_key = "#{entity}_id"
+    source_table = "#{entity}_custom_fields"
+    sql = "SELECT fields.* FROM #{source_table} fields"
+    if anonymized_filter
+      sql += " JOIN users source_users ON source_users.id = fields.user_id"
+      sql += " WHERE source_users.anonymized IS NOT TRUE"
+    end
+
+    rows = query(sql)
+    updates_by_key = {}
+    rows.each do |row|
+      next if row["value"].nil?
+
+      discourse_id = delta_update_mapping(mapping_name)[row[foreign_key].to_i]
+      next unless discourse_id
+
+      update = { foreign_key.to_sym => discourse_id, :name => row["name"], :value => row["value"] }
+      updates_by_key[[discourse_id, row["name"]]] = update
+    end
+    result =
+      update_records(
+        updates_by_key.values,
+        "#{entity}_custom_field",
+        [:value],
+        keys: [foreign_key.to_sym, :name],
+      )
+    @delta_stats[mapping_name][:updated_ids].merge(
+      result[:updated_keys].map { |key| key.first.to_i },
+    )
+  ensure
+    rows&.close
   end
 
   def enable_required_plugins
@@ -249,6 +833,9 @@ class BulkImport::Generic < BulkImport::Base
   def import_categories
     puts "", "Importing categories..."
 
+    start_delta_entity(:categories, "categories", :categories, @last_category_id)
+    update_delta_categories if delta_import?
+
     categories = query(<<~SQL)
         WITH
           RECURSIVE
@@ -306,6 +893,92 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     categories.close
+    update_delta_category_parents if delta_import?
+    finish_delta_entity(:categories, :categories)
+  end
+
+  # second pass: parents that were only created by this delta are resolvable
+  # after create_categories has run
+  def update_delta_category_parents
+    rows = query(<<~SQL)
+      SELECT id, parent_category_id, existing_id
+        FROM categories
+       WHERE parent_category_id IS NOT NULL
+       ORDER BY id
+    SQL
+    updates =
+      rows.filter_map do |row|
+        discourse_id = delta_update_mapping(:categories)[row["id"].to_i]
+        next unless discourse_id
+        next if row["existing_id"].present?
+
+        parent_id = category_id_from_imported_id(row["parent_category_id"])
+        next unless parent_id
+
+        { id: discourse_id, parent_category_id: parent_id }
+      end
+    result = update_records(updates, "category", [:parent_category_id])
+    record_delta_updates(:categories, result)
+  ensure
+    rows&.close
+  end
+
+  def update_delta_categories
+    columns = %i[
+      name
+      name_lower
+      slug
+      user_id
+      description
+      position
+      parent_category_id
+      uploaded_logo_id
+      show_subcategory_list
+      subcategory_list_style
+      minimum_required_tags
+      color
+      text_color
+    ]
+    source_columns = table_column_names("categories")
+    rows = query("SELECT * FROM categories ORDER BY id")
+    updates =
+      rows.filter_map do |row|
+        discourse_id = delta_update_mapping(:categories)[row["id"].to_i]
+        next unless discourse_id
+        next if row["existing_id"].present?
+
+        update = { id: discourse_id }
+        if row["name"].present?
+          update[:name] = row["name"][0...50].scrub.strip
+          update[:name_lower] = update[:name].downcase
+        end
+        update[:slug] = row["slug"] if source_columns.include?("slug")
+        if source_columns.include?("user_id") && row["user_id"].present?
+          update[:user_id] = user_id_from_imported_id(row["user_id"])
+        end
+        update[:description] = row["description"] if source_columns.include?("description")
+        update[:position] = row["position"] if source_columns.include?("position")
+        if row["parent_category_id"].present?
+          update[:parent_category_id] = category_id_from_imported_id(row["parent_category_id"])
+        end
+        if row["logo_upload_id"].present?
+          update[:uploaded_logo_id] = upload_id_from_original_id(row["logo_upload_id"])
+        end
+        %i[
+          show_subcategory_list
+          subcategory_list_style
+          minimum_required_tags
+          color
+          text_color
+        ].each do |column|
+          update[column] = row[column.to_s] if source_columns.include?(column.to_s)
+        end
+        update
+      end
+    result = update_records(updates, "category", columns)
+    record_delta_updates(:categories, result)
+  ensure
+    rows&.close
   end
 
   def import_category_about_topics
@@ -315,16 +988,21 @@ class BulkImport::Generic < BulkImport::Base
     Site.clear_cache
 
     categories = query(<<~SQL)
-      SELECT id, about_topic_title
+      SELECT id, about_topic_title, existing_id
         FROM categories
        WHERE about_topic_title IS NOT NULL
        ORDER BY id
     SQL
 
     categories.each do |row|
+      next if delta_import? && row["existing_id"].present?
+
       if (about_topic_title = row["about_topic_title"]).present?
         if (category_id = category_id_from_imported_id(row["id"]))
           topic = Category.find(category_id).topic
+          if delta_import? && topic.title != about_topic_title
+            @delta_stats[:categories][:updated_ids] << category_id
+          end
           topic.title = about_topic_title
           topic.save!(validate: false)
         end
@@ -338,6 +1016,8 @@ class BulkImport::Generic < BulkImport::Base
 
   def import_category_custom_fields
     puts "", "Importing category custom fields..."
+
+    upsert_delta_custom_fields(:category, :categories) if delta_import?
 
     category_custom_fields = query(<<~SQL)
       SELECT *
@@ -401,9 +1081,41 @@ class BulkImport::Generic < BulkImport::Base
 
     existing_category_group_ids = CategoryGroup.pluck(:category_id, :group_id).to_set
 
+    if delta_import?
+      permission_updates =
+        permissions.filter_map do |row|
+          category_id = category_id_from_imported_id(row["category_id"])
+          # JSON `->` yields TEXT in SQLite; keep IDs comparable with pluck results
+          group_id = row["existing_group_id"]&.to_i || group_id_from_imported_id(row["group_id"])
+          next unless category_id && group_id && !row["permission_type"].nil?
+          next if existing_category_group_ids.exclude?([category_id, group_id])
+
+          { category_id: category_id, group_id: group_id, permission_type: row["permission_type"] }
+        end
+      result =
+        update_records(
+          permission_updates,
+          "category_group",
+          [:permission_type],
+          keys: %i[category_id group_id],
+        )
+      @delta_stats[:categories][:updated_ids].merge(
+        result[:updated_keys].map { |key| key.first.to_i },
+      )
+      permissions.close
+      permissions = query(<<~SQL)
+        SELECT c.id AS category_id,
+              p.value -> 'group_id' AS group_id,
+              p.value -> 'existing_group_id' AS existing_group_id,
+              p.value -> 'permission_type' AS permission_type
+        FROM categories c,
+            JSON_EACH(c.permissions) p
+      SQL
+    end
+
     create_category_groups(permissions) do |row|
       category_id = category_id_from_imported_id(row["category_id"])
-      group_id = row["existing_group_id"] || group_id_from_imported_id(row["group_id"])
+      group_id = row["existing_group_id"]&.to_i || group_id_from_imported_id(row["group_id"])
       next if existing_category_group_ids.include?([category_id, group_id])
 
       { category_id: category_id, group_id: group_id, permission_type: row["permission_type"] }
@@ -506,6 +1218,9 @@ class BulkImport::Generic < BulkImport::Base
   def import_groups
     puts "", "Importing groups..."
 
+    start_delta_entity(:groups, "groups", :groups, @last_group_id)
+    update_delta_groups if delta_import?
+
     groups = query(<<~SQL)
       SELECT *
       FROM groups
@@ -532,6 +1247,58 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     groups.close
+    finish_delta_entity(:groups, :groups)
+  end
+
+  def update_delta_groups
+    columns = %i[
+      name
+      full_name
+      title
+      bio_raw
+      bio_cooked
+      public_admission
+      public_exit
+      allow_membership_requests
+      visibility_level
+      members_visibility_level
+      mentionable_level
+      messageable_level
+    ]
+    columns << :assignable_level if GROUP_COLUMNS.include?(:assignable_level)
+    rows = query("SELECT * FROM groups ORDER BY id")
+    updates =
+      rows.filter_map do |row|
+        discourse_id = delta_update_mapping(:groups)[row["id"].to_i]
+        next unless discourse_id
+        next if row["existing_id"].present?
+
+        update = { id: discourse_id }
+        columns.each { |column| update[column] = row[column.to_s] }
+        if update[:name].present?
+          fixed_name = fix_name(update[:name])
+          if fixed_name.present?
+            update[:name] = fixed_name
+          else
+            update.delete(:name)
+            log_import_issue(
+              "group name sanitized to blank, name kept",
+              "group #{row["id"]} #{row["name"].inspect}",
+            )
+          end
+        end
+        update[:bio_raw] = row["description"] unless row["description"].nil?
+        update[:bio_cooked] = pre_cook(update[:bio_raw]) unless update[:bio_raw].nil?
+        update
+      end
+    result = update_records(updates, "group", columns)
+    record_delta_updates(:groups, result)
+    Group
+      .where(id: updates.map { |update| update[:id] })
+      .pluck(:name)
+      .each { |name| @group_names_lower << User.normalize_username(name) }
+  ensure
+    rows&.close
   end
 
   def import_group_members
@@ -544,6 +1311,21 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     existing_group_user_ids = GroupUser.pluck(:group_id, :user_id).to_set
+
+    if delta_import?
+      ownership_updates =
+        group_members.filter_map do |row|
+          group_id = group_id_from_imported_id(row["group_id"])
+          user_id = user_id_from_imported_id(row["user_id"])
+          next unless group_id && user_id && !row["owner"].nil?
+          next if existing_group_user_ids.exclude?([group_id, user_id])
+
+          { group_id: group_id, user_id: user_id, owner: row["owner"] }
+        end
+      update_records(ownership_updates, "group_user", [:owner], keys: %i[group_id user_id])
+      group_members.close
+      group_members = query("SELECT * FROM group_members ORDER BY ROWID")
+    end
 
     create_group_users(group_members) do |row|
       group_id = group_id_from_imported_id(row["group_id"])
@@ -561,6 +1343,9 @@ class BulkImport::Generic < BulkImport::Base
 
   def import_users
     puts "", "Importing users..."
+
+    start_delta_entity(:users, "users", :users, @last_user_id)
+    update_delta_users if delta_import?
 
     users = query(<<~SQL)
       SELECT *
@@ -620,6 +1405,107 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     users.close
+    finish_delta_entity(:users, :users)
+  end
+
+  def update_delta_users
+    destination_users = User.unscoped.where(id: delta_update_mapping(:users).values).index_by(&:id)
+    columns = %i[
+      username
+      username_lower
+      name
+      locale
+      title
+      staged
+      admin
+      moderator
+      trust_level
+      manual_locked_trust_level
+      primary_group_id
+      suspended_at
+      suspended_till
+      last_seen_at
+    ]
+    rows = query("SELECT * FROM users ORDER BY id")
+    updates = []
+    email_updates = []
+    primary_emails =
+      UserEmail.where(user_id: delta_update_mapping(:users).values, primary: true).index_by(
+        &:user_id
+      )
+
+    rows.each do |row|
+      discourse_id = delta_update_mapping(:users)[row["id"].to_i]
+      next unless discourse_id
+      next if row["anonymized"] == 1
+
+      destination_user = destination_users[discourse_id]
+      update = { id: discourse_id }
+      if row["username"].present? &&
+           !@delta_username_conflict_source_ids.include?(row["id"].to_i) &&
+           !delta_username_unchanged?(row, discourse_id, destination_user&.username_lower) &&
+           (username = fix_name(row["username"])).present?
+        update[:username] = username
+        update[:username_lower] = User.normalize_username(username)
+      end
+      %i[
+        name
+        locale
+        title
+        staged
+        admin
+        moderator
+        trust_level
+        manual_locked_trust_level
+      ].each { |column| update[column] = row[column.to_s] }
+      if row["primary_group_id"].present?
+        update[:primary_group_id] = group_id_from_imported_id(row["primary_group_id"])
+      end
+      if row["last_seen_at"].present?
+        source_last_seen_at = to_datetime(row["last_seen_at"])
+        update[:last_seen_at] = [destination_user&.last_seen_at, source_last_seen_at].compact.max
+      end
+
+      if row["suspension"].present?
+        suspension = JSON.parse(row["suspension"])
+        source_start = to_datetime(suspension["suspended_at"])
+        source_end = to_datetime(suspension["suspended_till"])
+        update[:suspended_at] = destination_user&.suspended_at || source_start || Time.zone.now
+        update[:suspended_till] = [destination_user&.suspended_till, source_end].compact.max ||
+          200.years.from_now
+      end
+      updates << update
+
+      if row["email"].present? && (primary_email = primary_emails[discourse_id])
+        email = row["email"].downcase
+        if EmailAddressValidator.valid_value?(email)
+          email_updates << { id: primary_email.id, user_id: discourse_id, email: email }
+        else
+          log_import_issue("invalid email update skipped", "user #{row["id"]}")
+        end
+      end
+    end
+
+    result = update_records(updates, "user", columns)
+    record_delta_updates(:users, result)
+    updated_user_ids_by_email_id = email_updates.to_h { |update| [update[:id], update[:user_id]] }
+    email_result = update_records(email_updates, "user_email", [:email])
+    @delta_stats[:users][:updated_ids].merge(
+      email_result[:updated_keys].filter_map { |id| updated_user_ids_by_email_id[id.to_i] },
+    )
+
+    User
+      .unscoped
+      .where(id: updates.map { |update| update[:id] })
+      .find_each do |user|
+        @usernames_lower << user.username_lower
+        @user_ids_by_username_lower[user.username_lower] = user.id
+        @usernames_by_id[user.id] = user.username
+        @user_full_names_by_id[user.id] = user.name if user.name.present?
+      end
+    @emails = UserEmail.pluck(:email, :user_id).to_h
+  ensure
+    rows&.close
   end
 
   def import_user_emails
@@ -635,6 +1521,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_emails(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
+      next if delta_deduplicated_source_id?(:users, row["id"])
       next unless user_id && existing_user_ids.add?(user_id)
 
       if row["anonymized"] == 1
@@ -651,6 +1538,8 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_profiles
     puts "", "Importing user profiles..."
 
+    update_delta_user_profiles if delta_import?
+
     users = query(<<~SQL)
       SELECT id, bio, location, website, anonymized
       FROM users
@@ -661,6 +1550,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_profiles(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
+      next if delta_deduplicated_source_id?(:users, row["id"])
       next unless user_id && existing_user_ids.add?(user_id)
 
       if row["anonymized"] == 1
@@ -675,8 +1565,39 @@ class BulkImport::Generic < BulkImport::Base
     users.close
   end
 
+  def update_delta_user_profiles
+    rows = query("SELECT id, bio, location, website, anonymized FROM users ORDER BY id")
+    updates =
+      rows.filter_map do |row|
+        user_id = delta_update_mapping(:users)[row["id"].to_i]
+        next unless user_id
+        next if row["anonymized"] == 1
+
+        update = {
+          user_id: user_id,
+          location: row["location"],
+          website: row["website"],
+          bio_raw: row["bio"],
+        }
+        update[:bio_cooked] = pre_cook(row["bio"].scrub.strip) unless row["bio"].nil?
+        update
+      end
+    result =
+      update_records(
+        updates,
+        "user_profile",
+        %i[location website bio_raw bio_cooked],
+        keys: [:user_id],
+      )
+    @delta_stats[:users][:updated_ids].merge(result[:updated_keys].map(&:to_i))
+  ensure
+    rows&.close
+  end
+
   def import_user_options
     puts "", "Importing user options..."
+
+    update_delta_user_options if delta_import?
 
     users_columns = table_column_names("users")
     hide_profile_columns = %w[hide_profile_and_presence hide_profile hide_presence]
@@ -704,6 +1625,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_options(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
+      next if delta_deduplicated_source_id?(:users, row["id"])
       next unless user_id && existing_user_ids.add?(user_id)
 
       if row["anonymized"] == 1
@@ -731,6 +1653,36 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     users.close
+  end
+
+  def update_delta_user_options
+    source_columns = table_column_names("users")
+    columns = USER_OPTION_COLUMNS.reject { |column| column == :user_id }
+    columns.select! { |column| source_columns.include?(column.to_s) }
+    return if columns.empty?
+
+    # the combined flag is mirrored into the split columns below, even when the
+    # source schema predates the split
+    columns |= %i[hide_profile hide_presence] if columns.include?(:hide_profile_and_presence)
+
+    rows = query("SELECT * FROM users ORDER BY id")
+    updates =
+      rows.filter_map do |row|
+        user_id = delta_update_mapping(:users)[row["id"].to_i]
+        next unless user_id
+        next if row["anonymized"] == 1
+
+        update = { user_id: user_id }
+        columns.each { |column| update[column] = row[column.to_s] }
+        if !update[:hide_profile_and_presence].nil?
+          update[:hide_profile] = update[:hide_presence] = update[:hide_profile_and_presence]
+        end
+        update
+      end
+    result = update_records(updates, "user_option", columns, keys: [:user_id])
+    @delta_stats[:users][:updated_ids].merge(result[:updated_keys].map(&:to_i))
+  ensure
+    rows&.close
   end
 
   def import_user_fields
@@ -778,6 +1730,8 @@ class BulkImport::Generic < BulkImport::Base
 
     user_fields.close
 
+    update_delta_user_field_values(field_id_mapping) if delta_import?
+
     values = query(<<~SQL)
       SELECT v.*
         FROM user_field_values v
@@ -797,6 +1751,31 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     values.close
+  end
+
+  def update_delta_user_field_values(field_id_mapping)
+    rows = query(<<~SQL)
+      SELECT v.*
+        FROM user_field_values v
+             JOIN users u ON v.user_id = u.id
+       WHERE u.anonymized IS NOT TRUE
+    SQL
+    updates_by_key = {}
+    rows.each do |row|
+      next if row["value"].nil?
+
+      user_id = delta_update_mapping(:users)[row["user_id"].to_i]
+      field_name = field_id_mapping[row["field_id"]]
+      next unless user_id && field_name
+
+      update = { user_id: user_id, name: field_name, value: row["value"] }
+      updates_by_key[[user_id, field_name]] = update
+    end
+    result =
+      update_records(updates_by_key.values, "user_custom_field", [:value], keys: %i[user_id name])
+    @delta_stats[:users][:updated_ids].merge(result[:updated_keys].map { |key| key.first.to_i })
+  ensure
+    rows&.close
   end
 
   def import_single_sign_on_records
@@ -859,6 +1838,9 @@ class BulkImport::Generic < BulkImport::Base
   def import_topics
     puts "", "Importing topics..."
 
+    start_delta_entity(:topics, "topics", :topics, @last_topic_id)
+    update_delta_topics if delta_import?
+
     topics = query(<<~SQL)
       SELECT *
       FROM topics
@@ -896,10 +1878,81 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     topics.close
+    finish_delta_entity(:topics, :topics)
+  end
+
+  def update_delta_topics
+    source_columns = table_column_names("topics")
+    columns = %i[
+      title
+      fancy_title
+      slug
+      user_id
+      category_id
+      closed
+      archived
+      pinned_at
+      pinned_until
+      pinned_globally
+      subtype
+    ]
+    rows = query("SELECT * FROM topics ORDER BY id")
+    updates =
+      rows.filter_map do |row|
+        discourse_id = delta_update_mapping(:topics)[row["id"].to_i]
+        next unless discourse_id
+
+        update = { id: discourse_id }
+        if row["title"].present?
+          update[:title] = row["title"][0...255].scrub.strip
+          update[:fancy_title] = (
+            if source_columns.include?("fancy_title") && row["fancy_title"].present?
+              row["fancy_title"]
+            else
+              pre_fancy(update[:title])
+            end
+          )
+          update[:slug] = (
+            if source_columns.include?("slug") && row["slug"].present?
+              row["slug"]
+            else
+              Slug.for(update[:title])
+            end
+          )
+        end
+        update[:user_id] = user_id_from_imported_id(row["user_id"]) if row["user_id"].present?
+        if row["category_id"].present?
+          update[:category_id] = category_id_from_imported_id(row["category_id"])
+        end
+        %i[closed archived pinned_globally].each do |column|
+          if source_columns.include?(column.to_s)
+            update[column] = to_nullable_boolean(row[column.to_s])
+          end
+        end
+        update[:subtype] = row["subtype"] if source_columns.include?("subtype")
+        %i[pinned_at pinned_until].each do |column|
+          if source_columns.include?(column.to_s) && row[column.to_s].present?
+            update[column] = to_datetime(row[column.to_s])
+          end
+        end
+        update
+      end
+    result = update_records(updates, "topic", columns)
+    record_delta_updates(:topics, result)
+
+    # direct SQL updates bypass the model callbacks that keep search in sync
+    Topic
+      .unscoped
+      .where(id: result[:updated_keys])
+      .find_each { |topic| SearchIndexer.index(topic, force: true) }
+  ensure
+    rows&.close
   end
 
   def import_topic_custom_fields
     puts "", "Importing topic custom fields..."
+
+    upsert_delta_custom_fields(:topic, :topics) if delta_import?
 
     topic_custom_fields = query(<<~SQL)
       SELECT *
@@ -993,6 +2046,9 @@ class BulkImport::Generic < BulkImport::Base
   def import_posts
     puts "", "Importing posts..."
 
+    start_delta_entity(:posts, "posts", :posts, @last_post_id)
+    update_delta_posts if delta_import?
+
     posts = query(<<~SQL)
       SELECT *
       FROM posts
@@ -1023,6 +2079,61 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     posts.close
+    finish_delta_entity(:posts, :posts)
+  end
+
+  def update_delta_posts
+    rows = query("SELECT * FROM posts ORDER BY id")
+    updates =
+      rows.lazy.filter_map do |row|
+        discourse_id = delta_update_mapping(:posts)[row["id"].to_i]
+        next unless discourse_id
+
+        update = { id: discourse_id }
+        if row["user_id"].present?
+          update[:user_id] = user_id_from_imported_id(row["user_id"])
+          update[:last_editor_id] = update[:user_id]
+        end
+        unless row["raw"].nil?
+          raw = raw_with_placeholders_interpolated(row["raw"], row)
+          if (raw = prepare_delta_post_raw(raw, original_id: row["id"]))
+            update[:raw] = raw
+            update[:word_count] = raw.scan(/[[:word:]]+/).size
+          end
+        end
+        update
+      end
+    result = update_records(updates, "post", %i[user_id last_editor_id raw word_count])
+    record_delta_updates(:posts, result)
+
+    # cooked content is regenerated by the post-delta rebake; clearing the
+    # marker scopes that rebake to the posts this delta touched
+    result[:updated_keys].each_slice(10_000) do |ids|
+      DB.exec("UPDATE posts SET baked_version = NULL WHERE id IN (#{ids.join(",")})")
+    end
+  ensure
+    rows&.close
+  end
+
+  def prepare_delta_post_raw(raw, original_id:)
+    raw = raw.scrub.strip.presence || "<Empty imported post>"
+    raw = process_raw(raw)
+    if @bbcode_to_md
+      raw =
+        begin
+          raw.bbcode_to_md(false, {}, :disable, :quote)
+        rescue StandardError
+          raw
+        end
+    end
+    raw = normalize_text(raw)
+
+    if raw.bytes.include?(0)
+      log_import_issue("raw update skipped (raw contains null bytes)", "post #{original_id}")
+      return nil
+    end
+
+    raw
   end
 
   def group_id_name_map
@@ -1061,7 +2172,12 @@ class BulkImport::Generic < BulkImport::Base
       mentions.each do |mention|
         name = resolve_mentioned_name(mention)
 
-        puts "#{mention["type"]} not found -- #{mention["placeholder"]}" unless name
+        unless name
+          log_import_issue(
+            "unresolved #{mention["type"]} mention",
+            "#{mention["placeholder"]} (content #{row["id"]})",
+          )
+        end
         raw.gsub!(mention["placeholder"], " @#{name} ")
       end
     end
@@ -1249,15 +2365,15 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def event_bbcode(event)
-    return unless defined?(DiscoursePostEvent)
+    return unless defined?(DiscourseEvents::Events)
 
     starts_at = to_datetime(event["starts_at"])
     ends_at = to_datetime(event["ends_at"])
-    status = DiscoursePostEvent::Event.statuses[event["status"]].to_s
+    status = DiscourseEvents::Events::Event.statuses[event["status"]].to_s
     name =
       if (name = event["name"].presence)
-        name.ljust(DiscoursePostEvent::Event::MIN_NAME_LENGTH, ".").truncate(
-          DiscoursePostEvent::Event::MAX_NAME_LENGTH,
+        name.ljust(DiscourseEvents::Events::Event::MIN_NAME_LENGTH, ".").truncate(
+          DiscourseEvents::Events::Event::MAX_NAME_LENGTH,
         )
       end
     url = event["url"]
@@ -1278,6 +2394,8 @@ class BulkImport::Generic < BulkImport::Base
 
   def import_post_custom_fields
     puts "", "Importing post custom fields..."
+
+    upsert_delta_custom_fields(:post, :posts) if delta_import?
 
     post_custom_fields = query(<<~SQL)
       SELECT *
@@ -1987,6 +3105,8 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_custom_fields
     puts "", "Importing user custom fields..."
 
+    upsert_delta_custom_fields(:user, :users, anonymized_filter: true) if delta_import?
+
     rows = query(<<~SQL)
       SELECT ucf.user_id, ucf.name, ucf.value, ucf.created_at
         FROM user_custom_fields ucf
@@ -2112,16 +3232,16 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY oi.rowid, x.value -> 'id'
     SQL
 
-    DB.exec(<<~SQL)
-      DELETE
-        FROM optimized_images oi
-       WHERE EXISTS (
-                      SELECT 1
-                        FROM migration_mappings mm
-                       WHERE mm.type = 1
-                         AND mm.discourse_id::BIGINT = oi.upload_id
-                    )
-    SQL
+    DB.exec(<<~SQL) unless delta_import?
+        DELETE
+          FROM optimized_images oi
+         WHERE EXISTS (
+                        SELECT 1
+                          FROM migration_mappings mm
+                         WHERE mm.type = 1
+                           AND mm.discourse_id::BIGINT = oi.upload_id
+                      )
+      SQL
 
     existing_optimized_images = OptimizedImage.pluck(:upload_id, :height, :width).to_set
 
@@ -2149,6 +3269,8 @@ class BulkImport::Generic < BulkImport::Base
 
     puts "", "Importing user avatars..."
 
+    update_delta_user_avatars if delta_import?
+
     avatars = query(<<~SQL)
       SELECT id, avatar_upload_id
         FROM users
@@ -2162,12 +3284,49 @@ class BulkImport::Generic < BulkImport::Base
     create_user_avatars(avatars) do |row|
       user_id = user_id_from_imported_id(row["id"])
       upload_id = upload_id_from_original_id(row["avatar_upload_id"])
+      next if delta_deduplicated_source_id?(:users, row["id"])
       next if !upload_id || !user_id || existing_user_ids.include?(user_id)
 
       { user_id: user_id, custom_upload_id: upload_id }
     end
 
     avatars.close
+  end
+
+  def update_delta_user_avatars
+    existing_avatars =
+      UserAvatar.where(user_id: delta_update_mapping(:users).values).index_by(&:user_id)
+    rows = query(<<~SQL)
+      SELECT id, avatar_upload_id
+        FROM users
+       WHERE avatar_upload_id IS NOT NULL
+         AND anonymized IS NOT TRUE
+       ORDER BY id
+    SQL
+    updates = []
+    rows.each do |row|
+      user_id = delta_update_mapping(:users)[row["id"].to_i]
+      upload_id = upload_id_from_original_id(row["avatar_upload_id"])
+      avatar = existing_avatars[user_id]
+      next unless user_id && upload_id && avatar
+
+      updates << { id: avatar.id, user_id: user_id, custom_upload_id: upload_id }
+    end
+    result = update_records(updates, "user_avatar", [:custom_upload_id])
+    users_by_avatar_id = updates.to_h { |update| [update[:id], update[:user_id]] }
+    @delta_stats[:users][:updated_ids].merge(
+      result[:updated_keys].filter_map { |id| users_by_avatar_id[id.to_i] },
+    )
+
+    updates.each do |update|
+      UploadReference.ensure_exist!(
+        upload_ids: [update[:custom_upload_id]],
+        target_type: "UserAvatar",
+        target_id: update[:id],
+      )
+    end
+  ensure
+    rows&.close
   end
 
   def import_upload_references
@@ -2249,6 +3408,8 @@ class BulkImport::Generic < BulkImport::Base
 
     puts "", "Importing upload references for #{type}..."
 
+    reconcile_delta_post_upload_references if delta_import? && type == "posts"
+
     content_uploads = query(<<~SQL)
       SELECT t.id AS target_id, u.value AS upload_id
         FROM #{type} t,
@@ -2273,6 +3434,35 @@ class BulkImport::Generic < BulkImport::Base
     content_uploads.close
   end
 
+  def reconcile_delta_post_upload_references
+    rows = query("SELECT id, upload_ids FROM posts WHERE upload_ids IS NOT NULL ORDER BY id")
+    rows.each do |row|
+      post_id = post_id_from_imported_id(row["id"])
+      next unless post_id
+
+      original_upload_ids = JSON.parse(row["upload_ids"])
+      upload_ids =
+        original_upload_ids.filter_map { |original_id| upload_id_from_original_id(original_id) }
+      if upload_ids.size != original_upload_ids.size
+        log_import_issue(
+          "post upload reconciliation skipped (unmapped uploads)",
+          "post #{row["id"]}",
+        )
+        next
+      end
+      existing_ids =
+        UploadReference.where(target_type: "Post", target_id: post_id).pluck(:upload_id).sort
+      next if existing_ids == upload_ids.uniq.sort
+
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target_type: "Post", target_id: post_id)
+      if delta_update_mapping(:posts).key?(row["id"].to_i)
+        @delta_stats[:posts][:updated_ids] << post_id
+      end
+    end
+  ensure
+    rows&.close
+  end
+
   def content_id_from_original_id(type, original_id)
     case type
     when "posts"
@@ -2287,13 +3477,29 @@ class BulkImport::Generic < BulkImport::Base
 
     start_time = Time.now
 
+    if delta_import?
+      avatar_predicate = "u.uploaded_avatar_id IS DISTINCT FROM ua.custom_upload_id"
+      mapping_predicate = <<~SQL.squish
+        AND EXISTS (
+          SELECT 1
+            FROM user_custom_fields mapping
+           WHERE mapping.user_id = u.id
+             AND mapping.name = 'import_id'
+             AND mapping.value ~ '^[0-9]+$'
+        )
+      SQL
+    else
+      avatar_predicate = "u.uploaded_avatar_id IS NULL"
+      mapping_predicate = ""
+    end
     DB.exec(<<~SQL)
       UPDATE users u
          SET uploaded_avatar_id = ua.custom_upload_id
         FROM user_avatars ua
-       WHERE u.uploaded_avatar_id IS NULL
+       WHERE #{avatar_predicate}
          AND u.id = ua.user_id
          AND ua.custom_upload_id IS NOT NULL
+         #{mapping_predicate}
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
@@ -2376,7 +3582,10 @@ class BulkImport::Generic < BulkImport::Base
               tag_group_id: discourse_tag_group_id,
             )
           else
-            puts "Warning: Intermediate tag group ID #{intermediate_group_id} from row not found in @tag_group_mapping for tag '#{tag.name}'"
+            log_import_issue(
+              "tag group mapping missing",
+              "intermediate tag group #{intermediate_group_id} for tag '#{tag.name}'",
+            )
           end
         end
       end
@@ -2673,7 +3882,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_post_events
     puts "", "Importing events..."
 
-    unless defined?(DiscoursePostEvent)
+    unless defined?(DiscourseEvents::Events)
       puts "  Skipping import of events because the plugin is not installed."
       return
     end
@@ -2686,10 +3895,10 @@ class BulkImport::Generic < BulkImport::Base
 
     default_custom_fields = "{}"
     timezone = "UTC"
-    public_group_invitees = "{#{DiscoursePostEvent::Event::PUBLIC_GROUP}}"
+    public_group_invitees = "{#{DiscourseEvents::Events::Event::PUBLIC_GROUP}}"
     standalone_invitees = "{}"
 
-    existing_events = DiscoursePostEvent::Event.pluck(:id).to_set
+    existing_events = DiscourseEvents::Events::Event.pluck(:id).to_set
 
     create_post_events(post_events) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
@@ -2706,7 +3915,7 @@ class BulkImport::Generic < BulkImport::Base
         timezone: timezone,
         raw_invitees:
           (
-            if row["status"] == DiscoursePostEvent::Event.statuses[:public]
+            if row["status"] == DiscourseEvents::Events::Event.statuses[:public]
               public_group_invitees
             else
               standalone_invitees
@@ -2718,7 +3927,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing event dates..."
 
     post_events.reset
-    existing_events = DiscoursePostEvent::EventDate.pluck(:event_id).to_set
+    existing_events = DiscourseEvents::Events::EventDate.pluck(:event_id).to_set
 
     create_post_event_dates(post_events) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
@@ -2734,7 +3943,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing topic event custom fields..."
 
     post_events.reset
-    field_name = DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT
+    field_name = DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
     existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
 
     create_topic_custom_fields(post_events) do |row|
@@ -2748,7 +3957,7 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     post_events.reset
-    field_name = DiscoursePostEvent::TOPIC_POST_EVENT_ENDS_AT
+    field_name = DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT
     existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
 
     create_topic_custom_fields(post_events) do |row|
@@ -3730,6 +4939,10 @@ class BulkImport::Generic < BulkImport::Base
     value == 1
   end
 
+  def to_nullable_boolean(value)
+    value.nil? ? nil : to_boolean(value)
+  end
+
   def anon_username_suffix
     while true
       suffix = (SecureRandom.random_number * 100_000_000).to_i
@@ -3741,4 +4954,4 @@ class BulkImport::Generic < BulkImport::Base
   end
 end
 
-BulkImport::Generic.new(ARGV[0], ARGV[1]).start
+BulkImport::Generic.new(ARGV[0], ARGV[1]).start if $PROGRAM_NAME == __FILE__

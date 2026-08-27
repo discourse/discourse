@@ -1318,7 +1318,6 @@ zh_TW:
     topic_view_duration_hours: "按照每 IP/使用者每 N 小時來記錄一次新的主題訪問"
     user_profile_view_duration_hours: "按照每 IP/使用者每 N 小時來記錄使用者資料訪問數"
     levenshtein_distance_spammer_emails: "當比對廣告Email時，數字與文字將仍使用模糊比對"
-    min_ban_entries_for_roll_up: "當點擊折疊按鈕且不少於 (N) 條記錄時，將會創建一個子網禁止記錄。"
     max_age_unmatched_emails: "在 (N) 天後刪除不匹配的電郵地址。"
     max_age_unmatched_ips: "在 (N) 天後刪除不匹配的 IP 記錄。"
     num_flaggers_to_close_topic: "要自動終止一個主題的討論並介入時所需的最小數量的獨立標記者"
