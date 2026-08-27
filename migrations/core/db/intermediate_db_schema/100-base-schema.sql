@@ -212,6 +212,7 @@ CREATE INDEX idx_embed_quotes_owner_type_owner_id ON embed_quotes (owner_type, o
 
 CREATE TABLE embed_uploads
 (
+    external_host     TEXT,
     original_markdown TEXT,
     owner_id          NUMERIC      NOT NULL,
     owner_type        ENUM_INTEGER NOT NULL,

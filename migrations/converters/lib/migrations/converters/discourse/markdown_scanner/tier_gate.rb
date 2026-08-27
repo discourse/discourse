@@ -192,18 +192,43 @@ module Migrations
             false
           end
 
+          # The byte offsets of every construct-capable reference in `text`,
+          # sorted — so the engine tier checks a region with a binary search
+          # instead of slicing and rescanning it per region.
+          def construct_capable_entity_offsets(text)
+            return [] unless text.include?("&")
+
+            offsets = []
+            [
+              [NUMERIC_ENTITY, ->(match) { construct_codepoint?(match[1]) }],
+              [NAMED_ENTITY, ->(match) { !IRRELEVANT_NAMED_ENTITIES.include?(match[1]) }],
+            ].each do |pattern, capable|
+              pos = 0
+              while (match = pattern.match(text, pos))
+                offsets << match.byteoffset(0).first if capable.call(match)
+                pos = match.end(0)
+              end
+            end
+            offsets.sort!
+            offsets
+          end
+
           private
 
           def real_candidates?(raw)
             @assume_candidates || unconditional_candidate?(raw) || probe_candidate?(raw)
           end
 
-          # `[quote` is matched case-insensitively because core's bbcode tags
-          # are (`[QUOTE=bob]` renders); the `upload://` scheme is not, because
+          # `[quote=` is matched case-insensitively because core's bbcode tags
+          # are (`[QUOTE=bob]` renders); the `=` is required because only a
+          # metadata-bearing opener holds user/post/topic fields to remap — a
+          # plain `[quote]` block extracts nothing on any path, and both the
+          # certification and trial passes search openers with exactly this
+          # shape. The `upload://` scheme is not case-insensitive, because
           # core's upload rewriting is case-sensitive there and an `UPLOAD://`
           # link carries nothing an importer could resolve.
           def unconditional_candidate?(raw)
-            raw.match?(/\[quote/i) || raw.include?("upload://") || raw.include?("uploads/") ||
+            raw.match?(/\[quote=/i) || raw.include?("upload://") || raw.include?("uploads/") ||
               @unconditional_patterns.any? { |pattern| raw.match?(pattern) }
           end
 

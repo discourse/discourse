@@ -38,6 +38,33 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context do
     expect(Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).to be < 2
   end
 
+  it "resolves hashtags across Unicode composition forms, but not compat forms" do
+    composed = "café"
+    decomposed = "café"
+    unicode_context =
+      described_class.new(
+        bundle:,
+        config: Migrations::Converters::MarkdownEngine::Config.new(tag_names: [composed, "fix"]),
+      )
+
+    begin
+      # NFC + downcase on both sides (Ruby's NameNormalizer, the JS lookup):
+      # either composition form in a post denotes the same configured name.
+      [composed, decomposed, "CafÉ"].each do |spelling|
+        result = unicode_context.scan([{ id: 1, raw: "tagged ##{spelling}" }]).first
+        expect(result.dig("blocks", 0, "hashtags", 0, "type")).to eq("tag"),
+        "##{spelling.inspect} did not resolve"
+      end
+
+      # NFC deliberately keeps compatibility characters distinct (NameNormalizer
+      # is NFC, not NFKC): the `ﬁ` ligature does not denote the `fix` tag.
+      result = unicode_context.scan([{ id: 1, raw: "tagged #ﬁx" }]).first
+      expect(result.dig("blocks", 0, "hashtags").to_a).to be_empty
+    ensure
+      unicode_context.close
+    end
+  end
+
   it "extracts mentions with the block's line map" do
     result = scan_one("a paragraph\n\nwith @sam here")
     expect(result["blocks"]).to contain_exactly(

@@ -301,7 +301,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       token = extract.call(node, nil)
 
       expect(collector.uploads).to contain_exactly(
-        { placeholder: token, upload_id: "abc123", original_markdown: nil },
+        { placeholder: token, upload_id: "abc123", original_markdown: nil, external_host: nil },
       )
     end
 

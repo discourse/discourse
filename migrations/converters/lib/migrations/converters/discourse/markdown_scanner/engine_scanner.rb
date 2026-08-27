@@ -67,9 +67,6 @@ module Migrations
             engine:,
             detectors:,
             gate:,
-            mention_names:,
-            hashtag_names:,
-            custom_emoji_names: nil,
             internal_link_hosts: {},
             internal_link_base_prefix: nil,
             slow_timeout_ms: SLOW_TIMEOUT_MS,
@@ -79,9 +76,6 @@ module Migrations
             @slow_timeout_ms = slow_timeout_ms
             @scan_timeout_ms = nil
             @gate = gate
-            @mention_names = mention_names
-            @hashtag_names = hashtag_names
-            @custom_emoji_names = (custom_emoji_names || []).to_set
             @hosts = internal_link_hosts
             @base_prefix = internal_link_base_prefix
             @on_node = on_node
@@ -105,6 +99,26 @@ module Migrations
             end
             @url_dispatch.each_value(&:freeze)
             @url_dispatch.freeze
+
+            # The name-gated detectors, dispatched by trigger byte, for the
+            # passes' one-walk occurrence index. Their triggers are disjoint
+            # single bytes, so each byte maps to exactly one (kind, detector).
+            @probe_dispatch = {}
+            {
+              mention: @mention_detector,
+              hashtag: @hashtag_detector,
+              emoji: @emoji_detector,
+            }.each do |kind, detector|
+              next if detector.nil?
+              detector.triggers.each { |char| @probe_dispatch[char.ord] = [kind, detector].freeze }
+            end
+            @probe_dispatch.freeze
+            @probe_stop =
+              if @probe_dispatch.empty?
+                nil
+              else
+                Regexp.new("[#{@probe_dispatch.keys.map { |byte| Regexp.escape(byte.chr) }.join}]")
+              end
           end
 
           # @param input [String]
@@ -184,23 +198,38 @@ module Migrations
                       :emoji_detector,
                       :quote_detector,
                       :url_dispatch,
+                      :probe_dispatch,
+                      :probe_stop,
                       :on_node
 
+          # Tracking questions are answered by the detectors themselves — they
+          # hold the name sets and the normalization, so the token filter here
+          # and the grammar that later anchors a construct cannot drift apart.
           def mention_tracked?(name)
-            @mention_names.include?(Migrations::NameNormalizer.normalize(name))
-          end
-
-          def hashtag_tracked?(ref)
-            name = ref.sub(/::(?:category|tag)\z/, "")
-            @hashtag_names.include?(Migrations::NameNormalizer.normalize(name))
+            !@mention_detector.nil? && @mention_detector.tracked_name?(name)
           end
 
           def emoji_tracked?(name)
-            @custom_emoji_names.include?(name)
+            !@emoji_detector.nil? && @emoji_detector.tracked_name?(name)
           end
 
-          def entity_capable?(text)
-            @gate.construct_capable_entity?(text)
+          # The certified text for an engine hashtag slug, nil when untracked.
+          # Core's matcher admits trailing colons into the slug and its lookup
+          # drops them (`"support:".split(":")`), while the detector grammar
+          # keeps a dangling `:` outside the construct — so the certified text
+          # must too. A `::type` suffix gates on the name alone.
+          def hashtag_text(slug)
+            ref = slug.sub(/:+\z/, "")
+            return nil if ref.empty?
+
+            name = ref.sub(/::(?:category|tag)\z/, "")
+            return nil if @hashtag_detector.nil? || !@hashtag_detector.tracked_name?(name)
+
+            "##{ref}"
+          end
+
+          def construct_capable_entity_offsets(text)
+            @gate.construct_capable_entity_offsets(text)
           end
 
           # A link/image value the migration remaps: an `upload://` short URL,
@@ -312,14 +341,10 @@ module Migrations
                   add_expected(:mention, content, range, 1)
                 end
                 block["hashtags"].each do |hashtag|
-                  # Core's matcher admits trailing colons into the slug and its
-                  # Ruby-side lookup drops them (`"support:".split(":")`); the
-                  # detector grammar keeps a dangling `:` outside the
-                  # construct, so the certified text must too.
-                  ref = hashtag["slug"].sub(/:+\z/, "")
-                  next if ref.empty? || !@scanner.hashtag_tracked?(ref)
+                  text = @scanner.hashtag_text(hashtag["slug"])
+                  next if text.nil?
                   had = true
-                  add_expected(:hashtag, "##{ref}", range, 1)
+                  add_expected(:hashtag, text, range, 1)
                 end
                 block["emojis"].each do |name|
                   next unless @scanner.emoji_tracked?(name)
@@ -344,9 +369,7 @@ module Migrations
               # Entities decode before the engine's text rules run, so inside a
               # construct-bearing region a token value may not exist as literal
               # raw bytes — counting cannot see through that.
-              regions_with_constructs.uniq.each do |range|
-                return :entity if @scanner.entity_capable?(@input.byteslice(range))
-              end
+              regions_with_constructs.uniq.each { |range| return :entity if entity_in?(range) }
 
               nil
             end
@@ -367,27 +390,16 @@ module Migrations
               @certified = {}
 
               @expected.each do |(kind, value), entry|
-                occurrences = []
-                failed = false
+                occurrences = certify_regions(kind, value, entry)
 
-                entry[:regions].each do |range, expected|
-                  in_region = certify(kind, value, range, expected)
-                  if in_region
-                    occurrences.concat(in_region)
-                  else
-                    failed = true
-                    break
-                  end
-                end
-
-                unless failed
+                if occurrences
                   @certified[[kind, value]] = occurrences
                   next
                 end
 
-                return :entity if @scanner.entity_capable?(@input)
+                return :entity if entity_offsets.any?
 
-                global = certify(kind, value, whole, entry[:total])
+                global = certify_in(kind, value, whole, entry[:total])
                 if global
                   @certified[[kind, value]] = global
                 elsif kind == :url && reference_definition?(value)
@@ -402,41 +414,30 @@ module Migrations
               nil
             end
 
-            # The occurrences of a value in a range, when their number equals
-            # what the engine saw — else nil. A URL value can be spelled in
-            # alternate readings (the engine normalizes URLs: percent-encoding,
-            # linkify adding a scheme to a bare-domain autolink), and the
-            # readings must be counted as ONE union of spans, never
-            # independently: with `` `http://host/t/5` `` in code and the
-            # schemeless spelling in prose, the scheme-ful reading alone counts
-            # 1 and would certify the code span — the union counts 2 against
-            # the engine's 1 and refuses, so the trial pass can prove which
-            # span is live.
-            def certify(kind, value, range, expected)
-              occurrences =
-                if kind == :url
-                  url_occurrence_union(value, range)
-                else
-                  occurrence_offsets(kind, value, range)
-                end
+            # Every region certified, concatenated — nil when any region's
+            # count is off.
+            def certify_regions(kind, value, entry)
+              occurrences = []
+              entry[:regions].each do |range, expected|
+                in_region = certify_in(kind, value, range, expected)
+                return nil if in_region.nil?
 
-              occurrences if occurrences && occurrences.size == expected
+                occurrences.concat(in_region)
+              end
+              occurrences
             end
 
-            # Every reading's spans, deduplicated; nil when two distinct spans
-            # overlap — no counting can attribute overlapping spellings, so
-            # that ambiguity goes to the trial pass.
-            def url_occurrence_union(value, range)
-              spans = []
-              url_readings(value).each do |reading|
-                spans.concat(occurrence_offsets(:url, reading, range))
+            # The occurrences of a value in a range, when their number equals
+            # what the engine saw — else nil.
+            def certify_in(kind, value, range, expected)
+              if kind == :url
+                spans, overlapping = url_spans(value, range)
+                return nil if overlapping
+              else
+                spans = occurrences_within(probed_occurrences(kind, value), range)
               end
-              spans.uniq!
-              spans.sort_by!(&:offset)
-              spans.each_cons(2) do |left, right|
-                return nil if right.offset < left.offset + left.length
-              end
-              spans
+
+              spans if spans.size == expected
             end
 
             def reference_definition?(value)
@@ -472,13 +473,13 @@ module Migrations
             # Mentions, hashtags and emoji: their certified occurrences came
             # out of the detectors, so re-probing yields the node directly.
             def resolve_probed(spans)
-              @certified.each do |(kind, value), occurrences|
+              @certified.each do |(kind, _value), occurrences|
                 next if kind == :url
 
                 occurrences.each do |occurrence|
-                  match = probe_match(kind, value, occurrence.offset)
-                  # The probe validated this exact offset during counting; a
-                  # miss here means the pass is inconsistent with itself.
+                  match = probe_match_at(kind, occurrence)
+                  # The index was built from detector matches; a miss here
+                  # means the pass is inconsistent with itself.
                   return :probe_desync if match.nil?
                   spans[[match.start_pos, match.end_pos]] ||= match
                 end

@@ -121,11 +121,10 @@ module Migrations
                   when :mention
                     value if @scanner.mention_tracked?(value.delete_prefix("@"))
                   when :hashtag
-                    # Trailing colons stay outside the construct, as in the
-                    # certification pass; the multiset key keeps the engine's
-                    # exact value so the trial delta still matches its token.
-                    stripped = value.sub(/:+\z/, "")
-                    "##{stripped}" if !stripped.empty? && @scanner.hashtag_tracked?(stripped)
+                    # The multiset key keeps the engine's exact value so the
+                    # trial delta still matches its token; the certified text
+                    # comes from the same helper the certification pass uses.
+                    @scanner.hashtag_text(value)
                   when :emoji
                     ":#{value}:" if @scanner.emoji_tracked?(value)
                   when :url
@@ -138,17 +137,17 @@ module Migrations
             end
 
             def candidates_for(entry)
-              whole = 0...@input.bytesize
-              readings = entry[:kind] == :url ? url_readings(entry[:text]) : [entry[:text]]
-
-              seen = {}
-              readings.flat_map do |reading|
-                occurrence_kind = entry[:kind] == :url ? :url : entry[:kind]
-                occurrence_offsets(occurrence_kind, reading, whole).filter_map do |occurrence|
-                  next if seen[occurrence.offset]
-                  seen[occurrence.offset] = true
-                  Candidate.new(kind: entry[:kind], key: entry[:key], text: reading, occurrence:)
+              occurrences =
+                if entry[:kind] == :url
+                  # Overlapping readings are exactly what trials exist to
+                  # attribute, so the spans are probed regardless.
+                  url_spans(entry[:text], 0...@input.bytesize).first
+                else
+                  probed_occurrences(entry[:kind], entry[:text])
                 end
+
+              occurrences.map do |occurrence|
+                Candidate.new(kind: entry[:kind], key: entry[:key], text: entry[:text], occurrence:)
               end
             end
 
@@ -206,7 +205,7 @@ module Migrations
                   anchor_match(candidate.occurrence) ||
                     bare_value_match(candidate.key[1], candidate.occurrence)
                 else
-                  probe_match(candidate.kind, candidate.text, candidate.occurrence.offset)
+                  probe_match_at(candidate.kind, candidate.occurrence)
                 end
 
               # Position proven but nothing can take the construct whole (an

@@ -63,8 +63,14 @@ module Migrations
               .slice(*SETTING_KEYS)
               .to_h { |key, value| [key, self.class.coerce(value, defaults[key])] }
           @settings = defaults.merge(overrides)
-          @category_slugs = category_slugs.map(&:downcase)
-          @tag_names = tag_names.map(&:downcase)
+          # One normalization on both sides of the JS lookup: the names are
+          # injected already normalized ({NameNormalizer}: Unicode NFC, then
+          # downcase), and runtime.js applies `normalize("NFC").toLowerCase()`
+          # to the sought slug — so a decomposed spelling in a post matches
+          # the composed name it denotes, the same way the Ruby detectors
+          # match it.
+          @category_slugs = category_slugs.map { |slug| NameNormalizer.normalize(slug) }
+          @tag_names = tag_names.map { |name| NameNormalizer.normalize(name) }
           @custom_emoji_names = custom_emoji_names.map(&:to_s)
           @additional_options = additional_options
         end

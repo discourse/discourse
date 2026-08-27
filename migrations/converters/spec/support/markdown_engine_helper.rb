@@ -3,11 +3,17 @@
 # The extractor requires a markdown engine context, and building one means a
 # V8 isolate evaluating the whole engine bundle (~70ms warm) — too much to pay
 # per example. Contexts are stateless across scans, so they are memoized per
-# configuration for the whole spec run; the handful of distinct configurations
-# the suite uses stays alive until process exit.
+# configuration for the whole spec run (one isolate is ~33 MiB RSS, so specs
+# should reuse the canonical configurations here rather than inventing
+# near-duplicates) and disposed together after the suite.
 module MarkdownEngineHelper
   def self.bundle
     @bundle ||= Migrations::Converters::MarkdownEngine::Bundle.load_or_build
+  end
+
+  def self.close_all
+    @contexts&.each_value(&:close)
+    @contexts = nil
   end
 
   def self.context_for(category_slugs: [], tag_names: [], custom_emoji_names: [], settings: {})
@@ -40,3 +46,5 @@ module MarkdownEngineHelper
     )
   end
 end
+
+RSpec.configure { |config| config.after(:suite) { MarkdownEngineHelper.close_all } }

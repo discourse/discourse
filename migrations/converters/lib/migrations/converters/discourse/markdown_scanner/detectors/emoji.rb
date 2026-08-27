@@ -51,6 +51,12 @@ module Migrations
               PRESENCE_PATTERN
             end
 
+            # Custom emoji names are matched byte-exact — core's emoji rule
+            # does no case folding or normalization on them.
+            def tracked_name?(name)
+              @names.include?(name)
+            end
+
             def detect(input, pos, _byte)
               return nil unless emoji_boundary_before?(input, pos)
 

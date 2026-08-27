@@ -1,4 +1,4 @@
-# Markdown engine context (tiered scanner, PR 1)
+# Markdown engine context
 
 The tiered markdown-scanner design sends every post holding a candidate
 construct (as built, roughly 40% of posts on a measured corpus — the rest
@@ -8,10 +8,11 @@ everything else depends on: a **self-contained engine context** the converter
 can run per worker — without a booted Rails application, a migrated local
 site database, or any ambient site state.
 
-Benchmarks for the overall approach live in
-`migrations/tooling/scripts/benchmarks/markdown_engine_bench.rb`; that script
-borrows PrettyText's context from a booted Rails app, which is exactly the
-dependency this design removes.
+The measurement instruments live in `migrations/tooling/scripts/`:
+`validate_markdown_extraction.rb` runs the full production path (fork model,
+batching, round-trip verification, RSS/PSS) against a real corpus, and
+`benchmarks/markdown_extraction_scaling.rb` reports growth behavior on
+adversarial and many-values bodies.
 
 ## Goals
 
@@ -25,13 +26,14 @@ dependency this design removes.
 - Parse-only. The context never renders HTML, never sanitizes, never resolves
   avatars or topic titles.
 
-## Non-goals (later PRs)
+## Non-goals
 
-- The tier gate, bijection certification, and trial-substitution fallback
-  are separate PRs; this PR only delivers the context plus a `scan` call
+- The consumers — the tier gate, count certification and the
+  trial-substitution fallback — live in `markdown_scanner/` beside
+  `RawExtractor`; this document covers only the context and its `scan` call
   returning per-post token data.
-- V8 snapshot optimization. Context creation happens once per worker; the
-  measured cost of full evaluation is acceptable (~hundreds of ms).
+- V8 snapshot optimization. Context creation happens once per worker at
+  ~0.15s; a warm bundle loads in tens of milliseconds.
 
 ## What PrettyText's context actually consists of
 
@@ -168,8 +170,20 @@ and per inline block the recognized construct values (mentions, emoji names,
 link hrefs and image srcs — preferring `data-orig-*` attributes, excluding
 fragment-only hrefs — and hashtags as `{type, slug}`, since the href shape
 depends on lookup internals the scan replaces), compact JSON only, never
-token trees. The Ruby side batches posts per call (byte-bounded batches; the
-benchmark showed batching matters mostly for tail latency).
+token trees.
+
+### Batching — measured, recommended for the posts step
+
+`Context#scan` takes a list, and extraction has the seams a batching caller
+needs: `RawExtractor#engine_bound?` says which bodies to pre-scan,
+`RawExtractor#scan_batch` makes one V8 call for many of them (falling back to
+the per-body ladder when a pathological body terminates the batched call),
+and `extract(..., scan_data:)` consumes the precomputed element. On a real
+corpus of 1.5M posts at 18 workers on 20 cores, batches of 32 measured 45.2s
+wall / 360.4s V8 (22,030 batched calls, no poisoned-batch fallbacks) against
+70.9s wall / 684.4s V8 unbatched, with identical extraction results — the
+per-call V8 overhead (~0.5ms) is comparable to an average parse itself, so
+the posts step should batch.
 
 ### Ruby API sketch
 
@@ -182,7 +196,7 @@ config = MarkdownEngine::Config.new(                 # explicit inputs only
 
 # per worker, in step setup:
 engine = MarkdownEngine::Context.new(bundle:, config:)
-engine.scan(posts)   # => per-post construct data for the bijection stage
+engine.scan(posts)   # => per-post construct data for count certification
 ```
 
 ## Testing

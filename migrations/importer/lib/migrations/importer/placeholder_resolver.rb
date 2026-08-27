@@ -97,18 +97,26 @@ module Migrations
       # @param maps see the class description for the methods it must answer.
       # @param unresolved_embeds [#<<] collects {UnresolvedEmbed}s.
       # @param orphan_placeholders [#<<] collects {OrphanPlaceholder}s.
+      # @param external_upload_hosts [Enumerable<String>] hosts (beyond the
+      #   source's own) whose full-URL uploads may map to imported files — an
+      #   old CDN or S3 bucket the conversion vouches for. A full-URL upload
+      #   row marked with any other `external_host` is restored verbatim: its
+      #   40-hex basename colliding with a source upload sha1 must not rewrite
+      #   another site's file.
       def initialize(
         intermediate_db,
         maps,
         owner_type:,
         unresolved_embeds: [],
-        orphan_placeholders: []
+        orphan_placeholders: [],
+        external_upload_hosts: []
       )
         @intermediate_db = intermediate_db
         @maps = maps
         @owner_type = owner_type
         @unresolved_embeds = unresolved_embeds
         @orphan_placeholders = orphan_placeholders
+        @external_upload_hosts = external_upload_hosts.map(&:downcase).to_set
         @names = NameResolver.new(intermediate_db)
       end
 
@@ -385,7 +393,7 @@ module Migrations
           when :event
             [row[:event_id], @maps.event_markdown(row[:event_id])]
           when :upload
-            [row[:upload_id], @maps.upload_markdown(row[:upload_id])]
+            [row[:upload_id], resolve_upload(row)]
           end
 
         return markdown if markdown.present?
@@ -403,6 +411,18 @@ module Migrations
         # (which maps to nothing here) survives. Polls, events and `upload://`
         # uploads have no fallback and drop out.
         kind == :upload ? row[:original_markdown].to_s : ""
+      end
+
+      # A row whose URL pointed at a host the conversion didn't recognize maps
+      # only when that host is explicitly vouched for — a foreign 40-hex
+      # basename can collide with a source upload sha1, and mapping it would
+      # rewrite another site's file. Declined rows take the verbatim fallback
+      # through the caller's miss path.
+      def resolve_upload(row)
+        host = row[:external_host]
+        return nil if host && !@external_upload_hosts.include?(host)
+
+        @maps.upload_markdown(row[:upload_id])
       end
 
       # Builds the opening `[quote="…"]` tag only; the quoted text and `[/quote]` are

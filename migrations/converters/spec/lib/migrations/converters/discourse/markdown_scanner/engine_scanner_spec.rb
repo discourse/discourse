@@ -77,6 +77,46 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
+  describe "gate agreement" do
+    it "defers nothing for a plain quote block, so the gate may skip it" do
+      # The mention forces the engine path; the plain [quote] block riding
+      # along yields no embed — which is why TierGate's quote candidacy can
+      # require the metadata-bearing `[quote=` shape and stay a superset of
+      # what extraction defers.
+      extract("[quote]\nquoted prose\n[/quote]\n\n@alice")
+
+      expect(buffer.quotes).to be_empty
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(extractor.engine_bound?("[quote]\nquoted prose\n[/quote]")).to be(false)
+    end
+
+    it "certifies a decomposed hashtag spelling against its composed name" do
+      composed = "café"
+      engine =
+        MarkdownEngineHelper.context_for(
+          tag_names: [composed],
+          settings: {
+            "unicode_usernames" => true,
+          },
+        )
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:
+            Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize(composed)]),
+          markdown_engine: engine,
+        )
+
+      decomposed = "café"
+      output = extractor.extract("tagged #{"#" + decomposed} here")
+
+      expect(buffer.hashtags.size).to eq(1)
+      expect(buffer.hashtags.first[:original_markdown]).to eq("##{decomposed}")
+      expect(output).to eq("tagged #{buffer.hashtags.first[:placeholder]} here")
+    end
+  end
+
   describe "constructs on the engine tier" do
     it "extracts hashtags and custom emoji" do
       output = extract("`c` #support and :parrot: but not :smile:")

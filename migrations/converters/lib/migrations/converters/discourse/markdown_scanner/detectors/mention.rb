@@ -42,6 +42,13 @@ module Migrations
               @names = names
             end
 
+            # Whether `name` names someone on the source — the engine tier's
+            # token filter asks the detector so filter and grammar share one
+            # name set and one normalization.
+            def tracked_name?(name)
+              @names.include?(normalize(name))
+            end
+
             def detect(input, pos, _byte)
               return nil unless mention_boundary_before?(input, pos)
 

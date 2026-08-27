@@ -216,12 +216,16 @@ module Migrations
 
       # @param upload_id [String, nil] the referenced `uploads` row's id — a content
       #   hash, so text rather than numeric.
-      # @param original_markdown [String, nil] the verbatim source snippet for an
-      #   upload referenced by a full URL, so the importer can put it back when the
-      #   sha1 maps to no Discourse upload. Stays nil for a short `upload://`
-      #   reference, which has no meaningful fallback.
-      def upload(upload_id: nil, original_markdown: nil)
-        record(@uploads, :upload, upload_id:, original_markdown:)
+      # @param original_markdown [String, nil] the verbatim source snippet, so the
+      #   importer can put it back when the id maps to no Discourse upload — the
+      #   extractor records it for short `upload://` references and full-URL
+      #   uploads alike.
+      # @param external_host [String, nil] for a full-URL upload whose host is not
+      #   the source's own: the importer maps its id only when the conversion
+      #   allowlists that host, so a foreign URL whose basename collides with a
+      #   source upload sha1 is restored verbatim instead of rewritten.
+      def upload(upload_id: nil, original_markdown: nil, external_host: nil)
+        record(@uploads, :upload, upload_id:, original_markdown:, external_host:)
       end
 
       # Empties the recorded embeds (in place, keeping the collections) so one buffer

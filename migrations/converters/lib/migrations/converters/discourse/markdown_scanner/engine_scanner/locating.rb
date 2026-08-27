@@ -11,6 +11,10 @@ module Migrations
           # whole-construct detector match, and splicing the accepted matches.
           # Everything reads `@input`, `@line_starts` and `@scanner`, which the
           # including pass sets up.
+          #
+          # Occurrence lookups answer from per-body indexes built lazily and at
+          # most once: a body with many distinct engine values used to pay one
+          # search walk per value, which multiplied out to O(values × body).
           module Locating
             include Detectors::Boundaries
 
@@ -21,6 +25,9 @@ module Migrations
 
             URL_BYTES = [*"a".."z", *"A".."Z", *"0".."9", "/"].to_set(&:ord).freeze
             TRAILING_PUNCTUATION = ".?#&=%~_-".bytes.to_set.freeze
+
+            EMPTY_OCCURRENCES = [].freeze
+            private_constant :EMPTY_OCCURRENCES
 
             # A link's `[`/`!` anchor is searched backwards from its
             # destination; the detector grammars cap a label around a thousand
@@ -39,41 +46,123 @@ module Migrations
               end
             end
 
-            def occurrence_offsets(kind, reading, range)
-              # A hashtag token's value is the lookup's casefolded ref, while
-              # the raw spells the construct in the author's case (`#Support`),
-              # so only that kind is searched case-insensitively — the detector
-              # probe still validates every hit. Mention and emoji token
-              # content preserves the raw's own bytes, and folding those would
-              # conflate `@Bob` with `@bob`, two distinct token values.
-              needle = kind == :hashtag ? /#{Regexp.escape(reading)}/i : reading
-              occurrences = []
-              length = reading.bytesize
-              pos = range.begin
-              limit = range.end - length
-
-              while pos <= limit && (index = @input.byteindex(needle, pos))
-                break if index > limit
-
-                valid =
-                  if kind == :url
-                    url_occurrence?(index, length)
-                  else
-                    !probe_match(kind, reading, index).nil?
+            # Every mention/hashtag/emoji construct in the body, found in ONE
+            # pass over the trigger bytes and keyed like {#index_key}. The
+            # detectors validate boundaries and gate on the source's name sets,
+            # so an entry here IS a detector match with exactly that text.
+            def probe_index
+              @probe_index ||=
+                begin
+                  index = {}
+                  stop = @scanner.probe_stop
+                  if stop
+                    pos = 0
+                    while (offset = @input.byteindex(stop, pos))
+                      byte = @input.getbyte(offset)
+                      kind, detector = @scanner.probe_dispatch[byte]
+                      if kind && (match = detector.detect(@input, offset, byte))
+                        length = match.end_pos - offset
+                        key = index_key(kind, @input.byteslice(offset, length))
+                        (index[key] ||= []) << Occurrence.new(offset:, length:)
+                      end
+                      pos = offset + 1
+                    end
                   end
-                occurrences << Occurrence.new(offset: index, length:) if valid
-                pos = index + 1
-              end
-
-              occurrences
+                  index
+                end
             end
 
-            # For the probed kinds the detector itself validates an occurrence
-            # — boundaries, name sets, everything — so an occurrence here IS a
-            # detector match with exactly this value. A longer name matching at
-            # the same offset (`@sam` inside `@samuel`) is a different
-            # construct, not an occurrence of this one.
-            def probe_match(kind, value, index)
+            # Hashtags are keyed by normalized text: the engine reports a
+            # hashtag's ref casefolded while the raw spells the author's form
+            # (`#Support`), and normalizing both sides the same way
+            # ({NameNormalizer}) also matches a decomposed raw spelling against
+            # the composed name it denotes. Mention and emoji token content
+            # preserves the raw's own bytes, and folding those would conflate
+            # `@Bob` with `@bob`, two distinct token values.
+            def index_key(kind, text)
+              kind == :hashtag ? [kind, Migrations::NameNormalizer.normalize(text)] : [kind, text]
+            end
+
+            # Whole-body occurrences of a probed value, from the index.
+            def probed_occurrences(kind, value)
+              probe_index[index_key(kind, value)] || EMPTY_OCCURRENCES
+            end
+
+            # The occurrences of a URL value in `range` — every reading (the
+            # engine normalizes URLs: percent-encoding, linkify adding a
+            # scheme to a bare-domain autolink) unioned and deduplicated. The
+            # readings must be counted as ONE union, never independently: with
+            # `` `http://host/t/5` `` in code and the schemeless spelling in
+            # prose, the scheme-ful reading alone counts 1 and would certify
+            # the code span — the union counts 2 against the engine's 1 and
+            # refuses, so the trial pass can prove which span is live.
+            #
+            # Memoized per (value, range): the search stays scoped to the
+            # region under certification — the adaptive property that keeps a
+            # many-values body from paying a whole-body walk per value — while
+            # a mapless block, the global fallback and the trial pass (which
+            # all ask for the same whole-body range) share one walk.
+            #
+            # @return [Array(Array<Occurrence>, Boolean)] the sorted spans and
+            #   whether two distinct spans overlap — overlapping spellings
+            #   cannot be attributed by counting, so certification refuses them
+            #   (the trial pass still probes each span individually).
+            def url_spans(value, range)
+              @url_spans ||= {}
+              @url_spans[[value, range]] ||= begin
+                spans = []
+                url_readings_for(value).each { |reading| collect_url_spans(reading, range, spans) }
+                spans.uniq!
+                spans.sort_by!(&:offset)
+                overlapping =
+                  spans.each_cons(2).any? { |left, right| right.offset < left.offset + left.length }
+                [spans, overlapping].freeze
+              end
+            end
+
+            def url_readings_for(value)
+              @url_readings ||= {}
+              @url_readings[value] ||= url_readings(value)
+            end
+
+            def collect_url_spans(reading, range, spans)
+              length = reading.bytesize
+              return if length == 0
+
+              pos = range.begin
+              limit = range.end - length
+              while pos <= limit && (index = @input.byteindex(reading, pos))
+                break if index > limit
+
+                spans << Occurrence.new(offset: index, length:) if url_occurrence?(index, length)
+                pos = index + 1
+              end
+            end
+
+            def occurrences_within(occurrences, range)
+              occurrences.select do |occurrence|
+                occurrence.offset >= range.begin &&
+                  occurrence.offset + occurrence.length <= range.end
+              end
+            end
+
+            # Byte offsets of every construct-capable character reference, one
+            # scan for the whole body, so each region precondition is a binary
+            # search instead of a byteslice plus a fresh scan.
+            def entity_offsets
+              @entity_offsets ||= @scanner.construct_capable_entity_offsets(@input)
+            end
+
+            def entity_in?(range)
+              index = entity_offsets.bsearch_index { |offset| offset >= range.begin }
+              !index.nil? && entity_offsets[index] < range.end
+            end
+
+            # The detector match behind an indexed occurrence. The index was
+            # built from detector matches, so this re-probe cannot miss unless
+            # a pass got out of step with its own index — callers treat nil as
+            # that inconsistency.
+            def probe_match_at(kind, occurrence)
               detector =
                 case kind
                 when :mention
@@ -83,8 +172,8 @@ module Migrations
                 when :emoji
                   @scanner.emoji_detector
                 end
-              match = detector.detect(@input, index, @input.getbyte(index))
-              match if match && match.end_pos == index + value.bytesize
+              match = detector.detect(@input, occurrence.offset, @input.getbyte(occurrence.offset))
+              match if match && match.end_pos == occurrence.offset + occurrence.length
             end
 
             # A URL occurrence must not be extendable into a longer URL: a
@@ -137,32 +226,30 @@ module Migrations
             # occurrence and the start of the previous line (a link's
             # destination may sit one line below its `[` — see
             # `Base::LINK_GAP`), then the occurrence itself as a bare URL.
+            # The walk descends byte by byte, so no anchor list is allocated.
             def anchor_match(occurrence)
               offset = occurrence.offset
               line = @line_starts.bsearch_index { |start| start > offset } || @line_starts.size
               from = [@line_starts[[line - 2, 0].max], offset - ANCHOR_WINDOW].max
 
-              # Anchors are tried nearest-first (reverse of this ascending
-              # list). An image's `![` pushes its positions swapped, so the
-              # `!` is tried before its `[` — the `[` alone also matches, as
-              # a link, and being nearer would otherwise capture `[alt](…)`
-              # out of `![alt](…)`.
-              anchors = []
-              pos = from
-              while pos < offset
+              pos = offset - 1
+              while pos >= from
                 byte = @input.getbyte(pos)
-                if byte == 0x21 && pos + 1 < offset && @input.getbyte(pos + 1) == 0x5b # `![`
-                  anchors << pos + 1 << pos
-                  pos += 2
+                if byte == 0x5b && pos > from && @input.getbyte(pos - 1) == 0x21 # `![`
+                  # The image's `!` outranks its `[`: the `[` alone also
+                  # matches, as a link, and being nearer would otherwise
+                  # capture `[alt](…)` out of `![alt](…)`.
+                  match =
+                    detector_match_at(pos - 1, occurrence) || detector_match_at(pos, occurrence)
+                  return match if match
+                  pos -= 2
+                elsif byte == 0x5b || byte == 0x21 # `[` `!`
+                  match = detector_match_at(pos, occurrence)
+                  return match if match
+                  pos -= 1
                 else
-                  anchors << pos if byte == 0x21 || byte == 0x5b # `!` `[`
-                  pos += 1
+                  pos -= 1
                 end
-              end
-
-              anchors.reverse_each do |anchor|
-                match = detector_match_at(anchor, occurrence)
-                return match if match
               end
 
               # The occurrence itself, as a bare URL. Linkify can swallow a

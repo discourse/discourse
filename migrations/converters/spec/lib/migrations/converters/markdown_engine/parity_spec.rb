@@ -87,6 +87,42 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context, :rails do
       MSG
   end
 
+  # The bundle ships the core-bundled plugins' markdown features because
+  # their constructs must tokenize the way the destination cooks them — this
+  # asserts exactly that, against each plugin PrettyText actually loaded in
+  # this checkout (an absent plugin would make the booted side feature-less
+  # and the comparison meaningless, so those fixtures are skipped).
+  it "produces the same scan output for the bundled plugins' constructs" do
+    plugin_fixtures = {
+      "poll" => "[poll type=regular]\n* one\n* two @someuser\n[/poll]\n\nafter @someuser",
+      "discourse-details" => %{[details="Summary"]\nhidden @someuser\n[/details]},
+      "spoiler-alert" => "[spoiler]shh @someuser[/spoiler]",
+      "footnote" => "noted[^1]\n\n[^1]: the note with @someuser",
+      "discourse-local-dates" =>
+        %{[date=2026-08-27 time=13:37:00 timezone="Europe/Vienna"] with @someuser},
+      "checklist" => "[ ] open task @someuser\n[x] done task",
+      "chat" =>
+        "[chat quote=\"someuser;123;2026-08-27T00:00:00Z\" channel=\"general\" channelId=\"1\"]\nhi @someuser\n[/chat]",
+    }
+    loaded = Discourse.plugins.map(&:name)
+    testable = plugin_fixtures.select { |plugin, _| loaded.include?(plugin) }
+    skip "no bundled plugin is loaded — run with LOAD_PLUGINS=1" if testable.empty?
+
+    posts = testable.values.each_with_index.map { |raw, index| { "id" => index, "raw" => raw } }
+    standalone = context.scan(posts.map { |post| { id: post["id"], raw: post["raw"] } })
+    booted = pretty_text_scan(posts)
+
+    standalone
+      .zip(booted, testable.keys)
+      .each { |ours, theirs, plugin| expect(ours).to eq(theirs), <<~MSG }
+        scan mismatch for the #{plugin} fixture:
+        #{testable[plugin].inspect}
+
+        standalone: #{ours.inspect}
+        booted:     #{theirs.inspect}
+      MSG
+  end
+
   it "builds the same unicode emoji replacement table as the Emoji model" do
     expect(Migrations::Converters::MarkdownEngine::EmojiData.unicode_replacements).to eq(
       JSON.parse(Emoji.unicode_replacements_json),

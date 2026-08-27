@@ -12,6 +12,12 @@
 # unchanged instead of dropping the embed — a hotlink to another forum's upload then
 # survives as-is.
 #
+# `external_host` is set when a full-URL upload points at a host the conversion does
+# not recognize as the source's own. A foreign URL whose 40-hex basename happens to
+# collide with a source upload sha1 must not be rewritten to the imported file, so
+# the importer maps such a row only when the conversion explicitly allowlists the
+# host (a CDN, an old S3 bucket) — otherwise the verbatim snippet is restored.
+#
 # NOTE: `upload_id` is `:text`, not `:numeric`. Upload `original_id`s in the
 # IntermediateDB are content hashes (see `uploads.id`, also `:text`). This matches
 # the global `.*upload.*_id$ => :text` convention, so the reference must be text too.
@@ -21,6 +27,7 @@ Migrations::Tooling::Schema.table :embed_uploads do
 
   add_column :owner_type, :integer, required: true, enum: :embed_owner
   add_column :owner_id, :numeric, required: true
+  add_column :external_host, :text
   add_column :placeholder, :text, required: true
   add_column :upload_id, :text
   add_column :original_markdown, :text

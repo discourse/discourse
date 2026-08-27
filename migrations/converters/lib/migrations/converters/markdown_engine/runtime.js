@@ -31,7 +31,10 @@ __helpers = {
     return null;
   },
   hashtag_lookup(slug, cookingUserId, typesInPriorityOrder) {
-    const ref = slug.toLowerCase();
+    // The counterpart of Ruby's NameNormalizer (Unicode NFC, then downcase):
+    // the injected name sets are normalized that way, so the sought slug must
+    // be too, or a decomposed spelling in a post misses the composed name.
+    const ref = slug.normalize("NFC").toLowerCase();
     // `#slug::type` forces one type; `#parent:child` addresses a category by
     // its child slug; `ref` preserves the typed form including a `::type`
     // suffix, like the host lookup service. This mirrors that service far

@@ -42,7 +42,7 @@ module Migrations
             # writes.
             URL =
               %r{
-                (?: (?i:https?:)? // [^/#{Base::URL_TERMINATORS}]{1,255} )?             # optional scheme + host
+                (?<origin> (?i:https?:)? // [^/#{Base::URL_TERMINATORS}]{1,255} )?      # optional scheme + host
                 (?> (?: / (?! (?:secure-)?uploads/ ) [^/#{Base::URL_TERMINATORS}]{1,255} ){0,16} )
                 / (?:secure-)? uploads /
                 (?> (?: (?! (?:original|optimized)/ ) [^/#{Base::URL_TERMINATORS}]{1,255} / ){0,16} )
@@ -113,10 +113,12 @@ module Migrations
             end
 
             def build_match(pos, match)
+              origin = match[:origin]
+              host = origin && UrlOrigin.split(origin)&.first
               Match.new(
                 start_pos: pos,
                 end_pos: match.byteoffset(0).last,
-                node: UploadUrlReference.new(sha1: match[:sha1]),
+                node: UploadUrlReference.new(sha1: match[:sha1], host:),
               )
             end
 

@@ -41,8 +41,17 @@ fail-closed:
   duplicated tracked values (or one that is already pathological to parse)
   can reach them.
 - **A per-body engine failure** (a parse timeout, a JS exception some body
-  triggers) leaves that body verbatim on the tally (`:engine_error`) and the
-  engine context is rebuilt for the next body.
+  triggers) gets one patient retry under a slow ceiling (60s by default)
+  before the body lands verbatim on the tally (`:engine_error`) with the
+  engine context rebuilt for the next body. A body that only parsed on the
+  retry is extracted and counted separately (`RawExtractor#slow_parses`) —
+  it will cook just as slowly on the destination site.
+- **Third-party plugin markdown is an accuracy boundary.** The engine loads
+  the markdown features of the core-bundled plugins (their constructs must
+  tokenize the way the destination cooks them — asserted by the plugin
+  parity fixtures); a source that relied on some other plugin's markdown
+  feature is scanned without it, so text inside such a construct is treated
+  as ordinary prose.
 - **Pattern caps** — the detector patterns that parse a proven construct's
   syntax cap their runs (link labels at CommonMark's 999 characters,
   destinations and bare URLs at 2 KiB, quote headers at 512 bytes) so a body
@@ -62,3 +71,10 @@ fail-closed:
   survive. A canonical rebuild happens only when something actually resolved
   (a renamed quoted user produces a canonical `[quote="…"]` header) or for
   rows without a verbatim source.
+- **Foreign-host upload URLs map only against an allowlist.** A full upload
+  URL on a host the conversion did not recognize as the source's own carries
+  that host on its row, and the importer maps its sha1 only when the
+  conversion vouches for the host (`external_upload_hosts:` — an old CDN or
+  S3 bucket). Any other foreign row is restored verbatim: a foreign 40-hex
+  basename colliding with a source upload sha1 must not rewrite another
+  site's file.

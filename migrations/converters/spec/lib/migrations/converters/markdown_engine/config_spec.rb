@@ -50,9 +50,14 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
       )
     end
 
-    it "downcases slugs and tag names for the case-insensitive lookup" do
+    it "normalizes slugs and tag names the way the detectors do" do
       expect(config.category_slugs).to eq(%w[support feature])
       expect(config.tag_names).to eq(%w[bug])
+    end
+
+    it "applies NFC, so a decomposed configured name matches its composed form" do
+      config = described_class.new(tag_names: ["café"])
+      expect(config.tag_names).to eq([Migrations::NameNormalizer.normalize("café")])
     end
 
     it "builds a custom emoji map keyed by name" do
@@ -68,10 +73,20 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
   end
 
   # The engine only receives the settings named in SETTING_KEYS, so any
-  # `siteSettings.*` read added to the JavaScript the Bundle loads must be
+  # `siteSettings` read added to the JavaScript the Bundle loads must be
   # classified here before it silently falls back to `undefined` in V8.
   describe "SETTING_KEYS coverage" do
-    it "contains every siteSettings key the bundled markdown JavaScript reads" do
+    # Recognized read idioms, each capturing the key(s) read. Anything that
+    # mentions `siteSettings` and matches none of these fails the second
+    # example: an alias or a new idiom must be added here, not silently skipped.
+    let(:property_read) { /siteSettings\??\.([A-Za-z_0-9]+)/ }
+    let(:bracket_read) { /siteSettings\??\[\s*["']([A-Za-z_0-9]+)["']\s*\]/ }
+    let(:destructuring_read) { /\{([^{}]*)\}\s*=[^=;\n]*siteSettings/ }
+    # A callback parameter named `siteSettings` declares the object, it reads
+    # no key — the reads happen through the other idioms in the body.
+    let(:parameter_declaration) { /[(,]\s*siteSettings\s*(?=[,)])/ }
+
+    def bundled_js_files
       root = Migrations::Converters::MarkdownEngine.discourse_root
       bundle = Migrations::Converters::MarkdownEngine::Bundle
 
@@ -89,11 +104,57 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
           ],
         )
       end
+      files
+    end
 
+    it "contains every siteSettings key the bundled markdown JavaScript reads" do
       keys_read =
-        files.flat_map { |file| File.read(file).scan(/siteSettings\.([a-z_0-9]+)/).flatten }.uniq
+        bundled_js_files.flat_map do |file|
+          source = File.read(file)
+          source.scan(property_read).flatten + source.scan(bracket_read).flatten +
+            source
+              .scan(destructuring_read)
+              .flatten
+              .flat_map { |names| names.split(",").map { |name| name[/[A-Za-z_0-9]+/] } }
+              .compact
+        end
 
-      expect(keys_read - described_class::SETTING_KEYS).to be_empty
+      expect(keys_read.uniq - described_class::SETTING_KEYS).to be_empty
+    end
+
+    it "recognizes every siteSettings mention, so aliases can't hide a read" do
+      unrecognized =
+        bundled_js_files.flat_map do |file|
+          File
+            .read(file)
+            .each_line
+            .with_index(1)
+            .filter_map do |line, number|
+              line = line.sub(%r{//.*}, "")
+              next unless line.include?("siteSettings")
+              # Object shorthand on its own line: a multiline destructuring or
+              # parameter list declaring the object, same as the inline forms.
+              next if line.match?(/\A\s*siteSettings,?\s*\z/)
+
+              # An object-literal key (`{ siteSettings: {} }`) supplies the
+              # object; it reads no key.
+              stripped =
+                line
+                  .gsub(property_read, "")
+                  .gsub(bracket_read, "")
+                  .gsub(destructuring_read, "")
+                  .gsub(parameter_declaration, "(")
+                  .gsub(/siteSettings\s*:/, "")
+              # What remains is a mention none of the read idioms account
+              # for: a bare reference (an alias assignment, a helper call
+              # forwarding the object) whose later reads this static check
+              # cannot see.
+              "#{file}:#{number}: #{line.strip}" if stripped.include?("siteSettings")
+            end
+        end
+
+      expect(unrecognized).to be_empty,
+      -> { "extend the recognized siteSettings read idioms:\n#{unrecognized.join("\n")}" }
     end
   end
 end

@@ -132,6 +132,53 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolver.unresolved_embeds.map(&:entity_id)).to eq(["sha1"])
     end
 
+    it "declines a foreign-host row even when its sha1 maps, and restores the snippet" do
+      upload = placeholder.mint(:upload)
+      snippet = "![x](https://other-forum.example/uploads/original/2X/a/ab/#{"a" * 40}.png)"
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: upload,
+        upload_id: "sha1",
+        original_markdown: snippet,
+        external_host: "other-forum.example",
+      )
+      # The mapped markdown existing is exactly the dangerous case: a foreign
+      # basename colliding with a source upload sha1.
+      maps = FakePlaceholderMaps.new(upload_markdown: { "sha1" => "![x](upload://sha1.png)" })
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{upload} y" }])
+
+      expect(resolved[1]).to eq("x #{snippet} y")
+      expect(resolver.unresolved_embeds.map(&:entity_id)).to eq(["sha1"])
+    end
+
+    it "maps a foreign-host row when the conversion vouches for the host" do
+      upload = placeholder.mint(:upload)
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: upload,
+        upload_id: "sha1",
+        original_markdown: "![x](https://cdn.example.net/uploads/original/2X/old.png)",
+        external_host: "cdn.example.net",
+      )
+      maps = FakePlaceholderMaps.new(upload_markdown: { "sha1" => "![x](upload://sha1.png)" })
+      resolver =
+        described_class.new(
+          intermediate_db,
+          maps,
+          owner_type: embed_owner::POST,
+          external_upload_hosts: ["CDN.example.net"],
+        )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{upload} y" }])
+
+      expect(resolved[1]).to eq("x ![x](upload://sha1.png) y")
+      expect(resolver.unresolved_embeds).to be_empty
+    end
+
     it "prefers the mapped upload markdown over the verbatim snippet" do
       upload = placeholder.mint(:upload)
       Migrations::Database::IntermediateDB::EmbedUpload.create(

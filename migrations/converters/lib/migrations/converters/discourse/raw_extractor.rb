@@ -129,6 +129,7 @@ module Migrations
           @embeds = embeds
           @mention_classifier = mention_classifier
           @markdown_engine = markdown_engine
+          @internal_link_hosts = internal_link_hosts
           @on_engine_refusal = on_engine_refusal
           @on_slow_parse = on_slow_parse
           @engine_refusals = Hash.new(0)
@@ -152,8 +153,9 @@ module Migrations
           # accumulates its report-once host set) and the scanner resets its
           # state on each `scan`, so build them once and reuse them for every
           # post. `extract` swaps `@topic_id` per call, so one extractor must not
-          # run in two threads at once — each worker holds its own (the posts
-          # step builds it in per-worker `setup`).
+          # run in two threads at once — each worker holds its own (a future
+          # posts step is expected to build it in per-worker `setup`; no
+          # production step exists yet).
           on_node = ->(node, source) { defer(node, source) }
           @gate = MarkdownScanner::TierGate.new(detectors:)
           @engine_scanner =
@@ -161,9 +163,6 @@ module Migrations
               engine: markdown_engine,
               detectors:,
               gate: @gate,
-              mention_names:,
-              hashtag_names:,
-              custom_emoji_names:,
               internal_link_hosts:,
               internal_link_base_prefix:,
               slow_timeout_ms:,
@@ -268,7 +267,11 @@ module Migrations
           when Markbridge::AST::Upload
             @embeds.upload(upload_id: node.sha1, original_markdown: source)
           when MarkdownScanner::UploadUrlReference
-            @embeds.upload(upload_id: node.sha1, original_markdown: source)
+            @embeds.upload(
+              upload_id: node.sha1,
+              original_markdown: source,
+              external_host: external_upload_host(node.host),
+            )
           when Markbridge::AST::Mention
             @embeds.mention(
               mention_type: @mention_classifier.call(node.name),
@@ -310,6 +313,14 @@ module Migrations
         # points into its own topic. A `topic:` with no `post:` drops both coordinates,
         # because the importer can only resolve them as a pair. A quote with neither is
         # username-only.
+        # A full-URL upload on a host the conversion does not recognize as the
+        # source's own. The importer maps such a row's sha1 only against an
+        # explicit allowlist: a foreign basename that happens to collide with
+        # a source upload sha1 must not be rewritten to the imported file.
+        def external_upload_host(host)
+          host if host && !@internal_link_hosts.key?(host)
+        end
+
         def defer_quote(node, source)
           post_number = node.post_number
           topic_id = post_number ? (node.topic_id || @topic_id) : nil

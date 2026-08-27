@@ -78,6 +78,13 @@ module Migrations
               @names = names
             end
 
+            # Whether `name` is a source category slug path or tag name — the
+            # engine tier's token filter asks the detector so filter and
+            # grammar share one name set and one normalization.
+            def tracked_name?(name)
+              @names.include?(normalize(name))
+            end
+
             def detect(input, pos, _byte)
               return nil unless boundary_before?(input, pos)
 

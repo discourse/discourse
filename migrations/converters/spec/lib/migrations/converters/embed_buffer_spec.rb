@@ -162,7 +162,12 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       token = buffer.upload(upload_id: "abc123", original_markdown: "![x](/uploads/x.png)")
 
       expect(buffer.uploads).to contain_exactly(
-        { placeholder: token, upload_id: "abc123", original_markdown: "![x](/uploads/x.png)" },
+        {
+          placeholder: token,
+          upload_id: "abc123",
+          original_markdown: "![x](/uploads/x.png)",
+          external_host: nil,
+        },
       )
     end
 

@@ -3,6 +3,35 @@
 RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 
+  describe "external-host marking" do
+    subject(:extractor) do
+      described_class.new(
+        embeds: buffer,
+        mention_names:,
+        hashtag_names:,
+        markdown_engine:,
+        internal_link_hosts: {
+          "forum.example.com" => nil,
+        },
+      )
+    end
+
+    let(:sha1) { "a" * 40 }
+
+    # The importer maps a foreign-host row's sha1 only against an explicit
+    # allowlist — a colliding basename must not rewrite another site's file —
+    # so the extractor has to say which rows are foreign.
+    it "marks foreign hosts and leaves the source's own and relative URLs unmarked" do
+      extract(
+        "![a](https://forum.example.com/uploads/default/original/2X/a/ab/#{sha1}.png) " \
+          "![b](https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png) " \
+          "![c](/uploads/default/original/2X/a/ab/#{sha1}.png)",
+      )
+
+      expect(buffer.uploads.map { |row| row[:external_host] }).to eq([nil, "cdn.example.com", nil])
+    end
+  end
+
   describe "uploads" do
     it "defers an image upload, recording the sha1" do
       result = extract("before ![alt|690x388](upload://abc123XYZ.png) after")
