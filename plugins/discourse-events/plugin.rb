@@ -365,7 +365,7 @@ after_initialize do
     if SiteSetting.discourse_post_event_enabled
       topic_view.instance_variable_set(
         :@posts,
-        topic_view.posts.includes(event: [:image_upload, { event_hosts: :user }]),
+        topic_view.posts.includes(event: [:image_upload, :event_dates, { event_hosts: :user }]),
       )
     end
   end
