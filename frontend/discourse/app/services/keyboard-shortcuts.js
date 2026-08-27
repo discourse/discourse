@@ -296,9 +296,11 @@ export default class KeyboardShortcutLib extends Service {
    *                {
    *                  category: String,
    *                  name: String,
-   *                  definition: (See function `buildShortcut` in
-   *                    frontend/discourse/app/controllers/keyboard-shortcuts-help.js
-   *                    for definition structure)
+   *                  definition: {
+   *                    keys1: ["mod", "shift", "d"],   // key spellings, as for bindings
+   *                    keys2: ["alt", "&uarr;"],       // optional second group
+   *                    shortcutsDelimiter: "or",       // or | slash | space | newline
+   *                  }
    *                }
    *
    * - click      - allows to provide a selector on which a click event

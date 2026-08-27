@@ -56,18 +56,23 @@ function buildSearchText(keys) {
     .join(" ");
 }
 
+/** How two key groups of one help entry relate; anything else falls back to "or". */
+const SHORTCUT_DELIMITERS = ["or", "slash", "space", "newline"];
+
 function buildShortcut(
   key,
   { keys1 = [], keys2 = [], shortcutsDelimiter = "or" }
 ) {
   const groups = [keys1, keys2].filter((keys) => keys.length > 0);
+  const delimiter = SHORTCUT_DELIMITERS.includes(shortcutsDelimiter)
+    ? shortcutsDelimiter
+    : "or";
 
   // "space"/"newline" mean keys1 then keys2 are pressed in sequence — one
   // searchable combination. "or"/"slash" mean alternatives — each group
   // searched independently so tokens can't span alternatives
   // (e.g. "ctrl /" must not match a "/ or Ctrl+Alt+F" shortcut).
-  const isSequence =
-    shortcutsDelimiter === "space" || shortcutsDelimiter === "newline";
+  const isSequence = delimiter === "space" || delimiter === "newline";
   const shortcutTexts = isSequence
     ? [buildSearchText(groups.flat())]
     : groups.map(buildSearchText);
@@ -75,7 +80,7 @@ function buildShortcut(
   return {
     keys1: groups[0]?.join("+"),
     keys2: groups[1]?.join("+"),
-    delimiter: shortcutsDelimiter,
+    delimiter,
     shortcutTexts,
     description: i18n(`${KEY}.${key}`, { shortcut: "" }).trim(),
   };
