@@ -1881,6 +1881,11 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
     end
 
+    it "handles splitting host_list settings" do
+      SiteSetting.blocked_email_domains = "example.com|example.org"
+      expect(SiteSetting.blocked_email_domains_map).to eq(%w[example.com example.org])
+    end
+
     it "handles blank values for settings" do
       SiteSetting.ga_universal_auto_link_domains = ""
       SiteSetting.pm_tags_allowed_for_groups = ""

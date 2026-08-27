@@ -1227,7 +1227,7 @@ module SiteSettingExtension
 
     # Same logic as above for other list type settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
-    if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
+    if %i[list emoji_list tag_list host_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
       if %w[simple compact locale].include?(list_type) || list_type.nil?

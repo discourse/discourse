@@ -96,6 +96,8 @@ class Report
     web_hook_events_daily_aggregate
   ]
 
+  INTERNAL_REPORT_TYPES = %w[posters_by_member_type_members]
+
   include Reports::AssociatedAccountsByProvider
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
