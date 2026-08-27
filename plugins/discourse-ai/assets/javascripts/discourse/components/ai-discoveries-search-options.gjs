@@ -87,11 +87,9 @@ export default class AiDiscoveriesSearchOptions extends Component {
     return this.search.inTopicContext && this.scopedTerm === this.query;
   }
 
-  // Whichever option produced what the menu is currently showing, so the row
-  // reads as a set with one of them in effect.
+  // The configured or most recently selected mode applies when the term is submitted.
   get askedActive() {
-    const query = this.query;
-    return Boolean(query) && this.discobotDiscoveries.lastQuery === query;
+    return Boolean(this.query) && this.discobotDiscoveries.mode === "ask";
   }
 
   // The widest reach, so it only holds when nothing narrower does — every other
@@ -106,11 +104,12 @@ export default class AiDiscoveriesSearchOptions extends Component {
       return false;
     }
 
-    return Boolean(this.args.searchTopics);
+    return this.discobotDiscoveries.mode === "search";
   }
 
   @action
   searchAllTopics() {
+    this.discobotDiscoveries.setMode("search");
     // choosing the indexed results means the answer is no longer what was asked for
     this.discobotDiscoveries.dismissDiscovery();
     // the input no longer carries a chip to step back out of a scope, so the
@@ -132,6 +131,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchUserPosts() {
+    this.discobotDiscoveries.setMode("search");
     this.discobotDiscoveries.dismissDiscovery();
     this.args.clearTopicContext?.();
     this.args.clearPMInboxContext?.();
@@ -145,6 +145,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchMessages() {
+    this.discobotDiscoveries.setMode("search");
     this.discobotDiscoveries.dismissDiscovery();
     this.args.clearTopicContext?.();
     this.args.searchTermChanged?.(this.query, {
@@ -155,6 +156,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchThisTopic() {
+    this.discobotDiscoveries.setMode("search");
     this.scopedTerm = this.query;
     this.discobotDiscoveries.dismissDiscovery();
     this.args.searchTermChanged?.(this.query, {
@@ -165,6 +167,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   ask() {
+    this.discobotDiscoveries.setMode("ask");
     // asking never honours a scope, so picking it leaves any behind
     this.args.clearTopicContext?.();
     this.args.clearPMInboxContext?.();
@@ -216,13 +219,15 @@ export default class AiDiscoveriesSearchOptions extends Component {
           @label="discourse_ai.discobot_discoveries.ask_ai"
           @action={{this.ask}}
         />
-        <DButton
-          class="btn-default btn-small ai-discoveries-search-options__option --advanced"
-          @icon="sliders"
-          @title="search.open_advanced"
-          @ariaLabel="search.open_advanced"
-          @action={{@openAdvancedSearch}}
-        />
+        {{#if this.allTopicsActive}}
+          <DButton
+            class="btn-default btn-small ai-discoveries-search-options__option --advanced"
+            @icon="sliders"
+            @title="search.open_advanced"
+            @ariaLabel="search.open_advanced"
+            @action={{@openAdvancedSearch}}
+          />
+        {{/if}}
       </div>
     {{/if}}
   </template>

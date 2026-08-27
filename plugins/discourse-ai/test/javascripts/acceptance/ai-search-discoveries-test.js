@@ -28,6 +28,7 @@ acceptance("AI Discoveries - welcome search", function (needs) {
     discourse_ai_enabled: true,
     ai_discover_enabled: true,
     ai_discover_agent: -34,
+    ai_discover_default_mode: "ask",
   });
 
   test("the placeholder offers both ways to resolve a term", async function (assert) {
@@ -57,6 +58,7 @@ acceptance("AI Discoveries - header search", function (needs) {
     discourse_ai_enabled: true,
     ai_discover_enabled: true,
     ai_discover_agent: -34,
+    ai_discover_default_mode: "ask",
     enable_welcome_banner: false,
   });
 
@@ -135,8 +137,11 @@ acceptance("AI Discoveries - header search", function (needs) {
       .dom(".ai-discoveries-search-options__option.--ask")
       .exists("and asking sits beside it");
     assert
+      .dom(".ai-discoveries-search-options__option.--ask")
+      .hasClass("is-active", "Ask AI follows the configured default");
+    assert
       .dom(".ai-discoveries-search-options__option.--advanced")
-      .exists("with advanced search alongside them");
+      .doesNotExist("advanced search stays with indexed search");
     assert
       .dom(".search-input .show-advanced-search")
       .doesNotExist("and not in the input any more");
@@ -189,6 +194,9 @@ acceptance("AI Discoveries - header search", function (needs) {
     assert
       .dom(".search-result-topic")
       .exists("and the indexed results take the space back");
+    assert
+      .dom(".ai-discoveries-search-options__option.--advanced")
+      .exists("advanced search is available for all topics");
   });
 
   test("history keeps both kinds, each marked with its own icon", async function (assert) {
@@ -213,6 +221,52 @@ acceptance("AI Discoveries - header search", function (needs) {
       [true, false, true],
       "and each row keeps the icon of the kind of search it repeats"
     );
+  });
+
+  test("a recent indexed search restores Search mode", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "searched");
+    await click(".ai-discoveries-search-options__option.--search");
+
+    find(".ai-discoveries-search-options__option.--ask").dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
+    await waitUntil(() => submittedRequestId);
+    await publishToMessageBus("/discourse-ai/discoveries", {
+      request_id: submittedRequestId,
+      query: "searched",
+      ai_discover_reply: "An answer.",
+      answerable: true,
+      done: true,
+    });
+
+    await fillIn("#icon-search-input", "");
+    await click(
+      '.search-menu-recent .search-menu-assistant-item[data-usage="recent-search"]'
+    );
+
+    assert
+      .dom(".ai-discoveries-search-options__option.--search")
+      .hasClass("is-active", "the magnifying-glass item selects Search");
+    assert
+      .dom(".ai-discoveries-search-options__option.--ask")
+      .doesNotHaveClass("is-active", "Ask AI is no longer selected");
+    assert
+      .dom(".ai-discobot-discoveries")
+      .doesNotExist("the earlier answer is dismissed");
+    assert.dom(".search-result-topic").exists("the indexed results replace it");
+    assert.strictEqual(
+      discoveryRequests,
+      1,
+      "the history item does not start another Ask AI request"
+    );
+
+    await fillIn("#icon-search-input", "dev");
+
+    assert
+      .dom(".ai-discoveries-search-options__option.--search")
+      .hasClass("is-active", "Search remains selected for a new term");
   });
 
   test("scoping to a topic leaves the input alone", async function (assert) {
@@ -281,23 +335,31 @@ acceptance("AI Discoveries - header search", function (needs) {
       );
   });
 
-  test("enter runs the indexed search", async function (assert) {
+  test("enter uses the configured Ask AI default", async function (assert) {
     await visit("/");
     await click("#search-button");
     await fillIn("#icon-search-input", "dev");
     find("#icon-search-input").dispatchEvent(
       new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
     );
-    await waitFor(".search-result-topic");
+    await waitUntil(() => submittedRequestId);
 
     assert
-      .dom(".search-result-topic")
-      .exists("the indexed results arrive as they always have");
+      .dom(".ai-discobot-discoveries")
+      .exists("the AI result opens without another choice");
     assert.strictEqual(
       discoveryRequests,
-      0,
-      "and nothing is asked without picking it"
+      1,
+      "Ask AI starts from the configured default"
     );
+
+    await publishToMessageBus("/discourse-ai/discoveries", {
+      request_id: submittedRequestId,
+      query: "dev",
+      ai_discover_reply: "An answer.",
+      answerable: true,
+      done: true,
+    });
   });
 });
 

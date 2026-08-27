@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
-import { click, render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
@@ -20,6 +20,11 @@ module(
         "service:discobot-discoveries",
         class extends Service {
           @tracked lastQuery = "";
+          @tracked mode = "ask";
+
+          setMode(mode) {
+            this.mode = mode;
+          }
 
           triggerDiscovery(query) {
             this.lastQuery = query;
@@ -68,6 +73,12 @@ module(
       assert
         .dom(".ai-discoveries-search-options__option.--ask")
         .exists("and asking sits beside it");
+      assert
+        .dom(".ai-discoveries-search-options__option.--ask")
+        .hasClass("is-active", "Ask AI is selected by default");
+      assert
+        .dom(".ai-discoveries-search-options__option.--advanced")
+        .doesNotExist("advanced search is hidden for Ask AI");
       assert
         .dom(".ai-discoveries-search-options__option.--search")
         .hasText(
@@ -174,6 +185,8 @@ module(
     });
 
     test("marks whichever option is in effect", async function (assert) {
+      this.owner.lookup("service:discobot-discoveries").setMode("search");
+
       await render(
         <template>
           <AiDiscoveriesSearchOptions
@@ -191,6 +204,20 @@ module(
           "is-active",
           "the indexed search is what the menu is showing"
         );
+      assert
+        .dom(".ai-discoveries-search-options__option.--advanced")
+        .exists("advanced search is available for all topics");
+
+      this.owner.lookup("service:search").activeGlobalSearchTerm =
+        "a different query";
+      await settled();
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--search")
+        .hasClass("is-active", "Search stays selected for the next query");
+      assert
+        .dom(".ai-discoveries-search-options__option.--advanced")
+        .exists("advanced search remains available for the next query");
 
       await click(".ai-discoveries-search-options__option.--ask");
 
@@ -200,6 +227,9 @@ module(
       assert
         .dom(".ai-discoveries-search-options__option.--search")
         .doesNotHaveClass("is-active", "and the other option steps back");
+      assert
+        .dom(".ai-discoveries-search-options__option.--advanced")
+        .doesNotExist("advanced search is hidden while asking AI");
     });
 
     test("a user page offers that user's posts", async function (assert) {

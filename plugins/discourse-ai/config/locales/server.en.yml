@@ -160,7 +160,7 @@ en:
     ai_bot_enable_docked_composer: "Enable the docked chat-style composer for AI bot conversations instead of the standard floating composer."
 
     ai_discover_enabled: "Enable the discovery search feature"
-    ai_discover_default_mode: "Choose the search mode selected when a user opens the welcome banner search. Users can switch modes until the page is reloaded."
+    ai_discover_default_mode: "Choose whether eligible users use Ask AI or indexed Search by default. Users can switch modes until the page is reloaded."
     ai_discover_summary_detail: "Choose how much detail to include in Discoveries summaries."
     ai_discover_related_count: "Set the maximum number of related discussions Discoveries selects and shows with each answer."
     ai_discover_agent: "Agent to use for discovery search feature"

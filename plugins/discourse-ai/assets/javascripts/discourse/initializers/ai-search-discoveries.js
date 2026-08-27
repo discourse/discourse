@@ -95,25 +95,40 @@ export default apiInitializer((api) => {
     }
   );
 
-  // a remembered ask repeats as an ask, not as an indexed search
+  // each remembered item repeats using the mode shown by its icon
   api.addSearchMenuAssistantSelectCallback((args) => {
+    if (args.usage === "recent-search") {
+      discobotDiscoveries.setMode("search");
+      discobotDiscoveries.dismissDiscovery();
+      return true;
+    }
+
     if (args.usage !== "recent-ask") {
       return true;
     }
 
     args.searchTermChanged(args.updatedTerm);
+    discobotDiscoveries.setMode("ask");
     discobotDiscoveries.triggerDiscovery(args.updatedTerm);
     return false;
   });
 
-  // enter is the other way to choose the indexed results, and dismisses the
-  // answer for the same reason picking "search all topics" does
-  api.addSearchMenuOnKeyDownCallback((searchMenu, event) => {
-    if (!offersDiscoveries(searchMenu?.args?.location)) {
+  // enter uses the configured or most recently selected option
+  api.addSearchMenuOnKeyDownCallback((searchTerm, event) => {
+    if (!offersDiscoveries(searchTerm?.args?.location)) {
       return true;
     }
 
     if (event.key === "Enter") {
+      const query = search.activeGlobalSearchTerm?.trim();
+
+      if (discobotDiscoveries.mode === "ask" && query) {
+        searchTerm.args.clearTopicContext();
+        searchTerm.args.clearPMInboxContext();
+        discobotDiscoveries.triggerDiscovery(query);
+        return false;
+      }
+
       discobotDiscoveries.dismissDiscovery();
       return true;
     }
@@ -122,7 +137,7 @@ export default apiInitializer((api) => {
     // the last one stops applying: the scope is released and the row goes back
     // to offering all three.
     if (search.inTopicContext) {
-      searchMenu.clearTopicContext();
+      searchTerm.args.clearTopicContext();
     }
 
     return true;

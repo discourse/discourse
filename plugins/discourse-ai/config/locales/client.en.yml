@@ -1650,7 +1650,7 @@ en:
         create_topic: "Create topic"
         answer_ready: "Discoveries answer ready."
         user_setting: "Enable AI search discoveries"
-        search_placeholder: "Search or ask AI"
+        search_placeholder: "Search or Ask AI"
         search_all_topics: "All topics"
         search_this_topic: "This topic"
         search_user_posts: "Posts by %{username}"

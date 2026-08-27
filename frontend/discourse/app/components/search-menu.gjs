@@ -471,6 +471,7 @@ export default class SearchMenu extends Component {
           />
 
           <SearchTerm
+            @location={{@location}}
             @searchTermChanged={{this.searchTermChanged}}
             @typeFilter={{this.typeFilter}}
             @updateTypeFilter={{this.updateTypeFilter}}
