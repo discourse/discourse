@@ -110,30 +110,30 @@ module Migrations
             zwnj
           ].to_set.freeze
 
-          # @param detectors [Array<Detectors::Base>] the same list the
+          # @param constructs [Array<Constructs::Base>] the same list the
           #   {EngineScanner} anchors with — the gate derives its checks from
           #   what is actually wired.
-          def initialize(detectors:)
-            @presence = Regexp.union(BASE_PRESENCE, *detectors.filter_map(&:presence_pattern))
+          def initialize(constructs:)
+            @presence = Regexp.union(BASE_PRESENCE, *constructs.filter_map(&:presence_pattern))
 
-            # The name-gated detectors answer "would anything actually be
+            # The name-gated constructs answer "would anything actually be
             # extracted?" exactly — a probe just runs them at their triggers.
-            # Every other detector extracts wherever its pattern matches, so its
+            # Every other construct extracts wherever its pattern matches, so its
             # presence alone makes a body worth scanning.
             probed = []
             @unconditional_patterns = []
             unknown = false
 
-            detectors.each do |detector|
-              case detector
-              when Detectors::Mention, Detectors::Hashtag, Detectors::Emoji
-                probed << detector
-              when Detectors::Quote, Detectors::Upload, Detectors::UploadUrl
+            constructs.each do |construct|
+              case construct
+              when Constructs::Mention, Constructs::Hashtag, Constructs::Emoji
+                probed << construct
+              when Constructs::Quote, Constructs::Upload, Constructs::UploadUrl
                 # Covered by the fixed checks in `unconditional_candidate?`.
-              when Detectors::InternalLink
-                @unconditional_patterns << detector.presence_pattern
+              when Constructs::InternalLink
+                @unconditional_patterns << construct.presence_pattern
               else
-                # A detector this gate doesn't know: classification can't rule
+                # A construct this gate doesn't know: classification can't rule
                 # its constructs out, so candidacy is assumed whenever presence
                 # hits.
                 unknown = true
@@ -143,8 +143,8 @@ module Migrations
             @assume_candidates = unknown
 
             @probe_dispatch = {}
-            probed.each do |detector|
-              detector.triggers.each { |char| (@probe_dispatch[char.ord] ||= []) << detector }
+            probed.each do |construct|
+              construct.triggers.each { |char| (@probe_dispatch[char.ord] ||= []) << construct }
             end
             @probe_dispatch.each_value(&:freeze)
             @probe_dispatch.freeze
@@ -225,15 +225,15 @@ module Migrations
           # scheme stays case-sensitive because core's upload rewriting is
           # case-sensitive there; an `UPLOAD://` link carries nothing an
           # importer could resolve. Full upload URLs go through the
-          # detector's own check, so an unrelated `/uploads/` path (WordPress
+          # construct's own check, so an unrelated `/uploads/` path (WordPress
           # for example) makes no candidate.
           def unconditional_candidate?(raw)
             raw.match?(/\[quote=/i) || raw.include?("upload://") ||
-              Detectors::UploadUrl.candidate?(raw) ||
+              Constructs::UploadUrl.candidate?(raw) ||
               @unconditional_patterns.any? { |pattern| raw.match?(pattern) }
           end
 
-          # Runs the name-gated detectors at each of their trigger positions —
+          # Runs the name-gated constructs at each of their trigger positions —
           # a superset of what the engine can recognize there (code shielding
           # and link structure only ever remove matches). First hit wins; a
           # body with no hit extracts nothing on any path.
@@ -243,8 +243,8 @@ module Migrations
             pos = 0
             while (index = raw.byteindex(@probe_stop, pos))
               byte = raw.getbyte(index)
-              @probe_dispatch[byte]&.each do |detector|
-                return true if detector.detect(raw, index, byte)
+              @probe_dispatch[byte]&.each do |construct|
+                return true if construct.detect(raw, index, byte)
               end
               pos = index + 1
             end

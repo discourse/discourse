@@ -194,8 +194,8 @@ module Migrations
       # IntermediateDB stores ids as SQLite signed 64-bit integers (binding a
       # bignum raises). At most 18 digits fit. A longer number is a numeric post
       # title or junk, not a real id — drop it and let the remaining ids
-      # carry the quote. The Discourse MarkdownScanner quote detector applies the
-      # same 18-digit bound (see markdown_scanner/detectors/quote.rb).
+      # carry the quote. The Discourse MarkdownScanner quote construct applies the
+      # same 18-digit bound (see markdown_scanner/constructs/quote.rb).
       def storable_id(value)
         value if value && value < 10**18
       end

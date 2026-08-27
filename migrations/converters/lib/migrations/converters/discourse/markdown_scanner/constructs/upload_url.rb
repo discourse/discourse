@@ -4,7 +4,7 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
+        module Constructs
           # Detects uploads referenced by a full URL instead of a short `upload://`
           # one — markdown images `![alt](url)`, markdown links `[text](url)` and
           # bare whitespace-delimited URLs. Two URL shapes are supported, matching

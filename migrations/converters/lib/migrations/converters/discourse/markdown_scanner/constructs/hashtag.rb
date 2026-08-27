@@ -4,7 +4,7 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
+        module Constructs
           # Detects a Discourse hashtag (`#slug`, `#parent:child`, or a forced
           # `#name::tag` / `#name::category`). The category or tag it names is
           # resolved at import (its slug/name can change), so the node just carries
@@ -79,7 +79,7 @@ module Migrations
             end
 
             # Whether `name` is a source category slug path or tag name — the
-            # engine tier's token filter asks the detector so filter and
+            # engine tier's token filter asks the construct so filter and
             # grammar share one name set and one normalization.
             def tracked_name?(name)
               @names.include?(normalize(name))

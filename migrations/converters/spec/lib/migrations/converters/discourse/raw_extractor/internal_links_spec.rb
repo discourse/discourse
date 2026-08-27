@@ -580,7 +580,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # Core linkifies a bare absolute URL after anything but an ASCII letter, digit
     # or `+` (see `internal_links_parity_spec.rb`), so a URL glued right after
-    # prose punctuation is a link once cooked — the detector rewrites it too.
+    # prose punctuation is a link once cooked — the construct rewrites it too.
     it "rewrites a bare URL glued to preceding punctuation" do
       link, result = link_for("see,https://forum.example.com/t/slug/5 ok")
 
@@ -608,7 +608,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     # A `\` escapes the following character in markdown, so core forms no link;
-    # the detector leaves the URL literal to match.
+    # the construct leaves the URL literal to match.
     it "leaves a backslash-escaped bare URL literal" do
       raw = "see \\https://forum.example.com/t/slug/5 ok"
 

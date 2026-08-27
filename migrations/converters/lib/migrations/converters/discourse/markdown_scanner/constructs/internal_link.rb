@@ -4,7 +4,7 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
+        module Constructs
           # Detects a link pointing at another record on the *same* Discourse — a
           # topic, post, user, category, tag, group or badge — so the importer can
           # rewrite it once the id/slug maps exist. Two syntactic forms:
@@ -14,7 +14,7 @@ module Migrations
           #     bare URL and oneboxes keep working).
           #
           # An image `![](…)` is not our concern, and a raw HTML `<a>` is out of scope
-          # (as with the upload detector), so neither is matched.
+          # (as with the upload construct), so neither is matched.
           #
           # `/filter?q=…` is out of scope too, and deliberately so: it names its
           # categories and tags inside the query string rather than in the path
@@ -36,7 +36,7 @@ module Migrations
           # relative URL bare in prose is left alone, because it stays plain text when
           # the post is cooked, so rewriting it would turn text into a link. A bare
           # URL with no scheme at all (`forum.example.com/t/5`), which core's linkify
-          # also links, is never detected here: it contains no character a detector
+          # also links, is never detected here: it contains no character a construct
           # can trigger on.
           # The engine tier rewrites that form in place once the parse proves it
           # (see {EngineScanner}).
@@ -62,7 +62,7 @@ module Migrations
           class InternalLink < Base
             TRIGGERS = ["[", "h", "H", "/"].freeze
 
-            # The route segments this detector understands, shared by the presence
+            # The route segments this construct understands, shared by the presence
             # gate and the bare-URL pattern.
             ROUTE_SEGMENT = "t|p|u|users|c|g|tags?|badges"
             private_constant :ROUTE_SEGMENT
@@ -143,8 +143,8 @@ module Migrations
             # @param on_foreign_host [#call, nil] called with the host (a String)
             #   when an absolute URL is rejected for a foreign host but its path
             #   still parses as an internal route — the "did the operator forget a
-            #   former domain?" signal. Each host is reported once per detector
-            #   instance, and the foreign path is parsed as-is: a forgotten domain
+            #   former domain?" signal. Each host is reported once per
+            #   {InternalLink} instance, and the foreign path is parsed as-is: a forgotten domain
             #   that served the forum under a subdirectory parses no route and
             #   stays unreported. Nil skips the extra route parse of a foreign
             #   host, so a run that doesn't want the signal pays nothing beyond the
@@ -254,7 +254,7 @@ module Migrations
               )
             end
 
-            # For the engine tier, which filters URL values before any detector
+            # For the engine tier, which filters URL values before any construct
             # runs and so never reaches `build` for a foreign link: the same
             # once-per-host signal for an absolute URL whose host isn't
             # configured.

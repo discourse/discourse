@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-# Cross-checks the custom-emoji detector against what core actually renders. For
+# Cross-checks the custom-emoji construct against what core actually renders. For
 # every boundary character in a representative set we build `a<char>:parrot: x`
-# (and the forward variant `a :parrot:<char> x`) and assert the detector defers
+# (and the forward variant `a :parrot:<char> x`) and assert the construct defers
 # exactly when `PrettyText.cook` renders the source's custom emoji.
 #
-# The deliberate divergence: this detector defers only the source's *custom*
+# The deliberate divergence: this construct defers only the source's *custom*
 # emoji. A standard shortcode (`:smile:`) cooks in core too, but it needs no
 # remapping and round-trips verbatim, so we leave it literal on purpose. The
 # core-side predicate is therefore "core rendered THE CUSTOM emoji" — an
@@ -83,7 +83,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     MarkdownEngineHelper.context_for_names(hashtag_names: [], custom_emoji_names: [name])
   end
 
-  def detector_extracts?(raw, name = "parrot")
+  def construct_extracts?(raw, name = "parrot")
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
@@ -114,11 +114,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   def deviations_for(direction)
     boundary_chars.filter_map do |label, char|
       raw = direction == :before ? "a#{char}:parrot: x" : "a :parrot:#{char} x"
-      extracted = detector_extracts?(raw)
+      extracted = construct_extracts?(raw)
       cooked = core_cooks?(raw)
       next if extracted == cooked
 
-      "#{direction} #{label} #{describe_char(char)}: detector=#{extracted} core=#{cooked}"
+      "#{direction} #{label} #{describe_char(char)}: construct=#{extracted} core=#{cooked}"
     end
   end
 
@@ -134,12 +134,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   it "defers a shortcode at the very start of the input, matching core" do
     raw = ":parrot: x"
-    expect(detector_extracts?(raw)).to eq(core_cooks?(raw))
+    expect(construct_extracts?(raw)).to eq(core_cooks?(raw))
   end
 
   it "defers each shortcode of an adjacent chain, matching core" do
     raw = "look :parrot::parrot: x"
-    expect(detector_extracts?(raw)).to be(true)
+    expect(construct_extracts?(raw)).to be(true)
     expect(core_cooks?(raw)).to be(true)
   end
 
@@ -147,13 +147,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     # `:parrot:t4:` resolves to a toned standard emoji, never the custom one, so
     # both sides leave it as written.
     raw = "wave :parrot:t4: here"
-    expect(detector_extracts?(raw)).to be(false)
+    expect(construct_extracts?(raw)).to be(false)
     expect(core_cooks?(raw)).to be(false)
   end
 
   it "defers a tone-like suffix that has no closing colon, matching core" do
     raw = "wave :parrot:t4 here"
-    expect(detector_extracts?(raw)).to be(true)
+    expect(construct_extracts?(raw)).to be(true)
     expect(core_cooks?(raw)).to be(true)
   end
 
@@ -162,14 +162,14 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     # shortcode — even with a custom emoji named after the middle segment.
     create_custom_emoji("30")
     raw = "meet at 10:30:45 sharp"
-    expect(detector_extracts?(raw, "30")).to be(false)
+    expect(construct_extracts?(raw, "30")).to be(false)
     expect(core_cooks?(raw, "30")).to be(false)
   end
 
   it "defers a custom emoji whose name holds `+` and digits, matching core" do
     create_custom_emoji("+1")
     raw = "nice :+1: work"
-    expect(detector_extracts?(raw, "+1")).to be(true)
+    expect(construct_extracts?(raw, "+1")).to be(true)
     expect(core_cooks?(raw, "+1")).to be(true)
   end
 end

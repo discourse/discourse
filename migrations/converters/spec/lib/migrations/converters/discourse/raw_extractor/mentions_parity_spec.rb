@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Cross-checks the mention detector against what core actually renders. For every
+# Cross-checks the mention construct against what core actually renders. For every
 # boundary character in a representative set we build `a<char>@someuser x` (and the
-# forward variant `a @someuser<char> x`) and assert the detector extracts exactly
+# forward variant `a @someuser<char> x`) and assert the construct extracts exactly
 # when `PrettyText.cook` produces a cooked mention link. Mentions run through the
 # same text-post-process engine as hashtags, which imposes a whitespace-or-
 # punctuation boundary on both sides of the whole match that the rule regex never
@@ -10,7 +10,7 @@
 # core's regex. Needs a booted Rails environment, so it is tagged `:rails` and runs
 # only under `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
-  # The detector reads a username the Unicode-aware way (`@café`), which can only
+  # The construct reads a username the Unicode-aware way (`@café`), which can only
   # be a real source username when the source ran with unicode usernames on, so
   # that is the setting under which the two sides are comparable. With it off core
   # would use an ASCII-only `\w` name and no multibyte username could exist to gate
@@ -22,7 +22,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   let!(:user) { Fabricate(:user, username: "someuser") }
 
-  # Extraction is gated on the source's names, so the detector defers only a
+  # Extraction is gated on the source's names, so the construct defers only a
   # mention that names something real — the same condition under which core cooks a
   # link (a name that resolves to nothing cooks an inert `<span class="mention">`).
   let(:mention_names) do
@@ -65,7 +65,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     }.merge(ascii_punctuation)
   end
 
-  def detector_extracts?(raw)
+  def construct_extracts?(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
@@ -91,11 +91,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   def deviations_for(direction)
     boundary_chars.filter_map do |label, char|
       raw = direction == :before ? "a#{char}@someuser x" : "a @someuser#{char} x"
-      extracted = detector_extracts?(raw)
+      extracted = construct_extracts?(raw)
       cooked = core_cooks?(raw)
       next if extracted == cooked
 
-      "#{direction} #{label} #{describe_char(char)}: detector=#{extracted} core=#{cooked}"
+      "#{direction} #{label} #{describe_char(char)}: construct=#{extracted} core=#{cooked}"
     end
   end
 
@@ -111,7 +111,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   it "extracts a mention at the very start of the input, matching core" do
     raw = "@someuser x"
-    expect(detector_extracts?(raw)).to eq(core_cooks?(raw))
+    expect(construct_extracts?(raw)).to eq(core_cooks?(raw))
   end
 
   describe "name shapes" do
@@ -153,12 +153,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   end
 
   # The one deliberate divergence: core's name regex caps a username at 60
-  # characters, so a longer `@name` cooks nothing, while the detector has no cap and
+  # characters, so a longer `@name` cooks nothing, while the construct has no cap and
   # extracts it. A name that long can't be a real source username (Discourse's own
   # limit is 60), so the gate never defers one — the cap is moot, and we keep the
-  # simpler capless detector.
+  # simpler capless construct.
   it "leaves an over-long name literal, matching core's 60-character cap" do
-    # The detector grammar itself has no length cap, but the engine's mention
+    # The construct grammar itself has no length cap, but the engine's mention
     # rule does — and no token means nothing certifies, so extraction inherits
     # core's cap without duplicating it.
     long = "u#{"a" * 60}" # 61 characters

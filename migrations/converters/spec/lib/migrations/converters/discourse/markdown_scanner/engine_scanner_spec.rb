@@ -194,7 +194,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "refuses a recognized link no grammar can take, instead of calling it handled" do
-      # CommonMark allows an escaped `]` inside a label; the detector grammar
+      # CommonMark allows an escaped `]` inside a label; the construct grammar
       # does not, so the certified destination cannot be anchored to a node.
       # The reference is real and stays stale — that must land on the
       # must-resolve tally, never report as success. The mention beside it is

@@ -21,8 +21,8 @@ module Migrations
       # custom emoji. Polls and events are self-contained (no id remapping needed), so
       # they're left in `raw` verbatim.
       class RawExtractor
-        Detectors = MarkdownScanner::Detectors
-        private_constant :Detectors
+        Constructs = MarkdownScanner::Constructs
+        private_constant :Constructs
 
         HashtagType = Migrations::Database::IntermediateDB::Enums::HashtagType
         private_constant :HashtagType
@@ -35,7 +35,7 @@ module Migrations
         FORCED_HASHTAG_TYPES = { category: HashtagType::CATEGORY, tag: HashtagType::TAG }.freeze
         private_constant :FORCED_HASHTAG_TYPES
 
-        # The symbol an {Detectors::InternalLink} node carries for its target kind
+        # The symbol a {Constructs::InternalLink} node carries for its target kind
         # mapped to the stored `link_target` enum value.
         LINK_TARGET_TYPES = {
           topic: LinkTarget::TOPIC,
@@ -69,7 +69,7 @@ module Migrations
         # @param custom_emoji_names [Enumerable<String>, nil] the source's custom
         #   emoji names. When given (and non-empty) a `:name:` shortcode naming one
         #   of them is extracted; standard shortcodes always stay plain text. Without
-        #   them the emoji detector is left out entirely, so posts don't pay for its
+        #   them the emoji construct is left out entirely, so posts don't pay for its
         #   `:` trigger.
         # @param internal_link_hosts [Hash{String => (String, nil)}] the source's own
         #   hosts (its base URL and any former domains), each downcased and mapped to
@@ -138,21 +138,21 @@ module Migrations
           @engine_refusals = Hash.new(0)
           @slow_parses = 0
 
-          detectors = [Detectors::Upload.new, Detectors::UploadUrl.new, Detectors::Quote.new]
+          constructs = [Constructs::Upload.new, Constructs::UploadUrl.new, Constructs::Quote.new]
           # After UploadUrl, so an upload URL still wins over a bare internal link that
           # happens to look like one.
-          detectors << Detectors::InternalLink.new(
+          constructs << Constructs::InternalLink.new(
             hosts: internal_link_hosts,
             base_prefix: internal_link_base_prefix,
             on_foreign_host:,
           )
-          detectors << Detectors::Mention.new(names: mention_names)
-          detectors << Detectors::Hashtag.new(names: hashtag_names)
+          constructs << Constructs::Mention.new(names: mention_names)
+          constructs << Constructs::Hashtag.new(names: hashtag_names)
           if custom_emoji_names.present?
-            detectors << Detectors::Emoji.new(names: custom_emoji_names)
+            constructs << Constructs::Emoji.new(names: custom_emoji_names)
           end
 
-          # The detectors carry no per-post state (the internal-link one only
+          # The constructs carry no per-post state (the internal-link one only
           # accumulates its report-once host set) and the scanner resets its
           # state on each `scan`, so build them once and reuse them for every
           # post. `extract` swaps `@topic_id` per call, so one extractor must not
@@ -160,11 +160,11 @@ module Migrations
           # posts step is expected to build it in per-worker `setup`; no
           # production step exists yet).
           on_node = ->(node, source) { defer(node, source) }
-          @gate = MarkdownScanner::TierGate.new(detectors:)
+          @gate = MarkdownScanner::TierGate.new(constructs:)
           @engine_scanner =
             MarkdownScanner::EngineScanner.new(
               engine: markdown_engine,
-              detectors:,
+              constructs:,
               gate: @gate,
               internal_link_hosts:,
               internal_link_base_prefix:,
@@ -180,7 +180,7 @@ module Migrations
         # with the extraction itself:
         #
         #   * unexpected failure — `:unanchored` (the engine proved a tracked
-        #     occurrence, but no detector grammar could place it),
+        #     occurrence, but no construct grammar could place it),
         #     `:engine_error`, `:overlap`, `:probe_desync`;
         #   * known unsupported source content — `:invalid_internal_route` (a
         #     coordinate-shaped path that parses no route, usually a link that

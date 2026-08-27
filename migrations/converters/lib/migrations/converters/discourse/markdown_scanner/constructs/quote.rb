@@ -4,7 +4,7 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
+        module Constructs
           # Parses the opening tag of a Discourse quote (`[quote=…]`); the body
           # and `[/quote]` stay in place, and any embeds inside the body are
           # still extracted. The {EngineScanner} calls this only where a parsed

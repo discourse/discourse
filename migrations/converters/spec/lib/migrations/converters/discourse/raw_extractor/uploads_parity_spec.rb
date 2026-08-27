@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-# Cross-checks the full-URL upload detector's bare-URL boundary against what core
+# Cross-checks the full-URL upload construct's bare-URL boundary against what core
 # renders. It shares {Base#bare_url_boundary_before?} with the internal-link
-# detector, so it rides the same linkify boundary (see
+# construct, so it rides the same linkify boundary (see
 # `internal_links_parity_spec.rb`); this smaller battery confirms an upload URL —
 # recognized by its 40-hex sha1, not by a route — admits at the same characters.
 # For every boundary character we build `a<char><upload-url> b` (and the forward
-# variant) and assert the detector defers exactly when `PrettyText.cook` linkifies
+# variant) and assert the construct defers exactly when `PrettyText.cook` linkifies
 # an anchor for the URL. Needs a booted Rails environment, so it is tagged `:rails`
 # and runs only under `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
@@ -30,7 +30,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
   end
 
-  def detector_extracts?(raw)
+  def construct_extracts?(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
@@ -49,12 +49,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   def deviations_for(direction)
     LinkifyBoundaryCorpus.chars.filter_map do |label, char|
       raw = direction == :before ? "a#{char}#{url} b" : "a #{url}#{char} b"
-      extracted = detector_extracts?(raw)
+      extracted = construct_extracts?(raw)
       linkified = core_links?(raw)
       next if extracted == linkified
 
       "#{direction} #{label} #{LinkifyBoundaryCorpus.describe(char)}: " \
-        "detector=#{extracted} core=#{linkified}"
+        "construct=#{extracted} core=#{linkified}"
     end
   end
 
@@ -73,7 +73,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   it "defers at the very start of the input, matching core" do
     raw = "#{url} b"
-    expect(detector_extracts?(raw)).to eq(core_links?(raw))
+    expect(construct_extracts?(raw)).to eq(core_links?(raw))
   end
 
   # The converter decodes `/uploads/short-url/<token>` without core on the
@@ -83,7 +83,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     tokens = %w[21 aZ9 Zm9vYmFy 2Yjf3WE4KOQ88YUb4fUMubKB9My zzzzzzzzzzzzzzzzzzzzzzzzzzz 0]
     tokens.each do |token|
       expect(
-        Migrations::Converters::Discourse::MarkdownScanner::Detectors::UploadUrl.sha1_from_short_token(
+        Migrations::Converters::Discourse::MarkdownScanner::Constructs::UploadUrl.sha1_from_short_token(
           token,
         ),
       ).to eq(Upload.sha1_from_base62_encoded(token)),

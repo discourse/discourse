@@ -4,19 +4,19 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
-          # The boundary look-arounds shared by the detectors: whether core's
+        module Constructs
+          # The boundary look-arounds shared by the constructs: whether core's
           # engines let a construct open (or close) at a position, given what
           # sits next to it. Each takes the input and a byte offset, first
           # tests the neighboring byte as ASCII, and falls back to the
           # recovered character for a Unicode-aware test. Mixed into {Base},
-          # so every detector shares one reading of each boundary.
+          # so every construct shares one reading of each boundary.
           module Boundaries
             # The boundary markdown-it's text-post-process engine enforces around a
             # whole match: whitespace or, per markdown-it's `isPunctChar`, a Unicode
             # punctuation or symbol character. `\p{Z}` covers the wide spaces (NBSP,
             # ideographic space) markdown-it counts as whitespace that Ruby's `\s`
-            # misses. Shared by the detectors whose construct only fires on such a
+            # misses. Shared by the classes whose construct only fires on such a
             # boundary (mentions, hashtags). Verified against PrettyText — this
             # boundary is imposed by the engine, not shown by the rule's own regex.
             PUNCTUATION_OR_SYMBOL = /[\p{P}\p{S}\p{Z}]/
@@ -130,7 +130,7 @@ module Migrations
             end
 
             # Where a bare URL may start. This is only the cheap first gate — the URL
-            # detectors narrow it further once a match tells them whether the URL is
+            # constructs narrow it further once a match tells them whether the URL is
             # relative or absolute, because the boundary alone doesn't separate the
             # two:
             #
@@ -149,7 +149,7 @@ module Migrations
             #     digit or `+` (see {#linkify_boundary_before?}). A schemed or `//host`
             #     URL in prose becomes a link once the post is cooked, so rewriting it
             #     keeps a link a link. A relative path like `/t/5` stays plain text
-            #     when cooked, so the detectors leave a relative prose URL alone — it
+            #     when cooked, so the constructs leave a relative prose URL alone — it
             #     passes this gate but is rejected as relative unless it sits at the
             #     `)](` target above.
             #

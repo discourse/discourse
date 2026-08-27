@@ -27,7 +27,7 @@ module Migrations
         # post is reported with a cause. This can refuse a post, but it can
         # never corrupt one.
         #
-        # Certified occurrences are turned into nodes by the {Detectors},
+        # Certified occurrences are turned into nodes by the {Constructs},
         # anchored at the certified offsets, so the recorded embeds have the
         # same shape as everywhere else in the pipeline.
         class EngineScanner
@@ -70,7 +70,7 @@ module Migrations
           #   terminated body refuses directly.
           def initialize(
             engine:,
-            detectors:,
+            constructs:,
             gate:,
             internal_link_hosts: {},
             internal_link_base_prefix: nil,
@@ -85,36 +85,40 @@ module Migrations
             @base_prefix = internal_link_base_prefix
             @on_node = on_node
 
-            @mention_detector = detectors.find { |detector| detector.is_a?(Detectors::Mention) }
-            @hashtag_detector = detectors.find { |detector| detector.is_a?(Detectors::Hashtag) }
-            @emoji_detector = detectors.find { |detector| detector.is_a?(Detectors::Emoji) }
-            @quote_detector = detectors.find { |detector| detector.is_a?(Detectors::Quote) }
-            @internal_link_detector =
-              detectors.find { |detector| detector.is_a?(Detectors::InternalLink) }
+            @mention_construct =
+              constructs.find { |construct| construct.is_a?(Constructs::Mention) }
+            @hashtag_construct =
+              constructs.find { |construct| construct.is_a?(Constructs::Hashtag) }
+            @emoji_construct = constructs.find { |construct| construct.is_a?(Constructs::Emoji) }
+            @quote_construct = constructs.find { |construct| construct.is_a?(Constructs::Quote) }
+            @internal_link_construct =
+              constructs.find { |construct| construct.is_a?(Constructs::InternalLink) }
 
             # URL constructs are matched from their syntax anchor: `[`, `!`,
             # or the first byte of a bare URL.
             @url_dispatch = {}
-            detectors.each do |detector|
-              case detector
-              when Detectors::Upload, Detectors::UploadUrl, Detectors::InternalLink
-                detector.triggers.each { |char| (@url_dispatch[char.ord] ||= []) << detector }
+            constructs.each do |construct|
+              case construct
+              when Constructs::Upload, Constructs::UploadUrl, Constructs::InternalLink
+                construct.triggers.each { |char| (@url_dispatch[char.ord] ||= []) << construct }
               end
             end
             @url_dispatch.each_value(&:freeze)
             @url_dispatch.freeze
 
-            # The name-gated detectors by trigger byte, for the one-walk
+            # The name-gated constructs by trigger byte, for the one-walk
             # occurrence index. The trigger bytes are disjoint, so each byte
-            # maps to exactly one (kind, detector) pair.
+            # maps to exactly one (kind, construct) pair.
             @probe_dispatch = {}
             {
-              mention: @mention_detector,
-              hashtag: @hashtag_detector,
-              emoji: @emoji_detector,
-            }.each do |kind, detector|
-              next if detector.nil?
-              detector.triggers.each { |char| @probe_dispatch[char.ord] = [kind, detector].freeze }
+              mention: @mention_construct,
+              hashtag: @hashtag_construct,
+              emoji: @emoji_construct,
+            }.each do |kind, construct|
+              next if construct.nil?
+              construct.triggers.each do |char|
+                @probe_dispatch[char.ord] = [kind, construct].freeze
+              end
             end
             @probe_dispatch.freeze
             @probe_stop =
@@ -191,29 +195,29 @@ module Migrations
             @scan_timeout_ms / 1000.0
           end
 
-          attr_reader :mention_detector,
-                      :hashtag_detector,
-                      :emoji_detector,
-                      :quote_detector,
+          attr_reader :mention_construct,
+                      :hashtag_construct,
+                      :emoji_construct,
+                      :quote_construct,
                       :url_dispatch,
                       :probe_dispatch,
                       :probe_stop,
                       :on_node
 
-          # The detectors hold the name sets and the normalization, so the
+          # The constructs hold the name sets and the normalization, so the
           # token filter here and the grammar that later anchors a construct
           # cannot drift apart.
           def mention_tracked?(name)
-            !@mention_detector.nil? && @mention_detector.tracked_name?(name)
+            !@mention_construct.nil? && @mention_construct.tracked_name?(name)
           end
 
           def emoji_tracked?(name)
-            !@emoji_detector.nil? && @emoji_detector.tracked_name?(name)
+            !@emoji_construct.nil? && @emoji_construct.tracked_name?(name)
           end
 
           # The certified text for an engine hashtag slug; nil when the name
           # is not tracked. Core's matcher lets trailing colons into the slug
-          # and its lookup drops them, while the detector grammar keeps a
+          # and its lookup drops them, while the construct grammar keeps a
           # dangling `:` outside the construct — the certified text must do
           # the same. A `::type` suffix takes no part in the name check.
           def hashtag_text(slug)
@@ -221,7 +225,7 @@ module Migrations
             return nil if ref.empty?
 
             name = ref.sub(/::(?:category|tag)\z/, "")
-            return nil if @hashtag_detector.nil? || !@hashtag_detector.tracked_name?(name)
+            return nil if @hashtag_construct.nil? || !@hashtag_construct.tracked_name?(name)
 
             "##{ref}"
           end
@@ -231,17 +235,17 @@ module Migrations
           end
 
           # A link or image value the migration remaps: an `upload://` short
-          # URL, a full URL with a supported upload shape (the detector's own
+          # URL, a full URL with a supported upload shape (the construct's own
           # check, so an unrelated `/uploads/` path is not tracked), an
           # absolute URL on one of the source's own hosts inside that host's
           # configured path prefix, or a site-relative path inside the base
           # prefix that parses as a route. External links are not constructs
           # and can never refuse a body. The host and prefix reading is
-          # {UrlOrigin}, the same one the detector grammar uses, so this
-          # filter and the anchoring detectors cannot disagree.
+          # {UrlOrigin}, the same one the construct grammar uses, so this
+          # filter and the anchoring constructs cannot disagree.
           def url_tracked?(value)
             return true if value.start_with?("upload://")
-            return true if Detectors::UploadUrl.tracked_value?(value)
+            return true if Constructs::UploadUrl.tracked_value?(value)
 
             host, rest = UrlOrigin.split(value)
             return false if rest.nil?
@@ -251,7 +255,7 @@ module Migrations
 
               # An internal-looking URL on an unconfigured host may be a
               # forgotten former domain; report it once per host.
-              @internal_link_detector&.note_foreign_url(value)
+              @internal_link_construct&.note_foreign_url(value)
               return false
             end
 
@@ -260,7 +264,7 @@ module Migrations
             path = UrlOrigin.path_within_prefix(rest, @base_prefix)
             return false if path.nil?
 
-            Detectors::InternalLink::RouteParser.parse(path) ? true : false
+            Constructs::InternalLink::RouteParser.parse(path) ? true : false
           end
 
           # The refusal cause for a tracked URL no grammar could place. A
@@ -268,7 +272,7 @@ module Migrations
           # (`/t//209`, `/u/bob!!!`) is a broken link in the source data;
           # rewriting only its origin would carry the stale coordinates onto
           # the new host. Everything else is `:unanchored`: the engine proved
-          # a tracked occurrence and the detector grammar has a real gap.
+          # a tracked occurrence and the construct grammar has a real gap.
           def unplaced_url_cause(value)
             host, rest = UrlOrigin.split(value)
             path =
@@ -278,7 +282,7 @@ module Migrations
                 UrlOrigin.path_within_prefix(rest, @base_prefix)
               end
 
-            parser = Detectors::InternalLink::RouteParser
+            parser = Constructs::InternalLink::RouteParser
             if path && parser.coordinate_shaped?(path) && parser.parse(path).nil?
               :invalid_internal_route
             else
@@ -291,7 +295,7 @@ module Migrations
           # definition's destination). `route_url` is the engine's normalized
           # href; `url` is the raw spelling at the occurrence.
           def bare_url_node(route_url:, url:)
-            @internal_link_detector&.reference_for(route_url:, url:)
+            @internal_link_construct&.reference_for(route_url:, url:)
           end
 
           # The per-body count-certification pass; the scanner itself stays
@@ -484,9 +488,9 @@ module Migrations
               spans if spans.size == expected
             end
 
-            # Turns certified URL occurrences into whole-construct detector
-            # matches. A destination inside `[text](…)` must be replaced
-            # together with its syntax, so the detectors match from the `[`
+            # Turns certified URL occurrences into matches that cover the
+            # whole construct. A destination inside `[text](…)` must be
+            # replaced together with its syntax, so the classes match from the `[`
             # or `!` anchor; that also covers both occurrences of a
             # `[URL](same URL)` self-link with one node. An occurrence that
             # is its own syntax (a bare schemeless domain, a reference
@@ -508,14 +512,14 @@ module Migrations
             end
 
             # Mentions, hashtags and emoji: their certified occurrences came
-            # from the detectors, so probing again returns the node directly.
+            # from the constructs, so probing again returns the node directly.
             def resolve_probed(spans)
               @certified.each do |(kind, _value), occurrences|
                 next if kind == :url
 
                 occurrences.each do |occurrence|
                   match = probe_match_at(kind, occurrence)
-                  # The index was built from detector matches; a miss here
+                  # The index was built from construct matches; a miss here
                   # means the pass is inconsistent with itself.
                   return :probe_desync if match.nil?
                   spans[[match.start_pos, match.end_pos]] ||= match
@@ -544,10 +548,10 @@ module Migrations
                 # remap; core renders it without coordinates. A header the
                 # grammar could not read at all may still hold remappable
                 # fields, so it refuses instead of keeping stale data.
-                match = @scanner.quote_detector.detect_block_opener(@input, opener)
+                match = @scanner.quote_construct.detect_block_opener(@input, opener)
                 if match
                   spans[[match.start_pos, match.end_pos]] ||= match
-                elsif !@scanner.quote_detector.parseable_opener?(@input, opener)
+                elsif !@scanner.quote_construct.parseable_opener?(@input, opener)
                   return :unanchored
                 end
               end

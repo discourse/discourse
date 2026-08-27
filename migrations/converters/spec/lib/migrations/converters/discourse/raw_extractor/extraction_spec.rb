@@ -205,7 +205,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads.size).to eq(1)
     end
 
-    # A `[` that a detector claims never reaches the bbcode check, mirroring
+    # A `[` that a construct claims never reaches the bbcode check, mirroring
     # markdown-it running the link rule before the inline bbcode rule.
     it "extracts from a link whose label happens to be code" do
       extract("z [code](https://external.com/x) #{upload} y[/code]")
@@ -330,7 +330,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.map { |mention| mention[:name] }).to eq(%w[bob])
     end
 
-    # The skip must not swallow a link another detector wants, or the embed it
+    # The skip must not swallow a link another construct wants, or the embed it
     # carries would go unrecorded.
     it "still defers an internal link" do
       link_extractor.extract("[t](https://forum.example.com/t/slug/5)")
@@ -449,7 +449,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   it "raises on a node type it has no defer handler for" do
-    # `extract` builds its detectors internally and never produces an unknown
+    # `extract` builds its constructs internally and never produces an unknown
     # node, so this guard is unreachable through the public API; open up the
     # private method deliberately to exercise it.
     seam =

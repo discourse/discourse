@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
-  subject(:gate) { described_class.new(detectors:) }
+  subject(:gate) { described_class.new(constructs:) }
 
   let(:scanner) { Migrations::Converters::Discourse::MarkdownScanner }
 
@@ -14,21 +14,21 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
     Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("support")])
   end
 
-  let(:detectors) do
+  let(:constructs) do
     [
-      scanner::Detectors::Upload.new,
-      scanner::Detectors::UploadUrl.new,
-      scanner::Detectors::Quote.new,
-      scanner::Detectors::InternalLink.new(
+      scanner::Constructs::Upload.new,
+      scanner::Constructs::UploadUrl.new,
+      scanner::Constructs::Quote.new,
+      scanner::Constructs::InternalLink.new(
         hosts: {
           "forum.example.com" => nil,
         },
         base_prefix: nil,
         on_foreign_host: nil,
       ),
-      scanner::Detectors::Mention.new(names: mention_names),
-      scanner::Detectors::Hashtag.new(names: hashtag_names),
-      scanner::Detectors::Emoji.new(names: %w[parrot]),
+      scanner::Constructs::Mention.new(names: mention_names),
+      scanner::Constructs::Hashtag.new(names: hashtag_names),
+      scanner::Constructs::Emoji.new(names: %w[parrot]),
     ]
   end
 
@@ -71,7 +71,7 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
       expect(gate.classify("/uploads/default/original/2X/#{sha1}.png")).to eq(:engine)
       expect(gate.classify("/uploads/short-url/aZ9.png")).to eq(:engine)
       # A WordPress-style path has neither supported shape. Without the
-      # detector check, every such body would pay an engine parse.
+      # construct check, every such body would pay an engine parse.
       expect(gate.classify("https://blog.example.net/wp-content/uploads/2009/12/a.jpg")).to eq(
         :none,
       )
@@ -161,10 +161,10 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
     end
   end
 
-  describe "an unfamiliar detector" do
-    let(:detectors) do
+  describe "an unfamiliar construct" do
+    let(:constructs) do
       stub =
-        Class.new(Migrations::Converters::Discourse::MarkdownScanner::Detectors::Base) do
+        Class.new(Migrations::Converters::Discourse::MarkdownScanner::Constructs::Base) do
           const_set(:TRIGGERS, ["%"].freeze)
 
           def detect(_input, _pos, _byte)

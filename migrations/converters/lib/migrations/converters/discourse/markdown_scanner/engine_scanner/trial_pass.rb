@@ -269,9 +269,9 @@ module Migrations
               pos = 0
               while (offset = @input.byteindex(/\[quote=/i, pos))
                 pos = offset + 1
-                match = @scanner.quote_detector.detect_block_opener(@input, offset)
+                match = @scanner.quote_construct.detect_block_opener(@input, offset)
                 if match.nil?
-                  unproven += 1 unless @scanner.quote_detector.parseable_opener?(@input, offset)
+                  unproven += 1 unless @scanner.quote_construct.parseable_opener?(@input, offset)
                   next
                 end
 

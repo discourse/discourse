@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Cross-checks the hashtag detector against what core actually renders. For every
+# Cross-checks the hashtag construct against what core actually renders. For every
 # boundary character in a representative set we build `a<char>#general x` (and the
-# forward variant `a #general<char> x`) and assert the detector extracts exactly
+# forward variant `a #general<char> x`) and assert the construct extracts exactly
 # when `PrettyText.cook` produces a cooked hashtag link. This needs a booted Rails
 # environment (PrettyText's server-side markdown-it and a real category to look
 # up), so it is tagged `:rails` and runs only under `MIGRATIONS_RAILS=1`.
@@ -19,7 +19,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   end
   let!(:user) { Fabricate(:user) }
 
-  # Extraction is gated on the source's names, so the detector defers only a
+  # Extraction is gated on the source's names, so the construct defers only a
   # hashtag that names something real — the same condition under which core cooks.
   let(:hashtag_names) do
     Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("general")])
@@ -53,7 +53,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     }.merge(ascii_punctuation)
   end
 
-  def detector_extracts?(raw)
+  def construct_extracts?(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
@@ -76,11 +76,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   def deviations_for(direction)
     boundary_chars.filter_map do |label, char|
       raw = direction == :before ? "a#{char}#general x" : "a #general#{char} x"
-      extracted = detector_extracts?(raw)
+      extracted = construct_extracts?(raw)
       cooked = core_cooks?(raw)
       next if extracted == cooked
 
-      "#{direction} #{label} #{describe_char(char)}: detector=#{extracted} core=#{cooked}"
+      "#{direction} #{label} #{describe_char(char)}: construct=#{extracted} core=#{cooked}"
     end
   end
 
@@ -96,6 +96,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   it "extracts a hashtag at the very start of the input, matching core" do
     raw = "#general x"
-    expect(detector_extracts?(raw)).to eq(core_cooks?(raw))
+    expect(construct_extracts?(raw)).to eq(core_cooks?(raw))
   end
 end

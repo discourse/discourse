@@ -184,7 +184,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads.map { |row| row[:upload_id] }).to eq(%w[Zm9vYmFy YmFyYmF6])
     end
 
-    # The attachment marker folds case (core's split, see the detector), so an
+    # The attachment marker folds case (core's split, see the construct), so an
     # upper-cased one still takes the attachment branch — with its size tail,
     # which the link-label branch has no reason to consume.
     it "reads an upper-cased attachment marker as an attachment, size included" do
@@ -337,7 +337,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # Core linkifies a bare absolute URL after anything but an ASCII letter, digit
     # or `+` (see `uploads_parity_spec.rb`), so a URL glued right after prose
-    # punctuation is a link once cooked — the detector defers it too.
+    # punctuation is a link once cooked — the construct defers it too.
     it "defers a bare upload URL glued to preceding punctuation" do
       url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
       result = extract("here,#{url} thanks")

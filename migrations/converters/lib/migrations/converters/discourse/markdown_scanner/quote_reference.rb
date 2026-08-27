@@ -5,7 +5,7 @@ module Migrations
     module Discourse
       module MarkdownScanner
         # A deferred quote reference: the opening `[quote="…"]` tag alone. That
-        # tag is all the detector consumes — the body and `[/quote]` stay in the
+        # tag is all the construct consumes — the body and `[/quote]` stay in the
         # raw and are scanned like any other text. The opening tag alone carries
         # the references that need remapping, so this is a reference, not a
         # quote block with children.

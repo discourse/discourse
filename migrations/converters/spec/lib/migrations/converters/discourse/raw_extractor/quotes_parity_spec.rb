@@ -2,17 +2,17 @@
 
 require "cgi"
 
-# Cross-checks the quote detector's header reading and its trailing-space forward
+# Cross-checks the quote construct's header reading and its trailing-space forward
 # check against what core actually renders. Core parses `[quote=…]` through
 # discourse-markdown-it's bbcode-block.js block rule, which accepts an unquoted
 # header and strips a range of quotation-mark pairs, and only renders the block
 # when nothing but spaces or tabs follows the opening tag to the end of its line.
-# For each header shape we assert the detector defers exactly when
+# For each header shape we assert the construct defers exactly when
 # `PrettyText.cook` renders a `<aside class="quote">`, and reads back the same
 # username core put on it. Needs a booted Rails environment, so it is tagged
 # `:rails` and runs only under `MIGRATIONS_RAILS=1`.
 #
-# The detector deliberately skips core's block-position rules (line start, a real
+# The construct deliberately skips core's block-position rules (line start, a real
 # `[/quote]` further down, list context) — matching those would need whole-
 # document machinery, and over-extracting a `[quote=…]` that core left as raw
 # BBCode only renumbers text in place at import. So a handful of rows are known,
@@ -32,7 +32,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   def markdown_engine
     MarkdownEngineHelper.context_for_names(hashtag_names: [])
   end
-  def detector_quote(raw)
+  def construct_quote(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
@@ -43,12 +43,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     buffer.quotes.first
   end
 
-  def detector_extracts?(raw)
-    !detector_quote(raw).nil?
+  def construct_extracts?(raw)
+    !construct_quote(raw).nil?
   end
 
-  def detector_username(raw)
-    detector_quote(raw)&.[](:quoted_username)
+  def construct_username(raw)
+    construct_quote(raw)&.[](:quoted_username)
   end
 
   def core_html(raw)
@@ -61,13 +61,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   # The username core put on the aside, with the HTML entities it escapes (a
   # literal `"` in a mismatched header cooks as `&quot;`) turned back so it
-  # compares to the detector's raw header value.
+  # compares to the construct's raw header value.
   def core_username(raw)
     escaped = core_html(raw)[/data-username="([^"]*)"/, 1]
     escaped && CGI.unescapeHTML(escaped)
   end
 
-  # Header shapes that are parity: the detector defers exactly when core renders,
+  # Header shapes that are parity: the construct defers exactly when core renders,
   # and reads back the same username. Each `\n` right after the opening tag is the
   # trailing-space forward check's happy path (a bare line end). The username is
   # the value core strips down to, so the mismatched and empty-pair rows keep the
@@ -129,11 +129,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   it "defers exactly when core renders, reading back the same username" do
     deviations =
       parity_headers.filter_map do |label, (raw, expected)|
-        detector = detector_username(raw)
+        construct = construct_username(raw)
         core = core_username(raw)
-        next if detector == expected && core == expected
+        next if construct == expected && core == expected
 
-        "#{label}: detector=#{detector.inspect} core=#{core.inspect} expected=#{expected.inspect}"
+        "#{label}: construct=#{construct.inspect} core=#{core.inspect} expected=#{expected.inspect}"
       end
 
     expect(deviations).to be_empty, -> { deviations.join("\n") }
@@ -142,9 +142,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   it "leaves headerless and no-username shapes alone, matching core" do
     deviations =
       parity_non_quotes.filter_map do |label, raw|
-        next if !detector_extracts?(raw) && !core_renders_quote?(raw)
+        next if !construct_extracts?(raw) && !core_renders_quote?(raw)
 
-        "#{label}: detector=#{detector_extracts?(raw)} core=#{core_renders_quote?(raw)}"
+        "#{label}: construct=#{construct_extracts?(raw)} core=#{core_renders_quote?(raw)}"
       end
 
     expect(deviations).to be_empty, -> { deviations.join("\n") }
@@ -152,15 +152,15 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   it "extracts a header at the very start of the input, matching core" do
     raw = %([quote="bob"]\nx\n[/quote])
-    expect(detector_extracts?(raw)).to eq(core_renders_quote?(raw))
-    expect(detector_username(raw)).to eq(core_username(raw))
+    expect(construct_extracts?(raw)).to eq(core_renders_quote?(raw))
+    expect(construct_username(raw)).to eq(core_username(raw))
   end
 
   it "reads a comma-containing display name back the way core joins it" do
     # quotes.js splits the header on commas and joins everything before the
     # `post:` part back together as the display name.
     raw = %([quote="Doe, John, post:1, username:jd"]\nx\n[/quote])
-    expect(detector_quote(raw)).to include(quoted_username: "jd", quoted_name: "Doe, John")
+    expect(construct_quote(raw)).to include(quoted_username: "jd", quoted_name: "Doe, John")
     expect(core_html(raw)).to include("Doe, John")
   end
 
@@ -169,7 +169,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     # quote whose opening tag is followed only by a CRLF; the forward check reads
     # the `\r` as a line end for the same reason.
     raw = %([quote="bob"]\r\nx\r\n[/quote])
-    expect(detector_extracts?(raw)).to be(true)
+    expect(construct_extracts?(raw)).to be(true)
     expect(core_renders_quote?(raw)).to be(true)
   end
 
@@ -180,19 +180,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     it "leaves a mid-line tag alone, like core" do
       # Not at a line start, so core renders nothing and neither do we.
       raw = %(some text [quote="bob"]\nx\n[/quote])
-      expect(detector_extracts?(raw)).to be(false)
+      expect(construct_extracts?(raw)).to be(false)
       expect(core_renders_quote?(raw)).to be(false)
     end
 
     it "leaves a tag inside a list item alone, like core" do
       raw = %(- [quote="bob"]\nx\n[/quote])
-      expect(detector_extracts?(raw)).to be(false)
+      expect(construct_extracts?(raw)).to be(false)
       expect(core_renders_quote?(raw)).to be(false)
     end
 
     it "leaves an unclosed quote alone, like core" do
       raw = %([quote="bob"]\nx\nno closing tag here)
-      expect(detector_extracts?(raw)).to be(false)
+      expect(construct_extracts?(raw)).to be(false)
       expect(core_renders_quote?(raw)).to be(false)
     end
 
@@ -201,14 +201,14 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       # engine tier certifies block context from the parsed quote token, so
       # the header is remapped exactly where core renders it.
       raw = %([quote="bob"]body[/quote])
-      expect(detector_extracts?(raw)).to be(true)
+      expect(construct_extracts?(raw)).to be(true)
       expect(core_renders_quote?(raw)).to be(true)
     end
 
     it "leaves a headerless [quote] alone where core renders an anonymous aside" do
       # Nothing to remap without a header, so we defer to the importer's re-cook.
       raw = %([quote]\nx\n[/quote])
-      expect(detector_extracts?(raw)).to be(false)
+      expect(construct_extracts?(raw)).to be(false)
       expect(core_renders_quote?(raw)).to be(true)
     end
   end

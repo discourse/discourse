@@ -4,16 +4,16 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
-          # Base class for construct detectors. The boundary look-arounds the
-          # detectors share live in {Boundaries}; the constants here are the
+        module Constructs
+          # Base class for the construct classes. The boundary look-arounds
+          # they share live in {Boundaries}; the constants here are the
           # shared pattern building blocks.
           class Base
             include Boundaries
 
-            # The characters this detector can match at (each subclass's `TRIGGERS`).
+            # The characters this construct can match at (each subclass's `TRIGGERS`).
             # The scanner dispatches by character, so a position only runs the
-            # detectors that can match there.
+            # constructs that can match there.
             #
             # @return [Array<String>]
             def triggers
@@ -30,11 +30,11 @@ module Migrations
             end
 
             # A regexp the {TierGate} adds to its presence check when this
-            # detector is wired: a body matching neither the gate's built-in
-            # check nor any detector's pattern is returned without any work.
-            # Only a detector whose constructs don't always contain one of the
+            # class is wired: a body matching neither the gate's built-in
+            # check nor any class's pattern is returned without any work.
+            # Only a class whose matches don't always contain one of the
             # gate's base presence characters needs one; nil (the default)
-            # means the built-in check already covers this detector.
+            # means the built-in check already covers this class.
             #
             # @return [Regexp, nil]
             def presence_pattern
@@ -120,7 +120,7 @@ module Migrations
             LINK_TITLE = /(?:"[^"\n]*"|'[^'\n]*'|\([^()\n]*\))/
 
             # Everything a markdown link allows after its destination: an optional
-            # title, padding, and the closing paren. Shared so every detector that
+            # title, padding, and the closing paren. Shared so every construct that
             # reads `[text](url)` accepts the same shapes — a link carrying a title
             # is still a link, and one that doesn't match here is never rewritten.
             LINK_TAIL = /(?:#{LINK_GAP}#{LINK_TITLE})?#{LINK_GAP}\)/

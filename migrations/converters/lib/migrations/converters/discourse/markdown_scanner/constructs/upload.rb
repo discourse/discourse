@@ -6,7 +6,7 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
+        module Constructs
           # Detects Discourse upload references (`upload://` URLs):
           # `![alt|dims](upload://sha1.ext)` images,
           # `[file|attachment](upload://sha1.ext) (size)` attachments,

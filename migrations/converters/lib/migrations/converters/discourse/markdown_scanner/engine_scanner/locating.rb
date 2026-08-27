@@ -8,7 +8,7 @@ module Migrations
           # The byte-domain machinery a certification pass and a trial pass
           # share: finding a value's occurrences in the raw, validating an
           # occurrence's boundaries, turning an occurrence into a
-          # whole-construct detector match, and splicing the accepted matches.
+          # match that covers the whole construct, and splicing the accepted matches.
           # Everything reads `@input`, `@line_starts` and `@scanner`, which the
           # including pass sets up.
           #
@@ -16,7 +16,7 @@ module Migrations
           # lazily and at most once, so a body with many distinct engine
           # values does not pay one search walk per value.
           module Locating
-            include Detectors::Boundaries
+            include Constructs::Boundaries
 
             # A certified raw occurrence: where it starts and how many bytes
             # the certified reading spans there (an alternate URL reading can
@@ -30,7 +30,7 @@ module Migrations
             private_constant :EMPTY_OCCURRENCES
 
             # A link's `[`/`!` anchor is searched backwards from its
-            # destination; the detector grammars cap a label around a thousand
+            # destination; the construct grammars cap a label around a thousand
             # bytes, so a wider window cannot anchor anything and only costs
             # time on line-terminator-free bodies.
             ANCHOR_WINDOW = 2048
@@ -48,8 +48,8 @@ module Migrations
 
             # Every mention/hashtag/emoji construct in the body, found in ONE
             # pass over the trigger bytes and keyed like {#index_key}. The
-            # detectors validate boundaries and gate on the source's name sets,
-            # so an entry here IS a detector match with exactly that text.
+            # constructs validate boundaries and gate on the source's name sets,
+            # so an entry here IS a construct match with exactly that text.
             def probe_index
               @probe_index ||=
                 begin
@@ -59,8 +59,8 @@ module Migrations
                     pos = 0
                     while (offset = @input.byteindex(stop, pos))
                       byte = @input.getbyte(offset)
-                      kind, detector = @scanner.probe_dispatch[byte]
-                      if kind && (match = detector.detect(@input, offset, byte))
+                      kind, construct = @scanner.probe_dispatch[byte]
+                      if kind && (match = construct.detect(@input, offset, byte))
                         length = match.end_pos - offset
                         key = index_key(kind, @input.byteslice(offset, length))
                         (index[key] ||= []) << Occurrence.new(offset:, length:)
@@ -179,21 +179,21 @@ module Migrations
               !index.nil? && entity_offsets[index] < range.end
             end
 
-            # The detector match behind an indexed occurrence. The index was
-            # built from detector matches, so this re-probe cannot miss unless
+            # The construct match behind an indexed occurrence. The index was
+            # built from construct matches, so this re-probe cannot miss unless
             # a pass got out of step with its own index — callers treat nil as
             # that inconsistency.
             def probe_match_at(kind, occurrence)
-              detector =
+              construct =
                 case kind
                 when :mention
-                  @scanner.mention_detector
+                  @scanner.mention_construct
                 when :hashtag
-                  @scanner.hashtag_detector
+                  @scanner.hashtag_construct
                 when :emoji
-                  @scanner.emoji_detector
+                  @scanner.emoji_construct
                 end
-              match = detector.detect(@input, occurrence.offset, @input.getbyte(occurrence.offset))
+              match = construct.detect(@input, occurrence.offset, @input.getbyte(occurrence.offset))
               match if match && match.end_pos == occurrence.offset + occurrence.length
             end
 
@@ -261,11 +261,11 @@ module Migrations
                   # matches, as a link, and being nearer would otherwise
                   # capture `[alt](…)` out of `![alt](…)`.
                   match =
-                    detector_match_at(pos - 1, occurrence) || detector_match_at(pos, occurrence)
+                    construct_match_at(pos - 1, occurrence) || construct_match_at(pos, occurrence)
                   return match if match
                   pos -= 2
                 elsif byte == 0x5b || byte == 0x21 # `[` `!`
-                  match = detector_match_at(pos, occurrence)
+                  match = construct_match_at(pos, occurrence)
                   return match if match
                   pos -= 1
                 else
@@ -276,15 +276,15 @@ module Migrations
               # The occurrence itself, as a bare URL. Linkify can include a
               # trailing byte no URL grammar accepts (`` ` ``, `\`) and
               # percent-encode it into the href, so the certified occurrence
-              # may run past what any detector can take; a detector match over
+              # may run past what any construct can take; a construct match over
               # a prefix still rewrites the reference correctly and leaves the
               # odd byte literal, the way core will re-linkify both after
               # resolution.
-              detector_match_at(offset, occurrence, allow_prefix: true)
+              construct_match_at(offset, occurrence, allow_prefix: true)
             end
 
             # A proven occurrence that is its own whole construct: a bare
-            # schemeless domain (linkify links it, but no detector grammar has
+            # schemeless domain (linkify links it, but no construct grammar has
             # a byte to trigger on) or a reference definition's destination.
             # The engine's href carries the scheme the route parses from; the
             # span replaced is exactly the raw spelling. The proof came from
@@ -298,17 +298,17 @@ module Migrations
               node = @scanner.bare_url_node(route_url: value, url: raw_spelling)
               return nil if node.nil?
 
-              Detectors::Match.new(
+              Constructs::Match.new(
                 start_pos: occurrence.offset,
                 end_pos: occurrence.offset + occurrence.length,
                 node:,
               )
             end
 
-            def detector_match_at(anchor, occurrence, allow_prefix: false)
+            def construct_match_at(anchor, occurrence, allow_prefix: false)
               byte = @input.getbyte(anchor)
-              @scanner.url_dispatch[byte]&.each do |detector|
-                match = detector.detect(@input, anchor, byte)
+              @scanner.url_dispatch[byte]&.each do |construct|
+                match = construct.detect(@input, anchor, byte)
                 next if match.nil?
                 covered =
                   allow_prefix ? occurrence.offset + 1 : occurrence.offset + occurrence.length

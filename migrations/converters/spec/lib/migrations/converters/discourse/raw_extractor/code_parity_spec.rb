@@ -237,7 +237,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   end
 
   # Whether the extractor left the sentinel alone, i.e. read it as code.
-  def detector_treats_as_code?(raw)
+  def construct_treats_as_code?(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
@@ -260,7 +260,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   it "reads every construct as code exactly when core does" do
     deviations =
       rows.filter_map do |label, raw|
-        detected = detector_treats_as_code?(raw)
+        detected = construct_treats_as_code?(raw)
         cooked = core_treats_as_code?(raw)
         next if detected == cooked
 

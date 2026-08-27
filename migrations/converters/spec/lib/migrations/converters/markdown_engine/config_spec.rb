@@ -50,7 +50,7 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
       )
     end
 
-    it "normalizes slugs and tag names the way the detectors do" do
+    it "normalizes slugs and tag names the way the constructs do" do
       expect(config.category_slugs).to eq(%w[support feature])
       expect(config.tag_names).to eq(%w[bug])
     end

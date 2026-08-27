@@ -11,7 +11,7 @@ module Migrations
       # The division of labor: the discourse-markdown-it engine decides what
       # the markdown means — what is code, what is a live mention or link.
       # The {EngineScanner}'s certification and trial passes prove which raw
-      # bytes produced each engine token. The {Detectors} do not parse
+      # bytes produced each engine token. The {Constructs} do not parse
       # markdown context; they locate candidate byte spans, parse the
       # migration-specific syntax (quote headers, upload ids, internal
       # routes), and build the reference objects the importer resolves. The

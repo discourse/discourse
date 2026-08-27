@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# Cross-checks the internal-link detector's bare-URL boundary against what core
+# Cross-checks the internal-link construct's bare-URL boundary against what core
 # actually renders. For every boundary character in a representative set we build
 # `a<char>https://forum.example.com/t/slug/5 b` (and the forward variant with the
-# character right after the URL) and assert the detector records a link exactly
+# character right after the URL) and assert the construct records a link exactly
 # when `PrettyText.cook` linkifies an anchor for that URL.
 #
 # Core's machinery for a bare absolute URL in prose is markdown-it's linkify, fed
@@ -12,7 +12,7 @@
 # `[A-Za-z0-9.+-]`) and the core ruler (`rules_core/linkify.mjs` via linkify-it,
 # which also admits `.` and `-`). The net boundary before a scheme is "any
 # character except an ASCII letter, digit or `+`" (and `\`, a markdown escape) —
-# far wider than the whitespace-or-paren gate the detector used to admit at, so it
+# far wider than the whitespace-or-paren gate the construct used to admit at, so it
 # is checked here against PrettyText rather than read off a regex. The URL is
 # inline in a sentence, so no onebox block path. Needs a booted Rails environment,
 # so it is tagged `:rails` and runs only under `MIGRATIONS_RAILS=1`.
@@ -32,7 +32,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   end
   before { SiteSetting.enable_markdown_linkify = true }
 
-  # The detector treats an absolute URL as internal only when its host is one it
+  # The construct treats an absolute URL as internal only when its host is one it
   # was given; core linkifies any absolute URL regardless. Using the source's own
   # host keeps the two comparable — every row's URL is on it.
   def host
@@ -57,7 +57,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   # What the extractor did with the URL: `:link` (a row was recorded),
   # `:refused` (the body landed on the refusal tally), or `:none`.
-  def detector_outcome(raw)
+  def construct_outcome(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
@@ -84,12 +84,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     deviations =
       LinkifyBoundaryCorpus.chars.filter_map do |label, char|
         raw = "a#{char}#{url} b"
-        outcome = detector_outcome(raw)
+        outcome = construct_outcome(raw)
         core = core_reading(raw)
 
         if (outcome != :none) != core[:linkified]
           "before #{label} #{LinkifyBoundaryCorpus.describe(char)}: " \
-            "detector=#{outcome} core=#{core[:linkified]}"
+            "construct=#{outcome} core=#{core[:linkified]}"
         elsif outcome == :refused
           # Nothing follows the URL here, so its route is intact; a refusal
           # would hide a regression from recording links to refusing them.
@@ -103,12 +103,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     deviations =
       LinkifyBoundaryCorpus.chars.filter_map do |label, char|
         raw = "a #{url}#{char} b"
-        outcome = detector_outcome(raw)
+        outcome = construct_outcome(raw)
         core = core_reading(raw)
 
         if (outcome != :none) != core[:linkified]
           "forward #{label} #{LinkifyBoundaryCorpus.describe(char)}: " \
-            "detector=#{outcome} core=#{core[:linkified]}"
+            "construct=#{outcome} core=#{core[:linkified]}"
         elsif outcome == :refused && !core[:extended]
           # A refusal is only right when core swallowed the character into the
           # href and made the trailing id a junk coordinate path. With the
@@ -141,7 +141,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   it "records a link at the very start of the input, matching core" do
     raw = "#{url} b"
-    expect(detector_outcome(raw)).to eq(:link)
+    expect(construct_outcome(raw)).to eq(:link)
     expect(core_reading(raw)[:linkified]).to be(true)
   end
 
@@ -150,7 +150,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # not a divergence.
   it "leaves a bare relative path literal, matching core" do
     raw = "see /t/slug/5 here"
-    expect(detector_outcome(raw)).to eq(:none)
+    expect(construct_outcome(raw)).to eq(:none)
     expect(core_reading(raw)[:linkified]).to be(false)
   end
 end

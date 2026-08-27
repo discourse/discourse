@@ -68,7 +68,7 @@ module Migrations
           # injected already normalized ({NameNormalizer}: Unicode NFC, then
           # downcase), and runtime.js applies `normalize("NFC").toLowerCase()`
           # to the sought slug — so a decomposed spelling in a post matches
-          # the composed name it denotes, the same way the Ruby detectors
+          # the composed name it denotes, the same way the Ruby constructs
           # match it.
           @category_slugs = category_slugs.map { |slug| NameNormalizer.normalize(slug) }
           @tag_names = tag_names.map { |name| NameNormalizer.normalize(name) }

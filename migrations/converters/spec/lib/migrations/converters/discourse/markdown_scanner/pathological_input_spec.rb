@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 # Adversarial bodies: repeated malformed construct openers. With unbounded
-# detector patterns, each opener re-scans the whole remaining input, and a
+# construct patterns, each opener re-scans the whole remaining input, and a
 # single generated post can occupy a conversion worker for minutes. The
-# detector patterns are bounded (line-bounded classes, atomic groups, length
+# construct patterns are bounded (line-bounded classes, atomic groups, length
 # caps), and these bodies cost a fraction of a second.
 #
 # This spec only asserts termination within a generous ceiling: a quadratic

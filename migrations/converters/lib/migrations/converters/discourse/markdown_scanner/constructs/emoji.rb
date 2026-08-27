@@ -4,11 +4,11 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
+        module Constructs
           # Detects a custom emoji shortcode (`:name:`) and defers it only when the
           # name is one of the source's own custom emoji. Standard emoji, a stray
           # `:word:` in prose, and clock times all pass through untouched. This
-          # detector requires its name set (there's nothing to defer without it).
+          # construct requires its name set (there's nothing to defer without it).
           #
           # This follows core's emoji rule (`discourse-markdown-it/src/features/
           # emoji.js`): the opening `:` must sit on the rule's boundary — start of

@@ -6,7 +6,7 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
+        module Constructs
           # Detects user and group mentions (`@name`). The mention *type* is decided
           # later by the converter's MentionClassifier (it needs the source's groups
           # and `here_mention` setting), so the node just carries the name.
@@ -43,7 +43,7 @@ module Migrations
             end
 
             # Whether `name` names someone on the source — the engine tier's
-            # token filter asks the detector so filter and grammar share one
+            # token filter asks the construct so filter and grammar share one
             # name set and one normalization.
             def tracked_name?(name)
               @names.include?(normalize(name))

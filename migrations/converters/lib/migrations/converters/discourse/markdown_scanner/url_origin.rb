@@ -5,7 +5,7 @@ module Migrations
     module Discourse
       module MarkdownScanner
         # The one URL-origin reading shared by everything that must agree on
-        # what "the source's own URL" means: the {Detectors::InternalLink}
+        # what "the source's own URL" means: the {Constructs::InternalLink}
         # grammar, the {EngineScanner}'s tracked-value filter, and the
         # foreign-host signal. With one shared reading, the host, port and
         # prefix rules cannot drift apart between those places.

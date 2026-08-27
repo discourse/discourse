@@ -4,11 +4,11 @@ module Migrations
   module Converters
     module Discourse
       module MarkdownScanner
-        module Detectors
+        module Constructs
           class InternalLink < Base
             # The route grammar: reads a path (with its query and fragment) into
             # the target fields of the record it names. A pure function of the
-            # path string — the detector has already decided the URL is internal
+            # path string — the construct has already decided the URL is internal
             # (host, prefix, boundary) before asking what it points at.
             class RouteParser
               # A `/u/<name>` segment, read like a username (see
