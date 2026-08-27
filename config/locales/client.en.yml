@@ -7469,6 +7469,21 @@ en:
               staff: "Staff"
               empty: "No posts in the selected period."
               save_error: "Couldn't save your selection for next time."
+              add_group: "Add group"
+              modal:
+                title: "Compare groups"
+                search_placeholder: "Search groups..."
+                counter: "%{count} of %{max} groups selected"
+                apply: "Save"
+                enable: "Enable %{title}"
+                disable: "Disable %{title}"
+                move_up: "Move %{title} up"
+                move_down: "Move %{title} down"
+                footer_note: "These changes will apply for all users."
+                descriptions:
+                  new_members: "Signed up during the selected period"
+                  returning: "Signed up before the selected period"
+                  staff: "Admins and moderators"
             trust_level_pipeline:
               title: "Trust level pipeline"
               trust_levels:
@@ -7806,6 +7821,16 @@ en:
           average_for_sample: "Average for sample"
           total: "All time total"
           no_data: "No data to display."
+          posters_by_member_type_members:
+            title: "%{name} — %{users} · %{posts}"
+            users_count:
+              one: "%{count} user"
+              other: "%{count} users"
+            posts_count:
+              one: "%{count} post"
+              other: "%{count} posts"
+            deselect: "Deselect %{name}"
+            fetch_error: "Couldn't load users for this group."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'

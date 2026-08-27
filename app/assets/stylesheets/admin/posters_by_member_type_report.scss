@@ -1,0 +1,48 @@
+.posters-by-member-type-report {
+  &__numeric {
+    text-align: right;
+  }
+
+  &__row {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+
+    &.--selected {
+      background: var(--tertiary-low);
+
+      td {
+        color: var(--tertiary);
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__members {
+    margin-top: var(--space-4);
+  }
+
+  &__members-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  &__members-heading {
+    min-width: 0;
+  }
+
+  &__members-name {
+    margin: 0;
+  }
+
+  &__members-stats {
+    margin: 0;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+}
