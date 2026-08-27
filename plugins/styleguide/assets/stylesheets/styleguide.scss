@@ -956,6 +956,88 @@
   }
 }
 
+.styleguide-reorderable-list {
+  max-width: 22em;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+
+  &__label {
+    flex: 1 1 auto;
+  }
+
+  &__input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__note {
+    flex: 0 0 auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  .d-reorderable-list__row {
+    padding: 0.35em 0.75em;
+
+    &:hover {
+      background: var(--d-hover);
+    }
+
+    /* Inputs carry a default bottom margin, which pushes the box above the
+       row's centre line and leaves it out of step with the controls. Scoped to
+       the row so it outranks the attribute selector that sets it. */
+
+    input {
+      margin-bottom: 0;
+    }
+  }
+
+  .d-reorderable-list__create {
+    padding: 0.35em 0.75em;
+  }
+}
+
+.styleguide-reorderable-list-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5em;
+
+  &__panel {
+    flex: 1 1 14em;
+    max-width: 22em;
+
+    h4 {
+      margin-bottom: 0.5em;
+    }
+  }
+}
+
+.styleguide-reorderable-table {
+  width: 100%;
+  max-width: 30em;
+  border-collapse: collapse;
+
+  /* The grip's column, sized to the grip. A table shares its free width out
+     among the columns, so without a width of its own this one takes a third of
+     the table to hold a 24px control. A width below the content's minimum is
+     raised to it, which is what makes `1px` mean "no wider than the grip". */
+
+  &__reorder {
+    width: 1px;
+    white-space: nowrap;
+  }
+
+  th {
+    padding: 0.35em 0.5em;
+    border-block-end: 1px solid var(--primary-low);
+    text-align: start;
+  }
+
+  td {
+    padding: 0.35em 0.5em;
+  }
+}
+
 .styleguide-shortcut-spellings {
   th,
   td {

@@ -1,9 +1,9 @@
+import type { DisabledItems } from "discourse/ui-kit/-internals/cursor/item-scope";
+import type { Orientation } from "discourse/ui-kit/-internals/cursor/navigation";
 import type {
   DRovingFocusArgs,
-  DRovingFocusDisabledItems,
   DRovingFocusEntry,
   DRovingFocusStrategy,
-  Orientation,
 } from "./types";
 
 /**
@@ -29,7 +29,7 @@ export interface DRovingFocusConfig {
   controllerElement: HTMLElement | string | null | undefined;
   entryFocus: DRovingFocusEntry;
   fallbackSkipsMarked: boolean;
-  disabledItems: DRovingFocusDisabledItems;
+  disabledItems: DisabledItems;
   onCrossAxis: DRovingFocusArgs["onCrossAxis"];
   typeAhead: boolean;
 }

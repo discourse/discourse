@@ -3,6 +3,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { guidFor } from "@ember/object/internals";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
 import { createRovingFocusApi } from "./d-roving-focus/api";
 import { apiStep } from "./d-roving-focus/api-navigation";
 import {
@@ -10,7 +11,6 @@ import {
   normalizeConfig,
 } from "./d-roving-focus/config";
 import RovingFocusDiagnostics from "./d-roving-focus/diagnostics";
-import ItemScope from "./d-roving-focus/item-scope";
 import KeyboardRouter from "./d-roving-focus/keyboard";
 import ActiveDescendantStrategy from "./d-roving-focus/strategies/active-descendant";
 import RovingTabindexStrategy from "./d-roving-focus/strategies/roving-tabindex";
@@ -24,7 +24,6 @@ import type {
 export type {
   DRovingFocusApi,
   DRovingFocusAxis,
-  DRovingFocusDisabledItems,
   DRovingFocusEntry,
   DRovingFocusStepResult,
   DRovingFocusStrategy,

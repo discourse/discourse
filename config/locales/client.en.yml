@@ -394,6 +394,24 @@ en:
     skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
 
+    reorder_announcement: "Moved %{label} to position %{position} of %{total}"
+    reorder_announcement_cross_list: "Moved %{label} to %{list}, position %{position} of %{total}"
+
+    reorder:
+      handle: "Reorder %{label}"
+      handle_description: "Use the arrow keys to move between rows. Press Enter for move options."
+      remove: "Remove %{label}"
+      removed: "Removed %{label}"
+      move_up: "Move up"
+      move_down: "Move down"
+      move_to_top: "Move to top"
+      move_to_bottom: "Move to bottom"
+      move_to_list: "Move to %{list}"
+      position: "%{position} of %{total}"
+      at_start: "%{label} is already first"
+      at_end: "%{label} is already last"
+      add_item: "Add an item"
+
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
