@@ -16,13 +16,27 @@ ur:
       permissions_header: 'یہ "%{application_name}" کو اجازت دے گا:'
       redirect_warning: "مجاز کر دینے پر آپ کو منتقل کر دیا جائے گا"
       expiry_notice: '"%{application_name}" کے لیے یہ کنجی %{expires_at} پر ختم ہو جائے گی۔'
+      write_scope_warning: "مکمل تحریری رسائی کی درخواست — یہ اپلیکیشن مواد بنانے، ترمیم اور حذف کرنے کے قابل ہوگی۔ صرف تبھی آگے بڑھیں جب آپ اسے پوری طرح بھروسہ مند سمجھتے ہوں۔"
+      copy_key: "کنجی کاپی کریں"
       copied: "کاپی کر لیا!"
       otp_description: 'کیا آپ "%{application_name}" کو اِس سائٹ تک رسائی دینا پسند کریں گے؟'
       no_trust_level: "معذرت، آپ کے پاس رکن API تک رسائی کے لیے مطلوبہ فعالیت کا درجہ نہیں ہے۔"
       generic_error: "معذرت، ہم رکن API کیز جاری کرنے سے قاصر ہیں، یہ ترتیب فورم کے منتظم کی طرف سے غیر فعال ہوسکتی ہے"
       device:
+        title: "اپلیکیشن کو مجاز کریں"
+        enter_code: "اپنی اپلیکیشن میں ظاہر کردہ کوڈ درج کریں۔"
         code: "کَوڈ"
+        enter_full_code: "اس ایپلیکیشن کو مجاز بنانے کے لیے مکمل کوڈ درج کریں۔"
         continue: "جاری رکھیں"
+        invalid_code: "معذرت، یہ کوڈ درست نہیں ہے۔ کوڈ چیک کریں اور دوبارہ کوشش کریں۔"
+        expired_code: "معذرت، اس کوڈ کی میعاد ختم ہو چکی ہے یا پہلے ہی استعمال ہو چکا ہے۔ ایپلیکیشن سے ایک نئے کوڈ کی درخواست کریں اور دوبارہ کوشش کریں۔"
+        authorize_title: '"%{application_name} " کو مجاز بنائیں'
+        expiry_notice: "میعاد ختم: %{expires_at}"
+        no_expiry_warning: "یہ کنجی خود بخود ختم نہیں ہوگی۔ صرف اس وقت اجازت دیں جب کو اس ایپلیکیشن پر مکمل اعتماد ہو۔"
+        unregistered_app_warning: "یہ ایپلیکیشن اس سائٹ سے رجسٹرڈ یا تصدیق شدہ نہیں ہے۔ صرف اسی صورت میں آگے بڑھیں اگر آپ کو اس کوڈ کے ماخذ پر مکمل اعتماد ہو۔"
+        complete: "اجازت نامہ مکمل ہوا"
+        denied: "اجازت نامہ مسترد ہوا"
+        return_to_cli: "آپ اب اپنے ٹرمینل یا ایپلیکیشن میں واپس جا سکتے ہیں۔"
     blocks:
       ghost:
         status: "حیثیت"
@@ -46,6 +60,9 @@ ur:
         access_permission_viewer: "دیکھنے والا"
         access_permission_viewer_description: "اس اکائی کے لیے مواد دیکھا جا سکتا ہے"
         access_permission_remove: "خارج کریں"
+        access_permission_remove_description: "اس سے مفید ہونے والے کی اجازت ہٹائیں"
+        add_group: "صارف یا گروپ شامل کریں"
+        mandatory_acl_tooltip: "یہ اجازت %{name} کے لیے لازمی ہے اور اسے ہٹایا نہیں جا سکتا"
         mandatory: "لازمی"
         disallowed: "غیر مجاز"
         required_permission_not_added: "اس %{typeName} کے لیے کم از کم ایک گرانٹی کے پاس %{permission} اجازت ہونی چاہیے"
@@ -105,6 +122,7 @@ ur:
         x_minutes:
           one: "%{count} منٹ"
           other: "%{count} منٹ"
+        x_minutes_seconds: "%{minutes}م %{seconds}س"
         about_x_hours:
           one: "%{count} گھنٹہ"
           other: "%{count} گھنٹے"
@@ -503,17 +521,29 @@ ur:
       pill: "تجویز کردہ"
       pm_title: "تجویز کردہ پیغامات"
     admin_onboarding_banner:
+      launch_in_easy_steps: "اپنے فورم کی شروعات کریں"
+      launch_in_easy_steps_subtitle: "%{step_count} کے %{completed_steps} اقدامات مکمل ہو چکے"
       congrats_onboarding_complete: "آن بورڈنگ کے عمل کو مکمل کرنے پر مبارکباد!"
+      expand: "سیٹ اپ کے مراحل کو پھیلائیں"
+      collapse: "سیٹ اپ کے مراحل کو سکیڑیں"
+      dismiss: "سیٹ اپ منسوخ کریں"
       select_theme:
         title: "اپنی سائٹ کو تخصیص کریں"
+        description: "رنگ، فانٹس اور ہوم پیج منتخب کریں۔"
+        action: "اختیارات دیکھیں"
+        completed: "اختیارات تبدیل کریں"
         show_light_screenshot: "لائٹ اسکرین شاٹ دکھائیں"
         show_dark_screenshot: "ڈارک اسکرین شاٹ دکھائیں"
       invite_collaborators:
         title: "شراکت داروں کو مدعو کریں"
+        description: "ابتدائی صارفین اسے زندگی بخشیں گے۔"
         action: "دعوت نامہ بنائیں"
+        completed: "مزید مدعو کریں"
       start_posting:
         title: "دھاگے بنائیں"
+        description: "لوگوں کو بحث کرنے کے لیے موضوع دیں۔"
         action: "خیالات دیکھیں"
+        completed: "مزید خیالات دیکھیں"
         choose_option: "آپ کیسے شروع کرنا چاہیں گے؟"
         predefined_topics: "بحث کے موضوع کے سانچے"
         predefined_topics_subtitle: "نئے اراکین کو بات کرنے کے لیے موضوع دیں، کسی ایک سانچے کو چنیں ترمیم کریں اور اپنا بنائیں۔"
@@ -535,25 +565,39 @@ ur:
             body: "کمیونٹی کو اپنے پسندیدہ کھانے کے بارے بتائیں! میں شروع کروں: مجھے پیزا پسند ہے، خاص طور پر اضافی پنیر اور پیپرونی کے ساتھ۔"
     design_wizard:
       title: "اپنی سائٹ کو تخصیص کریں"
+      subtitle: "رنگ، فانٹس اور ہوم پیج منتخب کریں۔"
+      step_label: "%{index} مرحلے پر جائیں"
+      save: "محفوظ اور ختم کریں"
       back: "واپس"
       next: "اگلا"
       sections:
         theme: "تھیم"
+        colors: "ڈیفالٹ رنگ"
         fonts: "فونٹس"
         homepage: "ہَوم پَیج"
       theme:
         selected: "منتخب"
+        custom_theme_notice: "آپ کا فورم فی الحال بطور ڈیفالٹ تھیم %{name} کا استعمال کر رہا ہے۔ نیچے سے کسی تھیم کا انتخاب کریں اور اسے دیکھیں۔ محفوظ کرنے سے آپ کا موجودہ تھیم بدل جائے گا۔"
       colors:
         light: "لائٹ"
         dark: "ڈارک"
+        dark_only: "%{name} صرف ڈارک موڈ میں ہے"
       fonts:
         base_font: "بیس فونٹ"
         heading_font: "سرخی والا فونٹ"
       homepage:
         topics: "موضوعات"
         categories: "زمرہ جات"
+        topic_page_type: "موضوع کے صفحے کی قسم"
+        topic_pages:
+          latest: "موضوعات کو ان کی تازہ ترین سرگرمی کے اعتبار سے ترتیب دیا گیا ہے، نئے سب سے پہلے۔"
+          new: "گزشتہ چند دنوں میں بنائے گئے موضوعات، نئے سب سے پہلے۔"
+          hot: "فی الحال رجحان ساز موضوعات، جو مجموعی مقبولیت کو حالیہ مصروفیت کے ساتھ ملا کر پیش خدمت ہیں۔"
+        category_page_style: "زمرہ کے صفحہ کا انداز"
         styles:
           boxes: "خانے"
+          with_topics: "موضوعات کے ساتھ زمرہ جات"
+          only: "صرف زمرہ جات"
     about:
       edit: "اِس صفحہ میں ترمیم کریں"
       simple_title: "بارے میں"
@@ -748,6 +792,9 @@ ur:
         share_session_title: "%{site_name} پر سائن ان کریں"
         share_session_message: "جاری رکھنے کے لیے، %{site_name} کو اس صفحے میں آپ کے موجودہ سیشن کو استعمال کرنے کی اجازت درکار ہے۔ رسائی کی اجازت دینے کے لیے نیچے کلک کریں۔"
         signin_required_title: "%{site_name} پر سائن ان کریں"
+        signin_required_message: "ہمیں موجودہ %{site_name} سیشن نہیں ملا۔ سائن ان یا سائن اپ کرنے کے لیے ایک نیا ٹیب کھولیں، پھر جاری رکھنے کے لیے یہاں واپسی کریں۔"
+        open_signin_tab: "سائن ان ٹیب کھولیں"
+        waiting_title: "سائن ان کے انتظار میں"
         cancel: "منسوخ کریں"
     topic_count_all:
       one: "%{count} نیا موضوع دیکھیں"
@@ -2350,6 +2397,8 @@ ur:
           email_placeholder: "name@example.com"
           invite_by_email: "ای میل"
           restrict_domain: "ڈومین تک محدود"
+          domain_placeholder: "example.com"
+          domain_invalid: "ایک درست ڈومین درج کریں، مثلاً example.com"
           create_and_send: "بھیجیں"
           create_and_copy: "رابطہ کاپی کریں"
           update: "اپ ڈیٹ"
@@ -2358,12 +2407,17 @@ ur:
             role_admin: "منتظم"
             role_moderator: "نگران"
             method: "شیئرنگ"
+            method_link: "قابل اشتراک رابطہ"
             method_email: "ای میل"
+            restriction: "تک محدود"
             uses: "زیادہ سے زیادہ استعمال"
             expires: "میعاد ختم"
             topic: "ٹاپک"
             groups: "گروپس"
             edit: "ترمیم کریں"
+            view_invites: "دعوتیں دیکھیں"
+          email_sent:
+            body: "%{email} کو ایک دعوت نامہ ای میل کیا گیا۔"
         bulk_invite:
           none: "اس صفحہ پر دکھانے کے لیے کوئی دعوت نہیں ہے۔"
           text: "مجموئی دعوت نامہ"
@@ -2545,6 +2599,9 @@ ur:
       reset: رِی سَیٹ
       optional: اختیاری
       required: درکار ہے
+      errors_summary_title:
+        one: "جاری رکھنے کے لیے اس خرابی کو حل کریں"
+        other: "جاری رکھنے کے لیے ان خرابیوں کو حل کریں"
       dirty_form: "آپ نے اپنی تبدیلیاں جمع نہیں کروائیں! کیا آپ واقعی چھوڑنا چاہتے ہیں؟"
       errors:
         starts_with: "%{prefix}سے شروع ہونا چاہیے"
@@ -2575,10 +2632,15 @@ ur:
     home: "ہَوم"
     read_only_mode:
       enabled: "یہ سائٹ صرف پڑھنے کے مَوڈ میں ہے۔ براہِ مہربانی براؤز کرتے رہئیے، لیکن جواب دینا، لائکس دینا، اور دیگر اعمال ابھی کے لئے غیر فعال ہیں۔"
+      enabled_anonymous: "یہ فورم صرف پڑھنے تک محدود ہے۔ براہِ کرم براؤزنگ جاری رکھیں، لیکن فی الحال سائن اپ اور لاگ ان دستیاب نہیں ہیں۔"
       login_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ اِن غیر فعال رہے گا۔"
       logout_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ آؤٹ غیر فعال رہے گا۔"
+      signup_disabled: "جب سائٹ صرف پڑھنے تک محدود ہو تو سائن اپ کرنا غیر فعال ہو گا۔"
     staff_writes_only_mode:
       enabled: "یہ سائٹ صرف عملے کے موڈ میں ہے۔ براہ کرم براؤز کرنا جاری رکھیں، لیکن جواب دینا، پسند کرنا، اور دیگر اعمال صرف عملے کے اراکین تک محدود ہیں۔"
+      enabled_anonymous: "یہ فورم صرف عملے کے لیے دستیاب ہے۔ براہِ کرم براؤزنگ جاری رکھیں، لیکن سائن اپ کرنا ممکن نہیں ہے اور صرف عملے کے ارکان لاگ ان کر سکتے ہیں۔"
+      login_disabled: "جب فورم صرف عملے کے لیے دستیاب ہو تو صرف عملے کے ارکان لاگ ان کر سکتے ہیں۔"
+      signup_disabled: "جب فورم صرف عملے کے لیے دستیاب ہو تو سائن اپ کرنا غیر فعال ہو گا۔"
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> - <a href="{url}" target="_blank">{ rate, plural,
@@ -2736,11 +2798,27 @@ ur:
     code_login:
       email_label: "ای میل"
       continue_button: "جاری رکھیں"
+      check_your_email: "اپنا ای میل چیک کریں"
       code_instructions: "ہم نے <b>%{email}</b> پر ایک 6 ہندسوں پر مشتمل کوڈ بھیجا ہے۔ جاری رکھنے کے لیے اسے نیچے درج کریں۔"
       verify_button: "جاری رکھیں"
+      resend: "کوڈ دوبارہ بھیجیں"
+      resend_countdown: "کوڈ دوبارہ بھیجیں (%{count}س)"
+      code_resent: "ہم نے ایک نیا کوڈ بھیجا۔"
+      use_different_email: "ایک مختلف ای میل استعمال کریں"
+      use_password_instead: "اس کے بجائے اپنےپاس ورڈ سے لاگ ان کریں"
+      email_me_code: "مجھے ایک مرتبہ استعمال ہونے والا لاگ ان کوڈ ای میل کریں"
       signup_title: "اپنا اکاؤنٹ بنائیں"
+      signup_instructions: "اس فورم میں شمولیت کے لیے اپنا ای میل درج کریں۔ ہم آپ کو تصدیق کے لیے ایک کوڈ بھیجیں گے جس سے آپ کی شروعات ہو جائے گی!"
+      user_fields_title: "تقریباً مکمل"
+      user_fields_instructions: "چند مزید تفصیلات، آپ کے اکاؤنٹ کی تخلیق کو انجام دینے کے لیے۔"
+      account_ready_title: "آپ کا اکاؤنٹ تیار ہے! 🎉"
+      account_ready_edit: "اپنا اسم صارف اور اوتار منتخب کریں"
       account_ready_continue: "جاری رکھیں"
       username_label: "اسمِ صارف"
+      username_placeholder: "ایک اسم صارف منتخب کریں"
+      change_avatar: "اوتار تبدیل کریں"
+      username_taken: "یہ اسم صارف دستیاب نہیں ہے۔ کوئی اور آزمائیں۔"
+      username_unavailable: "یہ اسم صارف دستیاب نہیں ہے۔ %{suggestion} کیسا ہے۔"
     login:
       header_title: "خوش آمدید"
       title: "لاگ اِن"
@@ -2759,6 +2837,9 @@ ur:
       security_key_description: "جب آپ کے پاس اپنی فزیکل سیکیورٹی کلید یا ہم آہنگ موبائل ڈیوائس تیار ہو جائے تو نیچے سیکیورٹی کلید کے ساتھ تصدیق کریں بٹن کو دبائیں۔"
       security_key_alternative: "دوسرا راستہ آزمائیں"
       security_key_authenticate: "سیکیورٹی کی کے ساتھ تصدیق کریں"
+      passkey_2fa_description: "اپنی پاسکی سے اپنی شناخت کی تصدیق کریں۔"
+      use_passkey: "پاس کی استعمال کریں"
+      use_security_key: "سیکیورٹی کی کنجی استعمال کریں"
       security_key_not_allowed_error: "سیکیورٹی کی, کی تصدیق کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"
       security_key_no_matching_credential_error: "فراہم کردہ سیکیورٹی کی میں کوئی مماثلت نہیں مل سکی۔"
       security_key_support_missing_error: "آپ کا موجودہ آلہ یا براؤزر سیکیورٹی کیز کے استعمال کی حمایت نہیں کرتا ہے۔ براہ کرم کوئی مختلف طریقہ استعمال کریں۔"
@@ -2833,6 +2914,7 @@ ur:
         totp: "بجائے ایک اَوتھینٹیکَیٹر اَیپ کا استعمال کریں"
         backup_code: "بجائے ایک بیک اپ کوڈ استعمال کریں"
         security_key: "اس کے بجائے سیکیورٹی کی استعمال کریں۔"
+        passkey: "اس کے بجائے پاس کی استعمال کریں"
       no_login_methods:
         title: "لاگ ان کے طریقے نہیں ہیں"
         description: "لاگ ان کا کوئی طریقہ ترتیب نہیں دیا گیا ہے۔ منتظمین سائٹ کو دوبارہ ترتیب دینے کے لیے <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> پر جا سکتے ہیں۔"
@@ -2877,6 +2959,13 @@ ur:
       disabled: "ظاہر نہ کریں"
       sidebar_footer: "سائڈبار فوٹر میں ڈسپلے کریں"
       header: "ہیڈر میں ڈسپلے"
+    category_scope:
+      all: "تمام عوامی اور نجی زمرے"
+      public: "عوامی زمرے"
+      include: "منتخب کیے زمروں کو (ذیلی زمروں کے ساتھ) شامل کریں"
+      include_strict: "منتخب کیے زمروں کو (بغیر ذیلی زمروں کے) شامل کریں"
+      exclude: "منتخب کیے زمروں کو (ذیلی زمروں کے ساتھ) خارج کریں"
+      exclude_strict: "منتخب کیے زمروں کو (بغیر ذیلی زمروں کے) خارج کریں"
     welcome_banner_location:
       above_topic_content: "اوپر موضوع کا مواد"
       below_site_header: "سائٹ ہیڈر کے نیچے"

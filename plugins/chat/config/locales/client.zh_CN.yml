@@ -72,6 +72,8 @@ zh_CN:
       pinned_messages:
         title: "置顶消息"
         close: "关闭置顶消息"
+        dismiss: "请帮我关闭置顶横幅广告"
+        show: "显示置顶横幅"
         pinned_by_you: "由您置顶"
         pinned_by_user: "由 %{username} 置顶"
       pinned_bar:
@@ -290,6 +292,8 @@ zh_CN:
       remove_upload: "移除文件"
       react: "使用表情符号回复"
       reply: "回复"
+      message_actions: "消息操作"
+      more_message_actions: "更多消息操作"
       edit: "编辑"
       copy_link: "复制链接"
       copy_text: "复制文本"
@@ -314,6 +318,7 @@ zh_CN:
         other: "%{count} 条新消息"
       sound:
         title: "桌面聊天通知声音"
+        preview: "播放所选声音的预览"
       sounds:
         none: "无"
         classic: "经典简约"
@@ -332,6 +337,7 @@ zh_CN:
       upload_to_thread: "上传到消息串"
       uploaded_files:
         other: "%{count} 个文件"
+      youtube: "YouTube"
       you_flagged: "您已举报此消息"
       exit: "退出聊天"
       channel_status:
@@ -486,6 +492,10 @@ zh_CN:
         type: "聊天消息"
         message_in_channel: "频道"
       reactions:
+        add: "使用 %{emoji} 回复"
+        remove: "删除此 %{emoji} 回应"
+        counted:
+          other: "%{emoji} 回应， %{count} 人"
         only_you: "<span>您回应了 </span>:%{emoji}:"
         you_and_single_user: "<span>您和 %{username} 回应了 </span>:%{emoji}:"
         you_and_multiple_users: "<span>您、%{commaSeparatedUsernames} 和 %{username} 回应了 </span>:%{emoji}:"
@@ -815,12 +825,25 @@ zh_CN:
       chat_approval:
         message: "消息"
         buttons: "按钮"
+        buttons_description: "添加 1 到 10 个回复按钮。"
+        add_button: "添加按钮"
+        label: "标签"
+        label_description: "按钮上显示的文字。"
+        label_placeholder: "按钮标签"
         value: "值"
+        value_description: "单击此按钮时工作流返回的值。"
+        value_placeholder: "返回值"
         style: "样式"
+        style_description: "选择按钮样式，或者留空以保留标准聊天按钮外观。"
+        style_none: "无样式"
         style_default: "默认"
         style_primary: "主要"
+        style_danger: "危险"
         style_success: "成功"
+        style_flat: "平的"
+        style_transparent: "透明的"
         icon: "图标"
+        icon_description: "选择一个图标显示在按钮标签之前。"
         approve_label: "“批准”按钮标签"
         approve_label_description: "如果留空，则默认为“批准”。"
         deny_label: "“拒绝”按钮标签"
@@ -831,5 +854,6 @@ zh_CN:
         timeout_minutes_description: "留空表示无超时。"
         timeout_action: "超时操作"
         timeout_action_description: "审批超时会发生什么？"
+        timeout_action_continue: "继续工作流程"
         timeout_action_deny: "恢复为被拒绝"
         timeout_action_fail: "工作流失败"
