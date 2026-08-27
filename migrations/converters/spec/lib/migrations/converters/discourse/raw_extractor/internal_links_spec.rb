@@ -440,6 +440,25 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(text: "[1]", target_id: 12)
     end
 
+    # `[](url)` is valid CommonMark that core renders as a link with no text —
+    # a shape real corpora carry (pasted HTML digests). The empty label
+    # records no label span (there is nothing to rewrite in it), and the
+    # destination span points at the url as usual.
+    it "defers a link with an empty label" do
+      link, result = link_for("[](https://forum.example.com/t/slug/12)")
+
+      expect(link).to include(
+        text: "",
+        target_type: enums::LinkTarget::TOPIC,
+        target_id: 12,
+        url_offset: 3,
+        label_url_offset: nil,
+        original_markdown: "[](https://forum.example.com/t/slug/12)",
+      )
+      expect(result).to eq(link[:placeholder])
+      expect(extractor.engine_refusals).to be_empty
+    end
+
     # Links don't nest in core: the inner `[…](…)` wins and the outer bracket
     # stays literal, so the outer text must not match around it.
     it "defers the inner link when the text holds a nested link" do

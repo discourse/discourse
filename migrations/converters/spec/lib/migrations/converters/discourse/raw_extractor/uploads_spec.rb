@@ -89,6 +89,51 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
+  # `[image|281x500](upload://…)` — a failed image paste whose `!` was lost.
+  # Core renders the label literally, pipe and all, as a plain link carrying
+  # `data-orig-href`, so the upload is as real as in any other form.
+  describe "link-position labels with pipe metadata" do
+    it "defers the upload, replacing the whole construct" do
+      result = extract("pasted [image|281x500](upload://2Yjf3WE4KOQ88YUb4fUMubKB9My.jpeg) here")
+
+      upload = buffer.uploads.first
+      expect(upload[:upload_id]).to eq("2Yjf3WE4KOQ88YUb4fUMubKB9My")
+      expect(upload[:original_markdown]).to eq(
+        "[image|281x500](upload://2Yjf3WE4KOQ88YUb4fUMubKB9My.jpeg)",
+      )
+      expect(result).to eq("pasted #{upload[:placeholder]} here")
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "takes a multi-pipe label and an empty pre-pipe part" do
+      extract("[a|b|c](upload://Zm9vYmFy.png) and [|690x388](upload://YmFyYmF6.png)")
+
+      expect(buffer.uploads.map { |row| row[:upload_id] }).to eq(%w[Zm9vYmFy YmFyYmF6])
+    end
+
+    # The attachment marker folds case (core's split, see the detector), so an
+    # upper-cased one still takes the attachment branch — with its size tail,
+    # which the link-label branch has no reason to consume.
+    it "reads an upper-cased attachment marker as an attachment, size included" do
+      result = extract("[r.pdf|ATTACHMENT](upload://Zm9vYmFy.pdf) (1.2 MB)")
+
+      expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
+      expect(result).to eq(buffer.uploads.first[:placeholder])
+    end
+
+    # Core links a pipe-less `[label](upload://…)` too, but that shape is
+    # unmeasured in real corpora, and widening the label grammar further is
+    # where label-corruption risks live — so it deliberately stays verbatim,
+    # reported on the must-resolve tally.
+    it "leaves a pipe-less link label verbatim and reports it" do
+      body = "[plain label](upload://Zm9vYmFy.png)"
+
+      expect(extract(body)).to eq(body)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to eq(unanchored: 1)
+    end
+  end
+
   describe "full-URL uploads" do
     let(:sha1) { "0123456789abcdef0123456789abcdef01234567" }
 

@@ -23,9 +23,11 @@ fail-closed:
   of engine-tier bodies; the trial pass reduces that further.
 - **Unanchored link forms stay verbatim and count as refusals.** A proven
   destination whose surrounding syntax no grammar can take whole (a label
-  with an escaped `]`, a construct beyond the pattern caps) keeps its source
-  text and puts the body on the tally (`:unanchored`); other constructs in
-  the same body are still extracted. A destination that is its own syntax —
+  with an escaped `]`, a construct beyond the pattern caps, a pipe-less
+  `[label](upload://…)` link — core links it, but the shape is unmeasured
+  in real corpora and the pipe-bearing paste leftover is the one that
+  actually occurs) keeps its source text and puts the body on the tally
+  (`:unanchored`); other constructs in the same body are still extracted. A destination that is its own syntax —
   a bare schemeless domain linkify links, a reference definition's URL — is
   rewritten in place, not refused. An internal URL whose path opens a
   coordinate route but parses none (`/t//209`, `/u/bob!!!`, the reserved

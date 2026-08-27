@@ -7,9 +7,11 @@ module Migrations
     module Discourse
       module MarkdownScanner
         module Detectors
-          # Detects Discourse upload references (`upload://` URLs), both
-          # `![alt|dims](upload://sha1.ext)` images and
-          # `[file|attachment](upload://sha1.ext) (size)` attachments.
+          # Detects Discourse upload references (`upload://` URLs):
+          # `![alt|dims](upload://sha1.ext)` images,
+          # `[file|attachment](upload://sha1.ext) (size)` attachments, and
+          # `[label|meta](upload://sha1.ext)` link-position labels with pipe
+          # metadata (failed image pastes).
           class Upload < Base
             TRIGGERS = ["!", "["].freeze
 
@@ -54,14 +56,29 @@ module Migrations
               # dropped from the post.
               (?:[^\S\n]*\((?<size>[^)\n]{1,99})\))?
             }xi
-            private_constant :IMAGE_PATTERN, :ATTACHMENT_PATTERN
+            # A link-position label with metadata after a pipe —
+            # `[image|281x500](upload://sha1.ext)` — the leftover of a failed
+            # image paste (the composer's placeholder label survived but the
+            # `!` didn't). Core renders the label literally, pipe and all, as a
+            # plain link to the upload, and the upload is as real as in any
+            # other form. The suffix class matches the image dimensions class
+            # (pipes allowed, so `[a|b|c]` matches whole); an exact
+            # `|attachment` marker is not taken here — that form belongs to
+            # ATTACHMENT_PATTERN above, with its trailing size.
+            LINK_PATTERN =
+              %r{
+              \G
+              \[(?<filename>[^|\[\]]{0,999})\|(?!attachment\])(?<label_suffix>[^\[\]\n]{0,99})\]
+              \((?-i:upload)://(?<url>[^)\n]{1,512})\)
+            }xi
+            private_constant :IMAGE_PATTERN, :ATTACHMENT_PATTERN, :LINK_PATTERN
 
             def detect(input, pos, byte)
               case byte
               when 0x21 # `!`
                 detect_image(input, pos)
               when 0x5b # `[`
-                detect_attachment(input, pos)
+                detect_attachment(input, pos) || detect_link(input, pos)
               end
             end
 
@@ -99,6 +116,27 @@ module Migrations
                   filename: match[:filename],
                   type: :attachment,
                   size: match[:size],
+                  raw: match[0],
+                )
+
+              Match.new(start_pos: pos, end_pos: match.byteoffset(0).last, node:)
+            end
+
+            # Only the sha1 and the verbatim source reach the embed row, so the
+            # label parts are recorded for the node's own sake; a resolution
+            # hit re-renders from the destination's metadata like every other
+            # upload, and a miss restores the label untouched.
+            def detect_link(input, pos)
+              match = match_at(LINK_PATTERN, input, pos)
+              return nil unless match
+
+              sha1, = parse_upload_url(match[:url])
+
+              node =
+                Markbridge::AST::Upload.new(
+                  sha1:,
+                  filename: match[:filename],
+                  type: :attachment,
                   raw: match[0],
                 )
 

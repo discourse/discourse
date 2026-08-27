@@ -57,6 +57,29 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved[1]).to eq(%{x [See](https://dest.example.com/t/12 "why this matters") y})
     end
 
+    # `[](url)` — an empty label is valid CommonMark and stays empty: only
+    # the destination span is rewritten, and there is no label span to touch.
+    it "rewrites the destination of an empty-label link and keeps the label empty" do
+      token = placeholder.mint(:link)
+      create_link(
+        token,
+        original: "[](https://old.example.com/t/x/300)",
+        url: "https://old.example.com/t/x/300",
+        url_offset: "[](".bytesize,
+        text: "",
+        target_type: link_target::TOPIC,
+        target_id: 300,
+      )
+
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 12 })
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "#{token}" }],
+        )
+
+      expect(resolved[1]).to eq("[](https://dest.example.com/t/12)")
+    end
+
     it "keeps angle brackets and padding around a rewritten destination" do
       token = placeholder.mint(:link)
       create_link(
@@ -307,6 +330,30 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       expect(resolved[1]).to eq(original)
       expect(resolver.unresolved_embeds.map(&:kind)).to eq(%i[upload])
+    end
+
+    # A failed image paste (`[label|meta](upload://…)`, link position, no `!`)
+    # rides the standard upload row: verbatim back on a miss, the
+    # destination's own markdown on a hit — same as every other upload form.
+    it "round-trips a link-position pipe label through miss and hit" do
+      token = placeholder.mint(:upload)
+      original = "[image|281x500](upload://abcdef.jpeg)"
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: token,
+        upload_id: "abcdef",
+        original_markdown: original,
+      )
+
+      expect(resolver.resolve_all([{ id: 1, raw: "x #{token} y" }])[1]).to eq("x #{original} y")
+
+      maps = FakePlaceholderMaps.new(upload_markdown: { "abcdef" => "![shot](upload://new.jpeg)" })
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "x #{token} y" }],
+        )
+      expect(resolved[1]).to eq("x ![shot](upload://new.jpeg) y")
     end
   end
 end
